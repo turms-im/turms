@@ -1,0 +1,9 @@
+${AnsiColor.BRIGHT_CYAN}
+${application.title}${application.formatted-version}
+It's your turms.
+  _______
+ |__   __|
+    | |_   _ _ __ _ __ ___  ___ 
+    | | | | | '__| '_ ` _ \/ __|
+    | | |_| | |  | | | | | \__ \
+    |_|\__,_|_|  |_| |_| |_|___/

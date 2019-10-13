@@ -1,0 +1,12 @@
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb:
+            core:
+              ReactiveMongoTemplate: debug
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost/turms-test

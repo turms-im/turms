@@ -1,0 +1,25 @@
+server:
+  error:
+    whitelabel:
+      enabled: false
+#  port: 9510
+  port: 0
+spring:
+  application:
+    name: turms
+  data:
+    mongodb:
+      auto-index-creation: true
+      uri: mongodb://localhost:29510/turms
+      repositories:
+        type: reactive
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: false
+    default-property-inclusion: non_null
+  profiles:
+    include: dev,turms #prod
+  webflux:
+    date-format: yyyyMMddHHmmss
+  hazelcast:
+    config: classpath:hazelcast.yaml

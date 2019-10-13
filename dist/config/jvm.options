@@ -1,0 +1,3 @@
+-Xms1g
+-Xmx1g
+-Dspring.config.location=file:../config/application.yaml
