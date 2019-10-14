@@ -54,16 +54,16 @@ Turms在业务功能配置全面且灵活的同时，不失性能。在部署简
 
 ## Quick Start
 
-- 下载并解压[Turms](https://github.com/turms-im/turms/releases)服务端压缩包。
+- 下载并解压[Turms服务端](https://github.com/turms-im/turms/releases)压缩包。
 
-- 下载并安装[MongoDB v4.2.0](https://www.mongodb.com/download-center/community)，并将数据库的URI、账号与密码配置到config/application.yml中（提醒：您也可以直接在此处配置多个MongoDB地址，Turms会自动接入MongoDB集群）。
+- 下载并安装[MongoDB v4.2.0](https://www.mongodb.com/download-center/community)，并将数据库的URI、账号与密码配置到config/application.yaml中（提醒：您也可以直接在此处配置多个MongoDB地址，Turms会自动接入MongoDB集群）。
 
-  （具体可参考：https://mongodb.github.io/mongo-java-driver/3.11/driver/tutorials/connect-to-mongodb/）
+  （具体可参考：https://docs.mongodb.com/manual/reference/connection-string/）
 
 - 运行MongoDB数据库。运行bin/mongo-quick-start-run-primary与bin/mongo-quick-start-run-secondary，约几秒后会提示“waiting for connections on port 29510”。则再运行bin/mongo-quick-start-init（或者自行搭建MongoDB集群）
   请确保运行正确，否则Turms会抛出MongoSocketOpenException、MongoNotPrimaryException等异常。
 
-- （可跳过，保持默认）根据您的需求配置config/hazelcast.yml、config/jvm.options、config/application.yml（您可以在此处配置Turms自定义的配置参数）。
+- （可跳过，保持默认）根据您的需求配置config/hazelcast.yaml、config/jvm.options、config/application.yaml（您可以在此处配置Turms自定义的配置参数）。
 
 - 在所有需要运行Turms服务端的系统上，运行bin/turms脚本。若您保留默认的config/hazelcast.yml配置，Turms服务端会自动寻找其他Turms服务端节点，由此Turms集群开始运作。
 
