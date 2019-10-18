@@ -13,7 +13,7 @@ spring:
   webflux:
     date-format: yyyyMMddHHmmss
   hazelcast:
-      config: file:../config/hazelcast.yaml
+    config: file:../config/hazelcast.yaml
   data:
     mongodb:
       auto-index-creation: true
@@ -22,3 +22,16 @@ spring:
       uri: mongodb://localhost:29510/turms
       repositories:
         type: reactive
+  boot:
+    admin:
+      client:
+        auto-deregistration: true
+        url: http://localhost:9514
+        username: turms
+        password: turms
+        register-once: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" #TODO: only exposes the necessary metrics

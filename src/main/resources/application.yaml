@@ -2,8 +2,7 @@ server:
   error:
     whitelabel:
       enabled: false
-#  port: 9510
-  port: 0
+  port: 0 #9510
 spring:
   application:
     name: turms
@@ -18,8 +17,21 @@ spring:
       fail-on-unknown-properties: false
     default-property-inclusion: non_null
   profiles:
-    include: dev,turms #prod
+    include: dev,turms
   webflux:
     date-format: yyyyMMddHHmmss
   hazelcast:
     config: classpath:hazelcast.yaml
+  boot:
+    admin:
+      client:
+        auto-deregistration: true
+        url: http://localhost:9514
+        username: turms
+        password: turms
+        register-once: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
