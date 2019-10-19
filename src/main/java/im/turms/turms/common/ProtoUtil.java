@@ -35,12 +35,15 @@ public class ProtoUtil {
         im.turms.turms.pojo.dto.Message.Builder messageBuilder = im.turms.turms.pojo.dto.Message
                 .newBuilder()
                 .setId(Int64Value.newBuilder().setValue(message.getId()).build())
-                .setChatType(message.getChatType())
                 .setDeliveryDate(Int64Value.newBuilder().setValue(message.getDeliveryDate().getTime()).build())
                 .setDeletionDate(Int64Value.newBuilder().setValue(message.getDeletionDate().getTime()).build())
                 .setText(StringValue.newBuilder().setValue(message.getText()).build())
-                .setFromId(Int64Value.newBuilder().setValue(message.getSenderId()).build())
-                .setToId(Int64Value.newBuilder().setValue(message.getTargetId()).build());
+                .setSenderId(Int64Value.newBuilder().setValue(message.getSenderId()).build())
+                .setRecipientId(Int64Value.newBuilder().setValue(message.getTargetId()).build());
+        Long groupId = message.groupId();
+        if (groupId != null) {
+            messageBuilder.setGroupId(Int64Value.newBuilder().setValue(groupId).build());
+        }
         for (byte[] record : message.getRecords()) {
             messageBuilder.addRecords(
                     BytesValue.newBuilder()
