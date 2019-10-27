@@ -15,3 +15,7 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:29510/turms-dev
+server:
+  error:
+    whitelabel:
+      enabled: true

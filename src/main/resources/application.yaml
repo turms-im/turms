@@ -16,10 +16,9 @@ spring:
     deserialization:
       fail-on-unknown-properties: false
     default-property-inclusion: non_null
+    time-zone: UTC
   profiles:
     include: dev,turms
-  webflux:
-    date-format: yyyyMMddHHmmss
   hazelcast:
     config: classpath:hazelcast.yaml
   boot:
@@ -35,3 +34,8 @@ management:
     web:
       exposure:
         include: "*"
+logging:
+  file:
+    name: ../logs/turms.log
+  pattern:
+    dateformat: yyyy-MM-dd HH:mm:ss.SSS,UTC
