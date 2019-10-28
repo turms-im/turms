@@ -136,7 +136,6 @@
             <artifactId>aho-corasick-double-array-trie</artifactId>
             <version>${aho-corasick-double-array-trie.version}</version>
         </dependency>
-
         <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
