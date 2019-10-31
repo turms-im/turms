@@ -18,6 +18,7 @@
 package im.turms.turms.common;
 
 import com.google.protobuf.*;
+import im.turms.turms.constant.ChatType;
 import im.turms.turms.constant.DeviceType;
 import im.turms.turms.constant.UserStatus;
 import im.turms.turms.pojo.bo.UserOnlineInfo;
@@ -25,9 +26,12 @@ import im.turms.turms.pojo.domain.Message;
 import im.turms.turms.pojo.domain.*;
 import im.turms.turms.pojo.dto.UserInfo;
 import im.turms.turms.pojo.dto.UserStatusDetail;
+import im.turms.turms.pojo.request.CreateMessageRequest;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 public class ProtoUtil {
@@ -162,6 +166,44 @@ public class ProtoUtil {
                 .setReceptionDate(Int64Value.newBuilder().setValue(messageStatus.getReceptionDate().getTime()).build())
                 .setReadDate(Int64Value.newBuilder().setValue(messageStatus.getReadDate().getTime()).build())
                 .setRecallDate(Int64Value.newBuilder().setValue(messageStatus.getRecallDate().getTime()).build());
+    }
+
+    public static CreateMessageRequest.Builder message2createMessageRequest(Message message) {
+        CreateMessageRequest.Builder builder = CreateMessageRequest
+                .newBuilder();
+        Long messageId = message.getId();
+        ChatType chatType = message.getChatType();
+        Date deliveryDate = message.getDeliveryDate();
+        String text = message.getText();
+//        Long senderId = message.getSenderId(); the field is duplicated with requesterId
+        Long targetId = message.getTargetId();
+        List<byte[]> records = message.getRecords();
+        Integer burnAfter = message.getBurnAfter();
+        if (messageId != null) {
+            builder.setMessageId(Int64Value.newBuilder().setValue(messageId).build());
+        }
+        if (chatType != null && chatType != ChatType.UNRECOGNIZED) {
+            builder.setChatType(chatType);
+        }
+        if (deliveryDate != null) {
+            builder.setDeliveryDate(deliveryDate.getTime());
+        }
+        if (text != null) {
+            builder.setText(StringValue.newBuilder().setValue(text).build());
+        }
+        if (targetId != null) {
+            builder.setToId(targetId);
+        }
+        if (records != null && !records.isEmpty()) {
+            for (byte[] record : records) {
+                ByteString byteString = ByteString.copyFrom(record);
+                builder.addRecords(byteString);
+            }
+        }
+        if (burnAfter != null) {
+            builder.setBurnAfter(Int32Value.newBuilder().setValue(burnAfter).build());
+        }
+        return null;
     }
 
     public static UserStatusDetail.Builder userOnlineInfo2userStatus(
