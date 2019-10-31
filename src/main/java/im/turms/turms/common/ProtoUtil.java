@@ -18,9 +18,7 @@
 package im.turms.turms.common;
 
 import com.google.protobuf.*;
-import im.turms.turms.constant.ChatType;
-import im.turms.turms.constant.DeviceType;
-import im.turms.turms.constant.UserStatus;
+import im.turms.turms.constant.*;
 import im.turms.turms.pojo.bo.UserOnlineInfo;
 import im.turms.turms.pojo.domain.Message;
 import im.turms.turms.pojo.domain.*;
@@ -35,110 +33,299 @@ import java.util.List;
 import java.util.Set;
 
 public class ProtoUtil {
+
+    private ProtoUtil() {
+    }
+
     public static im.turms.turms.pojo.dto.Message.Builder message2proto(Message message) {
-        im.turms.turms.pojo.dto.Message.Builder messageBuilder = im.turms.turms.pojo.dto.Message
-                .newBuilder()
-                .setId(Int64Value.newBuilder().setValue(message.getId()).build())
-                .setDeliveryDate(Int64Value.newBuilder().setValue(message.getDeliveryDate().getTime()).build())
-                .setDeletionDate(Int64Value.newBuilder().setValue(message.getDeletionDate().getTime()).build())
-                .setText(StringValue.newBuilder().setValue(message.getText()).build())
-                .setSenderId(Int64Value.newBuilder().setValue(message.getSenderId()).build())
-                .setRecipientId(Int64Value.newBuilder().setValue(message.getTargetId()).build());
+        im.turms.turms.pojo.dto.Message.Builder builder = im.turms.turms.pojo.dto.Message.newBuilder();
+        Long messageId = message.getId();
+        Date deliveryDate = message.getDeliveryDate();
+        Date deletionDate = message.getDeletionDate();
+        String text = message.getText();
+        Long senderId = message.getSenderId();
+        Long targetId = message.getTargetId();
         Long groupId = message.groupId();
+        if (messageId != null) {
+            builder.setId(Int64Value.newBuilder().setValue(messageId).build());
+        }
+        if (deliveryDate != null) {
+            builder.setDeliveryDate(Int64Value.newBuilder().setValue(deliveryDate.getTime()).build());
+        }
+        if (deletionDate != null) {
+            builder.setDeletionDate(Int64Value.newBuilder().setValue(deletionDate.getTime()).build());
+        }
+        if (text != null) {
+            builder.setText(StringValue.newBuilder().setValue(text).build());
+        }
+        if (senderId != null) {
+            builder.setSenderId(Int64Value.newBuilder().setValue(senderId).build());
+        }
+        if (targetId != null) {
+            builder.setRecipientId(Int64Value.newBuilder().setValue(targetId).build());
+        }
         if (groupId != null) {
-            messageBuilder.setGroupId(Int64Value.newBuilder().setValue(groupId).build());
+            builder.setGroupId(Int64Value.newBuilder().setValue(groupId).build());
         }
         for (byte[] record : message.getRecords()) {
-            messageBuilder.addRecords(
-                    BytesValue.newBuilder()
-                            .setValue(ByteString.copyFrom(record))
-                            .build());
+            builder.addRecords(BytesValue.newBuilder()
+                    .setValue(ByteString.copyFrom(record))
+                    .build());
         }
-        return messageBuilder;
+        return builder;
     }
 
     public static UserInfo.Builder userProfile2proto(@NotNull User user) {
-        return UserInfo.newBuilder()
-                .setId(Int64Value.newBuilder().setValue(user.getId()).build())
-                .setName(StringValue.newBuilder().setValue(user.getName()).build())
-                .setIntro(StringValue.newBuilder().setValue(user.getIntro()).build())
-                .setProfilePictureUrl(StringValue.newBuilder().setValue(user.getProfilePictureUrl()).build())
-                .setRegistrationDate(Int64Value.newBuilder().setValue(user.getRegistrationDate().getTime()).build())
-                .setActive(BoolValue.newBuilder().setValue(user.getActive()).build())
-                .setProfileAccessStrategy(user.getProfileAccess());
+        UserInfo.Builder builder = UserInfo.newBuilder();
+        Long userId = user.getId();
+        String name = user.getName();
+        String intro = user.getIntro();
+        String profilePictureUrl = user.getProfilePictureUrl();
+        Date registrationDate = user.getRegistrationDate();
+        Boolean active = user.getActive();
+        ProfileAccessStrategy profileAccess = user.getProfileAccess();
+        if (userId != null) {
+            builder.setId(Int64Value.newBuilder().setValue(userId).build());
+        }
+        if (name != null) {
+            builder.setName(StringValue.newBuilder().setValue(name).build());
+        }
+        if (intro != null) {
+            builder.setIntro(StringValue.newBuilder().setValue(intro).build());
+        }
+        if (profilePictureUrl != null) {
+            builder.setProfilePictureUrl(StringValue.newBuilder().setValue(profilePictureUrl).build());
+        }
+        if (registrationDate != null) {
+            builder.setRegistrationDate(Int64Value.newBuilder().setValue(registrationDate.getTime()).build());
+        }
+        if (active != null) {
+            builder.setActive(BoolValue.newBuilder().setValue(active).build());
+        }
+        if (profileAccess != null) {
+            builder.setProfileAccessStrategy(profileAccess);
+        }
+        return builder;
     }
 
     public static im.turms.turms.pojo.dto.UserFriendRequest.Builder friendRequest2proto(@NotNull UserFriendRequest userFriendRequest) {
-        return im.turms.turms.pojo.dto.UserFriendRequest.newBuilder()
-                .setId(Int64Value.newBuilder().setValue(userFriendRequest.getId()).build())
-                .setCreationDate(Int64Value.newBuilder().setValue(userFriendRequest.getCreationDate().getTime()).build())
-                .setContent(StringValue.newBuilder().setValue(userFriendRequest.getContent()).build())
-                .setRequestStatus(userFriendRequest.getStatus())
-                .setReason(StringValue.newBuilder().setValue(userFriendRequest.getReason()).build())
-                .setExpirationDate(Int64Value.newBuilder().setValue(userFriendRequest.getExpirationDate().getTime()).build())
-                .setRequesterId(Int64Value.newBuilder().setValue(userFriendRequest.getRequesterId()).build())
-                .setRecipientId(Int64Value.newBuilder().setValue(userFriendRequest.getRecipientId()).build());
+        im.turms.turms.pojo.dto.UserFriendRequest.Builder builder = im.turms.turms.pojo.dto.UserFriendRequest.newBuilder();
+        Long requestId = userFriendRequest.getId();
+        Date creationDate = userFriendRequest.getCreationDate();
+        String content = userFriendRequest.getContent();
+        RequestStatus status = userFriendRequest.getStatus();
+        String reason = userFriendRequest.getReason();
+        Date expirationDate = userFriendRequest.getExpirationDate();
+        Long requesterId = userFriendRequest.getRequesterId();
+        Long recipientId = userFriendRequest.getRecipientId();
+        if (requestId != null) {
+            builder.setId(Int64Value.newBuilder().setValue(requestId).build());
+        }
+        if (creationDate != null) {
+            builder.setCreationDate(Int64Value.newBuilder().setValue(creationDate.getTime()).build());
+        }
+        if (content != null) {
+            builder.setContent(StringValue.newBuilder().setValue(content).build());
+        }
+        if (status != null) {
+            builder.setRequestStatus(status);
+        }
+        if (reason != null) {
+            builder.setReason(StringValue.newBuilder().setValue(reason).build());
+        }
+        if (expirationDate != null) {
+            builder.setExpirationDate(Int64Value.newBuilder().setValue(expirationDate.getTime()).build());
+        }
+        if (requesterId != null) {
+            builder.setRequesterId(Int64Value.newBuilder().setValue(requesterId).build());
+        }
+        if (recipientId != null) {
+            builder.setRecipientId(Int64Value.newBuilder().setValue(recipientId).build());
+        }
+        return builder;
     }
 
     public static im.turms.turms.pojo.dto.UserRelationship.Builder relationship2proto(@NotNull UserRelationship relationship) {
-        return im.turms.turms.pojo.dto.UserRelationship.newBuilder()
-                .setOwnerId(Int64Value.newBuilder().setValue(relationship.getKey().getOwnerId()).build())
-                .setRelatedUserId(Int64Value.newBuilder().setValue(relationship.getKey().getRelatedUserId()).build())
-                .setIsBlocked(BoolValue.newBuilder().setValue(relationship.getIsBlocked()).build())
-                .setEstablishmentDate(Int64Value.newBuilder().setValue(relationship.getEstablishmentDate().getTime()).build());
+        im.turms.turms.pojo.dto.UserRelationship.Builder builder = im.turms.turms.pojo.dto.UserRelationship.newBuilder();
+        UserRelationship.Key key = relationship.getKey();
+        Boolean isBlocked = relationship.getIsBlocked();
+        Date establishmentDate = relationship.getEstablishmentDate();
+        if (key != null) {
+            Long ownerId = key.getOwnerId();
+            Long relatedUserId = key.getRelatedUserId();
+            if (ownerId != null) {
+                builder.setOwnerId(Int64Value.newBuilder().setValue(ownerId).build());
+            }
+            if (relatedUserId != null) {
+                builder.setRelatedUserId(Int64Value.newBuilder().setValue(relatedUserId).build());
+            }
+        }
+        if (isBlocked != null) {
+            builder.setIsBlocked(BoolValue.newBuilder().setValue(isBlocked).build());
+        }
+        if (establishmentDate != null) {
+            builder.setEstablishmentDate(Int64Value.newBuilder().setValue(establishmentDate.getTime()).build());
+        }
+        return builder;
     }
 
     public static im.turms.turms.pojo.dto.UserRelationshipGroup.Builder relationshipGroup2proto(@NotNull UserRelationshipGroup relationshipGroup) {
-        return im.turms.turms.pojo.dto.UserRelationshipGroup.newBuilder()
-                .setIndex(relationshipGroup.getKey().getIndex())
-                .setName(relationshipGroup.getName());
+        im.turms.turms.pojo.dto.UserRelationshipGroup.Builder builder = im.turms.turms.pojo.dto.UserRelationshipGroup.newBuilder();
+        UserRelationshipGroup.Key key = relationshipGroup.getKey();
+        if (key != null) {
+            Integer index = key.getIndex();
+            if (index != null) {
+                builder.setIndex(index);
+            }
+        }
+        String name = relationshipGroup.getName();
+        if (name != null) {
+            builder.setName(name);
+        }
+        return builder;
     }
 
     public static im.turms.turms.pojo.dto.Group.Builder group2proto(@NotNull Group group) {
-        return im.turms.turms.pojo.dto.Group.newBuilder()
-                .setId(Int64Value.newBuilder().setValue(group.getId()).build())
-                .setTypeId(Int64Value.newBuilder().setValue(group.getTypeId()).build())
-                .setCreatorId(Int64Value.newBuilder().setValue(group.getCreatorId()).build())
-                .setOwnerId(Int64Value.newBuilder().setValue(group.getOwnerId()).build())
-                .setName(StringValue.newBuilder().setValue(group.getName()).build())
-                .setIntro(StringValue.newBuilder().setValue(group.getIntro()).build())
-                .setAnnouncement(StringValue.newBuilder().setValue(group.getAnnouncement()).build())
-                .setProfilePictureUrl(StringValue.newBuilder().setValue(group.getProfilePictureUrl()).build())
-                .setCreationDate(Int64Value.newBuilder().setValue(group.getCreationDate().getTime()).build())
-                .setDeletionDate(Int64Value.newBuilder().setValue(group.getDeletionDate().getTime()).build())
-                .setMuteEndDate(Int64Value.newBuilder().setValue(group.getMuteEndDate().getTime()).build())
-                .setActive(BoolValue.newBuilder().setValue(group.getActive()));
+        im.turms.turms.pojo.dto.Group.Builder builder = im.turms.turms.pojo.dto.Group.newBuilder();
+        Long groupId = group.getId();
+        Long typeId = group.getTypeId();
+        Long creatorId = group.getCreatorId();
+        Long ownerId = group.getOwnerId();
+        String name = group.getName();
+        String intro = group.getIntro();
+        String announcement = group.getAnnouncement();
+        String profilePictureUrl = group.getProfilePictureUrl();
+        Date creationDate = group.getCreationDate();
+        Date deletionDate = group.getDeletionDate();
+        Date muteEndDate = group.getMuteEndDate();
+        Boolean active = group.getActive();
+        if (groupId != null) {
+            builder.setId(Int64Value.newBuilder().setValue(groupId).build());
+        }
+        if (typeId != null) {
+            builder.setTypeId(Int64Value.newBuilder().setValue(typeId).build());
+        }
+        if (creatorId != null) {
+            builder.setCreatorId(Int64Value.newBuilder().setValue(creatorId).build());
+        }
+        if (ownerId != null) {
+            builder.setOwnerId(Int64Value.newBuilder().setValue(ownerId).build());
+        }
+        if (name != null) {
+            builder.setName(StringValue.newBuilder().setValue(name).build());
+        }
+        if (intro != null) {
+            builder.setIntro(StringValue.newBuilder().setValue(intro).build());
+        }
+        if (announcement != null) {
+            builder.setAnnouncement(StringValue.newBuilder().setValue(announcement).build());
+        }
+        if (profilePictureUrl != null) {
+            builder.setProfilePictureUrl(StringValue.newBuilder().setValue(profilePictureUrl).build());
+        }
+        if (creationDate != null) {
+            builder.setCreationDate(Int64Value.newBuilder().setValue(creationDate.getTime()).build());
+        }
+        if (deletionDate != null) {
+            builder.setDeletionDate(Int64Value.newBuilder().setValue(deletionDate.getTime()).build());
+        }
+        if (muteEndDate != null) {
+            builder.setMuteEndDate(Int64Value.newBuilder().setValue(muteEndDate.getTime()).build());
+        }
+        if (active != null) {
+            builder.setActive(BoolValue.newBuilder().setValue(active));
+        }
+        return builder;
     }
 
     public static im.turms.turms.pojo.dto.GroupInvitation.Builder groupInvitation2proto(@NotNull GroupInvitation invitation) {
-        return im.turms.turms.pojo.dto.GroupInvitation.newBuilder()
-                .setId(Int64Value.newBuilder().setValue(invitation.getId()).build())
-                .setCreationDate(Int64Value.newBuilder().setValue(invitation.getCreationDate().getTime()).build())
-                .setContent(StringValue.newBuilder().setValue(invitation.getContent()).build())
-                .setStatusValue(invitation.getStatus().getNumber())
-                .setExpirationDate(Int64Value.newBuilder().setValue(invitation.getExpirationDate().getTime()).build())
-                .setGroupId(Int64Value.newBuilder().setValue(invitation.getGroupId()).build())
-                .setInviterId(Int64Value.newBuilder().setValue(invitation.getInviterId()).build())
-                .setInviteeId(Int64Value.newBuilder().setValue(invitation.getInviteeId()).build());
+        im.turms.turms.pojo.dto.GroupInvitation.Builder builder = im.turms.turms.pojo.dto.GroupInvitation.newBuilder();
+        Long invitationId = invitation.getId();
+        Date creationDate = invitation.getCreationDate();
+        String content = invitation.getContent();
+        RequestStatus status = invitation.getStatus();
+        Date expirationDate = invitation.getExpirationDate();
+        Long groupId = invitation.getGroupId();
+        Long inviterId = invitation.getInviterId();
+        Long inviteeId = invitation.getInviteeId();
+        if (invitationId != null) {
+            builder.setId(Int64Value.newBuilder().setValue(invitationId).build());
+        }
+        if (creationDate != null) {
+            builder.setCreationDate(Int64Value.newBuilder().setValue(creationDate.getTime()).build());
+        }
+        if (content != null) {
+            builder.setContent(StringValue.newBuilder().setValue(content).build());
+        }
+        if (status != null) {
+            builder.setStatusValue(status.getNumber());
+        }
+        if (expirationDate != null) {
+            builder.setExpirationDate(Int64Value.newBuilder().setValue(expirationDate.getTime()).build());
+        }
+        if (groupId != null) {
+            builder.setGroupId(Int64Value.newBuilder().setValue(groupId).build());
+        }
+        if (inviterId != null) {
+            builder.setInviterId(Int64Value.newBuilder().setValue(inviterId).build());
+        }
+        if (inviteeId != null) {
+            builder.setInviteeId(Int64Value.newBuilder().setValue(inviteeId).build());
+        }
+        return builder;
     }
 
     public static im.turms.turms.pojo.dto.GroupJoinRequest.Builder groupJoinRequest2proto(@NotNull GroupJoinRequest groupJoinRequest) {
-        return im.turms.turms.pojo.dto.GroupJoinRequest.newBuilder()
-                .setId(Int64Value.newBuilder().setValue(groupJoinRequest.getId()).build())
-                .setCreationDate(Int64Value.newBuilder().setValue(groupJoinRequest.getCreationDate().getTime()).build())
-                .setContent(StringValue.newBuilder().setValue(groupJoinRequest.getContent()).build())
-                .setStatus(groupJoinRequest.getStatus())
-                .setExpirationDate(Int64Value.newBuilder().setValue(groupJoinRequest.getExpirationDate().getTime()).build())
-                .setGroupId(Int64Value.newBuilder().setValue(groupJoinRequest.getGroupId()).build())
-                .setRequesterId(Int64Value.newBuilder().setValue(groupJoinRequest.getRequesterId()).build())
-                .setResponderId(Int64Value.newBuilder().setValue(groupJoinRequest.getResponderId()).build());
+        im.turms.turms.pojo.dto.GroupJoinRequest.Builder builder = im.turms.turms.pojo.dto.GroupJoinRequest.newBuilder();
+        Long requestId = groupJoinRequest.getId();
+        Date creationDate = groupJoinRequest.getCreationDate();
+        String content = groupJoinRequest.getContent();
+        RequestStatus status = groupJoinRequest.getStatus();
+        Date expirationDate = groupJoinRequest.getExpirationDate();
+        Long groupId = groupJoinRequest.getGroupId();
+        Long requesterId = groupJoinRequest.getRequesterId();
+        Long responderId = groupJoinRequest.getResponderId();
+        if (requestId != null) {
+            builder.setId(Int64Value.newBuilder().setValue(requestId).build());
+        }
+        if (creationDate != null) {
+            builder.setCreationDate(Int64Value.newBuilder().setValue(creationDate.getTime()).build());
+        }
+        if (content != null) {
+            builder.setContent(StringValue.newBuilder().setValue(content).build());
+        }
+        if (status != null) {
+            builder.setStatus(status);
+        }
+        if (expirationDate != null) {
+            builder.setExpirationDate(Int64Value.newBuilder().setValue(expirationDate.getTime()).build());
+        }
+        if (groupId != null) {
+            builder.setGroupId(Int64Value.newBuilder().setValue(groupId).build());
+        }
+        if (requesterId != null) {
+            builder.setRequesterId(Int64Value.newBuilder().setValue(requesterId).build());
+        }
+        if (responderId != null) {
+            builder.setResponderId(Int64Value.newBuilder().setValue(responderId).build());
+        }
+        return builder;
     }
 
     public static im.turms.turms.pojo.dto.GroupJoinQuestion.Builder groupJoinQuestion2proto(@NotNull GroupJoinQuestion question) {
-        im.turms.turms.pojo.dto.GroupJoinQuestion.Builder builder = im.turms.turms.pojo.dto.GroupJoinQuestion.newBuilder()
-                .setId(Int64Value.newBuilder().setValue(question.getId()).build())
-                .setGroupId(Int64Value.newBuilder().setValue(question.getGroupId()).build())
-                .setQuestion(StringValue.newBuilder().setValue(question.getQuestion()).build());
+        im.turms.turms.pojo.dto.GroupJoinQuestion.Builder builder = im.turms.turms.pojo.dto.GroupJoinQuestion.newBuilder();
+        Long questionId = question.getId();
+        Long groupId = question.getGroupId();
+        String content = question.getQuestion();
+        if (questionId != null) {
+            builder.setId(Int64Value.newBuilder().setValue(questionId).build());
+        }
+        if (groupId != null) {
+            builder.setGroupId(Int64Value.newBuilder().setValue(groupId).build());
+        }
+        if (content != null) {
+            builder.setQuestion(StringValue.newBuilder().setValue(content).build());
+        }
         if (question.getAnswers() != null && !question.getAnswers().isEmpty()) {
             for (String answer : question.getAnswers()) {
                 builder.addAnswers(StringValue.newBuilder().setValue(answer).build());
@@ -148,29 +335,71 @@ public class ProtoUtil {
     }
 
     public static im.turms.turms.pojo.dto.GroupMember.Builder groupMember2proto(@NotNull GroupMember groupMember) {
-        return im.turms.turms.pojo.dto.GroupMember.newBuilder()
-                .setGroupId(Int64Value.newBuilder().setValue(groupMember.getKey().getGroupId()).build())
-                .setUserId(Int64Value.newBuilder().setValue(groupMember.getKey().getUserId()).build())
-                .setName(StringValue.newBuilder().setValue(groupMember.getName()).build())
-                .setRole(groupMember.getRole())
-                .setJoinDate(Int64Value.newBuilder().setValue(groupMember.getJoinDate().getTime()).build())
-                .setMuteEndDate(Int64Value.newBuilder().setValue(groupMember.getMuteEndDate().getTime()).build());
+        im.turms.turms.pojo.dto.GroupMember.Builder builder = im.turms.turms.pojo.dto.GroupMember.newBuilder();
+        GroupMember.Key key = groupMember.getKey();
+        if (key != null) {
+            Long groupId = key.getGroupId();
+            Long userId = key.getUserId();
+            if (groupId != null) {
+                builder.setGroupId(Int64Value.newBuilder().setValue(groupId).build());
+            }
+            if (userId != null) {
+                builder.setUserId(Int64Value.newBuilder().setValue(userId).build());
+            }
+        }
+        String name = groupMember.getName();
+        GroupMemberRole role = groupMember.getRole();
+        Date joinDate = groupMember.getJoinDate();
+        Date muteEndDate = groupMember.getMuteEndDate();
+        if (name != null) {
+            builder.setName(StringValue.newBuilder().setValue(name).build());
+        }
+        if (role != null) {
+            builder.setRole(role);
+        }
+        if (joinDate != null) {
+            builder.setJoinDate(Int64Value.newBuilder().setValue(joinDate.getTime()).build());
+        }
+        if (muteEndDate != null) {
+            builder.setMuteEndDate(Int64Value.newBuilder().setValue(muteEndDate.getTime()).build());
+        }
+        return builder;
     }
 
     public static im.turms.turms.pojo.dto.MessageStatus.Builder messageStatus2proto(MessageStatus messageStatus) {
-        return im.turms.turms.pojo.dto.MessageStatus
-                .newBuilder()
-                .setMessageId(Int64Value.newBuilder().setValue(messageStatus.getKey().getMessageId()).build())
-                .setToUserId(Int64Value.newBuilder().setValue(messageStatus.getKey().getMessageId()).build())
-                .setDeliveryStatus(messageStatus.getDeliveryStatus())
-                .setReceptionDate(Int64Value.newBuilder().setValue(messageStatus.getReceptionDate().getTime()).build())
-                .setReadDate(Int64Value.newBuilder().setValue(messageStatus.getReadDate().getTime()).build())
-                .setRecallDate(Int64Value.newBuilder().setValue(messageStatus.getRecallDate().getTime()).build());
+        im.turms.turms.pojo.dto.MessageStatus.Builder builder = im.turms.turms.pojo.dto.MessageStatus.newBuilder();
+        MessageStatus.Key key = messageStatus.getKey();
+        if (key != null) {
+            Long messageId = key.getMessageId();
+            Long recipientId = key.getRecipientId();
+            if (messageId != null) {
+                builder.setMessageId(Int64Value.newBuilder().setValue(messageId).build());
+            }
+            if (recipientId != null) {
+                builder.setToUserId(Int64Value.newBuilder().setValue(recipientId).build());
+            }
+        }
+        MessageDeliveryStatus deliveryStatus = messageStatus.getDeliveryStatus();
+        Date receptionDate = messageStatus.getReceptionDate();
+        Date readDate = messageStatus.getReadDate();
+        Date recallDate = messageStatus.getRecallDate();
+        if (deliveryStatus != null) {
+            builder.setDeliveryStatus(deliveryStatus);
+        }
+        if (receptionDate != null) {
+            builder.setReceptionDate(Int64Value.newBuilder().setValue(receptionDate.getTime()).build());
+        }
+        if (readDate != null) {
+            builder.setReadDate(Int64Value.newBuilder().setValue(readDate.getTime()).build());
+        }
+        if (recallDate != null) {
+            builder.setRecallDate(Int64Value.newBuilder().setValue(recallDate.getTime()).build());
+        }
+        return builder;
     }
 
     public static CreateMessageRequest.Builder message2createMessageRequest(Message message) {
-        CreateMessageRequest.Builder builder = CreateMessageRequest
-                .newBuilder();
+        CreateMessageRequest.Builder builder = CreateMessageRequest.newBuilder();
         Long messageId = message.getId();
         ChatType chatType = message.getChatType();
         Date deliveryDate = message.getDeliveryDate();
@@ -236,17 +465,5 @@ public class ProtoUtil {
             }
         }
         return builder;
-    }
-
-    public static im.turms.turms.pojo.dto.GroupMember.Builder mergeGroupMember(
-            @NotNull GroupMember member,
-            @NotNull im.turms.turms.pojo.dto.GroupMember.Builder memberBuilder) {
-        return memberBuilder
-                .setGroupId(Int64Value.newBuilder().setValue(member.getKey().getGroupId()).build())
-                .setUserId(Int64Value.newBuilder().setValue(member.getKey().getUserId()).build())
-                .setName(StringValue.newBuilder().setValue(member.getName()).build())
-                .setRole(member.getRole())
-                .setJoinDate(Int64Value.newBuilder().setValue(member.getJoinDate().getTime()).build())
-                .setMuteEndDate(Int64Value.newBuilder().setValue(member.getMuteEndDate().getTime()).build());
     }
 }
