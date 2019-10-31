@@ -43,6 +43,7 @@ public class ProtoUtil {
         Date deliveryDate = message.getDeliveryDate();
         Date deletionDate = message.getDeletionDate();
         String text = message.getText();
+        List<byte[]> records = message.getRecords();
         Long senderId = message.getSenderId();
         Long targetId = message.getTargetId();
         Long groupId = message.groupId();
@@ -67,10 +68,12 @@ public class ProtoUtil {
         if (groupId != null) {
             builder.setGroupId(Int64Value.newBuilder().setValue(groupId).build());
         }
-        for (byte[] record : message.getRecords()) {
-            builder.addRecords(BytesValue.newBuilder()
-                    .setValue(ByteString.copyFrom(record))
-                    .build());
+        if (records != null && !records.isEmpty()) {
+            for (byte[] record : records) {
+                builder.addRecords(BytesValue.newBuilder()
+                        .setValue(ByteString.copyFrom(record))
+                        .build());
+            }
         }
         return builder;
     }
