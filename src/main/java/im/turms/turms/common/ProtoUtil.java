@@ -435,7 +435,7 @@ public class ProtoUtil {
         if (burnAfter != null) {
             builder.setBurnAfter(Int32Value.newBuilder().setValue(burnAfter).build());
         }
-        return null;
+        return builder;
     }
 
     public static UserStatusDetail.Builder userOnlineInfo2userStatus(
