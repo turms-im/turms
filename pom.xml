@@ -28,6 +28,7 @@
         <aho-corasick-double-array-trie.version>1.2.1</aho-corasick-double-array-trie.version>
         <yauaa.version>5.12</yauaa.version>
         <maven.test.skip>true</maven.test.skip>
+        <swagger.version>3.0.0-SNAPSHOT</swagger.version>
     </properties>
     <repositories>
         <repository>
@@ -38,6 +39,11 @@
             <id>sonatype-nexus-snapshots</id>
             <name>Sonatype Nexus Snapshots</name>
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </repository>
+        <repository>
+            <id>jcenter-snapshots</id>
+            <name>jcenter</name>
+            <url>http://oss.jfrog.org/artifactory/oss-snapshot-local/</url>
         </repository>
     </repositories>
     <pluginRepositories>
@@ -135,6 +141,21 @@
             <groupId>com.hankcs</groupId>
             <artifactId>aho-corasick-double-array-trie</artifactId>
             <version>${aho-corasick-double-array-trie.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-spring-webflux</artifactId>
+            <version>${swagger.version}</version>
         </dependency>
         <!-- Testing -->
         <dependency>
