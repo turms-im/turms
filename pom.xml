@@ -10,14 +10,14 @@
     </parent>
     <groupId>im.turms</groupId>
     <artifactId>turms-core</artifactId>
-    <version>${turms.version}</version>
+    <version>0.9.0-beta-SNAPSHOT</version>
     <name>turms</name>
     <description>Turms is an open source, distributed, robust and blazingly fast instant messaging server capable of solving a growing number of use cases</description>
 
     <properties>
         <turms.version>0.9.0-beta-SNAPSHOT</turms.version>
         <java.version>11</java.version>
-        <hazelcast.version>3.12.3</hazelcast.version>
+        <hazelcast.version>3.12.4</hazelcast.version>
         <protobuf.version>3.10.0</protobuf.version>
         <guava.version>28.1-jre</guava.version>
         <commons-lang3.version>3.9</commons-lang3.version>
@@ -144,6 +144,11 @@
             <version>${aho-corasick-double-array-trie.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.pf4j</groupId>
+            <artifactId>pf4j</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
             <version>${swagger.version}</version>
@@ -212,18 +217,15 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>repackage</id>
                 <configuration>
-                    <jvmArguments>
-                        --add-modules java.se
-                        --add-exports java.base/jdk.internal.ref=ALL-UNNAMED
-                        --add-opens java.base/java.lang=ALL-UNNAMED
-                        --add-opens java.base/java.nio=ALL-UNNAMED
-                        --add-opens java.base/sun.nio.ch=ALL-UNNAMED
-                        --add-opens java.management/sun.management=ALL-UNNAMED
-                        --add-opens jdk.management/com.ibm.lang.management.internal=ALL-UNNAMED
-                        --add-opens jdk.management/com.sun.management.internal=ALL-UNNAMED
-                    </jvmArguments>
+                            <attach>false</attach>
+                            <finalName>turms-${turms.version}</finalName>
                 </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.xolstice.maven.plugins</groupId>
@@ -266,6 +268,7 @@
                     <annotationProcessors>
                         <annotationProcessor>org.springframework.boot.configurationprocessor.ConfigurationMetadataAnnotationProcessor</annotationProcessor>
                         <annotationProcessor>lombok.launch.AnnotationProcessorHider$AnnotationProcessor</annotationProcessor>
+                        <annotationProcessor>org.pf4j.processor.ExtensionAnnotationProcessor</annotationProcessor>
                     </annotationProcessors>
                 </configuration>
             </plugin>
