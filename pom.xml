@@ -9,12 +9,13 @@
         <relativePath/>
     </parent>
     <groupId>im.turms</groupId>
-    <artifactId>turms</artifactId>
-    <version>0.8.0-beta</version>
+    <artifactId>turms-core</artifactId>
+    <version>${turms.version}</version>
     <name>turms</name>
     <description>Turms is an open source, distributed, robust and blazingly fast instant messaging server capable of solving a growing number of use cases</description>
 
     <properties>
+        <turms.version>0.9.0-beta-SNAPSHOT</turms.version>
         <java.version>11</java.version>
         <hazelcast.version>3.12.3</hazelcast.version>
         <protobuf.version>3.10.0</protobuf.version>
