@@ -30,8 +30,11 @@
         <caffeine.version>2.8.0</caffeine.version>
         <aho-corasick-double-array-trie.version>1.2.1</aho-corasick-double-array-trie.version>
         <yauaa.version>5.12</yauaa.version>
-        <maven.test.skip>true</maven.test.skip>
         <swagger.version>3.0.0-SNAPSHOT</swagger.version>
+
+        <skipTests>false</skipTests>
+        <skipITs>${skipTests}</skipITs>
+        <skipUTs>${skipTests}</skipUTs>
     </properties>
     <repositories>
         <repository>
@@ -261,6 +264,9 @@
                     <plugin>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <version>3.0.0-M3</version>
+                        <configuration>
+                            <skipTests>${skipUTs}</skipTests>
+                        </configuration>
                         <dependencies>
                             <dependency>
                                 <groupId>org.junit.platform</groupId>
@@ -268,6 +274,23 @@
                                 <version>1.3.2</version>
                             </dependency>
                         </dependencies>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>3.0.0-M3</version>
+                        <configuration>
+                            <skipTests>${skipTests}</skipTests>
+                            <skipITs>${skipITs}</skipITs>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
