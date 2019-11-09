@@ -17,15 +17,14 @@
 
 package im.turms.turms;
 
-import im.turms.turms.property.TurmsProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.reactive.config.EnableWebFlux;
 
 @SpringBootApplication
-@EnableConfigurationProperties(TurmsProperties.class)
+@ConfigurationPropertiesScan
 @EnableScheduling
 @EnableWebFlux
 public class TurmsApplication {
