@@ -34,6 +34,9 @@ management:
     web:
       exposure:
         include: "*" #TODO: only exposes the necessary metrics
+  health:
+    hazelcast:
+      enabled: false
 logging:
   file:
     name: ../logs/turms.log
