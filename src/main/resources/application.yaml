@@ -29,6 +29,8 @@ spring:
         username: turms
         password: turms
         register-once: false
+  webflux:
+    date-format: yyyy-MM-dd'T'HH:mm:ss.SSSX
 management:
   endpoints:
     web:

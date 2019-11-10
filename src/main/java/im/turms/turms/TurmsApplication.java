@@ -21,12 +21,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.web.reactive.config.EnableWebFlux;
 
 @SpringBootApplication
 @ConfigurationPropertiesScan
 @EnableScheduling
-@EnableWebFlux
 public class TurmsApplication {
     public static void main(String[] args) {
         SpringApplication.run(TurmsApplication.class, args);
