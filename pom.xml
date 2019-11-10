@@ -10,14 +10,14 @@
     </parent>
     <groupId>im.turms</groupId>
     <artifactId>turms-core</artifactId>
-    <version>0.9.0-beta-SNAPSHOT</version>
+    <version>0.9.0-SNAPSHOT</version>
     <name>turms</name>
     <description>Turms is an open source, distributed, robust and blazingly fast instant messaging server capable of
         solving a growing number of use cases
     </description>
 
     <properties>
-        <turms.version>0.9.0-beta-SNAPSHOT</turms.version>
+        <turms.version>0.9.0-SNAPSHOT</turms.version>
         <java.version>11</java.version>
         <hazelcast.version>4.0-BETA-1</hazelcast.version>
         <protobuf.version>3.10.0</protobuf.version>
@@ -32,7 +32,7 @@
         <yauaa.version>5.12</yauaa.version>
         <swagger.version>3.0.0-SNAPSHOT</swagger.version>
 
-        <skipTests>false</skipTests>
+        <skipTests>true</skipTests>
         <skipITs>${skipTests}</skipITs>
         <skipUTs>${skipTests}</skipUTs>
     </properties>
