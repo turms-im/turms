@@ -29,7 +29,7 @@
         <commons-io.version>2.6</commons-io.version>
         <caffeine.version>2.8.0</caffeine.version>
         <aho-corasick-double-array-trie.version>1.2.1</aho-corasick-double-array-trie.version>
-        <yauaa.version>5.12</yauaa.version>
+        <yauaa.version>5.13</yauaa.version>
         <swagger.version>3.0.0-SNAPSHOT</swagger.version>
 
         <skipTests>true</skipTests>
