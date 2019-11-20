@@ -40,6 +40,7 @@ public class ProtoUtil {
     public static im.turms.turms.pojo.bo.message.Message.Builder message2proto(Message message) {
         im.turms.turms.pojo.bo.message.Message.Builder builder = im.turms.turms.pojo.bo.message.Message.newBuilder();
         Long messageId = message.getId();
+        Boolean isSystemMessage = message.getIsSystemMessage();
         Date deliveryDate = message.getDeliveryDate();
         Date deletionDate = message.getDeletionDate();
         String text = message.getText();
@@ -49,6 +50,9 @@ public class ProtoUtil {
         Long groupId = message.groupId();
         if (messageId != null) {
             builder.setId(Int64Value.newBuilder().setValue(messageId).build());
+        }
+        if (isSystemMessage != null) {
+            builder.setIsSystemMessage(BoolValue.newBuilder().setValue(isSystemMessage).build());
         }
         if (deliveryDate != null) {
             builder.setDeliveryDate(Int64Value.newBuilder().setValue(deliveryDate.getTime()).build());
@@ -405,6 +409,7 @@ public class ProtoUtil {
         CreateMessageRequest.Builder builder = CreateMessageRequest.newBuilder();
         Long messageId = message.getId();
         ChatType chatType = message.getChatType();
+        Boolean isSystemMessage = message.getIsSystemMessage();
         Date deliveryDate = message.getDeliveryDate();
         String text = message.getText();
 //        Long senderId = message.getSenderId(); the field is duplicated with requesterId
@@ -416,6 +421,9 @@ public class ProtoUtil {
         }
         if (chatType != null && chatType != ChatType.UNRECOGNIZED) {
             builder.setChatType(chatType);
+        }
+        if (isSystemMessage != null) {
+            builder.setIsSystemMessage(BoolValue.newBuilder().setValue(isSystemMessage).build());
         }
         if (deliveryDate != null) {
             builder.setDeliveryDate(deliveryDate.getTime());
