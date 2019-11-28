@@ -35,7 +35,9 @@ set TURMS_JVM_OPTIONS=%TURMS_PATH_CONF%\jvm.options
 for /F "usebackq delims=" %%a in (`CALL %JAVA% -cp "!TURMS_CLASSPATH!" "org.elasticsearch.tools.launchers.JvmOptionsParser" "!TURMS_JVM_OPTIONS!" ^|^| echo jvm_options_parser_failed`) do set JVM_OPTIONS=%%a
 @endlocal & set "MAYBE_JVM_OPTIONS_PARSER_FAILED=%JVM_OPTIONS%" & set TURMS_JAVA_OPTS=%JVM_OPTIONS%
 
+@echo on
 %JAVA% %TURMS_JAVA_OPTS% -cp "%TURMS_CLASSPATH%" "org.springframework.boot.loader.JarLauncher"
+@echo off
 
 endlocal
 endlocal
