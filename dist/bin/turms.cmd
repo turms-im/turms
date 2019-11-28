@@ -15,6 +15,7 @@ for %%I in ("%TURMS_HOME%..") do set TURMS_HOME=%%~dpfI
 
 set TURMS_CLASSPATH=!TURMS_HOME!\lib\*
 set TURMS_PATH_CONF=!TURMS_HOME!\config
+set TURMS_APP_CONF=%TURMS_PATH_CONF%\application.yaml
 
 if defined JAVA_HOME (
   set JAVA="%JAVA_HOME%\bin\java.exe"
@@ -33,7 +34,7 @@ set TURMS_JVM_OPTIONS=%TURMS_PATH_CONF%\jvm.options
 
 @setlocal
 for /F "usebackq delims=" %%a in (`CALL %JAVA% -cp "!TURMS_CLASSPATH!" "org.elasticsearch.tools.launchers.JvmOptionsParser" "!TURMS_JVM_OPTIONS!" ^|^| echo jvm_options_parser_failed`) do set JVM_OPTIONS=%%a
-@endlocal & set "MAYBE_JVM_OPTIONS_PARSER_FAILED=%JVM_OPTIONS%" & set TURMS_JAVA_OPTS=%JVM_OPTIONS%
+@endlocal & set "MAYBE_JVM_OPTIONS_PARSER_FAILED=%JVM_OPTIONS%" & set TURMS_JAVA_OPTS=%JVM_OPTIONS% -Dspring.config.location=%TURMS_APP_CONF%
 
 @echo on
 %JAVA% %TURMS_JAVA_OPTS% -cp "%TURMS_CLASSPATH%" "org.springframework.boot.loader.JarLauncher"
