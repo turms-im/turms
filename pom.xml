@@ -17,7 +17,6 @@
     </description>
 
     <properties>
-        <turms.version>0.9.0-SNAPSHOT</turms.version>
         <java.version>11</java.version>
         <hazelcast.version>4.0-BETA-1</hazelcast.version>
         <protobuf.version>3.10.0</protobuf.version>
@@ -31,6 +30,21 @@
         <aho-corasick-double-array-trie.version>1.2.1</aho-corasick-double-array-trie.version>
         <yauaa.version>5.13</yauaa.version>
         <swagger.version>3.0.0-SNAPSHOT</swagger.version>
+
+        <swagger2markup.version>1.3.3</swagger2markup.version>
+        <swagger2markup.plugin.version>1.3.7</swagger2markup.plugin.version>
+        <swagger2markup.extension.version>1.3.3</swagger2markup.extension.version>
+        <asciidoctorj.version>1.5.5</asciidoctorj.version>
+        <asciidoctorj.pdf.version>1.5.0-beta.8</asciidoctorj.pdf.version>
+        <jruby.version>9.2.9.0</jruby.version>
+
+        <swagger.output.dir>${project.build.directory}/swagger</swagger.output.dir>
+        <swagger.snippetOutput.dir>${project.build.directory}/asciidoc/snippets</swagger.snippetOutput.dir>
+        <generated.asciidoc.directory>${project.build.directory}/asciidoc</generated.asciidoc.directory>
+        <asciidoctor.input.directory>${project.basedir}/src/docs/asciidoc</asciidoctor.input.directory>
+        <asciidoctor.html.output.directory>${project.basedir}/src/docs/html</asciidoctor.html.output.directory>
+        <asciidoctor.pdf.output.directory>${project.basedir}/src/docs/pdf</asciidoctor.pdf.output.directory>
+        <swagger.input>http://127.0.0.1:9510/v2/api-docs</swagger.input>
 
         <skipTests>true</skipTests>
         <skipITs>${skipTests}</skipITs>
@@ -233,6 +247,110 @@
     </build>
     <profiles>
         <profile>
+            <id>swagger2markup</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.github.swagger2markup</groupId>
+                        <artifactId>swagger2markup-maven-plugin</artifactId>
+                        <version>${swagger2markup.plugin.version}</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>io.github.swagger2markup</groupId>
+                                <artifactId>swagger2markup-import-files-ext</artifactId>
+                                <version>${swagger2markup.extension.version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>io.github.swagger2markup</groupId>
+                                <artifactId>swagger2markup</artifactId>
+                                <version>${swagger2markup.version}</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <swaggerInput>${swagger.input}</swaggerInput>
+                            <outputDir>${generated.asciidoc.directory}</outputDir>
+                            <config>
+                                <swagger2markup.markupLanguage>ASCIIDOC</swagger2markup.markupLanguage>
+                                <swagger2markup.pathsGroupedBy>TAGS</swagger2markup.pathsGroupedBy>
+                                <swagger2markup.extensions.dynamicOverview.contentPath>${project.basedir}/src/docs/asciidoc/extensions/overview</swagger2markup.extensions.dynamicOverview.contentPath>
+                                <swagger2markup.extensions.dynamicDefinitions.contentPath>${project.basedir}/src/docs/asciidoc/extensions/definitions</swagger2markup.extensions.dynamicDefinitions.contentPath>
+                                <swagger2markup.extensions.dynamicPaths.contentPath>${project.basedir}/src/docs/asciidoc/extensions/paths</swagger2markup.extensions.dynamicPaths.contentPath>
+                                <swagger2markup.extensions.dynamicSecurity.contentPath>${project.basedir}src/docs/asciidoc/extensions/security</swagger2markup.extensions.dynamicSecurity.contentPath>
+                            </config>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>convertSwagger2markup</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctor-maven-plugin</artifactId>
+                        <version>1.5.6</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.asciidoctor</groupId>
+                                <artifactId>asciidoctorj-pdf</artifactId>
+                                <version>${asciidoctorj.pdf.version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.jruby</groupId>
+                                <artifactId>jruby-complete</artifactId>
+                                <version>${jruby.version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>org.asciidoctor</groupId>
+                                <artifactId>asciidoctorj</artifactId>
+                                <version>${asciidoctorj.version}</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <sourceDirectory>${asciidoctor.input.directory}</sourceDirectory>
+                            <sourceDocumentName>swagger.adoc</sourceDocumentName>
+                            <attributes>
+                                <doctype>book</doctype>
+                                <toc>left</toc>
+                                <toclevels>3</toclevels>
+                                <numbered></numbered>
+                                <hardbreaks></hardbreaks>
+                                <sectlinks></sectlinks>
+                                <sectanchors></sectanchors>
+                                <generated>${generated.asciidoc.directory}</generated>
+                            </attributes>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>output-html</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>process-asciidoc</goal>
+                                </goals>
+                                <configuration>
+                                    <backend>html5</backend>
+                                    <outputDirectory>${asciidoctor.html.output.directory}</outputDirectory>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>output-pdf</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>process-asciidoc</goal>
+                                </goals>
+                                <configuration>
+                                    <backend>pdf</backend>
+                                    <outputDirectory>${asciidoctor.pdf.output.directory}</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
             <id>release</id>
             <build>
                 <plugins>
@@ -256,7 +374,7 @@
                                 <id>repackage</id>
                                 <configuration>
                                     <attach>false</attach>
-                                    <finalName>turms-${turms.version}</finalName>
+                                    <finalName>turms-${project.version}</finalName>
                                 </configuration>
                             </execution>
                         </executions>
