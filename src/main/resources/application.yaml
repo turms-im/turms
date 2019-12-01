@@ -2,7 +2,7 @@ server:
   error:
     whitelabel:
       enabled: false
-  port: 0 #9510
+  port: 9510 #9510
 spring:
   application:
     name: turms
