@@ -38,6 +38,9 @@
         <asciidoctorj.pdf.version>1.5.0-beta.8</asciidoctorj.pdf.version>
         <jruby.version>9.2.9.0</jruby.version>
 
+        <protobuf-maven-plugin.version>0.6.1</protobuf-maven-plugin.version>
+        <replacer.version>1.5.3</replacer.version>
+
         <swagger.output.dir>${project.build.directory}/swagger</swagger.output.dir>
         <swagger.snippetOutput.dir>${project.build.directory}/asciidoc/snippets</swagger.snippetOutput.dir>
         <generated.asciidoc.directory>${project.build.directory}/asciidoc</generated.asciidoc.directory>
@@ -45,6 +48,9 @@
         <asciidoctor.html.output.directory>${project.basedir}/src/docs/html</asciidoctor.html.output.directory>
         <asciidoctor.pdf.output.directory>${project.basedir}/src/docs/pdf</asciidoctor.pdf.output.directory>
         <swagger.input>http://127.0.0.1:9510/v2/api-docs</swagger.input>
+
+        <replacer.file>${project.basedir}/src/main/java/im/turms/turms/compiler/CompilerOptions.java</replacer.file>
+        <replacer.turms.env>@env@</replacer.turms.env>
 
         <skipTests>true</skipTests>
         <skipITs>${skipTests}</skipITs>
@@ -224,7 +230,7 @@
             <plugin>
                 <groupId>org.xolstice.maven.plugins</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
-                <version>0.6.1</version>
+                <version>${protobuf-maven-plugin.version}</version>
                 <extensions>true</extensions>
                 <configuration>
                     <protocArtifact>com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
@@ -246,6 +252,39 @@
         </plugins>
     </build>
     <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <turms.env>DEV</turms.env>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.google.code.maven-replacer-plugin</groupId>
+                        <artifactId>replacer</artifactId>
+                        <version>${replacer.version}</version>
+                        <executions>
+                            <execution>
+                                <id>replace</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>replace</goal>
+                                </goals>
+                                <configuration>
+                                    <file>${replacer.file}</file>
+                                    <replacements>
+                                        <replacement>
+                                            <token>${replacer.turms.env}</token>
+                                            <value>${turms.env}</value>
+                                        </replacement>
+                                    </replacements>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>swagger2markup</id>
             <build>
@@ -352,8 +391,34 @@
         </profile>
         <profile>
             <id>release</id>
+            <properties>
+                <turms.env>PROD</turms.env>
+            </properties>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>com.google.code.maven-replacer-plugin</groupId>
+                        <artifactId>replacer</artifactId>
+                        <version>${replacer.version}</version>
+                        <executions>
+                            <execution>
+                                <id>replace</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>replace</goal>
+                                </goals>
+                                <configuration>
+                                    <file>${replacer.file}</file>
+                                    <replacements>
+                                        <replacement>
+                                            <token>${replacer.turms.env}</token>
+                                            <value>${turms.env}</value>
+                                        </replacement>
+                                    </replacements>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>com.github.spotbugs</groupId>
                         <artifactId>spotbugs-maven-plugin</artifactId>
