@@ -538,10 +538,6 @@
                                 </goals>
                                 <configuration>
                                     <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                                    <overWriteReleases>false</overWriteReleases>
-                                    <overWriteSnapshots>false</overWriteSnapshots>
-                                    <overWriteIfNewer>true</overWriteIfNewer>
-                                    <stripVersion>true</stripVersion>
                                     <excludeScope>provided</excludeScope>
                                 </configuration>
                             </execution>
