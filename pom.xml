@@ -9,7 +9,7 @@
         <relativePath/>
     </parent>
     <groupId>im.turms</groupId>
-    <artifactId>turms-core</artifactId>
+    <artifactId>turms</artifactId>
     <version>0.9.0-SNAPSHOT</version>
     <name>turms</name>
     <description>Turms is an open source, distributed, robust and blazingly fast instant messaging server capable of
@@ -23,31 +23,36 @@
         <guava.version>28.1-jre</guava.version>
         <commons-lang3.version>3.9</commons-lang3.version>
         <rtree2.version>0.9-RC1</rtree2.version>
-        <spring-boot-admin-starter-client.version>2.2.0-SNAPSHOT</spring-boot-admin-starter-client.version>
+        <spring-boot-admin-starter-client.version>2.2.0</spring-boot-admin-starter-client.version>
         <jmh.version>1.22</jmh.version>
         <commons-io.version>2.6</commons-io.version>
         <caffeine.version>2.8.0</caffeine.version>
         <aho-corasick-double-array-trie.version>1.2.1</aho-corasick-double-array-trie.version>
-        <yauaa.version>5.13</yauaa.version>
+        <yauaa.version>5.14.1</yauaa.version>
         <swagger.version>3.0.0-SNAPSHOT</swagger.version>
+
+        <protobuf-maven-plugin.version>0.6.1</protobuf-maven-plugin.version>
+        <replacer.version>1.5.3</replacer.version>
+        <spring-boot-thin-layout.version>1.0.23.RELEASE</spring-boot-thin-layout.version>
+        <pf4j.version>3.2.0</pf4j.version>
 
         <swagger2markup.version>1.3.3</swagger2markup.version>
         <swagger2markup.plugin.version>1.3.7</swagger2markup.plugin.version>
         <swagger2markup.extension.version>1.3.3</swagger2markup.extension.version>
         <asciidoctorj.version>1.6.2</asciidoctorj.version>
         <asciidoctorj.pdf.version>1.5.0-beta.8</asciidoctorj.pdf.version>
+        <asciidoctor-maven-plugin.version>1.5.6</asciidoctor-maven-plugin.version>
         <jruby.version>9.2.9.0</jruby.version>
+        <junit-platform-surefire-provider.version>1.3.2</junit-platform-surefire-provider.version>
+        <spotbugs.version>4.0.0-beta4</spotbugs.version>
 
-        <protobuf-maven-plugin.version>0.6.1</protobuf-maven-plugin.version>
-        <replacer.version>1.5.3</replacer.version>
-
+        <swagger.input>http://127.0.0.1:9510/v2/api-docs</swagger.input>
         <swagger.output.dir>${project.build.directory}/swagger</swagger.output.dir>
         <swagger.snippetOutput.dir>${project.build.directory}/asciidoc/snippets</swagger.snippetOutput.dir>
         <generated.asciidoc.directory>${project.build.directory}/asciidoc</generated.asciidoc.directory>
         <asciidoctor.input.directory>${project.basedir}/src/docs/asciidoc</asciidoctor.input.directory>
         <asciidoctor.html.output.directory>${project.basedir}/docs/html</asciidoctor.html.output.directory>
         <asciidoctor.pdf.output.directory>${project.basedir}/docs/pdf</asciidoctor.pdf.output.directory>
-        <swagger.input>http://127.0.0.1:9510/v2/api-docs</swagger.input>
 
         <replacer.file>${project.basedir}/src/main/java/im/turms/turms/compiler/CompilerOptions.java</replacer.file>
         <replacer.turms.env>@env@</replacer.turms.env>
@@ -55,6 +60,14 @@
         <skipTests>true</skipTests>
         <skipITs>${skipTests}</skipITs>
         <skipUTs>${skipTests}</skipUTs>
+
+        <spotbugs-maven-plugin.version>3.1.12.2</spotbugs-maven-plugin.version>
+        <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
+        <maven-failsafe-plugin.version>3.0.0-M4</maven-failsafe-plugin.version>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <maven-source-plugin.version>3.2.0</maven-source-plugin.version>
+        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+        <os-maven-plugin.version>1.6.2</os-maven-plugin.version>
     </properties>
     <repositories>
         <repository>
@@ -171,7 +184,7 @@
         <dependency>
             <groupId>org.pf4j</groupId>
             <artifactId>pf4j</artifactId>
-            <version>3.1.0</version>
+            <version>${pf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
@@ -223,70 +236,13 @@
             <extension>
                 <groupId>kr.motd.maven</groupId>
                 <artifactId>os-maven-plugin</artifactId>
-                <version>1.6.2</version>
+                <version>${os-maven-plugin.version}</version>
             </extension>
         </extensions>
-        <plugins>
-            <plugin>
-                <groupId>org.xolstice.maven.plugins</groupId>
-                <artifactId>protobuf-maven-plugin</artifactId>
-                <version>${protobuf-maven-plugin.version}</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <protocArtifact>com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
-                    </protocArtifact>
-                    <protoSourceRoot>${project.basedir}/src/main/proto</protoSourceRoot>
-                    <outputDirectory>${project.build.sourceDirectory}</outputDirectory>
-                    <clearOutputDirectory>false</clearOutputDirectory>
-                    <temporaryProtoFileDirectory>${project.build.directory}/protoc-dependencies
-                    </temporaryProtoFileDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
     </build>
     <profiles>
         <profile>
-            <id>dev</id>
-            <properties>
-                <turms.env>DEV</turms.env>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.google.code.maven-replacer-plugin</groupId>
-                        <artifactId>replacer</artifactId>
-                        <version>${replacer.version}</version>
-                        <executions>
-                            <execution>
-                                <id>replace</id>
-                                <phase>generate-sources</phase>
-                                <goals>
-                                    <goal>replace</goal>
-                                </goals>
-                                <configuration>
-                                    <file>${replacer.file}</file>
-                                    <replacements>
-                                        <replacement>
-                                            <token>${replacer.turms.env}</token>
-                                            <value>${turms.env}</value>
-                                        </replacement>
-                                    </replacements>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>swagger2markup</id>
+            <id>artifact-swagger</id>
             <build>
                 <plugins>
                     <plugin>
@@ -311,10 +267,18 @@
                             <config>
                                 <swagger2markup.markupLanguage>ASCIIDOC</swagger2markup.markupLanguage>
                                 <swagger2markup.pathsGroupedBy>TAGS</swagger2markup.pathsGroupedBy>
-                                <swagger2markup.extensions.dynamicOverview.contentPath>${project.basedir}/src/docs/asciidoc/extensions/overview</swagger2markup.extensions.dynamicOverview.contentPath>
-                                <swagger2markup.extensions.dynamicDefinitions.contentPath>${project.basedir}/src/docs/asciidoc/extensions/definitions</swagger2markup.extensions.dynamicDefinitions.contentPath>
-                                <swagger2markup.extensions.dynamicPaths.contentPath>${project.basedir}/src/docs/asciidoc/extensions/paths</swagger2markup.extensions.dynamicPaths.contentPath>
-                                <swagger2markup.extensions.dynamicSecurity.contentPath>${project.basedir}src/docs/asciidoc/extensions/security</swagger2markup.extensions.dynamicSecurity.contentPath>
+                                <swagger2markup.extensions.dynamicOverview.contentPath>
+                                    ${project.basedir}/src/docs/asciidoc/extensions/overview
+                                </swagger2markup.extensions.dynamicOverview.contentPath>
+                                <swagger2markup.extensions.dynamicDefinitions.contentPath>
+                                    ${project.basedir}/src/docs/asciidoc/extensions/definitions
+                                </swagger2markup.extensions.dynamicDefinitions.contentPath>
+                                <swagger2markup.extensions.dynamicPaths.contentPath>
+                                    ${project.basedir}/src/docs/asciidoc/extensions/paths
+                                </swagger2markup.extensions.dynamicPaths.contentPath>
+                                <swagger2markup.extensions.dynamicSecurity.contentPath>
+                                    ${project.basedir}src/docs/asciidoc/extensions/security
+                                </swagger2markup.extensions.dynamicSecurity.contentPath>
                             </config>
                         </configuration>
                         <executions>
@@ -329,7 +293,7 @@
                     <plugin>
                         <groupId>org.asciidoctor</groupId>
                         <artifactId>asciidoctor-maven-plugin</artifactId>
-                        <version>1.5.6</version>
+                        <version>${asciidoctor-maven-plugin.version}</version>
                         <dependencies>
                             <dependency>
                                 <groupId>org.asciidoctor</groupId>
@@ -390,7 +354,40 @@
             </build>
         </profile>
         <profile>
-            <id>release</id>
+            <id>env-dev</id>
+            <properties>
+                <turms.env>DEV</turms.env>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.google.code.maven-replacer-plugin</groupId>
+                        <artifactId>replacer</artifactId>
+                        <version>${replacer.version}</version>
+                        <executions>
+                            <execution>
+                                <id>replace</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>replace</goal>
+                                </goals>
+                                <configuration>
+                                    <file>${replacer.file}</file>
+                                    <replacements>
+                                        <replacement>
+                                            <token>${replacer.turms.env}</token>
+                                            <value>${turms.env}</value>
+                                        </replacement>
+                                    </replacements>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>env-prod</id>
             <properties>
                 <turms.env>PROD</turms.env>
             </properties>
@@ -419,34 +416,57 @@
                             </execution>
                         </executions>
                     </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>env-protobuf</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.xolstice.maven.plugins</groupId>
+                        <artifactId>protobuf-maven-plugin</artifactId>
+                        <version>${protobuf-maven-plugin.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <protocArtifact>com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
+                            </protocArtifact>
+                            <protoSourceRoot>${project.basedir}/src/main/proto</protoSourceRoot>
+                            <outputDirectory>${project.build.sourceDirectory}</outputDirectory>
+                            <clearOutputDirectory>false</clearOutputDirectory>
+                            <temporaryProtoFileDirectory>${project.build.directory}/protoc-dependencies
+                            </temporaryProtoFileDirectory>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>compile</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>test</id>
+            <build>
+                <plugins>
                     <plugin>
                         <groupId>com.github.spotbugs</groupId>
                         <artifactId>spotbugs-maven-plugin</artifactId>
-                        <version>3.1.12.2</version>
+                        <version>${spotbugs-maven-plugin.version}</version>
                         <dependencies>
                             <dependency>
                                 <groupId>com.github.spotbugs</groupId>
                                 <artifactId>spotbugs</artifactId>
-                                <version>4.0.0-beta4</version>
+                                <version>${spotbugs.version}</version>
                             </dependency>
                         </dependencies>
                     </plugin>
                     <plugin>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>repackage</id>
-                                <configuration>
-                                    <attach>false</attach>
-                                    <finalName>turms-${project.version}</finalName>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
                         <artifactId>maven-surefire-plugin</artifactId>
-                        <version>3.0.0-M3</version>
+                        <version>${maven-surefire-plugin.version}</version>
                         <configuration>
                             <skipTests>${skipUTs}</skipTests>
                         </configuration>
@@ -454,14 +474,14 @@
                             <dependency>
                                 <groupId>org.junit.platform</groupId>
                                 <artifactId>junit-platform-surefire-provider</artifactId>
-                                <version>1.3.2</version>
+                                <version>${junit-platform-surefire-provider.version}</version>
                             </dependency>
                         </dependencies>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
-                        <version>3.0.0-M3</version>
+                        <version>${maven-failsafe-plugin.version}</version>
                         <configuration>
                             <skipTests>${skipTests}</skipTests>
                             <skipITs>${skipITs}</skipITs>
@@ -475,10 +495,17 @@
                             </execution>
                         </executions>
                     </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>artifact-turms</id>
+            <build>
+                <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-compiler-plugin</artifactId>
-                        <version>3.8.1</version>
+                        <version>${maven-compiler-plugin.version}</version>
                         <configuration>
                             <source>11</source>
                             <target>11</target>
@@ -494,41 +521,63 @@
                         </configuration>
                     </plugin>
                     <plugin>
+                        <groupId>org.springframework.boot.experimental</groupId>
+                        <artifactId>spring-boot-thin-maven-plugin</artifactId>
+                        <version>${spring-boot-thin-layout.version}</version>
+                    </plugin>
+                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <version>3.1.0</version>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <version>${maven-dependency-plugin.version}</version>
                         <executions>
                             <execution>
-                                <id>attach-sources</id>
+                                <id>copy-dependencies</id>
+                                <phase>package</phase>
                                 <goals>
-                                    <goal>jar-no-fork</goal>
+                                    <goal>copy-dependencies</goal>
                                 </goals>
+                                <configuration>
+                                    <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                                    <overWriteReleases>false</overWriteReleases>
+                                    <overWriteSnapshots>false</overWriteSnapshots>
+                                    <overWriteIfNewer>true</overWriteIfNewer>
+                                    <stripVersion>true</stripVersion>
+                                    <excludeScope>provided</excludeScope>
+                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
-                    <!--            <plugin>-->
-                    <!--                <groupId>org.apache.maven.plugins</groupId>-->
-                    <!--                <artifactId>maven-javadoc-plugin</artifactId>-->
-                    <!--                <version>3.0.0</version>-->
-                    <!--                <executions>-->
-                    <!--                    <execution>-->
-                    <!--                        <id>attach-javadocs</id>-->
-                    <!--                        <goals>-->
-                    <!--                            <goal>jar</goal>-->
-                    <!--                        </goals>-->
-                    <!--                    </execution>-->
-                    <!--                </executions>-->
-                    <!--            </plugin>-->
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <!-- Use an independent profile to avoid distributing accidentally -->
+            <id>distribution-turms</id>
+            <build>
+                <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
+                        <version>${maven-gpg-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
                                 <phase>verify</phase>
                                 <goals>
                                     <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>${maven-source-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
                                 </goals>
                             </execution>
                         </executions>

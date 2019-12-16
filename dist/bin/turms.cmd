@@ -37,7 +37,7 @@ for /F "usebackq delims=" %%a in (`CALL %JAVA% -cp "!TURMS_CLASSPATH!" "org.elas
 @endlocal & set "MAYBE_JVM_OPTIONS_PARSER_FAILED=%JVM_OPTIONS%" & set TURMS_JAVA_OPTS=%JVM_OPTIONS% -Dspring.config.location=%TURMS_APP_CONF%
 
 @echo on
-%JAVA% %TURMS_JAVA_OPTS% -cp "%TURMS_CLASSPATH%" "org.springframework.boot.loader.JarLauncher"
+%JAVA% %TURMS_JAVA_OPTS% -cp "%TURMS_CLASSPATH%" "im.turms.turms.TurmsApplication"
 @echo off
 
 endlocal

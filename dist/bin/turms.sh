@@ -74,7 +74,7 @@ else
     "$JAVA" \
     $TURMS_JAVA_OPTS \
     -cp "$TURMS_CLASSPATH" \
-    org.springframework.boot.loader.JarLauncher \
+    im.turms.turms.TurmsApplication \
     "$@" \
     <&- &
   set +x
