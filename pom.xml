@@ -18,7 +18,7 @@
 
     <properties>
         <java.version>11</java.version>
-        <hazelcast.version>4.0-BETA-1</hazelcast.version>
+        <hazelcast.version>4.0-BETA-2</hazelcast.version>
         <protobuf.version>3.11.1</protobuf.version>
         <guava.version>28.1-jre</guava.version>
         <commons-lang3.version>3.9</commons-lang3.version>
