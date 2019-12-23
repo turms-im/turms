@@ -405,6 +405,7 @@ public class ProtoUtil {
         return builder;
     }
 
+    //TODO: Change domain to exact values
     public static CreateMessageRequest.Builder message2createMessageRequest(Message message) {
         CreateMessageRequest.Builder builder = CreateMessageRequest.newBuilder();
         Long messageId = message.getId();
