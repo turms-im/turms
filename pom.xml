@@ -230,6 +230,12 @@
             <version>${jmh.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator-annotation-processor</artifactId>
+            <version>6.1.0.Final</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
     <build>
         <extensions>
@@ -516,6 +522,10 @@
                                 <annotationProcessor>lombok.launch.AnnotationProcessorHider$AnnotationProcessor
                                 </annotationProcessor>
                                 <annotationProcessor>org.pf4j.processor.ExtensionAnnotationProcessor
+                                </annotationProcessor>
+                                <annotationProcessor>org.pf4j.processor.ExtensionAnnotationProcessor
+                                </annotationProcessor>
+                                <annotationProcessor>org.hibernate.validator.ap.ConstraintValidationProcessor
                                 </annotationProcessor>
                             </annotationProcessors>
                         </configuration>
