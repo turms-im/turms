@@ -23,7 +23,7 @@
         <guava.version>28.1-jre</guava.version>
         <commons-lang3.version>3.9</commons-lang3.version>
         <rtree2.version>0.9-RC1</rtree2.version>
-        <spring-boot-admin-starter-client.version>2.2.0</spring-boot-admin-starter-client.version>
+        <spring-boot-admin-starter-client.version>2.2.1</spring-boot-admin-starter-client.version>
         <jmh.version>1.22</jmh.version>
         <commons-io.version>2.6</commons-io.version>
         <caffeine.version>2.8.0</caffeine.version>
