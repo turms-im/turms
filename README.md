@@ -10,8 +10,6 @@ Turms是一款完全免费开源、易于集群部署、健壮、方便拓展、
 1. turms服务端 v0.8.0-beta：已发布源码、发布包与基础文档
 2. [turms-client-js v0.8.0-beta](https://github.com/turms-im/turms-client-js)：已发布源码与基础文档
 3. [turms-admin v0.9.0](https://github.com/turms-im/turms-admin)：已发布源码与基础文档
-4. ~~turms-client-dart v0.8.0：暂时取消，原因看下表。~~
-5. ~~turms-client-flutter-demo v0.8.0：暂时取消，原因看下表。~~
 
 ## 配套组合
 
