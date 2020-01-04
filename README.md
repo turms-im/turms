@@ -1,5 +1,7 @@
 # Turms
 
+（turms-admin已于2020年1月4日发布。由于当前文档过老，因此在接下来的2个月将会把主要精力花在书写各类文档，以及修复bug上）
+
 Turms是一款完全免费开源、易于集群部署、健壮、方便拓展、运作高效且业务独立的Java即时通信服务端程序。
 
 - 下述**beta**版本项目已开源，总体完成度约90%。在业务功能上，beta版本已支持所有✔的业务功能点，并且Turms已经攻破了设计上与技术上的难点，架构已定型，后期仅需添砖加瓦即可稳步前进。但由于beta版本并仅经过简单的测试，因此近期主要的工作还是查漏补缺（主要是补全给管理员用的数据统计与小部分标记为TODO的功能点）、完善逻辑与修补bug。欢迎各开发者在Issues区域咨询诸如业务实现、架构设计、关键功能设计与new features相关的提单。
@@ -7,7 +9,7 @@ Turms是一款完全免费开源、易于集群部署、健壮、方便拓展、
 
 1. turms服务端 v0.8.0-beta：已发布源码、发布包与基础文档
 2. [turms-client-js v0.8.0-beta](https://github.com/turms-im/turms-client-js)：已发布源码与基础文档
-3. turms-admin v0.8.0-beta：由于许多新业务功能点不在原开发计划内，为了保证turms-admin的早期设计与新增的功能点保持一致的逻辑，因此跳票。turms-admin会在与Turms服务端联调后于19年12月中旬发布。
+3. [turms-admin v0.9.0](https://github.com/turms-im/turms-admin)：已发布源码与基础文档
 4. ~~turms-client-dart v0.8.0：暂时取消，原因看下表。~~
 5. ~~turms-client-flutter-demo v0.8.0：暂时取消，原因看下表。~~
 
@@ -19,11 +21,8 @@ Turms是一款完全免费开源、易于集群部署、健壮、方便拓展、
 | Turms服务端 | CMS                      | 为Turms服务端集群提供：运营数据统计、内容管理、集群配置等功能 | [turms-admin](https://github.com/turms-im/turms-admin)       |
 | Turms客户端 | 通讯能力库               | 除了实现显而易见的业务功能外，关键还实现了与Turms服务端的交互逻辑（如路由跳转、消息去重、心跳检查等），对调用者透明。您在使用该库时，无需关系背后的逻辑 | [turms-client-js](https://github.com/turms-im/turms-client-js) |
 | Turms客户端 | UI组件模板（不依赖框架） | （提醒：您完全可以不使用该UI组件模板，而是自定义UI组件）基于turms-client-js实现，各UI组件结合了HTML5+JS+CSS，实现了，同时也作为demo来展示常见场景下，界面与功能的常见调用关系 |                                                              |
-| Turms客户端 | 通讯能力库               | 考虑到当前大环境下Flutter的市场份额与有限的开发时间与精力，Turms希望将有限的时间与精力放到刀刃上（Turms服务端）。因此，关于Turms是否要专门为Flutter平台开发客户端的问题，后期将由Turms社区投票表决。如果Turms社区对Flutter平台需求迫切，那么Turms将尽可能自行开发（但代价是Turms服务端的更新就会慢下来），否则可能就要交由第三方团队进行开发。 | ~~[turms-client-dart](https://github.com/turms-im/turms-client-dart)~~ |
-| Turms客户端 | UI组件(Unplanned)        | ——同上                                                       | ~~[turms-client-ui-flutter](https://github.com/turms-im/turms-client-ui-flutter)~~ |
-| Turms客户端 | Demo                     | ——同上                                                       | ~~[turms-client-flutter-demo](https://github.com/turms-im/turms-client-flutter-demo)~~ |
 
-注意：出于对开发成本与维护成本的考虑，Turms暂不提供在Android（Java/Kotlin）与iOS（Swift/Objective-C）平台中Turms客户端的原生实现，而是提供了基于具有跨平台能力的JavaScript~~与Dart~~语言的客户端实现。
+注意：出于对开发成本与维护成本的考虑，Turms暂不提供在Android（Java/Kotlin）与iOS（Swift/Objective-C）平台中Turms客户端实现，而是提供了基于具有跨平台能力的JavaScript的客户端实现。但承诺将于2020年完成以Java语言并适用于Android端的turms客户端的开发工作，同时也尽可能为iOS平台（Swift语言）开发出turms客户端。
 
 额外补充：关于Demo这块的计划。出于Turms解决方案的定位，Turms并不打算在近期提供带UI与具体业务逻辑的客户端Demo。
 因为一方面，在业务层面，Turms已经足够简单易用了，若您仅是想自行测试Turms的业务功能，您甚至无需敲一行代码，即可运行Turms服务端。仅需十来行代码就可以实现客户端的登陆、发送消息、发送好友请求等等多种业务操作，修改下业务相关配置，即可定制各种业务。
