@@ -1,4 +1,4 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://user:password@localhost/foo
+      uri: mongodb://user:password@localhost/turms
