@@ -24,6 +24,7 @@ enum Code {
     SUCCESSOR_NOT_GROUP_MEMBER,
     TARGET_USERS_UNAUTHORIZED,
     TARGET_USERS_NOT_EXIST,
+    TYPE_NOT_EXISTS,
     UNAUTHORIZED,
 
     SERVER_INTERNAL_ERROR = 5000,
@@ -58,6 +59,7 @@ export default class TurmsStatusCode {
         [Code.SUCCESSOR_NOT_GROUP_MEMBER]: "The successor is not the group member",
         [Code.TARGET_USERS_UNAUTHORIZED]: "The target users are unauthorized",
         [Code.TARGET_USERS_NOT_EXIST]: "The target users do not exist",
+        [Code.TYPE_NOT_EXISTS]: "The resource type does not exist",
         [Code.UNAUTHORIZED]: "Unauthorized",
         [Code.LOGGED_DEVICES_CANNOT_OFFLINE]: "Cannot set logged in devices offline"
     };
