@@ -4,21 +4,15 @@
 
 Turms是一款完全免费开源、易于集群部署、健壮、方便拓展、运作高效且业务独立的Java即时通信服务端程序。
 
-- 下述**beta**版本项目已开源，总体完成度约90%。在业务功能上，beta版本已支持所有✔的业务功能点，并且Turms已经攻破了设计上与技术上的难点，架构已定型，后期仅需添砖加瓦即可稳步前进。但由于beta版本并仅经过简单的测试，因此近期主要的工作还是查漏补缺（主要是补全给管理员用的数据统计与小部分标记为TODO的功能点）、完善逻辑与修补bug。欢迎各开发者在Issues区域咨询诸如业务实现、架构设计、关键功能设计与new features相关的提单。
-- 大部分bug和小的新feature会在一至二个自然日之内解决或提供，复杂的bug会在一至十四个自然日内解决。
-
-1. turms服务端 v0.8.0-beta：已发布源码、发布包与基础文档
-2. [turms-client-js v0.8.0-beta](https://github.com/turms-im/turms-client-js)：已发布源码与基础文档
-3. [turms-admin v0.9.0](https://github.com/turms-im/turms-admin)：已发布源码与基础文档
-
 ## 配套组合
 
-| 范围        | 类别               | 功能描述                                                     | 名称                                                         |
-| ----------- | ------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| Turms服务端 | 自定义插件实现接口 | 事件（如用户上下线事件、消息接收与转发事件等）触发的时候，对应的自定义插件将被触发以实现各种各样定制功能 | [turms-plugin](https://github.com/turms-im/turms-plugin)     |
-| Turms服务端 | CMS                | 为Turms服务端集群提供：运营数据统计、内容管理、集群配置等功能 | [turms-admin](https://github.com/turms-im/turms-admin)       |
-| Turms客户端 | 通讯能力库         | 除了实现显而易见的业务功能外，关键还实现了与Turms服务端的交互逻辑（如路由跳转、消息去重、心跳检查等），对调用者透明。您在使用该库时，无需关系背后的逻辑 | [turms-client-js](https://github.com/turms-im/turms-client-js) |
-| Turms客户端 | 通讯能力库         | （尚未提供，将于2020年完成开发）Android(Java)平台的turms客户端、iOS(Swift)平台的turms客户端 |                                                              |
+| 名称                                   | 功能描述                                                     |
+| -------------------------------------- | ------------------------------------------------------------ |
+| turms-plugin                           | 事件（如用户上下线事件、消息接收与转发事件等）触发的时候，对应的自定义插件将被触发以实现各种各样定制功能 |
+| turms-client-js                        | 除了实现显而易见的业务功能外，关键还实现了与Turms服务端的交互逻辑（如路由跳转、消息去重、心跳检查等），对调用者透明。您在使用该库时，无需关系背后的逻辑 |
+| turms-admin                            | 为Turms服务端集群提供：运营数据统计、内容管理、集群配置等功能 |
+| turms-apm                              | 为Turms服务端集群提供监控功能                                |
+| turms-client-java & turms-client-swift | （尚未提供，将于2020年完成开发）Android(Java)平台的turms客户端、iOS(Swift)平台的turms客户端 |
 
 注意：出于对开发成本与维护成本的考虑，Turms暂不提供在Android（Java/Kotlin）与iOS（Swift/Objective-C）平台中Turms客户端实现，而是提供了基于具有跨平台能力的JavaScript的客户端实现。但承诺将于2020年完成以Java语言并适用于Android端的turms客户端的开发工作，同时也尽可能为iOS平台（Swift语言）开发出turms客户端。
 
@@ -31,10 +25,6 @@ Turms是一款完全免费开源、易于集群部署、健壮、方便拓展、
 Turms基于Apache V2协议，深入贯彻开源精神与宗旨。既欢迎其他开发者或团队的借鉴，也不担心抄袭。因为Turms有且只有一个目标：致力于构建全球范围内最为卓越开源即时通讯解决方案。对于任何二次开发者或团队，Turms后期都会不加保留为其逐步开放各种相关架构设计、技术选型、代码视图设计等文档，甚至为二次开发者提供响应式编程水平测试（如果无法通过这些基础测试，那就无法基于Turms进行二次开发）。
 不管任何开发者或团队是借鉴还是抄袭，Turms对其提出的issues都将一视同仁，对有价值的问题都将予以热心的答复。
 Turms的目标很简单：致力于构建全球范围内最为卓越开源即时通讯解决方案。
-
-## 设计与编码理念
-
-Community > Performance >= Convenience > Convention > Configuration
 
 ## 主要特性
 
@@ -53,7 +43,7 @@ Turms在业务功能配置全面且灵活的同时，不失性能。在部署简
 
 - 下载并解压[Turms服务端](https://github.com/turms-im/turms/releases)压缩包。
 
-- 下载并安装[MongoDB v4.2.0](https://www.mongodb.com/download-center/community)，并将数据库的URI、账号与密码配置到config/application.yaml中（提醒：您也可以直接在此处配置多个MongoDB地址，Turms会自动接入MongoDB集群）。
+- 下载并安装[MongoDB v4.2.2](https://www.mongodb.com/download-center/community)，并将数据库的URI、账号与密码配置到config/application.yaml中（提醒：您也可以直接在此处配置多个MongoDB地址，Turms会自动接入MongoDB集群）。
 
   （具体可参考：https://docs.mongodb.com/manual/reference/connection-string/）
 

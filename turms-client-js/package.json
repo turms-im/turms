@@ -1,0 +1,65 @@
+{
+  "name": "turms-client-js",
+  "version": "0.9.0-dev.20191110",
+  "description": "turms-client-js is a library to communicate with turms servers.",
+  "main": "dist/turms-client-min.js",
+  "types": "types/turms-client.d.ts",
+  "sideEffects": false,
+  "files": [
+    "src",
+    "dist",
+    "types"
+  ],
+  "scripts": {
+    "protoc": "pbjs --force-number --no-create --no-verify --no-convert --no-delimited -t static-module -w commonjs -o ./src/model/proto-bundle.js ./src/proto/**/*.proto & pbts -o ./src/model/proto-bundle.d.ts ./src/model/proto-bundle.js",
+    "webpack": "webpack --mode=production",
+    "test": "jest",
+    "build": "npm run protoc && npm run webpack",
+    "analyze": "npm run protoc && webpack --mode=production --report=true"
+  },
+  "keywords": [
+    "turms"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/turms-im/turms-client-js.git"
+  },
+  "author": "James Chen <eurekajameschen@gmail.com>",
+  "licenses": [
+    {
+      "type": "Apache-2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/turms-im/turms-client-js/issues"
+  },
+  "homepage": "https://github.com/turms-im/turms-client-js#readme",
+  "dependencies": {
+    "@babel/polyfill": "^7.6.0",
+    "core-js": "^3.3.6",
+    "protobufjs": "^6.8.8",
+    "unfetch": "^4.1.0",
+    "websocket-as-promised": "^0.10.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.6.4",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@babel/preset-env": "^7.6.3",
+    "@babel/preset-typescript": "^7.6.0",
+    "@types/jest": "^24.0.21",
+    "@typescript-eslint/eslint-plugin": "^2.6.0",
+    "@typescript-eslint/parser": "^2.6.0",
+    "babel-loader": "^8.0.6",
+    "dts-bundle": "^0.7.3",
+    "eslint": "^6.6.0",
+    "jest": "^24.9.0",
+    "terser-webpack-plugin": "^2.2.1",
+    "ts-jest": "^24.1.0",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.1-rc",
+    "webpack": "^4.41.2",
+    "webpack-bundle-analyzer": "^3.6.0",
+    "webpack-cli": "^3.3.10"
+  }
+}
