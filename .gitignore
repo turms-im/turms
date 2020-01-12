@@ -31,3 +31,5 @@ turms/target/
 turms/dist/bin/
 turms-plugin-demo/target/
 turms-apm/target/
+turms-docs/node_modules/
+turms-docs/src/.vuepress/dist/

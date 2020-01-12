@@ -1,0 +1,23 @@
+{
+  "name": "turms-docs",
+  "version": "0.9.0",
+  "description": "documentation for turms",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vuepress dev src",
+    "build": "vuepress build src"
+  },
+  "devDependencies": {
+    "vuepress": "^1.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/turms-im/turms.git"
+  },
+  "author": "James Chen",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/turms-im/turms/issues"
+  },
+  "homepage": "https://github.com/turms-im/turms#readme"
+}

@@ -2,8 +2,6 @@
 
 Turms是一套全球范围内最为先进且全能的开源即时通讯解决方案。
 
-[文档地址：https://turms.github.io/](https://turms.github.io/)
-
 ### 组合
 
 | 名称                                   | 描述                                                         |
