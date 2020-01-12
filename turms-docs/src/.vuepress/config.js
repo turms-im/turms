@@ -1,5 +1,6 @@
 module.exports = {
     title: 'Turms Documentation',
+    base: '/turms/',
     dest: '../docs',
     themeConfig: {
         repo: 'https://github.com/turms-im/turms',
