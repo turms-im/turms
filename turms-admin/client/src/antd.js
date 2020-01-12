@@ -37,7 +37,11 @@ import 'ant-design-vue/lib/message/style/css';
 
 Vue.prototype.$message = message;
 Vue.prototype.$error = function (msg, error) {
-    this.$message.error(`${msg}: ${error.message || error}`);
+    let desc = error.message;
+    if (error.response && error.response.data && error.response.data.code) {
+        desc = `(${error.response.status}, ${error.response.data.code}) ${error.response.data.reason}`;
+    }
+    this.$message.error(`${msg}: ${desc}`);
 };
 Vue.use(Button);
 Vue.use(Icon);

@@ -23,6 +23,7 @@ enum Code {
     SESSION_SIMULTANEOUS_CONFLICTS_OFFLINE,
     SUCCESSOR_NOT_GROUP_MEMBER,
     TARGET_USERS_UNAUTHORIZED,
+    TARGET_USERS_NOT_EXIST,
     UNAUTHORIZED,
 
     SERVER_INTERNAL_ERROR = 5000,
@@ -56,6 +57,7 @@ export default class TurmsStatusCode {
         [Code.SESSION_SIMULTANEOUS_CONFLICTS_OFFLINE]: "A different device has logged into your account",
         [Code.SUCCESSOR_NOT_GROUP_MEMBER]: "The successor is not the group member",
         [Code.TARGET_USERS_UNAUTHORIZED]: "The target users are unauthorized",
+        [Code.TARGET_USERS_NOT_EXIST]: "The target users do not exist",
         [Code.UNAUTHORIZED]: "Unauthorized",
         [Code.LOGGED_DEVICES_CANNOT_OFFLINE]: "Cannot set logged in devices offline"
     };

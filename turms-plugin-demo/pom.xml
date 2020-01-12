@@ -15,8 +15,8 @@
     <dependencies>
         <dependency>
             <groupId>im.turms</groupId>
-            <artifactId>turms-core</artifactId>
-            <version>0.9.0-beta-SNAPSHOT</version>
+            <artifactId>turms</artifactId>
+            <version>0.9.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

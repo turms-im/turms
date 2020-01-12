@@ -1,8 +1,3 @@
-HELP.md
-/target/
-!.mvn/wrapper/maven-wrapper.jar
-/dist/bin/temp/
-
 ### STS ###
 .apt_generated
 .classpath
@@ -30,3 +25,9 @@ HELP.md
 mvnw
 mvnw.cmd
 .mvn/
+
+### Custom ###
+turms/target/
+turms/dist/bin/
+turms-plugin-demo/target/
+turms-apm/target/

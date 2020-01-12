@@ -97,6 +97,12 @@ export default {
             type: String,
             required: true
         },
+        params: {
+            type: Object,
+            default: () => {
+                return {};
+            }
+        },
         worksheetName: {
             type: String,
             required: true
@@ -182,6 +188,7 @@ export default {
                     startDate.utcOffset(-new Date().getTimezoneOffset()).format(),
                     endDate.utcOffset(-new Date().getTimezoneOffset()).format());
                 params.divideBy = this.dateMode.toUpperCase();
+                Object.assign(params, this.params || {});
                 this.$client.get(this.url, {params})
                     .then(response => {
                         this.records = this.transformDate(response.data.data);

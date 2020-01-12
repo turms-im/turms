@@ -13,6 +13,7 @@
             class="statistics-number-collapse"
             :url="url"
             :name="name"
+            :params="params"
             :worksheet-name="worksheetName"
             :title="dailyStatisticsPanelTitle"
             :options="cardOptions"
