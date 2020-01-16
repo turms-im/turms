@@ -1,6 +1,16 @@
 <template>
     <div class="cluster-config-item">
-        <div class="cluster-config-item__name">
+        <a-tooltip
+            v-if="pair[1].desc"
+            placement="right"
+            :title="pair[1].desc"
+        >
+            <a-icon
+                type="question-circle"
+                class="cluster-config-item__info"
+            />
+        </a-tooltip>
+        <div :class="[{'cluster-config-item__name--deprecated': pair[1].deprecated}, 'cluster-config-item__name']">
             <a-icon
                 v-if="!pair[1].mutable"
                 type="close"
@@ -15,7 +25,7 @@
                 class="cluster-config-item__input"
             />
         </div>
-        <div v-if="pair[1].type === 'int'">
+        <div v-if="pair[1].type === 'int' || pair[1].type === 'double'">
             <a-input-number
                 v-model="pair[1].value"
                 :disabled="!pair[1].mutable"
@@ -47,6 +57,7 @@
         <div
             v-if="pair[1].type !== 'string'
                 && pair[1].type !== 'int'
+                && pair[1].type !== 'double'
                 && pair[1].type !== 'boolean'
                 && pair[1].type !== 'enum'"
         >
@@ -98,8 +109,17 @@ export default {
         margin-bottom: 20px;
     }
 
+    &__info {
+        line-height: 2;
+        margin-right: 12px;
+    }
+
     &__name {
         margin-right: 18px;
+
+        &--deprecated {
+            text-decoration: line-through;
+        }
     }
 
     &__immutable-icon {
