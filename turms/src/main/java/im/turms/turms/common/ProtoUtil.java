@@ -30,11 +30,32 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class ProtoUtil {
 
     private ProtoUtil() {
+    }
+
+    public static com.google.protobuf.Message.Builder fillFields(com.google.protobuf.Message.Builder builder, Map<String, ?> fields) {
+        if (fields != null && !fields.isEmpty()) {
+            Descriptors.Descriptor descriptor = builder.getDescriptorForType();
+            for (Map.Entry<String, ?> entry : fields.entrySet()) {
+                Object value = entry.getValue();
+                if (value != null) {
+                    Descriptors.FieldDescriptor fieldDescriptor = descriptor.findFieldByName(entry.getKey());
+                    if (fieldDescriptor == null) {
+                        new NoSuchFieldException(entry.getKey()).printStackTrace();
+                    } else {
+                        //TODO: add value to "value" if "value" exists
+//                    fieldDescriptor.get
+                        builder.setField(fieldDescriptor, value);
+                    }
+                }
+            }
+        }
+        return builder;
     }
 
     public static im.turms.turms.pojo.bo.message.Message.Builder message2proto(Message message) {

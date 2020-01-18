@@ -242,12 +242,12 @@ export default class UserService {
         }).then(notification => NotificationUtil.getIdsWithVersion(notification));
     }
 
-    queryFriends(groupIndex?: number): Promise<ParsedModel.UserRelationshipsWithVersion> {
-        return this.queryRelationships(undefined, true, false, groupIndex);
+    queryFriends(groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion> {
+        return this.queryRelationships(undefined, true, false, groupIndex, lastUpdatedDate);
     }
 
-    queryBlacklistedUsers(groupIndex?: number): Promise<ParsedModel.UserRelationshipsWithVersion> {
-        return this.queryRelationships(undefined, true, true, groupIndex);
+    queryBlacklistedUsers(groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion> {
+        return this.queryRelationships(undefined, true, true, groupIndex, lastUpdatedDate);
     }
 
     createRelationship(userId: number, isBlocked: boolean, groupIndex?: number): Promise<void> {

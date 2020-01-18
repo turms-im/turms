@@ -149,7 +149,7 @@ export default class GroupService {
 
     updateGroupJoinQuestion(questionId: number, question?: string, answers?: string[], score?: number): Promise<void> {
         RequestUtil.throwIfAnyFalsy(questionId);
-        RequestUtil.throwIfAllFalsy(question, answers);
+        RequestUtil.throwIfAllFalsy(question, answers, score);
         return this._turmsClient.driver.send({
             updateGroupJoinQuestionRequest: {
                 questionId: questionId,
