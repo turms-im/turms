@@ -27,6 +27,7 @@ enum Code {
     TYPE_NOT_EXISTS,
     UNAUTHORIZED,
     REDUNDANT_REQUEST,
+    ALREADY_GROUP_MEMBER,
 
     SERVER_INTERNAL_ERROR = 5000,
     LOGGED_DEVICES_CANNOT_OFFLINE
@@ -63,6 +64,7 @@ export default class TurmsStatusCode {
         [Code.TYPE_NOT_EXISTS]: "The resource type does not exist",
         [Code.UNAUTHORIZED]: "Unauthorized",
         [Code.REDUNDANT_REQUEST]: "The request is redundant",
+        [Code.ALREADY_GROUP_MEMBER]: "The user is already a member of the group",
         [Code.LOGGED_DEVICES_CANNOT_OFFLINE]: "Cannot set logged in devices offline"
     };
     private code: number;
