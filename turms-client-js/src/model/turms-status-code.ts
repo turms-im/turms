@@ -7,7 +7,7 @@ enum Code {
     NOT_RESPONSIBLE = 3000,
 
     FAILED = 4000,
-    DISABLE_FUNCTION,
+    DISABLED_FUNCTION,
     EXPIRY_DATE_BEFORE_NOW,
     EXPIRY_RESOURCE,
     ID_DUPLICATED,
@@ -44,7 +44,7 @@ export default class TurmsStatusCode {
         [Code.ALREADY_UP_TO_DATE]: "Already up-to-date",
         [Code.RECIPIENTS_OFFLINE]: "The recipients are offline",
 
-        [Code.DISABLE_FUNCTION]: "The function has been disabled in servers",
+        [Code.DISABLED_FUNCTION]: "The function has been disabled in servers",
         [Code.EXPIRY_DATE_BEFORE_NOW]: "Expiration date must be greater than now",
         [Code.EXPIRY_RESOURCE]: "The target resource has expired",
         [Code.ID_DUPLICATED]: "ID must be unique",

@@ -112,18 +112,13 @@ export default class GroupService {
         }).then(notification => NotificationUtil.getIds(notification));
     }
 
-    queryJoinedGroupsInfos(lastUpdatedDate?: Date): Promise<ParsedModel.GroupWithVersion> {
+    queryJoinedGroupsInfos(lastUpdatedDate?: Date): Promise<ParsedModel.GroupWithVersion[]> {
         // @ts-ignore
         return this._turmsClient.driver.send({
             queryJoinedGroupsInfosRequest: {
                 lastUpdatedDate: RequestUtil.getTimeIfNotNull(lastUpdatedDate)
             }
-        }).then(notification => {
-            return {
-                group: NotificationUtil.transform(notification.data.groupsWithVersion.groups[0]),
-                lastUpdatedDate: NotificationUtil.transformDate(notification.data.groupsWithVersion.lastUpdatedDate)
-            };
-        });
+        }).then(notification => NotificationUtil.getFirstArrayAndTransform(notification.data.groupsWithVersion.groups));
     }
 
     addGroupJoinQuestion(groupId: number, question: string, answers: string[], score: number): Promise<number> {
