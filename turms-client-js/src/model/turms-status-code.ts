@@ -26,6 +26,7 @@ enum Code {
     TARGET_USERS_NOT_EXIST,
     TYPE_NOT_EXISTS,
     UNAUTHORIZED,
+    REDUNDANT_REQUEST,
 
     SERVER_INTERNAL_ERROR = 5000,
     LOGGED_DEVICES_CANNOT_OFFLINE
@@ -61,6 +62,7 @@ export default class TurmsStatusCode {
         [Code.TARGET_USERS_NOT_EXIST]: "The target users do not exist",
         [Code.TYPE_NOT_EXISTS]: "The resource type does not exist",
         [Code.UNAUTHORIZED]: "Unauthorized",
+        [Code.REDUNDANT_REQUEST]: "The request is redundant",
         [Code.LOGGED_DEVICES_CANNOT_OFFLINE]: "Cannot set logged in devices offline"
     };
     private code: number;
