@@ -65,7 +65,9 @@ export default class MessageService {
         text?: string,
         records?: Uint8Array[]): Promise<void> {
         RequestUtil.throwIfAnyFalsy(messageId);
-        RequestUtil.throwIfAllFalsy(text, records);
+        if (RequestUtil.areAllFalsy(text, records)) {
+            return Promise.resolve();
+        }
         return this._turmsClient.driver.send({
             updateMessageRequest: {
                 messageId,

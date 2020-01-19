@@ -136,7 +136,9 @@ export default class UserService {
         intro?: string,
         profilePictureUrl?: string,
         profileAccessStrategy?: string | ProfileAccessStrategy): Promise<void> {
-        RequestUtil.throwIfAllFalsy(name, intro, profilePictureUrl, profileAccessStrategy);
+        if (RequestUtil.areAllFalsy(name, intro, profilePictureUrl, profileAccessStrategy)) {
+            return Promise.resolve();
+        }
         if (typeof profileAccessStrategy === 'string') {
             profileAccessStrategy = ConstantTransformer.string2ProfileAccessStrategy(profileAccessStrategy);
         }
@@ -282,7 +284,9 @@ export default class UserService {
 
     updateRelationship(relatedUserId: number, isBlocked?: boolean, groupIndex?: number): Promise<void> {
         RequestUtil.throwIfAnyFalsy(relatedUserId);
-        RequestUtil.throwIfAllFalsy(isBlocked, groupIndex);
+        if (RequestUtil.areAllFalsy(isBlocked, groupIndex)) {
+            return Promise.resolve();
+        }
         return this._turmsClient.driver.send({
             updateRelationshipRequest: {
                 relatedUserId,

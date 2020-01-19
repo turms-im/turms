@@ -40,15 +40,21 @@ export default class RequestUtil {
     }
 
     static throwIfAllFalsy(...values: any[]): void {
-        if (this.isFalsy(values)) {
+        if (RequestUtil.areAllFalsy(values)) {
             throw this.ERROR;
+        }
+    }
+
+    static areAllFalsy(...values: any[]): boolean {
+        if (this.isFalsy(values)) {
+            return true;
         } else {
             for (const value of values) {
                 if (this.isTruthy(value)) {
-                    return;
+                    return false;
                 }
             }
-            throw this.ERROR;
+            return true;
         }
     }
 }

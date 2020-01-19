@@ -56,8 +56,10 @@ export default class GroupService {
         successorId?: number,
         quitAfterTransfer?: boolean): Promise<void> {
         RequestUtil.throwIfAnyFalsy(groupId);
-        RequestUtil.throwIfAllFalsy(groupName, intro, announcement, profilePictureUrl, minimumScore, groupTypeId,
-            muteEndDate, successorId);
+        if (RequestUtil.areAllFalsy(groupName, intro, announcement, profilePictureUrl, minimumScore, groupTypeId,
+            muteEndDate, successorId)) {
+            return Promise.resolve();
+        }
         return this._turmsClient.driver.send({
             updateGroupRequest: {
                 groupId,
@@ -144,7 +146,9 @@ export default class GroupService {
 
     updateGroupJoinQuestion(questionId: number, question?: string, answers?: string[], score?: number): Promise<void> {
         RequestUtil.throwIfAnyFalsy(questionId);
-        RequestUtil.throwIfAllFalsy(question, answers, score);
+        if (RequestUtil.areAllFalsy(question, answers, score)) {
+            return Promise.resolve();
+        }
         return this._turmsClient.driver.send({
             updateGroupJoinQuestionRequest: {
                 questionId: questionId,
@@ -341,7 +345,9 @@ export default class GroupService {
         role?: string | GroupMemberRole,
         muteEndDate?: Date): Promise<void> {
         RequestUtil.throwIfAnyFalsy(groupId, memberId);
-        RequestUtil.throwIfAllFalsy(name, role, muteEndDate);
+        if (RequestUtil.areAllFalsy(name, role, muteEndDate)) {
+            return Promise.resolve();
+        }
         if (typeof role === 'string') {
             role = ConstantTransformer.string2GroupMemberRole(role);
         }
