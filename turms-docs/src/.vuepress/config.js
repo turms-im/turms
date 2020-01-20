@@ -22,11 +22,9 @@ module.exports = {
                 children: [
                     '/features/',
                     '/features/simultaneous-login',
-                    '/features/user-info',
-                    '/features/user-relationship',
+                    '/features/user',
                     '/features/group',
-                    '/features/message',
-                    '/features/others',
+                    '/features/message'
                 ]
             },
             {
@@ -41,4 +39,4 @@ module.exports = {
             }
         ]
     }
-}
+};
