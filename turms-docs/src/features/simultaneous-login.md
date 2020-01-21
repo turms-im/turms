@@ -36,5 +36,5 @@
 
 | **类型**           | **功能描述**               | 对应Enum值                   |
 | :----------------- | -------------------------- | ---------------------------- |
-| 已上线设备掉线     | 已上线的设备掉线           | FORCE_LOGGED_DEVICES_OFFLINE |
-| 预上线设备上线失败 | 准备上线的一方直接上线失败 | LOGGING_DEVICE_OFFLINE       |
+| 已上线设备掉线     | 已上线的设备掉线           | FORCE_LOGGED_IN_DEVICES_OFFLINE |
+| 预上线设备上线失败 | 准备上线的一方直接上线失败 | LOGGING_IN_DEVICE_OFFLINE       |
