@@ -25,7 +25,7 @@
 | :----------------- | :----------------------- | ------------------------------------------------------------ |
 | 管理员管理         | AdminController          | 每个Turms集群默认存在一个角色为“ROOT”，userId为“turms”，且password随机生成的超级管理员账号 |
 | 管理员操作日志管理 | AdminActionLogController |                                                              |
-| 管理员权限管理     | AdminRoleController      |                                                              |
+| 管理员权限管理     | AdminRoleController      | 每个Turms集群默认存在一个角色为“ROOT”的超级管理员角色，其具有所有权限 |
 | 集群管理           | ClusterController        |                                                              |
 | 原因管理           | ReasonController         | （对用户开放）服务降级。主要用于当浏览器客户端登陆/连接失败时，其可通过该Controller所申明的接口查询失败原因 |
 | 路由管理           | RouterController         | （对用户开放）服务降级。当浏览器客户端因试图连接不对其负责的Turms服务端而登录失败时，其可通过该Controller所申明的接口来查询应对该用户负责的其他Turms服务端IP |

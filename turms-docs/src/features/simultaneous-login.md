@@ -12,7 +12,7 @@
 
 “设备类型”指的是：Android、iOS、Desktop、Browser、Unknown、Others
 
-配置属性：im.turms.turms.property.business.User#simultaneousLogin。
+配置属性：im.turms.turms.property.business.User#simultaneousLogin
 相关配置：allowUnknownDeviceCoexistsWithKnownDevice
 
 | **自带类型**                                                 | 对应Enum值                                                   |

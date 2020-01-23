@@ -22,7 +22,7 @@
 | **功能**                     | **功能描述**                                                 | **相关配置**                                                 |
 | :--------------------------- | :----------------------------------------------------------- | ------------------------------------------------------------ |
 | 获取关系                     | 根据可选的过滤（如指定用户ID、“是否是联系人”、“是否是好友/拉黑用户”等）与分组条件，获取当前用户所拥有的关系 |                                                              |
-| 添加关系人(+发起好友请求)    | ①若是添加关系为“好友”的关系人，则根据您自定义的Turms服务端配置，用户既可直接添加"好友"，也可以先发起好友请求，待获得批准后，才可执行添加操作。<br />②若是添加关系为“拉黑用户”的关系人，则直接生效，无需批准。用户将不再收到拉黑用户发来的任何消息或者请求。 | FriendRequest.contentLimit<br />FriendRequest.shouldDeleteExpiredRequestsAutomatically<br />FriendRequest.allowResendingRequestAfterDeclinedOrIgnoredOrExpired<br />FriendRequest.friendRequestTimeToLiveHours |
+| 添加关系人(+发起好友请求)    | ①若是添加关系为“好友”的关系人，则根据您自定义的Turms服务端配置，用户既可直接添加"好友"关系，也可以先发起好友请求，待获得被请求人批准后，才自动执行添加“好友”关系操作。<br />②若是添加关系为“拉黑用户”的关系人，则无需批准，直接生效。用户将不再收到拉黑用户发来的任何消息或者请求。 | FriendRequest.contentLimit<br />FriendRequest.shouldDeleteExpiredRequestsAutomatically<br />FriendRequest.allowResendingRequestAfterDeclinedOrIgnoredOrExpired<br />FriendRequest.friendRequestTimeToLiveHours |
 | 通过/拒绝好友请求            | 用户可以通过或者拒绝好友请求。若同意好友请求，则二者将建立双向的“好友”关系 |                                                              |
 | 删除关系人                   | 根据可选删除条件（如“是/不是关系人”、“是好友/拉黑用户”），删除某类关系人或指定关系人。 | shouldDeleteTwoSidedRelationships                            |
 | 修改与关系人的关系           | 修改用户关系（好友/拉黑用户）信息。在修改关系为“好友”时，默认需要先发送好友请求（您可以取消此步骤） |                                                              |
