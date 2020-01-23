@@ -7,6 +7,6 @@ export default class NotificationUtil {
     static getFirstArrayAndTransform(data?: object): Array<any> | undefined;
     static transformDate(date?: IInt64Value): Date | undefined;
     static getFirstIdFromIds(notification?: TurmsNotification): number | null;
-    static getIds(notification: im.turms.proto.TurmsNotification): number[];
-    static getIdsWithVersion(notification: im.turms.proto.TurmsNotification): ParsedModel.IdsWithVersion;
+    static getIds(notification: TurmsNotification): number[];
+    static getIdsWithVersion(notification: TurmsNotification): ParsedModel.IdsWithVersion;
 }

@@ -47,12 +47,12 @@ export default class NotificationUtil {
             ? notification.data.ids.values[0] : null;
     }
 
-    static getIds(notification: im.turms.proto.TurmsNotification): number[] {
+    static getIds(notification: TurmsNotification): number[] {
         return notification.data && notification.data.ids
             ? notification.data.ids.values : null;
     }
 
-    static getIdsWithVersion(notification: im.turms.proto.TurmsNotification): ParsedModel.IdsWithVersion {
+    static getIdsWithVersion(notification: TurmsNotification): ParsedModel.IdsWithVersion {
         return {
             ids: notification.data.idsWithVersion.values,
             lastUpdatedDate: notification.data.idsWithVersion.lastUpdatedDate && notification.data.idsWithVersion.lastUpdatedDate.value ?

@@ -13,7 +13,7 @@ export default class GroupService {
     unmuteGroup(groupId: number): Promise<void>;
     queryGroup(groupId: number, lastUpdatedDate?: Date): Promise<ParsedModel.GroupWithVersion>;
     queryJoinedGroupsIds(lastUpdatedDate?: Date): Promise<number[]>;
-    queryJoinedGroupsInfos(lastUpdatedDate?: Date): Promise<ParsedModel.GroupWithVersion>;
+    queryJoinedGroupsInfos(lastUpdatedDate?: Date): Promise<ParsedModel.GroupWithVersion[]>;
     addGroupJoinQuestion(groupId: number, question: string, answers: string[], score: number): Promise<number>;
     deleteGroupJoinQuestion(questionId: number): Promise<void>;
     updateGroupJoinQuestion(questionId: number, question?: string, answers?: string[], score?: number): Promise<void>;

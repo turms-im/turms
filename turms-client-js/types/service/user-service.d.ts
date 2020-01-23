@@ -35,8 +35,8 @@ export default class UserService {
     queryUsersOnlineStatusRequest(usersIds: number[]): Promise<ParsedModel.UserStatusDetail[]>;
     queryRelationships(relatedUsersIds?: number[], isRelatedUsers?: boolean, isBlocked?: boolean, groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion>;
     queryRelatedUsersIds(isBlocked?: boolean, groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion>;
-    queryFriends(groupIndex?: number): Promise<ParsedModel.UserRelationshipsWithVersion>;
-    queryBlacklistedUsers(groupIndex?: number): Promise<ParsedModel.UserRelationshipsWithVersion>;
+    queryFriends(groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion>;
+    queryBlacklistedUsers(groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion>;
     createRelationship(userId: number, isBlocked: boolean, groupIndex?: number): Promise<void>;
     createFriendRelationship(userId: number, groupIndex?: number): Promise<void>;
     createBlacklistedUserRelationship(userId: number, groupIndex?: number): Promise<void>;

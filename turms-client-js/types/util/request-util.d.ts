@@ -7,4 +7,5 @@ export default class RequestUtil {
     static throwIfEmpty(value: any): void;
     static throwIfAnyFalsy(...values: any[]): void;
     static throwIfAllFalsy(...values: any[]): void;
+    static areAllFalsy(...values: any[]): boolean;
 }

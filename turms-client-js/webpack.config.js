@@ -3,7 +3,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = (env, argv) => {
-    const base = {
+    const config = {
         entry: {
             'turms-client': './src/turms-client.ts',
             'turms-client-min': './src/turms-client.ts'
@@ -42,9 +42,9 @@ module.exports = (env, argv) => {
             filename: "[name].js"
         }
     };
-    base.plugins = [];
+    config.plugins = [];
     if (argv.report) {
-        base.plugins.push(new BundleAnalyzerPlugin());
+        config.plugins.push(new BundleAnalyzerPlugin());
     }
-    return base;
+    return config;
 };

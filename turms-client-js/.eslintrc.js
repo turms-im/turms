@@ -19,6 +19,7 @@ module.exports = {
     ],
     "rules": {
         "@typescript-eslint/ban-ts-ignore": "off",
+        "@typescript-eslint/no-namespace": "off",
         "no-trailing-spaces": "error"
     }
 };

@@ -9,6 +9,7 @@
     "allowJs": true,
     "declaration": true,
     "sourceMap": true,
+    "skipLibCheck": true,
     "removeComments": true,
     "declarationDir": "types",
     "outDir": "./dist",
@@ -20,11 +21,12 @@
     ]
   },
   "include": [
-    "src/**/*",
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",
     "**/*.spec.ts",
+    "**/*.d.ts",
     "./dist/**/*"
   ]
 }

@@ -1,5 +1,5 @@
 import { im } from "./proto-bundle";
-export declare namespace ParsedModel {
+export module ParsedModel {
     import ChatType = im.turms.proto.ChatType;
     import MessageDeliveryStatus = im.turms.proto.MessageDeliveryStatus;
     import ProfileAccessStrategy = im.turms.proto.ProfileAccessStrategy;

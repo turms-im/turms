@@ -9,7 +9,7 @@ export default class MessageService {
     sendMessage(chatType: string | ChatType, toId: number, deliveryDate: Date, text?: string, records?: Uint8Array[], burnAfter?: number): Promise<number>;
     forwardMessage(messageId: number, chatType: string | ChatType, toId: number): Promise<number>;
     updateSentMessage(messageId: number, text?: string, records?: Uint8Array[]): Promise<void>;
-    queryMessages(chatType?: string | ChatType, areSystemMessages?: boolean, fromId?: number, deliveryDateAfter?: Date, deliveryDateBefore?: Date, deliveryStatus?: string | MessageDeliveryStatus, size?: number): Promise<ParsedModel.Message[]>;
+    queryMessages(ids?: number[], chatType?: string | ChatType, areSystemMessages?: boolean, fromId?: number, deliveryDateAfter?: Date, deliveryDateBefore?: Date, deliveryStatus?: string | MessageDeliveryStatus, size?: number): Promise<ParsedModel.Message[]>;
     queryPendingMessagesWithTotal(size?: number): Promise<ParsedModel.MessagesWithTotal[]>;
     queryMessageStatus(messageId: number): Promise<ParsedModel.MessageStatus[]>;
     recallMessage(messageId: number, recallDate?: Date): Promise<void>;
