@@ -154,6 +154,7 @@
     "group": "/groups",
     "joinRequest": "/groups/join-requests",
     "user": "/users",
-    "userStatus": "/users/online-infos/statuses"
+    "userStatus": "/users/online-infos/statuses",
+    "userPermissionGroup": "/users/permission-groups"
   }
 }

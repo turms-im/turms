@@ -24,6 +24,12 @@
         >
             <content-user-friend-request-pane />
         </a-tab-pane>
+        <a-tab-pane
+            key="5"
+            :tab="$t('permissionGroup')"
+        >
+            <content-user-permission-group-pane />
+        </a-tab-pane>
     </a-tabs>
 </template>
 
@@ -32,6 +38,7 @@ import ContentUserInfoPane from './content-user-info-pane';
 import ContentOnlineUserPane from './content-online-user-info-pane';
 import ContentUserRelationshipPane from './relationship/index';
 import ContentUserFriendRequestPane from './content-user-friend-request-pane';
+import ContentUserPermissionGroupPane from './content-user-permission-group-pane';
 
 export default {
     name: 'content-user-tabs',
@@ -39,7 +46,8 @@ export default {
         ContentUserInfoPane,
         ContentOnlineUserPane,
         ContentUserRelationshipPane,
-        ContentUserFriendRequestPane
+        ContentUserFriendRequestPane,
+        ContentUserPermissionGroupPane
     }
 };
 </script>

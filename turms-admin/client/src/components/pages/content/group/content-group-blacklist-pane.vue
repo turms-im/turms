@@ -99,7 +99,7 @@ export default {
                     },
                     {
                         key: 'blockDate',
-                        width: '20%'
+                        width: '25%'
                     },
                     {
                         key: 'requesterId',
@@ -107,7 +107,7 @@ export default {
                     },
                     {
                         key: 'operation',
-                        width: '20%'
+                        width: '15%'
                     }
                 ]}
         };

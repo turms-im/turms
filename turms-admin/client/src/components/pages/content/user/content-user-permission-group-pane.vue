@@ -8,221 +8,67 @@
 
 <script>
 import ContentTemplate from '../template/content-template';
-
 export default {
-    name: 'content-group-type-pane',
+    name: 'content-user-permission-group-pane',
     components: {
         ContentTemplate
     },
     data() {
         return {
-            url: this.$rs.apis.groupType,
+            url: this.$rs.apis.userPermissionGroup,
             actionGroups: [
                 [{
-                    title: this.$t('addGroupType'),
+                    title: this.$t('addPermissionGroup'),
                     type: 'CREATE',
                     size: 'XL',
                     fields: [
                         {
                             type: 'INPUT',
-                            label: this.$t('typeName'),
-                            decorator: this.$validator.create('name', {required: true})
+                            label: this.$t('permissionGroupId'),
+                            decorator: this.$validator.create('id', {onlyNumber: true})
                         },
                         {
                             type: 'INPUT',
-                            decorator: this.$validator.create('groupSizeLimit', {required: true, onlyNumber: true})
+                            label: this.$t('creatableGroupTypeId'),
+                            decorator: this.$validator.create('creatableGroupTypeIds', {required: true})
                         },
                         {
-                            type: 'SWITCH',
-                            decorator: this.$validator.create('guestSpeakable', {required: true})
+                            type: 'INPUT',
+                            decorator: this.$validator.create('ownedGroupLimit', {required: true, onlyNumber: true})
                         },
                         {
-                            type: 'SWITCH',
-                            decorator: this.$validator.create('selfInfoUpdatable', {required: true})
+                            type: 'INPUT',
+                            decorator: this.$validator.create('ownedGroupLimitForEachGroupType', {required: true, onlyNumber: true})
                         },
                         {
-                            type: 'SWITCH',
-                            decorator: this.$validator.create('enableReadReceipt', {required: true})
-                        },
-                        {
-                            type: 'SWITCH',
-                            decorator: this.$validator.create('messageEditable', {required: true})
-                        },
-                        {
-                            type: 'SELECT',
-                            decorator: this.$validator.create('invitationStrategy', {required: true}),
-                            options: {
-                                values: this.$rs.groupInvitationStrategies.map(name => {
-                                    return {
-                                        label: name,
-                                        id: name
-                                    };
-                                })
-                            }
-                        },
-                        {
-                            type: 'SELECT',
-                            decorator: this.$validator.create('joinStrategy', {required: true}),
-                            options: {
-                                values: this.$rs.groupJoinStrategies.map(name => {
-                                    return {
-                                        label: name,
-                                        id: name
-                                    };
-                                })
-                            }
-                        },
-                        {
-                            type: 'SELECT',
-                            decorator: this.$validator.create('groupInfoUpdateStrategy', {required: true}),
-                            options: {
-                                values: this.$rs.groupUpdateStrategies.map(name => {
-                                    return {
-                                        label: name,
-                                        id: name
-                                    };
-                                })
-                            }
-                        },
-                        {
-                            type: 'SELECT',
-                            decorator: this.$validator.create('memberInfoUpdateStrategy', {required: true}),
-                            options: {
-                                values: this.$rs.groupUpdateStrategies.map(name => {
-                                    return {
-                                        label: name,
-                                        id: name
-                                    };
-                                })
-                            }
+                            type: 'INPUT',
+                            label: this.$t('groupTypeLimit'),
+                            decorator: this.$validator.create('groupTypeLimits', {required: true})
                         }
                     ]
                 },
                 {
-                    title: this.$t('updateSelectedGroupTypes'),
+                    title: this.$t('updateSelectedPermissionGroups'),
                     type: 'UPDATE',
                     size: 'XL',
                     fields: [
                         {
                             type: 'INPUT',
-                            label: this.$t('typeName'),
-                            decorator: this.$validator.create('name')
+                            label: this.$t('creatableGroupTypeId'),
+                            decorator: this.$validator.create('creatableGroupTypeIds')
                         },
                         {
                             type: 'INPUT',
-                            decorator: this.$validator.create('groupSizeLimit', {onlyNumber: true})
+                            decorator: this.$validator.create('ownedGroupLimit', {onlyNumber: true})
                         },
                         {
-                            type: 'SELECT',
-                            decorator: this.$validator.create('guestSpeakable'),
-                            options: {
-                                values: [
-                                    {
-                                        label: this.$t('yes'),
-                                        id: true
-                                    },
-                                    {
-                                        label: this.$t('no'),
-                                        id: false
-                                    }
-                                ]
-                            }
+                            type: 'INPUT',
+                            decorator: this.$validator.create('ownedGroupLimitForEachGroupType', {onlyNumber: true})
                         },
                         {
-                            type: 'SELECT',
-                            decorator: this.$validator.create('selfInfoUpdatable'),
-                            options: {
-                                values: [
-                                    {
-                                        label: this.$t('yes'),
-                                        id: true
-                                    },
-                                    {
-                                        label: this.$t('no'),
-                                        id: false
-                                    }
-                                ]
-                            }
-                        },
-                        {
-                            type: 'SELECT',
-                            decorator: this.$validator.create('enableReadReceipt'),
-                            options: {
-                                values: [
-                                    {
-                                        label: this.$t('yes'),
-                                        id: true
-                                    },
-                                    {
-                                        label: this.$t('no'),
-                                        id: false
-                                    }
-                                ]
-                            }
-                        },
-                        {
-                            type: 'SELECT',
-                            decorator: this.$validator.create('messageEditable'),
-                            options: {
-                                values: [
-                                    {
-                                        label: this.$t('yes'),
-                                        id: true
-                                    },
-                                    {
-                                        label: this.$t('no'),
-                                        id: false
-                                    }
-                                ]
-                            }
-                        },
-                        {
-                            type: 'SELECT',
-                            decorator: this.$validator.create('invitationStrategy'),
-                            options: {
-                                values: this.$rs.groupInvitationStrategies.map(name => {
-                                    return {
-                                        label: name,
-                                        id: name
-                                    };
-                                })
-                            }
-                        },
-                        {
-                            type: 'SELECT',
-                            decorator: this.$validator.create('joinStrategy'),
-                            options: {
-                                values: this.$rs.groupJoinStrategies.map(name => {
-                                    return {
-                                        label: name,
-                                        id: name
-                                    };
-                                })
-                            }
-                        },
-                        {
-                            type: 'SELECT',
-                            decorator: this.$validator.create('groupInfoUpdateStrategy'),
-                            options: {
-                                values: this.$rs.groupUpdateStrategies.map(name => {
-                                    return {
-                                        label: name,
-                                        id: name
-                                    };
-                                })
-                            }
-                        },
-                        {
-                            type: 'SELECT',
-                            decorator: this.$validator.create('memberInfoUpdateStrategy'),
-                            options: {
-                                values: this.$rs.groupUpdateStrategies.map(name => {
-                                    return {
-                                        label: name,
-                                        id: name
-                                    };
-                                })
-                            }
+                            type: 'INPUT',
+                            label: this.$t('groupTypeLimit'),
+                            decorator: this.$validator.create('groupTypeLimits')
                         }
                     ]
                 }]
@@ -230,49 +76,31 @@ export default {
             table: {
                 columns: [
                     {
-                        title: this.$t('groupTypeId'),
+                        title: this.$t('permissionGroupId'),
                         key: 'id',
-                        width: '10%'
+                        width: '20%'
                     },
                     {
-                        key: 'name',
-                        width: '10%'
+                        title: this.$t('creatableGroupTypeId'),
+                        key: 'creatableGroupTypeIds',
+                        width: '20%'
                     },
                     {
-                        key: 'invitationStrategy',
-                        width: '10%'
+                        key: 'ownedGroupLimit',
+                        width: '15%'
                     },
                     {
-                        key: 'joinStrategy',
-                        width: '10%'
+                        key: 'ownedGroupLimitForEachGroupType',
+                        width: '15%'
                     },
                     {
-                        key: 'groupInfoUpdateStrategy',
-                        width: '10%'
-                    },
-                    {
-                        key: 'memberInfoUpdateStrategy',
-                        width: '10%'
-                    },
-                    {
-                        key: 'guestSpeakable',
-                        width: '8%'
-                    },
-                    {
-                        key: 'selfInfoUpdatable',
-                        width: '8%'
-                    },
-                    {
-                        key: 'enableReadReceipt',
-                        width: '8%'
-                    },
-                    {
-                        key: 'messageEditable',
-                        width: '8%'
+                        title: this.$t('groupTypeLimit'),
+                        key: 'groupTypeLimits',
+                        width: '20%'
                     },
                     {
                         key: 'operation',
-                        width: '8%'
+                        width: '10%'
                     }
                 ]}
         };

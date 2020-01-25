@@ -111,11 +111,11 @@ export default {
                 },
                 {
                     key: 'registrationDate',
-                    width: '15%'
+                    width: '20%'
                 },
                 {
                     key: 'operation',
-                    width: '15%'
+                    width: '10%'
                 }]}
         };
     },

@@ -137,6 +137,7 @@
 </template>
 
 <script>
+import JSONBig from 'json-bigint';
 let id = 1;
 export default {
     name: 'button-modal-template',
@@ -338,7 +339,7 @@ export default {
                     });
                     if (this.type === 'CREATE') {
                         this.loading = true;
-                        this.$client.post(this.url, values)
+                        this.$client.post(this.url, this.filterParams(values))
                             .then(response => {
                                 if (response.status === 204) {
                                     this.$message.error(this.$t('createFailed'));
@@ -363,7 +364,7 @@ export default {
                         }
                         this.loading = true;
                         const params = this.$rq.getQueryParams(this.queryKey, this.keys);
-                        this.$client.put(`${this.url}${params}`, values)
+                        this.$client.put(`${this.url}${params}`, this.filterParams(values))
                             .then(() => {
                                 this.$parent.$data.records.forEach(record => {
                                     let currentKey = record[this.recordKey];
@@ -388,6 +389,17 @@ export default {
                     }
                 }
             });
+        },
+        filterParams(params) {
+            if (params) {
+                for (const entry of Object.entries(params)) {
+                    try {
+                        params[entry[0]] = JSONBig.parse(entry[1]);
+                        // eslint-disable-next-line no-empty
+                    } catch {}
+                }
+            }
+            return params;
         }
     }
 };

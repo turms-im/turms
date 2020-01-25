@@ -89,6 +89,10 @@ export default {
                             decorator: this.$validator.create('profilePictureUrl', {isUrl: true, maxNumber: 256})
                         },
                         {
+                            type: 'INPUT',
+                            decorator: this.$validator.create('permissionGroupId', {onlyNumber: true})
+                        },
+                        {
                             type: 'SELECT',
                             decorator: this.$validator.create('profileAccess'),
                             options: {
@@ -158,6 +162,10 @@ export default {
                             decorator: this.$validator.create('profilePictureUrl', {isUrl: true, maxNumber: 256})
                         },
                         {
+                            type: 'INPUT',
+                            decorator: this.$validator.create('permissionGroupId', {onlyNumber: true})
+                        },
+                        {
                             type: 'SELECT',
                             decorator: this.$validator.create('profileAccess'),
                             options: {
@@ -218,19 +226,23 @@ export default {
                     },
                     {
                         key: 'intro',
-                        width: '12.5%'
+                        width: '10%'
                     },
                     {
                         key: 'profilePictureUrl',
-                        width: '10%'
+                        width: '7.5%'
                     },
                     {
                         key: 'profileAccess',
                         width: '7.5%'
                     },
                     {
+                        key: 'permissionGroupId',
+                        width: '7.5%'
+                    },
+                    {
                         key: 'registrationDate',
-                        width: '10%'
+                        width: '7.5%'
                     },
                     {
                         title: this.$t('cancelDate'),
