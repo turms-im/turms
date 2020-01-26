@@ -405,7 +405,6 @@ public class ProtoUtil {
         return builder;
     }
 
-    //TODO: Change domain to exact values
     public static CreateMessageRequest.Builder message2createMessageRequest(Message message) {
         CreateMessageRequest.Builder builder = CreateMessageRequest.newBuilder();
         Long messageId = message.getId();
@@ -413,7 +412,7 @@ public class ProtoUtil {
         Boolean isSystemMessage = message.getIsSystemMessage();
         Date deliveryDate = message.getDeliveryDate();
         String text = message.getText();
-//        Long senderId = message.getSenderId(); the field is duplicated with requesterId
+//        Long senderId = message.getSenderId(); the field is duplicate with requesterId
         Long targetId = message.getTargetId();
         List<byte[]> records = message.getRecords();
         Integer burnAfter = message.getBurnAfter();
