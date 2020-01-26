@@ -28,6 +28,7 @@ enum Code {
     UNAUTHORIZED,
     REDUNDANT_REQUEST,
     ALREADY_GROUP_MEMBER,
+    FRIEND_REQUEST_HAS_EXISTED,
 
     SERVER_INTERNAL_ERROR = 5000,
     LOGGED_DEVICES_CANNOT_OFFLINE
@@ -65,6 +66,7 @@ export default class TurmsStatusCode {
         [Code.UNAUTHORIZED]: "Unauthorized",
         [Code.REDUNDANT_REQUEST]: "The request is redundant",
         [Code.ALREADY_GROUP_MEMBER]: "The user is already a member of the group",
+        [Code.FRIEND_REQUEST_HAS_EXISTED]: "A friend request has already existed",
         [Code.LOGGED_DEVICES_CANNOT_OFFLINE]: "Cannot set logged in devices offline"
     };
     private code: number;
