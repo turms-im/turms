@@ -449,13 +449,14 @@ public class ProtoUtil {
 
     public static UserStatusDetail.Builder userOnlineInfo2userStatus(
             @NotNull Long userId,
-            @Nullable UserOnlineInfo userOnlineInfo) {
+            @Nullable UserOnlineInfo userOnlineInfo,
+            boolean shouldConvertInvisibleToOffline) {
         UserStatusDetail.Builder builder = UserStatusDetail.newBuilder()
                 .setUserId(userId);
         if (userOnlineInfo == null) {
             builder.setUserStatus(UserStatus.OFFLINE);
         } else {
-            builder.setUserStatus(userOnlineInfo.getUserStatusForClients());
+            builder.setUserStatus(userOnlineInfo.getUserStatus(shouldConvertInvisibleToOffline));
             builder.addAllUsingDeviceTypes(userOnlineInfo.getUsingDeviceTypes());
         }
         return builder;
@@ -463,14 +464,15 @@ public class ProtoUtil {
 
     public static im.turms.turms.pojo.bo.group.GroupMember.Builder userOnlineInfo2groupMember(
             @NotNull Long userId,
-            @Nullable UserOnlineInfo userOnlineInfo) {
+            @Nullable UserOnlineInfo userOnlineInfo,
+            boolean shouldConvertInvisibleToOffline) {
         im.turms.turms.pojo.bo.group.GroupMember.Builder builder = im.turms.turms.pojo.bo.group.GroupMember
                 .newBuilder()
                 .setUserId(Int64Value.newBuilder().setValue(userId).build());
         if (userOnlineInfo == null) {
             builder.setUserStatus(UserStatus.OFFLINE);
         } else {
-            builder.setUserStatus(userOnlineInfo.getUserStatusForClients());
+            builder.setUserStatus(userOnlineInfo.getUserStatus(shouldConvertInvisibleToOffline));
             Set<DeviceType> usingDeviceTypes = userOnlineInfo.getUsingDeviceTypes();
             if (usingDeviceTypes != null) {
                 builder.addAllUsingDeviceTypes(userOnlineInfo.getUsingDeviceTypes());
