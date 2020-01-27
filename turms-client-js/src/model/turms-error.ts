@@ -27,7 +27,11 @@ export default class TurmsError {
     }
 
     static fromNotification(notification: TurmsNotification): TurmsError {
-        return new TurmsError(notification.code.value, TurmsStatusCode.getReason(notification.code.value));
+        if (notification.code.value === TurmsStatusCode.FAILED) {
+            return new TurmsError(notification.code.value, notification.reason.value);
+        } else {
+            return new TurmsError(notification.code.value, TurmsStatusCode.getReason(notification.code.value));
+        }
     }
 
     static fromCode(code: number): TurmsError {

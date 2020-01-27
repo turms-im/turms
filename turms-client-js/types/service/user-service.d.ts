@@ -33,7 +33,7 @@ export default class UserService {
     queryUsersIdsNearby(latitude: number, longitude: number, distance?: number, maxNumber?: number): Promise<number[]>;
     queryUsersInfosNearby(latitude: number, longitude: number, distance?: number, maxNumber?: number): Promise<ParsedModel.UserInfo[]>;
     queryUsersOnlineStatusRequest(usersIds: number[]): Promise<ParsedModel.UserStatusDetail[]>;
-    queryRelationships(relatedUsersIds?: number[], isRelatedUsers?: boolean, isBlocked?: boolean, groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion>;
+    queryRelationships(relatedUsersIds?: number[], isBlocked?: boolean, groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion>;
     queryRelatedUsersIds(isBlocked?: boolean, groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion>;
     queryFriends(groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion>;
     queryBlacklistedUsers(groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion>;
@@ -42,10 +42,10 @@ export default class UserService {
     createBlacklistedUserRelationship(userId: number, groupIndex?: number): Promise<void>;
     deleteRelationship(relatedUserId: number, deleteGroupIndex?: number, targetGroupIndex?: number): Promise<void>;
     updateRelationship(relatedUserId: number, isBlocked?: boolean, groupIndex?: number): Promise<void>;
-    sendFriendRequest(recipientId: number, content: string): Promise<void>;
+    sendFriendRequest(recipientId: number, content: string): Promise<number>;
     replyFriendRequest(requestId: number, responseAction: string | ResponseAction, reason?: string): Promise<void>;
     queryFriendRequests(lastUpdatedDate?: Date): Promise<ParsedModel.UserFriendRequestsWithVersion>;
-    createRelationshipGroup(name: string): Promise<void>;
+    createRelationshipGroup(name: string): Promise<number>;
     deleteRelationshipGroups(groupIndex: number, targetGroupIndex?: number): Promise<void>;
     updateRelationshipGroup(groupIndex: number, newName: string): Promise<void>;
     queryRelationshipGroups(lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipGroupsWithVersion>;

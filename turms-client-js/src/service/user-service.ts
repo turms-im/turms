@@ -65,7 +65,7 @@ export default class UserService {
         deviceType = DeviceType.UNKNOWN): Promise<void> {
         RequestUtil.throwIfAnyFalsy(userId, password);
         if (document.cookie[COOKIE_USER_ID])
-        this._userId = userId;
+            this._userId = userId;
         this._password = password;
         this._userOnlineStatus = userOnlineStatus;
         this._deviceType = deviceType;
@@ -216,7 +216,6 @@ export default class UserService {
 
     queryRelationships(
         relatedUsersIds?: number[],
-        isRelatedUsers?: boolean,
         isBlocked?: boolean,
         groupIndex?: number,
         lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion> {
@@ -245,11 +244,11 @@ export default class UserService {
     }
 
     queryFriends(groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion> {
-        return this.queryRelationships(undefined, true, false, groupIndex, lastUpdatedDate);
+        return this.queryRelationships(undefined, false, groupIndex, lastUpdatedDate);
     }
 
     queryBlacklistedUsers(groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion> {
-        return this.queryRelationships(undefined, true, true, groupIndex, lastUpdatedDate);
+        return this.queryRelationships(undefined, true, groupIndex, lastUpdatedDate);
     }
 
     createRelationship(userId: number, isBlocked: boolean, groupIndex?: number): Promise<void> {
@@ -296,14 +295,14 @@ export default class UserService {
         }).then();
     }
 
-    sendFriendRequest(recipientId: number, content: string): Promise<void> {
+    sendFriendRequest(recipientId: number, content: string): Promise<number> {
         RequestUtil.throwIfAnyFalsy(recipientId, content);
         return this._turmsClient.driver.send({
             createFriendRequestRequest: {
                 recipientId,
                 content
             }
-        }).then();
+        }).then(notification => NotificationUtil.getFirstIdFromIds(notification));
     }
 
     replyFriendRequest(requestId: number, responseAction: string | ResponseAction, reason?: string): Promise<void> {
@@ -329,13 +328,13 @@ export default class UserService {
         }).then(notification => NotificationUtil.transform(notification.data.userFriendRequestsWithVersion));
     }
 
-    createRelationshipGroup(name: string): Promise<void> {
+    createRelationshipGroup(name: string): Promise<number> {
         RequestUtil.throwIfAnyFalsy(name);
         return this._turmsClient.driver.send({
             createRelationshipGroupRequest: {
                 name
             }
-        }).then();
+        }).then(notification => NotificationUtil.getFirstIdFromIds(notification));
     }
 
     deleteRelationshipGroups(groupIndex: number, targetGroupIndex?: number): Promise<void> {

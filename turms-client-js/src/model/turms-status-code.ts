@@ -29,12 +29,13 @@ enum Code {
     REDUNDANT_REQUEST,
     ALREADY_GROUP_MEMBER,
     FRIEND_REQUEST_HAS_EXISTED,
+    RELATIONSHIP_HAS_ESTABLISHED,
 
     SERVER_INTERNAL_ERROR = 5000,
     LOGGED_DEVICES_CANNOT_OFFLINE
 }
 
-export default class TurmsStatusCode {
+class TurmsStatusCode {
     private static _code2ReasonMap = {
         [Code.OK]: "ok",
         [Code.NOT_RESPONSIBLE]: "The server isn't responsible for the user",
@@ -67,6 +68,7 @@ export default class TurmsStatusCode {
         [Code.REDUNDANT_REQUEST]: "The request is redundant",
         [Code.ALREADY_GROUP_MEMBER]: "The user is already a member of the group",
         [Code.FRIEND_REQUEST_HAS_EXISTED]: "A friend request has already existed",
+        [Code.RELATIONSHIP_HAS_ESTABLISHED]: "The relationship has already established",
         [Code.LOGGED_DEVICES_CANNOT_OFFLINE]: "Cannot set logged in devices offline"
     };
     private code: number;
@@ -92,3 +94,4 @@ export default class TurmsStatusCode {
         return this._code2ReasonMap[code];
     }
 }
+export default Object.assign(TurmsStatusCode, Code);
