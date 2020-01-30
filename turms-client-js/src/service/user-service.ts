@@ -37,7 +37,7 @@ export default class UserService {
     }
 
     /**
-     * Note: Because of user privacy, most of modern browsers request Geolocation APIs to run in the https,
+     * Note: Because of user privacy, most of modern browsers request Geolocation APIs to run in HTTPS,
      * getUserLocation() cannot get the location of user in insecure sites.
      * FYI: https://stackoverflow.com/questions/37835805/http-sites-does-not-detect-the-location-in-chrome-issue
      * https://caniuse.com/#search=Geolocation
@@ -64,8 +64,7 @@ export default class UserService {
         userOnlineStatus = UserStatus.AVAILABLE,
         deviceType = DeviceType.UNKNOWN): Promise<void> {
         RequestUtil.throwIfAnyFalsy(userId, password);
-        if (document.cookie[COOKIE_USER_ID])
-            this._userId = userId;
+        this._userId = userId;
         this._password = password;
         this._userOnlineStatus = userOnlineStatus;
         this._deviceType = deviceType;

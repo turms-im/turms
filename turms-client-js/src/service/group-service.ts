@@ -106,21 +106,21 @@ export default class GroupService {
         });
     }
 
-    queryJoinedGroupsIds(lastUpdatedDate?: Date): Promise<number[]> {
+    queryJoinedGroupsIds(lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion> {
         return this._turmsClient.driver.send({
             queryJoinedGroupsIdsRequest: {
                 lastUpdatedDate: RequestUtil.getTimeIfNotNull(lastUpdatedDate)
             }
-        }).then(notification => NotificationUtil.getIds(notification));
+        }).then(notification => NotificationUtil.getIdsWithVersion(notification));
     }
 
-    queryJoinedGroupsInfos(lastUpdatedDate?: Date): Promise<ParsedModel.GroupWithVersion[]> {
+    queryJoinedGroupsInfos(lastUpdatedDate?: Date): Promise<ParsedModel.GroupsWithVersion> {
         // @ts-ignore
         return this._turmsClient.driver.send({
             queryJoinedGroupsInfosRequest: {
                 lastUpdatedDate: RequestUtil.getTimeIfNotNull(lastUpdatedDate)
             }
-        }).then(notification => NotificationUtil.getFirstArrayAndTransform(notification.data.groupsWithVersion.groups));
+        }).then(notification => NotificationUtil.transform(notification.data.groupsWithVersion));
     }
 
     addGroupJoinQuestion(groupId: number, question: string, answers: string[], score: number): Promise<number> {
@@ -182,14 +182,14 @@ export default class GroupService {
 
     queryBlacklistedUsersIds(
         groupId: number,
-        lastUpdatedDate?: Date): Promise<number[]> {
+        lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion> {
         RequestUtil.throwIfAnyFalsy(groupId);
         return this._turmsClient.driver.send({
             queryGroupBlacklistedUsersIdsRequest: {
                 groupId,
                 lastUpdatedDate: RequestUtil.getTimeIfNotNull(lastUpdatedDate)
             }
-        }).then(notification => NotificationUtil.getIds(notification));
+        }).then(notification => NotificationUtil.getIdsWithVersion(notification));
     }
 
     queryBlacklistedUsersInfos(
