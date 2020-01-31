@@ -112,27 +112,3 @@ export default {
     }
 };
 </script>
-
-<style lang="scss" scoped>
-    .content-template-export {
-        display: flex;
-        &__range {
-            margin-left: 24px;
-        }
-        &__from {
-            width: 100px;
-            text-align: center
-        }
-        &__between {
-            width: 30px;
-            border-left: 0;
-            pointer-events: none;
-            background-color: #fff
-        }
-        &__to {
-            width: 100px;
-            text-align: center;
-            border-left: 0;
-        }
-    }
-</style>
