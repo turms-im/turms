@@ -1,5 +1,6 @@
 <template>
     <content-template
+        :name="name"
         :record-key="recordKey"
         :query-key="queryKey"
         :url="url"
@@ -20,6 +21,7 @@ export default {
     },
     data() {
         return {
+            name: 'user-relationship',
             url: this.$rs.apis.userRelationship,
             params: {
                 withGroupIndexes: true

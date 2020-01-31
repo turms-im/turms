@@ -1,5 +1,6 @@
 <template>
     <content-template
+        :name="name"
         :record-key="recordKey"
         :query-key="queryKey"
         :url="url"
@@ -23,6 +24,7 @@ export default {
     },
     data() {
         return {
+            name: 'admin-info',
             url: this.$rs.apis.admin,
             initialDataUrls: [this.$rs.apis.adminRole],
             recordKey: 'account',

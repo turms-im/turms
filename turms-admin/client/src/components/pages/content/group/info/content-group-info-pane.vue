@@ -1,5 +1,6 @@
 <template>
     <content-template
+        :name="name"
         :url="url"
         :deletion="deletion"
         :filters="filters"
@@ -18,6 +19,7 @@ export default {
     },
     data() {
         return {
+            name: 'group-info',
             url: this.$rs.apis.group,
             deletion: {
                 refresh: true

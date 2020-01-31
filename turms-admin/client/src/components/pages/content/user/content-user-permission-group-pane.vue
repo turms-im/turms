@@ -1,5 +1,6 @@
 <template>
     <content-template
+        :name="name"
         :url="url"
         :action-groups="actionGroups"
         :table="table"
@@ -15,6 +16,7 @@ export default {
     },
     data() {
         return {
+            name: 'user-permission-group',
             url: this.$rs.apis.userPermissionGroup,
             actionGroups: [
                 [{

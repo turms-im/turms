@@ -193,7 +193,7 @@ export default {
                     .then(response => {
                         this.records = this.transformDate(response.data.data);
                         const headers = [];
-                        const width = 25;
+                        const width = this.$rs.excel.width;
                         headers.push({
                             header: this.$t('date'),
                             key: 'date',

@@ -1,5 +1,6 @@
 <template>
     <content-template
+        :name="name"
         :url="url"
         :initial-data-urls="initialDataUrls"
         :action-groups="actionGroups"
@@ -20,6 +21,7 @@ export default {
     },
     data() {
         return {
+            name: 'admin-role',
             url: this.$rs.apis.adminRole,
             initialDataUrls: [this.$rs.apis.adminRole],
             actionGroups: [

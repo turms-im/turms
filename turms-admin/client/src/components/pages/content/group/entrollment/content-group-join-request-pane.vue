@@ -1,5 +1,6 @@
 <template>
     <content-template
+        :name="name"
         :url="url"
         :filters="filters"
         :action-groups="actionGroups"
@@ -17,6 +18,7 @@ export default {
     },
     data() {
         return {
+            name: 'group-join-request',
             url: this.$rs.apis.joinRequest,
             filters: [
                 {

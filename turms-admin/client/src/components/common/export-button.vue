@@ -43,13 +43,22 @@ export default {
     },
     methods: {
         exportDate() {
+            if (this.exporting) {
+                return;
+            }
             this.exporting = true;
             const hide = this.$message.loading(this.$t('exportingData'), 0);
-            exportExcel(this.fileName, this.worksheetName, this.headers, this.rows, () => {
-                setTimeout(hide);
-                this.$message.success(this.$t('exportSuccessfully'));
-                this.exporting = false;
-            });
+            exportExcel(this.fileName, this.worksheetName, this.headers, this.rows)
+                .then(() => {
+                    this.$message.success(this.$t('exportSuccessfully'));
+                })
+                .catch(() => {
+                    this.$message.error(this.$t('failedToExport'));
+                })
+                .finally(() => {
+                    setTimeout(hide);
+                    this.exporting = false;
+                });
         }
     }
 };

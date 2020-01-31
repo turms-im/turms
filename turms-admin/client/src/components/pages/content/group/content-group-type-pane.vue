@@ -1,5 +1,6 @@
 <template>
     <content-template
+        :name="name"
         :url="url"
         :action-groups="actionGroups"
         :table="table"
@@ -16,6 +17,7 @@ export default {
     },
     data() {
         return {
+            name: 'group-type',
             url: this.$rs.apis.groupType,
             actionGroups: [
                 [{

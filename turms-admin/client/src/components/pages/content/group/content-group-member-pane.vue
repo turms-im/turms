@@ -1,5 +1,6 @@
 <template>
     <content-template
+        :name="name"
         :record-key="recordKey"
         :query-key="queryKey"
         :url="url"
@@ -19,6 +20,7 @@ export default {
     },
     data() {
         return {
+            name: 'group-member',
             url: this.$rs.apis.groupMember,
             recordKey: 'key',
             queryKey: 'keys',

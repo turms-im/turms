@@ -1,5 +1,6 @@
 <template>
     <content-template
+        :name="name"
         :url="url"
         :filters="filters"
         :action-groups="actionGroups"
@@ -17,6 +18,7 @@ export default {
     },
     data() {
         return {
+            name: 'user-friend-request',
             url: this.$rs.apis.friendRequest,
             filters: [
                 {

@@ -1,5 +1,7 @@
 {
-  "url": "",
+  "excel": {
+    "width": 25
+  },
   "groupInvitationStrategies": [
     "ALL_REQUIRING_ACCEPTANCE",
     "ALL",

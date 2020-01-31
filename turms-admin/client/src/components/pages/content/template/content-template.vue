@@ -63,42 +63,53 @@
                 {{ $t('clearFilters') }}
             </a-button>
         </div>
-        <div
-            v-for="(actions, index) in actionGroups"
-            :key="index"
-            class="action-groups"
-        >
-            <button-modal-template
-                v-for="(action, actionIndex) in actions"
-                :key="actionIndex"
-                :button-label="action.buttonLabel || action.title"
-                :title="action.title"
-                :fields="action.fields"
-                :type="action.type"
-                :query-key="queryKey"
-                :record-key="recordKey"
-                :keys="selectedRowKeys"
-                :url="url"
-                :disabled="action.type === 'UPDATE' && !hasSelectedRows"
-                :params="action.params || {}"
-                :size="action.size"
-                class="action-button"
-            />
-            <a-popconfirm
-                v-if="!deletion.disabled"
-                class="action-button"
-                :visible="popconfirmVisible"
-                :title="$t('confirmDeletion')"
-                @visibleChange="hanlePopconfirmVisibleChange"
-                @confirm="deleteSelectedRows"
+        <div class="action-groups">
+            <div
+                v-for="(actions, index) in actionGroups"
+                :key="index"
+                class="action-group"
             >
-                <a-button
-                    type="danger"
-                    :disabled="!hasSelectedRows"
+                <button-modal-template
+                    v-for="(action, actionIndex) in actions"
+                    :key="actionIndex"
+                    :button-label="action.buttonLabel || action.title"
+                    :title="action.title"
+                    :fields="action.fields"
+                    :type="action.type"
+                    :query-key="queryKey"
+                    :record-key="recordKey"
+                    :keys="selectedRowKeys"
+                    :url="url"
+                    :disabled="action.type === 'UPDATE' && !hasSelectedRows"
+                    :params="action.params || {}"
+                    :size="action.size"
+                    class="action-button"
+                />
+                <a-popconfirm
+                    v-if="!deletion.disabled"
+                    class="action-button"
+                    :visible="popconfirmVisible"
+                    :title="$t('confirmDeletion')"
+                    @visibleChange="hanlePopconfirmVisibleChange"
+                    @confirm="deleteSelectedRows"
                 >
-                    {{ $t('deleteSelectedRecords') }}
-                </a-button>
-            </a-popconfirm>
+                    <a-button
+                        type="danger"
+                        :disabled="!hasSelectedRows"
+                    >
+                        {{ $t('deleteSelectedRecords') }}
+                    </a-button>
+                </a-popconfirm>
+            </div>
+            <div class="action-group">
+                <content-template-export
+                    :url="url + '/page'"
+                    :params="searchParams"
+                    :disabled="records.length === 0"
+                    :file-name="'turms-' + name"
+                    class="action-button"
+                />
+            </div>
         </div>
         <a-spin :spinning="loading">
             <a-table
@@ -175,6 +186,7 @@ import Skeleton from '../../../common/skeleton';
 import CustomInput from '../../../common/custom-input';
 import ButtonModalTemplate from './button-modal-template';
 import DateRangePicker from '../../../common/date-range-picker';
+import ContentTemplateExport from './content-template-export';
 
 export default {
     name: 'content-template',
@@ -182,9 +194,14 @@ export default {
         Skeleton,
         ButtonModalTemplate,
         CustomInput,
-        DateRangePicker
+        DateRangePicker,
+        ContentTemplateExport
     },
     props: {
+        name: {
+            type: String,
+            required: true
+        },
         initialDataUrls: {
             type: Array,
             required: false,
@@ -272,6 +289,33 @@ export default {
         };
     },
     computed: {
+        searchParams() {
+            const params = {};
+            this.filters.forEach(filter => {
+                let data = this.getIfValid(filter.model);
+                if (filter.type.toUpperCase() === 'SELECT' && typeof data === 'string') {
+                    data = data.toUpperCase();
+                    if (data === 'ALL') {
+                        return;
+                    }
+                }
+                if (filter.type.toUpperCase() === 'DATE-RANGE' && data && !filter.name.endsWith('StartDate') && !filter.name.endsWith('EndDate')) {
+                    params[`${filter.name}Start`] = this.getTimeIfNotNull(data[0]);
+                    params[`${filter.name}End`] = this.getTimeIfNotNull(data[1]);
+                } else {
+                    params[filter.name] = data;
+                }
+            });
+            if (JSONBig.stringify(this.lastFilters) !== JSONBig.stringify(params)) {
+                // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+                this.pagination.current = 1;
+            }
+            Object.assign(params, {
+                page: this.pagination.current - 1,
+                size: this.pagination.pageSize
+            }, this.params);
+            return params;
+        },
         columnsData() {
             return this.table.columns.map(column => {
                 const fields = column.key.split('.');
@@ -427,8 +471,7 @@ export default {
         search() {
             this.loading = true;
             this.selectedRowKeys.splice(0, this.selectedRowKeys.length);
-            const params = this.getParams();
-            this.$client.get(this.url + '/page', { params })
+            this.$client.get(this.url + '/page', { params: this.searchParams })
                 .then(response => {
                     if (response.status === 204) {
                         this.records = [];
@@ -448,36 +491,11 @@ export default {
                 .catch(error => {
                     if (error.response && error.response.status === 404) {
                         this.records = [];
+                        this.total = 0;
                     }
                     this.$error(this.$t('failedToFetchData'), error);
                 })
                 .finally(() => this.loading = false);
-        },
-        getParams() {
-            const params = {};
-            this.filters.forEach(filter => {
-                let data = this.getIfValid(filter.model);
-                if (filter.type.toUpperCase() === 'SELECT' && typeof data === 'string') {
-                    data = data.toUpperCase();
-                    if (data === 'ALL') {
-                        return;
-                    }
-                }
-                if (filter.type.toUpperCase() === 'DATE-RANGE' && data && !filter.name.endsWith('StartDate') && !filter.name.endsWith('EndDate')) {
-                    params[`${filter.name}Start`] = this.getTimeIfNotNull(data[0]);
-                    params[`${filter.name}End`] = this.getTimeIfNotNull(data[1]);
-                } else {
-                    params[filter.name] = data;
-                }
-            });
-            if (JSONBig.stringify(this.lastFilters) !== JSONBig.stringify(params)) {
-                this.pagination.current = 1;
-            }
-            Object.assign(params, {
-                page: this.pagination.current - 1,
-                size: this.pagination.pageSize
-            }, this.params);
-            return params;
         },
         deleteSelectedRows() {
             this.requestDelete(this.selectedRowKeys);
@@ -535,9 +553,17 @@ export default {
         color: #52c41a;
     }
 }
-
 .action-groups {
     display: flex;
     flex-wrap: wrap;
+
+    .action-group {
+        display: flex;
+        flex-wrap: wrap;
+
+        &:not(:first-child) {
+            margin-left: 24px;
+        }
+    }
 }
 </style>
