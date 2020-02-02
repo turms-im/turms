@@ -35,7 +35,7 @@
 | 群主转让群           | 群主可以将群的拥有者权限转给群内的其他成员，转移后， 被转让者变为新的群主，原群主变为普通成员。群主还可以选择在转让的同时，直接退出该群 |                                                              |
 | 修改群组资料         | 支持群组名，群组头像，群组介绍，群组通知，群组类型等字段     |                                                              |
 | 群组禁言             | 群组普通成员在禁言时段无法发送消息，仅有群主与管理员能发送消息 |                                                              |
-| 获取群组信息         | 根据过滤条件（如群组ID），查找群组<br />（补充：由于通过昵称来查找群组功能的高效实现较复杂，因此放到0.9.0版本实现，预计采用AC自动机算法） |                                                              |
+| 获取群组信息         | 根据过滤条件（如群组ID），查找群组                           |                                                              |
 | 增加群组成员         | 增加群组成员                                                 |                                                              |
 | 发送入群邀请         | 拥有邀请权限角色的群组成员可向指定用户发送入群邀请           | groupInvitationContentLimit<br />groupInvitationTimeToLiveHours |
 | 撤销入群邀请         | 群主、管理员与入群邀请发起者可撤销入群邀请                   | allowRecallingPendingGroupInvitationByOwnerAndManager<br />shouldDeleteExpiredGroupInvitationsAutomatically |

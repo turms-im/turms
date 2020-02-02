@@ -10,6 +10,7 @@
 </template>
 <script>
 import exportExcel from '../../../../utils/excel-export-util';
+import JSONBig from 'json-bigint';
 
 export default {
     name: 'content-template-export',
@@ -39,6 +40,12 @@ export default {
         };
     },
     computed: {
+        searchParams() {
+            const searchParams = JSONBig.parse(JSONBig.stringify(this.params));
+            searchParams.page = 0;
+            searchParams.size = 1000;
+            return searchParams;
+        },
         headers() {
             const headers = [];
             const width = this.$rs.excel.width;
@@ -95,7 +102,7 @@ export default {
                 });
         },
         fetchData() {
-            return this.$client.get(this.url, {params: this.params})
+            return this.$client.get(this.url, {params: this.searchParams})
                 .then(response => {
                     if (response.status === 204) {
                         this.records = [];

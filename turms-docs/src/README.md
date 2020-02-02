@@ -6,15 +6,15 @@ Turms是一套全球范围内最为先进且全能的开源即时通讯解决方
 
 ### 组合
 
-| 名称               | 描述                                                         |
-| ------------------ | ------------------------------------------------------------ |
-| turms              | Turms服务端。本质是一个易于集群部署、健壮、方便拓展、运作高效且业务独立的Java即时通信服务端程序 |
-| turms-client-js    | 除了实现显而易见的业务功能外，关键还实现了与Turms服务端的交互逻辑（如路由跳转、消息去重、心跳检查等），对调用者透明。您在使用该库时，无需关系背后的逻辑 |
-| turms-client-java  | 同上                                                         |
-| turms-admin        | 为Turms服务端集群提供：运营数据统计、内容管理、集群配置等功能 |
-| turms-apm          | 为Turms服务端集群提供监控功能                                |
-| turms-plugin       | 事件（如用户上下线事件、消息接收与转发事件等）触发的时候，对应的自定义插件将被触发以实现各种各样定制功能 |
-| turms-client-swift | 尚未提供，将于2020年完成开发                                 |
+| 名称                                                        | 描述                                                         |
+| ----------------------------------------------------------- | ------------------------------------------------------------ |
+| <span style="white-space:nowrap;">turms</span>              | Turms服务端。本质是一个易于集群部署、健壮、方便拓展、运作高效且业务独立的Java即时通信服务端程序 |
+| <span style="white-space:nowrap;">turms-client-js</span>    | 除了实现显而易见的业务功能外，关键还实现了与Turms服务端的交互逻辑（如路由跳转、消息去重、心跳检查等），对调用者透明。您在使用该库时，无需关系背后的逻辑 |
+| <span style="white-space:nowrap;">turms-client-java</span>  | 同上                                                         |
+| <span style="white-space:nowrap;">turms-admin</span>        | 为Turms服务端集群提供：运营数据统计、内容管理、集群配置等功能 |
+| <span style="white-space:nowrap;">turms-apm</span>          | 为Turms服务端集群提供监控功能                                |
+| <span style="white-space:nowrap;">turms-plugin</span>       | 事件（如用户上下线事件、消息接收与转发事件等）触发的时候，对应的自定义插件将被触发以实现各种各样定制功能 |
+| <span style="white-space:nowrap;">turms-client-swift</span> | 尚未提供，将于2020年完成开发                                 |
 
 ### 关于Demo
 

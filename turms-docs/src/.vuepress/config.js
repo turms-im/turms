@@ -32,8 +32,10 @@ module.exports = {
                 collapsable: false,
                 children: [
                     '/for-developers/quick-start',
+                    '/for-developers/architecture',
                     '/for-developers/config',
                     '/for-developers/api',
+                    '/for-developers/status-code',
                     '/for-developers/custom-plugin'
                 ]
             }

@@ -2,7 +2,7 @@
 
 - 下载并解压[Turms服务端](https://github.com/turms-im/turms/releases)压缩包。
 
-- 下载并安装[MongoDB v4.2.2](https://www.mongodb.com/download-center/community)，并将数据库的URI、账号与密码配置到config/application.yaml中（提醒：您也可以直接在此处配置多个MongoDB地址，Turms会自动接入MongoDB集群）。
+- 下载并安装[MongoDB v4.2.3](https://www.mongodb.com/download-center/community)，并将数据库的URI、账号与密码配置到config/application.yaml中（提醒：您也可以直接在此处配置多个MongoDB地址，Turms会自动接入MongoDB集群）。
 
   （具体可参考：https://docs.mongodb.com/manual/reference/connection-string/）
 
@@ -13,9 +13,10 @@
 
 - 在所有需要运行Turms服务端的系统上，运行bin/turms脚本。若您保留默认的config/hazelcast.yml配置，Turms服务端会自动寻找其他Turms服务端节点，由此Turms集群开始运作。
 
-提醒：上述操作主要用于您初次体验Turms集群使用，若您需将Turms部署在生产环境当中，请务必查阅Wiki手册，了解各种配置参数的意义，以最小的资源消耗，来定制属于您自己的业务需求与业务组合。
+补充：
 
-Turms服务端会自动检测Turms集群中是否已存在一个角色为ROOT，且名称为“turms”的超级管理员账号。如果不存在，则Turms服务端会自动创建一个角色为ROOT、名称为“turms”且带有随机密码的管理员账号，并将该账号打印在日志中，如：
+* 每次Turms服务端发布时，发布内容都会包含两个压缩包，一个文件名以“DEV”结尾，代表该压缩包由DEV环境编译而成，另一个以“PROD”结尾，表明其由PROD环境编译而成。DEV压缩包内的Turms服务端会在启动时自动生成Mock数据，供开发与测试用。
+* Turms服务端在启动时，会自动检测Turms集群中是否已存在一个角色为“ROOT”，且名称为“turms”的超级管理员账号。如果不存在，则Turms服务端会自动创建一个角色为“ROOT”、名称为“turms”且带有随机密码的管理员账号，并将该管理员信息打印在日志中，如：
 
 ```
 2019-10-13 00:00:00.000  INFO 14152 --- [tLoopGroup-2-20] im.turms.turms.common.TurmsLogger:
@@ -24,3 +25,5 @@ Root admin: {
 	"Raw Password" : "4CWBq&z&BdLDe@77q+]g +MHLV#Vx~[i"
 }
 ```
+
+提醒：上述操作主要用于您初次体验Turms集群使用，若您需将Turms部署在生产环境当中，请务必查阅Wiki手册，了解各种配置参数的意义，以最小的资源消耗，来定制属于您自己的业务需求与业务组合。
