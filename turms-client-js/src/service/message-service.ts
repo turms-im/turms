@@ -36,9 +36,9 @@ export default class MessageService {
                 chatType,
                 toId,
                 deliveryDate: deliveryDate.getTime(),
-                text: RequestUtil.getIfNotNull(text),
+                text: RequestUtil.wrapValueIfNotNull(text),
                 records: records,
-                burnAfter: RequestUtil.getIfNotNull(burnAfter)
+                burnAfter: RequestUtil.wrapValueIfNotNull(burnAfter)
             }
         }).then(notification => NotificationUtil.getFirstIdFromIds(notification));
     }
@@ -71,7 +71,7 @@ export default class MessageService {
         return this._turmsClient.driver.send({
             updateMessageRequest: {
                 messageId,
-                text: RequestUtil.getIfNotNull(text),
+                text: RequestUtil.wrapValueIfNotNull(text),
                 records
             }
         }).then();
@@ -95,13 +95,13 @@ export default class MessageService {
         // @ts-ignore
         return this._turmsClient.driver.send({
             queryMessagesRequest: {
-                ids: RequestUtil.getIfNotNull(ids),
+                ids: RequestUtil.wrapValueIfNotNull(ids),
                 chatType,
-                areSystemMessages: RequestUtil.getIfNotNull(areSystemMessages),
-                fromId: RequestUtil.getIfNotNull(fromId),
-                deliveryDateAfter: RequestUtil.getTimeIfNotNull(deliveryDateAfter),
-                deliveryDateBefore: RequestUtil.getTimeIfNotNull(deliveryDateBefore),
-                size: RequestUtil.getIfNotNull(size),
+                areSystemMessages: RequestUtil.wrapValueIfNotNull(areSystemMessages),
+                fromId: RequestUtil.wrapValueIfNotNull(fromId),
+                deliveryDateAfter: RequestUtil.wrapTimeIfNotNull(deliveryDateAfter),
+                deliveryDateBefore: RequestUtil.wrapTimeIfNotNull(deliveryDateBefore),
+                size: RequestUtil.wrapValueIfNotNull(size),
                 deliveryStatus: deliveryStatus
             }
         }).then(notification => NotificationUtil.getFirstArrayAndTransform(notification.data.messages));
@@ -111,7 +111,7 @@ export default class MessageService {
         // @ts-ignore
         return this._turmsClient.driver.send({
             queryPendingMessagesWithTotalRequest: {
-                size: RequestUtil.getIfNotNull(size)
+                size: RequestUtil.wrapValueIfNotNull(size)
             }
         }).then(notification => NotificationUtil.getFirstArrayAndTransform(notification.data.messagesWithTotalList));
     }
@@ -131,7 +131,7 @@ export default class MessageService {
         return this._turmsClient.driver.send({
             updateMessageRequest: {
                 messageId,
-                recallDate: RequestUtil.getTimeIfNotNull(recallDate)
+                recallDate: RequestUtil.wrapTimeIfNotNull(recallDate)
             }
         }).then();
     }
@@ -141,7 +141,7 @@ export default class MessageService {
         return this._turmsClient.driver.send({
             updateMessageRequest: {
                 messageId,
-                readDate: RequestUtil.getTimeIfNotNull(readDate)
+                readDate: RequestUtil.wrapTimeIfNotNull(readDate)
             }
         }).then();
     }
@@ -173,8 +173,8 @@ export default class MessageService {
         return Location.encode({
             latitude,
             longitude,
-            address: RequestUtil.getIfNotNull(address),
-            name: RequestUtil.getIfNotNull(name)
+            address: RequestUtil.wrapValueIfNotNull(address),
+            name: RequestUtil.wrapValueIfNotNull(name)
         }).finish();
     }
 
@@ -183,9 +183,9 @@ export default class MessageService {
         return AudioFile.encode({
             description: {
                 url,
-                duration: RequestUtil.getIfNotNull(duration),
-                format: RequestUtil.getIfNotNull(format),
-                size: RequestUtil.getIfNotNull(size),
+                duration: RequestUtil.wrapValueIfNotNull(duration),
+                format: RequestUtil.wrapValueIfNotNull(format),
+                size: RequestUtil.wrapValueIfNotNull(size),
             }
         }).finish();
     }
@@ -204,9 +204,9 @@ export default class MessageService {
         return VideoFile.encode({
             description: {
                 url,
-                duration: RequestUtil.getIfNotNull(duration),
-                format: RequestUtil.getIfNotNull(format),
-                size: RequestUtil.getIfNotNull(size),
+                duration: RequestUtil.wrapValueIfNotNull(duration),
+                format: RequestUtil.wrapValueIfNotNull(format),
+                size: RequestUtil.wrapValueIfNotNull(size),
             }
         }).finish();
     }
@@ -234,9 +234,9 @@ export default class MessageService {
         return ImageFile.encode({
             description: {
                 url,
-                fileSize: RequestUtil.getIfNotNull(fileSize),
-                imageSize: RequestUtil.getIfNotNull(imageSize),
-                original: RequestUtil.getIfNotNull(original)
+                fileSize: RequestUtil.wrapValueIfNotNull(fileSize),
+                imageSize: RequestUtil.wrapValueIfNotNull(imageSize),
+                original: RequestUtil.wrapValueIfNotNull(original)
             }
         }).finish();
     }
@@ -255,8 +255,8 @@ export default class MessageService {
         return File.encode({
             description: {
                 url,
-                format: RequestUtil.getIfNotNull(format),
-                size: RequestUtil.getIfNotNull(size)
+                format: RequestUtil.wrapValueIfNotNull(format),
+                size: RequestUtil.wrapValueIfNotNull(size)
             }
         }).finish();
     }
