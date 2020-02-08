@@ -1,7 +1,7 @@
 export default class RequestUtil {
     static ERROR: Error;
-    static getIfNotNull(value: any): any | undefined;
-    static getTimeIfNotNull(value: Date): any | undefined;
+    static wrapValueIfNotNull(value: any): any | undefined;
+    static wrapTimeIfNotNull(value: Date): any | undefined;
     private static isFalsy;
     private static isTruthy;
     static throwIfEmpty(value: any): void;

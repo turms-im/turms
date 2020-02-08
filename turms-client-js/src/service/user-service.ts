@@ -125,7 +125,7 @@ export default class UserService {
         RequestUtil.throwIfAnyFalsy(password);
         return this._turmsClient.driver.send({
             updateUserRequest: {
-                password: RequestUtil.getIfNotNull(password)
+                password: RequestUtil.wrapValueIfNotNull(password)
             }
         }).then();
     }
@@ -143,9 +143,9 @@ export default class UserService {
         }
         return this._turmsClient.driver.send({
             updateUserRequest: {
-                name: RequestUtil.getIfNotNull(name),
-                intro: RequestUtil.getIfNotNull(intro),
-                profilePictureUrl: RequestUtil.getIfNotNull(profilePictureUrl),
+                name: RequestUtil.wrapValueIfNotNull(name),
+                intro: RequestUtil.wrapValueIfNotNull(intro),
+                profilePictureUrl: RequestUtil.wrapValueIfNotNull(profilePictureUrl),
                 profileAccessStrategy: profileAccessStrategy
             }
         }).then();
@@ -155,7 +155,7 @@ export default class UserService {
         // @ts-ignore
         return this._turmsClient.driver.send({
             queryUserGroupInvitationsRequest: {
-                lastUpdatedDate: RequestUtil.getTimeIfNotNull(lastUpdatedDate)
+                lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
         }).then(notification => NotificationUtil.transform(notification.data.groupInvitationsWithVersion));
     }
@@ -166,7 +166,7 @@ export default class UserService {
         return this._turmsClient.driver.send({
             queryUserProfileRequest: {
                 userId: userId,
-                lastUpdatedDate: RequestUtil.getTimeIfNotNull(lastUpdatedDate)
+                lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
         }).then(notification => {
             return {
@@ -182,8 +182,8 @@ export default class UserService {
             queryUsersIdsNearbyRequest: {
                 latitude: latitude,
                 longitude: longitude,
-                distance: RequestUtil.getIfNotNull(distance),
-                maxNumber: RequestUtil.getIfNotNull(maxNumber)
+                distance: RequestUtil.wrapValueIfNotNull(distance),
+                maxNumber: RequestUtil.wrapValueIfNotNull(maxNumber)
             }
         }).then(notification => NotificationUtil.getIds(notification));
     }
@@ -195,8 +195,8 @@ export default class UserService {
             queryUsersInfosNearbyRequest: {
                 latitude: latitude,
                 longitude: longitude,
-                distance: RequestUtil.getIfNotNull(distance),
-                maxNumber: RequestUtil.getIfNotNull(maxNumber)
+                distance: RequestUtil.wrapValueIfNotNull(distance),
+                maxNumber: RequestUtil.wrapValueIfNotNull(maxNumber)
             }
         }).then(notification => NotificationUtil.getFirstArrayAndTransform(notification.data.usersInfosWithVersion.userInfos));
     }
@@ -222,9 +222,9 @@ export default class UserService {
         return this._turmsClient.driver.send({
             queryRelationshipsRequest: {
                 relatedUsersIds,
-                isBlocked: RequestUtil.getIfNotNull(isBlocked),
-                groupIndex: RequestUtil.getIfNotNull(groupIndex),
-                lastUpdatedDate: RequestUtil.getTimeIfNotNull(lastUpdatedDate)
+                isBlocked: RequestUtil.wrapValueIfNotNull(isBlocked),
+                groupIndex: RequestUtil.wrapValueIfNotNull(groupIndex),
+                lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
         }).then(notification => NotificationUtil.transform(notification.data.userRelationshipsWithVersion));
     }
@@ -235,9 +235,9 @@ export default class UserService {
         lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion> {
         return this._turmsClient.driver.send({
             queryRelatedUsersIdsRequest: {
-                isBlocked: RequestUtil.getIfNotNull(isBlocked),
-                groupIndex: RequestUtil.getIfNotNull(groupIndex),
-                lastUpdatedDate: RequestUtil.getTimeIfNotNull(lastUpdatedDate)
+                isBlocked: RequestUtil.wrapValueIfNotNull(isBlocked),
+                groupIndex: RequestUtil.wrapValueIfNotNull(groupIndex),
+                lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
         }).then(notification => NotificationUtil.getIdsWithVersion(notification));
     }
@@ -256,7 +256,7 @@ export default class UserService {
             createRelationshipRequest: {
                 userId,
                 isBlocked: isBlocked,
-                groupIndex: RequestUtil.getIfNotNull(groupIndex)
+                groupIndex: RequestUtil.wrapValueIfNotNull(groupIndex)
             }
         }).then();
     }
@@ -274,8 +274,8 @@ export default class UserService {
         return this._turmsClient.driver.send({
             deleteRelationshipRequest: {
                 relatedUserId,
-                groupIndex: RequestUtil.getIfNotNull(deleteGroupIndex),
-                targetGroupIndex: RequestUtil.getIfNotNull(targetGroupIndex)
+                groupIndex: RequestUtil.wrapValueIfNotNull(deleteGroupIndex),
+                targetGroupIndex: RequestUtil.wrapValueIfNotNull(targetGroupIndex)
             }
         }).then();
     }
@@ -288,8 +288,8 @@ export default class UserService {
         return this._turmsClient.driver.send({
             updateRelationshipRequest: {
                 relatedUserId,
-                blocked: RequestUtil.getIfNotNull(isBlocked),
-                newGroupIndex: RequestUtil.getIfNotNull(groupIndex)
+                blocked: RequestUtil.wrapValueIfNotNull(isBlocked),
+                newGroupIndex: RequestUtil.wrapValueIfNotNull(groupIndex)
             }
         }).then();
     }
@@ -313,7 +313,7 @@ export default class UserService {
             updateFriendRequestRequest: {
                 requestId: requestId,
                 responseAction: responseAction,
-                reason: RequestUtil.getIfNotNull(reason)
+                reason: RequestUtil.wrapValueIfNotNull(reason)
             }
         }).then();
     }
@@ -322,7 +322,7 @@ export default class UserService {
         // @ts-ignore
         return this._turmsClient.driver.send({
             queryFriendRequestsRequest: {
-                lastUpdatedDate: RequestUtil.getTimeIfNotNull(lastUpdatedDate)
+                lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
         }).then(notification => NotificationUtil.transform(notification.data.userFriendRequestsWithVersion));
     }
@@ -341,7 +341,7 @@ export default class UserService {
         return this._turmsClient.driver.send({
             deleteRelationshipGroupRequest: {
                 groupIndex,
-                targetGroupIndex: RequestUtil.getIfNotNull(targetGroupIndex)
+                targetGroupIndex: RequestUtil.wrapValueIfNotNull(targetGroupIndex)
             }
         }).then();
     }
@@ -360,7 +360,7 @@ export default class UserService {
         // @ts-ignore
         return this._turmsClient.driver.send({
             queryRelationshipGroupsRequest: {
-                lastUpdatedDate: RequestUtil.getTimeIfNotNull(lastUpdatedDate)
+                lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
         }).then(notification => NotificationUtil.transform(notification.data.userRelationshipGroupsWithVersion));
     }
@@ -370,7 +370,7 @@ export default class UserService {
         return this._turmsClient.driver.send({
             updateRelationshipRequest: {
                 relatedUserId,
-                newGroupIndex: RequestUtil.getIfNotNull(groupIndex)
+                newGroupIndex: RequestUtil.wrapValueIfNotNull(groupIndex)
             }
         }).then();
     }
@@ -386,8 +386,8 @@ export default class UserService {
             updateUserLocationRequest: {
                 latitude,
                 longitude,
-                name: RequestUtil.getIfNotNull(name),
-                address: RequestUtil.getIfNotNull(address)
+                name: RequestUtil.wrapValueIfNotNull(name),
+                address: RequestUtil.wrapValueIfNotNull(address)
             }
         }).then();
     }

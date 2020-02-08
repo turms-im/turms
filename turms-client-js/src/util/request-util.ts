@@ -1,11 +1,11 @@
 export default class RequestUtil {
     static ERROR = new Error("Illegal parameters");
 
-    static getIfNotNull(value: any): any | undefined {
+    static wrapValueIfNotNull(value: any): any | undefined {
         return value ? {value} : undefined;
     }
 
-    static getTimeIfNotNull(value: Date): any | undefined {
+    static wrapTimeIfNotNull(value: Date): any | undefined {
         return value ? {value: value.getTime()} : undefined;
     }
 
