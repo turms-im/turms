@@ -1,7 +1,7 @@
 import Foundation
 import PromiseKit
 
-public class UserService {
+public class UserService {    
     private weak var turmsClient: TurmsClient!
     var userId: Int64?
     var password: String?

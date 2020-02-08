@@ -27,7 +27,7 @@ let package = Package(
             dependencies: ["PromiseKit", "Starscream", "SwiftProtobuf"]),
         .testTarget(
             name: "TurmsClientTests",
-            dependencies: ["TurmsClient"]),
+            dependencies: ["TurmsClient", "Starscream", "SwiftProtobuf"]),
     ]
 )
 

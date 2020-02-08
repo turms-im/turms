@@ -3,13 +3,22 @@ import PromiseKit
 import Starscream
 
 public class TurmsDriver {
+    private static let REQUEST_ID_FIELD = "rid"
+    private static let USER_ID_FIELD = "uid"
+    private static let PASSWORD_FIELD = "pwd"
+    private static let DEVICE_TYPE_FIELD = "dt"
+    private static let USER_ONLINE_STATUS_FIELD = "us"
+    private static let USER_LOCATION_FIELD = "loc"
+    private static let USER_DEVICE_DETAILS = "dd"
+    private static let LOCATION_SPLIT = ":"
+
     private var heartbeatInterval: Int = 20
 
     private var websocket: WebSocket?
     private var heartbeatTimer: Timer?
     private var isConnected = false
     public var onMessage: ((TurmsNotification) -> Void)?
-    public var onClose: ((Bool, TurmsStatusCode, Error?) -> Void)?
+    public var onClose: ((Bool, TurmsStatusCode, Error?, UInt16?) -> Void)?
     private var onDisconnectResolver: Resolver<Void>?
 
     private var url: String
@@ -22,7 +31,7 @@ public class TurmsDriver {
     private var password: String?
     private var address: String?
 
-    public init(url: String? = nil, connectionTimeout: Int? = nil, minRequestsInterval: Int? = nil) {
+    public init(_ url: String? = nil, connectionTimeout: Int? = nil, minRequestsInterval: Int? = nil) {
         self.url = url ?? "ws://localhost:9510"
         self.connectionTimeout = connectionTimeout ?? 10
         self.minRequestsInterval = minRequestsInterval
@@ -47,7 +56,7 @@ public class TurmsDriver {
         return Promise { seal in
             if connected() {
                 onDisconnectResolver = seal
-                websocket?.disconnect()
+                websocket!.disconnect()
             } else {
                 seal.reject(TurmsBusinessError(.clientSessionAlreadyEstablished))
             }
@@ -61,9 +70,11 @@ public class TurmsDriver {
             } else {
                 self.userId = userId
                 self.password = password
-                let request = URLRequest(
+                var request = URLRequest(
                     url: URL(string: url ?? self.url)!,
                     timeoutInterval: TimeInterval(connectionTimeout))
+                request.addValue(String(userId), forHTTPHeaderField: TurmsDriver.USER_ID_FIELD)
+                request.addValue(password, forHTTPHeaderField: TurmsDriver.PASSWORD_FIELD)
                 websocket = WebSocket(request: request)
                 websocket!.onEvent = { event in
                     switch event {
@@ -72,18 +83,25 @@ public class TurmsDriver {
                             if self.onMessage != nil {
                                 self.onMessage!(notification)
                             }
-                            let handler: Resolver<TurmsNotification>? = self.requestsMap[notification.requestID.value]
-                            handler?.fulfill(notification)
+                            if notification.hasRequestID {
+                                let handler: Resolver<TurmsNotification>? = self.requestsMap[notification.requestID.value]
+                                handler?.fulfill(notification)
+                            }
                         case .connected:
                             self.onWebsocketOpen()
-                        case .disconnected(let reason, _):
-                            self.onWebsocketClose(Int(reason)!)
+                            seal.fulfill(())
+                        case .disconnected(let reason, let websocketCode):
+                            self.onWebsocketClose(Int(reason), websocketCode)
+                            self.onDisconnectResolver?.fulfill(())
+                        case .cancelled:
+                            self.onWebsocketClose()
                             self.onDisconnectResolver?.fulfill(())
                         case .error(let error):
-                            self.onWebsocketError(error)
+                            self.onWebsocketError(error as! HTTPUpgradeError)
                         default: break
                     }
                 }
+                websocket!.connect()
             }
         }
     }
@@ -118,8 +136,9 @@ public class TurmsDriver {
                 let now = Date()
                 if minRequestsInterval == nil || Int(round(now.timeIntervalSince1970 - lastRequestDate.timeIntervalSince1970)) > minRequestsInterval! {
                     setLastRequestRecord(false, now)
-                    let data = try! request.jsonUTF8Data()
+                    let data = try! request.serializedData()
                     resetHeartBeatTimer()
+                    requestsMap.updateValue(seal, forKey: request.requestID.value)
                     websocket?.write(data: data)
                 } else {
                     seal.reject(TurmsBusinessError(.clientRequestsTooFrequent))
@@ -148,21 +167,30 @@ public class TurmsDriver {
         isConnected = true
     }
 
-    private func onWebsocketClose(_ code: Int) {
+    private func onWebsocketClose(_ turmsStatusCode: Int? = nil, _ webSocketCode: UInt16 = 1000) {
         let wasLogged = isConnected
         isConnected = false
         heartbeatTimer?.invalidate()
-        onClose?(wasLogged, TurmsStatusCode(rawValue: code)!, nil)
+        onClose?(wasLogged, TurmsStatusCode(rawValue: turmsStatusCode ?? -1)!, nil, webSocketCode)
     }
 
-    private func onWebsocketError(_ error: Error?) {
+    private func onWebsocketError(_ error: HTTPUpgradeError) {
         let wasLogged = isConnected
         isConnected = false
         heartbeatTimer?.invalidate()
-        if !wasLogged, userId != nil, error != nil {
+        if !wasLogged, userId != nil, password != nil {
+            switch error {
+                case .notAnUpgrade(let code):
+                    if code == 307 {
+                        connect(userId: userId!, password: password!, url: url)
+                    }
+                    fallthrough
+                default:
+                    onClose?(wasLogged, .failed, error, nil)
+            }
             connect(userId: userId!, password: password!, url: url)
         } else {
-            onClose?(wasLogged, .failed, error)
+            onClose?(wasLogged, .failed, error, nil)
         }
     }
 }

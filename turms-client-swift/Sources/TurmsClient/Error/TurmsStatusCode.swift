@@ -42,7 +42,7 @@ public enum TurmsStatusCode: Int {
 }
 
 extension TurmsStatusCode {
-    public var reason: String? {
+    public var reason: String {
         switch self {
             case .ok: return "ok"
             case .notResponsible: return "The server isn't responsible for the user"

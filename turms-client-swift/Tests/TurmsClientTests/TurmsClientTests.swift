@@ -1,15 +1,9 @@
-import XCTest
 @testable import TurmsClient
+import XCTest
 
 final class TurmsClientTests: XCTestCase {
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-//        XCTAssertEqual(TurmsClient().text, "Hello, World!")
+    func test_init_shouldReturnNotNilClientInstance() {
+        let turmsClient: TurmsClient = TurmsClient(Config.WS_URL)
+        XCTAssertNotNil(turmsClient)
     }
-
-    static var allTests = [
-        ("testExample", testExample),
-    ]
 }

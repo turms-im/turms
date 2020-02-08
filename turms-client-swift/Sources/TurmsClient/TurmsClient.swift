@@ -4,9 +4,9 @@ public class TurmsClient {
     public private(set) var groupService: GroupService!
     public private(set) var messageService: MessageService!
 
-    public init(url: String?, connectionTimeout: Int?, minRequestsInterval: Int?) {
+    public init(_ url: String?, connectionTimeout: Int? = nil, minRequestsInterval: Int? = nil) {
         driver = TurmsDriver(
-            url: url,
+            url,
             connectionTimeout: connectionTimeout,
             minRequestsInterval: minRequestsInterval)
         userService = UserService(self)
