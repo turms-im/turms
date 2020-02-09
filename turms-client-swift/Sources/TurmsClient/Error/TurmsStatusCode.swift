@@ -81,4 +81,8 @@ extension TurmsStatusCode {
             case .clientRequestsTooFrequent: return "Client requests are too frequent"
         }
     }
+    
+    public static func isSuccess(_ code: Int32) -> Bool {
+        return 2000 <= code && code < 3000
+    }
 }

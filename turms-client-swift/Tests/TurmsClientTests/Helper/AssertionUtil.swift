@@ -1,30 +1,29 @@
 import Foundation
 import PromiseKit
 import XCTest
+import TurmsClient
 
-class AssertionUtil {
+class TestUtil {
     private init() {}
-
-    static func assertPromise<T>(_ description: String, _ promise: Promise<T>, assert: ((T) -> Void)? = nil) {
+    
+    static func assertCompleted<T>(_ description: String, _ promise: Promise<T>) {
         let e = XCTestExpectation(description: description)
         promise.done { result in
-            if assert != nil {
-                assert!(result)
-            }
             e.fulfill()
         }.catch { error in
-            XCTFail("\(description): \(error.localizedDescription)")
+            XCTFail("Failed: \(description): \(error)")
         }
         let result = XCTWaiter().wait(for: [e], timeout: 5)
-        switch result {
-            case .incorrectOrder:
-                XCTFail(description + ": incorrect order")
-            case .interrupted:
-                XCTFail(description + ": interrupted")
-            case .timedOut:
-                XCTFail(description + ": timedOut")
-            default:
-                XCTAssert(true, description)
+        XCTAssertEqual(.completed, result, "Failed: \(description): \(result)")
+    }
+    
+    static func wait<T>(_ promise: Promise<T>) -> XCTWaiter.Result {
+        let e = XCTestExpectation()
+        promise.done { result in
+            e.fulfill()
+        }.catch { error in
+            XCTFail("Failed: \(error)")
         }
+        return XCTWaiter().wait(for: [e], timeout: 5)
     }
 }

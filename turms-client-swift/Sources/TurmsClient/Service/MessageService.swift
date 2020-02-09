@@ -19,14 +19,15 @@ public class MessageService {
             throw TurmsBusinessError(.illegalArguments)
         }
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("createMessageRequest")
                 .field("chatType", chatType)
                 .field("toId", toId)
                 .field("deliveryDate", deliveryDate)
-                .wrappedField("text", text)
+                .field("text", text)
                 .field("records", records)
-                .wrappedField("burnAfter", burnAfter))
+                .field("burnAfter", burnAfter)
+            }
             .map { $0.data.ids.values[0] }
     }
 
@@ -35,11 +36,12 @@ public class MessageService {
         chatType: ChatType,
         toId: Int64) -> Promise<Int64> {
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("createMessageRequest")
-                .wrappedField("messageId", messageId)
+                .field("messageId", messageId)
                 .field("chatType", chatType)
-                .field("toId", toId))
+                .field("toId", toId)
+            }
             .map { $0.data.ids.values[0] }
     }
 
@@ -51,17 +53,18 @@ public class MessageService {
             return Promise.value(())
         }
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("updateMessageRequest")
                 .field("messageId", messageId)
-                .wrappedField("text", text)
-                .field("records", records))
+                .field("text", text)
+                .field("records", records)
+            }
             .map { _ in () }
     }
 
     public func queryMessages(
         ids: [Int64]? = nil,
-        chatType: ChatType?,
+        chatType: ChatType? = nil,
         areSystemMessages: Bool? = nil,
         fromId: Int64? = nil,
         deliveryDateAfter: Date? = nil,
@@ -69,50 +72,55 @@ public class MessageService {
         deliveryStatus: MessageDeliveryStatus? = nil,
         size: Int32 = 50) -> Promise<[Message]> {
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("queryMessagesRequest")
-                .wrappedField("ids", ids)
+                .field("ids", ids)
                 .field("chatType", chatType)
-                .wrappedField("areSystemMessages", areSystemMessages)
-                .wrappedField("fromId", fromId)
-                .wrappedField("deliveryDateAfter", deliveryDateAfter)
-                .wrappedField("deliveryDateBefore", deliveryDateBefore)
-                .wrappedField("size", size)
-                .field("deliveryStatus", deliveryStatus))
+                .field("areSystemMessages", areSystemMessages)
+                .field("fromId", fromId)
+                .field("deliveryDateAfter", deliveryDateAfter)
+                .field("deliveryDateBefore", deliveryDateBefore)
+                .field("size", size)
+                .field("deliveryStatus", deliveryStatus)
+            }
             .map { $0.data.messages.messages }
     }
 
     public func queryPendingMessagesWithTotal(size: Int32 = 1) -> Promise<[MessagesWithTotal]> {
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("queryPendingMessagesWithTotalRequest")
-                .wrappedField("size", size))
+                .field("size", size)
+            }
             .map { $0.data.messagesWithTotalList.messagesWithTotalList }
     }
 
     public func queryMessageStatus(messageId: Int64) -> Promise<[MessageStatus]> {
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("queryMessageStatusesRequest")
-                .field("messageId", messageId))
+                .field("messageId", messageId)
+            }
             .map { $0.data.messageStatuses.messageStatuses }
     }
 
     public func recallMessage(messageId: Int64, recallDate: Date = Date()) -> Promise<Void> {
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("updateMessageRequest")
                 .field("messageId", messageId)
-                .wrappedField("recallDate", recallDate))
+                .field("recallDate", recallDate)
+            }
             .map { _ in () }
     }
 
     public func readMessage(messageId: Int64, readDate: Date = Date()) -> Promise<Void> {
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("updateMessageRequest")
                 .field("messageId", messageId)
-                .wrappedField("readDate", readDate))
+                .field("readDate", readDate)
+            }
             .map { _ in () }
     }
 
@@ -124,10 +132,11 @@ public class MessageService {
 
     public func updateTypingStatusRequest(chatType: ChatType, toId: Int64) -> Promise<Void> {
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("updateTypingStatusRequest")
                 .field("chatType", chatType)
-                .field("toId", toId))
+                .field("toId", toId)
+            }
             .map { _ in () }
     }
 

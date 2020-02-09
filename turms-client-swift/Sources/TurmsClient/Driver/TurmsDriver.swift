@@ -17,6 +17,7 @@ public class TurmsDriver {
     private var websocket: WebSocket?
     private var heartbeatTimer: Timer?
     private var isConnected = false
+    
     public var onMessage: ((TurmsNotification) -> Void)?
     public var onClose: ((Bool, TurmsStatusCode, Error?, UInt16?) -> Void)?
     private var onDisconnectResolver: Resolver<Void>?
@@ -29,7 +30,9 @@ public class TurmsDriver {
     private var isLastRequestHeartbeat = false
     private var userId: Int64?
     private var password: String?
+    
     private var address: String?
+    private var sessionId: String?
 
     public init(_ url: String? = nil, connectionTimeout: Int? = nil, minRequestsInterval: Int? = nil) {
         self.url = url ?? "ws://localhost:9510"
@@ -80,12 +83,25 @@ public class TurmsDriver {
                     switch event {
                         case .binary(let data):
                             let notification = try! TurmsNotification(serializedData: data)
+                            if notification.hasData, case .session = notification.data.kind! {
+                                self.address = notification.data.session.address
+                                self.sessionId = notification.data.session.sessionID
+                            } else if notification.hasRequestID {
+                                let requestId = notification.requestID.value
+                                let handler = self.requestsMap[requestId]
+                                if notification.hasCode {
+                                    let code = notification.code.value
+                                    if TurmsStatusCode.isSuccess(code) {
+                                        handler?.fulfill(notification)
+                                    } else {
+                                        handler?.reject(TurmsBusinessError(code))
+                                    }
+                                } else {
+                                    handler?.fulfill(notification)
+                                }
+                            }
                             if self.onMessage != nil {
                                 self.onMessage!(notification)
-                            }
-                            if notification.hasRequestID {
-                                let handler: Resolver<TurmsNotification>? = self.requestsMap[notification.requestID.value]
-                                handler?.fulfill(notification)
                             }
                         case .connected:
                             self.onWebsocketOpen()
@@ -123,8 +139,10 @@ public class TurmsDriver {
         }
     }
 
-    func send(_ requestBuilder: RequestBuilder) -> Promise<TurmsNotification> {
-        let request = requestBuilder
+    func send(_ populator: (inout RequestBuilder) -> ()) -> Promise<TurmsNotification> {
+        var builder = RequestBuilder()
+        populator(&builder)
+        let request = builder
             .id(generateRandomId())
             .build()
         return send(request)

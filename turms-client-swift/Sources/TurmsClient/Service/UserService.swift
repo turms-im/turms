@@ -1,7 +1,7 @@
 import Foundation
 import PromiseKit
 
-public class UserService {    
+public class UserService {
     private weak var turmsClient: TurmsClient!
     var userId: Int64?
     var password: String?
@@ -51,17 +51,19 @@ public class UserService {
             return Promise(error: TurmsBusinessError(.illegalArguments))
         }
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("updateUserOnlineStatusRequest")
-                .field("userStatus", onlineStatus))
+                .field("userStatus", onlineStatus)
+            }
             .map { _ in () }
     }
 
     public func updatePassword(password: String) -> Promise<Void> {
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("updateUserRequest")
-                .wrappedField("password", password))
+                .field("password", password)
+            }
             .map { _ in () }
     }
 
@@ -74,59 +76,65 @@ public class UserService {
             return Promise.value(())
         }
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("updateUserRequest")
-                .wrappedField("name", name)
-                .wrappedField("intro", intro)
-                .wrappedField("profilePictureUrl", profilePictureUrl)
-                .field("profileAccessStrategy", profileAccessStrategy))
+                .field("name", name)
+                .field("intro", intro)
+                .field("profilePictureUrl", profilePictureUrl)
+                .field("profileAccessStrategy", profileAccessStrategy)
+            }
             .map { _ in () }
     }
 
     public func queryUserGroupInvitations(lastUpdatedDate: Date? = nil) -> Promise<GroupInvitationsWithVersion> {
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("queryUserGroupInvitationsRequest")
-                .wrappedField("lastUpdatedDate", lastUpdatedDate))
+                .field("lastUpdatedDate", lastUpdatedDate)
+            }
             .map { $0.data.groupInvitationsWithVersion }
     }
 
     public func queryUserProfile(userId: Int64, lastUpdatedDate: Date? = nil) -> Promise<UserInfoWithVersion> {
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("queryUserProfileRequest")
                 .field("userId", userId)
-                .wrappedField("lastUpdatedDate", lastUpdatedDate))
+                .field("lastUpdatedDate", lastUpdatedDate)
+            }
             .map { UserInfoWithVersion.from($0) }
     }
 
     public func queryUsersIdsNearby(latitude: Float, longitude: Float, distance: Int32? = nil, maxNumber: Int32? = nil) -> Promise<[Int64]> {
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("queryUsersIdsNearbyRequest")
                 .field("latitude", latitude)
                 .field("longitude", longitude)
-                .wrappedField("distance", distance)
-                .wrappedField("maxNumber", maxNumber))
+                .field("distance", distance)
+                .field("maxNumber", maxNumber)
+            }
             .map { $0.data.ids.values }
     }
 
     public func queryUsersInfosNearby(latitude: Float, longitude: Float, distance: Int32? = nil, maxNumber: Int32? = nil) -> Promise<[UserInfo]> {
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("queryUsersInfosNearbyRequest")
                 .field("latitude", latitude)
                 .field("longitude", longitude)
-                .wrappedField("distance", distance)
-                .wrappedField("maxNumber", maxNumber))
+                .field("distance", distance)
+                .field("maxNumber", maxNumber)
+            }
             .map { $0.data.usersInfosWithVersion.userInfos }
     }
 
     public func queryUsersOnlineStatusRequest(usersIds: [Int64]) -> Promise<[UserStatusDetail]> {
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("queryUsersOnlineStatusRequest")
-                .field("usersIds", usersIds))
+                .field("usersIds", usersIds)
+            }
             .map { $0.data.usersOnlineStatuses.userStatuses }
     }
 
@@ -138,22 +146,24 @@ public class UserService {
         groupIndex: Int32? = nil,
         lastUpdatedDate: Date? = nil) -> Promise<UserRelationshipsWithVersion> {
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("queryRelationshipsRequest")
                 .field("relatedUsersIds", relatedUsersIds)
-                .wrappedField("isBlocked", isBlocked)
-                .wrappedField("groupIndex", groupIndex)
-                .wrappedField("lastUpdatedDate", lastUpdatedDate))
+                .field("isBlocked", isBlocked)
+                .field("groupIndex", groupIndex)
+                .field("lastUpdatedDate", lastUpdatedDate)
+            }
             .map { $0.data.userRelationshipsWithVersion }
     }
 
     public func queryRelatedUsersIds(isBlocked: Bool? = nil, groupIndex: Int32? = nil, lastUpdatedDate: Date? = nil) -> Promise<Int64ValuesWithVersion> {
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("queryRelatedUsersIdsRequest")
-                .wrappedField("isBlocked", isBlocked)
-                .wrappedField("groupIndex", groupIndex)
-                .wrappedField("lastUpdatedDate", lastUpdatedDate))
+                .field("isBlocked", isBlocked)
+                .field("groupIndex", groupIndex)
+                .field("lastUpdatedDate", lastUpdatedDate)
+            }
             .map { $0.data.idsWithVersion }
     }
 
@@ -173,11 +183,12 @@ public class UserService {
 
     public func createRelationship(userId: Int64, isBlocked: Bool, groupIndex: Int32? = nil) -> Promise<Void> {
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("createRelationshipRequest")
                 .field("userId", userId)
                 .field("isBlocked", isBlocked)
-                .wrappedField("groupIndex", groupIndex))
+                .field("groupIndex", groupIndex)
+            }
             .map { _ in () }
     }
 
@@ -197,11 +208,12 @@ public class UserService {
 
     public func deleteRelationship(relatedUserId: Int64, deleteGroupIndex: Int32? = nil, targetGroupIndex: Int32? = nil) -> Promise<Void> {
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("deleteRelationshipRequest")
                 .field("relatedUserId", relatedUserId)
-                .wrappedField("groupIndex", deleteGroupIndex)
-                .wrappedField("targetGroupIndex", targetGroupIndex))
+                .field("groupIndex", deleteGroupIndex)
+                .field("targetGroupIndex", targetGroupIndex)
+            }
             .map { _ in () }
     }
 
@@ -210,81 +222,90 @@ public class UserService {
             return Promise.value(())
         }
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("updateRelationshipRequest")
                 .field("relatedUserId", relatedUserId)
-                .wrappedField("blocked", isBlocked)
-                .wrappedField("newGroupIndex", groupIndex))
+                .field("blocked", isBlocked)
+                .field("newGroupIndex", groupIndex)
+            }
             .map { _ in () }
     }
 
     public func sendFriendRequest(recipientId: Int64, content: String) -> Promise<Int64> {
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("createFriendRequestRequest")
                 .field("recipientId", recipientId)
-                .field("content", content))
+                .field("content", content)
+            }
             .map { $0.data.ids.values[0] }
     }
 
     public func replyFriendRequest(requestId: Int64, responseAction: ResponseAction, reason: String? = nil) -> Promise<Void> {
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("updateFriendRequestRequest")
                 .field("requestId", requestId)
                 .field("responseAction", responseAction)
-                .wrappedField("reason", reason))
+                .field("reason", reason)
+            }
             .map { _ in () }
     }
 
     public func queryFriendRequests(lastUpdatedDate: Date? = nil) -> Promise<UserFriendRequestsWithVersion> {
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("queryFriendRequestsRequest")
-                .wrappedField("lastUpdatedDate", lastUpdatedDate))
+                .field("lastUpdatedDate", lastUpdatedDate)
+            }
             .map { $0.data.userFriendRequestsWithVersion }
     }
 
     public func createRelationshipGroup(name: String) -> Promise<Int32> {
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("createRelationshipGroupRequest")
-                .field("name", name))
+                .field("name", name)
+            }
             .map { Int32($0.data.ids.values[0]) }
     }
 
     public func deleteRelationshipGroups(groupIndex: Int32, targetGroupIndex: Int32? = nil) -> Promise<Void> {
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("deleteRelationshipGroupRequest")
                 .field("groupIndex", groupIndex)
-                .wrappedField("targetGroupIndex", targetGroupIndex))
+                .field("targetGroupIndex", targetGroupIndex)
+            }
             .map { _ in () }
     }
 
     public func updateRelationshipGroup(groupIndex: Int32, newName: String) -> Promise<Void> {
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("updateRelationshipGroupRequest")
                 .field("groupIndex", groupIndex)
-                .field("newName", newName))
+                .field("newName", newName)
+            }
             .map { _ in () }
     }
 
     public func queryRelationshipGroups(lastUpdatedDate: Date? = nil) -> Promise<UserRelationshipGroupsWithVersion> {
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("queryRelationshipGroupsRequest")
-                .wrappedField("lastUpdatedDate", lastUpdatedDate))
+                .field("lastUpdatedDate", lastUpdatedDate)
+            }
             .map { $0.data.userRelationshipGroupsWithVersion }
     }
 
     public func moveRelatedUserToGroup(relatedUserId: Int64, groupIndex: Int32) -> Promise<Void> {
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("updateRelationshipRequest")
                 .field("relatedUserId", relatedUserId)
-                .wrappedField("newGroupIndex", groupIndex))
+                .field("newGroupIndex", groupIndex)
+            }
             .map { _ in () }
     }
 
@@ -295,12 +316,13 @@ public class UserService {
      */
     public func updateLocation(latitude: Float, longitude: Float, name: String? = nil, address: String? = nil) -> Promise<Void> {
         return turmsClient.driver
-            .send(RequestBuilder.newInstance()
+            .send { $0
                 .request("updateUserLocationRequest")
                 .field("latitude", latitude)
                 .field("longitude", longitude)
-                .wrappedField("name", name)
-                .wrappedField("address", address))
+                .field("name", name)
+                .field("address", address)
+            }
             .map { _ in () }
     }
 }
