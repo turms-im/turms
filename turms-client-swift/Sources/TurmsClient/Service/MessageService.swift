@@ -14,9 +14,9 @@ public class MessageService {
         deliveryDate: Date,
         text: String? = nil,
         records: [[UInt8]]? = nil,
-        burnAfter: Int32? = nil) throws -> Promise<Int64> {
+        burnAfter: Int32? = nil) -> Promise<Int64> {
         if Validator.areAllNil(text, records) {
-            throw TurmsBusinessError(.illegalArguments)
+            return Promise(error: TurmsBusinessError(.illegalArguments))
         }
         return turmsClient.driver
             .send { $0
@@ -86,7 +86,7 @@ public class MessageService {
             .map { $0.data.messages.messages }
     }
 
-    public func queryPendingMessagesWithTotal(size: Int32 = 1) -> Promise<[MessagesWithTotal]> {
+    public func queryPendingMessagesWithTotal(_ size: Int32 = 1) -> Promise<[MessagesWithTotal]> {
         return turmsClient.driver
             .send { $0
                 .request("queryPendingMessagesWithTotalRequest")
@@ -95,7 +95,7 @@ public class MessageService {
             .map { $0.data.messagesWithTotalList.messagesWithTotalList }
     }
 
-    public func queryMessageStatus(messageId: Int64) -> Promise<[MessageStatus]> {
+    public func queryMessageStatus(_ messageId: Int64) -> Promise<[MessageStatus]> {
         return turmsClient.driver
             .send { $0
                 .request("queryMessageStatusesRequest")
@@ -124,7 +124,7 @@ public class MessageService {
             .map { _ in () }
     }
 
-    public func markMessageUnread(messageId: Int64) -> Promise<Void> {
+    public func markMessageUnread(_ messageId: Int64) -> Promise<Void> {
         return readMessage(
             messageId: messageId,
             readDate: Date(timeIntervalSince1970: 0))
@@ -168,7 +168,7 @@ public class MessageService {
         }.serializedData()
     }
 
-    public static func generateAudioRecordByData(data: Data) -> Data {
+    public static func generateAudioRecordByData(_ data: Data) -> Data {
         return try! AudioFile.with {
             $0.data.value = data
         }.serializedData()
@@ -189,13 +189,13 @@ public class MessageService {
         }.serializedData()
     }
 
-    public static func generateVideoRecordByData(data: Data) -> Data {
+    public static func generateVideoRecordByData(_ data: Data) -> Data {
         return try! VideoFile.with {
             $0.data.value = data
         }.serializedData()
     }
 
-    public static func generateImageRecordByData(data: Data) -> Data {
+    public static func generateImageRecordByData(_ data: Data) -> Data {
         return try! ImageFile.with {
             $0.data.value = data
         }.serializedData()
@@ -216,7 +216,7 @@ public class MessageService {
         }.serializedData()
     }
 
-    public static func generateFileRecordByDate(data: Data) -> Data {
+    public static func generateFileRecordByDate(_ data: Data) -> Data {
         return try! File.with {
             $0.data.value = data
         }.serializedData()

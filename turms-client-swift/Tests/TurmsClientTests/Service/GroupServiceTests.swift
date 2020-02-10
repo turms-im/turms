@@ -2,17 +2,17 @@ import PromiseKit
 @testable import TurmsClient
 import XCTest
 
-public class GroupServiceTests: XCTestCase {
+class GroupServiceTests: XCTestCase {
     var turmsClient: TurmsClient!
 
-    public override func setUp() {
+    override func setUp() {
         continueAfterFailure = false
         turmsClient = TurmsClient(Config.WS_URL)
-        TestUtil.assertCompleted("connect_shouldSucceed", turmsClient.driver.connect(userId: 1, password: "123"))
+        TestUtil.wait(turmsClient.driver.connect(userId: 1, password: "123"))
     }
 
-    public override func tearDown() {
-        TestUtil.assertCompleted("disconnect_shouldSucceed", turmsClient.driver.disconnect())
+    override func tearDown() {
+        TestUtil.wait(turmsClient.driver.disconnect())
     }
 
     func test_system() {
