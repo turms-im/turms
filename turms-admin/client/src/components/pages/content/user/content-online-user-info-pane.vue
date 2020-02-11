@@ -4,7 +4,7 @@
     >
         <div>
             <custom-input
-                v-model="id"
+                v-model="ids"
                 :placeholder="$t('userId')"
                 class="search-filter search-filter-id"
                 :only-number-and-comma="true"
@@ -12,7 +12,7 @@
             <a-button
                 type="primary"
                 class="search-button"
-                :disabled="!id"
+                :disabled="!ids"
                 @click="search"
             >
                 {{ $t('search') }}
@@ -43,10 +43,10 @@
                     slot-scope="text, record"
                 >
                     <div class="editable-row-operations">
-                        <span v-if="record.userStatus !== 'OFFLINE'">
+                        <span v-if="!['OFFLINE', 'NONEXISTENT'].includes(record.userStatus)">
                             <a-popconfirm
                                 :title="$t('confirmDisconnect')"
-                                @confirm="() => onDelete(record.id)"
+                                @confirm="() => disconnectUsers([record.id], [record.deviceType])"
                             >
                                 <a>{{ $t('disconnect') }}</a>
                             </a-popconfirm>
@@ -108,7 +108,7 @@ export default {
                 width: '10%',
                 scopedSlots: {customRender: 'operation'}
             }],
-            id: null,
+            ids: '',
             loading: false,
             selectedRowKeys: [],
             selectedRows: [],
@@ -129,17 +129,20 @@ export default {
         search() {
             this.loading = true;
             this.selectedRowKeys.splice(0, this.selectedRowKeys.length);
+            const userIds = this.ids
+                .split(',')
+                .filter(value => value !== '')
+                .map(value => parseInt(value));
             this.$client.get(this.$rs.apis.userStatus, {
                 params: {
-                    ids: this.id || undefined
+                    ids: userIds.length ? userIds.join(',') : undefined
                 }
             })
                 .then(response => {
                     if (response.status === 204) {
                         this.records = [];
                     } else {
-                        this.loaded = true;
-                        this.records = response.data.data.flatMap(record => {
+                        const records = response.data.data.flatMap(record => {
                             const array = [];
                             record.key = record.userId;
                             if (record.sessionMap) {
@@ -160,6 +163,18 @@ export default {
                             }
                             return array;
                         });
+                        this.records = [];
+                        for (const userId of userIds) {
+                            const userStatusInfo = records.find(record => record.key === userId);
+                            if (userStatusInfo) {
+                                this.records.push(userStatusInfo);
+                            } else {
+                                this.records.push({
+                                    userId,
+                                    userStatus: 'NONEXISTENT'
+                                });
+                            }
+                        }
                     }
                 })
                 .catch(error => {
@@ -172,21 +187,25 @@ export default {
                 .finally(() => this.loading = false);
         },
         setSelectedDevicesOffline() {
-            this.onDelete();
-        },
-        onDelete(ids) {
             if (!this.selectedRows.length) {
                 this.$message.error(this.$t('noRecordsSelected'));
                 return;
             }
+            if (!this.selectedRows.some(value => !['OFFLINE', 'NONEXISTENT'].includes(value.userStatus))) {
+                this.$message.success(this.$t('disconnectSuccessfully'));
+                return;
+            }
+            const userIds = this.selectedRowKeys.filter((v, i, a) => a.indexOf(v) === i);
             const deviceTypes = this.selectedRows
                 .filter(record => record.deviceType)
                 .map(record => record.deviceType);
+            this.disconnectUsers(userIds, deviceTypes);
+        },
+        disconnectUsers(ids, deviceTypes) {
             if (!deviceTypes.length) {
-                this.$message.error(this.$t('noOnlineDevices'));
+                console.error('The device types to disconnect must not be empty');
                 return;
             }
-            ids = ids || this.selectedRowKeys.filter((v, i, a) => a.indexOf(v) === i);
             this.loading = true;
             const params = {
                 ids: ids.join(','),
@@ -197,7 +216,11 @@ export default {
             })
                 .then(() => {
                     this.$message.success(this.$t('disconnectSuccessfully'));
-                    this.records = this.records.filter(record => !ids.includes(record.id));
+                    this.records = this.records.map(record => {
+                        if (!ids.includes(record.id)) {
+                            record.userStatus = 'OFFLINE';
+                        }
+                    });
                 })
                 .catch(error => {
                     this.$error(this.$t('failedToDisconnect'), error);
