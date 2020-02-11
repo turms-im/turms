@@ -170,6 +170,7 @@ export default {
                                 this.records.push(userStatusInfo);
                             } else {
                                 this.records.push({
+                                    key: userId,
                                     userId,
                                     userStatus: 'NONEXISTENT'
                                 });
