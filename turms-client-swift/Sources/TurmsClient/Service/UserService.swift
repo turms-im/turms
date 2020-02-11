@@ -46,7 +46,7 @@ public class UserService {
         return turmsClient.driver.disconnect()
     }
 
-    public func updateUserOnlineStatus(onlineStatus: UserStatus) -> Promise<Void> {
+    public func updateUserOnlineStatus(_ onlineStatus: UserStatus) -> Promise<Void> {
         if onlineStatus == .offline {
             return Promise(error: TurmsBusinessError(.illegalArguments))
         }
@@ -58,7 +58,7 @@ public class UserService {
             .map { _ in () }
     }
 
-    public func updatePassword(password: String) -> Promise<Void> {
+    public func updatePassword(_ password: String) -> Promise<Void> {
         return turmsClient.driver
             .send { $0
                 .request("updateUserRequest")
@@ -86,7 +86,7 @@ public class UserService {
             .map { _ in () }
     }
 
-    public func queryUserGroupInvitations(lastUpdatedDate: Date? = nil) -> Promise<GroupInvitationsWithVersion> {
+    public func queryUserGroupInvitations(_ lastUpdatedDate: Date? = nil) -> Promise<GroupInvitationsWithVersion> {
         return turmsClient.driver
             .send { $0
                 .request("queryUserGroupInvitationsRequest")
@@ -129,7 +129,7 @@ public class UserService {
             .map { $0.data.usersInfosWithVersion.userInfos }
     }
 
-    public func queryUsersOnlineStatusRequest(usersIds: [Int64]) -> Promise<[UserStatusDetail]> {
+    public func queryUsersOnlineStatusRequest(_ usersIds: [Int64]) -> Promise<[UserStatusDetail]> {
         return turmsClient.driver
             .send { $0
                 .request("queryUsersOnlineStatusRequest")
@@ -252,7 +252,7 @@ public class UserService {
             .map { _ in () }
     }
 
-    public func queryFriendRequests(lastUpdatedDate: Date? = nil) -> Promise<UserFriendRequestsWithVersion> {
+    public func queryFriendRequests(_ lastUpdatedDate: Date? = nil) -> Promise<UserFriendRequestsWithVersion> {
         return turmsClient.driver
             .send { $0
                 .request("queryFriendRequestsRequest")
@@ -261,7 +261,7 @@ public class UserService {
             .map { $0.data.userFriendRequestsWithVersion }
     }
 
-    public func createRelationshipGroup(name: String) -> Promise<Int32> {
+    public func createRelationshipGroup(_ name: String) -> Promise<Int32> {
         return turmsClient.driver
             .send { $0
                 .request("createRelationshipGroupRequest")
@@ -290,7 +290,7 @@ public class UserService {
             .map { _ in () }
     }
 
-    public func queryRelationshipGroups(lastUpdatedDate: Date? = nil) -> Promise<UserRelationshipGroupsWithVersion> {
+    public func queryRelationshipGroups(_ lastUpdatedDate: Date? = nil) -> Promise<UserRelationshipGroupsWithVersion> {
         return turmsClient.driver
             .send { $0
                 .request("queryRelationshipGroupsRequest")

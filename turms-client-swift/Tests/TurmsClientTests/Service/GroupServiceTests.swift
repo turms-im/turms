@@ -44,7 +44,7 @@ class GroupServiceTests: XCTestCase {
         // Update
         TestUtil.assertCompleted("updateGroup_shouldSucceed", turmsClient.groupService.updateGroup(groupId: groupId!, groupName: "name", intro: "intro", announcement: "announcement", minimumScore: 10))
         TestUtil.assertCompleted("muteGroup_shouldSucceed", turmsClient.groupService.muteGroup(groupId: groupId!, muteEndDate: Date()))
-        TestUtil.assertCompleted("unmuteGroup_shouldSucceed", turmsClient.groupService.unmuteGroup(groupId: groupId!))
+        TestUtil.assertCompleted("unmuteGroup_shouldSucceed", turmsClient.groupService.unmuteGroup(groupId!))
         TestUtil.assertCompleted("updateGroupJoinQuestion_shouldSucceed", turmsClient.groupService.updateGroupJoinQuestion(questionId: groupQuestionId!, question: "new-question", answers: ["answer"]))
         TestUtil.assertCompleted("updateGroupMemberInfo_shouldSucceed", turmsClient.groupService.updateGroupMemberInfo(groupId: groupId!, memberId: groupMemberId, name: "myname"))
         TestUtil.assertCompleted("muteGroupMember_shouldSucceed", turmsClient.groupService.muteGroupMember(groupId: groupId!, memberId: groupMemberId, muteEndDate: Date(timeIntervalSinceNow: 100000)))
@@ -82,7 +82,7 @@ class GroupServiceTests: XCTestCase {
         TestUtil.assertCompleted("queryGroupMembersByMembersIds_shouldEqualNewMemberId", turmsClient.groupService.queryGroupMembersByMembersIds(groupId: groupId!, membersIds: [groupMemberId], withStatus: true).done {
             XCTAssertEqual(groupMemberId, $0.groupMembers[0].userID.value)
         })
-        TestUtil.assertCompleted("answerGroupQuestions_shouldEqualNewQuestionId", turmsClient.groupService.answerGroupQuestions(questionIdsAndAnswers: [groupQuestionId!: "answer"]).recover { error -> Promise<Bool> in
+        TestUtil.assertCompleted("answerGroupQuestions_shouldEqualNewQuestionId", turmsClient.groupService.answerGroupQuestions([groupQuestionId!: "answer"]).recover { error -> Promise<Bool> in
             if let businessError = error as? TurmsBusinessError, businessError.code == .alreadyGroupMember {
                 return Promise.value(false)
             } else {
@@ -93,16 +93,16 @@ class GroupServiceTests: XCTestCase {
         // Delete
 
         TestUtil.assertCompleted("removeGroupMember_shouldSucceed", turmsClient.groupService.removeGroupMember(groupId: groupId!, memberId: groupMemberId))
-        TestUtil.assertCompleted("deleteGroupJoinQuestion_shouldSucceed", turmsClient.groupService.deleteGroupJoinQuestion(questionId: groupQuestionId!))
+        TestUtil.assertCompleted("deleteGroupJoinQuestion_shouldSucceed", turmsClient.groupService.deleteGroupJoinQuestion(groupQuestionId!))
         TestUtil.assertCompleted("unblacklistUser_shouldSucceed", turmsClient.groupService.unblacklistUser(groupId: groupId!, userId: groupBlacklistedUserId))
-        TestUtil.assertCompleted("deleteInvitation_shouldSucceedOrThrowDisabledFunction", turmsClient.groupService.deleteInvitation(invitationId: groupInvitationId!).recover { error -> Promise<Void> in
+        TestUtil.assertCompleted("deleteInvitation_shouldSucceedOrThrowDisabledFunction", turmsClient.groupService.deleteInvitation(groupInvitationId!).recover { error -> Promise<Void> in
             if let businessError = error as? TurmsBusinessError, businessError.code == .disabledFunction {
                 return Promise.value(())
             } else {
                 throw error
             }
         })
-        TestUtil.assertCompleted("deleteJoinRequest_shouldSucceedOrThrowDisabledFunction", turmsClient.groupService.deleteJoinRequest(requestId: groupJoinRequestId!).recover { error -> Promise<Void> in
+        TestUtil.assertCompleted("deleteJoinRequest_shouldSucceedOrThrowDisabledFunction", turmsClient.groupService.deleteJoinRequest(groupJoinRequestId!).recover { error -> Promise<Void> in
             if let businessError = error as? TurmsBusinessError, businessError.code == .disabledFunction {
                 return Promise.value(())
             } else {
@@ -114,7 +114,7 @@ class GroupServiceTests: XCTestCase {
         TestUtil.wait(turmsClient.groupService.createGroup(name: "readyToDelete").done {
             readyToDeleteGroupId = $0
         })
-        TestUtil.assertCompleted("deleteGroup_shouldSucceed", turmsClient.groupService.deleteGroup(groupId: readyToDeleteGroupId))
+        TestUtil.assertCompleted("deleteGroup_shouldSucceed", turmsClient.groupService.deleteGroup(readyToDeleteGroupId))
 
         // Lowest-priority Update
         TestUtil.assertCompleted("transferOwnership_shouldSucceed", turmsClient.groupService.transferOwnership(groupId: groupId!, successorId: groupSuccessorId, quitAfterTransfer: true))

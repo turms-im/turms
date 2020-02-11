@@ -29,7 +29,7 @@ public class GroupService {
             .map { $0.data.ids.values[0] }
     }
 
-    public func deleteGroup(groupId: Int64) -> Promise<Void> {
+    public func deleteGroup(_ groupId: Int64) -> Promise<Void> {
         return turmsClient.driver
             .send { $0
                 .request("deleteGroupRequest")
@@ -98,7 +98,7 @@ public class GroupService {
             .map { _ in () }
     }
 
-    public func unmuteGroup(groupId: Int64) -> Promise<Void> {
+    public func unmuteGroup(_ groupId: Int64) -> Promise<Void> {
         return muteGroup(groupId: groupId, muteEndDate: Date(timeIntervalSince1970: 0))
     }
 
@@ -112,7 +112,7 @@ public class GroupService {
             .map { GroupWithVersion.from($0) }
     }
 
-    public func queryJoinedGroupsIds(lastUpdatedDate: Date? = nil) -> Promise<Int64ValuesWithVersion> {
+    public func queryJoinedGroupsIds(_ lastUpdatedDate: Date? = nil) -> Promise<Int64ValuesWithVersion> {
         return turmsClient.driver
             .send { $0
                 .request("queryJoinedGroupsIdsRequest")
@@ -121,7 +121,7 @@ public class GroupService {
             .map { $0.data.idsWithVersion }
     }
 
-    public func queryJoinedGroupsInfos(lastUpdatedDate: Date? = nil) -> Promise<GroupsWithVersion> {
+    public func queryJoinedGroupsInfos(_ lastUpdatedDate: Date? = nil) -> Promise<GroupsWithVersion> {
         return turmsClient.driver
             .send { $0
                 .request("queryJoinedGroupsInfosRequest")
@@ -142,7 +142,7 @@ public class GroupService {
             .map { $0.data.ids.values[0] }
     }
 
-    public func deleteGroupJoinQuestion(questionId: Int64) -> Promise<Void> {
+    public func deleteGroupJoinQuestion(_ questionId: Int64) -> Promise<Void> {
         return turmsClient.driver
             .send { $0
                 .request("deleteGroupJoinQuestionRequest")
@@ -223,7 +223,7 @@ public class GroupService {
             .map { $0.data.ids.values[0] }
     }
 
-    public func deleteInvitation(invitationId: Int64) -> Promise<Void> {
+    public func deleteInvitation(_ invitationId: Int64) -> Promise<Void> {
         return turmsClient.driver
             .send { $0
                 .request("deleteGroupInvitationRequest")
@@ -252,7 +252,7 @@ public class GroupService {
             .map { $0.data.ids.values[0] }
     }
 
-    public func deleteJoinRequest(requestId: Int64) -> Promise<Void> {
+    public func deleteJoinRequest(_ requestId: Int64) -> Promise<Void> {
         return turmsClient.driver
             .send { $0
                 .request("deleteGroupJoinRequestRequest")
@@ -288,7 +288,7 @@ public class GroupService {
             .map { $0.data.groupJoinQuestionsWithVersion }
     }
 
-    public func answerGroupQuestions(questionIdsAndAnswers: [Int64: String]) -> Promise<Bool> {
+    public func answerGroupQuestions(_ questionIdsAndAnswers: [Int64: String]) -> Promise<Bool> {
         if questionIdsAndAnswers.isEmpty {
             return Promise.value(false)
         }
