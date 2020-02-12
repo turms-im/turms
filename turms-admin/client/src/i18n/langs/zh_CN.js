@@ -217,7 +217,6 @@ const zh_CN = {
     'noFieldForUpdateError': '至少需要设置一个更新字段',
     'noRecordsSelected': '未选中任何记录',
     'noRecordsToExport': '无可导出记录',
-    'noOnlineDevices': '无在线设备',
     'oneUpdateFieldAtLeast': '无任何更新字段',
     'onlineDevice': '在线设备',
     'onlineUserStatus': '在线用户状态',
@@ -241,8 +240,8 @@ const zh_CN = {
     'profileAccess': '访问权限',
     'profilePictureUrl': '头像URL',
     'question': '问题',
-    'failedToDisconnect': '下线请求失败',
-    'disconnectSuccessfully': '下线请求成功',
+    'failedToDisconnect': '下线目标设备失败',
+    'disconnectSuccessfully': '已下线目标设备',
     'questionId': '问题ID',
     'readDate': '阅读时间',
     'readDateRange': {

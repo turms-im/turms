@@ -5,6 +5,9 @@ import ChatType = im.turms.proto.ChatType;
 import MessageDeliveryStatus = im.turms.proto.MessageDeliveryStatus;
 export default class MessageService {
     private _turmsClient;
+    private _onMessage?;
+    get onMessage(): (message: ParsedModel.Message) => void;
+    set onMessage(value: (message: ParsedModel.Message) => void);
     constructor(turmsClient: TurmsClient);
     sendMessage(chatType: string | ChatType, toId: number, deliveryDate: Date, text?: string, records?: Uint8Array[], burnAfter?: number): Promise<number>;
     forwardMessage(messageId: number, chatType: string | ChatType, toId: number): Promise<number>;

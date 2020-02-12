@@ -41,10 +41,11 @@ function start() {
             }
         }
     };
-    clientUserOne.driver.onMessage = (notification) => {
-        if (notification.relayedRequest || (notification.data && notification.data.session)) {
-            appendUserOneContainer('onMessage: Receive a notification from other users or server: ' + beautify(notification));
-        }
+    clientUserOne.notificationService.onNotification = (notification) => {
+        appendUserOneContainer('onNotification: Receive a notification from other users or server: ' + beautify(notification));
+    };
+    clientUserOne.messageService.onMessage = (message) => {
+        appendUserOneContainer('onMessage: Receive a message from other users or server: ' + beautify(message));
     };
     clientUserTwo.driver.onClose = (wasLogged, error) => {
         if (wasLogged) {
@@ -56,10 +57,11 @@ function start() {
             }
         }
     };
-    clientUserTwo.driver.onMessage = (notification) => {
-        if (notification.relayedRequest || (notification.data && notification.data.session)) {
-            appendUserTwoContainer('onMessage: Receive a notification from other users or server: ' + beautify(notification));
-        }
+    clientUserTwo.notificationService.onNotification = (notification) => {
+        appendUserTwoContainer('onNotification: Receive a notification from other users or server: ' + beautify(notification));
+    };
+    clientUserTwo.messageService.onMessage = (message) => {
+        appendUserTwoContainer('onMessage: Receive a message from other users or server: ' + beautify(message));
     };
     return Promise.all([
         clientUserOne.userService.login(USER_ONE_ID, '123')

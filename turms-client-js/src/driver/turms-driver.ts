@@ -21,7 +21,7 @@ export default class TurmsDriver {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private _websocket: any; //WebSocketAsPromised
     private _heartbeatTimer?: Timer;
-    private _onMessage?: (notification: ParsedNotification) => void;
+    private _onNotificationListeners: ((notification: ParsedNotification) => void)[] = [];
     private _onClose?: (wasConnected: boolean, error?: any, status?: TurmsError) => void;
 
     private _turmsClient: TurmsClient;
@@ -64,8 +64,8 @@ export default class TurmsDriver {
         this._onClose = value;
     }
 
-    set onMessage(value: any) {
-        this._onMessage = value;
+    get onNotificationListeners() {
+        return this._onNotificationListeners;
     }
 
     sendHeartbeat(): Promise<void> {
@@ -122,8 +122,13 @@ export default class TurmsDriver {
                         this._sessionId = notification.data.session.sessionId;
                         this._address = notification.data.session.address;
                     }
-                    if (this._onMessage) {
-                        this._onMessage(NotificationUtil.transform(notification) as ParsedNotification);
+                    const parsedNotification = NotificationUtil.transform(notification);
+                    for (const listener of this._onNotificationListeners) {
+                        try {
+                            listener(parsedNotification as ParsedNotification);
+                        } catch (e) {
+                            console.error(e);
+                        }
                     }
                 });
                 let causedByError = false;
