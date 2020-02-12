@@ -14,9 +14,31 @@ import MessageDeliveryStatus = im.turms.proto.MessageDeliveryStatus;
 
 export default class MessageService {
     private _turmsClient: TurmsClient;
+    private _onMessage?: (message: ParsedModel.Message) => void;
+
+    get onMessage(): (message: ParsedModel.Message) => void {
+        return this._onMessage;
+    }
+
+    set onMessage(value: (message: ParsedModel.Message) => void) {
+        this._onMessage = value;
+    }
 
     constructor(turmsClient: TurmsClient) {
         this._turmsClient = turmsClient;
+        this._turmsClient.driver
+            .onNotificationListeners
+            .push(notification => {
+                if (this._onMessage != null && notification.data) {
+                    const data = notification.data;
+                    if (data.messages) {
+                        for (const message of data.messages.messages) {
+                            this._onMessage(message as ParsedModel.Message)
+                        }
+                    }
+                }
+                return null;
+            });
     }
 
     sendMessage(

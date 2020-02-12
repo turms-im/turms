@@ -2,6 +2,7 @@ import TurmsDriver from "./driver/turms-driver";
 import UserService from "./service/user-service";
 import GroupService from "./service/group-service";
 import MessageService from "./service/message-service";
+import NotificationService from "./service/notification-service";
 import InputFileReader from "./util/input-file-reader";
 
 //TODO: Support load .proto files dynamically.
@@ -10,6 +11,7 @@ class TurmsClient {
     private readonly _userService: UserService;
     private readonly _groupService: GroupService;
     private readonly _messageService: MessageService;
+    private readonly _notificationService: NotificationService;
 
     constructor(
         url?: string,
@@ -31,6 +33,7 @@ class TurmsClient {
         this._userService = new UserService(this);
         this._groupService = new GroupService(this);
         this._messageService = new MessageService(this);
+        this._notificationService = new NotificationService(this);
     }
 
     //Driver
@@ -49,6 +52,10 @@ class TurmsClient {
 
     get messageService(): MessageService {
         return this._messageService;
+    }
+
+    get notificationService(): NotificationService {
+        return this._notificationService;
     }
 
     //Util

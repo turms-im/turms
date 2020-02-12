@@ -31,7 +31,7 @@ declare enum Code {
     SERVER_INTERNAL_ERROR = 5000,
     LOGGED_DEVICES_CANNOT_OFFLINE = 5001
 }
-export default class TurmsStatusCode {
+declare class TurmsStatusCode {
     private static _code2ReasonMap;
     private code;
     private reason;
@@ -40,4 +40,5 @@ export default class TurmsStatusCode {
     static isErrorCode(code: number | string): boolean;
     static getReason(code: number): string;
 }
-export {};
+declare const _default: typeof TurmsStatusCode & typeof Code;
+export default _default;

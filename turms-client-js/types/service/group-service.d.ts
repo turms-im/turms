@@ -12,14 +12,14 @@ export default class GroupService {
     muteGroup(groupId: number, muteEndDate: Date): Promise<void>;
     unmuteGroup(groupId: number): Promise<void>;
     queryGroup(groupId: number, lastUpdatedDate?: Date): Promise<ParsedModel.GroupWithVersion>;
-    queryJoinedGroupsIds(lastUpdatedDate?: Date): Promise<number[]>;
-    queryJoinedGroupsInfos(lastUpdatedDate?: Date): Promise<ParsedModel.GroupWithVersion[]>;
+    queryJoinedGroupsIds(lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion>;
+    queryJoinedGroupsInfos(lastUpdatedDate?: Date): Promise<ParsedModel.GroupsWithVersion>;
     addGroupJoinQuestion(groupId: number, question: string, answers: string[], score: number): Promise<number>;
     deleteGroupJoinQuestion(questionId: number): Promise<void>;
     updateGroupJoinQuestion(questionId: number, question?: string, answers?: string[], score?: number): Promise<void>;
     blacklistUser(groupId: number, userId: number): Promise<void>;
     unblacklistUser(groupId: number, userId: number): Promise<void>;
-    queryBlacklistedUsersIds(groupId: number, lastUpdatedDate?: Date): Promise<number[]>;
+    queryBlacklistedUsersIds(groupId: number, lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion>;
     queryBlacklistedUsersInfos(groupId: number, lastUpdatedDate?: Date): Promise<ParsedModel.UsersInfosWithVersion>;
     createInvitation(groupId: number, inviteeId: number, content: string): Promise<number>;
     deleteInvitation(invitationId: number): Promise<void>;
