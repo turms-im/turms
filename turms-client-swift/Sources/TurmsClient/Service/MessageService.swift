@@ -3,9 +3,22 @@ import PromiseKit
 
 public class MessageService {
     private weak var turmsClient: TurmsClient!
+    public var onMessage: ((Message) -> Void)?
 
     init(_ turmsClient: TurmsClient) {
         self.turmsClient = turmsClient
+        self.turmsClient.driver
+            .onNotificationListeners
+            .append {
+                if self.onMessage != nil, $0.hasData {
+                    let data = $0.data
+                    if case .messages(let messages) = data.kind! {
+                        for message in messages.messages {
+                            self.onMessage!(message)
+                        }
+                    }
+                }
+            }
     }
 
     public func sendMessage(

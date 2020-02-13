@@ -18,7 +18,7 @@ public class TurmsDriver {
     private var heartbeatTimer: Timer?
     private var isConnected = false
     
-    public var onMessage: ((TurmsNotification) -> Void)?
+    public var onNotificationListeners: [(TurmsNotification) -> Void] = []
     public var onClose: ((Bool, TurmsStatusCode, Error?, UInt16?) -> Void)?
     private var onDisconnectResolver: Resolver<Void>?
 
@@ -100,8 +100,8 @@ public class TurmsDriver {
                                     handler?.fulfill(notification)
                                 }
                             }
-                            if self.onMessage != nil {
-                                self.onMessage!(notification)
+                            for listener in self.onNotificationListeners {
+                                listener(notification)
                             }
                         case .connected:
                             self.onWebsocketOpen()
