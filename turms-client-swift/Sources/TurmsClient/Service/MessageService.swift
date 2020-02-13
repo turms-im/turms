@@ -2,8 +2,25 @@ import Foundation
 import PromiseKit
 
 public class MessageService {
+    /**
+     * Format: "@{userId}"
+     * Example: "@{123}", "I need to talk with @{123} and @{321}"
+     */
+    private static let DEFAULT_MENTIONED_USER_IDS_REGEX = try! NSRegularExpression(pattern: "@\\{(\\d+?)\\}", options: [])
+    private static let DEFAULT_MENTIONED_USER_IDS_PARSER: (_ message: Message) -> [Int64] = {
+        if $0.hasText {
+            let text = $0.text.value
+            let results = DEFAULT_MENTIONED_USER_IDS_REGEX.matches(in: text, range: NSRange(text.startIndex..., in: text))
+            return results.map {
+                Int64(String(text[Range($0.range(at: 1), in: text)!]))!
+            }
+        }
+        return []
+    }
+
     private weak var turmsClient: TurmsClient!
-    public var onMessage: ((Message) -> Void)?
+    private var mentionedUserIdsParser: ((Message) -> [Int64])?
+    public var onMessage: ((Message, MessageAddition) -> Void)?
 
     init(_ turmsClient: TurmsClient) {
         self.turmsClient = turmsClient
@@ -14,7 +31,8 @@ public class MessageService {
                     let data = $0.data
                     if case .messages(let messages) = data.kind! {
                         for message in messages.messages {
-                            self.onMessage!(message)
+                            let addition = self.parseMessageAddition(message)
+                            self.onMessage!(message, addition)
                         }
                     }
                 }
@@ -153,6 +171,18 @@ public class MessageService {
             .map { _ in () }
     }
 
+    public func isMentionEnabled() -> Bool {
+        return mentionedUserIdsParser != nil
+    }
+
+    public func enableMention(mentionedUserIdsParser: ((Message) -> [Int64])?) {
+        if mentionedUserIdsParser != nil {
+            self.mentionedUserIdsParser = mentionedUserIdsParser
+        } else if self.mentionedUserIdsParser == nil {
+            self.mentionedUserIdsParser = MessageService.DEFAULT_MENTIONED_USER_IDS_PARSER
+        }
+    }
+
     public static func generateLocationRecord(latitude: Float, longitude: Float, locationName: String? = nil, address: String? = nil) -> Data {
         return try! UserLocation.with {
             $0.latitude = latitude
@@ -245,5 +275,11 @@ public class MessageService {
                 $0.description_p.size.value = size!
             }
         }.serializedData()
+    }
+
+    private func parseMessageAddition(_ message: Message) -> MessageAddition {
+        let mentionedUserIds = mentionedUserIdsParser?(message) ?? []
+        let isMentioned = turmsClient.userService.userId != nil ? mentionedUserIds.contains(turmsClient.userService.userId!) : false
+        return MessageAddition(isMentioned: isMentioned, mentionedUserIds: mentionedUserIds)
     }
 }
