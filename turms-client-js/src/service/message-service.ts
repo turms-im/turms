@@ -4,6 +4,7 @@ import ConstantTransformer from "../util/constant-transformer";
 import RequestUtil from "../util/request-util";
 import {ParsedModel} from "../model/parsed-model";
 import NotificationUtil from "../util/notification-util";
+import MessageAddition from "../model/message-addition";
 import ChatType = im.turms.proto.ChatType;
 import File = im.turms.proto.File;
 import AudioFile = im.turms.proto.AudioFile;
@@ -13,14 +14,32 @@ import Location = im.turms.proto.UserLocation;
 import MessageDeliveryStatus = im.turms.proto.MessageDeliveryStatus;
 
 export default class MessageService {
-    private _turmsClient: TurmsClient;
-    private _onMessage?: (message: ParsedModel.Message) => void;
+    /**
+     * Format: "@{userId}"
+     * Example: "@{123}", "I need to talk with @{123} and @{321}"
+     */
+    private static readonly DEFAULT_MENTIONED_USER_IDS_PARSER = function (message: ParsedModel.Message): number[] {
+        const regex = /@{(\d+?)}/g;
+        if (message.text) {
+            const userIds = [];
+            let matches;
+            while (!!(matches = regex.exec(message.text))) {
+                userIds.push(parseInt(matches[1]));
+            }
+            return userIds;
+        }
+        return [];
+    };
 
-    get onMessage(): (message: ParsedModel.Message) => void {
+    private _turmsClient: TurmsClient;
+    private _mentionedUserIdsParser?: (message: ParsedModel.Message) => number[];
+    private _onMessage?: (message: ParsedModel.Message, messageAddition: MessageAddition) => void;
+
+    get onMessage(): (message: ParsedModel.Message, messageAddition: MessageAddition) => void {
         return this._onMessage;
     }
 
-    set onMessage(value: (message: ParsedModel.Message) => void) {
+    set onMessage(value: (message: ParsedModel.Message, messageAddition: MessageAddition) => void) {
         this._onMessage = value;
     }
 
@@ -33,7 +52,8 @@ export default class MessageService {
                     const data = notification.data;
                     if (data.messages) {
                         for (const message of data.messages.messages) {
-                            this._onMessage(message as ParsedModel.Message)
+                            const addition = this.parseMessageAddition(message);
+                            this._onMessage(message as ParsedModel.Message, addition);
                         }
                     }
                 }
@@ -185,6 +205,18 @@ export default class MessageService {
         }).then();
     }
 
+    isMentionEnabled(): boolean {
+        return this._mentionedUserIdsParser != null;
+    }
+
+    enableMention(mentionedUserIdsParser?: (message: ParsedModel.Message) => number[]) {
+        if (mentionedUserIdsParser) {
+            this._mentionedUserIdsParser = mentionedUserIdsParser;
+        } else if (!this._mentionedUserIdsParser) {
+            this._mentionedUserIdsParser = MessageService.DEFAULT_MENTIONED_USER_IDS_PARSER;
+        }
+    }
+
     static generateLocationRecord(
         latitude: number,
         longitude: number,
@@ -281,5 +313,16 @@ export default class MessageService {
                 size: RequestUtil.wrapValueIfNotNull(size)
             }
         }).finish();
+    }
+
+    private parseMessageAddition(message: ParsedModel.Message): MessageAddition {
+        let mentionedUserIds;
+        if (this._mentionedUserIdsParser) {
+            mentionedUserIds = this._mentionedUserIdsParser(message);
+        } else {
+            mentionedUserIds = [];
+        }
+        const isMentioned = mentionedUserIds.includes(this._turmsClient.userService.userId);
+        return new MessageAddition(isMentioned, mentionedUserIds);
     }
 }

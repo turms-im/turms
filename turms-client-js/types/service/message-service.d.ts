@@ -1,13 +1,16 @@
 import TurmsClient from "../turms-client";
 import { im } from "../model/proto-bundle";
 import { ParsedModel } from "../model/parsed-model";
+import MessageAddition from "../model/message-addition";
 import ChatType = im.turms.proto.ChatType;
 import MessageDeliveryStatus = im.turms.proto.MessageDeliveryStatus;
 export default class MessageService {
+    private static readonly DEFAULT_MENTIONED_USER_IDS_PARSER;
     private _turmsClient;
+    private _mentionedUserIdsParser?;
     private _onMessage?;
-    get onMessage(): (message: ParsedModel.Message) => void;
-    set onMessage(value: (message: ParsedModel.Message) => void);
+    get onMessage(): (message: ParsedModel.Message, messageAddition: MessageAddition) => void;
+    set onMessage(value: (message: ParsedModel.Message, messageAddition: MessageAddition) => void);
     constructor(turmsClient: TurmsClient);
     sendMessage(chatType: string | ChatType, toId: number, deliveryDate: Date, text?: string, records?: Uint8Array[], burnAfter?: number): Promise<number>;
     forwardMessage(messageId: number, chatType: string | ChatType, toId: number): Promise<number>;
@@ -19,6 +22,8 @@ export default class MessageService {
     readMessage(messageId: number, readDate?: Date): Promise<void>;
     markMessageUnread(messageId: number): Promise<void>;
     updateTypingStatusRequest(chatType: string | ChatType, toId: number): Promise<void>;
+    isMentionEnabled(): boolean;
+    enableMention(mentionedUserIdsParser?: (message: ParsedModel.Message) => number[]): void;
     static generateLocationRecord(latitude: number, longitude: number, locationName?: string, address?: string): Uint8Array;
     static generateAudioRecordByDescription(url: string, duration?: number, format?: string, size?: number): Uint8Array;
     static generateAudioRecordByData(data: ArrayBuffer): Uint8Array;
@@ -28,4 +33,5 @@ export default class MessageService {
     static generateImageRecordByDescription(url: string, fileSize?: number, imageSize?: number, original?: boolean): Uint8Array;
     static generateFileRecordByDate(data: ArrayBuffer): Uint8Array;
     static generateFileRecordByDescription(url: string, format?: string, size?: number): Uint8Array;
+    private parseMessageAddition;
 }
