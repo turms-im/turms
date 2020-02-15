@@ -28,7 +28,6 @@ if not exist %JAVA% (
   echo "could not find java in JAVA_HOME or bundled at %TURMS_HOME%\jdk" >&2
   exit /b 1
 )
-echo !!!!!!!!!!!!!!!!!!!!!!!!!
 echo %TURMS_PATH_CONF%
 set TURMS_JVM_OPTIONS=%TURMS_PATH_CONF%\jvm.options
 
@@ -36,8 +35,20 @@ set TURMS_JVM_OPTIONS=%TURMS_PATH_CONF%\jvm.options
 for /F "usebackq delims=" %%a in (`CALL %JAVA% -cp "!TURMS_CLASSPATH!" "org.elasticsearch.tools.launchers.JvmOptionsParser" "!TURMS_JVM_OPTIONS!" ^|^| echo jvm_options_parser_failed`) do set JVM_OPTIONS=%%a
 @endlocal & set "MAYBE_JVM_OPTIONS_PARSER_FAILED=%JVM_OPTIONS%" & set TURMS_JAVA_OPTS=%JVM_OPTIONS% -Dspring.config.location=%TURMS_APP_CONF%
 
+set MAIN_CLASS="im.turms.turms.TurmsApplication"
+set params='%*'
+for /F "usebackq tokens=1* delims= " %%A in (!params!) do (
+    set current=%%A
+	if "!current!" == "-f" (
+        set MAIN_CLASS="org.springframework.boot.loader.JarLauncher"
+	)
+	if "!current!" == "--fat" (
+        set MAIN_CLASS="org.springframework.boot.loader.JarLauncher"
+	)
+)
+
 @echo on
-%JAVA% %TURMS_JAVA_OPTS% -cp "%TURMS_CLASSPATH%" "im.turms.turms.TurmsApplication"
+%JAVA% %TURMS_JAVA_OPTS% -cp "%TURMS_CLASSPATH%" %MAIN_CLASS%
 @echo off
 
 endlocal

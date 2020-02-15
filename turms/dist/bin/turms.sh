@@ -60,23 +60,29 @@ TURMS_JVM_OPTIONS="$TURMS_PATH_CONF"/jvm.options
 JVM_OPTIONS=`"$JAVA" -cp "$TURMS_CLASSPATH" org.elasticsearch.tools.launchers.JvmOptionsParser "$TURMS_JVM_OPTIONS"`
 TURMS_JAVA_OPTS="$JVM_OPTIONS -Dspring.config.location=$TURMS_APP_CONF"
 
+MAIN_CLASS="im.turms.turms.TurmsApplication"
+
+if echo $* | grep -E '(^-f |-f$| -f |--fat$|--fat )' > /dev/null; then
+    MAIN_CLASS="org.springframework.boot.loader.JarLauncher"
+fi
+
 set -x
-if ! echo $* | grep -E '(^-d |-d$| -d |--daemonize$|--daemonize )' > /dev/null; then
+if echo $* | grep -E '(^-d |-d$| -d |--daemonize$|--daemonize )' > /dev/null; then
   exec \
     "$JAVA" \
     $TURMS_JAVA_OPTS \
     -cp "$TURMS_CLASSPATH" \
-    org.springframework.boot.loader.JarLauncher \
-    "$@"
+    "$MAIN_CLASS" \
+    "$@" \
+    <&- &
   set +x
 else
   exec \
     "$JAVA" \
     $TURMS_JAVA_OPTS \
     -cp "$TURMS_CLASSPATH" \
-    im.turms.turms.TurmsApplication \
-    "$@" \
-    <&- &
+    "$MAIN_CLASS" \
+    "$@"
   set +x
   retval=$?
   pid=$!

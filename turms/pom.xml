@@ -497,7 +497,7 @@
             </build>
         </profile>
         <profile>
-            <id>artifact-turms</id>
+            <id>artifact-turms-thin</id>
             <build>
                 <plugins>
                     <plugin>
@@ -541,6 +541,26 @@
                                 <configuration>
                                     <outputDirectory>${project.build.directory}/lib</outputDirectory>
                                     <excludeScope>provided</excludeScope>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>artifact-turms-fat</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>repackage</id>
+                                <configuration>
+                                    <attach>false</attach>
+                                    <finalName>turms-${project.version}</finalName>
                                 </configuration>
                             </execution>
                         </executions>
