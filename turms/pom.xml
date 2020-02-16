@@ -19,7 +19,7 @@
     <properties>
         <java.version>11</java.version>
         <hazelcast.version>4.0</hazelcast.version>
-        <protobuf.version>3.11.3</protobuf.version>
+        <protobuf.version>3.11.4</protobuf.version>
         <guava.version>28.2-jre</guava.version>
         <commons-lang3.version>3.9</commons-lang3.version>
         <rtree2.version>0.9-RC1</rtree2.version>
@@ -28,7 +28,7 @@
         <commons-io.version>2.6</commons-io.version>
         <caffeine.version>2.8.1</caffeine.version>
         <aho-corasick-double-array-trie.version>1.2.2</aho-corasick-double-array-trie.version>
-        <yauaa.version>5.14.1</yauaa.version>
+        <yauaa.version>5.15</yauaa.version>
         <pf4j.version>3.2.0</pf4j.version>
         <swagger.version>3.0.0-SNAPSHOT</swagger.version>
 
