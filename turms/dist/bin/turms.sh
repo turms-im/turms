@@ -66,8 +66,8 @@ if echo $* | grep -E '(^-f |-f$| -f |--fat$|--fat )' > /dev/null; then
     MAIN_CLASS="org.springframework.boot.loader.JarLauncher"
 fi
 
-set -x
 if echo $* | grep -E '(^-d |-d$| -d |--daemonize$|--daemonize )' > /dev/null; then
+  set -x
   exec \
     "$JAVA" \
     $TURMS_JAVA_OPTS \
@@ -77,6 +77,7 @@ if echo $* | grep -E '(^-d |-d$| -d |--daemonize$|--daemonize )' > /dev/null; th
     <&- &
   set +x
 else
+  set -x
   exec \
     "$JAVA" \
     $TURMS_JAVA_OPTS \
