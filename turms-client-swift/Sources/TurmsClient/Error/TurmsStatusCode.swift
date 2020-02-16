@@ -32,6 +32,11 @@ public enum TurmsStatusCode: Int {
     case alreadyGroupMember
     case friendRequestHasExisted
     case relationshipHasEstablished
+    case userNotGroupMember
+    case userHasBeenBlacklisted
+    case groupHasBeenMuted
+    case memberHasBeenMuted
+    case guestsHaveBeenMuted
 
     case loggedInDevicesCannotOffline = 5001
 
@@ -65,7 +70,7 @@ extension TurmsStatusCode {
             case .sessionSimultaneousConflictsDecline: return "A different device has logged into your account"
             case .sessionSimultaneousConflictsNotify: return "Someone attempted to log into your account"
             case .sessionSimultaneousConflictsOffline: return "A different device has logged into your account"
-            case .successorNotGroupMember: return "The successor is not the group member"
+            case .successorNotGroupMember: return "The successor is not a member of the group"
             case .targetUsersUnauthorized: return "The target users are unauthorized"
             case .targetUsersNotExist: return "The target users do not exist"
             case .typeNotExists: return "The resource type does not exist"
@@ -79,6 +84,11 @@ extension TurmsStatusCode {
             case .clientSessionHasBeenClosed: return "The session has been closed"
             case .clientSessionAlreadyEstablished: return "The session has been established"
             case .clientRequestsTooFrequent: return "Client requests are too frequent"
+            case .userNotGroupMember: return "The user is not a member of the group"
+            case .userHasBeenBlacklisted: return "The user has been blacklisted"
+            case .groupHasBeenMuted: return "The group has been muted"
+            case .memberHasBeenMuted: return "The group member has been muted"
+            case .guestsHaveBeenMuted: return "The guests of the group have been muted"
         }
     }
     

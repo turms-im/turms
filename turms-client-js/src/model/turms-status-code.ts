@@ -30,6 +30,11 @@ enum Code {
     ALREADY_GROUP_MEMBER,
     FRIEND_REQUEST_HAS_EXISTED,
     RELATIONSHIP_HAS_ESTABLISHED,
+    USER_NOT_GROUP_MEMBER,
+    USER_HAS_BEEN_BLACKLISTED,
+    GROUP_HAS_BEEN_MUTED,
+    MEMBER_HAS_BEEN_MUTED,
+    GUESTS_HAVE_BEEN_MUTED,
 
     SERVER_INTERNAL_ERROR = 5000,
     LOGGED_DEVICES_CANNOT_OFFLINE
@@ -60,7 +65,7 @@ class TurmsStatusCode {
         [Code.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE]: "A different device has logged into your account",
         [Code.SESSION_SIMULTANEOUS_CONFLICTS_NOTIFY]: "Someone attempted to log into your account",
         [Code.SESSION_SIMULTANEOUS_CONFLICTS_OFFLINE]: "A different device has logged into your account",
-        [Code.SUCCESSOR_NOT_GROUP_MEMBER]: "The successor is not the group member",
+        [Code.SUCCESSOR_NOT_GROUP_MEMBER]: "The successor is not a member of the group",
         [Code.TARGET_USERS_UNAUTHORIZED]: "The target users are unauthorized",
         [Code.TARGET_USERS_NOT_EXIST]: "The target users do not exist",
         [Code.TYPE_NOT_EXISTS]: "The resource type does not exist",
@@ -69,6 +74,11 @@ class TurmsStatusCode {
         [Code.ALREADY_GROUP_MEMBER]: "The user is already a member of the group",
         [Code.FRIEND_REQUEST_HAS_EXISTED]: "A friend request has already existed",
         [Code.RELATIONSHIP_HAS_ESTABLISHED]: "The relationship has already established",
+        [Code.USER_NOT_GROUP_MEMBER]: "The user is not a member of the group",
+        [Code.USER_HAS_BEEN_BLACKLISTED]: "The user has been blacklisted",
+        [Code.GROUP_HAS_BEEN_MUTED]: "The group has been muted",
+        [Code.MEMBER_HAS_BEEN_MUTED]: "The group member has been muted",
+        [Code.GUESTS_HAVE_BEEN_MUTED]: "The guests of the group have been muted",
         [Code.LOGGED_DEVICES_CANNOT_OFFLINE]: "Cannot set logged in devices offline"
     };
     private code: number;
@@ -94,4 +104,5 @@ class TurmsStatusCode {
         return this._code2ReasonMap[code];
     }
 }
+
 export default Object.assign(TurmsStatusCode, Code);
