@@ -4,6 +4,14 @@ Turms是一套全球范围内最为先进且全能的开源即时通讯解决方
 
 [文档地址：https://turms-im.github.io/turms/](https://turms-im.github.io/turms/)
 
+### Playground
+turms服务端的Demo地址（DEV配置）：http://120.24.57.206:9510/
+
+turms-admin的Demo地址（PROD配置）：http://47.99.56.54:9512/
+（登陆时，在turms服务端地址栏处输入：http://120.24.57.206:9510/，且账号与密码均为：guest）
+
+您还可以使用任意turms-client(java/js/swift)客户端与turms服务端进行交互
+
 ### 组合
 
 | 名称                                                        | 描述                                                         |
@@ -11,10 +19,10 @@ Turms是一套全球范围内最为先进且全能的开源即时通讯解决方
 | <span style="white-space:nowrap;">turms</span>              | Turms服务端。本质是一个易于集群部署、健壮、方便拓展、运作高效且业务独立的Java即时通信服务端程序 |
 | <span style="white-space:nowrap;">turms-client-js</span>    | 除了实现显而易见的业务功能外，关键还实现了与Turms服务端的交互逻辑（如路由跳转、消息去重、心跳检查等），对调用者透明。您在使用该库时，无需关系背后的逻辑 |
 | <span style="white-space:nowrap;">turms-client-java</span>  | 同上                                                         |
+| <span style="white-space:nowrap;">turms-client-swift</span> | 同上                                                         |
 | <span style="white-space:nowrap;">turms-admin</span>        | 为Turms服务端集群提供：运营数据统计、内容管理、集群配置等功能 |
 | <span style="white-space:nowrap;">turms-apm</span>          | 为Turms服务端集群提供监控功能                                |
 | <span style="white-space:nowrap;">turms-plugin</span>       | 事件（如用户上下线事件、消息接收与转发事件等）触发的时候，对应的自定义插件将被触发以实现各种各样定制功能 |
-| <span style="white-space:nowrap;">turms-client-swift</span> | 尚未提供，将于2020年完成开发                                 |
 
 ### 关于Demo
 
