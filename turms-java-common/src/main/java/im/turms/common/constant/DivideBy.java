@@ -1,4 +1,4 @@
-package im.turms.turms.constant;
+package im.turms.common.constant;
 
 public enum DivideBy {
     HOUR,

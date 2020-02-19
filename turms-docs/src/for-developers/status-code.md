@@ -1,6 +1,6 @@
 ### 状态码
 
-具体状态码细节可查阅im.turms.turms.common.TurmsStatusCode类。
+具体状态码细节可查阅im.turms.common.TurmsStatusCode类。
 
 #### 类别
 

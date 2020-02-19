@@ -18,13 +18,13 @@
 package im.turms.turms.common;
 
 import com.google.protobuf.*;
-import im.turms.turms.constant.*;
+import im.turms.common.constant.*;
+import im.turms.common.model.bo.user.UserInfo;
+import im.turms.common.model.bo.user.UserStatusDetail;
+import im.turms.common.model.dto.request.message.CreateMessageRequest;
 import im.turms.turms.pojo.bo.UserOnlineInfo;
-import im.turms.turms.pojo.bo.user.UserInfo;
-import im.turms.turms.pojo.bo.user.UserStatusDetail;
 import im.turms.turms.pojo.domain.Message;
 import im.turms.turms.pojo.domain.*;
-import im.turms.turms.pojo.request.message.CreateMessageRequest;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -37,8 +37,8 @@ public class ProtoUtil {
     private ProtoUtil() {
     }
 
-    public static im.turms.turms.pojo.bo.message.Message.Builder message2proto(Message message) {
-        im.turms.turms.pojo.bo.message.Message.Builder builder = im.turms.turms.pojo.bo.message.Message.newBuilder();
+    public static im.turms.common.model.bo.message.Message.Builder message2proto(Message message) {
+        im.turms.common.model.bo.message.Message.Builder builder = im.turms.common.model.bo.message.Message.newBuilder();
         Long messageId = message.getId();
         Boolean isSystemMessage = message.getIsSystemMessage();
         Date deliveryDate = message.getDeliveryDate();
@@ -115,8 +115,8 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static im.turms.turms.pojo.bo.user.UserFriendRequest.Builder friendRequest2proto(@NotNull UserFriendRequest userFriendRequest) {
-        im.turms.turms.pojo.bo.user.UserFriendRequest.Builder builder = im.turms.turms.pojo.bo.user.UserFriendRequest.newBuilder();
+    public static im.turms.common.model.bo.user.UserFriendRequest.Builder friendRequest2proto(@NotNull UserFriendRequest userFriendRequest) {
+        im.turms.common.model.bo.user.UserFriendRequest.Builder builder = im.turms.common.model.bo.user.UserFriendRequest.newBuilder();
         Long requestId = userFriendRequest.getId();
         Date creationDate = userFriendRequest.getCreationDate();
         String content = userFriendRequest.getContent();
@@ -152,8 +152,8 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static im.turms.turms.pojo.bo.user.UserRelationship.Builder relationship2proto(@NotNull UserRelationship relationship) {
-        im.turms.turms.pojo.bo.user.UserRelationship.Builder builder = im.turms.turms.pojo.bo.user.UserRelationship.newBuilder();
+    public static im.turms.common.model.bo.user.UserRelationship.Builder relationship2proto(@NotNull UserRelationship relationship) {
+        im.turms.common.model.bo.user.UserRelationship.Builder builder = im.turms.common.model.bo.user.UserRelationship.newBuilder();
         UserRelationship.Key key = relationship.getKey();
         Boolean isBlocked = relationship.getIsBlocked();
         Date establishmentDate = relationship.getEstablishmentDate();
@@ -176,8 +176,8 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static im.turms.turms.pojo.bo.user.UserRelationshipGroup.Builder relationshipGroup2proto(@NotNull UserRelationshipGroup relationshipGroup) {
-        im.turms.turms.pojo.bo.user.UserRelationshipGroup.Builder builder = im.turms.turms.pojo.bo.user.UserRelationshipGroup.newBuilder();
+    public static im.turms.common.model.bo.user.UserRelationshipGroup.Builder relationshipGroup2proto(@NotNull UserRelationshipGroup relationshipGroup) {
+        im.turms.common.model.bo.user.UserRelationshipGroup.Builder builder = im.turms.common.model.bo.user.UserRelationshipGroup.newBuilder();
         UserRelationshipGroup.Key key = relationshipGroup.getKey();
         if (key != null) {
             Integer index = key.getIndex();
@@ -192,8 +192,8 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static im.turms.turms.pojo.bo.group.Group.Builder group2proto(@NotNull Group group) {
-        im.turms.turms.pojo.bo.group.Group.Builder builder = im.turms.turms.pojo.bo.group.Group.newBuilder();
+    public static im.turms.common.model.bo.group.Group.Builder group2proto(@NotNull Group group) {
+        im.turms.common.model.bo.group.Group.Builder builder = im.turms.common.model.bo.group.Group.newBuilder();
         Long groupId = group.getId();
         Long typeId = group.getTypeId();
         Long creatorId = group.getCreatorId();
@@ -245,8 +245,8 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static im.turms.turms.pojo.bo.group.GroupInvitation.Builder groupInvitation2proto(@NotNull GroupInvitation invitation) {
-        im.turms.turms.pojo.bo.group.GroupInvitation.Builder builder = im.turms.turms.pojo.bo.group.GroupInvitation.newBuilder();
+    public static im.turms.common.model.bo.group.GroupInvitation.Builder groupInvitation2proto(@NotNull GroupInvitation invitation) {
+        im.turms.common.model.bo.group.GroupInvitation.Builder builder = im.turms.common.model.bo.group.GroupInvitation.newBuilder();
         Long invitationId = invitation.getId();
         Date creationDate = invitation.getCreationDate();
         String content = invitation.getContent();
@@ -282,8 +282,8 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static im.turms.turms.pojo.bo.group.GroupJoinRequest.Builder groupJoinRequest2proto(@NotNull GroupJoinRequest groupJoinRequest) {
-        im.turms.turms.pojo.bo.group.GroupJoinRequest.Builder builder = im.turms.turms.pojo.bo.group.GroupJoinRequest.newBuilder();
+    public static im.turms.common.model.bo.group.GroupJoinRequest.Builder groupJoinRequest2proto(@NotNull GroupJoinRequest groupJoinRequest) {
+        im.turms.common.model.bo.group.GroupJoinRequest.Builder builder = im.turms.common.model.bo.group.GroupJoinRequest.newBuilder();
         Long requestId = groupJoinRequest.getId();
         Date creationDate = groupJoinRequest.getCreationDate();
         String content = groupJoinRequest.getContent();
@@ -319,8 +319,8 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static im.turms.turms.pojo.bo.group.GroupJoinQuestion.Builder groupJoinQuestion2proto(@NotNull GroupJoinQuestion question) {
-        im.turms.turms.pojo.bo.group.GroupJoinQuestion.Builder builder = im.turms.turms.pojo.bo.group.GroupJoinQuestion.newBuilder();
+    public static im.turms.common.model.bo.group.GroupJoinQuestion.Builder groupJoinQuestion2proto(@NotNull GroupJoinQuestion question) {
+        im.turms.common.model.bo.group.GroupJoinQuestion.Builder builder = im.turms.common.model.bo.group.GroupJoinQuestion.newBuilder();
         Long questionId = question.getId();
         Long groupId = question.getGroupId();
         String content = question.getQuestion();
@@ -341,8 +341,8 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static im.turms.turms.pojo.bo.group.GroupMember.Builder groupMember2proto(@NotNull GroupMember groupMember) {
-        im.turms.turms.pojo.bo.group.GroupMember.Builder builder = im.turms.turms.pojo.bo.group.GroupMember.newBuilder();
+    public static im.turms.common.model.bo.group.GroupMember.Builder groupMember2proto(@NotNull GroupMember groupMember) {
+        im.turms.common.model.bo.group.GroupMember.Builder builder = im.turms.common.model.bo.group.GroupMember.newBuilder();
         GroupMember.Key key = groupMember.getKey();
         if (key != null) {
             Long groupId = key.getGroupId();
@@ -373,8 +373,8 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static im.turms.turms.pojo.bo.message.MessageStatus.Builder messageStatus2proto(MessageStatus messageStatus) {
-        im.turms.turms.pojo.bo.message.MessageStatus.Builder builder = im.turms.turms.pojo.bo.message.MessageStatus.newBuilder();
+    public static im.turms.common.model.bo.message.MessageStatus.Builder messageStatus2proto(MessageStatus messageStatus) {
+        im.turms.common.model.bo.message.MessageStatus.Builder builder = im.turms.common.model.bo.message.MessageStatus.newBuilder();
         MessageStatus.Key key = messageStatus.getKey();
         if (key != null) {
             Long messageId = key.getMessageId();
@@ -461,11 +461,11 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static im.turms.turms.pojo.bo.group.GroupMember.Builder userOnlineInfo2groupMember(
+    public static im.turms.common.model.bo.group.GroupMember.Builder userOnlineInfo2groupMember(
             @NotNull Long userId,
             @Nullable UserOnlineInfo userOnlineInfo,
             boolean shouldConvertInvisibleToOffline) {
-        im.turms.turms.pojo.bo.group.GroupMember.Builder builder = im.turms.turms.pojo.bo.group.GroupMember
+        im.turms.common.model.bo.group.GroupMember.Builder builder = im.turms.common.model.bo.group.GroupMember
                 .newBuilder()
                 .setUserId(Int64Value.newBuilder().setValue(userId).build());
         if (userOnlineInfo == null) {

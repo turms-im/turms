@@ -32,7 +32,6 @@
         <pf4j.version>3.2.0</pf4j.version>
         <swagger.version>3.0.0-SNAPSHOT</swagger.version>
 
-        <protobuf-maven-plugin.version>0.6.1</protobuf-maven-plugin.version>
         <replacer.version>1.5.3</replacer.version>
         <spring-boot-thin-layout.version>1.0.23.RELEASE</spring-boot-thin-layout.version>
 
@@ -67,7 +66,6 @@
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-source-plugin.version>3.2.0</maven-source-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
-        <os-maven-plugin.version>1.6.2</os-maven-plugin.version>
 
         <hibernate-validator-annotation-processor.version>6.1.2.Final</hibernate-validator-annotation-processor.version>
     </properties>
@@ -84,6 +82,16 @@
         </repository>
     </repositories>
     <dependencies>
+        <dependency>
+            <groupId>im.turms</groupId>
+            <artifactId>common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.pf4j</groupId>
+            <artifactId>pf4j</artifactId>
+            <version>${pf4j.version}</version>
+        </dependency>
         <dependency>
             <groupId>io.projectreactor.addons</groupId>
             <artifactId>reactor-extra</artifactId>
@@ -130,11 +138,6 @@
         </dependency>
         <dependency>
             <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
-            <version>${protobuf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java-util</artifactId>
             <version>${protobuf.version}</version>
         </dependency>
@@ -172,11 +175,6 @@
             <groupId>com.hankcs</groupId>
             <artifactId>aho-corasick-double-array-trie</artifactId>
             <version>${aho-corasick-double-array-trie.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.pf4j</groupId>
-            <artifactId>pf4j</artifactId>
-            <version>${pf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>io.springfox</groupId>
@@ -229,15 +227,6 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-    <build>
-        <extensions>
-            <extension>
-                <groupId>kr.motd.maven</groupId>
-                <artifactId>os-maven-plugin</artifactId>
-                <version>${os-maven-plugin.version}</version>
-            </extension>
-        </extensions>
-    </build>
     <profiles>
         <profile>
             <id>artifact-swagger</id>
@@ -411,35 +400,6 @@
                                         </replacement>
                                     </replacements>
                                 </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>env-protobuf</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.xolstice.maven.plugins</groupId>
-                        <artifactId>protobuf-maven-plugin</artifactId>
-                        <version>${protobuf-maven-plugin.version}</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <protocArtifact>com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
-                            </protocArtifact>
-                            <protoSourceRoot>${project.basedir}/src/main/proto</protoSourceRoot>
-                            <outputDirectory>${project.build.sourceDirectory}</outputDirectory>
-                            <clearOutputDirectory>false</clearOutputDirectory>
-                            <temporaryProtoFileDirectory>${project.build.directory}/protoc-dependencies
-                            </temporaryProtoFileDirectory>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>compile</goal>
-                                </goals>
                             </execution>
                         </executions>
                     </plugin>
