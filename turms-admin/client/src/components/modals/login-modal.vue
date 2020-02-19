@@ -106,7 +106,27 @@ export default {
             e.preventDefault();
             this.form.validateFields((err, values) => {
                 if (!err) {
-                    this.login(values.url, values.account, values.password);
+                    if (/^https?:/i.test(values.url)) {
+                        this.login(values.url, values.account, values.password);
+                    } else {
+                        let url = `https://${values.url}`;
+                        axios({method: 'head', url: `${url}${this.$rs.apis.admin}`})
+                            .catch(httpsError => {
+                                if (httpsError.response && httpsError.response.status) {
+                                    this.login(url, values.account, values.password);
+                                } else {
+                                    url = `http://${values.url}`;
+                                    axios({method: 'head', url: `${url}${this.$rs.apis.admin}`})
+                                        .catch(httpError => {
+                                            if (httpError.response && httpError.response.status) {
+                                                this.login(url, values.account, values.password);
+                                            } else {
+                                                this.$error(this.$t('loginFailed'), httpError);
+                                            }
+                                        });
+                                }
+                            });
+                    }
                 }
             });
         },
