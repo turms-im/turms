@@ -12,8 +12,8 @@ let package = Package(
     dependencies: [
         // Don't use Combine because of "@available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)"
         .package(url: "https://github.com/mxcl/PromiseKit", from: "6.13.1"),
-        .package(url: "https://github.com/daltoniam/Starscream", from: "4.0.0"),
         .package(url: "https://github.com/apple/swift-protobuf", from: "1.8.0"),
+        .package(url: "https://github.com/turms-im/Starscream", .branch("master")),
         
         // Dev deps
         .package(url: "https://github.com/shibapm/PackageConfig", from: "0.12.2"),

@@ -207,10 +207,10 @@ public class TurmsDriver {
         heartbeatTimer?.invalidate()
         if !wasLogged, userId != nil, password != nil {
             switch error {
-                case .notAnUpgrade(let code):
+                case let .notAnUpgrade(code, headers):
                     if code == 307 {
-                        // TODO: https://github.com/daltoniam/Starscream/issues/739
-                        connect(userId: userId!, password: password!, url: url)
+                        let address = headers["reason"]!
+                        reconnect(address)
                     }
                     fallthrough
                 default:
