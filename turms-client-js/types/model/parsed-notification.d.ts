@@ -1,8 +1,8 @@
 export interface ParsedNotification {
-    requestId?: number;
+    requestId?: string;
     code?: number;
     reason?: string;
     data?: any;
     relayedRequest?: any;
-    requesterId?: number;
+    requesterId?: string;
 }

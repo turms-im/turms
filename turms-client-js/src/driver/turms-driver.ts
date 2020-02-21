@@ -35,7 +35,7 @@ export default class TurmsDriver {
     private _isLastRequestHeartbeat = false;
     private _queryReasonWhenLoginFailed = true;
     private _queryReasonWhenDisconnected = true;
-    private _userId: number;
+    private _userId: string;
     private _password: string;
     private _requestId: number;
     private _sessionId?: string;
@@ -92,7 +92,7 @@ export default class TurmsDriver {
         }
     }
 
-    connect(userId: number, password: string, requestId: number, url?: string, connectionTimeout?: number, requestTimeout?: number): Promise<void> {
+    connect(userId: string, password: string, requestId: number, url?: string, connectionTimeout?: number, requestTimeout?: number): Promise<void> {
         return new Promise((resolve, reject) => {
             if (this.connected()) {
                 reject(TurmsError.CLIENT_ALREADY_CONNECTED);
@@ -111,7 +111,7 @@ export default class TurmsDriver {
                     unpackMessage: (data: ArrayBuffer): TurmsNotification => TurmsNotification.decode(new Uint8Array(data)),
                     connectionTimeout: connectionTimeout || this._connectionTimeout,
                     timeout: requestTimeout || this._requestTimeout,
-                    extractRequestId: (notification: TurmsNotification): number | undefined => {
+                    extractRequestId: (notification: TurmsNotification): string | undefined => {
                         if (!notification.relayedRequest && notification.requestId) {
                             return notification.requestId.value;
                         }
@@ -167,7 +167,7 @@ export default class TurmsDriver {
             if (!this._minRequestsInterval || now.getTime() - this._lastRequestDate.getTime() > this._minRequestsInterval) {
                 this._setLastRequestRecord(false, now);
                 const requestId = this._generateRandomId();
-                message.requestId = {value: requestId};
+                message.requestId = {value: '' + requestId};
                 const data = TurmsRequest.encode(message).finish();
                 this.resetHeartBeatTimer();
                 return this._websocket.sendRequest(data, {

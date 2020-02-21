@@ -3,13 +3,13 @@ import NotificationUtil from "../util/notification-util";
 
 export default class NotificationService {
     private _turmsClient: TurmsClient;
-    private _onNotification?: (notification: any, requesterId: number) => void;
+    private _onNotification?: (notification: any, requesterId: string) => void;
 
-    get onNotification(): (notification: any, requesterId: number) => void {
+    get onNotification(): (notification: any, requesterId: string) => void {
         return this._onNotification;
     }
 
-    set onNotification(value: (notification: any, requesterId: number) => void) {
+    set onNotification(value: (notification: any, requesterId: string) => void) {
         this._onNotification = value;
     }
 

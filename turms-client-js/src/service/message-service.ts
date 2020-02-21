@@ -18,13 +18,13 @@ export default class MessageService {
      * Format: "@{userId}"
      * Example: "@{123}", "I need to talk with @{123} and @{321}"
      */
-    private static readonly DEFAULT_MENTIONED_USER_IDS_PARSER = function (message: ParsedModel.Message): number[] {
+    private static readonly DEFAULT_MENTIONED_USER_IDS_PARSER = function (message: ParsedModel.Message): string[] {
         const regex = /@{(\d+?)}/g;
         if (message.text) {
             const userIds = [];
             let matches;
             while (!!(matches = regex.exec(message.text))) {
-                userIds.push(parseInt(matches[1]));
+                userIds.push(matches[1]);
             }
             return userIds;
         }
@@ -32,7 +32,7 @@ export default class MessageService {
     };
 
     private _turmsClient: TurmsClient;
-    private _mentionedUserIdsParser?: (message: ParsedModel.Message) => number[];
+    private _mentionedUserIdsParser?: (message: ParsedModel.Message) => string[];
     private _onMessage?: (message: ParsedModel.Message, messageAddition: MessageAddition) => void;
 
     get onMessage(): (message: ParsedModel.Message, messageAddition: MessageAddition) => void {
@@ -63,11 +63,11 @@ export default class MessageService {
 
     sendMessage(
         chatType: string | ChatType,
-        toId: number,
+        toId: string,
         deliveryDate: Date,
         text?: string,
         records?: Uint8Array[],
-        burnAfter?: number): Promise<number> {
+        burnAfter?: number): Promise<string> {
         RequestUtil.throwIfAnyFalsy(chatType, toId, deliveryDate);
         RequestUtil.throwIfAllFalsy(text, records);
         if (typeof chatType === "string") {
@@ -77,18 +77,18 @@ export default class MessageService {
             createMessageRequest: {
                 chatType,
                 toId,
-                deliveryDate: deliveryDate.getTime(),
+                deliveryDate: '' + deliveryDate.getTime(),
                 text: RequestUtil.wrapValueIfNotNull(text),
                 records: records,
                 burnAfter: RequestUtil.wrapValueIfNotNull(burnAfter)
             }
-        }).then(notification => NotificationUtil.getFirstIdFromIds(notification));
+        }).then(notification => notification.data.ids.values[0]);
     }
 
     forwardMessage(
-        messageId: number,
+        messageId: string,
         chatType: string | ChatType,
-        toId: number): Promise<number> {
+        toId: string): Promise<string> {
         RequestUtil.throwIfAnyFalsy(messageId, chatType, toId);
         if (typeof chatType === "string") {
             chatType = ConstantTransformer.string2ChatType(chatType);
@@ -99,11 +99,11 @@ export default class MessageService {
                 chatType,
                 toId
             }
-        }).then(notification => NotificationUtil.getFirstIdFromIds(notification));
+        }).then(notification => notification.data.ids.values[0]);
     }
 
     updateSentMessage(
-        messageId: number,
+        messageId: string,
         text?: string,
         records?: Uint8Array[]): Promise<void> {
         RequestUtil.throwIfAnyFalsy(messageId);
@@ -120,10 +120,10 @@ export default class MessageService {
     }
 
     queryMessages(
-        ids?: number[],
+        ids?: string[],
         chatType?: string | ChatType,
         areSystemMessages?: boolean,
-        fromId?: number,
+        fromId?: string,
         deliveryDateAfter?: Date,
         deliveryDateBefore?: Date,
         deliveryStatus?: string | MessageDeliveryStatus,
@@ -158,7 +158,7 @@ export default class MessageService {
         }).then(notification => NotificationUtil.getFirstArrayAndTransform(notification.data.messagesWithTotalList));
     }
 
-    queryMessageStatus(messageId: number): Promise<ParsedModel.MessageStatus[]> {
+    queryMessageStatus(messageId: string): Promise<ParsedModel.MessageStatus[]> {
         RequestUtil.throwIfAnyFalsy(messageId);
         // @ts-ignore
         return this._turmsClient.driver.send({
@@ -168,7 +168,7 @@ export default class MessageService {
         }).then(notification => NotificationUtil.transform(notification.data.messageStatuses));
     }
 
-    recallMessage(messageId: number, recallDate = new Date()): Promise<void> {
+    recallMessage(messageId: string, recallDate = new Date()): Promise<void> {
         RequestUtil.throwIfAnyFalsy(messageId, recallDate);
         return this._turmsClient.driver.send({
             updateMessageRequest: {
@@ -178,7 +178,7 @@ export default class MessageService {
         }).then();
     }
 
-    readMessage(messageId: number, readDate = new Date()): Promise<void> {
+    readMessage(messageId: string, readDate = new Date()): Promise<void> {
         RequestUtil.throwIfAnyFalsy(messageId, readDate);
         return this._turmsClient.driver.send({
             updateMessageRequest: {
@@ -188,11 +188,11 @@ export default class MessageService {
         }).then();
     }
 
-    markMessageUnread(messageId: number): Promise<void> {
+    markMessageUnread(messageId: string): Promise<void> {
         return this.readMessage(messageId, new Date(0));
     }
 
-    updateTypingStatusRequest(chatType: string | ChatType, toId: number): Promise<void> {
+    updateTypingStatusRequest(chatType: string | ChatType, toId: string): Promise<void> {
         RequestUtil.throwIfAnyFalsy(chatType, toId);
         if (typeof chatType === 'string') {
             chatType = ConstantTransformer.string2ChatType(chatType);
@@ -209,7 +209,7 @@ export default class MessageService {
         return this._mentionedUserIdsParser != null;
     }
 
-    enableMention(mentionedUserIdsParser?: (message: ParsedModel.Message) => number[]) {
+    enableMention(mentionedUserIdsParser?: (message: ParsedModel.Message) => string[]) {
         if (mentionedUserIdsParser) {
             this._mentionedUserIdsParser = mentionedUserIdsParser;
         } else if (!this._mentionedUserIdsParser) {

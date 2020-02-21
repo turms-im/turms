@@ -1,3 +1,5 @@
+import * as Long from "long";
+
 import * as $protobuf from "protobufjs";
 /** Namespace im. */
 export namespace im {
@@ -82,7 +84,7 @@ export namespace im {
             interface IInt64ValuesWithVersion {
 
                 /** Int64ValuesWithVersion values */
-                values?: (number[]|null);
+                values?: (string[]|null);
 
                 /** Int64ValuesWithVersion lastUpdatedDate */
                 lastUpdatedDate?: (google.protobuf.IInt64Value|null);
@@ -98,7 +100,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IInt64ValuesWithVersion);
 
                 /** Int64ValuesWithVersion values. */
-                public values: number[];
+                public values: string[];
 
                 /** Int64ValuesWithVersion lastUpdatedDate. */
                 public lastUpdatedDate?: (google.protobuf.IInt64Value|null);
@@ -126,7 +128,7 @@ export namespace im {
             interface IInt64Values {
 
                 /** Int64Values values */
-                values?: (number[]|null);
+                values?: (string[]|null);
             }
 
             /** Represents an Int64Values. */
@@ -139,7 +141,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IInt64Values);
 
                 /** Int64Values values. */
-                public values: number[];
+                public values: string[];
 
                 /**
                  * Encodes the specified Int64Values message. Does not implicitly {@link im.turms.proto.Int64Values.verify|verify} messages.
@@ -759,7 +761,7 @@ export namespace im {
                 score?: (number|null);
 
                 /** GroupJoinQuestionsAnswerResult questionsIds */
-                questionsIds?: (number[]|null);
+                questionsIds?: (string[]|null);
 
                 /** GroupJoinQuestionsAnswerResult joined */
                 joined?: (boolean|null);
@@ -778,7 +780,7 @@ export namespace im {
                 public score: number;
 
                 /** GroupJoinQuestionsAnswerResult questionsIds. */
-                public questionsIds: number[];
+                public questionsIds: string[];
 
                 /** GroupJoinQuestionsAnswerResult joined. */
                 public joined: boolean;
@@ -1482,7 +1484,7 @@ export namespace im {
                 chatType?: (im.turms.proto.ChatType|null);
 
                 /** MessagesWithTotal fromId */
-                fromId?: (number|null);
+                fromId?: (string|null);
 
                 /** MessagesWithTotal messages */
                 messages?: (im.turms.proto.IMessage[]|null);
@@ -1504,7 +1506,7 @@ export namespace im {
                 public chatType: im.turms.proto.ChatType;
 
                 /** MessagesWithTotal fromId. */
-                public fromId: number;
+                public fromId: string;
 
                 /** MessagesWithTotal messages. */
                 public messages: im.turms.proto.IMessage[];
@@ -1570,7 +1572,7 @@ export namespace im {
             interface IAcknowledge {
 
                 /** Acknowledge deliveryDate */
-                deliveryDate?: (number|null);
+                deliveryDate?: (string|null);
 
                 /** Acknowledge messageId */
                 messageId?: (google.protobuf.IInt64Value|null);
@@ -1586,7 +1588,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IAcknowledge);
 
                 /** Acknowledge deliveryDate. */
-                public deliveryDate: number;
+                public deliveryDate: string;
 
                 /** Acknowledge messageId. */
                 public messageId?: (google.protobuf.IInt64Value|null);
@@ -2118,7 +2120,7 @@ export namespace im {
             interface IUserStatusDetail {
 
                 /** UserStatusDetail userId */
-                userId?: (number|null);
+                userId?: (string|null);
 
                 /** UserStatusDetail userStatus */
                 userStatus?: (im.turms.proto.UserStatus|null);
@@ -2137,7 +2139,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IUserStatusDetail);
 
                 /** UserStatusDetail userId. */
-                public userId: number;
+                public userId: string;
 
                 /** UserStatusDetail userStatus. */
                 public userStatus: im.turms.proto.UserStatus;
@@ -2470,10 +2472,10 @@ export namespace im {
             interface ICreateGroupBlacklistedUserRequest {
 
                 /** CreateGroupBlacklistedUserRequest groupId */
-                groupId?: (number|null);
+                groupId?: (string|null);
 
                 /** CreateGroupBlacklistedUserRequest blacklistedUserId */
-                blacklistedUserId?: (number|null);
+                blacklistedUserId?: (string|null);
             }
 
             /** Represents a CreateGroupBlacklistedUserRequest. */
@@ -2486,10 +2488,10 @@ export namespace im {
                 constructor(properties?: im.turms.proto.ICreateGroupBlacklistedUserRequest);
 
                 /** CreateGroupBlacklistedUserRequest groupId. */
-                public groupId: number;
+                public groupId: string;
 
                 /** CreateGroupBlacklistedUserRequest blacklistedUserId. */
-                public blacklistedUserId: number;
+                public blacklistedUserId: string;
 
                 /**
                  * Encodes the specified CreateGroupBlacklistedUserRequest message. Does not implicitly {@link im.turms.proto.CreateGroupBlacklistedUserRequest.verify|verify} messages.
@@ -2514,10 +2516,10 @@ export namespace im {
             interface IDeleteGroupBlacklistedUserRequest {
 
                 /** DeleteGroupBlacklistedUserRequest groupId */
-                groupId?: (number|null);
+                groupId?: (string|null);
 
                 /** DeleteGroupBlacklistedUserRequest unblacklistedUserId */
-                unblacklistedUserId?: (number|null);
+                unblacklistedUserId?: (string|null);
             }
 
             /** Represents a DeleteGroupBlacklistedUserRequest. */
@@ -2530,10 +2532,10 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IDeleteGroupBlacklistedUserRequest);
 
                 /** DeleteGroupBlacklistedUserRequest groupId. */
-                public groupId: number;
+                public groupId: string;
 
                 /** DeleteGroupBlacklistedUserRequest unblacklistedUserId. */
-                public unblacklistedUserId: number;
+                public unblacklistedUserId: string;
 
                 /**
                  * Encodes the specified DeleteGroupBlacklistedUserRequest message. Does not implicitly {@link im.turms.proto.DeleteGroupBlacklistedUserRequest.verify|verify} messages.
@@ -2558,7 +2560,7 @@ export namespace im {
             interface IQueryGroupBlacklistedUsersIdsRequest {
 
                 /** QueryGroupBlacklistedUsersIdsRequest groupId */
-                groupId?: (number|null);
+                groupId?: (string|null);
 
                 /** QueryGroupBlacklistedUsersIdsRequest lastUpdatedDate */
                 lastUpdatedDate?: (google.protobuf.IInt64Value|null);
@@ -2574,7 +2576,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IQueryGroupBlacklistedUsersIdsRequest);
 
                 /** QueryGroupBlacklistedUsersIdsRequest groupId. */
-                public groupId: number;
+                public groupId: string;
 
                 /** QueryGroupBlacklistedUsersIdsRequest lastUpdatedDate. */
                 public lastUpdatedDate?: (google.protobuf.IInt64Value|null);
@@ -2602,7 +2604,7 @@ export namespace im {
             interface IQueryGroupBlacklistedUsersInfosRequest {
 
                 /** QueryGroupBlacklistedUsersInfosRequest groupId */
-                groupId?: (number|null);
+                groupId?: (string|null);
 
                 /** QueryGroupBlacklistedUsersInfosRequest lastUpdatedDate */
                 lastUpdatedDate?: (google.protobuf.IInt64Value|null);
@@ -2618,7 +2620,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IQueryGroupBlacklistedUsersInfosRequest);
 
                 /** QueryGroupBlacklistedUsersInfosRequest groupId. */
-                public groupId: number;
+                public groupId: string;
 
                 /** QueryGroupBlacklistedUsersInfosRequest lastUpdatedDate. */
                 public lastUpdatedDate?: (google.protobuf.IInt64Value|null);
@@ -2720,7 +2722,7 @@ export namespace im {
             interface IDeleteGroupRequest {
 
                 /** DeleteGroupRequest groupId */
-                groupId?: (number|null);
+                groupId?: (string|null);
             }
 
             /** Represents a DeleteGroupRequest. */
@@ -2733,7 +2735,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IDeleteGroupRequest);
 
                 /** DeleteGroupRequest groupId. */
-                public groupId: number;
+                public groupId: string;
 
                 /**
                  * Encodes the specified DeleteGroupRequest message. Does not implicitly {@link im.turms.proto.DeleteGroupRequest.verify|verify} messages.
@@ -2796,10 +2798,10 @@ export namespace im {
             interface ICreateGroupInvitationRequest {
 
                 /** CreateGroupInvitationRequest groupId */
-                groupId?: (number|null);
+                groupId?: (string|null);
 
                 /** CreateGroupInvitationRequest inviteeId */
-                inviteeId?: (number|null);
+                inviteeId?: (string|null);
 
                 /** CreateGroupInvitationRequest content */
                 content?: (string|null);
@@ -2815,10 +2817,10 @@ export namespace im {
                 constructor(properties?: im.turms.proto.ICreateGroupInvitationRequest);
 
                 /** CreateGroupInvitationRequest groupId. */
-                public groupId: number;
+                public groupId: string;
 
                 /** CreateGroupInvitationRequest inviteeId. */
-                public inviteeId: number;
+                public inviteeId: string;
 
                 /** CreateGroupInvitationRequest content. */
                 public content: string;
@@ -2846,7 +2848,7 @@ export namespace im {
             interface ICreateGroupJoinQuestionRequest {
 
                 /** CreateGroupJoinQuestionRequest groupId */
-                groupId?: (number|null);
+                groupId?: (string|null);
 
                 /** CreateGroupJoinQuestionRequest question */
                 question?: (string|null);
@@ -2868,7 +2870,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.ICreateGroupJoinQuestionRequest);
 
                 /** CreateGroupJoinQuestionRequest groupId. */
-                public groupId: number;
+                public groupId: string;
 
                 /** CreateGroupJoinQuestionRequest question. */
                 public question: string;
@@ -2902,7 +2904,7 @@ export namespace im {
             interface ICreateGroupJoinRequestRequest {
 
                 /** CreateGroupJoinRequestRequest groupId */
-                groupId?: (number|null);
+                groupId?: (string|null);
 
                 /** CreateGroupJoinRequestRequest content */
                 content?: (string|null);
@@ -2918,7 +2920,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.ICreateGroupJoinRequestRequest);
 
                 /** CreateGroupJoinRequestRequest groupId. */
-                public groupId: number;
+                public groupId: string;
 
                 /** CreateGroupJoinRequestRequest content. */
                 public content: string;
@@ -2946,7 +2948,7 @@ export namespace im {
             interface IDeleteGroupInvitationRequest {
 
                 /** DeleteGroupInvitationRequest invitationId */
-                invitationId?: (number|null);
+                invitationId?: (string|null);
             }
 
             /** Represents a DeleteGroupInvitationRequest. */
@@ -2959,7 +2961,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IDeleteGroupInvitationRequest);
 
                 /** DeleteGroupInvitationRequest invitationId. */
-                public invitationId: number;
+                public invitationId: string;
 
                 /**
                  * Encodes the specified DeleteGroupInvitationRequest message. Does not implicitly {@link im.turms.proto.DeleteGroupInvitationRequest.verify|verify} messages.
@@ -2984,7 +2986,7 @@ export namespace im {
             interface IDeleteGroupJoinQuestionRequest {
 
                 /** DeleteGroupJoinQuestionRequest questionId */
-                questionId?: (number|null);
+                questionId?: (string|null);
             }
 
             /** Represents a DeleteGroupJoinQuestionRequest. */
@@ -2997,7 +2999,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IDeleteGroupJoinQuestionRequest);
 
                 /** DeleteGroupJoinQuestionRequest questionId. */
-                public questionId: number;
+                public questionId: string;
 
                 /**
                  * Encodes the specified DeleteGroupJoinQuestionRequest message. Does not implicitly {@link im.turms.proto.DeleteGroupJoinQuestionRequest.verify|verify} messages.
@@ -3022,7 +3024,7 @@ export namespace im {
             interface IDeleteGroupJoinRequestRequest {
 
                 /** DeleteGroupJoinRequestRequest requestId */
-                requestId?: (number|null);
+                requestId?: (string|null);
             }
 
             /** Represents a DeleteGroupJoinRequestRequest. */
@@ -3035,7 +3037,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IDeleteGroupJoinRequestRequest);
 
                 /** DeleteGroupJoinRequestRequest requestId. */
-                public requestId: number;
+                public requestId: string;
 
                 /**
                  * Encodes the specified DeleteGroupJoinRequestRequest message. Does not implicitly {@link im.turms.proto.DeleteGroupJoinRequestRequest.verify|verify} messages.
@@ -3060,7 +3062,7 @@ export namespace im {
             interface IQueryGroupInvitationsRequest {
 
                 /** QueryGroupInvitationsRequest groupId */
-                groupId?: (number|null);
+                groupId?: (string|null);
 
                 /** QueryGroupInvitationsRequest lastUpdatedDate */
                 lastUpdatedDate?: (google.protobuf.IInt64Value|null);
@@ -3076,7 +3078,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IQueryGroupInvitationsRequest);
 
                 /** QueryGroupInvitationsRequest groupId. */
-                public groupId: number;
+                public groupId: string;
 
                 /** QueryGroupInvitationsRequest lastUpdatedDate. */
                 public lastUpdatedDate?: (google.protobuf.IInt64Value|null);
@@ -3104,7 +3106,7 @@ export namespace im {
             interface IQueryGroupJoinQuestionsRequest {
 
                 /** QueryGroupJoinQuestionsRequest groupId */
-                groupId?: (number|null);
+                groupId?: (string|null);
 
                 /** QueryGroupJoinQuestionsRequest withAnswers */
                 withAnswers?: (boolean|null);
@@ -3123,7 +3125,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IQueryGroupJoinQuestionsRequest);
 
                 /** QueryGroupJoinQuestionsRequest groupId. */
-                public groupId: number;
+                public groupId: string;
 
                 /** QueryGroupJoinQuestionsRequest withAnswers. */
                 public withAnswers: boolean;
@@ -3154,7 +3156,7 @@ export namespace im {
             interface IQueryGroupJoinRequestsRequest {
 
                 /** QueryGroupJoinRequestsRequest groupId */
-                groupId?: (number|null);
+                groupId?: (string|null);
 
                 /** QueryGroupJoinRequestsRequest lastUpdatedDate */
                 lastUpdatedDate?: (google.protobuf.IInt64Value|null);
@@ -3170,7 +3172,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IQueryGroupJoinRequestsRequest);
 
                 /** QueryGroupJoinRequestsRequest groupId. */
-                public groupId: number;
+                public groupId: string;
 
                 /** QueryGroupJoinRequestsRequest lastUpdatedDate. */
                 public lastUpdatedDate?: (google.protobuf.IInt64Value|null);
@@ -3198,7 +3200,7 @@ export namespace im {
             interface IUpdateGroupJoinQuestionRequest {
 
                 /** UpdateGroupJoinQuestionRequest questionId */
-                questionId?: (number|null);
+                questionId?: (string|null);
 
                 /** UpdateGroupJoinQuestionRequest question */
                 question?: (google.protobuf.IStringValue|null);
@@ -3220,7 +3222,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IUpdateGroupJoinQuestionRequest);
 
                 /** UpdateGroupJoinQuestionRequest questionId. */
-                public questionId: number;
+                public questionId: string;
 
                 /** UpdateGroupJoinQuestionRequest question. */
                 public question?: (google.protobuf.IStringValue|null);
@@ -3254,10 +3256,10 @@ export namespace im {
             interface ICreateGroupMemberRequest {
 
                 /** CreateGroupMemberRequest groupId */
-                groupId?: (number|null);
+                groupId?: (string|null);
 
                 /** CreateGroupMemberRequest userId */
-                userId?: (number|null);
+                userId?: (string|null);
 
                 /** CreateGroupMemberRequest name */
                 name?: (google.protobuf.IStringValue|null);
@@ -3279,10 +3281,10 @@ export namespace im {
                 constructor(properties?: im.turms.proto.ICreateGroupMemberRequest);
 
                 /** CreateGroupMemberRequest groupId. */
-                public groupId: number;
+                public groupId: string;
 
                 /** CreateGroupMemberRequest userId. */
-                public userId: number;
+                public userId: string;
 
                 /** CreateGroupMemberRequest name. */
                 public name?: (google.protobuf.IStringValue|null);
@@ -3316,10 +3318,10 @@ export namespace im {
             interface IDeleteGroupMemberRequest {
 
                 /** DeleteGroupMemberRequest groupId */
-                groupId?: (number|null);
+                groupId?: (string|null);
 
                 /** DeleteGroupMemberRequest groupMemberId */
-                groupMemberId?: (number|null);
+                groupMemberId?: (string|null);
 
                 /** DeleteGroupMemberRequest successorId */
                 successorId?: (google.protobuf.IInt64Value|null);
@@ -3338,10 +3340,10 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IDeleteGroupMemberRequest);
 
                 /** DeleteGroupMemberRequest groupId. */
-                public groupId: number;
+                public groupId: string;
 
                 /** DeleteGroupMemberRequest groupMemberId. */
-                public groupMemberId: number;
+                public groupMemberId: string;
 
                 /** DeleteGroupMemberRequest successorId. */
                 public successorId?: (google.protobuf.IInt64Value|null);
@@ -3372,13 +3374,13 @@ export namespace im {
             interface IQueryGroupMembersRequest {
 
                 /** QueryGroupMembersRequest groupId */
-                groupId?: (number|null);
+                groupId?: (string|null);
 
                 /** QueryGroupMembersRequest lastUpdatedDate */
                 lastUpdatedDate?: (google.protobuf.IInt64Value|null);
 
                 /** QueryGroupMembersRequest groupMembersIds */
-                groupMembersIds?: (number[]|null);
+                groupMembersIds?: (string[]|null);
 
                 /** QueryGroupMembersRequest withStatus */
                 withStatus?: (google.protobuf.IBoolValue|null);
@@ -3394,13 +3396,13 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IQueryGroupMembersRequest);
 
                 /** QueryGroupMembersRequest groupId. */
-                public groupId: number;
+                public groupId: string;
 
                 /** QueryGroupMembersRequest lastUpdatedDate. */
                 public lastUpdatedDate?: (google.protobuf.IInt64Value|null);
 
                 /** QueryGroupMembersRequest groupMembersIds. */
-                public groupMembersIds: number[];
+                public groupMembersIds: string[];
 
                 /** QueryGroupMembersRequest withStatus. */
                 public withStatus?: (google.protobuf.IBoolValue|null);
@@ -3428,10 +3430,10 @@ export namespace im {
             interface IUpdateGroupMemberRequest {
 
                 /** UpdateGroupMemberRequest groupId */
-                groupId?: (number|null);
+                groupId?: (string|null);
 
                 /** UpdateGroupMemberRequest memberId */
-                memberId?: (number|null);
+                memberId?: (string|null);
 
                 /** UpdateGroupMemberRequest name */
                 name?: (google.protobuf.IStringValue|null);
@@ -3453,10 +3455,10 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IUpdateGroupMemberRequest);
 
                 /** UpdateGroupMemberRequest groupId. */
-                public groupId: number;
+                public groupId: string;
 
                 /** UpdateGroupMemberRequest memberId. */
-                public memberId: number;
+                public memberId: string;
 
                 /** UpdateGroupMemberRequest name. */
                 public name?: (google.protobuf.IStringValue|null);
@@ -3490,7 +3492,7 @@ export namespace im {
             interface IQueryGroupRequest {
 
                 /** QueryGroupRequest groupId */
-                groupId?: (number|null);
+                groupId?: (string|null);
 
                 /** QueryGroupRequest lastUpdatedDate */
                 lastUpdatedDate?: (google.protobuf.IInt64Value|null);
@@ -3506,7 +3508,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IQueryGroupRequest);
 
                 /** QueryGroupRequest groupId. */
-                public groupId: number;
+                public groupId: string;
 
                 /** QueryGroupRequest lastUpdatedDate. */
                 public lastUpdatedDate?: (google.protobuf.IInt64Value|null);
@@ -3610,7 +3612,7 @@ export namespace im {
             interface IUpdateGroupRequest {
 
                 /** UpdateGroupRequest groupId */
-                groupId?: (number|null);
+                groupId?: (string|null);
 
                 /** UpdateGroupRequest groupName */
                 groupName?: (google.protobuf.IStringValue|null);
@@ -3650,7 +3652,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IUpdateGroupRequest);
 
                 /** UpdateGroupRequest groupId. */
-                public groupId: number;
+                public groupId: string;
 
                 /** UpdateGroupRequest groupName. */
                 public groupName?: (google.protobuf.IStringValue|null);
@@ -3711,10 +3713,10 @@ export namespace im {
                 isSystemMessage?: (google.protobuf.IBoolValue|null);
 
                 /** CreateMessageRequest toId */
-                toId?: (number|null);
+                toId?: (string|null);
 
                 /** CreateMessageRequest deliveryDate */
-                deliveryDate?: (number|null);
+                deliveryDate?: (string|null);
 
                 /** CreateMessageRequest text */
                 text?: (google.protobuf.IStringValue|null);
@@ -3745,10 +3747,10 @@ export namespace im {
                 public isSystemMessage?: (google.protobuf.IBoolValue|null);
 
                 /** CreateMessageRequest toId. */
-                public toId: number;
+                public toId: string;
 
                 /** CreateMessageRequest deliveryDate. */
-                public deliveryDate: number;
+                public deliveryDate: string;
 
                 /** CreateMessageRequest text. */
                 public text?: (google.protobuf.IStringValue|null);
@@ -3782,7 +3784,7 @@ export namespace im {
             interface IQueryMessageStatusesRequest {
 
                 /** QueryMessageStatusesRequest messageId */
-                messageId?: (number|null);
+                messageId?: (string|null);
             }
 
             /** Represents a QueryMessageStatusesRequest. */
@@ -3795,7 +3797,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IQueryMessageStatusesRequest);
 
                 /** QueryMessageStatusesRequest messageId. */
-                public messageId: number;
+                public messageId: string;
 
                 /**
                  * Encodes the specified QueryMessageStatusesRequest message. Does not implicitly {@link im.turms.proto.QueryMessageStatusesRequest.verify|verify} messages.
@@ -3820,7 +3822,7 @@ export namespace im {
             interface IQueryMessagesRequest {
 
                 /** QueryMessagesRequest ids */
-                ids?: (number[]|null);
+                ids?: (string[]|null);
 
                 /** QueryMessagesRequest size */
                 size?: (google.protobuf.IInt32Value|null);
@@ -3854,7 +3856,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IQueryMessagesRequest);
 
                 /** QueryMessagesRequest ids. */
-                public ids: number[];
+                public ids: string[];
 
                 /** QueryMessagesRequest size. */
                 public size?: (google.protobuf.IInt32Value|null);
@@ -3938,7 +3940,7 @@ export namespace im {
             interface IUpdateMessageRequest {
 
                 /** UpdateMessageRequest messageId */
-                messageId?: (number|null);
+                messageId?: (string|null);
 
                 /** UpdateMessageRequest isSystemMessage */
                 isSystemMessage?: (google.protobuf.IBoolValue|null);
@@ -3966,7 +3968,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IUpdateMessageRequest);
 
                 /** UpdateMessageRequest messageId. */
-                public messageId: number;
+                public messageId: string;
 
                 /** UpdateMessageRequest isSystemMessage. */
                 public isSystemMessage?: (google.protobuf.IBoolValue|null);
@@ -4009,7 +4011,7 @@ export namespace im {
                 chatType?: (im.turms.proto.ChatType|null);
 
                 /** UpdateTypingStatusRequest toId */
-                toId?: (number|null);
+                toId?: (string|null);
             }
 
             /** Represents an UpdateTypingStatusRequest. */
@@ -4025,7 +4027,7 @@ export namespace im {
                 public chatType: im.turms.proto.ChatType;
 
                 /** UpdateTypingStatusRequest toId. */
-                public toId: number;
+                public toId: string;
 
                 /**
                  * Encodes the specified UpdateTypingStatusRequest message. Does not implicitly {@link im.turms.proto.UpdateTypingStatusRequest.verify|verify} messages.
@@ -4050,7 +4052,7 @@ export namespace im {
             interface IAckRequest {
 
                 /** AckRequest messagesIds */
-                messagesIds?: (number[]|null);
+                messagesIds?: (string[]|null);
             }
 
             /** Represents an AckRequest. */
@@ -4063,7 +4065,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IAckRequest);
 
                 /** AckRequest messagesIds. */
-                public messagesIds: number[];
+                public messagesIds: string[];
 
                 /**
                  * Encodes the specified AckRequest message. Does not implicitly {@link im.turms.proto.AckRequest.verify|verify} messages.
@@ -4479,7 +4481,7 @@ export namespace im {
             interface IQueryUserProfileRequest {
 
                 /** QueryUserProfileRequest userId */
-                userId?: (number|null);
+                userId?: (string|null);
 
                 /** QueryUserProfileRequest lastUpdatedDate */
                 lastUpdatedDate?: (google.protobuf.IInt64Value|null);
@@ -4495,7 +4497,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IQueryUserProfileRequest);
 
                 /** QueryUserProfileRequest userId. */
-                public userId: number;
+                public userId: string;
 
                 /** QueryUserProfileRequest lastUpdatedDate. */
                 public lastUpdatedDate?: (google.protobuf.IInt64Value|null);
@@ -4635,7 +4637,7 @@ export namespace im {
             interface IQueryUsersOnlineStatusRequest {
 
                 /** QueryUsersOnlineStatusRequest usersIds */
-                usersIds?: (number[]|null);
+                usersIds?: (string[]|null);
             }
 
             /** Represents a QueryUsersOnlineStatusRequest. */
@@ -4648,7 +4650,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IQueryUsersOnlineStatusRequest);
 
                 /** QueryUsersOnlineStatusRequest usersIds. */
-                public usersIds: number[];
+                public usersIds: string[];
 
                 /**
                  * Encodes the specified QueryUsersOnlineStatusRequest message. Does not implicitly {@link im.turms.proto.QueryUsersOnlineStatusRequest.verify|verify} messages.
@@ -4673,7 +4675,7 @@ export namespace im {
             interface ICreateFriendRequestRequest {
 
                 /** CreateFriendRequestRequest recipientId */
-                recipientId?: (number|null);
+                recipientId?: (string|null);
 
                 /** CreateFriendRequestRequest content */
                 content?: (string|null);
@@ -4689,7 +4691,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.ICreateFriendRequestRequest);
 
                 /** CreateFriendRequestRequest recipientId. */
-                public recipientId: number;
+                public recipientId: string;
 
                 /** CreateFriendRequestRequest content. */
                 public content: string;
@@ -4755,7 +4757,7 @@ export namespace im {
             interface ICreateRelationshipRequest {
 
                 /** CreateRelationshipRequest userId */
-                userId?: (number|null);
+                userId?: (string|null);
 
                 /** CreateRelationshipRequest isBlocked */
                 isBlocked?: (boolean|null);
@@ -4774,7 +4776,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.ICreateRelationshipRequest);
 
                 /** CreateRelationshipRequest userId. */
-                public userId: number;
+                public userId: string;
 
                 /** CreateRelationshipRequest isBlocked. */
                 public isBlocked: boolean;
@@ -4805,7 +4807,7 @@ export namespace im {
             interface IDeleteRelationshipGroupMemberRequest {
 
                 /** DeleteRelationshipGroupMemberRequest userId */
-                userId?: (number|null);
+                userId?: (string|null);
 
                 /** DeleteRelationshipGroupMemberRequest groupIndex */
                 groupIndex?: (number|null);
@@ -4824,7 +4826,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IDeleteRelationshipGroupMemberRequest);
 
                 /** DeleteRelationshipGroupMemberRequest userId. */
-                public userId: number;
+                public userId: string;
 
                 /** DeleteRelationshipGroupMemberRequest groupIndex. */
                 public groupIndex: number;
@@ -4899,7 +4901,7 @@ export namespace im {
             interface IDeleteRelationshipRequest {
 
                 /** DeleteRelationshipRequest relatedUserId */
-                relatedUserId?: (number|null);
+                relatedUserId?: (string|null);
 
                 /** DeleteRelationshipRequest groupIndex */
                 groupIndex?: (google.protobuf.IInt32Value|null);
@@ -4918,7 +4920,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IDeleteRelationshipRequest);
 
                 /** DeleteRelationshipRequest relatedUserId. */
-                public relatedUserId: number;
+                public relatedUserId: string;
 
                 /** DeleteRelationshipRequest groupIndex. */
                 public groupIndex?: (google.protobuf.IInt32Value|null);
@@ -5075,7 +5077,7 @@ export namespace im {
             interface IQueryRelationshipsRequest {
 
                 /** QueryRelationshipsRequest relatedUsersIds */
-                relatedUsersIds?: (number[]|null);
+                relatedUsersIds?: (string[]|null);
 
                 /** QueryRelationshipsRequest isBlocked */
                 isBlocked?: (google.protobuf.IBoolValue|null);
@@ -5097,7 +5099,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IQueryRelationshipsRequest);
 
                 /** QueryRelationshipsRequest relatedUsersIds. */
-                public relatedUsersIds: number[];
+                public relatedUsersIds: string[];
 
                 /** QueryRelationshipsRequest isBlocked. */
                 public isBlocked?: (google.protobuf.IBoolValue|null);
@@ -5131,7 +5133,7 @@ export namespace im {
             interface IUpdateFriendRequestRequest {
 
                 /** UpdateFriendRequestRequest requestId */
-                requestId?: (number|null);
+                requestId?: (string|null);
 
                 /** UpdateFriendRequestRequest responseAction */
                 responseAction?: (im.turms.proto.ResponseAction|null);
@@ -5150,7 +5152,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IUpdateFriendRequestRequest);
 
                 /** UpdateFriendRequestRequest requestId. */
-                public requestId: number;
+                public requestId: string;
 
                 /** UpdateFriendRequestRequest responseAction. */
                 public responseAction: im.turms.proto.ResponseAction;
@@ -5225,7 +5227,7 @@ export namespace im {
             interface IUpdateRelationshipRequest {
 
                 /** UpdateRelationshipRequest relatedUserId */
-                relatedUserId?: (number|null);
+                relatedUserId?: (string|null);
 
                 /** UpdateRelationshipRequest blocked */
                 blocked?: (google.protobuf.IBoolValue|null);
@@ -5247,7 +5249,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IUpdateRelationshipRequest);
 
                 /** UpdateRelationshipRequest relatedUserId. */
-                public relatedUserId: number;
+                public relatedUserId: string;
 
                 /** UpdateRelationshipRequest blocked. */
                 public blocked?: (google.protobuf.IBoolValue|null);
@@ -5522,7 +5524,7 @@ export namespace google {
         interface IInt64Value {
 
             /** Int64Value value */
-            value?: (number|null);
+            value?: (string|null);
         }
 
         /** Represents an Int64Value. */
@@ -5535,7 +5537,7 @@ export namespace google {
             constructor(properties?: google.protobuf.IInt64Value);
 
             /** Int64Value value. */
-            public value: number;
+            public value: string;
 
             /**
              * Encodes the specified Int64Value message. Does not implicitly {@link google.protobuf.Int64Value.verify|verify} messages.
@@ -5560,7 +5562,7 @@ export namespace google {
         interface IUInt64Value {
 
             /** UInt64Value value */
-            value?: (number|null);
+            value?: (string|null);
         }
 
         /** Represents a UInt64Value. */
@@ -5573,7 +5575,7 @@ export namespace google {
             constructor(properties?: google.protobuf.IUInt64Value);
 
             /** UInt64Value value. */
-            public value: number;
+            public value: string;
 
             /**
              * Encodes the specified UInt64Value message. Does not implicitly {@link google.protobuf.UInt64Value.verify|verify} messages.

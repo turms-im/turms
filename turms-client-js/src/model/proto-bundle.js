@@ -198,7 +198,7 @@ $root.im = (function() {
                  * Properties of an Int64ValuesWithVersion.
                  * @memberof im.turms.proto
                  * @interface IInt64ValuesWithVersion
-                 * @property {Array.<number>|null} [values] Int64ValuesWithVersion values
+                 * @property {Array.<string>|null} [values] Int64ValuesWithVersion values
                  * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] Int64ValuesWithVersion lastUpdatedDate
                  */
 
@@ -220,7 +220,7 @@ $root.im = (function() {
 
                 /**
                  * Int64ValuesWithVersion values.
-                 * @member {Array.<number>} values
+                 * @member {Array.<string>} values
                  * @memberof im.turms.proto.Int64ValuesWithVersion
                  * @instance
                  */
@@ -252,7 +252,7 @@ $root.im = (function() {
                             writer.int64(message.values[i]);
                         writer.ldelim();
                     }
-                    if (message.lastUpdatedDate != null && message.hasOwnProperty("lastUpdatedDate"))
+                    if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
                         $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     return writer;
                 };
@@ -281,9 +281,9 @@ $root.im = (function() {
                             if ((tag & 7) === 2) {
                                 var end2 = reader.uint32() + reader.pos;
                                 while (reader.pos < end2)
-                                    message.values.push(reader.int64());
+                                    message.values.push(reader.int64().toString());
                             } else
-                                message.values.push(reader.int64());
+                                message.values.push(reader.int64().toString());
                             break;
                         case 2:
                             message.lastUpdatedDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
@@ -305,7 +305,7 @@ $root.im = (function() {
                  * Properties of an Int64Values.
                  * @memberof im.turms.proto
                  * @interface IInt64Values
-                 * @property {Array.<number>|null} [values] Int64Values values
+                 * @property {Array.<string>|null} [values] Int64Values values
                  */
 
                 /**
@@ -326,7 +326,7 @@ $root.im = (function() {
 
                 /**
                  * Int64Values values.
-                 * @member {Array.<number>} values
+                 * @member {Array.<string>} values
                  * @memberof im.turms.proto.Int64Values
                  * @instance
                  */
@@ -377,9 +377,9 @@ $root.im = (function() {
                             if ((tag & 7) === 2) {
                                 var end2 = reader.uint32() + reader.pos;
                                 while (reader.pos < end2)
-                                    message.values.push(reader.int64());
+                                    message.values.push(reader.int64().toString());
                             } else
-                                message.values.push(reader.int64());
+                                message.values.push(reader.int64().toString());
                             break;
                         default:
                             reader.skipType(tag & 7);
@@ -445,9 +445,9 @@ $root.im = (function() {
                 AudioFile.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.description != null && message.hasOwnProperty("description"))
+                    if (message.description != null && Object.hasOwnProperty.call(message, "description"))
                         $root.im.turms.proto.AudioFile.Description.encode(message.description, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.data != null && message.hasOwnProperty("data"))
+                    if (message.data != null && Object.hasOwnProperty.call(message, "data"))
                         $root.google.protobuf.BytesValue.encode(message.data, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     return writer;
                 };
@@ -555,13 +555,13 @@ $root.im = (function() {
                     Description.encode = function encode(message, writer) {
                         if (!writer)
                             writer = $Writer.create();
-                        if (message.url != null && message.hasOwnProperty("url"))
+                        if (message.url != null && Object.hasOwnProperty.call(message, "url"))
                             writer.uint32(/* id 1, wireType 2 =*/10).string(message.url);
-                        if (message.duration != null && message.hasOwnProperty("duration"))
+                        if (message.duration != null && Object.hasOwnProperty.call(message, "duration"))
                             $root.google.protobuf.Int32Value.encode(message.duration, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                        if (message.size != null && message.hasOwnProperty("size"))
+                        if (message.size != null && Object.hasOwnProperty.call(message, "size"))
                             $root.google.protobuf.Int32Value.encode(message.size, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                        if (message.format != null && message.hasOwnProperty("format"))
+                        if (message.format != null && Object.hasOwnProperty.call(message, "format"))
                             $root.google.protobuf.StringValue.encode(message.format, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
                         return writer;
                     };
@@ -663,9 +663,9 @@ $root.im = (function() {
                 File.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.description != null && message.hasOwnProperty("description"))
+                    if (message.description != null && Object.hasOwnProperty.call(message, "description"))
                         $root.im.turms.proto.File.Description.encode(message.description, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.data != null && message.hasOwnProperty("data"))
+                    if (message.data != null && Object.hasOwnProperty.call(message, "data"))
                         $root.google.protobuf.BytesValue.encode(message.data, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     return writer;
                 };
@@ -764,11 +764,11 @@ $root.im = (function() {
                     Description.encode = function encode(message, writer) {
                         if (!writer)
                             writer = $Writer.create();
-                        if (message.url != null && message.hasOwnProperty("url"))
+                        if (message.url != null && Object.hasOwnProperty.call(message, "url"))
                             writer.uint32(/* id 1, wireType 2 =*/10).string(message.url);
-                        if (message.size != null && message.hasOwnProperty("size"))
+                        if (message.size != null && Object.hasOwnProperty.call(message, "size"))
                             $root.google.protobuf.Int32Value.encode(message.size, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                        if (message.format != null && message.hasOwnProperty("format"))
+                        if (message.format != null && Object.hasOwnProperty.call(message, "format"))
                             $root.google.protobuf.StringValue.encode(message.format, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                         return writer;
                     };
@@ -867,9 +867,9 @@ $root.im = (function() {
                 ImageFile.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.description != null && message.hasOwnProperty("description"))
+                    if (message.description != null && Object.hasOwnProperty.call(message, "description"))
                         $root.im.turms.proto.ImageFile.Description.encode(message.description, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.data != null && message.hasOwnProperty("data"))
+                    if (message.data != null && Object.hasOwnProperty.call(message, "data"))
                         $root.google.protobuf.BytesValue.encode(message.data, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     return writer;
                 };
@@ -977,13 +977,13 @@ $root.im = (function() {
                     Description.encode = function encode(message, writer) {
                         if (!writer)
                             writer = $Writer.create();
-                        if (message.url != null && message.hasOwnProperty("url"))
+                        if (message.url != null && Object.hasOwnProperty.call(message, "url"))
                             writer.uint32(/* id 1, wireType 2 =*/10).string(message.url);
-                        if (message.original != null && message.hasOwnProperty("original"))
+                        if (message.original != null && Object.hasOwnProperty.call(message, "original"))
                             $root.google.protobuf.BoolValue.encode(message.original, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                        if (message.imageSize != null && message.hasOwnProperty("imageSize"))
+                        if (message.imageSize != null && Object.hasOwnProperty.call(message, "imageSize"))
                             $root.google.protobuf.Int32Value.encode(message.imageSize, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                        if (message.fileSize != null && message.hasOwnProperty("fileSize"))
+                        if (message.fileSize != null && Object.hasOwnProperty.call(message, "fileSize"))
                             $root.google.protobuf.Int32Value.encode(message.fileSize, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
                         return writer;
                     };
@@ -1085,9 +1085,9 @@ $root.im = (function() {
                 VideoFile.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.description != null && message.hasOwnProperty("description"))
+                    if (message.description != null && Object.hasOwnProperty.call(message, "description"))
                         $root.im.turms.proto.VideoFile.Description.encode(message.description, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.data != null && message.hasOwnProperty("data"))
+                    if (message.data != null && Object.hasOwnProperty.call(message, "data"))
                         $root.google.protobuf.BytesValue.encode(message.data, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     return writer;
                 };
@@ -1195,13 +1195,13 @@ $root.im = (function() {
                     Description.encode = function encode(message, writer) {
                         if (!writer)
                             writer = $Writer.create();
-                        if (message.url != null && message.hasOwnProperty("url"))
+                        if (message.url != null && Object.hasOwnProperty.call(message, "url"))
                             writer.uint32(/* id 1, wireType 2 =*/10).string(message.url);
-                        if (message.duration != null && message.hasOwnProperty("duration"))
+                        if (message.duration != null && Object.hasOwnProperty.call(message, "duration"))
                             $root.google.protobuf.Int32Value.encode(message.duration, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                        if (message.size != null && message.hasOwnProperty("size"))
+                        if (message.size != null && Object.hasOwnProperty.call(message, "size"))
                             $root.google.protobuf.Int32Value.encode(message.size, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                        if (message.format != null && message.hasOwnProperty("format"))
+                        if (message.format != null && Object.hasOwnProperty.call(message, "format"))
                             $root.google.protobuf.StringValue.encode(message.format, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
                         return writer;
                     };
@@ -1357,21 +1357,21 @@ $root.im = (function() {
                 GroupInvitation.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.id != null && message.hasOwnProperty("id"))
+                    if (message.id != null && Object.hasOwnProperty.call(message, "id"))
                         $root.google.protobuf.Int64Value.encode(message.id, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.creationDate != null && message.hasOwnProperty("creationDate"))
+                    if (message.creationDate != null && Object.hasOwnProperty.call(message, "creationDate"))
                         $root.google.protobuf.Int64Value.encode(message.creationDate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    if (message.content != null && message.hasOwnProperty("content"))
+                    if (message.content != null && Object.hasOwnProperty.call(message, "content"))
                         $root.google.protobuf.StringValue.encode(message.content, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.status != null && message.hasOwnProperty("status"))
+                    if (message.status != null && Object.hasOwnProperty.call(message, "status"))
                         writer.uint32(/* id 4, wireType 0 =*/32).int32(message.status);
-                    if (message.expirationDate != null && message.hasOwnProperty("expirationDate"))
+                    if (message.expirationDate != null && Object.hasOwnProperty.call(message, "expirationDate"))
                         $root.google.protobuf.Int64Value.encode(message.expirationDate, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
-                    if (message.groupId != null && message.hasOwnProperty("groupId"))
+                    if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
                         $root.google.protobuf.Int64Value.encode(message.groupId, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
-                    if (message.inviterId != null && message.hasOwnProperty("inviterId"))
+                    if (message.inviterId != null && Object.hasOwnProperty.call(message, "inviterId"))
                         $root.google.protobuf.Int64Value.encode(message.inviterId, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
-                    if (message.inviteeId != null && message.hasOwnProperty("inviteeId"))
+                    if (message.inviteeId != null && Object.hasOwnProperty.call(message, "inviteeId"))
                         $root.google.protobuf.Int64Value.encode(message.inviteeId, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
                     return writer;
                 };
@@ -1486,7 +1486,7 @@ $root.im = (function() {
                     if (message.groupInvitations != null && message.groupInvitations.length)
                         for (var i = 0; i < message.groupInvitations.length; ++i)
                             $root.im.turms.proto.GroupInvitation.encode(message.groupInvitations[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.lastUpdatedDate != null && message.hasOwnProperty("lastUpdatedDate"))
+                    if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
                         $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     return writer;
                 };
@@ -1609,16 +1609,16 @@ $root.im = (function() {
                 GroupJoinQuestion.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.id != null && message.hasOwnProperty("id"))
+                    if (message.id != null && Object.hasOwnProperty.call(message, "id"))
                         $root.google.protobuf.Int64Value.encode(message.id, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.groupId != null && message.hasOwnProperty("groupId"))
+                    if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
                         $root.google.protobuf.Int64Value.encode(message.groupId, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    if (message.question != null && message.hasOwnProperty("question"))
+                    if (message.question != null && Object.hasOwnProperty.call(message, "question"))
                         $root.google.protobuf.StringValue.encode(message.question, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                     if (message.answers != null && message.answers.length)
                         for (var i = 0; i < message.answers.length; ++i)
                             $root.google.protobuf.StringValue.encode(message.answers[i], writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-                    if (message.score != null && message.hasOwnProperty("score"))
+                    if (message.score != null && Object.hasOwnProperty.call(message, "score"))
                         $root.google.protobuf.Int32Value.encode(message.score, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
                     return writer;
                 };
@@ -1676,7 +1676,7 @@ $root.im = (function() {
                  * @memberof im.turms.proto
                  * @interface IGroupJoinQuestionsAnswerResult
                  * @property {number|null} [score] GroupJoinQuestionsAnswerResult score
-                 * @property {Array.<number>|null} [questionsIds] GroupJoinQuestionsAnswerResult questionsIds
+                 * @property {Array.<string>|null} [questionsIds] GroupJoinQuestionsAnswerResult questionsIds
                  * @property {boolean|null} [joined] GroupJoinQuestionsAnswerResult joined
                  */
 
@@ -1706,7 +1706,7 @@ $root.im = (function() {
 
                 /**
                  * GroupJoinQuestionsAnswerResult questionsIds.
-                 * @member {Array.<number>} questionsIds
+                 * @member {Array.<string>} questionsIds
                  * @memberof im.turms.proto.GroupJoinQuestionsAnswerResult
                  * @instance
                  */
@@ -1732,7 +1732,7 @@ $root.im = (function() {
                 GroupJoinQuestionsAnswerResult.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.score != null && message.hasOwnProperty("score"))
+                    if (message.score != null && Object.hasOwnProperty.call(message, "score"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int32(message.score);
                     if (message.questionsIds != null && message.questionsIds.length) {
                         writer.uint32(/* id 2, wireType 2 =*/18).fork();
@@ -1740,7 +1740,7 @@ $root.im = (function() {
                             writer.int64(message.questionsIds[i]);
                         writer.ldelim();
                     }
-                    if (message.joined != null && message.hasOwnProperty("joined"))
+                    if (message.joined != null && Object.hasOwnProperty.call(message, "joined"))
                         writer.uint32(/* id 3, wireType 0 =*/24).bool(message.joined);
                     return writer;
                 };
@@ -1772,9 +1772,9 @@ $root.im = (function() {
                             if ((tag & 7) === 2) {
                                 var end2 = reader.uint32() + reader.pos;
                                 while (reader.pos < end2)
-                                    message.questionsIds.push(reader.int64());
+                                    message.questionsIds.push(reader.int64().toString());
                             } else
-                                message.questionsIds.push(reader.int64());
+                                message.questionsIds.push(reader.int64().toString());
                             break;
                         case 3:
                             message.joined = reader.bool();
@@ -1847,7 +1847,7 @@ $root.im = (function() {
                     if (message.groupJoinQuestions != null && message.groupJoinQuestions.length)
                         for (var i = 0; i < message.groupJoinQuestions.length; ++i)
                             $root.im.turms.proto.GroupJoinQuestion.encode(message.groupJoinQuestions[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.lastUpdatedDate != null && message.hasOwnProperty("lastUpdatedDate"))
+                    if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
                         $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     return writer;
                 };
@@ -1996,21 +1996,21 @@ $root.im = (function() {
                 GroupJoinRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.id != null && message.hasOwnProperty("id"))
+                    if (message.id != null && Object.hasOwnProperty.call(message, "id"))
                         $root.google.protobuf.Int64Value.encode(message.id, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.creationDate != null && message.hasOwnProperty("creationDate"))
+                    if (message.creationDate != null && Object.hasOwnProperty.call(message, "creationDate"))
                         $root.google.protobuf.Int64Value.encode(message.creationDate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    if (message.content != null && message.hasOwnProperty("content"))
+                    if (message.content != null && Object.hasOwnProperty.call(message, "content"))
                         $root.google.protobuf.StringValue.encode(message.content, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.status != null && message.hasOwnProperty("status"))
+                    if (message.status != null && Object.hasOwnProperty.call(message, "status"))
                         writer.uint32(/* id 4, wireType 0 =*/32).int32(message.status);
-                    if (message.expirationDate != null && message.hasOwnProperty("expirationDate"))
+                    if (message.expirationDate != null && Object.hasOwnProperty.call(message, "expirationDate"))
                         $root.google.protobuf.Int64Value.encode(message.expirationDate, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
-                    if (message.groupId != null && message.hasOwnProperty("groupId"))
+                    if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
                         $root.google.protobuf.Int64Value.encode(message.groupId, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
-                    if (message.requesterId != null && message.hasOwnProperty("requesterId"))
+                    if (message.requesterId != null && Object.hasOwnProperty.call(message, "requesterId"))
                         $root.google.protobuf.Int64Value.encode(message.requesterId, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
-                    if (message.responderId != null && message.hasOwnProperty("responderId"))
+                    if (message.responderId != null && Object.hasOwnProperty.call(message, "responderId"))
                         $root.google.protobuf.Int64Value.encode(message.responderId, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
                     return writer;
                 };
@@ -2125,7 +2125,7 @@ $root.im = (function() {
                     if (message.groupJoinRequests != null && message.groupJoinRequests.length)
                         for (var i = 0; i < message.groupJoinRequests.length; ++i)
                             $root.im.turms.proto.GroupJoinRequest.encode(message.groupJoinRequests[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.lastUpdatedDate != null && message.hasOwnProperty("lastUpdatedDate"))
+                    if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
                         $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     return writer;
                 };
@@ -2275,19 +2275,19 @@ $root.im = (function() {
                 GroupMember.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.groupId != null && message.hasOwnProperty("groupId"))
+                    if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
                         $root.google.protobuf.Int64Value.encode(message.groupId, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.userId != null && message.hasOwnProperty("userId"))
+                    if (message.userId != null && Object.hasOwnProperty.call(message, "userId"))
                         $root.google.protobuf.Int64Value.encode(message.userId, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    if (message.name != null && message.hasOwnProperty("name"))
+                    if (message.name != null && Object.hasOwnProperty.call(message, "name"))
                         $root.google.protobuf.StringValue.encode(message.name, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.role != null && message.hasOwnProperty("role"))
+                    if (message.role != null && Object.hasOwnProperty.call(message, "role"))
                         writer.uint32(/* id 4, wireType 0 =*/32).int32(message.role);
-                    if (message.joinDate != null && message.hasOwnProperty("joinDate"))
+                    if (message.joinDate != null && Object.hasOwnProperty.call(message, "joinDate"))
                         $root.google.protobuf.Int64Value.encode(message.joinDate, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
-                    if (message.muteEndDate != null && message.hasOwnProperty("muteEndDate"))
+                    if (message.muteEndDate != null && Object.hasOwnProperty.call(message, "muteEndDate"))
                         $root.google.protobuf.Int64Value.encode(message.muteEndDate, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
-                    if (message.userStatus != null && message.hasOwnProperty("userStatus"))
+                    if (message.userStatus != null && Object.hasOwnProperty.call(message, "userStatus"))
                         writer.uint32(/* id 7, wireType 0 =*/56).int32(message.userStatus);
                     if (message.usingDeviceTypes != null && message.usingDeviceTypes.length) {
                         writer.uint32(/* id 8, wireType 2 =*/66).fork();
@@ -2415,7 +2415,7 @@ $root.im = (function() {
                     if (message.groupMembers != null && message.groupMembers.length)
                         for (var i = 0; i < message.groupMembers.length; ++i)
                             $root.im.turms.proto.GroupMember.encode(message.groupMembers[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.lastUpdatedDate != null && message.hasOwnProperty("lastUpdatedDate"))
+                    if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
                         $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     return writer;
                 };
@@ -2600,29 +2600,29 @@ $root.im = (function() {
                 Group.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.id != null && message.hasOwnProperty("id"))
+                    if (message.id != null && Object.hasOwnProperty.call(message, "id"))
                         $root.google.protobuf.Int64Value.encode(message.id, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.typeId != null && message.hasOwnProperty("typeId"))
+                    if (message.typeId != null && Object.hasOwnProperty.call(message, "typeId"))
                         $root.google.protobuf.Int64Value.encode(message.typeId, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    if (message.creatorId != null && message.hasOwnProperty("creatorId"))
+                    if (message.creatorId != null && Object.hasOwnProperty.call(message, "creatorId"))
                         $root.google.protobuf.Int64Value.encode(message.creatorId, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.ownerId != null && message.hasOwnProperty("ownerId"))
+                    if (message.ownerId != null && Object.hasOwnProperty.call(message, "ownerId"))
                         $root.google.protobuf.Int64Value.encode(message.ownerId, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-                    if (message.name != null && message.hasOwnProperty("name"))
+                    if (message.name != null && Object.hasOwnProperty.call(message, "name"))
                         $root.google.protobuf.StringValue.encode(message.name, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
-                    if (message.intro != null && message.hasOwnProperty("intro"))
+                    if (message.intro != null && Object.hasOwnProperty.call(message, "intro"))
                         $root.google.protobuf.StringValue.encode(message.intro, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
-                    if (message.announcement != null && message.hasOwnProperty("announcement"))
+                    if (message.announcement != null && Object.hasOwnProperty.call(message, "announcement"))
                         $root.google.protobuf.StringValue.encode(message.announcement, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
-                    if (message.profilePictureUrl != null && message.hasOwnProperty("profilePictureUrl"))
+                    if (message.profilePictureUrl != null && Object.hasOwnProperty.call(message, "profilePictureUrl"))
                         $root.google.protobuf.StringValue.encode(message.profilePictureUrl, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
-                    if (message.creationDate != null && message.hasOwnProperty("creationDate"))
+                    if (message.creationDate != null && Object.hasOwnProperty.call(message, "creationDate"))
                         $root.google.protobuf.Int64Value.encode(message.creationDate, writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
-                    if (message.deletionDate != null && message.hasOwnProperty("deletionDate"))
+                    if (message.deletionDate != null && Object.hasOwnProperty.call(message, "deletionDate"))
                         $root.google.protobuf.Int64Value.encode(message.deletionDate, writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
-                    if (message.muteEndDate != null && message.hasOwnProperty("muteEndDate"))
+                    if (message.muteEndDate != null && Object.hasOwnProperty.call(message, "muteEndDate"))
                         $root.google.protobuf.Int64Value.encode(message.muteEndDate, writer.uint32(/* id 11, wireType 2 =*/90).fork()).ldelim();
-                    if (message.active != null && message.hasOwnProperty("active"))
+                    if (message.active != null && Object.hasOwnProperty.call(message, "active"))
                         $root.google.protobuf.BoolValue.encode(message.active, writer.uint32(/* id 12, wireType 2 =*/98).fork()).ldelim();
                     return writer;
                 };
@@ -2749,7 +2749,7 @@ $root.im = (function() {
                     if (message.groups != null && message.groups.length)
                         for (var i = 0; i < message.groups.length; ++i)
                             $root.im.turms.proto.Group.encode(message.groups[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.lastUpdatedDate != null && message.hasOwnProperty("lastUpdatedDate"))
+                    if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
                         $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     return writer;
                 };
@@ -2880,17 +2880,17 @@ $root.im = (function() {
                 MessageStatus.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.messageId != null && message.hasOwnProperty("messageId"))
+                    if (message.messageId != null && Object.hasOwnProperty.call(message, "messageId"))
                         $root.google.protobuf.Int64Value.encode(message.messageId, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.toUserId != null && message.hasOwnProperty("toUserId"))
+                    if (message.toUserId != null && Object.hasOwnProperty.call(message, "toUserId"))
                         $root.google.protobuf.Int64Value.encode(message.toUserId, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    if (message.deliveryStatus != null && message.hasOwnProperty("deliveryStatus"))
+                    if (message.deliveryStatus != null && Object.hasOwnProperty.call(message, "deliveryStatus"))
                         writer.uint32(/* id 3, wireType 0 =*/24).int32(message.deliveryStatus);
-                    if (message.receptionDate != null && message.hasOwnProperty("receptionDate"))
+                    if (message.receptionDate != null && Object.hasOwnProperty.call(message, "receptionDate"))
                         $root.google.protobuf.Int64Value.encode(message.receptionDate, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-                    if (message.readDate != null && message.hasOwnProperty("readDate"))
+                    if (message.readDate != null && Object.hasOwnProperty.call(message, "readDate"))
                         $root.google.protobuf.Int64Value.encode(message.readDate, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
-                    if (message.recallDate != null && message.hasOwnProperty("recallDate"))
+                    if (message.recallDate != null && Object.hasOwnProperty.call(message, "recallDate"))
                         $root.google.protobuf.Int64Value.encode(message.recallDate, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
                     return writer;
                 };
@@ -3144,21 +3144,21 @@ $root.im = (function() {
                 Message.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.id != null && message.hasOwnProperty("id"))
+                    if (message.id != null && Object.hasOwnProperty.call(message, "id"))
                         $root.google.protobuf.Int64Value.encode(message.id, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.deliveryDate != null && message.hasOwnProperty("deliveryDate"))
+                    if (message.deliveryDate != null && Object.hasOwnProperty.call(message, "deliveryDate"))
                         $root.google.protobuf.Int64Value.encode(message.deliveryDate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    if (message.deletionDate != null && message.hasOwnProperty("deletionDate"))
+                    if (message.deletionDate != null && Object.hasOwnProperty.call(message, "deletionDate"))
                         $root.google.protobuf.Int64Value.encode(message.deletionDate, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.text != null && message.hasOwnProperty("text"))
+                    if (message.text != null && Object.hasOwnProperty.call(message, "text"))
                         $root.google.protobuf.StringValue.encode(message.text, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-                    if (message.senderId != null && message.hasOwnProperty("senderId"))
+                    if (message.senderId != null && Object.hasOwnProperty.call(message, "senderId"))
                         $root.google.protobuf.Int64Value.encode(message.senderId, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
-                    if (message.groupId != null && message.hasOwnProperty("groupId"))
+                    if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
                         $root.google.protobuf.Int64Value.encode(message.groupId, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
-                    if (message.isSystemMessage != null && message.hasOwnProperty("isSystemMessage"))
+                    if (message.isSystemMessage != null && Object.hasOwnProperty.call(message, "isSystemMessage"))
                         $root.google.protobuf.BoolValue.encode(message.isSystemMessage, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
-                    if (message.recipientId != null && message.hasOwnProperty("recipientId"))
+                    if (message.recipientId != null && Object.hasOwnProperty.call(message, "recipientId"))
                         $root.google.protobuf.Int64Value.encode(message.recipientId, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
                     if (message.records != null && message.records.length)
                         for (var i = 0; i < message.records.length; ++i)
@@ -3317,7 +3317,7 @@ $root.im = (function() {
                  * @interface IMessagesWithTotal
                  * @property {number|null} [total] MessagesWithTotal total
                  * @property {im.turms.proto.ChatType|null} [chatType] MessagesWithTotal chatType
-                 * @property {number|null} [fromId] MessagesWithTotal fromId
+                 * @property {string|null} [fromId] MessagesWithTotal fromId
                  * @property {Array.<im.turms.proto.IMessage>|null} [messages] MessagesWithTotal messages
                  */
 
@@ -3355,11 +3355,11 @@ $root.im = (function() {
 
                 /**
                  * MessagesWithTotal fromId.
-                 * @member {number} fromId
+                 * @member {string} fromId
                  * @memberof im.turms.proto.MessagesWithTotal
                  * @instance
                  */
-                MessagesWithTotal.prototype.fromId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                MessagesWithTotal.prototype.fromId = "0";
 
                 /**
                  * MessagesWithTotal messages.
@@ -3381,11 +3381,11 @@ $root.im = (function() {
                 MessagesWithTotal.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.total != null && message.hasOwnProperty("total"))
+                    if (message.total != null && Object.hasOwnProperty.call(message, "total"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int32(message.total);
-                    if (message.chatType != null && message.hasOwnProperty("chatType"))
+                    if (message.chatType != null && Object.hasOwnProperty.call(message, "chatType"))
                         writer.uint32(/* id 2, wireType 0 =*/16).int32(message.chatType);
-                    if (message.fromId != null && message.hasOwnProperty("fromId"))
+                    if (message.fromId != null && Object.hasOwnProperty.call(message, "fromId"))
                         writer.uint32(/* id 3, wireType 0 =*/24).int64(message.fromId);
                     if (message.messages != null && message.messages.length)
                         for (var i = 0; i < message.messages.length; ++i)
@@ -3418,7 +3418,7 @@ $root.im = (function() {
                             message.chatType = reader.int32();
                             break;
                         case 3:
-                            message.fromId = reader.int64();
+                            message.fromId = reader.int64().toString();
                             break;
                         case 4:
                             if (!(message.messages && message.messages.length))
@@ -3527,7 +3527,7 @@ $root.im = (function() {
                  * Properties of an Acknowledge.
                  * @memberof im.turms.proto
                  * @interface IAcknowledge
-                 * @property {number|null} [deliveryDate] Acknowledge deliveryDate
+                 * @property {string|null} [deliveryDate] Acknowledge deliveryDate
                  * @property {google.protobuf.IInt64Value|null} [messageId] Acknowledge messageId
                  */
 
@@ -3548,11 +3548,11 @@ $root.im = (function() {
 
                 /**
                  * Acknowledge deliveryDate.
-                 * @member {number} deliveryDate
+                 * @member {string} deliveryDate
                  * @memberof im.turms.proto.Acknowledge
                  * @instance
                  */
-                Acknowledge.prototype.deliveryDate = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                Acknowledge.prototype.deliveryDate = "0";
 
                 /**
                  * Acknowledge messageId.
@@ -3574,9 +3574,9 @@ $root.im = (function() {
                 Acknowledge.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.deliveryDate != null && message.hasOwnProperty("deliveryDate"))
+                    if (message.deliveryDate != null && Object.hasOwnProperty.call(message, "deliveryDate"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.deliveryDate);
-                    if (message.messageId != null && message.hasOwnProperty("messageId"))
+                    if (message.messageId != null && Object.hasOwnProperty.call(message, "messageId"))
                         $root.google.protobuf.Int64Value.encode(message.messageId, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     return writer;
                 };
@@ -3600,7 +3600,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.deliveryDate = reader.int64();
+                            message.deliveryDate = reader.int64().toString();
                             break;
                         case 2:
                             message.messageId = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
@@ -3669,9 +3669,9 @@ $root.im = (function() {
                 Session.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.sessionId != null && message.hasOwnProperty("sessionId"))
+                    if (message.sessionId != null && Object.hasOwnProperty.call(message, "sessionId"))
                         writer.uint32(/* id 1, wireType 2 =*/10).string(message.sessionId);
-                    if (message.address != null && message.hasOwnProperty("address"))
+                    if (message.address != null && Object.hasOwnProperty.call(message, "address"))
                         writer.uint32(/* id 2, wireType 2 =*/18).string(message.address);
                     return writer;
                 };
@@ -3818,21 +3818,21 @@ $root.im = (function() {
                 UserFriendRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.id != null && message.hasOwnProperty("id"))
+                    if (message.id != null && Object.hasOwnProperty.call(message, "id"))
                         $root.google.protobuf.Int64Value.encode(message.id, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.creationDate != null && message.hasOwnProperty("creationDate"))
+                    if (message.creationDate != null && Object.hasOwnProperty.call(message, "creationDate"))
                         $root.google.protobuf.Int64Value.encode(message.creationDate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    if (message.content != null && message.hasOwnProperty("content"))
+                    if (message.content != null && Object.hasOwnProperty.call(message, "content"))
                         $root.google.protobuf.StringValue.encode(message.content, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.requestStatus != null && message.hasOwnProperty("requestStatus"))
+                    if (message.requestStatus != null && Object.hasOwnProperty.call(message, "requestStatus"))
                         writer.uint32(/* id 4, wireType 0 =*/32).int32(message.requestStatus);
-                    if (message.reason != null && message.hasOwnProperty("reason"))
+                    if (message.reason != null && Object.hasOwnProperty.call(message, "reason"))
                         $root.google.protobuf.StringValue.encode(message.reason, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
-                    if (message.expirationDate != null && message.hasOwnProperty("expirationDate"))
+                    if (message.expirationDate != null && Object.hasOwnProperty.call(message, "expirationDate"))
                         $root.google.protobuf.Int64Value.encode(message.expirationDate, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
-                    if (message.requesterId != null && message.hasOwnProperty("requesterId"))
+                    if (message.requesterId != null && Object.hasOwnProperty.call(message, "requesterId"))
                         $root.google.protobuf.Int64Value.encode(message.requesterId, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
-                    if (message.recipientId != null && message.hasOwnProperty("recipientId"))
+                    if (message.recipientId != null && Object.hasOwnProperty.call(message, "recipientId"))
                         $root.google.protobuf.Int64Value.encode(message.recipientId, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
                     return writer;
                 };
@@ -3947,7 +3947,7 @@ $root.im = (function() {
                     if (message.userFriendRequests != null && message.userFriendRequests.length)
                         for (var i = 0; i < message.userFriendRequests.length; ++i)
                             $root.im.turms.proto.UserFriendRequest.encode(message.userFriendRequests[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.lastUpdatedDate != null && message.hasOwnProperty("lastUpdatedDate"))
+                    if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
                         $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     return writer;
                 };
@@ -4096,21 +4096,21 @@ $root.im = (function() {
                 UserInfo.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.id != null && message.hasOwnProperty("id"))
+                    if (message.id != null && Object.hasOwnProperty.call(message, "id"))
                         $root.google.protobuf.Int64Value.encode(message.id, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.name != null && message.hasOwnProperty("name"))
+                    if (message.name != null && Object.hasOwnProperty.call(message, "name"))
                         $root.google.protobuf.StringValue.encode(message.name, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    if (message.intro != null && message.hasOwnProperty("intro"))
+                    if (message.intro != null && Object.hasOwnProperty.call(message, "intro"))
                         $root.google.protobuf.StringValue.encode(message.intro, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.profilePictureUrl != null && message.hasOwnProperty("profilePictureUrl"))
+                    if (message.profilePictureUrl != null && Object.hasOwnProperty.call(message, "profilePictureUrl"))
                         $root.google.protobuf.StringValue.encode(message.profilePictureUrl, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-                    if (message.registrationDate != null && message.hasOwnProperty("registrationDate"))
+                    if (message.registrationDate != null && Object.hasOwnProperty.call(message, "registrationDate"))
                         $root.google.protobuf.Int64Value.encode(message.registrationDate, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
-                    if (message.deletionDate != null && message.hasOwnProperty("deletionDate"))
+                    if (message.deletionDate != null && Object.hasOwnProperty.call(message, "deletionDate"))
                         $root.google.protobuf.Int64Value.encode(message.deletionDate, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
-                    if (message.active != null && message.hasOwnProperty("active"))
+                    if (message.active != null && Object.hasOwnProperty.call(message, "active"))
                         $root.google.protobuf.BoolValue.encode(message.active, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
-                    if (message.profileAccessStrategy != null && message.hasOwnProperty("profileAccessStrategy"))
+                    if (message.profileAccessStrategy != null && Object.hasOwnProperty.call(message, "profileAccessStrategy"))
                         writer.uint32(/* id 8, wireType 0 =*/64).int32(message.profileAccessStrategy);
                     return writer;
                 };
@@ -4248,15 +4248,15 @@ $root.im = (function() {
                 UserLocation.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.latitude != null && message.hasOwnProperty("latitude"))
+                    if (message.latitude != null && Object.hasOwnProperty.call(message, "latitude"))
                         writer.uint32(/* id 1, wireType 5 =*/13).float(message.latitude);
-                    if (message.longitude != null && message.hasOwnProperty("longitude"))
+                    if (message.longitude != null && Object.hasOwnProperty.call(message, "longitude"))
                         writer.uint32(/* id 2, wireType 5 =*/21).float(message.longitude);
-                    if (message.name != null && message.hasOwnProperty("name"))
+                    if (message.name != null && Object.hasOwnProperty.call(message, "name"))
                         $root.google.protobuf.StringValue.encode(message.name, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.address != null && message.hasOwnProperty("address"))
+                    if (message.address != null && Object.hasOwnProperty.call(message, "address"))
                         $root.google.protobuf.StringValue.encode(message.address, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-                    if (message.timestamp != null && message.hasOwnProperty("timestamp"))
+                    if (message.timestamp != null && Object.hasOwnProperty.call(message, "timestamp"))
                         $root.google.protobuf.Int64Value.encode(message.timestamp, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
                     return writer;
                 };
@@ -4358,9 +4358,9 @@ $root.im = (function() {
                 UserRelationshipGroup.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.index != null && message.hasOwnProperty("index"))
+                    if (message.index != null && Object.hasOwnProperty.call(message, "index"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int32(message.index);
-                    if (message.name != null && message.hasOwnProperty("name"))
+                    if (message.name != null && Object.hasOwnProperty.call(message, "name"))
                         writer.uint32(/* id 2, wireType 2 =*/18).string(message.name);
                     return writer;
                 };
@@ -4457,7 +4457,7 @@ $root.im = (function() {
                     if (message.userRelationshipGroups != null && message.userRelationshipGroups.length)
                         for (var i = 0; i < message.userRelationshipGroups.length; ++i)
                             $root.im.turms.proto.UserRelationshipGroup.encode(message.userRelationshipGroups[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.lastUpdatedDate != null && message.hasOwnProperty("lastUpdatedDate"))
+                    if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
                         $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     return writer;
                 };
@@ -4579,15 +4579,15 @@ $root.im = (function() {
                 UserRelationship.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.ownerId != null && message.hasOwnProperty("ownerId"))
+                    if (message.ownerId != null && Object.hasOwnProperty.call(message, "ownerId"))
                         $root.google.protobuf.Int64Value.encode(message.ownerId, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.relatedUserId != null && message.hasOwnProperty("relatedUserId"))
+                    if (message.relatedUserId != null && Object.hasOwnProperty.call(message, "relatedUserId"))
                         $root.google.protobuf.Int64Value.encode(message.relatedUserId, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    if (message.isBlocked != null && message.hasOwnProperty("isBlocked"))
+                    if (message.isBlocked != null && Object.hasOwnProperty.call(message, "isBlocked"))
                         $root.google.protobuf.BoolValue.encode(message.isBlocked, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.groupIndex != null && message.hasOwnProperty("groupIndex"))
+                    if (message.groupIndex != null && Object.hasOwnProperty.call(message, "groupIndex"))
                         $root.google.protobuf.Int64Value.encode(message.groupIndex, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-                    if (message.establishmentDate != null && message.hasOwnProperty("establishmentDate"))
+                    if (message.establishmentDate != null && Object.hasOwnProperty.call(message, "establishmentDate"))
                         $root.google.protobuf.Int64Value.encode(message.establishmentDate, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
                     return writer;
                 };
@@ -4693,7 +4693,7 @@ $root.im = (function() {
                     if (message.userRelationships != null && message.userRelationships.length)
                         for (var i = 0; i < message.userRelationships.length; ++i)
                             $root.im.turms.proto.UserRelationship.encode(message.userRelationships[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.lastUpdatedDate != null && message.hasOwnProperty("lastUpdatedDate"))
+                    if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
                         $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     return writer;
                 };
@@ -4741,7 +4741,7 @@ $root.im = (function() {
                  * Properties of a UserStatusDetail.
                  * @memberof im.turms.proto
                  * @interface IUserStatusDetail
-                 * @property {number|null} [userId] UserStatusDetail userId
+                 * @property {string|null} [userId] UserStatusDetail userId
                  * @property {im.turms.proto.UserStatus|null} [userStatus] UserStatusDetail userStatus
                  * @property {Array.<im.turms.proto.DeviceType>|null} [usingDeviceTypes] UserStatusDetail usingDeviceTypes
                  */
@@ -4764,11 +4764,11 @@ $root.im = (function() {
 
                 /**
                  * UserStatusDetail userId.
-                 * @member {number} userId
+                 * @member {string} userId
                  * @memberof im.turms.proto.UserStatusDetail
                  * @instance
                  */
-                UserStatusDetail.prototype.userId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                UserStatusDetail.prototype.userId = "0";
 
                 /**
                  * UserStatusDetail userStatus.
@@ -4798,9 +4798,9 @@ $root.im = (function() {
                 UserStatusDetail.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.userId != null && message.hasOwnProperty("userId"))
+                    if (message.userId != null && Object.hasOwnProperty.call(message, "userId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.userId);
-                    if (message.userStatus != null && message.hasOwnProperty("userStatus"))
+                    if (message.userStatus != null && Object.hasOwnProperty.call(message, "userStatus"))
                         writer.uint32(/* id 2, wireType 0 =*/16).int32(message.userStatus);
                     if (message.usingDeviceTypes != null && message.usingDeviceTypes.length) {
                         writer.uint32(/* id 3, wireType 2 =*/26).fork();
@@ -4830,7 +4830,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.userId = reader.int64();
+                            message.userId = reader.int64().toString();
                             break;
                         case 2:
                             message.userStatus = reader.int32();
@@ -4913,7 +4913,7 @@ $root.im = (function() {
                     if (message.userInfos != null && message.userInfos.length)
                         for (var i = 0; i < message.userInfos.length; ++i)
                             $root.im.turms.proto.UserInfo.encode(message.userInfos[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.lastUpdatedDate != null && message.hasOwnProperty("lastUpdatedDate"))
+                    if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
                         $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     return writer;
                 };
@@ -5129,17 +5129,17 @@ $root.im = (function() {
                 TurmsNotification.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.requestId != null && message.hasOwnProperty("requestId"))
+                    if (message.requestId != null && Object.hasOwnProperty.call(message, "requestId"))
                         $root.google.protobuf.Int64Value.encode(message.requestId, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.code != null && message.hasOwnProperty("code"))
+                    if (message.code != null && Object.hasOwnProperty.call(message, "code"))
                         $root.google.protobuf.Int32Value.encode(message.code, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    if (message.reason != null && message.hasOwnProperty("reason"))
+                    if (message.reason != null && Object.hasOwnProperty.call(message, "reason"))
                         $root.google.protobuf.StringValue.encode(message.reason, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.data != null && message.hasOwnProperty("data"))
+                    if (message.data != null && Object.hasOwnProperty.call(message, "data"))
                         $root.im.turms.proto.TurmsNotification.Data.encode(message.data, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-                    if (message.relayedRequest != null && message.hasOwnProperty("relayedRequest"))
+                    if (message.relayedRequest != null && Object.hasOwnProperty.call(message, "relayedRequest"))
                         $root.im.turms.proto.TurmsRequest.encode(message.relayedRequest, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
-                    if (message.requesterId != null && message.hasOwnProperty("requesterId"))
+                    if (message.requesterId != null && Object.hasOwnProperty.call(message, "requesterId"))
                         $root.google.protobuf.Int64Value.encode(message.requesterId, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
                     return writer;
                 };
@@ -5408,43 +5408,43 @@ $root.im = (function() {
                     Data.encode = function encode(message, writer) {
                         if (!writer)
                             writer = $Writer.create();
-                        if (message.ids != null && message.hasOwnProperty("ids"))
+                        if (message.ids != null && Object.hasOwnProperty.call(message, "ids"))
                             $root.im.turms.proto.Int64Values.encode(message.ids, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                        if (message.idsWithVersion != null && message.hasOwnProperty("idsWithVersion"))
+                        if (message.idsWithVersion != null && Object.hasOwnProperty.call(message, "idsWithVersion"))
                             $root.im.turms.proto.Int64ValuesWithVersion.encode(message.idsWithVersion, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                        if (message.success != null && message.hasOwnProperty("success"))
+                        if (message.success != null && Object.hasOwnProperty.call(message, "success"))
                             $root.google.protobuf.BoolValue.encode(message.success, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                        if (message.acknowledge != null && message.hasOwnProperty("acknowledge"))
+                        if (message.acknowledge != null && Object.hasOwnProperty.call(message, "acknowledge"))
                             $root.im.turms.proto.Acknowledge.encode(message.acknowledge, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-                        if (message.session != null && message.hasOwnProperty("session"))
+                        if (message.session != null && Object.hasOwnProperty.call(message, "session"))
                             $root.im.turms.proto.Session.encode(message.session, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
-                        if (message.messages != null && message.hasOwnProperty("messages"))
+                        if (message.messages != null && Object.hasOwnProperty.call(message, "messages"))
                             $root.im.turms.proto.Messages.encode(message.messages, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
-                        if (message.messageStatuses != null && message.hasOwnProperty("messageStatuses"))
+                        if (message.messageStatuses != null && Object.hasOwnProperty.call(message, "messageStatuses"))
                             $root.im.turms.proto.MessageStatuses.encode(message.messageStatuses, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
-                        if (message.messagesWithTotalList != null && message.hasOwnProperty("messagesWithTotalList"))
+                        if (message.messagesWithTotalList != null && Object.hasOwnProperty.call(message, "messagesWithTotalList"))
                             $root.im.turms.proto.MessagesWithTotalList.encode(message.messagesWithTotalList, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
-                        if (message.usersInfosWithVersion != null && message.hasOwnProperty("usersInfosWithVersion"))
+                        if (message.usersInfosWithVersion != null && Object.hasOwnProperty.call(message, "usersInfosWithVersion"))
                             $root.im.turms.proto.UsersInfosWithVersion.encode(message.usersInfosWithVersion, writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
-                        if (message.usersOnlineStatuses != null && message.hasOwnProperty("usersOnlineStatuses"))
+                        if (message.usersOnlineStatuses != null && Object.hasOwnProperty.call(message, "usersOnlineStatuses"))
                             $root.im.turms.proto.UsersOnlineStatuses.encode(message.usersOnlineStatuses, writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
-                        if (message.userFriendRequestsWithVersion != null && message.hasOwnProperty("userFriendRequestsWithVersion"))
+                        if (message.userFriendRequestsWithVersion != null && Object.hasOwnProperty.call(message, "userFriendRequestsWithVersion"))
                             $root.im.turms.proto.UserFriendRequestsWithVersion.encode(message.userFriendRequestsWithVersion, writer.uint32(/* id 11, wireType 2 =*/90).fork()).ldelim();
-                        if (message.userRelationshipGroupsWithVersion != null && message.hasOwnProperty("userRelationshipGroupsWithVersion"))
+                        if (message.userRelationshipGroupsWithVersion != null && Object.hasOwnProperty.call(message, "userRelationshipGroupsWithVersion"))
                             $root.im.turms.proto.UserRelationshipGroupsWithVersion.encode(message.userRelationshipGroupsWithVersion, writer.uint32(/* id 12, wireType 2 =*/98).fork()).ldelim();
-                        if (message.userRelationshipsWithVersion != null && message.hasOwnProperty("userRelationshipsWithVersion"))
+                        if (message.userRelationshipsWithVersion != null && Object.hasOwnProperty.call(message, "userRelationshipsWithVersion"))
                             $root.im.turms.proto.UserRelationshipsWithVersion.encode(message.userRelationshipsWithVersion, writer.uint32(/* id 13, wireType 2 =*/106).fork()).ldelim();
-                        if (message.groupInvitationsWithVersion != null && message.hasOwnProperty("groupInvitationsWithVersion"))
+                        if (message.groupInvitationsWithVersion != null && Object.hasOwnProperty.call(message, "groupInvitationsWithVersion"))
                             $root.im.turms.proto.GroupInvitationsWithVersion.encode(message.groupInvitationsWithVersion, writer.uint32(/* id 14, wireType 2 =*/114).fork()).ldelim();
-                        if (message.groupJoinQuestionAnswerResult != null && message.hasOwnProperty("groupJoinQuestionAnswerResult"))
+                        if (message.groupJoinQuestionAnswerResult != null && Object.hasOwnProperty.call(message, "groupJoinQuestionAnswerResult"))
                             $root.im.turms.proto.GroupJoinQuestionsAnswerResult.encode(message.groupJoinQuestionAnswerResult, writer.uint32(/* id 15, wireType 2 =*/122).fork()).ldelim();
-                        if (message.groupJoinRequestsWithVersion != null && message.hasOwnProperty("groupJoinRequestsWithVersion"))
+                        if (message.groupJoinRequestsWithVersion != null && Object.hasOwnProperty.call(message, "groupJoinRequestsWithVersion"))
                             $root.im.turms.proto.GroupJoinRequestsWithVersion.encode(message.groupJoinRequestsWithVersion, writer.uint32(/* id 16, wireType 2 =*/130).fork()).ldelim();
-                        if (message.groupJoinQuestionsWithVersion != null && message.hasOwnProperty("groupJoinQuestionsWithVersion"))
+                        if (message.groupJoinQuestionsWithVersion != null && Object.hasOwnProperty.call(message, "groupJoinQuestionsWithVersion"))
                             $root.im.turms.proto.GroupJoinQuestionsWithVersion.encode(message.groupJoinQuestionsWithVersion, writer.uint32(/* id 17, wireType 2 =*/138).fork()).ldelim();
-                        if (message.groupMembersWithVersion != null && message.hasOwnProperty("groupMembersWithVersion"))
+                        if (message.groupMembersWithVersion != null && Object.hasOwnProperty.call(message, "groupMembersWithVersion"))
                             $root.im.turms.proto.GroupMembersWithVersion.encode(message.groupMembersWithVersion, writer.uint32(/* id 18, wireType 2 =*/146).fork()).ldelim();
-                        if (message.groupsWithVersion != null && message.hasOwnProperty("groupsWithVersion"))
+                        if (message.groupsWithVersion != null && Object.hasOwnProperty.call(message, "groupsWithVersion"))
                             $root.im.turms.proto.GroupsWithVersion.encode(message.groupsWithVersion, writer.uint32(/* id 19, wireType 2 =*/154).fork()).ldelim();
                         return writer;
                     };
@@ -5544,8 +5544,8 @@ $root.im = (function() {
                  * Properties of a CreateGroupBlacklistedUserRequest.
                  * @memberof im.turms.proto
                  * @interface ICreateGroupBlacklistedUserRequest
-                 * @property {number|null} [groupId] CreateGroupBlacklistedUserRequest groupId
-                 * @property {number|null} [blacklistedUserId] CreateGroupBlacklistedUserRequest blacklistedUserId
+                 * @property {string|null} [groupId] CreateGroupBlacklistedUserRequest groupId
+                 * @property {string|null} [blacklistedUserId] CreateGroupBlacklistedUserRequest blacklistedUserId
                  */
 
                 /**
@@ -5565,19 +5565,19 @@ $root.im = (function() {
 
                 /**
                  * CreateGroupBlacklistedUserRequest groupId.
-                 * @member {number} groupId
+                 * @member {string} groupId
                  * @memberof im.turms.proto.CreateGroupBlacklistedUserRequest
                  * @instance
                  */
-                CreateGroupBlacklistedUserRequest.prototype.groupId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                CreateGroupBlacklistedUserRequest.prototype.groupId = "0";
 
                 /**
                  * CreateGroupBlacklistedUserRequest blacklistedUserId.
-                 * @member {number} blacklistedUserId
+                 * @member {string} blacklistedUserId
                  * @memberof im.turms.proto.CreateGroupBlacklistedUserRequest
                  * @instance
                  */
-                CreateGroupBlacklistedUserRequest.prototype.blacklistedUserId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                CreateGroupBlacklistedUserRequest.prototype.blacklistedUserId = "0";
 
                 /**
                  * Encodes the specified CreateGroupBlacklistedUserRequest message. Does not implicitly {@link im.turms.proto.CreateGroupBlacklistedUserRequest.verify|verify} messages.
@@ -5591,9 +5591,9 @@ $root.im = (function() {
                 CreateGroupBlacklistedUserRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.groupId != null && message.hasOwnProperty("groupId"))
+                    if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.groupId);
-                    if (message.blacklistedUserId != null && message.hasOwnProperty("blacklistedUserId"))
+                    if (message.blacklistedUserId != null && Object.hasOwnProperty.call(message, "blacklistedUserId"))
                         writer.uint32(/* id 2, wireType 0 =*/16).int64(message.blacklistedUserId);
                     return writer;
                 };
@@ -5617,10 +5617,10 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.groupId = reader.int64();
+                            message.groupId = reader.int64().toString();
                             break;
                         case 2:
-                            message.blacklistedUserId = reader.int64();
+                            message.blacklistedUserId = reader.int64().toString();
                             break;
                         default:
                             reader.skipType(tag & 7);
@@ -5639,8 +5639,8 @@ $root.im = (function() {
                  * Properties of a DeleteGroupBlacklistedUserRequest.
                  * @memberof im.turms.proto
                  * @interface IDeleteGroupBlacklistedUserRequest
-                 * @property {number|null} [groupId] DeleteGroupBlacklistedUserRequest groupId
-                 * @property {number|null} [unblacklistedUserId] DeleteGroupBlacklistedUserRequest unblacklistedUserId
+                 * @property {string|null} [groupId] DeleteGroupBlacklistedUserRequest groupId
+                 * @property {string|null} [unblacklistedUserId] DeleteGroupBlacklistedUserRequest unblacklistedUserId
                  */
 
                 /**
@@ -5660,19 +5660,19 @@ $root.im = (function() {
 
                 /**
                  * DeleteGroupBlacklistedUserRequest groupId.
-                 * @member {number} groupId
+                 * @member {string} groupId
                  * @memberof im.turms.proto.DeleteGroupBlacklistedUserRequest
                  * @instance
                  */
-                DeleteGroupBlacklistedUserRequest.prototype.groupId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                DeleteGroupBlacklistedUserRequest.prototype.groupId = "0";
 
                 /**
                  * DeleteGroupBlacklistedUserRequest unblacklistedUserId.
-                 * @member {number} unblacklistedUserId
+                 * @member {string} unblacklistedUserId
                  * @memberof im.turms.proto.DeleteGroupBlacklistedUserRequest
                  * @instance
                  */
-                DeleteGroupBlacklistedUserRequest.prototype.unblacklistedUserId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                DeleteGroupBlacklistedUserRequest.prototype.unblacklistedUserId = "0";
 
                 /**
                  * Encodes the specified DeleteGroupBlacklistedUserRequest message. Does not implicitly {@link im.turms.proto.DeleteGroupBlacklistedUserRequest.verify|verify} messages.
@@ -5686,9 +5686,9 @@ $root.im = (function() {
                 DeleteGroupBlacklistedUserRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.groupId != null && message.hasOwnProperty("groupId"))
+                    if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.groupId);
-                    if (message.unblacklistedUserId != null && message.hasOwnProperty("unblacklistedUserId"))
+                    if (message.unblacklistedUserId != null && Object.hasOwnProperty.call(message, "unblacklistedUserId"))
                         writer.uint32(/* id 2, wireType 0 =*/16).int64(message.unblacklistedUserId);
                     return writer;
                 };
@@ -5712,10 +5712,10 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.groupId = reader.int64();
+                            message.groupId = reader.int64().toString();
                             break;
                         case 2:
-                            message.unblacklistedUserId = reader.int64();
+                            message.unblacklistedUserId = reader.int64().toString();
                             break;
                         default:
                             reader.skipType(tag & 7);
@@ -5734,7 +5734,7 @@ $root.im = (function() {
                  * Properties of a QueryGroupBlacklistedUsersIdsRequest.
                  * @memberof im.turms.proto
                  * @interface IQueryGroupBlacklistedUsersIdsRequest
-                 * @property {number|null} [groupId] QueryGroupBlacklistedUsersIdsRequest groupId
+                 * @property {string|null} [groupId] QueryGroupBlacklistedUsersIdsRequest groupId
                  * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryGroupBlacklistedUsersIdsRequest lastUpdatedDate
                  */
 
@@ -5755,11 +5755,11 @@ $root.im = (function() {
 
                 /**
                  * QueryGroupBlacklistedUsersIdsRequest groupId.
-                 * @member {number} groupId
+                 * @member {string} groupId
                  * @memberof im.turms.proto.QueryGroupBlacklistedUsersIdsRequest
                  * @instance
                  */
-                QueryGroupBlacklistedUsersIdsRequest.prototype.groupId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                QueryGroupBlacklistedUsersIdsRequest.prototype.groupId = "0";
 
                 /**
                  * QueryGroupBlacklistedUsersIdsRequest lastUpdatedDate.
@@ -5781,9 +5781,9 @@ $root.im = (function() {
                 QueryGroupBlacklistedUsersIdsRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.groupId != null && message.hasOwnProperty("groupId"))
+                    if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.groupId);
-                    if (message.lastUpdatedDate != null && message.hasOwnProperty("lastUpdatedDate"))
+                    if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
                         $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     return writer;
                 };
@@ -5807,7 +5807,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.groupId = reader.int64();
+                            message.groupId = reader.int64().toString();
                             break;
                         case 2:
                             message.lastUpdatedDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
@@ -5829,7 +5829,7 @@ $root.im = (function() {
                  * Properties of a QueryGroupBlacklistedUsersInfosRequest.
                  * @memberof im.turms.proto
                  * @interface IQueryGroupBlacklistedUsersInfosRequest
-                 * @property {number|null} [groupId] QueryGroupBlacklistedUsersInfosRequest groupId
+                 * @property {string|null} [groupId] QueryGroupBlacklistedUsersInfosRequest groupId
                  * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryGroupBlacklistedUsersInfosRequest lastUpdatedDate
                  */
 
@@ -5850,11 +5850,11 @@ $root.im = (function() {
 
                 /**
                  * QueryGroupBlacklistedUsersInfosRequest groupId.
-                 * @member {number} groupId
+                 * @member {string} groupId
                  * @memberof im.turms.proto.QueryGroupBlacklistedUsersInfosRequest
                  * @instance
                  */
-                QueryGroupBlacklistedUsersInfosRequest.prototype.groupId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                QueryGroupBlacklistedUsersInfosRequest.prototype.groupId = "0";
 
                 /**
                  * QueryGroupBlacklistedUsersInfosRequest lastUpdatedDate.
@@ -5876,9 +5876,9 @@ $root.im = (function() {
                 QueryGroupBlacklistedUsersInfosRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.groupId != null && message.hasOwnProperty("groupId"))
+                    if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.groupId);
-                    if (message.lastUpdatedDate != null && message.hasOwnProperty("lastUpdatedDate"))
+                    if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
                         $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     return writer;
                 };
@@ -5902,7 +5902,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.groupId = reader.int64();
+                            message.groupId = reader.int64().toString();
                             break;
                         case 2:
                             message.lastUpdatedDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
@@ -6016,19 +6016,19 @@ $root.im = (function() {
                 CreateGroupRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.name != null && message.hasOwnProperty("name"))
+                    if (message.name != null && Object.hasOwnProperty.call(message, "name"))
                         writer.uint32(/* id 1, wireType 2 =*/10).string(message.name);
-                    if (message.intro != null && message.hasOwnProperty("intro"))
+                    if (message.intro != null && Object.hasOwnProperty.call(message, "intro"))
                         $root.google.protobuf.StringValue.encode(message.intro, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    if (message.announcement != null && message.hasOwnProperty("announcement"))
+                    if (message.announcement != null && Object.hasOwnProperty.call(message, "announcement"))
                         $root.google.protobuf.StringValue.encode(message.announcement, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.profilePictureUrl != null && message.hasOwnProperty("profilePictureUrl"))
+                    if (message.profilePictureUrl != null && Object.hasOwnProperty.call(message, "profilePictureUrl"))
                         $root.google.protobuf.StringValue.encode(message.profilePictureUrl, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-                    if (message.minimumScore != null && message.hasOwnProperty("minimumScore"))
+                    if (message.minimumScore != null && Object.hasOwnProperty.call(message, "minimumScore"))
                         $root.google.protobuf.Int32Value.encode(message.minimumScore, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
-                    if (message.groupTypeId != null && message.hasOwnProperty("groupTypeId"))
+                    if (message.groupTypeId != null && Object.hasOwnProperty.call(message, "groupTypeId"))
                         $root.google.protobuf.Int64Value.encode(message.groupTypeId, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
-                    if (message.muteEndDate != null && message.hasOwnProperty("muteEndDate"))
+                    if (message.muteEndDate != null && Object.hasOwnProperty.call(message, "muteEndDate"))
                         $root.google.protobuf.Int64Value.encode(message.muteEndDate, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
                     return writer;
                 };
@@ -6089,7 +6089,7 @@ $root.im = (function() {
                  * Properties of a DeleteGroupRequest.
                  * @memberof im.turms.proto
                  * @interface IDeleteGroupRequest
-                 * @property {number|null} [groupId] DeleteGroupRequest groupId
+                 * @property {string|null} [groupId] DeleteGroupRequest groupId
                  */
 
                 /**
@@ -6109,11 +6109,11 @@ $root.im = (function() {
 
                 /**
                  * DeleteGroupRequest groupId.
-                 * @member {number} groupId
+                 * @member {string} groupId
                  * @memberof im.turms.proto.DeleteGroupRequest
                  * @instance
                  */
-                DeleteGroupRequest.prototype.groupId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                DeleteGroupRequest.prototype.groupId = "0";
 
                 /**
                  * Encodes the specified DeleteGroupRequest message. Does not implicitly {@link im.turms.proto.DeleteGroupRequest.verify|verify} messages.
@@ -6127,7 +6127,7 @@ $root.im = (function() {
                 DeleteGroupRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.groupId != null && message.hasOwnProperty("groupId"))
+                    if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.groupId);
                     return writer;
                 };
@@ -6151,7 +6151,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.groupId = reader.int64();
+                            message.groupId = reader.int64().toString();
                             break;
                         default:
                             reader.skipType(tag & 7);
@@ -6209,7 +6209,7 @@ $root.im = (function() {
                 CheckGroupJoinQuestionsAnswersRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.questionIdAndAnswer != null && message.hasOwnProperty("questionIdAndAnswer"))
+                    if (message.questionIdAndAnswer != null && Object.hasOwnProperty.call(message, "questionIdAndAnswer"))
                         for (var keys = Object.keys(message.questionIdAndAnswer), i = 0; i < keys.length; ++i)
                             writer.uint32(/* id 1, wireType 2 =*/10).fork().uint32(/* id 1, wireType 0 =*/8).int64(keys[i]).uint32(/* id 2, wireType 2 =*/18).string(message.questionIdAndAnswer[keys[i]]).ldelim();
                     return writer;
@@ -6258,8 +6258,8 @@ $root.im = (function() {
                  * Properties of a CreateGroupInvitationRequest.
                  * @memberof im.turms.proto
                  * @interface ICreateGroupInvitationRequest
-                 * @property {number|null} [groupId] CreateGroupInvitationRequest groupId
-                 * @property {number|null} [inviteeId] CreateGroupInvitationRequest inviteeId
+                 * @property {string|null} [groupId] CreateGroupInvitationRequest groupId
+                 * @property {string|null} [inviteeId] CreateGroupInvitationRequest inviteeId
                  * @property {string|null} [content] CreateGroupInvitationRequest content
                  */
 
@@ -6280,19 +6280,19 @@ $root.im = (function() {
 
                 /**
                  * CreateGroupInvitationRequest groupId.
-                 * @member {number} groupId
+                 * @member {string} groupId
                  * @memberof im.turms.proto.CreateGroupInvitationRequest
                  * @instance
                  */
-                CreateGroupInvitationRequest.prototype.groupId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                CreateGroupInvitationRequest.prototype.groupId = "0";
 
                 /**
                  * CreateGroupInvitationRequest inviteeId.
-                 * @member {number} inviteeId
+                 * @member {string} inviteeId
                  * @memberof im.turms.proto.CreateGroupInvitationRequest
                  * @instance
                  */
-                CreateGroupInvitationRequest.prototype.inviteeId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                CreateGroupInvitationRequest.prototype.inviteeId = "0";
 
                 /**
                  * CreateGroupInvitationRequest content.
@@ -6314,11 +6314,11 @@ $root.im = (function() {
                 CreateGroupInvitationRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.groupId != null && message.hasOwnProperty("groupId"))
+                    if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.groupId);
-                    if (message.inviteeId != null && message.hasOwnProperty("inviteeId"))
+                    if (message.inviteeId != null && Object.hasOwnProperty.call(message, "inviteeId"))
                         writer.uint32(/* id 2, wireType 0 =*/16).int64(message.inviteeId);
-                    if (message.content != null && message.hasOwnProperty("content"))
+                    if (message.content != null && Object.hasOwnProperty.call(message, "content"))
                         writer.uint32(/* id 3, wireType 2 =*/26).string(message.content);
                     return writer;
                 };
@@ -6342,10 +6342,10 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.groupId = reader.int64();
+                            message.groupId = reader.int64().toString();
                             break;
                         case 2:
-                            message.inviteeId = reader.int64();
+                            message.inviteeId = reader.int64().toString();
                             break;
                         case 3:
                             message.content = reader.string();
@@ -6367,7 +6367,7 @@ $root.im = (function() {
                  * Properties of a CreateGroupJoinQuestionRequest.
                  * @memberof im.turms.proto
                  * @interface ICreateGroupJoinQuestionRequest
-                 * @property {number|null} [groupId] CreateGroupJoinQuestionRequest groupId
+                 * @property {string|null} [groupId] CreateGroupJoinQuestionRequest groupId
                  * @property {string|null} [question] CreateGroupJoinQuestionRequest question
                  * @property {Array.<string>|null} [answers] CreateGroupJoinQuestionRequest answers
                  * @property {number|null} [score] CreateGroupJoinQuestionRequest score
@@ -6391,11 +6391,11 @@ $root.im = (function() {
 
                 /**
                  * CreateGroupJoinQuestionRequest groupId.
-                 * @member {number} groupId
+                 * @member {string} groupId
                  * @memberof im.turms.proto.CreateGroupJoinQuestionRequest
                  * @instance
                  */
-                CreateGroupJoinQuestionRequest.prototype.groupId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                CreateGroupJoinQuestionRequest.prototype.groupId = "0";
 
                 /**
                  * CreateGroupJoinQuestionRequest question.
@@ -6433,14 +6433,14 @@ $root.im = (function() {
                 CreateGroupJoinQuestionRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.groupId != null && message.hasOwnProperty("groupId"))
+                    if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.groupId);
-                    if (message.question != null && message.hasOwnProperty("question"))
+                    if (message.question != null && Object.hasOwnProperty.call(message, "question"))
                         writer.uint32(/* id 2, wireType 2 =*/18).string(message.question);
                     if (message.answers != null && message.answers.length)
                         for (var i = 0; i < message.answers.length; ++i)
                             writer.uint32(/* id 3, wireType 2 =*/26).string(message.answers[i]);
-                    if (message.score != null && message.hasOwnProperty("score"))
+                    if (message.score != null && Object.hasOwnProperty.call(message, "score"))
                         writer.uint32(/* id 4, wireType 0 =*/32).int32(message.score);
                     return writer;
                 };
@@ -6464,7 +6464,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.groupId = reader.int64();
+                            message.groupId = reader.int64().toString();
                             break;
                         case 2:
                             message.question = reader.string();
@@ -6494,7 +6494,7 @@ $root.im = (function() {
                  * Properties of a CreateGroupJoinRequestRequest.
                  * @memberof im.turms.proto
                  * @interface ICreateGroupJoinRequestRequest
-                 * @property {number|null} [groupId] CreateGroupJoinRequestRequest groupId
+                 * @property {string|null} [groupId] CreateGroupJoinRequestRequest groupId
                  * @property {string|null} [content] CreateGroupJoinRequestRequest content
                  */
 
@@ -6515,11 +6515,11 @@ $root.im = (function() {
 
                 /**
                  * CreateGroupJoinRequestRequest groupId.
-                 * @member {number} groupId
+                 * @member {string} groupId
                  * @memberof im.turms.proto.CreateGroupJoinRequestRequest
                  * @instance
                  */
-                CreateGroupJoinRequestRequest.prototype.groupId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                CreateGroupJoinRequestRequest.prototype.groupId = "0";
 
                 /**
                  * CreateGroupJoinRequestRequest content.
@@ -6541,9 +6541,9 @@ $root.im = (function() {
                 CreateGroupJoinRequestRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.groupId != null && message.hasOwnProperty("groupId"))
+                    if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.groupId);
-                    if (message.content != null && message.hasOwnProperty("content"))
+                    if (message.content != null && Object.hasOwnProperty.call(message, "content"))
                         writer.uint32(/* id 2, wireType 2 =*/18).string(message.content);
                     return writer;
                 };
@@ -6567,7 +6567,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.groupId = reader.int64();
+                            message.groupId = reader.int64().toString();
                             break;
                         case 2:
                             message.content = reader.string();
@@ -6589,7 +6589,7 @@ $root.im = (function() {
                  * Properties of a DeleteGroupInvitationRequest.
                  * @memberof im.turms.proto
                  * @interface IDeleteGroupInvitationRequest
-                 * @property {number|null} [invitationId] DeleteGroupInvitationRequest invitationId
+                 * @property {string|null} [invitationId] DeleteGroupInvitationRequest invitationId
                  */
 
                 /**
@@ -6609,11 +6609,11 @@ $root.im = (function() {
 
                 /**
                  * DeleteGroupInvitationRequest invitationId.
-                 * @member {number} invitationId
+                 * @member {string} invitationId
                  * @memberof im.turms.proto.DeleteGroupInvitationRequest
                  * @instance
                  */
-                DeleteGroupInvitationRequest.prototype.invitationId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                DeleteGroupInvitationRequest.prototype.invitationId = "0";
 
                 /**
                  * Encodes the specified DeleteGroupInvitationRequest message. Does not implicitly {@link im.turms.proto.DeleteGroupInvitationRequest.verify|verify} messages.
@@ -6627,7 +6627,7 @@ $root.im = (function() {
                 DeleteGroupInvitationRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.invitationId != null && message.hasOwnProperty("invitationId"))
+                    if (message.invitationId != null && Object.hasOwnProperty.call(message, "invitationId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.invitationId);
                     return writer;
                 };
@@ -6651,7 +6651,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.invitationId = reader.int64();
+                            message.invitationId = reader.int64().toString();
                             break;
                         default:
                             reader.skipType(tag & 7);
@@ -6670,7 +6670,7 @@ $root.im = (function() {
                  * Properties of a DeleteGroupJoinQuestionRequest.
                  * @memberof im.turms.proto
                  * @interface IDeleteGroupJoinQuestionRequest
-                 * @property {number|null} [questionId] DeleteGroupJoinQuestionRequest questionId
+                 * @property {string|null} [questionId] DeleteGroupJoinQuestionRequest questionId
                  */
 
                 /**
@@ -6690,11 +6690,11 @@ $root.im = (function() {
 
                 /**
                  * DeleteGroupJoinQuestionRequest questionId.
-                 * @member {number} questionId
+                 * @member {string} questionId
                  * @memberof im.turms.proto.DeleteGroupJoinQuestionRequest
                  * @instance
                  */
-                DeleteGroupJoinQuestionRequest.prototype.questionId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                DeleteGroupJoinQuestionRequest.prototype.questionId = "0";
 
                 /**
                  * Encodes the specified DeleteGroupJoinQuestionRequest message. Does not implicitly {@link im.turms.proto.DeleteGroupJoinQuestionRequest.verify|verify} messages.
@@ -6708,7 +6708,7 @@ $root.im = (function() {
                 DeleteGroupJoinQuestionRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.questionId != null && message.hasOwnProperty("questionId"))
+                    if (message.questionId != null && Object.hasOwnProperty.call(message, "questionId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.questionId);
                     return writer;
                 };
@@ -6732,7 +6732,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.questionId = reader.int64();
+                            message.questionId = reader.int64().toString();
                             break;
                         default:
                             reader.skipType(tag & 7);
@@ -6751,7 +6751,7 @@ $root.im = (function() {
                  * Properties of a DeleteGroupJoinRequestRequest.
                  * @memberof im.turms.proto
                  * @interface IDeleteGroupJoinRequestRequest
-                 * @property {number|null} [requestId] DeleteGroupJoinRequestRequest requestId
+                 * @property {string|null} [requestId] DeleteGroupJoinRequestRequest requestId
                  */
 
                 /**
@@ -6771,11 +6771,11 @@ $root.im = (function() {
 
                 /**
                  * DeleteGroupJoinRequestRequest requestId.
-                 * @member {number} requestId
+                 * @member {string} requestId
                  * @memberof im.turms.proto.DeleteGroupJoinRequestRequest
                  * @instance
                  */
-                DeleteGroupJoinRequestRequest.prototype.requestId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                DeleteGroupJoinRequestRequest.prototype.requestId = "0";
 
                 /**
                  * Encodes the specified DeleteGroupJoinRequestRequest message. Does not implicitly {@link im.turms.proto.DeleteGroupJoinRequestRequest.verify|verify} messages.
@@ -6789,7 +6789,7 @@ $root.im = (function() {
                 DeleteGroupJoinRequestRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.requestId != null && message.hasOwnProperty("requestId"))
+                    if (message.requestId != null && Object.hasOwnProperty.call(message, "requestId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.requestId);
                     return writer;
                 };
@@ -6813,7 +6813,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.requestId = reader.int64();
+                            message.requestId = reader.int64().toString();
                             break;
                         default:
                             reader.skipType(tag & 7);
@@ -6832,7 +6832,7 @@ $root.im = (function() {
                  * Properties of a QueryGroupInvitationsRequest.
                  * @memberof im.turms.proto
                  * @interface IQueryGroupInvitationsRequest
-                 * @property {number|null} [groupId] QueryGroupInvitationsRequest groupId
+                 * @property {string|null} [groupId] QueryGroupInvitationsRequest groupId
                  * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryGroupInvitationsRequest lastUpdatedDate
                  */
 
@@ -6853,11 +6853,11 @@ $root.im = (function() {
 
                 /**
                  * QueryGroupInvitationsRequest groupId.
-                 * @member {number} groupId
+                 * @member {string} groupId
                  * @memberof im.turms.proto.QueryGroupInvitationsRequest
                  * @instance
                  */
-                QueryGroupInvitationsRequest.prototype.groupId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                QueryGroupInvitationsRequest.prototype.groupId = "0";
 
                 /**
                  * QueryGroupInvitationsRequest lastUpdatedDate.
@@ -6879,9 +6879,9 @@ $root.im = (function() {
                 QueryGroupInvitationsRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.groupId != null && message.hasOwnProperty("groupId"))
+                    if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.groupId);
-                    if (message.lastUpdatedDate != null && message.hasOwnProperty("lastUpdatedDate"))
+                    if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
                         $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     return writer;
                 };
@@ -6905,7 +6905,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.groupId = reader.int64();
+                            message.groupId = reader.int64().toString();
                             break;
                         case 2:
                             message.lastUpdatedDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
@@ -6927,7 +6927,7 @@ $root.im = (function() {
                  * Properties of a QueryGroupJoinQuestionsRequest.
                  * @memberof im.turms.proto
                  * @interface IQueryGroupJoinQuestionsRequest
-                 * @property {number|null} [groupId] QueryGroupJoinQuestionsRequest groupId
+                 * @property {string|null} [groupId] QueryGroupJoinQuestionsRequest groupId
                  * @property {boolean|null} [withAnswers] QueryGroupJoinQuestionsRequest withAnswers
                  * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryGroupJoinQuestionsRequest lastUpdatedDate
                  */
@@ -6949,11 +6949,11 @@ $root.im = (function() {
 
                 /**
                  * QueryGroupJoinQuestionsRequest groupId.
-                 * @member {number} groupId
+                 * @member {string} groupId
                  * @memberof im.turms.proto.QueryGroupJoinQuestionsRequest
                  * @instance
                  */
-                QueryGroupJoinQuestionsRequest.prototype.groupId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                QueryGroupJoinQuestionsRequest.prototype.groupId = "0";
 
                 /**
                  * QueryGroupJoinQuestionsRequest withAnswers.
@@ -6983,11 +6983,11 @@ $root.im = (function() {
                 QueryGroupJoinQuestionsRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.groupId != null && message.hasOwnProperty("groupId"))
+                    if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.groupId);
-                    if (message.withAnswers != null && message.hasOwnProperty("withAnswers"))
+                    if (message.withAnswers != null && Object.hasOwnProperty.call(message, "withAnswers"))
                         writer.uint32(/* id 2, wireType 0 =*/16).bool(message.withAnswers);
-                    if (message.lastUpdatedDate != null && message.hasOwnProperty("lastUpdatedDate"))
+                    if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
                         $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                     return writer;
                 };
@@ -7011,7 +7011,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.groupId = reader.int64();
+                            message.groupId = reader.int64().toString();
                             break;
                         case 2:
                             message.withAnswers = reader.bool();
@@ -7036,7 +7036,7 @@ $root.im = (function() {
                  * Properties of a QueryGroupJoinRequestsRequest.
                  * @memberof im.turms.proto
                  * @interface IQueryGroupJoinRequestsRequest
-                 * @property {number|null} [groupId] QueryGroupJoinRequestsRequest groupId
+                 * @property {string|null} [groupId] QueryGroupJoinRequestsRequest groupId
                  * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryGroupJoinRequestsRequest lastUpdatedDate
                  */
 
@@ -7057,11 +7057,11 @@ $root.im = (function() {
 
                 /**
                  * QueryGroupJoinRequestsRequest groupId.
-                 * @member {number} groupId
+                 * @member {string} groupId
                  * @memberof im.turms.proto.QueryGroupJoinRequestsRequest
                  * @instance
                  */
-                QueryGroupJoinRequestsRequest.prototype.groupId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                QueryGroupJoinRequestsRequest.prototype.groupId = "0";
 
                 /**
                  * QueryGroupJoinRequestsRequest lastUpdatedDate.
@@ -7083,9 +7083,9 @@ $root.im = (function() {
                 QueryGroupJoinRequestsRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.groupId != null && message.hasOwnProperty("groupId"))
+                    if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.groupId);
-                    if (message.lastUpdatedDate != null && message.hasOwnProperty("lastUpdatedDate"))
+                    if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
                         $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     return writer;
                 };
@@ -7109,7 +7109,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.groupId = reader.int64();
+                            message.groupId = reader.int64().toString();
                             break;
                         case 2:
                             message.lastUpdatedDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
@@ -7131,7 +7131,7 @@ $root.im = (function() {
                  * Properties of an UpdateGroupJoinQuestionRequest.
                  * @memberof im.turms.proto
                  * @interface IUpdateGroupJoinQuestionRequest
-                 * @property {number|null} [questionId] UpdateGroupJoinQuestionRequest questionId
+                 * @property {string|null} [questionId] UpdateGroupJoinQuestionRequest questionId
                  * @property {google.protobuf.IStringValue|null} [question] UpdateGroupJoinQuestionRequest question
                  * @property {Array.<string>|null} [answers] UpdateGroupJoinQuestionRequest answers
                  * @property {google.protobuf.IInt32Value|null} [score] UpdateGroupJoinQuestionRequest score
@@ -7155,11 +7155,11 @@ $root.im = (function() {
 
                 /**
                  * UpdateGroupJoinQuestionRequest questionId.
-                 * @member {number} questionId
+                 * @member {string} questionId
                  * @memberof im.turms.proto.UpdateGroupJoinQuestionRequest
                  * @instance
                  */
-                UpdateGroupJoinQuestionRequest.prototype.questionId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                UpdateGroupJoinQuestionRequest.prototype.questionId = "0";
 
                 /**
                  * UpdateGroupJoinQuestionRequest question.
@@ -7197,14 +7197,14 @@ $root.im = (function() {
                 UpdateGroupJoinQuestionRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.questionId != null && message.hasOwnProperty("questionId"))
+                    if (message.questionId != null && Object.hasOwnProperty.call(message, "questionId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.questionId);
-                    if (message.question != null && message.hasOwnProperty("question"))
+                    if (message.question != null && Object.hasOwnProperty.call(message, "question"))
                         $root.google.protobuf.StringValue.encode(message.question, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     if (message.answers != null && message.answers.length)
                         for (var i = 0; i < message.answers.length; ++i)
                             writer.uint32(/* id 3, wireType 2 =*/26).string(message.answers[i]);
-                    if (message.score != null && message.hasOwnProperty("score"))
+                    if (message.score != null && Object.hasOwnProperty.call(message, "score"))
                         $root.google.protobuf.Int32Value.encode(message.score, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
                     return writer;
                 };
@@ -7228,7 +7228,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.questionId = reader.int64();
+                            message.questionId = reader.int64().toString();
                             break;
                         case 2:
                             message.question = $root.google.protobuf.StringValue.decode(reader, reader.uint32());
@@ -7258,8 +7258,8 @@ $root.im = (function() {
                  * Properties of a CreateGroupMemberRequest.
                  * @memberof im.turms.proto
                  * @interface ICreateGroupMemberRequest
-                 * @property {number|null} [groupId] CreateGroupMemberRequest groupId
-                 * @property {number|null} [userId] CreateGroupMemberRequest userId
+                 * @property {string|null} [groupId] CreateGroupMemberRequest groupId
+                 * @property {string|null} [userId] CreateGroupMemberRequest userId
                  * @property {google.protobuf.IStringValue|null} [name] CreateGroupMemberRequest name
                  * @property {im.turms.proto.GroupMemberRole|null} [role] CreateGroupMemberRequest role
                  * @property {google.protobuf.IInt64Value|null} [muteEndDate] CreateGroupMemberRequest muteEndDate
@@ -7282,19 +7282,19 @@ $root.im = (function() {
 
                 /**
                  * CreateGroupMemberRequest groupId.
-                 * @member {number} groupId
+                 * @member {string} groupId
                  * @memberof im.turms.proto.CreateGroupMemberRequest
                  * @instance
                  */
-                CreateGroupMemberRequest.prototype.groupId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                CreateGroupMemberRequest.prototype.groupId = "0";
 
                 /**
                  * CreateGroupMemberRequest userId.
-                 * @member {number} userId
+                 * @member {string} userId
                  * @memberof im.turms.proto.CreateGroupMemberRequest
                  * @instance
                  */
-                CreateGroupMemberRequest.prototype.userId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                CreateGroupMemberRequest.prototype.userId = "0";
 
                 /**
                  * CreateGroupMemberRequest name.
@@ -7332,15 +7332,15 @@ $root.im = (function() {
                 CreateGroupMemberRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.groupId != null && message.hasOwnProperty("groupId"))
+                    if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.groupId);
-                    if (message.userId != null && message.hasOwnProperty("userId"))
+                    if (message.userId != null && Object.hasOwnProperty.call(message, "userId"))
                         writer.uint32(/* id 2, wireType 0 =*/16).int64(message.userId);
-                    if (message.name != null && message.hasOwnProperty("name"))
+                    if (message.name != null && Object.hasOwnProperty.call(message, "name"))
                         $root.google.protobuf.StringValue.encode(message.name, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.role != null && message.hasOwnProperty("role"))
+                    if (message.role != null && Object.hasOwnProperty.call(message, "role"))
                         writer.uint32(/* id 4, wireType 0 =*/32).int32(message.role);
-                    if (message.muteEndDate != null && message.hasOwnProperty("muteEndDate"))
+                    if (message.muteEndDate != null && Object.hasOwnProperty.call(message, "muteEndDate"))
                         $root.google.protobuf.Int64Value.encode(message.muteEndDate, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
                     return writer;
                 };
@@ -7364,10 +7364,10 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.groupId = reader.int64();
+                            message.groupId = reader.int64().toString();
                             break;
                         case 2:
-                            message.userId = reader.int64();
+                            message.userId = reader.int64().toString();
                             break;
                         case 3:
                             message.name = $root.google.protobuf.StringValue.decode(reader, reader.uint32());
@@ -7395,8 +7395,8 @@ $root.im = (function() {
                  * Properties of a DeleteGroupMemberRequest.
                  * @memberof im.turms.proto
                  * @interface IDeleteGroupMemberRequest
-                 * @property {number|null} [groupId] DeleteGroupMemberRequest groupId
-                 * @property {number|null} [groupMemberId] DeleteGroupMemberRequest groupMemberId
+                 * @property {string|null} [groupId] DeleteGroupMemberRequest groupId
+                 * @property {string|null} [groupMemberId] DeleteGroupMemberRequest groupMemberId
                  * @property {google.protobuf.IInt64Value|null} [successorId] DeleteGroupMemberRequest successorId
                  * @property {google.protobuf.IBoolValue|null} [quitAfterTransfer] DeleteGroupMemberRequest quitAfterTransfer
                  */
@@ -7418,19 +7418,19 @@ $root.im = (function() {
 
                 /**
                  * DeleteGroupMemberRequest groupId.
-                 * @member {number} groupId
+                 * @member {string} groupId
                  * @memberof im.turms.proto.DeleteGroupMemberRequest
                  * @instance
                  */
-                DeleteGroupMemberRequest.prototype.groupId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                DeleteGroupMemberRequest.prototype.groupId = "0";
 
                 /**
                  * DeleteGroupMemberRequest groupMemberId.
-                 * @member {number} groupMemberId
+                 * @member {string} groupMemberId
                  * @memberof im.turms.proto.DeleteGroupMemberRequest
                  * @instance
                  */
-                DeleteGroupMemberRequest.prototype.groupMemberId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                DeleteGroupMemberRequest.prototype.groupMemberId = "0";
 
                 /**
                  * DeleteGroupMemberRequest successorId.
@@ -7460,13 +7460,13 @@ $root.im = (function() {
                 DeleteGroupMemberRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.groupId != null && message.hasOwnProperty("groupId"))
+                    if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.groupId);
-                    if (message.groupMemberId != null && message.hasOwnProperty("groupMemberId"))
+                    if (message.groupMemberId != null && Object.hasOwnProperty.call(message, "groupMemberId"))
                         writer.uint32(/* id 2, wireType 0 =*/16).int64(message.groupMemberId);
-                    if (message.successorId != null && message.hasOwnProperty("successorId"))
+                    if (message.successorId != null && Object.hasOwnProperty.call(message, "successorId"))
                         $root.google.protobuf.Int64Value.encode(message.successorId, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.quitAfterTransfer != null && message.hasOwnProperty("quitAfterTransfer"))
+                    if (message.quitAfterTransfer != null && Object.hasOwnProperty.call(message, "quitAfterTransfer"))
                         $root.google.protobuf.BoolValue.encode(message.quitAfterTransfer, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
                     return writer;
                 };
@@ -7490,10 +7490,10 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.groupId = reader.int64();
+                            message.groupId = reader.int64().toString();
                             break;
                         case 2:
-                            message.groupMemberId = reader.int64();
+                            message.groupMemberId = reader.int64().toString();
                             break;
                         case 3:
                             message.successorId = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
@@ -7518,9 +7518,9 @@ $root.im = (function() {
                  * Properties of a QueryGroupMembersRequest.
                  * @memberof im.turms.proto
                  * @interface IQueryGroupMembersRequest
-                 * @property {number|null} [groupId] QueryGroupMembersRequest groupId
+                 * @property {string|null} [groupId] QueryGroupMembersRequest groupId
                  * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryGroupMembersRequest lastUpdatedDate
-                 * @property {Array.<number>|null} [groupMembersIds] QueryGroupMembersRequest groupMembersIds
+                 * @property {Array.<string>|null} [groupMembersIds] QueryGroupMembersRequest groupMembersIds
                  * @property {google.protobuf.IBoolValue|null} [withStatus] QueryGroupMembersRequest withStatus
                  */
 
@@ -7542,11 +7542,11 @@ $root.im = (function() {
 
                 /**
                  * QueryGroupMembersRequest groupId.
-                 * @member {number} groupId
+                 * @member {string} groupId
                  * @memberof im.turms.proto.QueryGroupMembersRequest
                  * @instance
                  */
-                QueryGroupMembersRequest.prototype.groupId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                QueryGroupMembersRequest.prototype.groupId = "0";
 
                 /**
                  * QueryGroupMembersRequest lastUpdatedDate.
@@ -7558,7 +7558,7 @@ $root.im = (function() {
 
                 /**
                  * QueryGroupMembersRequest groupMembersIds.
-                 * @member {Array.<number>} groupMembersIds
+                 * @member {Array.<string>} groupMembersIds
                  * @memberof im.turms.proto.QueryGroupMembersRequest
                  * @instance
                  */
@@ -7584,9 +7584,9 @@ $root.im = (function() {
                 QueryGroupMembersRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.groupId != null && message.hasOwnProperty("groupId"))
+                    if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.groupId);
-                    if (message.lastUpdatedDate != null && message.hasOwnProperty("lastUpdatedDate"))
+                    if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
                         $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     if (message.groupMembersIds != null && message.groupMembersIds.length) {
                         writer.uint32(/* id 3, wireType 2 =*/26).fork();
@@ -7594,7 +7594,7 @@ $root.im = (function() {
                             writer.int64(message.groupMembersIds[i]);
                         writer.ldelim();
                     }
-                    if (message.withStatus != null && message.hasOwnProperty("withStatus"))
+                    if (message.withStatus != null && Object.hasOwnProperty.call(message, "withStatus"))
                         $root.google.protobuf.BoolValue.encode(message.withStatus, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
                     return writer;
                 };
@@ -7618,7 +7618,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.groupId = reader.int64();
+                            message.groupId = reader.int64().toString();
                             break;
                         case 2:
                             message.lastUpdatedDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
@@ -7629,9 +7629,9 @@ $root.im = (function() {
                             if ((tag & 7) === 2) {
                                 var end2 = reader.uint32() + reader.pos;
                                 while (reader.pos < end2)
-                                    message.groupMembersIds.push(reader.int64());
+                                    message.groupMembersIds.push(reader.int64().toString());
                             } else
-                                message.groupMembersIds.push(reader.int64());
+                                message.groupMembersIds.push(reader.int64().toString());
                             break;
                         case 4:
                             message.withStatus = $root.google.protobuf.BoolValue.decode(reader, reader.uint32());
@@ -7653,8 +7653,8 @@ $root.im = (function() {
                  * Properties of an UpdateGroupMemberRequest.
                  * @memberof im.turms.proto
                  * @interface IUpdateGroupMemberRequest
-                 * @property {number|null} [groupId] UpdateGroupMemberRequest groupId
-                 * @property {number|null} [memberId] UpdateGroupMemberRequest memberId
+                 * @property {string|null} [groupId] UpdateGroupMemberRequest groupId
+                 * @property {string|null} [memberId] UpdateGroupMemberRequest memberId
                  * @property {google.protobuf.IStringValue|null} [name] UpdateGroupMemberRequest name
                  * @property {im.turms.proto.GroupMemberRole|null} [role] UpdateGroupMemberRequest role
                  * @property {google.protobuf.IInt64Value|null} [muteEndDate] UpdateGroupMemberRequest muteEndDate
@@ -7677,19 +7677,19 @@ $root.im = (function() {
 
                 /**
                  * UpdateGroupMemberRequest groupId.
-                 * @member {number} groupId
+                 * @member {string} groupId
                  * @memberof im.turms.proto.UpdateGroupMemberRequest
                  * @instance
                  */
-                UpdateGroupMemberRequest.prototype.groupId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                UpdateGroupMemberRequest.prototype.groupId = "0";
 
                 /**
                  * UpdateGroupMemberRequest memberId.
-                 * @member {number} memberId
+                 * @member {string} memberId
                  * @memberof im.turms.proto.UpdateGroupMemberRequest
                  * @instance
                  */
-                UpdateGroupMemberRequest.prototype.memberId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                UpdateGroupMemberRequest.prototype.memberId = "0";
 
                 /**
                  * UpdateGroupMemberRequest name.
@@ -7727,15 +7727,15 @@ $root.im = (function() {
                 UpdateGroupMemberRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.groupId != null && message.hasOwnProperty("groupId"))
+                    if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.groupId);
-                    if (message.memberId != null && message.hasOwnProperty("memberId"))
+                    if (message.memberId != null && Object.hasOwnProperty.call(message, "memberId"))
                         writer.uint32(/* id 2, wireType 0 =*/16).int64(message.memberId);
-                    if (message.name != null && message.hasOwnProperty("name"))
+                    if (message.name != null && Object.hasOwnProperty.call(message, "name"))
                         $root.google.protobuf.StringValue.encode(message.name, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.role != null && message.hasOwnProperty("role"))
+                    if (message.role != null && Object.hasOwnProperty.call(message, "role"))
                         writer.uint32(/* id 4, wireType 0 =*/32).int32(message.role);
-                    if (message.muteEndDate != null && message.hasOwnProperty("muteEndDate"))
+                    if (message.muteEndDate != null && Object.hasOwnProperty.call(message, "muteEndDate"))
                         $root.google.protobuf.Int64Value.encode(message.muteEndDate, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
                     return writer;
                 };
@@ -7759,10 +7759,10 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.groupId = reader.int64();
+                            message.groupId = reader.int64().toString();
                             break;
                         case 2:
-                            message.memberId = reader.int64();
+                            message.memberId = reader.int64().toString();
                             break;
                         case 3:
                             message.name = $root.google.protobuf.StringValue.decode(reader, reader.uint32());
@@ -7790,7 +7790,7 @@ $root.im = (function() {
                  * Properties of a QueryGroupRequest.
                  * @memberof im.turms.proto
                  * @interface IQueryGroupRequest
-                 * @property {number|null} [groupId] QueryGroupRequest groupId
+                 * @property {string|null} [groupId] QueryGroupRequest groupId
                  * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryGroupRequest lastUpdatedDate
                  */
 
@@ -7811,11 +7811,11 @@ $root.im = (function() {
 
                 /**
                  * QueryGroupRequest groupId.
-                 * @member {number} groupId
+                 * @member {string} groupId
                  * @memberof im.turms.proto.QueryGroupRequest
                  * @instance
                  */
-                QueryGroupRequest.prototype.groupId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                QueryGroupRequest.prototype.groupId = "0";
 
                 /**
                  * QueryGroupRequest lastUpdatedDate.
@@ -7837,9 +7837,9 @@ $root.im = (function() {
                 QueryGroupRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.groupId != null && message.hasOwnProperty("groupId"))
+                    if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.groupId);
-                    if (message.lastUpdatedDate != null && message.hasOwnProperty("lastUpdatedDate"))
+                    if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
                         $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     return writer;
                 };
@@ -7863,7 +7863,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.groupId = reader.int64();
+                            message.groupId = reader.int64().toString();
                             break;
                         case 2:
                             message.lastUpdatedDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
@@ -7923,7 +7923,7 @@ $root.im = (function() {
                 QueryJoinedGroupsIdsRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.lastUpdatedDate != null && message.hasOwnProperty("lastUpdatedDate"))
+                    if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
                         $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
                     return writer;
                 };
@@ -8004,7 +8004,7 @@ $root.im = (function() {
                 QueryJoinedGroupsInfosRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.lastUpdatedDate != null && message.hasOwnProperty("lastUpdatedDate"))
+                    if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
                         $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
                     return writer;
                 };
@@ -8047,7 +8047,7 @@ $root.im = (function() {
                  * Properties of an UpdateGroupRequest.
                  * @memberof im.turms.proto
                  * @interface IUpdateGroupRequest
-                 * @property {number|null} [groupId] UpdateGroupRequest groupId
+                 * @property {string|null} [groupId] UpdateGroupRequest groupId
                  * @property {google.protobuf.IStringValue|null} [groupName] UpdateGroupRequest groupName
                  * @property {google.protobuf.IStringValue|null} [intro] UpdateGroupRequest intro
                  * @property {google.protobuf.IStringValue|null} [announcement] UpdateGroupRequest announcement
@@ -8076,11 +8076,11 @@ $root.im = (function() {
 
                 /**
                  * UpdateGroupRequest groupId.
-                 * @member {number} groupId
+                 * @member {string} groupId
                  * @memberof im.turms.proto.UpdateGroupRequest
                  * @instance
                  */
-                UpdateGroupRequest.prototype.groupId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                UpdateGroupRequest.prototype.groupId = "0";
 
                 /**
                  * UpdateGroupRequest groupName.
@@ -8166,25 +8166,25 @@ $root.im = (function() {
                 UpdateGroupRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.groupId != null && message.hasOwnProperty("groupId"))
+                    if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.groupId);
-                    if (message.groupName != null && message.hasOwnProperty("groupName"))
+                    if (message.groupName != null && Object.hasOwnProperty.call(message, "groupName"))
                         $root.google.protobuf.StringValue.encode(message.groupName, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    if (message.intro != null && message.hasOwnProperty("intro"))
+                    if (message.intro != null && Object.hasOwnProperty.call(message, "intro"))
                         $root.google.protobuf.StringValue.encode(message.intro, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.announcement != null && message.hasOwnProperty("announcement"))
+                    if (message.announcement != null && Object.hasOwnProperty.call(message, "announcement"))
                         $root.google.protobuf.StringValue.encode(message.announcement, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-                    if (message.profilePictureUrl != null && message.hasOwnProperty("profilePictureUrl"))
+                    if (message.profilePictureUrl != null && Object.hasOwnProperty.call(message, "profilePictureUrl"))
                         $root.google.protobuf.StringValue.encode(message.profilePictureUrl, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
-                    if (message.minimumScore != null && message.hasOwnProperty("minimumScore"))
+                    if (message.minimumScore != null && Object.hasOwnProperty.call(message, "minimumScore"))
                         $root.google.protobuf.Int32Value.encode(message.minimumScore, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
-                    if (message.groupTypeId != null && message.hasOwnProperty("groupTypeId"))
+                    if (message.groupTypeId != null && Object.hasOwnProperty.call(message, "groupTypeId"))
                         $root.google.protobuf.Int64Value.encode(message.groupTypeId, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
-                    if (message.muteEndDate != null && message.hasOwnProperty("muteEndDate"))
+                    if (message.muteEndDate != null && Object.hasOwnProperty.call(message, "muteEndDate"))
                         $root.google.protobuf.Int64Value.encode(message.muteEndDate, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
-                    if (message.successorId != null && message.hasOwnProperty("successorId"))
+                    if (message.successorId != null && Object.hasOwnProperty.call(message, "successorId"))
                         $root.google.protobuf.Int64Value.encode(message.successorId, writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
-                    if (message.quitAfterTransfer != null && message.hasOwnProperty("quitAfterTransfer"))
+                    if (message.quitAfterTransfer != null && Object.hasOwnProperty.call(message, "quitAfterTransfer"))
                         $root.google.protobuf.BoolValue.encode(message.quitAfterTransfer, writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
                     return writer;
                 };
@@ -8208,7 +8208,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.groupId = reader.int64();
+                            message.groupId = reader.int64().toString();
                             break;
                         case 2:
                             message.groupName = $root.google.protobuf.StringValue.decode(reader, reader.uint32());
@@ -8257,8 +8257,8 @@ $root.im = (function() {
                  * @property {google.protobuf.IInt64Value|null} [messageId] CreateMessageRequest messageId
                  * @property {im.turms.proto.ChatType|null} [chatType] CreateMessageRequest chatType
                  * @property {google.protobuf.IBoolValue|null} [isSystemMessage] CreateMessageRequest isSystemMessage
-                 * @property {number|null} [toId] CreateMessageRequest toId
-                 * @property {number|null} [deliveryDate] CreateMessageRequest deliveryDate
+                 * @property {string|null} [toId] CreateMessageRequest toId
+                 * @property {string|null} [deliveryDate] CreateMessageRequest deliveryDate
                  * @property {google.protobuf.IStringValue|null} [text] CreateMessageRequest text
                  * @property {Array.<Uint8Array>|null} [records] CreateMessageRequest records
                  * @property {google.protobuf.IInt32Value|null} [burnAfter] CreateMessageRequest burnAfter
@@ -8306,19 +8306,19 @@ $root.im = (function() {
 
                 /**
                  * CreateMessageRequest toId.
-                 * @member {number} toId
+                 * @member {string} toId
                  * @memberof im.turms.proto.CreateMessageRequest
                  * @instance
                  */
-                CreateMessageRequest.prototype.toId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                CreateMessageRequest.prototype.toId = "0";
 
                 /**
                  * CreateMessageRequest deliveryDate.
-                 * @member {number} deliveryDate
+                 * @member {string} deliveryDate
                  * @memberof im.turms.proto.CreateMessageRequest
                  * @instance
                  */
-                CreateMessageRequest.prototype.deliveryDate = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                CreateMessageRequest.prototype.deliveryDate = "0";
 
                 /**
                  * CreateMessageRequest text.
@@ -8356,22 +8356,22 @@ $root.im = (function() {
                 CreateMessageRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.messageId != null && message.hasOwnProperty("messageId"))
+                    if (message.messageId != null && Object.hasOwnProperty.call(message, "messageId"))
                         $root.google.protobuf.Int64Value.encode(message.messageId, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.chatType != null && message.hasOwnProperty("chatType"))
+                    if (message.chatType != null && Object.hasOwnProperty.call(message, "chatType"))
                         writer.uint32(/* id 2, wireType 0 =*/16).int32(message.chatType);
-                    if (message.isSystemMessage != null && message.hasOwnProperty("isSystemMessage"))
+                    if (message.isSystemMessage != null && Object.hasOwnProperty.call(message, "isSystemMessage"))
                         $root.google.protobuf.BoolValue.encode(message.isSystemMessage, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.toId != null && message.hasOwnProperty("toId"))
+                    if (message.toId != null && Object.hasOwnProperty.call(message, "toId"))
                         writer.uint32(/* id 4, wireType 0 =*/32).int64(message.toId);
-                    if (message.deliveryDate != null && message.hasOwnProperty("deliveryDate"))
+                    if (message.deliveryDate != null && Object.hasOwnProperty.call(message, "deliveryDate"))
                         writer.uint32(/* id 5, wireType 0 =*/40).int64(message.deliveryDate);
-                    if (message.text != null && message.hasOwnProperty("text"))
+                    if (message.text != null && Object.hasOwnProperty.call(message, "text"))
                         $root.google.protobuf.StringValue.encode(message.text, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
                     if (message.records != null && message.records.length)
                         for (var i = 0; i < message.records.length; ++i)
                             writer.uint32(/* id 7, wireType 2 =*/58).bytes(message.records[i]);
-                    if (message.burnAfter != null && message.hasOwnProperty("burnAfter"))
+                    if (message.burnAfter != null && Object.hasOwnProperty.call(message, "burnAfter"))
                         $root.google.protobuf.Int32Value.encode(message.burnAfter, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
                     return writer;
                 };
@@ -8404,10 +8404,10 @@ $root.im = (function() {
                             message.isSystemMessage = $root.google.protobuf.BoolValue.decode(reader, reader.uint32());
                             break;
                         case 4:
-                            message.toId = reader.int64();
+                            message.toId = reader.int64().toString();
                             break;
                         case 5:
-                            message.deliveryDate = reader.int64();
+                            message.deliveryDate = reader.int64().toString();
                             break;
                         case 6:
                             message.text = $root.google.protobuf.StringValue.decode(reader, reader.uint32());
@@ -8437,7 +8437,7 @@ $root.im = (function() {
                  * Properties of a QueryMessageStatusesRequest.
                  * @memberof im.turms.proto
                  * @interface IQueryMessageStatusesRequest
-                 * @property {number|null} [messageId] QueryMessageStatusesRequest messageId
+                 * @property {string|null} [messageId] QueryMessageStatusesRequest messageId
                  */
 
                 /**
@@ -8457,11 +8457,11 @@ $root.im = (function() {
 
                 /**
                  * QueryMessageStatusesRequest messageId.
-                 * @member {number} messageId
+                 * @member {string} messageId
                  * @memberof im.turms.proto.QueryMessageStatusesRequest
                  * @instance
                  */
-                QueryMessageStatusesRequest.prototype.messageId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                QueryMessageStatusesRequest.prototype.messageId = "0";
 
                 /**
                  * Encodes the specified QueryMessageStatusesRequest message. Does not implicitly {@link im.turms.proto.QueryMessageStatusesRequest.verify|verify} messages.
@@ -8475,7 +8475,7 @@ $root.im = (function() {
                 QueryMessageStatusesRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.messageId != null && message.hasOwnProperty("messageId"))
+                    if (message.messageId != null && Object.hasOwnProperty.call(message, "messageId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.messageId);
                     return writer;
                 };
@@ -8499,7 +8499,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.messageId = reader.int64();
+                            message.messageId = reader.int64().toString();
                             break;
                         default:
                             reader.skipType(tag & 7);
@@ -8518,7 +8518,7 @@ $root.im = (function() {
                  * Properties of a QueryMessagesRequest.
                  * @memberof im.turms.proto
                  * @interface IQueryMessagesRequest
-                 * @property {Array.<number>|null} [ids] QueryMessagesRequest ids
+                 * @property {Array.<string>|null} [ids] QueryMessagesRequest ids
                  * @property {google.protobuf.IInt32Value|null} [size] QueryMessagesRequest size
                  * @property {im.turms.proto.ChatType|null} [chatType] QueryMessagesRequest chatType
                  * @property {google.protobuf.IBoolValue|null} [areSystemMessages] QueryMessagesRequest areSystemMessages
@@ -8546,7 +8546,7 @@ $root.im = (function() {
 
                 /**
                  * QueryMessagesRequest ids.
-                 * @member {Array.<number>} ids
+                 * @member {Array.<string>} ids
                  * @memberof im.turms.proto.QueryMessagesRequest
                  * @instance
                  */
@@ -8626,19 +8626,19 @@ $root.im = (function() {
                             writer.int64(message.ids[i]);
                         writer.ldelim();
                     }
-                    if (message.size != null && message.hasOwnProperty("size"))
+                    if (message.size != null && Object.hasOwnProperty.call(message, "size"))
                         $root.google.protobuf.Int32Value.encode(message.size, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    if (message.chatType != null && message.hasOwnProperty("chatType"))
+                    if (message.chatType != null && Object.hasOwnProperty.call(message, "chatType"))
                         writer.uint32(/* id 3, wireType 0 =*/24).int32(message.chatType);
-                    if (message.areSystemMessages != null && message.hasOwnProperty("areSystemMessages"))
+                    if (message.areSystemMessages != null && Object.hasOwnProperty.call(message, "areSystemMessages"))
                         $root.google.protobuf.BoolValue.encode(message.areSystemMessages, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-                    if (message.fromId != null && message.hasOwnProperty("fromId"))
+                    if (message.fromId != null && Object.hasOwnProperty.call(message, "fromId"))
                         $root.google.protobuf.Int64Value.encode(message.fromId, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
-                    if (message.deliveryDateAfter != null && message.hasOwnProperty("deliveryDateAfter"))
+                    if (message.deliveryDateAfter != null && Object.hasOwnProperty.call(message, "deliveryDateAfter"))
                         $root.google.protobuf.Int64Value.encode(message.deliveryDateAfter, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
-                    if (message.deliveryDateBefore != null && message.hasOwnProperty("deliveryDateBefore"))
+                    if (message.deliveryDateBefore != null && Object.hasOwnProperty.call(message, "deliveryDateBefore"))
                         $root.google.protobuf.Int64Value.encode(message.deliveryDateBefore, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
-                    if (message.deliveryStatus != null && message.hasOwnProperty("deliveryStatus"))
+                    if (message.deliveryStatus != null && Object.hasOwnProperty.call(message, "deliveryStatus"))
                         writer.uint32(/* id 8, wireType 0 =*/64).int32(message.deliveryStatus);
                     return writer;
                 };
@@ -8667,9 +8667,9 @@ $root.im = (function() {
                             if ((tag & 7) === 2) {
                                 var end2 = reader.uint32() + reader.pos;
                                 while (reader.pos < end2)
-                                    message.ids.push(reader.int64());
+                                    message.ids.push(reader.int64().toString());
                             } else
-                                message.ids.push(reader.int64());
+                                message.ids.push(reader.int64().toString());
                             break;
                         case 2:
                             message.size = $root.google.protobuf.Int32Value.decode(reader, reader.uint32());
@@ -8747,7 +8747,7 @@ $root.im = (function() {
                 QueryPendingMessagesWithTotalRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.size != null && message.hasOwnProperty("size"))
+                    if (message.size != null && Object.hasOwnProperty.call(message, "size"))
                         $root.google.protobuf.Int32Value.encode(message.size, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
                     return writer;
                 };
@@ -8790,7 +8790,7 @@ $root.im = (function() {
                  * Properties of an UpdateMessageRequest.
                  * @memberof im.turms.proto
                  * @interface IUpdateMessageRequest
-                 * @property {number|null} [messageId] UpdateMessageRequest messageId
+                 * @property {string|null} [messageId] UpdateMessageRequest messageId
                  * @property {google.protobuf.IBoolValue|null} [isSystemMessage] UpdateMessageRequest isSystemMessage
                  * @property {google.protobuf.IStringValue|null} [text] UpdateMessageRequest text
                  * @property {Array.<Uint8Array>|null} [records] UpdateMessageRequest records
@@ -8816,11 +8816,11 @@ $root.im = (function() {
 
                 /**
                  * UpdateMessageRequest messageId.
-                 * @member {number} messageId
+                 * @member {string} messageId
                  * @memberof im.turms.proto.UpdateMessageRequest
                  * @instance
                  */
-                UpdateMessageRequest.prototype.messageId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                UpdateMessageRequest.prototype.messageId = "0";
 
                 /**
                  * UpdateMessageRequest isSystemMessage.
@@ -8874,18 +8874,18 @@ $root.im = (function() {
                 UpdateMessageRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.messageId != null && message.hasOwnProperty("messageId"))
+                    if (message.messageId != null && Object.hasOwnProperty.call(message, "messageId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.messageId);
-                    if (message.isSystemMessage != null && message.hasOwnProperty("isSystemMessage"))
+                    if (message.isSystemMessage != null && Object.hasOwnProperty.call(message, "isSystemMessage"))
                         $root.google.protobuf.BoolValue.encode(message.isSystemMessage, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    if (message.text != null && message.hasOwnProperty("text"))
+                    if (message.text != null && Object.hasOwnProperty.call(message, "text"))
                         $root.google.protobuf.StringValue.encode(message.text, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                     if (message.records != null && message.records.length)
                         for (var i = 0; i < message.records.length; ++i)
                             writer.uint32(/* id 4, wireType 2 =*/34).bytes(message.records[i]);
-                    if (message.recallDate != null && message.hasOwnProperty("recallDate"))
+                    if (message.recallDate != null && Object.hasOwnProperty.call(message, "recallDate"))
                         $root.google.protobuf.Int64Value.encode(message.recallDate, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
-                    if (message.readDate != null && message.hasOwnProperty("readDate"))
+                    if (message.readDate != null && Object.hasOwnProperty.call(message, "readDate"))
                         $root.google.protobuf.Int64Value.encode(message.readDate, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
                     return writer;
                 };
@@ -8909,7 +8909,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.messageId = reader.int64();
+                            message.messageId = reader.int64().toString();
                             break;
                         case 2:
                             message.isSystemMessage = $root.google.protobuf.BoolValue.decode(reader, reader.uint32());
@@ -8946,7 +8946,7 @@ $root.im = (function() {
                  * @memberof im.turms.proto
                  * @interface IUpdateTypingStatusRequest
                  * @property {im.turms.proto.ChatType|null} [chatType] UpdateTypingStatusRequest chatType
-                 * @property {number|null} [toId] UpdateTypingStatusRequest toId
+                 * @property {string|null} [toId] UpdateTypingStatusRequest toId
                  */
 
                 /**
@@ -8974,11 +8974,11 @@ $root.im = (function() {
 
                 /**
                  * UpdateTypingStatusRequest toId.
-                 * @member {number} toId
+                 * @member {string} toId
                  * @memberof im.turms.proto.UpdateTypingStatusRequest
                  * @instance
                  */
-                UpdateTypingStatusRequest.prototype.toId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                UpdateTypingStatusRequest.prototype.toId = "0";
 
                 /**
                  * Encodes the specified UpdateTypingStatusRequest message. Does not implicitly {@link im.turms.proto.UpdateTypingStatusRequest.verify|verify} messages.
@@ -8992,9 +8992,9 @@ $root.im = (function() {
                 UpdateTypingStatusRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.chatType != null && message.hasOwnProperty("chatType"))
+                    if (message.chatType != null && Object.hasOwnProperty.call(message, "chatType"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int32(message.chatType);
-                    if (message.toId != null && message.hasOwnProperty("toId"))
+                    if (message.toId != null && Object.hasOwnProperty.call(message, "toId"))
                         writer.uint32(/* id 2, wireType 0 =*/16).int64(message.toId);
                     return writer;
                 };
@@ -9021,7 +9021,7 @@ $root.im = (function() {
                             message.chatType = reader.int32();
                             break;
                         case 2:
-                            message.toId = reader.int64();
+                            message.toId = reader.int64().toString();
                             break;
                         default:
                             reader.skipType(tag & 7);
@@ -9040,7 +9040,7 @@ $root.im = (function() {
                  * Properties of an AckRequest.
                  * @memberof im.turms.proto
                  * @interface IAckRequest
-                 * @property {Array.<number>|null} [messagesIds] AckRequest messagesIds
+                 * @property {Array.<string>|null} [messagesIds] AckRequest messagesIds
                  */
 
                 /**
@@ -9061,7 +9061,7 @@ $root.im = (function() {
 
                 /**
                  * AckRequest messagesIds.
-                 * @member {Array.<number>} messagesIds
+                 * @member {Array.<string>} messagesIds
                  * @memberof im.turms.proto.AckRequest
                  * @instance
                  */
@@ -9112,9 +9112,9 @@ $root.im = (function() {
                             if ((tag & 7) === 2) {
                                 var end2 = reader.uint32() + reader.pos;
                                 while (reader.pos < end2)
-                                    message.messagesIds.push(reader.int64());
+                                    message.messagesIds.push(reader.int64().toString());
                             } else
-                                message.messagesIds.push(reader.int64());
+                                message.messagesIds.push(reader.int64().toString());
                             break;
                         default:
                             reader.skipType(tag & 7);
@@ -9653,111 +9653,111 @@ $root.im = (function() {
                 TurmsRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.requestId != null && message.hasOwnProperty("requestId"))
+                    if (message.requestId != null && Object.hasOwnProperty.call(message, "requestId"))
                         $root.google.protobuf.Int64Value.encode(message.requestId, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.ackRequest != null && message.hasOwnProperty("ackRequest"))
+                    if (message.ackRequest != null && Object.hasOwnProperty.call(message, "ackRequest"))
                         $root.im.turms.proto.AckRequest.encode(message.ackRequest, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    if (message.createMessageRequest != null && message.hasOwnProperty("createMessageRequest"))
+                    if (message.createMessageRequest != null && Object.hasOwnProperty.call(message, "createMessageRequest"))
                         $root.im.turms.proto.CreateMessageRequest.encode(message.createMessageRequest, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
-                    if (message.queryMessageStatusesRequest != null && message.hasOwnProperty("queryMessageStatusesRequest"))
+                    if (message.queryMessageStatusesRequest != null && Object.hasOwnProperty.call(message, "queryMessageStatusesRequest"))
                         $root.im.turms.proto.QueryMessageStatusesRequest.encode(message.queryMessageStatusesRequest, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
-                    if (message.queryMessagesRequest != null && message.hasOwnProperty("queryMessagesRequest"))
+                    if (message.queryMessagesRequest != null && Object.hasOwnProperty.call(message, "queryMessagesRequest"))
                         $root.im.turms.proto.QueryMessagesRequest.encode(message.queryMessagesRequest, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
-                    if (message.queryPendingMessagesWithTotalRequest != null && message.hasOwnProperty("queryPendingMessagesWithTotalRequest"))
+                    if (message.queryPendingMessagesWithTotalRequest != null && Object.hasOwnProperty.call(message, "queryPendingMessagesWithTotalRequest"))
                         $root.im.turms.proto.QueryPendingMessagesWithTotalRequest.encode(message.queryPendingMessagesWithTotalRequest, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
-                    if (message.updateMessageRequest != null && message.hasOwnProperty("updateMessageRequest"))
+                    if (message.updateMessageRequest != null && Object.hasOwnProperty.call(message, "updateMessageRequest"))
                         $root.im.turms.proto.UpdateMessageRequest.encode(message.updateMessageRequest, writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
-                    if (message.updateTypingStatusRequest != null && message.hasOwnProperty("updateTypingStatusRequest"))
+                    if (message.updateTypingStatusRequest != null && Object.hasOwnProperty.call(message, "updateTypingStatusRequest"))
                         $root.im.turms.proto.UpdateTypingStatusRequest.encode(message.updateTypingStatusRequest, writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
-                    if (message.queryUserGroupInvitationsRequest != null && message.hasOwnProperty("queryUserGroupInvitationsRequest"))
+                    if (message.queryUserGroupInvitationsRequest != null && Object.hasOwnProperty.call(message, "queryUserGroupInvitationsRequest"))
                         $root.im.turms.proto.QueryUserGroupInvitationsRequest.encode(message.queryUserGroupInvitationsRequest, writer.uint32(/* id 100, wireType 2 =*/802).fork()).ldelim();
-                    if (message.queryUserProfileRequest != null && message.hasOwnProperty("queryUserProfileRequest"))
+                    if (message.queryUserProfileRequest != null && Object.hasOwnProperty.call(message, "queryUserProfileRequest"))
                         $root.im.turms.proto.QueryUserProfileRequest.encode(message.queryUserProfileRequest, writer.uint32(/* id 101, wireType 2 =*/810).fork()).ldelim();
-                    if (message.queryUsersIdsNearbyRequest != null && message.hasOwnProperty("queryUsersIdsNearbyRequest"))
+                    if (message.queryUsersIdsNearbyRequest != null && Object.hasOwnProperty.call(message, "queryUsersIdsNearbyRequest"))
                         $root.im.turms.proto.QueryUsersIdsNearbyRequest.encode(message.queryUsersIdsNearbyRequest, writer.uint32(/* id 102, wireType 2 =*/818).fork()).ldelim();
-                    if (message.queryUsersInfosNearbyRequest != null && message.hasOwnProperty("queryUsersInfosNearbyRequest"))
+                    if (message.queryUsersInfosNearbyRequest != null && Object.hasOwnProperty.call(message, "queryUsersInfosNearbyRequest"))
                         $root.im.turms.proto.QueryUsersInfosNearbyRequest.encode(message.queryUsersInfosNearbyRequest, writer.uint32(/* id 103, wireType 2 =*/826).fork()).ldelim();
-                    if (message.queryUsersOnlineStatusRequest != null && message.hasOwnProperty("queryUsersOnlineStatusRequest"))
+                    if (message.queryUsersOnlineStatusRequest != null && Object.hasOwnProperty.call(message, "queryUsersOnlineStatusRequest"))
                         $root.im.turms.proto.QueryUsersOnlineStatusRequest.encode(message.queryUsersOnlineStatusRequest, writer.uint32(/* id 104, wireType 2 =*/834).fork()).ldelim();
-                    if (message.updateUserLocationRequest != null && message.hasOwnProperty("updateUserLocationRequest"))
+                    if (message.updateUserLocationRequest != null && Object.hasOwnProperty.call(message, "updateUserLocationRequest"))
                         $root.im.turms.proto.UpdateUserLocationRequest.encode(message.updateUserLocationRequest, writer.uint32(/* id 105, wireType 2 =*/842).fork()).ldelim();
-                    if (message.updateUserOnlineStatusRequest != null && message.hasOwnProperty("updateUserOnlineStatusRequest"))
+                    if (message.updateUserOnlineStatusRequest != null && Object.hasOwnProperty.call(message, "updateUserOnlineStatusRequest"))
                         $root.im.turms.proto.UpdateUserOnlineStatusRequest.encode(message.updateUserOnlineStatusRequest, writer.uint32(/* id 106, wireType 2 =*/850).fork()).ldelim();
-                    if (message.updateUserRequest != null && message.hasOwnProperty("updateUserRequest"))
+                    if (message.updateUserRequest != null && Object.hasOwnProperty.call(message, "updateUserRequest"))
                         $root.im.turms.proto.UpdateUserRequest.encode(message.updateUserRequest, writer.uint32(/* id 107, wireType 2 =*/858).fork()).ldelim();
-                    if (message.createFriendRequestRequest != null && message.hasOwnProperty("createFriendRequestRequest"))
+                    if (message.createFriendRequestRequest != null && Object.hasOwnProperty.call(message, "createFriendRequestRequest"))
                         $root.im.turms.proto.CreateFriendRequestRequest.encode(message.createFriendRequestRequest, writer.uint32(/* id 200, wireType 2 =*/1602).fork()).ldelim();
-                    if (message.createRelationshipGroupRequest != null && message.hasOwnProperty("createRelationshipGroupRequest"))
+                    if (message.createRelationshipGroupRequest != null && Object.hasOwnProperty.call(message, "createRelationshipGroupRequest"))
                         $root.im.turms.proto.CreateRelationshipGroupRequest.encode(message.createRelationshipGroupRequest, writer.uint32(/* id 201, wireType 2 =*/1610).fork()).ldelim();
-                    if (message.createRelationshipRequest != null && message.hasOwnProperty("createRelationshipRequest"))
+                    if (message.createRelationshipRequest != null && Object.hasOwnProperty.call(message, "createRelationshipRequest"))
                         $root.im.turms.proto.CreateRelationshipRequest.encode(message.createRelationshipRequest, writer.uint32(/* id 202, wireType 2 =*/1618).fork()).ldelim();
-                    if (message.deleteRelationshipGroupRequest != null && message.hasOwnProperty("deleteRelationshipGroupRequest"))
+                    if (message.deleteRelationshipGroupRequest != null && Object.hasOwnProperty.call(message, "deleteRelationshipGroupRequest"))
                         $root.im.turms.proto.DeleteRelationshipGroupRequest.encode(message.deleteRelationshipGroupRequest, writer.uint32(/* id 203, wireType 2 =*/1626).fork()).ldelim();
-                    if (message.deleteRelationshipRequest != null && message.hasOwnProperty("deleteRelationshipRequest"))
+                    if (message.deleteRelationshipRequest != null && Object.hasOwnProperty.call(message, "deleteRelationshipRequest"))
                         $root.im.turms.proto.DeleteRelationshipRequest.encode(message.deleteRelationshipRequest, writer.uint32(/* id 204, wireType 2 =*/1634).fork()).ldelim();
-                    if (message.queryFriendRequestsRequest != null && message.hasOwnProperty("queryFriendRequestsRequest"))
+                    if (message.queryFriendRequestsRequest != null && Object.hasOwnProperty.call(message, "queryFriendRequestsRequest"))
                         $root.im.turms.proto.QueryFriendRequestsRequest.encode(message.queryFriendRequestsRequest, writer.uint32(/* id 205, wireType 2 =*/1642).fork()).ldelim();
-                    if (message.queryRelatedUsersIdsRequest != null && message.hasOwnProperty("queryRelatedUsersIdsRequest"))
+                    if (message.queryRelatedUsersIdsRequest != null && Object.hasOwnProperty.call(message, "queryRelatedUsersIdsRequest"))
                         $root.im.turms.proto.QueryRelatedUsersIdsRequest.encode(message.queryRelatedUsersIdsRequest, writer.uint32(/* id 206, wireType 2 =*/1650).fork()).ldelim();
-                    if (message.queryRelationshipGroupsRequest != null && message.hasOwnProperty("queryRelationshipGroupsRequest"))
+                    if (message.queryRelationshipGroupsRequest != null && Object.hasOwnProperty.call(message, "queryRelationshipGroupsRequest"))
                         $root.im.turms.proto.QueryRelationshipGroupsRequest.encode(message.queryRelationshipGroupsRequest, writer.uint32(/* id 207, wireType 2 =*/1658).fork()).ldelim();
-                    if (message.queryRelationshipsRequest != null && message.hasOwnProperty("queryRelationshipsRequest"))
+                    if (message.queryRelationshipsRequest != null && Object.hasOwnProperty.call(message, "queryRelationshipsRequest"))
                         $root.im.turms.proto.QueryRelationshipsRequest.encode(message.queryRelationshipsRequest, writer.uint32(/* id 208, wireType 2 =*/1666).fork()).ldelim();
-                    if (message.updateFriendRequestRequest != null && message.hasOwnProperty("updateFriendRequestRequest"))
+                    if (message.updateFriendRequestRequest != null && Object.hasOwnProperty.call(message, "updateFriendRequestRequest"))
                         $root.im.turms.proto.UpdateFriendRequestRequest.encode(message.updateFriendRequestRequest, writer.uint32(/* id 209, wireType 2 =*/1674).fork()).ldelim();
-                    if (message.updateRelationshipGroupRequest != null && message.hasOwnProperty("updateRelationshipGroupRequest"))
+                    if (message.updateRelationshipGroupRequest != null && Object.hasOwnProperty.call(message, "updateRelationshipGroupRequest"))
                         $root.im.turms.proto.UpdateRelationshipGroupRequest.encode(message.updateRelationshipGroupRequest, writer.uint32(/* id 210, wireType 2 =*/1682).fork()).ldelim();
-                    if (message.updateRelationshipRequest != null && message.hasOwnProperty("updateRelationshipRequest"))
+                    if (message.updateRelationshipRequest != null && Object.hasOwnProperty.call(message, "updateRelationshipRequest"))
                         $root.im.turms.proto.UpdateRelationshipRequest.encode(message.updateRelationshipRequest, writer.uint32(/* id 211, wireType 2 =*/1690).fork()).ldelim();
-                    if (message.createGroupRequest != null && message.hasOwnProperty("createGroupRequest"))
+                    if (message.createGroupRequest != null && Object.hasOwnProperty.call(message, "createGroupRequest"))
                         $root.im.turms.proto.CreateGroupRequest.encode(message.createGroupRequest, writer.uint32(/* id 300, wireType 2 =*/2402).fork()).ldelim();
-                    if (message.deleteGroupRequest != null && message.hasOwnProperty("deleteGroupRequest"))
+                    if (message.deleteGroupRequest != null && Object.hasOwnProperty.call(message, "deleteGroupRequest"))
                         $root.im.turms.proto.DeleteGroupRequest.encode(message.deleteGroupRequest, writer.uint32(/* id 301, wireType 2 =*/2410).fork()).ldelim();
-                    if (message.queryGroupRequest != null && message.hasOwnProperty("queryGroupRequest"))
+                    if (message.queryGroupRequest != null && Object.hasOwnProperty.call(message, "queryGroupRequest"))
                         $root.im.turms.proto.QueryGroupRequest.encode(message.queryGroupRequest, writer.uint32(/* id 302, wireType 2 =*/2418).fork()).ldelim();
-                    if (message.queryJoinedGroupsIdsRequest != null && message.hasOwnProperty("queryJoinedGroupsIdsRequest"))
+                    if (message.queryJoinedGroupsIdsRequest != null && Object.hasOwnProperty.call(message, "queryJoinedGroupsIdsRequest"))
                         $root.im.turms.proto.QueryJoinedGroupsIdsRequest.encode(message.queryJoinedGroupsIdsRequest, writer.uint32(/* id 303, wireType 2 =*/2426).fork()).ldelim();
-                    if (message.queryJoinedGroupsInfosRequest != null && message.hasOwnProperty("queryJoinedGroupsInfosRequest"))
+                    if (message.queryJoinedGroupsInfosRequest != null && Object.hasOwnProperty.call(message, "queryJoinedGroupsInfosRequest"))
                         $root.im.turms.proto.QueryJoinedGroupsInfosRequest.encode(message.queryJoinedGroupsInfosRequest, writer.uint32(/* id 304, wireType 2 =*/2434).fork()).ldelim();
-                    if (message.updateGroupRequest != null && message.hasOwnProperty("updateGroupRequest"))
+                    if (message.updateGroupRequest != null && Object.hasOwnProperty.call(message, "updateGroupRequest"))
                         $root.im.turms.proto.UpdateGroupRequest.encode(message.updateGroupRequest, writer.uint32(/* id 305, wireType 2 =*/2442).fork()).ldelim();
-                    if (message.createGroupBlacklistedUserRequest != null && message.hasOwnProperty("createGroupBlacklistedUserRequest"))
+                    if (message.createGroupBlacklistedUserRequest != null && Object.hasOwnProperty.call(message, "createGroupBlacklistedUserRequest"))
                         $root.im.turms.proto.CreateGroupBlacklistedUserRequest.encode(message.createGroupBlacklistedUserRequest, writer.uint32(/* id 400, wireType 2 =*/3202).fork()).ldelim();
-                    if (message.deleteGroupBlacklistedUserRequest != null && message.hasOwnProperty("deleteGroupBlacklistedUserRequest"))
+                    if (message.deleteGroupBlacklistedUserRequest != null && Object.hasOwnProperty.call(message, "deleteGroupBlacklistedUserRequest"))
                         $root.im.turms.proto.DeleteGroupBlacklistedUserRequest.encode(message.deleteGroupBlacklistedUserRequest, writer.uint32(/* id 401, wireType 2 =*/3210).fork()).ldelim();
-                    if (message.queryGroupBlacklistedUsersIdsRequest != null && message.hasOwnProperty("queryGroupBlacklistedUsersIdsRequest"))
+                    if (message.queryGroupBlacklistedUsersIdsRequest != null && Object.hasOwnProperty.call(message, "queryGroupBlacklistedUsersIdsRequest"))
                         $root.im.turms.proto.QueryGroupBlacklistedUsersIdsRequest.encode(message.queryGroupBlacklistedUsersIdsRequest, writer.uint32(/* id 402, wireType 2 =*/3218).fork()).ldelim();
-                    if (message.queryGroupBlacklistedUsersInfosRequest != null && message.hasOwnProperty("queryGroupBlacklistedUsersInfosRequest"))
+                    if (message.queryGroupBlacklistedUsersInfosRequest != null && Object.hasOwnProperty.call(message, "queryGroupBlacklistedUsersInfosRequest"))
                         $root.im.turms.proto.QueryGroupBlacklistedUsersInfosRequest.encode(message.queryGroupBlacklistedUsersInfosRequest, writer.uint32(/* id 403, wireType 2 =*/3226).fork()).ldelim();
-                    if (message.checkGroupJoinQuestionsAnswersRequest != null && message.hasOwnProperty("checkGroupJoinQuestionsAnswersRequest"))
+                    if (message.checkGroupJoinQuestionsAnswersRequest != null && Object.hasOwnProperty.call(message, "checkGroupJoinQuestionsAnswersRequest"))
                         $root.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest.encode(message.checkGroupJoinQuestionsAnswersRequest, writer.uint32(/* id 500, wireType 2 =*/4002).fork()).ldelim();
-                    if (message.createGroupInvitationRequest != null && message.hasOwnProperty("createGroupInvitationRequest"))
+                    if (message.createGroupInvitationRequest != null && Object.hasOwnProperty.call(message, "createGroupInvitationRequest"))
                         $root.im.turms.proto.CreateGroupInvitationRequest.encode(message.createGroupInvitationRequest, writer.uint32(/* id 501, wireType 2 =*/4010).fork()).ldelim();
-                    if (message.createGroupJoinRequestRequest != null && message.hasOwnProperty("createGroupJoinRequestRequest"))
+                    if (message.createGroupJoinRequestRequest != null && Object.hasOwnProperty.call(message, "createGroupJoinRequestRequest"))
                         $root.im.turms.proto.CreateGroupJoinRequestRequest.encode(message.createGroupJoinRequestRequest, writer.uint32(/* id 502, wireType 2 =*/4018).fork()).ldelim();
-                    if (message.createGroupJoinQuestionRequest != null && message.hasOwnProperty("createGroupJoinQuestionRequest"))
+                    if (message.createGroupJoinQuestionRequest != null && Object.hasOwnProperty.call(message, "createGroupJoinQuestionRequest"))
                         $root.im.turms.proto.CreateGroupJoinQuestionRequest.encode(message.createGroupJoinQuestionRequest, writer.uint32(/* id 503, wireType 2 =*/4026).fork()).ldelim();
-                    if (message.deleteGroupInvitationRequest != null && message.hasOwnProperty("deleteGroupInvitationRequest"))
+                    if (message.deleteGroupInvitationRequest != null && Object.hasOwnProperty.call(message, "deleteGroupInvitationRequest"))
                         $root.im.turms.proto.DeleteGroupInvitationRequest.encode(message.deleteGroupInvitationRequest, writer.uint32(/* id 504, wireType 2 =*/4034).fork()).ldelim();
-                    if (message.deleteGroupJoinRequestRequest != null && message.hasOwnProperty("deleteGroupJoinRequestRequest"))
+                    if (message.deleteGroupJoinRequestRequest != null && Object.hasOwnProperty.call(message, "deleteGroupJoinRequestRequest"))
                         $root.im.turms.proto.DeleteGroupJoinRequestRequest.encode(message.deleteGroupJoinRequestRequest, writer.uint32(/* id 505, wireType 2 =*/4042).fork()).ldelim();
-                    if (message.deleteGroupJoinQuestionRequest != null && message.hasOwnProperty("deleteGroupJoinQuestionRequest"))
+                    if (message.deleteGroupJoinQuestionRequest != null && Object.hasOwnProperty.call(message, "deleteGroupJoinQuestionRequest"))
                         $root.im.turms.proto.DeleteGroupJoinQuestionRequest.encode(message.deleteGroupJoinQuestionRequest, writer.uint32(/* id 506, wireType 2 =*/4050).fork()).ldelim();
-                    if (message.queryGroupInvitationsRequest != null && message.hasOwnProperty("queryGroupInvitationsRequest"))
+                    if (message.queryGroupInvitationsRequest != null && Object.hasOwnProperty.call(message, "queryGroupInvitationsRequest"))
                         $root.im.turms.proto.QueryGroupInvitationsRequest.encode(message.queryGroupInvitationsRequest, writer.uint32(/* id 507, wireType 2 =*/4058).fork()).ldelim();
-                    if (message.queryGroupJoinRequestsRequest != null && message.hasOwnProperty("queryGroupJoinRequestsRequest"))
+                    if (message.queryGroupJoinRequestsRequest != null && Object.hasOwnProperty.call(message, "queryGroupJoinRequestsRequest"))
                         $root.im.turms.proto.QueryGroupJoinRequestsRequest.encode(message.queryGroupJoinRequestsRequest, writer.uint32(/* id 508, wireType 2 =*/4066).fork()).ldelim();
-                    if (message.queryGroupJoinQuestionsRequest != null && message.hasOwnProperty("queryGroupJoinQuestionsRequest"))
+                    if (message.queryGroupJoinQuestionsRequest != null && Object.hasOwnProperty.call(message, "queryGroupJoinQuestionsRequest"))
                         $root.im.turms.proto.QueryGroupJoinQuestionsRequest.encode(message.queryGroupJoinQuestionsRequest, writer.uint32(/* id 509, wireType 2 =*/4074).fork()).ldelim();
-                    if (message.updateGroupJoinQuestionRequest != null && message.hasOwnProperty("updateGroupJoinQuestionRequest"))
+                    if (message.updateGroupJoinQuestionRequest != null && Object.hasOwnProperty.call(message, "updateGroupJoinQuestionRequest"))
                         $root.im.turms.proto.UpdateGroupJoinQuestionRequest.encode(message.updateGroupJoinQuestionRequest, writer.uint32(/* id 510, wireType 2 =*/4082).fork()).ldelim();
-                    if (message.createGroupMemberRequest != null && message.hasOwnProperty("createGroupMemberRequest"))
+                    if (message.createGroupMemberRequest != null && Object.hasOwnProperty.call(message, "createGroupMemberRequest"))
                         $root.im.turms.proto.CreateGroupMemberRequest.encode(message.createGroupMemberRequest, writer.uint32(/* id 600, wireType 2 =*/4802).fork()).ldelim();
-                    if (message.deleteGroupMemberRequest != null && message.hasOwnProperty("deleteGroupMemberRequest"))
+                    if (message.deleteGroupMemberRequest != null && Object.hasOwnProperty.call(message, "deleteGroupMemberRequest"))
                         $root.im.turms.proto.DeleteGroupMemberRequest.encode(message.deleteGroupMemberRequest, writer.uint32(/* id 601, wireType 2 =*/4810).fork()).ldelim();
-                    if (message.queryGroupMembersRequest != null && message.hasOwnProperty("queryGroupMembersRequest"))
+                    if (message.queryGroupMembersRequest != null && Object.hasOwnProperty.call(message, "queryGroupMembersRequest"))
                         $root.im.turms.proto.QueryGroupMembersRequest.encode(message.queryGroupMembersRequest, writer.uint32(/* id 602, wireType 2 =*/4818).fork()).ldelim();
-                    if (message.updateGroupMemberRequest != null && message.hasOwnProperty("updateGroupMemberRequest"))
+                    if (message.updateGroupMemberRequest != null && Object.hasOwnProperty.call(message, "updateGroupMemberRequest"))
                         $root.im.turms.proto.UpdateGroupMemberRequest.encode(message.updateGroupMemberRequest, writer.uint32(/* id 603, wireType 2 =*/4826).fork()).ldelim();
                     return writer;
                 };
@@ -9994,7 +9994,7 @@ $root.im = (function() {
                 QueryUserGroupInvitationsRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.lastUpdatedDate != null && message.hasOwnProperty("lastUpdatedDate"))
+                    if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
                         $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
                     return writer;
                 };
@@ -10037,7 +10037,7 @@ $root.im = (function() {
                  * Properties of a QueryUserProfileRequest.
                  * @memberof im.turms.proto
                  * @interface IQueryUserProfileRequest
-                 * @property {number|null} [userId] QueryUserProfileRequest userId
+                 * @property {string|null} [userId] QueryUserProfileRequest userId
                  * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryUserProfileRequest lastUpdatedDate
                  */
 
@@ -10058,11 +10058,11 @@ $root.im = (function() {
 
                 /**
                  * QueryUserProfileRequest userId.
-                 * @member {number} userId
+                 * @member {string} userId
                  * @memberof im.turms.proto.QueryUserProfileRequest
                  * @instance
                  */
-                QueryUserProfileRequest.prototype.userId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                QueryUserProfileRequest.prototype.userId = "0";
 
                 /**
                  * QueryUserProfileRequest lastUpdatedDate.
@@ -10084,9 +10084,9 @@ $root.im = (function() {
                 QueryUserProfileRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.userId != null && message.hasOwnProperty("userId"))
+                    if (message.userId != null && Object.hasOwnProperty.call(message, "userId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.userId);
-                    if (message.lastUpdatedDate != null && message.hasOwnProperty("lastUpdatedDate"))
+                    if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
                         $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     return writer;
                 };
@@ -10110,7 +10110,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.userId = reader.int64();
+                            message.userId = reader.int64().toString();
                             break;
                         case 2:
                             message.lastUpdatedDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
@@ -10197,13 +10197,13 @@ $root.im = (function() {
                 QueryUsersIdsNearbyRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.latitude != null && message.hasOwnProperty("latitude"))
+                    if (message.latitude != null && Object.hasOwnProperty.call(message, "latitude"))
                         writer.uint32(/* id 1, wireType 5 =*/13).float(message.latitude);
-                    if (message.longitude != null && message.hasOwnProperty("longitude"))
+                    if (message.longitude != null && Object.hasOwnProperty.call(message, "longitude"))
                         writer.uint32(/* id 2, wireType 5 =*/21).float(message.longitude);
-                    if (message.distance != null && message.hasOwnProperty("distance"))
+                    if (message.distance != null && Object.hasOwnProperty.call(message, "distance"))
                         $root.google.protobuf.FloatValue.encode(message.distance, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.maxNumber != null && message.hasOwnProperty("maxNumber"))
+                    if (message.maxNumber != null && Object.hasOwnProperty.call(message, "maxNumber"))
                         $root.google.protobuf.Int32Value.encode(message.maxNumber, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
                     return writer;
                 };
@@ -10320,13 +10320,13 @@ $root.im = (function() {
                 QueryUsersInfosNearbyRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.latitude != null && message.hasOwnProperty("latitude"))
+                    if (message.latitude != null && Object.hasOwnProperty.call(message, "latitude"))
                         writer.uint32(/* id 1, wireType 5 =*/13).float(message.latitude);
-                    if (message.longitude != null && message.hasOwnProperty("longitude"))
+                    if (message.longitude != null && Object.hasOwnProperty.call(message, "longitude"))
                         writer.uint32(/* id 2, wireType 5 =*/21).float(message.longitude);
-                    if (message.distance != null && message.hasOwnProperty("distance"))
+                    if (message.distance != null && Object.hasOwnProperty.call(message, "distance"))
                         $root.google.protobuf.FloatValue.encode(message.distance, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.maxNumber != null && message.hasOwnProperty("maxNumber"))
+                    if (message.maxNumber != null && Object.hasOwnProperty.call(message, "maxNumber"))
                         $root.google.protobuf.UInt32Value.encode(message.maxNumber, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
                     return writer;
                 };
@@ -10378,7 +10378,7 @@ $root.im = (function() {
                  * Properties of a QueryUsersOnlineStatusRequest.
                  * @memberof im.turms.proto
                  * @interface IQueryUsersOnlineStatusRequest
-                 * @property {Array.<number>|null} [usersIds] QueryUsersOnlineStatusRequest usersIds
+                 * @property {Array.<string>|null} [usersIds] QueryUsersOnlineStatusRequest usersIds
                  */
 
                 /**
@@ -10399,7 +10399,7 @@ $root.im = (function() {
 
                 /**
                  * QueryUsersOnlineStatusRequest usersIds.
-                 * @member {Array.<number>} usersIds
+                 * @member {Array.<string>} usersIds
                  * @memberof im.turms.proto.QueryUsersOnlineStatusRequest
                  * @instance
                  */
@@ -10450,9 +10450,9 @@ $root.im = (function() {
                             if ((tag & 7) === 2) {
                                 var end2 = reader.uint32() + reader.pos;
                                 while (reader.pos < end2)
-                                    message.usersIds.push(reader.int64());
+                                    message.usersIds.push(reader.int64().toString());
                             } else
-                                message.usersIds.push(reader.int64());
+                                message.usersIds.push(reader.int64().toString());
                             break;
                         default:
                             reader.skipType(tag & 7);
@@ -10471,7 +10471,7 @@ $root.im = (function() {
                  * Properties of a CreateFriendRequestRequest.
                  * @memberof im.turms.proto
                  * @interface ICreateFriendRequestRequest
-                 * @property {number|null} [recipientId] CreateFriendRequestRequest recipientId
+                 * @property {string|null} [recipientId] CreateFriendRequestRequest recipientId
                  * @property {string|null} [content] CreateFriendRequestRequest content
                  */
 
@@ -10492,11 +10492,11 @@ $root.im = (function() {
 
                 /**
                  * CreateFriendRequestRequest recipientId.
-                 * @member {number} recipientId
+                 * @member {string} recipientId
                  * @memberof im.turms.proto.CreateFriendRequestRequest
                  * @instance
                  */
-                CreateFriendRequestRequest.prototype.recipientId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                CreateFriendRequestRequest.prototype.recipientId = "0";
 
                 /**
                  * CreateFriendRequestRequest content.
@@ -10518,9 +10518,9 @@ $root.im = (function() {
                 CreateFriendRequestRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.recipientId != null && message.hasOwnProperty("recipientId"))
+                    if (message.recipientId != null && Object.hasOwnProperty.call(message, "recipientId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.recipientId);
-                    if (message.content != null && message.hasOwnProperty("content"))
+                    if (message.content != null && Object.hasOwnProperty.call(message, "content"))
                         writer.uint32(/* id 2, wireType 2 =*/18).string(message.content);
                     return writer;
                 };
@@ -10544,7 +10544,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.recipientId = reader.int64();
+                            message.recipientId = reader.int64().toString();
                             break;
                         case 2:
                             message.content = reader.string();
@@ -10604,7 +10604,7 @@ $root.im = (function() {
                 CreateRelationshipGroupRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.name != null && message.hasOwnProperty("name"))
+                    if (message.name != null && Object.hasOwnProperty.call(message, "name"))
                         writer.uint32(/* id 1, wireType 2 =*/10).string(message.name);
                     return writer;
                 };
@@ -10647,7 +10647,7 @@ $root.im = (function() {
                  * Properties of a CreateRelationshipRequest.
                  * @memberof im.turms.proto
                  * @interface ICreateRelationshipRequest
-                 * @property {number|null} [userId] CreateRelationshipRequest userId
+                 * @property {string|null} [userId] CreateRelationshipRequest userId
                  * @property {boolean|null} [isBlocked] CreateRelationshipRequest isBlocked
                  * @property {google.protobuf.IInt32Value|null} [groupIndex] CreateRelationshipRequest groupIndex
                  */
@@ -10669,11 +10669,11 @@ $root.im = (function() {
 
                 /**
                  * CreateRelationshipRequest userId.
-                 * @member {number} userId
+                 * @member {string} userId
                  * @memberof im.turms.proto.CreateRelationshipRequest
                  * @instance
                  */
-                CreateRelationshipRequest.prototype.userId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                CreateRelationshipRequest.prototype.userId = "0";
 
                 /**
                  * CreateRelationshipRequest isBlocked.
@@ -10703,11 +10703,11 @@ $root.im = (function() {
                 CreateRelationshipRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.userId != null && message.hasOwnProperty("userId"))
+                    if (message.userId != null && Object.hasOwnProperty.call(message, "userId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.userId);
-                    if (message.isBlocked != null && message.hasOwnProperty("isBlocked"))
+                    if (message.isBlocked != null && Object.hasOwnProperty.call(message, "isBlocked"))
                         writer.uint32(/* id 2, wireType 0 =*/16).bool(message.isBlocked);
-                    if (message.groupIndex != null && message.hasOwnProperty("groupIndex"))
+                    if (message.groupIndex != null && Object.hasOwnProperty.call(message, "groupIndex"))
                         $root.google.protobuf.Int32Value.encode(message.groupIndex, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                     return writer;
                 };
@@ -10731,7 +10731,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.userId = reader.int64();
+                            message.userId = reader.int64().toString();
                             break;
                         case 2:
                             message.isBlocked = reader.bool();
@@ -10756,7 +10756,7 @@ $root.im = (function() {
                  * Properties of a DeleteRelationshipGroupMemberRequest.
                  * @memberof im.turms.proto
                  * @interface IDeleteRelationshipGroupMemberRequest
-                 * @property {number|null} [userId] DeleteRelationshipGroupMemberRequest userId
+                 * @property {string|null} [userId] DeleteRelationshipGroupMemberRequest userId
                  * @property {number|null} [groupIndex] DeleteRelationshipGroupMemberRequest groupIndex
                  * @property {google.protobuf.IInt32Value|null} [targetGroupIndex] DeleteRelationshipGroupMemberRequest targetGroupIndex
                  */
@@ -10778,11 +10778,11 @@ $root.im = (function() {
 
                 /**
                  * DeleteRelationshipGroupMemberRequest userId.
-                 * @member {number} userId
+                 * @member {string} userId
                  * @memberof im.turms.proto.DeleteRelationshipGroupMemberRequest
                  * @instance
                  */
-                DeleteRelationshipGroupMemberRequest.prototype.userId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                DeleteRelationshipGroupMemberRequest.prototype.userId = "0";
 
                 /**
                  * DeleteRelationshipGroupMemberRequest groupIndex.
@@ -10812,11 +10812,11 @@ $root.im = (function() {
                 DeleteRelationshipGroupMemberRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.userId != null && message.hasOwnProperty("userId"))
+                    if (message.userId != null && Object.hasOwnProperty.call(message, "userId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.userId);
-                    if (message.groupIndex != null && message.hasOwnProperty("groupIndex"))
+                    if (message.groupIndex != null && Object.hasOwnProperty.call(message, "groupIndex"))
                         writer.uint32(/* id 2, wireType 0 =*/16).int32(message.groupIndex);
-                    if (message.targetGroupIndex != null && message.hasOwnProperty("targetGroupIndex"))
+                    if (message.targetGroupIndex != null && Object.hasOwnProperty.call(message, "targetGroupIndex"))
                         $root.google.protobuf.Int32Value.encode(message.targetGroupIndex, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                     return writer;
                 };
@@ -10840,7 +10840,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.userId = reader.int64();
+                            message.userId = reader.int64().toString();
                             break;
                         case 2:
                             message.groupIndex = reader.int32();
@@ -10912,9 +10912,9 @@ $root.im = (function() {
                 DeleteRelationshipGroupRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.groupIndex != null && message.hasOwnProperty("groupIndex"))
+                    if (message.groupIndex != null && Object.hasOwnProperty.call(message, "groupIndex"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int32(message.groupIndex);
-                    if (message.targetGroupIndex != null && message.hasOwnProperty("targetGroupIndex"))
+                    if (message.targetGroupIndex != null && Object.hasOwnProperty.call(message, "targetGroupIndex"))
                         $root.google.protobuf.Int32Value.encode(message.targetGroupIndex, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     return writer;
                 };
@@ -10960,7 +10960,7 @@ $root.im = (function() {
                  * Properties of a DeleteRelationshipRequest.
                  * @memberof im.turms.proto
                  * @interface IDeleteRelationshipRequest
-                 * @property {number|null} [relatedUserId] DeleteRelationshipRequest relatedUserId
+                 * @property {string|null} [relatedUserId] DeleteRelationshipRequest relatedUserId
                  * @property {google.protobuf.IInt32Value|null} [groupIndex] DeleteRelationshipRequest groupIndex
                  * @property {google.protobuf.IInt32Value|null} [targetGroupIndex] DeleteRelationshipRequest targetGroupIndex
                  */
@@ -10982,11 +10982,11 @@ $root.im = (function() {
 
                 /**
                  * DeleteRelationshipRequest relatedUserId.
-                 * @member {number} relatedUserId
+                 * @member {string} relatedUserId
                  * @memberof im.turms.proto.DeleteRelationshipRequest
                  * @instance
                  */
-                DeleteRelationshipRequest.prototype.relatedUserId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                DeleteRelationshipRequest.prototype.relatedUserId = "0";
 
                 /**
                  * DeleteRelationshipRequest groupIndex.
@@ -11016,11 +11016,11 @@ $root.im = (function() {
                 DeleteRelationshipRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.relatedUserId != null && message.hasOwnProperty("relatedUserId"))
+                    if (message.relatedUserId != null && Object.hasOwnProperty.call(message, "relatedUserId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.relatedUserId);
-                    if (message.groupIndex != null && message.hasOwnProperty("groupIndex"))
+                    if (message.groupIndex != null && Object.hasOwnProperty.call(message, "groupIndex"))
                         $root.google.protobuf.Int32Value.encode(message.groupIndex, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    if (message.targetGroupIndex != null && message.hasOwnProperty("targetGroupIndex"))
+                    if (message.targetGroupIndex != null && Object.hasOwnProperty.call(message, "targetGroupIndex"))
                         $root.google.protobuf.Int32Value.encode(message.targetGroupIndex, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                     return writer;
                 };
@@ -11044,7 +11044,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.relatedUserId = reader.int64();
+                            message.relatedUserId = reader.int64().toString();
                             break;
                         case 2:
                             message.groupIndex = $root.google.protobuf.Int32Value.decode(reader, reader.uint32());
@@ -11107,7 +11107,7 @@ $root.im = (function() {
                 QueryFriendRequestsRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.lastUpdatedDate != null && message.hasOwnProperty("lastUpdatedDate"))
+                    if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
                         $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
                     return writer;
                 };
@@ -11206,11 +11206,11 @@ $root.im = (function() {
                 QueryRelatedUsersIdsRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.isBlocked != null && message.hasOwnProperty("isBlocked"))
+                    if (message.isBlocked != null && Object.hasOwnProperty.call(message, "isBlocked"))
                         $root.google.protobuf.BoolValue.encode(message.isBlocked, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.groupIndex != null && message.hasOwnProperty("groupIndex"))
+                    if (message.groupIndex != null && Object.hasOwnProperty.call(message, "groupIndex"))
                         $root.google.protobuf.Int32Value.encode(message.groupIndex, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    if (message.lastUpdatedDate != null && message.hasOwnProperty("lastUpdatedDate"))
+                    if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
                         $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                     return writer;
                 };
@@ -11297,7 +11297,7 @@ $root.im = (function() {
                 QueryRelationshipGroupsRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.lastUpdatedDate != null && message.hasOwnProperty("lastUpdatedDate"))
+                    if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
                         $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
                     return writer;
                 };
@@ -11340,7 +11340,7 @@ $root.im = (function() {
                  * Properties of a QueryRelationshipsRequest.
                  * @memberof im.turms.proto
                  * @interface IQueryRelationshipsRequest
-                 * @property {Array.<number>|null} [relatedUsersIds] QueryRelationshipsRequest relatedUsersIds
+                 * @property {Array.<string>|null} [relatedUsersIds] QueryRelationshipsRequest relatedUsersIds
                  * @property {google.protobuf.IBoolValue|null} [isBlocked] QueryRelationshipsRequest isBlocked
                  * @property {google.protobuf.IInt32Value|null} [groupIndex] QueryRelationshipsRequest groupIndex
                  * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryRelationshipsRequest lastUpdatedDate
@@ -11364,7 +11364,7 @@ $root.im = (function() {
 
                 /**
                  * QueryRelationshipsRequest relatedUsersIds.
-                 * @member {Array.<number>} relatedUsersIds
+                 * @member {Array.<string>} relatedUsersIds
                  * @memberof im.turms.proto.QueryRelationshipsRequest
                  * @instance
                  */
@@ -11412,11 +11412,11 @@ $root.im = (function() {
                             writer.int64(message.relatedUsersIds[i]);
                         writer.ldelim();
                     }
-                    if (message.isBlocked != null && message.hasOwnProperty("isBlocked"))
+                    if (message.isBlocked != null && Object.hasOwnProperty.call(message, "isBlocked"))
                         $root.google.protobuf.BoolValue.encode(message.isBlocked, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    if (message.groupIndex != null && message.hasOwnProperty("groupIndex"))
+                    if (message.groupIndex != null && Object.hasOwnProperty.call(message, "groupIndex"))
                         $root.google.protobuf.Int32Value.encode(message.groupIndex, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.lastUpdatedDate != null && message.hasOwnProperty("lastUpdatedDate"))
+                    if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
                         $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
                     return writer;
                 };
@@ -11445,9 +11445,9 @@ $root.im = (function() {
                             if ((tag & 7) === 2) {
                                 var end2 = reader.uint32() + reader.pos;
                                 while (reader.pos < end2)
-                                    message.relatedUsersIds.push(reader.int64());
+                                    message.relatedUsersIds.push(reader.int64().toString());
                             } else
-                                message.relatedUsersIds.push(reader.int64());
+                                message.relatedUsersIds.push(reader.int64().toString());
                             break;
                         case 2:
                             message.isBlocked = $root.google.protobuf.BoolValue.decode(reader, reader.uint32());
@@ -11475,7 +11475,7 @@ $root.im = (function() {
                  * Properties of an UpdateFriendRequestRequest.
                  * @memberof im.turms.proto
                  * @interface IUpdateFriendRequestRequest
-                 * @property {number|null} [requestId] UpdateFriendRequestRequest requestId
+                 * @property {string|null} [requestId] UpdateFriendRequestRequest requestId
                  * @property {im.turms.proto.ResponseAction|null} [responseAction] UpdateFriendRequestRequest responseAction
                  * @property {google.protobuf.IStringValue|null} [reason] UpdateFriendRequestRequest reason
                  */
@@ -11497,11 +11497,11 @@ $root.im = (function() {
 
                 /**
                  * UpdateFriendRequestRequest requestId.
-                 * @member {number} requestId
+                 * @member {string} requestId
                  * @memberof im.turms.proto.UpdateFriendRequestRequest
                  * @instance
                  */
-                UpdateFriendRequestRequest.prototype.requestId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                UpdateFriendRequestRequest.prototype.requestId = "0";
 
                 /**
                  * UpdateFriendRequestRequest responseAction.
@@ -11531,11 +11531,11 @@ $root.im = (function() {
                 UpdateFriendRequestRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.requestId != null && message.hasOwnProperty("requestId"))
+                    if (message.requestId != null && Object.hasOwnProperty.call(message, "requestId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.requestId);
-                    if (message.responseAction != null && message.hasOwnProperty("responseAction"))
+                    if (message.responseAction != null && Object.hasOwnProperty.call(message, "responseAction"))
                         writer.uint32(/* id 2, wireType 0 =*/16).int32(message.responseAction);
-                    if (message.reason != null && message.hasOwnProperty("reason"))
+                    if (message.reason != null && Object.hasOwnProperty.call(message, "reason"))
                         $root.google.protobuf.StringValue.encode(message.reason, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                     return writer;
                 };
@@ -11559,7 +11559,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.requestId = reader.int64();
+                            message.requestId = reader.int64().toString();
                             break;
                         case 2:
                             message.responseAction = reader.int32();
@@ -11631,9 +11631,9 @@ $root.im = (function() {
                 UpdateRelationshipGroupRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.groupIndex != null && message.hasOwnProperty("groupIndex"))
+                    if (message.groupIndex != null && Object.hasOwnProperty.call(message, "groupIndex"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int32(message.groupIndex);
-                    if (message.newName != null && message.hasOwnProperty("newName"))
+                    if (message.newName != null && Object.hasOwnProperty.call(message, "newName"))
                         writer.uint32(/* id 2, wireType 2 =*/18).string(message.newName);
                     return writer;
                 };
@@ -11679,7 +11679,7 @@ $root.im = (function() {
                  * Properties of an UpdateRelationshipRequest.
                  * @memberof im.turms.proto
                  * @interface IUpdateRelationshipRequest
-                 * @property {number|null} [relatedUserId] UpdateRelationshipRequest relatedUserId
+                 * @property {string|null} [relatedUserId] UpdateRelationshipRequest relatedUserId
                  * @property {google.protobuf.IBoolValue|null} [blocked] UpdateRelationshipRequest blocked
                  * @property {google.protobuf.IInt32Value|null} [newGroupIndex] UpdateRelationshipRequest newGroupIndex
                  * @property {google.protobuf.IInt32Value|null} [deleteGroupIndex] UpdateRelationshipRequest deleteGroupIndex
@@ -11702,11 +11702,11 @@ $root.im = (function() {
 
                 /**
                  * UpdateRelationshipRequest relatedUserId.
-                 * @member {number} relatedUserId
+                 * @member {string} relatedUserId
                  * @memberof im.turms.proto.UpdateRelationshipRequest
                  * @instance
                  */
-                UpdateRelationshipRequest.prototype.relatedUserId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+                UpdateRelationshipRequest.prototype.relatedUserId = "0";
 
                 /**
                  * UpdateRelationshipRequest blocked.
@@ -11744,13 +11744,13 @@ $root.im = (function() {
                 UpdateRelationshipRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.relatedUserId != null && message.hasOwnProperty("relatedUserId"))
+                    if (message.relatedUserId != null && Object.hasOwnProperty.call(message, "relatedUserId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.relatedUserId);
-                    if (message.blocked != null && message.hasOwnProperty("blocked"))
+                    if (message.blocked != null && Object.hasOwnProperty.call(message, "blocked"))
                         $root.google.protobuf.BoolValue.encode(message.blocked, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    if (message.newGroupIndex != null && message.hasOwnProperty("newGroupIndex"))
+                    if (message.newGroupIndex != null && Object.hasOwnProperty.call(message, "newGroupIndex"))
                         $root.google.protobuf.Int32Value.encode(message.newGroupIndex, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.deleteGroupIndex != null && message.hasOwnProperty("deleteGroupIndex"))
+                    if (message.deleteGroupIndex != null && Object.hasOwnProperty.call(message, "deleteGroupIndex"))
                         $root.google.protobuf.Int32Value.encode(message.deleteGroupIndex, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
                     return writer;
                 };
@@ -11774,7 +11774,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.relatedUserId = reader.int64();
+                            message.relatedUserId = reader.int64().toString();
                             break;
                         case 2:
                             message.blocked = $root.google.protobuf.BoolValue.decode(reader, reader.uint32());
@@ -11867,13 +11867,13 @@ $root.im = (function() {
                 UpdateUserLocationRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.latitude != null && message.hasOwnProperty("latitude"))
+                    if (message.latitude != null && Object.hasOwnProperty.call(message, "latitude"))
                         writer.uint32(/* id 1, wireType 5 =*/13).float(message.latitude);
-                    if (message.longitude != null && message.hasOwnProperty("longitude"))
+                    if (message.longitude != null && Object.hasOwnProperty.call(message, "longitude"))
                         writer.uint32(/* id 2, wireType 5 =*/21).float(message.longitude);
-                    if (message.name != null && message.hasOwnProperty("name"))
+                    if (message.name != null && Object.hasOwnProperty.call(message, "name"))
                         $root.google.protobuf.StringValue.encode(message.name, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.address != null && message.hasOwnProperty("address"))
+                    if (message.address != null && Object.hasOwnProperty.call(message, "address"))
                         $root.google.protobuf.StringValue.encode(message.address, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
                     return writer;
                 };
@@ -11963,7 +11963,7 @@ $root.im = (function() {
                 UpdateUserOnlineStatusRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.userStatus != null && message.hasOwnProperty("userStatus"))
+                    if (message.userStatus != null && Object.hasOwnProperty.call(message, "userStatus"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int32(message.userStatus);
                     return writer;
                 };
@@ -12080,15 +12080,15 @@ $root.im = (function() {
                 UpdateUserRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.password != null && message.hasOwnProperty("password"))
+                    if (message.password != null && Object.hasOwnProperty.call(message, "password"))
                         $root.google.protobuf.StringValue.encode(message.password, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.name != null && message.hasOwnProperty("name"))
+                    if (message.name != null && Object.hasOwnProperty.call(message, "name"))
                         $root.google.protobuf.StringValue.encode(message.name, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    if (message.intro != null && message.hasOwnProperty("intro"))
+                    if (message.intro != null && Object.hasOwnProperty.call(message, "intro"))
                         $root.google.protobuf.StringValue.encode(message.intro, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.profilePictureUrl != null && message.hasOwnProperty("profilePictureUrl"))
+                    if (message.profilePictureUrl != null && Object.hasOwnProperty.call(message, "profilePictureUrl"))
                         $root.google.protobuf.StringValue.encode(message.profilePictureUrl, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-                    if (message.profileAccessStrategy != null && message.hasOwnProperty("profileAccessStrategy"))
+                    if (message.profileAccessStrategy != null && Object.hasOwnProperty.call(message, "profileAccessStrategy"))
                         writer.uint32(/* id 5, wireType 0 =*/40).int32(message.profileAccessStrategy);
                     return writer;
                 };
@@ -12208,7 +12208,7 @@ $root.google = (function() {
             DoubleValue.encode = function encode(message, writer) {
                 if (!writer)
                     writer = $Writer.create();
-                if (message.value != null && message.hasOwnProperty("value"))
+                if (message.value != null && Object.hasOwnProperty.call(message, "value"))
                     writer.uint32(/* id 1, wireType 1 =*/9).double(message.value);
                 return writer;
             };
@@ -12289,7 +12289,7 @@ $root.google = (function() {
             FloatValue.encode = function encode(message, writer) {
                 if (!writer)
                     writer = $Writer.create();
-                if (message.value != null && message.hasOwnProperty("value"))
+                if (message.value != null && Object.hasOwnProperty.call(message, "value"))
                     writer.uint32(/* id 1, wireType 5 =*/13).float(message.value);
                 return writer;
             };
@@ -12332,7 +12332,7 @@ $root.google = (function() {
              * Properties of an Int64Value.
              * @memberof google.protobuf
              * @interface IInt64Value
-             * @property {number|null} [value] Int64Value value
+             * @property {string|null} [value] Int64Value value
              */
 
             /**
@@ -12352,11 +12352,11 @@ $root.google = (function() {
 
             /**
              * Int64Value value.
-             * @member {number} value
+             * @member {string} value
              * @memberof google.protobuf.Int64Value
              * @instance
              */
-            Int64Value.prototype.value = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+            Int64Value.prototype.value = "0";
 
             /**
              * Encodes the specified Int64Value message. Does not implicitly {@link google.protobuf.Int64Value.verify|verify} messages.
@@ -12370,7 +12370,7 @@ $root.google = (function() {
             Int64Value.encode = function encode(message, writer) {
                 if (!writer)
                     writer = $Writer.create();
-                if (message.value != null && message.hasOwnProperty("value"))
+                if (message.value != null && Object.hasOwnProperty.call(message, "value"))
                     writer.uint32(/* id 1, wireType 0 =*/8).int64(message.value);
                 return writer;
             };
@@ -12394,7 +12394,7 @@ $root.google = (function() {
                     var tag = reader.uint32();
                     switch (tag >>> 3) {
                     case 1:
-                        message.value = reader.int64();
+                        message.value = reader.int64().toString();
                         break;
                     default:
                         reader.skipType(tag & 7);
@@ -12413,7 +12413,7 @@ $root.google = (function() {
              * Properties of a UInt64Value.
              * @memberof google.protobuf
              * @interface IUInt64Value
-             * @property {number|null} [value] UInt64Value value
+             * @property {string|null} [value] UInt64Value value
              */
 
             /**
@@ -12433,11 +12433,11 @@ $root.google = (function() {
 
             /**
              * UInt64Value value.
-             * @member {number} value
+             * @member {string} value
              * @memberof google.protobuf.UInt64Value
              * @instance
              */
-            UInt64Value.prototype.value = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+            UInt64Value.prototype.value = "0";
 
             /**
              * Encodes the specified UInt64Value message. Does not implicitly {@link google.protobuf.UInt64Value.verify|verify} messages.
@@ -12451,7 +12451,7 @@ $root.google = (function() {
             UInt64Value.encode = function encode(message, writer) {
                 if (!writer)
                     writer = $Writer.create();
-                if (message.value != null && message.hasOwnProperty("value"))
+                if (message.value != null && Object.hasOwnProperty.call(message, "value"))
                     writer.uint32(/* id 1, wireType 0 =*/8).uint64(message.value);
                 return writer;
             };
@@ -12475,7 +12475,7 @@ $root.google = (function() {
                     var tag = reader.uint32();
                     switch (tag >>> 3) {
                     case 1:
-                        message.value = reader.uint64();
+                        message.value = reader.uint64().toString();
                         break;
                     default:
                         reader.skipType(tag & 7);
@@ -12532,7 +12532,7 @@ $root.google = (function() {
             Int32Value.encode = function encode(message, writer) {
                 if (!writer)
                     writer = $Writer.create();
-                if (message.value != null && message.hasOwnProperty("value"))
+                if (message.value != null && Object.hasOwnProperty.call(message, "value"))
                     writer.uint32(/* id 1, wireType 0 =*/8).int32(message.value);
                 return writer;
             };
@@ -12613,7 +12613,7 @@ $root.google = (function() {
             UInt32Value.encode = function encode(message, writer) {
                 if (!writer)
                     writer = $Writer.create();
-                if (message.value != null && message.hasOwnProperty("value"))
+                if (message.value != null && Object.hasOwnProperty.call(message, "value"))
                     writer.uint32(/* id 1, wireType 0 =*/8).uint32(message.value);
                 return writer;
             };
@@ -12694,7 +12694,7 @@ $root.google = (function() {
             BoolValue.encode = function encode(message, writer) {
                 if (!writer)
                     writer = $Writer.create();
-                if (message.value != null && message.hasOwnProperty("value"))
+                if (message.value != null && Object.hasOwnProperty.call(message, "value"))
                     writer.uint32(/* id 1, wireType 0 =*/8).bool(message.value);
                 return writer;
             };
@@ -12775,7 +12775,7 @@ $root.google = (function() {
             StringValue.encode = function encode(message, writer) {
                 if (!writer)
                     writer = $Writer.create();
-                if (message.value != null && message.hasOwnProperty("value"))
+                if (message.value != null && Object.hasOwnProperty.call(message, "value"))
                     writer.uint32(/* id 1, wireType 2 =*/10).string(message.value);
                 return writer;
             };
@@ -12856,7 +12856,7 @@ $root.google = (function() {
             BytesValue.encode = function encode(message, writer) {
                 if (!writer)
                     writer = $Writer.create();
-                if (message.value != null && message.hasOwnProperty("value"))
+                if (message.value != null && Object.hasOwnProperty.call(message, "value"))
                     writer.uint32(/* id 1, wireType 2 =*/10).bytes(message.value);
                 return writer;
             };

@@ -14,13 +14,13 @@ export declare namespace ParsedModel {
     }
 
     interface IdsWithVersion {
-        ids?: number[];
+        ids?: string[];
         lastUpdatedDate?: Date;
     }
 
     interface UserRelationshipGroupsWithVersion {
         userRelationshipGroups?: UserRelationshipGroup;
-        lastUpdatedDate?: number;
+        lastUpdatedDate?: Date;
     }
 
     interface UserRelationshipGroup {
@@ -30,18 +30,18 @@ export declare namespace ParsedModel {
 
     interface UserFriendRequestsWithVersion {
         userFriendRequests?: UserFriendRequest[];
-        lastUpdatedDate?: number;
+        lastUpdatedDate?: Date;
     }
 
     interface UserFriendRequest {
-        id?: number;
-        creationDate?: number;
+        id?: string;
+        creationDate?: Date;
         content?: string;
         requestStatus?: RequestStatus;
         reason?: string;
-        expirationDate?: number;
-        requesterId?: number;
-        recipientId?: number;
+        expirationDate?: Date;
+        requesterId?: string;
+        recipientId?: string;
     }
 
     interface UsersInfosWithVersion {
@@ -50,19 +50,19 @@ export declare namespace ParsedModel {
     }
 
     interface Message {
-        id?: number;
+        id?: string;
         deliveryDate?: Date;
         deletionDate?: Date;
         text?: string;
-        senderId?: number;
-        groupId?: number;
-        recipientId?: number;
+        senderId?: string;
+        groupId?: string;
+        recipientId?: string;
         records?: Uint8Array[];
     }
 
     interface MessageStatus {
-        messageId?: number;
-        toUserId?: number;
+        messageId?: string;
+        toUserId?: string;
         deliveryStatus?: MessageDeliveryStatus;
         receptionDate?: Date;
         readDate?: Date;
@@ -72,13 +72,13 @@ export declare namespace ParsedModel {
     interface MessagesWithTotal {
         total?: number;
         chatType?: ChatType;
-        fromId?: number;
+        fromId?: string;
         messages?: Message;
     }
 
     interface UserRelationship {
-        ownerId?: number;
-        relatedUserId?: number;
+        ownerId?: string;
+        relatedUserId?: string;
         isBlocked?: boolean;
         groupIndex?: number;
         establishmentDate?: Date;
@@ -95,7 +95,7 @@ export declare namespace ParsedModel {
     }
 
     interface UserInfo {
-        id?: number;
+        id?: string;
         name?: string;
         intro?: string;
         profilePictureUrl?: string;
@@ -106,7 +106,7 @@ export declare namespace ParsedModel {
     }
 
     interface UserStatusDetail {
-        userId?: number;
+        userId?: string;
         userStatus?: UserStatus;
         usingDeviceTypes?: DeviceType[];
     }
@@ -117,19 +117,19 @@ export declare namespace ParsedModel {
     }
 
     interface GroupInvitation {
-        id?: number;
+        id?: string;
         creationDate?: Date;
         content?: string;
         status?: RequestStatus;
         expirationDate?: Date;
-        groupId?: number;
-        inviterId?: number;
-        inviteeId?: number;
+        groupId?: string;
+        inviterId?: string;
+        inviteeId?: string;
     }
 
     interface GroupMember {
-        groupId?: number;
-        userId?: number;
+        groupId?: string;
+        userId?: string;
         name?: string;
         role?: GroupMemberRole;
         joinDate?: Date;
@@ -144,8 +144,8 @@ export declare namespace ParsedModel {
     }
 
     interface GroupJoinQuestion {
-        id?: number;
-        groupId?: number;
+        id?: string;
+        groupId?: string;
         question?: string;
         answers?: string;
         score?: number;
@@ -157,14 +157,14 @@ export declare namespace ParsedModel {
     }
 
     interface GroupJoinRequest {
-        id?: number;
+        id?: string;
         creationDate?: Date;
         content?: string;
         status?: RequestStatus;
         expirationDate?: Date;
-        groupId?: number;
-        requesterId?: number;
-        responderId?: number;
+        groupId?: string;
+        requesterId?: string;
+        responderId?: string;
     }
 
     interface GroupJoinRequestsWithVersion {
@@ -183,10 +183,10 @@ export declare namespace ParsedModel {
     }
 
     interface Group {
-        id?: number;
-        typeId?: number;
-        creatorId?: number;
-        ownerId?: number;
+        id?: string;
+        typeId?: string;
+        creatorId?: string;
+        ownerId?: string;
         name?: string;
         intro?: string;
         announcement?: string;

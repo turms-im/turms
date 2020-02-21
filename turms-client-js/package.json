@@ -11,7 +11,7 @@
     "types"
   ],
   "scripts": {
-    "protoc": "pbjs --force-number --no-create --no-verify --no-convert --no-delimited -t static-module -w commonjs -o ./src/model/proto-bundle.js ./src/proto/**/*.proto & pbts -o ./src/model/proto-bundle.d.ts ./src/model/proto-bundle.js",
+    "protoc": "pbjs --no-create --no-verify --no-convert --no-delimited -t static-module -w commonjs -o ./src/model/proto-bundle.js ./src/proto/**/*.proto & pbts -o ./src/model/proto-bundle.d.ts ./src/model/proto-bundle.js",
     "webpack": "webpack --mode=production",
     "test": "jest",
     "build": "npm run protoc && npm run webpack",
@@ -37,7 +37,7 @@
   "homepage": "https://github.com/turms-im/turms-client-js#readme",
   "dependencies": {
     "core-js": "^3.6.4",
-    "protobufjs": "^6.8.8",
+    "protobufjs": "git+https://github.com/turms-im/protobuf.js.git",
     "unfetch": "^4.1.0",
     "websocket-as-promised": "^1.0.1"
   },

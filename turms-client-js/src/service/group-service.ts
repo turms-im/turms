@@ -20,7 +20,7 @@ export default class GroupService {
         profilePictureUrl?: string,
         minimumScore?: number,
         muteEndDate?: Date,
-        groupTypeId?: number): Promise<number> {
+        groupTypeId?: string): Promise<string> {
         RequestUtil.throwIfAnyFalsy(name);
         return this._turmsClient.driver.send({
             createGroupRequest: {
@@ -32,10 +32,10 @@ export default class GroupService {
                 muteEndDate: RequestUtil.wrapTimeIfNotNull(muteEndDate),
                 groupTypeId: RequestUtil.wrapValueIfNotNull(groupTypeId)
             }
-        }).then(notification => NotificationUtil.getFirstIdFromIds(notification));
+        }).then(notification => notification.data.ids.values[0]);
     }
 
-    deleteGroup(groupId: number): Promise<void> {
+    deleteGroup(groupId: string): Promise<void> {
         RequestUtil.throwIfAnyFalsy(groupId);
         return this._turmsClient.driver.send({
             deleteGroupRequest: {
@@ -45,15 +45,15 @@ export default class GroupService {
     }
 
     updateGroup(
-        groupId: number,
+        groupId: string,
         groupName?: string,
         intro?: string,
         announcement?: string,
         profilePictureUrl?: string,
         minimumScore?: number,
-        groupTypeId?: number,
+        groupTypeId?: string,
         muteEndDate?: Date,
-        successorId?: number,
+        successorId?: string,
         quitAfterTransfer?: boolean): Promise<void> {
         RequestUtil.throwIfAnyFalsy(groupId);
         if (RequestUtil.areAllFalsy(groupName, intro, announcement, profilePictureUrl, minimumScore, groupTypeId,
@@ -76,21 +76,21 @@ export default class GroupService {
         }).then();
     }
 
-    transferOwnership(groupId: number, successorId: number, quitAfterTransfer = false): Promise<void> {
+    transferOwnership(groupId: string, successorId: string, quitAfterTransfer = false): Promise<void> {
         RequestUtil.throwIfAnyFalsy(groupId, successorId);
         return this.updateGroup(groupId, null, null, null, null, null, null, null, successorId, quitAfterTransfer);
     }
 
-    muteGroup(groupId: number, muteEndDate: Date): Promise<void> {
+    muteGroup(groupId: string, muteEndDate: Date): Promise<void> {
         RequestUtil.throwIfAnyFalsy(groupId, muteEndDate);
         return this.updateGroup(groupId, null, null, null, null, null, null, muteEndDate, null);
     }
 
-    unmuteGroup(groupId: number): Promise<void> {
+    unmuteGroup(groupId: string): Promise<void> {
         return this.muteGroup(groupId, new Date(0));
     }
 
-    queryGroup(groupId: number, lastUpdatedDate?: Date): Promise<ParsedModel.GroupWithVersion> {
+    queryGroup(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.GroupWithVersion> {
         RequestUtil.throwIfAnyFalsy(groupId);
         // @ts-ignore
         return this._turmsClient.driver.send({
@@ -123,7 +123,7 @@ export default class GroupService {
         }).then(notification => NotificationUtil.transform(notification.data.groupsWithVersion));
     }
 
-    addGroupJoinQuestion(groupId: number, question: string, answers: string[], score: number): Promise<number> {
+    addGroupJoinQuestion(groupId: string, question: string, answers: string[], score: number): Promise<string> {
         RequestUtil.throwIfAnyFalsy(groupId, question, answers, score);
         return this._turmsClient.driver.send({
             createGroupJoinQuestionRequest: {
@@ -132,10 +132,10 @@ export default class GroupService {
                 answers,
                 score
             }
-        }).then(notification => NotificationUtil.getFirstIdFromIds(notification));
+        }).then(notification => notification.data.ids.values[0]);
     }
 
-    deleteGroupJoinQuestion(questionId: number): Promise<void> {
+    deleteGroupJoinQuestion(questionId: string): Promise<void> {
         RequestUtil.throwIfAnyFalsy(questionId);
         return this._turmsClient.driver.send({
             deleteGroupJoinQuestionRequest: {
@@ -144,7 +144,7 @@ export default class GroupService {
         }).then();
     }
 
-    updateGroupJoinQuestion(questionId: number, question?: string, answers?: string[], score?: number): Promise<void> {
+    updateGroupJoinQuestion(questionId: string, question?: string, answers?: string[], score?: number): Promise<void> {
         RequestUtil.throwIfAnyFalsy(questionId);
         if (RequestUtil.areAllFalsy(question, answers, score)) {
             return Promise.resolve();
@@ -160,7 +160,7 @@ export default class GroupService {
     }
 
     // Group Blacklist
-    blacklistUser(groupId: number, userId: number): Promise<void> {
+    blacklistUser(groupId: string, userId: string): Promise<void> {
         RequestUtil.throwIfAnyFalsy(groupId, userId);
         return this._turmsClient.driver.send({
             createGroupBlacklistedUserRequest: {
@@ -170,7 +170,7 @@ export default class GroupService {
         }).then();
     }
 
-    unblacklistUser(groupId: number, userId: number): Promise<void> {
+    unblacklistUser(groupId: string, userId: string): Promise<void> {
         RequestUtil.throwIfAnyFalsy(groupId, userId);
         return this._turmsClient.driver.send({
             deleteGroupBlacklistedUserRequest: {
@@ -181,7 +181,7 @@ export default class GroupService {
     }
 
     queryBlacklistedUsersIds(
-        groupId: number,
+        groupId: string,
         lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion> {
         RequestUtil.throwIfAnyFalsy(groupId);
         return this._turmsClient.driver.send({
@@ -193,7 +193,7 @@ export default class GroupService {
     }
 
     queryBlacklistedUsersInfos(
-        groupId: number,
+        groupId: string,
         lastUpdatedDate?: Date): Promise<ParsedModel.UsersInfosWithVersion> {
         RequestUtil.throwIfAnyFalsy(groupId);
         // @ts-ignore
@@ -206,7 +206,7 @@ export default class GroupService {
     }
 
     // Group Enrollment
-    createInvitation(groupId: number, inviteeId: number, content: string): Promise<number> {
+    createInvitation(groupId: string, inviteeId: string, content: string): Promise<string> {
         RequestUtil.throwIfAnyFalsy(groupId, inviteeId, content);
         return this._turmsClient.driver.send({
             createGroupInvitationRequest: {
@@ -214,10 +214,10 @@ export default class GroupService {
                 inviteeId,
                 content
             }
-        }).then(notification => NotificationUtil.getFirstIdFromIds(notification));
+        }).then(notification => notification.data.ids.values[0]);
     }
 
-    deleteInvitation(invitationId: number): Promise<void> {
+    deleteInvitation(invitationId: string): Promise<void> {
         RequestUtil.throwIfAnyFalsy(invitationId);
         return this._turmsClient.driver.send({
             deleteGroupInvitationRequest: {
@@ -226,7 +226,7 @@ export default class GroupService {
         }).then();
     }
 
-    queryInvitations(groupId: number, lastUpdatedDate?: Date): Promise<ParsedModel.GroupInvitationsWithVersion> {
+    queryInvitations(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.GroupInvitationsWithVersion> {
         RequestUtil.throwIfAnyFalsy(groupId);
         // @ts-ignore
         return this._turmsClient.driver.send({
@@ -237,17 +237,17 @@ export default class GroupService {
         }).then(notification => NotificationUtil.transform(notification.data.groupInvitationsWithVersion));
     }
 
-    createJoinRequest(groupId: number, content: string): Promise<number> {
+    createJoinRequest(groupId: string, content: string): Promise<string> {
         RequestUtil.throwIfAnyFalsy(groupId, content);
         return this._turmsClient.driver.send({
             createGroupJoinRequestRequest: {
                 groupId,
                 content
             }
-        }).then(notification => NotificationUtil.getFirstIdFromIds(notification));
+        }).then(notification => notification.data.ids.values[0]);
     }
 
-    deleteJoinRequest(requestId: number): Promise<void> {
+    deleteJoinRequest(requestId: string): Promise<void> {
         RequestUtil.throwIfAnyFalsy(requestId);
         return this._turmsClient.driver.send({
             deleteGroupJoinRequestRequest: {
@@ -256,7 +256,7 @@ export default class GroupService {
         }).then();
     }
 
-    queryJoinRequests(groupId: number, lastUpdatedDate?: Date): Promise<ParsedModel.GroupJoinRequestsWithVersion> {
+    queryJoinRequests(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.GroupJoinRequestsWithVersion> {
         RequestUtil.throwIfAnyFalsy(groupId);
         // @ts-ignore
         return this._turmsClient.driver.send({
@@ -271,7 +271,7 @@ export default class GroupService {
      * Note: Only the owner and managers have the right to fetch questions with answers
      */
     queryGroupJoinQuestionsRequest(
-        groupId: number,
+        groupId: string,
         withAnswers = false,
         lastUpdatedDate?: Date): Promise<ParsedModel.GroupJoinQuestionsWithVersion> {
         RequestUtil.throwIfAnyFalsy(groupId, withAnswers);
@@ -285,7 +285,7 @@ export default class GroupService {
         }).then(notification => NotificationUtil.transform(notification.data.groupJoinQuestionsWithVersion));
     }
 
-    answerGroupQuestions(questionIdsAndAnswers: { [k: number]: string }): Promise<boolean> {
+    answerGroupQuestions(questionIdsAndAnswers: { [k: string]: string }): Promise<boolean> {
         RequestUtil.throwIfEmpty(questionIdsAndAnswers);
         return this._turmsClient.driver.send({
             checkGroupJoinQuestionsAnswersRequest: {
@@ -296,8 +296,8 @@ export default class GroupService {
 
     // Group Member
     addGroupMember(
-        groupId: number,
-        userId: number,
+        groupId: string,
+        userId: string,
         name?: string,
         role?: string | GroupMemberRole,
         muteEndDate?: Date): Promise<void> {
@@ -316,7 +316,7 @@ export default class GroupService {
         }).then();
     }
 
-    quitGroup(groupId: number, successorId?: number, quitAfterTransfer?: boolean): Promise<void> {
+    quitGroup(groupId: string, successorId?: string, quitAfterTransfer?: boolean): Promise<void> {
         RequestUtil.throwIfAnyFalsy(groupId);
         return this._turmsClient.driver.send({
             deleteGroupMemberRequest: {
@@ -328,7 +328,7 @@ export default class GroupService {
         }).then();
     }
 
-    removeGroupMember(groupId: number, memberId: number): Promise<void> {
+    removeGroupMember(groupId: string, memberId: string): Promise<void> {
         RequestUtil.throwIfAnyFalsy(groupId, memberId);
         return this._turmsClient.driver.send({
             deleteGroupMemberRequest: {
@@ -339,8 +339,8 @@ export default class GroupService {
     }
 
     updateGroupMemberInfo(
-        groupId: number,
-        memberId: number,
+        groupId: string,
+        memberId: string,
         name?: string,
         role?: string | GroupMemberRole,
         muteEndDate?: Date): Promise<void> {
@@ -362,16 +362,16 @@ export default class GroupService {
         }).then();
     }
 
-    muteGroupMember(groupId: number, memberId: number, muteEndDate: Date): Promise<void> {
+    muteGroupMember(groupId: string, memberId: string, muteEndDate: Date): Promise<void> {
         RequestUtil.throwIfAnyFalsy(groupId, memberId, muteEndDate);
         return this.updateGroupMemberInfo(groupId, memberId, undefined, undefined, muteEndDate);
     }
 
-    unmuteGroupMember(groupId: number, memberId: number): Promise<void> {
+    unmuteGroupMember(groupId: string, memberId: string): Promise<void> {
         return this.muteGroupMember(groupId, memberId, new Date(0));
     }
 
-    queryGroupMembers(groupId: number, withStatus = false, lastUpdatedDate?: Date): Promise<ParsedModel.GroupMembersWithVersion> {
+    queryGroupMembers(groupId: string, withStatus = false, lastUpdatedDate?: Date): Promise<ParsedModel.GroupMembersWithVersion> {
         RequestUtil.throwIfAnyFalsy(groupId);
         // @ts-ignore
         return this._turmsClient.driver.send({
@@ -383,7 +383,7 @@ export default class GroupService {
         }).then(notification => NotificationUtil.transform(notification.data.groupMembersWithVersion));
     }
 
-    queryGroupMembersByMembersIds(groupId: number, membersIds: number[], withStatus = false): Promise<ParsedModel.GroupMembersWithVersion> {
+    queryGroupMembersByMembersIds(groupId: string, membersIds: string[], withStatus = false): Promise<ParsedModel.GroupMembersWithVersion> {
         RequestUtil.throwIfAnyFalsy(groupId, membersIds);
         // @ts-ignore
         return this._turmsClient.driver.send({

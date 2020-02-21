@@ -30,7 +30,7 @@ export default class TurmsDriver {
     sendHeartbeat(): Promise<void>;
     connected(): boolean;
     disconnect(): Promise<CloseEvent>;
-    connect(userId: number, password: string, requestId: number, url?: string, connectionTimeout?: number, requestTimeout?: number): Promise<void>;
+    connect(userId: string, password: string, requestId: number, url?: string, connectionTimeout?: number, requestTimeout?: number): Promise<void>;
     resetHeartBeatTimer(): void;
     send(message: im.turms.proto.ITurmsRequest): Promise<TurmsNotification>;
     private _setLastRequestRecord;
