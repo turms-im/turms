@@ -17,9 +17,9 @@ public class TurmsDriver {
     private var websocket: WebSocket?
     private var heartbeatTimer: Timer?
     private var isConnected = false
-    
+
     public var onNotificationListeners: [(TurmsNotification) -> Void] = []
-    public var onClose: ((Bool, TurmsStatusCode, Error?, UInt16?) -> Void)?
+    public var onClose: ((Bool, TurmsCloseStatus, String?, Error?) -> Void)?
     private var onDisconnectResolver: Resolver<Void>?
 
     private var url: String
@@ -30,7 +30,7 @@ public class TurmsDriver {
     private var isLastRequestHeartbeat = false
     private var userId: Int64?
     private var password: String?
-    
+
     private var address: String?
     private var sessionId: String?
 
@@ -107,7 +107,7 @@ public class TurmsDriver {
                             self.onWebsocketOpen()
                             seal.fulfill(())
                         case .disconnected(let reason, let websocketCode):
-                            self.onWebsocketClose(Int(reason), websocketCode)
+                            self.onWebsocketClose(Int(websocketCode), reason)
                             self.onDisconnectResolver?.fulfill(())
                         case .cancelled:
                             self.onWebsocketClose()
@@ -139,7 +139,7 @@ public class TurmsDriver {
         }
     }
 
-    func send(_ populator: (inout RequestBuilder) -> ()) -> Promise<TurmsNotification> {
+    func send(_ populator: (inout RequestBuilder) -> Void) -> Promise<TurmsNotification> {
         var builder = RequestBuilder()
         populator(&builder)
         let request = builder
@@ -185,11 +185,20 @@ public class TurmsDriver {
         isConnected = true
     }
 
-    private func onWebsocketClose(_ turmsStatusCode: Int? = nil, _ webSocketCode: UInt16 = 1000) {
+    private func onWebsocketClose(_ statusCode: Int? = nil, _ reason: String? = nil) {
         let wasLogged = isConnected
         isConnected = false
         heartbeatTimer?.invalidate()
-        onClose?(wasLogged, TurmsStatusCode(rawValue: turmsStatusCode ?? -1)!, nil, webSocketCode)
+        let status: TurmsCloseStatus = statusCode != nil ? TurmsCloseStatus(rawValue: statusCode!) ?? .websocketError : .websocketError
+        if status == .redirect {
+            reconnect(reason!)
+        } else {
+            if status == .websocketError {
+                onClose?(wasLogged, status, "\(statusCode!)", nil)
+            } else {
+                onClose?(wasLogged, status, reason, nil)
+            }
+        }
     }
 
     private func onWebsocketError(_ error: HTTPUpgradeError) {
@@ -198,17 +207,24 @@ public class TurmsDriver {
         heartbeatTimer?.invalidate()
         if !wasLogged, userId != nil, password != nil {
             switch error {
-                case .notAnUpgrade(let code):
+                case let .notAnUpgrade(code, headers):
                     if code == 307 {
-                        connect(userId: userId!, password: password!, url: url)
+                        let address = headers["reason"]!
+                        reconnect(address)
                     }
                     fallthrough
                 default:
-                    onClose?(wasLogged, .failed, error, nil)
+                    onClose?(wasLogged, .illegalRequest, nil, nil)
             }
             connect(userId: userId!, password: password!, url: url)
         } else {
-            onClose?(wasLogged, .failed, error, nil)
+            onClose?(wasLogged, .illegalRequest, nil, nil)
         }
+    }
+
+    private func reconnect(_ address: String) {
+        let isSecure = url.starts(with: "wss://")
+        url = "\(isSecure ? "wss://" : "ws://")\(address)"
+        connect(userId: userId!, password: password!, url: url)
     }
 }
