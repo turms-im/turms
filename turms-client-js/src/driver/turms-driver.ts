@@ -8,12 +8,10 @@ import {im} from "../model/proto-bundle";
 // @ts-ignore
 import fetch from "unfetch";
 import querystring from "querystring";
-import TurmsClient from "../turms-client";
 import NotificationUtil from "../util/notification-util";
 import {ParsedNotification} from "../model/parsed-notification";
 import TurmsNotification = im.turms.proto.TurmsNotification;
 import TurmsRequest = im.turms.proto.TurmsRequest;
-import UserLocation = im.turms.proto.UserLocation;
 import UserStatus = im.turms.proto.UserStatus;
 import DeviceType = im.turms.proto.DeviceType;
 
@@ -34,7 +32,6 @@ export default class TurmsDriver {
     private _onNotificationListeners: ((notification: ParsedNotification) => void)[] = [];
     private _onClose?: (wasConnected: boolean, error?: any, status?: TurmsError) => void;
 
-    private _turmsClient: TurmsClient;
     private _url = 'ws://localhost:9510';
     private _httpUrl = 'http://localhost:9510';
     private _connectionTimeout = 10 * 1000;
@@ -55,15 +52,13 @@ export default class TurmsDriver {
     private _sessionId?: string;
     private _address?: string;
 
-    constructor(client: TurmsClient,
-                url?: string,
+    constructor(url?: string,
                 connectionTimeout?: number,
                 requestTimeout?: number,
                 minRequestsInterval?: number,
                 httpUrl?: string,
                 queryReasonWhenLoginFailed = true,
                 queryReasonWhenDisconnected = true) {
-        this._turmsClient = client;
         if (url) this._url = url;
         if (connectionTimeout) this._connectionTimeout = connectionTimeout;
         if (requestTimeout) this._requestTimeout = requestTimeout;
@@ -101,7 +96,8 @@ export default class TurmsDriver {
     disconnect(): Promise<void> {
         if (this._websocket.isOpened || this._websocket.isOpening) {
             return this._websocket.close()
-                .then(() => {});
+                .then(() => {
+                });
         } else {
             return Promise.reject();
         }
@@ -332,7 +328,7 @@ export default class TurmsDriver {
             return fetch(`${this._httpUrl}/reasons/login-failed?${params}`)
                 .then(response => {
                     if (response.status === 307) {
-                        return this._turmsClient.userService.relogin();
+                        return this.reconnect();
                     } else {
                         return response.text()
                             .then(text => {
@@ -344,5 +340,14 @@ export default class TurmsDriver {
             this._onClose(wasLogged, error);
         }
         return Promise.resolve();
+    }
+
+    reconnect() {
+        if (!this._userId || !this._password) {
+            return Promise.reject();
+        } else {
+            return this.connect(this._userId, this._password, this._location,
+                this._userOnlineStatus, this._deviceType);
+        }
     }
 }

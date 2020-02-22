@@ -14,9 +14,9 @@ beforeAll(() => {
     turmsClient = new TurmsClient(Constants.WS_URL);
 });
 
-afterAll(() => {
+afterAll(async () => {
     if (turmsClient.driver.connected()) {
-        turmsClient.driver.disconnect();
+        await turmsClient.driver.disconnect();
     }
 });
 

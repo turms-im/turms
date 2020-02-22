@@ -21,9 +21,9 @@ beforeAll(async () => {
     await turmsClient.driver.connect('1', "123", null, UserStatus.BUSY, DeviceType.BROWSER);
 });
 
-afterAll(() => {
+afterAll(async () => {
     if (turmsClient.driver.connected()) {
-        turmsClient.driver.disconnect();
+        await turmsClient.driver.disconnect();
     }
 });
 
@@ -92,7 +92,7 @@ describe('Update', () => {
 });
 
 describe('Query', () => {
-    it('queryGroup_shouldGroupWithVersion', async () => {
+    it('queryGroup_shouldReturnGroupWithVersion', async () => {
         const groupWithVersion = await turmsClient.groupService.queryGroup(groupId);
         expect(groupWithVersion.group.id).toEqual(groupId);
     });

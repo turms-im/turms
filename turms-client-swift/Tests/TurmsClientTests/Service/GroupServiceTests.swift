@@ -51,7 +51,7 @@ class GroupServiceTests: XCTestCase {
         TestUtil.assertCompleted("unmuteGroupMember_shouldSucceed", turmsClient.groupService.unmuteGroupMember(groupId: groupId!, memberId: groupMemberId))
 
         // Query
-        TestUtil.assertCompleted("queryGroup_shouldGroupWithVersion", turmsClient.groupService.queryGroup(groupId: groupId!).done {
+        TestUtil.assertCompleted("queryGroup_shouldReturnGroupWithVersion", turmsClient.groupService.queryGroup(groupId: groupId!).done {
             XCTAssertEqual(groupId!, $0.group.id.value)
         })
         TestUtil.assertCompleted("queryJoinedGroupsIds_shouldEqualNewGroupId", turmsClient.groupService.queryJoinedGroupsIds().done {

@@ -1,5 +1,4 @@
 import { im } from "../model/proto-bundle";
-import TurmsClient from "../turms-client";
 import { ParsedNotification } from "../model/parsed-notification";
 import TurmsNotification = im.turms.proto.TurmsNotification;
 import UserStatus = im.turms.proto.UserStatus;
@@ -10,7 +9,6 @@ export default class TurmsDriver {
     private _heartbeatTimer?;
     private _onNotificationListeners;
     private _onClose?;
-    private _turmsClient;
     private _url;
     private _httpUrl;
     private _connectionTimeout;
@@ -28,7 +26,7 @@ export default class TurmsDriver {
     private _requestId;
     private _sessionId?;
     private _address?;
-    constructor(client: TurmsClient, url?: string, connectionTimeout?: number, requestTimeout?: number, minRequestsInterval?: number, httpUrl?: string, queryReasonWhenLoginFailed?: boolean, queryReasonWhenDisconnected?: boolean);
+    constructor(url?: string, connectionTimeout?: number, requestTimeout?: number, minRequestsInterval?: number, httpUrl?: string, queryReasonWhenLoginFailed?: boolean, queryReasonWhenDisconnected?: boolean);
     set onClose(value: any);
     get onNotificationListeners(): ((notification: ParsedNotification) => void)[];
     sendHeartbeat(): Promise<void>;
@@ -44,4 +42,5 @@ export default class TurmsDriver {
     private _onWebsocketOpen;
     private _onWebsocketClose;
     private _onWebsocketError;
+    reconnect(): Promise<void>;
 }

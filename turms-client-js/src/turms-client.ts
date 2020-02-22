@@ -21,7 +21,6 @@ class TurmsClient {
         queryReasonWhenLoginFailed?: boolean,
         queryReasonWhenDisconnected?: boolean) {
         this._driver = new TurmsDriver(
-            this,
             url,
             connectionTimeout,
             requestTimeout,

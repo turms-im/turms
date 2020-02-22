@@ -71,12 +71,7 @@ export default class UserService {
     }
 
     relogin(): Promise<void> {
-        if (!this._userId || !this._password) {
-            return Promise.reject();
-        } else {
-            return this.login(this._userId, this._password, this._location,
-                this._userOnlineStatus, this._deviceType);
-        }
+        return this._turmsClient.driver.reconnect();
     }
 
     logout(): Promise<void> {

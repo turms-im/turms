@@ -38,13 +38,13 @@ class MessageServiceTests: XCTestCase {
         TestUtil.assertCompleted("updateTypingStatus_shouldSucceed", senderClient.messageService.updateTypingStatusRequest(chatType: .private, toId: privateMessageId!))
 
         // Query
-        TestUtil.assertCompleted("queryMessages_shouldGroupWithVersion", recipientClient.messageService.queryMessages(chatType: .private, fromId: MessageServiceTests.SENDER_ID, size: 10).done {
+        TestUtil.assertCompleted("queryMessages_shouldReturnNotEmptyMessages", recipientClient.messageService.queryMessages(chatType: .private, fromId: MessageServiceTests.SENDER_ID, size: 10).done {
             XCTAssertFalse($0.isEmpty)
         })
-        TestUtil.assertCompleted("queryPendingMessagesWithTotal_shouldGroupWithVersion", senderClient.messageService.queryPendingMessagesWithTotal().done {
+        TestUtil.assertCompleted("queryPendingMessagesWithTotal_shouldReturnNotEmptyPendingMessagesWithTotal", senderClient.messageService.queryPendingMessagesWithTotal().done {
             XCTAssertFalse($0.isEmpty)
         })
-        TestUtil.assertCompleted("queryMessageStatus_shouldGroupWithVersion", senderClient.messageService.queryMessageStatus(groupMessageId!).done {
+        TestUtil.assertCompleted("queryMessageStatus_shouldReturnNotEmptyMessageStatus", senderClient.messageService.queryMessageStatus(groupMessageId!).done {
             XCTAssertFalse($0.isEmpty)
         })
 
