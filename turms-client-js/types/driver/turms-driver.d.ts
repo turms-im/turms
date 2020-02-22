@@ -16,7 +16,6 @@ export default class TurmsDriver {
     private _minRequestsInterval;
     private _requestsMap;
     private _lastRequestDate;
-    private _isLastRequestHeartbeat;
     private _queryReasonWhenLoginFailed;
     private _queryReasonWhenDisconnected;
     private _userId;
@@ -29,11 +28,10 @@ export default class TurmsDriver {
     get onNotificationListeners(): ((notification: ParsedNotification) => void)[];
     sendHeartbeat(): Promise<void>;
     connected(): boolean;
-    disconnect(): Promise<CloseEvent>;
+    disconnect(): Promise<void>;
     connect(userId: string, password: string, requestId: number, url?: string, connectionTimeout?: number, requestTimeout?: number): Promise<void>;
     resetHeartBeatTimer(): void;
     send(message: im.turms.proto.ITurmsRequest): Promise<TurmsNotification>;
-    private _setLastRequestRecord;
     private _generateRandomId;
     private _onWebsocketOpen;
     private _onWebsocketClose;

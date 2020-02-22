@@ -32,7 +32,7 @@ export default class GroupService {
                 muteEndDate: RequestUtil.wrapTimeIfNotNull(muteEndDate),
                 groupTypeId: RequestUtil.wrapValueIfNotNull(groupTypeId)
             }
-        }).then(notification => notification.data.ids.values[0]);
+        }).then(n => NotificationUtil.getFirstVal(n, 'ids'));
     }
 
     deleteGroup(groupId: string): Promise<void> {
@@ -41,7 +41,8 @@ export default class GroupService {
             deleteGroupRequest: {
                 groupId
             }
-        }).then();
+        }).then(_ => {
+        });
     }
 
     updateGroup(
@@ -73,7 +74,8 @@ export default class GroupService {
                 successorId: RequestUtil.wrapValueIfNotNull(successorId),
                 quitAfterTransfer: RequestUtil.wrapValueIfNotNull(quitAfterTransfer)
             }
-        }).then();
+        }).then(_ => {
+        });
     }
 
     transferOwnership(groupId: string, successorId: string, quitAfterTransfer = false): Promise<void> {
@@ -98,10 +100,10 @@ export default class GroupService {
                 groupId,
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
-        }).then(notification => {
+        }).then(n => {
             return {
-                group: NotificationUtil.transform(notification.data.groupsWithVersion.groups[0]),
-                lastUpdatedDate: NotificationUtil.transformDate(notification.data.groupsWithVersion.lastUpdatedDate)
+                group: NotificationUtil.getAndTransform(n, 'groupsWithVersion.groups.0'),
+                lastUpdatedDate: NotificationUtil.getVerDate(n, 'groupsWithVersion')
             };
         });
     }
@@ -111,7 +113,7 @@ export default class GroupService {
             queryJoinedGroupsIdsRequest: {
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
-        }).then(notification => NotificationUtil.getIdsWithVersion(notification));
+        }).then(n => NotificationUtil.getIdsWithVer(n));
     }
 
     queryJoinedGroupsInfos(lastUpdatedDate?: Date): Promise<ParsedModel.GroupsWithVersion> {
@@ -120,7 +122,7 @@ export default class GroupService {
             queryJoinedGroupsInfosRequest: {
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
-        }).then(notification => NotificationUtil.transform(notification.data.groupsWithVersion));
+        }).then(n => NotificationUtil.getAndTransform(n, 'groupsWithVersion'));
     }
 
     addGroupJoinQuestion(groupId: string, question: string, answers: string[], score: number): Promise<string> {
@@ -132,7 +134,7 @@ export default class GroupService {
                 answers,
                 score
             }
-        }).then(notification => notification.data.ids.values[0]);
+        }).then(n => NotificationUtil.getFirstVal(n, 'ids'));
     }
 
     deleteGroupJoinQuestion(questionId: string): Promise<void> {
@@ -141,7 +143,8 @@ export default class GroupService {
             deleteGroupJoinQuestionRequest: {
                 questionId
             }
-        }).then();
+        }).then(_ => {
+        });
     }
 
     updateGroupJoinQuestion(questionId: string, question?: string, answers?: string[], score?: number): Promise<void> {
@@ -156,7 +159,8 @@ export default class GroupService {
                 answers: answers,
                 score: RequestUtil.wrapValueIfNotNull(score)
             }
-        }).then();
+        }).then(_ => {
+        });
     }
 
     // Group Blacklist
@@ -167,7 +171,8 @@ export default class GroupService {
                 blacklistedUserId: userId,
                 groupId
             }
-        }).then();
+        }).then(_ => {
+        });
     }
 
     unblacklistUser(groupId: string, userId: string): Promise<void> {
@@ -177,7 +182,8 @@ export default class GroupService {
                 groupId,
                 unblacklistedUserId: userId
             }
-        }).then();
+        }).then(_ => {
+        });
     }
 
     queryBlacklistedUsersIds(
@@ -189,7 +195,7 @@ export default class GroupService {
                 groupId,
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
-        }).then(notification => NotificationUtil.getIdsWithVersion(notification));
+        }).then(n => NotificationUtil.getIdsWithVer(n));
     }
 
     queryBlacklistedUsersInfos(
@@ -202,7 +208,7 @@ export default class GroupService {
                 groupId,
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
-        }).then(notification => NotificationUtil.transform(notification.data.usersInfosWithVersion));
+        }).then(n => NotificationUtil.getAndTransform(n, 'usersInfosWithVersion'));
     }
 
     // Group Enrollment
@@ -214,7 +220,7 @@ export default class GroupService {
                 inviteeId,
                 content
             }
-        }).then(notification => notification.data.ids.values[0]);
+        }).then(n => NotificationUtil.getFirstVal(n, 'ids'));
     }
 
     deleteInvitation(invitationId: string): Promise<void> {
@@ -223,7 +229,8 @@ export default class GroupService {
             deleteGroupInvitationRequest: {
                 invitationId
             }
-        }).then();
+        }).then(_ => {
+        });
     }
 
     queryInvitations(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.GroupInvitationsWithVersion> {
@@ -234,7 +241,7 @@ export default class GroupService {
                 groupId,
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
-        }).then(notification => NotificationUtil.transform(notification.data.groupInvitationsWithVersion));
+        }).then(n => NotificationUtil.getAndTransform(n, 'groupInvitationsWithVersion'));
     }
 
     createJoinRequest(groupId: string, content: string): Promise<string> {
@@ -244,7 +251,7 @@ export default class GroupService {
                 groupId,
                 content
             }
-        }).then(notification => notification.data.ids.values[0]);
+        }).then(n => NotificationUtil.getFirstVal(n, 'ids'));
     }
 
     deleteJoinRequest(requestId: string): Promise<void> {
@@ -253,7 +260,8 @@ export default class GroupService {
             deleteGroupJoinRequestRequest: {
                 requestId
             }
-        }).then();
+        }).then(_ => {
+        });
     }
 
     queryJoinRequests(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.GroupJoinRequestsWithVersion> {
@@ -264,7 +272,7 @@ export default class GroupService {
                 groupId,
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
-        }).then(notification => NotificationUtil.transform(notification.data.groupJoinRequestsWithVersion));
+        }).then(n => NotificationUtil.getAndTransform(n, 'groupJoinRequestsWithVersion'));
     }
 
     /**
@@ -282,7 +290,7 @@ export default class GroupService {
                 withAnswers,
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
-        }).then(notification => NotificationUtil.transform(notification.data.groupJoinQuestionsWithVersion));
+        }).then(n => NotificationUtil.getAndTransform(n, 'groupJoinQuestionsWithVersion'));
     }
 
     answerGroupQuestions(questionIdsAndAnswers: { [k: string]: string }): Promise<boolean> {
@@ -291,7 +299,7 @@ export default class GroupService {
             checkGroupJoinQuestionsAnswersRequest: {
                 questionIdAndAnswer: questionIdsAndAnswers
             }
-        }).then(notification => notification.data.success.value);
+        }).then(n => NotificationUtil.getVal(n, 'success'));
     }
 
     // Group Member
@@ -313,7 +321,8 @@ export default class GroupService {
                 role: role,
                 muteEndDate: RequestUtil.wrapTimeIfNotNull(muteEndDate)
             }
-        }).then();
+        }).then(_ => {
+        });
     }
 
     quitGroup(groupId: string, successorId?: string, quitAfterTransfer?: boolean): Promise<void> {
@@ -325,7 +334,8 @@ export default class GroupService {
                 successorId: RequestUtil.wrapValueIfNotNull(successorId),
                 quitAfterTransfer: RequestUtil.wrapValueIfNotNull(quitAfterTransfer)
             }
-        }).then();
+        }).then(_ => {
+        });
     }
 
     removeGroupMember(groupId: string, memberId: string): Promise<void> {
@@ -335,7 +345,8 @@ export default class GroupService {
                 groupId,
                 groupMemberId: memberId
             }
-        }).then();
+        }).then(_ => {
+        });
     }
 
     updateGroupMemberInfo(
@@ -359,7 +370,8 @@ export default class GroupService {
                 role: role,
                 muteEndDate: RequestUtil.wrapTimeIfNotNull(muteEndDate)
             }
-        }).then();
+        }).then(_ => {
+        });
     }
 
     muteGroupMember(groupId: string, memberId: string, muteEndDate: Date): Promise<void> {
@@ -380,7 +392,7 @@ export default class GroupService {
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate),
                 withStatus: RequestUtil.wrapValueIfNotNull(withStatus)
             }
-        }).then(notification => NotificationUtil.transform(notification.data.groupMembersWithVersion));
+        }).then(n => NotificationUtil.getAndTransform(n, 'groupMembersWithVersion'));
     }
 
     queryGroupMembersByMembersIds(groupId: string, membersIds: string[], withStatus = false): Promise<ParsedModel.GroupMembersWithVersion> {
@@ -392,6 +404,6 @@ export default class GroupService {
                 groupMembersIds: membersIds,
                 withStatus: RequestUtil.wrapValueIfNotNull(withStatus)
             }
-        }).then(notification => NotificationUtil.transform(notification.data.groupMembersWithVersion));
+        }).then(n => NotificationUtil.getAndTransform(n, 'groupMembersWithVersion'));
     }
 }

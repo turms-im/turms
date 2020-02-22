@@ -37,7 +37,13 @@ enum Code {
     GUESTS_HAVE_BEEN_MUTED,
 
     SERVER_INTERNAL_ERROR = 5000,
-    LOGGED_DEVICES_CANNOT_OFFLINE
+    LOGGED_DEVICES_CANNOT_OFFLINE,
+
+    CLIENT_USER_ID_AND_PASSWORD_MUST_NOT_NULL = 6000,
+    CLIENT_SESSION_HAS_BEEN_CLOSED,
+    CLIENT_SESSION_ALREADY_ESTABLISHED,
+    CLIENT_REQUESTS_TOO_FREQUENT
+
 }
 
 class TurmsStatusCode {
@@ -79,7 +85,11 @@ class TurmsStatusCode {
         [Code.GROUP_HAS_BEEN_MUTED]: "The group has been muted",
         [Code.MEMBER_HAS_BEEN_MUTED]: "The group member has been muted",
         [Code.GUESTS_HAVE_BEEN_MUTED]: "The guests of the group have been muted",
-        [Code.LOGGED_DEVICES_CANNOT_OFFLINE]: "Cannot set logged in devices offline"
+        [Code.LOGGED_DEVICES_CANNOT_OFFLINE]: "Cannot set logged in devices offline",
+        [Code.CLIENT_USER_ID_AND_PASSWORD_MUST_NOT_NULL]: "The user ID and password must be not null",
+        [Code.CLIENT_SESSION_HAS_BEEN_CLOSED]: "The session has been closed",
+        [Code.CLIENT_SESSION_ALREADY_ESTABLISHED]: "The session has been established",
+        [Code.CLIENT_REQUESTS_TOO_FREQUENT]: "Client requests are too frequent"
     };
     private code: number;
     private reason: string;
@@ -93,7 +103,7 @@ class TurmsStatusCode {
         if (typeof code === 'string') {
             code = parseInt(code);
         }
-        return code === Code.OK;
+        return 2000 <= code && code < 3000;
     }
 
     static isErrorCode(code: number | string): boolean {

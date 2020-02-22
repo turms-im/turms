@@ -82,7 +82,7 @@ export default class MessageService {
                 records: records,
                 burnAfter: RequestUtil.wrapValueIfNotNull(burnAfter)
             }
-        }).then(notification => notification.data.ids.values[0]);
+        }).then(n => NotificationUtil.getFirstVal(n, 'ids'));
     }
 
     forwardMessage(
@@ -99,7 +99,7 @@ export default class MessageService {
                 chatType,
                 toId
             }
-        }).then(notification => notification.data.ids.values[0]);
+        }).then(n => NotificationUtil.getFirstVal(n, 'ids'));
     }
 
     updateSentMessage(
@@ -116,7 +116,8 @@ export default class MessageService {
                 text: RequestUtil.wrapValueIfNotNull(text),
                 records
             }
-        }).then();
+        }).then(_ => {
+        });
     }
 
     queryMessages(
@@ -146,7 +147,7 @@ export default class MessageService {
                 size: RequestUtil.wrapValueIfNotNull(size),
                 deliveryStatus: deliveryStatus
             }
-        }).then(notification => NotificationUtil.getFirstArrayAndTransform(notification.data.messages));
+        }).then(n => NotificationUtil.getArrAndTransform(n, 'messages.messages'));
     }
 
     queryPendingMessagesWithTotal(size = 1): Promise<ParsedModel.MessagesWithTotal[]> {
@@ -155,7 +156,7 @@ export default class MessageService {
             queryPendingMessagesWithTotalRequest: {
                 size: RequestUtil.wrapValueIfNotNull(size)
             }
-        }).then(notification => NotificationUtil.getFirstArrayAndTransform(notification.data.messagesWithTotalList));
+        }).then(n => NotificationUtil.getArrAndTransform(n, 'messagesWithTotalList.messagesWithTotalList'));
     }
 
     queryMessageStatus(messageId: string): Promise<ParsedModel.MessageStatus[]> {
@@ -165,7 +166,7 @@ export default class MessageService {
             queryMessageStatusesRequest: {
                 messageId
             }
-        }).then(notification => NotificationUtil.transform(notification.data.messageStatuses));
+        }).then(n => NotificationUtil.getArrAndTransform(n, 'messageStatuses.messageStatuses'));
     }
 
     recallMessage(messageId: string, recallDate = new Date()): Promise<void> {
@@ -175,7 +176,8 @@ export default class MessageService {
                 messageId,
                 recallDate: RequestUtil.wrapTimeIfNotNull(recallDate)
             }
-        }).then();
+        }).then(_ => {
+        });
     }
 
     readMessage(messageId: string, readDate = new Date()): Promise<void> {
@@ -185,7 +187,8 @@ export default class MessageService {
                 messageId,
                 readDate: RequestUtil.wrapTimeIfNotNull(readDate)
             }
-        }).then();
+        }).then(_ => {
+        });
     }
 
     markMessageUnread(messageId: string): Promise<void> {
@@ -202,7 +205,8 @@ export default class MessageService {
                 chatType,
                 toId
             }
-        }).then();
+        }).then(_ => {
+        });
     }
 
     isMentionEnabled(): boolean {

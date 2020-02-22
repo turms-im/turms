@@ -13,7 +13,7 @@
   "scripts": {
     "protoc": "pbjs --no-create --no-verify --no-convert --no-delimited -t static-module -w commonjs -o ./src/model/proto-bundle.js ./src/proto/**/*.proto & pbts -o ./src/model/proto-bundle.d.ts ./src/model/proto-bundle.js",
     "webpack": "webpack --mode=production",
-    "test": "jest",
+    "test": "jest --runInBand --bail",
     "build": "npm run protoc && npm run webpack",
     "analyze": "npm run protoc && webpack --mode=production --report=true"
   },

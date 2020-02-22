@@ -32,7 +32,6 @@ export default class TurmsDriver {
     private _minRequestsInterval = 0;
     private _requestsMap = {};
     private _lastRequestDate = new Date(0);
-    private _isLastRequestHeartbeat = false;
     private _queryReasonWhenLoginFailed = true;
     private _queryReasonWhenDisconnected = true;
     private _userId: string;
@@ -71,7 +70,7 @@ export default class TurmsDriver {
     sendHeartbeat(): Promise<void> {
         return new Promise((resolve, reject): void => {
             if (this.connected()) {
-                this._setLastRequestRecord(true, new Date());
+                this._lastRequestDate = new Date();
                 this._websocket.send(new Uint8Array(0));
                 resolve();
             } else {
@@ -84,9 +83,10 @@ export default class TurmsDriver {
         return this._websocket && this._websocket.isOpened;
     }
 
-    disconnect(): Promise<CloseEvent> {
+    disconnect(): Promise<void> {
         if (this._websocket.isOpened || this._websocket.isOpening) {
-            return this._websocket.close();
+            return this._websocket.close()
+                .then(() => {});
         } else {
             return Promise.reject();
         }
@@ -111,23 +111,25 @@ export default class TurmsDriver {
                     unpackMessage: (data: ArrayBuffer): TurmsNotification => TurmsNotification.decode(new Uint8Array(data)),
                     connectionTimeout: connectionTimeout || this._connectionTimeout,
                     timeout: requestTimeout || this._requestTimeout,
-                    extractRequestId: (notification: TurmsNotification): string | undefined => {
+                    extractRequestId: (notification: TurmsNotification): number | undefined => {
                         if (!notification.relayedRequest && notification.requestId) {
-                            return notification.requestId.value;
+                            return parseInt(notification.requestId.value);
                         }
                     }
                 });
                 this._websocket.onUnpackedMessage.addListener((notification: TurmsNotification) => {
-                    if (notification && notification.data && notification.data.session) {
+                    const isSessionInfo = notification.data && notification.data.session;
+                    if (isSessionInfo) {
                         this._sessionId = notification.data.session.sessionId;
                         this._address = notification.data.session.address;
-                    }
-                    const parsedNotification = NotificationUtil.transform(notification);
-                    for (const listener of this._onNotificationListeners) {
-                        try {
-                            listener(parsedNotification as ParsedNotification);
-                        } catch (e) {
-                            console.error(e);
+                    } else {
+                        const parsedNotification = NotificationUtil.transform(notification);
+                        for (const listener of this._onNotificationListeners) {
+                            try {
+                                listener(parsedNotification as ParsedNotification);
+                            } catch (e) {
+                                console.error(e);
+                            }
                         }
                     }
                 });
@@ -143,14 +145,18 @@ export default class TurmsDriver {
                     causedByError = true;
                     this._onWebsocketError(error)
                         .then(() => resolve())
-                        .catch((error) => reject(error));
+                        .catch(e => reject(e));
                 });
                 this._websocket.open()
                     .then(() => {
                         this._onWebsocketOpen();
                         resolve();
                     })
-                    .catch((error) => reject(error));
+                    .catch((error) => {
+                        this._onWebsocketError(error)
+                            .then(() => resolve())
+                            .catch(e => reject(e))
+                    });
             }
         });
     }
@@ -162,42 +168,32 @@ export default class TurmsDriver {
     }
 
     send(message: im.turms.proto.ITurmsRequest): Promise<TurmsNotification> {
-        if (this.connected()) {
-            const now = new Date();
-            if (!this._minRequestsInterval || now.getTime() - this._lastRequestDate.getTime() > this._minRequestsInterval) {
-                this._setLastRequestRecord(false, now);
-                const requestId = this._generateRandomId();
-                message.requestId = {value: '' + requestId};
-                const data = TurmsRequest.encode(message).finish();
-                this.resetHeartBeatTimer();
-                return this._websocket.sendRequest(data, {
-                    requestId: requestId
-                }).then((notification: TurmsNotification) => {
-                    if (notification.code && TurmsStatusCode.isErrorCode(notification.code.value)) {
-                        throw TurmsError.fromNotification(notification);
-                    } else {
-                        return notification;
-                    }
-                });
-            } else if (this._isLastRequestHeartbeat) {
-                return new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                        this.send(message)
-                            .then(response => resolve(response))
-                            .catch(error => reject(error));
-                    }, this._minRequestsInterval);
-                })
+        return new Promise((resolve, reject) => {
+            if (this.connected()) {
+                const now = new Date();
+                if (!this._minRequestsInterval || now.getTime() - this._lastRequestDate.getTime() > this._minRequestsInterval) {
+                    this._lastRequestDate = now;
+                    const requestId = this._generateRandomId();
+                    message.requestId = {value: '' + requestId};
+                    const data = TurmsRequest.encode(message).finish();
+                    this._requestsMap[requestId] = resolve;
+                    this.resetHeartBeatTimer();
+                    return this._websocket.sendRequest(data, {
+                        requestId: requestId
+                    }).then((notification: TurmsNotification) => {
+                        if (notification.code && TurmsStatusCode.isSuccessCode(notification.code.value)) {
+                            resolve(notification);
+                        } else {
+                            reject(TurmsError.fromNotification(notification));
+                        }
+                    });
+                } else {
+                    reject(TurmsError.fromCode(TurmsStatusCode.CLIENT_REQUESTS_TOO_FREQUENT));
+                }
             } else {
-                return Promise.reject("Request is too frequent");
+                reject(TurmsError.fromCode(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED));
             }
-        } else {
-            return Promise.reject("The WebSocket is closed");
-        }
-    }
-
-    private _setLastRequestRecord(isLastRequestHeartbeat: boolean, lastRequestDate: Date) {
-        this._isLastRequestHeartbeat = isLastRequestHeartbeat;
-        this._lastRequestDate = lastRequestDate;
+        });
     }
 
     private _generateRandomId(): number {

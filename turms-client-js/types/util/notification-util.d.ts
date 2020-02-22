@@ -4,7 +4,14 @@ import TurmsNotification = im.turms.proto.TurmsNotification;
 import IInt64Value = google.protobuf.IInt64Value;
 export default class NotificationUtil {
     static transform(data?: object | number | string, parentKey?: string): object | number | string | undefined;
-    static getFirstArrayAndTransform(data?: object): Array<any> | undefined;
+    static getFirstVal(notification: TurmsNotification, path: string): any;
+    static getVal(notification: TurmsNotification, path: string): any;
+    static getAndTransform(notification: TurmsNotification, path: string): any;
+    static getArrAndTransform(notification: TurmsNotification, path: string): any;
+    static get(notification: TurmsNotification, path: string): any;
+    static getArr(notification: TurmsNotification, path: string): any[];
+    private static _get;
     static transformDate(date?: IInt64Value): Date | undefined;
-    static getIdsWithVersion(notification: TurmsNotification): ParsedModel.IdsWithVersion;
+    static getIdsWithVer(n: TurmsNotification): ParsedModel.IdsWithVersion;
+    static getVerDate(n: TurmsNotification, path: string): Date | undefined;
 }

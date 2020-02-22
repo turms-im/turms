@@ -6,12 +6,8 @@ export default class RequestUtil {
     }
 
     static wrapTimeIfNotNull(value: Date): any | undefined {
-        return value ? {value: value.getTime()} : undefined;
+        return value ? {value: '' + value.getTime()} : undefined;
     }
-
-    // static getDateIfNotNull(value: Int64Value): Date | undefined {
-    //     return value && value.value ? new Date(value.value) : undefined;
-    // }
 
     private static isFalsy(value: any): boolean {
         return typeof value === 'undefined' || value === null || value === [];

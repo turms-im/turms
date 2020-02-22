@@ -24,7 +24,7 @@ export default class UserService {
     static getUserLocationFromBrowser(): Promise<Position>;
     login(userId: string, password: string, location?: string | Position, userOnlineStatus?: UserStatus, deviceType?: DeviceType): Promise<void>;
     relogin(): Promise<void>;
-    logout(): Promise<CloseEvent>;
+    logout(): Promise<void>;
     updateUserOnlineStatus(onlineStatus: string | UserStatus): Promise<void>;
     updatePassword(password: string): Promise<void>;
     updateProfile(name?: string, intro?: string, profilePictureUrl?: string, profileAccessStrategy?: string | ProfileAccessStrategy): Promise<void>;

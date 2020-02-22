@@ -87,9 +87,9 @@ export default class UserService {
                 UserService._clearCookies();
                 return Promise.resolve();
             })
-            .catch((error) => {
+            .catch(error => {
                 UserService._clearCookies();
-                return Promise.reject(error);
+                return Promise.reject(`Failed to login due to 1. password mismatch; 2. the server doesn't exist or is unavailable`);
             });
     }
 
@@ -102,7 +102,7 @@ export default class UserService {
         }
     }
 
-    logout(): Promise<CloseEvent> {
+    logout(): Promise<void> {
         return this._turmsClient.driver.disconnect();
     }
 
@@ -118,7 +118,8 @@ export default class UserService {
             updateUserOnlineStatusRequest: {
                 userStatus: onlineStatus
             }
-        }).then();
+        }).then(_ => {
+        });
     }
 
     updatePassword(password: string): Promise<void> {
@@ -127,7 +128,8 @@ export default class UserService {
             updateUserRequest: {
                 password: RequestUtil.wrapValueIfNotNull(password)
             }
-        }).then();
+        }).then(_ => {
+        });
     }
 
     updateProfile(
@@ -148,7 +150,8 @@ export default class UserService {
                 profilePictureUrl: RequestUtil.wrapValueIfNotNull(profilePictureUrl),
                 profileAccessStrategy: profileAccessStrategy
             }
-        }).then();
+        }).then(_ => {
+        });
     }
 
     queryUserGroupInvitations(lastUpdatedDate?: Date): Promise<ParsedModel.GroupInvitationsWithVersion> {
@@ -157,7 +160,7 @@ export default class UserService {
             queryUserGroupInvitationsRequest: {
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
-        }).then(notification => NotificationUtil.transform(notification.data.groupInvitationsWithVersion));
+        }).then(n => NotificationUtil.getAndTransform(n, 'groupInvitationsWithVersion'));
     }
 
     queryUserProfile(userId: string, lastUpdatedDate?: Date): Promise<ParsedModel.UserInfoWithVersion> {
@@ -168,10 +171,10 @@ export default class UserService {
                 userId: userId,
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
-        }).then(notification => {
+        }).then(n => {
             return {
-                userInfo: NotificationUtil.transform(notification.data.usersInfosWithVersion.userInfos[0]),
-                lastUpdatedDate: NotificationUtil.transformDate(notification.data.usersInfosWithVersion.lastUpdatedDate)
+                userInfo: NotificationUtil.getAndTransform(n, 'usersInfosWithVersion.userInfos.0'),
+                lastUpdatedDate: NotificationUtil.transformDate(n.data.usersInfosWithVersion.lastUpdatedDate)
             }
         });
     }
@@ -185,7 +188,7 @@ export default class UserService {
                 distance: RequestUtil.wrapValueIfNotNull(distance),
                 maxNumber: RequestUtil.wrapValueIfNotNull(maxNumber)
             }
-        }).then(notification => notification.data.ids.values);
+        }).then(n => NotificationUtil.getArr(n, 'ids.values'));
     }
 
     queryUsersInfosNearby(latitude: number, longitude: number, distance?: number, maxNumber?: number): Promise<ParsedModel.UserInfo[]> {
@@ -198,7 +201,7 @@ export default class UserService {
                 distance: RequestUtil.wrapValueIfNotNull(distance),
                 maxNumber: RequestUtil.wrapValueIfNotNull(maxNumber)
             }
-        }).then(notification => NotificationUtil.getFirstArrayAndTransform(notification.data.usersInfosWithVersion.userInfos));
+        }).then(n => NotificationUtil.getArrAndTransform(n, 'usersInfosWithVersion.userInfos'));
     }
 
     queryUsersOnlineStatusRequest(usersIds: string[]): Promise<ParsedModel.UserStatusDetail[]> {
@@ -208,7 +211,7 @@ export default class UserService {
             queryUsersOnlineStatusRequest: {
                 usersIds
             }
-        }).then(notification => NotificationUtil.getFirstArrayAndTransform(notification.data.usersOnlineStatuses));
+        }).then(n => NotificationUtil.getArrAndTransform(n, 'usersOnlineStatuses.userStatuses'));
     }
 
     // Relationship
@@ -226,7 +229,7 @@ export default class UserService {
                 groupIndex: RequestUtil.wrapValueIfNotNull(groupIndex),
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
-        }).then(notification => NotificationUtil.transform(notification.data.userRelationshipsWithVersion));
+        }).then(n => NotificationUtil.getAndTransform(n, 'userRelationshipsWithVersion'));
     }
 
     queryRelatedUsersIds(
@@ -239,7 +242,7 @@ export default class UserService {
                 groupIndex: RequestUtil.wrapValueIfNotNull(groupIndex),
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
-        }).then(notification => NotificationUtil.getIdsWithVersion(notification));
+        }).then(n => NotificationUtil.getIdsWithVer(n));
     }
 
     queryFriends(groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion> {
@@ -258,7 +261,8 @@ export default class UserService {
                 isBlocked: isBlocked,
                 groupIndex: RequestUtil.wrapValueIfNotNull(groupIndex)
             }
-        }).then();
+        }).then(_ => {
+        });
     }
 
     createFriendRelationship(userId: string, groupIndex?: number): Promise<void> {
@@ -277,7 +281,8 @@ export default class UserService {
                 groupIndex: RequestUtil.wrapValueIfNotNull(deleteGroupIndex),
                 targetGroupIndex: RequestUtil.wrapValueIfNotNull(targetGroupIndex)
             }
-        }).then();
+        }).then(_ => {
+        });
     }
 
     updateRelationship(relatedUserId: string, isBlocked?: boolean, groupIndex?: number): Promise<void> {
@@ -291,7 +296,8 @@ export default class UserService {
                 blocked: RequestUtil.wrapValueIfNotNull(isBlocked),
                 newGroupIndex: RequestUtil.wrapValueIfNotNull(groupIndex)
             }
-        }).then();
+        }).then(_ => {
+        });
     }
 
     sendFriendRequest(recipientId: string, content: string): Promise<string> {
@@ -301,7 +307,7 @@ export default class UserService {
                 recipientId,
                 content
             }
-        }).then(notification => notification.data.ids.values[0]);
+        }).then(n => NotificationUtil.getFirstVal(n, 'ids'));
     }
 
     replyFriendRequest(requestId: string, responseAction: string | ResponseAction, reason?: string): Promise<void> {
@@ -315,7 +321,8 @@ export default class UserService {
                 responseAction: responseAction,
                 reason: RequestUtil.wrapValueIfNotNull(reason)
             }
-        }).then();
+        }).then(_ => {
+        });
     }
 
     queryFriendRequests(lastUpdatedDate?: Date): Promise<ParsedModel.UserFriendRequestsWithVersion> {
@@ -324,7 +331,7 @@ export default class UserService {
             queryFriendRequestsRequest: {
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
-        }).then(notification => NotificationUtil.transform(notification.data.userFriendRequestsWithVersion));
+        }).then(n => NotificationUtil.getAndTransform(n, 'userFriendRequestsWithVersion'));
     }
 
     createRelationshipGroup(name: string): Promise<string> {
@@ -333,7 +340,7 @@ export default class UserService {
             createRelationshipGroupRequest: {
                 name
             }
-        }).then(notification => notification.data.ids.values[0]);
+        }).then(n => NotificationUtil.getFirstVal(n, 'ids'));
     }
 
     deleteRelationshipGroups(groupIndex: number, targetGroupIndex?: number): Promise<void> {
@@ -343,7 +350,8 @@ export default class UserService {
                 groupIndex,
                 targetGroupIndex: RequestUtil.wrapValueIfNotNull(targetGroupIndex)
             }
-        }).then();
+        }).then(_ => {
+        });
     }
 
     updateRelationshipGroup(groupIndex: number, newName: string): Promise<void> {
@@ -353,7 +361,8 @@ export default class UserService {
                 groupIndex,
                 newName
             }
-        }).then();
+        }).then(_ => {
+        });
     }
 
     queryRelationshipGroups(lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipGroupsWithVersion> {
@@ -362,7 +371,7 @@ export default class UserService {
             queryRelationshipGroupsRequest: {
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
-        }).then(notification => NotificationUtil.transform(notification.data.userRelationshipGroupsWithVersion));
+        }).then(n => NotificationUtil.getAndTransform(n, 'userRelationshipGroupsWithVersion'));
     }
 
     moveRelatedUserToGroup(relatedUserId: string, groupIndex: number): Promise<void> {
@@ -372,7 +381,8 @@ export default class UserService {
                 relatedUserId,
                 newGroupIndex: RequestUtil.wrapValueIfNotNull(groupIndex)
             }
-        }).then();
+        }).then(_ => {
+        });
     }
 
     /**
@@ -389,7 +399,8 @@ export default class UserService {
                 name: RequestUtil.wrapValueIfNotNull(name),
                 address: RequestUtil.wrapValueIfNotNull(address)
             }
-        }).then();
+        }).then(_ => {
+        });
     }
 
     private static _clearCookies(): void {

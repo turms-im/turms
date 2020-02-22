@@ -5,7 +5,6 @@ import MessageService from "./service/message-service";
 import NotificationService from "./service/notification-service";
 import InputFileReader from "./util/input-file-reader";
 
-//TODO: Support load .proto files dynamically.
 class TurmsClient {
     private readonly _driver: TurmsDriver;
     private readonly _userService: UserService;
