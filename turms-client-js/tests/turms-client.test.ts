@@ -3,7 +3,7 @@ import TurmsClient from "../src/turms-client";
 
 describe('TurmsClient class', () => {
     it('constructor_shouldReturnNotNullClientInstance', () => {
-        const turmsClient = new TurmsClient(Constants.WS_URL, null, null);
+        const turmsClient = new TurmsClient(Constants.WS_URL);
         expect(turmsClient).toBeTruthy();
     });
 });

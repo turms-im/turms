@@ -13,6 +13,16 @@ import NotificationUtil from "../util/notification-util";
 import {ParsedNotification} from "../model/parsed-notification";
 import TurmsNotification = im.turms.proto.TurmsNotification;
 import TurmsRequest = im.turms.proto.TurmsRequest;
+import UserLocation = im.turms.proto.UserLocation;
+import UserStatus = im.turms.proto.UserStatus;
+import DeviceType = im.turms.proto.DeviceType;
+
+const COOKIE_REQUEST_ID = 'rid';
+const COOKIE_USER_ID = 'uid';
+const COOKIE_PASSWORD = 'pwd';
+const COOKIE_USER_ONLINE_STATUS = 'us';
+const COOKIE_DEVICE_TYPE = 'dt';
+const COOKIE_LOCATION = 'loc';
 
 const HEARTBEAT_INTERVAL = 20 * 1000;
 export default class TurmsDriver {
@@ -34,8 +44,13 @@ export default class TurmsDriver {
     private _lastRequestDate = new Date(0);
     private _queryReasonWhenLoginFailed = true;
     private _queryReasonWhenDisconnected = true;
+
     private _userId: string;
     private _password: string;
+    private _location: string;
+    private _userOnlineStatus: UserStatus;
+    private _deviceType: DeviceType;
+
     private _requestId: number;
     private _sessionId?: string;
     private _address?: string;
@@ -92,15 +107,24 @@ export default class TurmsDriver {
         }
     }
 
-    connect(userId: string, password: string, requestId: number, url?: string, connectionTimeout?: number, requestTimeout?: number): Promise<void> {
+    private _connect(
+        userId: string,
+        password: string,
+        location?: string,
+        userOnlineStatus = UserStatus.AVAILABLE,
+        deviceType = DeviceType.UNKNOWN): Promise<void> {
         return new Promise((resolve, reject) => {
             if (this.connected()) {
                 reject(TurmsError.CLIENT_ALREADY_CONNECTED);
             } else {
+                this._requestId = this._generateRandomId();
                 this._userId = userId;
                 this._password = password;
-                this._requestId = requestId;
-                this._websocket = new WebSocketAsPromised(url || this._url, {
+                this._location = location;
+                this._userOnlineStatus = userOnlineStatus;
+                this._deviceType = deviceType;
+                this.fillLoginInfo(this._requestId, userId, password, userOnlineStatus, deviceType, location);
+                this._websocket = new WebSocketAsPromised(this._url, {
                     createWebSocket: (serverUrl): WebSocket => {
                         const ws = new WebSocket(serverUrl);
                         ws.binaryType = "arraybuffer";
@@ -109,8 +133,8 @@ export default class TurmsDriver {
                     attachRequestId: (data: Uint8Array): Uint8Array => data,
                     packMessage: (data: Uint8Array): Uint8Array => data,
                     unpackMessage: (data: ArrayBuffer): TurmsNotification => TurmsNotification.decode(new Uint8Array(data)),
-                    connectionTimeout: connectionTimeout || this._connectionTimeout,
-                    timeout: requestTimeout || this._requestTimeout,
+                    connectionTimeout: this._connectionTimeout,
+                    timeout: this._requestTimeout,
                     extractRequestId: (notification: TurmsNotification): number | undefined => {
                         if (!notification.relayedRequest && notification.requestId) {
                             return parseInt(notification.requestId.value);
@@ -159,6 +183,54 @@ export default class TurmsDriver {
                     });
             }
         });
+    }
+
+    connect(
+        userId: string,
+        password: string,
+        location?: string,
+        userOnlineStatus = UserStatus.AVAILABLE,
+        deviceType = DeviceType.UNKNOWN): Promise<void> {
+        return this._connect(userId, password, location, userOnlineStatus, deviceType)
+            .then(() => {
+                this.clearLoginInfo();
+                return Promise.resolve();
+            })
+            .catch(error => {
+                this.clearLoginInfo();
+                return Promise.reject(`Failed to login due to 1. password mismatch; 2. the server doesn't exist or is unavailable`);
+            });
+    }
+
+    fillLoginInfo(
+        requestId: number,
+        userId: string,
+        password: string,
+        userOnlineStatus?: UserStatus,
+        deviceType?: DeviceType,
+        location?: string) {
+        document.cookie = `${COOKIE_REQUEST_ID}=${requestId}; path=/`;
+        document.cookie = `${COOKIE_USER_ID}=${userId}; path=/`;
+        document.cookie = `${COOKIE_PASSWORD}=${escape(password)}; path=/`;
+        if (userOnlineStatus) {
+            document.cookie = `${COOKIE_USER_ONLINE_STATUS}=${userOnlineStatus.toString()}; path=/`;
+        }
+        if (deviceType) {
+            document.cookie = `${COOKIE_DEVICE_TYPE}=${deviceType.toString()}; path=/`;
+        }
+        if (location) {
+            document.cookie = `${COOKIE_LOCATION}=${location}; path=/`;
+        }
+    }
+
+    clearLoginInfo() {
+        const now = new Date().toUTCString();
+        document.cookie = `${COOKIE_USER_ID}=;expires=${now}`;
+        document.cookie = `${COOKIE_PASSWORD}=;expires=${now}`;
+        document.cookie = `${COOKIE_USER_ONLINE_STATUS}=;expires=${now}`;
+        document.cookie = `${COOKIE_DEVICE_TYPE}=;expires=${now}`;
+        document.cookie = `${COOKIE_REQUEST_ID}=;expires=${now}`;
+        document.cookie = `${COOKIE_LOCATION}=;expires=${now}`;
     }
 
     resetHeartBeatTimer(): void {

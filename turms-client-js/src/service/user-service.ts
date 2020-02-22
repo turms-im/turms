@@ -9,13 +9,6 @@ import ProfileAccessStrategy = im.turms.proto.ProfileAccessStrategy;
 import ResponseAction = im.turms.proto.ResponseAction;
 import DeviceType = im.turms.proto.DeviceType;
 
-export const COOKIE_REQUEST_ID = 'rid';
-export const COOKIE_USER_ID = 'uid';
-export const COOKIE_PASSWORD = 'pwd';
-export const COOKIE_USER_ONLINE_STATUS = 'us';
-export const COOKIE_DEVICE_TYPE = 'dt';
-export const COOKIE_LOCATION = 'loc';
-
 export default class UserService {
     private _turmsClient: TurmsClient;
     private _userId?: string;
@@ -68,29 +61,13 @@ export default class UserService {
         this._password = password;
         this._userOnlineStatus = userOnlineStatus;
         this._deviceType = deviceType;
-        const requestId = Math.ceil(Math.random() * 9007199254740991);
-        document.cookie = `${COOKIE_USER_ID}=${userId}; path=/`;
-        document.cookie = `${COOKIE_PASSWORD}=${escape(password)}; path=/`;
-        document.cookie = `${COOKIE_USER_ONLINE_STATUS}=${userOnlineStatus.toString()}; path=/`;
-        document.cookie = `${COOKIE_DEVICE_TYPE}=${deviceType.toString()}; path=/`;
-        document.cookie = `${COOKIE_REQUEST_ID}=${requestId}; path=/`;
         if (location) {
-            if (typeof location === 'string') {
-                this._location = location;
-            } else {
-                this._location = `${location.coords.latitude}:${location.coords.longitude}`;
+            if (typeof location !== 'string') {
+                location = `${location.coords.latitude}:${location.coords.longitude}`;
             }
-            document.cookie = `${COOKIE_LOCATION}=${this._location}; path=/`;
+            this._location = location;
         }
-        return this._turmsClient.driver.connect(userId, password, requestId)
-            .then(() => {
-                UserService._clearCookies();
-                return Promise.resolve();
-            })
-            .catch(error => {
-                UserService._clearCookies();
-                return Promise.reject(`Failed to login due to 1. password mismatch; 2. the server doesn't exist or is unavailable`);
-            });
+        return this._turmsClient.driver.connect(userId, password, location as string, userOnlineStatus, deviceType);
     }
 
     relogin(): Promise<void> {
@@ -401,15 +378,5 @@ export default class UserService {
             }
         }).then(_ => {
         });
-    }
-
-    private static _clearCookies(): void {
-        const now = new Date().toUTCString();
-        document.cookie = `${COOKIE_USER_ID}=;expires=${now}`;
-        document.cookie = `${COOKIE_PASSWORD}=;expires=${now}`;
-        document.cookie = `${COOKIE_USER_ONLINE_STATUS}=;expires=${now}`;
-        document.cookie = `${COOKIE_DEVICE_TYPE}=;expires=${now}`;
-        document.cookie = `${COOKIE_REQUEST_ID}=;expires=${now}`;
-        document.cookie = `${COOKIE_LOCATION}=;expires=${now}`;
     }
 }

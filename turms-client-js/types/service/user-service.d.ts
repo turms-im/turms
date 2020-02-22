@@ -5,12 +5,6 @@ import UserStatus = im.turms.proto.UserStatus;
 import ProfileAccessStrategy = im.turms.proto.ProfileAccessStrategy;
 import ResponseAction = im.turms.proto.ResponseAction;
 import DeviceType = im.turms.proto.DeviceType;
-export declare const COOKIE_REQUEST_ID = "rid";
-export declare const COOKIE_USER_ID = "uid";
-export declare const COOKIE_PASSWORD = "pwd";
-export declare const COOKIE_USER_ONLINE_STATUS = "us";
-export declare const COOKIE_DEVICE_TYPE = "dt";
-export declare const COOKIE_LOCATION = "loc";
 export default class UserService {
     private _turmsClient;
     private _userId?;
@@ -51,5 +45,4 @@ export default class UserService {
     queryRelationshipGroups(lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipGroupsWithVersion>;
     moveRelatedUserToGroup(relatedUserId: string, groupIndex: number): Promise<void>;
     updateLocation(latitude: number, longitude: number, name?: string, address?: string): Promise<void>;
-    private static _clearCookies;
 }

@@ -11,7 +11,7 @@ let userStatus = UserStatus.AWAY;
 let relationshipGroupIndex;
 
 beforeAll(() => {
-    turmsClient = new TurmsClient(Constants.WS_URL, null, null);
+    turmsClient = new TurmsClient(Constants.WS_URL);
 });
 
 afterAll(() => {
@@ -41,7 +41,7 @@ describe('Login', () => {
 describe('Create', () => {
     it('createRelationship_shouldSucceed', async () => {
         try {
-            const result = await turmsClient.userService.createRelationship('10', true, null);
+            const result = await turmsClient.userService.createRelationship('10', true);
             expect(result).toBeUndefined();
         } catch (e) {
             expect(e.code).toEqual(TurmsStatusCode.RELATIONSHIP_HAS_ESTABLISHED);
@@ -49,7 +49,7 @@ describe('Create', () => {
     });
     it('createFriendRelationship_shouldSucceed', async () => {
         try {
-            const result = await turmsClient.userService.createFriendRelationship('10', null);
+            const result = await turmsClient.userService.createFriendRelationship('10');
             expect(result).toBeUndefined();
         } catch (e) {
             expect(e.code).toEqual(TurmsStatusCode.RELATIONSHIP_HAS_ESTABLISHED);
@@ -57,7 +57,7 @@ describe('Create', () => {
     });
     it('createBlacklistedUserRelationship_shouldSucceed', async () => {
         try {
-            const result = await turmsClient.userService.createBlacklistedUserRelationship('10', null);
+            const result = await turmsClient.userService.createBlacklistedUserRelationship('10');
             expect(result).toBeUndefined();
         } catch (e) {
             expect(e.code).toEqual(TurmsStatusCode.RELATIONSHIP_HAS_ESTABLISHED);
@@ -91,7 +91,7 @@ describe('Update', () => {
         expect(result).toBeUndefined();
     });
     it('updateProfile_shouldSucceed', async () => {
-        const result = await turmsClient.userService.updateProfile('123', '123', 'http://www.test.com', null);
+        const result = await turmsClient.userService.updateProfile('123', '123', 'http://www.test.com');
         expect(result).toBeUndefined();
     });
     it('updateRelationship_shouldSucceed', async () => {
@@ -113,7 +113,7 @@ describe('Update', () => {
         expect(result).toBeUndefined();
     });
     it('updateLocation_shouldSucceed', async () => {
-        const result = await turmsClient.userService.updateLocation(2, 2, null, null);
+        const result = await turmsClient.userService.updateLocation(2, 2);
         expect(result).toBeUndefined();
     });
 });
@@ -172,7 +172,7 @@ describe('Delete', () => {
         expect(result).toBeUndefined();
     });
     it('deleteRelationship_shouldSucceed', async () => {
-        const result = await turmsClient.userService.deleteRelationshipGroups(relationshipGroupIndex, null);
+        const result = await turmsClient.userService.deleteRelationshipGroups(relationshipGroupIndex);
         expect(result).toBeUndefined();
     })
 });

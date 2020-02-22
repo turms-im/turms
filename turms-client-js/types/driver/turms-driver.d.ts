@@ -2,6 +2,8 @@ import { im } from "../model/proto-bundle";
 import TurmsClient from "../turms-client";
 import { ParsedNotification } from "../model/parsed-notification";
 import TurmsNotification = im.turms.proto.TurmsNotification;
+import UserStatus = im.turms.proto.UserStatus;
+import DeviceType = im.turms.proto.DeviceType;
 export default class TurmsDriver {
     private _heartbeatInterval;
     private _websocket;
@@ -20,6 +22,9 @@ export default class TurmsDriver {
     private _queryReasonWhenDisconnected;
     private _userId;
     private _password;
+    private _location;
+    private _userOnlineStatus;
+    private _deviceType;
     private _requestId;
     private _sessionId?;
     private _address?;
@@ -29,7 +34,10 @@ export default class TurmsDriver {
     sendHeartbeat(): Promise<void>;
     connected(): boolean;
     disconnect(): Promise<void>;
-    connect(userId: string, password: string, requestId: number, url?: string, connectionTimeout?: number, requestTimeout?: number): Promise<void>;
+    private _connect;
+    connect(userId: string, password: string, location?: string, userOnlineStatus?: UserStatus, deviceType?: DeviceType): Promise<void>;
+    fillLoginInfo(requestId: number, userId: string, password: string, userOnlineStatus?: UserStatus, deviceType?: DeviceType, location?: string): void;
+    clearLoginInfo(): void;
     resetHeartBeatTimer(): void;
     send(message: im.turms.proto.ITurmsRequest): Promise<TurmsNotification>;
     private _generateRandomId;
