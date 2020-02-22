@@ -5,6 +5,7 @@ import RequestUtil from "../util/request-util";
 import {ParsedModel} from "../model/parsed-model";
 import NotificationUtil from "../util/notification-util";
 import GroupMemberRole = im.turms.proto.GroupMemberRole;
+import GroupJoinQuestionsAnswerResult = im.turms.proto.GroupJoinQuestionsAnswerResult;
 
 export default class GroupService {
     private _turmsClient: TurmsClient;
@@ -293,13 +294,13 @@ export default class GroupService {
         }).then(n => NotificationUtil.getAndTransform(n, 'groupJoinQuestionsWithVersion'));
     }
 
-    answerGroupQuestions(questionIdsAndAnswers: { [k: string]: string }): Promise<boolean> {
+    answerGroupQuestions(questionIdsAndAnswers: { [k: string]: string }): Promise<GroupJoinQuestionsAnswerResult> {
         RequestUtil.throwIfEmpty(questionIdsAndAnswers);
         return this._turmsClient.driver.send({
             checkGroupJoinQuestionsAnswersRequest: {
                 questionIdAndAnswer: questionIdsAndAnswers
             }
-        }).then(n => NotificationUtil.getVal(n, 'success'));
+        }).then(n => NotificationUtil.get(n, 'groupJoinQuestionsAnswerResult'));
     }
 
     // Group Member

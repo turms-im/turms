@@ -133,11 +133,13 @@ describe('Query', () => {
         const groupMembersWithVersion = await turmsClient.groupService.queryGroupMembersByMembersIds(groupId, [GROUP_MEMBER_ID], true);
         expect(groupMembersWithVersion.groupMembers[0].userId).toEqual(GROUP_MEMBER_ID);
     });
-    it('answerGroupQuestions_shouldEqualNewQuestionId', async () => {
-        const map = {};
-        map[groupJoinQuestionId] = "answer";
+    it('answerGroupQuestions_shouldReturnAnswerResult', async () => {
+        const idsAndAnswer = {};
+        idsAndAnswer[groupJoinQuestionId] = "answer";
         try {
-            expect(await turmsClient.groupService.answerGroupQuestions(map)).toBeTruthy();
+            const answerResult = await turmsClient.groupService.answerGroupQuestions(idsAndAnswer);
+            const isCorrect = answerResult.questionsIds.includes(groupJoinQuestionId);
+            expect(isCorrect).toEqual(true);
         } catch (e) {
             expect(e.code).toEqual(TurmsStatusCode.ALREADY_GROUP_MEMBER);
         }

@@ -82,7 +82,7 @@ class GroupServiceTests: XCTestCase {
         TestUtil.assertCompleted("queryGroupMembersByMembersIds_shouldEqualNewMemberId", turmsClient.groupService.queryGroupMembersByMembersIds(groupId: groupId!, membersIds: [groupMemberId], withStatus: true).done {
             XCTAssertEqual(groupMemberId, $0.groupMembers[0].userID.value)
         })
-        TestUtil.assertCompleted("answerGroupQuestions_shouldEqualNewQuestionId", turmsClient.groupService.answerGroupQuestions([groupQuestionId!: "answer"]).recover { error -> Promise<Bool> in
+        TestUtil.assertCompleted("answerGroupQuestions_shouldReturnAnswerResult", turmsClient.groupService.answerGroupQuestions([groupQuestionId!: "answer"]).recover { error -> Promise<GroupJoinQuestionsAnswerResult> in
             if let businessError = error as? TurmsBusinessError, businessError.code == .alreadyGroupMember {
                 return Promise.value(false)
             } else {

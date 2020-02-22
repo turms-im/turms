@@ -288,7 +288,7 @@ public class GroupService {
             .map { $0.data.groupJoinQuestionsWithVersion }
     }
 
-    public func answerGroupQuestions(_ questionIdsAndAnswers: [Int64: String]) -> Promise<Bool> {
+    public func answerGroupQuestions(_ questionIdsAndAnswers: [Int64: String]) -> Promise<GroupJoinQuestionsAnswerResult> {
         if questionIdsAndAnswers.isEmpty {
             return Promise.value(false)
         }
@@ -301,7 +301,7 @@ public class GroupService {
                 .request("checkGroupJoinQuestionsAnswersRequest")
                 .field("questionIdAndAnswer", map)
             }
-            .map { $0.data.success.value }
+            .map { $0.data.groupJoinQuestionsAnswerResult }
     }
 
     // Group Member
