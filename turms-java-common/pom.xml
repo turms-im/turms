@@ -9,6 +9,7 @@
     <version>0.9.0</version>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <protobuf-maven-plugin.version>0.6.1</protobuf-maven-plugin.version>

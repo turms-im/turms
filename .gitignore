@@ -38,3 +38,4 @@ turms-client-js/node_modules/
 turms-client-js/types/src/
 turms-java-common/target/
 turms-client-js/coverage/
+turms-plugins/turms-plugin-minio/target/
