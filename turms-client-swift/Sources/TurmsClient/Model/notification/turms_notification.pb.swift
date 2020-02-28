@@ -24,8 +24,7 @@ public struct TurmsNotification {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  /// Note: request_id is allowed to be duplicated because
-  ///
+  /// Note: request_id is allowed to be duplicate because
   /// it is used for clients to identify the response of the same request id in a session
   public var requestID: SwiftProtobuf.Google_Protobuf_Int64Value {
     get {return _storage._requestID ?? SwiftProtobuf.Google_Protobuf_Int64Value()}
@@ -72,10 +71,8 @@ public struct TurmsNotification {
   /// Clears the value of `relayedRequest`. Subsequent reads from it will return its default value.
   public mutating func clearRelayedRequest() {_uniqueStorage()._relayedRequest = nil}
 
-  /// requester_id only exists when a requester trigger a notification to its recipients
-  ///
+  /// requester_id only exists when a requester triggers a notification to its recipients
   /// Note: Do not move requester_id to TurmsRequest because it needs to rebuild a whole TurmsNotification
-  ///
   /// when recipients need the requester_id.
   public var requesterID: SwiftProtobuf.Google_Protobuf_Int64Value {
     get {return _storage._requesterID ?? SwiftProtobuf.Google_Protobuf_Int64Value()}
@@ -114,12 +111,12 @@ public struct TurmsNotification {
       set {_uniqueStorage()._kind = .idsWithVersion(newValue)}
     }
 
-    public var success: SwiftProtobuf.Google_Protobuf_BoolValue {
+    public var url: SwiftProtobuf.Google_Protobuf_StringValue {
       get {
-        if case .success(let v)? = _storage._kind {return v}
-        return SwiftProtobuf.Google_Protobuf_BoolValue()
+        if case .url(let v)? = _storage._kind {return v}
+        return SwiftProtobuf.Google_Protobuf_StringValue()
       }
-      set {_uniqueStorage()._kind = .success(newValue)}
+      set {_uniqueStorage()._kind = .url(newValue)}
     }
 
     public var acknowledge: Acknowledge {
@@ -255,7 +252,7 @@ public struct TurmsNotification {
     public enum OneOf_Kind: Equatable {
       case ids(Int64Values)
       case idsWithVersion(Int64ValuesWithVersion)
-      case success(SwiftProtobuf.Google_Protobuf_BoolValue)
+      case url(SwiftProtobuf.Google_Protobuf_StringValue)
       case acknowledge(Acknowledge)
       case session(Session)
       case messages(Messages)
@@ -278,7 +275,7 @@ public struct TurmsNotification {
         switch (lhs, rhs) {
         case (.ids(let l), .ids(let r)): return l == r
         case (.idsWithVersion(let l), .idsWithVersion(let r)): return l == r
-        case (.success(let l), .success(let r)): return l == r
+        case (.url(let l), .url(let r)): return l == r
         case (.acknowledge(let l), .acknowledge(let r)): return l == r
         case (.session(let l), .session(let r)): return l == r
         case (.messages(let l), .messages(let r)): return l == r
@@ -421,7 +418,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "ids"),
     2: .standard(proto: "ids_with_version"),
-    3: .same(proto: "success"),
+    3: .same(proto: "url"),
     4: .same(proto: "acknowledge"),
     5: .same(proto: "session"),
     6: .same(proto: "messages"),
@@ -481,13 +478,13 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .idsWithVersion(v)}
         case 3:
-          var v: SwiftProtobuf.Google_Protobuf_BoolValue?
+          var v: SwiftProtobuf.Google_Protobuf_StringValue?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
-            if case .success(let m) = current {v = m}
+            if case .url(let m) = current {v = m}
           }
           try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._kind = .success(v)}
+          if let v = v {_storage._kind = .url(v)}
         case 4:
           var v: Acknowledge?
           if let current = _storage._kind {
@@ -629,7 +626,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
         try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
       case .idsWithVersion(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-      case .success(let v)?:
+      case .url(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
       case .acknowledge(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 4)

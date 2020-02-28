@@ -25,8 +25,7 @@ public struct TurmsRequest {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  /// Note: request_id is allowed to be duplicated because
-  ///
+  /// Note: request_id is allowed to be duplicate because
   /// it is used for clients to identify the response of the same request id in a session
   public var requestID: SwiftProtobuf.Google_Protobuf_Int64Value {
     get {return _storage._requestID ?? SwiftProtobuf.Google_Protobuf_Int64Value()}
@@ -49,6 +48,31 @@ public struct TurmsRequest {
       return AckRequest()
     }
     set {_uniqueStorage()._kind = .ackRequest(newValue)}
+  }
+
+  /// Storage
+  public var deleteResourceRequest: DeleteResourceRequest {
+    get {
+      if case .deleteResourceRequest(let v)? = _storage._kind {return v}
+      return DeleteResourceRequest()
+    }
+    set {_uniqueStorage()._kind = .deleteResourceRequest(newValue)}
+  }
+
+  public var querySignedGetURLRequest: QuerySignedGetUrlRequest {
+    get {
+      if case .querySignedGetURLRequest(let v)? = _storage._kind {return v}
+      return QuerySignedGetUrlRequest()
+    }
+    set {_uniqueStorage()._kind = .querySignedGetURLRequest(newValue)}
+  }
+
+  public var querySignedPutURLRequest: QuerySignedPutUrlRequest {
+    get {
+      if case .querySignedPutURLRequest(let v)? = _storage._kind {return v}
+      return QuerySignedPutUrlRequest()
+    }
+    set {_uniqueStorage()._kind = .querySignedPutURLRequest(newValue)}
   }
 
   /// Message
@@ -471,6 +495,10 @@ public struct TurmsRequest {
   public enum OneOf_Kind: Equatable {
     /// Signal
     case ackRequest(AckRequest)
+    /// Storage
+    case deleteResourceRequest(DeleteResourceRequest)
+    case querySignedGetURLRequest(QuerySignedGetUrlRequest)
+    case querySignedPutURLRequest(QuerySignedPutUrlRequest)
     /// Message
     case createMessageRequest(CreateMessageRequest)
     case queryMessageStatusesRequest(QueryMessageStatusesRequest)
@@ -534,6 +562,9 @@ public struct TurmsRequest {
     public static func ==(lhs: TurmsRequest.OneOf_Kind, rhs: TurmsRequest.OneOf_Kind) -> Bool {
       switch (lhs, rhs) {
       case (.ackRequest(let l), .ackRequest(let r)): return l == r
+      case (.deleteResourceRequest(let l), .deleteResourceRequest(let r)): return l == r
+      case (.querySignedGetURLRequest(let l), .querySignedGetURLRequest(let r)): return l == r
+      case (.querySignedPutURLRequest(let l), .querySignedPutURLRequest(let r)): return l == r
       case (.createMessageRequest(let l), .createMessageRequest(let r)): return l == r
       case (.queryMessageStatusesRequest(let l), .queryMessageStatusesRequest(let r)): return l == r
       case (.queryMessagesRequest(let l), .queryMessagesRequest(let r)): return l == r
@@ -605,12 +636,15 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "request_id"),
     2: .standard(proto: "ack_request"),
-    5: .standard(proto: "create_message_request"),
-    6: .standard(proto: "query_message_statuses_request"),
-    7: .standard(proto: "query_messages_request"),
-    8: .standard(proto: "query_pending_messages_with_total_request"),
-    9: .standard(proto: "update_message_request"),
-    10: .standard(proto: "update_typing_status_request"),
+    3: .standard(proto: "delete_resource_request"),
+    4: .standard(proto: "query_signed_get_url_request"),
+    5: .standard(proto: "query_signed_put_url_request"),
+    6: .standard(proto: "create_message_request"),
+    7: .standard(proto: "query_message_statuses_request"),
+    8: .standard(proto: "query_messages_request"),
+    9: .standard(proto: "query_pending_messages_with_total_request"),
+    10: .standard(proto: "update_message_request"),
+    11: .standard(proto: "update_typing_status_request"),
     100: .standard(proto: "query_user_group_invitations_request"),
     101: .standard(proto: "query_user_profile_request"),
     102: .standard(proto: "query_users_ids_nearby_request"),
@@ -693,7 +727,31 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
           }
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .ackRequest(v)}
+        case 3:
+          var v: DeleteResourceRequest?
+          if let current = _storage._kind {
+            try decoder.handleConflictingOneOf()
+            if case .deleteResourceRequest(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {_storage._kind = .deleteResourceRequest(v)}
+        case 4:
+          var v: QuerySignedGetUrlRequest?
+          if let current = _storage._kind {
+            try decoder.handleConflictingOneOf()
+            if case .querySignedGetURLRequest(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {_storage._kind = .querySignedGetURLRequest(v)}
         case 5:
+          var v: QuerySignedPutUrlRequest?
+          if let current = _storage._kind {
+            try decoder.handleConflictingOneOf()
+            if case .querySignedPutURLRequest(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {_storage._kind = .querySignedPutURLRequest(v)}
+        case 6:
           var v: CreateMessageRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -701,7 +759,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
           }
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .createMessageRequest(v)}
-        case 6:
+        case 7:
           var v: QueryMessageStatusesRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -709,7 +767,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
           }
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .queryMessageStatusesRequest(v)}
-        case 7:
+        case 8:
           var v: QueryMessagesRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -717,7 +775,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
           }
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .queryMessagesRequest(v)}
-        case 8:
+        case 9:
           var v: QueryPendingMessagesWithTotalRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -725,7 +783,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
           }
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .queryPendingMessagesWithTotalRequest(v)}
-        case 9:
+        case 10:
           var v: UpdateMessageRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -733,7 +791,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
           }
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .updateMessageRequest(v)}
-        case 10:
+        case 11:
           var v: UpdateTypingStatusRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -1115,18 +1173,24 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
       switch _storage._kind {
       case .ackRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-      case .createMessageRequest(let v)?:
+      case .deleteResourceRequest(let v)?:
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
+      case .querySignedGetURLRequest(let v)?:
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
+      case .querySignedPutURLRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
-      case .queryMessageStatusesRequest(let v)?:
+      case .createMessageRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
-      case .queryMessagesRequest(let v)?:
+      case .queryMessageStatusesRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
-      case .queryPendingMessagesWithTotalRequest(let v)?:
+      case .queryMessagesRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 8)
-      case .updateMessageRequest(let v)?:
+      case .queryPendingMessagesWithTotalRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 9)
-      case .updateTypingStatusRequest(let v)?:
+      case .updateMessageRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
+      case .updateTypingStatusRequest(let v)?:
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 11)
       case .queryUserGroupInvitationsRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 100)
       case .queryUserProfileRequest(let v)?:
