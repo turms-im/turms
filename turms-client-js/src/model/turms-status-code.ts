@@ -35,9 +35,11 @@ enum Code {
     GROUP_HAS_BEEN_MUTED,
     MEMBER_HAS_BEEN_MUTED,
     GUESTS_HAVE_BEEN_MUTED,
+    FILE_TOO_LARGE,
 
     SERVER_INTERNAL_ERROR = 5000,
     LOGGED_DEVICES_CANNOT_OFFLINE,
+    NOT_IMPLEMENTED,
 
     CLIENT_USER_ID_AND_PASSWORD_MUST_NOT_NULL = 6000,
     CLIENT_SESSION_HAS_BEEN_CLOSED,
@@ -85,7 +87,9 @@ class TurmsStatusCode {
         [Code.GROUP_HAS_BEEN_MUTED]: "The group has been muted",
         [Code.MEMBER_HAS_BEEN_MUTED]: "The group member has been muted",
         [Code.GUESTS_HAVE_BEEN_MUTED]: "The guests of the group have been muted",
+        [Code.FILE_TOO_LARGE]: "The file is too large to upload",
         [Code.LOGGED_DEVICES_CANNOT_OFFLINE]: "Cannot set logged in devices offline",
+        [Code.NOT_IMPLEMENTED]: "Not Implemented",
         [Code.CLIENT_USER_ID_AND_PASSWORD_MUST_NOT_NULL]: "The user ID and password must be not null",
         [Code.CLIENT_SESSION_HAS_BEEN_CLOSED]: "The session has been closed",
         [Code.CLIENT_SESSION_ALREADY_ESTABLISHED]: "The session has been established",

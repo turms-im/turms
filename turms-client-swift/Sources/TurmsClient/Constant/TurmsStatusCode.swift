@@ -37,8 +37,10 @@ public enum TurmsStatusCode: Int {
     case groupHasBeenMuted
     case memberHasBeenMuted
     case guestsHaveBeenMuted
+    case fileTooLarge
 
     case loggedInDevicesCannotOffline = 5001
+    case notImplemented
 
     case clientUserIdAndPasswordMustNotNull = 6000
     case clientSessionHasBeenClosed
@@ -80,6 +82,7 @@ extension TurmsStatusCode {
             case .friendRequestHasExisted: return "A friend request has already existed"
             case .relationshipHasEstablished: return "The relationship has already established"
             case .loggedInDevicesCannotOffline: return "Cannot set logged in devices offline"
+            case .notImplemented: return "Not Implemented"
             case .clientUserIdAndPasswordMustNotNull: return "The user ID and password must be not null"
             case .clientSessionHasBeenClosed: return "The session has been closed"
             case .clientSessionAlreadyEstablished: return "The session has been established"
@@ -89,6 +92,7 @@ extension TurmsStatusCode {
             case .groupHasBeenMuted: return "The group has been muted"
             case .memberHasBeenMuted: return "The group member has been muted"
             case .guestsHaveBeenMuted: return "The guests of the group have been muted"
+            case .fileTooLarge: return "The file is too large to upload"
         }
     }
     

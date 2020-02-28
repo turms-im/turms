@@ -2,6 +2,7 @@ import TurmsClient from "../turms-client";
 import { im } from "../model/proto-bundle";
 import { ParsedModel } from "../model/parsed-model";
 import GroupMemberRole = im.turms.proto.GroupMemberRole;
+import GroupJoinQuestionsAnswerResult = im.turms.proto.GroupJoinQuestionsAnswerResult;
 export default class GroupService {
     private _turmsClient;
     constructor(turmsClient: TurmsClient);
@@ -30,7 +31,7 @@ export default class GroupService {
     queryGroupJoinQuestionsRequest(groupId: string, withAnswers?: boolean, lastUpdatedDate?: Date): Promise<ParsedModel.GroupJoinQuestionsWithVersion>;
     answerGroupQuestions(questionIdsAndAnswers: {
         [k: string]: string;
-    }): Promise<boolean>;
+    }): Promise<GroupJoinQuestionsAnswerResult>;
     addGroupMember(groupId: string, userId: string, name?: string, role?: string | GroupMemberRole, muteEndDate?: Date): Promise<void>;
     quitGroup(groupId: string, successorId?: string, quitAfterTransfer?: boolean): Promise<void>;
     removeGroupMember(groupId: string, memberId: string): Promise<void>;

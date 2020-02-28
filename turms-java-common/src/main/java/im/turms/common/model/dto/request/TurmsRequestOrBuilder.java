@@ -66,10 +66,67 @@ public interface TurmsRequestOrBuilder extends
 
   /**
    * <pre>
+   * Storage
+   * </pre>
+   *
+   * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 3;</code>
+   * @return Whether the deleteResourceRequest field is set.
+   */
+  boolean hasDeleteResourceRequest();
+  /**
+   * <pre>
+   * Storage
+   * </pre>
+   *
+   * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 3;</code>
+   * @return The deleteResourceRequest.
+   */
+  im.turms.common.model.dto.request.storage.DeleteResourceRequest getDeleteResourceRequest();
+  /**
+   * <pre>
+   * Storage
+   * </pre>
+   *
+   * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 3;</code>
+   */
+  im.turms.common.model.dto.request.storage.DeleteResourceRequestOrBuilder getDeleteResourceRequestOrBuilder();
+
+  /**
+   * <code>.im.turms.proto.QuerySignedGetUrlRequest query_signed_get_url_request = 4;</code>
+   * @return Whether the querySignedGetUrlRequest field is set.
+   */
+  boolean hasQuerySignedGetUrlRequest();
+  /**
+   * <code>.im.turms.proto.QuerySignedGetUrlRequest query_signed_get_url_request = 4;</code>
+   * @return The querySignedGetUrlRequest.
+   */
+  im.turms.common.model.dto.request.storage.QuerySignedGetUrlRequest getQuerySignedGetUrlRequest();
+  /**
+   * <code>.im.turms.proto.QuerySignedGetUrlRequest query_signed_get_url_request = 4;</code>
+   */
+  im.turms.common.model.dto.request.storage.QuerySignedGetUrlRequestOrBuilder getQuerySignedGetUrlRequestOrBuilder();
+
+  /**
+   * <code>.im.turms.proto.QuerySignedPutUrlRequest query_signed_put_url_request = 5;</code>
+   * @return Whether the querySignedPutUrlRequest field is set.
+   */
+  boolean hasQuerySignedPutUrlRequest();
+  /**
+   * <code>.im.turms.proto.QuerySignedPutUrlRequest query_signed_put_url_request = 5;</code>
+   * @return The querySignedPutUrlRequest.
+   */
+  im.turms.common.model.dto.request.storage.QuerySignedPutUrlRequest getQuerySignedPutUrlRequest();
+  /**
+   * <code>.im.turms.proto.QuerySignedPutUrlRequest query_signed_put_url_request = 5;</code>
+   */
+  im.turms.common.model.dto.request.storage.QuerySignedPutUrlRequestOrBuilder getQuerySignedPutUrlRequestOrBuilder();
+
+  /**
+   * <pre>
    * Message
    * </pre>
    *
-   * <code>.im.turms.proto.CreateMessageRequest create_message_request = 5;</code>
+   * <code>.im.turms.proto.CreateMessageRequest create_message_request = 6;</code>
    * @return Whether the createMessageRequest field is set.
    */
   boolean hasCreateMessageRequest();
@@ -78,7 +135,7 @@ public interface TurmsRequestOrBuilder extends
    * Message
    * </pre>
    *
-   * <code>.im.turms.proto.CreateMessageRequest create_message_request = 5;</code>
+   * <code>.im.turms.proto.CreateMessageRequest create_message_request = 6;</code>
    * @return The createMessageRequest.
    */
   im.turms.common.model.dto.request.message.CreateMessageRequest getCreateMessageRequest();
@@ -87,82 +144,82 @@ public interface TurmsRequestOrBuilder extends
    * Message
    * </pre>
    *
-   * <code>.im.turms.proto.CreateMessageRequest create_message_request = 5;</code>
+   * <code>.im.turms.proto.CreateMessageRequest create_message_request = 6;</code>
    */
   im.turms.common.model.dto.request.message.CreateMessageRequestOrBuilder getCreateMessageRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.QueryMessageStatusesRequest query_message_statuses_request = 6;</code>
+   * <code>.im.turms.proto.QueryMessageStatusesRequest query_message_statuses_request = 7;</code>
    * @return Whether the queryMessageStatusesRequest field is set.
    */
   boolean hasQueryMessageStatusesRequest();
   /**
-   * <code>.im.turms.proto.QueryMessageStatusesRequest query_message_statuses_request = 6;</code>
+   * <code>.im.turms.proto.QueryMessageStatusesRequest query_message_statuses_request = 7;</code>
    * @return The queryMessageStatusesRequest.
    */
   im.turms.common.model.dto.request.message.QueryMessageStatusesRequest getQueryMessageStatusesRequest();
   /**
-   * <code>.im.turms.proto.QueryMessageStatusesRequest query_message_statuses_request = 6;</code>
+   * <code>.im.turms.proto.QueryMessageStatusesRequest query_message_statuses_request = 7;</code>
    */
   im.turms.common.model.dto.request.message.QueryMessageStatusesRequestOrBuilder getQueryMessageStatusesRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.QueryMessagesRequest query_messages_request = 7;</code>
+   * <code>.im.turms.proto.QueryMessagesRequest query_messages_request = 8;</code>
    * @return Whether the queryMessagesRequest field is set.
    */
   boolean hasQueryMessagesRequest();
   /**
-   * <code>.im.turms.proto.QueryMessagesRequest query_messages_request = 7;</code>
+   * <code>.im.turms.proto.QueryMessagesRequest query_messages_request = 8;</code>
    * @return The queryMessagesRequest.
    */
   im.turms.common.model.dto.request.message.QueryMessagesRequest getQueryMessagesRequest();
   /**
-   * <code>.im.turms.proto.QueryMessagesRequest query_messages_request = 7;</code>
+   * <code>.im.turms.proto.QueryMessagesRequest query_messages_request = 8;</code>
    */
   im.turms.common.model.dto.request.message.QueryMessagesRequestOrBuilder getQueryMessagesRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.QueryPendingMessagesWithTotalRequest query_pending_messages_with_total_request = 8;</code>
+   * <code>.im.turms.proto.QueryPendingMessagesWithTotalRequest query_pending_messages_with_total_request = 9;</code>
    * @return Whether the queryPendingMessagesWithTotalRequest field is set.
    */
   boolean hasQueryPendingMessagesWithTotalRequest();
   /**
-   * <code>.im.turms.proto.QueryPendingMessagesWithTotalRequest query_pending_messages_with_total_request = 8;</code>
+   * <code>.im.turms.proto.QueryPendingMessagesWithTotalRequest query_pending_messages_with_total_request = 9;</code>
    * @return The queryPendingMessagesWithTotalRequest.
    */
   im.turms.common.model.dto.request.message.QueryPendingMessagesWithTotalRequest getQueryPendingMessagesWithTotalRequest();
   /**
-   * <code>.im.turms.proto.QueryPendingMessagesWithTotalRequest query_pending_messages_with_total_request = 8;</code>
+   * <code>.im.turms.proto.QueryPendingMessagesWithTotalRequest query_pending_messages_with_total_request = 9;</code>
    */
   im.turms.common.model.dto.request.message.QueryPendingMessagesWithTotalRequestOrBuilder getQueryPendingMessagesWithTotalRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.UpdateMessageRequest update_message_request = 9;</code>
+   * <code>.im.turms.proto.UpdateMessageRequest update_message_request = 10;</code>
    * @return Whether the updateMessageRequest field is set.
    */
   boolean hasUpdateMessageRequest();
   /**
-   * <code>.im.turms.proto.UpdateMessageRequest update_message_request = 9;</code>
+   * <code>.im.turms.proto.UpdateMessageRequest update_message_request = 10;</code>
    * @return The updateMessageRequest.
    */
   im.turms.common.model.dto.request.message.UpdateMessageRequest getUpdateMessageRequest();
   /**
-   * <code>.im.turms.proto.UpdateMessageRequest update_message_request = 9;</code>
+   * <code>.im.turms.proto.UpdateMessageRequest update_message_request = 10;</code>
    */
   im.turms.common.model.dto.request.message.UpdateMessageRequestOrBuilder getUpdateMessageRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.UpdateTypingStatusRequest update_typing_status_request = 10;</code>
+   * <code>.im.turms.proto.UpdateTypingStatusRequest update_typing_status_request = 11;</code>
    * @return Whether the updateTypingStatusRequest field is set.
    */
   boolean hasUpdateTypingStatusRequest();
   /**
-   * <code>.im.turms.proto.UpdateTypingStatusRequest update_typing_status_request = 10;</code>
+   * <code>.im.turms.proto.UpdateTypingStatusRequest update_typing_status_request = 11;</code>
    * @return The updateTypingStatusRequest.
    */
   im.turms.common.model.dto.request.message.UpdateTypingStatusRequest getUpdateTypingStatusRequest();
   /**
-   * <code>.im.turms.proto.UpdateTypingStatusRequest update_typing_status_request = 10;</code>
+   * <code>.im.turms.proto.UpdateTypingStatusRequest update_typing_status_request = 11;</code>
    */
   im.turms.common.model.dto.request.message.UpdateTypingStatusRequestOrBuilder getUpdateTypingStatusRequestOrBuilder();
 

@@ -16,6 +16,12 @@ export namespace im {
                 GROUP = 1
             }
 
+            /** ContentType enum. */
+            enum ContentType {
+                PROFILE = 0,
+                ATTACHMENT = 1
+            }
+
             /** DeviceType enum. */
             enum DeviceType {
                 DESKTOP = 0,
@@ -2327,8 +2333,8 @@ export namespace im {
                     /** Data idsWithVersion */
                     idsWithVersion?: (im.turms.proto.IInt64ValuesWithVersion|null);
 
-                    /** Data success */
-                    success?: (google.protobuf.IBoolValue|null);
+                    /** Data url */
+                    url?: (google.protobuf.IStringValue|null);
 
                     /** Data acknowledge */
                     acknowledge?: (im.turms.proto.IAcknowledge|null);
@@ -2394,8 +2400,8 @@ export namespace im {
                     /** Data idsWithVersion. */
                     public idsWithVersion?: (im.turms.proto.IInt64ValuesWithVersion|null);
 
-                    /** Data success. */
-                    public success?: (google.protobuf.IBoolValue|null);
+                    /** Data url. */
+                    public url?: (google.protobuf.IStringValue|null);
 
                     /** Data acknowledge. */
                     public acknowledge?: (im.turms.proto.IAcknowledge|null);
@@ -2446,7 +2452,7 @@ export namespace im {
                     public groupsWithVersion?: (im.turms.proto.IGroupsWithVersion|null);
 
                     /** Data kind. */
-                    public kind?: ("ids"|"idsWithVersion"|"success"|"acknowledge"|"session"|"messages"|"messageStatuses"|"messagesWithTotalList"|"usersInfosWithVersion"|"usersOnlineStatuses"|"userFriendRequestsWithVersion"|"userRelationshipGroupsWithVersion"|"userRelationshipsWithVersion"|"groupInvitationsWithVersion"|"groupJoinQuestionAnswerResult"|"groupJoinRequestsWithVersion"|"groupJoinQuestionsWithVersion"|"groupMembersWithVersion"|"groupsWithVersion");
+                    public kind?: ("ids"|"idsWithVersion"|"url"|"acknowledge"|"session"|"messages"|"messageStatuses"|"messagesWithTotalList"|"usersInfosWithVersion"|"usersOnlineStatuses"|"userFriendRequestsWithVersion"|"userRelationshipGroupsWithVersion"|"userRelationshipsWithVersion"|"groupInvitationsWithVersion"|"groupJoinQuestionAnswerResult"|"groupJoinRequestsWithVersion"|"groupJoinQuestionsWithVersion"|"groupMembersWithVersion"|"groupsWithVersion");
 
                     /**
                      * Encodes the specified Data message. Does not implicitly {@link im.turms.proto.TurmsNotification.Data.verify|verify} messages.
@@ -4086,6 +4092,162 @@ export namespace im {
                 public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.AckRequest;
             }
 
+            /** Properties of a DeleteResourceRequest. */
+            interface IDeleteResourceRequest {
+
+                /** DeleteResourceRequest contentType */
+                contentType?: (im.turms.proto.ContentType|null);
+
+                /** DeleteResourceRequest keyStr */
+                keyStr?: (google.protobuf.IStringValue|null);
+
+                /** DeleteResourceRequest keyNum */
+                keyNum?: (google.protobuf.IInt64Value|null);
+            }
+
+            /** Represents a DeleteResourceRequest. */
+            class DeleteResourceRequest implements IDeleteResourceRequest {
+
+                /**
+                 * Constructs a new DeleteResourceRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: im.turms.proto.IDeleteResourceRequest);
+
+                /** DeleteResourceRequest contentType. */
+                public contentType: im.turms.proto.ContentType;
+
+                /** DeleteResourceRequest keyStr. */
+                public keyStr?: (google.protobuf.IStringValue|null);
+
+                /** DeleteResourceRequest keyNum. */
+                public keyNum?: (google.protobuf.IInt64Value|null);
+
+                /**
+                 * Encodes the specified DeleteResourceRequest message. Does not implicitly {@link im.turms.proto.DeleteResourceRequest.verify|verify} messages.
+                 * @param message DeleteResourceRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: im.turms.proto.IDeleteResourceRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a DeleteResourceRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns DeleteResourceRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.DeleteResourceRequest;
+            }
+
+            /** Properties of a QuerySignedGetUrlRequest. */
+            interface IQuerySignedGetUrlRequest {
+
+                /** QuerySignedGetUrlRequest contentType */
+                contentType?: (im.turms.proto.ContentType|null);
+
+                /** QuerySignedGetUrlRequest keyStr */
+                keyStr?: (google.protobuf.IStringValue|null);
+
+                /** QuerySignedGetUrlRequest keyNum */
+                keyNum?: (google.protobuf.IInt64Value|null);
+            }
+
+            /** Represents a QuerySignedGetUrlRequest. */
+            class QuerySignedGetUrlRequest implements IQuerySignedGetUrlRequest {
+
+                /**
+                 * Constructs a new QuerySignedGetUrlRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: im.turms.proto.IQuerySignedGetUrlRequest);
+
+                /** QuerySignedGetUrlRequest contentType. */
+                public contentType: im.turms.proto.ContentType;
+
+                /** QuerySignedGetUrlRequest keyStr. */
+                public keyStr?: (google.protobuf.IStringValue|null);
+
+                /** QuerySignedGetUrlRequest keyNum. */
+                public keyNum?: (google.protobuf.IInt64Value|null);
+
+                /**
+                 * Encodes the specified QuerySignedGetUrlRequest message. Does not implicitly {@link im.turms.proto.QuerySignedGetUrlRequest.verify|verify} messages.
+                 * @param message QuerySignedGetUrlRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: im.turms.proto.IQuerySignedGetUrlRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a QuerySignedGetUrlRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns QuerySignedGetUrlRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QuerySignedGetUrlRequest;
+            }
+
+            /** Properties of a QuerySignedPutUrlRequest. */
+            interface IQuerySignedPutUrlRequest {
+
+                /** QuerySignedPutUrlRequest contentType */
+                contentType?: (im.turms.proto.ContentType|null);
+
+                /** QuerySignedPutUrlRequest keyStr */
+                keyStr?: (google.protobuf.IStringValue|null);
+
+                /** QuerySignedPutUrlRequest keyNum */
+                keyNum?: (google.protobuf.IInt64Value|null);
+
+                /** QuerySignedPutUrlRequest contentLength */
+                contentLength?: (string|null);
+            }
+
+            /** Represents a QuerySignedPutUrlRequest. */
+            class QuerySignedPutUrlRequest implements IQuerySignedPutUrlRequest {
+
+                /**
+                 * Constructs a new QuerySignedPutUrlRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: im.turms.proto.IQuerySignedPutUrlRequest);
+
+                /** QuerySignedPutUrlRequest contentType. */
+                public contentType: im.turms.proto.ContentType;
+
+                /** QuerySignedPutUrlRequest keyStr. */
+                public keyStr?: (google.protobuf.IStringValue|null);
+
+                /** QuerySignedPutUrlRequest keyNum. */
+                public keyNum?: (google.protobuf.IInt64Value|null);
+
+                /** QuerySignedPutUrlRequest contentLength. */
+                public contentLength: string;
+
+                /**
+                 * Encodes the specified QuerySignedPutUrlRequest message. Does not implicitly {@link im.turms.proto.QuerySignedPutUrlRequest.verify|verify} messages.
+                 * @param message QuerySignedPutUrlRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: im.turms.proto.IQuerySignedPutUrlRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a QuerySignedPutUrlRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns QuerySignedPutUrlRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QuerySignedPutUrlRequest;
+            }
+
             /** Properties of a TurmsRequest. */
             interface ITurmsRequest {
 
@@ -4094,6 +4256,15 @@ export namespace im {
 
                 /** TurmsRequest ackRequest */
                 ackRequest?: (im.turms.proto.IAckRequest|null);
+
+                /** TurmsRequest deleteResourceRequest */
+                deleteResourceRequest?: (im.turms.proto.IDeleteResourceRequest|null);
+
+                /** TurmsRequest querySignedGetUrlRequest */
+                querySignedGetUrlRequest?: (im.turms.proto.IQuerySignedGetUrlRequest|null);
+
+                /** TurmsRequest querySignedPutUrlRequest */
+                querySignedPutUrlRequest?: (im.turms.proto.IQuerySignedPutUrlRequest|null);
 
                 /** TurmsRequest createMessageRequest */
                 createMessageRequest?: (im.turms.proto.ICreateMessageRequest|null);
@@ -4264,6 +4435,15 @@ export namespace im {
                 /** TurmsRequest ackRequest. */
                 public ackRequest?: (im.turms.proto.IAckRequest|null);
 
+                /** TurmsRequest deleteResourceRequest. */
+                public deleteResourceRequest?: (im.turms.proto.IDeleteResourceRequest|null);
+
+                /** TurmsRequest querySignedGetUrlRequest. */
+                public querySignedGetUrlRequest?: (im.turms.proto.IQuerySignedGetUrlRequest|null);
+
+                /** TurmsRequest querySignedPutUrlRequest. */
+                public querySignedPutUrlRequest?: (im.turms.proto.IQuerySignedPutUrlRequest|null);
+
                 /** TurmsRequest createMessageRequest. */
                 public createMessageRequest?: (im.turms.proto.ICreateMessageRequest|null);
 
@@ -4418,7 +4598,7 @@ export namespace im {
                 public updateGroupMemberRequest?: (im.turms.proto.IUpdateGroupMemberRequest|null);
 
                 /** TurmsRequest kind. */
-                public kind?: ("ackRequest"|"createMessageRequest"|"queryMessageStatusesRequest"|"queryMessagesRequest"|"queryPendingMessagesWithTotalRequest"|"updateMessageRequest"|"updateTypingStatusRequest"|"queryUserGroupInvitationsRequest"|"queryUserProfileRequest"|"queryUsersIdsNearbyRequest"|"queryUsersInfosNearbyRequest"|"queryUsersOnlineStatusRequest"|"updateUserLocationRequest"|"updateUserOnlineStatusRequest"|"updateUserRequest"|"createFriendRequestRequest"|"createRelationshipGroupRequest"|"createRelationshipRequest"|"deleteRelationshipGroupRequest"|"deleteRelationshipRequest"|"queryFriendRequestsRequest"|"queryRelatedUsersIdsRequest"|"queryRelationshipGroupsRequest"|"queryRelationshipsRequest"|"updateFriendRequestRequest"|"updateRelationshipGroupRequest"|"updateRelationshipRequest"|"createGroupRequest"|"deleteGroupRequest"|"queryGroupRequest"|"queryJoinedGroupsIdsRequest"|"queryJoinedGroupsInfosRequest"|"updateGroupRequest"|"createGroupBlacklistedUserRequest"|"deleteGroupBlacklistedUserRequest"|"queryGroupBlacklistedUsersIdsRequest"|"queryGroupBlacklistedUsersInfosRequest"|"checkGroupJoinQuestionsAnswersRequest"|"createGroupInvitationRequest"|"createGroupJoinRequestRequest"|"createGroupJoinQuestionRequest"|"deleteGroupInvitationRequest"|"deleteGroupJoinRequestRequest"|"deleteGroupJoinQuestionRequest"|"queryGroupInvitationsRequest"|"queryGroupJoinRequestsRequest"|"queryGroupJoinQuestionsRequest"|"updateGroupJoinQuestionRequest"|"createGroupMemberRequest"|"deleteGroupMemberRequest"|"queryGroupMembersRequest"|"updateGroupMemberRequest");
+                public kind?: ("ackRequest"|"deleteResourceRequest"|"querySignedGetUrlRequest"|"querySignedPutUrlRequest"|"createMessageRequest"|"queryMessageStatusesRequest"|"queryMessagesRequest"|"queryPendingMessagesWithTotalRequest"|"updateMessageRequest"|"updateTypingStatusRequest"|"queryUserGroupInvitationsRequest"|"queryUserProfileRequest"|"queryUsersIdsNearbyRequest"|"queryUsersInfosNearbyRequest"|"queryUsersOnlineStatusRequest"|"updateUserLocationRequest"|"updateUserOnlineStatusRequest"|"updateUserRequest"|"createFriendRequestRequest"|"createRelationshipGroupRequest"|"createRelationshipRequest"|"deleteRelationshipGroupRequest"|"deleteRelationshipRequest"|"queryFriendRequestsRequest"|"queryRelatedUsersIdsRequest"|"queryRelationshipGroupsRequest"|"queryRelationshipsRequest"|"updateFriendRequestRequest"|"updateRelationshipGroupRequest"|"updateRelationshipRequest"|"createGroupRequest"|"deleteGroupRequest"|"queryGroupRequest"|"queryJoinedGroupsIdsRequest"|"queryJoinedGroupsInfosRequest"|"updateGroupRequest"|"createGroupBlacklistedUserRequest"|"deleteGroupBlacklistedUserRequest"|"queryGroupBlacklistedUsersIdsRequest"|"queryGroupBlacklistedUsersInfosRequest"|"checkGroupJoinQuestionsAnswersRequest"|"createGroupInvitationRequest"|"createGroupJoinRequestRequest"|"createGroupJoinQuestionRequest"|"deleteGroupInvitationRequest"|"deleteGroupJoinRequestRequest"|"deleteGroupJoinQuestionRequest"|"queryGroupInvitationsRequest"|"queryGroupJoinRequestsRequest"|"queryGroupJoinQuestionsRequest"|"updateGroupJoinQuestionRequest"|"createGroupMemberRequest"|"deleteGroupMemberRequest"|"queryGroupMembersRequest"|"updateGroupMemberRequest");
 
                 /**
                  * Encodes the specified TurmsRequest message. Does not implicitly {@link im.turms.proto.TurmsRequest.verify|verify} messages.

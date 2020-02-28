@@ -193,19 +193,19 @@ private static final long serialVersionUID = 0L;
     im.turms.common.model.bo.common.Int64ValuesWithVersionOrBuilder getIdsWithVersionOrBuilder();
 
     /**
-     * <code>.google.protobuf.BoolValue success = 3;</code>
-     * @return Whether the success field is set.
+     * <code>.google.protobuf.StringValue url = 3;</code>
+     * @return Whether the url field is set.
      */
-    boolean hasSuccess();
+    boolean hasUrl();
     /**
-     * <code>.google.protobuf.BoolValue success = 3;</code>
-     * @return The success.
+     * <code>.google.protobuf.StringValue url = 3;</code>
+     * @return The url.
      */
-    com.google.protobuf.BoolValue getSuccess();
+    com.google.protobuf.StringValue getUrl();
     /**
-     * <code>.google.protobuf.BoolValue success = 3;</code>
+     * <code>.google.protobuf.StringValue url = 3;</code>
      */
-    com.google.protobuf.BoolValueOrBuilder getSuccessOrBuilder();
+    com.google.protobuf.StringValueOrBuilder getUrlOrBuilder();
 
     /**
      * <code>.im.turms.proto.Acknowledge acknowledge = 4;</code>
@@ -523,14 +523,14 @@ private static final long serialVersionUID = 0L;
               break;
             }
             case 26: {
-              com.google.protobuf.BoolValue.Builder subBuilder = null;
+              com.google.protobuf.StringValue.Builder subBuilder = null;
               if (kindCase_ == 3) {
-                subBuilder = ((com.google.protobuf.BoolValue) kind_).toBuilder();
+                subBuilder = ((com.google.protobuf.StringValue) kind_).toBuilder();
               }
               kind_ =
-                  input.readMessage(com.google.protobuf.BoolValue.parser(), extensionRegistry);
+                  input.readMessage(com.google.protobuf.StringValue.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((com.google.protobuf.BoolValue) kind_);
+                subBuilder.mergeFrom((com.google.protobuf.StringValue) kind_);
                 kind_ = subBuilder.buildPartial();
               }
               kindCase_ = 3;
@@ -799,7 +799,7 @@ private static final long serialVersionUID = 0L;
             com.google.protobuf.AbstractMessage.InternalOneOfEnum {
       IDS(1),
       IDS_WITH_VERSION(2),
-      SUCCESS(3),
+      URL(3),
       ACKNOWLEDGE(4),
       SESSION(5),
       MESSAGES(6),
@@ -835,7 +835,7 @@ private static final long serialVersionUID = 0L;
         switch (value) {
           case 1: return IDS;
           case 2: return IDS_WITH_VERSION;
-          case 3: return SUCCESS;
+          case 3: return URL;
           case 4: return ACKNOWLEDGE;
           case 5: return SESSION;
           case 6: return MESSAGES;
@@ -923,32 +923,32 @@ private static final long serialVersionUID = 0L;
       return im.turms.common.model.bo.common.Int64ValuesWithVersion.getDefaultInstance();
     }
 
-    public static final int SUCCESS_FIELD_NUMBER = 3;
+    public static final int URL_FIELD_NUMBER = 3;
     /**
-     * <code>.google.protobuf.BoolValue success = 3;</code>
-     * @return Whether the success field is set.
+     * <code>.google.protobuf.StringValue url = 3;</code>
+     * @return Whether the url field is set.
      */
-    public boolean hasSuccess() {
+    public boolean hasUrl() {
       return kindCase_ == 3;
     }
     /**
-     * <code>.google.protobuf.BoolValue success = 3;</code>
-     * @return The success.
+     * <code>.google.protobuf.StringValue url = 3;</code>
+     * @return The url.
      */
-    public com.google.protobuf.BoolValue getSuccess() {
+    public com.google.protobuf.StringValue getUrl() {
       if (kindCase_ == 3) {
-         return (com.google.protobuf.BoolValue) kind_;
+         return (com.google.protobuf.StringValue) kind_;
       }
-      return com.google.protobuf.BoolValue.getDefaultInstance();
+      return com.google.protobuf.StringValue.getDefaultInstance();
     }
     /**
-     * <code>.google.protobuf.BoolValue success = 3;</code>
+     * <code>.google.protobuf.StringValue url = 3;</code>
      */
-    public com.google.protobuf.BoolValueOrBuilder getSuccessOrBuilder() {
+    public com.google.protobuf.StringValueOrBuilder getUrlOrBuilder() {
       if (kindCase_ == 3) {
-         return (com.google.protobuf.BoolValue) kind_;
+         return (com.google.protobuf.StringValue) kind_;
       }
-      return com.google.protobuf.BoolValue.getDefaultInstance();
+      return com.google.protobuf.StringValue.getDefaultInstance();
     }
 
     public static final int ACKNOWLEDGE_FIELD_NUMBER = 4;
@@ -1420,7 +1420,7 @@ private static final long serialVersionUID = 0L;
         output.writeMessage(2, (im.turms.common.model.bo.common.Int64ValuesWithVersion) kind_);
       }
       if (kindCase_ == 3) {
-        output.writeMessage(3, (com.google.protobuf.BoolValue) kind_);
+        output.writeMessage(3, (com.google.protobuf.StringValue) kind_);
       }
       if (kindCase_ == 4) {
         output.writeMessage(4, (im.turms.common.model.bo.signal.Acknowledge) kind_);
@@ -1489,7 +1489,7 @@ private static final long serialVersionUID = 0L;
       }
       if (kindCase_ == 3) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, (com.google.protobuf.BoolValue) kind_);
+          .computeMessageSize(3, (com.google.protobuf.StringValue) kind_);
       }
       if (kindCase_ == 4) {
         size += com.google.protobuf.CodedOutputStream
@@ -1581,8 +1581,8 @@ private static final long serialVersionUID = 0L;
               .equals(other.getIdsWithVersion())) return false;
           break;
         case 3:
-          if (!getSuccess()
-              .equals(other.getSuccess())) return false;
+          if (!getUrl()
+              .equals(other.getUrl())) return false;
           break;
         case 4:
           if (!getAcknowledge()
@@ -1672,8 +1672,8 @@ private static final long serialVersionUID = 0L;
           hash = (53 * hash) + getIdsWithVersion().hashCode();
           break;
         case 3:
-          hash = (37 * hash) + SUCCESS_FIELD_NUMBER;
-          hash = (53 * hash) + getSuccess().hashCode();
+          hash = (37 * hash) + URL_FIELD_NUMBER;
+          hash = (53 * hash) + getUrl().hashCode();
           break;
         case 4:
           hash = (37 * hash) + ACKNOWLEDGE_FIELD_NUMBER;
@@ -1918,10 +1918,10 @@ private static final long serialVersionUID = 0L;
           }
         }
         if (kindCase_ == 3) {
-          if (successBuilder_ == null) {
+          if (urlBuilder_ == null) {
             result.kind_ = kind_;
           } else {
-            result.kind_ = successBuilder_.build();
+            result.kind_ = urlBuilder_.build();
           }
         }
         if (kindCase_ == 4) {
@@ -2094,8 +2094,8 @@ private static final long serialVersionUID = 0L;
             mergeIdsWithVersion(other.getIdsWithVersion());
             break;
           }
-          case SUCCESS: {
-            mergeSuccess(other.getSuccess());
+          case URL: {
+            mergeUrl(other.getUrl());
             break;
           }
           case ACKNOWLEDGE: {
@@ -2487,69 +2487,69 @@ private static final long serialVersionUID = 0L;
       }
 
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder> successBuilder_;
+          com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> urlBuilder_;
       /**
-       * <code>.google.protobuf.BoolValue success = 3;</code>
-       * @return Whether the success field is set.
+       * <code>.google.protobuf.StringValue url = 3;</code>
+       * @return Whether the url field is set.
        */
-      public boolean hasSuccess() {
+      public boolean hasUrl() {
         return kindCase_ == 3;
       }
       /**
-       * <code>.google.protobuf.BoolValue success = 3;</code>
-       * @return The success.
+       * <code>.google.protobuf.StringValue url = 3;</code>
+       * @return The url.
        */
-      public com.google.protobuf.BoolValue getSuccess() {
-        if (successBuilder_ == null) {
+      public com.google.protobuf.StringValue getUrl() {
+        if (urlBuilder_ == null) {
           if (kindCase_ == 3) {
-            return (com.google.protobuf.BoolValue) kind_;
+            return (com.google.protobuf.StringValue) kind_;
           }
-          return com.google.protobuf.BoolValue.getDefaultInstance();
+          return com.google.protobuf.StringValue.getDefaultInstance();
         } else {
           if (kindCase_ == 3) {
-            return successBuilder_.getMessage();
+            return urlBuilder_.getMessage();
           }
-          return com.google.protobuf.BoolValue.getDefaultInstance();
+          return com.google.protobuf.StringValue.getDefaultInstance();
         }
       }
       /**
-       * <code>.google.protobuf.BoolValue success = 3;</code>
+       * <code>.google.protobuf.StringValue url = 3;</code>
        */
-      public Builder setSuccess(com.google.protobuf.BoolValue value) {
-        if (successBuilder_ == null) {
+      public Builder setUrl(com.google.protobuf.StringValue value) {
+        if (urlBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
           kind_ = value;
           onChanged();
         } else {
-          successBuilder_.setMessage(value);
+          urlBuilder_.setMessage(value);
         }
         kindCase_ = 3;
         return this;
       }
       /**
-       * <code>.google.protobuf.BoolValue success = 3;</code>
+       * <code>.google.protobuf.StringValue url = 3;</code>
        */
-      public Builder setSuccess(
-          com.google.protobuf.BoolValue.Builder builderForValue) {
-        if (successBuilder_ == null) {
+      public Builder setUrl(
+          com.google.protobuf.StringValue.Builder builderForValue) {
+        if (urlBuilder_ == null) {
           kind_ = builderForValue.build();
           onChanged();
         } else {
-          successBuilder_.setMessage(builderForValue.build());
+          urlBuilder_.setMessage(builderForValue.build());
         }
         kindCase_ = 3;
         return this;
       }
       /**
-       * <code>.google.protobuf.BoolValue success = 3;</code>
+       * <code>.google.protobuf.StringValue url = 3;</code>
        */
-      public Builder mergeSuccess(com.google.protobuf.BoolValue value) {
-        if (successBuilder_ == null) {
+      public Builder mergeUrl(com.google.protobuf.StringValue value) {
+        if (urlBuilder_ == null) {
           if (kindCase_ == 3 &&
-              kind_ != com.google.protobuf.BoolValue.getDefaultInstance()) {
-            kind_ = com.google.protobuf.BoolValue.newBuilder((com.google.protobuf.BoolValue) kind_)
+              kind_ != com.google.protobuf.StringValue.getDefaultInstance()) {
+            kind_ = com.google.protobuf.StringValue.newBuilder((com.google.protobuf.StringValue) kind_)
                 .mergeFrom(value).buildPartial();
           } else {
             kind_ = value;
@@ -2557,18 +2557,18 @@ private static final long serialVersionUID = 0L;
           onChanged();
         } else {
           if (kindCase_ == 3) {
-            successBuilder_.mergeFrom(value);
+            urlBuilder_.mergeFrom(value);
           }
-          successBuilder_.setMessage(value);
+          urlBuilder_.setMessage(value);
         }
         kindCase_ = 3;
         return this;
       }
       /**
-       * <code>.google.protobuf.BoolValue success = 3;</code>
+       * <code>.google.protobuf.StringValue url = 3;</code>
        */
-      public Builder clearSuccess() {
-        if (successBuilder_ == null) {
+      public Builder clearUrl() {
+        if (urlBuilder_ == null) {
           if (kindCase_ == 3) {
             kindCase_ = 0;
             kind_ = null;
@@ -2579,49 +2579,49 @@ private static final long serialVersionUID = 0L;
             kindCase_ = 0;
             kind_ = null;
           }
-          successBuilder_.clear();
+          urlBuilder_.clear();
         }
         return this;
       }
       /**
-       * <code>.google.protobuf.BoolValue success = 3;</code>
+       * <code>.google.protobuf.StringValue url = 3;</code>
        */
-      public com.google.protobuf.BoolValue.Builder getSuccessBuilder() {
-        return getSuccessFieldBuilder().getBuilder();
+      public com.google.protobuf.StringValue.Builder getUrlBuilder() {
+        return getUrlFieldBuilder().getBuilder();
       }
       /**
-       * <code>.google.protobuf.BoolValue success = 3;</code>
+       * <code>.google.protobuf.StringValue url = 3;</code>
        */
-      public com.google.protobuf.BoolValueOrBuilder getSuccessOrBuilder() {
-        if ((kindCase_ == 3) && (successBuilder_ != null)) {
-          return successBuilder_.getMessageOrBuilder();
+      public com.google.protobuf.StringValueOrBuilder getUrlOrBuilder() {
+        if ((kindCase_ == 3) && (urlBuilder_ != null)) {
+          return urlBuilder_.getMessageOrBuilder();
         } else {
           if (kindCase_ == 3) {
-            return (com.google.protobuf.BoolValue) kind_;
+            return (com.google.protobuf.StringValue) kind_;
           }
-          return com.google.protobuf.BoolValue.getDefaultInstance();
+          return com.google.protobuf.StringValue.getDefaultInstance();
         }
       }
       /**
-       * <code>.google.protobuf.BoolValue success = 3;</code>
+       * <code>.google.protobuf.StringValue url = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder> 
-          getSuccessFieldBuilder() {
-        if (successBuilder_ == null) {
+          com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> 
+          getUrlFieldBuilder() {
+        if (urlBuilder_ == null) {
           if (!(kindCase_ == 3)) {
-            kind_ = com.google.protobuf.BoolValue.getDefaultInstance();
+            kind_ = com.google.protobuf.StringValue.getDefaultInstance();
           }
-          successBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder>(
-                  (com.google.protobuf.BoolValue) kind_,
+          urlBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>(
+                  (com.google.protobuf.StringValue) kind_,
                   getParentForChildren(),
                   isClean());
           kind_ = null;
         }
         kindCase_ = 3;
         onChanged();;
-        return successBuilder_;
+        return urlBuilder_;
       }
 
       private com.google.protobuf.SingleFieldBuilderV3<

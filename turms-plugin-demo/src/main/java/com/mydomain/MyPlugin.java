@@ -38,7 +38,7 @@ public class MyPlugin extends TurmsPlugin {
     }
 
     @Extension
-    public static class MyTurmsRequestHandler implements ClientRequestHandler {
+    public static class MyTurmsRequestHandler extends ClientRequestHandler {
         @Override
         public Mono<TurmsRequestWrapper> transform(@NotNull TurmsRequestWrapper turmsRequestWrapper) {
             TurmsRequest turmsRequest = turmsRequestWrapper.getTurmsRequest();
