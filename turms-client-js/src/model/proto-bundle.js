@@ -55,12 +55,14 @@ $root.im = (function() {
              * @name im.turms.proto.ContentType
              * @enum {string}
              * @property {number} PROFILE=0 PROFILE value
-             * @property {number} ATTACHMENT=1 ATTACHMENT value
+             * @property {number} GROUP_PROFILE=1 GROUP_PROFILE value
+             * @property {number} ATTACHMENT=2 ATTACHMENT value
              */
             proto.ContentType = (function() {
                 var valuesById = {}, values = Object.create(valuesById);
                 values[valuesById[0] = "PROFILE"] = 0;
-                values[valuesById[1] = "ATTACHMENT"] = 1;
+                values[valuesById[1] = "GROUP_PROFILE"] = 1;
+                values[valuesById[2] = "ATTACHMENT"] = 2;
                 return values;
             })();
 

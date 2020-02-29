@@ -13,13 +13,17 @@ public enum ContentType
    */
   PROFILE(0),
   /**
+   * <code>GROUP_PROFILE = 1;</code>
+   */
+  GROUP_PROFILE(1),
+  /**
    * <pre>
    *    STORAGE = 2;
    * </pre>
    *
-   * <code>ATTACHMENT = 1;</code>
+   * <code>ATTACHMENT = 2;</code>
    */
-  ATTACHMENT(1),
+  ATTACHMENT(2),
   UNRECOGNIZED(-1),
   ;
 
@@ -28,13 +32,17 @@ public enum ContentType
    */
   public static final int PROFILE_VALUE = 0;
   /**
+   * <code>GROUP_PROFILE = 1;</code>
+   */
+  public static final int GROUP_PROFILE_VALUE = 1;
+  /**
    * <pre>
    *    STORAGE = 2;
    * </pre>
    *
-   * <code>ATTACHMENT = 1;</code>
+   * <code>ATTACHMENT = 2;</code>
    */
-  public static final int ATTACHMENT_VALUE = 1;
+  public static final int ATTACHMENT_VALUE = 2;
 
 
   public final int getNumber() {
@@ -62,7 +70,8 @@ public enum ContentType
   public static ContentType forNumber(int value) {
     switch (value) {
       case 0: return PROFILE;
-      case 1: return ATTACHMENT;
+      case 1: return GROUP_PROFILE;
+      case 2: return ATTACHMENT;
       default: return null;
     }
   }

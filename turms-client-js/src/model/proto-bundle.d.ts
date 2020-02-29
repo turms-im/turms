@@ -19,7 +19,8 @@ export namespace im {
             /** ContentType enum. */
             enum ContentType {
                 PROFILE = 0,
-                ATTACHMENT = 1
+                GROUP_PROFILE = 1,
+                ATTACHMENT = 2
             }
 
             /** DeviceType enum. */

@@ -42,9 +42,10 @@ public class TurmsMinioPlugin extends TurmsPlugin {
 
     @Extension
     public static class MinioStorageServiceProvider extends StorageServiceProvider {
-        S3AsyncClient client;
-        S3Presigner presigner;
-        TurmsProperties turmsProperties;
+        private URI endpoint;
+        private S3AsyncClient client;
+        private S3Presigner presigner;
+        private TurmsProperties turmsProperties;
 
         @Override
         public void setContext(ApplicationContext context) throws Exception {
@@ -59,11 +60,20 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                 case PROFILE:
                     key = requesterId.toString();
                     break;
+                case GROUP_PROFILE:
+                    if (keyNum != null) {
+                        key = keyNum.toString();
+                    } else {
+                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS);
+                    }
+                    break;
+                case ATTACHMENT:
+                    throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS);
                 default:
                     throw new IllegalStateException("Unexpected value: " + contentType);
             }
             DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
-                    .bucket(contentType.name().toLowerCase())
+                    .bucket(getBucketName(contentType))
                     .key(key)
                     .build();
             return Mono.fromFuture(client.deleteObject(deleteObjectRequest))
@@ -74,6 +84,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
         public Mono<String> queryPresignedGetUrl(@NotNull Long requesterId, @NotNull ContentType contentType, String keyStr, @Nullable Long keyNum) {
             switch (contentType) {
                 case PROFILE:
+                case GROUP_PROFILE:
                     throw TurmsBusinessException.get(TurmsStatusCode.REDUNDANT_REQUEST);
                 case ATTACHMENT:
                     if (keyNum != null) {
@@ -83,7 +94,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                         } else {
                             key = keyNum.toString();
                         }
-                        String url = presignedUrlForGet(contentType.name().toLowerCase(), key);
+                        String url = presignedUrlForGet(getBucketName(contentType), key);
                         return Mono.just(url);
                     } else {
                         throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS);
@@ -102,6 +113,14 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                     type = turmsProperties.getStorage().getProfileContentType();
                     objectKey = requesterId.toString();
                     break;
+                case GROUP_PROFILE:
+                    type = turmsProperties.getStorage().getGroupProfileContentType();
+                    if (keyNum != null) {
+                        objectKey = keyNum.toString();
+                    } else {
+                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS);
+                    }
+                    break;
                 case ATTACHMENT:
                     type = turmsProperties.getStorage().getAttachmentContentType();
                     if (keyNum != null) {
@@ -117,7 +136,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                 default:
                     throw new IllegalStateException("Unexpected value: " + contentType);
             }
-            String url = presignedPutUrl(contentType.name().toLowerCase(), objectKey, type);
+            String url = presignedPutUrl(getBucketName(contentType), objectKey, type);
             return Mono.just(url);
         }
 
@@ -129,7 +148,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
             String secretKey = env.getProperty("turms.storage.minio.secretKey", "minioadmin");
             String regionStr = env.getProperty("turms.storage.minio.region", Region.AWS_GLOBAL.toString());
             Region region = Region.of(regionStr);
-            URI endpoint = URI.create(endpointStr);
+            endpoint = URI.create(endpointStr);
 
             SdkAsyncHttpClient httpClient = NettyNioAsyncHttpClient.builder()
                     .writeTimeout(Duration.ZERO)
@@ -159,7 +178,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
             for (ContentType type : ContentType.values()) {
                 if (type != ContentType.UNRECOGNIZED) {
                     boolean exists = bucketExists(type);
-                    String bucket = type.name().toLowerCase();
+                    String bucket = getBucketName(type);
                     if (!exists) {
                         TurmsLogger.log(String.format("Bucket: %s is being created", bucket));
                         createBucket(type);
@@ -174,13 +193,14 @@ public class TurmsMinioPlugin extends TurmsPlugin {
 
         private void createBucket(ContentType contentType) throws InterruptedException, ExecutionException, TimeoutException {
             CreateBucketRequest request = CreateBucketRequest.builder()
-                    .bucket(contentType.name().toLowerCase())
+                    .bucket(getBucketName(contentType))
                     .build();
             client.createBucket(request).get(30, TimeUnit.SECONDS);
         }
 
         private void putBucketPolicy(ContentType contentType) throws InterruptedException, ExecutionException, TimeoutException {
-            if (contentType == ContentType.PROFILE) {
+            if (contentType == ContentType.PROFILE || contentType == ContentType.GROUP_PROFILE) {
+                String bucket = getBucketName(contentType);
                 String policy = "{\n" +
                         "  \"Version\": \"2012-10-17\",\n" +
                         "  \"Statement\": [\n" +
@@ -189,13 +209,13 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                         "        \"s3:GetObject\"\n" +
                         "      ],\n" +
                         "      \"Effect\": \"Allow\",\n" +
-                        "      \"Resource\": \"arn:aws:s3:::profile/*\",\n" +
+                        "      \"Resource\": \"arn:aws:s3:::" + bucket + "/*\",\n" +
                         "      \"Principal\": \"*\"\n" +
                         "    }\n" +
                         "  ]\n" +
                         "}";
                 PutBucketPolicyRequest policyRequest = PutBucketPolicyRequest.builder()
-                        .bucket(contentType.name().toLowerCase())
+                        .bucket(bucket)
                         .policy(policy)
                         .build();
                 client.putBucketPolicy(policyRequest).get(5, TimeUnit.SECONDS);
@@ -208,6 +228,9 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                 switch (contentType) {
                     case PROFILE:
                         days = turmsProperties.getStorage().getProfileExpiration();
+                        break;
+                    case GROUP_PROFILE:
+                        days = turmsProperties.getStorage().getGroupProfileExpiration();
                         break;
                     case ATTACHMENT:
                         days = turmsProperties.getStorage().getAttachmentExpiration();
@@ -225,7 +248,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                             .rules(rule)
                             .build();
                     PutBucketLifecycleConfigurationRequest request = PutBucketLifecycleConfigurationRequest.builder()
-                            .bucket(contentType.name().toLowerCase())
+                            .bucket(getBucketName(contentType))
                             .lifecycleConfiguration(configuration)
                             .build();
                     client.putBucketLifecycleConfiguration(request).get(30, TimeUnit.SECONDS);
@@ -236,7 +259,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
         private boolean bucketExists(ContentType contentType) throws InterruptedException, ExecutionException, TimeoutException {
             try {
                 HeadBucketRequest request = HeadBucketRequest.builder()
-                        .bucket(contentType.name().toLowerCase())
+                        .bucket(getBucketName(contentType))
                         .build();
                 HeadBucketResponse response = client.headBucket(request).get(30, TimeUnit.SECONDS);
                 return 200 == response.sdkHttpResponse().statusCode();
@@ -276,6 +299,10 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                     .build();
             PresignedPutObjectRequest request = presigner.presignPutObject(presignRequest);
             return request.url().toString();
+        }
+
+        private String getBucketName(ContentType contentType) {
+            return contentType.name().toLowerCase().replace("_", "-");
         }
     }
 }
