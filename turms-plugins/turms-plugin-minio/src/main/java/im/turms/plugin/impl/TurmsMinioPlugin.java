@@ -54,7 +54,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
         }
 
         @Override
-        public Mono<Boolean> deleteResource(@NotNull Long requesterId, @NotNull ContentType contentType, String keyStr, @Nullable Long keyNum) {
+        public Mono<Void> deleteResource(@NotNull Long requesterId, @NotNull ContentType contentType, String keyStr, @Nullable Long keyNum) {
             String key;
             switch (contentType) {
                 case PROFILE:
@@ -76,8 +76,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                     .bucket(getBucketName(contentType))
                     .key(key)
                     .build();
-            return Mono.fromFuture(client.deleteObject(deleteObjectRequest))
-                    .thenReturn(true);
+            return Mono.fromFuture(client.deleteObject(deleteObjectRequest)).then();
         }
 
         @Override
