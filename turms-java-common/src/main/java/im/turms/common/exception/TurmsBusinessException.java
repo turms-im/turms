@@ -42,6 +42,10 @@ public class TurmsBusinessException extends NoStackTraceException {
         this.reason = reason;
     }
 
+    @Override
+    public String toString() {
+        return String.format("code: %d, reason: %s", code.getBusinessCode(), reason);
+    }
 
     @Override
     public boolean equals(Object o) {
