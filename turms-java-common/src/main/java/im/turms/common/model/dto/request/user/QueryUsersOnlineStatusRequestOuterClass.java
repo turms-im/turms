@@ -31,8 +31,8 @@ public final class QueryUsersOnlineStatusRequestOuterClass {
       "\n4request/user/query_users_online_status" +
       "_request.proto\022\016im.turms.proto\"2\n\035QueryU" +
       "sersOnlineStatusRequest\022\021\n\tusers_ids\030\001 \003" +
-      "(\003B*\n&im.turms.common.model.dto.request." +
-      "userP\001b\006proto3"
+      "(\003B-\n&im.turms.common.model.dto.request." +
+      "userP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

@@ -30,8 +30,8 @@ public final class DeleteGroupRequestOuterClass {
     java.lang.String[] descriptorData = {
       "\n(request/group/delete_group_request.pro" +
       "to\022\016im.turms.proto\"&\n\022DeleteGroupRequest" +
-      "\022\020\n\010group_id\030\001 \001(\003B+\n\'im.turms.common.mo" +
-      "del.dto.request.groupP\001b\006proto3"
+      "\022\020\n\010group_id\030\001 \001(\003B.\n\'im.turms.common.mo" +
+      "del.dto.request.groupP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

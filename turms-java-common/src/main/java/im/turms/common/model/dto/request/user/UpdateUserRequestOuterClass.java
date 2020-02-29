@@ -38,8 +38,8 @@ public final class UpdateUserRequestOuterClass {
       "ngValue\0229\n\023profile_picture_url\030\004 \001(\0132\034.g" +
       "oogle.protobuf.StringValue\022F\n\027profile_ac" +
       "cess_strategy\030\005 \001(\0162%.im.turms.proto.Pro" +
-      "fileAccessStrategyB*\n&im.turms.common.mo" +
-      "del.dto.request.userP\001b\006proto3"
+      "fileAccessStrategyB-\n&im.turms.common.mo" +
+      "del.dto.request.userP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

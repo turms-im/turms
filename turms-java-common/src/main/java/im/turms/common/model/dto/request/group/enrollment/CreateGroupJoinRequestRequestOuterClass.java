@@ -31,9 +31,9 @@ public final class CreateGroupJoinRequestRequestOuterClass {
       "\n@request/group/enrollment/create_group_" +
       "join_request_request.proto\022\016im.turms.pro" +
       "to\"B\n\035CreateGroupJoinRequestRequest\022\020\n\010g" +
-      "roup_id\030\001 \001(\003\022\017\n\007content\030\002 \001(\tB6\n2im.tur" +
+      "roup_id\030\001 \001(\003\022\017\n\007content\030\002 \001(\tB9\n2im.tur" +
       "ms.common.model.dto.request.group.enroll" +
-      "mentP\001b\006proto3"
+      "mentP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

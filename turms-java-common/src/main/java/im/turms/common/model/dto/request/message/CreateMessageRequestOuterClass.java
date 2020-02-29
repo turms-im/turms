@@ -39,8 +39,8 @@ public final class CreateMessageRequestOuterClass {
       "y_date\030\005 \001(\003\022*\n\004text\030\006 \001(\0132\034.google.prot" +
       "obuf.StringValue\022\017\n\007records\030\007 \003(\014\022/\n\nbur" +
       "n_after\030\010 \001(\0132\033.google.protobuf.Int32Val" +
-      "ueB-\n)im.turms.common.model.dto.request." +
-      "messageP\001b\006proto3"
+      "ueB0\n)im.turms.common.model.dto.request." +
+      "messageP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

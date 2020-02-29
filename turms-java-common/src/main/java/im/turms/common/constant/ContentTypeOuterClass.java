@@ -25,8 +25,8 @@ public final class ContentTypeOuterClass {
     java.lang.String[] descriptorData = {
       "\n\033constant/content_type.proto\022\016im.turms." +
       "proto**\n\013ContentType\022\013\n\007PROFILE\020\000\022\016\n\nATT" +
-      "ACHMENT\020\001B\034\n\030im.turms.common.constantP\001b" +
-      "\006proto3"
+      "ACHMENT\020\001B\037\n\030im.turms.common.constantP\001\272" +
+      "\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

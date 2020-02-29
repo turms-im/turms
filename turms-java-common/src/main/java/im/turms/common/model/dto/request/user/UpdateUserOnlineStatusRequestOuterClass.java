@@ -32,8 +32,8 @@ public final class UpdateUserOnlineStatusRequestOuterClass {
       "_request.proto\022\016im.turms.proto\032\032constant" +
       "/user_status.proto\"P\n\035UpdateUserOnlineSt" +
       "atusRequest\022/\n\013user_status\030\001 \001(\0162\032.im.tu" +
-      "rms.proto.UserStatusB*\n&im.turms.common." +
-      "model.dto.request.userP\001b\006proto3"
+      "rms.proto.UserStatusB-\n&im.turms.common." +
+      "model.dto.request.userP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

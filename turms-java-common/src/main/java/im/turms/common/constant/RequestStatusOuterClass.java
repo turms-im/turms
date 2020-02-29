@@ -27,8 +27,8 @@ public final class RequestStatusOuterClass {
       "s.proto*~\n\rRequestStatus\022\013\n\007PENDING\020\000\022\014\n" +
       "\010ACCEPTED\020\001\022\034\n\030ACCEPTED_WITHOUT_CONFIRM\020" +
       "\002\022\014\n\010DECLINED\020\003\022\013\n\007IGNORED\020\004\022\013\n\007EXPIRED\020" +
-      "\005\022\014\n\010CANCELED\020\006B\034\n\030im.turms.common.const" +
-      "antP\001b\006proto3"
+      "\005\022\014\n\010CANCELED\020\006B\037\n\030im.turms.common.const" +
+      "antP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

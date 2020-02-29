@@ -32,9 +32,9 @@ public final class CreateGroupJoinQuestionRequestOuterClass {
       "join_question_request.proto\022\016im.turms.pr" +
       "oto\"d\n\036CreateGroupJoinQuestionRequest\022\020\n" +
       "\010group_id\030\001 \001(\003\022\020\n\010question\030\002 \001(\t\022\017\n\007ans" +
-      "wers\030\003 \003(\t\022\r\n\005score\030\004 \001(\005B6\n2im.turms.co" +
+      "wers\030\003 \003(\t\022\r\n\005score\030\004 \001(\005B9\n2im.turms.co" +
       "mmon.model.dto.request.group.enrollmentP" +
-      "\001b\006proto3"
+      "\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

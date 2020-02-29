@@ -34,8 +34,8 @@ public final class QueryGroupJoinQuestionsRequestOuterClass {
       "QueryGroupJoinQuestionsRequest\022\020\n\010group_" +
       "id\030\001 \001(\003\022\024\n\014with_answers\030\002 \001(\010\0226\n\021last_u" +
       "pdated_date\030\003 \001(\0132\033.google.protobuf.Int6" +
-      "4ValueB6\n2im.turms.common.model.dto.requ" +
-      "est.group.enrollmentP\001b\006proto3"
+      "4ValueB9\n2im.turms.common.model.dto.requ" +
+      "est.group.enrollmentP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

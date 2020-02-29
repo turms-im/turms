@@ -31,9 +31,9 @@ public final class GroupJoinQuestionsAnswerResultOuterClass {
       "\n4model/group/group_join_questions_answe" +
       "r_result.proto\022\016im.turms.proto\"V\n\036GroupJ" +
       "oinQuestionsAnswerResult\022\r\n\005score\030\001 \001(\005\022" +
-      "\025\n\rquestions_ids\030\002 \003(\003\022\016\n\006joined\030\003 \001(\010B\"" +
-      "\n\036im.turms.common.model.bo.groupP\001b\006prot" +
-      "o3"
+      "\025\n\rquestions_ids\030\002 \003(\003\022\016\n\006joined\030\003 \001(\010B%" +
+      "\n\036im.turms.common.model.bo.groupP\001\272\002\000b\006p" +
+      "roto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

@@ -30,8 +30,8 @@ public final class Int64ValuesOuterClass {
     java.lang.String[] descriptorData = {
       "\n\037model/common/int64_values.proto\022\016im.tu" +
       "rms.proto\"\035\n\013Int64Values\022\016\n\006values\030\001 \003(\003" +
-      "B#\n\037im.turms.common.model.bo.commonP\001b\006p" +
-      "roto3"
+      "B&\n\037im.turms.common.model.bo.commonP\001\272\002\000" +
+      "b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

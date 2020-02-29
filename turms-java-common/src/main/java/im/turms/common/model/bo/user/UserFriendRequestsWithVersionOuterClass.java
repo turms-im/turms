@@ -35,8 +35,8 @@ public final class UserFriendRequestsWithVersionOuterClass {
       "sWithVersion\022?\n\024user_friend_requests\030\001 \003" +
       "(\0132!.im.turms.proto.UserFriendRequest\0226\n" +
       "\021last_updated_date\030\002 \001(\0132\033.google.protob" +
-      "uf.Int64ValueB!\n\035im.turms.common.model.b" +
-      "o.userP\001b\006proto3"
+      "uf.Int64ValueB$\n\035im.turms.common.model.b" +
+      "o.userP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

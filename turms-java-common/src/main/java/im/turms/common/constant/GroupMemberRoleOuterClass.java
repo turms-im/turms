@@ -26,8 +26,8 @@ public final class GroupMemberRoleOuterClass {
       "\n constant/group_member_role.proto\022\016im.t" +
       "urms.proto*U\n\017GroupMemberRole\022\t\n\005OWNER\020\000" +
       "\022\013\n\007MANAGER\020\001\022\n\n\006MEMBER\020\002\022\t\n\005GUEST\020\003\022\023\n\017" +
-      "ANONYMOUS_GUEST\020\004B\034\n\030im.turms.common.con" +
-      "stantP\001b\006proto3"
+      "ANONYMOUS_GUEST\020\004B\037\n\030im.turms.common.con" +
+      "stantP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

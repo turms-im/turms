@@ -31,9 +31,9 @@ public final class UpdateRelationshipGroupRequestOuterClass {
       "\nArequest/user/relationship/update_relat" +
       "ionship_group_request.proto\022\016im.turms.pr" +
       "oto\"G\n\036UpdateRelationshipGroupRequest\022\023\n" +
-      "\013group_index\030\001 \001(\005\022\020\n\010new_name\030\002 \001(\tB7\n3" +
+      "\013group_index\030\001 \001(\005\022\020\n\010new_name\030\002 \001(\tB:\n3" +
       "im.turms.common.model.dto.request.user.r" +
-      "elationshipP\001b\006proto3"
+      "elationshipP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

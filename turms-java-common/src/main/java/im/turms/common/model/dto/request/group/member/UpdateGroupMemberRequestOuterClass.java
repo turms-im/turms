@@ -36,9 +36,9 @@ public final class UpdateGroupMemberRequestOuterClass {
       " \001(\003\022*\n\004name\030\003 \001(\0132\034.google.protobuf.Str" +
       "ingValue\022-\n\004role\030\004 \001(\0162\037.im.turms.proto." +
       "GroupMemberRole\0222\n\rmute_end_date\030\005 \001(\0132\033" +
-      ".google.protobuf.Int64ValueB2\n.im.turms." +
-      "common.model.dto.request.group.memberP\001b" +
-      "\006proto3"
+      ".google.protobuf.Int64ValueB5\n.im.turms." +
+      "common.model.dto.request.group.memberP\001\272" +
+      "\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

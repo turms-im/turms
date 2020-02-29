@@ -32,8 +32,8 @@ public final class AcknowledgeOuterClass {
       "ms.proto\032\036google/protobuf/wrappers.proto" +
       "\"U\n\013Acknowledge\022\025\n\rdelivery_date\030\001 \001(\003\022/" +
       "\n\nmessage_id\030\002 \001(\0132\033.google.protobuf.Int" +
-      "64ValueB#\n\037im.turms.common.model.bo.sign" +
-      "alP\001b\006proto3"
+      "64ValueB&\n\037im.turms.common.model.bo.sign" +
+      "alP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

@@ -31,8 +31,8 @@ public final class MessagesOuterClass {
       "\n\034model/message/messages.proto\022\016im.turms" +
       ".proto\032\033model/message/message.proto\"5\n\010M" +
       "essages\022)\n\010messages\030\001 \003(\0132\027.im.turms.pro" +
-      "to.MessageB$\n im.turms.common.model.bo.m" +
-      "essageP\001b\006proto3"
+      "to.MessageB\'\n im.turms.common.model.bo.m" +
+      "essageP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

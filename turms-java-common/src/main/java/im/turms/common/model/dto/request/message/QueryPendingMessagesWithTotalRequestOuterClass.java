@@ -32,9 +32,9 @@ public final class QueryPendingMessagesWithTotalRequestOuterClass {
       "_with_total_request.proto\022\016im.turms.prot" +
       "o\032\036google/protobuf/wrappers.proto\"Q\n$Que" +
       "ryPendingMessagesWithTotalRequest\022)\n\004siz" +
-      "e\030\001 \001(\0132\033.google.protobuf.Int32ValueB-\n)" +
+      "e\030\001 \001(\0132\033.google.protobuf.Int32ValueB0\n)" +
       "im.turms.common.model.dto.request.messag" +
-      "eP\001b\006proto3"
+      "eP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

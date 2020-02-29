@@ -35,8 +35,9 @@ public final class UpdateFriendRequestRequestOuterClass {
       "RequestRequest\022\021\n\trequestId\030\001 \001(\003\0226\n\016res" +
       "ponseAction\030\002 \001(\0162\036.im.turms.proto.Respo" +
       "nseAction\022,\n\006reason\030\003 \001(\0132\034.google.proto" +
-      "buf.StringValueB7\n3im.turms.common.model" +
-      ".dto.request.user.relationshipP\001b\006proto3"
+      "buf.StringValueB:\n3im.turms.common.model" +
+      ".dto.request.user.relationshipP\001\272\002\000b\006pro" +
+      "to3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

@@ -35,8 +35,8 @@ public final class QuerySignedGetUrlRequestOuterClass {
       "\n\014content_type\030\001 \001(\0162\033.im.turms.proto.Co" +
       "ntentType\022-\n\007key_str\030\002 \001(\0132\034.google.prot" +
       "obuf.StringValue\022,\n\007key_num\030\003 \001(\0132\033.goog" +
-      "le.protobuf.Int64ValueB-\n)im.turms.commo" +
-      "n.model.dto.request.storageP\001b\006proto3"
+      "le.protobuf.Int64ValueB0\n)im.turms.commo" +
+      "n.model.dto.request.storageP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

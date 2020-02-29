@@ -12,7 +12,7 @@ export default class MessageService {
     get onMessage(): (message: ParsedModel.Message, messageAddition: MessageAddition) => void;
     set onMessage(value: (message: ParsedModel.Message, messageAddition: MessageAddition) => void);
     constructor(turmsClient: TurmsClient);
-    sendMessage(chatType: string | ChatType, toId: string, deliveryDate: Date, text?: string, records?: Uint8Array[], burnAfter?: number): Promise<string>;
+    sendMessage(chatType: string | ChatType, toId: string, deliveryDate?: Date, text?: string, records?: Uint8Array[], burnAfter?: number): Promise<string>;
     forwardMessage(messageId: string, chatType: string | ChatType, toId: string): Promise<string>;
     updateSentMessage(messageId: string, text?: string, records?: Uint8Array[]): Promise<void>;
     queryMessages(ids?: string[], chatType?: string | ChatType, areSystemMessages?: boolean, fromId?: string, deliveryDateAfter?: Date, deliveryDateBefore?: Date, deliveryStatus?: string | MessageDeliveryStatus, size?: number): Promise<ParsedModel.Message[]>;

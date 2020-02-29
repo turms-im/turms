@@ -64,14 +64,17 @@ export default class MessageService {
     sendMessage(
         chatType: string | ChatType,
         toId: string,
-        deliveryDate: Date,
+        deliveryDate?: Date,
         text?: string,
         records?: Uint8Array[],
         burnAfter?: number): Promise<string> {
-        RequestUtil.throwIfAnyFalsy(chatType, toId, deliveryDate);
+        RequestUtil.throwIfAnyFalsy(chatType, toId);
         RequestUtil.throwIfAllFalsy(text, records);
         if (typeof chatType === "string") {
             chatType = ConstantTransformer.string2ChatType(chatType);
+        }
+        if (!deliveryDate) {
+            deliveryDate = new Date();
         }
         return this._turmsClient.driver.send({
             createMessageRequest: {

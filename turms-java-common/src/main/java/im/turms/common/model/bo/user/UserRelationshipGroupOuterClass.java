@@ -30,8 +30,8 @@ public final class UserRelationshipGroupOuterClass {
     java.lang.String[] descriptorData = {
       "\n(model/user/user_relationship_group.pro" +
       "to\022\016im.turms.proto\"4\n\025UserRelationshipGr" +
-      "oup\022\r\n\005index\030\001 \001(\005\022\014\n\004name\030\002 \001(\tB!\n\035im.t" +
-      "urms.common.model.bo.userP\001b\006proto3"
+      "oup\022\r\n\005index\030\001 \001(\005\022\014\n\004name\030\002 \001(\tB$\n\035im.t" +
+      "urms.common.model.bo.userP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

@@ -40,9 +40,9 @@ public final class CheckGroupJoinQuestionsAnswersRequestOuterClass {
       "\001 \003(\0132N.im.turms.proto.CheckGroupJoinQue" +
       "stionsAnswersRequest.QuestionIdAndAnswer" +
       "Entry\032:\n\030QuestionIdAndAnswerEntry\022\013\n\003key" +
-      "\030\001 \001(\003\022\r\n\005value\030\002 \001(\t:\0028\001B6\n2im.turms.co" +
+      "\030\001 \001(\003\022\r\n\005value\030\002 \001(\t:\0028\001B9\n2im.turms.co" +
       "mmon.model.dto.request.group.enrollmentP" +
-      "\001b\006proto3"
+      "\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

@@ -40,8 +40,8 @@ public final class FileOuterClass {
       "rotobuf.BytesValue\032s\n\013Description\022\013\n\003url" +
       "\030\001 \001(\t\022)\n\004size\030\002 \001(\0132\033.google.protobuf.I" +
       "nt32Value\022,\n\006format\030\003 \001(\0132\034.google.proto" +
-      "buf.StringValueB!\n\035im.turms.common.model" +
-      ".bo.fileP\001b\006proto3"
+      "buf.StringValueB$\n\035im.turms.common.model" +
+      ".bo.fileP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

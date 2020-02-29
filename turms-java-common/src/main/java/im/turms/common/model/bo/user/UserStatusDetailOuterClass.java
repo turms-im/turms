@@ -34,8 +34,8 @@ public final class UserStatusDetailOuterClass {
       "atusDetail\022\017\n\007user_id\030\001 \001(\003\022/\n\013user_stat" +
       "us\030\002 \001(\0162\032.im.turms.proto.UserStatus\0226\n\022" +
       "using_device_types\030\003 \003(\0162\032.im.turms.prot" +
-      "o.DeviceTypeB!\n\035im.turms.common.model.bo" +
-      ".userP\001b\006proto3"
+      "o.DeviceTypeB$\n\035im.turms.common.model.bo" +
+      ".userP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

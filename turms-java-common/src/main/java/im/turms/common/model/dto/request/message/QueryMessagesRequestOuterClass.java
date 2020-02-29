@@ -42,8 +42,8 @@ public final class QueryMessagesRequestOuterClass {
       "64Value\0229\n\024delivery_date_before\030\007 \001(\0132\033." +
       "google.protobuf.Int64Value\022>\n\017delivery_s" +
       "tatus\030\010 \001(\0162%.im.turms.proto.MessageDeli" +
-      "veryStatusB-\n)im.turms.common.model.dto." +
-      "request.messageP\001b\006proto3"
+      "veryStatusB0\n)im.turms.common.model.dto." +
+      "request.messageP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

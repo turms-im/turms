@@ -35,9 +35,9 @@ public final class QueryRelatedUsersIdsRequestOuterClass {
       "\001 \001(\0132\032.google.protobuf.BoolValue\0220\n\013gro" +
       "up_index\030\002 \001(\0132\033.google.protobuf.Int32Va" +
       "lue\0226\n\021last_updated_date\030\003 \001(\0132\033.google." +
-      "protobuf.Int64ValueB7\n3im.turms.common.m" +
-      "odel.dto.request.user.relationshipP\001b\006pr" +
-      "oto3"
+      "protobuf.Int64ValueB:\n3im.turms.common.m" +
+      "odel.dto.request.user.relationshipP\001\272\002\000b" +
+      "\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

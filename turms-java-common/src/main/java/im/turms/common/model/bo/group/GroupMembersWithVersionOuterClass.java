@@ -34,8 +34,8 @@ public final class GroupMembersWithVersionOuterClass {
       ".proto\"\205\001\n\027GroupMembersWithVersion\0222\n\rgr" +
       "oup_members\030\001 \003(\0132\033.im.turms.proto.Group" +
       "Member\0226\n\021last_updated_date\030\002 \001(\0132\033.goog" +
-      "le.protobuf.Int64ValueB\"\n\036im.turms.commo" +
-      "n.model.bo.groupP\001b\006proto3"
+      "le.protobuf.Int64ValueB%\n\036im.turms.commo" +
+      "n.model.bo.groupP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

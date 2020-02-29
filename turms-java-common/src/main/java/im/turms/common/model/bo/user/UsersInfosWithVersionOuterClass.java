@@ -34,8 +34,8 @@ public final class UsersInfosWithVersionOuterClass {
       "}\n\025UsersInfosWithVersion\022,\n\nuser_infos\030\001" +
       " \003(\0132\030.im.turms.proto.UserInfo\0226\n\021last_u" +
       "pdated_date\030\002 \001(\0132\033.google.protobuf.Int6" +
-      "4ValueB!\n\035im.turms.common.model.bo.userP" +
-      "\001b\006proto3"
+      "4ValueB$\n\035im.turms.common.model.bo.userP" +
+      "\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

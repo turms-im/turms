@@ -39,8 +39,8 @@ public final class CreateGroupRequestOuterClass {
       "obuf.Int32Value\0222\n\rgroup_type_id\030\006 \001(\0132\033" +
       ".google.protobuf.Int64Value\0222\n\rmute_end_" +
       "date\030\007 \001(\0132\033.google.protobuf.Int64ValueB" +
-      "+\n\'im.turms.common.model.dto.request.gro" +
-      "upP\001b\006proto3"
+      ".\n\'im.turms.common.model.dto.request.gro" +
+      "upP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

@@ -32,8 +32,8 @@ public final class DeleteGroupBlacklistedUserRequestOuterClass {
       "lacklisted_user_request.proto\022\016im.turms." +
       "proto\"T\n!DeleteGroupBlacklistedUserReque" +
       "st\022\020\n\010group_id\030\001 \001(\003\022\035\n\025unblacklisted_us" +
-      "er_id\030\002 \001(\003B5\n1im.turms.common.model.dto" +
-      ".request.group.blacklistP\001b\006proto3"
+      "er_id\030\002 \001(\003B8\n1im.turms.common.model.dto" +
+      ".request.group.blacklistP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

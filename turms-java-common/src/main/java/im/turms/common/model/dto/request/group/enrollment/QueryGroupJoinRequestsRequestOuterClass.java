@@ -33,9 +33,9 @@ public final class QueryGroupJoinRequestsRequestOuterClass {
       "to\032\036google/protobuf/wrappers.proto\"i\n\035Qu" +
       "eryGroupJoinRequestsRequest\022\020\n\010group_id\030" +
       "\001 \001(\003\0226\n\021last_updated_date\030\002 \001(\0132\033.googl" +
-      "e.protobuf.Int64ValueB6\n2im.turms.common" +
-      ".model.dto.request.group.enrollmentP\001b\006p" +
-      "roto3"
+      "e.protobuf.Int64ValueB9\n2im.turms.common" +
+      ".model.dto.request.group.enrollmentP\001\272\002\000" +
+      "b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

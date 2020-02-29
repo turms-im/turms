@@ -41,8 +41,8 @@ public final class MessageOuterClass {
       "2\032.google.protobuf.BoolValue\0221\n\014recipien" +
       "t_id\030\010 \001(\0132\033.google.protobuf.Int64Value\022" +
       ",\n\007records\030\t \003(\0132\033.google.protobuf.Bytes" +
-      "ValueB$\n im.turms.common.model.bo.messag" +
-      "eP\001b\006proto3"
+      "ValueB\'\n im.turms.common.model.bo.messag" +
+      "eP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

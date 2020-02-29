@@ -31,9 +31,9 @@ public final class CreateFriendRequestRequestOuterClass {
       "\n=request/user/relationship/create_frien" +
       "d_request_request.proto\022\016im.turms.proto\"" +
       "C\n\032CreateFriendRequestRequest\022\024\n\014recipie" +
-      "nt_id\030\001 \001(\003\022\017\n\007content\030\002 \001(\tB7\n3im.turms" +
+      "nt_id\030\001 \001(\003\022\017\n\007content\030\002 \001(\tB:\n3im.turms" +
       ".common.model.dto.request.user.relations" +
-      "hipP\001b\006proto3"
+      "hipP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

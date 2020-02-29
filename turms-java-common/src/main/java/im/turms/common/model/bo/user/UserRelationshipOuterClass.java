@@ -37,8 +37,8 @@ public final class UserRelationshipOuterClass {
       "obuf.BoolValue\0220\n\013group_index\030\004 \001(\0132\033.go" +
       "ogle.protobuf.Int64Value\0227\n\022establishmen" +
       "t_date\030\005 \001(\0132\033.google.protobuf.Int64Valu" +
-      "eB!\n\035im.turms.common.model.bo.userP\001b\006pr" +
-      "oto3"
+      "eB$\n\035im.turms.common.model.bo.userP\001\272\002\000b" +
+      "\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

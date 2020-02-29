@@ -32,8 +32,8 @@ public final class QueryGroupRequestOuterClass {
       "o\022\016im.turms.proto\032\036google/protobuf/wrapp" +
       "ers.proto\"]\n\021QueryGroupRequest\022\020\n\010group_" +
       "id\030\001 \001(\003\0226\n\021last_updated_date\030\002 \001(\0132\033.go" +
-      "ogle.protobuf.Int64ValueB+\n\'im.turms.com" +
-      "mon.model.dto.request.groupP\001b\006proto3"
+      "ogle.protobuf.Int64ValueB.\n\'im.turms.com" +
+      "mon.model.dto.request.groupP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

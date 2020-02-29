@@ -31,8 +31,8 @@ public final class QueryMessageStatusesRequestOuterClass {
       "\n4request/message/query_message_statuses" +
       "_request.proto\022\016im.turms.proto\"1\n\033QueryM" +
       "essageStatusesRequest\022\022\n\nmessage_id\030\001 \001(" +
-      "\003B-\n)im.turms.common.model.dto.request.m" +
-      "essageP\001b\006proto3"
+      "\003B0\n)im.turms.common.model.dto.request.m" +
+      "essageP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

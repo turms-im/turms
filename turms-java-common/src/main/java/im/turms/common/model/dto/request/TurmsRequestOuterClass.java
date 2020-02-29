@@ -230,8 +230,8 @@ public final class TurmsRequestOuterClass {
       "t\030\332\004 \001(\0132(.im.turms.proto.QueryGroupMemb" +
       "ersRequestH\000\022P\n\033update_group_member_requ" +
       "est\030\333\004 \001(\0132(.im.turms.proto.UpdateGroupM" +
-      "emberRequestH\000B\006\n\004kindB%\n!im.turms.commo" +
-      "n.model.dto.requestP\001b\006proto3"
+      "emberRequestH\000B\006\n\004kindB(\n!im.turms.commo" +
+      "n.model.dto.requestP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

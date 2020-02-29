@@ -32,8 +32,8 @@ public final class Int64ValuesWithVersionOuterClass {
       ".proto\022\016im.turms.proto\032\036google/protobuf/" +
       "wrappers.proto\"`\n\026Int64ValuesWithVersion" +
       "\022\016\n\006values\030\001 \003(\003\0226\n\021last_updated_date\030\002 " +
-      "\001(\0132\033.google.protobuf.Int64ValueB#\n\037im.t" +
-      "urms.common.model.bo.commonP\001b\006proto3"
+      "\001(\0132\033.google.protobuf.Int64ValueB&\n\037im.t" +
+      "urms.common.model.bo.commonP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

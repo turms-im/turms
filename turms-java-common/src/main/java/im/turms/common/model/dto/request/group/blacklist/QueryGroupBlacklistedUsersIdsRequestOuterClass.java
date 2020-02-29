@@ -33,9 +33,9 @@ public final class QueryGroupBlacklistedUsersIdsRequestOuterClass {
       "rms.proto\032\036google/protobuf/wrappers.prot" +
       "o\"p\n$QueryGroupBlacklistedUsersIdsReques" +
       "t\022\020\n\010group_id\030\001 \001(\003\0226\n\021last_updated_date" +
-      "\030\002 \001(\0132\033.google.protobuf.Int64ValueB5\n1i" +
+      "\030\002 \001(\0132\033.google.protobuf.Int64ValueB8\n1i" +
       "m.turms.common.model.dto.request.group.b" +
-      "lacklistP\001b\006proto3"
+      "lacklistP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

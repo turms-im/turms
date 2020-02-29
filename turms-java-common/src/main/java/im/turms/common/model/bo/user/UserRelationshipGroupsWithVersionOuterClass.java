@@ -35,8 +35,8 @@ public final class UserRelationshipGroupsWithVersionOuterClass {
       "ionshipGroupsWithVersion\022G\n\030user_relatio" +
       "nship_groups\030\001 \003(\0132%.im.turms.proto.User" +
       "RelationshipGroup\0226\n\021last_updated_date\030\002" +
-      " \001(\0132\033.google.protobuf.Int64ValueB!\n\035im." +
-      "turms.common.model.bo.userP\001b\006proto3"
+      " \001(\0132\033.google.protobuf.Int64ValueB$\n\035im." +
+      "turms.common.model.bo.userP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

@@ -36,9 +36,9 @@ public final class UpdateMessageRequestOuterClass {
       "xt\030\003 \001(\0132\034.google.protobuf.StringValue\022\017" +
       "\n\007records\030\004 \003(\014\0220\n\013recall_date\030\005 \001(\0132\033.g" +
       "oogle.protobuf.Int64Value\022.\n\tread_date\030\006" +
-      " \001(\0132\033.google.protobuf.Int64ValueB-\n)im." +
+      " \001(\0132\033.google.protobuf.Int64ValueB0\n)im." +
       "turms.common.model.dto.request.messageP\001" +
-      "b\006proto3"
+      "\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

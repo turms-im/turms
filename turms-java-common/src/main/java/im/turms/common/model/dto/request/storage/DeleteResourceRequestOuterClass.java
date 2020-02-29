@@ -35,8 +35,8 @@ public final class DeleteResourceRequestOuterClass {
       "t_type\030\001 \001(\0162\033.im.turms.proto.ContentTyp" +
       "e\022-\n\007key_str\030\002 \001(\0132\034.google.protobuf.Str" +
       "ingValue\022,\n\007key_num\030\003 \001(\0132\033.google.proto" +
-      "buf.Int64ValueB-\n)im.turms.common.model." +
-      "dto.request.storageP\001b\006proto3"
+      "buf.Int64ValueB0\n)im.turms.common.model." +
+      "dto.request.storageP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

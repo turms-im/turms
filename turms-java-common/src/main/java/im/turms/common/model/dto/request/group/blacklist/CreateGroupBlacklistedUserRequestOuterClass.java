@@ -32,8 +32,8 @@ public final class CreateGroupBlacklistedUserRequestOuterClass {
       "lacklisted_user_request.proto\022\016im.turms." +
       "proto\"R\n!CreateGroupBlacklistedUserReque" +
       "st\022\020\n\010group_id\030\001 \001(\003\022\033\n\023blacklisted_user" +
-      "_id\030\002 \001(\003B5\n1im.turms.common.model.dto.r" +
-      "equest.group.blacklistP\001b\006proto3"
+      "_id\030\002 \001(\003B8\n1im.turms.common.model.dto.r" +
+      "equest.group.blacklistP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

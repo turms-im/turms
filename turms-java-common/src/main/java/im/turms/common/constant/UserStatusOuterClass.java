@@ -27,7 +27,8 @@ public final class UserStatusOuterClass {
       "roto*r\n\nUserStatus\022\r\n\tAVAILABLE\020\000\022\013\n\007OFF" +
       "LINE\020\001\022\r\n\tINVISIBLE\020\002\022\010\n\004BUSY\020\003\022\022\n\016DO_NO" +
       "T_DISTURB\020\004\022\010\n\004AWAY\020\005\022\021\n\rBE_RIGHT_BACK\020\006" +
-      "B\034\n\030im.turms.common.constantP\001b\006proto3"
+      "B\037\n\030im.turms.common.constantP\001\272\002\000b\006proto" +
+      "3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

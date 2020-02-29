@@ -35,8 +35,8 @@ public final class QueryGroupMembersRequestOuterClass {
       "updated_date\030\002 \001(\0132\033.google.protobuf.Int" +
       "64Value\022\031\n\021group_members_ids\030\003 \003(\003\022/\n\013wi" +
       "th_status\030\004 \001(\0132\032.google.protobuf.BoolVa" +
-      "lueB2\n.im.turms.common.model.dto.request" +
-      ".group.memberP\001b\006proto3"
+      "lueB5\n.im.turms.common.model.dto.request" +
+      ".group.memberP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

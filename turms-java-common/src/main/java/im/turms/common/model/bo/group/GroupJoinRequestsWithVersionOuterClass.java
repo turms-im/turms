@@ -35,8 +35,8 @@ public final class GroupJoinRequestsWithVersionOuterClass {
       "WithVersion\022=\n\023group_join_requests\030\001 \003(\013" +
       "2 .im.turms.proto.GroupJoinRequest\0226\n\021la" +
       "st_updated_date\030\002 \001(\0132\033.google.protobuf." +
-      "Int64ValueB\"\n\036im.turms.common.model.bo.g" +
-      "roupP\001b\006proto3"
+      "Int64ValueB%\n\036im.turms.common.model.bo.g" +
+      "roupP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

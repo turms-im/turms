@@ -30,8 +30,8 @@ public final class AckRequestOuterClass {
     java.lang.String[] descriptorData = {
       "\n request/signal/ack_request.proto\022\016im.t" +
       "urms.proto\"\"\n\nAckRequest\022\024\n\014messages_ids" +
-      "\030\001 \003(\003B,\n(im.turms.common.model.dto.requ" +
-      "est.signalP\001b\006proto3"
+      "\030\001 \003(\003B/\n(im.turms.common.model.dto.requ" +
+      "est.signalP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

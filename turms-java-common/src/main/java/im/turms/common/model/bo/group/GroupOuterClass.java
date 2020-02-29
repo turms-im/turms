@@ -44,8 +44,8 @@ public final class GroupOuterClass {
       "\n\rdeletion_date\030\n \001(\0132\033.google.protobuf." +
       "Int64Value\0222\n\rmute_end_date\030\013 \001(\0132\033.goog" +
       "le.protobuf.Int64Value\022*\n\006active\030\014 \001(\0132\032" +
-      ".google.protobuf.BoolValueB\"\n\036im.turms.c" +
-      "ommon.model.bo.groupP\001b\006proto3"
+      ".google.protobuf.BoolValueB%\n\036im.turms.c" +
+      "ommon.model.bo.groupP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

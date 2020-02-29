@@ -41,8 +41,8 @@ public final class GroupInvitationOuterClass {
       "gle.protobuf.Int64Value\022/\n\ninviter_id\030\007 " +
       "\001(\0132\033.google.protobuf.Int64Value\022/\n\ninvi" +
       "tee_id\030\010 \001(\0132\033.google.protobuf.Int64Valu" +
-      "eB\"\n\036im.turms.common.model.bo.groupP\001b\006p" +
-      "roto3"
+      "eB%\n\036im.turms.common.model.bo.groupP\001\272\002\000" +
+      "b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

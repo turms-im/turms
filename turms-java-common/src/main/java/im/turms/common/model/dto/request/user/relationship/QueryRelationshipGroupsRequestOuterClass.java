@@ -33,8 +33,8 @@ public final class QueryRelationshipGroupsRequestOuterClass {
       "oto\032\036google/protobuf/wrappers.proto\"X\n\036Q" +
       "ueryRelationshipGroupsRequest\0226\n\021last_up" +
       "dated_date\030\001 \001(\0132\033.google.protobuf.Int64" +
-      "ValueB7\n3im.turms.common.model.dto.reque" +
-      "st.user.relationshipP\001b\006proto3"
+      "ValueB:\n3im.turms.common.model.dto.reque" +
+      "st.user.relationshipP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

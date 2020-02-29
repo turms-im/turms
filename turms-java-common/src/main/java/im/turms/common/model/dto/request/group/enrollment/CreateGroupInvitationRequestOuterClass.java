@@ -32,8 +32,8 @@ public final class CreateGroupInvitationRequestOuterClass {
       "invitation_request.proto\022\016im.turms.proto" +
       "\"U\n\034CreateGroupInvitationRequest\022\020\n\010grou" +
       "p_id\030\001 \001(\003\022\022\n\ninvitee_id\030\002 \001(\003\022\017\n\007conten" +
-      "t\030\003 \001(\tB6\n2im.turms.common.model.dto.req" +
-      "uest.group.enrollmentP\001b\006proto3"
+      "t\030\003 \001(\tB9\n2im.turms.common.model.dto.req" +
+      "uest.group.enrollmentP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

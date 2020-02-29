@@ -33,9 +33,9 @@ public final class QueryGroupInvitationsRequestOuterClass {
       "\032\036google/protobuf/wrappers.proto\"h\n\034Quer" +
       "yGroupInvitationsRequest\022\020\n\010group_id\030\001 \001" +
       "(\003\0226\n\021last_updated_date\030\002 \001(\0132\033.google.p" +
-      "rotobuf.Int64ValueB6\n2im.turms.common.mo" +
-      "del.dto.request.group.enrollmentP\001b\006prot" +
-      "o3"
+      "rotobuf.Int64ValueB9\n2im.turms.common.mo" +
+      "del.dto.request.group.enrollmentP\001\272\002\000b\006p" +
+      "roto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

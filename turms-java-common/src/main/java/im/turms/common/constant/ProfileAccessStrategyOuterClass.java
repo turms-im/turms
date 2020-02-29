@@ -26,8 +26,8 @@ public final class ProfileAccessStrategyOuterClass {
       "\n&constant/profile_access_strategy.proto" +
       "\022\016im.turms.proto*O\n\025ProfileAccessStrateg" +
       "y\022\007\n\003ALL\020\000\022 \n\034ALL_EXCEPT_BLACKLISTED_USE" +
-      "RS\020\001\022\013\n\007FRIENDS\020\002B\034\n\030im.turms.common.con" +
-      "stantP\001b\006proto3"
+      "RS\020\001\022\013\n\007FRIENDS\020\002B\037\n\030im.turms.common.con" +
+      "stantP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

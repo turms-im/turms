@@ -98,8 +98,8 @@ public final class TurmsNotificationOuterClass {
       "ersion\030\022 \001(\0132\'.im.turms.proto.GroupMembe" +
       "rsWithVersionH\000\022@\n\023groups_with_version\030\023" +
       " \001(\0132!.im.turms.proto.GroupsWithVersionH" +
-      "\000B\006\n\004kindB*\n&im.turms.common.model.dto.n" +
-      "otificationP\001b\006proto3"
+      "\000B\006\n\004kindB-\n&im.turms.common.model.dto.n" +
+      "otificationP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

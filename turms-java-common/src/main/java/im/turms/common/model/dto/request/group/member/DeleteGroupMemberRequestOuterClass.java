@@ -35,8 +35,8 @@ public final class DeleteGroupMemberRequestOuterClass {
       "_member_id\030\002 \001(\003\0221\n\014successor_id\030\003 \001(\0132\033" +
       ".google.protobuf.Int64Value\0227\n\023quit_afte" +
       "r_transfer\030\004 \001(\0132\032.google.protobuf.BoolV" +
-      "alueB2\n.im.turms.common.model.dto.reques" +
-      "t.group.memberP\001b\006proto3"
+      "alueB5\n.im.turms.common.model.dto.reques" +
+      "t.group.memberP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

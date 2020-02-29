@@ -41,8 +41,8 @@ public final class UserFriendRequestOuterClass {
       "\006 \001(\0132\033.google.protobuf.Int64Value\0221\n\014re" +
       "quester_id\030\007 \001(\0132\033.google.protobuf.Int64" +
       "Value\0221\n\014recipient_id\030\010 \001(\0132\033.google.pro" +
-      "tobuf.Int64ValueB!\n\035im.turms.common.mode" +
-      "l.bo.userP\001b\006proto3"
+      "tobuf.Int64ValueB$\n\035im.turms.common.mode" +
+      "l.bo.userP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

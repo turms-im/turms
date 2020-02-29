@@ -42,13 +42,14 @@ public class MessageService {
     public func sendMessage(
         chatType: ChatType,
         toId: Int64,
-        deliveryDate: Date,
+        deliveryDate: Date? = nil,
         text: String? = nil,
         records: [[UInt8]]? = nil,
         burnAfter: Int32? = nil) -> Promise<Int64> {
         if Validator.areAllNil(text, records) {
             return Promise(error: TurmsBusinessError(.illegalArguments))
         }
+        deliveryDate = deliveryDate ?? Date()
         return turmsClient.driver
             .send { $0
                 .request("createMessageRequest")

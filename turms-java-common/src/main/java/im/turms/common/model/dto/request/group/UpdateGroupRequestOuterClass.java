@@ -43,8 +43,8 @@ public final class UpdateGroupRequestOuterClass {
       "uf.Int64Value\0221\n\014successor_id\030\t \001(\0132\033.go" +
       "ogle.protobuf.Int64Value\0227\n\023quit_after_t" +
       "ransfer\030\n \001(\0132\032.google.protobuf.BoolValu" +
-      "eB+\n\'im.turms.common.model.dto.request.g" +
-      "roupP\001b\006proto3"
+      "eB.\n\'im.turms.common.model.dto.request.g" +
+      "roupP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

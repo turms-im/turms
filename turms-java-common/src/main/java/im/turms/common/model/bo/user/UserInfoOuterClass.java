@@ -41,8 +41,8 @@ public final class UserInfoOuterClass {
       "google.protobuf.Int64Value\022*\n\006active\030\007 \001" +
       "(\0132\032.google.protobuf.BoolValue\022F\n\027profil" +
       "e_access_strategy\030\010 \001(\0162%.im.turms.proto" +
-      ".ProfileAccessStrategyB!\n\035im.turms.commo" +
-      "n.model.bo.userP\001b\006proto3"
+      ".ProfileAccessStrategyB$\n\035im.turms.commo" +
+      "n.model.bo.userP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

@@ -35,8 +35,8 @@ public final class GroupInvitationsWithVersionOuterClass {
       "ersion\022:\n\021group_invitations\030\001 \003(\0132\037.im.t" +
       "urms.proto.GroupInvitation\0226\n\021last_updat" +
       "ed_date\030\002 \001(\0132\033.google.protobuf.Int64Val" +
-      "ueB\"\n\036im.turms.common.model.bo.groupP\001b\006" +
-      "proto3"
+      "ueB%\n\036im.turms.common.model.bo.groupP\001\272\002" +
+      "\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

@@ -32,9 +32,9 @@ public final class QueryUserProfileRequestOuterClass {
       "t.proto\022\016im.turms.proto\032\036google/protobuf" +
       "/wrappers.proto\"b\n\027QueryUserProfileReque" +
       "st\022\017\n\007user_id\030\001 \001(\003\0226\n\021last_updated_date" +
-      "\030\002 \001(\0132\033.google.protobuf.Int64ValueB*\n&i" +
-      "m.turms.common.model.dto.request.userP\001b" +
-      "\006proto3"
+      "\030\002 \001(\0132\033.google.protobuf.Int64ValueB-\n&i" +
+      "m.turms.common.model.dto.request.userP\001\272" +
+      "\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

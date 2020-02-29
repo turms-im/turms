@@ -32,9 +32,9 @@ public final class QueryJoinedGroupsInfosRequestOuterClass {
       "s_request.proto\022\016im.turms.proto\032\036google/" +
       "protobuf/wrappers.proto\"W\n\035QueryJoinedGr" +
       "oupsInfosRequest\0226\n\021last_updated_date\030\001 " +
-      "\001(\0132\033.google.protobuf.Int64ValueB+\n\'im.t" +
-      "urms.common.model.dto.request.groupP\001b\006p" +
-      "roto3"
+      "\001(\0132\033.google.protobuf.Int64ValueB.\n\'im.t" +
+      "urms.common.model.dto.request.groupP\001\272\002\000" +
+      "b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

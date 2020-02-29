@@ -34,8 +34,8 @@ public final class UserLocationOuterClass {
       "ongitude\030\002 \001(\002\022*\n\004name\030\003 \001(\0132\034.google.pr" +
       "otobuf.StringValue\022-\n\007address\030\004 \001(\0132\034.go" +
       "ogle.protobuf.StringValue\022.\n\ttimestamp\030\005" +
-      " \001(\0132\033.google.protobuf.Int64ValueB!\n\035im." +
-      "turms.common.model.bo.userP\001b\006proto3"
+      " \001(\0132\033.google.protobuf.Int64ValueB$\n\035im." +
+      "turms.common.model.bo.userP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

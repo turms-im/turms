@@ -35,8 +35,8 @@ public final class UserRelationshipsWithVersionOuterClass {
       "Version\022<\n\022user_relationships\030\001 \003(\0132 .im" +
       ".turms.proto.UserRelationship\0226\n\021last_up" +
       "dated_date\030\002 \001(\0132\033.google.protobuf.Int64" +
-      "ValueB!\n\035im.turms.common.model.bo.userP\001" +
-      "b\006proto3"
+      "ValueB$\n\035im.turms.common.model.bo.userP\001" +
+      "\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

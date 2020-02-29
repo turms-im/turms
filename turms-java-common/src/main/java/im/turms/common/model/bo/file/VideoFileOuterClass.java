@@ -42,8 +42,8 @@ public final class VideoFileOuterClass {
       "\0132\033.google.protobuf.Int32Value\022)\n\004size\030\003" +
       " \001(\0132\033.google.protobuf.Int32Value\022,\n\006for" +
       "mat\030\004 \001(\0132\034.google.protobuf.StringValueB" +
-      "!\n\035im.turms.common.model.bo.fileP\001b\006prot" +
-      "o3"
+      "$\n\035im.turms.common.model.bo.fileP\001\272\002\000b\006p" +
+      "roto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

@@ -31,8 +31,8 @@ public final class CreateRelationshipGroupRequestOuterClass {
       "\nArequest/user/relationship/create_relat" +
       "ionship_group_request.proto\022\016im.turms.pr" +
       "oto\".\n\036CreateRelationshipGroupRequest\022\014\n" +
-      "\004name\030\001 \001(\tB7\n3im.turms.common.model.dto" +
-      ".request.user.relationshipP\001b\006proto3"
+      "\004name\030\001 \001(\tB:\n3im.turms.common.model.dto" +
+      ".request.user.relationshipP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

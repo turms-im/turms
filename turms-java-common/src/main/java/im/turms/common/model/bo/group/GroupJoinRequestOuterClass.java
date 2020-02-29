@@ -41,8 +41,8 @@ public final class GroupJoinRequestOuterClass {
       "google.protobuf.Int64Value\0221\n\014requester_" +
       "id\030\007 \001(\0132\033.google.protobuf.Int64Value\0221\n" +
       "\014responder_id\030\010 \001(\0132\033.google.protobuf.In" +
-      "t64ValueB\"\n\036im.turms.common.model.bo.gro" +
-      "upP\001b\006proto3"
+      "t64ValueB%\n\036im.turms.common.model.bo.gro" +
+      "upP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

@@ -34,8 +34,8 @@ public final class QueryGroupBlacklistedUsersInfosRequestOuterClass {
       "oto\"r\n&QueryGroupBlacklistedUsersInfosRe" +
       "quest\022\020\n\010group_id\030\001 \001(\003\0226\n\021last_updated_" +
       "date\030\002 \001(\0132\033.google.protobuf.Int64ValueB" +
-      "5\n1im.turms.common.model.dto.request.gro" +
-      "up.blacklistP\001b\006proto3"
+      "8\n1im.turms.common.model.dto.request.gro" +
+      "up.blacklistP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

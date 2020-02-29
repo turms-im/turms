@@ -35,8 +35,8 @@ public final class UpdateGroupJoinQuestionRequestOuterClass {
       "on_id\030\001 \001(\003\022.\n\010question\030\002 \001(\0132\034.google.p" +
       "rotobuf.StringValue\022\017\n\007answers\030\003 \003(\t\022*\n\005" +
       "score\030\004 \001(\0132\033.google.protobuf.Int32Value" +
-      "B6\n2im.turms.common.model.dto.request.gr" +
-      "oup.enrollmentP\001b\006proto3"
+      "B9\n2im.turms.common.model.dto.request.gr" +
+      "oup.enrollmentP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

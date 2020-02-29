@@ -34,8 +34,8 @@ public final class MessagesWithTotalOuterClass {
       "sagesWithTotal\022\r\n\005total\030\001 \001(\005\022+\n\tchat_ty" +
       "pe\030\002 \001(\0162\030.im.turms.proto.ChatType\022\017\n\007fr" +
       "om_id\030\003 \001(\003\022)\n\010messages\030\004 \003(\0132\027.im.turms" +
-      ".proto.MessageB$\n im.turms.common.model." +
-      "bo.messageP\001b\006proto3"
+      ".proto.MessageB\'\n im.turms.common.model." +
+      "bo.messageP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

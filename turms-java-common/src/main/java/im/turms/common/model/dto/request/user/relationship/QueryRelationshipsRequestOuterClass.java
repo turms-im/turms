@@ -36,8 +36,8 @@ public final class QueryRelationshipsRequestOuterClass {
       "obuf.BoolValue\0220\n\013group_index\030\003 \001(\0132\033.go" +
       "ogle.protobuf.Int32Value\0226\n\021last_updated" +
       "_date\030\004 \001(\0132\033.google.protobuf.Int64Value" +
-      "B7\n3im.turms.common.model.dto.request.us" +
-      "er.relationshipP\001b\006proto3"
+      "B:\n3im.turms.common.model.dto.request.us" +
+      "er.relationshipP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

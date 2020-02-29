@@ -32,8 +32,9 @@ public final class UpdateTypingStatusRequestOuterClass {
       "equest.proto\022\016im.turms.proto\032\030constant/c" +
       "hat_type.proto\"W\n\031UpdateTypingStatusRequ" +
       "est\022+\n\tchat_type\030\001 \001(\0162\030.im.turms.proto." +
-      "ChatType\022\r\n\005to_id\030\002 \001(\003B-\n)im.turms.comm" +
-      "on.model.dto.request.messageP\001b\006proto3"
+      "ChatType\022\r\n\005to_id\030\002 \001(\003B0\n)im.turms.comm" +
+      "on.model.dto.request.messageP\001\272\002\000b\006proto" +
+      "3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

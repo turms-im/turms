@@ -26,8 +26,8 @@ public final class DeviceTypeOuterClass {
       "\n\032constant/device_type.proto\022\016im.turms.p" +
       "roto*U\n\nDeviceType\022\013\n\007DESKTOP\020\000\022\013\n\007BROWS" +
       "ER\020\001\022\007\n\003IOS\020\002\022\013\n\007ANDROID\020\003\022\n\n\006OTHERS\020\004\022\013" +
-      "\n\007UNKNOWN\020\005B\034\n\030im.turms.common.constantP" +
-      "\001b\006proto3"
+      "\n\007UNKNOWN\020\005B\037\n\030im.turms.common.constantP" +
+      "\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

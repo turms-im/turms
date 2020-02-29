@@ -42,8 +42,8 @@ public final class ImageFileOuterClass {
       "\0132\032.google.protobuf.BoolValue\022/\n\nimage_s" +
       "ize\030\003 \001(\0132\033.google.protobuf.Int32Value\022." +
       "\n\tfile_size\030\004 \001(\0132\033.google.protobuf.Int3" +
-      "2ValueB!\n\035im.turms.common.model.bo.fileP" +
-      "\001b\006proto3"
+      "2ValueB$\n\035im.turms.common.model.bo.fileP" +
+      "\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

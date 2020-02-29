@@ -3,10 +3,10 @@ package im.turms.plugin.impl;
 import im.turms.common.TurmsStatusCode;
 import im.turms.common.constant.ContentType;
 import im.turms.common.exception.TurmsBusinessException;
+import im.turms.turms.common.TurmsLogger;
 import im.turms.turms.plugin.StorageServiceProvider;
 import im.turms.turms.plugin.TurmsPlugin;
 import im.turms.turms.property.TurmsProperties;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.pf4j.Extension;
 import org.pf4j.PluginWrapper;
 import org.springframework.context.ApplicationContext;
@@ -76,8 +76,13 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                 case PROFILE:
                     throw TurmsBusinessException.get(TurmsStatusCode.REDUNDANT_REQUEST);
                 case ATTACHMENT:
-                    if (keyStr != null && keyNum != null) {
-                        String key = String.format("%d/%s", keyNum, keyStr);
+                    if (keyNum != null) {
+                        String key;
+                        if (keyStr != null) {
+                            key = String.format("%d/%s", keyNum, keyStr);
+                        } else {
+                            key = keyNum.toString();
+                        }
                         String url = presignedUrlForGet(contentType.name().toLowerCase(), key);
                         return Mono.just(url);
                     } else {
@@ -100,7 +105,11 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                 case ATTACHMENT:
                     type = turmsProperties.getStorage().getAttachmentContentType();
                     if (keyNum != null) {
-                        objectKey = String.format("%d/%s", keyNum, RandomStringUtils.random(8));
+                        if (keyStr != null) {
+                            objectKey = String.format("%d/%s", keyNum, keyStr);
+                        } else {
+                            objectKey = keyNum.toString();
+                        }
                     } else {
                         throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS);
                     }
@@ -150,29 +159,47 @@ public class TurmsMinioPlugin extends TurmsPlugin {
             for (ContentType type : ContentType.values()) {
                 if (type != ContentType.UNRECOGNIZED) {
                     boolean exists = bucketExists(type);
+                    String bucket = type.name().toLowerCase();
                     if (!exists) {
+                        TurmsLogger.log(String.format("Bucket: %s is being created", bucket));
                         createBucket(type);
+                        putBucketPolicy(type);
                         putBucketLifecycleConfig(type);
+                    } else {
+                        TurmsLogger.log(String.format("Bucket: %s exists", bucket));
                     }
                 }
             }
         }
 
         private void createBucket(ContentType contentType) throws InterruptedException, ExecutionException, TimeoutException {
-            BucketCannedACL acl = null;
-            switch (contentType) {
-                case PROFILE:
-                    acl = BucketCannedACL.PUBLIC_READ;
-                    break;
-                case ATTACHMENT:
-                    acl = BucketCannedACL.PRIVATE;
-                    break;
-            }
             CreateBucketRequest request = CreateBucketRequest.builder()
                     .bucket(contentType.name().toLowerCase())
-                    .acl(acl)
                     .build();
             client.createBucket(request).get(30, TimeUnit.SECONDS);
+        }
+
+        private void putBucketPolicy(ContentType contentType) throws InterruptedException, ExecutionException, TimeoutException {
+            if (contentType == ContentType.PROFILE) {
+                String policy = "{\n" +
+                        "  \"Version\": \"2012-10-17\",\n" +
+                        "  \"Statement\": [\n" +
+                        "    {\n" +
+                        "      \"Action\": [\n" +
+                        "        \"s3:GetObject\"\n" +
+                        "      ],\n" +
+                        "      \"Effect\": \"Allow\",\n" +
+                        "      \"Resource\": \"arn:aws:s3:::profile/*\",\n" +
+                        "      \"Principal\": \"*\"\n" +
+                        "    }\n" +
+                        "  ]\n" +
+                        "}";
+                PutBucketPolicyRequest policyRequest = PutBucketPolicyRequest.builder()
+                        .bucket(contentType.name().toLowerCase())
+                        .policy(policy)
+                        .build();
+                client.putBucketPolicy(policyRequest).get(5, TimeUnit.SECONDS);
+            }
         }
 
         private void putBucketLifecycleConfig(ContentType contentType) throws InterruptedException, ExecutionException, TimeoutException {
@@ -192,6 +219,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                     LifecycleExpiration expiration = LifecycleExpiration.builder().days(days).build();
                     LifecycleRule rule = LifecycleRule.builder()
                             .expiration(expiration)
+                            .status(ExpirationStatus.ENABLED)
                             .build();
                     BucketLifecycleConfiguration configuration = BucketLifecycleConfiguration.builder()
                             .rules(rule)
@@ -212,8 +240,12 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                         .build();
                 HeadBucketResponse response = client.headBucket(request).get(30, TimeUnit.SECONDS);
                 return 200 == response.sdkHttpResponse().statusCode();
-            } catch (NoSuchBucketException e) {
-                return false;
+            } catch (Exception e) {
+                if (e.getCause() instanceof NoSuchBucketException) {
+                    return false;
+                } else {
+                    throw e;
+                }
             }
         }
 

@@ -31,8 +31,9 @@ public final class DeleteGroupJoinRequestRequestOuterClass {
       "\n@request/group/enrollment/delete_group_" +
       "join_request_request.proto\022\016im.turms.pro" +
       "to\"3\n\035DeleteGroupJoinRequestRequest\022\022\n\nr" +
-      "equest_id\030\001 \001(\003B6\n2im.turms.common.model" +
-      ".dto.request.group.enrollmentP\001b\006proto3"
+      "equest_id\030\001 \001(\003B9\n2im.turms.common.model" +
+      ".dto.request.group.enrollmentP\001\272\002\000b\006prot" +
+      "o3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

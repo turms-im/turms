@@ -36,8 +36,8 @@ public final class GroupJoinQuestionOuterClass {
       "\010question\030\003 \001(\0132\034.google.protobuf.String" +
       "Value\022-\n\007answers\030\004 \003(\0132\034.google.protobuf" +
       ".StringValue\022*\n\005score\030\005 \001(\0132\033.google.pro" +
-      "tobuf.Int32ValueB\"\n\036im.turms.common.mode" +
-      "l.bo.groupP\001b\006proto3"
+      "tobuf.Int32ValueB%\n\036im.turms.common.mode" +
+      "l.bo.groupP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

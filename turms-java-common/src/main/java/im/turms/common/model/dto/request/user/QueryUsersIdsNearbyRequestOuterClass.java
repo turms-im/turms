@@ -34,8 +34,8 @@ public final class QueryUsersIdsNearbyRequestOuterClass {
       "rbyRequest\022\020\n\010latitude\030\001 \001(\002\022\021\n\tlongitud" +
       "e\030\002 \001(\002\022-\n\010distance\030\003 \001(\0132\033.google.proto" +
       "buf.FloatValue\022.\n\tmaxNumber\030\004 \001(\0132\033.goog" +
-      "le.protobuf.Int32ValueB*\n&im.turms.commo" +
-      "n.model.dto.request.userP\001b\006proto3"
+      "le.protobuf.Int32ValueB-\n&im.turms.commo" +
+      "n.model.dto.request.userP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

@@ -34,9 +34,9 @@ public final class DeleteRelationshipRequestOuterClass {
       "RelationshipRequest\022\027\n\017related_user_id\030\001" +
       " \001(\003\0220\n\013group_index\030\002 \001(\0132\033.google.proto" +
       "buf.Int32Value\0227\n\022target_group_index\030\003 \001" +
-      "(\0132\033.google.protobuf.Int32ValueB7\n3im.tu" +
+      "(\0132\033.google.protobuf.Int32ValueB:\n3im.tu" +
       "rms.common.model.dto.request.user.relati" +
-      "onshipP\001b\006proto3"
+      "onshipP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

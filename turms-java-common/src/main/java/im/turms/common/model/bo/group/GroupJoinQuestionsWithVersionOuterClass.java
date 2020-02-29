@@ -35,8 +35,8 @@ public final class GroupJoinQuestionsWithVersionOuterClass {
       "onsWithVersion\022?\n\024group_join_questions\030\001" +
       " \003(\0132!.im.turms.proto.GroupJoinQuestion\022" +
       "6\n\021last_updated_date\030\002 \001(\0132\033.google.prot" +
-      "obuf.Int64ValueB\"\n\036im.turms.common.model" +
-      ".bo.groupP\001b\006proto3"
+      "obuf.Int64ValueB%\n\036im.turms.common.model" +
+      ".bo.groupP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

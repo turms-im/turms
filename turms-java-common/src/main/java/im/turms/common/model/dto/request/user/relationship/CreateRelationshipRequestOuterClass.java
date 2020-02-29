@@ -33,9 +33,9 @@ public final class CreateRelationshipRequestOuterClass {
       "oogle/protobuf/wrappers.proto\"r\n\031CreateR" +
       "elationshipRequest\022\017\n\007user_id\030\001 \001(\003\022\022\n\ni" +
       "s_blocked\030\002 \001(\010\0220\n\013group_index\030\003 \001(\0132\033.g" +
-      "oogle.protobuf.Int32ValueB7\n3im.turms.co" +
+      "oogle.protobuf.Int32ValueB:\n3im.turms.co" +
       "mmon.model.dto.request.user.relationship" +
-      "P\001b\006proto3"
+      "P\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

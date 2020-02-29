@@ -36,8 +36,8 @@ public final class UpdateRelationshipRequestOuterClass {
       "BoolValue\0224\n\017new_group_index\030\003 \001(\0132\033.goo" +
       "gle.protobuf.Int32Value\0227\n\022delete_group_" +
       "index\030\004 \001(\0132\033.google.protobuf.Int32Value" +
-      "B7\n3im.turms.common.model.dto.request.us" +
-      "er.relationshipP\001b\006proto3"
+      "B:\n3im.turms.common.model.dto.request.us" +
+      "er.relationshipP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
