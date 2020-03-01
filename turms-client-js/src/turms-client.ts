@@ -4,12 +4,14 @@ import GroupService from "./service/group-service";
 import MessageService from "./service/message-service";
 import NotificationService from "./service/notification-service";
 import InputFileReader from "./util/input-file-reader";
+import StorageService from "./service/storage-service";
 
 class TurmsClient {
     private readonly _driver: TurmsDriver;
     private readonly _userService: UserService;
     private readonly _groupService: GroupService;
     private readonly _messageService: MessageService;
+    private readonly _storageService: StorageService;
     private readonly _notificationService: NotificationService;
 
     constructor(
@@ -19,7 +21,8 @@ class TurmsClient {
         minRequestsInterval?: number,
         httpUrl?: string,
         queryReasonWhenLoginFailed?: boolean,
-        queryReasonWhenDisconnected?: boolean) {
+        queryReasonWhenDisconnected?: boolean,
+        storageServerUrl?: string) {
         this._driver = new TurmsDriver(
             url,
             connectionTimeout,
@@ -31,6 +34,7 @@ class TurmsClient {
         this._userService = new UserService(this);
         this._groupService = new GroupService(this);
         this._messageService = new MessageService(this);
+        this._storageService = new StorageService(this, storageServerUrl);
         this._notificationService = new NotificationService(this);
     }
 
@@ -50,6 +54,10 @@ class TurmsClient {
 
     get messageService(): MessageService {
         return this._messageService;
+    }
+
+    get storageService(): StorageService {
+        return this._storageService;
     }
 
     get notificationService(): NotificationService {

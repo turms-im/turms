@@ -107,9 +107,7 @@ function start() {
                 clientUserOne.groupService.createGroup(
                     'Turms Developers Group',
                     'This is a group for the developers who are interested in Turms',
-                    'nope',
-                    null,
-                    null)
+                    'nope')
                     .then(id => {
                         appendUserOneContainer('group ' + id + ' has been created');
                     })
