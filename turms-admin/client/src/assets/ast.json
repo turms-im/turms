@@ -1,0 +1,1673 @@
+[
+  {
+    "class": "groupService",
+    "method": "createGroup",
+    "type": "Promise<string>",
+    "parameters": [
+      {
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "name": "intro",
+        "type": "string"
+      },
+      {
+        "name": "announcement",
+        "type": "string"
+      },
+      {
+        "name": "profilePictureUrl",
+        "type": "string"
+      },
+      {
+        "name": "minimumScore",
+        "type": "number"
+      },
+      {
+        "name": "muteEndDate",
+        "type": "Date"
+      },
+      {
+        "name": "groupTypeId",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "deleteGroup",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "groupId",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "updateGroup",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "groupId",
+        "type": "string"
+      },
+      {
+        "name": "groupName",
+        "type": "string"
+      },
+      {
+        "name": "intro",
+        "type": "string"
+      },
+      {
+        "name": "announcement",
+        "type": "string"
+      },
+      {
+        "name": "profilePictureUrl",
+        "type": "string"
+      },
+      {
+        "name": "minimumScore",
+        "type": "number"
+      },
+      {
+        "name": "groupTypeId",
+        "type": "string"
+      },
+      {
+        "name": "muteEndDate",
+        "type": "Date"
+      },
+      {
+        "name": "successorId",
+        "type": "string"
+      },
+      {
+        "name": "quitAfterTransfer",
+        "type": "boolean"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "transferOwnership",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "groupId",
+        "type": "string"
+      },
+      {
+        "name": "successorId",
+        "type": "string"
+      },
+      {
+        "name": "quitAfterTransfer",
+        "type": "boolean"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "muteGroup",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "groupId",
+        "type": "string"
+      },
+      {
+        "name": "muteEndDate",
+        "type": "Date"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "unmuteGroup",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "groupId",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "queryGroup",
+    "type": "Promise<ParsedModel.GroupWithVersion>",
+    "parameters": [
+      {
+        "name": "groupId",
+        "type": "string"
+      },
+      {
+        "name": "lastUpdatedDate",
+        "type": "Date"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "queryJoinedGroupsIds",
+    "type": "Promise<ParsedModel.IdsWithVersion>",
+    "parameters": [
+      {
+        "name": "lastUpdatedDate",
+        "type": "Date"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "queryJoinedGroupsInfos",
+    "type": "Promise<ParsedModel.GroupsWithVersion>",
+    "parameters": [
+      {
+        "name": "lastUpdatedDate",
+        "type": "Date"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "addGroupJoinQuestion",
+    "type": "Promise<string>",
+    "parameters": [
+      {
+        "name": "groupId",
+        "type": "string"
+      },
+      {
+        "name": "question",
+        "type": "string"
+      },
+      {
+        "name": "answers",
+        "type": "string[]"
+      },
+      {
+        "name": "score",
+        "type": "number"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "deleteGroupJoinQuestion",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "questionId",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "updateGroupJoinQuestion",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "questionId",
+        "type": "string"
+      },
+      {
+        "name": "question",
+        "type": "string"
+      },
+      {
+        "name": "answers",
+        "type": "string[]"
+      },
+      {
+        "name": "score",
+        "type": "number"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "blacklistUser",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "groupId",
+        "type": "string"
+      },
+      {
+        "name": "userId",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "unblacklistUser",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "groupId",
+        "type": "string"
+      },
+      {
+        "name": "userId",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "queryBlacklistedUsersIds",
+    "type": "Promise<ParsedModel.IdsWithVersion>",
+    "parameters": [
+      {
+        "name": "groupId",
+        "type": "string"
+      },
+      {
+        "name": "lastUpdatedDate",
+        "type": "Date"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "queryBlacklistedUsersInfos",
+    "type": "Promise<ParsedModel.UsersInfosWithVersion>",
+    "parameters": [
+      {
+        "name": "groupId",
+        "type": "string"
+      },
+      {
+        "name": "lastUpdatedDate",
+        "type": "Date"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "createInvitation",
+    "type": "Promise<string>",
+    "parameters": [
+      {
+        "name": "groupId",
+        "type": "string"
+      },
+      {
+        "name": "inviteeId",
+        "type": "string"
+      },
+      {
+        "name": "content",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "deleteInvitation",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "invitationId",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "queryInvitations",
+    "type": "Promise<ParsedModel.GroupInvitationsWithVersion>",
+    "parameters": [
+      {
+        "name": "groupId",
+        "type": "string"
+      },
+      {
+        "name": "lastUpdatedDate",
+        "type": "Date"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "createJoinRequest",
+    "type": "Promise<string>",
+    "parameters": [
+      {
+        "name": "groupId",
+        "type": "string"
+      },
+      {
+        "name": "content",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "deleteJoinRequest",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "requestId",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "queryJoinRequests",
+    "type": "Promise<ParsedModel.GroupJoinRequestsWithVersion>",
+    "parameters": [
+      {
+        "name": "groupId",
+        "type": "string"
+      },
+      {
+        "name": "lastUpdatedDate",
+        "type": "Date"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "queryGroupJoinQuestionsRequest",
+    "type": "Promise<ParsedModel.GroupJoinQuestionsWithVersion>",
+    "parameters": [
+      {
+        "name": "groupId",
+        "type": "string"
+      },
+      {
+        "name": "withAnswers",
+        "type": "boolean"
+      },
+      {
+        "name": "lastUpdatedDate",
+        "type": "Date"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "answerGroupQuestions",
+    "type": "Promise<GroupJoinQuestionsAnswerResult>",
+    "parameters": [
+      {
+        "name": "questionIdsAndAnswers",
+        "type": "{\r\n        [k: string]: string;\r\n    }"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "addGroupMember",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "groupId",
+        "type": "string"
+      },
+      {
+        "name": "userId",
+        "type": "string"
+      },
+      {
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "name": "role",
+        "type": "string | GroupMemberRole"
+      },
+      {
+        "name": "muteEndDate",
+        "type": "Date"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "quitGroup",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "groupId",
+        "type": "string"
+      },
+      {
+        "name": "successorId",
+        "type": "string"
+      },
+      {
+        "name": "quitAfterTransfer",
+        "type": "boolean"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "removeGroupMember",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "groupId",
+        "type": "string"
+      },
+      {
+        "name": "memberId",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "updateGroupMemberInfo",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "groupId",
+        "type": "string"
+      },
+      {
+        "name": "memberId",
+        "type": "string"
+      },
+      {
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "name": "role",
+        "type": "string | GroupMemberRole"
+      },
+      {
+        "name": "muteEndDate",
+        "type": "Date"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "muteGroupMember",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "groupId",
+        "type": "string"
+      },
+      {
+        "name": "memberId",
+        "type": "string"
+      },
+      {
+        "name": "muteEndDate",
+        "type": "Date"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "unmuteGroupMember",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "groupId",
+        "type": "string"
+      },
+      {
+        "name": "memberId",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "queryGroupMembers",
+    "type": "Promise<ParsedModel.GroupMembersWithVersion>",
+    "parameters": [
+      {
+        "name": "groupId",
+        "type": "string"
+      },
+      {
+        "name": "withStatus",
+        "type": "boolean"
+      },
+      {
+        "name": "lastUpdatedDate",
+        "type": "Date"
+      }
+    ]
+  },
+  {
+    "class": "groupService",
+    "method": "queryGroupMembersByMembersIds",
+    "type": "Promise<ParsedModel.GroupMembersWithVersion>",
+    "parameters": [
+      {
+        "name": "groupId",
+        "type": "string"
+      },
+      {
+        "name": "membersIds",
+        "type": "string[]"
+      },
+      {
+        "name": "withStatus",
+        "type": "boolean"
+      }
+    ]
+  },
+  {
+    "class": "messageService",
+    "method": "sendMessage",
+    "type": "Promise<string>",
+    "parameters": [
+      {
+        "name": "chatType",
+        "type": "string | ChatType"
+      },
+      {
+        "name": "toId",
+        "type": "string"
+      },
+      {
+        "name": "deliveryDate",
+        "type": "Date"
+      },
+      {
+        "name": "text",
+        "type": "string"
+      },
+      {
+        "name": "records",
+        "type": "Uint8Array[]"
+      },
+      {
+        "name": "burnAfter",
+        "type": "number"
+      }
+    ]
+  },
+  {
+    "class": "messageService",
+    "method": "forwardMessage",
+    "type": "Promise<string>",
+    "parameters": [
+      {
+        "name": "messageId",
+        "type": "string"
+      },
+      {
+        "name": "chatType",
+        "type": "string | ChatType"
+      },
+      {
+        "name": "toId",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "messageService",
+    "method": "updateSentMessage",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "messageId",
+        "type": "string"
+      },
+      {
+        "name": "text",
+        "type": "string"
+      },
+      {
+        "name": "records",
+        "type": "Uint8Array[]"
+      }
+    ]
+  },
+  {
+    "class": "messageService",
+    "method": "queryMessages",
+    "type": "Promise<ParsedModel.Message[]>",
+    "parameters": [
+      {
+        "name": "ids",
+        "type": "string[]"
+      },
+      {
+        "name": "chatType",
+        "type": "string | ChatType"
+      },
+      {
+        "name": "areSystemMessages",
+        "type": "boolean"
+      },
+      {
+        "name": "fromId",
+        "type": "string"
+      },
+      {
+        "name": "deliveryDateAfter",
+        "type": "Date"
+      },
+      {
+        "name": "deliveryDateBefore",
+        "type": "Date"
+      },
+      {
+        "name": "deliveryStatus",
+        "type": "string | MessageDeliveryStatus"
+      },
+      {
+        "name": "size",
+        "type": "number"
+      }
+    ]
+  },
+  {
+    "class": "messageService",
+    "method": "queryPendingMessagesWithTotal",
+    "type": "Promise<ParsedModel.MessagesWithTotal[]>",
+    "parameters": [
+      {
+        "name": "size",
+        "type": "number"
+      }
+    ]
+  },
+  {
+    "class": "messageService",
+    "method": "queryMessageStatus",
+    "type": "Promise<ParsedModel.MessageStatus[]>",
+    "parameters": [
+      {
+        "name": "messageId",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "messageService",
+    "method": "recallMessage",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "messageId",
+        "type": "string"
+      },
+      {
+        "name": "recallDate",
+        "type": "Date"
+      }
+    ]
+  },
+  {
+    "class": "messageService",
+    "method": "readMessage",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "messageId",
+        "type": "string"
+      },
+      {
+        "name": "readDate",
+        "type": "Date"
+      }
+    ]
+  },
+  {
+    "class": "messageService",
+    "method": "markMessageUnread",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "messageId",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "messageService",
+    "method": "updateTypingStatusRequest",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "chatType",
+        "type": "string | ChatType"
+      },
+      {
+        "name": "toId",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "messageService",
+    "method": "isMentionEnabled",
+    "type": "boolean",
+    "parameters": []
+  },
+  {
+    "class": "messageService",
+    "method": "enableMention",
+    "type": "void",
+    "parameters": [
+      {
+        "name": "mentionedUserIdsParser",
+        "type": "(message: ParsedModel.Message) => string[]"
+      }
+    ]
+  },
+  {
+    "class": "messageService",
+    "method": "generateLocationRecord",
+    "type": "Uint8Array",
+    "parameters": [
+      {
+        "name": "latitude",
+        "type": "number"
+      },
+      {
+        "name": "longitude",
+        "type": "number"
+      },
+      {
+        "name": "locationName",
+        "type": "string"
+      },
+      {
+        "name": "address",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "messageService",
+    "method": "generateAudioRecordByDescription",
+    "type": "Uint8Array",
+    "parameters": [
+      {
+        "name": "url",
+        "type": "string"
+      },
+      {
+        "name": "duration",
+        "type": "number"
+      },
+      {
+        "name": "format",
+        "type": "string"
+      },
+      {
+        "name": "size",
+        "type": "number"
+      }
+    ]
+  },
+  {
+    "class": "messageService",
+    "method": "generateAudioRecordByData",
+    "type": "Uint8Array",
+    "parameters": [
+      {
+        "name": "data",
+        "type": "ArrayBuffer"
+      }
+    ]
+  },
+  {
+    "class": "messageService",
+    "method": "generateVideoRecordByDescription",
+    "type": "Uint8Array",
+    "parameters": [
+      {
+        "name": "url",
+        "type": "string"
+      },
+      {
+        "name": "duration",
+        "type": "number"
+      },
+      {
+        "name": "format",
+        "type": "string"
+      },
+      {
+        "name": "size",
+        "type": "number"
+      }
+    ]
+  },
+  {
+    "class": "messageService",
+    "method": "generateVideoRecordByData",
+    "type": "Uint8Array",
+    "parameters": [
+      {
+        "name": "data",
+        "type": "ArrayBuffer"
+      }
+    ]
+  },
+  {
+    "class": "messageService",
+    "method": "generateImageRecordByData",
+    "type": "Uint8Array",
+    "parameters": [
+      {
+        "name": "data",
+        "type": "ArrayBuffer"
+      }
+    ]
+  },
+  {
+    "class": "messageService",
+    "method": "generateImageRecordByDescription",
+    "type": "Uint8Array",
+    "parameters": [
+      {
+        "name": "url",
+        "type": "string"
+      },
+      {
+        "name": "fileSize",
+        "type": "number"
+      },
+      {
+        "name": "imageSize",
+        "type": "number"
+      },
+      {
+        "name": "original",
+        "type": "boolean"
+      }
+    ]
+  },
+  {
+    "class": "messageService",
+    "method": "generateFileRecordByDate",
+    "type": "Uint8Array",
+    "parameters": [
+      {
+        "name": "data",
+        "type": "ArrayBuffer"
+      }
+    ]
+  },
+  {
+    "class": "messageService",
+    "method": "generateFileRecordByDescription",
+    "type": "Uint8Array",
+    "parameters": [
+      {
+        "name": "url",
+        "type": "string"
+      },
+      {
+        "name": "format",
+        "type": "string"
+      },
+      {
+        "name": "size",
+        "type": "number"
+      }
+    ]
+  },
+  {
+    "class": "storageService",
+    "method": "queryProfilePictureUrlForAccess",
+    "type": "Promise<string>",
+    "parameters": [
+      {
+        "name": "userId",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "storageService",
+    "method": "queryProfilePicture",
+    "type": "Promise<Uint8Array>",
+    "parameters": [
+      {
+        "name": "userId",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "storageService",
+    "method": "queryProfilePictureUrlForUpload",
+    "type": "Promise<string>",
+    "parameters": [
+      {
+        "name": "pictureSize",
+        "type": "any"
+      }
+    ]
+  },
+  {
+    "class": "storageService",
+    "method": "uploadProfilePicture",
+    "type": "Promise<string>",
+    "parameters": [
+      {
+        "name": "bytes",
+        "type": "Uint8Array"
+      }
+    ]
+  },
+  {
+    "class": "storageService",
+    "method": "deleteProfile",
+    "type": "Promise<void>",
+    "parameters": []
+  },
+  {
+    "class": "storageService",
+    "method": "queryGroupProfilePictureUrlForAccess",
+    "type": "Promise<string>",
+    "parameters": [
+      {
+        "name": "groupId",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "storageService",
+    "method": "queryGroupProfilePicture",
+    "type": "Promise<Uint8Array>",
+    "parameters": [
+      {
+        "name": "groupId",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "storageService",
+    "method": "queryGroupProfilePictureUrlForUpload",
+    "type": "Promise<string>",
+    "parameters": [
+      {
+        "name": "pictureSize",
+        "type": "number"
+      },
+      {
+        "name": "groupId",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "storageService",
+    "method": "uploadGroupProfilePicture",
+    "type": "Promise<string>",
+    "parameters": [
+      {
+        "name": "bytes",
+        "type": "Uint8Array"
+      },
+      {
+        "name": "groupId",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "storageService",
+    "method": "deleteGroupProfile",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "groupId",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "storageService",
+    "method": "queryAttachmentUrlForAccess",
+    "type": "Promise<string>",
+    "parameters": [
+      {
+        "name": "messageId",
+        "type": "string"
+      },
+      {
+        "name": "name",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "storageService",
+    "method": "queryAttachment",
+    "type": "Promise<Uint8Array>",
+    "parameters": [
+      {
+        "name": "messageId",
+        "type": "string"
+      },
+      {
+        "name": "name",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "storageService",
+    "method": "queryAttachmentUrlForUpload",
+    "type": "Promise<string>",
+    "parameters": [
+      {
+        "name": "messageId",
+        "type": "string"
+      },
+      {
+        "name": "attachmentSize",
+        "type": "number"
+      }
+    ]
+  },
+  {
+    "class": "storageService",
+    "method": "uploadAttachment",
+    "type": "Promise<string>",
+    "parameters": [
+      {
+        "name": "messageId",
+        "type": "string"
+      },
+      {
+        "name": "bytes",
+        "type": "Uint8Array"
+      }
+    ]
+  },
+  {
+    "class": "turmsDriver",
+    "method": "sendHeartbeat",
+    "type": "Promise<void>",
+    "parameters": []
+  },
+  {
+    "class": "turmsDriver",
+    "method": "connected",
+    "type": "boolean",
+    "parameters": []
+  },
+  {
+    "class": "turmsDriver",
+    "method": "disconnect",
+    "type": "Promise<void>",
+    "parameters": []
+  },
+  {
+    "class": "turmsDriver",
+    "method": "connect",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "userId",
+        "type": "string"
+      },
+      {
+        "name": "password",
+        "type": "string"
+      },
+      {
+        "name": "location",
+        "type": "string"
+      },
+      {
+        "name": "userOnlineStatus",
+        "type": "UserStatus"
+      },
+      {
+        "name": "deviceType",
+        "type": "DeviceType"
+      }
+    ]
+  },
+  {
+    "class": "turmsDriver",
+    "method": "fillLoginInfo",
+    "type": "void",
+    "parameters": [
+      {
+        "name": "requestId",
+        "type": "number"
+      },
+      {
+        "name": "userId",
+        "type": "string"
+      },
+      {
+        "name": "password",
+        "type": "string"
+      },
+      {
+        "name": "userOnlineStatus",
+        "type": "UserStatus"
+      },
+      {
+        "name": "deviceType",
+        "type": "DeviceType"
+      },
+      {
+        "name": "location",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "turmsDriver",
+    "method": "clearLoginInfo",
+    "type": "void",
+    "parameters": []
+  },
+  {
+    "class": "turmsDriver",
+    "method": "resetHeartBeatTimer",
+    "type": "void",
+    "parameters": []
+  },
+  {
+    "class": "turmsDriver",
+    "method": "send",
+    "type": "Promise<TurmsNotification>",
+    "parameters": [
+      {
+        "name": "message",
+        "type": "im.turms.proto.ITurmsRequest"
+      }
+    ]
+  },
+  {
+    "class": "turmsDriver",
+    "method": "reconnect",
+    "type": "Promise<void>",
+    "parameters": []
+  },
+  {
+    "class": "userService",
+    "method": "getUserLocationFromBrowser",
+    "type": "Promise<Position>",
+    "parameters": []
+  },
+  {
+    "class": "userService",
+    "method": "login",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "userId",
+        "type": "string"
+      },
+      {
+        "name": "password",
+        "type": "string"
+      },
+      {
+        "name": "location",
+        "type": "string | Position"
+      },
+      {
+        "name": "userOnlineStatus",
+        "type": "UserStatus"
+      },
+      {
+        "name": "deviceType",
+        "type": "DeviceType"
+      }
+    ]
+  },
+  {
+    "class": "userService",
+    "method": "relogin",
+    "type": "Promise<void>",
+    "parameters": []
+  },
+  {
+    "class": "userService",
+    "method": "logout",
+    "type": "Promise<void>",
+    "parameters": []
+  },
+  {
+    "class": "userService",
+    "method": "updateUserOnlineStatus",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "onlineStatus",
+        "type": "string | UserStatus"
+      }
+    ]
+  },
+  {
+    "class": "userService",
+    "method": "updatePassword",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "password",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "userService",
+    "method": "updateProfile",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "name": "intro",
+        "type": "string"
+      },
+      {
+        "name": "profilePictureUrl",
+        "type": "string"
+      },
+      {
+        "name": "profileAccessStrategy",
+        "type": "string | ProfileAccessStrategy"
+      }
+    ]
+  },
+  {
+    "class": "userService",
+    "method": "queryUserGroupInvitations",
+    "type": "Promise<ParsedModel.GroupInvitationsWithVersion>",
+    "parameters": [
+      {
+        "name": "lastUpdatedDate",
+        "type": "Date"
+      }
+    ]
+  },
+  {
+    "class": "userService",
+    "method": "queryUserProfile",
+    "type": "Promise<ParsedModel.UserInfoWithVersion>",
+    "parameters": [
+      {
+        "name": "userId",
+        "type": "string"
+      },
+      {
+        "name": "lastUpdatedDate",
+        "type": "Date"
+      }
+    ]
+  },
+  {
+    "class": "userService",
+    "method": "queryUsersIdsNearby",
+    "type": "Promise<string[]>",
+    "parameters": [
+      {
+        "name": "latitude",
+        "type": "number"
+      },
+      {
+        "name": "longitude",
+        "type": "number"
+      },
+      {
+        "name": "distance",
+        "type": "number"
+      },
+      {
+        "name": "maxNumber",
+        "type": "number"
+      }
+    ]
+  },
+  {
+    "class": "userService",
+    "method": "queryUsersInfosNearby",
+    "type": "Promise<ParsedModel.UserInfo[]>",
+    "parameters": [
+      {
+        "name": "latitude",
+        "type": "number"
+      },
+      {
+        "name": "longitude",
+        "type": "number"
+      },
+      {
+        "name": "distance",
+        "type": "number"
+      },
+      {
+        "name": "maxNumber",
+        "type": "number"
+      }
+    ]
+  },
+  {
+    "class": "userService",
+    "method": "queryUsersOnlineStatusRequest",
+    "type": "Promise<ParsedModel.UserStatusDetail[]>",
+    "parameters": [
+      {
+        "name": "usersIds",
+        "type": "string[]"
+      }
+    ]
+  },
+  {
+    "class": "userService",
+    "method": "queryRelationships",
+    "type": "Promise<ParsedModel.UserRelationshipsWithVersion>",
+    "parameters": [
+      {
+        "name": "relatedUsersIds",
+        "type": "string[]"
+      },
+      {
+        "name": "isBlocked",
+        "type": "boolean"
+      },
+      {
+        "name": "groupIndex",
+        "type": "number"
+      },
+      {
+        "name": "lastUpdatedDate",
+        "type": "Date"
+      }
+    ]
+  },
+  {
+    "class": "userService",
+    "method": "queryRelatedUsersIds",
+    "type": "Promise<ParsedModel.IdsWithVersion>",
+    "parameters": [
+      {
+        "name": "isBlocked",
+        "type": "boolean"
+      },
+      {
+        "name": "groupIndex",
+        "type": "number"
+      },
+      {
+        "name": "lastUpdatedDate",
+        "type": "Date"
+      }
+    ]
+  },
+  {
+    "class": "userService",
+    "method": "queryFriends",
+    "type": "Promise<ParsedModel.UserRelationshipsWithVersion>",
+    "parameters": [
+      {
+        "name": "groupIndex",
+        "type": "number"
+      },
+      {
+        "name": "lastUpdatedDate",
+        "type": "Date"
+      }
+    ]
+  },
+  {
+    "class": "userService",
+    "method": "queryBlacklistedUsers",
+    "type": "Promise<ParsedModel.UserRelationshipsWithVersion>",
+    "parameters": [
+      {
+        "name": "groupIndex",
+        "type": "number"
+      },
+      {
+        "name": "lastUpdatedDate",
+        "type": "Date"
+      }
+    ]
+  },
+  {
+    "class": "userService",
+    "method": "createRelationship",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "userId",
+        "type": "string"
+      },
+      {
+        "name": "isBlocked",
+        "type": "boolean"
+      },
+      {
+        "name": "groupIndex",
+        "type": "number"
+      }
+    ]
+  },
+  {
+    "class": "userService",
+    "method": "createFriendRelationship",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "userId",
+        "type": "string"
+      },
+      {
+        "name": "groupIndex",
+        "type": "number"
+      }
+    ]
+  },
+  {
+    "class": "userService",
+    "method": "createBlacklistedUserRelationship",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "userId",
+        "type": "string"
+      },
+      {
+        "name": "groupIndex",
+        "type": "number"
+      }
+    ]
+  },
+  {
+    "class": "userService",
+    "method": "deleteRelationship",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "relatedUserId",
+        "type": "string"
+      },
+      {
+        "name": "deleteGroupIndex",
+        "type": "string"
+      },
+      {
+        "name": "targetGroupIndex",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "userService",
+    "method": "updateRelationship",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "relatedUserId",
+        "type": "string"
+      },
+      {
+        "name": "isBlocked",
+        "type": "boolean"
+      },
+      {
+        "name": "groupIndex",
+        "type": "number"
+      }
+    ]
+  },
+  {
+    "class": "userService",
+    "method": "sendFriendRequest",
+    "type": "Promise<string>",
+    "parameters": [
+      {
+        "name": "recipientId",
+        "type": "string"
+      },
+      {
+        "name": "content",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "userService",
+    "method": "replyFriendRequest",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "requestId",
+        "type": "string"
+      },
+      {
+        "name": "responseAction",
+        "type": "string | ResponseAction"
+      },
+      {
+        "name": "reason",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "userService",
+    "method": "queryFriendRequests",
+    "type": "Promise<ParsedModel.UserFriendRequestsWithVersion>",
+    "parameters": [
+      {
+        "name": "lastUpdatedDate",
+        "type": "Date"
+      }
+    ]
+  },
+  {
+    "class": "userService",
+    "method": "createRelationshipGroup",
+    "type": "Promise<string>",
+    "parameters": [
+      {
+        "name": "name",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "userService",
+    "method": "deleteRelationshipGroups",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "groupIndex",
+        "type": "number"
+      },
+      {
+        "name": "targetGroupIndex",
+        "type": "number"
+      }
+    ]
+  },
+  {
+    "class": "userService",
+    "method": "updateRelationshipGroup",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "groupIndex",
+        "type": "number"
+      },
+      {
+        "name": "newName",
+        "type": "string"
+      }
+    ]
+  },
+  {
+    "class": "userService",
+    "method": "queryRelationshipGroups",
+    "type": "Promise<ParsedModel.UserRelationshipGroupsWithVersion>",
+    "parameters": [
+      {
+        "name": "lastUpdatedDate",
+        "type": "Date"
+      }
+    ]
+  },
+  {
+    "class": "userService",
+    "method": "moveRelatedUserToGroup",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "relatedUserId",
+        "type": "string"
+      },
+      {
+        "name": "groupIndex",
+        "type": "number"
+      }
+    ]
+  },
+  {
+    "class": "userService",
+    "method": "updateLocation",
+    "type": "Promise<void>",
+    "parameters": [
+      {
+        "name": "latitude",
+        "type": "number"
+      },
+      {
+        "name": "longitude",
+        "type": "number"
+      },
+      {
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "name": "address",
+        "type": "string"
+      }
+    ]
+  }
+]
