@@ -1,6 +1,6 @@
 const fs = require('fs');
 const {join, resolve} = require('path');
-const {TypescriptParser, ClassDeclaration} = require('typescript-parser');
+const {TypescriptParser, ClassDeclaration, GetterDeclaration} = require('typescript-parser');
 
 function getApiPaths(apiPath) {
     const paths = [];
@@ -20,9 +20,14 @@ const parser = new TypescriptParser();
 
 parser.parseFiles(apiPaths, __dirname).then(files => {
     const ast = [];
+    let clientDeclaration;
     for (const file of files) {
         for (const declaration of file.declarations) {
             if (declaration instanceof ClassDeclaration) {
+                if (declaration.name === 'TurmsClient') {
+                    clientDeclaration = declaration;
+                    continue;
+                }
                 const methods = {};
                 for (const method of declaration.methods) {
                     const parameters = [];
@@ -37,11 +42,21 @@ parser.parseFiles(apiPaths, __dirname).then(files => {
                         parameters
                     };
                     ast.push({
-                        class: declaration.name[0].toLowerCase() + declaration.name.slice(1),
+                        class: declaration.name,
                         method: method.name,
                         type: method.type,
                         parameters
                     });
+                }
+            }
+        }
+    }
+    for (const accessor of clientDeclaration.accessors) {
+        if (accessor instanceof GetterDeclaration) {
+            for (const element of ast) {
+                if (element.class === accessor.type) {
+                    element.class = accessor.name;
+                    break;
                 }
             }
         }

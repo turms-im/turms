@@ -1099,25 +1099,25 @@
     ]
   },
   {
-    "class": "turmsDriver",
+    "class": "driver",
     "method": "sendHeartbeat",
     "type": "Promise<void>",
     "parameters": []
   },
   {
-    "class": "turmsDriver",
+    "class": "driver",
     "method": "connected",
     "type": "boolean",
     "parameters": []
   },
   {
-    "class": "turmsDriver",
+    "class": "driver",
     "method": "disconnect",
     "type": "Promise<void>",
     "parameters": []
   },
   {
-    "class": "turmsDriver",
+    "class": "driver",
     "method": "connect",
     "type": "Promise<void>",
     "parameters": [
@@ -1144,7 +1144,7 @@
     ]
   },
   {
-    "class": "turmsDriver",
+    "class": "driver",
     "method": "fillLoginInfo",
     "type": "void",
     "parameters": [
@@ -1175,19 +1175,19 @@
     ]
   },
   {
-    "class": "turmsDriver",
+    "class": "driver",
     "method": "clearLoginInfo",
     "type": "void",
     "parameters": []
   },
   {
-    "class": "turmsDriver",
+    "class": "driver",
     "method": "resetHeartBeatTimer",
     "type": "void",
     "parameters": []
   },
   {
-    "class": "turmsDriver",
+    "class": "driver",
     "method": "send",
     "type": "Promise<TurmsNotification>",
     "parameters": [
@@ -1198,7 +1198,7 @@
     ]
   },
   {
-    "class": "turmsDriver",
+    "class": "driver",
     "method": "reconnect",
     "type": "Promise<void>",
     "parameters": []
