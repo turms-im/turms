@@ -69,7 +69,8 @@ class UserServiceTests: XCTestCase {
         // Query
         TestUtil.assertCompleted("queryUserGroupInvitations_shouldReturnGroupInvitationsWithVersion", turmsClient.userService.queryUserGroupInvitations())
         TestUtil.assertCompleted("queryUserProfile_shouldReturnUserInfoWithVersion", turmsClient.userService.queryUserProfile(userId: 1))
-        TestUtil.assertCompleted("queryUsersIdsNearby_shouldReturnUsersIds", turmsClient.userService.queryUsersIdsNearby(latitude: 1, longitude: 1))
+        TestUtil.assertCompleted("queryUserIdsNearby_shouldReturnUsersIds", turmsClient.userService.queryUserIdsNearby(latitude: 1, longitude: 1))
+        TestUtil.assertCompleted("queryUserSessionIdsNearby_shouldReturnUsersIds", turmsClient.userService.queryUserSessionIdsNearby(latitude: 1, longitude: 1))
         TestUtil.assertCompleted("queryUsersInfosNearby_shouldReturnUsersInfos", turmsClient.userService.queryUsersInfosNearby(latitude: 1, longitude: 1))
         TestUtil.assertCompleted("queryUsersOnlineStatusRequest_shouldUsersOnlineStatus", turmsClient.userService.queryUsersOnlineStatusRequest([1]).done {
             XCTAssertEqual($0[0].userStatus, userStatus)

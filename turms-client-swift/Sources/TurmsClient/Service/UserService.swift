@@ -105,7 +105,7 @@ public class UserService {
             .map { UserInfoWithVersion.from($0) }
     }
 
-    public func queryUsersIdsNearby(latitude: Float, longitude: Float, distance: Int32? = nil, maxNumber: Int32? = nil) -> Promise<[Int64]> {
+    public func queryUserIdsNearby(latitude: Float, longitude: Float, distance: Int32? = nil, maxNumber: Int32? = nil) -> Promise<[Int64]> {
         return turmsClient.driver
             .send { $0
                 .request("queryUsersIdsNearbyRequest")
@@ -115,6 +115,18 @@ public class UserService {
                 .field("maxNumber", maxNumber)
             }
             .map { $0.data.ids.values }
+    }
+    
+    public func queryUserSessionIdsNearby(latitude: Float, longitude: Float, distance: Int32? = nil, maxNumber: Int32? = nil) -> Promise<[UserSessionId]> {
+        return turmsClient.driver
+            .send { $0
+                .request("queryUsersIdsNearbyRequest")
+                .field("latitude", latitude)
+                .field("longitude", longitude)
+                .field("distance", distance)
+                .field("maxNumber", maxNumber)
+            }
+            .map { $0.data.userSessionIds.userSessionIds }
     }
 
     public func queryUsersInfosNearby(latitude: Float, longitude: Float, distance: Int32? = nil, maxNumber: Int32? = nil) -> Promise<[UserInfo]> {

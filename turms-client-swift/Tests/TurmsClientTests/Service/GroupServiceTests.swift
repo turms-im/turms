@@ -84,7 +84,7 @@ class GroupServiceTests: XCTestCase {
         })
         TestUtil.assertCompleted("answerGroupQuestions_shouldReturnAnswerResult", turmsClient.groupService.answerGroupQuestions([groupQuestionId!: "answer"]).recover { error -> Promise<GroupJoinQuestionsAnswerResult> in
             if let businessError = error as? TurmsBusinessError, businessError.code == .alreadyGroupMember {
-                return Promise.value(false)
+                return Promise.value(GroupJoinQuestionsAnswerResult())
             } else {
                 throw error
             }

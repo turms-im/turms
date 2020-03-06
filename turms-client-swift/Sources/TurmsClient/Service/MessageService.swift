@@ -49,13 +49,12 @@ public class MessageService {
         if Validator.areAllNil(text, records) {
             return Promise(error: TurmsBusinessError(.illegalArguments))
         }
-        deliveryDate = deliveryDate ?? Date()
         return turmsClient.driver
             .send { $0
                 .request("createMessageRequest")
                 .field("chatType", chatType)
                 .field("toId", toId)
-                .field("deliveryDate", deliveryDate)
+                .field("deliveryDate", deliveryDate ?? Date())
                 .field("text", text)
                 .field("records", records)
                 .field("burnAfter", burnAfter)

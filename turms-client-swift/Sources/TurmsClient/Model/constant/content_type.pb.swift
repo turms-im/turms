@@ -22,9 +22,10 @@ fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAP
 public enum ContentType: SwiftProtobuf.Enum {
   public typealias RawValue = Int
   case profile // = 0
+  case groupProfile // = 1
 
   ///    STORAGE = 2;
-  case attachment // = 1
+  case attachment // = 2
   case UNRECOGNIZED(Int)
 
   public init() {
@@ -34,7 +35,8 @@ public enum ContentType: SwiftProtobuf.Enum {
   public init?(rawValue: Int) {
     switch rawValue {
     case 0: self = .profile
-    case 1: self = .attachment
+    case 1: self = .groupProfile
+    case 2: self = .attachment
     default: self = .UNRECOGNIZED(rawValue)
     }
   }
@@ -42,7 +44,8 @@ public enum ContentType: SwiftProtobuf.Enum {
   public var rawValue: Int {
     switch self {
     case .profile: return 0
-    case .attachment: return 1
+    case .groupProfile: return 1
+    case .attachment: return 2
     case .UNRECOGNIZED(let i): return i
     }
   }
@@ -55,6 +58,7 @@ extension ContentType: CaseIterable {
   // The compiler won't synthesize support with the UNRECOGNIZED case.
   public static var allCases: [ContentType] = [
     .profile,
+    .groupProfile,
     .attachment,
   ]
 }
@@ -66,6 +70,7 @@ extension ContentType: CaseIterable {
 extension ContentType: SwiftProtobuf._ProtoNameProviding {
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     0: .same(proto: "PROFILE"),
-    1: .same(proto: "ATTACHMENT"),
+    1: .same(proto: "GROUP_PROFILE"),
+    2: .same(proto: "ATTACHMENT"),
   ]
 }

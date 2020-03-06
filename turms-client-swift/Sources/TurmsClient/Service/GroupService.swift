@@ -290,7 +290,7 @@ public class GroupService {
 
     public func answerGroupQuestions(_ questionIdsAndAnswers: [Int64: String]) -> Promise<GroupJoinQuestionsAnswerResult> {
         if questionIdsAndAnswers.isEmpty {
-            return Promise.value(false)
+            return Promise.value(GroupJoinQuestionsAnswerResult())
         }
         var map = [String: String]()
         questionIdsAndAnswers.forEach { key, value in
@@ -301,7 +301,7 @@ public class GroupService {
                 .request("checkGroupJoinQuestionsAnswersRequest")
                 .field("questionIdAndAnswer", map)
             }
-            .map { $0.data.groupJoinQuestionsAnswerResult }
+            .map { $0.data.groupJoinQuestionAnswerResult }
     }
 
     // Group Member
