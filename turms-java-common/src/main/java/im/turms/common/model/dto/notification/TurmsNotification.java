@@ -358,92 +358,107 @@ private static final long serialVersionUID = 0L;
     im.turms.common.model.bo.user.UserRelationshipsWithVersionOrBuilder getUserRelationshipsWithVersionOrBuilder();
 
     /**
-     * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
+     * <code>.im.turms.proto.UserSessionIds user_session_ids = 14;</code>
+     * @return Whether the userSessionIds field is set.
+     */
+    boolean hasUserSessionIds();
+    /**
+     * <code>.im.turms.proto.UserSessionIds user_session_ids = 14;</code>
+     * @return The userSessionIds.
+     */
+    im.turms.common.model.bo.user.UserSessionIds getUserSessionIds();
+    /**
+     * <code>.im.turms.proto.UserSessionIds user_session_ids = 14;</code>
+     */
+    im.turms.common.model.bo.user.UserSessionIdsOrBuilder getUserSessionIdsOrBuilder();
+
+    /**
+     * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
      * @return Whether the groupInvitationsWithVersion field is set.
      */
     boolean hasGroupInvitationsWithVersion();
     /**
-     * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
+     * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
      * @return The groupInvitationsWithVersion.
      */
     im.turms.common.model.bo.group.GroupInvitationsWithVersion getGroupInvitationsWithVersion();
     /**
-     * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
+     * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
      */
     im.turms.common.model.bo.group.GroupInvitationsWithVersionOrBuilder getGroupInvitationsWithVersionOrBuilder();
 
     /**
-     * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
+     * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
      * @return Whether the groupJoinQuestionAnswerResult field is set.
      */
     boolean hasGroupJoinQuestionAnswerResult();
     /**
-     * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
+     * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
      * @return The groupJoinQuestionAnswerResult.
      */
     im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult getGroupJoinQuestionAnswerResult();
     /**
-     * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
+     * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
      */
     im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResultOrBuilder getGroupJoinQuestionAnswerResultOrBuilder();
 
     /**
-     * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
+     * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
      * @return Whether the groupJoinRequestsWithVersion field is set.
      */
     boolean hasGroupJoinRequestsWithVersion();
     /**
-     * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
+     * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
      * @return The groupJoinRequestsWithVersion.
      */
     im.turms.common.model.bo.group.GroupJoinRequestsWithVersion getGroupJoinRequestsWithVersion();
     /**
-     * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
+     * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
      */
     im.turms.common.model.bo.group.GroupJoinRequestsWithVersionOrBuilder getGroupJoinRequestsWithVersionOrBuilder();
 
     /**
-     * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
+     * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
      * @return Whether the groupJoinQuestionsWithVersion field is set.
      */
     boolean hasGroupJoinQuestionsWithVersion();
     /**
-     * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
+     * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
      * @return The groupJoinQuestionsWithVersion.
      */
     im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion getGroupJoinQuestionsWithVersion();
     /**
-     * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
+     * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
      */
     im.turms.common.model.bo.group.GroupJoinQuestionsWithVersionOrBuilder getGroupJoinQuestionsWithVersionOrBuilder();
 
     /**
-     * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
+     * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
      * @return Whether the groupMembersWithVersion field is set.
      */
     boolean hasGroupMembersWithVersion();
     /**
-     * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
+     * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
      * @return The groupMembersWithVersion.
      */
     im.turms.common.model.bo.group.GroupMembersWithVersion getGroupMembersWithVersion();
     /**
-     * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
+     * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
      */
     im.turms.common.model.bo.group.GroupMembersWithVersionOrBuilder getGroupMembersWithVersionOrBuilder();
 
     /**
-     * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
+     * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
      * @return Whether the groupsWithVersion field is set.
      */
     boolean hasGroupsWithVersion();
     /**
-     * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
+     * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
      * @return The groupsWithVersion.
      */
     im.turms.common.model.bo.group.GroupsWithVersion getGroupsWithVersion();
     /**
-     * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
+     * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
      */
     im.turms.common.model.bo.group.GroupsWithVersionOrBuilder getGroupsWithVersionOrBuilder();
 
@@ -677,8 +692,22 @@ private static final long serialVersionUID = 0L;
               break;
             }
             case 114: {
-              im.turms.common.model.bo.group.GroupInvitationsWithVersion.Builder subBuilder = null;
+              im.turms.common.model.bo.user.UserSessionIds.Builder subBuilder = null;
               if (kindCase_ == 14) {
+                subBuilder = ((im.turms.common.model.bo.user.UserSessionIds) kind_).toBuilder();
+              }
+              kind_ =
+                  input.readMessage(im.turms.common.model.bo.user.UserSessionIds.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom((im.turms.common.model.bo.user.UserSessionIds) kind_);
+                kind_ = subBuilder.buildPartial();
+              }
+              kindCase_ = 14;
+              break;
+            }
+            case 122: {
+              im.turms.common.model.bo.group.GroupInvitationsWithVersion.Builder subBuilder = null;
+              if (kindCase_ == 15) {
                 subBuilder = ((im.turms.common.model.bo.group.GroupInvitationsWithVersion) kind_).toBuilder();
               }
               kind_ =
@@ -687,12 +716,12 @@ private static final long serialVersionUID = 0L;
                 subBuilder.mergeFrom((im.turms.common.model.bo.group.GroupInvitationsWithVersion) kind_);
                 kind_ = subBuilder.buildPartial();
               }
-              kindCase_ = 14;
+              kindCase_ = 15;
               break;
             }
-            case 122: {
+            case 130: {
               im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult.Builder subBuilder = null;
-              if (kindCase_ == 15) {
+              if (kindCase_ == 16) {
                 subBuilder = ((im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult) kind_).toBuilder();
               }
               kind_ =
@@ -701,12 +730,12 @@ private static final long serialVersionUID = 0L;
                 subBuilder.mergeFrom((im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult) kind_);
                 kind_ = subBuilder.buildPartial();
               }
-              kindCase_ = 15;
+              kindCase_ = 16;
               break;
             }
-            case 130: {
+            case 138: {
               im.turms.common.model.bo.group.GroupJoinRequestsWithVersion.Builder subBuilder = null;
-              if (kindCase_ == 16) {
+              if (kindCase_ == 17) {
                 subBuilder = ((im.turms.common.model.bo.group.GroupJoinRequestsWithVersion) kind_).toBuilder();
               }
               kind_ =
@@ -715,12 +744,12 @@ private static final long serialVersionUID = 0L;
                 subBuilder.mergeFrom((im.turms.common.model.bo.group.GroupJoinRequestsWithVersion) kind_);
                 kind_ = subBuilder.buildPartial();
               }
-              kindCase_ = 16;
+              kindCase_ = 17;
               break;
             }
-            case 138: {
+            case 146: {
               im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion.Builder subBuilder = null;
-              if (kindCase_ == 17) {
+              if (kindCase_ == 18) {
                 subBuilder = ((im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion) kind_).toBuilder();
               }
               kind_ =
@@ -729,12 +758,12 @@ private static final long serialVersionUID = 0L;
                 subBuilder.mergeFrom((im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion) kind_);
                 kind_ = subBuilder.buildPartial();
               }
-              kindCase_ = 17;
+              kindCase_ = 18;
               break;
             }
-            case 146: {
+            case 154: {
               im.turms.common.model.bo.group.GroupMembersWithVersion.Builder subBuilder = null;
-              if (kindCase_ == 18) {
+              if (kindCase_ == 19) {
                 subBuilder = ((im.turms.common.model.bo.group.GroupMembersWithVersion) kind_).toBuilder();
               }
               kind_ =
@@ -743,12 +772,12 @@ private static final long serialVersionUID = 0L;
                 subBuilder.mergeFrom((im.turms.common.model.bo.group.GroupMembersWithVersion) kind_);
                 kind_ = subBuilder.buildPartial();
               }
-              kindCase_ = 18;
+              kindCase_ = 19;
               break;
             }
-            case 154: {
+            case 162: {
               im.turms.common.model.bo.group.GroupsWithVersion.Builder subBuilder = null;
-              if (kindCase_ == 19) {
+              if (kindCase_ == 20) {
                 subBuilder = ((im.turms.common.model.bo.group.GroupsWithVersion) kind_).toBuilder();
               }
               kind_ =
@@ -757,7 +786,7 @@ private static final long serialVersionUID = 0L;
                 subBuilder.mergeFrom((im.turms.common.model.bo.group.GroupsWithVersion) kind_);
                 kind_ = subBuilder.buildPartial();
               }
-              kindCase_ = 19;
+              kindCase_ = 20;
               break;
             }
             default: {
@@ -810,12 +839,13 @@ private static final long serialVersionUID = 0L;
       USER_FRIEND_REQUESTS_WITH_VERSION(11),
       USER_RELATIONSHIP_GROUPS_WITH_VERSION(12),
       USER_RELATIONSHIPS_WITH_VERSION(13),
-      GROUP_INVITATIONS_WITH_VERSION(14),
-      GROUP_JOIN_QUESTION_ANSWER_RESULT(15),
-      GROUP_JOIN_REQUESTS_WITH_VERSION(16),
-      GROUP_JOIN_QUESTIONS_WITH_VERSION(17),
-      GROUP_MEMBERS_WITH_VERSION(18),
-      GROUPS_WITH_VERSION(19),
+      USER_SESSION_IDS(14),
+      GROUP_INVITATIONS_WITH_VERSION(15),
+      GROUP_JOIN_QUESTION_ANSWER_RESULT(16),
+      GROUP_JOIN_REQUESTS_WITH_VERSION(17),
+      GROUP_JOIN_QUESTIONS_WITH_VERSION(18),
+      GROUP_MEMBERS_WITH_VERSION(19),
+      GROUPS_WITH_VERSION(20),
       KIND_NOT_SET(0);
       private final int value;
       private KindCase(int value) {
@@ -846,12 +876,13 @@ private static final long serialVersionUID = 0L;
           case 11: return USER_FRIEND_REQUESTS_WITH_VERSION;
           case 12: return USER_RELATIONSHIP_GROUPS_WITH_VERSION;
           case 13: return USER_RELATIONSHIPS_WITH_VERSION;
-          case 14: return GROUP_INVITATIONS_WITH_VERSION;
-          case 15: return GROUP_JOIN_QUESTION_ANSWER_RESULT;
-          case 16: return GROUP_JOIN_REQUESTS_WITH_VERSION;
-          case 17: return GROUP_JOIN_QUESTIONS_WITH_VERSION;
-          case 18: return GROUP_MEMBERS_WITH_VERSION;
-          case 19: return GROUPS_WITH_VERSION;
+          case 14: return USER_SESSION_IDS;
+          case 15: return GROUP_INVITATIONS_WITH_VERSION;
+          case 16: return GROUP_JOIN_QUESTION_ANSWER_RESULT;
+          case 17: return GROUP_JOIN_REQUESTS_WITH_VERSION;
+          case 18: return GROUP_JOIN_QUESTIONS_WITH_VERSION;
+          case 19: return GROUP_MEMBERS_WITH_VERSION;
+          case 20: return GROUPS_WITH_VERSION;
           case 0: return KIND_NOT_SET;
           default: return null;
         }
@@ -1231,169 +1262,197 @@ private static final long serialVersionUID = 0L;
       return im.turms.common.model.bo.user.UserRelationshipsWithVersion.getDefaultInstance();
     }
 
-    public static final int GROUP_INVITATIONS_WITH_VERSION_FIELD_NUMBER = 14;
+    public static final int USER_SESSION_IDS_FIELD_NUMBER = 14;
     /**
-     * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
-     * @return Whether the groupInvitationsWithVersion field is set.
+     * <code>.im.turms.proto.UserSessionIds user_session_ids = 14;</code>
+     * @return Whether the userSessionIds field is set.
      */
-    public boolean hasGroupInvitationsWithVersion() {
+    public boolean hasUserSessionIds() {
       return kindCase_ == 14;
     }
     /**
-     * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
-     * @return The groupInvitationsWithVersion.
+     * <code>.im.turms.proto.UserSessionIds user_session_ids = 14;</code>
+     * @return The userSessionIds.
      */
-    public im.turms.common.model.bo.group.GroupInvitationsWithVersion getGroupInvitationsWithVersion() {
+    public im.turms.common.model.bo.user.UserSessionIds getUserSessionIds() {
       if (kindCase_ == 14) {
-         return (im.turms.common.model.bo.group.GroupInvitationsWithVersion) kind_;
+         return (im.turms.common.model.bo.user.UserSessionIds) kind_;
       }
-      return im.turms.common.model.bo.group.GroupInvitationsWithVersion.getDefaultInstance();
+      return im.turms.common.model.bo.user.UserSessionIds.getDefaultInstance();
     }
     /**
-     * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
+     * <code>.im.turms.proto.UserSessionIds user_session_ids = 14;</code>
      */
-    public im.turms.common.model.bo.group.GroupInvitationsWithVersionOrBuilder getGroupInvitationsWithVersionOrBuilder() {
+    public im.turms.common.model.bo.user.UserSessionIdsOrBuilder getUserSessionIdsOrBuilder() {
       if (kindCase_ == 14) {
-         return (im.turms.common.model.bo.group.GroupInvitationsWithVersion) kind_;
+         return (im.turms.common.model.bo.user.UserSessionIds) kind_;
       }
-      return im.turms.common.model.bo.group.GroupInvitationsWithVersion.getDefaultInstance();
+      return im.turms.common.model.bo.user.UserSessionIds.getDefaultInstance();
     }
 
-    public static final int GROUP_JOIN_QUESTION_ANSWER_RESULT_FIELD_NUMBER = 15;
+    public static final int GROUP_INVITATIONS_WITH_VERSION_FIELD_NUMBER = 15;
     /**
-     * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
-     * @return Whether the groupJoinQuestionAnswerResult field is set.
+     * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
+     * @return Whether the groupInvitationsWithVersion field is set.
      */
-    public boolean hasGroupJoinQuestionAnswerResult() {
+    public boolean hasGroupInvitationsWithVersion() {
       return kindCase_ == 15;
     }
     /**
-     * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
-     * @return The groupJoinQuestionAnswerResult.
+     * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
+     * @return The groupInvitationsWithVersion.
      */
-    public im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult getGroupJoinQuestionAnswerResult() {
+    public im.turms.common.model.bo.group.GroupInvitationsWithVersion getGroupInvitationsWithVersion() {
       if (kindCase_ == 15) {
-         return (im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult) kind_;
+         return (im.turms.common.model.bo.group.GroupInvitationsWithVersion) kind_;
       }
-      return im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult.getDefaultInstance();
+      return im.turms.common.model.bo.group.GroupInvitationsWithVersion.getDefaultInstance();
     }
     /**
-     * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
+     * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
      */
-    public im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResultOrBuilder getGroupJoinQuestionAnswerResultOrBuilder() {
+    public im.turms.common.model.bo.group.GroupInvitationsWithVersionOrBuilder getGroupInvitationsWithVersionOrBuilder() {
       if (kindCase_ == 15) {
-         return (im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult) kind_;
+         return (im.turms.common.model.bo.group.GroupInvitationsWithVersion) kind_;
       }
-      return im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult.getDefaultInstance();
+      return im.turms.common.model.bo.group.GroupInvitationsWithVersion.getDefaultInstance();
     }
 
-    public static final int GROUP_JOIN_REQUESTS_WITH_VERSION_FIELD_NUMBER = 16;
+    public static final int GROUP_JOIN_QUESTION_ANSWER_RESULT_FIELD_NUMBER = 16;
     /**
-     * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
-     * @return Whether the groupJoinRequestsWithVersion field is set.
+     * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
+     * @return Whether the groupJoinQuestionAnswerResult field is set.
      */
-    public boolean hasGroupJoinRequestsWithVersion() {
+    public boolean hasGroupJoinQuestionAnswerResult() {
       return kindCase_ == 16;
     }
     /**
-     * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
-     * @return The groupJoinRequestsWithVersion.
+     * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
+     * @return The groupJoinQuestionAnswerResult.
      */
-    public im.turms.common.model.bo.group.GroupJoinRequestsWithVersion getGroupJoinRequestsWithVersion() {
+    public im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult getGroupJoinQuestionAnswerResult() {
       if (kindCase_ == 16) {
-         return (im.turms.common.model.bo.group.GroupJoinRequestsWithVersion) kind_;
+         return (im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult) kind_;
       }
-      return im.turms.common.model.bo.group.GroupJoinRequestsWithVersion.getDefaultInstance();
+      return im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult.getDefaultInstance();
     }
     /**
-     * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
+     * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
      */
-    public im.turms.common.model.bo.group.GroupJoinRequestsWithVersionOrBuilder getGroupJoinRequestsWithVersionOrBuilder() {
+    public im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResultOrBuilder getGroupJoinQuestionAnswerResultOrBuilder() {
       if (kindCase_ == 16) {
-         return (im.turms.common.model.bo.group.GroupJoinRequestsWithVersion) kind_;
+         return (im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult) kind_;
       }
-      return im.turms.common.model.bo.group.GroupJoinRequestsWithVersion.getDefaultInstance();
+      return im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult.getDefaultInstance();
     }
 
-    public static final int GROUP_JOIN_QUESTIONS_WITH_VERSION_FIELD_NUMBER = 17;
+    public static final int GROUP_JOIN_REQUESTS_WITH_VERSION_FIELD_NUMBER = 17;
     /**
-     * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
-     * @return Whether the groupJoinQuestionsWithVersion field is set.
+     * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
+     * @return Whether the groupJoinRequestsWithVersion field is set.
      */
-    public boolean hasGroupJoinQuestionsWithVersion() {
+    public boolean hasGroupJoinRequestsWithVersion() {
       return kindCase_ == 17;
     }
     /**
-     * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
-     * @return The groupJoinQuestionsWithVersion.
+     * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
+     * @return The groupJoinRequestsWithVersion.
      */
-    public im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion getGroupJoinQuestionsWithVersion() {
+    public im.turms.common.model.bo.group.GroupJoinRequestsWithVersion getGroupJoinRequestsWithVersion() {
       if (kindCase_ == 17) {
-         return (im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion) kind_;
+         return (im.turms.common.model.bo.group.GroupJoinRequestsWithVersion) kind_;
       }
-      return im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion.getDefaultInstance();
+      return im.turms.common.model.bo.group.GroupJoinRequestsWithVersion.getDefaultInstance();
     }
     /**
-     * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
+     * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
      */
-    public im.turms.common.model.bo.group.GroupJoinQuestionsWithVersionOrBuilder getGroupJoinQuestionsWithVersionOrBuilder() {
+    public im.turms.common.model.bo.group.GroupJoinRequestsWithVersionOrBuilder getGroupJoinRequestsWithVersionOrBuilder() {
       if (kindCase_ == 17) {
-         return (im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion) kind_;
+         return (im.turms.common.model.bo.group.GroupJoinRequestsWithVersion) kind_;
       }
-      return im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion.getDefaultInstance();
+      return im.turms.common.model.bo.group.GroupJoinRequestsWithVersion.getDefaultInstance();
     }
 
-    public static final int GROUP_MEMBERS_WITH_VERSION_FIELD_NUMBER = 18;
+    public static final int GROUP_JOIN_QUESTIONS_WITH_VERSION_FIELD_NUMBER = 18;
     /**
-     * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
-     * @return Whether the groupMembersWithVersion field is set.
+     * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
+     * @return Whether the groupJoinQuestionsWithVersion field is set.
      */
-    public boolean hasGroupMembersWithVersion() {
+    public boolean hasGroupJoinQuestionsWithVersion() {
       return kindCase_ == 18;
     }
     /**
-     * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
+     * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
+     * @return The groupJoinQuestionsWithVersion.
+     */
+    public im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion getGroupJoinQuestionsWithVersion() {
+      if (kindCase_ == 18) {
+         return (im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion) kind_;
+      }
+      return im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion.getDefaultInstance();
+    }
+    /**
+     * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
+     */
+    public im.turms.common.model.bo.group.GroupJoinQuestionsWithVersionOrBuilder getGroupJoinQuestionsWithVersionOrBuilder() {
+      if (kindCase_ == 18) {
+         return (im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion) kind_;
+      }
+      return im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion.getDefaultInstance();
+    }
+
+    public static final int GROUP_MEMBERS_WITH_VERSION_FIELD_NUMBER = 19;
+    /**
+     * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
+     * @return Whether the groupMembersWithVersion field is set.
+     */
+    public boolean hasGroupMembersWithVersion() {
+      return kindCase_ == 19;
+    }
+    /**
+     * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
      * @return The groupMembersWithVersion.
      */
     public im.turms.common.model.bo.group.GroupMembersWithVersion getGroupMembersWithVersion() {
-      if (kindCase_ == 18) {
+      if (kindCase_ == 19) {
          return (im.turms.common.model.bo.group.GroupMembersWithVersion) kind_;
       }
       return im.turms.common.model.bo.group.GroupMembersWithVersion.getDefaultInstance();
     }
     /**
-     * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
+     * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
      */
     public im.turms.common.model.bo.group.GroupMembersWithVersionOrBuilder getGroupMembersWithVersionOrBuilder() {
-      if (kindCase_ == 18) {
+      if (kindCase_ == 19) {
          return (im.turms.common.model.bo.group.GroupMembersWithVersion) kind_;
       }
       return im.turms.common.model.bo.group.GroupMembersWithVersion.getDefaultInstance();
     }
 
-    public static final int GROUPS_WITH_VERSION_FIELD_NUMBER = 19;
+    public static final int GROUPS_WITH_VERSION_FIELD_NUMBER = 20;
     /**
-     * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
+     * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
      * @return Whether the groupsWithVersion field is set.
      */
     public boolean hasGroupsWithVersion() {
-      return kindCase_ == 19;
+      return kindCase_ == 20;
     }
     /**
-     * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
+     * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
      * @return The groupsWithVersion.
      */
     public im.turms.common.model.bo.group.GroupsWithVersion getGroupsWithVersion() {
-      if (kindCase_ == 19) {
+      if (kindCase_ == 20) {
          return (im.turms.common.model.bo.group.GroupsWithVersion) kind_;
       }
       return im.turms.common.model.bo.group.GroupsWithVersion.getDefaultInstance();
     }
     /**
-     * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
+     * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
      */
     public im.turms.common.model.bo.group.GroupsWithVersionOrBuilder getGroupsWithVersionOrBuilder() {
-      if (kindCase_ == 19) {
+      if (kindCase_ == 20) {
          return (im.turms.common.model.bo.group.GroupsWithVersion) kind_;
       }
       return im.turms.common.model.bo.group.GroupsWithVersion.getDefaultInstance();
@@ -1453,22 +1512,25 @@ private static final long serialVersionUID = 0L;
         output.writeMessage(13, (im.turms.common.model.bo.user.UserRelationshipsWithVersion) kind_);
       }
       if (kindCase_ == 14) {
-        output.writeMessage(14, (im.turms.common.model.bo.group.GroupInvitationsWithVersion) kind_);
+        output.writeMessage(14, (im.turms.common.model.bo.user.UserSessionIds) kind_);
       }
       if (kindCase_ == 15) {
-        output.writeMessage(15, (im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult) kind_);
+        output.writeMessage(15, (im.turms.common.model.bo.group.GroupInvitationsWithVersion) kind_);
       }
       if (kindCase_ == 16) {
-        output.writeMessage(16, (im.turms.common.model.bo.group.GroupJoinRequestsWithVersion) kind_);
+        output.writeMessage(16, (im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult) kind_);
       }
       if (kindCase_ == 17) {
-        output.writeMessage(17, (im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion) kind_);
+        output.writeMessage(17, (im.turms.common.model.bo.group.GroupJoinRequestsWithVersion) kind_);
       }
       if (kindCase_ == 18) {
-        output.writeMessage(18, (im.turms.common.model.bo.group.GroupMembersWithVersion) kind_);
+        output.writeMessage(18, (im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion) kind_);
       }
       if (kindCase_ == 19) {
-        output.writeMessage(19, (im.turms.common.model.bo.group.GroupsWithVersion) kind_);
+        output.writeMessage(19, (im.turms.common.model.bo.group.GroupMembersWithVersion) kind_);
+      }
+      if (kindCase_ == 20) {
+        output.writeMessage(20, (im.turms.common.model.bo.group.GroupsWithVersion) kind_);
       }
       unknownFields.writeTo(output);
     }
@@ -1533,27 +1595,31 @@ private static final long serialVersionUID = 0L;
       }
       if (kindCase_ == 14) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(14, (im.turms.common.model.bo.group.GroupInvitationsWithVersion) kind_);
+          .computeMessageSize(14, (im.turms.common.model.bo.user.UserSessionIds) kind_);
       }
       if (kindCase_ == 15) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(15, (im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult) kind_);
+          .computeMessageSize(15, (im.turms.common.model.bo.group.GroupInvitationsWithVersion) kind_);
       }
       if (kindCase_ == 16) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(16, (im.turms.common.model.bo.group.GroupJoinRequestsWithVersion) kind_);
+          .computeMessageSize(16, (im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult) kind_);
       }
       if (kindCase_ == 17) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(17, (im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion) kind_);
+          .computeMessageSize(17, (im.turms.common.model.bo.group.GroupJoinRequestsWithVersion) kind_);
       }
       if (kindCase_ == 18) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(18, (im.turms.common.model.bo.group.GroupMembersWithVersion) kind_);
+          .computeMessageSize(18, (im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion) kind_);
       }
       if (kindCase_ == 19) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(19, (im.turms.common.model.bo.group.GroupsWithVersion) kind_);
+          .computeMessageSize(19, (im.turms.common.model.bo.group.GroupMembersWithVersion) kind_);
+      }
+      if (kindCase_ == 20) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(20, (im.turms.common.model.bo.group.GroupsWithVersion) kind_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1625,26 +1691,30 @@ private static final long serialVersionUID = 0L;
               .equals(other.getUserRelationshipsWithVersion())) return false;
           break;
         case 14:
+          if (!getUserSessionIds()
+              .equals(other.getUserSessionIds())) return false;
+          break;
+        case 15:
           if (!getGroupInvitationsWithVersion()
               .equals(other.getGroupInvitationsWithVersion())) return false;
           break;
-        case 15:
+        case 16:
           if (!getGroupJoinQuestionAnswerResult()
               .equals(other.getGroupJoinQuestionAnswerResult())) return false;
           break;
-        case 16:
+        case 17:
           if (!getGroupJoinRequestsWithVersion()
               .equals(other.getGroupJoinRequestsWithVersion())) return false;
           break;
-        case 17:
+        case 18:
           if (!getGroupJoinQuestionsWithVersion()
               .equals(other.getGroupJoinQuestionsWithVersion())) return false;
           break;
-        case 18:
+        case 19:
           if (!getGroupMembersWithVersion()
               .equals(other.getGroupMembersWithVersion())) return false;
           break;
-        case 19:
+        case 20:
           if (!getGroupsWithVersion()
               .equals(other.getGroupsWithVersion())) return false;
           break;
@@ -1716,26 +1786,30 @@ private static final long serialVersionUID = 0L;
           hash = (53 * hash) + getUserRelationshipsWithVersion().hashCode();
           break;
         case 14:
+          hash = (37 * hash) + USER_SESSION_IDS_FIELD_NUMBER;
+          hash = (53 * hash) + getUserSessionIds().hashCode();
+          break;
+        case 15:
           hash = (37 * hash) + GROUP_INVITATIONS_WITH_VERSION_FIELD_NUMBER;
           hash = (53 * hash) + getGroupInvitationsWithVersion().hashCode();
           break;
-        case 15:
+        case 16:
           hash = (37 * hash) + GROUP_JOIN_QUESTION_ANSWER_RESULT_FIELD_NUMBER;
           hash = (53 * hash) + getGroupJoinQuestionAnswerResult().hashCode();
           break;
-        case 16:
+        case 17:
           hash = (37 * hash) + GROUP_JOIN_REQUESTS_WITH_VERSION_FIELD_NUMBER;
           hash = (53 * hash) + getGroupJoinRequestsWithVersion().hashCode();
           break;
-        case 17:
+        case 18:
           hash = (37 * hash) + GROUP_JOIN_QUESTIONS_WITH_VERSION_FIELD_NUMBER;
           hash = (53 * hash) + getGroupJoinQuestionsWithVersion().hashCode();
           break;
-        case 18:
+        case 19:
           hash = (37 * hash) + GROUP_MEMBERS_WITH_VERSION_FIELD_NUMBER;
           hash = (53 * hash) + getGroupMembersWithVersion().hashCode();
           break;
-        case 19:
+        case 20:
           hash = (37 * hash) + GROUPS_WITH_VERSION_FIELD_NUMBER;
           hash = (53 * hash) + getGroupsWithVersion().hashCode();
           break;
@@ -1995,41 +2069,48 @@ private static final long serialVersionUID = 0L;
           }
         }
         if (kindCase_ == 14) {
+          if (userSessionIdsBuilder_ == null) {
+            result.kind_ = kind_;
+          } else {
+            result.kind_ = userSessionIdsBuilder_.build();
+          }
+        }
+        if (kindCase_ == 15) {
           if (groupInvitationsWithVersionBuilder_ == null) {
             result.kind_ = kind_;
           } else {
             result.kind_ = groupInvitationsWithVersionBuilder_.build();
           }
         }
-        if (kindCase_ == 15) {
+        if (kindCase_ == 16) {
           if (groupJoinQuestionAnswerResultBuilder_ == null) {
             result.kind_ = kind_;
           } else {
             result.kind_ = groupJoinQuestionAnswerResultBuilder_.build();
           }
         }
-        if (kindCase_ == 16) {
+        if (kindCase_ == 17) {
           if (groupJoinRequestsWithVersionBuilder_ == null) {
             result.kind_ = kind_;
           } else {
             result.kind_ = groupJoinRequestsWithVersionBuilder_.build();
           }
         }
-        if (kindCase_ == 17) {
+        if (kindCase_ == 18) {
           if (groupJoinQuestionsWithVersionBuilder_ == null) {
             result.kind_ = kind_;
           } else {
             result.kind_ = groupJoinQuestionsWithVersionBuilder_.build();
           }
         }
-        if (kindCase_ == 18) {
+        if (kindCase_ == 19) {
           if (groupMembersWithVersionBuilder_ == null) {
             result.kind_ = kind_;
           } else {
             result.kind_ = groupMembersWithVersionBuilder_.build();
           }
         }
-        if (kindCase_ == 19) {
+        if (kindCase_ == 20) {
           if (groupsWithVersionBuilder_ == null) {
             result.kind_ = kind_;
           } else {
@@ -2136,6 +2217,10 @@ private static final long serialVersionUID = 0L;
           }
           case USER_RELATIONSHIPS_WITH_VERSION: {
             mergeUserRelationshipsWithVersion(other.getUserRelationshipsWithVersion());
+            break;
+          }
+          case USER_SESSION_IDS: {
+            mergeUserSessionIds(other.getUserSessionIds());
             break;
           }
           case GROUP_INVITATIONS_WITH_VERSION: {
@@ -4005,33 +4090,171 @@ private static final long serialVersionUID = 0L;
       }
 
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.group.GroupInvitationsWithVersion, im.turms.common.model.bo.group.GroupInvitationsWithVersion.Builder, im.turms.common.model.bo.group.GroupInvitationsWithVersionOrBuilder> groupInvitationsWithVersionBuilder_;
+          im.turms.common.model.bo.user.UserSessionIds, im.turms.common.model.bo.user.UserSessionIds.Builder, im.turms.common.model.bo.user.UserSessionIdsOrBuilder> userSessionIdsBuilder_;
       /**
-       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
-       * @return Whether the groupInvitationsWithVersion field is set.
+       * <code>.im.turms.proto.UserSessionIds user_session_ids = 14;</code>
+       * @return Whether the userSessionIds field is set.
        */
-      public boolean hasGroupInvitationsWithVersion() {
+      public boolean hasUserSessionIds() {
         return kindCase_ == 14;
       }
       /**
-       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
+       * <code>.im.turms.proto.UserSessionIds user_session_ids = 14;</code>
+       * @return The userSessionIds.
+       */
+      public im.turms.common.model.bo.user.UserSessionIds getUserSessionIds() {
+        if (userSessionIdsBuilder_ == null) {
+          if (kindCase_ == 14) {
+            return (im.turms.common.model.bo.user.UserSessionIds) kind_;
+          }
+          return im.turms.common.model.bo.user.UserSessionIds.getDefaultInstance();
+        } else {
+          if (kindCase_ == 14) {
+            return userSessionIdsBuilder_.getMessage();
+          }
+          return im.turms.common.model.bo.user.UserSessionIds.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.im.turms.proto.UserSessionIds user_session_ids = 14;</code>
+       */
+      public Builder setUserSessionIds(im.turms.common.model.bo.user.UserSessionIds value) {
+        if (userSessionIdsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          kind_ = value;
+          onChanged();
+        } else {
+          userSessionIdsBuilder_.setMessage(value);
+        }
+        kindCase_ = 14;
+        return this;
+      }
+      /**
+       * <code>.im.turms.proto.UserSessionIds user_session_ids = 14;</code>
+       */
+      public Builder setUserSessionIds(
+          im.turms.common.model.bo.user.UserSessionIds.Builder builderForValue) {
+        if (userSessionIdsBuilder_ == null) {
+          kind_ = builderForValue.build();
+          onChanged();
+        } else {
+          userSessionIdsBuilder_.setMessage(builderForValue.build());
+        }
+        kindCase_ = 14;
+        return this;
+      }
+      /**
+       * <code>.im.turms.proto.UserSessionIds user_session_ids = 14;</code>
+       */
+      public Builder mergeUserSessionIds(im.turms.common.model.bo.user.UserSessionIds value) {
+        if (userSessionIdsBuilder_ == null) {
+          if (kindCase_ == 14 &&
+              kind_ != im.turms.common.model.bo.user.UserSessionIds.getDefaultInstance()) {
+            kind_ = im.turms.common.model.bo.user.UserSessionIds.newBuilder((im.turms.common.model.bo.user.UserSessionIds) kind_)
+                .mergeFrom(value).buildPartial();
+          } else {
+            kind_ = value;
+          }
+          onChanged();
+        } else {
+          if (kindCase_ == 14) {
+            userSessionIdsBuilder_.mergeFrom(value);
+          }
+          userSessionIdsBuilder_.setMessage(value);
+        }
+        kindCase_ = 14;
+        return this;
+      }
+      /**
+       * <code>.im.turms.proto.UserSessionIds user_session_ids = 14;</code>
+       */
+      public Builder clearUserSessionIds() {
+        if (userSessionIdsBuilder_ == null) {
+          if (kindCase_ == 14) {
+            kindCase_ = 0;
+            kind_ = null;
+            onChanged();
+          }
+        } else {
+          if (kindCase_ == 14) {
+            kindCase_ = 0;
+            kind_ = null;
+          }
+          userSessionIdsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>.im.turms.proto.UserSessionIds user_session_ids = 14;</code>
+       */
+      public im.turms.common.model.bo.user.UserSessionIds.Builder getUserSessionIdsBuilder() {
+        return getUserSessionIdsFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.im.turms.proto.UserSessionIds user_session_ids = 14;</code>
+       */
+      public im.turms.common.model.bo.user.UserSessionIdsOrBuilder getUserSessionIdsOrBuilder() {
+        if ((kindCase_ == 14) && (userSessionIdsBuilder_ != null)) {
+          return userSessionIdsBuilder_.getMessageOrBuilder();
+        } else {
+          if (kindCase_ == 14) {
+            return (im.turms.common.model.bo.user.UserSessionIds) kind_;
+          }
+          return im.turms.common.model.bo.user.UserSessionIds.getDefaultInstance();
+        }
+      }
+      /**
+       * <code>.im.turms.proto.UserSessionIds user_session_ids = 14;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          im.turms.common.model.bo.user.UserSessionIds, im.turms.common.model.bo.user.UserSessionIds.Builder, im.turms.common.model.bo.user.UserSessionIdsOrBuilder> 
+          getUserSessionIdsFieldBuilder() {
+        if (userSessionIdsBuilder_ == null) {
+          if (!(kindCase_ == 14)) {
+            kind_ = im.turms.common.model.bo.user.UserSessionIds.getDefaultInstance();
+          }
+          userSessionIdsBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              im.turms.common.model.bo.user.UserSessionIds, im.turms.common.model.bo.user.UserSessionIds.Builder, im.turms.common.model.bo.user.UserSessionIdsOrBuilder>(
+                  (im.turms.common.model.bo.user.UserSessionIds) kind_,
+                  getParentForChildren(),
+                  isClean());
+          kind_ = null;
+        }
+        kindCase_ = 14;
+        onChanged();;
+        return userSessionIdsBuilder_;
+      }
+
+      private com.google.protobuf.SingleFieldBuilderV3<
+          im.turms.common.model.bo.group.GroupInvitationsWithVersion, im.turms.common.model.bo.group.GroupInvitationsWithVersion.Builder, im.turms.common.model.bo.group.GroupInvitationsWithVersionOrBuilder> groupInvitationsWithVersionBuilder_;
+      /**
+       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
+       * @return Whether the groupInvitationsWithVersion field is set.
+       */
+      public boolean hasGroupInvitationsWithVersion() {
+        return kindCase_ == 15;
+      }
+      /**
+       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
        * @return The groupInvitationsWithVersion.
        */
       public im.turms.common.model.bo.group.GroupInvitationsWithVersion getGroupInvitationsWithVersion() {
         if (groupInvitationsWithVersionBuilder_ == null) {
-          if (kindCase_ == 14) {
+          if (kindCase_ == 15) {
             return (im.turms.common.model.bo.group.GroupInvitationsWithVersion) kind_;
           }
           return im.turms.common.model.bo.group.GroupInvitationsWithVersion.getDefaultInstance();
         } else {
-          if (kindCase_ == 14) {
+          if (kindCase_ == 15) {
             return groupInvitationsWithVersionBuilder_.getMessage();
           }
           return im.turms.common.model.bo.group.GroupInvitationsWithVersion.getDefaultInstance();
         }
       }
       /**
-       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
+       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
        */
       public Builder setGroupInvitationsWithVersion(im.turms.common.model.bo.group.GroupInvitationsWithVersion value) {
         if (groupInvitationsWithVersionBuilder_ == null) {
@@ -4043,11 +4266,11 @@ private static final long serialVersionUID = 0L;
         } else {
           groupInvitationsWithVersionBuilder_.setMessage(value);
         }
-        kindCase_ = 14;
+        kindCase_ = 15;
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
+       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
        */
       public Builder setGroupInvitationsWithVersion(
           im.turms.common.model.bo.group.GroupInvitationsWithVersion.Builder builderForValue) {
@@ -4057,15 +4280,15 @@ private static final long serialVersionUID = 0L;
         } else {
           groupInvitationsWithVersionBuilder_.setMessage(builderForValue.build());
         }
-        kindCase_ = 14;
+        kindCase_ = 15;
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
+       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
        */
       public Builder mergeGroupInvitationsWithVersion(im.turms.common.model.bo.group.GroupInvitationsWithVersion value) {
         if (groupInvitationsWithVersionBuilder_ == null) {
-          if (kindCase_ == 14 &&
+          if (kindCase_ == 15 &&
               kind_ != im.turms.common.model.bo.group.GroupInvitationsWithVersion.getDefaultInstance()) {
             kind_ = im.turms.common.model.bo.group.GroupInvitationsWithVersion.newBuilder((im.turms.common.model.bo.group.GroupInvitationsWithVersion) kind_)
                 .mergeFrom(value).buildPartial();
@@ -4074,26 +4297,26 @@ private static final long serialVersionUID = 0L;
           }
           onChanged();
         } else {
-          if (kindCase_ == 14) {
+          if (kindCase_ == 15) {
             groupInvitationsWithVersionBuilder_.mergeFrom(value);
           }
           groupInvitationsWithVersionBuilder_.setMessage(value);
         }
-        kindCase_ = 14;
+        kindCase_ = 15;
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
+       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
        */
       public Builder clearGroupInvitationsWithVersion() {
         if (groupInvitationsWithVersionBuilder_ == null) {
-          if (kindCase_ == 14) {
+          if (kindCase_ == 15) {
             kindCase_ = 0;
             kind_ = null;
             onChanged();
           }
         } else {
-          if (kindCase_ == 14) {
+          if (kindCase_ == 15) {
             kindCase_ = 0;
             kind_ = null;
           }
@@ -4102,32 +4325,32 @@ private static final long serialVersionUID = 0L;
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
+       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
        */
       public im.turms.common.model.bo.group.GroupInvitationsWithVersion.Builder getGroupInvitationsWithVersionBuilder() {
         return getGroupInvitationsWithVersionFieldBuilder().getBuilder();
       }
       /**
-       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
+       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
        */
       public im.turms.common.model.bo.group.GroupInvitationsWithVersionOrBuilder getGroupInvitationsWithVersionOrBuilder() {
-        if ((kindCase_ == 14) && (groupInvitationsWithVersionBuilder_ != null)) {
+        if ((kindCase_ == 15) && (groupInvitationsWithVersionBuilder_ != null)) {
           return groupInvitationsWithVersionBuilder_.getMessageOrBuilder();
         } else {
-          if (kindCase_ == 14) {
+          if (kindCase_ == 15) {
             return (im.turms.common.model.bo.group.GroupInvitationsWithVersion) kind_;
           }
           return im.turms.common.model.bo.group.GroupInvitationsWithVersion.getDefaultInstance();
         }
       }
       /**
-       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
+       * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           im.turms.common.model.bo.group.GroupInvitationsWithVersion, im.turms.common.model.bo.group.GroupInvitationsWithVersion.Builder, im.turms.common.model.bo.group.GroupInvitationsWithVersionOrBuilder> 
           getGroupInvitationsWithVersionFieldBuilder() {
         if (groupInvitationsWithVersionBuilder_ == null) {
-          if (!(kindCase_ == 14)) {
+          if (!(kindCase_ == 15)) {
             kind_ = im.turms.common.model.bo.group.GroupInvitationsWithVersion.getDefaultInstance();
           }
           groupInvitationsWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -4137,7 +4360,7 @@ private static final long serialVersionUID = 0L;
                   isClean());
           kind_ = null;
         }
-        kindCase_ = 14;
+        kindCase_ = 15;
         onChanged();;
         return groupInvitationsWithVersionBuilder_;
       }
@@ -4145,31 +4368,31 @@ private static final long serialVersionUID = 0L;
       private com.google.protobuf.SingleFieldBuilderV3<
           im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult, im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult.Builder, im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResultOrBuilder> groupJoinQuestionAnswerResultBuilder_;
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
        * @return Whether the groupJoinQuestionAnswerResult field is set.
        */
       public boolean hasGroupJoinQuestionAnswerResult() {
-        return kindCase_ == 15;
+        return kindCase_ == 16;
       }
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
        * @return The groupJoinQuestionAnswerResult.
        */
       public im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult getGroupJoinQuestionAnswerResult() {
         if (groupJoinQuestionAnswerResultBuilder_ == null) {
-          if (kindCase_ == 15) {
+          if (kindCase_ == 16) {
             return (im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult) kind_;
           }
           return im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult.getDefaultInstance();
         } else {
-          if (kindCase_ == 15) {
+          if (kindCase_ == 16) {
             return groupJoinQuestionAnswerResultBuilder_.getMessage();
           }
           return im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult.getDefaultInstance();
         }
       }
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
        */
       public Builder setGroupJoinQuestionAnswerResult(im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult value) {
         if (groupJoinQuestionAnswerResultBuilder_ == null) {
@@ -4181,11 +4404,11 @@ private static final long serialVersionUID = 0L;
         } else {
           groupJoinQuestionAnswerResultBuilder_.setMessage(value);
         }
-        kindCase_ = 15;
+        kindCase_ = 16;
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
        */
       public Builder setGroupJoinQuestionAnswerResult(
           im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult.Builder builderForValue) {
@@ -4195,15 +4418,15 @@ private static final long serialVersionUID = 0L;
         } else {
           groupJoinQuestionAnswerResultBuilder_.setMessage(builderForValue.build());
         }
-        kindCase_ = 15;
+        kindCase_ = 16;
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
        */
       public Builder mergeGroupJoinQuestionAnswerResult(im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult value) {
         if (groupJoinQuestionAnswerResultBuilder_ == null) {
-          if (kindCase_ == 15 &&
+          if (kindCase_ == 16 &&
               kind_ != im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult.getDefaultInstance()) {
             kind_ = im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult.newBuilder((im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult) kind_)
                 .mergeFrom(value).buildPartial();
@@ -4212,26 +4435,26 @@ private static final long serialVersionUID = 0L;
           }
           onChanged();
         } else {
-          if (kindCase_ == 15) {
+          if (kindCase_ == 16) {
             groupJoinQuestionAnswerResultBuilder_.mergeFrom(value);
           }
           groupJoinQuestionAnswerResultBuilder_.setMessage(value);
         }
-        kindCase_ = 15;
+        kindCase_ = 16;
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
        */
       public Builder clearGroupJoinQuestionAnswerResult() {
         if (groupJoinQuestionAnswerResultBuilder_ == null) {
-          if (kindCase_ == 15) {
+          if (kindCase_ == 16) {
             kindCase_ = 0;
             kind_ = null;
             onChanged();
           }
         } else {
-          if (kindCase_ == 15) {
+          if (kindCase_ == 16) {
             kindCase_ = 0;
             kind_ = null;
           }
@@ -4240,32 +4463,32 @@ private static final long serialVersionUID = 0L;
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
        */
       public im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult.Builder getGroupJoinQuestionAnswerResultBuilder() {
         return getGroupJoinQuestionAnswerResultFieldBuilder().getBuilder();
       }
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
        */
       public im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResultOrBuilder getGroupJoinQuestionAnswerResultOrBuilder() {
-        if ((kindCase_ == 15) && (groupJoinQuestionAnswerResultBuilder_ != null)) {
+        if ((kindCase_ == 16) && (groupJoinQuestionAnswerResultBuilder_ != null)) {
           return groupJoinQuestionAnswerResultBuilder_.getMessageOrBuilder();
         } else {
-          if (kindCase_ == 15) {
+          if (kindCase_ == 16) {
             return (im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult) kind_;
           }
           return im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult.getDefaultInstance();
         }
       }
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 15;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult, im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult.Builder, im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResultOrBuilder> 
           getGroupJoinQuestionAnswerResultFieldBuilder() {
         if (groupJoinQuestionAnswerResultBuilder_ == null) {
-          if (!(kindCase_ == 15)) {
+          if (!(kindCase_ == 16)) {
             kind_ = im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult.getDefaultInstance();
           }
           groupJoinQuestionAnswerResultBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -4275,7 +4498,7 @@ private static final long serialVersionUID = 0L;
                   isClean());
           kind_ = null;
         }
-        kindCase_ = 15;
+        kindCase_ = 16;
         onChanged();;
         return groupJoinQuestionAnswerResultBuilder_;
       }
@@ -4283,31 +4506,31 @@ private static final long serialVersionUID = 0L;
       private com.google.protobuf.SingleFieldBuilderV3<
           im.turms.common.model.bo.group.GroupJoinRequestsWithVersion, im.turms.common.model.bo.group.GroupJoinRequestsWithVersion.Builder, im.turms.common.model.bo.group.GroupJoinRequestsWithVersionOrBuilder> groupJoinRequestsWithVersionBuilder_;
       /**
-       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
+       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
        * @return Whether the groupJoinRequestsWithVersion field is set.
        */
       public boolean hasGroupJoinRequestsWithVersion() {
-        return kindCase_ == 16;
+        return kindCase_ == 17;
       }
       /**
-       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
+       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
        * @return The groupJoinRequestsWithVersion.
        */
       public im.turms.common.model.bo.group.GroupJoinRequestsWithVersion getGroupJoinRequestsWithVersion() {
         if (groupJoinRequestsWithVersionBuilder_ == null) {
-          if (kindCase_ == 16) {
+          if (kindCase_ == 17) {
             return (im.turms.common.model.bo.group.GroupJoinRequestsWithVersion) kind_;
           }
           return im.turms.common.model.bo.group.GroupJoinRequestsWithVersion.getDefaultInstance();
         } else {
-          if (kindCase_ == 16) {
+          if (kindCase_ == 17) {
             return groupJoinRequestsWithVersionBuilder_.getMessage();
           }
           return im.turms.common.model.bo.group.GroupJoinRequestsWithVersion.getDefaultInstance();
         }
       }
       /**
-       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
+       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
        */
       public Builder setGroupJoinRequestsWithVersion(im.turms.common.model.bo.group.GroupJoinRequestsWithVersion value) {
         if (groupJoinRequestsWithVersionBuilder_ == null) {
@@ -4319,11 +4542,11 @@ private static final long serialVersionUID = 0L;
         } else {
           groupJoinRequestsWithVersionBuilder_.setMessage(value);
         }
-        kindCase_ = 16;
+        kindCase_ = 17;
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
+       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
        */
       public Builder setGroupJoinRequestsWithVersion(
           im.turms.common.model.bo.group.GroupJoinRequestsWithVersion.Builder builderForValue) {
@@ -4333,15 +4556,15 @@ private static final long serialVersionUID = 0L;
         } else {
           groupJoinRequestsWithVersionBuilder_.setMessage(builderForValue.build());
         }
-        kindCase_ = 16;
+        kindCase_ = 17;
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
+       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
        */
       public Builder mergeGroupJoinRequestsWithVersion(im.turms.common.model.bo.group.GroupJoinRequestsWithVersion value) {
         if (groupJoinRequestsWithVersionBuilder_ == null) {
-          if (kindCase_ == 16 &&
+          if (kindCase_ == 17 &&
               kind_ != im.turms.common.model.bo.group.GroupJoinRequestsWithVersion.getDefaultInstance()) {
             kind_ = im.turms.common.model.bo.group.GroupJoinRequestsWithVersion.newBuilder((im.turms.common.model.bo.group.GroupJoinRequestsWithVersion) kind_)
                 .mergeFrom(value).buildPartial();
@@ -4350,26 +4573,26 @@ private static final long serialVersionUID = 0L;
           }
           onChanged();
         } else {
-          if (kindCase_ == 16) {
+          if (kindCase_ == 17) {
             groupJoinRequestsWithVersionBuilder_.mergeFrom(value);
           }
           groupJoinRequestsWithVersionBuilder_.setMessage(value);
         }
-        kindCase_ = 16;
+        kindCase_ = 17;
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
+       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
        */
       public Builder clearGroupJoinRequestsWithVersion() {
         if (groupJoinRequestsWithVersionBuilder_ == null) {
-          if (kindCase_ == 16) {
+          if (kindCase_ == 17) {
             kindCase_ = 0;
             kind_ = null;
             onChanged();
           }
         } else {
-          if (kindCase_ == 16) {
+          if (kindCase_ == 17) {
             kindCase_ = 0;
             kind_ = null;
           }
@@ -4378,32 +4601,32 @@ private static final long serialVersionUID = 0L;
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
+       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
        */
       public im.turms.common.model.bo.group.GroupJoinRequestsWithVersion.Builder getGroupJoinRequestsWithVersionBuilder() {
         return getGroupJoinRequestsWithVersionFieldBuilder().getBuilder();
       }
       /**
-       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
+       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
        */
       public im.turms.common.model.bo.group.GroupJoinRequestsWithVersionOrBuilder getGroupJoinRequestsWithVersionOrBuilder() {
-        if ((kindCase_ == 16) && (groupJoinRequestsWithVersionBuilder_ != null)) {
+        if ((kindCase_ == 17) && (groupJoinRequestsWithVersionBuilder_ != null)) {
           return groupJoinRequestsWithVersionBuilder_.getMessageOrBuilder();
         } else {
-          if (kindCase_ == 16) {
+          if (kindCase_ == 17) {
             return (im.turms.common.model.bo.group.GroupJoinRequestsWithVersion) kind_;
           }
           return im.turms.common.model.bo.group.GroupJoinRequestsWithVersion.getDefaultInstance();
         }
       }
       /**
-       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 16;</code>
+       * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           im.turms.common.model.bo.group.GroupJoinRequestsWithVersion, im.turms.common.model.bo.group.GroupJoinRequestsWithVersion.Builder, im.turms.common.model.bo.group.GroupJoinRequestsWithVersionOrBuilder> 
           getGroupJoinRequestsWithVersionFieldBuilder() {
         if (groupJoinRequestsWithVersionBuilder_ == null) {
-          if (!(kindCase_ == 16)) {
+          if (!(kindCase_ == 17)) {
             kind_ = im.turms.common.model.bo.group.GroupJoinRequestsWithVersion.getDefaultInstance();
           }
           groupJoinRequestsWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -4413,7 +4636,7 @@ private static final long serialVersionUID = 0L;
                   isClean());
           kind_ = null;
         }
-        kindCase_ = 16;
+        kindCase_ = 17;
         onChanged();;
         return groupJoinRequestsWithVersionBuilder_;
       }
@@ -4421,31 +4644,31 @@ private static final long serialVersionUID = 0L;
       private com.google.protobuf.SingleFieldBuilderV3<
           im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion, im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion.Builder, im.turms.common.model.bo.group.GroupJoinQuestionsWithVersionOrBuilder> groupJoinQuestionsWithVersionBuilder_;
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
        * @return Whether the groupJoinQuestionsWithVersion field is set.
        */
       public boolean hasGroupJoinQuestionsWithVersion() {
-        return kindCase_ == 17;
+        return kindCase_ == 18;
       }
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
        * @return The groupJoinQuestionsWithVersion.
        */
       public im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion getGroupJoinQuestionsWithVersion() {
         if (groupJoinQuestionsWithVersionBuilder_ == null) {
-          if (kindCase_ == 17) {
+          if (kindCase_ == 18) {
             return (im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion) kind_;
           }
           return im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion.getDefaultInstance();
         } else {
-          if (kindCase_ == 17) {
+          if (kindCase_ == 18) {
             return groupJoinQuestionsWithVersionBuilder_.getMessage();
           }
           return im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion.getDefaultInstance();
         }
       }
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
        */
       public Builder setGroupJoinQuestionsWithVersion(im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion value) {
         if (groupJoinQuestionsWithVersionBuilder_ == null) {
@@ -4457,11 +4680,11 @@ private static final long serialVersionUID = 0L;
         } else {
           groupJoinQuestionsWithVersionBuilder_.setMessage(value);
         }
-        kindCase_ = 17;
+        kindCase_ = 18;
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
        */
       public Builder setGroupJoinQuestionsWithVersion(
           im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion.Builder builderForValue) {
@@ -4471,15 +4694,15 @@ private static final long serialVersionUID = 0L;
         } else {
           groupJoinQuestionsWithVersionBuilder_.setMessage(builderForValue.build());
         }
-        kindCase_ = 17;
+        kindCase_ = 18;
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
        */
       public Builder mergeGroupJoinQuestionsWithVersion(im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion value) {
         if (groupJoinQuestionsWithVersionBuilder_ == null) {
-          if (kindCase_ == 17 &&
+          if (kindCase_ == 18 &&
               kind_ != im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion.getDefaultInstance()) {
             kind_ = im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion.newBuilder((im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion) kind_)
                 .mergeFrom(value).buildPartial();
@@ -4488,26 +4711,26 @@ private static final long serialVersionUID = 0L;
           }
           onChanged();
         } else {
-          if (kindCase_ == 17) {
+          if (kindCase_ == 18) {
             groupJoinQuestionsWithVersionBuilder_.mergeFrom(value);
           }
           groupJoinQuestionsWithVersionBuilder_.setMessage(value);
         }
-        kindCase_ = 17;
+        kindCase_ = 18;
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
        */
       public Builder clearGroupJoinQuestionsWithVersion() {
         if (groupJoinQuestionsWithVersionBuilder_ == null) {
-          if (kindCase_ == 17) {
+          if (kindCase_ == 18) {
             kindCase_ = 0;
             kind_ = null;
             onChanged();
           }
         } else {
-          if (kindCase_ == 17) {
+          if (kindCase_ == 18) {
             kindCase_ = 0;
             kind_ = null;
           }
@@ -4516,32 +4739,32 @@ private static final long serialVersionUID = 0L;
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
        */
       public im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion.Builder getGroupJoinQuestionsWithVersionBuilder() {
         return getGroupJoinQuestionsWithVersionFieldBuilder().getBuilder();
       }
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
        */
       public im.turms.common.model.bo.group.GroupJoinQuestionsWithVersionOrBuilder getGroupJoinQuestionsWithVersionOrBuilder() {
-        if ((kindCase_ == 17) && (groupJoinQuestionsWithVersionBuilder_ != null)) {
+        if ((kindCase_ == 18) && (groupJoinQuestionsWithVersionBuilder_ != null)) {
           return groupJoinQuestionsWithVersionBuilder_.getMessageOrBuilder();
         } else {
-          if (kindCase_ == 17) {
+          if (kindCase_ == 18) {
             return (im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion) kind_;
           }
           return im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion.getDefaultInstance();
         }
       }
       /**
-       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 17;</code>
+       * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion, im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion.Builder, im.turms.common.model.bo.group.GroupJoinQuestionsWithVersionOrBuilder> 
           getGroupJoinQuestionsWithVersionFieldBuilder() {
         if (groupJoinQuestionsWithVersionBuilder_ == null) {
-          if (!(kindCase_ == 17)) {
+          if (!(kindCase_ == 18)) {
             kind_ = im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion.getDefaultInstance();
           }
           groupJoinQuestionsWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -4551,7 +4774,7 @@ private static final long serialVersionUID = 0L;
                   isClean());
           kind_ = null;
         }
-        kindCase_ = 17;
+        kindCase_ = 18;
         onChanged();;
         return groupJoinQuestionsWithVersionBuilder_;
       }
@@ -4559,31 +4782,31 @@ private static final long serialVersionUID = 0L;
       private com.google.protobuf.SingleFieldBuilderV3<
           im.turms.common.model.bo.group.GroupMembersWithVersion, im.turms.common.model.bo.group.GroupMembersWithVersion.Builder, im.turms.common.model.bo.group.GroupMembersWithVersionOrBuilder> groupMembersWithVersionBuilder_;
       /**
-       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
+       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
        * @return Whether the groupMembersWithVersion field is set.
        */
       public boolean hasGroupMembersWithVersion() {
-        return kindCase_ == 18;
+        return kindCase_ == 19;
       }
       /**
-       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
+       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
        * @return The groupMembersWithVersion.
        */
       public im.turms.common.model.bo.group.GroupMembersWithVersion getGroupMembersWithVersion() {
         if (groupMembersWithVersionBuilder_ == null) {
-          if (kindCase_ == 18) {
+          if (kindCase_ == 19) {
             return (im.turms.common.model.bo.group.GroupMembersWithVersion) kind_;
           }
           return im.turms.common.model.bo.group.GroupMembersWithVersion.getDefaultInstance();
         } else {
-          if (kindCase_ == 18) {
+          if (kindCase_ == 19) {
             return groupMembersWithVersionBuilder_.getMessage();
           }
           return im.turms.common.model.bo.group.GroupMembersWithVersion.getDefaultInstance();
         }
       }
       /**
-       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
+       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
        */
       public Builder setGroupMembersWithVersion(im.turms.common.model.bo.group.GroupMembersWithVersion value) {
         if (groupMembersWithVersionBuilder_ == null) {
@@ -4595,11 +4818,11 @@ private static final long serialVersionUID = 0L;
         } else {
           groupMembersWithVersionBuilder_.setMessage(value);
         }
-        kindCase_ = 18;
+        kindCase_ = 19;
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
+       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
        */
       public Builder setGroupMembersWithVersion(
           im.turms.common.model.bo.group.GroupMembersWithVersion.Builder builderForValue) {
@@ -4609,15 +4832,15 @@ private static final long serialVersionUID = 0L;
         } else {
           groupMembersWithVersionBuilder_.setMessage(builderForValue.build());
         }
-        kindCase_ = 18;
+        kindCase_ = 19;
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
+       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
        */
       public Builder mergeGroupMembersWithVersion(im.turms.common.model.bo.group.GroupMembersWithVersion value) {
         if (groupMembersWithVersionBuilder_ == null) {
-          if (kindCase_ == 18 &&
+          if (kindCase_ == 19 &&
               kind_ != im.turms.common.model.bo.group.GroupMembersWithVersion.getDefaultInstance()) {
             kind_ = im.turms.common.model.bo.group.GroupMembersWithVersion.newBuilder((im.turms.common.model.bo.group.GroupMembersWithVersion) kind_)
                 .mergeFrom(value).buildPartial();
@@ -4626,26 +4849,26 @@ private static final long serialVersionUID = 0L;
           }
           onChanged();
         } else {
-          if (kindCase_ == 18) {
+          if (kindCase_ == 19) {
             groupMembersWithVersionBuilder_.mergeFrom(value);
           }
           groupMembersWithVersionBuilder_.setMessage(value);
         }
-        kindCase_ = 18;
+        kindCase_ = 19;
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
+       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
        */
       public Builder clearGroupMembersWithVersion() {
         if (groupMembersWithVersionBuilder_ == null) {
-          if (kindCase_ == 18) {
+          if (kindCase_ == 19) {
             kindCase_ = 0;
             kind_ = null;
             onChanged();
           }
         } else {
-          if (kindCase_ == 18) {
+          if (kindCase_ == 19) {
             kindCase_ = 0;
             kind_ = null;
           }
@@ -4654,32 +4877,32 @@ private static final long serialVersionUID = 0L;
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
+       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
        */
       public im.turms.common.model.bo.group.GroupMembersWithVersion.Builder getGroupMembersWithVersionBuilder() {
         return getGroupMembersWithVersionFieldBuilder().getBuilder();
       }
       /**
-       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
+       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
        */
       public im.turms.common.model.bo.group.GroupMembersWithVersionOrBuilder getGroupMembersWithVersionOrBuilder() {
-        if ((kindCase_ == 18) && (groupMembersWithVersionBuilder_ != null)) {
+        if ((kindCase_ == 19) && (groupMembersWithVersionBuilder_ != null)) {
           return groupMembersWithVersionBuilder_.getMessageOrBuilder();
         } else {
-          if (kindCase_ == 18) {
+          if (kindCase_ == 19) {
             return (im.turms.common.model.bo.group.GroupMembersWithVersion) kind_;
           }
           return im.turms.common.model.bo.group.GroupMembersWithVersion.getDefaultInstance();
         }
       }
       /**
-       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 18;</code>
+       * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           im.turms.common.model.bo.group.GroupMembersWithVersion, im.turms.common.model.bo.group.GroupMembersWithVersion.Builder, im.turms.common.model.bo.group.GroupMembersWithVersionOrBuilder> 
           getGroupMembersWithVersionFieldBuilder() {
         if (groupMembersWithVersionBuilder_ == null) {
-          if (!(kindCase_ == 18)) {
+          if (!(kindCase_ == 19)) {
             kind_ = im.turms.common.model.bo.group.GroupMembersWithVersion.getDefaultInstance();
           }
           groupMembersWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -4689,7 +4912,7 @@ private static final long serialVersionUID = 0L;
                   isClean());
           kind_ = null;
         }
-        kindCase_ = 18;
+        kindCase_ = 19;
         onChanged();;
         return groupMembersWithVersionBuilder_;
       }
@@ -4697,31 +4920,31 @@ private static final long serialVersionUID = 0L;
       private com.google.protobuf.SingleFieldBuilderV3<
           im.turms.common.model.bo.group.GroupsWithVersion, im.turms.common.model.bo.group.GroupsWithVersion.Builder, im.turms.common.model.bo.group.GroupsWithVersionOrBuilder> groupsWithVersionBuilder_;
       /**
-       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
+       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
        * @return Whether the groupsWithVersion field is set.
        */
       public boolean hasGroupsWithVersion() {
-        return kindCase_ == 19;
+        return kindCase_ == 20;
       }
       /**
-       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
+       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
        * @return The groupsWithVersion.
        */
       public im.turms.common.model.bo.group.GroupsWithVersion getGroupsWithVersion() {
         if (groupsWithVersionBuilder_ == null) {
-          if (kindCase_ == 19) {
+          if (kindCase_ == 20) {
             return (im.turms.common.model.bo.group.GroupsWithVersion) kind_;
           }
           return im.turms.common.model.bo.group.GroupsWithVersion.getDefaultInstance();
         } else {
-          if (kindCase_ == 19) {
+          if (kindCase_ == 20) {
             return groupsWithVersionBuilder_.getMessage();
           }
           return im.turms.common.model.bo.group.GroupsWithVersion.getDefaultInstance();
         }
       }
       /**
-       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
+       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
        */
       public Builder setGroupsWithVersion(im.turms.common.model.bo.group.GroupsWithVersion value) {
         if (groupsWithVersionBuilder_ == null) {
@@ -4733,11 +4956,11 @@ private static final long serialVersionUID = 0L;
         } else {
           groupsWithVersionBuilder_.setMessage(value);
         }
-        kindCase_ = 19;
+        kindCase_ = 20;
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
+       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
        */
       public Builder setGroupsWithVersion(
           im.turms.common.model.bo.group.GroupsWithVersion.Builder builderForValue) {
@@ -4747,15 +4970,15 @@ private static final long serialVersionUID = 0L;
         } else {
           groupsWithVersionBuilder_.setMessage(builderForValue.build());
         }
-        kindCase_ = 19;
+        kindCase_ = 20;
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
+       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
        */
       public Builder mergeGroupsWithVersion(im.turms.common.model.bo.group.GroupsWithVersion value) {
         if (groupsWithVersionBuilder_ == null) {
-          if (kindCase_ == 19 &&
+          if (kindCase_ == 20 &&
               kind_ != im.turms.common.model.bo.group.GroupsWithVersion.getDefaultInstance()) {
             kind_ = im.turms.common.model.bo.group.GroupsWithVersion.newBuilder((im.turms.common.model.bo.group.GroupsWithVersion) kind_)
                 .mergeFrom(value).buildPartial();
@@ -4764,26 +4987,26 @@ private static final long serialVersionUID = 0L;
           }
           onChanged();
         } else {
-          if (kindCase_ == 19) {
+          if (kindCase_ == 20) {
             groupsWithVersionBuilder_.mergeFrom(value);
           }
           groupsWithVersionBuilder_.setMessage(value);
         }
-        kindCase_ = 19;
+        kindCase_ = 20;
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
+       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
        */
       public Builder clearGroupsWithVersion() {
         if (groupsWithVersionBuilder_ == null) {
-          if (kindCase_ == 19) {
+          if (kindCase_ == 20) {
             kindCase_ = 0;
             kind_ = null;
             onChanged();
           }
         } else {
-          if (kindCase_ == 19) {
+          if (kindCase_ == 20) {
             kindCase_ = 0;
             kind_ = null;
           }
@@ -4792,32 +5015,32 @@ private static final long serialVersionUID = 0L;
         return this;
       }
       /**
-       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
+       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
        */
       public im.turms.common.model.bo.group.GroupsWithVersion.Builder getGroupsWithVersionBuilder() {
         return getGroupsWithVersionFieldBuilder().getBuilder();
       }
       /**
-       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
+       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
        */
       public im.turms.common.model.bo.group.GroupsWithVersionOrBuilder getGroupsWithVersionOrBuilder() {
-        if ((kindCase_ == 19) && (groupsWithVersionBuilder_ != null)) {
+        if ((kindCase_ == 20) && (groupsWithVersionBuilder_ != null)) {
           return groupsWithVersionBuilder_.getMessageOrBuilder();
         } else {
-          if (kindCase_ == 19) {
+          if (kindCase_ == 20) {
             return (im.turms.common.model.bo.group.GroupsWithVersion) kind_;
           }
           return im.turms.common.model.bo.group.GroupsWithVersion.getDefaultInstance();
         }
       }
       /**
-       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 19;</code>
+       * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
           im.turms.common.model.bo.group.GroupsWithVersion, im.turms.common.model.bo.group.GroupsWithVersion.Builder, im.turms.common.model.bo.group.GroupsWithVersionOrBuilder> 
           getGroupsWithVersionFieldBuilder() {
         if (groupsWithVersionBuilder_ == null) {
-          if (!(kindCase_ == 19)) {
+          if (!(kindCase_ == 20)) {
             kind_ = im.turms.common.model.bo.group.GroupsWithVersion.getDefaultInstance();
           }
           groupsWithVersionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -4827,7 +5050,7 @@ private static final long serialVersionUID = 0L;
                   isClean());
           kind_ = null;
         }
-        kindCase_ = 19;
+        kindCase_ = 20;
         onChanged();;
         return groupsWithVersionBuilder_;
       }

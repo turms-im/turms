@@ -119,7 +119,7 @@ export default class TurmsDriver {
                 this._location = location;
                 this._userOnlineStatus = userOnlineStatus;
                 this._deviceType = deviceType;
-                this.fillLoginInfo(this._requestId, userId, password, userOnlineStatus, deviceType, location);
+                this._fillLoginInfo(this._requestId, userId, password, userOnlineStatus, deviceType, location);
                 this._websocket = new WebSocketAsPromised(this._url, {
                     createWebSocket: (serverUrl): WebSocket => {
                         const ws = new WebSocket(serverUrl);
@@ -189,44 +189,13 @@ export default class TurmsDriver {
         deviceType = DeviceType.UNKNOWN): Promise<void> {
         return this._connect(userId, password, location, userOnlineStatus, deviceType)
             .then(() => {
-                this.clearLoginInfo();
+                this._clearLoginInfo();
                 return Promise.resolve();
             })
             .catch(error => {
-                this.clearLoginInfo();
+                this._clearLoginInfo();
                 return Promise.reject(`Failed to login due to 1. password mismatch; 2. the server doesn't exist or is unavailable`);
             });
-    }
-
-    fillLoginInfo(
-        requestId: number,
-        userId: string,
-        password: string,
-        userOnlineStatus?: UserStatus,
-        deviceType?: DeviceType,
-        location?: string) {
-        document.cookie = `${COOKIE_REQUEST_ID}=${requestId}; path=/`;
-        document.cookie = `${COOKIE_USER_ID}=${userId}; path=/`;
-        document.cookie = `${COOKIE_PASSWORD}=${escape(password)}; path=/`;
-        if (userOnlineStatus) {
-            document.cookie = `${COOKIE_USER_ONLINE_STATUS}=${userOnlineStatus.toString()}; path=/`;
-        }
-        if (deviceType) {
-            document.cookie = `${COOKIE_DEVICE_TYPE}=${deviceType.toString()}; path=/`;
-        }
-        if (location) {
-            document.cookie = `${COOKIE_LOCATION}=${location}; path=/`;
-        }
-    }
-
-    clearLoginInfo() {
-        const now = new Date().toUTCString();
-        document.cookie = `${COOKIE_USER_ID}=;expires=${now}`;
-        document.cookie = `${COOKIE_PASSWORD}=;expires=${now}`;
-        document.cookie = `${COOKIE_USER_ONLINE_STATUS}=;expires=${now}`;
-        document.cookie = `${COOKIE_DEVICE_TYPE}=;expires=${now}`;
-        document.cookie = `${COOKIE_REQUEST_ID}=;expires=${now}`;
-        document.cookie = `${COOKIE_LOCATION}=;expires=${now}`;
     }
 
     resetHeartBeatTimer(): void {
@@ -262,6 +231,37 @@ export default class TurmsDriver {
                 reject(TurmsError.fromCode(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED));
             }
         });
+    }
+
+    private _fillLoginInfo(
+        requestId: number,
+        userId: string,
+        password: string,
+        userOnlineStatus?: UserStatus,
+        deviceType?: DeviceType,
+        location?: string) {
+        document.cookie = `${COOKIE_REQUEST_ID}=${requestId}; path=/`;
+        document.cookie = `${COOKIE_USER_ID}=${userId}; path=/`;
+        document.cookie = `${COOKIE_PASSWORD}=${escape(password)}; path=/`;
+        if (userOnlineStatus) {
+            document.cookie = `${COOKIE_USER_ONLINE_STATUS}=${userOnlineStatus.toString()}; path=/`;
+        }
+        if (deviceType) {
+            document.cookie = `${COOKIE_DEVICE_TYPE}=${deviceType.toString()}; path=/`;
+        }
+        if (location) {
+            document.cookie = `${COOKIE_LOCATION}=${location}; path=/`;
+        }
+    }
+
+    private _clearLoginInfo() {
+        const now = new Date().toUTCString();
+        document.cookie = `${COOKIE_USER_ID}=;expires=${now}`;
+        document.cookie = `${COOKIE_PASSWORD}=;expires=${now}`;
+        document.cookie = `${COOKIE_USER_ONLINE_STATUS}=;expires=${now}`;
+        document.cookie = `${COOKIE_DEVICE_TYPE}=;expires=${now}`;
+        document.cookie = `${COOKIE_REQUEST_ID}=;expires=${now}`;
+        document.cookie = `${COOKIE_LOCATION}=;expires=${now}`;
     }
 
     private _generateRandomId(): number {

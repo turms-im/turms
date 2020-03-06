@@ -2123,6 +2123,88 @@ export namespace im {
                 public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.UserRelationshipsWithVersion;
             }
 
+            /** Properties of a UserSessionId. */
+            interface IUserSessionId {
+
+                /** UserSessionId userId */
+                userId?: (string|null);
+
+                /** UserSessionId deviceType */
+                deviceType?: (im.turms.proto.DeviceType|null);
+            }
+
+            /** Represents a UserSessionId. */
+            class UserSessionId implements IUserSessionId {
+
+                /**
+                 * Constructs a new UserSessionId.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: im.turms.proto.IUserSessionId);
+
+                /** UserSessionId userId. */
+                public userId: string;
+
+                /** UserSessionId deviceType. */
+                public deviceType: im.turms.proto.DeviceType;
+
+                /**
+                 * Encodes the specified UserSessionId message. Does not implicitly {@link im.turms.proto.UserSessionId.verify|verify} messages.
+                 * @param message UserSessionId message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: im.turms.proto.IUserSessionId, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a UserSessionId message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns UserSessionId
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.UserSessionId;
+            }
+
+            /** Properties of a UserSessionIds. */
+            interface IUserSessionIds {
+
+                /** UserSessionIds userSessionIds */
+                userSessionIds?: (im.turms.proto.IUserSessionId[]|null);
+            }
+
+            /** Represents a UserSessionIds. */
+            class UserSessionIds implements IUserSessionIds {
+
+                /**
+                 * Constructs a new UserSessionIds.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: im.turms.proto.IUserSessionIds);
+
+                /** UserSessionIds userSessionIds. */
+                public userSessionIds: im.turms.proto.IUserSessionId[];
+
+                /**
+                 * Encodes the specified UserSessionIds message. Does not implicitly {@link im.turms.proto.UserSessionIds.verify|verify} messages.
+                 * @param message UserSessionIds message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: im.turms.proto.IUserSessionIds, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a UserSessionIds message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns UserSessionIds
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.UserSessionIds;
+            }
+
             /** Properties of a UserStatusDetail. */
             interface IUserStatusDetail {
 
@@ -2367,6 +2449,9 @@ export namespace im {
                     /** Data userRelationshipsWithVersion */
                     userRelationshipsWithVersion?: (im.turms.proto.IUserRelationshipsWithVersion|null);
 
+                    /** Data userSessionIds */
+                    userSessionIds?: (im.turms.proto.IUserSessionIds|null);
+
                     /** Data groupInvitationsWithVersion */
                     groupInvitationsWithVersion?: (im.turms.proto.IGroupInvitationsWithVersion|null);
 
@@ -2434,6 +2519,9 @@ export namespace im {
                     /** Data userRelationshipsWithVersion. */
                     public userRelationshipsWithVersion?: (im.turms.proto.IUserRelationshipsWithVersion|null);
 
+                    /** Data userSessionIds. */
+                    public userSessionIds?: (im.turms.proto.IUserSessionIds|null);
+
                     /** Data groupInvitationsWithVersion. */
                     public groupInvitationsWithVersion?: (im.turms.proto.IGroupInvitationsWithVersion|null);
 
@@ -2453,7 +2541,7 @@ export namespace im {
                     public groupsWithVersion?: (im.turms.proto.IGroupsWithVersion|null);
 
                     /** Data kind. */
-                    public kind?: ("ids"|"idsWithVersion"|"url"|"acknowledge"|"session"|"messages"|"messageStatuses"|"messagesWithTotalList"|"usersInfosWithVersion"|"usersOnlineStatuses"|"userFriendRequestsWithVersion"|"userRelationshipGroupsWithVersion"|"userRelationshipsWithVersion"|"groupInvitationsWithVersion"|"groupJoinQuestionAnswerResult"|"groupJoinRequestsWithVersion"|"groupJoinQuestionsWithVersion"|"groupMembersWithVersion"|"groupsWithVersion");
+                    public kind?: ("ids"|"idsWithVersion"|"url"|"acknowledge"|"session"|"messages"|"messageStatuses"|"messagesWithTotalList"|"usersInfosWithVersion"|"usersOnlineStatuses"|"userFriendRequestsWithVersion"|"userRelationshipGroupsWithVersion"|"userRelationshipsWithVersion"|"userSessionIds"|"groupInvitationsWithVersion"|"groupJoinQuestionAnswerResult"|"groupJoinRequestsWithVersion"|"groupJoinQuestionsWithVersion"|"groupMembersWithVersion"|"groupsWithVersion");
 
                     /**
                      * Encodes the specified Data message. Does not implicitly {@link im.turms.proto.TurmsNotification.Data.verify|verify} messages.

@@ -8,6 +8,7 @@ import UserStatus = im.turms.proto.UserStatus;
 import ProfileAccessStrategy = im.turms.proto.ProfileAccessStrategy;
 import ResponseAction = im.turms.proto.ResponseAction;
 import DeviceType = im.turms.proto.DeviceType;
+import UserSessionId = im.turms.proto.UserSessionId;
 
 export default class UserService {
     private _turmsClient: TurmsClient;
@@ -151,7 +152,7 @@ export default class UserService {
         });
     }
 
-    queryUsersIdsNearby(latitude: number, longitude: number, distance?: number, maxNumber?: number): Promise<string[]> {
+    queryUserIdsNearby(latitude: number, longitude: number, distance?: number, maxNumber?: number): Promise<string[]> {
         RequestUtil.throwIfAnyFalsy(latitude, longitude);
         return this._turmsClient.driver.send({
             queryUsersIdsNearbyRequest: {
@@ -161,6 +162,18 @@ export default class UserService {
                 maxNumber: RequestUtil.wrapValueIfNotNull(maxNumber)
             }
         }).then(n => NotificationUtil.getArr(n, 'ids.values'));
+    }
+
+    queryUserSessionIdsNearby(latitude: number, longitude: number, distance?: number, maxNumber?: number): Promise<UserSessionId[]> {
+        RequestUtil.throwIfAnyFalsy(latitude, longitude);
+        return this._turmsClient.driver.send({
+            queryUsersIdsNearbyRequest: {
+                latitude: latitude,
+                longitude: longitude,
+                distance: RequestUtil.wrapValueIfNotNull(distance),
+                maxNumber: RequestUtil.wrapValueIfNotNull(maxNumber)
+            }
+        }).then(n => NotificationUtil.getArr(n, 'userSessionIds.userSessionIds'));
     }
 
     queryUsersInfosNearby(latitude: number, longitude: number, distance?: number, maxNumber?: number): Promise<ParsedModel.UserInfo[]> {

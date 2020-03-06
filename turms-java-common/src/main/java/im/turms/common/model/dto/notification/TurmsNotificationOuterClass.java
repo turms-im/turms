@@ -53,53 +53,55 @@ public final class TurmsNotificationOuterClass {
       "_friend_requests_with_version.proto\0326mod" +
       "el/user/user_relationship_groups_with_ve" +
       "rsion.proto\0320model/user/user_relationshi" +
-      "ps_with_version.proto\032)model/user/users_" +
-      "infos_with_version.proto\032&model/user/use" +
-      "rs_online_statuses.proto\"\246\r\n\021TurmsNotifi" +
-      "cation\022/\n\nrequest_id\030\001 \001(\0132\033.google.prot" +
-      "obuf.Int64Value\022)\n\004code\030\002 \001(\0132\033.google.p" +
-      "rotobuf.Int32Value\022,\n\006reason\030\003 \001(\0132\034.goo" +
-      "gle.protobuf.StringValue\0224\n\004data\030\004 \001(\0132&" +
-      ".im.turms.proto.TurmsNotification.Data\0225" +
-      "\n\017relayed_request\030\005 \001(\0132\034.im.turms.proto" +
-      ".TurmsRequest\0221\n\014requester_id\030\006 \001(\0132\033.go" +
-      "ogle.protobuf.Int64Value\032\346\n\n\004Data\022*\n\003ids" +
-      "\030\001 \001(\0132\033.im.turms.proto.Int64ValuesH\000\022B\n" +
-      "\020ids_with_version\030\002 \001(\0132&.im.turms.proto" +
-      ".Int64ValuesWithVersionH\000\022+\n\003url\030\003 \001(\0132\034" +
-      ".google.protobuf.StringValueH\000\0222\n\013acknow" +
-      "ledge\030\004 \001(\0132\033.im.turms.proto.Acknowledge" +
-      "H\000\022*\n\007session\030\005 \001(\0132\027.im.turms.proto.Ses" +
-      "sionH\000\022,\n\010messages\030\006 \001(\0132\030.im.turms.prot" +
-      "o.MessagesH\000\022;\n\020message_statuses\030\007 \001(\0132\037" +
-      ".im.turms.proto.MessageStatusesH\000\022I\n\030mes" +
-      "sages_with_total_list\030\010 \001(\0132%.im.turms.p" +
-      "roto.MessagesWithTotalListH\000\022I\n\030users_in" +
-      "fos_with_version\030\t \001(\0132%.im.turms.proto." +
-      "UsersInfosWithVersionH\000\022D\n\025users_online_" +
-      "statuses\030\n \001(\0132#.im.turms.proto.UsersOnl" +
-      "ineStatusesH\000\022Z\n!user_friend_requests_wi" +
-      "th_version\030\013 \001(\0132-.im.turms.proto.UserFr" +
-      "iendRequestsWithVersionH\000\022b\n%user_relati" +
-      "onship_groups_with_version\030\014 \001(\01321.im.tu" +
-      "rms.proto.UserRelationshipGroupsWithVers" +
-      "ionH\000\022W\n\037user_relationships_with_version" +
-      "\030\r \001(\0132,.im.turms.proto.UserRelationship" +
-      "sWithVersionH\000\022U\n\036group_invitations_with" +
-      "_version\030\016 \001(\0132+.im.turms.proto.GroupInv" +
-      "itationsWithVersionH\000\022[\n!group_join_ques" +
-      "tion_answer_result\030\017 \001(\0132..im.turms.prot" +
-      "o.GroupJoinQuestionsAnswerResultH\000\022X\n gr" +
-      "oup_join_requests_with_version\030\020 \001(\0132,.i" +
-      "m.turms.proto.GroupJoinRequestsWithVersi" +
-      "onH\000\022Z\n!group_join_questions_with_versio" +
-      "n\030\021 \001(\0132-.im.turms.proto.GroupJoinQuesti" +
-      "onsWithVersionH\000\022M\n\032group_members_with_v" +
-      "ersion\030\022 \001(\0132\'.im.turms.proto.GroupMembe" +
-      "rsWithVersionH\000\022@\n\023groups_with_version\030\023" +
-      " \001(\0132!.im.turms.proto.GroupsWithVersionH" +
-      "\000B\006\n\004kindB-\n&im.turms.common.model.dto.n" +
-      "otificationP\001\272\002\000b\006proto3"
+      "ps_with_version.proto\032!model/user/user_s" +
+      "ession_ids.proto\032)model/user/users_infos" +
+      "_with_version.proto\032&model/user/users_on" +
+      "line_statuses.proto\"\342\r\n\021TurmsNotificatio" +
+      "n\022/\n\nrequest_id\030\001 \001(\0132\033.google.protobuf." +
+      "Int64Value\022)\n\004code\030\002 \001(\0132\033.google.protob" +
+      "uf.Int32Value\022,\n\006reason\030\003 \001(\0132\034.google.p" +
+      "rotobuf.StringValue\0224\n\004data\030\004 \001(\0132&.im.t" +
+      "urms.proto.TurmsNotification.Data\0225\n\017rel" +
+      "ayed_request\030\005 \001(\0132\034.im.turms.proto.Turm" +
+      "sRequest\0221\n\014requester_id\030\006 \001(\0132\033.google." +
+      "protobuf.Int64Value\032\242\013\n\004Data\022*\n\003ids\030\001 \001(" +
+      "\0132\033.im.turms.proto.Int64ValuesH\000\022B\n\020ids_" +
+      "with_version\030\002 \001(\0132&.im.turms.proto.Int6" +
+      "4ValuesWithVersionH\000\022+\n\003url\030\003 \001(\0132\034.goog" +
+      "le.protobuf.StringValueH\000\0222\n\013acknowledge" +
+      "\030\004 \001(\0132\033.im.turms.proto.AcknowledgeH\000\022*\n" +
+      "\007session\030\005 \001(\0132\027.im.turms.proto.SessionH" +
+      "\000\022,\n\010messages\030\006 \001(\0132\030.im.turms.proto.Mes" +
+      "sagesH\000\022;\n\020message_statuses\030\007 \001(\0132\037.im.t" +
+      "urms.proto.MessageStatusesH\000\022I\n\030messages" +
+      "_with_total_list\030\010 \001(\0132%.im.turms.proto." +
+      "MessagesWithTotalListH\000\022I\n\030users_infos_w" +
+      "ith_version\030\t \001(\0132%.im.turms.proto.Users" +
+      "InfosWithVersionH\000\022D\n\025users_online_statu" +
+      "ses\030\n \001(\0132#.im.turms.proto.UsersOnlineSt" +
+      "atusesH\000\022Z\n!user_friend_requests_with_ve" +
+      "rsion\030\013 \001(\0132-.im.turms.proto.UserFriendR" +
+      "equestsWithVersionH\000\022b\n%user_relationshi" +
+      "p_groups_with_version\030\014 \001(\01321.im.turms.p" +
+      "roto.UserRelationshipGroupsWithVersionH\000" +
+      "\022W\n\037user_relationships_with_version\030\r \001(" +
+      "\0132,.im.turms.proto.UserRelationshipsWith" +
+      "VersionH\000\022:\n\020user_session_ids\030\016 \001(\0132\036.im" +
+      ".turms.proto.UserSessionIdsH\000\022U\n\036group_i" +
+      "nvitations_with_version\030\017 \001(\0132+.im.turms" +
+      ".proto.GroupInvitationsWithVersionH\000\022[\n!" +
+      "group_join_question_answer_result\030\020 \001(\0132" +
+      "..im.turms.proto.GroupJoinQuestionsAnswe" +
+      "rResultH\000\022X\n group_join_requests_with_ve" +
+      "rsion\030\021 \001(\0132,.im.turms.proto.GroupJoinRe" +
+      "questsWithVersionH\000\022Z\n!group_join_questi" +
+      "ons_with_version\030\022 \001(\0132-.im.turms.proto." +
+      "GroupJoinQuestionsWithVersionH\000\022M\n\032group" +
+      "_members_with_version\030\023 \001(\0132\'.im.turms.p" +
+      "roto.GroupMembersWithVersionH\000\022@\n\023groups" +
+      "_with_version\030\024 \001(\0132!.im.turms.proto.Gro" +
+      "upsWithVersionH\000B\006\n\004kindB-\n&im.turms.com" +
+      "mon.model.dto.notificationP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -122,6 +124,7 @@ public final class TurmsNotificationOuterClass {
           im.turms.common.model.bo.user.UserFriendRequestsWithVersionOuterClass.getDescriptor(),
           im.turms.common.model.bo.user.UserRelationshipGroupsWithVersionOuterClass.getDescriptor(),
           im.turms.common.model.bo.user.UserRelationshipsWithVersionOuterClass.getDescriptor(),
+          im.turms.common.model.bo.user.UserSessionIdsOuterClass.getDescriptor(),
           im.turms.common.model.bo.user.UsersInfosWithVersionOuterClass.getDescriptor(),
           im.turms.common.model.bo.user.UsersOnlineStatusesOuterClass.getDescriptor(),
         });
@@ -136,7 +139,7 @@ public final class TurmsNotificationOuterClass {
     internal_static_im_turms_proto_TurmsNotification_Data_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_TurmsNotification_Data_descriptor,
-        new java.lang.String[] { "Ids", "IdsWithVersion", "Url", "Acknowledge", "Session", "Messages", "MessageStatuses", "MessagesWithTotalList", "UsersInfosWithVersion", "UsersOnlineStatuses", "UserFriendRequestsWithVersion", "UserRelationshipGroupsWithVersion", "UserRelationshipsWithVersion", "GroupInvitationsWithVersion", "GroupJoinQuestionAnswerResult", "GroupJoinRequestsWithVersion", "GroupJoinQuestionsWithVersion", "GroupMembersWithVersion", "GroupsWithVersion", "Kind", });
+        new java.lang.String[] { "Ids", "IdsWithVersion", "Url", "Acknowledge", "Session", "Messages", "MessageStatuses", "MessagesWithTotalList", "UsersInfosWithVersion", "UsersOnlineStatuses", "UserFriendRequestsWithVersion", "UserRelationshipGroupsWithVersion", "UserRelationshipsWithVersion", "UserSessionIds", "GroupInvitationsWithVersion", "GroupJoinQuestionAnswerResult", "GroupJoinRequestsWithVersion", "GroupJoinQuestionsWithVersion", "GroupMembersWithVersion", "GroupsWithVersion", "Kind", });
     com.google.protobuf.WrappersProto.getDescriptor();
     im.turms.common.model.bo.signal.AcknowledgeOuterClass.getDescriptor();
     im.turms.common.model.bo.signal.SessionOuterClass.getDescriptor();
@@ -155,6 +158,7 @@ public final class TurmsNotificationOuterClass {
     im.turms.common.model.bo.user.UserFriendRequestsWithVersionOuterClass.getDescriptor();
     im.turms.common.model.bo.user.UserRelationshipGroupsWithVersionOuterClass.getDescriptor();
     im.turms.common.model.bo.user.UserRelationshipsWithVersionOuterClass.getDescriptor();
+    im.turms.common.model.bo.user.UserSessionIdsOuterClass.getDescriptor();
     im.turms.common.model.bo.user.UsersInfosWithVersionOuterClass.getDescriptor();
     im.turms.common.model.bo.user.UsersOnlineStatusesOuterClass.getDescriptor();
   }

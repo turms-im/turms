@@ -5,6 +5,7 @@ import UserStatus = im.turms.proto.UserStatus;
 import ProfileAccessStrategy = im.turms.proto.ProfileAccessStrategy;
 import ResponseAction = im.turms.proto.ResponseAction;
 import DeviceType = im.turms.proto.DeviceType;
+import UserSessionId = im.turms.proto.UserSessionId;
 export default class UserService {
     private _turmsClient;
     private _userId?;
@@ -24,7 +25,8 @@ export default class UserService {
     updateProfile(name?: string, intro?: string, profilePictureUrl?: string, profileAccessStrategy?: string | ProfileAccessStrategy): Promise<void>;
     queryUserGroupInvitations(lastUpdatedDate?: Date): Promise<ParsedModel.GroupInvitationsWithVersion>;
     queryUserProfile(userId: string, lastUpdatedDate?: Date): Promise<ParsedModel.UserInfoWithVersion>;
-    queryUsersIdsNearby(latitude: number, longitude: number, distance?: number, maxNumber?: number): Promise<string[]>;
+    queryUserIdsNearby(latitude: number, longitude: number, distance?: number, maxNumber?: number): Promise<string[]>;
+    queryUserSessionIdsNearby(latitude: number, longitude: number, distance?: number, maxNumber?: number): Promise<UserSessionId[]>;
     queryUsersInfosNearby(latitude: number, longitude: number, distance?: number, maxNumber?: number): Promise<ParsedModel.UserInfo[]>;
     queryUsersOnlineStatusRequest(usersIds: string[]): Promise<ParsedModel.UserStatusDetail[]>;
     queryRelationships(relatedUsersIds?: string[], isBlocked?: boolean, groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion>;
