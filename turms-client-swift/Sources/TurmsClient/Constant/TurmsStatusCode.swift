@@ -38,6 +38,7 @@ public enum TurmsStatusCode: Int {
     case memberHasBeenMuted
     case guestsHaveBeenMuted
     case fileTooLarge
+    case requestTooLarge
 
     case loggedInDevicesCannotOffline = 5001
     case notImplemented
@@ -93,6 +94,7 @@ extension TurmsStatusCode {
             case .memberHasBeenMuted: return "The group member has been muted"
             case .guestsHaveBeenMuted: return "The guests of the group have been muted"
             case .fileTooLarge: return "The file is too large to upload"
+            case .requestTooLarge: return "The request is too large"
         }
     }
     

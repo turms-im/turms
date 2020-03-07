@@ -33,6 +33,8 @@ spring:
         register-once: false
   webflux:
     date-format: yyyy-MM-dd'T'HH:mm:ssX
+  codec:
+    max-in-memory-size: 64KB
 management:
   endpoints:
     web:
