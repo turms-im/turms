@@ -29,7 +29,7 @@ import reactor.core.publisher.Hooks;
 @EnableScheduling
 public class TurmsApplication {
     public static void main(String[] args) {
-        if (CompilerOptions.env == "DEV") {
+        if (CompilerOptions.ENV == CompilerOptions.Env.DEV) {
             Hooks.onOperatorDebug();
         }
         SpringApplication.run(TurmsApplication.class, args);
