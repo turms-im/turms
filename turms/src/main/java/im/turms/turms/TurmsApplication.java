@@ -17,21 +17,16 @@
 
 package im.turms.turms;
 
-import im.turms.turms.compiler.CompilerOptions;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import reactor.core.publisher.Hooks;
 
 @SpringBootApplication
 @ConfigurationPropertiesScan
 @EnableScheduling
 public class TurmsApplication {
     public static void main(String[] args) {
-        if (CompilerOptions.ENV == CompilerOptions.Env.DEV) {
-            Hooks.onOperatorDebug();
-        }
         SpringApplication.run(TurmsApplication.class, args);
     }
 }
