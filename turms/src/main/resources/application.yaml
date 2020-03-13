@@ -3,6 +3,12 @@ server:
     whitelabel:
       enabled: false
   port: 9510 #9510
+  ssl:
+    enabled: false # Enable SSL if needed. Make sure to mutate HTTP requests to HTTPS requests, or Netty will throw NotSslRecordException
+    key-store: classpath:keystore-test.p12 # keytool -genkeypair -keyalg RSA -keysize 2048 -validity 3650 -alias turms -keystore keystore-test.p12 -storetype PKCS12 -storepass imturms
+    key-store-type: PKCS12
+    key-store-password: imturms
+    key-alias: turms
 spring:
   application:
     name: turms
