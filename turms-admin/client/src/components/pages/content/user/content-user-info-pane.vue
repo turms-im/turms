@@ -88,10 +88,6 @@ export default {
                         },
                         {
                             type: 'INPUT',
-                            decorator: this.$validator.create('profilePictureUrl', {isUrl: true, maxNumber: 256})
-                        },
-                        {
-                            type: 'INPUT',
                             decorator: this.$validator.create('permissionGroupId', {onlyNumber: true})
                         },
                         {
@@ -161,10 +157,6 @@ export default {
                         },
                         {
                             type: 'INPUT',
-                            decorator: this.$validator.create('profilePictureUrl', {isUrl: true, maxNumber: 256})
-                        },
-                        {
-                            type: 'INPUT',
                             decorator: this.$validator.create('permissionGroupId', {onlyNumber: true})
                         },
                         {
@@ -231,20 +223,16 @@ export default {
                         width: '10%'
                     },
                     {
-                        key: 'profilePictureUrl',
-                        width: '7.5%'
-                    },
-                    {
                         key: 'profileAccess',
-                        width: '7.5%'
+                        width: '10%'
                     },
                     {
                         key: 'permissionGroupId',
-                        width: '7.5%'
+                        width: '10%'
                     },
                     {
                         key: 'registrationDate',
-                        width: '7.5%'
+                        width: '10%'
                     },
                     {
                         title: this.$t('cancelDate'),

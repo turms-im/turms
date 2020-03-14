@@ -119,10 +119,6 @@ export default {
                         },
                         {
                             type: 'INPUT',
-                            decorator: this.$validator.create('profilePictureUrl', {isUrl: true, maxNumber: 256})
-                        },
-                        {
-                            type: 'INPUT',
                             decorator: this.$validator.create('minimumScore', {onlyNumber: true})
                         },
                         {
@@ -188,10 +184,6 @@ export default {
                         },
                         {
                             type: 'INPUT',
-                            decorator: this.$validator.create('profilePictureUrl', {isUrl: true, maxNumber: 256})
-                        },
-                        {
-                            type: 'INPUT',
                             decorator: this.$validator.create('minimumScore', {onlyNumber: true})
                         },
                         {
@@ -229,52 +221,48 @@ export default {
                     {
                         title: this.$t('groupId'),
                         key: 'id',
-                        width: '7.5%'
+                        width: '8%'
                     },
                     {
                         title: this.$t('groupTypeId'),
                         key: 'typeId',
-                        width: '7.5%'
+                        width: '8%'
                     },
                     {
                         key: 'creatorId',
-                        width: '7.5%'
+                        width: '8%'
                     },
                     {
                         key: 'ownerId',
-                        width: '7.5%'
+                        width: '8%'
                     },
                     {
                         key: 'name',
-                        width: '7.5%'
+                        width: '8%'
                     },
                     {
                         key: 'intro',
-                        width: '7.5%'
+                        width: '8%'
                     },
                     {
                         key: 'announcement',
                         width: '10%'
                     },
                     {
-                        key: 'profilePictureUrl',
-                        width: '10%'
-                    },
-                    {
                         key: 'minimumScore',
-                        width: '6%'
+                        width: '7.5%'
                     },
                     {
                         key: 'creationDate',
-                        width: '6%'
+                        width: '7.5%'
                     },
                     {
                         key: 'deletionDate',
-                        width: '6%'
+                        width: '7.5%'
                     },
                     {
                         key: 'muteEndDate',
-                        width: '6%'
+                        width: '7.5%'
                     },
                     {
                         title: this.$t('isActive'),
@@ -283,7 +271,7 @@ export default {
                     },
                     {
                         key: 'operation',
-                        width: '5%'
+                        width: '6%'
                     }
                 ]}
         };

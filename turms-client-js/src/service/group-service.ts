@@ -18,7 +18,6 @@ export default class GroupService {
         name: string,
         intro?: string,
         announcement?: string,
-        profilePictureUrl?: string,
         minimumScore?: number,
         muteEndDate?: Date,
         groupTypeId?: string): Promise<string> {
@@ -28,7 +27,6 @@ export default class GroupService {
                 name,
                 intro: RequestUtil.wrapValueIfNotNull(intro),
                 announcement: RequestUtil.wrapValueIfNotNull(announcement),
-                profilePictureUrl: RequestUtil.wrapValueIfNotNull(profilePictureUrl),
                 minimumScore: RequestUtil.wrapValueIfNotNull(minimumScore),
                 muteEndDate: RequestUtil.wrapTimeIfNotNull(muteEndDate),
                 groupTypeId: RequestUtil.wrapValueIfNotNull(groupTypeId)
@@ -51,14 +49,13 @@ export default class GroupService {
         groupName?: string,
         intro?: string,
         announcement?: string,
-        profilePictureUrl?: string,
         minimumScore?: number,
         groupTypeId?: string,
         muteEndDate?: Date,
         successorId?: string,
         quitAfterTransfer?: boolean): Promise<void> {
         RequestUtil.throwIfAnyFalsy(groupId);
-        if (RequestUtil.areAllFalsy(groupName, intro, announcement, profilePictureUrl, minimumScore, groupTypeId,
+        if (RequestUtil.areAllFalsy(groupName, intro, announcement, minimumScore, groupTypeId,
             muteEndDate, successorId)) {
             return Promise.resolve();
         }
@@ -68,7 +65,6 @@ export default class GroupService {
                 groupName: RequestUtil.wrapValueIfNotNull(groupName),
                 intro: RequestUtil.wrapValueIfNotNull(intro),
                 announcement: RequestUtil.wrapValueIfNotNull(announcement),
-                profilePictureUrl: RequestUtil.wrapValueIfNotNull(profilePictureUrl),
                 muteEndDate: RequestUtil.wrapTimeIfNotNull(muteEndDate),
                 minimumScore: RequestUtil.wrapValueIfNotNull(minimumScore),
                 groupTypeId: RequestUtil.wrapValueIfNotNull(groupTypeId),
@@ -81,12 +77,12 @@ export default class GroupService {
 
     transferOwnership(groupId: string, successorId: string, quitAfterTransfer = false): Promise<void> {
         RequestUtil.throwIfAnyFalsy(groupId, successorId);
-        return this.updateGroup(groupId, null, null, null, null, null, null, null, successorId, quitAfterTransfer);
+        return this.updateGroup(groupId, null, null, null, null, null, null, successorId, quitAfterTransfer);
     }
 
     muteGroup(groupId: string, muteEndDate: Date): Promise<void> {
         RequestUtil.throwIfAnyFalsy(groupId, muteEndDate);
-        return this.updateGroup(groupId, null, null, null, null, null, null, muteEndDate, null);
+        return this.updateGroup(groupId, null, null, null, null, null, muteEndDate, null);
     }
 
     unmuteGroup(groupId: string): Promise<void> {

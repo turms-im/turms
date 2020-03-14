@@ -35,7 +35,7 @@ describe('Constructor', () => {
 
 describe('Create', () => {
     it('createGroup_shouldReturnGroupId', async () => {
-        groupId = await turmsClient.groupService.createGroup("name", "intro", "announcement", null, 10)
+        groupId = await turmsClient.groupService.createGroup("name", "intro", "announcement", 10)
         expect(groupId).toBeTruthy();
     });
     it('addGroupJoinQuestion_shouldReturnQuestionId', async () => {
@@ -62,7 +62,7 @@ describe('Create', () => {
 
 describe('Update', () => {
     it('updateGroup_shouldSucceed', async () => {
-        const result = await turmsClient.groupService.updateGroup(groupId, "name", "intro", "announcement", null, 10);
+        const result = await turmsClient.groupService.updateGroup(groupId, "name", "intro", "announcement", 10);
         expect(result).toBeUndefined();
     });
     it('muteGroup_shouldSucceed', async () => {

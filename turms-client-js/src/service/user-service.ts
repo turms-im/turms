@@ -108,9 +108,8 @@ export default class UserService {
     updateProfile(
         name?: string,
         intro?: string,
-        profilePictureUrl?: string,
         profileAccessStrategy?: string | ProfileAccessStrategy): Promise<void> {
-        if (RequestUtil.areAllFalsy(name, intro, profilePictureUrl, profileAccessStrategy)) {
+        if (RequestUtil.areAllFalsy(name, intro, profileAccessStrategy)) {
             return Promise.resolve();
         }
         if (typeof profileAccessStrategy === 'string') {
@@ -120,7 +119,6 @@ export default class UserService {
             updateUserRequest: {
                 name: RequestUtil.wrapValueIfNotNull(name),
                 intro: RequestUtil.wrapValueIfNotNull(intro),
-                profilePictureUrl: RequestUtil.wrapValueIfNotNull(profilePictureUrl),
                 profileAccessStrategy: profileAccessStrategy
             }
         }).then(_ => {

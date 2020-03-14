@@ -83,7 +83,6 @@ export declare namespace ParsedModel {
         id?: string;
         name?: string;
         intro?: string;
-        profilePictureUrl?: string;
         registrationDate?: Date;
         deletionDate?: Date;
         active?: boolean;
@@ -163,7 +162,6 @@ export declare namespace ParsedModel {
         name?: string;
         intro?: string;
         announcement?: string;
-        profilePictureUrl?: string;
         creationDate?: Date;
         deletionDate?: Date;
         muteEndDate?: Date;

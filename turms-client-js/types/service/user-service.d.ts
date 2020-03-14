@@ -22,7 +22,7 @@ export default class UserService {
     logout(): Promise<void>;
     updateUserOnlineStatus(onlineStatus: string | UserStatus): Promise<void>;
     updatePassword(password: string): Promise<void>;
-    updateProfile(name?: string, intro?: string, profilePictureUrl?: string, profileAccessStrategy?: string | ProfileAccessStrategy): Promise<void>;
+    updateProfile(name?: string, intro?: string, profileAccessStrategy?: string | ProfileAccessStrategy): Promise<void>;
     queryUserGroupInvitations(lastUpdatedDate?: Date): Promise<ParsedModel.GroupInvitationsWithVersion>;
     queryUserProfile(userId: string, lastUpdatedDate?: Date): Promise<ParsedModel.UserInfoWithVersion>;
     queryUserIdsNearby(latitude: number, longitude: number, distance?: number, maxNumber?: number): Promise<string[]>;

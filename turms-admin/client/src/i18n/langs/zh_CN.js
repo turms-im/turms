@@ -241,7 +241,6 @@ const zh_CN = {
     'privateChatMessage': '单聊消息',
     'processingStatus': '处理状态',
     'profileAccess': '访问权限',
-    'profilePictureUrl': '头像URL',
     'question': '问题',
     'failedToDisconnect': '下线目标设备失败',
     'disconnectSuccessfully': '已下线目标设备',

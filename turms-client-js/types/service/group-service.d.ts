@@ -6,9 +6,9 @@ import GroupJoinQuestionsAnswerResult = im.turms.proto.GroupJoinQuestionsAnswerR
 export default class GroupService {
     private _turmsClient;
     constructor(turmsClient: TurmsClient);
-    createGroup(name: string, intro?: string, announcement?: string, profilePictureUrl?: string, minimumScore?: number, muteEndDate?: Date, groupTypeId?: string): Promise<string>;
+    createGroup(name: string, intro?: string, announcement?: string, minimumScore?: number, muteEndDate?: Date, groupTypeId?: string): Promise<string>;
     deleteGroup(groupId: string): Promise<void>;
-    updateGroup(groupId: string, groupName?: string, intro?: string, announcement?: string, profilePictureUrl?: string, minimumScore?: number, groupTypeId?: string, muteEndDate?: Date, successorId?: string, quitAfterTransfer?: boolean): Promise<void>;
+    updateGroup(groupId: string, groupName?: string, intro?: string, announcement?: string, minimumScore?: number, groupTypeId?: string, muteEndDate?: Date, successorId?: string, quitAfterTransfer?: boolean): Promise<void>;
     transferOwnership(groupId: string, successorId: string, quitAfterTransfer?: boolean): Promise<void>;
     muteGroup(groupId: string, muteEndDate: Date): Promise<void>;
     unmuteGroup(groupId: string): Promise<void>;

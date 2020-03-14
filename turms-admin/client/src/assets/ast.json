@@ -17,10 +17,6 @@
         "type": "string"
       },
       {
-        "name": "profilePictureUrl",
-        "type": "string"
-      },
-      {
         "name": "minimumScore",
         "type": "number"
       },
@@ -64,10 +60,6 @@
       },
       {
         "name": "announcement",
-        "type": "string"
-      },
-      {
-        "name": "profilePictureUrl",
         "type": "string"
       },
       {
@@ -1281,10 +1273,6 @@
       },
       {
         "name": "intro",
-        "type": "string"
-      },
-      {
-        "name": "profilePictureUrl",
         "type": "string"
       },
       {

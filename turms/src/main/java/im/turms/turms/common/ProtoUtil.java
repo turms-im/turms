@@ -87,7 +87,6 @@ public class ProtoUtil {
         Long userId = user.getId();
         String name = user.getName();
         String intro = user.getIntro();
-        String profilePictureUrl = user.getProfilePictureUrl();
         Date registrationDate = user.getRegistrationDate();
         Boolean active = user.getActive();
         ProfileAccessStrategy profileAccess = user.getProfileAccess();
@@ -99,9 +98,6 @@ public class ProtoUtil {
         }
         if (intro != null) {
             builder.setIntro(StringValue.newBuilder().setValue(intro).build());
-        }
-        if (profilePictureUrl != null) {
-            builder.setProfilePictureUrl(StringValue.newBuilder().setValue(profilePictureUrl).build());
         }
         if (registrationDate != null) {
             builder.setRegistrationDate(Int64Value.newBuilder().setValue(registrationDate.getTime()).build());
@@ -201,7 +197,6 @@ public class ProtoUtil {
         String name = group.getName();
         String intro = group.getIntro();
         String announcement = group.getAnnouncement();
-        String profilePictureUrl = group.getProfilePictureUrl();
         Date creationDate = group.getCreationDate();
         Date deletionDate = group.getDeletionDate();
         Date muteEndDate = group.getMuteEndDate();
@@ -226,9 +221,6 @@ public class ProtoUtil {
         }
         if (announcement != null) {
             builder.setAnnouncement(StringValue.newBuilder().setValue(announcement).build());
-        }
-        if (profilePictureUrl != null) {
-            builder.setProfilePictureUrl(StringValue.newBuilder().setValue(profilePictureUrl).build());
         }
         if (creationDate != null) {
             builder.setCreationDate(Int64Value.newBuilder().setValue(creationDate.getTime()).build());

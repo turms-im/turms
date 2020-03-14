@@ -2486,7 +2486,6 @@ $root.im = (function() {
                  * @property {google.protobuf.IStringValue|null} [name] Group name
                  * @property {google.protobuf.IStringValue|null} [intro] Group intro
                  * @property {google.protobuf.IStringValue|null} [announcement] Group announcement
-                 * @property {google.protobuf.IStringValue|null} [profilePictureUrl] Group profilePictureUrl
                  * @property {google.protobuf.IInt64Value|null} [creationDate] Group creationDate
                  * @property {google.protobuf.IInt64Value|null} [deletionDate] Group deletionDate
                  * @property {google.protobuf.IInt64Value|null} [muteEndDate] Group muteEndDate
@@ -2565,14 +2564,6 @@ $root.im = (function() {
                 Group.prototype.announcement = null;
 
                 /**
-                 * Group profilePictureUrl.
-                 * @member {google.protobuf.IStringValue|null|undefined} profilePictureUrl
-                 * @memberof im.turms.proto.Group
-                 * @instance
-                 */
-                Group.prototype.profilePictureUrl = null;
-
-                /**
                  * Group creationDate.
                  * @member {google.protobuf.IInt64Value|null|undefined} creationDate
                  * @memberof im.turms.proto.Group
@@ -2630,16 +2621,14 @@ $root.im = (function() {
                         $root.google.protobuf.StringValue.encode(message.intro, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
                     if (message.announcement != null && Object.hasOwnProperty.call(message, "announcement"))
                         $root.google.protobuf.StringValue.encode(message.announcement, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
-                    if (message.profilePictureUrl != null && Object.hasOwnProperty.call(message, "profilePictureUrl"))
-                        $root.google.protobuf.StringValue.encode(message.profilePictureUrl, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
                     if (message.creationDate != null && Object.hasOwnProperty.call(message, "creationDate"))
-                        $root.google.protobuf.Int64Value.encode(message.creationDate, writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
+                        $root.google.protobuf.Int64Value.encode(message.creationDate, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
                     if (message.deletionDate != null && Object.hasOwnProperty.call(message, "deletionDate"))
-                        $root.google.protobuf.Int64Value.encode(message.deletionDate, writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
+                        $root.google.protobuf.Int64Value.encode(message.deletionDate, writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
                     if (message.muteEndDate != null && Object.hasOwnProperty.call(message, "muteEndDate"))
-                        $root.google.protobuf.Int64Value.encode(message.muteEndDate, writer.uint32(/* id 11, wireType 2 =*/90).fork()).ldelim();
+                        $root.google.protobuf.Int64Value.encode(message.muteEndDate, writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
                     if (message.active != null && Object.hasOwnProperty.call(message, "active"))
-                        $root.google.protobuf.BoolValue.encode(message.active, writer.uint32(/* id 12, wireType 2 =*/98).fork()).ldelim();
+                        $root.google.protobuf.BoolValue.encode(message.active, writer.uint32(/* id 11, wireType 2 =*/90).fork()).ldelim();
                     return writer;
                 };
 
@@ -2683,18 +2672,15 @@ $root.im = (function() {
                             message.announcement = $root.google.protobuf.StringValue.decode(reader, reader.uint32());
                             break;
                         case 8:
-                            message.profilePictureUrl = $root.google.protobuf.StringValue.decode(reader, reader.uint32());
-                            break;
-                        case 9:
                             message.creationDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
                             break;
-                        case 10:
+                        case 9:
                             message.deletionDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
                             break;
-                        case 11:
+                        case 10:
                             message.muteEndDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
                             break;
-                        case 12:
+                        case 11:
                             message.active = $root.google.protobuf.BoolValue.decode(reader, reader.uint32());
                             break;
                         default:
@@ -4014,7 +4000,6 @@ $root.im = (function() {
                  * @property {google.protobuf.IInt64Value|null} [id] UserInfo id
                  * @property {google.protobuf.IStringValue|null} [name] UserInfo name
                  * @property {google.protobuf.IStringValue|null} [intro] UserInfo intro
-                 * @property {google.protobuf.IStringValue|null} [profilePictureUrl] UserInfo profilePictureUrl
                  * @property {google.protobuf.IInt64Value|null} [registrationDate] UserInfo registrationDate
                  * @property {google.protobuf.IInt64Value|null} [deletionDate] UserInfo deletionDate
                  * @property {google.protobuf.IBoolValue|null} [active] UserInfo active
@@ -4059,14 +4044,6 @@ $root.im = (function() {
                  * @instance
                  */
                 UserInfo.prototype.intro = null;
-
-                /**
-                 * UserInfo profilePictureUrl.
-                 * @member {google.protobuf.IStringValue|null|undefined} profilePictureUrl
-                 * @memberof im.turms.proto.UserInfo
-                 * @instance
-                 */
-                UserInfo.prototype.profilePictureUrl = null;
 
                 /**
                  * UserInfo registrationDate.
@@ -4118,16 +4095,14 @@ $root.im = (function() {
                         $root.google.protobuf.StringValue.encode(message.name, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     if (message.intro != null && Object.hasOwnProperty.call(message, "intro"))
                         $root.google.protobuf.StringValue.encode(message.intro, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.profilePictureUrl != null && Object.hasOwnProperty.call(message, "profilePictureUrl"))
-                        $root.google.protobuf.StringValue.encode(message.profilePictureUrl, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
                     if (message.registrationDate != null && Object.hasOwnProperty.call(message, "registrationDate"))
-                        $root.google.protobuf.Int64Value.encode(message.registrationDate, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+                        $root.google.protobuf.Int64Value.encode(message.registrationDate, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
                     if (message.deletionDate != null && Object.hasOwnProperty.call(message, "deletionDate"))
-                        $root.google.protobuf.Int64Value.encode(message.deletionDate, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
+                        $root.google.protobuf.Int64Value.encode(message.deletionDate, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
                     if (message.active != null && Object.hasOwnProperty.call(message, "active"))
-                        $root.google.protobuf.BoolValue.encode(message.active, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
+                        $root.google.protobuf.BoolValue.encode(message.active, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
                     if (message.profileAccessStrategy != null && Object.hasOwnProperty.call(message, "profileAccessStrategy"))
-                        writer.uint32(/* id 8, wireType 0 =*/64).int32(message.profileAccessStrategy);
+                        writer.uint32(/* id 7, wireType 0 =*/56).int32(message.profileAccessStrategy);
                     return writer;
                 };
 
@@ -4159,18 +4134,15 @@ $root.im = (function() {
                             message.intro = $root.google.protobuf.StringValue.decode(reader, reader.uint32());
                             break;
                         case 4:
-                            message.profilePictureUrl = $root.google.protobuf.StringValue.decode(reader, reader.uint32());
-                            break;
-                        case 5:
                             message.registrationDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
                             break;
-                        case 6:
+                        case 5:
                             message.deletionDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
                             break;
-                        case 7:
+                        case 6:
                             message.active = $root.google.protobuf.BoolValue.decode(reader, reader.uint32());
                             break;
-                        case 8:
+                        case 7:
                             message.profileAccessStrategy = reader.int32();
                             break;
                         default:
@@ -6137,7 +6109,6 @@ $root.im = (function() {
                  * @property {string|null} [name] CreateGroupRequest name
                  * @property {google.protobuf.IStringValue|null} [intro] CreateGroupRequest intro
                  * @property {google.protobuf.IStringValue|null} [announcement] CreateGroupRequest announcement
-                 * @property {google.protobuf.IStringValue|null} [profilePictureUrl] CreateGroupRequest profilePictureUrl
                  * @property {google.protobuf.IInt32Value|null} [minimumScore] CreateGroupRequest minimumScore
                  * @property {google.protobuf.IInt64Value|null} [groupTypeId] CreateGroupRequest groupTypeId
                  * @property {google.protobuf.IInt64Value|null} [muteEndDate] CreateGroupRequest muteEndDate
@@ -6183,14 +6154,6 @@ $root.im = (function() {
                 CreateGroupRequest.prototype.announcement = null;
 
                 /**
-                 * CreateGroupRequest profilePictureUrl.
-                 * @member {google.protobuf.IStringValue|null|undefined} profilePictureUrl
-                 * @memberof im.turms.proto.CreateGroupRequest
-                 * @instance
-                 */
-                CreateGroupRequest.prototype.profilePictureUrl = null;
-
-                /**
                  * CreateGroupRequest minimumScore.
                  * @member {google.protobuf.IInt32Value|null|undefined} minimumScore
                  * @memberof im.turms.proto.CreateGroupRequest
@@ -6232,14 +6195,12 @@ $root.im = (function() {
                         $root.google.protobuf.StringValue.encode(message.intro, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     if (message.announcement != null && Object.hasOwnProperty.call(message, "announcement"))
                         $root.google.protobuf.StringValue.encode(message.announcement, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.profilePictureUrl != null && Object.hasOwnProperty.call(message, "profilePictureUrl"))
-                        $root.google.protobuf.StringValue.encode(message.profilePictureUrl, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
                     if (message.minimumScore != null && Object.hasOwnProperty.call(message, "minimumScore"))
-                        $root.google.protobuf.Int32Value.encode(message.minimumScore, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+                        $root.google.protobuf.Int32Value.encode(message.minimumScore, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
                     if (message.groupTypeId != null && Object.hasOwnProperty.call(message, "groupTypeId"))
-                        $root.google.protobuf.Int64Value.encode(message.groupTypeId, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
+                        $root.google.protobuf.Int64Value.encode(message.groupTypeId, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
                     if (message.muteEndDate != null && Object.hasOwnProperty.call(message, "muteEndDate"))
-                        $root.google.protobuf.Int64Value.encode(message.muteEndDate, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
+                        $root.google.protobuf.Int64Value.encode(message.muteEndDate, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
                     return writer;
                 };
 
@@ -6271,15 +6232,12 @@ $root.im = (function() {
                             message.announcement = $root.google.protobuf.StringValue.decode(reader, reader.uint32());
                             break;
                         case 4:
-                            message.profilePictureUrl = $root.google.protobuf.StringValue.decode(reader, reader.uint32());
-                            break;
-                        case 5:
                             message.minimumScore = $root.google.protobuf.Int32Value.decode(reader, reader.uint32());
                             break;
-                        case 6:
+                        case 5:
                             message.groupTypeId = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
                             break;
-                        case 7:
+                        case 6:
                             message.muteEndDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
                             break;
                         default:
@@ -8261,7 +8219,6 @@ $root.im = (function() {
                  * @property {google.protobuf.IStringValue|null} [groupName] UpdateGroupRequest groupName
                  * @property {google.protobuf.IStringValue|null} [intro] UpdateGroupRequest intro
                  * @property {google.protobuf.IStringValue|null} [announcement] UpdateGroupRequest announcement
-                 * @property {google.protobuf.IStringValue|null} [profilePictureUrl] UpdateGroupRequest profilePictureUrl
                  * @property {google.protobuf.IInt32Value|null} [minimumScore] UpdateGroupRequest minimumScore
                  * @property {google.protobuf.IInt64Value|null} [groupTypeId] UpdateGroupRequest groupTypeId
                  * @property {google.protobuf.IInt64Value|null} [muteEndDate] UpdateGroupRequest muteEndDate
@@ -8315,14 +8272,6 @@ $root.im = (function() {
                  * @instance
                  */
                 UpdateGroupRequest.prototype.announcement = null;
-
-                /**
-                 * UpdateGroupRequest profilePictureUrl.
-                 * @member {google.protobuf.IStringValue|null|undefined} profilePictureUrl
-                 * @memberof im.turms.proto.UpdateGroupRequest
-                 * @instance
-                 */
-                UpdateGroupRequest.prototype.profilePictureUrl = null;
 
                 /**
                  * UpdateGroupRequest minimumScore.
@@ -8384,18 +8333,16 @@ $root.im = (function() {
                         $root.google.protobuf.StringValue.encode(message.intro, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                     if (message.announcement != null && Object.hasOwnProperty.call(message, "announcement"))
                         $root.google.protobuf.StringValue.encode(message.announcement, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-                    if (message.profilePictureUrl != null && Object.hasOwnProperty.call(message, "profilePictureUrl"))
-                        $root.google.protobuf.StringValue.encode(message.profilePictureUrl, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
                     if (message.minimumScore != null && Object.hasOwnProperty.call(message, "minimumScore"))
-                        $root.google.protobuf.Int32Value.encode(message.minimumScore, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
+                        $root.google.protobuf.Int32Value.encode(message.minimumScore, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
                     if (message.groupTypeId != null && Object.hasOwnProperty.call(message, "groupTypeId"))
-                        $root.google.protobuf.Int64Value.encode(message.groupTypeId, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
+                        $root.google.protobuf.Int64Value.encode(message.groupTypeId, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
                     if (message.muteEndDate != null && Object.hasOwnProperty.call(message, "muteEndDate"))
-                        $root.google.protobuf.Int64Value.encode(message.muteEndDate, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
+                        $root.google.protobuf.Int64Value.encode(message.muteEndDate, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
                     if (message.successorId != null && Object.hasOwnProperty.call(message, "successorId"))
-                        $root.google.protobuf.Int64Value.encode(message.successorId, writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
+                        $root.google.protobuf.Int64Value.encode(message.successorId, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
                     if (message.quitAfterTransfer != null && Object.hasOwnProperty.call(message, "quitAfterTransfer"))
-                        $root.google.protobuf.BoolValue.encode(message.quitAfterTransfer, writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
+                        $root.google.protobuf.BoolValue.encode(message.quitAfterTransfer, writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
                     return writer;
                 };
 
@@ -8430,21 +8377,18 @@ $root.im = (function() {
                             message.announcement = $root.google.protobuf.StringValue.decode(reader, reader.uint32());
                             break;
                         case 5:
-                            message.profilePictureUrl = $root.google.protobuf.StringValue.decode(reader, reader.uint32());
-                            break;
-                        case 6:
                             message.minimumScore = $root.google.protobuf.Int32Value.decode(reader, reader.uint32());
                             break;
-                        case 7:
+                        case 6:
                             message.groupTypeId = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
                             break;
-                        case 8:
+                        case 7:
                             message.muteEndDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
                             break;
-                        case 9:
+                        case 8:
                             message.successorId = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
                             break;
-                        case 10:
+                        case 9:
                             message.quitAfterTransfer = $root.google.protobuf.BoolValue.decode(reader, reader.uint32());
                             break;
                         default:
@@ -12602,7 +12546,6 @@ $root.im = (function() {
                  * @property {google.protobuf.IStringValue|null} [password] UpdateUserRequest password
                  * @property {google.protobuf.IStringValue|null} [name] UpdateUserRequest name
                  * @property {google.protobuf.IStringValue|null} [intro] UpdateUserRequest intro
-                 * @property {google.protobuf.IStringValue|null} [profilePictureUrl] UpdateUserRequest profilePictureUrl
                  * @property {im.turms.proto.ProfileAccessStrategy|null} [profileAccessStrategy] UpdateUserRequest profileAccessStrategy
                  */
 
@@ -12646,14 +12589,6 @@ $root.im = (function() {
                 UpdateUserRequest.prototype.intro = null;
 
                 /**
-                 * UpdateUserRequest profilePictureUrl.
-                 * @member {google.protobuf.IStringValue|null|undefined} profilePictureUrl
-                 * @memberof im.turms.proto.UpdateUserRequest
-                 * @instance
-                 */
-                UpdateUserRequest.prototype.profilePictureUrl = null;
-
-                /**
                  * UpdateUserRequest profileAccessStrategy.
                  * @member {im.turms.proto.ProfileAccessStrategy} profileAccessStrategy
                  * @memberof im.turms.proto.UpdateUserRequest
@@ -12679,10 +12614,8 @@ $root.im = (function() {
                         $root.google.protobuf.StringValue.encode(message.name, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     if (message.intro != null && Object.hasOwnProperty.call(message, "intro"))
                         $root.google.protobuf.StringValue.encode(message.intro, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.profilePictureUrl != null && Object.hasOwnProperty.call(message, "profilePictureUrl"))
-                        $root.google.protobuf.StringValue.encode(message.profilePictureUrl, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
                     if (message.profileAccessStrategy != null && Object.hasOwnProperty.call(message, "profileAccessStrategy"))
-                        writer.uint32(/* id 5, wireType 0 =*/40).int32(message.profileAccessStrategy);
+                        writer.uint32(/* id 4, wireType 0 =*/32).int32(message.profileAccessStrategy);
                     return writer;
                 };
 
@@ -12714,9 +12647,6 @@ $root.im = (function() {
                             message.intro = $root.google.protobuf.StringValue.decode(reader, reader.uint32());
                             break;
                         case 4:
-                            message.profilePictureUrl = $root.google.protobuf.StringValue.decode(reader, reader.uint32());
-                            break;
-                        case 5:
                             message.profileAccessStrategy = reader.int32();
                             break;
                         default:

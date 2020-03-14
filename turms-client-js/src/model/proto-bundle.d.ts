@@ -1127,9 +1127,6 @@ export namespace im {
                 /** Group announcement */
                 announcement?: (google.protobuf.IStringValue|null);
 
-                /** Group profilePictureUrl */
-                profilePictureUrl?: (google.protobuf.IStringValue|null);
-
                 /** Group creationDate */
                 creationDate?: (google.protobuf.IInt64Value|null);
 
@@ -1172,9 +1169,6 @@ export namespace im {
 
                 /** Group announcement. */
                 public announcement?: (google.protobuf.IStringValue|null);
-
-                /** Group profilePictureUrl. */
-                public profilePictureUrl?: (google.protobuf.IStringValue|null);
 
                 /** Group creationDate. */
                 public creationDate?: (google.protobuf.IInt64Value|null);
@@ -1799,9 +1793,6 @@ export namespace im {
                 /** UserInfo intro */
                 intro?: (google.protobuf.IStringValue|null);
 
-                /** UserInfo profilePictureUrl */
-                profilePictureUrl?: (google.protobuf.IStringValue|null);
-
                 /** UserInfo registrationDate */
                 registrationDate?: (google.protobuf.IInt64Value|null);
 
@@ -1832,9 +1823,6 @@ export namespace im {
 
                 /** UserInfo intro. */
                 public intro?: (google.protobuf.IStringValue|null);
-
-                /** UserInfo profilePictureUrl. */
-                public profilePictureUrl?: (google.protobuf.IStringValue|null);
 
                 /** UserInfo registrationDate. */
                 public registrationDate?: (google.protobuf.IInt64Value|null);
@@ -2751,9 +2739,6 @@ export namespace im {
                 /** CreateGroupRequest announcement */
                 announcement?: (google.protobuf.IStringValue|null);
 
-                /** CreateGroupRequest profilePictureUrl */
-                profilePictureUrl?: (google.protobuf.IStringValue|null);
-
                 /** CreateGroupRequest minimumScore */
                 minimumScore?: (google.protobuf.IInt32Value|null);
 
@@ -2781,9 +2766,6 @@ export namespace im {
 
                 /** CreateGroupRequest announcement. */
                 public announcement?: (google.protobuf.IStringValue|null);
-
-                /** CreateGroupRequest profilePictureUrl. */
-                public profilePictureUrl?: (google.protobuf.IStringValue|null);
 
                 /** CreateGroupRequest minimumScore. */
                 public minimumScore?: (google.protobuf.IInt32Value|null);
@@ -3718,9 +3700,6 @@ export namespace im {
                 /** UpdateGroupRequest announcement */
                 announcement?: (google.protobuf.IStringValue|null);
 
-                /** UpdateGroupRequest profilePictureUrl */
-                profilePictureUrl?: (google.protobuf.IStringValue|null);
-
                 /** UpdateGroupRequest minimumScore */
                 minimumScore?: (google.protobuf.IInt32Value|null);
 
@@ -3757,9 +3736,6 @@ export namespace im {
 
                 /** UpdateGroupRequest announcement. */
                 public announcement?: (google.protobuf.IStringValue|null);
-
-                /** UpdateGroupRequest profilePictureUrl. */
-                public profilePictureUrl?: (google.protobuf.IStringValue|null);
 
                 /** UpdateGroupRequest minimumScore. */
                 public minimumScore?: (google.protobuf.IInt32Value|null);
@@ -5654,9 +5630,6 @@ export namespace im {
                 /** UpdateUserRequest intro */
                 intro?: (google.protobuf.IStringValue|null);
 
-                /** UpdateUserRequest profilePictureUrl */
-                profilePictureUrl?: (google.protobuf.IStringValue|null);
-
                 /** UpdateUserRequest profileAccessStrategy */
                 profileAccessStrategy?: (im.turms.proto.ProfileAccessStrategy|null);
             }
@@ -5678,9 +5651,6 @@ export namespace im {
 
                 /** UpdateUserRequest intro. */
                 public intro?: (google.protobuf.IStringValue|null);
-
-                /** UpdateUserRequest profilePictureUrl. */
-                public profilePictureUrl?: (google.protobuf.IStringValue|null);
 
                 /** UpdateUserRequest profileAccessStrategy. */
                 public profileAccessStrategy: im.turms.proto.ProfileAccessStrategy;
