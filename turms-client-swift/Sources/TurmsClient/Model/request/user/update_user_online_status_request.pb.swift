@@ -26,6 +26,8 @@ public struct UpdateUserOnlineStatusRequest {
 
   public var userStatus: UserStatus = .available
 
+  public var deviceTypes: [DeviceType] = []
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -39,12 +41,14 @@ extension UpdateUserOnlineStatusRequest: SwiftProtobuf.Message, SwiftProtobuf._M
   public static let protoMessageName: String = _protobuf_package + ".UpdateUserOnlineStatusRequest"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "user_status"),
+    2: .standard(proto: "device_types"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
       case 1: try decoder.decodeSingularEnumField(value: &self.userStatus)
+      case 2: try decoder.decodeRepeatedEnumField(value: &self.deviceTypes)
       default: break
       }
     }
@@ -54,11 +58,15 @@ extension UpdateUserOnlineStatusRequest: SwiftProtobuf.Message, SwiftProtobuf._M
     if self.userStatus != .available {
       try visitor.visitSingularEnumField(value: self.userStatus, fieldNumber: 1)
     }
+    if !self.deviceTypes.isEmpty {
+      try visitor.visitPackedEnumField(value: self.deviceTypes, fieldNumber: 2)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: UpdateUserOnlineStatusRequest, rhs: UpdateUserOnlineStatusRequest) -> Bool {
     if lhs.userStatus != rhs.userStatus {return false}
+    if lhs.deviceTypes != rhs.deviceTypes {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

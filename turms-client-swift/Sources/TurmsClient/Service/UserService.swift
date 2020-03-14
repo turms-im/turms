@@ -58,6 +58,16 @@ public class UserService {
             .map { _ in () }
     }
 
+    public func disconnectOnlineDevices(_ deviceTypes: [DeviceType]) -> Promise<Void> {
+        return turmsClient.driver
+            .send { $0
+                .request("updateUserOnlineStatusRequest")
+                .field("userStatus", UserStatus.offline)
+                .field("deviceTypes", deviceTypes)
+            }
+            .map { _ in () }
+    }
+
     public func updatePassword(_ password: String) -> Promise<Void> {
         return turmsClient.driver
             .send { $0
@@ -114,7 +124,7 @@ public class UserService {
             }
             .map { $0.data.ids.values }
     }
-    
+
     public func queryUserSessionIdsNearby(latitude: Float, longitude: Float, distance: Int32? = nil, maxNumber: Int32? = nil) -> Promise<[UserSessionId]> {
         return turmsClient.driver
             .send { $0
