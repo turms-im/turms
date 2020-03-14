@@ -56,15 +56,6 @@ public struct UpdateGroupRequest {
   /// Clears the value of `announcement`. Subsequent reads from it will return its default value.
   public mutating func clearAnnouncement() {_uniqueStorage()._announcement = nil}
 
-  public var profilePictureURL: SwiftProtobuf.Google_Protobuf_StringValue {
-    get {return _storage._profilePictureURL ?? SwiftProtobuf.Google_Protobuf_StringValue()}
-    set {_uniqueStorage()._profilePictureURL = newValue}
-  }
-  /// Returns true if `profilePictureURL` has been explicitly set.
-  public var hasProfilePictureURL: Bool {return _storage._profilePictureURL != nil}
-  /// Clears the value of `profilePictureURL`. Subsequent reads from it will return its default value.
-  public mutating func clearProfilePictureURL() {_uniqueStorage()._profilePictureURL = nil}
-
   public var minimumScore: SwiftProtobuf.Google_Protobuf_Int32Value {
     get {return _storage._minimumScore ?? SwiftProtobuf.Google_Protobuf_Int32Value()}
     set {_uniqueStorage()._minimumScore = newValue}
@@ -128,12 +119,11 @@ extension UpdateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
     2: .standard(proto: "group_name"),
     3: .same(proto: "intro"),
     4: .same(proto: "announcement"),
-    5: .standard(proto: "profile_picture_url"),
-    6: .standard(proto: "minimum_score"),
-    7: .standard(proto: "group_type_id"),
-    8: .standard(proto: "mute_end_date"),
-    9: .standard(proto: "successor_id"),
-    10: .standard(proto: "quit_after_transfer"),
+    5: .standard(proto: "minimum_score"),
+    6: .standard(proto: "group_type_id"),
+    7: .standard(proto: "mute_end_date"),
+    8: .standard(proto: "successor_id"),
+    9: .standard(proto: "quit_after_transfer"),
   ]
 
   fileprivate class _StorageClass {
@@ -141,7 +131,6 @@ extension UpdateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
     var _groupName: SwiftProtobuf.Google_Protobuf_StringValue? = nil
     var _intro: SwiftProtobuf.Google_Protobuf_StringValue? = nil
     var _announcement: SwiftProtobuf.Google_Protobuf_StringValue? = nil
-    var _profilePictureURL: SwiftProtobuf.Google_Protobuf_StringValue? = nil
     var _minimumScore: SwiftProtobuf.Google_Protobuf_Int32Value? = nil
     var _groupTypeID: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
     var _muteEndDate: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
@@ -157,7 +146,6 @@ extension UpdateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
       _groupName = source._groupName
       _intro = source._intro
       _announcement = source._announcement
-      _profilePictureURL = source._profilePictureURL
       _minimumScore = source._minimumScore
       _groupTypeID = source._groupTypeID
       _muteEndDate = source._muteEndDate
@@ -182,12 +170,11 @@ extension UpdateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
         case 2: try decoder.decodeSingularMessageField(value: &_storage._groupName)
         case 3: try decoder.decodeSingularMessageField(value: &_storage._intro)
         case 4: try decoder.decodeSingularMessageField(value: &_storage._announcement)
-        case 5: try decoder.decodeSingularMessageField(value: &_storage._profilePictureURL)
-        case 6: try decoder.decodeSingularMessageField(value: &_storage._minimumScore)
-        case 7: try decoder.decodeSingularMessageField(value: &_storage._groupTypeID)
-        case 8: try decoder.decodeSingularMessageField(value: &_storage._muteEndDate)
-        case 9: try decoder.decodeSingularMessageField(value: &_storage._successorID)
-        case 10: try decoder.decodeSingularMessageField(value: &_storage._quitAfterTransfer)
+        case 5: try decoder.decodeSingularMessageField(value: &_storage._minimumScore)
+        case 6: try decoder.decodeSingularMessageField(value: &_storage._groupTypeID)
+        case 7: try decoder.decodeSingularMessageField(value: &_storage._muteEndDate)
+        case 8: try decoder.decodeSingularMessageField(value: &_storage._successorID)
+        case 9: try decoder.decodeSingularMessageField(value: &_storage._quitAfterTransfer)
         default: break
         }
       }
@@ -208,23 +195,20 @@ extension UpdateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
       if let v = _storage._announcement {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
       }
-      if let v = _storage._profilePictureURL {
+      if let v = _storage._minimumScore {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
       }
-      if let v = _storage._minimumScore {
+      if let v = _storage._groupTypeID {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
       }
-      if let v = _storage._groupTypeID {
+      if let v = _storage._muteEndDate {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
       }
-      if let v = _storage._muteEndDate {
+      if let v = _storage._successorID {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 8)
       }
-      if let v = _storage._successorID {
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 9)
-      }
       if let v = _storage._quitAfterTransfer {
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 9)
       }
     }
     try unknownFields.traverse(visitor: &visitor)
@@ -239,7 +223,6 @@ extension UpdateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
         if _storage._groupName != rhs_storage._groupName {return false}
         if _storage._intro != rhs_storage._intro {return false}
         if _storage._announcement != rhs_storage._announcement {return false}
-        if _storage._profilePictureURL != rhs_storage._profilePictureURL {return false}
         if _storage._minimumScore != rhs_storage._minimumScore {return false}
         if _storage._groupTypeID != rhs_storage._groupTypeID {return false}
         if _storage._muteEndDate != rhs_storage._muteEndDate {return false}

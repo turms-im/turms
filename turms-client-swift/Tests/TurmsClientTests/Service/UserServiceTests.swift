@@ -58,7 +58,7 @@ class UserServiceTests: XCTestCase {
         // Update
         TestUtil.assertCompleted("updateUserOnlineStatus_shouldSucceed", turmsClient.userService.updateUserOnlineStatus(userStatus))
         TestUtil.assertCompleted("updatePassword_shouldSucceed", turmsClient.userService.updatePassword("123"))
-        TestUtil.assertCompleted("updateProfile_shouldSucceed", turmsClient.userService.updateProfile(name: "123", intro: "123", profilePictureUrl: "http://www.test.com"))
+        TestUtil.assertCompleted("updateProfile_shouldSucceed", turmsClient.userService.updateProfile(name: "123", intro: "123"))
         TestUtil.assertCompleted("updateRelationship_shouldSucceed", turmsClient.userService.updateRelationship(relatedUserId: 10, groupIndex: 1))
         TestUtil.assertCompleted("replyFriendRequest_shouldSucceed", turmsClient.userService.replyFriendRequest(requestId: 10, responseAction: .accept, reason: "reason"))
         TestUtil.assertCompleted("updateRelationshipGroup_shouldSucceed", turmsClient.userService.updateRelationshipGroup(groupIndex: relationshipGroupIndex, newName: "newGroupName"))

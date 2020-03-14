@@ -12,7 +12,6 @@ public class GroupService {
         name: String,
         intro: String? = nil,
         announcement: String? = nil,
-        profilePictureUrl: String? = nil,
         minimumScore: Int32? = nil,
         muteEndDate: Date? = nil,
         groupTypeId: Int32? = nil) -> Promise<Int64> {
@@ -21,7 +20,6 @@ public class GroupService {
                 .field("name", name)
                 .field("intro", intro)
                 .field("announcement", announcement)
-                .field("profilePictureUrl", profilePictureUrl)
                 .field("minimumScore", minimumScore)
                 .field("muteEndDate", muteEndDate)
                 .field("groupTypeId", groupTypeId)
@@ -43,7 +41,6 @@ public class GroupService {
         groupName: String? = nil,
         intro: String? = nil,
         announcement: String? = nil,
-        profilePictureUrl: String? = nil,
         minimumScore: Int32? = nil,
         groupTypeId: Int32? = nil,
         muteEndDate: Date? = nil,
@@ -53,7 +50,6 @@ public class GroupService {
             groupName,
             intro,
             announcement,
-            profilePictureUrl,
             minimumScore,
             groupTypeId,
             muteEndDate,
@@ -67,7 +63,6 @@ public class GroupService {
                 .field("groupName", groupName)
                 .field("intro", intro)
                 .field("announcement", announcement)
-                .field("profilePictureUrl", profilePictureUrl)
                 .field("muteEndDate", muteEndDate)
                 .field("minimumScore", minimumScore)
                 .field("groupTypeId", groupTypeId)

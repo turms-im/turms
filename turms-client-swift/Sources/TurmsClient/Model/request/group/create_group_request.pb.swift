@@ -47,15 +47,6 @@ public struct CreateGroupRequest {
   /// Clears the value of `announcement`. Subsequent reads from it will return its default value.
   public mutating func clearAnnouncement() {_uniqueStorage()._announcement = nil}
 
-  public var profilePictureURL: SwiftProtobuf.Google_Protobuf_StringValue {
-    get {return _storage._profilePictureURL ?? SwiftProtobuf.Google_Protobuf_StringValue()}
-    set {_uniqueStorage()._profilePictureURL = newValue}
-  }
-  /// Returns true if `profilePictureURL` has been explicitly set.
-  public var hasProfilePictureURL: Bool {return _storage._profilePictureURL != nil}
-  /// Clears the value of `profilePictureURL`. Subsequent reads from it will return its default value.
-  public mutating func clearProfilePictureURL() {_uniqueStorage()._profilePictureURL = nil}
-
   public var minimumScore: SwiftProtobuf.Google_Protobuf_Int32Value {
     get {return _storage._minimumScore ?? SwiftProtobuf.Google_Protobuf_Int32Value()}
     set {_uniqueStorage()._minimumScore = newValue}
@@ -100,17 +91,15 @@ extension CreateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
     1: .same(proto: "name"),
     2: .same(proto: "intro"),
     3: .same(proto: "announcement"),
-    4: .standard(proto: "profile_picture_url"),
-    5: .standard(proto: "minimum_score"),
-    6: .standard(proto: "group_type_id"),
-    7: .standard(proto: "mute_end_date"),
+    4: .standard(proto: "minimum_score"),
+    5: .standard(proto: "group_type_id"),
+    6: .standard(proto: "mute_end_date"),
   ]
 
   fileprivate class _StorageClass {
     var _name: String = String()
     var _intro: SwiftProtobuf.Google_Protobuf_StringValue? = nil
     var _announcement: SwiftProtobuf.Google_Protobuf_StringValue? = nil
-    var _profilePictureURL: SwiftProtobuf.Google_Protobuf_StringValue? = nil
     var _minimumScore: SwiftProtobuf.Google_Protobuf_Int32Value? = nil
     var _groupTypeID: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
     var _muteEndDate: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
@@ -123,7 +112,6 @@ extension CreateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
       _name = source._name
       _intro = source._intro
       _announcement = source._announcement
-      _profilePictureURL = source._profilePictureURL
       _minimumScore = source._minimumScore
       _groupTypeID = source._groupTypeID
       _muteEndDate = source._muteEndDate
@@ -145,10 +133,9 @@ extension CreateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
         case 1: try decoder.decodeSingularStringField(value: &_storage._name)
         case 2: try decoder.decodeSingularMessageField(value: &_storage._intro)
         case 3: try decoder.decodeSingularMessageField(value: &_storage._announcement)
-        case 4: try decoder.decodeSingularMessageField(value: &_storage._profilePictureURL)
-        case 5: try decoder.decodeSingularMessageField(value: &_storage._minimumScore)
-        case 6: try decoder.decodeSingularMessageField(value: &_storage._groupTypeID)
-        case 7: try decoder.decodeSingularMessageField(value: &_storage._muteEndDate)
+        case 4: try decoder.decodeSingularMessageField(value: &_storage._minimumScore)
+        case 5: try decoder.decodeSingularMessageField(value: &_storage._groupTypeID)
+        case 6: try decoder.decodeSingularMessageField(value: &_storage._muteEndDate)
         default: break
         }
       }
@@ -166,17 +153,14 @@ extension CreateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
       if let v = _storage._announcement {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
       }
-      if let v = _storage._profilePictureURL {
+      if let v = _storage._minimumScore {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
       }
-      if let v = _storage._minimumScore {
+      if let v = _storage._groupTypeID {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
       }
-      if let v = _storage._groupTypeID {
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
-      }
       if let v = _storage._muteEndDate {
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
       }
     }
     try unknownFields.traverse(visitor: &visitor)
@@ -190,7 +174,6 @@ extension CreateGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
         if _storage._name != rhs_storage._name {return false}
         if _storage._intro != rhs_storage._intro {return false}
         if _storage._announcement != rhs_storage._announcement {return false}
-        if _storage._profilePictureURL != rhs_storage._profilePictureURL {return false}
         if _storage._minimumScore != rhs_storage._minimumScore {return false}
         if _storage._groupTypeID != rhs_storage._groupTypeID {return false}
         if _storage._muteEndDate != rhs_storage._muteEndDate {return false}

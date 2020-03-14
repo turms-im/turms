@@ -51,15 +51,6 @@ public struct UserInfo {
   /// Clears the value of `intro`. Subsequent reads from it will return its default value.
   public mutating func clearIntro() {_uniqueStorage()._intro = nil}
 
-  public var profilePictureURL: SwiftProtobuf.Google_Protobuf_StringValue {
-    get {return _storage._profilePictureURL ?? SwiftProtobuf.Google_Protobuf_StringValue()}
-    set {_uniqueStorage()._profilePictureURL = newValue}
-  }
-  /// Returns true if `profilePictureURL` has been explicitly set.
-  public var hasProfilePictureURL: Bool {return _storage._profilePictureURL != nil}
-  /// Clears the value of `profilePictureURL`. Subsequent reads from it will return its default value.
-  public mutating func clearProfilePictureURL() {_uniqueStorage()._profilePictureURL = nil}
-
   public var registrationDate: SwiftProtobuf.Google_Protobuf_Int64Value {
     get {return _storage._registrationDate ?? SwiftProtobuf.Google_Protobuf_Int64Value()}
     set {_uniqueStorage()._registrationDate = newValue}
@@ -109,18 +100,16 @@ extension UserInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
     1: .same(proto: "id"),
     2: .same(proto: "name"),
     3: .same(proto: "intro"),
-    4: .standard(proto: "profile_picture_url"),
-    5: .standard(proto: "registration_date"),
-    6: .standard(proto: "deletion_date"),
-    7: .same(proto: "active"),
-    8: .standard(proto: "profile_access_strategy"),
+    4: .standard(proto: "registration_date"),
+    5: .standard(proto: "deletion_date"),
+    6: .same(proto: "active"),
+    7: .standard(proto: "profile_access_strategy"),
   ]
 
   fileprivate class _StorageClass {
     var _id: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
     var _name: SwiftProtobuf.Google_Protobuf_StringValue? = nil
     var _intro: SwiftProtobuf.Google_Protobuf_StringValue? = nil
-    var _profilePictureURL: SwiftProtobuf.Google_Protobuf_StringValue? = nil
     var _registrationDate: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
     var _deletionDate: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
     var _active: SwiftProtobuf.Google_Protobuf_BoolValue? = nil
@@ -134,7 +123,6 @@ extension UserInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
       _id = source._id
       _name = source._name
       _intro = source._intro
-      _profilePictureURL = source._profilePictureURL
       _registrationDate = source._registrationDate
       _deletionDate = source._deletionDate
       _active = source._active
@@ -157,11 +145,10 @@ extension UserInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         case 1: try decoder.decodeSingularMessageField(value: &_storage._id)
         case 2: try decoder.decodeSingularMessageField(value: &_storage._name)
         case 3: try decoder.decodeSingularMessageField(value: &_storage._intro)
-        case 4: try decoder.decodeSingularMessageField(value: &_storage._profilePictureURL)
-        case 5: try decoder.decodeSingularMessageField(value: &_storage._registrationDate)
-        case 6: try decoder.decodeSingularMessageField(value: &_storage._deletionDate)
-        case 7: try decoder.decodeSingularMessageField(value: &_storage._active)
-        case 8: try decoder.decodeSingularEnumField(value: &_storage._profileAccessStrategy)
+        case 4: try decoder.decodeSingularMessageField(value: &_storage._registrationDate)
+        case 5: try decoder.decodeSingularMessageField(value: &_storage._deletionDate)
+        case 6: try decoder.decodeSingularMessageField(value: &_storage._active)
+        case 7: try decoder.decodeSingularEnumField(value: &_storage._profileAccessStrategy)
         default: break
         }
       }
@@ -179,20 +166,17 @@ extension UserInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
       if let v = _storage._intro {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
       }
-      if let v = _storage._profilePictureURL {
+      if let v = _storage._registrationDate {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
       }
-      if let v = _storage._registrationDate {
+      if let v = _storage._deletionDate {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
       }
-      if let v = _storage._deletionDate {
+      if let v = _storage._active {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
       }
-      if let v = _storage._active {
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
-      }
       if _storage._profileAccessStrategy != .all {
-        try visitor.visitSingularEnumField(value: _storage._profileAccessStrategy, fieldNumber: 8)
+        try visitor.visitSingularEnumField(value: _storage._profileAccessStrategy, fieldNumber: 7)
       }
     }
     try unknownFields.traverse(visitor: &visitor)
@@ -206,7 +190,6 @@ extension UserInfo: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationB
         if _storage._id != rhs_storage._id {return false}
         if _storage._name != rhs_storage._name {return false}
         if _storage._intro != rhs_storage._intro {return false}
-        if _storage._profilePictureURL != rhs_storage._profilePictureURL {return false}
         if _storage._registrationDate != rhs_storage._registrationDate {return false}
         if _storage._deletionDate != rhs_storage._deletionDate {return false}
         if _storage._active != rhs_storage._active {return false}

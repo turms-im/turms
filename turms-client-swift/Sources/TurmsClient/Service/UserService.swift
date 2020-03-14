@@ -70,9 +70,8 @@ public class UserService {
     public func updateProfile(
         name: String? = nil,
         intro: String? = nil,
-        profilePictureUrl: String? = nil,
         profileAccessStrategy: ProfileAccessStrategy? = nil) -> Promise<Void> {
-        if Validator.areAllNil(name, intro, profilePictureUrl, profileAccessStrategy) {
+        if Validator.areAllNil(name, intro, profileAccessStrategy) {
             return Promise.value(())
         }
         return turmsClient.driver
@@ -80,7 +79,6 @@ public class UserService {
                 .request("updateUserRequest")
                 .field("name", name)
                 .field("intro", intro)
-                .field("profilePictureUrl", profilePictureUrl)
                 .field("profileAccessStrategy", profileAccessStrategy)
             }
             .map { _ in () }

@@ -51,15 +51,6 @@ public struct UpdateUserRequest {
   /// Clears the value of `intro`. Subsequent reads from it will return its default value.
   public mutating func clearIntro() {_uniqueStorage()._intro = nil}
 
-  public var profilePictureURL: SwiftProtobuf.Google_Protobuf_StringValue {
-    get {return _storage._profilePictureURL ?? SwiftProtobuf.Google_Protobuf_StringValue()}
-    set {_uniqueStorage()._profilePictureURL = newValue}
-  }
-  /// Returns true if `profilePictureURL` has been explicitly set.
-  public var hasProfilePictureURL: Bool {return _storage._profilePictureURL != nil}
-  /// Clears the value of `profilePictureURL`. Subsequent reads from it will return its default value.
-  public mutating func clearProfilePictureURL() {_uniqueStorage()._profilePictureURL = nil}
-
   public var profileAccessStrategy: ProfileAccessStrategy {
     get {return _storage._profileAccessStrategy}
     set {_uniqueStorage()._profileAccessStrategy = newValue}
@@ -82,15 +73,13 @@ extension UpdateUserRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     1: .same(proto: "password"),
     2: .same(proto: "name"),
     3: .same(proto: "intro"),
-    4: .standard(proto: "profile_picture_url"),
-    5: .standard(proto: "profile_access_strategy"),
+    4: .standard(proto: "profile_access_strategy"),
   ]
 
   fileprivate class _StorageClass {
     var _password: SwiftProtobuf.Google_Protobuf_StringValue? = nil
     var _name: SwiftProtobuf.Google_Protobuf_StringValue? = nil
     var _intro: SwiftProtobuf.Google_Protobuf_StringValue? = nil
-    var _profilePictureURL: SwiftProtobuf.Google_Protobuf_StringValue? = nil
     var _profileAccessStrategy: ProfileAccessStrategy = .all
 
     static let defaultInstance = _StorageClass()
@@ -101,7 +90,6 @@ extension UpdateUserRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
       _password = source._password
       _name = source._name
       _intro = source._intro
-      _profilePictureURL = source._profilePictureURL
       _profileAccessStrategy = source._profileAccessStrategy
     }
   }
@@ -121,8 +109,7 @@ extension UpdateUserRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
         case 1: try decoder.decodeSingularMessageField(value: &_storage._password)
         case 2: try decoder.decodeSingularMessageField(value: &_storage._name)
         case 3: try decoder.decodeSingularMessageField(value: &_storage._intro)
-        case 4: try decoder.decodeSingularMessageField(value: &_storage._profilePictureURL)
-        case 5: try decoder.decodeSingularEnumField(value: &_storage._profileAccessStrategy)
+        case 4: try decoder.decodeSingularEnumField(value: &_storage._profileAccessStrategy)
         default: break
         }
       }
@@ -140,11 +127,8 @@ extension UpdateUserRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
       if let v = _storage._intro {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
       }
-      if let v = _storage._profilePictureURL {
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
-      }
       if _storage._profileAccessStrategy != .all {
-        try visitor.visitSingularEnumField(value: _storage._profileAccessStrategy, fieldNumber: 5)
+        try visitor.visitSingularEnumField(value: _storage._profileAccessStrategy, fieldNumber: 4)
       }
     }
     try unknownFields.traverse(visitor: &visitor)
@@ -158,7 +142,6 @@ extension UpdateUserRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
         if _storage._password != rhs_storage._password {return false}
         if _storage._name != rhs_storage._name {return false}
         if _storage._intro != rhs_storage._intro {return false}
-        if _storage._profilePictureURL != rhs_storage._profilePictureURL {return false}
         if _storage._profileAccessStrategy != rhs_storage._profileAccessStrategy {return false}
         return true
       }
