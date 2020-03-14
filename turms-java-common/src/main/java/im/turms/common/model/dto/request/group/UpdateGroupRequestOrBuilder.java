@@ -59,92 +59,77 @@ public interface UpdateGroupRequestOrBuilder extends
   com.google.protobuf.StringValueOrBuilder getAnnouncementOrBuilder();
 
   /**
-   * <code>.google.protobuf.StringValue profile_picture_url = 5;</code>
-   * @return Whether the profilePictureUrl field is set.
-   */
-  boolean hasProfilePictureUrl();
-  /**
-   * <code>.google.protobuf.StringValue profile_picture_url = 5;</code>
-   * @return The profilePictureUrl.
-   */
-  com.google.protobuf.StringValue getProfilePictureUrl();
-  /**
-   * <code>.google.protobuf.StringValue profile_picture_url = 5;</code>
-   */
-  com.google.protobuf.StringValueOrBuilder getProfilePictureUrlOrBuilder();
-
-  /**
-   * <code>.google.protobuf.Int32Value minimum_score = 6;</code>
+   * <code>.google.protobuf.Int32Value minimum_score = 5;</code>
    * @return Whether the minimumScore field is set.
    */
   boolean hasMinimumScore();
   /**
-   * <code>.google.protobuf.Int32Value minimum_score = 6;</code>
+   * <code>.google.protobuf.Int32Value minimum_score = 5;</code>
    * @return The minimumScore.
    */
   com.google.protobuf.Int32Value getMinimumScore();
   /**
-   * <code>.google.protobuf.Int32Value minimum_score = 6;</code>
+   * <code>.google.protobuf.Int32Value minimum_score = 5;</code>
    */
   com.google.protobuf.Int32ValueOrBuilder getMinimumScoreOrBuilder();
 
   /**
-   * <code>.google.protobuf.Int64Value group_type_id = 7;</code>
+   * <code>.google.protobuf.Int64Value group_type_id = 6;</code>
    * @return Whether the groupTypeId field is set.
    */
   boolean hasGroupTypeId();
   /**
-   * <code>.google.protobuf.Int64Value group_type_id = 7;</code>
+   * <code>.google.protobuf.Int64Value group_type_id = 6;</code>
    * @return The groupTypeId.
    */
   com.google.protobuf.Int64Value getGroupTypeId();
   /**
-   * <code>.google.protobuf.Int64Value group_type_id = 7;</code>
+   * <code>.google.protobuf.Int64Value group_type_id = 6;</code>
    */
   com.google.protobuf.Int64ValueOrBuilder getGroupTypeIdOrBuilder();
 
   /**
-   * <code>.google.protobuf.Int64Value mute_end_date = 8;</code>
+   * <code>.google.protobuf.Int64Value mute_end_date = 7;</code>
    * @return Whether the muteEndDate field is set.
    */
   boolean hasMuteEndDate();
   /**
-   * <code>.google.protobuf.Int64Value mute_end_date = 8;</code>
+   * <code>.google.protobuf.Int64Value mute_end_date = 7;</code>
    * @return The muteEndDate.
    */
   com.google.protobuf.Int64Value getMuteEndDate();
   /**
-   * <code>.google.protobuf.Int64Value mute_end_date = 8;</code>
+   * <code>.google.protobuf.Int64Value mute_end_date = 7;</code>
    */
   com.google.protobuf.Int64ValueOrBuilder getMuteEndDateOrBuilder();
 
   /**
-   * <code>.google.protobuf.Int64Value successor_id = 9;</code>
+   * <code>.google.protobuf.Int64Value successor_id = 8;</code>
    * @return Whether the successorId field is set.
    */
   boolean hasSuccessorId();
   /**
-   * <code>.google.protobuf.Int64Value successor_id = 9;</code>
+   * <code>.google.protobuf.Int64Value successor_id = 8;</code>
    * @return The successorId.
    */
   com.google.protobuf.Int64Value getSuccessorId();
   /**
-   * <code>.google.protobuf.Int64Value successor_id = 9;</code>
+   * <code>.google.protobuf.Int64Value successor_id = 8;</code>
    */
   com.google.protobuf.Int64ValueOrBuilder getSuccessorIdOrBuilder();
 
   /**
-   * <code>.google.protobuf.BoolValue quit_after_transfer = 10;</code>
+   * <code>.google.protobuf.BoolValue quit_after_transfer = 9;</code>
    * @return Whether the quitAfterTransfer field is set.
    */
   boolean hasQuitAfterTransfer();
   /**
-   * <code>.google.protobuf.BoolValue quit_after_transfer = 10;</code>
+   * <code>.google.protobuf.BoolValue quit_after_transfer = 9;</code>
    * @return The quitAfterTransfer.
    */
   com.google.protobuf.BoolValue getQuitAfterTransfer();
   /**
-   * <code>.google.protobuf.BoolValue quit_after_transfer = 10;</code>
+   * <code>.google.protobuf.BoolValue quit_after_transfer = 9;</code>
    */
   com.google.protobuf.BoolValueOrBuilder getQuitAfterTransferOrBuilder();
 }

@@ -30,17 +30,15 @@ public final class CreateGroupRequestOuterClass {
     java.lang.String[] descriptorData = {
       "\n(request/group/create_group_request.pro" +
       "to\022\016im.turms.proto\032\036google/protobuf/wrap" +
-      "pers.proto\"\332\002\n\022CreateGroupRequest\022\014\n\004nam" +
+      "pers.proto\"\237\002\n\022CreateGroupRequest\022\014\n\004nam" +
       "e\030\001 \001(\t\022+\n\005intro\030\002 \001(\0132\034.google.protobuf" +
       ".StringValue\0222\n\014announcement\030\003 \001(\0132\034.goo" +
-      "gle.protobuf.StringValue\0229\n\023profile_pict" +
-      "ure_url\030\004 \001(\0132\034.google.protobuf.StringVa" +
-      "lue\0222\n\rminimum_score\030\005 \001(\0132\033.google.prot" +
-      "obuf.Int32Value\0222\n\rgroup_type_id\030\006 \001(\0132\033" +
-      ".google.protobuf.Int64Value\0222\n\rmute_end_" +
-      "date\030\007 \001(\0132\033.google.protobuf.Int64ValueB" +
-      ".\n\'im.turms.common.model.dto.request.gro" +
-      "upP\001\272\002\000b\006proto3"
+      "gle.protobuf.StringValue\0222\n\rminimum_scor" +
+      "e\030\004 \001(\0132\033.google.protobuf.Int32Value\0222\n\r" +
+      "group_type_id\030\005 \001(\0132\033.google.protobuf.In" +
+      "t64Value\0222\n\rmute_end_date\030\006 \001(\0132\033.google" +
+      ".protobuf.Int64ValueB.\n\'im.turms.common." +
+      "model.dto.request.groupP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -52,7 +50,7 @@ public final class CreateGroupRequestOuterClass {
     internal_static_im_turms_proto_CreateGroupRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_CreateGroupRequest_descriptor,
-        new java.lang.String[] { "Name", "Intro", "Announcement", "ProfilePictureUrl", "MinimumScore", "GroupTypeId", "MuteEndDate", });
+        new java.lang.String[] { "Name", "Intro", "Announcement", "MinimumScore", "GroupTypeId", "MuteEndDate", });
     com.google.protobuf.WrappersProto.getDescriptor();
   }
 

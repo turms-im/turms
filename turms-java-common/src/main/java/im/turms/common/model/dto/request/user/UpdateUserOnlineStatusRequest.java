@@ -17,6 +17,7 @@ private static final long serialVersionUID = 0L;
   }
   private UpdateUserOnlineStatusRequest() {
     userStatus_ = 0;
+    deviceTypes_ = java.util.Collections.emptyList();
   }
 
   @java.lang.Override
@@ -39,6 +40,7 @@ private static final long serialVersionUID = 0L;
     if (extensionRegistry == null) {
       throw new java.lang.NullPointerException();
     }
+    int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
         com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
@@ -53,6 +55,29 @@ private static final long serialVersionUID = 0L;
             int rawValue = input.readEnum();
 
             userStatus_ = rawValue;
+            break;
+          }
+          case 16: {
+            int rawValue = input.readEnum();
+            if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+              deviceTypes_ = new java.util.ArrayList<java.lang.Integer>();
+              mutable_bitField0_ |= 0x00000001;
+            }
+            deviceTypes_.add(rawValue);
+            break;
+          }
+          case 18: {
+            int length = input.readRawVarint32();
+            int oldLimit = input.pushLimit(length);
+            while(input.getBytesUntilLimit() > 0) {
+              int rawValue = input.readEnum();
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                deviceTypes_ = new java.util.ArrayList<java.lang.Integer>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              deviceTypes_.add(rawValue);
+            }
+            input.popLimit(oldLimit);
             break;
           }
           default: {
@@ -70,6 +95,9 @@ private static final long serialVersionUID = 0L;
       throw new com.google.protobuf.InvalidProtocolBufferException(
           e).setUnfinishedMessage(this);
     } finally {
+      if (((mutable_bitField0_ & 0x00000001) != 0)) {
+        deviceTypes_ = java.util.Collections.unmodifiableList(deviceTypes_);
+      }
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
     }
@@ -106,6 +134,59 @@ private static final long serialVersionUID = 0L;
     return result == null ? im.turms.common.constant.UserStatus.UNRECOGNIZED : result;
   }
 
+  public static final int DEVICE_TYPES_FIELD_NUMBER = 2;
+  private java.util.List<java.lang.Integer> deviceTypes_;
+  private static final com.google.protobuf.Internal.ListAdapter.Converter<
+      java.lang.Integer, im.turms.common.constant.DeviceType> deviceTypes_converter_ =
+          new com.google.protobuf.Internal.ListAdapter.Converter<
+              java.lang.Integer, im.turms.common.constant.DeviceType>() {
+            public im.turms.common.constant.DeviceType convert(java.lang.Integer from) {
+              @SuppressWarnings("deprecation")
+              im.turms.common.constant.DeviceType result = im.turms.common.constant.DeviceType.valueOf(from);
+              return result == null ? im.turms.common.constant.DeviceType.UNRECOGNIZED : result;
+            }
+          };
+  /**
+   * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
+   * @return A list containing the deviceTypes.
+   */
+  public java.util.List<im.turms.common.constant.DeviceType> getDeviceTypesList() {
+    return new com.google.protobuf.Internal.ListAdapter<
+        java.lang.Integer, im.turms.common.constant.DeviceType>(deviceTypes_, deviceTypes_converter_);
+  }
+  /**
+   * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
+   * @return The count of deviceTypes.
+   */
+  public int getDeviceTypesCount() {
+    return deviceTypes_.size();
+  }
+  /**
+   * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
+   * @param index The index of the element to return.
+   * @return The deviceTypes at the given index.
+   */
+  public im.turms.common.constant.DeviceType getDeviceTypes(int index) {
+    return deviceTypes_converter_.convert(deviceTypes_.get(index));
+  }
+  /**
+   * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
+   * @return A list containing the enum numeric values on the wire for deviceTypes.
+   */
+  public java.util.List<java.lang.Integer>
+  getDeviceTypesValueList() {
+    return deviceTypes_;
+  }
+  /**
+   * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
+   * @param index The index of the value to return.
+   * @return The enum numeric value on the wire of deviceTypes at the given index.
+   */
+  public int getDeviceTypesValue(int index) {
+    return deviceTypes_.get(index);
+  }
+  private int deviceTypesMemoizedSerializedSize;
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -120,8 +201,16 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
+    getSerializedSize();
     if (userStatus_ != im.turms.common.constant.UserStatus.AVAILABLE.getNumber()) {
       output.writeEnum(1, userStatus_);
+    }
+    if (getDeviceTypesList().size() > 0) {
+      output.writeUInt32NoTag(18);
+      output.writeUInt32NoTag(deviceTypesMemoizedSerializedSize);
+    }
+    for (int i = 0; i < deviceTypes_.size(); i++) {
+      output.writeEnumNoTag(deviceTypes_.get(i));
     }
     unknownFields.writeTo(output);
   }
@@ -135,6 +224,18 @@ private static final long serialVersionUID = 0L;
     if (userStatus_ != im.turms.common.constant.UserStatus.AVAILABLE.getNumber()) {
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(1, userStatus_);
+    }
+    {
+      int dataSize = 0;
+      for (int i = 0; i < deviceTypes_.size(); i++) {
+        dataSize += com.google.protobuf.CodedOutputStream
+          .computeEnumSizeNoTag(deviceTypes_.get(i));
+      }
+      size += dataSize;
+      if (!getDeviceTypesList().isEmpty()) {  size += 1;
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32SizeNoTag(dataSize);
+      }deviceTypesMemoizedSerializedSize = dataSize;
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -152,6 +253,7 @@ private static final long serialVersionUID = 0L;
     im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest other = (im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest) obj;
 
     if (userStatus_ != other.userStatus_) return false;
+    if (!deviceTypes_.equals(other.deviceTypes_)) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -165,6 +267,10 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + USER_STATUS_FIELD_NUMBER;
     hash = (53 * hash) + userStatus_;
+    if (getDeviceTypesCount() > 0) {
+      hash = (37 * hash) + DEVICE_TYPES_FIELD_NUMBER;
+      hash = (53 * hash) + deviceTypes_.hashCode();
+    }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -300,6 +406,8 @@ private static final long serialVersionUID = 0L;
       super.clear();
       userStatus_ = 0;
 
+      deviceTypes_ = java.util.Collections.emptyList();
+      bitField0_ = (bitField0_ & ~0x00000001);
       return this;
     }
 
@@ -326,7 +434,13 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest buildPartial() {
       im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest result = new im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest(this);
+      int from_bitField0_ = bitField0_;
       result.userStatus_ = userStatus_;
+      if (((bitField0_ & 0x00000001) != 0)) {
+        deviceTypes_ = java.util.Collections.unmodifiableList(deviceTypes_);
+        bitField0_ = (bitField0_ & ~0x00000001);
+      }
+      result.deviceTypes_ = deviceTypes_;
       onBuilt();
       return result;
     }
@@ -378,6 +492,16 @@ private static final long serialVersionUID = 0L;
       if (other.userStatus_ != 0) {
         setUserStatusValue(other.getUserStatusValue());
       }
+      if (!other.deviceTypes_.isEmpty()) {
+        if (deviceTypes_.isEmpty()) {
+          deviceTypes_ = other.deviceTypes_;
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          ensureDeviceTypesIsMutable();
+          deviceTypes_.addAll(other.deviceTypes_);
+        }
+        onChanged();
+      }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
@@ -406,6 +530,7 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+    private int bitField0_;
 
     private int userStatus_ = 0;
     /**
@@ -455,6 +580,146 @@ private static final long serialVersionUID = 0L;
     public Builder clearUserStatus() {
       
       userStatus_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private java.util.List<java.lang.Integer> deviceTypes_ =
+      java.util.Collections.emptyList();
+    private void ensureDeviceTypesIsMutable() {
+      if (!((bitField0_ & 0x00000001) != 0)) {
+        deviceTypes_ = new java.util.ArrayList<java.lang.Integer>(deviceTypes_);
+        bitField0_ |= 0x00000001;
+      }
+    }
+    /**
+     * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
+     * @return A list containing the deviceTypes.
+     */
+    public java.util.List<im.turms.common.constant.DeviceType> getDeviceTypesList() {
+      return new com.google.protobuf.Internal.ListAdapter<
+          java.lang.Integer, im.turms.common.constant.DeviceType>(deviceTypes_, deviceTypes_converter_);
+    }
+    /**
+     * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
+     * @return The count of deviceTypes.
+     */
+    public int getDeviceTypesCount() {
+      return deviceTypes_.size();
+    }
+    /**
+     * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
+     * @param index The index of the element to return.
+     * @return The deviceTypes at the given index.
+     */
+    public im.turms.common.constant.DeviceType getDeviceTypes(int index) {
+      return deviceTypes_converter_.convert(deviceTypes_.get(index));
+    }
+    /**
+     * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
+     * @param index The index to set the value at.
+     * @param value The deviceTypes to set.
+     * @return This builder for chaining.
+     */
+    public Builder setDeviceTypes(
+        int index, im.turms.common.constant.DeviceType value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      ensureDeviceTypesIsMutable();
+      deviceTypes_.set(index, value.getNumber());
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
+     * @param value The deviceTypes to add.
+     * @return This builder for chaining.
+     */
+    public Builder addDeviceTypes(im.turms.common.constant.DeviceType value) {
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      ensureDeviceTypesIsMutable();
+      deviceTypes_.add(value.getNumber());
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
+     * @param values The deviceTypes to add.
+     * @return This builder for chaining.
+     */
+    public Builder addAllDeviceTypes(
+        java.lang.Iterable<? extends im.turms.common.constant.DeviceType> values) {
+      ensureDeviceTypesIsMutable();
+      for (im.turms.common.constant.DeviceType value : values) {
+        deviceTypes_.add(value.getNumber());
+      }
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearDeviceTypes() {
+      deviceTypes_ = java.util.Collections.emptyList();
+      bitField0_ = (bitField0_ & ~0x00000001);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
+     * @return A list containing the enum numeric values on the wire for deviceTypes.
+     */
+    public java.util.List<java.lang.Integer>
+    getDeviceTypesValueList() {
+      return java.util.Collections.unmodifiableList(deviceTypes_);
+    }
+    /**
+     * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
+     * @param index The index of the value to return.
+     * @return The enum numeric value on the wire of deviceTypes at the given index.
+     */
+    public int getDeviceTypesValue(int index) {
+      return deviceTypes_.get(index);
+    }
+    /**
+     * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
+     * @param index The index of the value to return.
+     * @return The enum numeric value on the wire of deviceTypes at the given index.
+     * @return This builder for chaining.
+     */
+    public Builder setDeviceTypesValue(
+        int index, int value) {
+      ensureDeviceTypesIsMutable();
+      deviceTypes_.set(index, value);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
+     * @param value The enum numeric value on the wire for deviceTypes to add.
+     * @return This builder for chaining.
+     */
+    public Builder addDeviceTypesValue(int value) {
+      ensureDeviceTypesIsMutable();
+      deviceTypes_.add(value);
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
+     * @param values The enum numeric values on the wire for deviceTypes to add.
+     * @return This builder for chaining.
+     */
+    public Builder addAllDeviceTypesValue(
+        java.lang.Iterable<java.lang.Integer> values) {
+      ensureDeviceTypesIsMutable();
+      for (int value : values) {
+        deviceTypes_.add(value);
+      }
       onChanged();
       return this;
     }

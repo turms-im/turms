@@ -5585,6 +5585,9 @@ export namespace im {
 
                 /** UpdateUserOnlineStatusRequest userStatus */
                 userStatus?: (im.turms.proto.UserStatus|null);
+
+                /** UpdateUserOnlineStatusRequest deviceTypes */
+                deviceTypes?: (im.turms.proto.DeviceType[]|null);
             }
 
             /** Represents an UpdateUserOnlineStatusRequest. */
@@ -5598,6 +5601,9 @@ export namespace im {
 
                 /** UpdateUserOnlineStatusRequest userStatus. */
                 public userStatus: im.turms.proto.UserStatus;
+
+                /** UpdateUserOnlineStatusRequest deviceTypes. */
+                public deviceTypes: im.turms.proto.DeviceType[];
 
                 /**
                  * Encodes the specified UpdateUserOnlineStatusRequest message. Does not implicitly {@link im.turms.proto.UpdateUserOnlineStatusRequest.verify|verify} messages.

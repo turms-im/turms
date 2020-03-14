@@ -30,23 +30,27 @@ public final class UpdateUserOnlineStatusRequestOuterClass {
     java.lang.String[] descriptorData = {
       "\n4request/user/update_user_online_status" +
       "_request.proto\022\016im.turms.proto\032\032constant" +
-      "/user_status.proto\"P\n\035UpdateUserOnlineSt" +
-      "atusRequest\022/\n\013user_status\030\001 \001(\0162\032.im.tu" +
-      "rms.proto.UserStatusB-\n&im.turms.common." +
-      "model.dto.request.userP\001\272\002\000b\006proto3"
+      "/user_status.proto\032\032constant/device_type" +
+      ".proto\"\202\001\n\035UpdateUserOnlineStatusRequest" +
+      "\022/\n\013user_status\030\001 \001(\0162\032.im.turms.proto.U" +
+      "serStatus\0220\n\014device_types\030\002 \003(\0162\032.im.tur" +
+      "ms.proto.DeviceTypeB-\n&im.turms.common.m" +
+      "odel.dto.request.userP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           im.turms.common.constant.UserStatusOuterClass.getDescriptor(),
+          im.turms.common.constant.DeviceTypeOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_UpdateUserOnlineStatusRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_im_turms_proto_UpdateUserOnlineStatusRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_UpdateUserOnlineStatusRequest_descriptor,
-        new java.lang.String[] { "UserStatus", });
+        new java.lang.String[] { "UserStatus", "DeviceTypes", });
     im.turms.common.constant.UserStatusOuterClass.getDescriptor();
+    im.turms.common.constant.DeviceTypeOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

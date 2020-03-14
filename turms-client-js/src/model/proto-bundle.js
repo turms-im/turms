@@ -12463,6 +12463,7 @@ $root.im = (function() {
                  * @memberof im.turms.proto
                  * @interface IUpdateUserOnlineStatusRequest
                  * @property {im.turms.proto.UserStatus|null} [userStatus] UpdateUserOnlineStatusRequest userStatus
+                 * @property {Array.<im.turms.proto.DeviceType>|null} [deviceTypes] UpdateUserOnlineStatusRequest deviceTypes
                  */
 
                 /**
@@ -12474,6 +12475,7 @@ $root.im = (function() {
                  * @param {im.turms.proto.IUpdateUserOnlineStatusRequest=} [properties] Properties to set
                  */
                 function UpdateUserOnlineStatusRequest(properties) {
+                    this.deviceTypes = [];
                     if (properties)
                         for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                             if (properties[keys[i]] != null)
@@ -12489,6 +12491,14 @@ $root.im = (function() {
                 UpdateUserOnlineStatusRequest.prototype.userStatus = 0;
 
                 /**
+                 * UpdateUserOnlineStatusRequest deviceTypes.
+                 * @member {Array.<im.turms.proto.DeviceType>} deviceTypes
+                 * @memberof im.turms.proto.UpdateUserOnlineStatusRequest
+                 * @instance
+                 */
+                UpdateUserOnlineStatusRequest.prototype.deviceTypes = $util.emptyArray;
+
+                /**
                  * Encodes the specified UpdateUserOnlineStatusRequest message. Does not implicitly {@link im.turms.proto.UpdateUserOnlineStatusRequest.verify|verify} messages.
                  * @function encode
                  * @memberof im.turms.proto.UpdateUserOnlineStatusRequest
@@ -12502,6 +12512,12 @@ $root.im = (function() {
                         writer = $Writer.create();
                     if (message.userStatus != null && Object.hasOwnProperty.call(message, "userStatus"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int32(message.userStatus);
+                    if (message.deviceTypes != null && message.deviceTypes.length) {
+                        writer.uint32(/* id 2, wireType 2 =*/18).fork();
+                        for (var i = 0; i < message.deviceTypes.length; ++i)
+                            writer.int32(message.deviceTypes[i]);
+                        writer.ldelim();
+                    }
                     return writer;
                 };
 
@@ -12525,6 +12541,16 @@ $root.im = (function() {
                         switch (tag >>> 3) {
                         case 1:
                             message.userStatus = reader.int32();
+                            break;
+                        case 2:
+                            if (!(message.deviceTypes && message.deviceTypes.length))
+                                message.deviceTypes = [];
+                            if ((tag & 7) === 2) {
+                                var end2 = reader.uint32() + reader.pos;
+                                while (reader.pos < end2)
+                                    message.deviceTypes.push(reader.int32());
+                            } else
+                                message.deviceTypes.push(reader.int32());
                             break;
                         default:
                             reader.skipType(tag & 7);

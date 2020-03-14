@@ -113,77 +113,62 @@ public interface GroupOrBuilder extends
   com.google.protobuf.StringValueOrBuilder getAnnouncementOrBuilder();
 
   /**
-   * <code>.google.protobuf.StringValue profile_picture_url = 8;</code>
-   * @return Whether the profilePictureUrl field is set.
-   */
-  boolean hasProfilePictureUrl();
-  /**
-   * <code>.google.protobuf.StringValue profile_picture_url = 8;</code>
-   * @return The profilePictureUrl.
-   */
-  com.google.protobuf.StringValue getProfilePictureUrl();
-  /**
-   * <code>.google.protobuf.StringValue profile_picture_url = 8;</code>
-   */
-  com.google.protobuf.StringValueOrBuilder getProfilePictureUrlOrBuilder();
-
-  /**
-   * <code>.google.protobuf.Int64Value creation_date = 9;</code>
+   * <code>.google.protobuf.Int64Value creation_date = 8;</code>
    * @return Whether the creationDate field is set.
    */
   boolean hasCreationDate();
   /**
-   * <code>.google.protobuf.Int64Value creation_date = 9;</code>
+   * <code>.google.protobuf.Int64Value creation_date = 8;</code>
    * @return The creationDate.
    */
   com.google.protobuf.Int64Value getCreationDate();
   /**
-   * <code>.google.protobuf.Int64Value creation_date = 9;</code>
+   * <code>.google.protobuf.Int64Value creation_date = 8;</code>
    */
   com.google.protobuf.Int64ValueOrBuilder getCreationDateOrBuilder();
 
   /**
-   * <code>.google.protobuf.Int64Value deletion_date = 10;</code>
+   * <code>.google.protobuf.Int64Value deletion_date = 9;</code>
    * @return Whether the deletionDate field is set.
    */
   boolean hasDeletionDate();
   /**
-   * <code>.google.protobuf.Int64Value deletion_date = 10;</code>
+   * <code>.google.protobuf.Int64Value deletion_date = 9;</code>
    * @return The deletionDate.
    */
   com.google.protobuf.Int64Value getDeletionDate();
   /**
-   * <code>.google.protobuf.Int64Value deletion_date = 10;</code>
+   * <code>.google.protobuf.Int64Value deletion_date = 9;</code>
    */
   com.google.protobuf.Int64ValueOrBuilder getDeletionDateOrBuilder();
 
   /**
-   * <code>.google.protobuf.Int64Value mute_end_date = 11;</code>
+   * <code>.google.protobuf.Int64Value mute_end_date = 10;</code>
    * @return Whether the muteEndDate field is set.
    */
   boolean hasMuteEndDate();
   /**
-   * <code>.google.protobuf.Int64Value mute_end_date = 11;</code>
+   * <code>.google.protobuf.Int64Value mute_end_date = 10;</code>
    * @return The muteEndDate.
    */
   com.google.protobuf.Int64Value getMuteEndDate();
   /**
-   * <code>.google.protobuf.Int64Value mute_end_date = 11;</code>
+   * <code>.google.protobuf.Int64Value mute_end_date = 10;</code>
    */
   com.google.protobuf.Int64ValueOrBuilder getMuteEndDateOrBuilder();
 
   /**
-   * <code>.google.protobuf.BoolValue active = 12;</code>
+   * <code>.google.protobuf.BoolValue active = 11;</code>
    * @return Whether the active field is set.
    */
   boolean hasActive();
   /**
-   * <code>.google.protobuf.BoolValue active = 12;</code>
+   * <code>.google.protobuf.BoolValue active = 11;</code>
    * @return The active.
    */
   com.google.protobuf.BoolValue getActive();
   /**
-   * <code>.google.protobuf.BoolValue active = 12;</code>
+   * <code>.google.protobuf.BoolValue active = 11;</code>
    */
   com.google.protobuf.BoolValueOrBuilder getActiveOrBuilder();
 }

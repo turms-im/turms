@@ -31,15 +31,14 @@ public final class UpdateUserRequestOuterClass {
       "\n&request/user/update_user_request.proto" +
       "\022\016im.turms.proto\032\036google/protobuf/wrappe" +
       "rs.proto\032&constant/profile_access_strate" +
-      "gy.proto\"\237\002\n\021UpdateUserRequest\022.\n\010passwo" +
+      "gy.proto\"\344\001\n\021UpdateUserRequest\022.\n\010passwo" +
       "rd\030\001 \001(\0132\034.google.protobuf.StringValue\022*" +
       "\n\004name\030\002 \001(\0132\034.google.protobuf.StringVal" +
       "ue\022+\n\005intro\030\003 \001(\0132\034.google.protobuf.Stri" +
-      "ngValue\0229\n\023profile_picture_url\030\004 \001(\0132\034.g" +
-      "oogle.protobuf.StringValue\022F\n\027profile_ac" +
-      "cess_strategy\030\005 \001(\0162%.im.turms.proto.Pro" +
-      "fileAccessStrategyB-\n&im.turms.common.mo" +
-      "del.dto.request.userP\001\272\002\000b\006proto3"
+      "ngValue\022F\n\027profile_access_strategy\030\004 \001(\016" +
+      "2%.im.turms.proto.ProfileAccessStrategyB" +
+      "-\n&im.turms.common.model.dto.request.use" +
+      "rP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -52,7 +51,7 @@ public final class UpdateUserRequestOuterClass {
     internal_static_im_turms_proto_UpdateUserRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_UpdateUserRequest_descriptor,
-        new java.lang.String[] { "Password", "Name", "Intro", "ProfilePictureUrl", "ProfileAccessStrategy", });
+        new java.lang.String[] { "Password", "Name", "Intro", "ProfileAccessStrategy", });
     com.google.protobuf.WrappersProto.getDescriptor();
     im.turms.common.constant.ProfileAccessStrategyOuterClass.getDescriptor();
   }

@@ -29,7 +29,7 @@ public final class GroupOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\027model/group/group.proto\022\016im.turms.prot" +
-      "o\032\036google/protobuf/wrappers.proto\"\316\004\n\005Gr" +
+      "o\032\036google/protobuf/wrappers.proto\"\223\004\n\005Gr" +
       "oup\022\'\n\002id\030\001 \001(\0132\033.google.protobuf.Int64V" +
       "alue\022,\n\007type_id\030\002 \001(\0132\033.google.protobuf." +
       "Int64Value\022/\n\ncreator_id\030\003 \001(\0132\033.google." +
@@ -38,14 +38,13 @@ public final class GroupOuterClass {
       "2\034.google.protobuf.StringValue\022+\n\005intro\030" +
       "\006 \001(\0132\034.google.protobuf.StringValue\0222\n\014a" +
       "nnouncement\030\007 \001(\0132\034.google.protobuf.Stri" +
-      "ngValue\0229\n\023profile_picture_url\030\010 \001(\0132\034.g" +
-      "oogle.protobuf.StringValue\0222\n\rcreation_d" +
-      "ate\030\t \001(\0132\033.google.protobuf.Int64Value\0222" +
-      "\n\rdeletion_date\030\n \001(\0132\033.google.protobuf." +
-      "Int64Value\0222\n\rmute_end_date\030\013 \001(\0132\033.goog" +
-      "le.protobuf.Int64Value\022*\n\006active\030\014 \001(\0132\032" +
-      ".google.protobuf.BoolValueB%\n\036im.turms.c" +
-      "ommon.model.bo.groupP\001\272\002\000b\006proto3"
+      "ngValue\0222\n\rcreation_date\030\010 \001(\0132\033.google." +
+      "protobuf.Int64Value\0222\n\rdeletion_date\030\t \001" +
+      "(\0132\033.google.protobuf.Int64Value\0222\n\rmute_" +
+      "end_date\030\n \001(\0132\033.google.protobuf.Int64Va" +
+      "lue\022*\n\006active\030\013 \001(\0132\032.google.protobuf.Bo" +
+      "olValueB%\n\036im.turms.common.model.bo.grou" +
+      "pP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -57,7 +56,7 @@ public final class GroupOuterClass {
     internal_static_im_turms_proto_Group_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_Group_descriptor,
-        new java.lang.String[] { "Id", "TypeId", "CreatorId", "OwnerId", "Name", "Intro", "Announcement", "ProfilePictureUrl", "CreationDate", "DeletionDate", "MuteEndDate", "Active", });
+        new java.lang.String[] { "Id", "TypeId", "CreatorId", "OwnerId", "Name", "Intro", "Announcement", "CreationDate", "DeletionDate", "MuteEndDate", "Active", });
     com.google.protobuf.WrappersProto.getDescriptor();
   }
 

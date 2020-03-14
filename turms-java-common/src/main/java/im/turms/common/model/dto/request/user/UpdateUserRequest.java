@@ -88,20 +88,7 @@ private static final long serialVersionUID = 0L;
 
             break;
           }
-          case 34: {
-            com.google.protobuf.StringValue.Builder subBuilder = null;
-            if (profilePictureUrl_ != null) {
-              subBuilder = profilePictureUrl_.toBuilder();
-            }
-            profilePictureUrl_ = input.readMessage(com.google.protobuf.StringValue.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(profilePictureUrl_);
-              profilePictureUrl_ = subBuilder.buildPartial();
-            }
-
-            break;
-          }
-          case 40: {
+          case 32: {
             int rawValue = input.readEnum();
 
             profileAccessStrategy_ = rawValue;
@@ -208,40 +195,17 @@ private static final long serialVersionUID = 0L;
     return getIntro();
   }
 
-  public static final int PROFILE_PICTURE_URL_FIELD_NUMBER = 4;
-  private com.google.protobuf.StringValue profilePictureUrl_;
-  /**
-   * <code>.google.protobuf.StringValue profile_picture_url = 4;</code>
-   * @return Whether the profilePictureUrl field is set.
-   */
-  public boolean hasProfilePictureUrl() {
-    return profilePictureUrl_ != null;
-  }
-  /**
-   * <code>.google.protobuf.StringValue profile_picture_url = 4;</code>
-   * @return The profilePictureUrl.
-   */
-  public com.google.protobuf.StringValue getProfilePictureUrl() {
-    return profilePictureUrl_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : profilePictureUrl_;
-  }
-  /**
-   * <code>.google.protobuf.StringValue profile_picture_url = 4;</code>
-   */
-  public com.google.protobuf.StringValueOrBuilder getProfilePictureUrlOrBuilder() {
-    return getProfilePictureUrl();
-  }
-
-  public static final int PROFILE_ACCESS_STRATEGY_FIELD_NUMBER = 5;
+  public static final int PROFILE_ACCESS_STRATEGY_FIELD_NUMBER = 4;
   private int profileAccessStrategy_;
   /**
-   * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
+   * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
    * @return The enum numeric value on the wire for profileAccessStrategy.
    */
   public int getProfileAccessStrategyValue() {
     return profileAccessStrategy_;
   }
   /**
-   * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
+   * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
    * @return The profileAccessStrategy.
    */
   public im.turms.common.constant.ProfileAccessStrategy getProfileAccessStrategy() {
@@ -273,11 +237,8 @@ private static final long serialVersionUID = 0L;
     if (intro_ != null) {
       output.writeMessage(3, getIntro());
     }
-    if (profilePictureUrl_ != null) {
-      output.writeMessage(4, getProfilePictureUrl());
-    }
     if (profileAccessStrategy_ != im.turms.common.constant.ProfileAccessStrategy.ALL.getNumber()) {
-      output.writeEnum(5, profileAccessStrategy_);
+      output.writeEnum(4, profileAccessStrategy_);
     }
     unknownFields.writeTo(output);
   }
@@ -300,13 +261,9 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(3, getIntro());
     }
-    if (profilePictureUrl_ != null) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(4, getProfilePictureUrl());
-    }
     if (profileAccessStrategy_ != im.turms.common.constant.ProfileAccessStrategy.ALL.getNumber()) {
       size += com.google.protobuf.CodedOutputStream
-        .computeEnumSize(5, profileAccessStrategy_);
+        .computeEnumSize(4, profileAccessStrategy_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -338,11 +295,6 @@ private static final long serialVersionUID = 0L;
       if (!getIntro()
           .equals(other.getIntro())) return false;
     }
-    if (hasProfilePictureUrl() != other.hasProfilePictureUrl()) return false;
-    if (hasProfilePictureUrl()) {
-      if (!getProfilePictureUrl()
-          .equals(other.getProfilePictureUrl())) return false;
-    }
     if (profileAccessStrategy_ != other.profileAccessStrategy_) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
@@ -366,10 +318,6 @@ private static final long serialVersionUID = 0L;
     if (hasIntro()) {
       hash = (37 * hash) + INTRO_FIELD_NUMBER;
       hash = (53 * hash) + getIntro().hashCode();
-    }
-    if (hasProfilePictureUrl()) {
-      hash = (37 * hash) + PROFILE_PICTURE_URL_FIELD_NUMBER;
-      hash = (53 * hash) + getProfilePictureUrl().hashCode();
     }
     hash = (37 * hash) + PROFILE_ACCESS_STRATEGY_FIELD_NUMBER;
     hash = (53 * hash) + profileAccessStrategy_;
@@ -524,12 +472,6 @@ private static final long serialVersionUID = 0L;
         intro_ = null;
         introBuilder_ = null;
       }
-      if (profilePictureUrlBuilder_ == null) {
-        profilePictureUrl_ = null;
-      } else {
-        profilePictureUrl_ = null;
-        profilePictureUrlBuilder_ = null;
-      }
       profileAccessStrategy_ = 0;
 
       return this;
@@ -572,11 +514,6 @@ private static final long serialVersionUID = 0L;
         result.intro_ = intro_;
       } else {
         result.intro_ = introBuilder_.build();
-      }
-      if (profilePictureUrlBuilder_ == null) {
-        result.profilePictureUrl_ = profilePictureUrl_;
-      } else {
-        result.profilePictureUrl_ = profilePictureUrlBuilder_.build();
       }
       result.profileAccessStrategy_ = profileAccessStrategy_;
       onBuilt();
@@ -635,9 +572,6 @@ private static final long serialVersionUID = 0L;
       }
       if (other.hasIntro()) {
         mergeIntro(other.getIntro());
-      }
-      if (other.hasProfilePictureUrl()) {
-        mergeProfilePictureUrl(other.getProfilePictureUrl());
       }
       if (other.profileAccessStrategy_ != 0) {
         setProfileAccessStrategyValue(other.getProfileAccessStrategyValue());
@@ -1028,135 +962,16 @@ private static final long serialVersionUID = 0L;
       return introBuilder_;
     }
 
-    private com.google.protobuf.StringValue profilePictureUrl_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> profilePictureUrlBuilder_;
-    /**
-     * <code>.google.protobuf.StringValue profile_picture_url = 4;</code>
-     * @return Whether the profilePictureUrl field is set.
-     */
-    public boolean hasProfilePictureUrl() {
-      return profilePictureUrlBuilder_ != null || profilePictureUrl_ != null;
-    }
-    /**
-     * <code>.google.protobuf.StringValue profile_picture_url = 4;</code>
-     * @return The profilePictureUrl.
-     */
-    public com.google.protobuf.StringValue getProfilePictureUrl() {
-      if (profilePictureUrlBuilder_ == null) {
-        return profilePictureUrl_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : profilePictureUrl_;
-      } else {
-        return profilePictureUrlBuilder_.getMessage();
-      }
-    }
-    /**
-     * <code>.google.protobuf.StringValue profile_picture_url = 4;</code>
-     */
-    public Builder setProfilePictureUrl(com.google.protobuf.StringValue value) {
-      if (profilePictureUrlBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        profilePictureUrl_ = value;
-        onChanged();
-      } else {
-        profilePictureUrlBuilder_.setMessage(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.StringValue profile_picture_url = 4;</code>
-     */
-    public Builder setProfilePictureUrl(
-        com.google.protobuf.StringValue.Builder builderForValue) {
-      if (profilePictureUrlBuilder_ == null) {
-        profilePictureUrl_ = builderForValue.build();
-        onChanged();
-      } else {
-        profilePictureUrlBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.StringValue profile_picture_url = 4;</code>
-     */
-    public Builder mergeProfilePictureUrl(com.google.protobuf.StringValue value) {
-      if (profilePictureUrlBuilder_ == null) {
-        if (profilePictureUrl_ != null) {
-          profilePictureUrl_ =
-            com.google.protobuf.StringValue.newBuilder(profilePictureUrl_).mergeFrom(value).buildPartial();
-        } else {
-          profilePictureUrl_ = value;
-        }
-        onChanged();
-      } else {
-        profilePictureUrlBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.StringValue profile_picture_url = 4;</code>
-     */
-    public Builder clearProfilePictureUrl() {
-      if (profilePictureUrlBuilder_ == null) {
-        profilePictureUrl_ = null;
-        onChanged();
-      } else {
-        profilePictureUrl_ = null;
-        profilePictureUrlBuilder_ = null;
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.StringValue profile_picture_url = 4;</code>
-     */
-    public com.google.protobuf.StringValue.Builder getProfilePictureUrlBuilder() {
-      
-      onChanged();
-      return getProfilePictureUrlFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.StringValue profile_picture_url = 4;</code>
-     */
-    public com.google.protobuf.StringValueOrBuilder getProfilePictureUrlOrBuilder() {
-      if (profilePictureUrlBuilder_ != null) {
-        return profilePictureUrlBuilder_.getMessageOrBuilder();
-      } else {
-        return profilePictureUrl_ == null ?
-            com.google.protobuf.StringValue.getDefaultInstance() : profilePictureUrl_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.StringValue profile_picture_url = 4;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> 
-        getProfilePictureUrlFieldBuilder() {
-      if (profilePictureUrlBuilder_ == null) {
-        profilePictureUrlBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>(
-                getProfilePictureUrl(),
-                getParentForChildren(),
-                isClean());
-        profilePictureUrl_ = null;
-      }
-      return profilePictureUrlBuilder_;
-    }
-
     private int profileAccessStrategy_ = 0;
     /**
-     * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
+     * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
      * @return The enum numeric value on the wire for profileAccessStrategy.
      */
     public int getProfileAccessStrategyValue() {
       return profileAccessStrategy_;
     }
     /**
-     * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
+     * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
      * @param value The enum numeric value on the wire for profileAccessStrategy to set.
      * @return This builder for chaining.
      */
@@ -1166,7 +981,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
+     * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
      * @return The profileAccessStrategy.
      */
     public im.turms.common.constant.ProfileAccessStrategy getProfileAccessStrategy() {
@@ -1175,7 +990,7 @@ private static final long serialVersionUID = 0L;
       return result == null ? im.turms.common.constant.ProfileAccessStrategy.UNRECOGNIZED : result;
     }
     /**
-     * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
+     * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
      * @param value The profileAccessStrategy to set.
      * @return This builder for chaining.
      */
@@ -1189,7 +1004,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
+     * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
      * @return This builder for chaining.
      */
     public Builder clearProfileAccessStrategy() {

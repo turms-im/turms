@@ -29,16 +29,15 @@ public final class UserSessionIdOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n model/user/user_session_id.proto\022\016im.t" +
-      "urms.proto\032\032constant/user_status.proto\032\032" +
-      "constant/device_type.proto\"Q\n\rUserSessio" +
-      "nId\022\017\n\007user_id\030\001 \001(\003\022/\n\013device_type\030\002 \001(" +
-      "\0162\032.im.turms.proto.DeviceTypeB$\n\035im.turm" +
-      "s.common.model.bo.userP\001\272\002\000b\006proto3"
+      "urms.proto\032\032constant/device_type.proto\"Q" +
+      "\n\rUserSessionId\022\017\n\007user_id\030\001 \001(\003\022/\n\013devi" +
+      "ce_type\030\002 \001(\0162\032.im.turms.proto.DeviceTyp" +
+      "eB$\n\035im.turms.common.model.bo.userP\001\272\002\000b" +
+      "\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          im.turms.common.constant.UserStatusOuterClass.getDescriptor(),
           im.turms.common.constant.DeviceTypeOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_UserSessionId_descriptor =
@@ -47,7 +46,6 @@ public final class UserSessionIdOuterClass {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_UserSessionId_descriptor,
         new java.lang.String[] { "UserId", "DeviceType", });
-    im.turms.common.constant.UserStatusOuterClass.getDescriptor();
     im.turms.common.constant.DeviceTypeOuterClass.getDescriptor();
   }
 

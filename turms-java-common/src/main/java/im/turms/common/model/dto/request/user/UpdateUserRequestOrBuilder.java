@@ -53,27 +53,12 @@ public interface UpdateUserRequestOrBuilder extends
   com.google.protobuf.StringValueOrBuilder getIntroOrBuilder();
 
   /**
-   * <code>.google.protobuf.StringValue profile_picture_url = 4;</code>
-   * @return Whether the profilePictureUrl field is set.
-   */
-  boolean hasProfilePictureUrl();
-  /**
-   * <code>.google.protobuf.StringValue profile_picture_url = 4;</code>
-   * @return The profilePictureUrl.
-   */
-  com.google.protobuf.StringValue getProfilePictureUrl();
-  /**
-   * <code>.google.protobuf.StringValue profile_picture_url = 4;</code>
-   */
-  com.google.protobuf.StringValueOrBuilder getProfilePictureUrlOrBuilder();
-
-  /**
-   * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
+   * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
    * @return The enum numeric value on the wire for profileAccessStrategy.
    */
   int getProfileAccessStrategyValue();
   /**
-   * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 5;</code>
+   * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
    * @return The profileAccessStrategy.
    */
   im.turms.common.constant.ProfileAccessStrategy getProfileAccessStrategy();

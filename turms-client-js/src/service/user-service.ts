@@ -95,6 +95,25 @@ export default class UserService {
         });
     }
 
+    disconnectOnlineDevices(deviceTypes: string[] | DeviceType[]): Promise<void> {
+        RequestUtil.throwIfAnyFalsy(deviceTypes);
+        // @ts-ignore
+        deviceTypes = deviceTypes.map(type => {
+            if (typeof type === 'string') {
+                return ConstantTransformer.string2DeviceType(type);
+            } else {
+                return type;
+            }
+        });
+        return this._turmsClient.driver.send({
+            updateUserOnlineStatusRequest: {
+                userStatus: UserStatus.OFFLINE,
+                deviceTypes: deviceTypes as DeviceType[]
+            }
+        }).then(_ => {
+        });
+    }
+
     updatePassword(password: string): Promise<void> {
         RequestUtil.throwIfAnyFalsy(password);
         return this._turmsClient.driver.send({

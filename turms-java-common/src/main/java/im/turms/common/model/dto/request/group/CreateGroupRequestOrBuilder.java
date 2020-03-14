@@ -50,62 +50,47 @@ public interface CreateGroupRequestOrBuilder extends
   com.google.protobuf.StringValueOrBuilder getAnnouncementOrBuilder();
 
   /**
-   * <code>.google.protobuf.StringValue profile_picture_url = 4;</code>
-   * @return Whether the profilePictureUrl field is set.
-   */
-  boolean hasProfilePictureUrl();
-  /**
-   * <code>.google.protobuf.StringValue profile_picture_url = 4;</code>
-   * @return The profilePictureUrl.
-   */
-  com.google.protobuf.StringValue getProfilePictureUrl();
-  /**
-   * <code>.google.protobuf.StringValue profile_picture_url = 4;</code>
-   */
-  com.google.protobuf.StringValueOrBuilder getProfilePictureUrlOrBuilder();
-
-  /**
-   * <code>.google.protobuf.Int32Value minimum_score = 5;</code>
+   * <code>.google.protobuf.Int32Value minimum_score = 4;</code>
    * @return Whether the minimumScore field is set.
    */
   boolean hasMinimumScore();
   /**
-   * <code>.google.protobuf.Int32Value minimum_score = 5;</code>
+   * <code>.google.protobuf.Int32Value minimum_score = 4;</code>
    * @return The minimumScore.
    */
   com.google.protobuf.Int32Value getMinimumScore();
   /**
-   * <code>.google.protobuf.Int32Value minimum_score = 5;</code>
+   * <code>.google.protobuf.Int32Value minimum_score = 4;</code>
    */
   com.google.protobuf.Int32ValueOrBuilder getMinimumScoreOrBuilder();
 
   /**
-   * <code>.google.protobuf.Int64Value group_type_id = 6;</code>
+   * <code>.google.protobuf.Int64Value group_type_id = 5;</code>
    * @return Whether the groupTypeId field is set.
    */
   boolean hasGroupTypeId();
   /**
-   * <code>.google.protobuf.Int64Value group_type_id = 6;</code>
+   * <code>.google.protobuf.Int64Value group_type_id = 5;</code>
    * @return The groupTypeId.
    */
   com.google.protobuf.Int64Value getGroupTypeId();
   /**
-   * <code>.google.protobuf.Int64Value group_type_id = 6;</code>
+   * <code>.google.protobuf.Int64Value group_type_id = 5;</code>
    */
   com.google.protobuf.Int64ValueOrBuilder getGroupTypeIdOrBuilder();
 
   /**
-   * <code>.google.protobuf.Int64Value mute_end_date = 7;</code>
+   * <code>.google.protobuf.Int64Value mute_end_date = 6;</code>
    * @return Whether the muteEndDate field is set.
    */
   boolean hasMuteEndDate();
   /**
-   * <code>.google.protobuf.Int64Value mute_end_date = 7;</code>
+   * <code>.google.protobuf.Int64Value mute_end_date = 6;</code>
    * @return The muteEndDate.
    */
   com.google.protobuf.Int64Value getMuteEndDate();
   /**
-   * <code>.google.protobuf.Int64Value mute_end_date = 7;</code>
+   * <code>.google.protobuf.Int64Value mute_end_date = 6;</code>
    */
   com.google.protobuf.Int64ValueOrBuilder getMuteEndDateOrBuilder();
 }

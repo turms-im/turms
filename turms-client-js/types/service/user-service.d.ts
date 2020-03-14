@@ -21,6 +21,7 @@ export default class UserService {
     relogin(): Promise<void>;
     logout(): Promise<void>;
     updateUserOnlineStatus(onlineStatus: string | UserStatus): Promise<void>;
+    disconnectOnlineDevices(deviceTypes: string[] | DeviceType[]): Promise<void>;
     updatePassword(password: string): Promise<void>;
     updateProfile(name?: string, intro?: string, profileAccessStrategy?: string | ProfileAccessStrategy): Promise<void>;
     queryUserGroupInvitations(lastUpdatedDate?: Date): Promise<ParsedModel.GroupInvitationsWithVersion>;
