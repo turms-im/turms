@@ -9,6 +9,7 @@ server:
     key-store-type: PKCS12
     key-store-password: imturms
     key-alias: turms
+  address: 0.0.0.0
 spring:
   application:
     name: turms
