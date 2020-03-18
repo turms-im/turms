@@ -42,7 +42,6 @@ public class TurmsMinioPlugin extends TurmsPlugin {
 
     @Extension
     public static class MinioStorageServiceProvider extends StorageServiceProvider {
-        private URI endpoint;
         private S3AsyncClient client;
         private S3Presigner presigner;
         private TurmsProperties turmsProperties;
@@ -140,15 +139,22 @@ public class TurmsMinioPlugin extends TurmsPlugin {
         }
 
         private void setUp() throws InterruptedException, ExecutionException, TimeoutException {
-            turmsProperties = getContext().getBean(TurmsProperties.class);
-            Environment env = getContext().getEnvironment();
+            ApplicationContext context = getContext();
+            turmsProperties = context.getBean(TurmsProperties.class);
+            Environment env = context.getEnvironment();
             String endpointStr = env.getProperty("turms.storage.minio.endpoint", "http://localhost:9000");
+            String regionStr = env.getProperty("turms.storage.minio.region", Region.AWS_GLOBAL.toString());
             String accessKey = env.getProperty("turms.storage.minio.accessKey", "minioadmin");
             String secretKey = env.getProperty("turms.storage.minio.secretKey", "minioadmin");
-            String regionStr = env.getProperty("turms.storage.minio.region", Region.AWS_GLOBAL.toString());
-            Region region = Region.of(regionStr);
-            endpoint = URI.create(endpointStr);
 
+            initClient(endpointStr, regionStr, accessKey, secretKey);
+            initBuckets();
+        }
+
+        private void initClient(String endpointStr, String regionStr, String accessKey, String secretKey) {
+            URI endpoint = URI.create(endpointStr);
+            Region region = Region.of(regionStr);
+            AwsCredentialsProvider credentialsProvider = () -> AwsBasicCredentials.create(accessKey, secretKey);
             SdkAsyncHttpClient httpClient = NettyNioAsyncHttpClient.builder()
                     .writeTimeout(Duration.ZERO)
                     .maxConcurrency(64)
@@ -157,7 +163,6 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                     .checksumValidationEnabled(false)
                     .chunkedEncodingEnabled(true)
                     .build();
-            AwsCredentialsProvider credentialsProvider = () -> AwsBasicCredentials.create(accessKey, secretKey);
             client = S3AsyncClient.builder()
                     .httpClient(httpClient)
                     .endpointOverride(endpoint)
@@ -170,10 +175,10 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                     .credentialsProvider(credentialsProvider)
                     .region(region)
                     .build();
-            initMinio();
+            TurmsLogger.log(String.format("The MinIO client is connecting to: %s", endpoint.toString()));
         }
 
-        private void initMinio() throws InterruptedException, ExecutionException, TimeoutException {
+        private void initBuckets() throws InterruptedException, ExecutionException, TimeoutException {
             for (ContentType type : ContentType.values()) {
                 if (type != ContentType.UNRECOGNIZED) {
                     boolean exists = bucketExists(type);
