@@ -15,3 +15,6 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:29510/turms-dev
+turms:
+  ip:
+    use-local-ip: true
