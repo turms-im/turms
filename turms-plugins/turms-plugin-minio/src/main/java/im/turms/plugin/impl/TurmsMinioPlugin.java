@@ -140,15 +140,18 @@ public class TurmsMinioPlugin extends TurmsPlugin {
 
         private void setUp() throws InterruptedException, ExecutionException, TimeoutException {
             ApplicationContext context = getContext();
-            turmsProperties = context.getBean(TurmsProperties.class);
             Environment env = context.getEnvironment();
-            String endpointStr = env.getProperty("turms.storage.minio.endpoint", "http://localhost:9000");
-            String regionStr = env.getProperty("turms.storage.minio.region", Region.AWS_GLOBAL.toString());
+            boolean enabled = env.getProperty("turms.storage.minio.enabled", Boolean.class, true);
+            if (enabled) {
+                turmsProperties = context.getBean(TurmsProperties.class);
+                String endpoint = env.getProperty("turms.storage.minio.endpoint", "http://localhost:9000");
+                String region = env.getProperty("turms.storage.minio.region", Region.AWS_GLOBAL.toString());
             String accessKey = env.getProperty("turms.storage.minio.accessKey", "minioadmin");
             String secretKey = env.getProperty("turms.storage.minio.secretKey", "minioadmin");
 
-            initClient(endpointStr, regionStr, accessKey, secretKey);
+                initClient(endpoint, region, accessKey, secretKey);
             initBuckets();
+        }
         }
 
         private void initClient(String endpointStr, String regionStr, String accessKey, String secretKey) {
