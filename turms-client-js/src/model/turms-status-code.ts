@@ -92,7 +92,7 @@ class TurmsStatusCode {
         [Code.REQUEST_TOO_LARGE]: "The request is too large",
         [Code.LOGGED_DEVICES_CANNOT_OFFLINE]: "Cannot set logged in devices offline",
         [Code.NOT_IMPLEMENTED]: "Not Implemented",
-        [Code.CLIENT_USER_ID_AND_PASSWORD_MUST_NOT_NULL]: "The user ID and password must be not null",
+        [Code.CLIENT_USER_ID_AND_PASSWORD_MUST_NOT_NULL]: "The user ID and password must not be null",
         [Code.CLIENT_SESSION_HAS_BEEN_CLOSED]: "The session has been closed",
         [Code.CLIENT_SESSION_ALREADY_ESTABLISHED]: "The session has been established",
         [Code.CLIENT_REQUESTS_TOO_FREQUENT]: "Client requests are too frequent"

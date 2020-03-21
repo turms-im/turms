@@ -14,30 +14,22 @@ public class Validator {
     public static void throwIfAnyFalsy(@NotEmpty Object... array) {
         for (Object o : array) {
             if (o == null) {
-                throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS);
+                throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The required values must not be null");
             } else {
                 if (o instanceof String) {
                     if (((String) o).isBlank()) {
-                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS);
+                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The string value must not be blank");
                     }
                 } else if (o instanceof Collection && ((Collection<?>) o).isEmpty()) {
-                    throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS);
+                    throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The collection value must not be empty");
                 }
-            }
-        }
-    }
-
-    public static void throwIfAnyNull(@NotEmpty Object... array) {
-        for (Object o : array) {
-            if (o == null) {
-                throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS);
             }
         }
     }
 
     public static void throwIfAllFalsy(@NotEmpty Object... array) {
         if (areAllFalsy(array)) {
-            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS);
+            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The optional values cannot be all falsy");
         }
     }
 
@@ -76,10 +68,10 @@ public class Validator {
     public static void throwIfEmpty(Object object) {
         if (object instanceof Map) {
             if (((Map<?, ?>) object).isEmpty()) {
-                throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS);
+                throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The collection value must not be empty");
             }
         } else if (object instanceof Collection && ((Collection<?>) object).isEmpty()) {
-            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS);
+            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The collection value must not be empty");
         }
     }
 }

@@ -63,11 +63,11 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                     if (keyNum != null) {
                         key = keyNum.toString();
                     } else {
-                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS);
+                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The group ID must not be null");
                     }
                     break;
                 case ATTACHMENT:
-                    throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS);
+                    throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The attachments cannot be deleted");
                 default:
                     throw new IllegalStateException("Unexpected value: " + contentType);
             }
@@ -95,7 +95,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                         String url = presignedUrlForGet(getBucketName(contentType), key);
                         return Mono.just(url);
                     } else {
-                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS);
+                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The message ID must not be null");
                     }
                 default:
                     throw new IllegalStateException("Unexpected value: " + contentType);
@@ -116,7 +116,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                     if (keyNum != null) {
                         objectKey = keyNum.toString();
                     } else {
-                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS);
+                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The group ID must not be null");
                     }
                     break;
                 case ATTACHMENT:
@@ -128,7 +128,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                             objectKey = keyNum.toString();
                         }
                     } else {
-                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS);
+                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The message ID must not be null");
                     }
                     break;
                 default:

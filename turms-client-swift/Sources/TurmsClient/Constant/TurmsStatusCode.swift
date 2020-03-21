@@ -84,7 +84,7 @@ extension TurmsStatusCode {
             case .relationshipHasEstablished: return "The relationship has already established"
             case .loggedInDevicesCannotOffline: return "Cannot set logged in devices offline"
             case .notImplemented: return "Not Implemented"
-            case .clientUserIdAndPasswordMustNotNull: return "The user ID and password must be not null"
+            case .clientUserIdAndPasswordMustNotNull: return "The user ID and password must not be null"
             case .clientSessionHasBeenClosed: return "The session has been closed"
             case .clientSessionAlreadyEstablished: return "The session has been established"
             case .clientRequestsTooFrequent: return "Client requests are too frequent"
