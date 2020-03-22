@@ -41,6 +41,7 @@ enum Code {
     SERVER_INTERNAL_ERROR = 5000,
     LOGGED_DEVICES_CANNOT_OFFLINE,
     NOT_IMPLEMENTED,
+    UNAVAILABLE,
 
     CLIENT_USER_ID_AND_PASSWORD_MUST_NOT_NULL = 6000,
     CLIENT_SESSION_HAS_BEEN_CLOSED,
@@ -92,6 +93,7 @@ class TurmsStatusCode {
         [Code.REQUEST_TOO_LARGE]: "The request is too large",
         [Code.LOGGED_DEVICES_CANNOT_OFFLINE]: "Cannot set logged in devices offline",
         [Code.NOT_IMPLEMENTED]: "Not Implemented",
+        [Code.UNAVAILABLE]: "The service is unavailable",
         [Code.CLIENT_USER_ID_AND_PASSWORD_MUST_NOT_NULL]: "The user ID and password must not be null",
         [Code.CLIENT_SESSION_HAS_BEEN_CLOSED]: "The session has been closed",
         [Code.CLIENT_SESSION_ALREADY_ESTABLISHED]: "The session has been established",

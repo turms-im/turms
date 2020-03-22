@@ -42,6 +42,7 @@ public enum TurmsStatusCode: Int {
 
     case loggedInDevicesCannotOffline = 5001
     case notImplemented
+    case unavailable
 
     case clientUserIdAndPasswordMustNotNull = 6000
     case clientSessionHasBeenClosed
@@ -84,6 +85,7 @@ extension TurmsStatusCode {
             case .relationshipHasEstablished: return "The relationship has already established"
             case .loggedInDevicesCannotOffline: return "Cannot set logged in devices offline"
             case .notImplemented: return "Not Implemented"
+            case .unavailable: return "The service is unavailable"
             case .clientUserIdAndPasswordMustNotNull: return "The user ID and password must not be null"
             case .clientSessionHasBeenClosed: return "The session has been closed"
             case .clientSessionAlreadyEstablished: return "The session has been established"

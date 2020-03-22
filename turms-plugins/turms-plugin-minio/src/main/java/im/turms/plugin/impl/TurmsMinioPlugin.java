@@ -3,12 +3,13 @@ package im.turms.plugin.impl;
 import im.turms.common.TurmsStatusCode;
 import im.turms.common.constant.ContentType;
 import im.turms.common.exception.TurmsBusinessException;
-import im.turms.turms.common.TurmsLogger;
 import im.turms.turms.plugin.StorageServiceProvider;
 import im.turms.turms.plugin.TurmsPlugin;
 import im.turms.turms.property.TurmsProperties;
 import org.pf4j.Extension;
 import org.pf4j.PluginWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.util.MimeTypeUtils;
@@ -31,9 +32,7 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.time.Duration;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 
 public class TurmsMinioPlugin extends TurmsPlugin {
     public TurmsMinioPlugin(PluginWrapper wrapper) {
@@ -42,9 +41,18 @@ public class TurmsMinioPlugin extends TurmsPlugin {
 
     @Extension
     public static class MinioStorageServiceProvider extends StorageServiceProvider {
+        private static final Logger log = LoggerFactory.getLogger(MinioStorageServiceProvider.class);
+
+        private static final int TIMEOUT = 10;
+
         private S3AsyncClient client;
         private S3Presigner presigner;
         private TurmsProperties turmsProperties;
+
+        private boolean retryEnabled;
+        private int retryInitialInterval;
+        private int retryInterval;
+        private int retryMaxAttempts;
 
         @Override
         public void setContext(ApplicationContext context) throws Exception {
@@ -146,12 +154,44 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                 turmsProperties = context.getBean(TurmsProperties.class);
                 String endpoint = env.getProperty("turms.storage.minio.endpoint", "http://localhost:9000");
                 String region = env.getProperty("turms.storage.minio.region", Region.AWS_GLOBAL.toString());
-            String accessKey = env.getProperty("turms.storage.minio.accessKey", "minioadmin");
-            String secretKey = env.getProperty("turms.storage.minio.secretKey", "minioadmin");
+                String accessKey = env.getProperty("turms.storage.minio.accessKey", "minioadmin");
+                String secretKey = env.getProperty("turms.storage.minio.secretKey", "minioadmin");
+
+                retryEnabled = env.getProperty("turms.storage.minio.retry.enabled", Boolean.class, true);
+                retryInitialInterval = env.getProperty("turms.storage.minio.retry.initial-interval", Integer.class, 5);
+                retryInterval = env.getProperty("turms.storage.minio.retry.interval", Integer.class, 5);
+                retryMaxAttempts = env.getProperty("turms.storage.minio.retry.max-attempts", Integer.class, 3);
 
                 initClient(endpoint, region, accessKey, secretKey);
-            initBuckets();
-        }
+                try {
+                    initBuckets();
+                    setServing(true);
+                } catch (Exception e) {
+                    if (retryEnabled) {
+                        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+                        executor.scheduleAtFixedRate(new Runnable() {
+                            int currentRetryTimes;
+
+                            @Override
+                            public void run() {
+                                currentRetryTimes++;
+                                if (retryMaxAttempts > 0 && currentRetryTimes > retryMaxAttempts) {
+                                    log.warn("The MinIO client failed to initialize");
+                                    executor.shutdown();
+                                    throw new RuntimeException();
+                                }
+                                try {
+                                    initBuckets();
+                                    setServing(true);
+                                } catch (Exception ignored) {
+                                }
+                            }
+                        }, retryInitialInterval, retryInterval, TimeUnit.SECONDS);
+                    } else {
+                        log.warn("The MinIO client failed to initialize");
+                    }
+                }
+            }
         }
 
         private void initClient(String endpointStr, String regionStr, String accessKey, String secretKey) {
@@ -178,7 +218,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                     .credentialsProvider(credentialsProvider)
                     .region(region)
                     .build();
-            TurmsLogger.log(String.format("The MinIO client is connecting to: %s", endpoint.toString()));
+            log.info(String.format("The MinIO client is connecting to: %s", endpoint.toString()));
         }
 
         private void initBuckets() throws InterruptedException, ExecutionException, TimeoutException {
@@ -187,12 +227,12 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                     boolean exists = bucketExists(type);
                     String bucket = getBucketName(type);
                     if (!exists) {
-                        TurmsLogger.log(String.format("Bucket: %s is being created", bucket));
+                        log.info(String.format("Bucket: %s is being created", bucket));
                         createBucket(type);
                         putBucketPolicy(type);
                         putBucketLifecycleConfig(type);
                     } else {
-                        TurmsLogger.log(String.format("Bucket: %s exists", bucket));
+                        log.info(String.format("Bucket: %s exists", bucket));
                     }
                 }
             }
@@ -202,7 +242,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
             CreateBucketRequest request = CreateBucketRequest.builder()
                     .bucket(getBucketName(contentType))
                     .build();
-            client.createBucket(request).get(30, TimeUnit.SECONDS);
+            client.createBucket(request).get(TIMEOUT, TimeUnit.SECONDS);
         }
 
         private void putBucketPolicy(ContentType contentType) throws InterruptedException, ExecutionException, TimeoutException {
@@ -225,7 +265,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                         .bucket(bucket)
                         .policy(policy)
                         .build();
-                client.putBucketPolicy(policyRequest).get(5, TimeUnit.SECONDS);
+                client.putBucketPolicy(policyRequest).get(TIMEOUT, TimeUnit.SECONDS);
             }
         }
 
@@ -258,7 +298,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                             .bucket(getBucketName(contentType))
                             .lifecycleConfiguration(configuration)
                             .build();
-                    client.putBucketLifecycleConfiguration(request).get(30, TimeUnit.SECONDS);
+                    client.putBucketLifecycleConfiguration(request).get(TIMEOUT, TimeUnit.SECONDS);
                 }
             }
         }
@@ -268,7 +308,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                 HeadBucketRequest request = HeadBucketRequest.builder()
                         .bucket(getBucketName(contentType))
                         .build();
-                HeadBucketResponse response = client.headBucket(request).get(30, TimeUnit.SECONDS);
+                HeadBucketResponse response = client.headBucket(request).get(TIMEOUT, TimeUnit.SECONDS);
                 return 200 == response.sdkHttpResponse().statusCode();
             } catch (Exception e) {
                 if (e.getCause() instanceof NoSuchBucketException) {

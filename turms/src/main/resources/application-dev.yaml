@@ -18,3 +18,7 @@ spring:
 turms:
   ip:
     use-local-ip: true
+  storage:
+    minio:
+      retry:
+        enabled: false
