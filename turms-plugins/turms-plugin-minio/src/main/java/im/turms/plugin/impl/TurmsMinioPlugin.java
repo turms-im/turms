@@ -148,7 +148,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
             return Mono.just(url);
         }
 
-        private void setUp() throws InterruptedException, ExecutionException, TimeoutException {
+        private void setUp() {
             ApplicationContext context = getContext();
             Environment env = context.getEnvironment();
             boolean enabled = env.getProperty("turms.storage.minio.enabled", Boolean.class, true);
