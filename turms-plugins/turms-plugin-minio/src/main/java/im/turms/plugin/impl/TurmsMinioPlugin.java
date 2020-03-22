@@ -44,6 +44,8 @@ public class TurmsMinioPlugin extends TurmsPlugin {
         private static final Logger log = LoggerFactory.getLogger(MinioStorageServiceProvider.class);
 
         private static final int TIMEOUT = 10;
+        private static final int DEFAULT_RETRY_INTERVAL = 30;
+        private static final int DEFAULT_RETRY_MAX_ATTEMPTS = 3;
 
         private S3AsyncClient client;
         private S3Presigner presigner;
@@ -158,9 +160,9 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                 String secretKey = env.getProperty("turms.storage.minio.secretKey", "minioadmin");
 
                 retryEnabled = env.getProperty("turms.storage.minio.retry.enabled", Boolean.class, true);
-                retryInitialInterval = env.getProperty("turms.storage.minio.retry.initial-interval", Integer.class, 5);
-                retryInterval = env.getProperty("turms.storage.minio.retry.interval", Integer.class, 5);
-                retryMaxAttempts = env.getProperty("turms.storage.minio.retry.max-attempts", Integer.class, 3);
+                retryInitialInterval = env.getProperty("turms.storage.minio.retry.initial-interval", Integer.class, DEFAULT_RETRY_INTERVAL);
+                retryInterval = env.getProperty("turms.storage.minio.retry.interval", Integer.class, DEFAULT_RETRY_INTERVAL);
+                retryMaxAttempts = env.getProperty("turms.storage.minio.retry.max-attempts", Integer.class, DEFAULT_RETRY_MAX_ATTEMPTS);
 
                 initClient(endpoint, region, accessKey, secretKey);
                 try {
