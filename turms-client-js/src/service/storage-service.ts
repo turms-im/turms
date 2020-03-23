@@ -61,7 +61,7 @@ export default class StorageService {
 // Group profile picture
 
     public queryGroupProfilePictureUrlForAccess(groupId: string): Promise<string> {
-        const url = `${this._serverUrl}/${StorageService._getBucketName(ContentType.PROFILE)}/${groupId}`;
+        const url = `${this._serverUrl}/${StorageService._getBucketName(ContentType.GROUP_PROFILE)}/${groupId}`;
         return Promise.resolve(url);
     }
 

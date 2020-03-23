@@ -48,6 +48,7 @@ public enum TurmsStatusCode: Int {
     case clientSessionHasBeenClosed
     case clientSessionAlreadyEstablished
     case clientRequestsTooFrequent
+    case missingData
 }
 
 extension TurmsStatusCode {
@@ -90,6 +91,7 @@ extension TurmsStatusCode {
             case .clientSessionHasBeenClosed: return "The session has been closed"
             case .clientSessionAlreadyEstablished: return "The session has been established"
             case .clientRequestsTooFrequent: return "Client requests are too frequent"
+            case .missingData: return "The data is missing"
             case .userNotGroupMember: return "The user is not a member of the group"
             case .userHasBeenBlacklisted: return "The user has been blacklisted"
             case .groupHasBeenMuted: return "The group has been muted"
