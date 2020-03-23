@@ -52,35 +52,35 @@ class GroupServiceTests: XCTestCase {
 
         // Query
         TestUtil.assertCompleted("queryGroup_shouldReturnGroupWithVersion", turmsClient.groupService.queryGroup(groupId: groupId!).done {
-            XCTAssertEqual(groupId!, $0.group.id.value)
+            XCTAssertEqual(groupId!, $0!.group.id.value)
         })
         TestUtil.assertCompleted("queryJoinedGroupsIds_shouldEqualNewGroupId", turmsClient.groupService.queryJoinedGroupsIds().done {
-            XCTAssert($0.values.contains(groupId!))
+            XCTAssert($0!.values.contains(groupId!))
         })
         TestUtil.assertCompleted("queryJoinedGroupsInfos_shouldEqualNewGroupId", turmsClient.groupService.queryJoinedGroupsInfos().done {
-            let groupIds = $0.groups.map { $0.id.value }
+            let groupIds = $0!.groups.map { $0.id.value }
             XCTAssert(groupIds.contains(groupId!))
         })
         TestUtil.assertCompleted("queryBlacklistedUsersIds_shouldEqualBlacklistedUserId", turmsClient.groupService.queryBlacklistedUsersIds(groupId: groupId!).done {
-            XCTAssertEqual(groupBlacklistedUserId, $0.values[0])
+            XCTAssertEqual(groupBlacklistedUserId, $0!.values[0])
         })
         TestUtil.assertCompleted("queryBlacklistedUsersInfos_shouldEqualBlacklistedUserId", turmsClient.groupService.queryBlacklistedUsersInfos(groupId: groupId!).done {
-            XCTAssertEqual(groupBlacklistedUserId, $0.userInfos[0].id.value)
+            XCTAssertEqual(groupBlacklistedUserId, $0!.userInfos[0].id.value)
         })
         TestUtil.assertCompleted("queryInvitations_shouldEqualNewInvitationId", turmsClient.groupService.queryInvitations(groupId: groupId!).done {
-            XCTAssertEqual(groupInvitationId, $0.groupInvitations[0].id.value)
+            XCTAssertEqual(groupInvitationId, $0!.groupInvitations[0].id.value)
         })
         TestUtil.assertCompleted("queryJoinRequests_shouldEqualNewJoinRequestId", turmsClient.groupService.queryJoinRequests(groupId: groupId!).done {
-            XCTAssertEqual(groupJoinRequestId, $0.groupJoinRequests[0].id.value)
+            XCTAssertEqual(groupJoinRequestId, $0!.groupJoinRequests[0].id.value)
         })
         TestUtil.assertCompleted("queryGroupJoinQuestionsRequest_shouldEqualNewGroupQuestionId", turmsClient.groupService.queryGroupJoinQuestionsRequest(groupId: groupId!, withAnswers: true).done {
-            XCTAssertEqual(groupQuestionId, $0.groupJoinQuestions[0].id.value)
+            XCTAssertEqual(groupQuestionId, $0!.groupJoinQuestions[0].id.value)
         })
         TestUtil.assertCompleted("queryGroupMembers_shouldEqualNewMemberId", turmsClient.groupService.queryGroupMembers(groupId: groupId!, withStatus: true).done {
-            XCTAssertEqual(groupMemberId, $0.groupMembers[1].userID.value)
+            XCTAssertEqual(groupMemberId, $0!.groupMembers[1].userID.value)
         })
         TestUtil.assertCompleted("queryGroupMembersByMembersIds_shouldEqualNewMemberId", turmsClient.groupService.queryGroupMembersByMembersIds(groupId: groupId!, membersIds: [groupMemberId], withStatus: true).done {
-            XCTAssertEqual(groupMemberId, $0.groupMembers[0].userID.value)
+            XCTAssertEqual(groupMemberId, $0!.groupMembers[0].userID.value)
         })
         TestUtil.assertCompleted("answerGroupQuestions_shouldReturnAnswerResult", turmsClient.groupService.answerGroupQuestions([groupQuestionId!: "answer"]).recover { error -> Promise<GroupJoinQuestionsAnswerResult> in
             if let businessError = error as? TurmsBusinessError, businessError.code == .alreadyGroupMember {

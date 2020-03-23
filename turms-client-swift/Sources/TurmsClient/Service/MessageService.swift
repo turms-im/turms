@@ -59,7 +59,7 @@ public class MessageService {
                 .field("records", records)
                 .field("burnAfter", burnAfter)
             }
-            .map { $0.data.ids.values[0] }
+            .map { try NotificationUtil.getFirstId($0) }
     }
 
     public func forwardMessage(
@@ -73,7 +73,7 @@ public class MessageService {
                 .field("chatType", chatType)
                 .field("toId", toId)
             }
-            .map { $0.data.ids.values[0] }
+            .map { try NotificationUtil.getFirstId($0) }
     }
 
     public func updateSentMessage(

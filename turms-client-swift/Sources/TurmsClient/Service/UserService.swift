@@ -94,23 +94,23 @@ public class UserService {
             .map { _ in () }
     }
 
-    public func queryUserGroupInvitations(_ lastUpdatedDate: Date? = nil) -> Promise<GroupInvitationsWithVersion> {
+    public func queryUserGroupInvitations(_ lastUpdatedDate: Date? = nil) -> Promise<GroupInvitationsWithVersion?> {
         return turmsClient.driver
             .send { $0
                 .request("queryUserGroupInvitationsRequest")
                 .field("lastUpdatedDate", lastUpdatedDate)
             }
-            .map { $0.data.groupInvitationsWithVersion }
+            .map { try $0.data.kind?.getKindData(GroupInvitationsWithVersion.self) }
     }
 
-    public func queryUserProfile(userId: Int64, lastUpdatedDate: Date? = nil) -> Promise<UserInfoWithVersion> {
+    public func queryUserProfile(userId: Int64, lastUpdatedDate: Date? = nil) -> Promise<UserInfoWithVersion?> {
         return turmsClient.driver
             .send { $0
                 .request("queryUserProfileRequest")
                 .field("userId", userId)
                 .field("lastUpdatedDate", lastUpdatedDate)
             }
-            .map { UserInfoWithVersion.from($0) }
+            .map { try UserInfoWithVersion.from($0) }
     }
 
     public func queryUserIdsNearby(latitude: Float, longitude: Float, distance: Int32? = nil, maxNumber: Int32? = nil) -> Promise<[Int64]> {
@@ -164,7 +164,7 @@ public class UserService {
         relatedUsersIds: [Int64]? = nil,
         isBlocked: Bool? = nil,
         groupIndex: Int32? = nil,
-        lastUpdatedDate: Date? = nil) -> Promise<UserRelationshipsWithVersion> {
+        lastUpdatedDate: Date? = nil) -> Promise<UserRelationshipsWithVersion?> {
         return turmsClient.driver
             .send { $0
                 .request("queryRelationshipsRequest")
@@ -173,10 +173,10 @@ public class UserService {
                 .field("groupIndex", groupIndex)
                 .field("lastUpdatedDate", lastUpdatedDate)
             }
-            .map { $0.data.userRelationshipsWithVersion }
+            .map { try $0.data.kind?.getKindData(UserRelationshipsWithVersion.self) }
     }
 
-    public func queryRelatedUsersIds(isBlocked: Bool? = nil, groupIndex: Int32? = nil, lastUpdatedDate: Date? = nil) -> Promise<Int64ValuesWithVersion> {
+    public func queryRelatedUsersIds(isBlocked: Bool? = nil, groupIndex: Int32? = nil, lastUpdatedDate: Date? = nil) -> Promise<Int64ValuesWithVersion?> {
         return turmsClient.driver
             .send { $0
                 .request("queryRelatedUsersIdsRequest")
@@ -184,17 +184,17 @@ public class UserService {
                 .field("groupIndex", groupIndex)
                 .field("lastUpdatedDate", lastUpdatedDate)
             }
-            .map { $0.data.idsWithVersion }
+            .map { try $0.data.kind?.getKindData(Int64ValuesWithVersion.self) }
     }
 
-    public func queryFriends(groupIndex: Int32? = nil, lastUpdatedDate: Date? = nil) -> Promise<UserRelationshipsWithVersion> {
+    public func queryFriends(groupIndex: Int32? = nil, lastUpdatedDate: Date? = nil) -> Promise<UserRelationshipsWithVersion?> {
         return queryRelationships(
             isBlocked: false,
             groupIndex: groupIndex,
             lastUpdatedDate: lastUpdatedDate)
     }
 
-    public func queryBlacklistedUsers(groupIndex: Int32? = nil, lastUpdatedDate: Date? = nil) -> Promise<UserRelationshipsWithVersion> {
+    public func queryBlacklistedUsers(groupIndex: Int32? = nil, lastUpdatedDate: Date? = nil) -> Promise<UserRelationshipsWithVersion?> {
         return queryRelationships(
             isBlocked: true,
             groupIndex: groupIndex,
@@ -258,7 +258,7 @@ public class UserService {
                 .field("recipientId", recipientId)
                 .field("content", content)
             }
-            .map { $0.data.ids.values[0] }
+            .map { try NotificationUtil.getFirstId($0) }
     }
 
     public func replyFriendRequest(requestId: Int64, responseAction: ResponseAction, reason: String? = nil) -> Promise<Void> {
@@ -272,13 +272,13 @@ public class UserService {
             .map { _ in () }
     }
 
-    public func queryFriendRequests(_ lastUpdatedDate: Date? = nil) -> Promise<UserFriendRequestsWithVersion> {
+    public func queryFriendRequests(_ lastUpdatedDate: Date? = nil) -> Promise<UserFriendRequestsWithVersion?> {
         return turmsClient.driver
             .send { $0
                 .request("queryFriendRequestsRequest")
                 .field("lastUpdatedDate", lastUpdatedDate)
             }
-            .map { $0.data.userFriendRequestsWithVersion }
+            .map { try $0.data.kind?.getKindData(UserFriendRequestsWithVersion.self) }
     }
 
     public func createRelationshipGroup(_ name: String) -> Promise<Int32> {
@@ -287,7 +287,7 @@ public class UserService {
                 .request("createRelationshipGroupRequest")
                 .field("name", name)
             }
-            .map { Int32($0.data.ids.values[0]) }
+            .map { try Int32(NotificationUtil.getFirstId($0)) }
     }
 
     public func deleteRelationshipGroups(groupIndex: Int32, targetGroupIndex: Int32? = nil) -> Promise<Void> {
@@ -310,13 +310,13 @@ public class UserService {
             .map { _ in () }
     }
 
-    public func queryRelationshipGroups(_ lastUpdatedDate: Date? = nil) -> Promise<UserRelationshipGroupsWithVersion> {
+    public func queryRelationshipGroups(_ lastUpdatedDate: Date? = nil) -> Promise<UserRelationshipGroupsWithVersion?> {
         return turmsClient.driver
             .send { $0
                 .request("queryRelationshipGroupsRequest")
                 .field("lastUpdatedDate", lastUpdatedDate)
             }
-            .map { $0.data.userRelationshipGroupsWithVersion }
+            .map { try $0.data.kind?.getKindData(UserRelationshipGroupsWithVersion.self) }
     }
 
     public func moveRelatedUserToGroup(relatedUserId: Int64, groupIndex: Int32) -> Promise<Void> {

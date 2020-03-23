@@ -13,7 +13,7 @@ class TestUtil {
         }.catch { error in
             XCTFail("Failed: \(description): \(error)")
         }
-        let result = XCTWaiter().wait(for: [e], timeout: 5)
+        let result = XCTWaiter().wait(for: [e], timeout: 3)
         XCTAssertEqual(.completed, result, "Failed: \(description): \(result)")
     }
     
@@ -24,6 +24,6 @@ class TestUtil {
         }.catch { error in
             XCTFail("Failed: \(error)")
         }
-        return XCTWaiter().wait(for: [e], timeout: 5)
+        return XCTWaiter().wait(for: [e], timeout: 3)
     }
 }
