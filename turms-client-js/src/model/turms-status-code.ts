@@ -46,7 +46,8 @@ enum Code {
     CLIENT_USER_ID_AND_PASSWORD_MUST_NOT_NULL = 6000,
     CLIENT_SESSION_HAS_BEEN_CLOSED,
     CLIENT_SESSION_ALREADY_ESTABLISHED,
-    CLIENT_REQUESTS_TOO_FREQUENT
+    CLIENT_REQUESTS_TOO_FREQUENT,
+    MISSING_DATA
 
 }
 
@@ -97,7 +98,8 @@ class TurmsStatusCode {
         [Code.CLIENT_USER_ID_AND_PASSWORD_MUST_NOT_NULL]: "The user ID and password must not be null",
         [Code.CLIENT_SESSION_HAS_BEEN_CLOSED]: "The session has been closed",
         [Code.CLIENT_SESSION_ALREADY_ESTABLISHED]: "The session has been established",
-        [Code.CLIENT_REQUESTS_TOO_FREQUENT]: "Client requests are too frequent"
+        [Code.CLIENT_REQUESTS_TOO_FREQUENT]: "Client requests are too frequent",
+        [Code.MISSING_DATA]: "The data is missing"
     };
     private code: number;
     private reason: string;

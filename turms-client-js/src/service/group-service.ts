@@ -4,6 +4,8 @@ import {im} from "../model/proto-bundle";
 import RequestUtil from "../util/request-util";
 import {ParsedModel} from "../model/parsed-model";
 import NotificationUtil from "../util/notification-util";
+import TurmsError from "../model/turms-error";
+import TurmsStatusCode from "../model/turms-status-code";
 import GroupMemberRole = im.turms.proto.GroupMemberRole;
 import GroupJoinQuestionsAnswerResult = im.turms.proto.GroupJoinQuestionsAnswerResult;
 
@@ -31,7 +33,7 @@ export default class GroupService {
                 muteEndDate: RequestUtil.wrapTimeIfNotNull(muteEndDate),
                 groupTypeId: RequestUtil.wrapValueIfNotNull(groupTypeId)
             }
-        }).then(n => NotificationUtil.getFirstVal(n, 'ids'));
+        }).then(n => NotificationUtil.getFirstVal(n, 'ids', true));
     }
 
     deleteGroup(groupId: string): Promise<void> {
@@ -89,7 +91,7 @@ export default class GroupService {
         return this.muteGroup(groupId, new Date(0));
     }
 
-    queryGroup(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.GroupWithVersion> {
+    queryGroup(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.GroupWithVersion | undefined> {
         RequestUtil.throwIfAnyFalsy(groupId);
         // @ts-ignore
         return this._turmsClient.driver.send({
@@ -98,14 +100,17 @@ export default class GroupService {
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
         }).then(n => {
-            return {
-                group: NotificationUtil.getAndTransform(n, 'groupsWithVersion.groups.0'),
-                lastUpdatedDate: NotificationUtil.getVerDate(n, 'groupsWithVersion')
-            };
+            const group = NotificationUtil.getAndTransform(n, 'groupsWithVersion.groups.0');
+            if (group) {
+                return {
+                    group,
+                    lastUpdatedDate: NotificationUtil.getVerDate(n, 'groupsWithVersion')
+                };
+            }
         });
     }
 
-    queryJoinedGroupsIds(lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion> {
+    queryJoinedGroupsIds(lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion | undefined> {
         return this._turmsClient.driver.send({
             queryJoinedGroupsIdsRequest: {
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
@@ -113,7 +118,7 @@ export default class GroupService {
         }).then(n => NotificationUtil.getIdsWithVer(n));
     }
 
-    queryJoinedGroupsInfos(lastUpdatedDate?: Date): Promise<ParsedModel.GroupsWithVersion> {
+    queryJoinedGroupsInfos(lastUpdatedDate?: Date): Promise<ParsedModel.GroupsWithVersion | undefined> {
         // @ts-ignore
         return this._turmsClient.driver.send({
             queryJoinedGroupsInfosRequest: {
@@ -131,7 +136,7 @@ export default class GroupService {
                 answers,
                 score
             }
-        }).then(n => NotificationUtil.getFirstVal(n, 'ids'));
+        }).then(n => NotificationUtil.getFirstVal(n, 'ids', true));
     }
 
     deleteGroupJoinQuestion(questionId: string): Promise<void> {
@@ -185,7 +190,7 @@ export default class GroupService {
 
     queryBlacklistedUsersIds(
         groupId: string,
-        lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion> {
+        lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion | undefined> {
         RequestUtil.throwIfAnyFalsy(groupId);
         return this._turmsClient.driver.send({
             queryGroupBlacklistedUsersIdsRequest: {
@@ -197,7 +202,7 @@ export default class GroupService {
 
     queryBlacklistedUsersInfos(
         groupId: string,
-        lastUpdatedDate?: Date): Promise<ParsedModel.UsersInfosWithVersion> {
+        lastUpdatedDate?: Date): Promise<ParsedModel.UsersInfosWithVersion | undefined> {
         RequestUtil.throwIfAnyFalsy(groupId);
         // @ts-ignore
         return this._turmsClient.driver.send({
@@ -217,7 +222,7 @@ export default class GroupService {
                 inviteeId,
                 content
             }
-        }).then(n => NotificationUtil.getFirstVal(n, 'ids'));
+        }).then(n => NotificationUtil.getFirstVal(n, 'ids', true));
     }
 
     deleteInvitation(invitationId: string): Promise<void> {
@@ -230,7 +235,7 @@ export default class GroupService {
         });
     }
 
-    queryInvitations(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.GroupInvitationsWithVersion> {
+    queryInvitations(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.GroupInvitationsWithVersion | undefined> {
         RequestUtil.throwIfAnyFalsy(groupId);
         // @ts-ignore
         return this._turmsClient.driver.send({
@@ -248,7 +253,7 @@ export default class GroupService {
                 groupId,
                 content
             }
-        }).then(n => NotificationUtil.getFirstVal(n, 'ids'));
+        }).then(n => NotificationUtil.getFirstVal(n, 'ids', true));
     }
 
     deleteJoinRequest(requestId: string): Promise<void> {
@@ -261,7 +266,7 @@ export default class GroupService {
         });
     }
 
-    queryJoinRequests(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.GroupJoinRequestsWithVersion> {
+    queryJoinRequests(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.GroupJoinRequestsWithVersion | undefined> {
         RequestUtil.throwIfAnyFalsy(groupId);
         // @ts-ignore
         return this._turmsClient.driver.send({
@@ -278,7 +283,7 @@ export default class GroupService {
     queryGroupJoinQuestionsRequest(
         groupId: string,
         withAnswers = false,
-        lastUpdatedDate?: Date): Promise<ParsedModel.GroupJoinQuestionsWithVersion> {
+        lastUpdatedDate?: Date): Promise<ParsedModel.GroupJoinQuestionsWithVersion | undefined> {
         RequestUtil.throwIfAnyFalsy(groupId, withAnswers);
         // @ts-ignore
         return this._turmsClient.driver.send({
@@ -290,13 +295,20 @@ export default class GroupService {
         }).then(n => NotificationUtil.getAndTransform(n, 'groupJoinQuestionsWithVersion'));
     }
 
-    answerGroupQuestions(questionIdsAndAnswers: { [k: string]: string }): Promise<GroupJoinQuestionsAnswerResult> {
+    answerGroupQuestions(questionIdsAndAnswers: { [k: string]: string }): Promise<GroupJoinQuestionsAnswerResult | undefined> {
         RequestUtil.throwIfEmpty(questionIdsAndAnswers);
         return this._turmsClient.driver.send({
             checkGroupJoinQuestionsAnswersRequest: {
                 questionIdAndAnswer: questionIdsAndAnswers
             }
-        }).then(n => NotificationUtil.get(n, 'groupJoinQuestionsAnswerResult'));
+        }).then(n => {
+            const result = NotificationUtil.get(n, 'groupJoinQuestionsAnswerResult');
+            if (result) {
+                return result;
+            } else {
+                throw TurmsError.fromCode(TurmsStatusCode.MISSING_DATA);
+            }
+        });
     }
 
     // Group Member
@@ -380,7 +392,7 @@ export default class GroupService {
         return this.muteGroupMember(groupId, memberId, new Date(0));
     }
 
-    queryGroupMembers(groupId: string, withStatus = false, lastUpdatedDate?: Date): Promise<ParsedModel.GroupMembersWithVersion> {
+    queryGroupMembers(groupId: string, withStatus = false, lastUpdatedDate?: Date): Promise<ParsedModel.GroupMembersWithVersion | undefined> {
         RequestUtil.throwIfAnyFalsy(groupId);
         // @ts-ignore
         return this._turmsClient.driver.send({
@@ -392,7 +404,7 @@ export default class GroupService {
         }).then(n => NotificationUtil.getAndTransform(n, 'groupMembersWithVersion'));
     }
 
-    queryGroupMembersByMembersIds(groupId: string, membersIds: string[], withStatus = false): Promise<ParsedModel.GroupMembersWithVersion> {
+    queryGroupMembersByMembersIds(groupId: string, membersIds: string[], withStatus = false): Promise<ParsedModel.GroupMembersWithVersion | undefined> {
         RequestUtil.throwIfAnyFalsy(groupId, membersIds);
         // @ts-ignore
         return this._turmsClient.driver.send({

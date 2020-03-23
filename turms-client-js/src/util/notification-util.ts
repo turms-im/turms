@@ -1,8 +1,9 @@
 import {google, im} from "../model/proto-bundle";
 import {ParsedModel} from "../model/parsed-model";
+import TurmsStatusCode from "../model/turms-status-code";
+import TurmsError from "../model/turms-error";
 import TurmsNotification = im.turms.proto.TurmsNotification;
 import IInt64Value = google.protobuf.IInt64Value;
-import TurmsStatusCode from "../model/turms-status-code";
 
 export default class NotificationUtil {
     static transform(data?: object | number | string, parentKey?: string): object | number | string | undefined {
@@ -29,9 +30,13 @@ export default class NotificationUtil {
         return data;
     }
 
-    static getFirstVal(notification: TurmsNotification, path: string): any {
+    static getFirstVal(notification: im.turms.proto.TurmsNotification, path: string, throwIfUndefined = false): any {
         path += '.values.0';
-        return this._get(notification, path, undefined);
+        const value = this._get(notification, path, undefined);
+        if (value === undefined && throwIfUndefined) {
+            throw TurmsError.fromCode(TurmsStatusCode.MISSING_DATA)
+        }
+        return value;
     }
 
     static getVal(notification: TurmsNotification, path: string): any {
@@ -76,13 +81,16 @@ export default class NotificationUtil {
         return date ? new Date(parseInt(date.value)) : undefined;
     }
 
-    static getIdsWithVer(n: TurmsNotification): ParsedModel.IdsWithVersion {
-        let date = this.get(n, 'idsWithVersion.lastUpdatedDate');
-        date = this.transformDate(date);
-        return {
-            ids: this.getArr(n, 'idsWithVersion.values'),
-            lastUpdatedDate: date
-        };
+    static getIdsWithVer(n: TurmsNotification): ParsedModel.IdsWithVersion | undefined {
+        const arr = this.getArr(n, 'idsWithVersion.values');
+        if (arr.length) {
+            let date = this.get(n, 'idsWithVersion.lastUpdatedDate');
+            date = this.transformDate(date);
+            return {
+                ids: arr,
+                lastUpdatedDate: date
+            };
+        }
     }
 
     static getVerDate(n: TurmsNotification, path: string): Date | undefined {

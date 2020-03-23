@@ -31,8 +31,8 @@ export default class UserService {
     }
 
     /**
-     * Note: Because of user privacy, most of modern browsers request Geolocation APIs to run in HTTPS,
-     * getUserLocation() cannot get the location of user in insecure sites.
+     * Note: Because of user privacy policies, most of modern browsers request Geolocation APIs to run in HTTPS,
+     * getUserLocation() cannot get the location of users in insecure sites.
      * FYI: https://stackoverflow.com/questions/37835805/http-sites-does-not-detect-the-location-in-chrome-issue
      * https://caniuse.com/#search=Geolocation
      */
@@ -144,7 +144,7 @@ export default class UserService {
         });
     }
 
-    queryUserGroupInvitations(lastUpdatedDate?: Date): Promise<ParsedModel.GroupInvitationsWithVersion> {
+    queryUserGroupInvitations(lastUpdatedDate?: Date): Promise<ParsedModel.GroupInvitationsWithVersion | undefined> {
         // @ts-ignore
         return this._turmsClient.driver.send({
             queryUserGroupInvitationsRequest: {
@@ -153,7 +153,7 @@ export default class UserService {
         }).then(n => NotificationUtil.getAndTransform(n, 'groupInvitationsWithVersion'));
     }
 
-    queryUserProfile(userId: string, lastUpdatedDate?: Date): Promise<ParsedModel.UserInfoWithVersion> {
+    queryUserProfile(userId: string, lastUpdatedDate?: Date): Promise<ParsedModel.UserInfoWithVersion | undefined> {
         RequestUtil.throwIfAnyFalsy(userId);
         // @ts-ignore
         return this._turmsClient.driver.send({
@@ -162,9 +162,12 @@ export default class UserService {
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
         }).then(n => {
-            return {
-                userInfo: NotificationUtil.getAndTransform(n, 'usersInfosWithVersion.userInfos.0'),
-                lastUpdatedDate: NotificationUtil.transformDate(n.data.usersInfosWithVersion.lastUpdatedDate)
+            const userInfo = NotificationUtil.getAndTransform(n, 'usersInfosWithVersion.userInfos.0');
+            if (userInfo) {
+                return {
+                    userInfo,
+                    lastUpdatedDate: NotificationUtil.transformDate(n.data.usersInfosWithVersion.lastUpdatedDate)
+                }
             }
         });
     }
@@ -222,7 +225,7 @@ export default class UserService {
         relatedUsersIds?: string[],
         isBlocked?: boolean,
         groupIndex?: number,
-        lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion> {
+        lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion | undefined> {
         // @ts-ignore
         return this._turmsClient.driver.send({
             queryRelationshipsRequest: {
@@ -237,7 +240,7 @@ export default class UserService {
     queryRelatedUsersIds(
         isBlocked?: boolean,
         groupIndex?: number,
-        lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion> {
+        lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion | undefined> {
         return this._turmsClient.driver.send({
             queryRelatedUsersIdsRequest: {
                 isBlocked: RequestUtil.wrapValueIfNotNull(isBlocked),
@@ -247,11 +250,11 @@ export default class UserService {
         }).then(n => NotificationUtil.getIdsWithVer(n));
     }
 
-    queryFriends(groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion> {
+    queryFriends(groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion | undefined> {
         return this.queryRelationships(undefined, false, groupIndex, lastUpdatedDate);
     }
 
-    queryBlacklistedUsers(groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion> {
+    queryBlacklistedUsers(groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion | undefined> {
         return this.queryRelationships(undefined, true, groupIndex, lastUpdatedDate);
     }
 
@@ -309,7 +312,7 @@ export default class UserService {
                 recipientId,
                 content
             }
-        }).then(n => NotificationUtil.getFirstVal(n, 'ids'));
+        }).then(n => NotificationUtil.getFirstVal(n, 'ids', true));
     }
 
     replyFriendRequest(requestId: string, responseAction: string | ResponseAction, reason?: string): Promise<void> {
@@ -327,7 +330,7 @@ export default class UserService {
         });
     }
 
-    queryFriendRequests(lastUpdatedDate?: Date): Promise<ParsedModel.UserFriendRequestsWithVersion> {
+    queryFriendRequests(lastUpdatedDate?: Date): Promise<ParsedModel.UserFriendRequestsWithVersion | undefined> {
         // @ts-ignore
         return this._turmsClient.driver.send({
             queryFriendRequestsRequest: {
@@ -342,7 +345,7 @@ export default class UserService {
             createRelationshipGroupRequest: {
                 name
             }
-        }).then(n => NotificationUtil.getFirstVal(n, 'ids'));
+        }).then(n => NotificationUtil.getFirstVal(n, 'ids', true));
     }
 
     deleteRelationshipGroups(groupIndex: number, targetGroupIndex?: number): Promise<void> {
@@ -367,7 +370,7 @@ export default class UserService {
         });
     }
 
-    queryRelationshipGroups(lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipGroupsWithVersion> {
+    queryRelationshipGroups(lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipGroupsWithVersion | undefined> {
         // @ts-ignore
         return this._turmsClient.driver.send({
             queryRelationshipGroupsRequest: {

@@ -85,7 +85,7 @@ export default class MessageService {
                 records: records,
                 burnAfter: RequestUtil.wrapValueIfNotNull(burnAfter)
             }
-        }).then(n => NotificationUtil.getFirstVal(n, 'ids'));
+        }).then(n => NotificationUtil.getFirstVal(n, 'ids', true));
     }
 
     forwardMessage(
@@ -102,7 +102,7 @@ export default class MessageService {
                 chatType,
                 toId
             }
-        }).then(n => NotificationUtil.getFirstVal(n, 'ids'));
+        }).then(n => NotificationUtil.getFirstVal(n, 'ids', true));
     }
 
     updateSentMessage(

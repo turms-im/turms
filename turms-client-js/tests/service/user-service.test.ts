@@ -91,7 +91,7 @@ describe('Update', () => {
         expect(result).toBeUndefined();
     });
     it('updateProfile_shouldSucceed', async () => {
-        const result = await turmsClient.userService.updateProfile('123', '123', 'http://www.test.com');
+        const result = await turmsClient.userService.updateProfile('123', '123');
         expect(result).toBeUndefined();
     });
     it('updateRelationship_shouldSucceed', async () => {

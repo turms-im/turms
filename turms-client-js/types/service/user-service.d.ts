@@ -24,16 +24,16 @@ export default class UserService {
     disconnectOnlineDevices(deviceTypes: string[] | DeviceType[]): Promise<void>;
     updatePassword(password: string): Promise<void>;
     updateProfile(name?: string, intro?: string, profileAccessStrategy?: string | ProfileAccessStrategy): Promise<void>;
-    queryUserGroupInvitations(lastUpdatedDate?: Date): Promise<ParsedModel.GroupInvitationsWithVersion>;
-    queryUserProfile(userId: string, lastUpdatedDate?: Date): Promise<ParsedModel.UserInfoWithVersion>;
+    queryUserGroupInvitations(lastUpdatedDate?: Date): Promise<ParsedModel.GroupInvitationsWithVersion | undefined>;
+    queryUserProfile(userId: string, lastUpdatedDate?: Date): Promise<ParsedModel.UserInfoWithVersion | undefined>;
     queryUserIdsNearby(latitude: number, longitude: number, distance?: number, maxNumber?: number): Promise<string[]>;
     queryUserSessionIdsNearby(latitude: number, longitude: number, distance?: number, maxNumber?: number): Promise<UserSessionId[]>;
     queryUsersInfosNearby(latitude: number, longitude: number, distance?: number, maxNumber?: number): Promise<ParsedModel.UserInfo[]>;
     queryUsersOnlineStatusRequest(usersIds: string[]): Promise<ParsedModel.UserStatusDetail[]>;
-    queryRelationships(relatedUsersIds?: string[], isBlocked?: boolean, groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion>;
-    queryRelatedUsersIds(isBlocked?: boolean, groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion>;
-    queryFriends(groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion>;
-    queryBlacklistedUsers(groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion>;
+    queryRelationships(relatedUsersIds?: string[], isBlocked?: boolean, groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion | undefined>;
+    queryRelatedUsersIds(isBlocked?: boolean, groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion | undefined>;
+    queryFriends(groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion | undefined>;
+    queryBlacklistedUsers(groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion | undefined>;
     createRelationship(userId: string, isBlocked: boolean, groupIndex?: number): Promise<void>;
     createFriendRelationship(userId: string, groupIndex?: number): Promise<void>;
     createBlacklistedUserRelationship(userId: string, groupIndex?: number): Promise<void>;
@@ -41,11 +41,11 @@ export default class UserService {
     updateRelationship(relatedUserId: string, isBlocked?: boolean, groupIndex?: number): Promise<void>;
     sendFriendRequest(recipientId: string, content: string): Promise<string>;
     replyFriendRequest(requestId: string, responseAction: string | ResponseAction, reason?: string): Promise<void>;
-    queryFriendRequests(lastUpdatedDate?: Date): Promise<ParsedModel.UserFriendRequestsWithVersion>;
+    queryFriendRequests(lastUpdatedDate?: Date): Promise<ParsedModel.UserFriendRequestsWithVersion | undefined>;
     createRelationshipGroup(name: string): Promise<string>;
     deleteRelationshipGroups(groupIndex: number, targetGroupIndex?: number): Promise<void>;
     updateRelationshipGroup(groupIndex: number, newName: string): Promise<void>;
-    queryRelationshipGroups(lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipGroupsWithVersion>;
+    queryRelationshipGroups(lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipGroupsWithVersion | undefined>;
     moveRelatedUserToGroup(relatedUserId: string, groupIndex: number): Promise<void>;
     updateLocation(latitude: number, longitude: number, name?: string, address?: string): Promise<void>;
 }
