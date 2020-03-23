@@ -91,7 +91,8 @@ export default class UserService {
             updateUserOnlineStatusRequest: {
                 userStatus: onlineStatus
             }
-        }).then(_ => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).then(() => {
         });
     }
 
@@ -110,7 +111,8 @@ export default class UserService {
                 userStatus: UserStatus.OFFLINE,
                 deviceTypes: deviceTypes as DeviceType[]
             }
-        }).then(_ => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).then(() => {
         });
     }
 
@@ -120,7 +122,8 @@ export default class UserService {
             updateUserRequest: {
                 password: RequestUtil.wrapValueIfNotNull(password)
             }
-        }).then(_ => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).then(() => {
         });
     }
 
@@ -140,7 +143,8 @@ export default class UserService {
                 intro: RequestUtil.wrapValueIfNotNull(intro),
                 profileAccessStrategy: profileAccessStrategy
             }
-        }).then(_ => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).then(() => {
         });
     }
 
@@ -266,7 +270,8 @@ export default class UserService {
                 isBlocked: isBlocked,
                 groupIndex: RequestUtil.wrapValueIfNotNull(groupIndex)
             }
-        }).then(_ => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).then(() => {
         });
     }
 
@@ -286,7 +291,8 @@ export default class UserService {
                 groupIndex: RequestUtil.wrapValueIfNotNull(deleteGroupIndex),
                 targetGroupIndex: RequestUtil.wrapValueIfNotNull(targetGroupIndex)
             }
-        }).then(_ => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).then(() => {
         });
     }
 
@@ -301,7 +307,8 @@ export default class UserService {
                 blocked: RequestUtil.wrapValueIfNotNull(isBlocked),
                 newGroupIndex: RequestUtil.wrapValueIfNotNull(groupIndex)
             }
-        }).then(_ => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).then(() => {
         });
     }
 
@@ -326,7 +333,8 @@ export default class UserService {
                 responseAction: responseAction,
                 reason: RequestUtil.wrapValueIfNotNull(reason)
             }
-        }).then(_ => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).then(() => {
         });
     }
 
@@ -355,7 +363,8 @@ export default class UserService {
                 groupIndex,
                 targetGroupIndex: RequestUtil.wrapValueIfNotNull(targetGroupIndex)
             }
-        }).then(_ => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).then(() => {
         });
     }
 
@@ -366,7 +375,8 @@ export default class UserService {
                 groupIndex,
                 newName
             }
-        }).then(_ => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).then(() => {
         });
     }
 
@@ -386,7 +396,8 @@ export default class UserService {
                 relatedUserId,
                 newGroupIndex: RequestUtil.wrapValueIfNotNull(groupIndex)
             }
-        }).then(_ => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).then(() => {
         });
     }
 
@@ -404,7 +415,8 @@ export default class UserService {
                 name: RequestUtil.wrapValueIfNotNull(name),
                 address: RequestUtil.wrapValueIfNotNull(address)
             }
-        }).then(_ => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).then(() => {
         });
     }
 }

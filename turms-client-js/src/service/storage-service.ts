@@ -151,7 +151,7 @@ export default class StorageService {
                     })
                     .then(data => {
                         const reader = new FileReader();
-                        reader.onload = function (e) {
+                        reader.onload = function (e): void {
                             resolve(new Uint8Array(e.target.result as ArrayBuffer));
                         }
                         reader.readAsArrayBuffer(data);

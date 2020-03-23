@@ -23,7 +23,7 @@ export default class MessageService {
         if (message.text) {
             const userIds = [];
             let matches;
-            while (!!(matches = regex.exec(message.text))) {
+            while ((matches = regex.exec(message.text))) {
                 userIds.push(matches[1]);
             }
             return userIds;
@@ -119,7 +119,8 @@ export default class MessageService {
                 text: RequestUtil.wrapValueIfNotNull(text),
                 records
             }
-        }).then(_ => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).then(() => {
         });
     }
 
@@ -179,7 +180,8 @@ export default class MessageService {
                 messageId,
                 recallDate: RequestUtil.wrapTimeIfNotNull(recallDate)
             }
-        }).then(_ => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).then(() => {
         });
     }
 
@@ -190,7 +192,8 @@ export default class MessageService {
                 messageId,
                 readDate: RequestUtil.wrapTimeIfNotNull(readDate)
             }
-        }).then(_ => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).then(() => {
         });
     }
 
@@ -208,7 +211,8 @@ export default class MessageService {
                 chatType,
                 toId
             }
-        }).then(_ => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).then(() => {
         });
     }
 
@@ -216,7 +220,7 @@ export default class MessageService {
         return this._mentionedUserIdsParser != null;
     }
 
-    enableMention(mentionedUserIdsParser?: (message: ParsedModel.Message) => string[]) {
+    enableMention(mentionedUserIdsParser?: (message: ParsedModel.Message) => string[]): void {
         if (mentionedUserIdsParser) {
             this._mentionedUserIdsParser = mentionedUserIdsParser;
         } else if (!this._mentionedUserIdsParser) {

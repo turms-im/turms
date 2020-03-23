@@ -73,7 +73,7 @@ export default class TurmsDriver {
         this._onClose = value;
     }
 
-    get onNotificationListeners() {
+    get onNotificationListeners(): ((notification: ParsedNotification) => void)[] {
         return this._onNotificationListeners;
     }
 
@@ -96,6 +96,7 @@ export default class TurmsDriver {
     disconnect(): Promise<void> {
         if (this._websocket.isOpened || this._websocket.isOpening) {
             return this._websocket.close()
+                // eslint-disable-next-line @typescript-eslint/no-empty-function
                 .then(() => {
                 });
         } else {
@@ -119,7 +120,7 @@ export default class TurmsDriver {
                 this._location = location;
                 this._userOnlineStatus = userOnlineStatus;
                 this._deviceType = deviceType;
-                this._fillLoginInfo(this._requestId, userId, password, userOnlineStatus, deviceType, location);
+                TurmsDriver._fillLoginInfo(this._requestId, userId, password, userOnlineStatus, deviceType, location);
                 this._websocket = new WebSocketAsPromised(this._url, {
                     createWebSocket: (serverUrl): WebSocket => {
                         const ws = new WebSocket(serverUrl);
@@ -189,11 +190,11 @@ export default class TurmsDriver {
         deviceType = DeviceType.UNKNOWN): Promise<void> {
         return this._connect(userId, password, location, userOnlineStatus, deviceType)
             .then(() => {
-                this._clearLoginInfo();
+                TurmsDriver._clearLoginInfo();
                 return Promise.resolve();
             })
             .catch(error => {
-                this._clearLoginInfo();
+                TurmsDriver._clearLoginInfo();
                 return Promise.reject(`Failed to login due to 1. password mismatch; 2. the server doesn't exist or is unavailable`);
             });
     }
@@ -233,13 +234,13 @@ export default class TurmsDriver {
         });
     }
 
-    private _fillLoginInfo(
+    private static _fillLoginInfo(
         requestId: number,
         userId: string,
         password: string,
         userOnlineStatus?: UserStatus,
         deviceType?: DeviceType,
-        location?: string) {
+        location?: string): void {
         document.cookie = `${COOKIE_REQUEST_ID}=${requestId}; path=/`;
         document.cookie = `${COOKIE_USER_ID}=${userId}; path=/`;
         document.cookie = `${COOKIE_PASSWORD}=${escape(password)}; path=/`;
@@ -254,7 +255,7 @@ export default class TurmsDriver {
         }
     }
 
-    private _clearLoginInfo() {
+    private static _clearLoginInfo(): void {
         const now = new Date().toUTCString();
         document.cookie = `${COOKIE_USER_ID}=;expires=${now}`;
         document.cookie = `${COOKIE_PASSWORD}=;expires=${now}`;
@@ -342,7 +343,7 @@ export default class TurmsDriver {
         return Promise.resolve();
     }
 
-    reconnect() {
+    reconnect(): Promise<void> {
         if (!this._userId || !this._password) {
             return Promise.reject();
         } else {

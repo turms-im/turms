@@ -60,7 +60,7 @@ export default class NotificationUtil {
         return this._get(notification, path, []);
     }
 
-    private static _get(notification: TurmsNotification, path: string, defaultValue: any) {
+    private static _get(notification: TurmsNotification, path: string, defaultValue: any): any {
         path = 'data.' + path;
         if (notification.code === TurmsStatusCode.NO_CONTENT) {
             return defaultValue;

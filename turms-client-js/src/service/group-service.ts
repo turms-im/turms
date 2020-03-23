@@ -42,7 +42,8 @@ export default class GroupService {
             deleteGroupRequest: {
                 groupId
             }
-        }).then(_ => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).then(() => {
         });
     }
 
@@ -73,7 +74,8 @@ export default class GroupService {
                 successorId: RequestUtil.wrapValueIfNotNull(successorId),
                 quitAfterTransfer: RequestUtil.wrapValueIfNotNull(quitAfterTransfer)
             }
-        }).then(_ => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).then(() => {
         });
     }
 
@@ -145,7 +147,8 @@ export default class GroupService {
             deleteGroupJoinQuestionRequest: {
                 questionId
             }
-        }).then(_ => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).then(() => {
         });
     }
 
@@ -161,7 +164,8 @@ export default class GroupService {
                 answers: answers,
                 score: RequestUtil.wrapValueIfNotNull(score)
             }
-        }).then(_ => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).then(() => {
         });
     }
 
@@ -173,7 +177,8 @@ export default class GroupService {
                 blacklistedUserId: userId,
                 groupId
             }
-        }).then(_ => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).then(() => {
         });
     }
 
@@ -184,7 +189,8 @@ export default class GroupService {
                 groupId,
                 unblacklistedUserId: userId
             }
-        }).then(_ => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).then(() => {
         });
     }
 
@@ -231,7 +237,8 @@ export default class GroupService {
             deleteGroupInvitationRequest: {
                 invitationId
             }
-        }).then(_ => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).then(() => {
         });
     }
 
@@ -262,7 +269,8 @@ export default class GroupService {
             deleteGroupJoinRequestRequest: {
                 requestId
             }
-        }).then(_ => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).then(() => {
         });
     }
 
@@ -330,7 +338,8 @@ export default class GroupService {
                 role: role,
                 muteEndDate: RequestUtil.wrapTimeIfNotNull(muteEndDate)
             }
-        }).then(_ => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).then(() => {
         });
     }
 
@@ -343,7 +352,8 @@ export default class GroupService {
                 successorId: RequestUtil.wrapValueIfNotNull(successorId),
                 quitAfterTransfer: RequestUtil.wrapValueIfNotNull(quitAfterTransfer)
             }
-        }).then(_ => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).then(() => {
         });
     }
 
@@ -354,7 +364,8 @@ export default class GroupService {
                 groupId,
                 groupMemberId: memberId
             }
-        }).then(_ => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).then(() => {
         });
     }
 
@@ -379,7 +390,8 @@ export default class GroupService {
                 role: role,
                 muteEndDate: RequestUtil.wrapTimeIfNotNull(muteEndDate)
             }
-        }).then(_ => {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+        }).then(() => {
         });
     }
 
