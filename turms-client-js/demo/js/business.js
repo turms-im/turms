@@ -29,17 +29,10 @@ function beautify(object) {
 function start() {
     const clientUserOne = new TurmsClient('ws://localhost:9510', 30 * 1000);
     const clientUserTwo = new TurmsClient('ws://localhost:9510', 30 * 1000);
-    const USER_ONE_ID = 1;
-    const USER_TWO_ID = 2;
-    clientUserOne.driver.onClose = (wasLogged, error, status) => {
-        if (wasLogged) {
-            appendUserOneContainer('onClose: wasLogged = ' + wasLogged);
-            if (error || status) {
-                appendUserOneContainer(error || status, true);
-            } else {
-                appendUserOneContainer('onClose: bye bye');
-            }
-        }
+    const USER_ONE_ID = '1';
+    const USER_TWO_ID = '2';
+    clientUserOne.driver.onClose = (closeStatus, wsStatusCode, wsReason, error) => {
+        appendUserOneContainer(`onClose: ${closeStatus}:${wsStatusCode}:${wsReason}:${error}`, error);
     };
     clientUserOne.notificationService.onNotification = (notification) => {
         appendUserOneContainer('onNotification: Receive a notification from other users or server: ' + beautify(notification));
@@ -47,15 +40,8 @@ function start() {
     clientUserOne.messageService.onMessage = (message) => {
         appendUserOneContainer('onMessage: Receive a message from other users or server: ' + beautify(message));
     };
-    clientUserTwo.driver.onClose = (wasLogged, error) => {
-        if (wasLogged) {
-            appendUserTwoContainer('onClose: wasLogged = ' + wasLogged);
-            if (error) {
-                appendUserTwoContainer(error, true);
-            } else {
-                appendUserTwoContainer('onClose: bye bye');
-            }
-        }
+    clientUserTwo.driver.onClose = (closeStatus, wsStatusCode, wsReason, error) => {
+        appendUserTwoContainer(`onClose: ${closeStatus}:${wsStatusCode}:${wsReason}:${error}`, error);
     };
     clientUserTwo.notificationService.onNotification = (notification) => {
         appendUserTwoContainer('onNotification: Receive a notification from other users or server: ' + beautify(notification));
@@ -123,25 +109,25 @@ function start() {
                             appendUserTwoContainer('No offline message');
                         }
                     });
-            const intervalTwo = setInterval(() => {
-                if (clientUserOne.driver.connected()) {
-                    clientUserTwo.messageService.sendMessage(
-                        "PRIVATE",
-                        USER_ONE_ID,
-                        new Date(),
-                        "Hello Community, My userId is " + USER_TWO_ID,
-                        null,
-                        30)
-                        .then(id => {
-                            appendUserTwoContainer('message ' + id + ' has been sent');
-                        })
-                        .catch(error => {
-                            appendUserTwoContainer('failed to send message: ' + beautify(error), true);
-                        });
-                } else {
-                    clearInterval(intervalTwo);
-                }
-            }, 2000);
+                const intervalTwo = setInterval(() => {
+                    if (clientUserOne.driver.connected()) {
+                        clientUserTwo.messageService.sendMessage(
+                            "PRIVATE",
+                            USER_ONE_ID,
+                            new Date(),
+                            "Hello Community, My userId is " + USER_TWO_ID,
+                            null,
+                            30)
+                            .then(id => {
+                                appendUserTwoContainer('message ' + id + ' has been sent');
+                            })
+                            .catch(error => {
+                                appendUserTwoContainer('failed to send message: ' + beautify(error), true);
+                            });
+                    } else {
+                        clearInterval(intervalTwo);
+                    }
+                }, 2000);
             }
         )
         .catch(reason => {

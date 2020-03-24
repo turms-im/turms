@@ -31,7 +31,7 @@ export default class TurmsDriver {
     private _websocket: any; //WebSocketAsPromised
     private _heartbeatTimer?: Timer;
     private _onNotificationListeners: ((notification: ParsedNotification) => void)[] = [];
-    private _onClose?: (wasLogged: boolean, closeStatus?: TurmsCloseStatus, reason?: string, error?: Error) => void;
+    private _onClose?: (closeStatus?: TurmsCloseStatus, wsStatusCode?: number, wsReason?: string, error?: Error) => void;
 
     private _url = 'ws://localhost:9510';
     private _httpUrl = 'http://localhost:9510';
@@ -156,9 +156,9 @@ export default class TurmsDriver {
                     }
                 });
                 this._websocket.onClose.addListener(event => {
-                        this._onWebsocketClose(event)
-                            .then(() => resolve())
-                            .catch(e => reject(e));
+                    this._onWebsocketClose(event)
+                        .then(() => resolve())
+                        .catch(e => reject(e));
                 });
                 this._websocket.open()
                     .then(() => {
@@ -289,7 +289,6 @@ export default class TurmsDriver {
         }
         if (wasLogged) {
             if (this._onClose) {
-                const reason = event ? `${event.code}:${event.reason}` : null;
                 if (this._queryReasonWhenDisconnected && this._userId && this._sessionId) {
                     const params = querystring.stringify({
                         userId: this._userId,
@@ -301,13 +300,13 @@ export default class TurmsDriver {
                             return response.text()
                                 .then(text => {
                                     const closeStatus = parseInt(text);
-                                    this._onClose(wasLogged, closeStatus, reason);
+                                    this._onClose(closeStatus, event.code, event.reason);
                                 });
                         }).catch(error => {
-                            this._onClose(wasLogged, null, reason, new Error(`Failed to fetch the disconnection reason: ${error}`));
+                            this._onClose(null, event.code, event.reason, new Error(`Failed to fetch the disconnection reason: ${error}`));
                         });
                 } else {
-                    this._onClose(wasLogged, null, reason);
+                    this._onClose(null, event.code, event.reason);
                 }
             }
         } else {
