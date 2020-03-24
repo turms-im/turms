@@ -42,6 +42,7 @@ export default class TurmsDriver {
     private _lastRequestDate = new Date(0);
     private _queryReasonWhenLoginFailed = true;
     private _queryReasonWhenDisconnected = true;
+    private _isClosedByClient = false;
 
     private _userId: string;
     private _password: string;
@@ -96,9 +97,12 @@ export default class TurmsDriver {
 
     disconnect(): Promise<void> {
         if (this._websocket.isOpened || this._websocket.isOpening) {
+            this._isClosedByClient = true;
             return this._websocket.close()
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
                 .then(() => {
+                    this._isClosedByClient = false;
+                }).catch(() => {
+                    this._isClosedByClient = false;
                 });
         } else {
             return Promise.reject();
@@ -155,6 +159,9 @@ export default class TurmsDriver {
                         }
                     }
                 });
+                // onClose will always be triggered when
+                // 1. rejected by a HTTP upgrade error response
+                // 2. disconnected no matter by error (after onError) or else
                 this._websocket.onClose.addListener(event => {
                     this._onWebsocketClose(event)
                         .then(() => resolve())
@@ -286,6 +293,11 @@ export default class TurmsDriver {
         const wasLogged = !!(this._heartbeatTimer && this._heartbeatTimer.isRunning);
         if (this._heartbeatTimer && this._heartbeatTimer.isRunning) {
             this._heartbeatTimer.stop();
+        }
+        if (this._isClosedByClient) {
+            this._isClosedByClient = false;
+            this._onClose(TurmsCloseStatus.DISCONNECTED_BY_CLIENT, event.code, event.reason);
+            return Promise.resolve();
         }
         if (wasLogged) {
             if (this._onClose) {
