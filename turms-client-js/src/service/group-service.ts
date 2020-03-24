@@ -4,7 +4,7 @@ import {im} from "../model/proto-bundle";
 import RequestUtil from "../util/request-util";
 import {ParsedModel} from "../model/parsed-model";
 import NotificationUtil from "../util/notification-util";
-import TurmsError from "../model/turms-error";
+import TurmsBusinessException from "../model/turms-business-exception";
 import TurmsStatusCode from "../model/turms-status-code";
 import GroupMemberRole = im.turms.proto.GroupMemberRole;
 import GroupJoinQuestionsAnswerResult = im.turms.proto.GroupJoinQuestionsAnswerResult;
@@ -314,7 +314,7 @@ export default class GroupService {
             if (result) {
                 return result;
             } else {
-                throw TurmsError.fromCode(TurmsStatusCode.MISSING_DATA);
+                throw TurmsBusinessException.fromCode(TurmsStatusCode.MISSING_DATA);
             }
         });
     }

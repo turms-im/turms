@@ -47,7 +47,7 @@ public class MessageService {
         records: [[UInt8]]? = nil,
         burnAfter: Int32? = nil) -> Promise<Int64> {
         if Validator.areAllNil(text, records) {
-            return Promise(error: TurmsBusinessError(.illegalArguments))
+            return Promise(error: TurmsBusinessException(.illegalArguments))
         }
         return turmsClient.driver
             .send { $0

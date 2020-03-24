@@ -14,7 +14,7 @@ public class GroupWithVersion {
                 lastUpdatedDate: notification.data.groupsWithVersion.lastUpdatedDate.value
             )
         } else {
-            throw TurmsBusinessError(.missingData)
+            throw TurmsBusinessException(.missingData)
         }
     }
 }

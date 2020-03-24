@@ -1,7 +1,7 @@
 import {google, im} from "../model/proto-bundle";
 import {ParsedModel} from "../model/parsed-model";
 import TurmsStatusCode from "../model/turms-status-code";
-import TurmsError from "../model/turms-error";
+import TurmsBusinessException from "../model/turms-business-exception";
 import TurmsNotification = im.turms.proto.TurmsNotification;
 import IInt64Value = google.protobuf.IInt64Value;
 
@@ -34,7 +34,7 @@ export default class NotificationUtil {
         path += '.values.0';
         const value = this._get(notification, path, undefined);
         if (value === undefined && throwIfUndefined) {
-            throw TurmsError.fromCode(TurmsStatusCode.MISSING_DATA)
+            throw TurmsBusinessException.fromCode(TurmsStatusCode.MISSING_DATA)
         }
         return value;
     }

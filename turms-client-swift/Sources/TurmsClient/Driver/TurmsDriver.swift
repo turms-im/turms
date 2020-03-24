@@ -46,7 +46,7 @@ public class TurmsDriver {
                 setLastRequestRecord(true, Date())
                 websocket!.write(data: Data()) { seal.fulfill(()) }
             } else {
-                seal.reject(TurmsBusinessError(.clientSessionAlreadyEstablished))
+                seal.reject(TurmsBusinessException(.clientSessionAlreadyEstablished))
             }
         }
     }
@@ -61,7 +61,7 @@ public class TurmsDriver {
                 onDisconnectResolver = seal
                 websocket!.disconnect()
             } else {
-                seal.reject(TurmsBusinessError(.clientSessionAlreadyEstablished))
+                seal.reject(TurmsBusinessException(.clientSessionAlreadyEstablished))
             }
         }
     }
@@ -69,7 +69,7 @@ public class TurmsDriver {
     public func connect(userId: Int64, password: String, url: String? = nil, connectionTimeout: Int = 10) -> Promise<Void> {
         return Promise { seal in
             if connected() {
-                seal.reject(TurmsBusinessError(.clientSessionAlreadyEstablished))
+                seal.reject(TurmsBusinessException(.clientSessionAlreadyEstablished))
             } else {
                 self.userId = userId
                 self.password = password
@@ -95,9 +95,9 @@ public class TurmsDriver {
                                         handler?.fulfill(notification)
                                     } else {
                                         if code == TurmsStatusCode.failed.rawValue {
-                                            handler?.reject(TurmsBusinessError(code, notification.reason.value))
+                                            handler?.reject(TurmsBusinessException(code, notification.reason.value))
                                         } else {
-                                            handler?.reject(TurmsBusinessError(code))
+                                            handler?.reject(TurmsBusinessException(code))
                                         }
                                     }
                                 } else {
@@ -163,10 +163,10 @@ public class TurmsDriver {
                     requestsMap.updateValue(seal, forKey: request.requestID.value)
                     websocket?.write(data: data)
                 } else {
-                    seal.reject(TurmsBusinessError(.clientRequestsTooFrequent))
+                    seal.reject(TurmsBusinessException(.clientRequestsTooFrequent))
                 }
             } else {
-                seal.reject(TurmsBusinessError(.clientSessionHasBeenClosed))
+                seal.reject(TurmsBusinessException(.clientSessionHasBeenClosed))
             }
         }
     }
@@ -197,11 +197,7 @@ public class TurmsDriver {
         if status == .redirect {
             reconnect(reason!)
         } else {
-            if status == .websocketError {
-                onClose?(wasLogged, status, "\(statusCode!)", nil)
-            } else {
-                onClose?(wasLogged, status, reason, nil)
-            }
+            onClose?(wasLogged, status, "\(statusCode!):\(reason?)", nil)
         }
     }
 

@@ -2,7 +2,7 @@ import {im} from "./proto-bundle";
 import TurmsStatusCode from "./turms-status-code";
 import TurmsNotification = im.turms.proto.TurmsNotification;
 
-export default class TurmsError {
+export default class TurmsBusinessException {
     private readonly _code: number;
     private readonly _reason: string;
 
@@ -26,15 +26,15 @@ export default class TurmsError {
         return `${this._code}:${this._reason}`;
     }
 
-    static fromNotification(notification: TurmsNotification): TurmsError {
+    static fromNotification(notification: TurmsNotification): TurmsBusinessException {
         if (notification.code.value === TurmsStatusCode.FAILED) {
-            return new TurmsError(notification.code.value, notification.reason.value);
+            return new TurmsBusinessException(notification.code.value, notification.reason.value);
         } else {
-            return new TurmsError(notification.code.value, TurmsStatusCode.getReason(notification.code.value));
+            return new TurmsBusinessException(notification.code.value, TurmsStatusCode.getReason(notification.code.value));
         }
     }
 
-    static fromCode(code: number): TurmsError {
-        return new TurmsError(code, TurmsStatusCode.getReason(code));
+    static fromCode(code: number): TurmsBusinessException {
+        return new TurmsBusinessException(code, TurmsStatusCode.getReason(code));
     }
 }

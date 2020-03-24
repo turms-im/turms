@@ -16,7 +16,7 @@ public class UserInfoWithVersion {
                 lastUpdatedDate: notification.data.usersInfosWithVersion.lastUpdatedDate.value
             )
         } else {
-            throw TurmsBusinessError(.missingData)
+            throw TurmsBusinessException(.missingData)
         }
     }
 }

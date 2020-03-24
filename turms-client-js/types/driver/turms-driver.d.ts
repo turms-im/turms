@@ -36,11 +36,10 @@ export default class TurmsDriver {
     connect(userId: string, password: string, location?: string, userOnlineStatus?: UserStatus, deviceType?: DeviceType): Promise<void>;
     resetHeartBeatTimer(): void;
     send(message: im.turms.proto.ITurmsRequest): Promise<TurmsNotification>;
-    private _fillLoginInfo;
-    private _clearLoginInfo;
+    private static _fillLoginInfo;
+    private static _clearLoginInfo;
     private _generateRandomId;
     private _onWebsocketOpen;
     private _onWebsocketClose;
-    private _onWebsocketError;
-    reconnect(): Promise<void>;
+    reconnect(host?: string): Promise<void>;
 }
