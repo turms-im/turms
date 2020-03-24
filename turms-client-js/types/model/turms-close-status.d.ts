@@ -10,7 +10,6 @@ declare enum TurmsCloseStatus {
     LOGIN_CONFLICT = 4600,
     DISCONNECTED_BY_ADMIN = 4700,
     USER_IS_DELETED_OR_INACTIVATED = 4701,
-    UNKNOWN_ERROR = 4900,
-    WEBSOCKET_ERROR = 4901
+    UNKNOWN_ERROR = 4900
 }
 export default TurmsCloseStatus;

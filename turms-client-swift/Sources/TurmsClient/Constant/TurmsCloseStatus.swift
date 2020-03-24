@@ -12,5 +12,4 @@ public enum TurmsCloseStatus: Int {
     case disconnectedByAdmin = 4700
     case userIsDeletedOrInactivated
     case unknownError = 4900
-    case websocketError
 }

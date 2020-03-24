@@ -15,7 +15,6 @@ enum TurmsCloseStatus {
     DISCONNECTED_BY_ADMIN = 4700,
     USER_IS_DELETED_OR_INACTIVATED,
 
-    UNKNOWN_ERROR = 4900,
-    WEBSOCKET_ERROR
+    UNKNOWN_ERROR = 4900
 }
 export default TurmsCloseStatus;
