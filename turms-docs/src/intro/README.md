@@ -5,24 +5,25 @@ Turms是一套全球范围内最为先进且全能的开源即时通讯解决方
 [文档地址：https://turms-im.github.io/turms/](https://turms-im.github.io/turms/)
 
 ### Playground
-turms服务端的Demo地址（DEV配置）：http://120.24.57.206:9510/
+
+turms服务端的Demo地址（DEV配置，自带Mock数据）：http://120.24.57.206:9510/
 
 turms-admin的Demo地址（PROD配置）：http://47.99.56.54:9512/
-（登陆时，在turms服务端地址栏处输入：http://120.24.57.206:9510/，且账号与密码均为：guest）
+（登陆turms-admin时，在turms服务端地址栏处输入：http://120.24.57.206:9510/ ，且账号与密码均为：guest。该账号有查询与增加领域模型的权限，无更新与删除领域模型的权限）
 
-您还可以使用任意turms-client(java/js/swift)客户端与turms服务端进行交互
+您还可以使用任意turms-client(java/js/swift)客户端，来登录该turms服务端，并与其他用户进行各种交互
 
 ### 组合
 
 | 名称                                                        | 描述                                                         |
 | ----------------------------------------------------------- | ------------------------------------------------------------ |
 | <span style="white-space:nowrap;">turms</span>              | Turms服务端。本质是一个易于集群部署、健壮、方便拓展、运作高效且业务独立的Java即时通信服务端程序 |
-| <span style="white-space:nowrap;">turms-client-js</span>    | 除了实现显而易见的业务功能外，关键还实现了与Turms服务端的交互逻辑（如路由跳转、消息去重、心跳检查等），对调用者透明。您在使用该库时，无需关系背后的逻辑 |
+| <span style="white-space:nowrap;">turms-client-js</span>    | 除了实现即时通讯的业务功能外，在底层还实现了与Turms服务端的交互逻辑（如路由跳转、自动重连、会话消息去重、心跳检查等）。您在使用该库时，无需关心背后的逻辑 |
 | <span style="white-space:nowrap;">turms-client-java</span>  | 同上                                                         |
 | <span style="white-space:nowrap;">turms-client-swift</span> | 同上                                                         |
 | <span style="white-space:nowrap;">turms-admin</span>        | 为Turms服务端集群提供：运营数据统计、内容管理、集群配置等功能 |
 | <span style="white-space:nowrap;">turms-apm</span>          | 为Turms服务端集群提供监控功能                                |
-| <span style="white-space:nowrap;">turms-plugin</span>       | 事件（如用户上下线事件、消息接收与转发事件等）触发的时候，对应的自定义插件将被触发以实现各种各样定制功能 |
+| <span style="white-space:nowrap;">turms-plugin</span>       | 事件（如用户上下线、消息接收与转发等事件）触发或服务被调用的时候，对应的自定义插件将被触发以实现各种各样定制功能 |
 
 ### 关于Demo
 
@@ -33,3 +34,12 @@ turms-admin的Demo地址（PROD配置）：http://47.99.56.54:9512/
 另一方面，Demo的设计与实现与具体业务场景、具体的编程语言、具体的技术架构、具体的运行平台都密切相关。而Turms解决方案一直是致力于高效地满足各种复杂多变的即时通讯业务场景，不希望因为Demo限制了开发者的想象力。并且开发与维护Demo也非常地费时费力，会拖慢Turms服务端的工作进度。
 
 因此，近期不打算做具体业务场景相关的Demo。
+
+### 补充
+
+如果您所开发的即时通讯产品对定制化要求低，并希望所使用的即时通讯解决方案带有完整的UI套件，并有直接面向客户开箱即用的可执行程序。推荐您尝试开源的：
+
+* [Rocket.Chat](https://github.com/RocketChat/Rocket.Chat)
+* Telegram解决方案
+
+Tumrs的定位是更为底层的通用即时通讯解决方案，您无法直接将Turms解决方案交给您的客户使用（就像大部分产品不会让客户直接写SQL语句来查询数据库里的业务模型）。但基于Turms，您可以更为高效、更为全能、更为定制化地实现GitHub上目前所有开源的即时通讯解决方案（除音视频会议功能。Turms后期会基于SFU媒体服务器为Turms主服务端定制一套信令服务端，目前您可自行选择其他音视频会议解决方案与Turms进行集成）。

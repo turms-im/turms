@@ -34,7 +34,8 @@ module.exports = {
                     '/for-developers/quick-start',
                     '/for-developers/architecture',
                     '/for-developers/config',
-                    '/for-developers/api',
+                    '/for-developers/admin-api',
+                    '/for-developers/client-api',
                     '/for-developers/status-code',
                     '/for-developers/custom-plugin'
                 ]

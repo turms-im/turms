@@ -13,7 +13,7 @@
 
 #### 管理接口使用对象
 
-①您的前端或后端程序发出HTTP请求进行调用；
+①您的前端或后端程序发出HTTP(S)请求进行调用；
 
 ②作为内容统计管理系统与集群监控管理系统的[turms-admin](https://github.com/turms-im/turms/tree/develop/turms-admin)使用。
 

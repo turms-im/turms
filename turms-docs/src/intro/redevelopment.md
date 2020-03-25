@@ -9,3 +9,11 @@ Turms基于Apache V2协议，深入贯彻开源精神与宗旨。既欢迎其他
 不管任何开发者或团队是借鉴还是抄袭，Turms对其提出的issues都将一视同仁，对有价值的问题都将予以热心的答复。
 
 因为Turms的目标很简单：致力于构建全球范围内最为卓越开源即时通讯解决方案。
+
+### 使用Reactor时的常见误区
+
+Turms服务端基于Reactor框架开发，而Reactor官方文档对很多语法组合讲解比较抽象与晦涩，尤其在结合复杂的业务代码时，想把握住Reactor的数据流就比较困难。因此本章节对使用Reactor进行开发时的常见误区进行基本讲解，以帮助二次开发者能更好地掌握并上手其语法（若您未曾了解过Reactor，您可以先浏览 https://projectreactor.io/docs/core/release/reference/ 文档，以了解其基本概念）。
+
+其中，最后一个练习由：im.turms.turms.access.websocket.config.TurmsWebSocketHandler#handle 部分代码简化而来，此方法承载了用户消息处理路由与服务端响应与通知的调度逻辑，是Reactor框架在Turms服务端处最为复杂的体现，若您能实战在轻松运用以下练习的语法点并避开常见误区，您可以尝试阅读上述提到的 handle 代码，以对Turms数据流与Reactor都有更好的认识，便于您对Turms服务端进行二次开发。
+
+（TODO）
