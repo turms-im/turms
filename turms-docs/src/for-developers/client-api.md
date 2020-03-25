@@ -120,7 +120,7 @@ turms-client-java版本
 
 ```java
 // Initialize client
-TurmsClient client = new TurmsClient(null, null, null, null);
+TurmsClient client = new TurmsClient();
 
 // Listen to the close event
 client.getDriver().setOnClose((closeStatus, wsStatusCode, wsReason, error) -> {
