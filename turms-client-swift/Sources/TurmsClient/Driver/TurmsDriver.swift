@@ -78,6 +78,7 @@ public class TurmsDriver {
                     timeoutInterval: TimeInterval(connectionTimeout))
                 request.addValue(String(userId), forHTTPHeaderField: TurmsDriver.USER_ID_FIELD)
                 request.addValue(password, forHTTPHeaderField: TurmsDriver.PASSWORD_FIELD)
+                request.addValue("IOS", forHTTPHeaderField: TurmsDriver.DEVICE_TYPE_FIELD)
                 websocket = WebSocket(request: request)
                 websocket!.onEvent = { event in
                     switch event {

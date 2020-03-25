@@ -70,7 +70,12 @@ class TurmsClient {
     }
 }
 
-const root = window || global;
+let root;
+if (typeof window !== 'undefined') {
+    root = window;
+} else if (typeof global !== 'undefined') {
+    root = global;
+}
 if (root) {
     Object.defineProperty(root, 'TurmsClient', {
         configurable: false,

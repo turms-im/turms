@@ -11,6 +11,7 @@ import querystring from "querystring";
 import NotificationUtil from "../util/notification-util";
 import {ParsedNotification} from "../model/parsed-notification";
 import TurmsCloseStatus from "../model/turms-close-status";
+import SystemUtil from "../util/system-util";
 import TurmsNotification = im.turms.proto.TurmsNotification;
 import TurmsRequest = im.turms.proto.TurmsRequest;
 import UserStatus = im.turms.proto.UserStatus;
@@ -48,7 +49,7 @@ export default class TurmsDriver {
     private _password: string;
     private _location: string;
     private _userOnlineStatus: UserStatus;
-    private _deviceType: DeviceType;
+    private _deviceType: DeviceType = SystemUtil.isBrowser() ? DeviceType.BROWSER : DeviceType.DESKTOP;
 
     private _requestId: number;
     private _sessionId?: string;
@@ -194,7 +195,11 @@ export default class TurmsDriver {
             })
             .catch(error => {
                 TurmsDriver._clearLoginInfo();
-                return Promise.reject(`Failed to login due to 1. password mismatch; 2. the server doesn't exist or is unavailable`);
+                if (this._queryReasonWhenLoginFailed) {
+                    return Promise.reject(error);
+                } else {
+                    return Promise.reject(`Failed to login due to 1. password mismatch; 2. the server doesn't exist or is unavailable`);
+                }
             });
     }
 
@@ -304,7 +309,7 @@ export default class TurmsDriver {
                 if (this._queryReasonWhenDisconnected && this._userId && this._sessionId) {
                     const params = querystring.stringify({
                         userId: this._userId,
-                        deviceType: this._deviceType,
+                        deviceType: DeviceType[this._deviceType],
                         sessionId: this._sessionId
                     });
                     return fetch(`${this._httpUrl}/reasons/disconnection?${params}`)
@@ -325,7 +330,7 @@ export default class TurmsDriver {
             if (this._queryReasonWhenLoginFailed && this._userId && this._requestId) {
                 const params = querystring.stringify({
                     userId: this._userId,
-                    deviceType: this._deviceType,
+                    deviceType: DeviceType[this._deviceType],
                     requestId: this._requestId
                 });
                 return fetch(`${this._httpUrl}/reasons/login-failed?${params}`)

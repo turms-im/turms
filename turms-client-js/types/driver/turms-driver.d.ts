@@ -18,6 +18,7 @@ export default class TurmsDriver {
     private _lastRequestDate;
     private _queryReasonWhenLoginFailed;
     private _queryReasonWhenDisconnected;
+    private _isClosedByClient;
     private _userId;
     private _password;
     private _location;

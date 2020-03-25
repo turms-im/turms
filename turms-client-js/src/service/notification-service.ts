@@ -3,13 +3,13 @@ import NotificationUtil from "../util/notification-util";
 
 export default class NotificationService {
     private _turmsClient: TurmsClient;
-    private _onNotification?: (notification: any, requesterId: string) => void;
+    private _onNotification?: (notification: any) => void;
 
-    get onNotification(): (notification: any, requesterId: string) => void {
+    get onNotification(): (notification: any) => void {
         return this._onNotification;
     }
 
-    set onNotification(value: (notification: any, requesterId: string) => void) {
+    set onNotification(value: (notification: any) => void) {
         this._onNotification = value;
     }
 
@@ -19,9 +19,7 @@ export default class NotificationService {
             .onNotificationListeners
             .push(notification => {
                 if (this._onNotification != null && notification.relayedRequest) {
-                    this._onNotification(
-                        NotificationUtil.transform(notification.relayedRequest),
-                        notification.requesterId);
+                    this._onNotification(NotificationUtil.transform(notification.relayedRequest));
                 }
                 return null;
             });
