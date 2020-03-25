@@ -19,7 +19,7 @@ public class TurmsDriver {
     private var isConnected = false
 
     public var onNotificationListeners: [(TurmsNotification) -> Void] = []
-    public var onClose: ((Bool, TurmsCloseStatus, String?, Error?) -> Void)?
+    public var onClose: ((TurmsCloseStatus?, Int?, String?, Error?) -> Void)?
     private var onDisconnectResolver: Resolver<Void>?
 
     private var url: String
@@ -112,13 +112,13 @@ public class TurmsDriver {
                             self.onWebsocketOpen()
                             seal.fulfill(())
                         case .disconnected(let reason, let websocketCode):
-                            self.onWebsocketClose(Int(websocketCode), reason)
+                            self.onWebsocketClose(false, Int(websocketCode), reason)
                             self.onDisconnectResolver?.fulfill(())
-                        case .cancelled:
-                            self.onWebsocketClose()
+                        case .cancelled: // disconnect by client and won't trigger the disconnected event
+                            self.onWebsocketClose(true)
                             self.onDisconnectResolver?.fulfill(())
-                        case .error(let error):
-                            self.onWebsocketError(error as! HTTPUpgradeError)
+                        case .error(let error as HTTPUpgradeError):
+                            self.onWebsocketError(error, seal)
                         default: break
                     }
                 }
@@ -140,7 +140,7 @@ public class TurmsDriver {
     @objc func checkAndSendHeartbeat() {
         let difference = Date().timeIntervalSince1970 - lastRequestDate.timeIntervalSince1970
         if minRequestsInterval == nil || Int(round(difference)) > minRequestsInterval! {
-            sendHeartbeat()
+            try! sendHeartbeat().wait()
         }
     }
 
@@ -190,23 +190,26 @@ public class TurmsDriver {
         isConnected = true
     }
 
-    private func onWebsocketClose(_ statusCode: Int? = nil, _ reason: String? = nil) {
-        let wasLogged = isConnected
+    private func onWebsocketClose(_ isClosedByClient: Bool, _ statusCode: Int? = nil, _ reason: String? = nil) {
         isConnected = false
         heartbeatTimer?.invalidate()
-        let status: TurmsCloseStatus = statusCode != nil ? TurmsCloseStatus(rawValue: statusCode!) ?? .websocketError : .websocketError
+        var status: TurmsCloseStatus?
+        if isClosedByClient {
+            status = .disconnectedByClient
+        } else {
+            status = statusCode != nil ? TurmsCloseStatus(rawValue: statusCode!) : nil
+        }
         if status == .redirect {
             reconnect(reason!)
         } else {
-            onClose?(wasLogged, status, "\(statusCode!):\(reason?)", nil)
+            onClose?(status, statusCode, reason, nil)
         }
     }
 
-    private func onWebsocketError(_ error: HTTPUpgradeError) {
-        let wasLogged = isConnected
+    private func onWebsocketError(_ error: HTTPUpgradeError, _ seal: Resolver<Void>) {
         isConnected = false
         heartbeatTimer?.invalidate()
-        if !wasLogged, userId != nil, password != nil {
+        if userId != nil, password != nil {
             switch error {
                 case let .notAnUpgrade(code, headers):
                     if code == 307 {
@@ -215,17 +218,16 @@ public class TurmsDriver {
                     }
                     fallthrough
                 default:
-                    onClose?(wasLogged, .illegalRequest, nil, nil)
+                    seal.reject(error)
             }
-            connect(userId: userId!, password: password!, url: url)
         } else {
-            onClose?(wasLogged, .illegalRequest, nil, nil)
+            seal.reject(error)
         }
     }
 
     private func reconnect(_ address: String) {
         let isSecure = url.starts(with: "wss://")
         url = "\(isSecure ? "wss://" : "ws://")\(address)"
-        connect(userId: userId!, password: password!, url: url)
+        try! connect(userId: userId!, password: password!, url: url).wait()
     }
 }
