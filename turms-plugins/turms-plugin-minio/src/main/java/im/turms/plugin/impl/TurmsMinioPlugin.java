@@ -220,7 +220,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                     .credentialsProvider(credentialsProvider)
                     .region(region)
                     .build();
-            log.info(String.format("The MinIO client is connecting to: %s", endpoint.toString()));
+            log.info("The MinIO client is connecting to: {}", endpoint);
         }
 
         private void initBuckets() throws InterruptedException, ExecutionException, TimeoutException {
@@ -229,12 +229,13 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                     boolean exists = bucketExists(type);
                     String bucket = getBucketName(type);
                     if (!exists) {
-                        log.info(String.format("Bucket: %s is being created", bucket));
+                        log.info("Bucket {} is being created", bucket);
                         createBucket(type);
                         putBucketPolicy(type);
                         putBucketLifecycleConfig(type);
+                        log.info("Bucket {} is created", bucket);
                     } else {
-                        log.info(String.format("Bucket: %s exists", bucket));
+                        log.info("Bucket {} has already existed", bucket);
                     }
                 }
             }
