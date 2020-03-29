@@ -28,6 +28,7 @@ mvnw.cmd
 
 ### Custom ###
 turms/target/
+turms/src/docs/
 turms/dist/bin/
 turms-plugin-demo/target/
 turms-apm/target/
