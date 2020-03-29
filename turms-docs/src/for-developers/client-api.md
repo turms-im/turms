@@ -120,7 +120,7 @@ turms-client-java版本
 
 ```java
 // Initialize client
-TurmsClient client = new TurmsClient();
+TurmsClient client = new TurmsClient(); // new TurmsClient("ws://any-turms-server.com");
 
 // Listen to the close event
 client.getDriver().setOnClose((closeStatus, wsStatusCode, wsReason, error) -> {
@@ -181,7 +181,7 @@ turms-client-swift版本
 
 ```swift
 // Initialize client
-let client = TurmsClient() // TurmsClient('ws://any-turms-server.com')
+let client = TurmsClient() // TurmsClient("ws://any-turms-server.com")
 
 // Listen to the close event
 client.driver.onClose = { (closeStatus: TurmsCloseStatus?, wsStatusCode: Int?, wsReason: String?, error: Error?) -> Void in
