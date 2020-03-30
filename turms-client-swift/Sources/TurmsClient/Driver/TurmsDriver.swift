@@ -109,7 +109,7 @@ public class TurmsDriver {
                                     if TurmsStatusCode.isSuccess(code) {
                                         handler?.fulfill(notification)
                                     } else {
-                                        if code == TurmsStatusCode.failed.rawValue {
+                                        if notification.hasReason {
                                             handler?.reject(TurmsBusinessException(code, notification.reason.value))
                                         } else {
                                             handler?.reject(TurmsBusinessException(code))

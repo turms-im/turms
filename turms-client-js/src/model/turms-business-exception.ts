@@ -27,7 +27,7 @@ export default class TurmsBusinessException {
     }
 
     static fromNotification(notification: TurmsNotification): TurmsBusinessException {
-        if (notification.code.value === TurmsStatusCode.FAILED) {
+        if (notification.reason && notification.reason.value) {
             return new TurmsBusinessException(notification.code.value, notification.reason.value);
         } else {
             return new TurmsBusinessException(notification.code.value, TurmsStatusCode.getReason(notification.code.value));
