@@ -16,6 +16,7 @@ spring:
   jackson:
     deserialization:
       fail-on-unknown-properties: false
+      accept-single-value-as-array: true
     default-property-inclusion: non_null
     serialization:
       fail-on-empty-beans: false
