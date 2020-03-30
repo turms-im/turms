@@ -5,7 +5,7 @@ public class TurmsClient {
     public private(set) var messageService: MessageService!
     public private(set) var notificationService: NotificationService!
 
-    public init(_ url: String?, connectionTimeout: Int? = nil, minRequestsInterval: Int? = nil) {
+    public init(_ url: String? = nil, connectionTimeout: Int? = nil, minRequestsInterval: Int? = nil) {
         driver = TurmsDriver(
             url,
             connectionTimeout: connectionTimeout,
