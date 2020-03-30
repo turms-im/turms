@@ -21,6 +21,8 @@ spring:
     serialization:
       fail-on-empty-beans: false
     time-zone: UTC
+    mapper:
+      propagate-transient-marker: true
   hazelcast:
     config: file:../config/hazelcast.yaml
   data:

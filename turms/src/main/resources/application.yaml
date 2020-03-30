@@ -27,6 +27,8 @@ spring:
       fail-on-empty-beans: false
     default-property-inclusion: non_null
     time-zone: UTC
+    mapper:
+      propagate-transient-marker: true
   profiles:
     include: dev,turms
   hazelcast:
