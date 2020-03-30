@@ -30,10 +30,6 @@ describe('TurmsDriver Class', () => {
         expect(result).toBeUndefined();
     });
     it('sendHeartbeat_shouldSucceed', async () => {
-        const location = UserLocation.encode({
-            longitude: 1,
-            latitude: 1
-        }).finish();
         const result = await turmsDriver.sendHeartbeat();
         expect(result).toBeUndefined();
     });

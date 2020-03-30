@@ -44,6 +44,7 @@ export default class TurmsDriver {
     private _queryReasonWhenLoginFailed = true;
     private _queryReasonWhenDisconnected = true;
     private _isClosedByClient = false;
+    private _heartbeatCallbacks = [];
 
     private _userId: string;
     private _password: string;
@@ -85,9 +86,9 @@ export default class TurmsDriver {
             if (this.connected()) {
                 this._lastRequestDate = new Date();
                 this._websocket.send(new Uint8Array(0));
-                resolve();
+                this._heartbeatCallbacks.push(resolve);
             } else {
-                reject();
+                reject(TurmsBusinessException.fromCode(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED));
             }
         });
     }
@@ -135,11 +136,20 @@ export default class TurmsDriver {
                     },
                     attachRequestId: (data: Uint8Array): Uint8Array => data,
                     packMessage: (data: Uint8Array): Uint8Array => data,
-                    unpackMessage: (data: ArrayBuffer): TurmsNotification => TurmsNotification.decode(new Uint8Array(data)),
+                    unpackMessage: (data: ArrayBuffer): TurmsNotification | undefined => {
+                        if (data && data.byteLength) {
+                            return TurmsNotification.decode(new Uint8Array(data))
+                        } else {
+                            for (const callback of this._heartbeatCallbacks) {
+                                callback();
+                            }
+                            this._heartbeatCallbacks = [];
+                        }
+                    },
                     connectionTimeout: this._connectionTimeout,
                     timeout: this._requestTimeout,
-                    extractRequestId: (notification: TurmsNotification): number | undefined => {
-                        if (!notification.relayedRequest && notification.requestId) {
+                    extractRequestId: (notification: TurmsNotification | undefined): number | undefined => {
+                        if (notification && !notification.relayedRequest && notification.requestId) {
                             return parseInt(notification.requestId.value);
                         }
                     }
@@ -282,12 +292,10 @@ export default class TurmsDriver {
         if (this._heartbeatTimer && this._heartbeatTimer.isRunning) {
             this._heartbeatTimer.reset(this._heartbeatInterval);
         } else {
-            this._heartbeatTimer = new Timer((): Promise<void> => {
+            this._heartbeatTimer = new Timer((): void => {
                 const difference = new Date().getTime() - this._lastRequestDate.getTime();
                 if (difference > this._minRequestsInterval) {
-                    return this.sendHeartbeat();
-                } else {
-                    return Promise.reject();
+                    this.sendHeartbeat().then(() => null);
                 }
             }, this._heartbeatInterval);
             this._heartbeatTimer.start();
