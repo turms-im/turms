@@ -21,6 +21,7 @@ public class TurmsDriver {
     public var onNotificationListeners: [(TurmsNotification) -> Void] = []
     public var onClose: ((TurmsCloseStatus?, Int?, String?, Error?) -> Void)?
     private var onDisconnectResolver: Resolver<Void>?
+    private var heartbeatCallbacks: [Resolver<Void>] = []
 
     private var url: String
     private var connectionTimeout: Int
@@ -44,7 +45,11 @@ public class TurmsDriver {
         return Promise { seal in
             if connected() {
                 setLastRequestRecord(true, Date())
-                websocket!.write(data: Data()) { seal.fulfill(()) }
+                websocket!.write(data: Data()) {
+                    DispatchQueue.global().sync {
+                        self.heartbeatCallbacks.append(seal)
+                    }
+                }
             } else {
                 seal.reject(TurmsBusinessException(.clientSessionAlreadyEstablished))
             }
@@ -83,6 +88,15 @@ public class TurmsDriver {
                 websocket!.onEvent = { event in
                     switch event {
                         case .binary(let data):
+                            if data.count == 0 {
+                                DispatchQueue.global().sync {
+                                    for callback in self.heartbeatCallbacks {
+                                        callback.fulfill(())
+                                    }
+                                    self.heartbeatCallbacks.removeAll()
+                                }
+                                return
+                            }
                             let notification = try! TurmsNotification(serializedData: data)
                             if notification.hasData, case .session = notification.data.kind! {
                                 self.address = notification.data.session.address
