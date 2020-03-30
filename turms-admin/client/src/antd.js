@@ -2,7 +2,7 @@ import Vue from 'vue';
 import './ant-style.css';
 import {Button, Icon, Row, Col, Layout, Dropdown, Menu, Pagination, Checkbox, DatePicker,
     Form, Input, InputNumber, Select, Switch, TreeSelect, Card, Collapse, Empty, Popover,
-    Table, Tabs, Tooltip, Tree, message, Modal, Popconfirm, Skeleton, Spin, LocaleProvider
+    Table, Tabs, Tooltip, Tree, message, Modal, Popconfirm, Skeleton, Spin, ConfigProvider
 } from 'ant-design-vue';
 
 import 'ant-design-vue/lib/button';
@@ -71,4 +71,4 @@ Vue.use(Modal);
 Vue.use(Popconfirm);
 Vue.use(Skeleton);
 Vue.use(Spin);
-Vue.use(LocaleProvider);
+Vue.use(ConfigProvider);

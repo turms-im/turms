@@ -44,7 +44,6 @@
                         />
                         <a-date-picker
                             v-if="field.type.toUpperCase() === 'DATE'"
-                            v-model="field.model"
                             v-decorator="field.decorator"
                             :show-time="typeof field.showTime === 'undefined' ? true : field.showTime"
                             :disabled-date="disabledDate"
@@ -138,6 +137,8 @@
 
 <script>
 import JSONBig from 'json-bigint';
+import moment from 'moment';
+
 let id = 1;
 export default {
     name: 'button-modal-template',
@@ -335,6 +336,8 @@ export default {
                                     delete values[key][subEntry[0]];
                                 }
                             });
+                        } else if (moment.isMoment(values[key])) {
+                            values[key] = values[key].toISOString();
                         }
                     });
                     if (this.type === 'CREATE') {
