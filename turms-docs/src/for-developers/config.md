@@ -10,5 +10,7 @@
 
 #### 具体属性说明
 
-可参考im.turms.turms.property目录下各配置类中属性的描述信息。
+由于配置项过多，您可查阅im.turms.turms.property目录下各配置类。
+
+其中的每个属性都能通过application.yaml配置，并且对于标有MutablePropertiesView注释的属性都能通过供管理员专用的API接口在Turms集群运行时进行更新。
 

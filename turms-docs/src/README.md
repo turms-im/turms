@@ -6,6 +6,8 @@ Turms是一套全球范围内最为先进且全能的开源即时通讯解决方
 
 ### Playground
 
+（当前Demo版本：0.9.0-SNAPSHOT.20200201）
+
 turms服务端的Demo地址（DEV配置，自带Mock数据）：http://120.24.57.206:9510/
 
 turms-admin的Demo地址（PROD配置）：http://47.99.56.54:9512/
@@ -39,7 +41,7 @@ turms-admin的Demo地址（PROD配置）：http://47.99.56.54:9512/
 
 如果您所开发的即时通讯产品对定制化要求低，并希望所使用的即时通讯解决方案带有完整的UI套件，并有直接面向客户开箱即用的可执行程序。推荐您尝试开源的：
 
-* [Rocket.Chat](https://github.com/RocketChat/Rocket.Chat)
+* [Rocket.Chat](https://github.com/RocketChat/Rocket.Chat) 。非常推荐。可以在所有平台上实现各种即时通讯功能（包括音视频会议、文件传输、桌面共享等高级功能），并且带有非常完善且开箱即用的UI客户端程序，您甚至可以直接将这些程序交给您的客户使用。
 * Telegram解决方案
 
 Tumrs的定位是更为底层的通用即时通讯解决方案，您无法直接将Turms解决方案交给您的客户使用（就像大部分产品不会让客户直接写SQL语句来查询数据库里的业务模型）。但基于Turms，您可以更为高效、更为全能、更为定制化地实现GitHub上目前所有开源的即时通讯解决方案（除音视频会议功能。Turms后期会基于SFU媒体服务器为Turms主服务端定制一套信令服务端，目前您可自行选择其他音视频会议解决方案与Turms进行集成）。

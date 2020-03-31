@@ -7,7 +7,7 @@
 1. 新建一个Maven项目
 2. 在pom.xml中引入：
 
-添加仓库：
+~~添加仓库：~~
 
 ```
 <repository>
@@ -16,6 +16,8 @@
     <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
 </repository>
 ```
+
+Clone Turms的仓库，并在Turms服务端项目的目录下，通过mvn install命令将其安装到本地的Maven仓库中
 
 添加依赖：
 
