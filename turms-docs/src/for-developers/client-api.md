@@ -51,7 +51,7 @@ Turms客户端目前支持JavaScript、Java与Swift这三种语言，对外暴�
 由于浏览器自身的限制繁多，因此针对浏览器运行环境，有以下几点需要注意：
 
 1. 由于现代浏览器自身限制，您必须在HTTP(S)服务器上执行turms-client-js接口，否则turms-client-js将无法执行客户端的登陆操作。例如：http://localhost:63342/turms-client-js/demo/demo.html（补充：如若用Intellij Idea直接运行一个HTML页面，默认该HTML页面就运行在HTTP服务器上）。原因：turms-client-js通过cookie来传送用户登录信息，而现代浏览器不允许非服务端环境（如本地文件环境file://）传送cookie。
-2. 服务降级（由turms解决方案实现，您无需自行实现，了解即可）。在现代浏览器中，对于登录失败与连接断开情况，其真实原因与状态码无法通过WebSocket响应获得。因此Turms提供了服务降级机制，默认会通过HTTP(S)请求查询其真实状态码。
+2. 服务降级（由turms引擎实现，您无需自行实现，了解即可）。在现代浏览器中，对于登录失败与连接断开情况，其真实原因与状态码无法通过WebSocket响应获得。因此Turms提供了服务降级机制，默认会通过HTTP(S)请求查询其真实状态码。
 3. turms-client-js不进行类似于socket.io的WebSocket服务降级处理操作，因此turms-client-js不会降级为轮询机制。
 
 ### 具体示例
