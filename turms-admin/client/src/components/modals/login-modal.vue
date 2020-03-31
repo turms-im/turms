@@ -157,11 +157,15 @@ export default {
                             accounts: account
                         }
                     }).then((response => {
-                        const admin = response.data.data[0];
-                        admin.password = password;
-                        this.$store.dispatch('setAdmin', admin);
-                        this.$store.dispatch('setUrl', url);
-                        this.$message.success(this.$t('loginSuccessfully'));
+                        if (response.data && response.data.data && response.data.data[0]) {
+                            const admin = response.data.data[0];
+                            admin.password = password;
+                            this.$store.dispatch('setAdmin', admin);
+                            this.$store.dispatch('setUrl', url);
+                            this.$message.success(this.$t('loginSuccessfully'));
+                        } else {
+                            this.$message.error(`${this.$t('loginFailed')}: ${this.$t('missingAdminInfo')}`);
+                        }
                     }));
                 }).catch(error => {
                     this.$error(this.$t('loginFailed'), error);

@@ -199,6 +199,7 @@ const zh_CN = {
     },
     'loginFailed': '登录失败',
     'loginSuccessfully': '登录成功',
+    'missingAdminInfo': '管理员信息丢失',
     'clearFilters': '清空过滤条件',
     'manager': '管理员',
     'member': '群成员',
