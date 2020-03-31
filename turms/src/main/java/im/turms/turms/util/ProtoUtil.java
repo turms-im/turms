@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.turms.common;
+package im.turms.turms.util;
 
 import com.google.protobuf.*;
 import im.turms.common.constant.*;

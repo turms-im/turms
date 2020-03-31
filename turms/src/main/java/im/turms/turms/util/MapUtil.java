@@ -1,4 +1,4 @@
-package im.turms.turms.common;
+package im.turms.turms.util;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
