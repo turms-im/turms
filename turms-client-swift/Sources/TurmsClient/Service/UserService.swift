@@ -16,9 +16,9 @@ public class UserService {
     public func login(
         userId: Int64,
         password: String,
-        location: Position? = nil,
+        deviceType: DeviceType? = nil,
         userOnlineStatus: UserStatus? = .available,
-        deviceType: DeviceType? = .unknown) -> Promise<Void> {
+        location: Position? = nil) -> Promise<Void> {
         self.userId = userId
         self.password = password
         self.userOnlineStatus = userOnlineStatus!
@@ -26,7 +26,10 @@ public class UserService {
         self.location = location
         return turmsClient.driver.connect(
             userId: userId,
-            password: password)
+            password: password,
+            deviceType: deviceType,
+            userOnlineStatus: userOnlineStatus,
+            location: location)
     }
 
     public func relogin() -> Promise<Void> {
@@ -36,9 +39,9 @@ public class UserService {
             return login(
                 userId: userId!,
                 password: password!,
-                location: location,
+                deviceType: deviceType,
                 userOnlineStatus: userOnlineStatus,
-                deviceType: deviceType)
+                location: location)
         }
     }
 

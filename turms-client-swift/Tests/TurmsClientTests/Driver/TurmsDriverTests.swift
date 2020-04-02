@@ -3,7 +3,7 @@ import XCTest
 
 class TurmsDriverTests: XCTestCase {
     func test_system() {
-        let turmsDriver: TurmsDriver = TurmsDriver(Config.WS_URL)
+        let turmsDriver: TurmsDriver = TurmsClient(Config.WS_URL).driver
         TestUtil.assertCompleted("connect_shouldSucceed", turmsDriver.connect(userId: 1, password: "123"))
         TestUtil.assertCompleted("sendHeartbeat_shouldSucceed", turmsDriver.sendHeartbeat())
         TestUtil.assertCompleted("sendTurmsRequest_shouldSucceed", turmsDriver.send(.with {

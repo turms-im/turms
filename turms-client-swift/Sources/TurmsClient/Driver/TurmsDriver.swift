@@ -10,10 +10,10 @@ public class TurmsDriver {
     private static let USER_ONLINE_STATUS_FIELD = "us"
     private static let USER_LOCATION_FIELD = "loc"
     private static let USER_DEVICE_DETAILS = "dd"
-    private static let LOCATION_SPLIT = ":"
 
     private var heartbeatInterval: Int = 20
 
+    private weak var turmsClient: TurmsClient!
     private var websocket: WebSocket?
     private var heartbeatTimer: Timer?
     private var isConnected = false
@@ -29,13 +29,12 @@ public class TurmsDriver {
     private var requestsMap: [Int64: Resolver<TurmsNotification>] = [:]
     private var lastRequestDate = Date(timeIntervalSince1970: 0)
     private var isLastRequestHeartbeat = false
-    private var userId: Int64?
-    private var password: String?
 
     private var address: String?
     private var sessionId: String?
 
-    public init(_ url: String? = nil, connectionTimeout: Int? = nil, minRequestsInterval: Int? = nil) {
+    public init(_ turmsClient: TurmsClient, url: String? = nil, connectionTimeout: Int? = nil, minRequestsInterval: Int? = nil) {
+        self.turmsClient = turmsClient
         self.url = url ?? "ws://localhost:9510"
         self.connectionTimeout = connectionTimeout ?? 10
         self.minRequestsInterval = minRequestsInterval
@@ -71,19 +70,23 @@ public class TurmsDriver {
         }
     }
 
-    public func connect(userId: Int64, password: String, url: String? = nil, connectionTimeout: Int = 10) -> Promise<Void> {
+    public func connect(userId: Int64, password: String, deviceType: DeviceType? = nil, userOnlineStatus: UserStatus? = nil, location: Position? = nil) -> Promise<Void> {
         return Promise { seal in
             if connected() {
                 seal.reject(TurmsBusinessException(.clientSessionAlreadyEstablished))
             } else {
-                self.userId = userId
-                self.password = password
                 var request = URLRequest(
-                    url: URL(string: url ?? self.url)!,
+                    url: URL(string: url)!,
                     timeoutInterval: TimeInterval(connectionTimeout))
                 request.addValue(String(userId), forHTTPHeaderField: TurmsDriver.USER_ID_FIELD)
                 request.addValue(password, forHTTPHeaderField: TurmsDriver.PASSWORD_FIELD)
-                request.addValue("IOS", forHTTPHeaderField: TurmsDriver.DEVICE_TYPE_FIELD)
+                request.addValue(deviceType != nil ? deviceType!.toString() : "IOS", forHTTPHeaderField: TurmsDriver.DEVICE_TYPE_FIELD)
+                if let onlineStatus = userOnlineStatus {
+                    request.addValue(onlineStatus.toString(), forHTTPHeaderField: TurmsDriver.USER_ONLINE_STATUS_FIELD)
+                }
+                if let userLocation = location {
+                    request.addValue(userLocation.toString(), forHTTPHeaderField: TurmsDriver.USER_LOCATION_FIELD)
+                }
                 websocket = WebSocket(request: request)
                 websocket!.onEvent = { event in
                     switch event {
@@ -223,7 +226,7 @@ public class TurmsDriver {
     private func onWebsocketError(_ error: HTTPUpgradeError, _ seal: Resolver<Void>) {
         isConnected = false
         heartbeatTimer?.invalidate()
-        if userId != nil, password != nil {
+        if turmsClient.userService.userId != nil, turmsClient.userService.password != nil {
             switch error {
                 case let .notAnUpgrade(code, headers):
                     if code == 307 {
@@ -242,6 +245,50 @@ public class TurmsDriver {
     private func reconnect(_ address: String) {
         let isSecure = url.starts(with: "wss://")
         url = "\(isSecure ? "wss://" : "ws://")\(address)"
-        try! connect(userId: userId!, password: password!, url: url).wait()
+        try! connect(userId: turmsClient.userService.userId!, password: turmsClient.userService.password!).wait()
+    }
+}
+
+extension DeviceType {
+    public func toString() -> String {
+        switch self {
+            case .desktop:
+                return "DESKTOP"
+            case .browser:
+                return "BROWSER"
+            case .ios:
+                return "IOS"
+            case .android:
+                return "ANDROID"
+            case .others:
+                return "OTHERS"
+            case .unknown:
+                return "UNKNOWN"
+            case .UNRECOGNIZED:
+                return ""
+        }
+    }
+}
+
+extension UserStatus {
+    public func toString() -> String {
+        switch self {
+            case .available:
+                return "AVAILABLE"
+            case .offline:
+                return "OFFLINE"
+            case .invisible:
+                return "INVISIBLE"
+            case .busy:
+                return "BUSY"
+            case .doNotDisturb:
+                return "DO_NOT_DISTURB"
+            case .away:
+                return "AWAY"
+            case .beRightBack:
+                return "BE_RIGHT_BACK"
+            case .UNRECOGNIZED:
+                return ""
+        }
     }
 }

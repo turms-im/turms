@@ -1,5 +1,5 @@
 public class TurmsClient {
-    public let driver: TurmsDriver
+    public private(set) var driver: TurmsDriver!
     public private(set) var userService: UserService!
     public private(set) var groupService: GroupService!
     public private(set) var messageService: MessageService!
@@ -8,7 +8,8 @@ public class TurmsClient {
 
     public init(_ url: String? = nil, connectionTimeout: Int? = nil, minRequestsInterval: Int? = nil, storageServerUrl: String? = nil) {
         driver = TurmsDriver(
-            url,
+            self,
+            url: url,
             connectionTimeout: connectionTimeout,
             minRequestsInterval: minRequestsInterval)
         userService = UserService(self)
