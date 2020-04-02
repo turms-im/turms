@@ -6,16 +6,17 @@ import TurmsStatusCode from "../model/turms-status-code";
 import TurmsBusinessException from "../model/turms-business-exception";
 import {im} from "../model/proto-bundle";
 // @ts-ignore
-import fetch from "unfetch";
-import querystring from "querystring";
+import * as fetch from "unfetch";
+import {encode as encodeQuerystring} from "querystring";
 import NotificationUtil from "../util/notification-util";
 import {ParsedNotification} from "../model/parsed-notification";
 import TurmsCloseStatus from "../model/turms-close-status";
-import SystemUtil from "../util/system-util";
+import TurmsClient from "../turms-client";
 import TurmsNotification = im.turms.proto.TurmsNotification;
 import TurmsRequest = im.turms.proto.TurmsRequest;
 import UserStatus = im.turms.proto.UserStatus;
 import DeviceType = im.turms.proto.DeviceType;
+import UserLocation from "../model/user-location";
 
 const COOKIE_REQUEST_ID = 'rid';
 const COOKIE_USER_ID = 'uid';
@@ -29,6 +30,7 @@ export default class TurmsDriver {
     private _heartbeatInterval: number;
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    private _turmsClient: TurmsClient;
     private _websocket: any; //WebSocketAsPromised
     private _heartbeatTimer?: Timer;
     private _onNotificationListeners: ((notification: ParsedNotification) => void)[] = [];
@@ -46,23 +48,19 @@ export default class TurmsDriver {
     private _isClosedByClient = false;
     private _heartbeatCallbacks = [];
 
-    private _userId: string;
-    private _password: string;
-    private _location: string;
-    private _userOnlineStatus: UserStatus;
-    private _deviceType: DeviceType = SystemUtil.isBrowser() ? DeviceType.BROWSER : DeviceType.DESKTOP;
-
     private _requestId: number;
     private _sessionId?: string;
     private _address?: string;
 
-    constructor(url?: string,
+    constructor(turmsClient: TurmsClient,
+                url?: string,
                 connectionTimeout?: number,
                 requestTimeout?: number,
                 minRequestsInterval?: number,
                 httpUrl?: string,
                 queryReasonWhenLoginFailed = true,
                 queryReasonWhenDisconnected = true) {
+        this._turmsClient = turmsClient;
         if (url) this._url = url;
         if (connectionTimeout) this._connectionTimeout = connectionTimeout;
         if (requestTimeout) this._requestTimeout = requestTimeout;
@@ -114,19 +112,14 @@ export default class TurmsDriver {
     private _connect(
         userId: string,
         password: string,
-        location?: string,
-        userOnlineStatus = UserStatus.AVAILABLE,
-        deviceType = DeviceType.UNKNOWN): Promise<void> {
+        deviceType?: DeviceType,
+        userOnlineStatus?: UserStatus,
+        location?: UserLocation): Promise<void> {
         return new Promise((resolve, reject) => {
             if (this.connected()) {
                 reject(TurmsBusinessException.CLIENT_ALREADY_CONNECTED);
             } else {
                 this._requestId = this._generateRandomId();
-                this._userId = userId;
-                this._password = password;
-                this._location = location;
-                this._userOnlineStatus = userOnlineStatus;
-                this._deviceType = deviceType;
                 TurmsDriver._fillLoginInfo(this._requestId, userId, password, userOnlineStatus, deviceType, location);
                 this._websocket = new WebSocketAsPromised(this._url, {
                     createWebSocket: (serverUrl): WebSocket => {
@@ -195,10 +188,10 @@ export default class TurmsDriver {
     connect(
         userId: string,
         password: string,
-        location?: string,
-        userOnlineStatus = UserStatus.AVAILABLE,
-        deviceType = DeviceType.UNKNOWN): Promise<void> {
-        return this._connect(userId, password, location, userOnlineStatus, deviceType)
+        deviceType?: DeviceType,
+        userOnlineStatus?: UserStatus,
+        location?: UserLocation): Promise<void> {
+        return this._connect(userId, password, deviceType, userOnlineStatus, location)
             .then(() => {
                 TurmsDriver._clearLoginInfo();
                 return Promise.resolve();
@@ -254,7 +247,7 @@ export default class TurmsDriver {
         password: string,
         userOnlineStatus?: UserStatus,
         deviceType?: DeviceType,
-        location?: string): void {
+        location?: UserLocation): void {
         document.cookie = `${COOKIE_REQUEST_ID}=${requestId}; path=/`;
         document.cookie = `${COOKIE_USER_ID}=${userId}; path=/`;
         document.cookie = `${COOKIE_PASSWORD}=${escape(password)}; path=/`;
@@ -265,7 +258,7 @@ export default class TurmsDriver {
             document.cookie = `${COOKIE_DEVICE_TYPE}=${deviceType.toString()}; path=/`;
         }
         if (location) {
-            document.cookie = `${COOKIE_LOCATION}=${location}; path=/`;
+            document.cookie = `${COOKIE_LOCATION}=${location.toString()}; path=/`;
         }
     }
 
@@ -314,10 +307,10 @@ export default class TurmsDriver {
         }
         if (wasLogged) {
             if (this._onClose) {
-                if (this._queryReasonWhenDisconnected && this._userId && this._sessionId) {
-                    const params = querystring.stringify({
-                        userId: this._userId,
-                        deviceType: DeviceType[this._deviceType],
+                if (this._queryReasonWhenDisconnected && this._turmsClient.userService.userId && this._sessionId) {
+                    const params = encodeQuerystring({
+                        userId: this._turmsClient.userService.userId,
+                        deviceType: DeviceType[this._turmsClient.userService.deviceType],
                         sessionId: this._sessionId
                     });
                     return fetch(`${this._httpUrl}/reasons/disconnection?${params}`)
@@ -335,10 +328,10 @@ export default class TurmsDriver {
                 }
             }
         } else {
-            if (this._queryReasonWhenLoginFailed && this._userId && this._requestId) {
-                const params = querystring.stringify({
-                    userId: this._userId,
-                    deviceType: DeviceType[this._deviceType],
+            if (this._queryReasonWhenLoginFailed && this._turmsClient.userService.userId && this._requestId) {
+                const params = encodeQuerystring({
+                    userId: this._turmsClient.userService.userId,
+                    deviceType: DeviceType[this._turmsClient.userService.deviceType],
                     requestId: this._requestId
                 });
                 return fetch(`${this._httpUrl}/reasons/login-failed?${params}`)
@@ -364,11 +357,15 @@ export default class TurmsDriver {
             const isSecure = this._url.startsWith("wss://");
             this._url = `${isSecure ? "wss://" : "ws://"}${host}`;
         }
-        if (!this._userId || !this._password) {
+        if (!this._turmsClient.userService.userId || !this._turmsClient.userService.password) {
             return Promise.reject();
         } else {
-            return this.connect(this._userId, this._password, this._location,
-                this._userOnlineStatus, this._deviceType);
+            return this.connect(
+                this._turmsClient.userService.userId,
+                this._turmsClient.userService.password,
+                this._turmsClient.userService.deviceType,
+                this._turmsClient.userService.userOnlineStatus,
+                this._turmsClient.userService.location);
         }
     }
 }

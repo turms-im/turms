@@ -3,7 +3,6 @@ import TurmsClient from '../../src/turms-client';
 import TurmsStatusCode from '../../src/model/turms-status-code'
 import {im} from '../../src/model/proto-bundle';
 import UserStatus = im.turms.proto.UserStatus;
-import DeviceType = im.turms.proto.DeviceType;
 import ResponseAction = im.turms.proto.ResponseAction;
 
 let turmsClient: TurmsClient;
@@ -28,7 +27,7 @@ describe('Constructor', () => {
 
 describe('Login', () => {
     it('login_shouldSucceed', async () => {
-        const result = await turmsClient.userService.login('1', '123', null, UserStatus.BUSY, DeviceType.BROWSER);
+        const result = await turmsClient.userService.login('1', '123');
         expect(result).toBeUndefined();
     });
     it('relogin_shouldSucceed', async () => {

@@ -4,6 +4,8 @@ import {im} from "../model/proto-bundle";
 import RequestUtil from "../util/request-util";
 import {ParsedModel} from "../model/parsed-model";
 import NotificationUtil from "../util/notification-util";
+import SystemUtil from "../util/system-util";
+import UserLocation from "../model/user-location";
 import UserStatus = im.turms.proto.UserStatus;
 import ProfileAccessStrategy = im.turms.proto.ProfileAccessStrategy;
 import ResponseAction = im.turms.proto.ResponseAction;
@@ -12,11 +14,11 @@ import UserSessionId = im.turms.proto.UserSessionId;
 
 export default class UserService {
     private _turmsClient: TurmsClient;
-    private _userId?: string;
-    private _password?: string;
-    private _location: string;
-    private _userOnlineStatus: im.turms.proto.UserStatus;
-    private _deviceType: im.turms.proto.DeviceType;
+    private _userId: string;
+    private _password: string;
+    private _deviceType = SystemUtil.isBrowser() ? DeviceType.BROWSER : DeviceType.DESKTOP;
+    private _userOnlineStatus: UserStatus;
+    private _location?: UserLocation;
 
     constructor(turmsClient: TurmsClient) {
         this._turmsClient = turmsClient;
@@ -28,6 +30,18 @@ export default class UserService {
 
     get userId(): string {
         return this._userId;
+    }
+
+    get location(): UserLocation {
+        return this._location;
+    }
+
+    get userOnlineStatus(): UserStatus {
+        return this._userOnlineStatus;
+    }
+
+    get deviceType(): DeviceType {
+        return this._deviceType;
     }
 
     /**
@@ -54,21 +68,25 @@ export default class UserService {
     login(
         userId: string,
         password: string,
-        location?: string | Position,
+        deviceType?: string | DeviceType,
         userOnlineStatus = UserStatus.AVAILABLE,
-        deviceType = DeviceType.UNKNOWN): Promise<void> {
+        location?: Position | UserLocation): Promise<void> {
         RequestUtil.throwIfAnyFalsy(userId, password);
         this._userId = userId;
         this._password = password;
-        this._userOnlineStatus = userOnlineStatus;
-        this._deviceType = deviceType;
-        if (location) {
-            if (typeof location !== 'string') {
-                location = `${location.coords.latitude}:${location.coords.longitude}`;
-            }
-            this._location = location;
+        if (typeof deviceType === 'string') {
+            this._deviceType = ConstantTransformer.string2DeviceType(deviceType);
+        } else if (typeof deviceType === 'number') {
+            this._deviceType = deviceType;
         }
-        return this._turmsClient.driver.connect(userId, password, location as string, userOnlineStatus, deviceType);
+        this._userOnlineStatus = userOnlineStatus;
+        // @ts-ignore
+        if (location && location.coords) {
+            // @ts-ignore
+            this._location = new UserLocation(location.coords.longitude, location.coords.latitude);
+        }
+        return this._turmsClient.driver.connect(this._userId, this._password,
+            this._deviceType, this._userOnlineStatus, this._location);
     }
 
     relogin(): Promise<void> {

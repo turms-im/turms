@@ -146,7 +146,7 @@ client.getMessageService().setOnMessage((message, messageAddition) -> {
     return null;
 });
 
-client.getUserService().login(1, "123", null, null, null)
+client.getUserService().login(1, "123")
         .thenAccept(ignored -> {
             client.getUserService().queryUserIdsNearby(
                     139.667651f,

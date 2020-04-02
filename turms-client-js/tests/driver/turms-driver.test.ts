@@ -1,14 +1,12 @@
 import TurmsDriver from "../../src/driver/turms-driver";
 import {im} from "../../src/model/proto-bundle";
+import TurmsClient from "../../src/turms-client";
 import UserLocation = im.turms.proto.UserLocation;
-import DeviceType = im.turms.proto.DeviceType;
-import UserStatus = im.turms.proto.UserStatus;
-import TurmsRequest = im.turms.proto.TurmsRequest;
 
 let turmsDriver: TurmsDriver;
 
 beforeAll(() => {
-    turmsDriver = new TurmsDriver();
+    turmsDriver = new TurmsClient().driver;
 });
 
 afterAll(async () => {
@@ -26,7 +24,7 @@ describe('TurmsDriver Class', () => {
             longitude: 1,
             latitude: 1
         }).finish();
-        const result = await turmsDriver.connect('1', "123", location, UserStatus.BUSY, DeviceType.ANDROID);
+        const result = await turmsDriver.connect('1', "123");
         expect(result).toBeUndefined();
     });
     it('sendHeartbeat_shouldSucceed', async () => {

@@ -24,6 +24,7 @@ class TurmsClient {
         queryReasonWhenDisconnected?: boolean,
         storageServerUrl?: string) {
         this._driver = new TurmsDriver(
+            this,
             url,
             connectionTimeout,
             requestTimeout,
