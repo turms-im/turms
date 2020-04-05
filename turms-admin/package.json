@@ -21,7 +21,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@antv/g2": "+-^3.5.14",
+    "@antv/g2": "^3.5.14",
     "ant-design-vue": "^1.5.1",
     "axios": "^0.19.2",
     "compression": "^1.7.4",
