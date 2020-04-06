@@ -37,6 +37,7 @@ module.exports = {
                     '/for-developers/admin-api',
                     '/for-developers/client-api',
                     '/for-developers/status-code',
+                    '/for-developers/status-aware',
                     '/for-developers/custom-plugin'
                 ]
             }

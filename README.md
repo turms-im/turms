@@ -6,7 +6,7 @@ Turms是一套全球范围内最为先进且全能的开源即时通讯引擎。
 
 ### Playground
 
-（当前Demo版本：0.9.0-SNAPSHOT.20200201）
+（以下Demo的版本始终为 https://github.com/turms-im/turms/releases 处发布的最新版）
 
 turms服务端的Demo地址（DEV配置，自带Mock数据）：http://120.24.57.206:9510/
 
