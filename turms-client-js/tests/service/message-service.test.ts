@@ -2,14 +2,14 @@ import TurmsClient from "../../src/turms-client";
 import Constants from "../helper/constants";
 import {im} from "../../src/model/proto-bundle";
 import MessageService from "../../src/service/message-service";
-import DeviceType = im.turms.proto.DeviceType;
-import UserStatus = im.turms.proto.UserStatus;
 import ChatType = im.turms.proto.ChatType;
 
 let senderClient: TurmsClient;
 let recipientClient: TurmsClient;
+let groupMemberClient: TurmsClient;
 const SENDER_ID = '1';
 const RECIPIENT_ID = '2';
+const GROUP_MEMBER_ID = '3';
 const TARGET_GROUP_ID = '1';
 let privateMessageId;
 let groupMessageId;
@@ -17,8 +17,10 @@ let groupMessageId;
 beforeAll(async () => {
     senderClient = new TurmsClient(Constants.WS_URL);
     recipientClient = new TurmsClient(Constants.WS_URL);
-    await senderClient.driver.connect(SENDER_ID, "123", null, UserStatus.BUSY, DeviceType.BROWSER);
-    await recipientClient.driver.connect(RECIPIENT_ID, "123", null, UserStatus.BUSY, DeviceType.BROWSER);
+    groupMemberClient = new TurmsClient(Constants.WS_URL);
+    await senderClient.driver.connect(SENDER_ID, "123");
+    await recipientClient.driver.connect(RECIPIENT_ID, "123");
+    await groupMemberClient.driver.connect(GROUP_MEMBER_ID, "123");
 });
 
 afterAll(async () => {
@@ -28,12 +30,16 @@ afterAll(async () => {
     if (recipientClient.driver.connected()) {
         await recipientClient.driver.disconnect();
     }
+    if (groupMemberClient.driver.connected()) {
+        await groupMemberClient.driver.disconnect();
+    }
 });
 
 describe('Constructor', () => {
     it('constructor_shouldReturnNotNullMessageServiceInstance', () => {
         expect(senderClient.messageService).toBeTruthy();
         expect(recipientClient.messageService).toBeTruthy();
+        expect(groupMemberClient.messageService).toBeTruthy();
     });
 });
 
@@ -89,8 +95,9 @@ describe('Query', () => {
         expect(messagesWithTotals.length).toBeGreaterThan(0);
     });
     it('queryMessageStatus_shouldReturnNotEmptyMessageStatus', async () => {
-        const messageStatuses = await senderClient.messageService.queryMessageStatus(groupMessageId);
-        expect(messageStatuses.length).toBeGreaterThan(0);
+        const messageStatusesOfMember1 = await senderClient.messageService.queryMessageStatus(groupMessageId);
+        const messageStatusesOfMember2 = await groupMemberClient.messageService.queryMessageStatus(groupMessageId);
+        expect(messageStatusesOfMember1[0].messageId === messageStatusesOfMember2[0].messageId);
     });
 });
 

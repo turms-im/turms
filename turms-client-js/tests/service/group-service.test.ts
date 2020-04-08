@@ -2,8 +2,6 @@ import Constants from '../helper/constants';
 import TurmsClient from '../../src/turms-client';
 import TurmsStatusCode from '../../src/model/turms-status-code'
 import {im} from '../../src/model/proto-bundle';
-import UserStatus = im.turms.proto.UserStatus;
-import DeviceType = im.turms.proto.DeviceType;
 import GroupMemberRole = im.turms.proto.GroupMemberRole;
 
 const GROUP_MEMBER_ID = '3';
@@ -18,7 +16,7 @@ let groupInvitationId;
 
 beforeAll(async () => {
     turmsClient = new TurmsClient(Constants.WS_URL);
-    await turmsClient.driver.connect('1', "123", null, UserStatus.BUSY, DeviceType.BROWSER);
+    await turmsClient.driver.connect('1', "123", null);
 });
 
 afterAll(async () => {

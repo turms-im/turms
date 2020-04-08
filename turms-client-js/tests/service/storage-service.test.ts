@@ -2,8 +2,6 @@ import Constants from "../helper/constants";
 import {im} from "../../src/model/proto-bundle";
 import TurmsClient from "../../src/turms-client";
 import {readFileSync} from 'fs';
-import DeviceType = im.turms.proto.DeviceType;
-import UserStatus = im.turms.proto.UserStatus;
 import ChatType = im.turms.proto.ChatType;
 
 let turmsClient: TurmsClient;
@@ -16,8 +14,7 @@ let messageId;
 
 beforeAll(async () => {
     turmsClient = new TurmsClient(Constants.WS_URL, null, null, null, Constants.STORAGE_SERVER_URL);
-    await turmsClient.userService
-        .login(USER_ID, "123", null, UserStatus.BUSY, DeviceType.ANDROID);
+    await turmsClient.userService.login(USER_ID, "123");
 });
 
 afterAll(async () => {
