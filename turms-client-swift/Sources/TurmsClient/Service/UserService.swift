@@ -6,7 +6,7 @@ public class UserService {
     var userId: Int64?
     var password: String?
     var location: Position?
-    var userOnlineStatus: UserStatus = .available
+    var userOnlineStatus: UserStatus?
     var deviceType: DeviceType = .unknown
 
     init(_ turmsClient: TurmsClient) {
