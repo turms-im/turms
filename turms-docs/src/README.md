@@ -20,7 +20,7 @@ turms-admin的Demo地址（PROD配置）：http://47.99.56.54:9512/
 | 名称                                                        | 描述                                                         |
 | ----------------------------------------------------------- | ------------------------------------------------------------ |
 | <span style="white-space:nowrap;">turms</span>              | Turms服务端。本质是一个易于集群部署、健壮、方便拓展、运作高效且业务独立的Java即时通信服务端程序 |
-| <span style="white-space:nowrap;">turms-client-js</span>    | 除了实现即时通讯的业务功能外，在底层还实现了与Turms服务端的交互逻辑（如路由跳转、自动重连、会话消息去重、心跳检查等）。您在使用该库时，无需关心背后的逻辑 |
+| <span style="white-space:nowrap;">turms-client-js</span>    | 除了实现即时通讯的业务功能外，在底层还实现了与Turms服务端的交互逻辑（如路由跳转、自动重连、心跳检查等）。您在使用该库时，无需关心背后的逻辑 |
 | <span style="white-space:nowrap;">turms-client-java</span>  | 同上                                                         |
 | <span style="white-space:nowrap;">turms-client-swift</span> | 同上                                                         |
 | <span style="white-space:nowrap;">turms-admin</span>        | 为Turms服务端集群提供：运营数据统计、内容管理、集群配置等功能 |
