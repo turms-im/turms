@@ -156,11 +156,10 @@ private static final long serialVersionUID = 0L;
           }
           case 74: {
             if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-              records_ = new java.util.ArrayList<com.google.protobuf.BytesValue>();
+              records_ = new java.util.ArrayList<com.google.protobuf.ByteString>();
               mutable_bitField0_ |= 0x00000001;
             }
-            records_.add(
-                input.readMessage(com.google.protobuf.BytesValue.parser(), extensionRegistry));
+            records_.add(input.readBytes());
             break;
           }
           default: {
@@ -179,7 +178,7 @@ private static final long serialVersionUID = 0L;
           e).setUnfinishedMessage(this);
     } finally {
       if (((mutable_bitField0_ & 0x00000001) != 0)) {
-        records_ = java.util.Collections.unmodifiableList(records_);
+        records_ = java.util.Collections.unmodifiableList(records_); // C
       }
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
@@ -383,37 +382,28 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int RECORDS_FIELD_NUMBER = 9;
-  private java.util.List<com.google.protobuf.BytesValue> records_;
+  private java.util.List<com.google.protobuf.ByteString> records_;
   /**
-   * <code>repeated .google.protobuf.BytesValue records = 9;</code>
+   * <code>repeated bytes records = 9;</code>
+   * @return A list containing the records.
    */
-  public java.util.List<com.google.protobuf.BytesValue> getRecordsList() {
+  public java.util.List<com.google.protobuf.ByteString>
+      getRecordsList() {
     return records_;
   }
   /**
-   * <code>repeated .google.protobuf.BytesValue records = 9;</code>
-   */
-  public java.util.List<? extends com.google.protobuf.BytesValueOrBuilder> 
-      getRecordsOrBuilderList() {
-    return records_;
-  }
-  /**
-   * <code>repeated .google.protobuf.BytesValue records = 9;</code>
+   * <code>repeated bytes records = 9;</code>
+   * @return The count of records.
    */
   public int getRecordsCount() {
     return records_.size();
   }
   /**
-   * <code>repeated .google.protobuf.BytesValue records = 9;</code>
+   * <code>repeated bytes records = 9;</code>
+   * @param index The index of the element to return.
+   * @return The records at the given index.
    */
-  public com.google.protobuf.BytesValue getRecords(int index) {
-    return records_.get(index);
-  }
-  /**
-   * <code>repeated .google.protobuf.BytesValue records = 9;</code>
-   */
-  public com.google.protobuf.BytesValueOrBuilder getRecordsOrBuilder(
-      int index) {
+  public com.google.protobuf.ByteString getRecords(int index) {
     return records_.get(index);
   }
 
@@ -456,7 +446,7 @@ private static final long serialVersionUID = 0L;
       output.writeMessage(8, getRecipientId());
     }
     for (int i = 0; i < records_.size(); i++) {
-      output.writeMessage(9, records_.get(i));
+      output.writeBytes(9, records_.get(i));
     }
     unknownFields.writeTo(output);
   }
@@ -499,9 +489,14 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(8, getRecipientId());
     }
-    for (int i = 0; i < records_.size(); i++) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(9, records_.get(i));
+    {
+      int dataSize = 0;
+      for (int i = 0; i < records_.size(); i++) {
+        dataSize += com.google.protobuf.CodedOutputStream
+          .computeBytesSizeNoTag(records_.get(i));
+      }
+      size += dataSize;
+      size += 1 * getRecordsList().size();
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -735,7 +730,6 @@ private static final long serialVersionUID = 0L;
     private void maybeForceBuilderInitialization() {
       if (com.google.protobuf.GeneratedMessageV3
               .alwaysUseFieldBuilders) {
-        getRecordsFieldBuilder();
       }
     }
     @java.lang.Override
@@ -789,12 +783,8 @@ private static final long serialVersionUID = 0L;
         recipientId_ = null;
         recipientIdBuilder_ = null;
       }
-      if (recordsBuilder_ == null) {
-        records_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000001);
-      } else {
-        recordsBuilder_.clear();
-      }
+      records_ = java.util.Collections.emptyList();
+      bitField0_ = (bitField0_ & ~0x00000001);
       return this;
     }
 
@@ -862,15 +852,11 @@ private static final long serialVersionUID = 0L;
       } else {
         result.recipientId_ = recipientIdBuilder_.build();
       }
-      if (recordsBuilder_ == null) {
-        if (((bitField0_ & 0x00000001) != 0)) {
-          records_ = java.util.Collections.unmodifiableList(records_);
-          bitField0_ = (bitField0_ & ~0x00000001);
-        }
-        result.records_ = records_;
-      } else {
-        result.records_ = recordsBuilder_.build();
+      if (((bitField0_ & 0x00000001) != 0)) {
+        records_ = java.util.Collections.unmodifiableList(records_);
+        bitField0_ = (bitField0_ & ~0x00000001);
       }
+      result.records_ = records_;
       onBuilt();
       return result;
     }
@@ -943,31 +929,15 @@ private static final long serialVersionUID = 0L;
       if (other.hasRecipientId()) {
         mergeRecipientId(other.getRecipientId());
       }
-      if (recordsBuilder_ == null) {
-        if (!other.records_.isEmpty()) {
-          if (records_.isEmpty()) {
-            records_ = other.records_;
-            bitField0_ = (bitField0_ & ~0x00000001);
-          } else {
-            ensureRecordsIsMutable();
-            records_.addAll(other.records_);
-          }
-          onChanged();
+      if (!other.records_.isEmpty()) {
+        if (records_.isEmpty()) {
+          records_ = other.records_;
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          ensureRecordsIsMutable();
+          records_.addAll(other.records_);
         }
-      } else {
-        if (!other.records_.isEmpty()) {
-          if (recordsBuilder_.isEmpty()) {
-            recordsBuilder_.dispose();
-            recordsBuilder_ = null;
-            records_ = other.records_;
-            bitField0_ = (bitField0_ & ~0x00000001);
-            recordsBuilder_ = 
-              com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                 getRecordsFieldBuilder() : null;
-          } else {
-            recordsBuilder_.addAllMessages(other.records_);
-          }
-        }
+        onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -1951,244 +1921,89 @@ private static final long serialVersionUID = 0L;
       return recipientIdBuilder_;
     }
 
-    private java.util.List<com.google.protobuf.BytesValue> records_ =
-      java.util.Collections.emptyList();
+    private java.util.List<com.google.protobuf.ByteString> records_ = java.util.Collections.emptyList();
     private void ensureRecordsIsMutable() {
       if (!((bitField0_ & 0x00000001) != 0)) {
-        records_ = new java.util.ArrayList<com.google.protobuf.BytesValue>(records_);
+        records_ = new java.util.ArrayList<com.google.protobuf.ByteString>(records_);
         bitField0_ |= 0x00000001;
        }
     }
-
-    private com.google.protobuf.RepeatedFieldBuilderV3<
-        com.google.protobuf.BytesValue, com.google.protobuf.BytesValue.Builder, com.google.protobuf.BytesValueOrBuilder> recordsBuilder_;
-
     /**
-     * <code>repeated .google.protobuf.BytesValue records = 9;</code>
+     * <code>repeated bytes records = 9;</code>
+     * @return A list containing the records.
      */
-    public java.util.List<com.google.protobuf.BytesValue> getRecordsList() {
-      if (recordsBuilder_ == null) {
-        return java.util.Collections.unmodifiableList(records_);
-      } else {
-        return recordsBuilder_.getMessageList();
-      }
+    public java.util.List<com.google.protobuf.ByteString>
+        getRecordsList() {
+      return ((bitField0_ & 0x00000001) != 0) ?
+               java.util.Collections.unmodifiableList(records_) : records_;
     }
     /**
-     * <code>repeated .google.protobuf.BytesValue records = 9;</code>
+     * <code>repeated bytes records = 9;</code>
+     * @return The count of records.
      */
     public int getRecordsCount() {
-      if (recordsBuilder_ == null) {
-        return records_.size();
-      } else {
-        return recordsBuilder_.getCount();
-      }
+      return records_.size();
     }
     /**
-     * <code>repeated .google.protobuf.BytesValue records = 9;</code>
+     * <code>repeated bytes records = 9;</code>
+     * @param index The index of the element to return.
+     * @return The records at the given index.
      */
-    public com.google.protobuf.BytesValue getRecords(int index) {
-      if (recordsBuilder_ == null) {
-        return records_.get(index);
-      } else {
-        return recordsBuilder_.getMessage(index);
-      }
+    public com.google.protobuf.ByteString getRecords(int index) {
+      return records_.get(index);
     }
     /**
-     * <code>repeated .google.protobuf.BytesValue records = 9;</code>
+     * <code>repeated bytes records = 9;</code>
+     * @param index The index to set the value at.
+     * @param value The records to set.
+     * @return This builder for chaining.
      */
     public Builder setRecords(
-        int index, com.google.protobuf.BytesValue value) {
-      if (recordsBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        ensureRecordsIsMutable();
-        records_.set(index, value);
-        onChanged();
-      } else {
-        recordsBuilder_.setMessage(index, value);
-      }
+        int index, com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureRecordsIsMutable();
+      records_.set(index, value);
+      onChanged();
       return this;
     }
     /**
-     * <code>repeated .google.protobuf.BytesValue records = 9;</code>
+     * <code>repeated bytes records = 9;</code>
+     * @param value The records to add.
+     * @return This builder for chaining.
      */
-    public Builder setRecords(
-        int index, com.google.protobuf.BytesValue.Builder builderForValue) {
-      if (recordsBuilder_ == null) {
-        ensureRecordsIsMutable();
-        records_.set(index, builderForValue.build());
-        onChanged();
-      } else {
-        recordsBuilder_.setMessage(index, builderForValue.build());
-      }
+    public Builder addRecords(com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureRecordsIsMutable();
+      records_.add(value);
+      onChanged();
       return this;
     }
     /**
-     * <code>repeated .google.protobuf.BytesValue records = 9;</code>
-     */
-    public Builder addRecords(com.google.protobuf.BytesValue value) {
-      if (recordsBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        ensureRecordsIsMutable();
-        records_.add(value);
-        onChanged();
-      } else {
-        recordsBuilder_.addMessage(value);
-      }
-      return this;
-    }
-    /**
-     * <code>repeated .google.protobuf.BytesValue records = 9;</code>
-     */
-    public Builder addRecords(
-        int index, com.google.protobuf.BytesValue value) {
-      if (recordsBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        ensureRecordsIsMutable();
-        records_.add(index, value);
-        onChanged();
-      } else {
-        recordsBuilder_.addMessage(index, value);
-      }
-      return this;
-    }
-    /**
-     * <code>repeated .google.protobuf.BytesValue records = 9;</code>
-     */
-    public Builder addRecords(
-        com.google.protobuf.BytesValue.Builder builderForValue) {
-      if (recordsBuilder_ == null) {
-        ensureRecordsIsMutable();
-        records_.add(builderForValue.build());
-        onChanged();
-      } else {
-        recordsBuilder_.addMessage(builderForValue.build());
-      }
-      return this;
-    }
-    /**
-     * <code>repeated .google.protobuf.BytesValue records = 9;</code>
-     */
-    public Builder addRecords(
-        int index, com.google.protobuf.BytesValue.Builder builderForValue) {
-      if (recordsBuilder_ == null) {
-        ensureRecordsIsMutable();
-        records_.add(index, builderForValue.build());
-        onChanged();
-      } else {
-        recordsBuilder_.addMessage(index, builderForValue.build());
-      }
-      return this;
-    }
-    /**
-     * <code>repeated .google.protobuf.BytesValue records = 9;</code>
+     * <code>repeated bytes records = 9;</code>
+     * @param values The records to add.
+     * @return This builder for chaining.
      */
     public Builder addAllRecords(
-        java.lang.Iterable<? extends com.google.protobuf.BytesValue> values) {
-      if (recordsBuilder_ == null) {
-        ensureRecordsIsMutable();
-        com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, records_);
-        onChanged();
-      } else {
-        recordsBuilder_.addAllMessages(values);
-      }
+        java.lang.Iterable<? extends com.google.protobuf.ByteString> values) {
+      ensureRecordsIsMutable();
+      com.google.protobuf.AbstractMessageLite.Builder.addAll(
+          values, records_);
+      onChanged();
       return this;
     }
     /**
-     * <code>repeated .google.protobuf.BytesValue records = 9;</code>
+     * <code>repeated bytes records = 9;</code>
+     * @return This builder for chaining.
      */
     public Builder clearRecords() {
-      if (recordsBuilder_ == null) {
-        records_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000001);
-        onChanged();
-      } else {
-        recordsBuilder_.clear();
-      }
+      records_ = java.util.Collections.emptyList();
+      bitField0_ = (bitField0_ & ~0x00000001);
+      onChanged();
       return this;
-    }
-    /**
-     * <code>repeated .google.protobuf.BytesValue records = 9;</code>
-     */
-    public Builder removeRecords(int index) {
-      if (recordsBuilder_ == null) {
-        ensureRecordsIsMutable();
-        records_.remove(index);
-        onChanged();
-      } else {
-        recordsBuilder_.remove(index);
-      }
-      return this;
-    }
-    /**
-     * <code>repeated .google.protobuf.BytesValue records = 9;</code>
-     */
-    public com.google.protobuf.BytesValue.Builder getRecordsBuilder(
-        int index) {
-      return getRecordsFieldBuilder().getBuilder(index);
-    }
-    /**
-     * <code>repeated .google.protobuf.BytesValue records = 9;</code>
-     */
-    public com.google.protobuf.BytesValueOrBuilder getRecordsOrBuilder(
-        int index) {
-      if (recordsBuilder_ == null) {
-        return records_.get(index);  } else {
-        return recordsBuilder_.getMessageOrBuilder(index);
-      }
-    }
-    /**
-     * <code>repeated .google.protobuf.BytesValue records = 9;</code>
-     */
-    public java.util.List<? extends com.google.protobuf.BytesValueOrBuilder> 
-         getRecordsOrBuilderList() {
-      if (recordsBuilder_ != null) {
-        return recordsBuilder_.getMessageOrBuilderList();
-      } else {
-        return java.util.Collections.unmodifiableList(records_);
-      }
-    }
-    /**
-     * <code>repeated .google.protobuf.BytesValue records = 9;</code>
-     */
-    public com.google.protobuf.BytesValue.Builder addRecordsBuilder() {
-      return getRecordsFieldBuilder().addBuilder(
-          com.google.protobuf.BytesValue.getDefaultInstance());
-    }
-    /**
-     * <code>repeated .google.protobuf.BytesValue records = 9;</code>
-     */
-    public com.google.protobuf.BytesValue.Builder addRecordsBuilder(
-        int index) {
-      return getRecordsFieldBuilder().addBuilder(
-          index, com.google.protobuf.BytesValue.getDefaultInstance());
-    }
-    /**
-     * <code>repeated .google.protobuf.BytesValue records = 9;</code>
-     */
-    public java.util.List<com.google.protobuf.BytesValue.Builder> 
-         getRecordsBuilderList() {
-      return getRecordsFieldBuilder().getBuilderList();
-    }
-    private com.google.protobuf.RepeatedFieldBuilderV3<
-        com.google.protobuf.BytesValue, com.google.protobuf.BytesValue.Builder, com.google.protobuf.BytesValueOrBuilder> 
-        getRecordsFieldBuilder() {
-      if (recordsBuilder_ == null) {
-        recordsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-            com.google.protobuf.BytesValue, com.google.protobuf.BytesValue.Builder, com.google.protobuf.BytesValueOrBuilder>(
-                records_,
-                ((bitField0_ & 0x00000001) != 0),
-                getParentForChildren(),
-                isClean());
-        records_ = null;
-      }
-      return recordsBuilder_;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

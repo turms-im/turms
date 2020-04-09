@@ -30,14 +30,13 @@ public final class GroupJoinQuestionOuterClass {
     java.lang.String[] descriptorData = {
       "\n%model/group/group_join_question.proto\022" +
       "\016im.turms.proto\032\036google/protobuf/wrapper" +
-      "s.proto\"\366\001\n\021GroupJoinQuestion\022\'\n\002id\030\001 \001(" +
+      "s.proto\"\330\001\n\021GroupJoinQuestion\022\'\n\002id\030\001 \001(" +
       "\0132\033.google.protobuf.Int64Value\022-\n\010group_" +
       "id\030\002 \001(\0132\033.google.protobuf.Int64Value\022.\n" +
       "\010question\030\003 \001(\0132\034.google.protobuf.String" +
-      "Value\022-\n\007answers\030\004 \003(\0132\034.google.protobuf" +
-      ".StringValue\022*\n\005score\030\005 \001(\0132\033.google.pro" +
-      "tobuf.Int32ValueB%\n\036im.turms.common.mode" +
-      "l.bo.groupP\001\272\002\000b\006proto3"
+      "Value\022\017\n\007answers\030\004 \003(\t\022*\n\005score\030\005 \001(\0132\033." +
+      "google.protobuf.Int32ValueB%\n\036im.turms.c" +
+      "ommon.model.bo.groupP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

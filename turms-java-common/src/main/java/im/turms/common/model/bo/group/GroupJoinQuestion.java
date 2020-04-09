@@ -16,7 +16,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private GroupJoinQuestion() {
-    answers_ = java.util.Collections.emptyList();
+    answers_ = com.google.protobuf.LazyStringArrayList.EMPTY;
   }
 
   @java.lang.Override
@@ -90,12 +90,12 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 34: {
+            java.lang.String s = input.readStringRequireUtf8();
             if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-              answers_ = new java.util.ArrayList<com.google.protobuf.StringValue>();
+              answers_ = new com.google.protobuf.LazyStringArrayList();
               mutable_bitField0_ |= 0x00000001;
             }
-            answers_.add(
-                input.readMessage(com.google.protobuf.StringValue.parser(), extensionRegistry));
+            answers_.add(s);
             break;
           }
           case 42: {
@@ -127,7 +127,7 @@ private static final long serialVersionUID = 0L;
           e).setUnfinishedMessage(this);
     } finally {
       if (((mutable_bitField0_ & 0x00000001) != 0)) {
-        answers_ = java.util.Collections.unmodifiableList(answers_);
+        answers_ = answers_.getUnmodifiableView();
       }
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
@@ -216,38 +216,38 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int ANSWERS_FIELD_NUMBER = 4;
-  private java.util.List<com.google.protobuf.StringValue> answers_;
+  private com.google.protobuf.LazyStringList answers_;
   /**
-   * <code>repeated .google.protobuf.StringValue answers = 4;</code>
+   * <code>repeated string answers = 4;</code>
+   * @return A list containing the answers.
    */
-  public java.util.List<com.google.protobuf.StringValue> getAnswersList() {
+  public com.google.protobuf.ProtocolStringList
+      getAnswersList() {
     return answers_;
   }
   /**
-   * <code>repeated .google.protobuf.StringValue answers = 4;</code>
-   */
-  public java.util.List<? extends com.google.protobuf.StringValueOrBuilder> 
-      getAnswersOrBuilderList() {
-    return answers_;
-  }
-  /**
-   * <code>repeated .google.protobuf.StringValue answers = 4;</code>
+   * <code>repeated string answers = 4;</code>
+   * @return The count of answers.
    */
   public int getAnswersCount() {
     return answers_.size();
   }
   /**
-   * <code>repeated .google.protobuf.StringValue answers = 4;</code>
+   * <code>repeated string answers = 4;</code>
+   * @param index The index of the element to return.
+   * @return The answers at the given index.
    */
-  public com.google.protobuf.StringValue getAnswers(int index) {
+  public java.lang.String getAnswers(int index) {
     return answers_.get(index);
   }
   /**
-   * <code>repeated .google.protobuf.StringValue answers = 4;</code>
+   * <code>repeated string answers = 4;</code>
+   * @param index The index of the value to return.
+   * @return The bytes of the answers at the given index.
    */
-  public com.google.protobuf.StringValueOrBuilder getAnswersOrBuilder(
-      int index) {
-    return answers_.get(index);
+  public com.google.protobuf.ByteString
+      getAnswersBytes(int index) {
+    return answers_.getByteString(index);
   }
 
   public static final int SCORE_FIELD_NUMBER = 5;
@@ -297,7 +297,7 @@ private static final long serialVersionUID = 0L;
       output.writeMessage(3, getQuestion());
     }
     for (int i = 0; i < answers_.size(); i++) {
-      output.writeMessage(4, answers_.get(i));
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, answers_.getRaw(i));
     }
     if (score_ != null) {
       output.writeMessage(5, getScore());
@@ -323,9 +323,13 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(3, getQuestion());
     }
-    for (int i = 0; i < answers_.size(); i++) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(4, answers_.get(i));
+    {
+      int dataSize = 0;
+      for (int i = 0; i < answers_.size(); i++) {
+        dataSize += computeStringSizeNoTag(answers_.getRaw(i));
+      }
+      size += dataSize;
+      size += 1 * getAnswersList().size();
     }
     if (score_ != null) {
       size += com.google.protobuf.CodedOutputStream
@@ -527,7 +531,6 @@ private static final long serialVersionUID = 0L;
     private void maybeForceBuilderInitialization() {
       if (com.google.protobuf.GeneratedMessageV3
               .alwaysUseFieldBuilders) {
-        getAnswersFieldBuilder();
       }
     }
     @java.lang.Override
@@ -551,12 +554,8 @@ private static final long serialVersionUID = 0L;
         question_ = null;
         questionBuilder_ = null;
       }
-      if (answersBuilder_ == null) {
-        answers_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000001);
-      } else {
-        answersBuilder_.clear();
-      }
+      answers_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      bitField0_ = (bitField0_ & ~0x00000001);
       if (scoreBuilder_ == null) {
         score_ = null;
       } else {
@@ -605,15 +604,11 @@ private static final long serialVersionUID = 0L;
       } else {
         result.question_ = questionBuilder_.build();
       }
-      if (answersBuilder_ == null) {
-        if (((bitField0_ & 0x00000001) != 0)) {
-          answers_ = java.util.Collections.unmodifiableList(answers_);
-          bitField0_ = (bitField0_ & ~0x00000001);
-        }
-        result.answers_ = answers_;
-      } else {
-        result.answers_ = answersBuilder_.build();
+      if (((bitField0_ & 0x00000001) != 0)) {
+        answers_ = answers_.getUnmodifiableView();
+        bitField0_ = (bitField0_ & ~0x00000001);
       }
+      result.answers_ = answers_;
       if (scoreBuilder_ == null) {
         result.score_ = score_;
       } else {
@@ -676,31 +671,15 @@ private static final long serialVersionUID = 0L;
       if (other.hasQuestion()) {
         mergeQuestion(other.getQuestion());
       }
-      if (answersBuilder_ == null) {
-        if (!other.answers_.isEmpty()) {
-          if (answers_.isEmpty()) {
-            answers_ = other.answers_;
-            bitField0_ = (bitField0_ & ~0x00000001);
-          } else {
-            ensureAnswersIsMutable();
-            answers_.addAll(other.answers_);
-          }
-          onChanged();
+      if (!other.answers_.isEmpty()) {
+        if (answers_.isEmpty()) {
+          answers_ = other.answers_;
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          ensureAnswersIsMutable();
+          answers_.addAll(other.answers_);
         }
-      } else {
-        if (!other.answers_.isEmpty()) {
-          if (answersBuilder_.isEmpty()) {
-            answersBuilder_.dispose();
-            answersBuilder_ = null;
-            answers_ = other.answers_;
-            bitField0_ = (bitField0_ & ~0x00000001);
-            answersBuilder_ = 
-              com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                 getAnswersFieldBuilder() : null;
-          } else {
-            answersBuilder_.addAllMessages(other.answers_);
-          }
-        }
+        onChanged();
       }
       if (other.hasScore()) {
         mergeScore(other.getScore());
@@ -1092,244 +1071,114 @@ private static final long serialVersionUID = 0L;
       return questionBuilder_;
     }
 
-    private java.util.List<com.google.protobuf.StringValue> answers_ =
-      java.util.Collections.emptyList();
+    private com.google.protobuf.LazyStringList answers_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     private void ensureAnswersIsMutable() {
       if (!((bitField0_ & 0x00000001) != 0)) {
-        answers_ = new java.util.ArrayList<com.google.protobuf.StringValue>(answers_);
+        answers_ = new com.google.protobuf.LazyStringArrayList(answers_);
         bitField0_ |= 0x00000001;
        }
     }
-
-    private com.google.protobuf.RepeatedFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> answersBuilder_;
-
     /**
-     * <code>repeated .google.protobuf.StringValue answers = 4;</code>
+     * <code>repeated string answers = 4;</code>
+     * @return A list containing the answers.
      */
-    public java.util.List<com.google.protobuf.StringValue> getAnswersList() {
-      if (answersBuilder_ == null) {
-        return java.util.Collections.unmodifiableList(answers_);
-      } else {
-        return answersBuilder_.getMessageList();
-      }
+    public com.google.protobuf.ProtocolStringList
+        getAnswersList() {
+      return answers_.getUnmodifiableView();
     }
     /**
-     * <code>repeated .google.protobuf.StringValue answers = 4;</code>
+     * <code>repeated string answers = 4;</code>
+     * @return The count of answers.
      */
     public int getAnswersCount() {
-      if (answersBuilder_ == null) {
-        return answers_.size();
-      } else {
-        return answersBuilder_.getCount();
-      }
+      return answers_.size();
     }
     /**
-     * <code>repeated .google.protobuf.StringValue answers = 4;</code>
+     * <code>repeated string answers = 4;</code>
+     * @param index The index of the element to return.
+     * @return The answers at the given index.
      */
-    public com.google.protobuf.StringValue getAnswers(int index) {
-      if (answersBuilder_ == null) {
-        return answers_.get(index);
-      } else {
-        return answersBuilder_.getMessage(index);
-      }
+    public java.lang.String getAnswers(int index) {
+      return answers_.get(index);
     }
     /**
-     * <code>repeated .google.protobuf.StringValue answers = 4;</code>
+     * <code>repeated string answers = 4;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the answers at the given index.
      */
-    public Builder setAnswers(
-        int index, com.google.protobuf.StringValue value) {
-      if (answersBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        ensureAnswersIsMutable();
-        answers_.set(index, value);
-        onChanged();
-      } else {
-        answersBuilder_.setMessage(index, value);
-      }
-      return this;
+    public com.google.protobuf.ByteString
+        getAnswersBytes(int index) {
+      return answers_.getByteString(index);
     }
     /**
-     * <code>repeated .google.protobuf.StringValue answers = 4;</code>
+     * <code>repeated string answers = 4;</code>
+     * @param index The index to set the value at.
+     * @param value The answers to set.
+     * @return This builder for chaining.
      */
     public Builder setAnswers(
-        int index, com.google.protobuf.StringValue.Builder builderForValue) {
-      if (answersBuilder_ == null) {
-        ensureAnswersIsMutable();
-        answers_.set(index, builderForValue.build());
-        onChanged();
-      } else {
-        answersBuilder_.setMessage(index, builderForValue.build());
-      }
+        int index, java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureAnswersIsMutable();
+      answers_.set(index, value);
+      onChanged();
       return this;
     }
     /**
-     * <code>repeated .google.protobuf.StringValue answers = 4;</code>
-     */
-    public Builder addAnswers(com.google.protobuf.StringValue value) {
-      if (answersBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        ensureAnswersIsMutable();
-        answers_.add(value);
-        onChanged();
-      } else {
-        answersBuilder_.addMessage(value);
-      }
-      return this;
-    }
-    /**
-     * <code>repeated .google.protobuf.StringValue answers = 4;</code>
+     * <code>repeated string answers = 4;</code>
+     * @param value The answers to add.
+     * @return This builder for chaining.
      */
     public Builder addAnswers(
-        int index, com.google.protobuf.StringValue value) {
-      if (answersBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        ensureAnswersIsMutable();
-        answers_.add(index, value);
-        onChanged();
-      } else {
-        answersBuilder_.addMessage(index, value);
-      }
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureAnswersIsMutable();
+      answers_.add(value);
+      onChanged();
       return this;
     }
     /**
-     * <code>repeated .google.protobuf.StringValue answers = 4;</code>
-     */
-    public Builder addAnswers(
-        com.google.protobuf.StringValue.Builder builderForValue) {
-      if (answersBuilder_ == null) {
-        ensureAnswersIsMutable();
-        answers_.add(builderForValue.build());
-        onChanged();
-      } else {
-        answersBuilder_.addMessage(builderForValue.build());
-      }
-      return this;
-    }
-    /**
-     * <code>repeated .google.protobuf.StringValue answers = 4;</code>
-     */
-    public Builder addAnswers(
-        int index, com.google.protobuf.StringValue.Builder builderForValue) {
-      if (answersBuilder_ == null) {
-        ensureAnswersIsMutable();
-        answers_.add(index, builderForValue.build());
-        onChanged();
-      } else {
-        answersBuilder_.addMessage(index, builderForValue.build());
-      }
-      return this;
-    }
-    /**
-     * <code>repeated .google.protobuf.StringValue answers = 4;</code>
+     * <code>repeated string answers = 4;</code>
+     * @param values The answers to add.
+     * @return This builder for chaining.
      */
     public Builder addAllAnswers(
-        java.lang.Iterable<? extends com.google.protobuf.StringValue> values) {
-      if (answersBuilder_ == null) {
-        ensureAnswersIsMutable();
-        com.google.protobuf.AbstractMessageLite.Builder.addAll(
-            values, answers_);
-        onChanged();
-      } else {
-        answersBuilder_.addAllMessages(values);
-      }
+        java.lang.Iterable<java.lang.String> values) {
+      ensureAnswersIsMutable();
+      com.google.protobuf.AbstractMessageLite.Builder.addAll(
+          values, answers_);
+      onChanged();
       return this;
     }
     /**
-     * <code>repeated .google.protobuf.StringValue answers = 4;</code>
+     * <code>repeated string answers = 4;</code>
+     * @return This builder for chaining.
      */
     public Builder clearAnswers() {
-      if (answersBuilder_ == null) {
-        answers_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000001);
-        onChanged();
-      } else {
-        answersBuilder_.clear();
-      }
+      answers_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      bitField0_ = (bitField0_ & ~0x00000001);
+      onChanged();
       return this;
     }
     /**
-     * <code>repeated .google.protobuf.StringValue answers = 4;</code>
+     * <code>repeated string answers = 4;</code>
+     * @param value The bytes of the answers to add.
+     * @return This builder for chaining.
      */
-    public Builder removeAnswers(int index) {
-      if (answersBuilder_ == null) {
-        ensureAnswersIsMutable();
-        answers_.remove(index);
-        onChanged();
-      } else {
-        answersBuilder_.remove(index);
-      }
+    public Builder addAnswersBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      ensureAnswersIsMutable();
+      answers_.add(value);
+      onChanged();
       return this;
-    }
-    /**
-     * <code>repeated .google.protobuf.StringValue answers = 4;</code>
-     */
-    public com.google.protobuf.StringValue.Builder getAnswersBuilder(
-        int index) {
-      return getAnswersFieldBuilder().getBuilder(index);
-    }
-    /**
-     * <code>repeated .google.protobuf.StringValue answers = 4;</code>
-     */
-    public com.google.protobuf.StringValueOrBuilder getAnswersOrBuilder(
-        int index) {
-      if (answersBuilder_ == null) {
-        return answers_.get(index);  } else {
-        return answersBuilder_.getMessageOrBuilder(index);
-      }
-    }
-    /**
-     * <code>repeated .google.protobuf.StringValue answers = 4;</code>
-     */
-    public java.util.List<? extends com.google.protobuf.StringValueOrBuilder> 
-         getAnswersOrBuilderList() {
-      if (answersBuilder_ != null) {
-        return answersBuilder_.getMessageOrBuilderList();
-      } else {
-        return java.util.Collections.unmodifiableList(answers_);
-      }
-    }
-    /**
-     * <code>repeated .google.protobuf.StringValue answers = 4;</code>
-     */
-    public com.google.protobuf.StringValue.Builder addAnswersBuilder() {
-      return getAnswersFieldBuilder().addBuilder(
-          com.google.protobuf.StringValue.getDefaultInstance());
-    }
-    /**
-     * <code>repeated .google.protobuf.StringValue answers = 4;</code>
-     */
-    public com.google.protobuf.StringValue.Builder addAnswersBuilder(
-        int index) {
-      return getAnswersFieldBuilder().addBuilder(
-          index, com.google.protobuf.StringValue.getDefaultInstance());
-    }
-    /**
-     * <code>repeated .google.protobuf.StringValue answers = 4;</code>
-     */
-    public java.util.List<com.google.protobuf.StringValue.Builder> 
-         getAnswersBuilderList() {
-      return getAnswersFieldBuilder().getBuilderList();
-    }
-    private com.google.protobuf.RepeatedFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> 
-        getAnswersFieldBuilder() {
-      if (answersBuilder_ == null) {
-        answersBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-            com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>(
-                answers_,
-                ((bitField0_ & 0x00000001) != 0),
-                getParentForChildren(),
-                isClean());
-        answers_ = null;
-      }
-      return answersBuilder_;
     }
 
     private com.google.protobuf.Int32Value score_;

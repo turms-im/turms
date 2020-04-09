@@ -1553,7 +1553,7 @@ $root.im = (function() {
                  * @property {google.protobuf.IInt64Value|null} [id] GroupJoinQuestion id
                  * @property {google.protobuf.IInt64Value|null} [groupId] GroupJoinQuestion groupId
                  * @property {google.protobuf.IStringValue|null} [question] GroupJoinQuestion question
-                 * @property {Array.<google.protobuf.IStringValue>|null} [answers] GroupJoinQuestion answers
+                 * @property {Array.<string>|null} [answers] GroupJoinQuestion answers
                  * @property {google.protobuf.IInt32Value|null} [score] GroupJoinQuestion score
                  */
 
@@ -1599,7 +1599,7 @@ $root.im = (function() {
 
                 /**
                  * GroupJoinQuestion answers.
-                 * @member {Array.<google.protobuf.IStringValue>} answers
+                 * @member {Array.<string>} answers
                  * @memberof im.turms.proto.GroupJoinQuestion
                  * @instance
                  */
@@ -1633,7 +1633,7 @@ $root.im = (function() {
                         $root.google.protobuf.StringValue.encode(message.question, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                     if (message.answers != null && message.answers.length)
                         for (var i = 0; i < message.answers.length; ++i)
-                            $root.google.protobuf.StringValue.encode(message.answers[i], writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+                            writer.uint32(/* id 4, wireType 2 =*/34).string(message.answers[i]);
                     if (message.score != null && Object.hasOwnProperty.call(message, "score"))
                         $root.google.protobuf.Int32Value.encode(message.score, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
                     return writer;
@@ -1669,7 +1669,7 @@ $root.im = (function() {
                         case 4:
                             if (!(message.answers && message.answers.length))
                                 message.answers = [];
-                            message.answers.push($root.google.protobuf.StringValue.decode(reader, reader.uint32()));
+                            message.answers.push(reader.string());
                             break;
                         case 5:
                             message.score = $root.google.protobuf.Int32Value.decode(reader, reader.uint32());
@@ -3043,7 +3043,7 @@ $root.im = (function() {
                  * @property {google.protobuf.IInt64Value|null} [groupId] Message groupId
                  * @property {google.protobuf.IBoolValue|null} [isSystemMessage] Message isSystemMessage
                  * @property {google.protobuf.IInt64Value|null} [recipientId] Message recipientId
-                 * @property {Array.<google.protobuf.IBytesValue>|null} [records] Message records
+                 * @property {Array.<Uint8Array>|null} [records] Message records
                  */
 
                 /**
@@ -3128,7 +3128,7 @@ $root.im = (function() {
 
                 /**
                  * Message records.
-                 * @member {Array.<google.protobuf.IBytesValue>} records
+                 * @member {Array.<Uint8Array>} records
                  * @memberof im.turms.proto.Message
                  * @instance
                  */
@@ -3164,7 +3164,7 @@ $root.im = (function() {
                         $root.google.protobuf.Int64Value.encode(message.recipientId, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
                     if (message.records != null && message.records.length)
                         for (var i = 0; i < message.records.length; ++i)
-                            $root.google.protobuf.BytesValue.encode(message.records[i], writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
+                            writer.uint32(/* id 9, wireType 2 =*/74).bytes(message.records[i]);
                     return writer;
                 };
 
@@ -3213,7 +3213,7 @@ $root.im = (function() {
                         case 9:
                             if (!(message.records && message.records.length))
                                 message.records = [];
-                            message.records.push($root.google.protobuf.BytesValue.decode(reader, reader.uint32()));
+                            message.records.push(reader.bytes());
                             break;
                         default:
                             reader.skipType(tag & 7);

@@ -128,26 +128,19 @@ public interface MessageOrBuilder extends
   com.google.protobuf.Int64ValueOrBuilder getRecipientIdOrBuilder();
 
   /**
-   * <code>repeated .google.protobuf.BytesValue records = 9;</code>
+   * <code>repeated bytes records = 9;</code>
+   * @return A list containing the records.
    */
-  java.util.List<com.google.protobuf.BytesValue> 
-      getRecordsList();
+  java.util.List<com.google.protobuf.ByteString> getRecordsList();
   /**
-   * <code>repeated .google.protobuf.BytesValue records = 9;</code>
-   */
-  com.google.protobuf.BytesValue getRecords(int index);
-  /**
-   * <code>repeated .google.protobuf.BytesValue records = 9;</code>
+   * <code>repeated bytes records = 9;</code>
+   * @return The count of records.
    */
   int getRecordsCount();
   /**
-   * <code>repeated .google.protobuf.BytesValue records = 9;</code>
+   * <code>repeated bytes records = 9;</code>
+   * @param index The index of the element to return.
+   * @return The records at the given index.
    */
-  java.util.List<? extends com.google.protobuf.BytesValueOrBuilder> 
-      getRecordsOrBuilderList();
-  /**
-   * <code>repeated .google.protobuf.BytesValue records = 9;</code>
-   */
-  com.google.protobuf.BytesValueOrBuilder getRecordsOrBuilder(
-      int index);
+  com.google.protobuf.ByteString getRecords(int index);
 }

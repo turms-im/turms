@@ -29,7 +29,7 @@ public final class MessageOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\033model/message/message.proto\022\016im.turms." +
-      "proto\032\036google/protobuf/wrappers.proto\"\275\003" +
+      "proto\032\036google/protobuf/wrappers.proto\"\240\003" +
       "\n\007Message\022\'\n\002id\030\001 \001(\0132\033.google.protobuf." +
       "Int64Value\0222\n\rdelivery_date\030\002 \001(\0132\033.goog" +
       "le.protobuf.Int64Value\0222\n\rdeletion_date\030" +
@@ -40,9 +40,8 @@ public final class MessageOuterClass {
       "uf.Int64Value\0225\n\021is_system_message\030\007 \001(\013" +
       "2\032.google.protobuf.BoolValue\0221\n\014recipien" +
       "t_id\030\010 \001(\0132\033.google.protobuf.Int64Value\022" +
-      ",\n\007records\030\t \003(\0132\033.google.protobuf.Bytes" +
-      "ValueB\'\n im.turms.common.model.bo.messag" +
-      "eP\001\272\002\000b\006proto3"
+      "\017\n\007records\030\t \003(\014B\'\n im.turms.common.mode" +
+      "l.bo.messageP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

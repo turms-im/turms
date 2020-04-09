@@ -712,7 +712,7 @@ export namespace im {
                 question?: (google.protobuf.IStringValue|null);
 
                 /** GroupJoinQuestion answers */
-                answers?: (google.protobuf.IStringValue[]|null);
+                answers?: (string[]|null);
 
                 /** GroupJoinQuestion score */
                 score?: (google.protobuf.IInt32Value|null);
@@ -737,7 +737,7 @@ export namespace im {
                 public question?: (google.protobuf.IStringValue|null);
 
                 /** GroupJoinQuestion answers. */
-                public answers: google.protobuf.IStringValue[];
+                public answers: string[];
 
                 /** GroupJoinQuestion score. */
                 public score?: (google.protobuf.IInt32Value|null);
@@ -1379,7 +1379,7 @@ export namespace im {
                 recipientId?: (google.protobuf.IInt64Value|null);
 
                 /** Message records */
-                records?: (google.protobuf.IBytesValue[]|null);
+                records?: (Uint8Array[]|null);
             }
 
             /** Represents a Message. */
@@ -1416,7 +1416,7 @@ export namespace im {
                 public recipientId?: (google.protobuf.IInt64Value|null);
 
                 /** Message records. */
-                public records: google.protobuf.IBytesValue[];
+                public records: Uint8Array[];
 
                 /**
                  * Encodes the specified Message message. Does not implicitly {@link im.turms.proto.Message.verify|verify} messages.

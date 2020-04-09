@@ -74,9 +74,7 @@ public class ProtoUtil {
         }
         if (records != null && !records.isEmpty()) {
             for (byte[] record : records) {
-                builder.addRecords(BytesValue.newBuilder()
-                        .setValue(ByteString.copyFrom(record))
-                        .build());
+                builder.addRecords(ByteString.copyFrom(record));
             }
         }
         return builder;
@@ -326,9 +324,7 @@ public class ProtoUtil {
             builder.setQuestion(StringValue.newBuilder().setValue(content).build());
         }
         if (question.getAnswers() != null && !question.getAnswers().isEmpty()) {
-            for (String answer : question.getAnswers()) {
-                builder.addAnswers(StringValue.newBuilder().setValue(answer).build());
-            }
+            builder.addAllAnswers(question.getAnswers());
         }
         return builder;
     }

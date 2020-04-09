@@ -53,28 +53,29 @@ public interface GroupJoinQuestionOrBuilder extends
   com.google.protobuf.StringValueOrBuilder getQuestionOrBuilder();
 
   /**
-   * <code>repeated .google.protobuf.StringValue answers = 4;</code>
+   * <code>repeated string answers = 4;</code>
+   * @return A list containing the answers.
    */
-  java.util.List<com.google.protobuf.StringValue> 
+  java.util.List<java.lang.String>
       getAnswersList();
   /**
-   * <code>repeated .google.protobuf.StringValue answers = 4;</code>
-   */
-  com.google.protobuf.StringValue getAnswers(int index);
-  /**
-   * <code>repeated .google.protobuf.StringValue answers = 4;</code>
+   * <code>repeated string answers = 4;</code>
+   * @return The count of answers.
    */
   int getAnswersCount();
   /**
-   * <code>repeated .google.protobuf.StringValue answers = 4;</code>
+   * <code>repeated string answers = 4;</code>
+   * @param index The index of the element to return.
+   * @return The answers at the given index.
    */
-  java.util.List<? extends com.google.protobuf.StringValueOrBuilder> 
-      getAnswersOrBuilderList();
+  java.lang.String getAnswers(int index);
   /**
-   * <code>repeated .google.protobuf.StringValue answers = 4;</code>
+   * <code>repeated string answers = 4;</code>
+   * @param index The index of the value to return.
+   * @return The bytes of the answers at the given index.
    */
-  com.google.protobuf.StringValueOrBuilder getAnswersOrBuilder(
-      int index);
+  com.google.protobuf.ByteString
+      getAnswersBytes(int index);
 
   /**
    * <code>.google.protobuf.Int32Value score = 5;</code>
