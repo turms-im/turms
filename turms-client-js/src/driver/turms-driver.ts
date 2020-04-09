@@ -6,17 +6,21 @@ import TurmsStatusCode from "../model/turms-status-code";
 import TurmsBusinessException from "../model/turms-business-exception";
 import {im} from "../model/proto-bundle";
 // @ts-ignore
-import * as fetch from "unfetch";
 import {encode as encodeQuerystring} from "querystring";
 import NotificationUtil from "../util/notification-util";
 import {ParsedNotification} from "../model/parsed-notification";
 import TurmsCloseStatus from "../model/turms-close-status";
 import TurmsClient from "../turms-client";
+import UserLocation from "../model/user-location";
 import TurmsNotification = im.turms.proto.TurmsNotification;
 import TurmsRequest = im.turms.proto.TurmsRequest;
 import UserStatus = im.turms.proto.UserStatus;
 import DeviceType = im.turms.proto.DeviceType;
-import UserLocation from "../model/user-location";
+
+// Don't use "import fetch from 'unfetch'" because it throws if running in Node.js
+// Don't use "import * as fetch from 'unfetch'" because it throws if running in browser
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const fetch = require('unfetch');
 
 const COOKIE_REQUEST_ID = 'rid';
 const COOKIE_USER_ID = 'uid';

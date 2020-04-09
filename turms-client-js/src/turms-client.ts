@@ -19,10 +19,10 @@ class TurmsClient {
         connectionTimeout?: number,
         requestTimeout?: number,
         minRequestsInterval?: number,
+        storageServerUrl?: string,
         httpUrl?: string,
         queryReasonWhenLoginFailed?: boolean,
-        queryReasonWhenDisconnected?: boolean,
-        storageServerUrl?: string) {
+        queryReasonWhenDisconnected?: boolean) {
         this._driver = new TurmsDriver(
             this,
             url,

@@ -12,8 +12,8 @@ export default class MessageService {
     get onMessage(): (message: ParsedModel.Message, messageAddition: MessageAddition) => void;
     set onMessage(value: (message: ParsedModel.Message, messageAddition: MessageAddition) => void);
     constructor(turmsClient: TurmsClient);
-    sendMessage(chatType: string | ChatType, toId: string, deliveryDate?: Date, text?: string, records?: Uint8Array[], burnAfter?: number): Promise<string>;
-    forwardMessage(messageId: string, chatType: string | ChatType, toId: string): Promise<string>;
+    sendMessage(chatType: string | ChatType, targetId: string, deliveryDate?: Date, text?: string, records?: Uint8Array[], burnAfter?: number): Promise<string>;
+    forwardMessage(messageId: string, chatType: string | ChatType, targetId: string): Promise<string>;
     updateSentMessage(messageId: string, text?: string, records?: Uint8Array[]): Promise<void>;
     queryMessages(ids?: string[], chatType?: string | ChatType, areSystemMessages?: boolean, fromId?: string, deliveryDateAfter?: Date, deliveryDateBefore?: Date, deliveryStatus?: string | MessageDeliveryStatus, size?: number): Promise<ParsedModel.Message[]>;
     queryPendingMessagesWithTotal(size?: number): Promise<ParsedModel.MessagesWithTotal[]>;
@@ -33,5 +33,6 @@ export default class MessageService {
     static generateImageRecordByDescription(url: string, fileSize?: number, imageSize?: number, original?: boolean): Uint8Array;
     static generateFileRecordByDate(data: ArrayBuffer): Uint8Array;
     static generateFileRecordByDescription(url: string, format?: string, size?: number): Uint8Array;
-    private parseMessageAddition;
+    private _parseMessageAddition;
+    private static _createMessageRequest2Message;
 }

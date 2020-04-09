@@ -48,13 +48,12 @@ export default class MessageService {
         this._turmsClient.driver
             .onNotificationListeners
             .push(notification => {
-                if (this._onMessage != null && notification.data) {
-                    const data = notification.data;
-                    if (data.messages) {
-                        for (const message of data.messages.messages) {
-                            const addition = this.parseMessageAddition(message);
-                            this._onMessage(message as ParsedModel.Message, addition);
-                        }
+                if (this._onMessage != null && notification.relayedRequest) {
+                    const request = notification.relayedRequest.createMessageRequest;
+                    if (request) {
+                        const message = MessageService._createMessageRequest2Message(notification.requesterId, request);
+                        const addition = this._parseMessageAddition(message);
+                        this._onMessage(message as ParsedModel.Message, addition);
                     }
                 }
                 return null;
@@ -326,7 +325,7 @@ export default class MessageService {
         }).finish();
     }
 
-    private parseMessageAddition(message: ParsedModel.Message): MessageAddition {
+    private _parseMessageAddition(message: ParsedModel.Message): MessageAddition {
         let mentionedUserIds;
         if (this._mentionedUserIdsParser) {
             mentionedUserIds = this._mentionedUserIdsParser(message);
@@ -335,5 +334,20 @@ export default class MessageService {
         }
         const isMentioned = mentionedUserIds.includes(this._turmsClient.userService.userId);
         return new MessageAddition(isMentioned, mentionedUserIds);
+    }
+
+    /**
+     * @param request should be a parsed CreateMessageRequest
+     */
+    private static _createMessageRequest2Message(requesterId: string, request: any): ParsedModel.Message {
+        return {
+            id: request.messageId,
+            deliveryDate: request.deliveryDate,
+            text: request.text,
+            records: request.records,
+            senderId: requesterId,
+            groupId: request.groupId,
+            recipientId: request.recipientId
+        }
     }
 }

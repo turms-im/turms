@@ -1,10 +1,10 @@
 import { im } from "../model/proto-bundle";
 import { ParsedNotification } from "../model/parsed-notification";
 import TurmsClient from "../turms-client";
+import UserLocation from "../model/user-location";
 import TurmsNotification = im.turms.proto.TurmsNotification;
 import UserStatus = im.turms.proto.UserStatus;
 import DeviceType = im.turms.proto.DeviceType;
-import UserLocation from "../model/user-location";
 export default class TurmsDriver {
     private _heartbeatInterval;
     private _turmsClient;
