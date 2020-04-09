@@ -10,7 +10,10 @@ public class NotificationService {
             .onNotificationListeners
             .append {
                 if self.onNotification != nil, $0.hasRelayedRequest {
-                    self.onNotification!($0.relayedRequest)
+                    guard case .createMessageRequest = $0.relayedRequest.kind else {
+                        self.onNotification!($0.relayedRequest)
+                        return
+                    }
                 }
             }
     }

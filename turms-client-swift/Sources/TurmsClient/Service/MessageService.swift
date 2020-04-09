@@ -27,13 +27,11 @@ public class MessageService {
         self.turmsClient.driver
             .onNotificationListeners
             .append {
-                if self.onMessage != nil, $0.hasData {
-                    let data = $0.data
-                    if case .messages(let messages) = data.kind! {
-                        for message in messages.messages {
-                            let addition = self.parseMessageAddition(message)
-                            self.onMessage!(message, addition)
-                        }
+                if self.onMessage != nil, $0.hasRelayedRequest {
+                    if case .createMessageRequest(let request) = $0.relayedRequest.kind {
+                        let message = MessageService.createMessage2Message($0.requesterID.value, request)
+                        let addition = self.parseMessageAddition(message)
+                        self.onMessage!(message, addition)
                     }
                 }
             }
@@ -281,5 +279,27 @@ public class MessageService {
         let mentionedUserIds = mentionedUserIdsParser?(message) ?? []
         let isMentioned = turmsClient.userService.userId != nil ? mentionedUserIds.contains(turmsClient.userService.userId!) : false
         return MessageAddition(isMentioned: isMentioned, mentionedUserIds: mentionedUserIds)
+    }
+
+    private static func createMessage2Message(_ requesterId: Int64, _ request: CreateMessageRequest) -> Message {
+        return Message.with {
+            if request.hasMessageID {
+                $0.id = request.messageID
+            }
+            $0.deliveryDate.value = request.deliveryDate
+            if request.hasText {
+                $0.text = request.text
+            }
+            if request.records.count > 0 {
+                $0.records = request.records
+            }
+            $0.senderID.value = requesterId
+            if request.hasGroupID {
+                $0.groupID = request.groupID
+            }
+            if request.hasRecipientID {
+                $0.recipientID = request.recipientID
+            }
+        }
     }
 }

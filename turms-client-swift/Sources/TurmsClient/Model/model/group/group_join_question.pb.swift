@@ -51,7 +51,7 @@ public struct GroupJoinQuestion {
   /// Clears the value of `question`. Subsequent reads from it will return its default value.
   public mutating func clearQuestion() {_uniqueStorage()._question = nil}
 
-  public var answers: [SwiftProtobuf.Google_Protobuf_StringValue] {
+  public var answers: [String] {
     get {return _storage._answers}
     set {_uniqueStorage()._answers = newValue}
   }
@@ -90,7 +90,7 @@ extension GroupJoinQuestion: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     var _id: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
     var _groupID: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
     var _question: SwiftProtobuf.Google_Protobuf_StringValue? = nil
-    var _answers: [SwiftProtobuf.Google_Protobuf_StringValue] = []
+    var _answers: [String] = []
     var _score: SwiftProtobuf.Google_Protobuf_Int32Value? = nil
 
     static let defaultInstance = _StorageClass()
@@ -121,7 +121,7 @@ extension GroupJoinQuestion: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
         case 1: try decoder.decodeSingularMessageField(value: &_storage._id)
         case 2: try decoder.decodeSingularMessageField(value: &_storage._groupID)
         case 3: try decoder.decodeSingularMessageField(value: &_storage._question)
-        case 4: try decoder.decodeRepeatedMessageField(value: &_storage._answers)
+        case 4: try decoder.decodeRepeatedStringField(value: &_storage._answers)
         case 5: try decoder.decodeSingularMessageField(value: &_storage._score)
         default: break
         }
@@ -141,7 +141,7 @@ extension GroupJoinQuestion: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
         try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
       }
       if !_storage._answers.isEmpty {
-        try visitor.visitRepeatedMessageField(value: _storage._answers, fieldNumber: 4)
+        try visitor.visitRepeatedStringField(value: _storage._answers, fieldNumber: 4)
       }
       if let v = _storage._score {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 5)

@@ -96,7 +96,7 @@ public struct Message {
   /// Clears the value of `recipientID`. Subsequent reads from it will return its default value.
   public mutating func clearRecipientID() {_uniqueStorage()._recipientID = nil}
 
-  public var records: [SwiftProtobuf.Google_Protobuf_BytesValue] {
+  public var records: [Data] {
     get {return _storage._records}
     set {_uniqueStorage()._records = newValue}
   }
@@ -135,7 +135,7 @@ extension Message: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
     var _groupID: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
     var _isSystemMessage: SwiftProtobuf.Google_Protobuf_BoolValue? = nil
     var _recipientID: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
-    var _records: [SwiftProtobuf.Google_Protobuf_BytesValue] = []
+    var _records: [Data] = []
 
     static let defaultInstance = _StorageClass()
 
@@ -174,7 +174,7 @@ extension Message: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
         case 6: try decoder.decodeSingularMessageField(value: &_storage._groupID)
         case 7: try decoder.decodeSingularMessageField(value: &_storage._isSystemMessage)
         case 8: try decoder.decodeSingularMessageField(value: &_storage._recipientID)
-        case 9: try decoder.decodeRepeatedMessageField(value: &_storage._records)
+        case 9: try decoder.decodeRepeatedBytesField(value: &_storage._records)
         default: break
         }
       }
@@ -208,7 +208,7 @@ extension Message: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
         try visitor.visitSingularMessageField(value: v, fieldNumber: 8)
       }
       if !_storage._records.isEmpty {
-        try visitor.visitRepeatedMessageField(value: _storage._records, fieldNumber: 9)
+        try visitor.visitRepeatedBytesField(value: _storage._records, fieldNumber: 9)
       }
     }
     try unknownFields.traverse(visitor: &visitor)
