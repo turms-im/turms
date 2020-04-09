@@ -41,7 +41,7 @@ public class MessageService {
 
     public func sendMessage(
         chatType: ChatType,
-        toId: Int64,
+        targetId: Int64,
         deliveryDate: Date? = nil,
         text: String? = nil,
         records: [[UInt8]]? = nil,
@@ -52,8 +52,8 @@ public class MessageService {
         return turmsClient.driver
             .send { $0
                 .request("createMessageRequest")
-                .field("chatType", chatType)
-                .field("toId", toId)
+                .field("groupId", chatType == .group ? targetId : nil)
+                .field("recipientId", chatType == .private ? targetId : nil)
                 .field("deliveryDate", deliveryDate ?? Date())
                 .field("text", text)
                 .field("records", records)
@@ -65,13 +65,13 @@ public class MessageService {
     public func forwardMessage(
         messageId: Int64,
         chatType: ChatType,
-        toId: Int64) -> Promise<Int64> {
+        targetId: Int64) -> Promise<Int64> {
         return turmsClient.driver
             .send { $0
                 .request("createMessageRequest")
                 .field("messageId", messageId)
-                .field("chatType", chatType)
-                .field("toId", toId)
+                .field("groupId", chatType == .group ? targetId : nil)
+                .field("recipientId", chatType == .private ? targetId : nil)
             }
             .map { try NotificationUtil.getFirstId($0) }
     }

@@ -228,7 +228,7 @@ public class TurmsDriver {
         heartbeatTimer?.invalidate()
         if turmsClient.userService.userId != nil, turmsClient.userService.password != nil {
             switch error {
-                case let .notAnUpgrade(code, headers):
+                case .notAnUpgrade(let code, let headers):
                     if code == 307 {
                         let address = headers["reason"]!
                         reconnect(address)

@@ -33,11 +33,6 @@ public struct CreateMessageRequest {
   /// Clears the value of `messageID`. Subsequent reads from it will return its default value.
   public mutating func clearMessageID() {_uniqueStorage()._messageID = nil}
 
-  public var chatType: ChatType {
-    get {return _storage._chatType}
-    set {_uniqueStorage()._chatType = newValue}
-  }
-
   /// Client can never set this to true
   public var isSystemMessage: SwiftProtobuf.Google_Protobuf_BoolValue {
     get {return _storage._isSystemMessage ?? SwiftProtobuf.Google_Protobuf_BoolValue()}
@@ -48,10 +43,23 @@ public struct CreateMessageRequest {
   /// Clears the value of `isSystemMessage`. Subsequent reads from it will return its default value.
   public mutating func clearIsSystemMessage() {_uniqueStorage()._isSystemMessage = nil}
 
-  public var toID: Int64 {
-    get {return _storage._toID}
-    set {_uniqueStorage()._toID = newValue}
+  public var groupID: SwiftProtobuf.Google_Protobuf_Int64Value {
+    get {return _storage._groupID ?? SwiftProtobuf.Google_Protobuf_Int64Value()}
+    set {_uniqueStorage()._groupID = newValue}
   }
+  /// Returns true if `groupID` has been explicitly set.
+  public var hasGroupID: Bool {return _storage._groupID != nil}
+  /// Clears the value of `groupID`. Subsequent reads from it will return its default value.
+  public mutating func clearGroupID() {_uniqueStorage()._groupID = nil}
+
+  public var recipientID: SwiftProtobuf.Google_Protobuf_Int64Value {
+    get {return _storage._recipientID ?? SwiftProtobuf.Google_Protobuf_Int64Value()}
+    set {_uniqueStorage()._recipientID = newValue}
+  }
+  /// Returns true if `recipientID` has been explicitly set.
+  public var hasRecipientID: Bool {return _storage._recipientID != nil}
+  /// Clears the value of `recipientID`. Subsequent reads from it will return its default value.
+  public mutating func clearRecipientID() {_uniqueStorage()._recipientID = nil}
 
   public var deliveryDate: Int64 {
     get {return _storage._deliveryDate}
@@ -96,9 +104,9 @@ extension CreateMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
   public static let protoMessageName: String = _protobuf_package + ".CreateMessageRequest"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "message_id"),
-    2: .standard(proto: "chat_type"),
-    3: .standard(proto: "is_system_message"),
-    4: .standard(proto: "to_id"),
+    2: .standard(proto: "is_system_message"),
+    3: .standard(proto: "group_id"),
+    4: .standard(proto: "recipient_id"),
     5: .standard(proto: "delivery_date"),
     6: .same(proto: "text"),
     7: .same(proto: "records"),
@@ -107,9 +115,9 @@ extension CreateMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
 
   fileprivate class _StorageClass {
     var _messageID: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
-    var _chatType: ChatType = .private
     var _isSystemMessage: SwiftProtobuf.Google_Protobuf_BoolValue? = nil
-    var _toID: Int64 = 0
+    var _groupID: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
+    var _recipientID: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
     var _deliveryDate: Int64 = 0
     var _text: SwiftProtobuf.Google_Protobuf_StringValue? = nil
     var _records: [Data] = []
@@ -121,9 +129,9 @@ extension CreateMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
 
     init(copying source: _StorageClass) {
       _messageID = source._messageID
-      _chatType = source._chatType
       _isSystemMessage = source._isSystemMessage
-      _toID = source._toID
+      _groupID = source._groupID
+      _recipientID = source._recipientID
       _deliveryDate = source._deliveryDate
       _text = source._text
       _records = source._records
@@ -144,9 +152,9 @@ extension CreateMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
       while let fieldNumber = try decoder.nextFieldNumber() {
         switch fieldNumber {
         case 1: try decoder.decodeSingularMessageField(value: &_storage._messageID)
-        case 2: try decoder.decodeSingularEnumField(value: &_storage._chatType)
-        case 3: try decoder.decodeSingularMessageField(value: &_storage._isSystemMessage)
-        case 4: try decoder.decodeSingularInt64Field(value: &_storage._toID)
+        case 2: try decoder.decodeSingularMessageField(value: &_storage._isSystemMessage)
+        case 3: try decoder.decodeSingularMessageField(value: &_storage._groupID)
+        case 4: try decoder.decodeSingularMessageField(value: &_storage._recipientID)
         case 5: try decoder.decodeSingularInt64Field(value: &_storage._deliveryDate)
         case 6: try decoder.decodeSingularMessageField(value: &_storage._text)
         case 7: try decoder.decodeRepeatedBytesField(value: &_storage._records)
@@ -162,14 +170,14 @@ extension CreateMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
       if let v = _storage._messageID {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
       }
-      if _storage._chatType != .private {
-        try visitor.visitSingularEnumField(value: _storage._chatType, fieldNumber: 2)
-      }
       if let v = _storage._isSystemMessage {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+      }
+      if let v = _storage._groupID {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
       }
-      if _storage._toID != 0 {
-        try visitor.visitSingularInt64Field(value: _storage._toID, fieldNumber: 4)
+      if let v = _storage._recipientID {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
       }
       if _storage._deliveryDate != 0 {
         try visitor.visitSingularInt64Field(value: _storage._deliveryDate, fieldNumber: 5)
@@ -193,9 +201,9 @@ extension CreateMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
         let _storage = _args.0
         let rhs_storage = _args.1
         if _storage._messageID != rhs_storage._messageID {return false}
-        if _storage._chatType != rhs_storage._chatType {return false}
         if _storage._isSystemMessage != rhs_storage._isSystemMessage {return false}
-        if _storage._toID != rhs_storage._toID {return false}
+        if _storage._groupID != rhs_storage._groupID {return false}
+        if _storage._recipientID != rhs_storage._recipientID {return false}
         if _storage._deliveryDate != rhs_storage._deliveryDate {return false}
         if _storage._text != rhs_storage._text {return false}
         if _storage._records != rhs_storage._records {return false}
