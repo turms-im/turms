@@ -8409,9 +8409,9 @@ $root.im = (function() {
                  * @memberof im.turms.proto
                  * @interface ICreateMessageRequest
                  * @property {google.protobuf.IInt64Value|null} [messageId] CreateMessageRequest messageId
-                 * @property {im.turms.proto.ChatType|null} [chatType] CreateMessageRequest chatType
                  * @property {google.protobuf.IBoolValue|null} [isSystemMessage] CreateMessageRequest isSystemMessage
-                 * @property {string|null} [toId] CreateMessageRequest toId
+                 * @property {google.protobuf.IInt64Value|null} [groupId] CreateMessageRequest groupId
+                 * @property {google.protobuf.IInt64Value|null} [recipientId] CreateMessageRequest recipientId
                  * @property {string|null} [deliveryDate] CreateMessageRequest deliveryDate
                  * @property {google.protobuf.IStringValue|null} [text] CreateMessageRequest text
                  * @property {Array.<Uint8Array>|null} [records] CreateMessageRequest records
@@ -8443,14 +8443,6 @@ $root.im = (function() {
                 CreateMessageRequest.prototype.messageId = null;
 
                 /**
-                 * CreateMessageRequest chatType.
-                 * @member {im.turms.proto.ChatType} chatType
-                 * @memberof im.turms.proto.CreateMessageRequest
-                 * @instance
-                 */
-                CreateMessageRequest.prototype.chatType = 0;
-
-                /**
                  * CreateMessageRequest isSystemMessage.
                  * @member {google.protobuf.IBoolValue|null|undefined} isSystemMessage
                  * @memberof im.turms.proto.CreateMessageRequest
@@ -8459,12 +8451,20 @@ $root.im = (function() {
                 CreateMessageRequest.prototype.isSystemMessage = null;
 
                 /**
-                 * CreateMessageRequest toId.
-                 * @member {string} toId
+                 * CreateMessageRequest groupId.
+                 * @member {google.protobuf.IInt64Value|null|undefined} groupId
                  * @memberof im.turms.proto.CreateMessageRequest
                  * @instance
                  */
-                CreateMessageRequest.prototype.toId = "0";
+                CreateMessageRequest.prototype.groupId = null;
+
+                /**
+                 * CreateMessageRequest recipientId.
+                 * @member {google.protobuf.IInt64Value|null|undefined} recipientId
+                 * @memberof im.turms.proto.CreateMessageRequest
+                 * @instance
+                 */
+                CreateMessageRequest.prototype.recipientId = null;
 
                 /**
                  * CreateMessageRequest deliveryDate.
@@ -8512,12 +8512,12 @@ $root.im = (function() {
                         writer = $Writer.create();
                     if (message.messageId != null && Object.hasOwnProperty.call(message, "messageId"))
                         $root.google.protobuf.Int64Value.encode(message.messageId, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.chatType != null && Object.hasOwnProperty.call(message, "chatType"))
-                        writer.uint32(/* id 2, wireType 0 =*/16).int32(message.chatType);
                     if (message.isSystemMessage != null && Object.hasOwnProperty.call(message, "isSystemMessage"))
-                        $root.google.protobuf.BoolValue.encode(message.isSystemMessage, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.toId != null && Object.hasOwnProperty.call(message, "toId"))
-                        writer.uint32(/* id 4, wireType 0 =*/32).int64(message.toId);
+                        $root.google.protobuf.BoolValue.encode(message.isSystemMessage, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                    if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
+                        $root.google.protobuf.Int64Value.encode(message.groupId, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                    if (message.recipientId != null && Object.hasOwnProperty.call(message, "recipientId"))
+                        $root.google.protobuf.Int64Value.encode(message.recipientId, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
                     if (message.deliveryDate != null && Object.hasOwnProperty.call(message, "deliveryDate"))
                         writer.uint32(/* id 5, wireType 0 =*/40).int64(message.deliveryDate);
                     if (message.text != null && Object.hasOwnProperty.call(message, "text"))
@@ -8552,13 +8552,13 @@ $root.im = (function() {
                             message.messageId = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
                             break;
                         case 2:
-                            message.chatType = reader.int32();
-                            break;
-                        case 3:
                             message.isSystemMessage = $root.google.protobuf.BoolValue.decode(reader, reader.uint32());
                             break;
+                        case 3:
+                            message.groupId = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
+                            break;
                         case 4:
-                            message.toId = reader.int64().toString();
+                            message.recipientId = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
                             break;
                         case 5:
                             message.deliveryDate = reader.int64().toString();

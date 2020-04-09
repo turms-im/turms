@@ -23,22 +23,11 @@ public interface CreateMessageRequestOrBuilder extends
   com.google.protobuf.Int64ValueOrBuilder getMessageIdOrBuilder();
 
   /**
-   * <code>.im.turms.proto.ChatType chat_type = 2;</code>
-   * @return The enum numeric value on the wire for chatType.
-   */
-  int getChatTypeValue();
-  /**
-   * <code>.im.turms.proto.ChatType chat_type = 2;</code>
-   * @return The chatType.
-   */
-  im.turms.common.constant.ChatType getChatType();
-
-  /**
    * <pre>
    * Client can never set this to true
    * </pre>
    *
-   * <code>.google.protobuf.BoolValue is_system_message = 3;</code>
+   * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
    * @return Whether the isSystemMessage field is set.
    */
   boolean hasIsSystemMessage();
@@ -47,7 +36,7 @@ public interface CreateMessageRequestOrBuilder extends
    * Client can never set this to true
    * </pre>
    *
-   * <code>.google.protobuf.BoolValue is_system_message = 3;</code>
+   * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
    * @return The isSystemMessage.
    */
   com.google.protobuf.BoolValue getIsSystemMessage();
@@ -56,15 +45,39 @@ public interface CreateMessageRequestOrBuilder extends
    * Client can never set this to true
    * </pre>
    *
-   * <code>.google.protobuf.BoolValue is_system_message = 3;</code>
+   * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
    */
   com.google.protobuf.BoolValueOrBuilder getIsSystemMessageOrBuilder();
 
   /**
-   * <code>int64 to_id = 4;</code>
-   * @return The toId.
+   * <code>.google.protobuf.Int64Value group_id = 3;</code>
+   * @return Whether the groupId field is set.
    */
-  long getToId();
+  boolean hasGroupId();
+  /**
+   * <code>.google.protobuf.Int64Value group_id = 3;</code>
+   * @return The groupId.
+   */
+  com.google.protobuf.Int64Value getGroupId();
+  /**
+   * <code>.google.protobuf.Int64Value group_id = 3;</code>
+   */
+  com.google.protobuf.Int64ValueOrBuilder getGroupIdOrBuilder();
+
+  /**
+   * <code>.google.protobuf.Int64Value recipient_id = 4;</code>
+   * @return Whether the recipientId field is set.
+   */
+  boolean hasRecipientId();
+  /**
+   * <code>.google.protobuf.Int64Value recipient_id = 4;</code>
+   * @return The recipientId.
+   */
+  com.google.protobuf.Int64Value getRecipientId();
+  /**
+   * <code>.google.protobuf.Int64Value recipient_id = 4;</code>
+   */
+  com.google.protobuf.Int64ValueOrBuilder getRecipientIdOrBuilder();
 
   /**
    * <code>int64 delivery_date = 5;</code>

@@ -63,12 +63,12 @@ export default class MessageService {
 
     sendMessage(
         chatType: string | ChatType,
-        toId: string,
+        targetId: string,
         deliveryDate?: Date,
         text?: string,
         records?: Uint8Array[],
         burnAfter?: number): Promise<string> {
-        RequestUtil.throwIfAnyFalsy(chatType, toId);
+        RequestUtil.throwIfAnyFalsy(chatType, targetId);
         RequestUtil.throwIfAllFalsy(text, records);
         if (typeof chatType === "string") {
             chatType = ConstantTransformer.string2ChatType(chatType);
@@ -78,8 +78,8 @@ export default class MessageService {
         }
         return this._turmsClient.driver.send({
             createMessageRequest: {
-                chatType,
-                toId,
+                groupId: RequestUtil.wrapValueIfNotNull(chatType === ChatType.GROUP ? targetId : undefined),
+                recipientId: RequestUtil.wrapValueIfNotNull(chatType === ChatType.PRIVATE ? targetId : undefined),
                 deliveryDate: '' + deliveryDate.getTime(),
                 text: RequestUtil.wrapValueIfNotNull(text),
                 records: records,
@@ -91,16 +91,16 @@ export default class MessageService {
     forwardMessage(
         messageId: string,
         chatType: string | ChatType,
-        toId: string): Promise<string> {
-        RequestUtil.throwIfAnyFalsy(messageId, chatType, toId);
+        targetId: string): Promise<string> {
+        RequestUtil.throwIfAnyFalsy(messageId, chatType, targetId);
         if (typeof chatType === "string") {
             chatType = ConstantTransformer.string2ChatType(chatType);
         }
         return this._turmsClient.driver.send({
             createMessageRequest: {
                 messageId: {value: messageId},
-                chatType,
-                toId
+                groupId: RequestUtil.wrapValueIfNotNull(chatType === ChatType.GROUP ? targetId : undefined),
+                recipientId: RequestUtil.wrapValueIfNotNull(chatType === ChatType.PRIVATE ? targetId : undefined),
             }
         }).then(n => NotificationUtil.getFirstVal(n, 'ids', true));
     }

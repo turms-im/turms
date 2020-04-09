@@ -3777,14 +3777,14 @@ export namespace im {
                 /** CreateMessageRequest messageId */
                 messageId?: (google.protobuf.IInt64Value|null);
 
-                /** CreateMessageRequest chatType */
-                chatType?: (im.turms.proto.ChatType|null);
-
                 /** CreateMessageRequest isSystemMessage */
                 isSystemMessage?: (google.protobuf.IBoolValue|null);
 
-                /** CreateMessageRequest toId */
-                toId?: (string|null);
+                /** CreateMessageRequest groupId */
+                groupId?: (google.protobuf.IInt64Value|null);
+
+                /** CreateMessageRequest recipientId */
+                recipientId?: (google.protobuf.IInt64Value|null);
 
                 /** CreateMessageRequest deliveryDate */
                 deliveryDate?: (string|null);
@@ -3811,14 +3811,14 @@ export namespace im {
                 /** CreateMessageRequest messageId. */
                 public messageId?: (google.protobuf.IInt64Value|null);
 
-                /** CreateMessageRequest chatType. */
-                public chatType: im.turms.proto.ChatType;
-
                 /** CreateMessageRequest isSystemMessage. */
                 public isSystemMessage?: (google.protobuf.IBoolValue|null);
 
-                /** CreateMessageRequest toId. */
-                public toId: string;
+                /** CreateMessageRequest groupId. */
+                public groupId?: (google.protobuf.IInt64Value|null);
+
+                /** CreateMessageRequest recipientId. */
+                public recipientId?: (google.protobuf.IInt64Value|null);
 
                 /** CreateMessageRequest deliveryDate. */
                 public deliveryDate: string;

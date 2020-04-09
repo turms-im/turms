@@ -411,8 +411,10 @@ public class ProtoUtil {
         if (messageId != null) {
             builder.setMessageId(Int64Value.newBuilder().setValue(messageId).build());
         }
-        if (chatType != null && chatType != ChatType.UNRECOGNIZED) {
-            builder.setChatType(chatType);
+        if (chatType == ChatType.PRIVATE) {
+            builder.setRecipientId(Int64Value.newBuilder().setValue(message.getTargetId()).build());
+        } else if (chatType == ChatType.GROUP) {
+            builder.setGroupId(Int64Value.newBuilder().setValue(message.getTargetId()).build());
         }
         if (isSystemMessage != null) {
             builder.setIsSystemMessage(BoolValue.newBuilder().setValue(isSystemMessage).build());
@@ -422,9 +424,6 @@ public class ProtoUtil {
         }
         if (text != null) {
             builder.setText(StringValue.newBuilder().setValue(text).build());
-        }
-        if (targetId != null) {
-            builder.setToId(targetId);
         }
         if (records != null && !records.isEmpty()) {
             for (byte[] record : records) {
