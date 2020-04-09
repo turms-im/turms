@@ -245,7 +245,7 @@ public class TurmsDriver {
     private func reconnect(_ address: String) {
         let isSecure = url.starts(with: "wss://")
         url = "\(isSecure ? "wss://" : "ws://")\(address)"
-        try! connect(userId: turmsClient.userService.userId!, password: turmsClient.userService.password!).wait()
+        try! connect(userId: turmsClient.userService.userId!, password: turmsClient.userService.password!, deviceType: turmsClient.userService.deviceType, userOnlineStatus: turmsClient.userService.userOnlineStatus, location: turmsClient.userService.location).wait()
     }
 }
 

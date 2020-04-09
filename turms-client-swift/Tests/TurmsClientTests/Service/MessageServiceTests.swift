@@ -5,9 +5,11 @@ import XCTest
 class MessageServiceTests: XCTestCase {
     static let SENDER_ID: Int64 = 1
     static let RECIPIENT_ID: Int64 = 2
+    static let GROUP_MEMBER_ID: Int64 = 3
     static let TARGET_GROUP_ID: Int64 = 1
     var senderClient: TurmsClient!
     var recipientClient: TurmsClient!
+    var groupMemberClient: TurmsClient!
 
     func test_system() {
         var privateMessageId: Int64?
@@ -17,8 +19,10 @@ class MessageServiceTests: XCTestCase {
         continueAfterFailure = false
         senderClient = TurmsClient(Config.WS_URL)
         recipientClient = TurmsClient(Config.WS_URL)
-        TestUtil.wait(senderClient.driver.connect(userId: 1, password: "123"))
-        TestUtil.wait(recipientClient.driver.connect(userId: 2, password: "123"))
+        groupMemberClient = TurmsClient(Config.WS_URL)
+        TestUtil.wait(senderClient.driver.connect(userId: MessageServiceTests.SENDER_ID, password: "123"))
+        TestUtil.wait(recipientClient.driver.connect(userId: MessageServiceTests.RECIPIENT_ID, password: "123"))
+        TestUtil.wait(groupMemberClient.driver.connect(userId: MessageServiceTests.GROUP_MEMBER_ID, password: "123"))
 
         // Create
         TestUtil.assertCompleted("sendPrivateMessage_shouldReturnMessageId", senderClient.messageService.sendMessage(chatType: .private, toId: MessageServiceTests.RECIPIENT_ID, deliveryDate: Date(), text: "hello").done {
@@ -44,13 +48,16 @@ class MessageServiceTests: XCTestCase {
         TestUtil.assertCompleted("queryPendingMessagesWithTotal_shouldReturnNotEmptyPendingMessagesWithTotal", senderClient.messageService.queryPendingMessagesWithTotal().done {
             XCTAssertFalse($0.isEmpty)
         })
-        TestUtil.assertCompleted("queryMessageStatus_shouldReturnNotEmptyMessageStatus", senderClient.messageService.queryMessageStatus(groupMessageId!).done {
-            XCTAssertFalse($0.isEmpty)
+        TestUtil.assertCompleted("queryMessageStatus_shouldReturnNotEmptyMessageStatus", senderClient.messageService.queryMessageStatus(groupMessageId!).then { statusesOfMember1 in
+            self.groupMemberClient.messageService.queryMessageStatus(groupMessageId!).done { statusesOfMember2 in
+                XCTAssertTrue(statusesOfMember1[0].messageID.value == statusesOfMember2[0].messageID.value)
+            }
         })
 
         // Tear down
         TestUtil.wait(senderClient.driver.disconnect())
         TestUtil.wait(recipientClient.driver.disconnect())
+        TestUtil.wait(groupMemberClient.driver.disconnect())
     }
 
     // Util
