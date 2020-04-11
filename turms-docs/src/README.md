@@ -26,6 +26,13 @@ turms-admin的Demo地址（PROD配置）：http://47.99.56.54:9512/
 | <span style="white-space:nowrap;">turms-admin</span>        | 为Turms服务端集群提供：运营数据统计、内容管理、集群配置等功能 |
 | <span style="white-space:nowrap;">turms-apm</span>          | 为Turms服务端集群提供监控功能                                |
 | <span style="white-space:nowrap;">turms-plugin</span>       | 事件（如用户上下线、消息接收与转发等事件）触发或服务被调用的时候，对应的自定义插件将被触发以实现各种各样定制功能 |
+| <span style="white-space:nowrap;">turms-plugin-minio</span> | 基于turms-plugin实现的存储服务插件。用于与MinIO服务端进行交互。 |
+
+### 参考架构
+
+虚线部分为可选服务，实线部分为必选服务。具体架构细节请参考该[文档](https://turms-im.github.io/turms/for-developers/architecture.html)。
+
+![](https://raw.githubusercontent.com/turms-im/assets/master/turms/reference-architecture.png)
 
 ### 关于Demo
 
