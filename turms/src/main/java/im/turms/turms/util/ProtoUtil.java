@@ -466,4 +466,36 @@ public class ProtoUtil {
         }
         return builder;
     }
+
+    public static CreateMessageRequest.Builder fillCloneMessageRequest(
+            @NotNull CreateMessageRequest request,
+            @NotNull Message message) {
+        CreateMessageRequest.Builder builder = request.toBuilder();
+        Long messageId = message.getId();
+        Boolean isSystemMessage = message.getIsSystemMessage();
+        Date deliveryDate = message.getDeliveryDate();
+        String text = message.getText();
+        List<byte[]> records = message.getRecords();
+        Integer burnAfter = message.getBurnAfter();
+
+        if (messageId != null) {
+            builder.setMessageId(Int64Value.newBuilder().setValue(messageId).build());
+        } else {
+            builder.clearMessageId();
+        }
+        builder.setIsSystemMessage(BoolValue.newBuilder().setValue(isSystemMessage).build());
+        builder.setDeliveryDate(deliveryDate.getTime());
+        if (text != null) {
+            builder.setText(StringValue.newBuilder().setValue(text).build());
+        }
+        if (records != null) {
+            for (byte[] record : records) {
+                builder.addRecords(ByteString.copyFrom(record));
+            }
+        }
+        if (burnAfter != null) {
+            builder.setBurnAfter(Int32Value.newBuilder().setValue(burnAfter).build());
+        }
+        return builder;
+    }
 }
