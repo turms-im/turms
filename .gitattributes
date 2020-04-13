@@ -1,5 +1,4 @@
-turms/docs/* linguist-vendored
-turms-client-js/demo/* linguist-vendored
-turms-client-js/dist/* linguist-vendored
-turms-client-js/types/* linguist-vendored
-docs/* linguist-vendored
+turms/docs/ linguist-vendored
+turms-client-js/dist/ linguist-vendored
+turms-client-js/types/ linguist-vendored
+docs/ linguist-vendored
