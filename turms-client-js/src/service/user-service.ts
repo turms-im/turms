@@ -166,15 +166,6 @@ export default class UserService {
         });
     }
 
-    queryUserGroupInvitations(lastUpdatedDate?: Date): Promise<ParsedModel.GroupInvitationsWithVersion | undefined> {
-        // @ts-ignore
-        return this._turmsClient.driver.send({
-            queryUserGroupInvitationsRequest: {
-                lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
-            }
-        }).then(n => NotificationUtil.getAndTransform(n, 'groupInvitationsWithVersion'));
-    }
-
     queryUserProfile(userId: string, lastUpdatedDate?: Date): Promise<ParsedModel.UserInfoWithVersion | undefined> {
         RequestUtil.throwIfAnyFalsy(userId);
         // @ts-ignore
@@ -356,10 +347,11 @@ export default class UserService {
         });
     }
 
-    queryFriendRequests(lastUpdatedDate?: Date): Promise<ParsedModel.UserFriendRequestsWithVersion | undefined> {
+    queryFriendRequests(areSentByMe: boolean, lastUpdatedDate?: Date): Promise<ParsedModel.UserFriendRequestsWithVersion | undefined> {
         // @ts-ignore
         return this._turmsClient.driver.send({
             queryFriendRequestsRequest: {
+                areSentByMe: areSentByMe,
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
         }).then(n => NotificationUtil.getAndTransform(n, 'userFriendRequestsWithVersion'));

@@ -242,12 +242,23 @@ export default class GroupService {
         });
     }
 
-    queryInvitations(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.GroupInvitationsWithVersion | undefined> {
+    queryInvitationsByGroupId(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.GroupInvitationsWithVersion | undefined> {
         RequestUtil.throwIfAnyFalsy(groupId);
         // @ts-ignore
         return this._turmsClient.driver.send({
             queryGroupInvitationsRequest: {
-                groupId,
+                groupId: RequestUtil.wrapValueIfNotNull(groupId),
+                lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
+            }
+        }).then(n => NotificationUtil.getAndTransform(n, 'groupInvitationsWithVersion'));
+    }
+
+    queryInvitations(areSentByMe: boolean, lastUpdatedDate?: Date): Promise<ParsedModel.GroupInvitationsWithVersion | undefined> {
+        RequestUtil.throwIfAnyFalsy(areSentByMe);
+        // @ts-ignore
+        return this._turmsClient.driver.send({
+            queryGroupInvitationsRequest: {
+                areSentByMe: RequestUtil.wrapValueIfNotNull(areSentByMe),
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
         }).then(n => NotificationUtil.getAndTransform(n, 'groupInvitationsWithVersion'));
@@ -279,7 +290,16 @@ export default class GroupService {
         // @ts-ignore
         return this._turmsClient.driver.send({
             queryGroupJoinRequestsRequest: {
-                groupId,
+                groupId: RequestUtil.wrapValueIfNotNull(groupId),
+                lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
+            }
+        }).then(n => NotificationUtil.getAndTransform(n, 'groupJoinRequestsWithVersion'));
+    }
+
+    querySentJoinRequests(lastUpdatedDate?: Date): Promise<ParsedModel.GroupJoinRequestsWithVersion | undefined> {
+        // @ts-ignore
+        return this._turmsClient.driver.send({
+            queryGroupJoinRequestsRequest: {
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
         }).then(n => NotificationUtil.getAndTransform(n, 'groupJoinRequestsWithVersion'));

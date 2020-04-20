@@ -28,7 +28,6 @@ export default class UserService {
     disconnectOnlineDevices(deviceTypes: string[] | DeviceType[]): Promise<void>;
     updatePassword(password: string): Promise<void>;
     updateProfile(name?: string, intro?: string, profileAccessStrategy?: string | ProfileAccessStrategy): Promise<void>;
-    queryUserGroupInvitations(lastUpdatedDate?: Date): Promise<ParsedModel.GroupInvitationsWithVersion | undefined>;
     queryUserProfile(userId: string, lastUpdatedDate?: Date): Promise<ParsedModel.UserInfoWithVersion | undefined>;
     queryUserIdsNearby(latitude: number, longitude: number, distance?: number, maxNumber?: number): Promise<string[]>;
     queryUserSessionIdsNearby(latitude: number, longitude: number, distance?: number, maxNumber?: number): Promise<UserSessionId[]>;
@@ -45,7 +44,7 @@ export default class UserService {
     updateRelationship(relatedUserId: string, isBlocked?: boolean, groupIndex?: number): Promise<void>;
     sendFriendRequest(recipientId: string, content: string): Promise<string>;
     replyFriendRequest(requestId: string, responseAction: string | ResponseAction, reason?: string): Promise<void>;
-    queryFriendRequests(lastUpdatedDate?: Date): Promise<ParsedModel.UserFriendRequestsWithVersion | undefined>;
+    queryFriendRequests(areSentByMe: boolean, lastUpdatedDate?: Date): Promise<ParsedModel.UserFriendRequestsWithVersion | undefined>;
     createRelationshipGroup(name: string): Promise<string>;
     deleteRelationshipGroups(groupIndex: number, targetGroupIndex?: number): Promise<void>;
     updateRelationshipGroup(groupIndex: number, newName: string): Promise<void>;

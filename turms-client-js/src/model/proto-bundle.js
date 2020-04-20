@@ -7000,7 +7000,8 @@ $root.im = (function() {
                  * Properties of a QueryGroupInvitationsRequest.
                  * @memberof im.turms.proto
                  * @interface IQueryGroupInvitationsRequest
-                 * @property {string|null} [groupId] QueryGroupInvitationsRequest groupId
+                 * @property {google.protobuf.IInt64Value|null} [groupId] QueryGroupInvitationsRequest groupId
+                 * @property {google.protobuf.IBoolValue|null} [areSentByMe] QueryGroupInvitationsRequest areSentByMe
                  * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryGroupInvitationsRequest lastUpdatedDate
                  */
 
@@ -7021,11 +7022,19 @@ $root.im = (function() {
 
                 /**
                  * QueryGroupInvitationsRequest groupId.
-                 * @member {string} groupId
+                 * @member {google.protobuf.IInt64Value|null|undefined} groupId
                  * @memberof im.turms.proto.QueryGroupInvitationsRequest
                  * @instance
                  */
-                QueryGroupInvitationsRequest.prototype.groupId = "0";
+                QueryGroupInvitationsRequest.prototype.groupId = null;
+
+                /**
+                 * QueryGroupInvitationsRequest areSentByMe.
+                 * @member {google.protobuf.IBoolValue|null|undefined} areSentByMe
+                 * @memberof im.turms.proto.QueryGroupInvitationsRequest
+                 * @instance
+                 */
+                QueryGroupInvitationsRequest.prototype.areSentByMe = null;
 
                 /**
                  * QueryGroupInvitationsRequest lastUpdatedDate.
@@ -7048,9 +7057,11 @@ $root.im = (function() {
                     if (!writer)
                         writer = $Writer.create();
                     if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
-                        writer.uint32(/* id 1, wireType 0 =*/8).int64(message.groupId);
+                        $root.google.protobuf.Int64Value.encode(message.groupId, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                    if (message.areSentByMe != null && Object.hasOwnProperty.call(message, "areSentByMe"))
+                        $root.google.protobuf.BoolValue.encode(message.areSentByMe, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
-                        $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                        $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                     return writer;
                 };
 
@@ -7073,9 +7084,12 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.groupId = reader.int64().toString();
+                            message.groupId = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
                             break;
                         case 2:
+                            message.areSentByMe = $root.google.protobuf.BoolValue.decode(reader, reader.uint32());
+                            break;
+                        case 3:
                             message.lastUpdatedDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
                             break;
                         default:
@@ -7204,7 +7218,7 @@ $root.im = (function() {
                  * Properties of a QueryGroupJoinRequestsRequest.
                  * @memberof im.turms.proto
                  * @interface IQueryGroupJoinRequestsRequest
-                 * @property {string|null} [groupId] QueryGroupJoinRequestsRequest groupId
+                 * @property {google.protobuf.IInt64Value|null} [groupId] QueryGroupJoinRequestsRequest groupId
                  * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryGroupJoinRequestsRequest lastUpdatedDate
                  */
 
@@ -7225,11 +7239,11 @@ $root.im = (function() {
 
                 /**
                  * QueryGroupJoinRequestsRequest groupId.
-                 * @member {string} groupId
+                 * @member {google.protobuf.IInt64Value|null|undefined} groupId
                  * @memberof im.turms.proto.QueryGroupJoinRequestsRequest
                  * @instance
                  */
-                QueryGroupJoinRequestsRequest.prototype.groupId = "0";
+                QueryGroupJoinRequestsRequest.prototype.groupId = null;
 
                 /**
                  * QueryGroupJoinRequestsRequest lastUpdatedDate.
@@ -7252,7 +7266,7 @@ $root.im = (function() {
                     if (!writer)
                         writer = $Writer.create();
                     if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
-                        writer.uint32(/* id 1, wireType 0 =*/8).int64(message.groupId);
+                        $root.google.protobuf.Int64Value.encode(message.groupId, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
                     if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
                         $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     return writer;
@@ -7277,7 +7291,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.groupId = reader.int64().toString();
+                            message.groupId = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
                             break;
                         case 2:
                             message.lastUpdatedDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
@@ -9639,7 +9653,6 @@ $root.im = (function() {
                  * @property {im.turms.proto.IQueryPendingMessagesWithTotalRequest|null} [queryPendingMessagesWithTotalRequest] TurmsRequest queryPendingMessagesWithTotalRequest
                  * @property {im.turms.proto.IUpdateMessageRequest|null} [updateMessageRequest] TurmsRequest updateMessageRequest
                  * @property {im.turms.proto.IUpdateTypingStatusRequest|null} [updateTypingStatusRequest] TurmsRequest updateTypingStatusRequest
-                 * @property {im.turms.proto.IQueryUserGroupInvitationsRequest|null} [queryUserGroupInvitationsRequest] TurmsRequest queryUserGroupInvitationsRequest
                  * @property {im.turms.proto.IQueryUserProfileRequest|null} [queryUserProfileRequest] TurmsRequest queryUserProfileRequest
                  * @property {im.turms.proto.IQueryUsersIdsNearbyRequest|null} [queryUsersIdsNearbyRequest] TurmsRequest queryUsersIdsNearbyRequest
                  * @property {im.turms.proto.IQueryUsersInfosNearbyRequest|null} [queryUsersInfosNearbyRequest] TurmsRequest queryUsersInfosNearbyRequest
@@ -9788,14 +9801,6 @@ $root.im = (function() {
                  * @instance
                  */
                 TurmsRequest.prototype.updateTypingStatusRequest = null;
-
-                /**
-                 * TurmsRequest queryUserGroupInvitationsRequest.
-                 * @member {im.turms.proto.IQueryUserGroupInvitationsRequest|null|undefined} queryUserGroupInvitationsRequest
-                 * @memberof im.turms.proto.TurmsRequest
-                 * @instance
-                 */
-                TurmsRequest.prototype.queryUserGroupInvitationsRequest = null;
 
                 /**
                  * TurmsRequest queryUserProfileRequest.
@@ -10154,12 +10159,12 @@ $root.im = (function() {
 
                 /**
                  * TurmsRequest kind.
-                 * @member {"ackRequest"|"deleteResourceRequest"|"querySignedGetUrlRequest"|"querySignedPutUrlRequest"|"createMessageRequest"|"queryMessageStatusesRequest"|"queryMessagesRequest"|"queryPendingMessagesWithTotalRequest"|"updateMessageRequest"|"updateTypingStatusRequest"|"queryUserGroupInvitationsRequest"|"queryUserProfileRequest"|"queryUsersIdsNearbyRequest"|"queryUsersInfosNearbyRequest"|"queryUsersOnlineStatusRequest"|"updateUserLocationRequest"|"updateUserOnlineStatusRequest"|"updateUserRequest"|"createFriendRequestRequest"|"createRelationshipGroupRequest"|"createRelationshipRequest"|"deleteRelationshipGroupRequest"|"deleteRelationshipRequest"|"queryFriendRequestsRequest"|"queryRelatedUsersIdsRequest"|"queryRelationshipGroupsRequest"|"queryRelationshipsRequest"|"updateFriendRequestRequest"|"updateRelationshipGroupRequest"|"updateRelationshipRequest"|"createGroupRequest"|"deleteGroupRequest"|"queryGroupRequest"|"queryJoinedGroupsIdsRequest"|"queryJoinedGroupsInfosRequest"|"updateGroupRequest"|"createGroupBlacklistedUserRequest"|"deleteGroupBlacklistedUserRequest"|"queryGroupBlacklistedUsersIdsRequest"|"queryGroupBlacklistedUsersInfosRequest"|"checkGroupJoinQuestionsAnswersRequest"|"createGroupInvitationRequest"|"createGroupJoinRequestRequest"|"createGroupJoinQuestionRequest"|"deleteGroupInvitationRequest"|"deleteGroupJoinRequestRequest"|"deleteGroupJoinQuestionRequest"|"queryGroupInvitationsRequest"|"queryGroupJoinRequestsRequest"|"queryGroupJoinQuestionsRequest"|"updateGroupJoinQuestionRequest"|"createGroupMemberRequest"|"deleteGroupMemberRequest"|"queryGroupMembersRequest"|"updateGroupMemberRequest"|undefined} kind
+                 * @member {"ackRequest"|"deleteResourceRequest"|"querySignedGetUrlRequest"|"querySignedPutUrlRequest"|"createMessageRequest"|"queryMessageStatusesRequest"|"queryMessagesRequest"|"queryPendingMessagesWithTotalRequest"|"updateMessageRequest"|"updateTypingStatusRequest"|"queryUserProfileRequest"|"queryUsersIdsNearbyRequest"|"queryUsersInfosNearbyRequest"|"queryUsersOnlineStatusRequest"|"updateUserLocationRequest"|"updateUserOnlineStatusRequest"|"updateUserRequest"|"createFriendRequestRequest"|"createRelationshipGroupRequest"|"createRelationshipRequest"|"deleteRelationshipGroupRequest"|"deleteRelationshipRequest"|"queryFriendRequestsRequest"|"queryRelatedUsersIdsRequest"|"queryRelationshipGroupsRequest"|"queryRelationshipsRequest"|"updateFriendRequestRequest"|"updateRelationshipGroupRequest"|"updateRelationshipRequest"|"createGroupRequest"|"deleteGroupRequest"|"queryGroupRequest"|"queryJoinedGroupsIdsRequest"|"queryJoinedGroupsInfosRequest"|"updateGroupRequest"|"createGroupBlacklistedUserRequest"|"deleteGroupBlacklistedUserRequest"|"queryGroupBlacklistedUsersIdsRequest"|"queryGroupBlacklistedUsersInfosRequest"|"checkGroupJoinQuestionsAnswersRequest"|"createGroupInvitationRequest"|"createGroupJoinRequestRequest"|"createGroupJoinQuestionRequest"|"deleteGroupInvitationRequest"|"deleteGroupJoinRequestRequest"|"deleteGroupJoinQuestionRequest"|"queryGroupInvitationsRequest"|"queryGroupJoinRequestsRequest"|"queryGroupJoinQuestionsRequest"|"updateGroupJoinQuestionRequest"|"createGroupMemberRequest"|"deleteGroupMemberRequest"|"queryGroupMembersRequest"|"updateGroupMemberRequest"|undefined} kind
                  * @memberof im.turms.proto.TurmsRequest
                  * @instance
                  */
                 Object.defineProperty(TurmsRequest.prototype, "kind", {
-                    get: $util.oneOfGetter($oneOfFields = ["ackRequest", "deleteResourceRequest", "querySignedGetUrlRequest", "querySignedPutUrlRequest", "createMessageRequest", "queryMessageStatusesRequest", "queryMessagesRequest", "queryPendingMessagesWithTotalRequest", "updateMessageRequest", "updateTypingStatusRequest", "queryUserGroupInvitationsRequest", "queryUserProfileRequest", "queryUsersIdsNearbyRequest", "queryUsersInfosNearbyRequest", "queryUsersOnlineStatusRequest", "updateUserLocationRequest", "updateUserOnlineStatusRequest", "updateUserRequest", "createFriendRequestRequest", "createRelationshipGroupRequest", "createRelationshipRequest", "deleteRelationshipGroupRequest", "deleteRelationshipRequest", "queryFriendRequestsRequest", "queryRelatedUsersIdsRequest", "queryRelationshipGroupsRequest", "queryRelationshipsRequest", "updateFriendRequestRequest", "updateRelationshipGroupRequest", "updateRelationshipRequest", "createGroupRequest", "deleteGroupRequest", "queryGroupRequest", "queryJoinedGroupsIdsRequest", "queryJoinedGroupsInfosRequest", "updateGroupRequest", "createGroupBlacklistedUserRequest", "deleteGroupBlacklistedUserRequest", "queryGroupBlacklistedUsersIdsRequest", "queryGroupBlacklistedUsersInfosRequest", "checkGroupJoinQuestionsAnswersRequest", "createGroupInvitationRequest", "createGroupJoinRequestRequest", "createGroupJoinQuestionRequest", "deleteGroupInvitationRequest", "deleteGroupJoinRequestRequest", "deleteGroupJoinQuestionRequest", "queryGroupInvitationsRequest", "queryGroupJoinRequestsRequest", "queryGroupJoinQuestionsRequest", "updateGroupJoinQuestionRequest", "createGroupMemberRequest", "deleteGroupMemberRequest", "queryGroupMembersRequest", "updateGroupMemberRequest"]),
+                    get: $util.oneOfGetter($oneOfFields = ["ackRequest", "deleteResourceRequest", "querySignedGetUrlRequest", "querySignedPutUrlRequest", "createMessageRequest", "queryMessageStatusesRequest", "queryMessagesRequest", "queryPendingMessagesWithTotalRequest", "updateMessageRequest", "updateTypingStatusRequest", "queryUserProfileRequest", "queryUsersIdsNearbyRequest", "queryUsersInfosNearbyRequest", "queryUsersOnlineStatusRequest", "updateUserLocationRequest", "updateUserOnlineStatusRequest", "updateUserRequest", "createFriendRequestRequest", "createRelationshipGroupRequest", "createRelationshipRequest", "deleteRelationshipGroupRequest", "deleteRelationshipRequest", "queryFriendRequestsRequest", "queryRelatedUsersIdsRequest", "queryRelationshipGroupsRequest", "queryRelationshipsRequest", "updateFriendRequestRequest", "updateRelationshipGroupRequest", "updateRelationshipRequest", "createGroupRequest", "deleteGroupRequest", "queryGroupRequest", "queryJoinedGroupsIdsRequest", "queryJoinedGroupsInfosRequest", "updateGroupRequest", "createGroupBlacklistedUserRequest", "deleteGroupBlacklistedUserRequest", "queryGroupBlacklistedUsersIdsRequest", "queryGroupBlacklistedUsersInfosRequest", "checkGroupJoinQuestionsAnswersRequest", "createGroupInvitationRequest", "createGroupJoinRequestRequest", "createGroupJoinQuestionRequest", "deleteGroupInvitationRequest", "deleteGroupJoinRequestRequest", "deleteGroupJoinQuestionRequest", "queryGroupInvitationsRequest", "queryGroupJoinRequestsRequest", "queryGroupJoinQuestionsRequest", "updateGroupJoinQuestionRequest", "createGroupMemberRequest", "deleteGroupMemberRequest", "queryGroupMembersRequest", "updateGroupMemberRequest"]),
                     set: $util.oneOfSetter($oneOfFields)
                 });
 
@@ -10197,22 +10202,20 @@ $root.im = (function() {
                         $root.im.turms.proto.UpdateMessageRequest.encode(message.updateMessageRequest, writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
                     if (message.updateTypingStatusRequest != null && Object.hasOwnProperty.call(message, "updateTypingStatusRequest"))
                         $root.im.turms.proto.UpdateTypingStatusRequest.encode(message.updateTypingStatusRequest, writer.uint32(/* id 11, wireType 2 =*/90).fork()).ldelim();
-                    if (message.queryUserGroupInvitationsRequest != null && Object.hasOwnProperty.call(message, "queryUserGroupInvitationsRequest"))
-                        $root.im.turms.proto.QueryUserGroupInvitationsRequest.encode(message.queryUserGroupInvitationsRequest, writer.uint32(/* id 100, wireType 2 =*/802).fork()).ldelim();
                     if (message.queryUserProfileRequest != null && Object.hasOwnProperty.call(message, "queryUserProfileRequest"))
-                        $root.im.turms.proto.QueryUserProfileRequest.encode(message.queryUserProfileRequest, writer.uint32(/* id 101, wireType 2 =*/810).fork()).ldelim();
+                        $root.im.turms.proto.QueryUserProfileRequest.encode(message.queryUserProfileRequest, writer.uint32(/* id 100, wireType 2 =*/802).fork()).ldelim();
                     if (message.queryUsersIdsNearbyRequest != null && Object.hasOwnProperty.call(message, "queryUsersIdsNearbyRequest"))
-                        $root.im.turms.proto.QueryUsersIdsNearbyRequest.encode(message.queryUsersIdsNearbyRequest, writer.uint32(/* id 102, wireType 2 =*/818).fork()).ldelim();
+                        $root.im.turms.proto.QueryUsersIdsNearbyRequest.encode(message.queryUsersIdsNearbyRequest, writer.uint32(/* id 101, wireType 2 =*/810).fork()).ldelim();
                     if (message.queryUsersInfosNearbyRequest != null && Object.hasOwnProperty.call(message, "queryUsersInfosNearbyRequest"))
-                        $root.im.turms.proto.QueryUsersInfosNearbyRequest.encode(message.queryUsersInfosNearbyRequest, writer.uint32(/* id 103, wireType 2 =*/826).fork()).ldelim();
+                        $root.im.turms.proto.QueryUsersInfosNearbyRequest.encode(message.queryUsersInfosNearbyRequest, writer.uint32(/* id 102, wireType 2 =*/818).fork()).ldelim();
                     if (message.queryUsersOnlineStatusRequest != null && Object.hasOwnProperty.call(message, "queryUsersOnlineStatusRequest"))
-                        $root.im.turms.proto.QueryUsersOnlineStatusRequest.encode(message.queryUsersOnlineStatusRequest, writer.uint32(/* id 104, wireType 2 =*/834).fork()).ldelim();
+                        $root.im.turms.proto.QueryUsersOnlineStatusRequest.encode(message.queryUsersOnlineStatusRequest, writer.uint32(/* id 103, wireType 2 =*/826).fork()).ldelim();
                     if (message.updateUserLocationRequest != null && Object.hasOwnProperty.call(message, "updateUserLocationRequest"))
-                        $root.im.turms.proto.UpdateUserLocationRequest.encode(message.updateUserLocationRequest, writer.uint32(/* id 105, wireType 2 =*/842).fork()).ldelim();
+                        $root.im.turms.proto.UpdateUserLocationRequest.encode(message.updateUserLocationRequest, writer.uint32(/* id 104, wireType 2 =*/834).fork()).ldelim();
                     if (message.updateUserOnlineStatusRequest != null && Object.hasOwnProperty.call(message, "updateUserOnlineStatusRequest"))
-                        $root.im.turms.proto.UpdateUserOnlineStatusRequest.encode(message.updateUserOnlineStatusRequest, writer.uint32(/* id 106, wireType 2 =*/850).fork()).ldelim();
+                        $root.im.turms.proto.UpdateUserOnlineStatusRequest.encode(message.updateUserOnlineStatusRequest, writer.uint32(/* id 105, wireType 2 =*/842).fork()).ldelim();
                     if (message.updateUserRequest != null && Object.hasOwnProperty.call(message, "updateUserRequest"))
-                        $root.im.turms.proto.UpdateUserRequest.encode(message.updateUserRequest, writer.uint32(/* id 107, wireType 2 =*/858).fork()).ldelim();
+                        $root.im.turms.proto.UpdateUserRequest.encode(message.updateUserRequest, writer.uint32(/* id 106, wireType 2 =*/850).fork()).ldelim();
                     if (message.createFriendRequestRequest != null && Object.hasOwnProperty.call(message, "createFriendRequestRequest"))
                         $root.im.turms.proto.CreateFriendRequestRequest.encode(message.createFriendRequestRequest, writer.uint32(/* id 200, wireType 2 =*/1602).fork()).ldelim();
                     if (message.createRelationshipGroupRequest != null && Object.hasOwnProperty.call(message, "createRelationshipGroupRequest"))
@@ -10342,27 +10345,24 @@ $root.im = (function() {
                             message.updateTypingStatusRequest = $root.im.turms.proto.UpdateTypingStatusRequest.decode(reader, reader.uint32());
                             break;
                         case 100:
-                            message.queryUserGroupInvitationsRequest = $root.im.turms.proto.QueryUserGroupInvitationsRequest.decode(reader, reader.uint32());
-                            break;
-                        case 101:
                             message.queryUserProfileRequest = $root.im.turms.proto.QueryUserProfileRequest.decode(reader, reader.uint32());
                             break;
-                        case 102:
+                        case 101:
                             message.queryUsersIdsNearbyRequest = $root.im.turms.proto.QueryUsersIdsNearbyRequest.decode(reader, reader.uint32());
                             break;
-                        case 103:
+                        case 102:
                             message.queryUsersInfosNearbyRequest = $root.im.turms.proto.QueryUsersInfosNearbyRequest.decode(reader, reader.uint32());
                             break;
-                        case 104:
+                        case 103:
                             message.queryUsersOnlineStatusRequest = $root.im.turms.proto.QueryUsersOnlineStatusRequest.decode(reader, reader.uint32());
                             break;
-                        case 105:
+                        case 104:
                             message.updateUserLocationRequest = $root.im.turms.proto.UpdateUserLocationRequest.decode(reader, reader.uint32());
                             break;
-                        case 106:
+                        case 105:
                             message.updateUserOnlineStatusRequest = $root.im.turms.proto.UpdateUserOnlineStatusRequest.decode(reader, reader.uint32());
                             break;
-                        case 107:
+                        case 106:
                             message.updateUserRequest = $root.im.turms.proto.UpdateUserRequest.decode(reader, reader.uint32());
                             break;
                         case 200:
@@ -10485,87 +10485,6 @@ $root.im = (function() {
                 };
 
                 return TurmsRequest;
-            })();
-
-            proto.QueryUserGroupInvitationsRequest = (function() {
-
-                /**
-                 * Properties of a QueryUserGroupInvitationsRequest.
-                 * @memberof im.turms.proto
-                 * @interface IQueryUserGroupInvitationsRequest
-                 * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryUserGroupInvitationsRequest lastUpdatedDate
-                 */
-
-                /**
-                 * Constructs a new QueryUserGroupInvitationsRequest.
-                 * @memberof im.turms.proto
-                 * @classdesc Represents a QueryUserGroupInvitationsRequest.
-                 * @implements IQueryUserGroupInvitationsRequest
-                 * @constructor
-                 * @param {im.turms.proto.IQueryUserGroupInvitationsRequest=} [properties] Properties to set
-                 */
-                function QueryUserGroupInvitationsRequest(properties) {
-                    if (properties)
-                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                            if (properties[keys[i]] != null)
-                                this[keys[i]] = properties[keys[i]];
-                }
-
-                /**
-                 * QueryUserGroupInvitationsRequest lastUpdatedDate.
-                 * @member {google.protobuf.IInt64Value|null|undefined} lastUpdatedDate
-                 * @memberof im.turms.proto.QueryUserGroupInvitationsRequest
-                 * @instance
-                 */
-                QueryUserGroupInvitationsRequest.prototype.lastUpdatedDate = null;
-
-                /**
-                 * Encodes the specified QueryUserGroupInvitationsRequest message. Does not implicitly {@link im.turms.proto.QueryUserGroupInvitationsRequest.verify|verify} messages.
-                 * @function encode
-                 * @memberof im.turms.proto.QueryUserGroupInvitationsRequest
-                 * @static
-                 * @param {im.turms.proto.IQueryUserGroupInvitationsRequest} message QueryUserGroupInvitationsRequest message or plain object to encode
-                 * @param {$protobuf.Writer} [writer] Writer to encode to
-                 * @returns {$protobuf.Writer} Writer
-                 */
-                QueryUserGroupInvitationsRequest.encode = function encode(message, writer) {
-                    if (!writer)
-                        writer = $Writer.create();
-                    if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
-                        $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    return writer;
-                };
-
-                /**
-                 * Decodes a QueryUserGroupInvitationsRequest message from the specified reader or buffer.
-                 * @function decode
-                 * @memberof im.turms.proto.QueryUserGroupInvitationsRequest
-                 * @static
-                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @param {number} [length] Message length if known beforehand
-                 * @returns {im.turms.proto.QueryUserGroupInvitationsRequest} QueryUserGroupInvitationsRequest
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                QueryUserGroupInvitationsRequest.decode = function decode(reader, length) {
-                    if (!(reader instanceof $Reader))
-                        reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.QueryUserGroupInvitationsRequest();
-                    while (reader.pos < end) {
-                        var tag = reader.uint32();
-                        switch (tag >>> 3) {
-                        case 1:
-                            message.lastUpdatedDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
-                        }
-                    }
-                    return message;
-                };
-
-                return QueryUserGroupInvitationsRequest;
             })();
 
             proto.QueryUserProfileRequest = (function() {
@@ -11606,6 +11525,7 @@ $root.im = (function() {
                  * Properties of a QueryFriendRequestsRequest.
                  * @memberof im.turms.proto
                  * @interface IQueryFriendRequestsRequest
+                 * @property {boolean|null} [areSentByMe] QueryFriendRequestsRequest areSentByMe
                  * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryFriendRequestsRequest lastUpdatedDate
                  */
 
@@ -11623,6 +11543,14 @@ $root.im = (function() {
                             if (properties[keys[i]] != null)
                                 this[keys[i]] = properties[keys[i]];
                 }
+
+                /**
+                 * QueryFriendRequestsRequest areSentByMe.
+                 * @member {boolean} areSentByMe
+                 * @memberof im.turms.proto.QueryFriendRequestsRequest
+                 * @instance
+                 */
+                QueryFriendRequestsRequest.prototype.areSentByMe = false;
 
                 /**
                  * QueryFriendRequestsRequest lastUpdatedDate.
@@ -11644,8 +11572,10 @@ $root.im = (function() {
                 QueryFriendRequestsRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
+                    if (message.areSentByMe != null && Object.hasOwnProperty.call(message, "areSentByMe"))
+                        writer.uint32(/* id 1, wireType 0 =*/8).bool(message.areSentByMe);
                     if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
-                        $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                        $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     return writer;
                 };
 
@@ -11668,6 +11598,9 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
+                            message.areSentByMe = reader.bool();
+                            break;
+                        case 2:
                             message.lastUpdatedDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
                             break;
                         default:

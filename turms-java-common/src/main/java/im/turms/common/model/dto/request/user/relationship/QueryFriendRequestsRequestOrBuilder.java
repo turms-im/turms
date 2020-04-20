@@ -8,17 +8,23 @@ public interface QueryFriendRequestsRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>.google.protobuf.Int64Value last_updated_date = 1;</code>
+   * <code>bool are_sent_by_me = 1;</code>
+   * @return The areSentByMe.
+   */
+  boolean getAreSentByMe();
+
+  /**
+   * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
    * @return Whether the lastUpdatedDate field is set.
    */
   boolean hasLastUpdatedDate();
   /**
-   * <code>.google.protobuf.Int64Value last_updated_date = 1;</code>
+   * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
    * @return The lastUpdatedDate.
    */
   com.google.protobuf.Int64Value getLastUpdatedDate();
   /**
-   * <code>.google.protobuf.Int64Value last_updated_date = 1;</code>
+   * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
    */
   com.google.protobuf.Int64ValueOrBuilder getLastUpdatedDateOrBuilder();
 }

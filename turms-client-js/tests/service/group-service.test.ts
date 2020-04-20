@@ -111,8 +111,8 @@ describe('Query', () => {
         const usersInfosWithVersion = await turmsClient.groupService.queryBlacklistedUsersInfos(groupId);
         expect(usersInfosWithVersion.userInfos[0].id).toEqual(GROUP_BLACKLISTED_USER_ID);
     });
-    it('queryInvitations_shouldEqualNewInvitationId', async () => {
-        const groupInvitationsWithVersion = await turmsClient.groupService.queryInvitations(groupId);
+    it('queryInvitationsByGroupId_shouldEqualNewInvitationId', async () => {
+        const groupInvitationsWithVersion = await turmsClient.groupService.queryInvitationsByGroupId(groupId);
         expect(groupInvitationsWithVersion.groupInvitations[0].id).toEqual(groupInvitationId);
     });
     it('queryJoinRequests_shouldEqualNewJoinRequestId', async () => {
@@ -136,7 +136,7 @@ describe('Query', () => {
         idsAndAnswer[groupJoinQuestionId] = "answer";
         try {
             const answerResult = await turmsClient.groupService.answerGroupQuestions(idsAndAnswer);
-            const isCorrect = answerResult.questionsIds.includes(groupJoinQuestionId);
+            const isCorrect = answerResult.questionsIds.indexOf(groupJoinQuestionId) >= 0;
             expect(isCorrect).toEqual(true);
         } catch (e) {
             expect(e.code).toEqual(TurmsStatusCode.ALREADY_GROUP_MEMBER);

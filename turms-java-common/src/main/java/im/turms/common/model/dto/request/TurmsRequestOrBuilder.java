@@ -228,130 +228,115 @@ public interface TurmsRequestOrBuilder extends
    * User
    * </pre>
    *
-   * <code>.im.turms.proto.QueryUserGroupInvitationsRequest query_user_group_invitations_request = 100;</code>
-   * @return Whether the queryUserGroupInvitationsRequest field is set.
-   */
-  boolean hasQueryUserGroupInvitationsRequest();
-  /**
-   * <pre>
-   * User
-   * </pre>
-   *
-   * <code>.im.turms.proto.QueryUserGroupInvitationsRequest query_user_group_invitations_request = 100;</code>
-   * @return The queryUserGroupInvitationsRequest.
-   */
-  im.turms.common.model.dto.request.user.QueryUserGroupInvitationsRequest getQueryUserGroupInvitationsRequest();
-  /**
-   * <pre>
-   * User
-   * </pre>
-   *
-   * <code>.im.turms.proto.QueryUserGroupInvitationsRequest query_user_group_invitations_request = 100;</code>
-   */
-  im.turms.common.model.dto.request.user.QueryUserGroupInvitationsRequestOrBuilder getQueryUserGroupInvitationsRequestOrBuilder();
-
-  /**
-   * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 101;</code>
+   * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
    * @return Whether the queryUserProfileRequest field is set.
    */
   boolean hasQueryUserProfileRequest();
   /**
-   * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 101;</code>
+   * <pre>
+   * User
+   * </pre>
+   *
+   * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
    * @return The queryUserProfileRequest.
    */
   im.turms.common.model.dto.request.user.QueryUserProfileRequest getQueryUserProfileRequest();
   /**
-   * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 101;</code>
+   * <pre>
+   * User
+   * </pre>
+   *
+   * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
    */
   im.turms.common.model.dto.request.user.QueryUserProfileRequestOrBuilder getQueryUserProfileRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.QueryUsersIdsNearbyRequest query_users_ids_nearby_request = 102;</code>
+   * <code>.im.turms.proto.QueryUsersIdsNearbyRequest query_users_ids_nearby_request = 101;</code>
    * @return Whether the queryUsersIdsNearbyRequest field is set.
    */
   boolean hasQueryUsersIdsNearbyRequest();
   /**
-   * <code>.im.turms.proto.QueryUsersIdsNearbyRequest query_users_ids_nearby_request = 102;</code>
+   * <code>.im.turms.proto.QueryUsersIdsNearbyRequest query_users_ids_nearby_request = 101;</code>
    * @return The queryUsersIdsNearbyRequest.
    */
   im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest getQueryUsersIdsNearbyRequest();
   /**
-   * <code>.im.turms.proto.QueryUsersIdsNearbyRequest query_users_ids_nearby_request = 102;</code>
+   * <code>.im.turms.proto.QueryUsersIdsNearbyRequest query_users_ids_nearby_request = 101;</code>
    */
   im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequestOrBuilder getQueryUsersIdsNearbyRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.QueryUsersInfosNearbyRequest query_users_infos_nearby_request = 103;</code>
+   * <code>.im.turms.proto.QueryUsersInfosNearbyRequest query_users_infos_nearby_request = 102;</code>
    * @return Whether the queryUsersInfosNearbyRequest field is set.
    */
   boolean hasQueryUsersInfosNearbyRequest();
   /**
-   * <code>.im.turms.proto.QueryUsersInfosNearbyRequest query_users_infos_nearby_request = 103;</code>
+   * <code>.im.turms.proto.QueryUsersInfosNearbyRequest query_users_infos_nearby_request = 102;</code>
    * @return The queryUsersInfosNearbyRequest.
    */
   im.turms.common.model.dto.request.user.QueryUsersInfosNearbyRequest getQueryUsersInfosNearbyRequest();
   /**
-   * <code>.im.turms.proto.QueryUsersInfosNearbyRequest query_users_infos_nearby_request = 103;</code>
+   * <code>.im.turms.proto.QueryUsersInfosNearbyRequest query_users_infos_nearby_request = 102;</code>
    */
   im.turms.common.model.dto.request.user.QueryUsersInfosNearbyRequestOrBuilder getQueryUsersInfosNearbyRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.QueryUsersOnlineStatusRequest query_users_online_status_request = 104;</code>
+   * <code>.im.turms.proto.QueryUsersOnlineStatusRequest query_users_online_status_request = 103;</code>
    * @return Whether the queryUsersOnlineStatusRequest field is set.
    */
   boolean hasQueryUsersOnlineStatusRequest();
   /**
-   * <code>.im.turms.proto.QueryUsersOnlineStatusRequest query_users_online_status_request = 104;</code>
+   * <code>.im.turms.proto.QueryUsersOnlineStatusRequest query_users_online_status_request = 103;</code>
    * @return The queryUsersOnlineStatusRequest.
    */
   im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest getQueryUsersOnlineStatusRequest();
   /**
-   * <code>.im.turms.proto.QueryUsersOnlineStatusRequest query_users_online_status_request = 104;</code>
+   * <code>.im.turms.proto.QueryUsersOnlineStatusRequest query_users_online_status_request = 103;</code>
    */
   im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequestOrBuilder getQueryUsersOnlineStatusRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 105;</code>
+   * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 104;</code>
    * @return Whether the updateUserLocationRequest field is set.
    */
   boolean hasUpdateUserLocationRequest();
   /**
-   * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 105;</code>
+   * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 104;</code>
    * @return The updateUserLocationRequest.
    */
   im.turms.common.model.dto.request.user.UpdateUserLocationRequest getUpdateUserLocationRequest();
   /**
-   * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 105;</code>
+   * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 104;</code>
    */
   im.turms.common.model.dto.request.user.UpdateUserLocationRequestOrBuilder getUpdateUserLocationRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 106;</code>
+   * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 105;</code>
    * @return Whether the updateUserOnlineStatusRequest field is set.
    */
   boolean hasUpdateUserOnlineStatusRequest();
   /**
-   * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 106;</code>
+   * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 105;</code>
    * @return The updateUserOnlineStatusRequest.
    */
   im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest getUpdateUserOnlineStatusRequest();
   /**
-   * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 106;</code>
+   * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 105;</code>
    */
   im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequestOrBuilder getUpdateUserOnlineStatusRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.UpdateUserRequest update_user_request = 107;</code>
+   * <code>.im.turms.proto.UpdateUserRequest update_user_request = 106;</code>
    * @return Whether the updateUserRequest field is set.
    */
   boolean hasUpdateUserRequest();
   /**
-   * <code>.im.turms.proto.UpdateUserRequest update_user_request = 107;</code>
+   * <code>.im.turms.proto.UpdateUserRequest update_user_request = 106;</code>
    * @return The updateUserRequest.
    */
   im.turms.common.model.dto.request.user.UpdateUserRequest getUpdateUserRequest();
   /**
-   * <code>.im.turms.proto.UpdateUserRequest update_user_request = 107;</code>
+   * <code>.im.turms.proto.UpdateUserRequest update_user_request = 106;</code>
    */
   im.turms.common.model.dto.request.user.UpdateUserRequestOrBuilder getUpdateUserRequestOrBuilder();
 

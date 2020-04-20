@@ -118,10 +118,6 @@ describe('Update', () => {
 });
 
 describe('Query', () => {
-    it('queryUserGroupInvitations_shouldReturnGroupInvitationsWithVersion', async () => {
-        const result = await turmsClient.userService.queryUserGroupInvitations();
-        expect(result).toBeTruthy();
-    });
     it('queryUserProfile_shouldReturnUserInfoWithVersion', async () => {
         const result = await turmsClient.userService.queryUserProfile('1');
         expect(result).toBeTruthy();

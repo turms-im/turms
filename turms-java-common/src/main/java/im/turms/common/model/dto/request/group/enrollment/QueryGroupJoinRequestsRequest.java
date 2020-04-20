@@ -48,9 +48,17 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
-          case 8: {
+          case 10: {
+            com.google.protobuf.Int64Value.Builder subBuilder = null;
+            if (groupId_ != null) {
+              subBuilder = groupId_.toBuilder();
+            }
+            groupId_ = input.readMessage(com.google.protobuf.Int64Value.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(groupId_);
+              groupId_ = subBuilder.buildPartial();
+            }
 
-            groupId_ = input.readInt64();
             break;
           }
           case 18: {
@@ -99,13 +107,26 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int GROUP_ID_FIELD_NUMBER = 1;
-  private long groupId_;
+  private com.google.protobuf.Int64Value groupId_;
   /**
-   * <code>int64 group_id = 1;</code>
+   * <code>.google.protobuf.Int64Value group_id = 1;</code>
+   * @return Whether the groupId field is set.
+   */
+  public boolean hasGroupId() {
+    return groupId_ != null;
+  }
+  /**
+   * <code>.google.protobuf.Int64Value group_id = 1;</code>
    * @return The groupId.
    */
-  public long getGroupId() {
-    return groupId_;
+  public com.google.protobuf.Int64Value getGroupId() {
+    return groupId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : groupId_;
+  }
+  /**
+   * <code>.google.protobuf.Int64Value group_id = 1;</code>
+   */
+  public com.google.protobuf.Int64ValueOrBuilder getGroupIdOrBuilder() {
+    return getGroupId();
   }
 
   public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 2;
@@ -145,8 +166,8 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (groupId_ != 0L) {
-      output.writeInt64(1, groupId_);
+    if (groupId_ != null) {
+      output.writeMessage(1, getGroupId());
     }
     if (lastUpdatedDate_ != null) {
       output.writeMessage(2, getLastUpdatedDate());
@@ -160,9 +181,9 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (groupId_ != 0L) {
+    if (groupId_ != null) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(1, groupId_);
+        .computeMessageSize(1, getGroupId());
     }
     if (lastUpdatedDate_ != null) {
       size += com.google.protobuf.CodedOutputStream
@@ -183,8 +204,11 @@ private static final long serialVersionUID = 0L;
     }
     im.turms.common.model.dto.request.group.enrollment.QueryGroupJoinRequestsRequest other = (im.turms.common.model.dto.request.group.enrollment.QueryGroupJoinRequestsRequest) obj;
 
-    if (getGroupId()
-        != other.getGroupId()) return false;
+    if (hasGroupId() != other.hasGroupId()) return false;
+    if (hasGroupId()) {
+      if (!getGroupId()
+          .equals(other.getGroupId())) return false;
+    }
     if (hasLastUpdatedDate() != other.hasLastUpdatedDate()) return false;
     if (hasLastUpdatedDate()) {
       if (!getLastUpdatedDate()
@@ -201,9 +225,10 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + GROUP_ID_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getGroupId());
+    if (hasGroupId()) {
+      hash = (37 * hash) + GROUP_ID_FIELD_NUMBER;
+      hash = (53 * hash) + getGroupId().hashCode();
+    }
     if (hasLastUpdatedDate()) {
       hash = (37 * hash) + LAST_UPDATED_DATE_FIELD_NUMBER;
       hash = (53 * hash) + getLastUpdatedDate().hashCode();
@@ -341,8 +366,12 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      groupId_ = 0L;
-
+      if (groupIdBuilder_ == null) {
+        groupId_ = null;
+      } else {
+        groupId_ = null;
+        groupIdBuilder_ = null;
+      }
       if (lastUpdatedDateBuilder_ == null) {
         lastUpdatedDate_ = null;
       } else {
@@ -375,7 +404,11 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public im.turms.common.model.dto.request.group.enrollment.QueryGroupJoinRequestsRequest buildPartial() {
       im.turms.common.model.dto.request.group.enrollment.QueryGroupJoinRequestsRequest result = new im.turms.common.model.dto.request.group.enrollment.QueryGroupJoinRequestsRequest(this);
-      result.groupId_ = groupId_;
+      if (groupIdBuilder_ == null) {
+        result.groupId_ = groupId_;
+      } else {
+        result.groupId_ = groupIdBuilder_.build();
+      }
       if (lastUpdatedDateBuilder_ == null) {
         result.lastUpdatedDate_ = lastUpdatedDate_;
       } else {
@@ -429,8 +462,8 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(im.turms.common.model.dto.request.group.enrollment.QueryGroupJoinRequestsRequest other) {
       if (other == im.turms.common.model.dto.request.group.enrollment.QueryGroupJoinRequestsRequest.getDefaultInstance()) return this;
-      if (other.getGroupId() != 0L) {
-        setGroupId(other.getGroupId());
+      if (other.hasGroupId()) {
+        mergeGroupId(other.getGroupId());
       }
       if (other.hasLastUpdatedDate()) {
         mergeLastUpdatedDate(other.getLastUpdatedDate());
@@ -464,34 +497,123 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private long groupId_ ;
+    private com.google.protobuf.Int64Value groupId_;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> groupIdBuilder_;
     /**
-     * <code>int64 group_id = 1;</code>
+     * <code>.google.protobuf.Int64Value group_id = 1;</code>
+     * @return Whether the groupId field is set.
+     */
+    public boolean hasGroupId() {
+      return groupIdBuilder_ != null || groupId_ != null;
+    }
+    /**
+     * <code>.google.protobuf.Int64Value group_id = 1;</code>
      * @return The groupId.
      */
-    public long getGroupId() {
-      return groupId_;
+    public com.google.protobuf.Int64Value getGroupId() {
+      if (groupIdBuilder_ == null) {
+        return groupId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : groupId_;
+      } else {
+        return groupIdBuilder_.getMessage();
+      }
     }
     /**
-     * <code>int64 group_id = 1;</code>
-     * @param value The groupId to set.
-     * @return This builder for chaining.
+     * <code>.google.protobuf.Int64Value group_id = 1;</code>
      */
-    public Builder setGroupId(long value) {
-      
-      groupId_ = value;
-      onChanged();
+    public Builder setGroupId(com.google.protobuf.Int64Value value) {
+      if (groupIdBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        groupId_ = value;
+        onChanged();
+      } else {
+        groupIdBuilder_.setMessage(value);
+      }
+
       return this;
     }
     /**
-     * <code>int64 group_id = 1;</code>
-     * @return This builder for chaining.
+     * <code>.google.protobuf.Int64Value group_id = 1;</code>
+     */
+    public Builder setGroupId(
+        com.google.protobuf.Int64Value.Builder builderForValue) {
+      if (groupIdBuilder_ == null) {
+        groupId_ = builderForValue.build();
+        onChanged();
+      } else {
+        groupIdBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <code>.google.protobuf.Int64Value group_id = 1;</code>
+     */
+    public Builder mergeGroupId(com.google.protobuf.Int64Value value) {
+      if (groupIdBuilder_ == null) {
+        if (groupId_ != null) {
+          groupId_ =
+            com.google.protobuf.Int64Value.newBuilder(groupId_).mergeFrom(value).buildPartial();
+        } else {
+          groupId_ = value;
+        }
+        onChanged();
+      } else {
+        groupIdBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.google.protobuf.Int64Value group_id = 1;</code>
      */
     public Builder clearGroupId() {
-      
-      groupId_ = 0L;
-      onChanged();
+      if (groupIdBuilder_ == null) {
+        groupId_ = null;
+        onChanged();
+      } else {
+        groupId_ = null;
+        groupIdBuilder_ = null;
+      }
+
       return this;
+    }
+    /**
+     * <code>.google.protobuf.Int64Value group_id = 1;</code>
+     */
+    public com.google.protobuf.Int64Value.Builder getGroupIdBuilder() {
+      
+      onChanged();
+      return getGroupIdFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.google.protobuf.Int64Value group_id = 1;</code>
+     */
+    public com.google.protobuf.Int64ValueOrBuilder getGroupIdOrBuilder() {
+      if (groupIdBuilder_ != null) {
+        return groupIdBuilder_.getMessageOrBuilder();
+      } else {
+        return groupId_ == null ?
+            com.google.protobuf.Int64Value.getDefaultInstance() : groupId_;
+      }
+    }
+    /**
+     * <code>.google.protobuf.Int64Value group_id = 1;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> 
+        getGroupIdFieldBuilder() {
+      if (groupIdBuilder_ == null) {
+        groupIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>(
+                getGroupId(),
+                getParentForChildren(),
+                isClean());
+        groupId_ = null;
+      }
+      return groupIdBuilder_;
     }
 
     private com.google.protobuf.Int64Value lastUpdatedDate_;

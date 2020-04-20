@@ -34,204 +34,200 @@ public final class TurmsRequestOuterClass {
       "/storage/delete_resource_request.proto\0322" +
       "request/storage/query_signed_get_url_req" +
       "uest.proto\0322request/storage/query_signed" +
-      "_put_url_request.proto\0327request/user/que" +
-      "ry_user_group_invitations_request.proto\032" +
-      "-request/user/query_user_profile_request" +
-      ".proto\0321request/user/query_users_ids_nea" +
-      "rby_request.proto\0323request/user/query_us" +
-      "ers_infos_nearby_request.proto\0324request/" +
-      "user/query_users_online_status_request.p" +
-      "roto\032/request/user/update_user_location_" +
-      "request.proto\0324request/user/update_user_" +
-      "online_status_request.proto\032&request/use" +
-      "r/update_user_request.proto\032=request/use" +
-      "r/relationship/create_friend_request_req" +
-      "uest.proto\032Arequest/user/relationship/cr" +
-      "eate_relationship_group_request.proto\032;r" +
-      "equest/user/relationship/create_relation" +
-      "ship_request.proto\032Arequest/user/relatio" +
-      "nship/delete_relationship_group_request." +
-      "proto\032;request/user/relationship/delete_" +
-      "relationship_request.proto\032=request/user" +
-      "/relationship/query_friend_requests_requ" +
-      "est.proto\032?request/user/relationship/que" +
-      "ry_related_users_ids_request.proto\032Arequ" +
-      "est/user/relationship/query_relationship" +
-      "_groups_request.proto\032;request/user/rela" +
-      "tionship/query_relationships_request.pro" +
-      "to\032=request/user/relationship/update_fri" +
-      "end_request_request.proto\032Arequest/user/" +
-      "relationship/update_relationship_group_r" +
-      "equest.proto\032;request/user/relationship/" +
-      "update_relationship_request.proto\032(reque" +
-      "st/group/create_group_request.proto\032(req" +
-      "uest/group/delete_group_request.proto\032\'r" +
-      "equest/group/query_group_request.proto\0323" +
-      "request/group/query_joined_groups_ids_re" +
-      "quest.proto\0325request/group/query_joined_" +
-      "groups_infos_request.proto\032(request/grou" +
-      "p/update_group_request.proto\032Crequest/gr" +
-      "oup/blacklist/create_group_blacklisted_u" +
-      "ser_request.proto\032Crequest/group/blackli" +
-      "st/delete_group_blacklisted_user_request" +
-      ".proto\032Grequest/group/blacklist/query_gr" +
-      "oup_blacklisted_users_ids_request.proto\032" +
-      "Irequest/group/blacklist/query_group_bla" +
-      "cklisted_users_infos_request.proto\032Irequ" +
-      "est/group/enrollment/check_group_join_qu" +
-      "estions_answers_request.proto\032>request/g" +
-      "roup/enrollment/create_group_invitation_" +
-      "request.proto\032@request/group/enrollment/" +
-      "create_group_join_request_request.proto\032" +
-      "Arequest/group/enrollment/create_group_j" +
-      "oin_question_request.proto\032>request/grou" +
-      "p/enrollment/delete_group_invitation_req" +
-      "uest.proto\032@request/group/enrollment/del" +
-      "ete_group_join_request_request.proto\032Are" +
-      "quest/group/enrollment/delete_group_join" +
-      "_question_request.proto\032>request/group/e" +
-      "nrollment/query_group_invitations_reques" +
-      "t.proto\032@request/group/enrollment/query_" +
-      "group_join_requests_request.proto\032Areque" +
-      "st/group/enrollment/query_group_join_que" +
-      "stions_request.proto\032Arequest/group/enro" +
-      "llment/update_group_join_question_reques" +
-      "t.proto\0326request/group/member/create_gro" +
-      "up_member_request.proto\0326request/group/m" +
-      "ember/delete_group_member_request.proto\032" +
-      "6request/group/member/query_group_member" +
-      "s_request.proto\0326request/group/member/up" +
-      "date_group_member_request.proto\032,request" +
-      "/message/create_message_request.proto\0324r" +
-      "equest/message/query_message_statuses_re" +
-      "quest.proto\032,request/message/query_messa" +
-      "ges_request.proto\032?request/message/query" +
-      "_pending_messages_with_total_request.pro" +
-      "to\032,request/message/update_message_reque" +
-      "st.proto\0322request/message/update_typing_" +
-      "status_request.proto\"\347%\n\014TurmsRequest\022/\n" +
-      "\nrequest_id\030\001 \001(\0132\033.google.protobuf.Int6" +
-      "4Value\0221\n\013ack_request\030\002 \001(\0132\032.im.turms.p" +
-      "roto.AckRequestH\000\022H\n\027delete_resource_req" +
-      "uest\030\003 \001(\0132%.im.turms.proto.DeleteResour" +
-      "ceRequestH\000\022P\n\034query_signed_get_url_requ" +
-      "est\030\004 \001(\0132(.im.turms.proto.QuerySignedGe" +
-      "tUrlRequestH\000\022P\n\034query_signed_put_url_re" +
-      "quest\030\005 \001(\0132(.im.turms.proto.QuerySigned" +
-      "PutUrlRequestH\000\022F\n\026create_message_reques" +
-      "t\030\006 \001(\0132$.im.turms.proto.CreateMessageRe" +
-      "questH\000\022U\n\036query_message_statuses_reques" +
-      "t\030\007 \001(\0132+.im.turms.proto.QueryMessageSta" +
-      "tusesRequestH\000\022F\n\026query_messages_request" +
-      "\030\010 \001(\0132$.im.turms.proto.QueryMessagesReq" +
-      "uestH\000\022i\n)query_pending_messages_with_to" +
-      "tal_request\030\t \001(\01324.im.turms.proto.Query" +
-      "PendingMessagesWithTotalRequestH\000\022F\n\026upd" +
-      "ate_message_request\030\n \001(\0132$.im.turms.pro" +
-      "to.UpdateMessageRequestH\000\022Q\n\034update_typi" +
-      "ng_status_request\030\013 \001(\0132).im.turms.proto" +
-      ".UpdateTypingStatusRequestH\000\022`\n$query_us" +
-      "er_group_invitations_request\030d \001(\01320.im." +
-      "turms.proto.QueryUserGroupInvitationsReq" +
-      "uestH\000\022M\n\032query_user_profile_request\030e \001" +
-      "(\0132\'.im.turms.proto.QueryUserProfileRequ" +
-      "estH\000\022T\n\036query_users_ids_nearby_request\030" +
-      "f \001(\0132*.im.turms.proto.QueryUsersIdsNear" +
-      "byRequestH\000\022X\n query_users_infos_nearby_" +
-      "request\030g \001(\0132,.im.turms.proto.QueryUser" +
-      "sInfosNearbyRequestH\000\022Z\n!query_users_onl" +
-      "ine_status_request\030h \001(\0132-.im.turms.prot" +
-      "o.QueryUsersOnlineStatusRequestH\000\022Q\n\034upd" +
-      "ate_user_location_request\030i \001(\0132).im.tur" +
-      "ms.proto.UpdateUserLocationRequestH\000\022Z\n!" +
-      "update_user_online_status_request\030j \001(\0132" +
-      "-.im.turms.proto.UpdateUserOnlineStatusR" +
-      "equestH\000\022@\n\023update_user_request\030k \001(\0132!." +
-      "im.turms.proto.UpdateUserRequestH\000\022T\n\035cr" +
-      "eate_friend_request_request\030\310\001 \001(\0132*.im." +
-      "turms.proto.CreateFriendRequestRequestH\000" +
-      "\022\\\n!create_relationship_group_request\030\311\001" +
-      " \001(\0132..im.turms.proto.CreateRelationship" +
-      "GroupRequestH\000\022Q\n\033create_relationship_re" +
-      "quest\030\312\001 \001(\0132).im.turms.proto.CreateRela" +
-      "tionshipRequestH\000\022\\\n!delete_relationship" +
-      "_group_request\030\313\001 \001(\0132..im.turms.proto.D" +
-      "eleteRelationshipGroupRequestH\000\022Q\n\033delet" +
-      "e_relationship_request\030\314\001 \001(\0132).im.turms" +
-      ".proto.DeleteRelationshipRequestH\000\022T\n\035qu" +
-      "ery_friend_requests_request\030\315\001 \001(\0132*.im." +
-      "turms.proto.QueryFriendRequestsRequestH\000" +
-      "\022W\n\037query_related_users_ids_request\030\316\001 \001" +
-      "(\0132+.im.turms.proto.QueryRelatedUsersIds" +
-      "RequestH\000\022\\\n!query_relationship_groups_r" +
-      "equest\030\317\001 \001(\0132..im.turms.proto.QueryRela" +
-      "tionshipGroupsRequestH\000\022Q\n\033query_relatio" +
-      "nships_request\030\320\001 \001(\0132).im.turms.proto.Q" +
-      "ueryRelationshipsRequestH\000\022T\n\035update_fri" +
-      "end_request_request\030\321\001 \001(\0132*.im.turms.pr" +
-      "oto.UpdateFriendRequestRequestH\000\022\\\n!upda" +
-      "te_relationship_group_request\030\322\001 \001(\0132..i" +
-      "m.turms.proto.UpdateRelationshipGroupReq" +
-      "uestH\000\022Q\n\033update_relationship_request\030\323\001" +
-      " \001(\0132).im.turms.proto.UpdateRelationship" +
-      "RequestH\000\022C\n\024create_group_request\030\254\002 \001(\013" +
-      "2\".im.turms.proto.CreateGroupRequestH\000\022C" +
-      "\n\024delete_group_request\030\255\002 \001(\0132\".im.turms" +
-      ".proto.DeleteGroupRequestH\000\022A\n\023query_gro" +
-      "up_request\030\256\002 \001(\0132!.im.turms.proto.Query" +
-      "GroupRequestH\000\022W\n\037query_joined_groups_id" +
-      "s_request\030\257\002 \001(\0132+.im.turms.proto.QueryJ" +
-      "oinedGroupsIdsRequestH\000\022[\n!query_joined_" +
-      "groups_infos_request\030\260\002 \001(\0132-.im.turms.p" +
-      "roto.QueryJoinedGroupsInfosRequestH\000\022C\n\024" +
-      "update_group_request\030\261\002 \001(\0132\".im.turms.p" +
-      "roto.UpdateGroupRequestH\000\022c\n%create_grou" +
-      "p_blacklisted_user_request\030\220\003 \001(\01321.im.t" +
-      "urms.proto.CreateGroupBlacklistedUserReq" +
-      "uestH\000\022c\n%delete_group_blacklisted_user_" +
-      "request\030\221\003 \001(\01321.im.turms.proto.DeleteGr" +
-      "oupBlacklistedUserRequestH\000\022j\n)query_gro" +
-      "up_blacklisted_users_ids_request\030\222\003 \001(\0132" +
-      "4.im.turms.proto.QueryGroupBlacklistedUs" +
-      "ersIdsRequestH\000\022n\n+query_group_blacklist" +
-      "ed_users_infos_request\030\223\003 \001(\01326.im.turms" +
-      ".proto.QueryGroupBlacklistedUsersInfosRe" +
-      "questH\000\022l\n*check_group_join_questions_an" +
-      "swers_request\030\364\003 \001(\01325.im.turms.proto.Ch" +
-      "eckGroupJoinQuestionsAnswersRequestH\000\022X\n" +
-      "\037create_group_invitation_request\030\365\003 \001(\0132" +
-      ",.im.turms.proto.CreateGroupInvitationRe" +
-      "questH\000\022[\n!create_group_join_request_req" +
-      "uest\030\366\003 \001(\0132-.im.turms.proto.CreateGroup" +
-      "JoinRequestRequestH\000\022]\n\"create_group_joi" +
-      "n_question_request\030\367\003 \001(\0132..im.turms.pro" +
-      "to.CreateGroupJoinQuestionRequestH\000\022X\n\037d" +
-      "elete_group_invitation_request\030\370\003 \001(\0132,." +
-      "im.turms.proto.DeleteGroupInvitationRequ" +
-      "estH\000\022[\n!delete_group_join_request_reque" +
-      "st\030\371\003 \001(\0132-.im.turms.proto.DeleteGroupJo" +
-      "inRequestRequestH\000\022]\n\"delete_group_join_" +
-      "question_request\030\372\003 \001(\0132..im.turms.proto" +
-      ".DeleteGroupJoinQuestionRequestH\000\022X\n\037que" +
-      "ry_group_invitations_request\030\373\003 \001(\0132,.im" +
-      ".turms.proto.QueryGroupInvitationsReques" +
-      "tH\000\022[\n!query_group_join_requests_request" +
-      "\030\374\003 \001(\0132-.im.turms.proto.QueryGroupJoinR" +
-      "equestsRequestH\000\022]\n\"query_group_join_que" +
-      "stions_request\030\375\003 \001(\0132..im.turms.proto.Q" +
-      "ueryGroupJoinQuestionsRequestH\000\022]\n\"updat" +
-      "e_group_join_question_request\030\376\003 \001(\0132..i" +
-      "m.turms.proto.UpdateGroupJoinQuestionReq" +
-      "uestH\000\022P\n\033create_group_member_request\030\330\004" +
-      " \001(\0132(.im.turms.proto.CreateGroupMemberR" +
-      "equestH\000\022P\n\033delete_group_member_request\030" +
-      "\331\004 \001(\0132(.im.turms.proto.DeleteGroupMembe" +
-      "rRequestH\000\022P\n\033query_group_members_reques" +
-      "t\030\332\004 \001(\0132(.im.turms.proto.QueryGroupMemb" +
-      "ersRequestH\000\022P\n\033update_group_member_requ" +
-      "est\030\333\004 \001(\0132(.im.turms.proto.UpdateGroupM" +
-      "emberRequestH\000B\006\n\004kindB(\n!im.turms.commo" +
-      "n.model.dto.requestP\001\272\002\000b\006proto3"
+      "_put_url_request.proto\032-request/user/que" +
+      "ry_user_profile_request.proto\0321request/u" +
+      "ser/query_users_ids_nearby_request.proto" +
+      "\0323request/user/query_users_infos_nearby_" +
+      "request.proto\0324request/user/query_users_" +
+      "online_status_request.proto\032/request/use" +
+      "r/update_user_location_request.proto\0324re" +
+      "quest/user/update_user_online_status_req" +
+      "uest.proto\032&request/user/update_user_req" +
+      "uest.proto\032=request/user/relationship/cr" +
+      "eate_friend_request_request.proto\032Areque" +
+      "st/user/relationship/create_relationship" +
+      "_group_request.proto\032;request/user/relat" +
+      "ionship/create_relationship_request.prot" +
+      "o\032Arequest/user/relationship/delete_rela" +
+      "tionship_group_request.proto\032;request/us" +
+      "er/relationship/delete_relationship_requ" +
+      "est.proto\032=request/user/relationship/que" +
+      "ry_friend_requests_request.proto\032?reques" +
+      "t/user/relationship/query_related_users_" +
+      "ids_request.proto\032Arequest/user/relation" +
+      "ship/query_relationship_groups_request.p" +
+      "roto\032;request/user/relationship/query_re" +
+      "lationships_request.proto\032=request/user/" +
+      "relationship/update_friend_request_reque" +
+      "st.proto\032Arequest/user/relationship/upda" +
+      "te_relationship_group_request.proto\032;req" +
+      "uest/user/relationship/update_relationsh" +
+      "ip_request.proto\032(request/group/create_g" +
+      "roup_request.proto\032(request/group/delete" +
+      "_group_request.proto\032\'request/group/quer" +
+      "y_group_request.proto\0323request/group/que" +
+      "ry_joined_groups_ids_request.proto\0325requ" +
+      "est/group/query_joined_groups_infos_requ" +
+      "est.proto\032(request/group/update_group_re" +
+      "quest.proto\032Crequest/group/blacklist/cre" +
+      "ate_group_blacklisted_user_request.proto" +
+      "\032Crequest/group/blacklist/delete_group_b" +
+      "lacklisted_user_request.proto\032Grequest/g" +
+      "roup/blacklist/query_group_blacklisted_u" +
+      "sers_ids_request.proto\032Irequest/group/bl" +
+      "acklist/query_group_blacklisted_users_in" +
+      "fos_request.proto\032Irequest/group/enrollm" +
+      "ent/check_group_join_questions_answers_r" +
+      "equest.proto\032>request/group/enrollment/c" +
+      "reate_group_invitation_request.proto\032@re" +
+      "quest/group/enrollment/create_group_join" +
+      "_request_request.proto\032Arequest/group/en" +
+      "rollment/create_group_join_question_requ" +
+      "est.proto\032>request/group/enrollment/dele" +
+      "te_group_invitation_request.proto\032@reque" +
+      "st/group/enrollment/delete_group_join_re" +
+      "quest_request.proto\032Arequest/group/enrol" +
+      "lment/delete_group_join_question_request" +
+      ".proto\032>request/group/enrollment/query_g" +
+      "roup_invitations_request.proto\032@request/" +
+      "group/enrollment/query_group_join_reques" +
+      "ts_request.proto\032Arequest/group/enrollme" +
+      "nt/query_group_join_questions_request.pr" +
+      "oto\032Arequest/group/enrollment/update_gro" +
+      "up_join_question_request.proto\0326request/" +
+      "group/member/create_group_member_request" +
+      ".proto\0326request/group/member/delete_grou" +
+      "p_member_request.proto\0326request/group/me" +
+      "mber/query_group_members_request.proto\0326" +
+      "request/group/member/update_group_member" +
+      "_request.proto\032,request/message/create_m" +
+      "essage_request.proto\0324request/message/qu" +
+      "ery_message_statuses_request.proto\032,requ" +
+      "est/message/query_messages_request.proto" +
+      "\032?request/message/query_pending_messages" +
+      "_with_total_request.proto\032,request/messa" +
+      "ge/update_message_request.proto\0322request" +
+      "/message/update_typing_status_request.pr" +
+      "oto\"\205%\n\014TurmsRequest\022/\n\nrequest_id\030\001 \001(\013" +
+      "2\033.google.protobuf.Int64Value\0221\n\013ack_req" +
+      "uest\030\002 \001(\0132\032.im.turms.proto.AckRequestH\000" +
+      "\022H\n\027delete_resource_request\030\003 \001(\0132%.im.t" +
+      "urms.proto.DeleteResourceRequestH\000\022P\n\034qu" +
+      "ery_signed_get_url_request\030\004 \001(\0132(.im.tu" +
+      "rms.proto.QuerySignedGetUrlRequestH\000\022P\n\034" +
+      "query_signed_put_url_request\030\005 \001(\0132(.im." +
+      "turms.proto.QuerySignedPutUrlRequestH\000\022F" +
+      "\n\026create_message_request\030\006 \001(\0132$.im.turm" +
+      "s.proto.CreateMessageRequestH\000\022U\n\036query_" +
+      "message_statuses_request\030\007 \001(\0132+.im.turm" +
+      "s.proto.QueryMessageStatusesRequestH\000\022F\n" +
+      "\026query_messages_request\030\010 \001(\0132$.im.turms" +
+      ".proto.QueryMessagesRequestH\000\022i\n)query_p" +
+      "ending_messages_with_total_request\030\t \001(\013" +
+      "24.im.turms.proto.QueryPendingMessagesWi" +
+      "thTotalRequestH\000\022F\n\026update_message_reque" +
+      "st\030\n \001(\0132$.im.turms.proto.UpdateMessageR" +
+      "equestH\000\022Q\n\034update_typing_status_request" +
+      "\030\013 \001(\0132).im.turms.proto.UpdateTypingStat" +
+      "usRequestH\000\022M\n\032query_user_profile_reques" +
+      "t\030d \001(\0132\'.im.turms.proto.QueryUserProfil" +
+      "eRequestH\000\022T\n\036query_users_ids_nearby_req" +
+      "uest\030e \001(\0132*.im.turms.proto.QueryUsersId" +
+      "sNearbyRequestH\000\022X\n query_users_infos_ne" +
+      "arby_request\030f \001(\0132,.im.turms.proto.Quer" +
+      "yUsersInfosNearbyRequestH\000\022Z\n!query_user" +
+      "s_online_status_request\030g \001(\0132-.im.turms" +
+      ".proto.QueryUsersOnlineStatusRequestH\000\022Q" +
+      "\n\034update_user_location_request\030h \001(\0132).i" +
+      "m.turms.proto.UpdateUserLocationRequestH" +
+      "\000\022Z\n!update_user_online_status_request\030i" +
+      " \001(\0132-.im.turms.proto.UpdateUserOnlineSt" +
+      "atusRequestH\000\022@\n\023update_user_request\030j \001" +
+      "(\0132!.im.turms.proto.UpdateUserRequestH\000\022" +
+      "T\n\035create_friend_request_request\030\310\001 \001(\0132" +
+      "*.im.turms.proto.CreateFriendRequestRequ" +
+      "estH\000\022\\\n!create_relationship_group_reque" +
+      "st\030\311\001 \001(\0132..im.turms.proto.CreateRelatio" +
+      "nshipGroupRequestH\000\022Q\n\033create_relationsh" +
+      "ip_request\030\312\001 \001(\0132).im.turms.proto.Creat" +
+      "eRelationshipRequestH\000\022\\\n!delete_relatio" +
+      "nship_group_request\030\313\001 \001(\0132..im.turms.pr" +
+      "oto.DeleteRelationshipGroupRequestH\000\022Q\n\033" +
+      "delete_relationship_request\030\314\001 \001(\0132).im." +
+      "turms.proto.DeleteRelationshipRequestH\000\022" +
+      "T\n\035query_friend_requests_request\030\315\001 \001(\0132" +
+      "*.im.turms.proto.QueryFriendRequestsRequ" +
+      "estH\000\022W\n\037query_related_users_ids_request" +
+      "\030\316\001 \001(\0132+.im.turms.proto.QueryRelatedUse" +
+      "rsIdsRequestH\000\022\\\n!query_relationship_gro" +
+      "ups_request\030\317\001 \001(\0132..im.turms.proto.Quer" +
+      "yRelationshipGroupsRequestH\000\022Q\n\033query_re" +
+      "lationships_request\030\320\001 \001(\0132).im.turms.pr" +
+      "oto.QueryRelationshipsRequestH\000\022T\n\035updat" +
+      "e_friend_request_request\030\321\001 \001(\0132*.im.tur" +
+      "ms.proto.UpdateFriendRequestRequestH\000\022\\\n" +
+      "!update_relationship_group_request\030\322\001 \001(" +
+      "\0132..im.turms.proto.UpdateRelationshipGro" +
+      "upRequestH\000\022Q\n\033update_relationship_reque" +
+      "st\030\323\001 \001(\0132).im.turms.proto.UpdateRelatio" +
+      "nshipRequestH\000\022C\n\024create_group_request\030\254" +
+      "\002 \001(\0132\".im.turms.proto.CreateGroupReques" +
+      "tH\000\022C\n\024delete_group_request\030\255\002 \001(\0132\".im." +
+      "turms.proto.DeleteGroupRequestH\000\022A\n\023quer" +
+      "y_group_request\030\256\002 \001(\0132!.im.turms.proto." +
+      "QueryGroupRequestH\000\022W\n\037query_joined_grou" +
+      "ps_ids_request\030\257\002 \001(\0132+.im.turms.proto.Q" +
+      "ueryJoinedGroupsIdsRequestH\000\022[\n!query_jo" +
+      "ined_groups_infos_request\030\260\002 \001(\0132-.im.tu" +
+      "rms.proto.QueryJoinedGroupsInfosRequestH" +
+      "\000\022C\n\024update_group_request\030\261\002 \001(\0132\".im.tu" +
+      "rms.proto.UpdateGroupRequestH\000\022c\n%create" +
+      "_group_blacklisted_user_request\030\220\003 \001(\01321" +
+      ".im.turms.proto.CreateGroupBlacklistedUs" +
+      "erRequestH\000\022c\n%delete_group_blacklisted_" +
+      "user_request\030\221\003 \001(\01321.im.turms.proto.Del" +
+      "eteGroupBlacklistedUserRequestH\000\022j\n)quer" +
+      "y_group_blacklisted_users_ids_request\030\222\003" +
+      " \001(\01324.im.turms.proto.QueryGroupBlacklis" +
+      "tedUsersIdsRequestH\000\022n\n+query_group_blac" +
+      "klisted_users_infos_request\030\223\003 \001(\01326.im." +
+      "turms.proto.QueryGroupBlacklistedUsersIn" +
+      "fosRequestH\000\022l\n*check_group_join_questio" +
+      "ns_answers_request\030\364\003 \001(\01325.im.turms.pro" +
+      "to.CheckGroupJoinQuestionsAnswersRequest" +
+      "H\000\022X\n\037create_group_invitation_request\030\365\003" +
+      " \001(\0132,.im.turms.proto.CreateGroupInvitat" +
+      "ionRequestH\000\022[\n!create_group_join_reques" +
+      "t_request\030\366\003 \001(\0132-.im.turms.proto.Create" +
+      "GroupJoinRequestRequestH\000\022]\n\"create_grou" +
+      "p_join_question_request\030\367\003 \001(\0132..im.turm" +
+      "s.proto.CreateGroupJoinQuestionRequestH\000" +
+      "\022X\n\037delete_group_invitation_request\030\370\003 \001" +
+      "(\0132,.im.turms.proto.DeleteGroupInvitatio" +
+      "nRequestH\000\022[\n!delete_group_join_request_" +
+      "request\030\371\003 \001(\0132-.im.turms.proto.DeleteGr" +
+      "oupJoinRequestRequestH\000\022]\n\"delete_group_" +
+      "join_question_request\030\372\003 \001(\0132..im.turms." +
+      "proto.DeleteGroupJoinQuestionRequestH\000\022X" +
+      "\n\037query_group_invitations_request\030\373\003 \001(\013" +
+      "2,.im.turms.proto.QueryGroupInvitationsR" +
+      "equestH\000\022[\n!query_group_join_requests_re" +
+      "quest\030\374\003 \001(\0132-.im.turms.proto.QueryGroup" +
+      "JoinRequestsRequestH\000\022]\n\"query_group_joi" +
+      "n_questions_request\030\375\003 \001(\0132..im.turms.pr" +
+      "oto.QueryGroupJoinQuestionsRequestH\000\022]\n\"" +
+      "update_group_join_question_request\030\376\003 \001(" +
+      "\0132..im.turms.proto.UpdateGroupJoinQuesti" +
+      "onRequestH\000\022P\n\033create_group_member_reque" +
+      "st\030\330\004 \001(\0132(.im.turms.proto.CreateGroupMe" +
+      "mberRequestH\000\022P\n\033delete_group_member_req" +
+      "uest\030\331\004 \001(\0132(.im.turms.proto.DeleteGroup" +
+      "MemberRequestH\000\022P\n\033query_group_members_r" +
+      "equest\030\332\004 \001(\0132(.im.turms.proto.QueryGrou" +
+      "pMembersRequestH\000\022P\n\033update_group_member" +
+      "_request\030\333\004 \001(\0132(.im.turms.proto.UpdateG" +
+      "roupMemberRequestH\000B\006\n\004kindB(\n!im.turms." +
+      "common.model.dto.requestP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -241,7 +237,6 @@ public final class TurmsRequestOuterClass {
           im.turms.common.model.dto.request.storage.DeleteResourceRequestOuterClass.getDescriptor(),
           im.turms.common.model.dto.request.storage.QuerySignedGetUrlRequestOuterClass.getDescriptor(),
           im.turms.common.model.dto.request.storage.QuerySignedPutUrlRequestOuterClass.getDescriptor(),
-          im.turms.common.model.dto.request.user.QueryUserGroupInvitationsRequestOuterClass.getDescriptor(),
           im.turms.common.model.dto.request.user.QueryUserProfileRequestOuterClass.getDescriptor(),
           im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequestOuterClass.getDescriptor(),
           im.turms.common.model.dto.request.user.QueryUsersInfosNearbyRequestOuterClass.getDescriptor(),
@@ -298,13 +293,12 @@ public final class TurmsRequestOuterClass {
     internal_static_im_turms_proto_TurmsRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_TurmsRequest_descriptor,
-        new java.lang.String[] { "RequestId", "AckRequest", "DeleteResourceRequest", "QuerySignedGetUrlRequest", "QuerySignedPutUrlRequest", "CreateMessageRequest", "QueryMessageStatusesRequest", "QueryMessagesRequest", "QueryPendingMessagesWithTotalRequest", "UpdateMessageRequest", "UpdateTypingStatusRequest", "QueryUserGroupInvitationsRequest", "QueryUserProfileRequest", "QueryUsersIdsNearbyRequest", "QueryUsersInfosNearbyRequest", "QueryUsersOnlineStatusRequest", "UpdateUserLocationRequest", "UpdateUserOnlineStatusRequest", "UpdateUserRequest", "CreateFriendRequestRequest", "CreateRelationshipGroupRequest", "CreateRelationshipRequest", "DeleteRelationshipGroupRequest", "DeleteRelationshipRequest", "QueryFriendRequestsRequest", "QueryRelatedUsersIdsRequest", "QueryRelationshipGroupsRequest", "QueryRelationshipsRequest", "UpdateFriendRequestRequest", "UpdateRelationshipGroupRequest", "UpdateRelationshipRequest", "CreateGroupRequest", "DeleteGroupRequest", "QueryGroupRequest", "QueryJoinedGroupsIdsRequest", "QueryJoinedGroupsInfosRequest", "UpdateGroupRequest", "CreateGroupBlacklistedUserRequest", "DeleteGroupBlacklistedUserRequest", "QueryGroupBlacklistedUsersIdsRequest", "QueryGroupBlacklistedUsersInfosRequest", "CheckGroupJoinQuestionsAnswersRequest", "CreateGroupInvitationRequest", "CreateGroupJoinRequestRequest", "CreateGroupJoinQuestionRequest", "DeleteGroupInvitationRequest", "DeleteGroupJoinRequestRequest", "DeleteGroupJoinQuestionRequest", "QueryGroupInvitationsRequest", "QueryGroupJoinRequestsRequest", "QueryGroupJoinQuestionsRequest", "UpdateGroupJoinQuestionRequest", "CreateGroupMemberRequest", "DeleteGroupMemberRequest", "QueryGroupMembersRequest", "UpdateGroupMemberRequest", "Kind", });
+        new java.lang.String[] { "RequestId", "AckRequest", "DeleteResourceRequest", "QuerySignedGetUrlRequest", "QuerySignedPutUrlRequest", "CreateMessageRequest", "QueryMessageStatusesRequest", "QueryMessagesRequest", "QueryPendingMessagesWithTotalRequest", "UpdateMessageRequest", "UpdateTypingStatusRequest", "QueryUserProfileRequest", "QueryUsersIdsNearbyRequest", "QueryUsersInfosNearbyRequest", "QueryUsersOnlineStatusRequest", "UpdateUserLocationRequest", "UpdateUserOnlineStatusRequest", "UpdateUserRequest", "CreateFriendRequestRequest", "CreateRelationshipGroupRequest", "CreateRelationshipRequest", "DeleteRelationshipGroupRequest", "DeleteRelationshipRequest", "QueryFriendRequestsRequest", "QueryRelatedUsersIdsRequest", "QueryRelationshipGroupsRequest", "QueryRelationshipsRequest", "UpdateFriendRequestRequest", "UpdateRelationshipGroupRequest", "UpdateRelationshipRequest", "CreateGroupRequest", "DeleteGroupRequest", "QueryGroupRequest", "QueryJoinedGroupsIdsRequest", "QueryJoinedGroupsInfosRequest", "UpdateGroupRequest", "CreateGroupBlacklistedUserRequest", "DeleteGroupBlacklistedUserRequest", "QueryGroupBlacklistedUsersIdsRequest", "QueryGroupBlacklistedUsersInfosRequest", "CheckGroupJoinQuestionsAnswersRequest", "CreateGroupInvitationRequest", "CreateGroupJoinRequestRequest", "CreateGroupJoinQuestionRequest", "DeleteGroupInvitationRequest", "DeleteGroupJoinRequestRequest", "DeleteGroupJoinQuestionRequest", "QueryGroupInvitationsRequest", "QueryGroupJoinRequestsRequest", "QueryGroupJoinQuestionsRequest", "UpdateGroupJoinQuestionRequest", "CreateGroupMemberRequest", "DeleteGroupMemberRequest", "QueryGroupMembersRequest", "UpdateGroupMemberRequest", "Kind", });
     com.google.protobuf.WrappersProto.getDescriptor();
     im.turms.common.model.dto.request.signal.AckRequestOuterClass.getDescriptor();
     im.turms.common.model.dto.request.storage.DeleteResourceRequestOuterClass.getDescriptor();
     im.turms.common.model.dto.request.storage.QuerySignedGetUrlRequestOuterClass.getDescriptor();
     im.turms.common.model.dto.request.storage.QuerySignedPutUrlRequestOuterClass.getDescriptor();
-    im.turms.common.model.dto.request.user.QueryUserGroupInvitationsRequestOuterClass.getDescriptor();
     im.turms.common.model.dto.request.user.QueryUserProfileRequestOuterClass.getDescriptor();
     im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequestOuterClass.getDescriptor();
     im.turms.common.model.dto.request.user.QueryUsersInfosNearbyRequestOuterClass.getDescriptor();

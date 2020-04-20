@@ -30,12 +30,14 @@ public final class QueryGroupInvitationsRequestOuterClass {
     java.lang.String[] descriptorData = {
       "\n>request/group/enrollment/query_group_i" +
       "nvitations_request.proto\022\016im.turms.proto" +
-      "\032\036google/protobuf/wrappers.proto\"h\n\034Quer" +
-      "yGroupInvitationsRequest\022\020\n\010group_id\030\001 \001" +
-      "(\003\0226\n\021last_updated_date\030\002 \001(\0132\033.google.p" +
-      "rotobuf.Int64ValueB9\n2im.turms.common.mo" +
-      "del.dto.request.group.enrollmentP\001\272\002\000b\006p" +
-      "roto3"
+      "\032\036google/protobuf/wrappers.proto\"\271\001\n\034Que" +
+      "ryGroupInvitationsRequest\022-\n\010group_id\030\001 " +
+      "\001(\0132\033.google.protobuf.Int64Value\0222\n\016are_" +
+      "sent_by_me\030\002 \001(\0132\032.google.protobuf.BoolV" +
+      "alue\0226\n\021last_updated_date\030\003 \001(\0132\033.google" +
+      ".protobuf.Int64ValueB9\n2im.turms.common." +
+      "model.dto.request.group.enrollmentP\001\272\002\000b" +
+      "\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -47,7 +49,7 @@ public final class QueryGroupInvitationsRequestOuterClass {
     internal_static_im_turms_proto_QueryGroupInvitationsRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_QueryGroupInvitationsRequest_descriptor,
-        new java.lang.String[] { "GroupId", "LastUpdatedDate", });
+        new java.lang.String[] { "GroupId", "AreSentByMe", "LastUpdatedDate", });
     com.google.protobuf.WrappersProto.getDescriptor();
   }
 

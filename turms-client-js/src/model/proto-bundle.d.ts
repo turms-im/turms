@@ -3139,7 +3139,10 @@ export namespace im {
             interface IQueryGroupInvitationsRequest {
 
                 /** QueryGroupInvitationsRequest groupId */
-                groupId?: (string|null);
+                groupId?: (google.protobuf.IInt64Value|null);
+
+                /** QueryGroupInvitationsRequest areSentByMe */
+                areSentByMe?: (google.protobuf.IBoolValue|null);
 
                 /** QueryGroupInvitationsRequest lastUpdatedDate */
                 lastUpdatedDate?: (google.protobuf.IInt64Value|null);
@@ -3155,7 +3158,10 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IQueryGroupInvitationsRequest);
 
                 /** QueryGroupInvitationsRequest groupId. */
-                public groupId: string;
+                public groupId?: (google.protobuf.IInt64Value|null);
+
+                /** QueryGroupInvitationsRequest areSentByMe. */
+                public areSentByMe?: (google.protobuf.IBoolValue|null);
 
                 /** QueryGroupInvitationsRequest lastUpdatedDate. */
                 public lastUpdatedDate?: (google.protobuf.IInt64Value|null);
@@ -3233,7 +3239,7 @@ export namespace im {
             interface IQueryGroupJoinRequestsRequest {
 
                 /** QueryGroupJoinRequestsRequest groupId */
-                groupId?: (string|null);
+                groupId?: (google.protobuf.IInt64Value|null);
 
                 /** QueryGroupJoinRequestsRequest lastUpdatedDate */
                 lastUpdatedDate?: (google.protobuf.IInt64Value|null);
@@ -3249,7 +3255,7 @@ export namespace im {
                 constructor(properties?: im.turms.proto.IQueryGroupJoinRequestsRequest);
 
                 /** QueryGroupJoinRequestsRequest groupId. */
-                public groupId: string;
+                public groupId?: (google.protobuf.IInt64Value|null);
 
                 /** QueryGroupJoinRequestsRequest lastUpdatedDate. */
                 public lastUpdatedDate?: (google.protobuf.IInt64Value|null);
@@ -4349,9 +4355,6 @@ export namespace im {
                 /** TurmsRequest updateTypingStatusRequest */
                 updateTypingStatusRequest?: (im.turms.proto.IUpdateTypingStatusRequest|null);
 
-                /** TurmsRequest queryUserGroupInvitationsRequest */
-                queryUserGroupInvitationsRequest?: (im.turms.proto.IQueryUserGroupInvitationsRequest|null);
-
                 /** TurmsRequest queryUserProfileRequest */
                 queryUserProfileRequest?: (im.turms.proto.IQueryUserProfileRequest|null);
 
@@ -4527,9 +4530,6 @@ export namespace im {
                 /** TurmsRequest updateTypingStatusRequest. */
                 public updateTypingStatusRequest?: (im.turms.proto.IUpdateTypingStatusRequest|null);
 
-                /** TurmsRequest queryUserGroupInvitationsRequest. */
-                public queryUserGroupInvitationsRequest?: (im.turms.proto.IQueryUserGroupInvitationsRequest|null);
-
                 /** TurmsRequest queryUserProfileRequest. */
                 public queryUserProfileRequest?: (im.turms.proto.IQueryUserProfileRequest|null);
 
@@ -4663,7 +4663,7 @@ export namespace im {
                 public updateGroupMemberRequest?: (im.turms.proto.IUpdateGroupMemberRequest|null);
 
                 /** TurmsRequest kind. */
-                public kind?: ("ackRequest"|"deleteResourceRequest"|"querySignedGetUrlRequest"|"querySignedPutUrlRequest"|"createMessageRequest"|"queryMessageStatusesRequest"|"queryMessagesRequest"|"queryPendingMessagesWithTotalRequest"|"updateMessageRequest"|"updateTypingStatusRequest"|"queryUserGroupInvitationsRequest"|"queryUserProfileRequest"|"queryUsersIdsNearbyRequest"|"queryUsersInfosNearbyRequest"|"queryUsersOnlineStatusRequest"|"updateUserLocationRequest"|"updateUserOnlineStatusRequest"|"updateUserRequest"|"createFriendRequestRequest"|"createRelationshipGroupRequest"|"createRelationshipRequest"|"deleteRelationshipGroupRequest"|"deleteRelationshipRequest"|"queryFriendRequestsRequest"|"queryRelatedUsersIdsRequest"|"queryRelationshipGroupsRequest"|"queryRelationshipsRequest"|"updateFriendRequestRequest"|"updateRelationshipGroupRequest"|"updateRelationshipRequest"|"createGroupRequest"|"deleteGroupRequest"|"queryGroupRequest"|"queryJoinedGroupsIdsRequest"|"queryJoinedGroupsInfosRequest"|"updateGroupRequest"|"createGroupBlacklistedUserRequest"|"deleteGroupBlacklistedUserRequest"|"queryGroupBlacklistedUsersIdsRequest"|"queryGroupBlacklistedUsersInfosRequest"|"checkGroupJoinQuestionsAnswersRequest"|"createGroupInvitationRequest"|"createGroupJoinRequestRequest"|"createGroupJoinQuestionRequest"|"deleteGroupInvitationRequest"|"deleteGroupJoinRequestRequest"|"deleteGroupJoinQuestionRequest"|"queryGroupInvitationsRequest"|"queryGroupJoinRequestsRequest"|"queryGroupJoinQuestionsRequest"|"updateGroupJoinQuestionRequest"|"createGroupMemberRequest"|"deleteGroupMemberRequest"|"queryGroupMembersRequest"|"updateGroupMemberRequest");
+                public kind?: ("ackRequest"|"deleteResourceRequest"|"querySignedGetUrlRequest"|"querySignedPutUrlRequest"|"createMessageRequest"|"queryMessageStatusesRequest"|"queryMessagesRequest"|"queryPendingMessagesWithTotalRequest"|"updateMessageRequest"|"updateTypingStatusRequest"|"queryUserProfileRequest"|"queryUsersIdsNearbyRequest"|"queryUsersInfosNearbyRequest"|"queryUsersOnlineStatusRequest"|"updateUserLocationRequest"|"updateUserOnlineStatusRequest"|"updateUserRequest"|"createFriendRequestRequest"|"createRelationshipGroupRequest"|"createRelationshipRequest"|"deleteRelationshipGroupRequest"|"deleteRelationshipRequest"|"queryFriendRequestsRequest"|"queryRelatedUsersIdsRequest"|"queryRelationshipGroupsRequest"|"queryRelationshipsRequest"|"updateFriendRequestRequest"|"updateRelationshipGroupRequest"|"updateRelationshipRequest"|"createGroupRequest"|"deleteGroupRequest"|"queryGroupRequest"|"queryJoinedGroupsIdsRequest"|"queryJoinedGroupsInfosRequest"|"updateGroupRequest"|"createGroupBlacklistedUserRequest"|"deleteGroupBlacklistedUserRequest"|"queryGroupBlacklistedUsersIdsRequest"|"queryGroupBlacklistedUsersInfosRequest"|"checkGroupJoinQuestionsAnswersRequest"|"createGroupInvitationRequest"|"createGroupJoinRequestRequest"|"createGroupJoinQuestionRequest"|"deleteGroupInvitationRequest"|"deleteGroupJoinRequestRequest"|"deleteGroupJoinQuestionRequest"|"queryGroupInvitationsRequest"|"queryGroupJoinRequestsRequest"|"queryGroupJoinQuestionsRequest"|"updateGroupJoinQuestionRequest"|"createGroupMemberRequest"|"deleteGroupMemberRequest"|"queryGroupMembersRequest"|"updateGroupMemberRequest");
 
                 /**
                  * Encodes the specified TurmsRequest message. Does not implicitly {@link im.turms.proto.TurmsRequest.verify|verify} messages.
@@ -4682,44 +4682,6 @@ export namespace im {
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
                 public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.TurmsRequest;
-            }
-
-            /** Properties of a QueryUserGroupInvitationsRequest. */
-            interface IQueryUserGroupInvitationsRequest {
-
-                /** QueryUserGroupInvitationsRequest lastUpdatedDate */
-                lastUpdatedDate?: (google.protobuf.IInt64Value|null);
-            }
-
-            /** Represents a QueryUserGroupInvitationsRequest. */
-            class QueryUserGroupInvitationsRequest implements IQueryUserGroupInvitationsRequest {
-
-                /**
-                 * Constructs a new QueryUserGroupInvitationsRequest.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: im.turms.proto.IQueryUserGroupInvitationsRequest);
-
-                /** QueryUserGroupInvitationsRequest lastUpdatedDate. */
-                public lastUpdatedDate?: (google.protobuf.IInt64Value|null);
-
-                /**
-                 * Encodes the specified QueryUserGroupInvitationsRequest message. Does not implicitly {@link im.turms.proto.QueryUserGroupInvitationsRequest.verify|verify} messages.
-                 * @param message QueryUserGroupInvitationsRequest message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: im.turms.proto.IQueryUserGroupInvitationsRequest, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes a QueryUserGroupInvitationsRequest message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns QueryUserGroupInvitationsRequest
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QueryUserGroupInvitationsRequest;
             }
 
             /** Properties of a QueryUserProfileRequest. */
@@ -5195,6 +5157,9 @@ export namespace im {
             /** Properties of a QueryFriendRequestsRequest. */
             interface IQueryFriendRequestsRequest {
 
+                /** QueryFriendRequestsRequest areSentByMe */
+                areSentByMe?: (boolean|null);
+
                 /** QueryFriendRequestsRequest lastUpdatedDate */
                 lastUpdatedDate?: (google.protobuf.IInt64Value|null);
             }
@@ -5207,6 +5172,9 @@ export namespace im {
                  * @param [properties] Properties to set
                  */
                 constructor(properties?: im.turms.proto.IQueryFriendRequestsRequest);
+
+                /** QueryFriendRequestsRequest areSentByMe. */
+                public areSentByMe: boolean;
 
                 /** QueryFriendRequestsRequest lastUpdatedDate. */
                 public lastUpdatedDate?: (google.protobuf.IInt64Value|null);

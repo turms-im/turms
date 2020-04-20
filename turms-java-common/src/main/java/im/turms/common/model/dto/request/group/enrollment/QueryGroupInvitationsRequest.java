@@ -48,12 +48,33 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
-          case 8: {
+          case 10: {
+            com.google.protobuf.Int64Value.Builder subBuilder = null;
+            if (groupId_ != null) {
+              subBuilder = groupId_.toBuilder();
+            }
+            groupId_ = input.readMessage(com.google.protobuf.Int64Value.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(groupId_);
+              groupId_ = subBuilder.buildPartial();
+            }
 
-            groupId_ = input.readInt64();
             break;
           }
           case 18: {
+            com.google.protobuf.BoolValue.Builder subBuilder = null;
+            if (areSentByMe_ != null) {
+              subBuilder = areSentByMe_.toBuilder();
+            }
+            areSentByMe_ = input.readMessage(com.google.protobuf.BoolValue.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(areSentByMe_);
+              areSentByMe_ = subBuilder.buildPartial();
+            }
+
+            break;
+          }
+          case 26: {
             com.google.protobuf.Int64Value.Builder subBuilder = null;
             if (lastUpdatedDate_ != null) {
               subBuilder = lastUpdatedDate_.toBuilder();
@@ -99,33 +120,69 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int GROUP_ID_FIELD_NUMBER = 1;
-  private long groupId_;
+  private com.google.protobuf.Int64Value groupId_;
   /**
-   * <code>int64 group_id = 1;</code>
+   * <code>.google.protobuf.Int64Value group_id = 1;</code>
+   * @return Whether the groupId field is set.
+   */
+  public boolean hasGroupId() {
+    return groupId_ != null;
+  }
+  /**
+   * <code>.google.protobuf.Int64Value group_id = 1;</code>
    * @return The groupId.
    */
-  public long getGroupId() {
-    return groupId_;
+  public com.google.protobuf.Int64Value getGroupId() {
+    return groupId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : groupId_;
+  }
+  /**
+   * <code>.google.protobuf.Int64Value group_id = 1;</code>
+   */
+  public com.google.protobuf.Int64ValueOrBuilder getGroupIdOrBuilder() {
+    return getGroupId();
   }
 
-  public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 2;
+  public static final int ARE_SENT_BY_ME_FIELD_NUMBER = 2;
+  private com.google.protobuf.BoolValue areSentByMe_;
+  /**
+   * <code>.google.protobuf.BoolValue are_sent_by_me = 2;</code>
+   * @return Whether the areSentByMe field is set.
+   */
+  public boolean hasAreSentByMe() {
+    return areSentByMe_ != null;
+  }
+  /**
+   * <code>.google.protobuf.BoolValue are_sent_by_me = 2;</code>
+   * @return The areSentByMe.
+   */
+  public com.google.protobuf.BoolValue getAreSentByMe() {
+    return areSentByMe_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : areSentByMe_;
+  }
+  /**
+   * <code>.google.protobuf.BoolValue are_sent_by_me = 2;</code>
+   */
+  public com.google.protobuf.BoolValueOrBuilder getAreSentByMeOrBuilder() {
+    return getAreSentByMe();
+  }
+
+  public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 3;
   private com.google.protobuf.Int64Value lastUpdatedDate_;
   /**
-   * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
+   * <code>.google.protobuf.Int64Value last_updated_date = 3;</code>
    * @return Whether the lastUpdatedDate field is set.
    */
   public boolean hasLastUpdatedDate() {
     return lastUpdatedDate_ != null;
   }
   /**
-   * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
+   * <code>.google.protobuf.Int64Value last_updated_date = 3;</code>
    * @return The lastUpdatedDate.
    */
   public com.google.protobuf.Int64Value getLastUpdatedDate() {
     return lastUpdatedDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : lastUpdatedDate_;
   }
   /**
-   * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
+   * <code>.google.protobuf.Int64Value last_updated_date = 3;</code>
    */
   public com.google.protobuf.Int64ValueOrBuilder getLastUpdatedDateOrBuilder() {
     return getLastUpdatedDate();
@@ -145,11 +202,14 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (groupId_ != 0L) {
-      output.writeInt64(1, groupId_);
+    if (groupId_ != null) {
+      output.writeMessage(1, getGroupId());
+    }
+    if (areSentByMe_ != null) {
+      output.writeMessage(2, getAreSentByMe());
     }
     if (lastUpdatedDate_ != null) {
-      output.writeMessage(2, getLastUpdatedDate());
+      output.writeMessage(3, getLastUpdatedDate());
     }
     unknownFields.writeTo(output);
   }
@@ -160,13 +220,17 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (groupId_ != 0L) {
+    if (groupId_ != null) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(1, groupId_);
+        .computeMessageSize(1, getGroupId());
+    }
+    if (areSentByMe_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(2, getAreSentByMe());
     }
     if (lastUpdatedDate_ != null) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(2, getLastUpdatedDate());
+        .computeMessageSize(3, getLastUpdatedDate());
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -183,8 +247,16 @@ private static final long serialVersionUID = 0L;
     }
     im.turms.common.model.dto.request.group.enrollment.QueryGroupInvitationsRequest other = (im.turms.common.model.dto.request.group.enrollment.QueryGroupInvitationsRequest) obj;
 
-    if (getGroupId()
-        != other.getGroupId()) return false;
+    if (hasGroupId() != other.hasGroupId()) return false;
+    if (hasGroupId()) {
+      if (!getGroupId()
+          .equals(other.getGroupId())) return false;
+    }
+    if (hasAreSentByMe() != other.hasAreSentByMe()) return false;
+    if (hasAreSentByMe()) {
+      if (!getAreSentByMe()
+          .equals(other.getAreSentByMe())) return false;
+    }
     if (hasLastUpdatedDate() != other.hasLastUpdatedDate()) return false;
     if (hasLastUpdatedDate()) {
       if (!getLastUpdatedDate()
@@ -201,9 +273,14 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + GROUP_ID_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getGroupId());
+    if (hasGroupId()) {
+      hash = (37 * hash) + GROUP_ID_FIELD_NUMBER;
+      hash = (53 * hash) + getGroupId().hashCode();
+    }
+    if (hasAreSentByMe()) {
+      hash = (37 * hash) + ARE_SENT_BY_ME_FIELD_NUMBER;
+      hash = (53 * hash) + getAreSentByMe().hashCode();
+    }
     if (hasLastUpdatedDate()) {
       hash = (37 * hash) + LAST_UPDATED_DATE_FIELD_NUMBER;
       hash = (53 * hash) + getLastUpdatedDate().hashCode();
@@ -341,8 +418,18 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      groupId_ = 0L;
-
+      if (groupIdBuilder_ == null) {
+        groupId_ = null;
+      } else {
+        groupId_ = null;
+        groupIdBuilder_ = null;
+      }
+      if (areSentByMeBuilder_ == null) {
+        areSentByMe_ = null;
+      } else {
+        areSentByMe_ = null;
+        areSentByMeBuilder_ = null;
+      }
       if (lastUpdatedDateBuilder_ == null) {
         lastUpdatedDate_ = null;
       } else {
@@ -375,7 +462,16 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public im.turms.common.model.dto.request.group.enrollment.QueryGroupInvitationsRequest buildPartial() {
       im.turms.common.model.dto.request.group.enrollment.QueryGroupInvitationsRequest result = new im.turms.common.model.dto.request.group.enrollment.QueryGroupInvitationsRequest(this);
-      result.groupId_ = groupId_;
+      if (groupIdBuilder_ == null) {
+        result.groupId_ = groupId_;
+      } else {
+        result.groupId_ = groupIdBuilder_.build();
+      }
+      if (areSentByMeBuilder_ == null) {
+        result.areSentByMe_ = areSentByMe_;
+      } else {
+        result.areSentByMe_ = areSentByMeBuilder_.build();
+      }
       if (lastUpdatedDateBuilder_ == null) {
         result.lastUpdatedDate_ = lastUpdatedDate_;
       } else {
@@ -429,8 +525,11 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(im.turms.common.model.dto.request.group.enrollment.QueryGroupInvitationsRequest other) {
       if (other == im.turms.common.model.dto.request.group.enrollment.QueryGroupInvitationsRequest.getDefaultInstance()) return this;
-      if (other.getGroupId() != 0L) {
-        setGroupId(other.getGroupId());
+      if (other.hasGroupId()) {
+        mergeGroupId(other.getGroupId());
+      }
+      if (other.hasAreSentByMe()) {
+        mergeAreSentByMe(other.getAreSentByMe());
       }
       if (other.hasLastUpdatedDate()) {
         mergeLastUpdatedDate(other.getLastUpdatedDate());
@@ -464,48 +563,256 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private long groupId_ ;
+    private com.google.protobuf.Int64Value groupId_;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> groupIdBuilder_;
     /**
-     * <code>int64 group_id = 1;</code>
+     * <code>.google.protobuf.Int64Value group_id = 1;</code>
+     * @return Whether the groupId field is set.
+     */
+    public boolean hasGroupId() {
+      return groupIdBuilder_ != null || groupId_ != null;
+    }
+    /**
+     * <code>.google.protobuf.Int64Value group_id = 1;</code>
      * @return The groupId.
      */
-    public long getGroupId() {
-      return groupId_;
+    public com.google.protobuf.Int64Value getGroupId() {
+      if (groupIdBuilder_ == null) {
+        return groupId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : groupId_;
+      } else {
+        return groupIdBuilder_.getMessage();
+      }
     }
     /**
-     * <code>int64 group_id = 1;</code>
-     * @param value The groupId to set.
-     * @return This builder for chaining.
+     * <code>.google.protobuf.Int64Value group_id = 1;</code>
      */
-    public Builder setGroupId(long value) {
-      
-      groupId_ = value;
-      onChanged();
+    public Builder setGroupId(com.google.protobuf.Int64Value value) {
+      if (groupIdBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        groupId_ = value;
+        onChanged();
+      } else {
+        groupIdBuilder_.setMessage(value);
+      }
+
       return this;
     }
     /**
-     * <code>int64 group_id = 1;</code>
-     * @return This builder for chaining.
+     * <code>.google.protobuf.Int64Value group_id = 1;</code>
+     */
+    public Builder setGroupId(
+        com.google.protobuf.Int64Value.Builder builderForValue) {
+      if (groupIdBuilder_ == null) {
+        groupId_ = builderForValue.build();
+        onChanged();
+      } else {
+        groupIdBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <code>.google.protobuf.Int64Value group_id = 1;</code>
+     */
+    public Builder mergeGroupId(com.google.protobuf.Int64Value value) {
+      if (groupIdBuilder_ == null) {
+        if (groupId_ != null) {
+          groupId_ =
+            com.google.protobuf.Int64Value.newBuilder(groupId_).mergeFrom(value).buildPartial();
+        } else {
+          groupId_ = value;
+        }
+        onChanged();
+      } else {
+        groupIdBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.google.protobuf.Int64Value group_id = 1;</code>
      */
     public Builder clearGroupId() {
-      
-      groupId_ = 0L;
-      onChanged();
+      if (groupIdBuilder_ == null) {
+        groupId_ = null;
+        onChanged();
+      } else {
+        groupId_ = null;
+        groupIdBuilder_ = null;
+      }
+
       return this;
+    }
+    /**
+     * <code>.google.protobuf.Int64Value group_id = 1;</code>
+     */
+    public com.google.protobuf.Int64Value.Builder getGroupIdBuilder() {
+      
+      onChanged();
+      return getGroupIdFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.google.protobuf.Int64Value group_id = 1;</code>
+     */
+    public com.google.protobuf.Int64ValueOrBuilder getGroupIdOrBuilder() {
+      if (groupIdBuilder_ != null) {
+        return groupIdBuilder_.getMessageOrBuilder();
+      } else {
+        return groupId_ == null ?
+            com.google.protobuf.Int64Value.getDefaultInstance() : groupId_;
+      }
+    }
+    /**
+     * <code>.google.protobuf.Int64Value group_id = 1;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> 
+        getGroupIdFieldBuilder() {
+      if (groupIdBuilder_ == null) {
+        groupIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>(
+                getGroupId(),
+                getParentForChildren(),
+                isClean());
+        groupId_ = null;
+      }
+      return groupIdBuilder_;
+    }
+
+    private com.google.protobuf.BoolValue areSentByMe_;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder> areSentByMeBuilder_;
+    /**
+     * <code>.google.protobuf.BoolValue are_sent_by_me = 2;</code>
+     * @return Whether the areSentByMe field is set.
+     */
+    public boolean hasAreSentByMe() {
+      return areSentByMeBuilder_ != null || areSentByMe_ != null;
+    }
+    /**
+     * <code>.google.protobuf.BoolValue are_sent_by_me = 2;</code>
+     * @return The areSentByMe.
+     */
+    public com.google.protobuf.BoolValue getAreSentByMe() {
+      if (areSentByMeBuilder_ == null) {
+        return areSentByMe_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : areSentByMe_;
+      } else {
+        return areSentByMeBuilder_.getMessage();
+      }
+    }
+    /**
+     * <code>.google.protobuf.BoolValue are_sent_by_me = 2;</code>
+     */
+    public Builder setAreSentByMe(com.google.protobuf.BoolValue value) {
+      if (areSentByMeBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        areSentByMe_ = value;
+        onChanged();
+      } else {
+        areSentByMeBuilder_.setMessage(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.google.protobuf.BoolValue are_sent_by_me = 2;</code>
+     */
+    public Builder setAreSentByMe(
+        com.google.protobuf.BoolValue.Builder builderForValue) {
+      if (areSentByMeBuilder_ == null) {
+        areSentByMe_ = builderForValue.build();
+        onChanged();
+      } else {
+        areSentByMeBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <code>.google.protobuf.BoolValue are_sent_by_me = 2;</code>
+     */
+    public Builder mergeAreSentByMe(com.google.protobuf.BoolValue value) {
+      if (areSentByMeBuilder_ == null) {
+        if (areSentByMe_ != null) {
+          areSentByMe_ =
+            com.google.protobuf.BoolValue.newBuilder(areSentByMe_).mergeFrom(value).buildPartial();
+        } else {
+          areSentByMe_ = value;
+        }
+        onChanged();
+      } else {
+        areSentByMeBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.google.protobuf.BoolValue are_sent_by_me = 2;</code>
+     */
+    public Builder clearAreSentByMe() {
+      if (areSentByMeBuilder_ == null) {
+        areSentByMe_ = null;
+        onChanged();
+      } else {
+        areSentByMe_ = null;
+        areSentByMeBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <code>.google.protobuf.BoolValue are_sent_by_me = 2;</code>
+     */
+    public com.google.protobuf.BoolValue.Builder getAreSentByMeBuilder() {
+      
+      onChanged();
+      return getAreSentByMeFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.google.protobuf.BoolValue are_sent_by_me = 2;</code>
+     */
+    public com.google.protobuf.BoolValueOrBuilder getAreSentByMeOrBuilder() {
+      if (areSentByMeBuilder_ != null) {
+        return areSentByMeBuilder_.getMessageOrBuilder();
+      } else {
+        return areSentByMe_ == null ?
+            com.google.protobuf.BoolValue.getDefaultInstance() : areSentByMe_;
+      }
+    }
+    /**
+     * <code>.google.protobuf.BoolValue are_sent_by_me = 2;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder> 
+        getAreSentByMeFieldBuilder() {
+      if (areSentByMeBuilder_ == null) {
+        areSentByMeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder>(
+                getAreSentByMe(),
+                getParentForChildren(),
+                isClean());
+        areSentByMe_ = null;
+      }
+      return areSentByMeBuilder_;
     }
 
     private com.google.protobuf.Int64Value lastUpdatedDate_;
     private com.google.protobuf.SingleFieldBuilderV3<
         com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> lastUpdatedDateBuilder_;
     /**
-     * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
+     * <code>.google.protobuf.Int64Value last_updated_date = 3;</code>
      * @return Whether the lastUpdatedDate field is set.
      */
     public boolean hasLastUpdatedDate() {
       return lastUpdatedDateBuilder_ != null || lastUpdatedDate_ != null;
     }
     /**
-     * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
+     * <code>.google.protobuf.Int64Value last_updated_date = 3;</code>
      * @return The lastUpdatedDate.
      */
     public com.google.protobuf.Int64Value getLastUpdatedDate() {
@@ -516,7 +823,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
+     * <code>.google.protobuf.Int64Value last_updated_date = 3;</code>
      */
     public Builder setLastUpdatedDate(com.google.protobuf.Int64Value value) {
       if (lastUpdatedDateBuilder_ == null) {
@@ -532,7 +839,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
+     * <code>.google.protobuf.Int64Value last_updated_date = 3;</code>
      */
     public Builder setLastUpdatedDate(
         com.google.protobuf.Int64Value.Builder builderForValue) {
@@ -546,7 +853,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
+     * <code>.google.protobuf.Int64Value last_updated_date = 3;</code>
      */
     public Builder mergeLastUpdatedDate(com.google.protobuf.Int64Value value) {
       if (lastUpdatedDateBuilder_ == null) {
@@ -564,7 +871,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
+     * <code>.google.protobuf.Int64Value last_updated_date = 3;</code>
      */
     public Builder clearLastUpdatedDate() {
       if (lastUpdatedDateBuilder_ == null) {
@@ -578,7 +885,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
+     * <code>.google.protobuf.Int64Value last_updated_date = 3;</code>
      */
     public com.google.protobuf.Int64Value.Builder getLastUpdatedDateBuilder() {
       
@@ -586,7 +893,7 @@ private static final long serialVersionUID = 0L;
       return getLastUpdatedDateFieldBuilder().getBuilder();
     }
     /**
-     * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
+     * <code>.google.protobuf.Int64Value last_updated_date = 3;</code>
      */
     public com.google.protobuf.Int64ValueOrBuilder getLastUpdatedDateOrBuilder() {
       if (lastUpdatedDateBuilder_ != null) {
@@ -597,7 +904,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
+     * <code>.google.protobuf.Int64Value last_updated_date = 3;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> 

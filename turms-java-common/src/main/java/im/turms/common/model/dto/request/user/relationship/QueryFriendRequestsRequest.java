@@ -48,7 +48,12 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
-          case 10: {
+          case 8: {
+
+            areSentByMe_ = input.readBool();
+            break;
+          }
+          case 18: {
             com.google.protobuf.Int64Value.Builder subBuilder = null;
             if (lastUpdatedDate_ != null) {
               subBuilder = lastUpdatedDate_.toBuilder();
@@ -93,24 +98,34 @@ private static final long serialVersionUID = 0L;
             im.turms.common.model.dto.request.user.relationship.QueryFriendRequestsRequest.class, im.turms.common.model.dto.request.user.relationship.QueryFriendRequestsRequest.Builder.class);
   }
 
-  public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 1;
+  public static final int ARE_SENT_BY_ME_FIELD_NUMBER = 1;
+  private boolean areSentByMe_;
+  /**
+   * <code>bool are_sent_by_me = 1;</code>
+   * @return The areSentByMe.
+   */
+  public boolean getAreSentByMe() {
+    return areSentByMe_;
+  }
+
+  public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 2;
   private com.google.protobuf.Int64Value lastUpdatedDate_;
   /**
-   * <code>.google.protobuf.Int64Value last_updated_date = 1;</code>
+   * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
    * @return Whether the lastUpdatedDate field is set.
    */
   public boolean hasLastUpdatedDate() {
     return lastUpdatedDate_ != null;
   }
   /**
-   * <code>.google.protobuf.Int64Value last_updated_date = 1;</code>
+   * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
    * @return The lastUpdatedDate.
    */
   public com.google.protobuf.Int64Value getLastUpdatedDate() {
     return lastUpdatedDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : lastUpdatedDate_;
   }
   /**
-   * <code>.google.protobuf.Int64Value last_updated_date = 1;</code>
+   * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
    */
   public com.google.protobuf.Int64ValueOrBuilder getLastUpdatedDateOrBuilder() {
     return getLastUpdatedDate();
@@ -130,8 +145,11 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
+    if (areSentByMe_ != false) {
+      output.writeBool(1, areSentByMe_);
+    }
     if (lastUpdatedDate_ != null) {
-      output.writeMessage(1, getLastUpdatedDate());
+      output.writeMessage(2, getLastUpdatedDate());
     }
     unknownFields.writeTo(output);
   }
@@ -142,9 +160,13 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
+    if (areSentByMe_ != false) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeBoolSize(1, areSentByMe_);
+    }
     if (lastUpdatedDate_ != null) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(1, getLastUpdatedDate());
+        .computeMessageSize(2, getLastUpdatedDate());
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -161,6 +183,8 @@ private static final long serialVersionUID = 0L;
     }
     im.turms.common.model.dto.request.user.relationship.QueryFriendRequestsRequest other = (im.turms.common.model.dto.request.user.relationship.QueryFriendRequestsRequest) obj;
 
+    if (getAreSentByMe()
+        != other.getAreSentByMe()) return false;
     if (hasLastUpdatedDate() != other.hasLastUpdatedDate()) return false;
     if (hasLastUpdatedDate()) {
       if (!getLastUpdatedDate()
@@ -177,6 +201,9 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
+    hash = (37 * hash) + ARE_SENT_BY_ME_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getAreSentByMe());
     if (hasLastUpdatedDate()) {
       hash = (37 * hash) + LAST_UPDATED_DATE_FIELD_NUMBER;
       hash = (53 * hash) + getLastUpdatedDate().hashCode();
@@ -314,6 +341,8 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      areSentByMe_ = false;
+
       if (lastUpdatedDateBuilder_ == null) {
         lastUpdatedDate_ = null;
       } else {
@@ -346,6 +375,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public im.turms.common.model.dto.request.user.relationship.QueryFriendRequestsRequest buildPartial() {
       im.turms.common.model.dto.request.user.relationship.QueryFriendRequestsRequest result = new im.turms.common.model.dto.request.user.relationship.QueryFriendRequestsRequest(this);
+      result.areSentByMe_ = areSentByMe_;
       if (lastUpdatedDateBuilder_ == null) {
         result.lastUpdatedDate_ = lastUpdatedDate_;
       } else {
@@ -399,6 +429,9 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(im.turms.common.model.dto.request.user.relationship.QueryFriendRequestsRequest other) {
       if (other == im.turms.common.model.dto.request.user.relationship.QueryFriendRequestsRequest.getDefaultInstance()) return this;
+      if (other.getAreSentByMe() != false) {
+        setAreSentByMe(other.getAreSentByMe());
+      }
       if (other.hasLastUpdatedDate()) {
         mergeLastUpdatedDate(other.getLastUpdatedDate());
       }
@@ -431,18 +464,48 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
+    private boolean areSentByMe_ ;
+    /**
+     * <code>bool are_sent_by_me = 1;</code>
+     * @return The areSentByMe.
+     */
+    public boolean getAreSentByMe() {
+      return areSentByMe_;
+    }
+    /**
+     * <code>bool are_sent_by_me = 1;</code>
+     * @param value The areSentByMe to set.
+     * @return This builder for chaining.
+     */
+    public Builder setAreSentByMe(boolean value) {
+      
+      areSentByMe_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>bool are_sent_by_me = 1;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearAreSentByMe() {
+      
+      areSentByMe_ = false;
+      onChanged();
+      return this;
+    }
+
     private com.google.protobuf.Int64Value lastUpdatedDate_;
     private com.google.protobuf.SingleFieldBuilderV3<
         com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> lastUpdatedDateBuilder_;
     /**
-     * <code>.google.protobuf.Int64Value last_updated_date = 1;</code>
+     * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
      * @return Whether the lastUpdatedDate field is set.
      */
     public boolean hasLastUpdatedDate() {
       return lastUpdatedDateBuilder_ != null || lastUpdatedDate_ != null;
     }
     /**
-     * <code>.google.protobuf.Int64Value last_updated_date = 1;</code>
+     * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
      * @return The lastUpdatedDate.
      */
     public com.google.protobuf.Int64Value getLastUpdatedDate() {
@@ -453,7 +516,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.google.protobuf.Int64Value last_updated_date = 1;</code>
+     * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
      */
     public Builder setLastUpdatedDate(com.google.protobuf.Int64Value value) {
       if (lastUpdatedDateBuilder_ == null) {
@@ -469,7 +532,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value last_updated_date = 1;</code>
+     * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
      */
     public Builder setLastUpdatedDate(
         com.google.protobuf.Int64Value.Builder builderForValue) {
@@ -483,7 +546,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value last_updated_date = 1;</code>
+     * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
      */
     public Builder mergeLastUpdatedDate(com.google.protobuf.Int64Value value) {
       if (lastUpdatedDateBuilder_ == null) {
@@ -501,7 +564,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value last_updated_date = 1;</code>
+     * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
      */
     public Builder clearLastUpdatedDate() {
       if (lastUpdatedDateBuilder_ == null) {
@@ -515,7 +578,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value last_updated_date = 1;</code>
+     * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
      */
     public com.google.protobuf.Int64Value.Builder getLastUpdatedDateBuilder() {
       
@@ -523,7 +586,7 @@ private static final long serialVersionUID = 0L;
       return getLastUpdatedDateFieldBuilder().getBuilder();
     }
     /**
-     * <code>.google.protobuf.Int64Value last_updated_date = 1;</code>
+     * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
      */
     public com.google.protobuf.Int64ValueOrBuilder getLastUpdatedDateOrBuilder() {
       if (lastUpdatedDateBuilder_ != null) {
@@ -534,7 +597,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.google.protobuf.Int64Value last_updated_date = 1;</code>
+     * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> 

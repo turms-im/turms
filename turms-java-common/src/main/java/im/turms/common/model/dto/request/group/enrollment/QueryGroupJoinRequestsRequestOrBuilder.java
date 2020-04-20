@@ -8,10 +8,19 @@ public interface QueryGroupJoinRequestsRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>int64 group_id = 1;</code>
+   * <code>.google.protobuf.Int64Value group_id = 1;</code>
+   * @return Whether the groupId field is set.
+   */
+  boolean hasGroupId();
+  /**
+   * <code>.google.protobuf.Int64Value group_id = 1;</code>
    * @return The groupId.
    */
-  long getGroupId();
+  com.google.protobuf.Int64Value getGroupId();
+  /**
+   * <code>.google.protobuf.Int64Value group_id = 1;</code>
+   */
+  com.google.protobuf.Int64ValueOrBuilder getGroupIdOrBuilder();
 
   /**
    * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
