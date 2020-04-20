@@ -67,7 +67,7 @@ class UserServiceTests: XCTestCase {
         TestUtil.assertCompleted("updateLocation_shouldSucceed", turmsClient.userService.updateLocation(latitude: 2, longitude: 2))
 
         // Query
-        TestUtil.assertCompleted("queryUserGroupInvitations_shouldReturnGroupInvitationsWithVersion", turmsClient.userService.queryUserGroupInvitations())
+
         TestUtil.assertCompleted("queryUserProfile_shouldReturnUserInfoWithVersion", turmsClient.userService.queryUserProfile(userId: 1))
         TestUtil.assertCompleted("queryUserIdsNearby_shouldReturnUsersIds", turmsClient.userService.queryUserIdsNearby(latitude: 1, longitude: 1))
         TestUtil.assertCompleted("queryUserSessionIdsNearby_shouldReturnUsersIds", turmsClient.userService.queryUserSessionIdsNearby(latitude: 1, longitude: 1))
@@ -79,7 +79,7 @@ class UserServiceTests: XCTestCase {
         TestUtil.assertCompleted("queryRelatedUsersIds_shouldReturnRelatedUsersIds", turmsClient.userService.queryRelatedUsersIds())
         TestUtil.assertCompleted("queryFriends_shouldReturnFriendRelationships", turmsClient.userService.queryFriends())
         TestUtil.assertCompleted("queryBlacklistedUsers_shouldReturnBlacklist", turmsClient.userService.queryBlacklistedUsers())
-        TestUtil.assertCompleted("queryFriendRequests_shouldReturnFriendRequests", turmsClient.userService.queryFriendRequests())
+        TestUtil.assertCompleted("queryFriendRequests_shouldReturnFriendRequests", turmsClient.userService.queryFriendRequests(true))
         TestUtil.assertCompleted("queryRelationshipGroups_shouldReturnRelationshipGroups", turmsClient.userService.queryRelationshipGroups())
 
         // Delete

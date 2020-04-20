@@ -125,14 +125,6 @@ public struct TurmsRequest {
   }
 
   /// User
-  public var queryUserGroupInvitationsRequest: QueryUserGroupInvitationsRequest {
-    get {
-      if case .queryUserGroupInvitationsRequest(let v)? = _storage._kind {return v}
-      return QueryUserGroupInvitationsRequest()
-    }
-    set {_uniqueStorage()._kind = .queryUserGroupInvitationsRequest(newValue)}
-  }
-
   public var queryUserProfileRequest: QueryUserProfileRequest {
     get {
       if case .queryUserProfileRequest(let v)? = _storage._kind {return v}
@@ -507,7 +499,6 @@ public struct TurmsRequest {
     case updateMessageRequest(UpdateMessageRequest)
     case updateTypingStatusRequest(UpdateTypingStatusRequest)
     /// User
-    case queryUserGroupInvitationsRequest(QueryUserGroupInvitationsRequest)
     case queryUserProfileRequest(QueryUserProfileRequest)
     case queryUsersIdsNearbyRequest(QueryUsersIdsNearbyRequest)
     case queryUsersInfosNearbyRequest(QueryUsersInfosNearbyRequest)
@@ -571,7 +562,6 @@ public struct TurmsRequest {
       case (.queryPendingMessagesWithTotalRequest(let l), .queryPendingMessagesWithTotalRequest(let r)): return l == r
       case (.updateMessageRequest(let l), .updateMessageRequest(let r)): return l == r
       case (.updateTypingStatusRequest(let l), .updateTypingStatusRequest(let r)): return l == r
-      case (.queryUserGroupInvitationsRequest(let l), .queryUserGroupInvitationsRequest(let r)): return l == r
       case (.queryUserProfileRequest(let l), .queryUserProfileRequest(let r)): return l == r
       case (.queryUsersIdsNearbyRequest(let l), .queryUsersIdsNearbyRequest(let r)): return l == r
       case (.queryUsersInfosNearbyRequest(let l), .queryUsersInfosNearbyRequest(let r)): return l == r
@@ -645,14 +635,13 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
     9: .standard(proto: "query_pending_messages_with_total_request"),
     10: .standard(proto: "update_message_request"),
     11: .standard(proto: "update_typing_status_request"),
-    100: .standard(proto: "query_user_group_invitations_request"),
-    101: .standard(proto: "query_user_profile_request"),
-    102: .standard(proto: "query_users_ids_nearby_request"),
-    103: .standard(proto: "query_users_infos_nearby_request"),
-    104: .standard(proto: "query_users_online_status_request"),
-    105: .standard(proto: "update_user_location_request"),
-    106: .standard(proto: "update_user_online_status_request"),
-    107: .standard(proto: "update_user_request"),
+    100: .standard(proto: "query_user_profile_request"),
+    101: .standard(proto: "query_users_ids_nearby_request"),
+    102: .standard(proto: "query_users_infos_nearby_request"),
+    103: .standard(proto: "query_users_online_status_request"),
+    104: .standard(proto: "update_user_location_request"),
+    105: .standard(proto: "update_user_online_status_request"),
+    106: .standard(proto: "update_user_request"),
     200: .standard(proto: "create_friend_request_request"),
     201: .standard(proto: "create_relationship_group_request"),
     202: .standard(proto: "create_relationship_request"),
@@ -800,14 +789,6 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .updateTypingStatusRequest(v)}
         case 100:
-          var v: QueryUserGroupInvitationsRequest?
-          if let current = _storage._kind {
-            try decoder.handleConflictingOneOf()
-            if case .queryUserGroupInvitationsRequest(let m) = current {v = m}
-          }
-          try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._kind = .queryUserGroupInvitationsRequest(v)}
-        case 101:
           var v: QueryUserProfileRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -815,7 +796,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
           }
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .queryUserProfileRequest(v)}
-        case 102:
+        case 101:
           var v: QueryUsersIdsNearbyRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -823,7 +804,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
           }
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .queryUsersIdsNearbyRequest(v)}
-        case 103:
+        case 102:
           var v: QueryUsersInfosNearbyRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -831,7 +812,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
           }
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .queryUsersInfosNearbyRequest(v)}
-        case 104:
+        case 103:
           var v: QueryUsersOnlineStatusRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -839,7 +820,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
           }
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .queryUsersOnlineStatusRequest(v)}
-        case 105:
+        case 104:
           var v: UpdateUserLocationRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -847,7 +828,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
           }
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .updateUserLocationRequest(v)}
-        case 106:
+        case 105:
           var v: UpdateUserOnlineStatusRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -855,7 +836,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
           }
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .updateUserOnlineStatusRequest(v)}
-        case 107:
+        case 106:
           var v: UpdateUserRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -1191,22 +1172,20 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
         try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
       case .updateTypingStatusRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 11)
-      case .queryUserGroupInvitationsRequest(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 100)
       case .queryUserProfileRequest(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 101)
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 100)
       case .queryUsersIdsNearbyRequest(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 102)
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 101)
       case .queryUsersInfosNearbyRequest(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 103)
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 102)
       case .queryUsersOnlineStatusRequest(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 104)
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 103)
       case .updateUserLocationRequest(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 105)
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 104)
       case .updateUserOnlineStatusRequest(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 106)
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 105)
       case .updateUserRequest(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 107)
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 106)
       case .createFriendRequestRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 200)
       case .createRelationshipGroupRequest(let v)?:

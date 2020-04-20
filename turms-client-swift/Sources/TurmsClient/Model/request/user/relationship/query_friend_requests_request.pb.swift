@@ -24,6 +24,11 @@ public struct QueryFriendRequestsRequest {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
+  public var areSentByMe: Bool {
+    get {return _storage._areSentByMe}
+    set {_uniqueStorage()._areSentByMe = newValue}
+  }
+
   public var lastUpdatedDate: SwiftProtobuf.Google_Protobuf_Int64Value {
     get {return _storage._lastUpdatedDate ?? SwiftProtobuf.Google_Protobuf_Int64Value()}
     set {_uniqueStorage()._lastUpdatedDate = newValue}
@@ -47,10 +52,12 @@ fileprivate let _protobuf_package = "im.turms.proto"
 extension QueryFriendRequestsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".QueryFriendRequestsRequest"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "last_updated_date"),
+    1: .standard(proto: "are_sent_by_me"),
+    2: .standard(proto: "last_updated_date"),
   ]
 
   fileprivate class _StorageClass {
+    var _areSentByMe: Bool = false
     var _lastUpdatedDate: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
 
     static let defaultInstance = _StorageClass()
@@ -58,6 +65,7 @@ extension QueryFriendRequestsRequest: SwiftProtobuf.Message, SwiftProtobuf._Mess
     private init() {}
 
     init(copying source: _StorageClass) {
+      _areSentByMe = source._areSentByMe
       _lastUpdatedDate = source._lastUpdatedDate
     }
   }
@@ -74,7 +82,8 @@ extension QueryFriendRequestsRequest: SwiftProtobuf.Message, SwiftProtobuf._Mess
     try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
       while let fieldNumber = try decoder.nextFieldNumber() {
         switch fieldNumber {
-        case 1: try decoder.decodeSingularMessageField(value: &_storage._lastUpdatedDate)
+        case 1: try decoder.decodeSingularBoolField(value: &_storage._areSentByMe)
+        case 2: try decoder.decodeSingularMessageField(value: &_storage._lastUpdatedDate)
         default: break
         }
       }
@@ -83,8 +92,11 @@ extension QueryFriendRequestsRequest: SwiftProtobuf.Message, SwiftProtobuf._Mess
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      if _storage._areSentByMe != false {
+        try visitor.visitSingularBoolField(value: _storage._areSentByMe, fieldNumber: 1)
+      }
       if let v = _storage._lastUpdatedDate {
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
       }
     }
     try unknownFields.traverse(visitor: &visitor)
@@ -95,6 +107,7 @@ extension QueryFriendRequestsRequest: SwiftProtobuf.Message, SwiftProtobuf._Mess
       let storagesAreEqual: Bool = withExtendedLifetime((lhs._storage, rhs._storage)) { (_args: (_StorageClass, _StorageClass)) in
         let _storage = _args.0
         let rhs_storage = _args.1
+        if _storage._areSentByMe != rhs_storage._areSentByMe {return false}
         if _storage._lastUpdatedDate != rhs_storage._lastUpdatedDate {return false}
         return true
       }

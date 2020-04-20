@@ -97,15 +97,6 @@ public class UserService {
             .map { _ in () }
     }
 
-    public func queryUserGroupInvitations(_ lastUpdatedDate: Date? = nil) -> Promise<GroupInvitationsWithVersion?> {
-        return turmsClient.driver
-            .send { $0
-                .request("queryUserGroupInvitationsRequest")
-                .field("lastUpdatedDate", lastUpdatedDate)
-            }
-            .map { try $0.data.kind?.getKindData(GroupInvitationsWithVersion.self) }
-    }
-
     public func queryUserProfile(userId: Int64, lastUpdatedDate: Date? = nil) -> Promise<UserInfoWithVersion?> {
         return turmsClient.driver
             .send { $0
@@ -275,10 +266,11 @@ public class UserService {
             .map { _ in () }
     }
 
-    public func queryFriendRequests(_ lastUpdatedDate: Date? = nil) -> Promise<UserFriendRequestsWithVersion?> {
+    public func queryFriendRequests(_ areSentByMe: Bool, lastUpdatedDate: Date? = nil) -> Promise<UserFriendRequestsWithVersion?> {
         return turmsClient.driver
             .send { $0
                 .request("queryFriendRequestsRequest")
+                .field("areSentByMe", areSentByMe)
                 .field("lastUpdatedDate", lastUpdatedDate)
             }
             .map { try $0.data.kind?.getKindData(UserFriendRequestsWithVersion.self) }

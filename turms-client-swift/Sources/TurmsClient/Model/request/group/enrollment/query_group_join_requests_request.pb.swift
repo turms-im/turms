@@ -24,10 +24,14 @@ public struct QueryGroupJoinRequestsRequest {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  public var groupID: Int64 {
-    get {return _storage._groupID}
+  public var groupID: SwiftProtobuf.Google_Protobuf_Int64Value {
+    get {return _storage._groupID ?? SwiftProtobuf.Google_Protobuf_Int64Value()}
     set {_uniqueStorage()._groupID = newValue}
   }
+  /// Returns true if `groupID` has been explicitly set.
+  public var hasGroupID: Bool {return _storage._groupID != nil}
+  /// Clears the value of `groupID`. Subsequent reads from it will return its default value.
+  public mutating func clearGroupID() {_uniqueStorage()._groupID = nil}
 
   public var lastUpdatedDate: SwiftProtobuf.Google_Protobuf_Int64Value {
     get {return _storage._lastUpdatedDate ?? SwiftProtobuf.Google_Protobuf_Int64Value()}
@@ -57,7 +61,7 @@ extension QueryGroupJoinRequestsRequest: SwiftProtobuf.Message, SwiftProtobuf._M
   ]
 
   fileprivate class _StorageClass {
-    var _groupID: Int64 = 0
+    var _groupID: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
     var _lastUpdatedDate: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
 
     static let defaultInstance = _StorageClass()
@@ -82,7 +86,7 @@ extension QueryGroupJoinRequestsRequest: SwiftProtobuf.Message, SwiftProtobuf._M
     try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
       while let fieldNumber = try decoder.nextFieldNumber() {
         switch fieldNumber {
-        case 1: try decoder.decodeSingularInt64Field(value: &_storage._groupID)
+        case 1: try decoder.decodeSingularMessageField(value: &_storage._groupID)
         case 2: try decoder.decodeSingularMessageField(value: &_storage._lastUpdatedDate)
         default: break
         }
@@ -92,8 +96,8 @@ extension QueryGroupJoinRequestsRequest: SwiftProtobuf.Message, SwiftProtobuf._M
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
-      if _storage._groupID != 0 {
-        try visitor.visitSingularInt64Field(value: _storage._groupID, fieldNumber: 1)
+      if let v = _storage._groupID {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
       }
       if let v = _storage._lastUpdatedDate {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 2)

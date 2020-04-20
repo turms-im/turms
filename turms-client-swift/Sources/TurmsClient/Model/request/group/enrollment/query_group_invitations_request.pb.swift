@@ -24,10 +24,23 @@ public struct QueryGroupInvitationsRequest {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  public var groupID: Int64 {
-    get {return _storage._groupID}
+  public var groupID: SwiftProtobuf.Google_Protobuf_Int64Value {
+    get {return _storage._groupID ?? SwiftProtobuf.Google_Protobuf_Int64Value()}
     set {_uniqueStorage()._groupID = newValue}
   }
+  /// Returns true if `groupID` has been explicitly set.
+  public var hasGroupID: Bool {return _storage._groupID != nil}
+  /// Clears the value of `groupID`. Subsequent reads from it will return its default value.
+  public mutating func clearGroupID() {_uniqueStorage()._groupID = nil}
+
+  public var areSentByMe: SwiftProtobuf.Google_Protobuf_BoolValue {
+    get {return _storage._areSentByMe ?? SwiftProtobuf.Google_Protobuf_BoolValue()}
+    set {_uniqueStorage()._areSentByMe = newValue}
+  }
+  /// Returns true if `areSentByMe` has been explicitly set.
+  public var hasAreSentByMe: Bool {return _storage._areSentByMe != nil}
+  /// Clears the value of `areSentByMe`. Subsequent reads from it will return its default value.
+  public mutating func clearAreSentByMe() {_uniqueStorage()._areSentByMe = nil}
 
   public var lastUpdatedDate: SwiftProtobuf.Google_Protobuf_Int64Value {
     get {return _storage._lastUpdatedDate ?? SwiftProtobuf.Google_Protobuf_Int64Value()}
@@ -53,11 +66,13 @@ extension QueryGroupInvitationsRequest: SwiftProtobuf.Message, SwiftProtobuf._Me
   public static let protoMessageName: String = _protobuf_package + ".QueryGroupInvitationsRequest"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "group_id"),
-    2: .standard(proto: "last_updated_date"),
+    2: .standard(proto: "are_sent_by_me"),
+    3: .standard(proto: "last_updated_date"),
   ]
 
   fileprivate class _StorageClass {
-    var _groupID: Int64 = 0
+    var _groupID: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
+    var _areSentByMe: SwiftProtobuf.Google_Protobuf_BoolValue? = nil
     var _lastUpdatedDate: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
 
     static let defaultInstance = _StorageClass()
@@ -66,6 +81,7 @@ extension QueryGroupInvitationsRequest: SwiftProtobuf.Message, SwiftProtobuf._Me
 
     init(copying source: _StorageClass) {
       _groupID = source._groupID
+      _areSentByMe = source._areSentByMe
       _lastUpdatedDate = source._lastUpdatedDate
     }
   }
@@ -82,8 +98,9 @@ extension QueryGroupInvitationsRequest: SwiftProtobuf.Message, SwiftProtobuf._Me
     try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
       while let fieldNumber = try decoder.nextFieldNumber() {
         switch fieldNumber {
-        case 1: try decoder.decodeSingularInt64Field(value: &_storage._groupID)
-        case 2: try decoder.decodeSingularMessageField(value: &_storage._lastUpdatedDate)
+        case 1: try decoder.decodeSingularMessageField(value: &_storage._groupID)
+        case 2: try decoder.decodeSingularMessageField(value: &_storage._areSentByMe)
+        case 3: try decoder.decodeSingularMessageField(value: &_storage._lastUpdatedDate)
         default: break
         }
       }
@@ -92,11 +109,14 @@ extension QueryGroupInvitationsRequest: SwiftProtobuf.Message, SwiftProtobuf._Me
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
-      if _storage._groupID != 0 {
-        try visitor.visitSingularInt64Field(value: _storage._groupID, fieldNumber: 1)
+      if let v = _storage._groupID {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+      }
+      if let v = _storage._areSentByMe {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
       }
       if let v = _storage._lastUpdatedDate {
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
       }
     }
     try unknownFields.traverse(visitor: &visitor)
@@ -108,6 +128,7 @@ extension QueryGroupInvitationsRequest: SwiftProtobuf.Message, SwiftProtobuf._Me
         let _storage = _args.0
         let rhs_storage = _args.1
         if _storage._groupID != rhs_storage._groupID {return false}
+        if _storage._areSentByMe != rhs_storage._areSentByMe {return false}
         if _storage._lastUpdatedDate != rhs_storage._lastUpdatedDate {return false}
         return true
       }

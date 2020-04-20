@@ -237,6 +237,16 @@ public class GroupService {
             .map { try $0.data.kind?.getKindData(GroupInvitationsWithVersion.self) }
     }
 
+    public func queryInvitations(areSentByMe: Bool, lastUpdatedDate: Date? = nil) -> Promise<GroupInvitationsWithVersion?> {
+        return turmsClient.driver
+            .send { $0
+                .request("queryGroupInvitationsRequest")
+                .field("areSentByMe", areSentByMe)
+                .field("lastUpdatedDate", lastUpdatedDate)
+            }
+            .map { try $0.data.kind?.getKindData(GroupInvitationsWithVersion.self) }
+    }
+
     public func createJoinRequest(groupId: Int64, content: String) -> Promise<Int64> {
         return turmsClient.driver
             .send { $0
@@ -261,6 +271,15 @@ public class GroupService {
             .send { $0
                 .request("queryGroupJoinRequestsRequest")
                 .field("groupId", groupId)
+                .field("lastUpdatedDate", lastUpdatedDate)
+            }
+            .map { try $0.data.kind?.getKindData(GroupJoinRequestsWithVersion.self) }
+    }
+
+    public func querySentJoinRequests(lastUpdatedDate: Date? = nil) -> Promise<GroupJoinRequestsWithVersion?> {
+        return turmsClient.driver
+            .send { $0
+                .request("queryGroupJoinRequestsRequest")
                 .field("lastUpdatedDate", lastUpdatedDate)
             }
             .map { try $0.data.kind?.getKindData(GroupJoinRequestsWithVersion.self) }
