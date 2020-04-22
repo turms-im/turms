@@ -37,4 +37,14 @@ export default class TurmsBusinessException {
     static fromCode(code: number): TurmsBusinessException {
         return new TurmsBusinessException(code, TurmsStatusCode.getReason(code));
     }
+
+    static illegalParam<T = never>(reason: string): Promise<T> {
+        const exception = new TurmsBusinessException(TurmsStatusCode.ILLEGAL_ARGUMENTS, reason);
+        return Promise.reject(exception);
+    }
+
+    // The method is used to avoid the duplicate string declaration to reduce the file size
+    static notFalsy<T = never>(name: string, notEmpty = false): Promise<T> {
+        return this.illegalParam(`${name} must be not null${notEmpty ? ' or empty' : ''}`);
+    }
 }

@@ -9,11 +9,11 @@ export default class RequestUtil {
         return value ? {value: '' + value.getTime()} : undefined;
     }
 
-    private static isFalsy(value: any): boolean {
+    public static isFalsy(value: any): boolean {
         return typeof value === 'undefined' || value === null || value === [];
     }
 
-    private static isTruthy(value: any): boolean {
+    public static isTruthy(value: any): boolean {
         return !this.isFalsy(value);
     }
 

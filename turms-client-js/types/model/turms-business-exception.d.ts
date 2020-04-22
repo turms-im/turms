@@ -11,4 +11,6 @@ export default class TurmsBusinessException {
     toString(): string;
     static fromNotification(notification: TurmsNotification): TurmsBusinessException;
     static fromCode(code: number): TurmsBusinessException;
+    static illegalParam<T = never>(reason: string): Promise<T>;
+    static notFalsy<T = never>(name: string, notEmpty?: boolean): Promise<T>;
 }

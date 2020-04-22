@@ -5,7 +5,6 @@ import im.turms.common.exception.TurmsBusinessException;
 
 import javax.validation.constraints.NotEmpty;
 import java.util.Collection;
-import java.util.Map;
 
 public class Validator {
     private Validator() {
@@ -63,15 +62,5 @@ public class Validator {
             }
         }
         return true;
-    }
-
-    public static void throwIfEmpty(Object object) {
-        if (object instanceof Map) {
-            if (((Map<?, ?>) object).isEmpty()) {
-                throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The collection value must not be empty");
-            }
-        } else if (object instanceof Collection && ((Collection<?>) object).isEmpty()) {
-            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The collection value must not be empty");
-        }
     }
 }

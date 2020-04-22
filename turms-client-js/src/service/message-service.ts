@@ -12,6 +12,7 @@ import VideoFile = im.turms.proto.VideoFile;
 import ImageFile = im.turms.proto.ImageFile;
 import Location = im.turms.proto.UserLocation;
 import MessageDeliveryStatus = im.turms.proto.MessageDeliveryStatus;
+import TurmsBusinessException from "../model/turms-business-exception";
 
 export default class MessageService {
     /**
@@ -67,10 +68,21 @@ export default class MessageService {
         text?: string,
         records?: Uint8Array[],
         burnAfter?: number): Promise<string> {
-        RequestUtil.throwIfAnyFalsy(chatType, targetId);
-        RequestUtil.throwIfAllFalsy(text, records);
+        if (RequestUtil.isFalsy(chatType)) {
+            return TurmsBusinessException.notFalsy('chatType');
+        }
+        if (RequestUtil.isFalsy(targetId)) {
+            return TurmsBusinessException.notFalsy('targetId');
+        }
+        if (RequestUtil.isFalsy(text) && RequestUtil.isFalsy(records)) {
+            return TurmsBusinessException.illegalParam('text and records must not all be null');
+        }
         if (typeof chatType === "string") {
-            chatType = ConstantTransformer.string2ChatType(chatType);
+            try {
+                chatType = ConstantTransformer.string2ChatType(chatType);
+            } catch (e) {
+                return TurmsBusinessException.illegalParam(e);
+            }
         }
         if (!deliveryDate) {
             deliveryDate = new Date();
@@ -91,9 +103,21 @@ export default class MessageService {
         messageId: string,
         chatType: string | ChatType,
         targetId: string): Promise<string> {
-        RequestUtil.throwIfAnyFalsy(messageId, chatType, targetId);
+        if (RequestUtil.isFalsy(messageId)) {
+            return TurmsBusinessException.notFalsy('messageId');
+        }
+        if (RequestUtil.isFalsy(chatType)) {
+            return TurmsBusinessException.notFalsy('chatType');
+        }
+        if (RequestUtil.isFalsy(targetId)) {
+            return TurmsBusinessException.notFalsy('targetId');
+        }
         if (typeof chatType === "string") {
-            chatType = ConstantTransformer.string2ChatType(chatType);
+            try {
+                chatType = ConstantTransformer.string2ChatType(chatType);
+            } catch (e) {
+                return TurmsBusinessException.illegalParam(e);
+            }
         }
         return this._turmsClient.driver.send({
             createMessageRequest: {
@@ -108,7 +132,9 @@ export default class MessageService {
         messageId: string,
         text?: string,
         records?: Uint8Array[]): Promise<void> {
-        RequestUtil.throwIfAnyFalsy(messageId);
+        if (RequestUtil.isFalsy(messageId)) {
+            return TurmsBusinessException.notFalsy('messageId');
+        }
         if (RequestUtil.areAllFalsy(text, records)) {
             return Promise.resolve();
         }
@@ -133,10 +159,18 @@ export default class MessageService {
         deliveryStatus?: string | MessageDeliveryStatus,
         size = 50): Promise<ParsedModel.Message[]> {
         if (typeof chatType === 'string') {
-            chatType = ConstantTransformer.string2ChatType(chatType);
+            try {
+                chatType = ConstantTransformer.string2ChatType(chatType);
+            } catch (e) {
+                return TurmsBusinessException.illegalParam(e);
+            }
         }
         if (typeof deliveryStatus === 'string') {
-            deliveryStatus = ConstantTransformer.string2DeliveryStatus(deliveryStatus);
+            try {
+                deliveryStatus = ConstantTransformer.string2DeliveryStatus(deliveryStatus);
+            } catch (e) {
+                return TurmsBusinessException.illegalParam(e);
+            }
         }
         // @ts-ignore
         return this._turmsClient.driver.send({
@@ -163,7 +197,9 @@ export default class MessageService {
     }
 
     queryMessageStatus(messageId: string): Promise<ParsedModel.MessageStatus[]> {
-        RequestUtil.throwIfAnyFalsy(messageId);
+        if (RequestUtil.isFalsy(messageId)) {
+            return TurmsBusinessException.notFalsy('messageId');
+        }
         // @ts-ignore
         return this._turmsClient.driver.send({
             queryMessageStatusesRequest: {
@@ -173,7 +209,9 @@ export default class MessageService {
     }
 
     recallMessage(messageId: string, recallDate = new Date()): Promise<void> {
-        RequestUtil.throwIfAnyFalsy(messageId, recallDate);
+        if (RequestUtil.isFalsy(messageId)) {
+            return TurmsBusinessException.notFalsy('messageId');
+        }
         return this._turmsClient.driver.send({
             updateMessageRequest: {
                 messageId,
@@ -185,7 +223,9 @@ export default class MessageService {
     }
 
     readMessage(messageId: string, readDate = new Date()): Promise<void> {
-        RequestUtil.throwIfAnyFalsy(messageId, readDate);
+        if (RequestUtil.isFalsy(messageId)) {
+            return TurmsBusinessException.notFalsy('messageId');
+        }
         return this._turmsClient.driver.send({
             updateMessageRequest: {
                 messageId,
@@ -200,15 +240,24 @@ export default class MessageService {
         return this.readMessage(messageId, new Date(0));
     }
 
-    updateTypingStatusRequest(chatType: string | ChatType, toId: string): Promise<void> {
-        RequestUtil.throwIfAnyFalsy(chatType, toId);
+    updateTypingStatusRequest(chatType: string | ChatType, targetId: string): Promise<void> {
+        if (RequestUtil.isFalsy(chatType)) {
+            return TurmsBusinessException.notFalsy('chatType');
+        }
+        if (RequestUtil.isFalsy(targetId)) {
+            return TurmsBusinessException.notFalsy('targetId');
+        }
         if (typeof chatType === 'string') {
-            chatType = ConstantTransformer.string2ChatType(chatType);
+            try {
+                chatType = ConstantTransformer.string2ChatType(chatType);
+            } catch (e) {
+                return TurmsBusinessException.illegalParam(e);
+            }
         }
         return this._turmsClient.driver.send({
             updateTypingStatusRequest: {
                 chatType,
-                toId
+                toId: targetId
             }
             // eslint-disable-next-line @typescript-eslint/no-empty-function
         }).then(() => {

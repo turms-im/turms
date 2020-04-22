@@ -21,7 +21,7 @@ export default class MessageService {
     recallMessage(messageId: string, recallDate?: Date): Promise<void>;
     readMessage(messageId: string, readDate?: Date): Promise<void>;
     markMessageUnread(messageId: string): Promise<void>;
-    updateTypingStatusRequest(chatType: string | ChatType, toId: string): Promise<void>;
+    updateTypingStatusRequest(chatType: string | ChatType, targetId: string): Promise<void>;
     isMentionEnabled(): boolean;
     enableMention(mentionedUserIdsParser?: (message: ParsedModel.Message) => string[]): void;
     static generateLocationRecord(latitude: number, longitude: number, locationName?: string, address?: string): Uint8Array;

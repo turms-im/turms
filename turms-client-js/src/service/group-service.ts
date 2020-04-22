@@ -23,7 +23,9 @@ export default class GroupService {
         minimumScore?: number,
         muteEndDate?: Date,
         groupTypeId?: string): Promise<string> {
-        RequestUtil.throwIfAnyFalsy(name);
+        if (RequestUtil.isFalsy(name)) {
+            return TurmsBusinessException.notFalsy('name');
+        }
         return this._turmsClient.driver.send({
             createGroupRequest: {
                 name,
@@ -37,7 +39,9 @@ export default class GroupService {
     }
 
     deleteGroup(groupId: string): Promise<void> {
-        RequestUtil.throwIfAnyFalsy(groupId);
+        if (RequestUtil.isFalsy(groupId)) {
+            return TurmsBusinessException.notFalsy('groupId');
+        }
         return this._turmsClient.driver.send({
             deleteGroupRequest: {
                 groupId
@@ -57,7 +61,9 @@ export default class GroupService {
         muteEndDate?: Date,
         successorId?: string,
         quitAfterTransfer?: boolean): Promise<void> {
-        RequestUtil.throwIfAnyFalsy(groupId);
+        if (RequestUtil.isFalsy(groupId)) {
+            return TurmsBusinessException.notFalsy('groupId');
+        }
         if (RequestUtil.areAllFalsy(groupName, intro, announcement, minimumScore, groupTypeId,
             muteEndDate, successorId)) {
             return Promise.resolve();
@@ -80,12 +86,22 @@ export default class GroupService {
     }
 
     transferOwnership(groupId: string, successorId: string, quitAfterTransfer = false): Promise<void> {
-        RequestUtil.throwIfAnyFalsy(groupId, successorId);
+        if (RequestUtil.isFalsy(groupId)) {
+            return TurmsBusinessException.notFalsy('groupId');
+        }
+        if (RequestUtil.isFalsy(successorId)) {
+            return TurmsBusinessException.notFalsy('successorId');
+        }
         return this.updateGroup(groupId, null, null, null, null, null, null, successorId, quitAfterTransfer);
     }
 
     muteGroup(groupId: string, muteEndDate: Date): Promise<void> {
-        RequestUtil.throwIfAnyFalsy(groupId, muteEndDate);
+        if (RequestUtil.isFalsy(groupId)) {
+            return TurmsBusinessException.notFalsy('groupId');
+        }
+        if (RequestUtil.isFalsy(muteEndDate)) {
+            return TurmsBusinessException.notFalsy('muteEndDate');
+        }
         return this.updateGroup(groupId, null, null, null, null, null, muteEndDate, null);
     }
 
@@ -94,7 +110,9 @@ export default class GroupService {
     }
 
     queryGroup(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.GroupWithVersion | undefined> {
-        RequestUtil.throwIfAnyFalsy(groupId);
+        if (RequestUtil.isFalsy(groupId)) {
+            return TurmsBusinessException.notFalsy('groupId');
+        }
         // @ts-ignore
         return this._turmsClient.driver.send({
             queryGroupRequest: {
@@ -130,7 +148,18 @@ export default class GroupService {
     }
 
     addGroupJoinQuestion(groupId: string, question: string, answers: string[], score: number): Promise<string> {
-        RequestUtil.throwIfAnyFalsy(groupId, question, answers, score);
+        if (RequestUtil.isFalsy(groupId)) {
+            return TurmsBusinessException.notFalsy('groupId');
+        }
+        if (RequestUtil.isFalsy(question)) {
+            return TurmsBusinessException.notFalsy('question');
+        }
+        if (RequestUtil.isFalsy(answers)) {
+            return TurmsBusinessException.notFalsy('answers', true);
+        }
+        if (RequestUtil.isFalsy(score)) {
+            return TurmsBusinessException.notFalsy('score');
+        }
         return this._turmsClient.driver.send({
             createGroupJoinQuestionRequest: {
                 groupId,
@@ -142,7 +171,9 @@ export default class GroupService {
     }
 
     deleteGroupJoinQuestion(questionId: string): Promise<void> {
-        RequestUtil.throwIfAnyFalsy(questionId);
+        if (RequestUtil.isFalsy(questionId)) {
+            return TurmsBusinessException.notFalsy('questionId');
+        }
         return this._turmsClient.driver.send({
             deleteGroupJoinQuestionRequest: {
                 questionId
@@ -153,7 +184,9 @@ export default class GroupService {
     }
 
     updateGroupJoinQuestion(questionId: string, question?: string, answers?: string[], score?: number): Promise<void> {
-        RequestUtil.throwIfAnyFalsy(questionId);
+        if (RequestUtil.isFalsy(questionId)) {
+            return TurmsBusinessException.notFalsy('questionId');
+        }
         if (RequestUtil.areAllFalsy(question, answers, score)) {
             return Promise.resolve();
         }
@@ -171,7 +204,12 @@ export default class GroupService {
 
     // Group Blacklist
     blacklistUser(groupId: string, userId: string): Promise<void> {
-        RequestUtil.throwIfAnyFalsy(groupId, userId);
+        if (RequestUtil.isFalsy(groupId)) {
+            return TurmsBusinessException.notFalsy('groupId');
+        }
+        if (RequestUtil.isFalsy(userId)) {
+            return TurmsBusinessException.notFalsy('userId');
+        }
         return this._turmsClient.driver.send({
             createGroupBlacklistedUserRequest: {
                 blacklistedUserId: userId,
@@ -183,7 +221,12 @@ export default class GroupService {
     }
 
     unblacklistUser(groupId: string, userId: string): Promise<void> {
-        RequestUtil.throwIfAnyFalsy(groupId, userId);
+        if (RequestUtil.isFalsy(groupId)) {
+            return TurmsBusinessException.notFalsy('groupId');
+        }
+        if (RequestUtil.isFalsy(userId)) {
+            return TurmsBusinessException.notFalsy('userId');
+        }
         return this._turmsClient.driver.send({
             deleteGroupBlacklistedUserRequest: {
                 groupId,
@@ -197,7 +240,9 @@ export default class GroupService {
     queryBlacklistedUsersIds(
         groupId: string,
         lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion | undefined> {
-        RequestUtil.throwIfAnyFalsy(groupId);
+        if (RequestUtil.isFalsy(groupId)) {
+            return TurmsBusinessException.notFalsy('groupId');
+        }
         return this._turmsClient.driver.send({
             queryGroupBlacklistedUsersIdsRequest: {
                 groupId,
@@ -209,7 +254,9 @@ export default class GroupService {
     queryBlacklistedUsersInfos(
         groupId: string,
         lastUpdatedDate?: Date): Promise<ParsedModel.UsersInfosWithVersion | undefined> {
-        RequestUtil.throwIfAnyFalsy(groupId);
+        if (RequestUtil.isFalsy(groupId)) {
+            return TurmsBusinessException.notFalsy('groupId');
+        }
         // @ts-ignore
         return this._turmsClient.driver.send({
             queryGroupBlacklistedUsersInfosRequest: {
@@ -221,7 +268,15 @@ export default class GroupService {
 
     // Group Enrollment
     createInvitation(groupId: string, inviteeId: string, content: string): Promise<string> {
-        RequestUtil.throwIfAnyFalsy(groupId, inviteeId, content);
+        if (RequestUtil.isFalsy(groupId)) {
+            return TurmsBusinessException.notFalsy('groupId');
+        }
+        if (RequestUtil.isFalsy(inviteeId)) {
+            return TurmsBusinessException.notFalsy('inviteeId');
+        }
+        if (RequestUtil.isFalsy(content)) {
+            return TurmsBusinessException.notFalsy('content');
+        }
         return this._turmsClient.driver.send({
             createGroupInvitationRequest: {
                 groupId,
@@ -232,7 +287,9 @@ export default class GroupService {
     }
 
     deleteInvitation(invitationId: string): Promise<void> {
-        RequestUtil.throwIfAnyFalsy(invitationId);
+        if (RequestUtil.isFalsy(invitationId)) {
+            return TurmsBusinessException.notFalsy('invitationId');
+        }
         return this._turmsClient.driver.send({
             deleteGroupInvitationRequest: {
                 invitationId
@@ -243,7 +300,9 @@ export default class GroupService {
     }
 
     queryInvitationsByGroupId(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.GroupInvitationsWithVersion | undefined> {
-        RequestUtil.throwIfAnyFalsy(groupId);
+        if (RequestUtil.isFalsy(groupId)) {
+            return TurmsBusinessException.notFalsy('groupId');
+        }
         // @ts-ignore
         return this._turmsClient.driver.send({
             queryGroupInvitationsRequest: {
@@ -254,7 +313,9 @@ export default class GroupService {
     }
 
     queryInvitations(areSentByMe: boolean, lastUpdatedDate?: Date): Promise<ParsedModel.GroupInvitationsWithVersion | undefined> {
-        RequestUtil.throwIfAnyFalsy(areSentByMe);
+        if (RequestUtil.isFalsy(areSentByMe)) {
+            return TurmsBusinessException.notFalsy('areSentByMe');
+        }
         // @ts-ignore
         return this._turmsClient.driver.send({
             queryGroupInvitationsRequest: {
@@ -265,7 +326,12 @@ export default class GroupService {
     }
 
     createJoinRequest(groupId: string, content: string): Promise<string> {
-        RequestUtil.throwIfAnyFalsy(groupId, content);
+        if (RequestUtil.isFalsy(groupId)) {
+            return TurmsBusinessException.notFalsy('groupId');
+        }
+        if (RequestUtil.isFalsy(content)) {
+            return TurmsBusinessException.notFalsy('content');
+        }
         return this._turmsClient.driver.send({
             createGroupJoinRequestRequest: {
                 groupId,
@@ -275,7 +341,9 @@ export default class GroupService {
     }
 
     deleteJoinRequest(requestId: string): Promise<void> {
-        RequestUtil.throwIfAnyFalsy(requestId);
+        if (RequestUtil.isFalsy(requestId)) {
+            return TurmsBusinessException.notFalsy('requestId');
+        }
         return this._turmsClient.driver.send({
             deleteGroupJoinRequestRequest: {
                 requestId
@@ -286,7 +354,9 @@ export default class GroupService {
     }
 
     queryJoinRequests(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.GroupJoinRequestsWithVersion | undefined> {
-        RequestUtil.throwIfAnyFalsy(groupId);
+        if (RequestUtil.isFalsy(groupId)) {
+            return TurmsBusinessException.notFalsy('groupId');
+        }
         // @ts-ignore
         return this._turmsClient.driver.send({
             queryGroupJoinRequestsRequest: {
@@ -312,7 +382,9 @@ export default class GroupService {
         groupId: string,
         withAnswers = false,
         lastUpdatedDate?: Date): Promise<ParsedModel.GroupJoinQuestionsWithVersion | undefined> {
-        RequestUtil.throwIfAnyFalsy(groupId, withAnswers);
+        if (RequestUtil.isFalsy(groupId)) {
+            return TurmsBusinessException.notFalsy('groupId');
+        }
         // @ts-ignore
         return this._turmsClient.driver.send({
             queryGroupJoinQuestionsRequest: {
@@ -324,7 +396,9 @@ export default class GroupService {
     }
 
     answerGroupQuestions(questionIdsAndAnswers: { [k: string]: string }): Promise<GroupJoinQuestionsAnswerResult | undefined> {
-        RequestUtil.throwIfEmpty(questionIdsAndAnswers);
+        if (RequestUtil.isFalsy(questionIdsAndAnswers)) {
+            return TurmsBusinessException.notFalsy('questionIdsAndAnswers', true);
+        }
         return this._turmsClient.driver.send({
             checkGroupJoinQuestionsAnswersRequest: {
                 questionIdAndAnswer: questionIdsAndAnswers
@@ -346,16 +420,25 @@ export default class GroupService {
         name?: string,
         role?: string | GroupMemberRole,
         muteEndDate?: Date): Promise<void> {
-        RequestUtil.throwIfAnyFalsy(groupId, userId);
+        if (RequestUtil.isFalsy(groupId)) {
+            return TurmsBusinessException.notFalsy('groupId');
+        }
+        if (RequestUtil.isFalsy(userId)) {
+            return TurmsBusinessException.notFalsy('userId');
+        }
         if (typeof role === 'string') {
-            role = ConstantTransformer.string2GroupMemberRole(role);
+            try {
+                role = ConstantTransformer.string2GroupMemberRole(role);
+            } catch (e) {
+                return TurmsBusinessException.illegalParam(e);
+            }
         }
         return this._turmsClient.driver.send({
             createGroupMemberRequest: {
                 groupId,
                 userId,
                 name: RequestUtil.wrapValueIfNotNull(name),
-                role: role,
+                role,
                 muteEndDate: RequestUtil.wrapTimeIfNotNull(muteEndDate)
             }
             // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -364,7 +447,9 @@ export default class GroupService {
     }
 
     quitGroup(groupId: string, successorId?: string, quitAfterTransfer?: boolean): Promise<void> {
-        RequestUtil.throwIfAnyFalsy(groupId);
+        if (RequestUtil.isFalsy(groupId)) {
+            return TurmsBusinessException.notFalsy('groupId');
+        }
         return this._turmsClient.driver.send({
             deleteGroupMemberRequest: {
                 groupId,
@@ -378,7 +463,12 @@ export default class GroupService {
     }
 
     removeGroupMember(groupId: string, memberId: string): Promise<void> {
-        RequestUtil.throwIfAnyFalsy(groupId, memberId);
+        if (RequestUtil.isFalsy(groupId)) {
+            return TurmsBusinessException.notFalsy('groupId');
+        }
+        if (RequestUtil.isFalsy(memberId)) {
+            return TurmsBusinessException.notFalsy('memberId');
+        }
         return this._turmsClient.driver.send({
             deleteGroupMemberRequest: {
                 groupId,
@@ -395,19 +485,28 @@ export default class GroupService {
         name?: string,
         role?: string | GroupMemberRole,
         muteEndDate?: Date): Promise<void> {
-        RequestUtil.throwIfAnyFalsy(groupId, memberId);
+        if (RequestUtil.isFalsy(groupId)) {
+            return TurmsBusinessException.notFalsy('groupId');
+        }
+        if (RequestUtil.isFalsy(memberId)) {
+            return TurmsBusinessException.notFalsy('memberId');
+        }
         if (RequestUtil.areAllFalsy(name, role, muteEndDate)) {
             return Promise.resolve();
         }
         if (typeof role === 'string') {
-            role = ConstantTransformer.string2GroupMemberRole(role);
+            try {
+                role = ConstantTransformer.string2GroupMemberRole(role);
+            } catch (e) {
+                return TurmsBusinessException.illegalParam(e);
+            }
         }
         return this._turmsClient.driver.send({
             updateGroupMemberRequest: {
                 groupId,
                 memberId,
                 name: RequestUtil.wrapValueIfNotNull(name),
-                role: role,
+                role,
                 muteEndDate: RequestUtil.wrapTimeIfNotNull(muteEndDate)
             }
             // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -416,7 +515,15 @@ export default class GroupService {
     }
 
     muteGroupMember(groupId: string, memberId: string, muteEndDate: Date): Promise<void> {
-        RequestUtil.throwIfAnyFalsy(groupId, memberId, muteEndDate);
+        if (RequestUtil.isFalsy(groupId)) {
+            return TurmsBusinessException.notFalsy('groupId');
+        }
+        if (RequestUtil.isFalsy(memberId)) {
+            return TurmsBusinessException.notFalsy('memberId');
+        }
+        if (RequestUtil.isFalsy(muteEndDate)) {
+            return TurmsBusinessException.notFalsy('muteEndDate');
+        }
         return this.updateGroupMemberInfo(groupId, memberId, undefined, undefined, muteEndDate);
     }
 
@@ -425,7 +532,9 @@ export default class GroupService {
     }
 
     queryGroupMembers(groupId: string, withStatus = false, lastUpdatedDate?: Date): Promise<ParsedModel.GroupMembersWithVersion | undefined> {
-        RequestUtil.throwIfAnyFalsy(groupId);
+        if (RequestUtil.isFalsy(groupId)) {
+            return TurmsBusinessException.notFalsy('groupId');
+        }
         // @ts-ignore
         return this._turmsClient.driver.send({
             queryGroupMembersRequest: {
@@ -437,7 +546,12 @@ export default class GroupService {
     }
 
     queryGroupMembersByMembersIds(groupId: string, membersIds: string[], withStatus = false): Promise<ParsedModel.GroupMembersWithVersion | undefined> {
-        RequestUtil.throwIfAnyFalsy(groupId, membersIds);
+        if (RequestUtil.isFalsy(groupId)) {
+            return TurmsBusinessException.notFalsy('groupId');
+        }
+        if (RequestUtil.isFalsy(membersIds)) {
+            return TurmsBusinessException.notFalsy('membersIds', true);
+        }
         // @ts-ignore
         return this._turmsClient.driver.send({
             queryGroupMembersRequest: {
