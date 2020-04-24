@@ -32,7 +32,7 @@ turms-admin的Demo地址（PROD配置）：http://47.99.56.54:9512/
 
 虚线部分为可选服务，实线部分为必选服务。具体架构细节请参考该[文档](https://turms-im.github.io/turms/for-developers/architecture.html)。
 
-特别值得一提是的：在不引入服务发现服务端与负载均衡服务端的情况下，Turms服务端集群自身也能够完成服务发现与负载均衡功能。
+特别值得一提的是：在不引入服务发现服务端与负载均衡服务端的情况下，Turms服务端集群自身也能够完成服务发现与负载均衡功能。
 
 ![](https://raw.githubusercontent.com/turms-im/assets/master/turms/reference-architecture.png)
 
