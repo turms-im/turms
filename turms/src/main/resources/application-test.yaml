@@ -9,4 +9,6 @@ logging:
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost/turms-test
+      uri: mongodb://localhost:29510/turms-test
+  profiles:
+    include: test-latest

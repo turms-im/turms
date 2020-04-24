@@ -30,7 +30,7 @@ spring:
     mapper:
       propagate-transient-marker: true
   profiles:
-    include: dev,turms
+    include: dev
   hazelcast:
     config: classpath:hazelcast.yaml
   boot:

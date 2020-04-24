@@ -45,6 +45,8 @@ spring:
     date-format: yyyy-MM-dd'T'HH:mm:ssX
   codec:
     max-in-memory-size: 64KB
+  profiles:
+    include: latest
 management:
   endpoints:
     web:
