@@ -59,8 +59,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
         private int retryInitialInterval;
         private int retryInterval;
         private int retryMaxAttempts;
-
-
+        
         @Override
         public void setContext(ApplicationContext context) throws Exception {
             super.setContext(context);
