@@ -6,6 +6,8 @@ import im.turms.common.exception.TurmsBusinessException;
 import im.turms.turms.plugin.StorageServiceProvider;
 import im.turms.turms.plugin.TurmsPlugin;
 import im.turms.turms.property.TurmsProperties;
+import im.turms.turms.service.group.GroupMemberService;
+import im.turms.turms.service.message.MessageService;
 import org.pf4j.Extension;
 import org.pf4j.PluginWrapper;
 import org.slf4j.Logger;
@@ -50,11 +52,14 @@ public class TurmsMinioPlugin extends TurmsPlugin {
         private S3AsyncClient client;
         private S3Presigner presigner;
         private TurmsProperties turmsProperties;
+        private MessageService messageService;
+        private GroupMemberService groupMemberService;
 
         private boolean retryEnabled;
         private int retryInitialInterval;
         private int retryInterval;
         private int retryMaxAttempts;
+
 
         @Override
         public void setContext(ApplicationContext context) throws Exception {
@@ -64,88 +69,127 @@ public class TurmsMinioPlugin extends TurmsPlugin {
 
         @Override
         public Mono<Void> deleteResource(@NotNull Long requesterId, @NotNull ContentType contentType, String keyStr, @Nullable Long keyNum) {
-            String key;
-            switch (contentType) {
-                case PROFILE:
-                    key = requesterId.toString();
-                    break;
-                case GROUP_PROFILE:
-                    if (keyNum != null) {
-                        key = keyNum.toString();
-                    } else {
-                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The group ID must not be null");
-                    }
-                    break;
-                case ATTACHMENT:
-                    throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The attachments cannot be deleted");
-                default:
-                    throw new IllegalStateException("Unexpected value: " + contentType);
-            }
-            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
-                    .bucket(getBucketName(contentType))
-                    .key(key)
-                    .build();
-            return Mono.fromFuture(client.deleteObject(deleteObjectRequest)).then();
+            return hasPermissionToDelete(requesterId, contentType, keyStr, keyNum)
+                    .flatMap(hasPermission -> {
+                        if (hasPermission) {
+                            String key;
+                            switch (contentType) {
+                                case PROFILE:
+                                    key = requesterId.toString();
+                                    break;
+                                case GROUP_PROFILE:
+                                    if (keyNum != null) {
+                                        key = keyNum.toString();
+                                    } else {
+                                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The group ID must not be null"));
+                                    }
+                                    break;
+                                case ATTACHMENT:
+                                    return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The attachments cannot be deleted"));
+                                default:
+                                    return Mono.error(new IllegalStateException("Unexpected value: " + contentType));
+                            }
+                            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                                    .bucket(getBucketName(contentType))
+                                    .key(key)
+                                    .build();
+                            return Mono.fromFuture(client.deleteObject(deleteObjectRequest)).then();
+                        } else {
+                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED));
+                        }
+                    });
         }
 
         @Override
         public Mono<String> queryPresignedGetUrl(@NotNull Long requesterId, @NotNull ContentType contentType, String keyStr, @Nullable Long keyNum) {
-            switch (contentType) {
-                case PROFILE:
-                case GROUP_PROFILE:
-                    throw TurmsBusinessException.get(TurmsStatusCode.REDUNDANT_REQUEST);
-                case ATTACHMENT:
-                    if (keyNum != null) {
-                        String key;
-                        if (keyStr != null) {
-                            key = String.format("%d/%s", keyNum, keyStr);
+            return hasPermissionToGet(requesterId, contentType, keyStr, keyNum)
+                    .flatMap(hasPermission -> {
+                        if (hasPermission) {
+                            switch (contentType) {
+                                case PROFILE:
+                                case GROUP_PROFILE:
+                                    return Mono.error(TurmsBusinessException.get(TurmsStatusCode.REDUNDANT_REQUEST));
+                                case ATTACHMENT:
+                                    if (keyNum != null) {
+                                        String key;
+                                        if (keyStr != null) {
+                                            key = String.format("%d/%s", keyNum, keyStr);
+                                        } else {
+                                            key = keyNum.toString();
+                                        }
+                                        String url = presignedUrlForGet(getBucketName(contentType), key);
+                                        return Mono.just(url);
+                                    } else {
+                                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The message ID must not be null"));
+                                    }
+                                default:
+                                    return Mono.error(new IllegalStateException("Unexpected value: " + contentType));
+                            }
                         } else {
-                            key = keyNum.toString();
+                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED));
                         }
-                        String url = presignedUrlForGet(getBucketName(contentType), key);
-                        return Mono.just(url);
-                    } else {
-                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The message ID must not be null");
-                    }
-                default:
-                    throw new IllegalStateException("Unexpected value: " + contentType);
-            }
+                    });
         }
 
         @Override
         public Mono<String> queryPresignedPutUrl(@NotNull Long requesterId, @NotNull ContentType contentType, @Nullable String keyStr, @Nullable Long keyNum, long contentLength) {
-            String type;
-            String objectKey;
+            int sizeLimit;
             switch (contentType) {
                 case PROFILE:
-                    type = turmsProperties.getStorage().getProfileContentType();
-                    objectKey = requesterId.toString();
+                    sizeLimit = turmsProperties.getStorage().getProfileSizeLimit();
                     break;
                 case GROUP_PROFILE:
-                    type = turmsProperties.getStorage().getGroupProfileContentType();
-                    if (keyNum != null) {
-                        objectKey = keyNum.toString();
-                    } else {
-                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The group ID must not be null");
-                    }
+                    sizeLimit = turmsProperties.getStorage().getGroupProfileSizeLimit();
                     break;
                 case ATTACHMENT:
-                    type = turmsProperties.getStorage().getAttachmentContentType();
-                    if (keyNum != null) {
-                        if (keyStr != null) {
-                            objectKey = String.format("%d/%s", keyNum, keyStr);
-                        } else {
-                            objectKey = keyNum.toString();
-                        }
-                    } else {
-                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The message ID must not be null");
-                    }
+                    sizeLimit = turmsProperties.getStorage().getAttachmentSizeLimit();
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + contentType);
             }
-            String url = presignedPutUrl(getBucketName(contentType), objectKey, type);
-            return Mono.just(url);
+            if (sizeLimit == 0 || contentLength <= sizeLimit) {
+                return hasPermissionToPut(requesterId, contentType, keyStr, keyNum)
+                        .flatMap(hasPermission -> {
+                            if (hasPermission) {
+                                String type;
+                                String objectKey;
+                                switch (contentType) {
+                                    case PROFILE:
+                                        type = turmsProperties.getStorage().getProfileContentType();
+                                        objectKey = requesterId.toString();
+                                        break;
+                                    case GROUP_PROFILE:
+                                        type = turmsProperties.getStorage().getGroupProfileContentType();
+                                        if (keyNum != null) {
+                                            objectKey = keyNum.toString();
+                                        } else {
+                                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The group ID must not be null"));
+                                        }
+                                        break;
+                                    case ATTACHMENT:
+                                        type = turmsProperties.getStorage().getAttachmentContentType();
+                                        if (keyNum != null) {
+                                            if (keyStr != null) {
+                                                objectKey = String.format("%d/%s", keyNum, keyStr);
+                                            } else {
+                                                objectKey = keyNum.toString();
+                                            }
+                                        } else {
+                                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The message ID must not be null"));
+                                        }
+                                        break;
+                                    default:
+                                        return Mono.error(new IllegalStateException("Unexpected value: " + contentType));
+                                }
+                                String url = presignedPutUrl(getBucketName(contentType), objectKey, type);
+                                return Mono.just(url);
+                            } else {
+                                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED));
+                            }
+                        });
+            } else {
+                throw TurmsBusinessException.get(TurmsStatusCode.FILE_TOO_LARGE);
+            }
         }
 
         private void setUp() {
@@ -154,6 +198,8 @@ public class TurmsMinioPlugin extends TurmsPlugin {
             boolean enabled = env.getProperty("turms.storage.minio.enabled", Boolean.class, true);
             if (enabled) {
                 turmsProperties = context.getBean(TurmsProperties.class);
+                messageService = context.getBean(MessageService.class);
+                groupMemberService = context.getBean(GroupMemberService.class);
                 String endpoint = env.getProperty("turms.storage.minio.endpoint", "http://localhost:9000");
                 String region = env.getProperty("turms.storage.minio.region", Region.AWS_GLOBAL.toString());
                 String accessKey = env.getProperty("turms.storage.minio.accessKey", "minioadmin");
@@ -353,6 +399,62 @@ public class TurmsMinioPlugin extends TurmsPlugin {
 
         private String getBucketName(ContentType contentType) {
             return contentType.name().toLowerCase().replace("_", "-");
+        }
+
+        // Permission
+
+        private Mono<Boolean> hasPermissionToGet(@NotNull Long requesterId, @NotNull ContentType contentType, @Nullable String keyStr, @Nullable Long keyNum) {
+            switch (contentType) {
+                case PROFILE:
+                case GROUP_PROFILE:
+                    return Mono.just(true);
+                case ATTACHMENT:
+                    if (keyNum != null) {
+                        return messageService.isMessageSentToUserOrByUser(keyNum, requesterId);
+                    } else {
+                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The message ID must not be null");
+                    }
+                default:
+                    throw new IllegalStateException("Unexpected value: " + contentType);
+            }
+        }
+
+        private Mono<Boolean> hasPermissionToPut(@NotNull Long requesterId, @NotNull ContentType contentType, @Nullable String keyStr, @Nullable Long keyNum) {
+            switch (contentType) {
+                case PROFILE:
+                    return Mono.just(true);
+                case GROUP_PROFILE:
+                    if (keyNum != null) {
+                        return groupMemberService.isOwnerOrManager(requesterId, keyNum);
+                    } else {
+                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The group ID must not be null");
+                    }
+                case ATTACHMENT:
+                    if (keyNum != null) {
+                        return messageService.isMessageSentToUserOrByUser(keyNum, requesterId);
+                    } else {
+                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The message ID must not be null");
+                    }
+                default:
+                    throw new IllegalStateException("Unexpected value: " + contentType);
+            }
+        }
+
+        private Mono<Boolean> hasPermissionToDelete(@NotNull Long requesterId, @NotNull ContentType contentType, @Nullable String keyStr, @Nullable Long keyNum) {
+            switch (contentType) {
+                case PROFILE:
+                    return Mono.just(true);
+                case GROUP_PROFILE:
+                    if (keyNum != null) {
+                        return groupMemberService.isOwnerOrManager(requesterId, keyNum);
+                    } else {
+                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The group ID must not be null");
+                    }
+                case ATTACHMENT:
+                    return Mono.just(false);
+                default:
+                    throw new IllegalStateException("Unexpected value: " + contentType);
+            }
         }
     }
 }
