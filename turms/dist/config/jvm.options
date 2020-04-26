@@ -1,2 +1,4 @@
 -Xms1g
 -Xmx1g
+-XX:+UnlockCommercialFeatures
+-XX:+FlightRecorder
