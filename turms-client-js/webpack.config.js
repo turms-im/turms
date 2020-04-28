@@ -6,7 +6,7 @@ module.exports = (env, argv) => {
     const config = {
         entry: {
             'turms-client': './src/turms-client.ts',
-            'turms-client-min': './src/turms-client.ts'
+            'turms-client.min': './src/turms-client.ts'
         },
         devtool: 'inline-source-map',
         module: {

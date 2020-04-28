@@ -37,6 +37,7 @@ turms-docs/src/.vuepress/dist/
 turms-client-java/target/
 turms-client-js/node_modules/
 turms-client-js/types/src/
+turms-client-js/dist/
 turms-java-common/target/
 turms-client-js/coverage/
 turms-plugins/turms-plugin-minio/target/

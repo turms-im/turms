@@ -2,7 +2,7 @@
   "name": "turms-client-js",
   "version": "0.9.0-dev.20200212",
   "description": "turms-client-js is a library to communicate with turms servers.",
-  "main": "dist/turms-client-min.js",
+  "main": "dist/turms-client.min.js",
   "types": "types/turms-client.d.ts",
   "sideEffects": false,
   "files": [
