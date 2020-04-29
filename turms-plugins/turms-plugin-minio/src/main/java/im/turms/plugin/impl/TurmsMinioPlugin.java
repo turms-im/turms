@@ -13,7 +13,6 @@ import org.pf4j.PluginWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.env.Environment;
 import org.springframework.util.MimeTypeUtils;
 import reactor.core.publisher.Mono;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
@@ -53,13 +52,9 @@ public class TurmsMinioPlugin extends TurmsPlugin {
         private S3Presigner presigner;
         private TurmsProperties turmsProperties;
         private MessageService messageService;
+        private MinioProperties minioProperties;
         private GroupMemberService groupMemberService;
 
-        private boolean retryEnabled;
-        private int retryInitialInterval;
-        private int retryInterval;
-        private int retryMaxAttempts;
-        
         @Override
         public void setContext(ApplicationContext context) throws Exception {
             super.setContext(context);
@@ -193,28 +188,19 @@ public class TurmsMinioPlugin extends TurmsPlugin {
 
         private void setUp() {
             ApplicationContext context = getContext();
-            Environment env = context.getEnvironment();
-            boolean enabled = env.getProperty("turms.storage.minio.enabled", Boolean.class, true);
-            if (enabled) {
+            minioProperties = new MinioProperties(context.getEnvironment());
+            if (minioProperties.isEnabled()) {
                 turmsProperties = context.getBean(TurmsProperties.class);
                 messageService = context.getBean(MessageService.class);
                 groupMemberService = context.getBean(GroupMemberService.class);
-                String endpoint = env.getProperty("turms.storage.minio.endpoint", "http://localhost:9000");
-                String region = env.getProperty("turms.storage.minio.region", Region.AWS_GLOBAL.toString());
-                String accessKey = env.getProperty("turms.storage.minio.accessKey", "minioadmin");
-                String secretKey = env.getProperty("turms.storage.minio.secretKey", "minioadmin");
 
-                retryEnabled = env.getProperty("turms.storage.minio.retry.enabled", Boolean.class, true);
-                retryInitialInterval = env.getProperty("turms.storage.minio.retry.initial-interval", Integer.class, DEFAULT_RETRY_INTERVAL);
-                retryInterval = env.getProperty("turms.storage.minio.retry.interval", Integer.class, DEFAULT_RETRY_INTERVAL);
-                retryMaxAttempts = env.getProperty("turms.storage.minio.retry.max-attempts", Integer.class, DEFAULT_RETRY_MAX_ATTEMPTS);
-
-                initClient(endpoint, region, accessKey, secretKey);
+                initClient(minioProperties.getEndpoint(), minioProperties.getRegion(),
+                        minioProperties.getAccessKey(), minioProperties.getSecretKey());
                 try {
                     initBuckets();
                     setServing(true);
                 } catch (Exception e) {
-                    if (retryEnabled) {
+                    if (minioProperties.getRetry().isEnabled()) {
                         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
                         executor.scheduleAtFixedRate(new Runnable() {
                             int currentRetryTimes;
@@ -222,10 +208,11 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                             @Override
                             public void run() {
                                 currentRetryTimes++;
-                                if (retryMaxAttempts > 0 && currentRetryTimes > retryMaxAttempts) {
+                                int maxAttempts = minioProperties.getRetry().getMaxAttempts();
+                                if (maxAttempts > 0 && currentRetryTimes > maxAttempts) {
                                     log.warn("The MinIO client failed to initialize");
                                     executor.shutdown();
-                                    throw new RuntimeException();
+                                    throw new RuntimeException("The MinIO client failed to initialize");
                                 }
                                 try {
                                     initBuckets();
@@ -233,7 +220,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                                 } catch (Exception ignored) {
                                 }
                             }
-                        }, retryInitialInterval, retryInterval, TimeUnit.SECONDS);
+                        }, minioProperties.getRetry().getInitialInterval(), minioProperties.getRetry().getInterval(), TimeUnit.SECONDS);
                     } else {
                         log.warn("The MinIO client failed to initialize");
                     }
