@@ -58,3 +58,6 @@ logging:
     name: ../logs/turms.log
   pattern:
     dateformat: yyyy-MM-dd HH:mm:ss.SSS,UTC
+turms-plugin:
+#  mock:
+#    enabled: true

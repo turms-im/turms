@@ -20,6 +20,8 @@ spring:
 turms:
   ip:
     use-local-ip: true
+  mock:
+    enabled: true
 turms-plugin:
   minio:
     retry:
