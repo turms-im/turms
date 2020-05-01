@@ -21,13 +21,11 @@
         <hazelcast.version>4.0.1</hazelcast.version>
         <protobuf.version>3.11.4</protobuf.version>
         <guava.version>29.0-jre</guava.version>
-        <commons-lang3.version>3.9</commons-lang3.version>
         <rtree2.version>0.9-RC1</rtree2.version>
         <rtree2d.version>0.9.0</rtree2d.version>
         <spring-boot-admin-starter-client.version>2.2.2</spring-boot-admin-starter-client.version>
         <jmh.version>1.23</jmh.version>
         <commons-io.version>2.6</commons-io.version>
-        <caffeine.version>2.8.1</caffeine.version>
         <aho-corasick-double-array-trie.version>1.2.2</aho-corasick-double-array-trie.version>
         <yauaa.version>5.17</yauaa.version>
         <pf4j.version>3.2.0</pf4j.version>
@@ -126,12 +124,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
@@ -150,7 +146,6 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>${commons-lang3.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
@@ -165,7 +160,6 @@
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
-            <version>${caffeine.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.davidmoten</groupId>
