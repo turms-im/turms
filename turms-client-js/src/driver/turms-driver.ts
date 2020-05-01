@@ -6,7 +6,6 @@ import TurmsStatusCode from "../model/turms-status-code";
 import TurmsBusinessException from "../model/turms-business-exception";
 import {im} from "../model/proto-bundle";
 // @ts-ignore
-import {encode as encodeQuerystring} from "querystring";
 import NotificationUtil from "../util/notification-util";
 import {ParsedNotification} from "../model/parsed-notification";
 import TurmsCloseStatus from "../model/turms-close-status";
@@ -309,14 +308,12 @@ export default class TurmsDriver {
             this._onClose(TurmsCloseStatus.DISCONNECTED_BY_CLIENT, event.code, event.reason);
             return Promise.resolve();
         }
+        const userId = this._turmsClient.userService.userId;
+        const deviceType = DeviceType[this._turmsClient.userService.deviceType];
         if (wasLogged) {
             if (this._onClose) {
-                if (this._queryReasonWhenDisconnected && this._turmsClient.userService.userId && this._sessionId) {
-                    const params = encodeQuerystring({
-                        userId: this._turmsClient.userService.userId,
-                        deviceType: DeviceType[this._turmsClient.userService.deviceType],
-                        sessionId: this._sessionId
-                    });
+                if (this._queryReasonWhenDisconnected && userId && this._sessionId) {
+                    const params = `userId=${userId}&deviceType=${deviceType}&sessionId=${this._sessionId}`;
                     return fetch(`${this._httpUrl}/reasons/disconnection?${params}`)
                         .then(response => {
                             return response.text()
@@ -332,17 +329,17 @@ export default class TurmsDriver {
                 }
             }
         } else {
-            if (this._queryReasonWhenLoginFailed && this._turmsClient.userService.userId && this._requestId) {
-                const params = encodeQuerystring({
-                    userId: this._turmsClient.userService.userId,
-                    deviceType: DeviceType[this._turmsClient.userService.deviceType],
-                    requestId: this._requestId
-                });
+            if (this._queryReasonWhenLoginFailed && userId && this._requestId) {
+                const params = `userId=${userId}&deviceType=${deviceType}&requestId=${this._requestId}`;
                 return fetch(`${this._httpUrl}/reasons/login-failed?${params}`)
                     .then(response => {
                         if (response.status === 307) {
                             return response.text().then(host => {
-                                return this.reconnect(host);
+                                if (host) {
+                                    return this.reconnect(host);
+                                } else {
+                                    return Promise.reject(new Error('Failed to login: 307'));
+                                }
                             });
                         } else {
                             throw new Error(response);

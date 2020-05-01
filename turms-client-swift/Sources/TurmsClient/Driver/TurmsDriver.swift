@@ -216,8 +216,8 @@ public class TurmsDriver {
         } else {
             status = statusCode != nil ? TurmsCloseStatus(rawValue: statusCode!) : nil
         }
-        if status == .redirect {
-            reconnect(reason!)
+        if status == .redirect, let address = reason, address.count > 0 {
+            reconnect(address)
         } else {
             onClose?(status, statusCode, reason, nil)
         }
@@ -229,8 +229,7 @@ public class TurmsDriver {
         if turmsClient.userService.userId != nil, turmsClient.userService.password != nil {
             switch error {
                 case .notAnUpgrade(let code, let headers):
-                    if code == 307 {
-                        let address = headers["reason"]!
+                    if code == 307, let address = headers["reason"], address.count > 0 {
                         reconnect(address)
                     }
                     fallthrough
