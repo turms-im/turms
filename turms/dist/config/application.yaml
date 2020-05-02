@@ -10,6 +10,8 @@ server:
     key-store-password: imturms
     key-alias: turms
   address: 0.0.0.0
+  netty:
+    connection-timeout: 10s # To mitigate the Slowloris DoS attack by lowering the timeout for the TCP connection handshake
 spring:
   application:
     name: turms
