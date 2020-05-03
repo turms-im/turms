@@ -18,7 +18,9 @@
 package im.turms.turms.util;
 
 import com.google.protobuf.*;
+import im.turms.common.TurmsStatusCode;
 import im.turms.common.constant.*;
+import im.turms.common.exception.TurmsBusinessException;
 import im.turms.common.model.bo.user.UserInfo;
 import im.turms.common.model.bo.user.UserStatusDetail;
 import im.turms.common.model.dto.request.message.CreateMessageRequest;
@@ -28,6 +30,8 @@ import im.turms.turms.pojo.domain.*;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -35,6 +39,21 @@ import java.util.Set;
 public class ProtoUtil {
 
     private ProtoUtil() {
+    }
+
+    public static long parseRequestId(ByteBuffer turmsRequestBuffer) throws IOException {
+        CodedInputStream stream = CodedInputStream.newInstance(turmsRequestBuffer);
+        int tag;
+        do {
+            tag = stream.readTag();
+            if (tag == 10) { // im/turms/common/model/dto/request/TurmsRequest.java:55
+                Int64Value value = stream.readMessage(Int64Value.parser(), ExtensionRegistry.getEmptyRegistry());
+                if (value != null) {
+                    return value.getValue();
+                }
+            }
+        } while (tag != 0);
+        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS);
     }
 
     public static im.turms.common.model.bo.message.Message.Builder message2proto(Message message) {
