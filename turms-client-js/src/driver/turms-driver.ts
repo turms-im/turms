@@ -278,7 +278,7 @@ export default class TurmsDriver {
     private _generateRandomId(): number {
         let id;
         do {
-            id = Math.floor(Math.random() * 9007199254740991);
+            id = Math.floor(Math.random() * 16384);
         } while (Object.prototype.hasOwnProperty.call(this._requestsMap, id));
         this._requestsMap[id] = true;
         return id;

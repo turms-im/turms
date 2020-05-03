@@ -197,7 +197,7 @@ public class TurmsDriver {
     private func generateRandomId() -> Int64 {
         var id: Int64
         repeat {
-            id = Int64.random(in: 0...Int64.max)
+            id = Int64.random(in: 0..<16384)
         } while requestsMap.keys.contains(id)
         return id
     }
