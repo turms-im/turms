@@ -1,0 +1,8 @@
+-Xms1g
+-Xmx1g
+
+-XX:+UseParallelGC
+
+-XX:+DisableAttachMechanism
+-Xnoclassgc
+-Xlog:disable

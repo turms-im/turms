@@ -1,13 +1,15 @@
 -Xms1g
 -Xmx1g
 
--XX:+UseG1GC
+-XX:+UnlockExperimentalVMOptions
+-XX:+UseEpsilonGC
+# -XX:+UseG1GC
 
 -XX:+HeapDumpOnOutOfMemoryError
 -XX:HeapDumpPath=./turms_pid%p.hprof
 
 -XX:+UnlockCommercialFeatures
 -XX:+FlightRecorder
--XX:StartFlightRecording=dumponexit=true,filename=./turms.jfr,maxsize=128m,delay=60s
+-XX:StartFlightRecording=dumponexit=true,filename=./turms.jfr,maxsize=128m,settings=profile,delay=60s
 
 -Xlog:gc*,gc+age=trace,safepoint:file=./turms-gc.log:utctime,pid,tags:filecount=32,filesize=32m
