@@ -15,12 +15,6 @@ server:
 spring:
   application:
     name: turms
-  data:
-    mongodb:
-      auto-index-creation: true
-      uri: mongodb://localhost:29510/turms
-      repositories:
-        type: reactive
   jackson:
     deserialization:
       fail-on-unknown-properties: false
@@ -47,14 +41,13 @@ spring:
     date-format: yyyy-MM-dd'T'HH:mm:ssX
   codec:
     max-in-memory-size: 64KB
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
 management:
   endpoints:
     web:
       exposure:
         include: "*"
-  health:
-    hazelcast:
-      enabled: false
 logging:
   file:
     name: ../logs/turms.log
@@ -63,3 +56,9 @@ logging:
 turms-plugin:
 #  mock:
 #    enabled: true
+turms:
+  database:
+    mongo-properties:
+      default-properties:
+        auto-index-creation: true
+        uri: mongodb://localhost:29510/turms

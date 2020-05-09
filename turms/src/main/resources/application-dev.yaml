@@ -12,9 +12,6 @@ logging:
             core:
               ReactiveMongoTemplate: DEBUG
 spring:
-  data:
-    mongodb:
-      uri: mongodb://localhost:29510/turms-dev
   profiles:
     include: dev-latest
 turms:
@@ -22,6 +19,11 @@ turms:
     use-local-ip: true
   mock:
     enabled: true
+  database:
+    mongo-properties:
+      default-properties:
+        auto-index-creation: true
+        uri: mongodb://localhost:29510/turms-dev
 turms-plugin:
   minio:
     retry:

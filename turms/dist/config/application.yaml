@@ -27,14 +27,6 @@ spring:
       propagate-transient-marker: true
   hazelcast:
     config: file:../config/hazelcast.yaml
-  data:
-    mongodb:
-      auto-index-creation: true
-      #  mongodb://<user>:<password>@<url>:<port>/<dbname>
-      #  mongodb://host1:27017,host2:27017,host3:27017
-      uri: mongodb://localhost:29510/turms
-      repositories:
-        type: reactive
   boot:
     admin:
       client:
@@ -49,16 +41,23 @@ spring:
     max-in-memory-size: 64KB
   profiles:
     include: latest
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
 management:
   endpoints:
     web:
       exposure:
         include: "*" #TODO: only exposes the necessary metrics
-  health:
-    hazelcast:
-      enabled: false
 logging:
   file:
     name: ../logs/turms.log
   pattern:
     dateformat: yyyy-MM-dd HH:mm:ss.SSS,UTC
+turms:
+  database:
+    mongo-properties:
+      default-properties:
+        auto-index-creation: true
+        #  mongodb://<user>:<password>@<url>:<port>/<dbname>
+        #  mongodb://host1:27017,host2:27017,host3:27017
+        uri: mongodb://localhost:29510/turms

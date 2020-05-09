@@ -7,8 +7,11 @@ logging:
             core:
               ReactiveMongoTemplate: debug
 spring:
-  data:
-    mongodb:
-      uri: mongodb://localhost:29510/turms-test
   profiles:
     include: test-latest
+turms:
+  database:
+    mongo-properties:
+      default-properties:
+        auto-index-creation: true
+        uri: mongodb://localhost:29510/turms-test
