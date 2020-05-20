@@ -15,8 +15,8 @@ spring:
   profiles:
     include: dev-latest
 turms:
-  address:
-    use-local-ip: true
+  load-balancing:
+    advertise-strategy: local_address
   mock:
     enabled: true
   database:
