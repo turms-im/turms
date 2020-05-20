@@ -17,7 +17,6 @@ private static final long serialVersionUID = 0L;
   }
   private QueryMessagesRequest() {
     ids_ = emptyLongList();
-    chatType_ = 0;
     deliveryStatus_ = 0;
   }
 
@@ -86,10 +85,17 @@ private static final long serialVersionUID = 0L;
 
             break;
           }
-          case 24: {
-            int rawValue = input.readEnum();
+          case 26: {
+            com.google.protobuf.BoolValue.Builder subBuilder = null;
+            if (areGroupMessages_ != null) {
+              subBuilder = areGroupMessages_.toBuilder();
+            }
+            areGroupMessages_ = input.readMessage(com.google.protobuf.BoolValue.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(areGroupMessages_);
+              areGroupMessages_ = subBuilder.buildPartial();
+            }
 
-            chatType_ = rawValue;
             break;
           }
           case 34: {
@@ -235,23 +241,27 @@ private static final long serialVersionUID = 0L;
     return getSize();
   }
 
-  public static final int CHAT_TYPE_FIELD_NUMBER = 3;
-  private int chatType_;
+  public static final int ARE_GROUP_MESSAGES_FIELD_NUMBER = 3;
+  private com.google.protobuf.BoolValue areGroupMessages_;
   /**
-   * <code>.im.turms.proto.ChatType chat_type = 3;</code>
-   * @return The enum numeric value on the wire for chatType.
+   * <code>.google.protobuf.BoolValue are_group_messages = 3;</code>
+   * @return Whether the areGroupMessages field is set.
    */
-  public int getChatTypeValue() {
-    return chatType_;
+  public boolean hasAreGroupMessages() {
+    return areGroupMessages_ != null;
   }
   /**
-   * <code>.im.turms.proto.ChatType chat_type = 3;</code>
-   * @return The chatType.
+   * <code>.google.protobuf.BoolValue are_group_messages = 3;</code>
+   * @return The areGroupMessages.
    */
-  public im.turms.common.constant.ChatType getChatType() {
-    @SuppressWarnings("deprecation")
-    im.turms.common.constant.ChatType result = im.turms.common.constant.ChatType.valueOf(chatType_);
-    return result == null ? im.turms.common.constant.ChatType.UNRECOGNIZED : result;
+  public com.google.protobuf.BoolValue getAreGroupMessages() {
+    return areGroupMessages_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : areGroupMessages_;
+  }
+  /**
+   * <code>.google.protobuf.BoolValue are_group_messages = 3;</code>
+   */
+  public com.google.protobuf.BoolValueOrBuilder getAreGroupMessagesOrBuilder() {
+    return getAreGroupMessages();
   }
 
   public static final int ARE_SYSTEM_MESSAGES_FIELD_NUMBER = 4;
@@ -390,8 +400,8 @@ private static final long serialVersionUID = 0L;
     if (size_ != null) {
       output.writeMessage(2, getSize());
     }
-    if (chatType_ != im.turms.common.constant.ChatType.PRIVATE.getNumber()) {
-      output.writeEnum(3, chatType_);
+    if (areGroupMessages_ != null) {
+      output.writeMessage(3, getAreGroupMessages());
     }
     if (areSystemMessages_ != null) {
       output.writeMessage(4, getAreSystemMessages());
@@ -435,9 +445,9 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(2, getSize());
     }
-    if (chatType_ != im.turms.common.constant.ChatType.PRIVATE.getNumber()) {
+    if (areGroupMessages_ != null) {
       size += com.google.protobuf.CodedOutputStream
-        .computeEnumSize(3, chatType_);
+        .computeMessageSize(3, getAreGroupMessages());
     }
     if (areSystemMessages_ != null) {
       size += com.google.protobuf.CodedOutputStream
@@ -481,7 +491,11 @@ private static final long serialVersionUID = 0L;
       if (!getSize()
           .equals(other.getSize())) return false;
     }
-    if (chatType_ != other.chatType_) return false;
+    if (hasAreGroupMessages() != other.hasAreGroupMessages()) return false;
+    if (hasAreGroupMessages()) {
+      if (!getAreGroupMessages()
+          .equals(other.getAreGroupMessages())) return false;
+    }
     if (hasAreSystemMessages() != other.hasAreSystemMessages()) return false;
     if (hasAreSystemMessages()) {
       if (!getAreSystemMessages()
@@ -522,8 +536,10 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + SIZE_FIELD_NUMBER;
       hash = (53 * hash) + getSize().hashCode();
     }
-    hash = (37 * hash) + CHAT_TYPE_FIELD_NUMBER;
-    hash = (53 * hash) + chatType_;
+    if (hasAreGroupMessages()) {
+      hash = (37 * hash) + ARE_GROUP_MESSAGES_FIELD_NUMBER;
+      hash = (53 * hash) + getAreGroupMessages().hashCode();
+    }
     if (hasAreSystemMessages()) {
       hash = (37 * hash) + ARE_SYSTEM_MESSAGES_FIELD_NUMBER;
       hash = (53 * hash) + getAreSystemMessages().hashCode();
@@ -683,8 +699,12 @@ private static final long serialVersionUID = 0L;
         size_ = null;
         sizeBuilder_ = null;
       }
-      chatType_ = 0;
-
+      if (areGroupMessagesBuilder_ == null) {
+        areGroupMessages_ = null;
+      } else {
+        areGroupMessages_ = null;
+        areGroupMessagesBuilder_ = null;
+      }
       if (areSystemMessagesBuilder_ == null) {
         areSystemMessages_ = null;
       } else {
@@ -748,7 +768,11 @@ private static final long serialVersionUID = 0L;
       } else {
         result.size_ = sizeBuilder_.build();
       }
-      result.chatType_ = chatType_;
+      if (areGroupMessagesBuilder_ == null) {
+        result.areGroupMessages_ = areGroupMessages_;
+      } else {
+        result.areGroupMessages_ = areGroupMessagesBuilder_.build();
+      }
       if (areSystemMessagesBuilder_ == null) {
         result.areSystemMessages_ = areSystemMessages_;
       } else {
@@ -831,8 +855,8 @@ private static final long serialVersionUID = 0L;
       if (other.hasSize()) {
         mergeSize(other.getSize());
       }
-      if (other.chatType_ != 0) {
-        setChatTypeValue(other.getChatTypeValue());
+      if (other.hasAreGroupMessages()) {
+        mergeAreGroupMessages(other.getAreGroupMessages());
       }
       if (other.hasAreSystemMessages()) {
         mergeAreSystemMessages(other.getAreSystemMessages());
@@ -1077,56 +1101,123 @@ private static final long serialVersionUID = 0L;
       return sizeBuilder_;
     }
 
-    private int chatType_ = 0;
+    private com.google.protobuf.BoolValue areGroupMessages_;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder> areGroupMessagesBuilder_;
     /**
-     * <code>.im.turms.proto.ChatType chat_type = 3;</code>
-     * @return The enum numeric value on the wire for chatType.
+     * <code>.google.protobuf.BoolValue are_group_messages = 3;</code>
+     * @return Whether the areGroupMessages field is set.
      */
-    public int getChatTypeValue() {
-      return chatType_;
+    public boolean hasAreGroupMessages() {
+      return areGroupMessagesBuilder_ != null || areGroupMessages_ != null;
     }
     /**
-     * <code>.im.turms.proto.ChatType chat_type = 3;</code>
-     * @param value The enum numeric value on the wire for chatType to set.
-     * @return This builder for chaining.
+     * <code>.google.protobuf.BoolValue are_group_messages = 3;</code>
+     * @return The areGroupMessages.
      */
-    public Builder setChatTypeValue(int value) {
-      chatType_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>.im.turms.proto.ChatType chat_type = 3;</code>
-     * @return The chatType.
-     */
-    public im.turms.common.constant.ChatType getChatType() {
-      @SuppressWarnings("deprecation")
-      im.turms.common.constant.ChatType result = im.turms.common.constant.ChatType.valueOf(chatType_);
-      return result == null ? im.turms.common.constant.ChatType.UNRECOGNIZED : result;
-    }
-    /**
-     * <code>.im.turms.proto.ChatType chat_type = 3;</code>
-     * @param value The chatType to set.
-     * @return This builder for chaining.
-     */
-    public Builder setChatType(im.turms.common.constant.ChatType value) {
-      if (value == null) {
-        throw new NullPointerException();
+    public com.google.protobuf.BoolValue getAreGroupMessages() {
+      if (areGroupMessagesBuilder_ == null) {
+        return areGroupMessages_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : areGroupMessages_;
+      } else {
+        return areGroupMessagesBuilder_.getMessage();
       }
-      
-      chatType_ = value.getNumber();
-      onChanged();
+    }
+    /**
+     * <code>.google.protobuf.BoolValue are_group_messages = 3;</code>
+     */
+    public Builder setAreGroupMessages(com.google.protobuf.BoolValue value) {
+      if (areGroupMessagesBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        areGroupMessages_ = value;
+        onChanged();
+      } else {
+        areGroupMessagesBuilder_.setMessage(value);
+      }
+
       return this;
     }
     /**
-     * <code>.im.turms.proto.ChatType chat_type = 3;</code>
-     * @return This builder for chaining.
+     * <code>.google.protobuf.BoolValue are_group_messages = 3;</code>
      */
-    public Builder clearChatType() {
-      
-      chatType_ = 0;
-      onChanged();
+    public Builder setAreGroupMessages(
+        com.google.protobuf.BoolValue.Builder builderForValue) {
+      if (areGroupMessagesBuilder_ == null) {
+        areGroupMessages_ = builderForValue.build();
+        onChanged();
+      } else {
+        areGroupMessagesBuilder_.setMessage(builderForValue.build());
+      }
+
       return this;
+    }
+    /**
+     * <code>.google.protobuf.BoolValue are_group_messages = 3;</code>
+     */
+    public Builder mergeAreGroupMessages(com.google.protobuf.BoolValue value) {
+      if (areGroupMessagesBuilder_ == null) {
+        if (areGroupMessages_ != null) {
+          areGroupMessages_ =
+            com.google.protobuf.BoolValue.newBuilder(areGroupMessages_).mergeFrom(value).buildPartial();
+        } else {
+          areGroupMessages_ = value;
+        }
+        onChanged();
+      } else {
+        areGroupMessagesBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.google.protobuf.BoolValue are_group_messages = 3;</code>
+     */
+    public Builder clearAreGroupMessages() {
+      if (areGroupMessagesBuilder_ == null) {
+        areGroupMessages_ = null;
+        onChanged();
+      } else {
+        areGroupMessages_ = null;
+        areGroupMessagesBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <code>.google.protobuf.BoolValue are_group_messages = 3;</code>
+     */
+    public com.google.protobuf.BoolValue.Builder getAreGroupMessagesBuilder() {
+      
+      onChanged();
+      return getAreGroupMessagesFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.google.protobuf.BoolValue are_group_messages = 3;</code>
+     */
+    public com.google.protobuf.BoolValueOrBuilder getAreGroupMessagesOrBuilder() {
+      if (areGroupMessagesBuilder_ != null) {
+        return areGroupMessagesBuilder_.getMessageOrBuilder();
+      } else {
+        return areGroupMessages_ == null ?
+            com.google.protobuf.BoolValue.getDefaultInstance() : areGroupMessages_;
+      }
+    }
+    /**
+     * <code>.google.protobuf.BoolValue are_group_messages = 3;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder> 
+        getAreGroupMessagesFieldBuilder() {
+      if (areGroupMessagesBuilder_ == null) {
+        areGroupMessagesBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder>(
+                getAreGroupMessages(),
+                getParentForChildren(),
+                isClean());
+        areGroupMessages_ = null;
+      }
+      return areGroupMessagesBuilder_;
     }
 
     private com.google.protobuf.BoolValue areSystemMessages_;

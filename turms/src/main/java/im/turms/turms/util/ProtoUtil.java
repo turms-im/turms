@@ -105,7 +105,7 @@ public class ProtoUtil {
         String name = user.getName();
         String intro = user.getIntro();
         Date registrationDate = user.getRegistrationDate();
-        Boolean active = user.getActive();
+        Boolean active = user.getIsActive();
         ProfileAccessStrategy profileAccess = user.getProfileAccess();
         if (userId != null) {
             builder.setId(Int64Value.newBuilder().setValue(userId).build());
@@ -193,7 +193,7 @@ public class ProtoUtil {
         im.turms.common.model.bo.user.UserRelationshipGroup.Builder builder = im.turms.common.model.bo.user.UserRelationshipGroup.newBuilder();
         UserRelationshipGroup.Key key = relationshipGroup.getKey();
         if (key != null) {
-            Integer index = key.getIndex();
+            Integer index = key.getGroupIndex();
             if (index != null) {
                 builder.setIndex(index);
             }
@@ -217,7 +217,7 @@ public class ProtoUtil {
         Date creationDate = group.getCreationDate();
         Date deletionDate = group.getDeletionDate();
         Date muteEndDate = group.getMuteEndDate();
-        Boolean active = group.getActive();
+        Boolean active = group.getIsActive();
         if (groupId != null) {
             builder.setId(Int64Value.newBuilder().setValue(groupId).build());
         }
@@ -415,7 +415,7 @@ public class ProtoUtil {
     public static CreateMessageRequest.Builder message2createMessageRequest(Message message) {
         CreateMessageRequest.Builder builder = CreateMessageRequest.newBuilder();
         Long messageId = message.getId();
-        ChatType chatType = message.getChatType();
+        Boolean isGroupMessage = message.getIsGroupMessage();
         Boolean isSystemMessage = message.getIsSystemMessage();
         Date deliveryDate = message.getDeliveryDate();
         String text = message.getText();
@@ -426,10 +426,10 @@ public class ProtoUtil {
         if (messageId != null) {
             builder.setMessageId(Int64Value.newBuilder().setValue(messageId).build());
         }
-        if (chatType == ChatType.PRIVATE) {
-            builder.setRecipientId(Int64Value.newBuilder().setValue(message.getTargetId()).build());
-        } else if (chatType == ChatType.GROUP) {
-            builder.setGroupId(Int64Value.newBuilder().setValue(message.getTargetId()).build());
+        if (isGroupMessage) {
+            builder.setGroupId(Int64Value.newBuilder().setValue(targetId));
+        } else {
+            builder.setRecipientId(Int64Value.newBuilder().setValue(targetId));
         }
         if (isSystemMessage != null) {
             builder.setIsSystemMessage(BoolValue.newBuilder().setValue(isSystemMessage).build());

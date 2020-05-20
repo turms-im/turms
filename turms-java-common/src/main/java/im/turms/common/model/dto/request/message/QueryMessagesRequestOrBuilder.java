@@ -40,15 +40,19 @@ public interface QueryMessagesRequestOrBuilder extends
   com.google.protobuf.Int32ValueOrBuilder getSizeOrBuilder();
 
   /**
-   * <code>.im.turms.proto.ChatType chat_type = 3;</code>
-   * @return The enum numeric value on the wire for chatType.
+   * <code>.google.protobuf.BoolValue are_group_messages = 3;</code>
+   * @return Whether the areGroupMessages field is set.
    */
-  int getChatTypeValue();
+  boolean hasAreGroupMessages();
   /**
-   * <code>.im.turms.proto.ChatType chat_type = 3;</code>
-   * @return The chatType.
+   * <code>.google.protobuf.BoolValue are_group_messages = 3;</code>
+   * @return The areGroupMessages.
    */
-  im.turms.common.constant.ChatType getChatType();
+  com.google.protobuf.BoolValue getAreGroupMessages();
+  /**
+   * <code>.google.protobuf.BoolValue are_group_messages = 3;</code>
+   */
+  com.google.protobuf.BoolValueOrBuilder getAreGroupMessagesOrBuilder();
 
   /**
    * <code>.google.protobuf.BoolValue are_system_messages = 4;</code>

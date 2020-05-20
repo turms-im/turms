@@ -30,26 +30,25 @@ public final class QueryMessagesRequestOuterClass {
     java.lang.String[] descriptorData = {
       "\n,request/message/query_messages_request" +
       ".proto\022\016im.turms.proto\032\036google/protobuf/" +
-      "wrappers.proto\032\030constant/chat_type.proto" +
-      "\032&constant/message_delivery_status.proto" +
-      "\"\227\003\n\024QueryMessagesRequest\022\013\n\003ids\030\001 \003(\003\022)" +
-      "\n\004size\030\002 \001(\0132\033.google.protobuf.Int32Valu" +
-      "e\022+\n\tchat_type\030\003 \001(\0162\030.im.turms.proto.Ch" +
-      "atType\0227\n\023are_system_messages\030\004 \001(\0132\032.go" +
-      "ogle.protobuf.BoolValue\022,\n\007from_id\030\005 \001(\013" +
-      "2\033.google.protobuf.Int64Value\0228\n\023deliver" +
-      "y_date_after\030\006 \001(\0132\033.google.protobuf.Int" +
-      "64Value\0229\n\024delivery_date_before\030\007 \001(\0132\033." +
-      "google.protobuf.Int64Value\022>\n\017delivery_s" +
-      "tatus\030\010 \001(\0162%.im.turms.proto.MessageDeli" +
-      "veryStatusB0\n)im.turms.common.model.dto." +
-      "request.messageP\001\272\002\000b\006proto3"
+      "wrappers.proto\032&constant/message_deliver" +
+      "y_status.proto\"\242\003\n\024QueryMessagesRequest\022" +
+      "\013\n\003ids\030\001 \003(\003\022)\n\004size\030\002 \001(\0132\033.google.prot" +
+      "obuf.Int32Value\0226\n\022are_group_messages\030\003 " +
+      "\001(\0132\032.google.protobuf.BoolValue\0227\n\023are_s" +
+      "ystem_messages\030\004 \001(\0132\032.google.protobuf.B" +
+      "oolValue\022,\n\007from_id\030\005 \001(\0132\033.google.proto" +
+      "buf.Int64Value\0228\n\023delivery_date_after\030\006 " +
+      "\001(\0132\033.google.protobuf.Int64Value\0229\n\024deli" +
+      "very_date_before\030\007 \001(\0132\033.google.protobuf" +
+      ".Int64Value\022>\n\017delivery_status\030\010 \001(\0162%.i" +
+      "m.turms.proto.MessageDeliveryStatusB0\n)i" +
+      "m.turms.common.model.dto.request.message" +
+      "P\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.WrappersProto.getDescriptor(),
-          im.turms.common.constant.ChatTypeOuterClass.getDescriptor(),
           im.turms.common.constant.MessageDeliveryStatusOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_QueryMessagesRequest_descriptor =
@@ -57,9 +56,8 @@ public final class QueryMessagesRequestOuterClass {
     internal_static_im_turms_proto_QueryMessagesRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_QueryMessagesRequest_descriptor,
-        new java.lang.String[] { "Ids", "Size", "ChatType", "AreSystemMessages", "FromId", "DeliveryDateAfter", "DeliveryDateBefore", "DeliveryStatus", });
+        new java.lang.String[] { "Ids", "Size", "AreGroupMessages", "AreSystemMessages", "FromId", "DeliveryDateAfter", "DeliveryDateBefore", "DeliveryStatus", });
     com.google.protobuf.WrappersProto.getDescriptor();
-    im.turms.common.constant.ChatTypeOuterClass.getDescriptor();
     im.turms.common.constant.MessageDeliveryStatusOuterClass.getDescriptor();
   }
 

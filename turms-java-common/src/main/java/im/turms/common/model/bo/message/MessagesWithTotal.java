@@ -16,7 +16,6 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private MessagesWithTotal() {
-    chatType_ = 0;
     messages_ = java.util.Collections.emptyList();
   }
 
@@ -57,9 +56,8 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 16: {
-            int rawValue = input.readEnum();
 
-            chatType_ = rawValue;
+            isGroupMessage_ = input.readBool();
             break;
           }
           case 24: {
@@ -121,23 +119,14 @@ private static final long serialVersionUID = 0L;
     return total_;
   }
 
-  public static final int CHAT_TYPE_FIELD_NUMBER = 2;
-  private int chatType_;
+  public static final int IS_GROUP_MESSAGE_FIELD_NUMBER = 2;
+  private boolean isGroupMessage_;
   /**
-   * <code>.im.turms.proto.ChatType chat_type = 2;</code>
-   * @return The enum numeric value on the wire for chatType.
+   * <code>bool is_group_message = 2;</code>
+   * @return The isGroupMessage.
    */
-  public int getChatTypeValue() {
-    return chatType_;
-  }
-  /**
-   * <code>.im.turms.proto.ChatType chat_type = 2;</code>
-   * @return The chatType.
-   */
-  public im.turms.common.constant.ChatType getChatType() {
-    @SuppressWarnings("deprecation")
-    im.turms.common.constant.ChatType result = im.turms.common.constant.ChatType.valueOf(chatType_);
-    return result == null ? im.turms.common.constant.ChatType.UNRECOGNIZED : result;
+  public boolean getIsGroupMessage() {
+    return isGroupMessage_;
   }
 
   public static final int FROM_ID_FIELD_NUMBER = 3;
@@ -202,8 +191,8 @@ private static final long serialVersionUID = 0L;
     if (total_ != 0) {
       output.writeInt32(1, total_);
     }
-    if (chatType_ != im.turms.common.constant.ChatType.PRIVATE.getNumber()) {
-      output.writeEnum(2, chatType_);
+    if (isGroupMessage_ != false) {
+      output.writeBool(2, isGroupMessage_);
     }
     if (fromId_ != 0L) {
       output.writeInt64(3, fromId_);
@@ -224,9 +213,9 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(1, total_);
     }
-    if (chatType_ != im.turms.common.constant.ChatType.PRIVATE.getNumber()) {
+    if (isGroupMessage_ != false) {
       size += com.google.protobuf.CodedOutputStream
-        .computeEnumSize(2, chatType_);
+        .computeBoolSize(2, isGroupMessage_);
     }
     if (fromId_ != 0L) {
       size += com.google.protobuf.CodedOutputStream
@@ -253,7 +242,8 @@ private static final long serialVersionUID = 0L;
 
     if (getTotal()
         != other.getTotal()) return false;
-    if (chatType_ != other.chatType_) return false;
+    if (getIsGroupMessage()
+        != other.getIsGroupMessage()) return false;
     if (getFromId()
         != other.getFromId()) return false;
     if (!getMessagesList()
@@ -271,8 +261,9 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + TOTAL_FIELD_NUMBER;
     hash = (53 * hash) + getTotal();
-    hash = (37 * hash) + CHAT_TYPE_FIELD_NUMBER;
-    hash = (53 * hash) + chatType_;
+    hash = (37 * hash) + IS_GROUP_MESSAGE_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getIsGroupMessage());
     hash = (37 * hash) + FROM_ID_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getFromId());
@@ -416,7 +407,7 @@ private static final long serialVersionUID = 0L;
       super.clear();
       total_ = 0;
 
-      chatType_ = 0;
+      isGroupMessage_ = false;
 
       fromId_ = 0L;
 
@@ -454,7 +445,7 @@ private static final long serialVersionUID = 0L;
       im.turms.common.model.bo.message.MessagesWithTotal result = new im.turms.common.model.bo.message.MessagesWithTotal(this);
       int from_bitField0_ = bitField0_;
       result.total_ = total_;
-      result.chatType_ = chatType_;
+      result.isGroupMessage_ = isGroupMessage_;
       result.fromId_ = fromId_;
       if (messagesBuilder_ == null) {
         if (((bitField0_ & 0x00000001) != 0)) {
@@ -516,8 +507,8 @@ private static final long serialVersionUID = 0L;
       if (other.getTotal() != 0) {
         setTotal(other.getTotal());
       }
-      if (other.chatType_ != 0) {
-        setChatTypeValue(other.getChatTypeValue());
+      if (other.getIsGroupMessage() != false) {
+        setIsGroupMessage(other.getIsGroupMessage());
       }
       if (other.getFromId() != 0L) {
         setFromId(other.getFromId());
@@ -608,54 +599,32 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private int chatType_ = 0;
+    private boolean isGroupMessage_ ;
     /**
-     * <code>.im.turms.proto.ChatType chat_type = 2;</code>
-     * @return The enum numeric value on the wire for chatType.
+     * <code>bool is_group_message = 2;</code>
+     * @return The isGroupMessage.
      */
-    public int getChatTypeValue() {
-      return chatType_;
+    public boolean getIsGroupMessage() {
+      return isGroupMessage_;
     }
     /**
-     * <code>.im.turms.proto.ChatType chat_type = 2;</code>
-     * @param value The enum numeric value on the wire for chatType to set.
+     * <code>bool is_group_message = 2;</code>
+     * @param value The isGroupMessage to set.
      * @return This builder for chaining.
      */
-    public Builder setChatTypeValue(int value) {
-      chatType_ = value;
+    public Builder setIsGroupMessage(boolean value) {
+      
+      isGroupMessage_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>.im.turms.proto.ChatType chat_type = 2;</code>
-     * @return The chatType.
-     */
-    public im.turms.common.constant.ChatType getChatType() {
-      @SuppressWarnings("deprecation")
-      im.turms.common.constant.ChatType result = im.turms.common.constant.ChatType.valueOf(chatType_);
-      return result == null ? im.turms.common.constant.ChatType.UNRECOGNIZED : result;
-    }
-    /**
-     * <code>.im.turms.proto.ChatType chat_type = 2;</code>
-     * @param value The chatType to set.
+     * <code>bool is_group_message = 2;</code>
      * @return This builder for chaining.
      */
-    public Builder setChatType(im.turms.common.constant.ChatType value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
+    public Builder clearIsGroupMessage() {
       
-      chatType_ = value.getNumber();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>.im.turms.proto.ChatType chat_type = 2;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearChatType() {
-      
-      chatType_ = 0;
+      isGroupMessage_ = false;
       onChanged();
       return this;
     }

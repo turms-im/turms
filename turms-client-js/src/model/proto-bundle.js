@@ -37,23 +37,9 @@ $root.im = (function() {
             var proto = {};
 
             /**
-             * ChatType enum.
-             * @name im.turms.proto.ChatType
-             * @enum {string}
-             * @property {number} PRIVATE=0 PRIVATE value
-             * @property {number} GROUP=1 GROUP value
-             */
-            proto.ChatType = (function() {
-                var valuesById = {}, values = Object.create(valuesById);
-                values[valuesById[0] = "PRIVATE"] = 0;
-                values[valuesById[1] = "GROUP"] = 1;
-                return values;
-            })();
-
-            /**
              * ContentType enum.
              * @name im.turms.proto.ContentType
-             * @enum {string}
+             * @enum {number}
              * @property {number} PROFILE=0 PROFILE value
              * @property {number} GROUP_PROFILE=1 GROUP_PROFILE value
              * @property {number} ATTACHMENT=2 ATTACHMENT value
@@ -69,7 +55,7 @@ $root.im = (function() {
             /**
              * DeviceType enum.
              * @name im.turms.proto.DeviceType
-             * @enum {string}
+             * @enum {number}
              * @property {number} DESKTOP=0 DESKTOP value
              * @property {number} BROWSER=1 BROWSER value
              * @property {number} IOS=2 IOS value
@@ -91,7 +77,7 @@ $root.im = (function() {
             /**
              * GroupMemberRole enum.
              * @name im.turms.proto.GroupMemberRole
-             * @enum {string}
+             * @enum {number}
              * @property {number} OWNER=0 OWNER value
              * @property {number} MANAGER=1 MANAGER value
              * @property {number} MEMBER=2 MEMBER value
@@ -111,7 +97,7 @@ $root.im = (function() {
             /**
              * MessageDeliveryStatus enum.
              * @name im.turms.proto.MessageDeliveryStatus
-             * @enum {string}
+             * @enum {number}
              * @property {number} READY=0 READY value
              * @property {number} SENDING=1 SENDING value
              * @property {number} RECEIVED=2 RECEIVED value
@@ -131,7 +117,7 @@ $root.im = (function() {
             /**
              * ProfileAccessStrategy enum.
              * @name im.turms.proto.ProfileAccessStrategy
-             * @enum {string}
+             * @enum {number}
              * @property {number} ALL=0 ALL value
              * @property {number} ALL_EXCEPT_BLACKLISTED_USERS=1 ALL_EXCEPT_BLACKLISTED_USERS value
              * @property {number} FRIENDS=2 FRIENDS value
@@ -147,7 +133,7 @@ $root.im = (function() {
             /**
              * RequestStatus enum.
              * @name im.turms.proto.RequestStatus
-             * @enum {string}
+             * @enum {number}
              * @property {number} PENDING=0 PENDING value
              * @property {number} ACCEPTED=1 ACCEPTED value
              * @property {number} ACCEPTED_WITHOUT_CONFIRM=2 ACCEPTED_WITHOUT_CONFIRM value
@@ -171,7 +157,7 @@ $root.im = (function() {
             /**
              * ResponseAction enum.
              * @name im.turms.proto.ResponseAction
-             * @enum {string}
+             * @enum {number}
              * @property {number} ACCEPT=0 ACCEPT value
              * @property {number} DECLINE=1 DECLINE value
              * @property {number} IGNORE=2 IGNORE value
@@ -187,7 +173,7 @@ $root.im = (function() {
             /**
              * UserStatus enum.
              * @name im.turms.proto.UserStatus
-             * @enum {string}
+             * @enum {number}
              * @property {number} AVAILABLE=0 AVAILABLE value
              * @property {number} OFFLINE=1 OFFLINE value
              * @property {number} INVISIBLE=2 INVISIBLE value
@@ -3318,7 +3304,7 @@ $root.im = (function() {
                  * @memberof im.turms.proto
                  * @interface IMessagesWithTotal
                  * @property {number|null} [total] MessagesWithTotal total
-                 * @property {im.turms.proto.ChatType|null} [chatType] MessagesWithTotal chatType
+                 * @property {boolean|null} [isGroupMessage] MessagesWithTotal isGroupMessage
                  * @property {string|null} [fromId] MessagesWithTotal fromId
                  * @property {Array.<im.turms.proto.IMessage>|null} [messages] MessagesWithTotal messages
                  */
@@ -3348,12 +3334,12 @@ $root.im = (function() {
                 MessagesWithTotal.prototype.total = 0;
 
                 /**
-                 * MessagesWithTotal chatType.
-                 * @member {im.turms.proto.ChatType} chatType
+                 * MessagesWithTotal isGroupMessage.
+                 * @member {boolean} isGroupMessage
                  * @memberof im.turms.proto.MessagesWithTotal
                  * @instance
                  */
-                MessagesWithTotal.prototype.chatType = 0;
+                MessagesWithTotal.prototype.isGroupMessage = false;
 
                 /**
                  * MessagesWithTotal fromId.
@@ -3385,8 +3371,8 @@ $root.im = (function() {
                         writer = $Writer.create();
                     if (message.total != null && Object.hasOwnProperty.call(message, "total"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int32(message.total);
-                    if (message.chatType != null && Object.hasOwnProperty.call(message, "chatType"))
-                        writer.uint32(/* id 2, wireType 0 =*/16).int32(message.chatType);
+                    if (message.isGroupMessage != null && Object.hasOwnProperty.call(message, "isGroupMessage"))
+                        writer.uint32(/* id 2, wireType 0 =*/16).bool(message.isGroupMessage);
                     if (message.fromId != null && Object.hasOwnProperty.call(message, "fromId"))
                         writer.uint32(/* id 3, wireType 0 =*/24).int64(message.fromId);
                     if (message.messages != null && message.messages.length)
@@ -3417,7 +3403,7 @@ $root.im = (function() {
                             message.total = reader.int32();
                             break;
                         case 2:
-                            message.chatType = reader.int32();
+                            message.isGroupMessage = reader.bool();
                             break;
                         case 3:
                             message.fromId = reader.int64().toString();
@@ -8688,7 +8674,7 @@ $root.im = (function() {
                  * @interface IQueryMessagesRequest
                  * @property {Array.<string>|null} [ids] QueryMessagesRequest ids
                  * @property {google.protobuf.IInt32Value|null} [size] QueryMessagesRequest size
-                 * @property {im.turms.proto.ChatType|null} [chatType] QueryMessagesRequest chatType
+                 * @property {google.protobuf.IBoolValue|null} [areGroupMessages] QueryMessagesRequest areGroupMessages
                  * @property {google.protobuf.IBoolValue|null} [areSystemMessages] QueryMessagesRequest areSystemMessages
                  * @property {google.protobuf.IInt64Value|null} [fromId] QueryMessagesRequest fromId
                  * @property {google.protobuf.IInt64Value|null} [deliveryDateAfter] QueryMessagesRequest deliveryDateAfter
@@ -8729,12 +8715,12 @@ $root.im = (function() {
                 QueryMessagesRequest.prototype.size = null;
 
                 /**
-                 * QueryMessagesRequest chatType.
-                 * @member {im.turms.proto.ChatType} chatType
+                 * QueryMessagesRequest areGroupMessages.
+                 * @member {google.protobuf.IBoolValue|null|undefined} areGroupMessages
                  * @memberof im.turms.proto.QueryMessagesRequest
                  * @instance
                  */
-                QueryMessagesRequest.prototype.chatType = 0;
+                QueryMessagesRequest.prototype.areGroupMessages = null;
 
                 /**
                  * QueryMessagesRequest areSystemMessages.
@@ -8796,8 +8782,8 @@ $root.im = (function() {
                     }
                     if (message.size != null && Object.hasOwnProperty.call(message, "size"))
                         $root.google.protobuf.Int32Value.encode(message.size, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    if (message.chatType != null && Object.hasOwnProperty.call(message, "chatType"))
-                        writer.uint32(/* id 3, wireType 0 =*/24).int32(message.chatType);
+                    if (message.areGroupMessages != null && Object.hasOwnProperty.call(message, "areGroupMessages"))
+                        $root.google.protobuf.BoolValue.encode(message.areGroupMessages, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                     if (message.areSystemMessages != null && Object.hasOwnProperty.call(message, "areSystemMessages"))
                         $root.google.protobuf.BoolValue.encode(message.areSystemMessages, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
                     if (message.fromId != null && Object.hasOwnProperty.call(message, "fromId"))
@@ -8843,7 +8829,7 @@ $root.im = (function() {
                             message.size = $root.google.protobuf.Int32Value.decode(reader, reader.uint32());
                             break;
                         case 3:
-                            message.chatType = reader.int32();
+                            message.areGroupMessages = $root.google.protobuf.BoolValue.decode(reader, reader.uint32());
                             break;
                         case 4:
                             message.areSystemMessages = $root.google.protobuf.BoolValue.decode(reader, reader.uint32());
@@ -9113,7 +9099,7 @@ $root.im = (function() {
                  * Properties of an UpdateTypingStatusRequest.
                  * @memberof im.turms.proto
                  * @interface IUpdateTypingStatusRequest
-                 * @property {im.turms.proto.ChatType|null} [chatType] UpdateTypingStatusRequest chatType
+                 * @property {boolean|null} [isGroupMessage] UpdateTypingStatusRequest isGroupMessage
                  * @property {string|null} [toId] UpdateTypingStatusRequest toId
                  */
 
@@ -9133,12 +9119,12 @@ $root.im = (function() {
                 }
 
                 /**
-                 * UpdateTypingStatusRequest chatType.
-                 * @member {im.turms.proto.ChatType} chatType
+                 * UpdateTypingStatusRequest isGroupMessage.
+                 * @member {boolean} isGroupMessage
                  * @memberof im.turms.proto.UpdateTypingStatusRequest
                  * @instance
                  */
-                UpdateTypingStatusRequest.prototype.chatType = 0;
+                UpdateTypingStatusRequest.prototype.isGroupMessage = false;
 
                 /**
                  * UpdateTypingStatusRequest toId.
@@ -9160,8 +9146,8 @@ $root.im = (function() {
                 UpdateTypingStatusRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.chatType != null && Object.hasOwnProperty.call(message, "chatType"))
-                        writer.uint32(/* id 1, wireType 0 =*/8).int32(message.chatType);
+                    if (message.isGroupMessage != null && Object.hasOwnProperty.call(message, "isGroupMessage"))
+                        writer.uint32(/* id 1, wireType 0 =*/8).bool(message.isGroupMessage);
                     if (message.toId != null && Object.hasOwnProperty.call(message, "toId"))
                         writer.uint32(/* id 2, wireType 0 =*/16).int64(message.toId);
                     return writer;
@@ -9186,7 +9172,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.chatType = reader.int32();
+                            message.isGroupMessage = reader.bool();
                             break;
                         case 2:
                             message.toId = reader.int64().toString();

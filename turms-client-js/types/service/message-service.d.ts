@@ -2,7 +2,6 @@ import TurmsClient from "../turms-client";
 import { im } from "../model/proto-bundle";
 import { ParsedModel } from "../model/parsed-model";
 import MessageAddition from "../model/message-addition";
-import ChatType = im.turms.proto.ChatType;
 import MessageDeliveryStatus = im.turms.proto.MessageDeliveryStatus;
 export default class MessageService {
     private static readonly DEFAULT_MENTIONED_USER_IDS_PARSER;
@@ -12,16 +11,16 @@ export default class MessageService {
     get onMessage(): (message: ParsedModel.Message, messageAddition: MessageAddition) => void;
     set onMessage(value: (message: ParsedModel.Message, messageAddition: MessageAddition) => void);
     constructor(turmsClient: TurmsClient);
-    sendMessage(chatType: string | ChatType, targetId: string, deliveryDate?: Date, text?: string, records?: Uint8Array[], burnAfter?: number): Promise<string>;
-    forwardMessage(messageId: string, chatType: string | ChatType, targetId: string): Promise<string>;
+    sendMessage(isGroupMessage: boolean, targetId: string, deliveryDate?: Date, text?: string, records?: Uint8Array[], burnAfter?: number): Promise<string>;
+    forwardMessage(messageId: string, isGroupMessage: boolean, targetId: string): Promise<string>;
     updateSentMessage(messageId: string, text?: string, records?: Uint8Array[]): Promise<void>;
-    queryMessages(ids?: string[], chatType?: string | ChatType, areSystemMessages?: boolean, fromId?: string, deliveryDateAfter?: Date, deliveryDateBefore?: Date, deliveryStatus?: string | MessageDeliveryStatus, size?: number): Promise<ParsedModel.Message[]>;
+    queryMessages(ids?: string[], areGroupMessages?: boolean, areSystemMessages?: boolean, fromId?: string, deliveryDateAfter?: Date, deliveryDateBefore?: Date, deliveryStatus?: string | MessageDeliveryStatus, size?: number): Promise<ParsedModel.Message[]>;
     queryPendingMessagesWithTotal(size?: number): Promise<ParsedModel.MessagesWithTotal[]>;
     queryMessageStatus(messageId: string): Promise<ParsedModel.MessageStatus[]>;
     recallMessage(messageId: string, recallDate?: Date): Promise<void>;
     readMessage(messageId: string, readDate?: Date): Promise<void>;
     markMessageUnread(messageId: string): Promise<void>;
-    updateTypingStatusRequest(chatType: string | ChatType, targetId: string): Promise<void>;
+    updateTypingStatusRequest(isGroupMessage: boolean, targetId: string): Promise<void>;
     isMentionEnabled(): boolean;
     enableMention(mentionedUserIdsParser?: (message: ParsedModel.Message) => string[]): void;
     static generateLocationRecord(latitude: number, longitude: number, locationName?: string, address?: string): Uint8Array;

@@ -14,15 +14,10 @@ public interface MessagesWithTotalOrBuilder extends
   int getTotal();
 
   /**
-   * <code>.im.turms.proto.ChatType chat_type = 2;</code>
-   * @return The enum numeric value on the wire for chatType.
+   * <code>bool is_group_message = 2;</code>
+   * @return The isGroupMessage.
    */
-  int getChatTypeValue();
-  /**
-   * <code>.im.turms.proto.ChatType chat_type = 2;</code>
-   * @return The chatType.
-   */
-  im.turms.common.constant.ChatType getChatType();
+  boolean getIsGroupMessage();
 
   /**
    * <code>int64 from_id = 3;</code>

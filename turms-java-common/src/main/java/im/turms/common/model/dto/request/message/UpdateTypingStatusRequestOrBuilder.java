@@ -8,15 +8,10 @@ public interface UpdateTypingStatusRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>.im.turms.proto.ChatType chat_type = 1;</code>
-   * @return The enum numeric value on the wire for chatType.
+   * <code>bool is_group_message = 1;</code>
+   * @return The isGroupMessage.
    */
-  int getChatTypeValue();
-  /**
-   * <code>.im.turms.proto.ChatType chat_type = 1;</code>
-   * @return The chatType.
-   */
-  im.turms.common.constant.ChatType getChatType();
+  boolean getIsGroupMessage();
 
   /**
    * <code>int64 to_id = 2;</code>

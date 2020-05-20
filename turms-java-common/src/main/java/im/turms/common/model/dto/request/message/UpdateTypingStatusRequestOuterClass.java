@@ -29,25 +29,21 @@ public final class UpdateTypingStatusRequestOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n2request/message/update_typing_status_r" +
-      "equest.proto\022\016im.turms.proto\032\030constant/c" +
-      "hat_type.proto\"W\n\031UpdateTypingStatusRequ" +
-      "est\022+\n\tchat_type\030\001 \001(\0162\030.im.turms.proto." +
-      "ChatType\022\r\n\005to_id\030\002 \001(\003B0\n)im.turms.comm" +
-      "on.model.dto.request.messageP\001\272\002\000b\006proto" +
-      "3"
+      "equest.proto\022\016im.turms.proto\"D\n\031UpdateTy" +
+      "pingStatusRequest\022\030\n\020is_group_message\030\001 " +
+      "\001(\010\022\r\n\005to_id\030\002 \001(\003B0\n)im.turms.common.mo" +
+      "del.dto.request.messageP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          im.turms.common.constant.ChatTypeOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_UpdateTypingStatusRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_im_turms_proto_UpdateTypingStatusRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_UpdateTypingStatusRequest_descriptor,
-        new java.lang.String[] { "ChatType", "ToId", });
-    im.turms.common.constant.ChatTypeOuterClass.getDescriptor();
+        new java.lang.String[] { "IsGroupMessage", "ToId", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

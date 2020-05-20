@@ -1,5 +1,3 @@
-import * as Long from "long";
-
 import * as $protobuf from "protobufjs";
 /** Namespace im. */
 export namespace im {
@@ -9,12 +7,6 @@ export namespace im {
 
         /** Namespace proto. */
         namespace proto {
-
-            /** ChatType enum. */
-            enum ChatType {
-                PRIVATE = 0,
-                GROUP = 1
-            }
 
             /** ContentType enum. */
             enum ContentType {
@@ -1481,8 +1473,8 @@ export namespace im {
                 /** MessagesWithTotal total */
                 total?: (number|null);
 
-                /** MessagesWithTotal chatType */
-                chatType?: (im.turms.proto.ChatType|null);
+                /** MessagesWithTotal isGroupMessage */
+                isGroupMessage?: (boolean|null);
 
                 /** MessagesWithTotal fromId */
                 fromId?: (string|null);
@@ -1503,8 +1495,8 @@ export namespace im {
                 /** MessagesWithTotal total. */
                 public total: number;
 
-                /** MessagesWithTotal chatType. */
-                public chatType: im.turms.proto.ChatType;
+                /** MessagesWithTotal isGroupMessage. */
+                public isGroupMessage: boolean;
 
                 /** MessagesWithTotal fromId. */
                 public fromId: string;
@@ -3904,8 +3896,8 @@ export namespace im {
                 /** QueryMessagesRequest size */
                 size?: (google.protobuf.IInt32Value|null);
 
-                /** QueryMessagesRequest chatType */
-                chatType?: (im.turms.proto.ChatType|null);
+                /** QueryMessagesRequest areGroupMessages */
+                areGroupMessages?: (google.protobuf.IBoolValue|null);
 
                 /** QueryMessagesRequest areSystemMessages */
                 areSystemMessages?: (google.protobuf.IBoolValue|null);
@@ -3938,8 +3930,8 @@ export namespace im {
                 /** QueryMessagesRequest size. */
                 public size?: (google.protobuf.IInt32Value|null);
 
-                /** QueryMessagesRequest chatType. */
-                public chatType: im.turms.proto.ChatType;
+                /** QueryMessagesRequest areGroupMessages. */
+                public areGroupMessages?: (google.protobuf.IBoolValue|null);
 
                 /** QueryMessagesRequest areSystemMessages. */
                 public areSystemMessages?: (google.protobuf.IBoolValue|null);
@@ -4084,8 +4076,8 @@ export namespace im {
             /** Properties of an UpdateTypingStatusRequest. */
             interface IUpdateTypingStatusRequest {
 
-                /** UpdateTypingStatusRequest chatType */
-                chatType?: (im.turms.proto.ChatType|null);
+                /** UpdateTypingStatusRequest isGroupMessage */
+                isGroupMessage?: (boolean|null);
 
                 /** UpdateTypingStatusRequest toId */
                 toId?: (string|null);
@@ -4100,8 +4092,8 @@ export namespace im {
                  */
                 constructor(properties?: im.turms.proto.IUpdateTypingStatusRequest);
 
-                /** UpdateTypingStatusRequest chatType. */
-                public chatType: im.turms.proto.ChatType;
+                /** UpdateTypingStatusRequest isGroupMessage. */
+                public isGroupMessage: boolean;
 
                 /** UpdateTypingStatusRequest toId. */
                 public toId: string;

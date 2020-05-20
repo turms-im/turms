@@ -29,18 +29,16 @@ public final class MessagesWithTotalOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\'model/message/messages_with_total.prot" +
-      "o\022\016im.turms.proto\032\030constant/chat_type.pr" +
-      "oto\032\033model/message/message.proto\"\213\001\n\021Mes" +
-      "sagesWithTotal\022\r\n\005total\030\001 \001(\005\022+\n\tchat_ty" +
-      "pe\030\002 \001(\0162\030.im.turms.proto.ChatType\022\017\n\007fr" +
-      "om_id\030\003 \001(\003\022)\n\010messages\030\004 \003(\0132\027.im.turms" +
-      ".proto.MessageB\'\n im.turms.common.model." +
-      "bo.messageP\001\272\002\000b\006proto3"
+      "o\022\016im.turms.proto\032\033model/message/message" +
+      ".proto\"x\n\021MessagesWithTotal\022\r\n\005total\030\001 \001" +
+      "(\005\022\030\n\020is_group_message\030\002 \001(\010\022\017\n\007from_id\030" +
+      "\003 \001(\003\022)\n\010messages\030\004 \003(\0132\027.im.turms.proto" +
+      ".MessageB\'\n im.turms.common.model.bo.mes" +
+      "sageP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          im.turms.common.constant.ChatTypeOuterClass.getDescriptor(),
           im.turms.common.model.bo.message.MessageOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_MessagesWithTotal_descriptor =
@@ -48,8 +46,7 @@ public final class MessagesWithTotalOuterClass {
     internal_static_im_turms_proto_MessagesWithTotal_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_MessagesWithTotal_descriptor,
-        new java.lang.String[] { "Total", "ChatType", "FromId", "Messages", });
-    im.turms.common.constant.ChatTypeOuterClass.getDescriptor();
+        new java.lang.String[] { "Total", "IsGroupMessage", "FromId", "Messages", });
     im.turms.common.model.bo.message.MessageOuterClass.getDescriptor();
   }
 

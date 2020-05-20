@@ -1,6 +1,5 @@
 import { im } from "./proto-bundle";
 export declare namespace ParsedModel {
-    import ChatType = im.turms.proto.ChatType;
     import MessageDeliveryStatus = im.turms.proto.MessageDeliveryStatus;
     import ProfileAccessStrategy = im.turms.proto.ProfileAccessStrategy;
     import RequestStatus = im.turms.proto.RequestStatus;
@@ -60,7 +59,7 @@ export declare namespace ParsedModel {
     }
     interface MessagesWithTotal {
         total?: number;
-        chatType?: ChatType;
+        isGroupMessage?: boolean;
         fromId?: string;
         messages?: Message;
     }

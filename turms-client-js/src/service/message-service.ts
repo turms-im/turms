@@ -5,14 +5,13 @@ import RequestUtil from "../util/request-util";
 import {ParsedModel} from "../model/parsed-model";
 import NotificationUtil from "../util/notification-util";
 import MessageAddition from "../model/message-addition";
-import ChatType = im.turms.proto.ChatType;
+import TurmsBusinessException from "../model/turms-business-exception";
 import File = im.turms.proto.File;
 import AudioFile = im.turms.proto.AudioFile;
 import VideoFile = im.turms.proto.VideoFile;
 import ImageFile = im.turms.proto.ImageFile;
 import Location = im.turms.proto.UserLocation;
 import MessageDeliveryStatus = im.turms.proto.MessageDeliveryStatus;
-import TurmsBusinessException from "../model/turms-business-exception";
 
 export default class MessageService {
     /**
@@ -62,35 +61,25 @@ export default class MessageService {
     }
 
     sendMessage(
-        chatType: string | ChatType,
+        isGroupMessage: boolean,
         targetId: string,
         deliveryDate?: Date,
         text?: string,
         records?: Uint8Array[],
         burnAfter?: number): Promise<string> {
-        if (RequestUtil.isFalsy(chatType)) {
-            return TurmsBusinessException.notFalsy('chatType');
-        }
         if (RequestUtil.isFalsy(targetId)) {
             return TurmsBusinessException.notFalsy('targetId');
         }
         if (RequestUtil.isFalsy(text) && RequestUtil.isFalsy(records)) {
             return TurmsBusinessException.illegalParam('text and records must not all be null');
         }
-        if (typeof chatType === "string") {
-            try {
-                chatType = ConstantTransformer.string2ChatType(chatType);
-            } catch (e) {
-                return TurmsBusinessException.illegalParam(e);
-            }
-        }
         if (!deliveryDate) {
             deliveryDate = new Date();
         }
         return this._turmsClient.driver.send({
             createMessageRequest: {
-                groupId: RequestUtil.wrapValueIfNotNull(chatType === ChatType.GROUP ? targetId : undefined),
-                recipientId: RequestUtil.wrapValueIfNotNull(chatType === ChatType.PRIVATE ? targetId : undefined),
+                groupId: RequestUtil.wrapValueIfNotNull(isGroupMessage ? targetId : undefined),
+                recipientId: RequestUtil.wrapValueIfNotNull(!isGroupMessage ? targetId : undefined),
                 deliveryDate: '' + deliveryDate.getTime(),
                 text: RequestUtil.wrapValueIfNotNull(text),
                 records: records,
@@ -101,29 +90,19 @@ export default class MessageService {
 
     forwardMessage(
         messageId: string,
-        chatType: string | ChatType,
+        isGroupMessage: boolean,
         targetId: string): Promise<string> {
         if (RequestUtil.isFalsy(messageId)) {
             return TurmsBusinessException.notFalsy('messageId');
         }
-        if (RequestUtil.isFalsy(chatType)) {
-            return TurmsBusinessException.notFalsy('chatType');
-        }
         if (RequestUtil.isFalsy(targetId)) {
             return TurmsBusinessException.notFalsy('targetId');
-        }
-        if (typeof chatType === "string") {
-            try {
-                chatType = ConstantTransformer.string2ChatType(chatType);
-            } catch (e) {
-                return TurmsBusinessException.illegalParam(e);
-            }
         }
         return this._turmsClient.driver.send({
             createMessageRequest: {
                 messageId: {value: messageId},
-                groupId: RequestUtil.wrapValueIfNotNull(chatType === ChatType.GROUP ? targetId : undefined),
-                recipientId: RequestUtil.wrapValueIfNotNull(chatType === ChatType.PRIVATE ? targetId : undefined),
+                groupId: RequestUtil.wrapValueIfNotNull(isGroupMessage ? targetId : undefined),
+                recipientId: RequestUtil.wrapValueIfNotNull(!isGroupMessage ? targetId : undefined),
             }
         }).then(n => NotificationUtil.getFirstVal(n, 'ids', true));
     }
@@ -151,20 +130,13 @@ export default class MessageService {
 
     queryMessages(
         ids?: string[],
-        chatType?: string | ChatType,
+        areGroupMessages?: boolean,
         areSystemMessages?: boolean,
         fromId?: string,
         deliveryDateAfter?: Date,
         deliveryDateBefore?: Date,
         deliveryStatus?: string | MessageDeliveryStatus,
         size = 50): Promise<ParsedModel.Message[]> {
-        if (typeof chatType === 'string') {
-            try {
-                chatType = ConstantTransformer.string2ChatType(chatType);
-            } catch (e) {
-                return TurmsBusinessException.illegalParam(e);
-            }
-        }
         if (typeof deliveryStatus === 'string') {
             try {
                 deliveryStatus = ConstantTransformer.string2DeliveryStatus(deliveryStatus);
@@ -176,7 +148,7 @@ export default class MessageService {
         return this._turmsClient.driver.send({
             queryMessagesRequest: {
                 ids: RequestUtil.wrapValueIfNotNull(ids),
-                chatType,
+                areGroupMessages: RequestUtil.wrapValueIfNotNull(areGroupMessages),
                 areSystemMessages: RequestUtil.wrapValueIfNotNull(areSystemMessages),
                 fromId: RequestUtil.wrapValueIfNotNull(fromId),
                 deliveryDateAfter: RequestUtil.wrapTimeIfNotNull(deliveryDateAfter),
@@ -240,23 +212,13 @@ export default class MessageService {
         return this.readMessage(messageId, new Date(0));
     }
 
-    updateTypingStatusRequest(chatType: string | ChatType, targetId: string): Promise<void> {
-        if (RequestUtil.isFalsy(chatType)) {
-            return TurmsBusinessException.notFalsy('chatType');
-        }
+    updateTypingStatusRequest(isGroupMessage: boolean, targetId: string): Promise<void> {
         if (RequestUtil.isFalsy(targetId)) {
             return TurmsBusinessException.notFalsy('targetId');
         }
-        if (typeof chatType === 'string') {
-            try {
-                chatType = ConstantTransformer.string2ChatType(chatType);
-            } catch (e) {
-                return TurmsBusinessException.illegalParam(e);
-            }
-        }
         return this._turmsClient.driver.send({
             updateTypingStatusRequest: {
-                chatType,
+                isGroupMessage,
                 toId: targetId
             }
             // eslint-disable-next-line @typescript-eslint/no-empty-function
