@@ -5,6 +5,7 @@ import MessageService from "./service/message-service";
 import NotificationService from "./service/notification-service";
 import InputFileReader from "./util/input-file-reader";
 import StorageService from "./service/storage-service";
+import ClientOptions from "./client-options";
 
 class TurmsClient {
     private readonly _driver: TurmsDriver;
@@ -15,7 +16,7 @@ class TurmsClient {
     private readonly _notificationService: NotificationService;
 
     constructor(
-        url?: string,
+        urlOrOptions?: string | ClientOptions,
         connectionTimeout?: number,
         requestTimeout?: number,
         minRequestsInterval?: number,
@@ -23,20 +24,32 @@ class TurmsClient {
         httpUrl?: string,
         queryReasonWhenLoginFailed?: boolean,
         queryReasonWhenDisconnected?: boolean) {
-        this._driver = new TurmsDriver(
-            this,
-            url,
-            connectionTimeout,
-            requestTimeout,
-            minRequestsInterval,
-            httpUrl,
-            queryReasonWhenLoginFailed,
-            queryReasonWhenDisconnected);
-        this._userService = new UserService(this);
-        this._groupService = new GroupService(this);
-        this._messageService = new MessageService(this);
-        this._storageService = new StorageService(this, storageServerUrl);
-        this._notificationService = new NotificationService(this);
+        if (typeof urlOrOptions === 'object') {
+            return new TurmsClient(
+                urlOrOptions.url,
+                urlOrOptions.connectionTimeout,
+                urlOrOptions.requestTimeout,
+                urlOrOptions.minRequestsInterval,
+                urlOrOptions.storageServerUrl,
+                urlOrOptions.httpUrl,
+                urlOrOptions.queryReasonWhenLoginFailed,
+                urlOrOptions.queryReasonWhenDisconnected);
+        } else {
+            this._driver = new TurmsDriver(
+                this,
+                urlOrOptions,
+                connectionTimeout,
+                requestTimeout,
+                minRequestsInterval,
+                httpUrl,
+                queryReasonWhenLoginFailed,
+                queryReasonWhenDisconnected);
+            this._userService = new UserService(this);
+            this._groupService = new GroupService(this);
+            this._messageService = new MessageService(this);
+            this._storageService = new StorageService(this, storageServerUrl);
+            this._notificationService = new NotificationService(this);
+        }
     }
 
     //Driver
