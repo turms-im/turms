@@ -56,19 +56,19 @@ export default {
                 {
                     type: 'SELECT',
                     model: 'ALL',
-                    name: 'chatType',
+                    name: 'areGroupMessages',
                     options: {
                         base: [{
                             id: 'ALL',
-                            label: this.$t('privateChatAndGroupChat')
+                            label: this.$t('userMessageAndSystemMessage')
                         },
                         {
-                            id: 'PRIVATE',
-                            label: this.$t('privateChat')
+                            id: false,
+                            label: this.$t('privateChatMessage')
                         },
                         {
-                            id: 'GROUP',
-                            label: this.$t('groupChat')
+                            id: true,
+                            label: this.$t('groupChatMessage')
                         }]
                     }
                 },
@@ -130,20 +130,8 @@ export default {
                     size: 'L',
                     fields: [
                         {
-                            type: 'SELECT',
-                            decorator: this.$validator.create('chatType', {required: true}),
-                            options: {
-                                values: [
-                                    {
-                                        label: this.$t('privateChat'),
-                                        id: 'PRIVATE'
-                                    },
-                                    {
-                                        label: this.$t('groupChat'),
-                                        id: 'GROUP'
-                                    }
-                                ]
-                            }
+                            type: 'SWITCH',
+                            decorator: this.$validator.create('isGroupMessage', {required: true})
                         },
                         {
                             type: 'SWITCH',
@@ -221,7 +209,7 @@ export default {
                         width: '10%'
                     },
                     {
-                        key: 'chatType',
+                        key: 'isGroupMessage',
                         width: '10%'
                     },
                     {

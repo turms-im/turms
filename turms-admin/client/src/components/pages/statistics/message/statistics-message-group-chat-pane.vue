@@ -22,7 +22,7 @@ export default {
             path: '/statistics/message/private-chat',
             url: `${this.$rs.apis.message}/count`,
             params: {
-                'chatType': 'GROUP'
+                areGroupMessages: true
             },
             resources: {
                 all: ['sent', 'sentOnAverage', 'acknowledged', 'acknowledgedOnAverage']
