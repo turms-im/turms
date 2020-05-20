@@ -1,8 +1,6 @@
 import TurmsClient from "../../src/turms-client";
 import Constants from "../helper/constants";
-import {im} from "../../src/model/proto-bundle";
 import MessageService from "../../src/service/message-service";
-import ChatType = im.turms.proto.ChatType;
 
 let senderClient: TurmsClient;
 let recipientClient: TurmsClient;
@@ -45,19 +43,19 @@ describe('Constructor', () => {
 
 describe('Create', () => {
     it('sendPrivateMessage_shouldReturnMessageId', async () => {
-        privateMessageId = await senderClient.messageService.sendMessage(ChatType.PRIVATE, RECIPIENT_ID, new Date(), "hello");
+        privateMessageId = await senderClient.messageService.sendMessage(false, RECIPIENT_ID, new Date(), "hello");
         expect(privateMessageId).toBeTruthy();
     });
     it('sendGroupMessage_shouldReturnMessageId', async () => {
-        groupMessageId = await senderClient.messageService.sendMessage(ChatType.GROUP, TARGET_GROUP_ID, new Date(), "hello");
+        groupMessageId = await senderClient.messageService.sendMessage(true, TARGET_GROUP_ID, new Date(), "hello");
         expect(privateMessageId).toBeTruthy();
     });
     it('forwardPrivateMessage_shouldReturnForwardedMessageId', async () => {
-        const messageId = await senderClient.messageService.forwardMessage(privateMessageId, ChatType.PRIVATE, RECIPIENT_ID);
+        const messageId = await senderClient.messageService.forwardMessage(privateMessageId, false, RECIPIENT_ID);
         expect(messageId).toBeTruthy();
     });
     it('forwardGroupMessage_shouldReturnForwardedMessageId', async () => {
-        const messageId = await senderClient.messageService.forwardMessage(groupMessageId, ChatType.GROUP, TARGET_GROUP_ID);
+        const messageId = await senderClient.messageService.forwardMessage(groupMessageId, true, TARGET_GROUP_ID);
         expect(messageId).toBeTruthy();
     });
 });
@@ -80,14 +78,14 @@ describe('Update', () => {
         expect(result).toBeUndefined();
     });
     it('updateTypingStatus_shouldSucceed', async () => {
-        const result = await senderClient.messageService.updateTypingStatusRequest(ChatType.PRIVATE, privateMessageId);
+        const result = await senderClient.messageService.updateTypingStatusRequest(false, privateMessageId);
         expect(result).toBeUndefined();
     });
 });
 
 describe('Query', () => {
     it('queryMessages_shouldReturnNotEmptyMessages', async () => {
-        const messages = await recipientClient.messageService.queryMessages(null, ChatType.PRIVATE, null, SENDER_ID, null, null, null, 10);
+        const messages = await recipientClient.messageService.queryMessages(null, false, null, SENDER_ID, null, null, null, 10);
         expect(messages.length).toBeGreaterThan(0);
     });
     it('queryPendingMessagesWithTotal_shouldReturnNotEmptyPendingMessagesWithTotal', async () => {
