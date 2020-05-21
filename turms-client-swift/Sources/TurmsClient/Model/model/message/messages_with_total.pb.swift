@@ -26,7 +26,7 @@ public struct MessagesWithTotal {
 
   public var total: Int32 = 0
 
-  public var chatType: ChatType = .private
+  public var isGroupMessage: Bool = false
 
   public var fromID: Int64 = 0
 
@@ -45,7 +45,7 @@ extension MessagesWithTotal: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
   public static let protoMessageName: String = _protobuf_package + ".MessagesWithTotal"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "total"),
-    2: .standard(proto: "chat_type"),
+    2: .standard(proto: "is_group_message"),
     3: .standard(proto: "from_id"),
     4: .same(proto: "messages"),
   ]
@@ -54,7 +54,7 @@ extension MessagesWithTotal: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
       case 1: try decoder.decodeSingularInt32Field(value: &self.total)
-      case 2: try decoder.decodeSingularEnumField(value: &self.chatType)
+      case 2: try decoder.decodeSingularBoolField(value: &self.isGroupMessage)
       case 3: try decoder.decodeSingularInt64Field(value: &self.fromID)
       case 4: try decoder.decodeRepeatedMessageField(value: &self.messages)
       default: break
@@ -66,8 +66,8 @@ extension MessagesWithTotal: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     if self.total != 0 {
       try visitor.visitSingularInt32Field(value: self.total, fieldNumber: 1)
     }
-    if self.chatType != .private {
-      try visitor.visitSingularEnumField(value: self.chatType, fieldNumber: 2)
+    if self.isGroupMessage != false {
+      try visitor.visitSingularBoolField(value: self.isGroupMessage, fieldNumber: 2)
     }
     if self.fromID != 0 {
       try visitor.visitSingularInt64Field(value: self.fromID, fieldNumber: 3)
@@ -80,7 +80,7 @@ extension MessagesWithTotal: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
 
   public static func ==(lhs: MessagesWithTotal, rhs: MessagesWithTotal) -> Bool {
     if lhs.total != rhs.total {return false}
-    if lhs.chatType != rhs.chatType {return false}
+    if lhs.isGroupMessage != rhs.isGroupMessage {return false}
     if lhs.fromID != rhs.fromID {return false}
     if lhs.messages != rhs.messages {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}

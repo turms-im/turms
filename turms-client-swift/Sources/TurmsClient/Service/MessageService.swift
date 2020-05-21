@@ -38,7 +38,7 @@ public class MessageService {
     }
 
     public func sendMessage(
-        chatType: ChatType,
+        isGroupMessage: Bool,
         targetId: Int64,
         deliveryDate: Date? = nil,
         text: String? = nil,
@@ -50,8 +50,8 @@ public class MessageService {
         return turmsClient.driver
             .send { $0
                 .request("createMessageRequest")
-                .field("groupId", chatType == .group ? targetId : nil)
-                .field("recipientId", chatType == .private ? targetId : nil)
+                .field("groupId", isGroupMessage ? targetId : nil)
+                .field("recipientId", !isGroupMessage ? targetId : nil)
                 .field("deliveryDate", deliveryDate ?? Date())
                 .field("text", text)
                 .field("records", records)
@@ -62,14 +62,14 @@ public class MessageService {
 
     public func forwardMessage(
         messageId: Int64,
-        chatType: ChatType,
+        isGroupMessage: Bool,
         targetId: Int64) -> Promise<Int64> {
         return turmsClient.driver
             .send { $0
                 .request("createMessageRequest")
                 .field("messageId", messageId)
-                .field("groupId", chatType == .group ? targetId : nil)
-                .field("recipientId", chatType == .private ? targetId : nil)
+                .field("groupId", isGroupMessage ? targetId : nil)
+                .field("recipientId", !isGroupMessage ? targetId : nil)
             }
             .map { try NotificationUtil.getFirstId($0) }
     }
@@ -93,7 +93,7 @@ public class MessageService {
 
     public func queryMessages(
         ids: [Int64]? = nil,
-        chatType: ChatType? = nil,
+        areGroupMessages: Bool? = nil,
         areSystemMessages: Bool? = nil,
         fromId: Int64? = nil,
         deliveryDateAfter: Date? = nil,
@@ -104,7 +104,7 @@ public class MessageService {
             .send { $0
                 .request("queryMessagesRequest")
                 .field("ids", ids)
-                .field("chatType", chatType)
+                .field("areGroupMessages", areGroupMessages)
                 .field("areSystemMessages", areSystemMessages)
                 .field("fromId", fromId)
                 .field("deliveryDateAfter", deliveryDateAfter)
@@ -159,11 +159,11 @@ public class MessageService {
             readDate: Date(timeIntervalSince1970: 0))
     }
 
-    public func updateTypingStatusRequest(chatType: ChatType, toId: Int64) -> Promise<Void> {
+    public func updateTypingStatusRequest(isGroupMessage: Bool, toId: Int64) -> Promise<Void> {
         return turmsClient.driver
             .send { $0
                 .request("updateTypingStatusRequest")
-                .field("chatType", chatType)
+                .field("isGroupMessage", isGroupMessage)
                 .field("toId", toId)
             }
             .map { _ in () }

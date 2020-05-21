@@ -25,7 +25,7 @@ class StorageServiceTests: XCTestCase {
         TestUtil.assertCompleted("uploadProfilePicture_shouldReturnUrl", turmsClient.storageService.uploadProfilePicture(StorageServiceTests.PROFILE_PICTURE))
         TestUtil.assertCompleted("uploadGroupProfilePicture_shouldReturnUrl", turmsClient.storageService.uploadGroupProfilePicture(data: StorageServiceTests.PROFILE_PICTURE, groupId: StorageServiceTests.GROUP_ID))
 
-        TestUtil.assertCompleted("uploadAttachment_sendMessage_shouldReturnUrl", turmsClient.messageService.sendMessage(chatType: .private, targetId: 2, text: "I've attached a picture").done {
+        TestUtil.assertCompleted("uploadAttachment_sendMessage_shouldReturnUrl", turmsClient.messageService.sendMessage(isGroupMessage: false, targetId: 2, text: "I've attached a picture").done {
             messageId = $0
         })
         TestUtil.assertCompleted("uploadAttachment_shouldReturnUrl", turmsClient.storageService.uploadAttachment(messageId: messageId, data: StorageServiceTests.ATTACHMENT))

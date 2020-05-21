@@ -24,7 +24,7 @@ public struct UpdateTypingStatusRequest {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  public var chatType: ChatType = .private
+  public var isGroupMessage: Bool = false
 
   public var toID: Int64 = 0
 
@@ -40,14 +40,14 @@ fileprivate let _protobuf_package = "im.turms.proto"
 extension UpdateTypingStatusRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".UpdateTypingStatusRequest"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "chat_type"),
+    1: .standard(proto: "is_group_message"),
     2: .standard(proto: "to_id"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-      case 1: try decoder.decodeSingularEnumField(value: &self.chatType)
+      case 1: try decoder.decodeSingularBoolField(value: &self.isGroupMessage)
       case 2: try decoder.decodeSingularInt64Field(value: &self.toID)
       default: break
       }
@@ -55,8 +55,8 @@ extension UpdateTypingStatusRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if self.chatType != .private {
-      try visitor.visitSingularEnumField(value: self.chatType, fieldNumber: 1)
+    if self.isGroupMessage != false {
+      try visitor.visitSingularBoolField(value: self.isGroupMessage, fieldNumber: 1)
     }
     if self.toID != 0 {
       try visitor.visitSingularInt64Field(value: self.toID, fieldNumber: 2)
@@ -65,7 +65,7 @@ extension UpdateTypingStatusRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
   }
 
   public static func ==(lhs: UpdateTypingStatusRequest, rhs: UpdateTypingStatusRequest) -> Bool {
-    if lhs.chatType != rhs.chatType {return false}
+    if lhs.isGroupMessage != rhs.isGroupMessage {return false}
     if lhs.toID != rhs.toID {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true

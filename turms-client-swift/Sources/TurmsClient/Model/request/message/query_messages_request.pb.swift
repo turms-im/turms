@@ -38,10 +38,14 @@ public struct QueryMessagesRequest {
   /// Clears the value of `size`. Subsequent reads from it will return its default value.
   public mutating func clearSize() {_uniqueStorage()._size = nil}
 
-  public var chatType: ChatType {
-    get {return _storage._chatType}
-    set {_uniqueStorage()._chatType = newValue}
+  public var areGroupMessages: SwiftProtobuf.Google_Protobuf_BoolValue {
+    get {return _storage._areGroupMessages ?? SwiftProtobuf.Google_Protobuf_BoolValue()}
+    set {_uniqueStorage()._areGroupMessages = newValue}
   }
+  /// Returns true if `areGroupMessages` has been explicitly set.
+  public var hasAreGroupMessages: Bool {return _storage._areGroupMessages != nil}
+  /// Clears the value of `areGroupMessages`. Subsequent reads from it will return its default value.
+  public mutating func clearAreGroupMessages() {_uniqueStorage()._areGroupMessages = nil}
 
   public var areSystemMessages: SwiftProtobuf.Google_Protobuf_BoolValue {
     get {return _storage._areSystemMessages ?? SwiftProtobuf.Google_Protobuf_BoolValue()}
@@ -100,7 +104,7 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "ids"),
     2: .same(proto: "size"),
-    3: .standard(proto: "chat_type"),
+    3: .standard(proto: "are_group_messages"),
     4: .standard(proto: "are_system_messages"),
     5: .standard(proto: "from_id"),
     6: .standard(proto: "delivery_date_after"),
@@ -111,7 +115,7 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
   fileprivate class _StorageClass {
     var _ids: [Int64] = []
     var _size: SwiftProtobuf.Google_Protobuf_Int32Value? = nil
-    var _chatType: ChatType = .private
+    var _areGroupMessages: SwiftProtobuf.Google_Protobuf_BoolValue? = nil
     var _areSystemMessages: SwiftProtobuf.Google_Protobuf_BoolValue? = nil
     var _fromID: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
     var _deliveryDateAfter: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
@@ -125,7 +129,7 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
     init(copying source: _StorageClass) {
       _ids = source._ids
       _size = source._size
-      _chatType = source._chatType
+      _areGroupMessages = source._areGroupMessages
       _areSystemMessages = source._areSystemMessages
       _fromID = source._fromID
       _deliveryDateAfter = source._deliveryDateAfter
@@ -148,7 +152,7 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
         switch fieldNumber {
         case 1: try decoder.decodeRepeatedInt64Field(value: &_storage._ids)
         case 2: try decoder.decodeSingularMessageField(value: &_storage._size)
-        case 3: try decoder.decodeSingularEnumField(value: &_storage._chatType)
+        case 3: try decoder.decodeSingularMessageField(value: &_storage._areGroupMessages)
         case 4: try decoder.decodeSingularMessageField(value: &_storage._areSystemMessages)
         case 5: try decoder.decodeSingularMessageField(value: &_storage._fromID)
         case 6: try decoder.decodeSingularMessageField(value: &_storage._deliveryDateAfter)
@@ -168,8 +172,8 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
       if let v = _storage._size {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
       }
-      if _storage._chatType != .private {
-        try visitor.visitSingularEnumField(value: _storage._chatType, fieldNumber: 3)
+      if let v = _storage._areGroupMessages {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
       }
       if let v = _storage._areSystemMessages {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
@@ -197,7 +201,7 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
         let rhs_storage = _args.1
         if _storage._ids != rhs_storage._ids {return false}
         if _storage._size != rhs_storage._size {return false}
-        if _storage._chatType != rhs_storage._chatType {return false}
+        if _storage._areGroupMessages != rhs_storage._areGroupMessages {return false}
         if _storage._areSystemMessages != rhs_storage._areSystemMessages {return false}
         if _storage._fromID != rhs_storage._fromID {return false}
         if _storage._deliveryDateAfter != rhs_storage._deliveryDateAfter {return false}

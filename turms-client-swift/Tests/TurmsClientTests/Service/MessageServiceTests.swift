@@ -25,24 +25,24 @@ class MessageServiceTests: XCTestCase {
         TestUtil.wait(groupMemberClient.driver.connect(userId: MessageServiceTests.GROUP_MEMBER_ID, password: "123"))
 
         // Create
-        TestUtil.assertCompleted("sendPrivateMessage_shouldReturnMessageId", senderClient.messageService.sendMessage(chatType: .private, targetId: MessageServiceTests.RECIPIENT_ID, deliveryDate: Date(), text: "hello").done {
+        TestUtil.assertCompleted("sendPrivateMessage_shouldReturnMessageId", senderClient.messageService.sendMessage(isGroupMessage: false, targetId: MessageServiceTests.RECIPIENT_ID, deliveryDate: Date(), text: "hello").done {
             privateMessageId = $0
         })
-        TestUtil.assertCompleted("sendGroupMessage_shouldReturnMessageId", senderClient.messageService.sendMessage(chatType: .group, targetId: MessageServiceTests.TARGET_GROUP_ID, deliveryDate: Date(), text: "hello").done {
+        TestUtil.assertCompleted("sendGroupMessage_shouldReturnMessageId", senderClient.messageService.sendMessage(isGroupMessage: true, targetId: MessageServiceTests.TARGET_GROUP_ID, deliveryDate: Date(), text: "hello").done {
             groupMessageId = $0
         })
-        TestUtil.assertCompleted("forwardPrivateMessage_shouldReturnForwardedMessageId", senderClient.messageService.forwardMessage(messageId: privateMessageId!, chatType: .private, targetId: MessageServiceTests.RECIPIENT_ID))
-        TestUtil.assertCompleted("forwardGroupMessage_shouldReturnForwardedMessageId", senderClient.messageService.forwardMessage(messageId: groupMessageId!, chatType: .group, targetId: MessageServiceTests.TARGET_GROUP_ID))
+        TestUtil.assertCompleted("forwardPrivateMessage_shouldReturnForwardedMessageId", senderClient.messageService.forwardMessage(messageId: privateMessageId!, isGroupMessage: false, targetId: MessageServiceTests.RECIPIENT_ID))
+        TestUtil.assertCompleted("forwardGroupMessage_shouldReturnForwardedMessageId", senderClient.messageService.forwardMessage(messageId: groupMessageId!, isGroupMessage: true, targetId: MessageServiceTests.TARGET_GROUP_ID))
 
         // Update
         TestUtil.assertCompleted("recallMessage_shouldSucceed", senderClient.messageService.recallMessage(messageId: groupMessageId!))
         TestUtil.assertCompleted("updateSentMessage_shouldSucceed", senderClient.messageService.updateSentMessage(messageId: privateMessageId!, text: "I have modified the message"))
         TestUtil.assertCompleted("readMessage_shouldSucceed", recipientClient.messageService.readMessage(messageId: privateMessageId!))
         TestUtil.assertCompleted("markMessageUnread_shouldSucceed", recipientClient.messageService.markMessageUnread(privateMessageId!))
-        TestUtil.assertCompleted("updateTypingStatus_shouldSucceed", senderClient.messageService.updateTypingStatusRequest(chatType: .private, toId: privateMessageId!))
+        TestUtil.assertCompleted("updateTypingStatus_shouldSucceed", senderClient.messageService.updateTypingStatusRequest(isGroupMessage: false, toId: privateMessageId!))
 
         // Query
-        TestUtil.assertCompleted("queryMessages_shouldReturnNotEmptyMessages", recipientClient.messageService.queryMessages(chatType: .private, fromId: MessageServiceTests.SENDER_ID, size: 10).done {
+        TestUtil.assertCompleted("queryMessages_shouldReturnNotEmptyMessages", recipientClient.messageService.queryMessages(areGroupMessages: false, fromId: MessageServiceTests.SENDER_ID, size: 10).done {
             XCTAssertFalse($0.isEmpty)
         })
         TestUtil.assertCompleted("queryPendingMessagesWithTotal_shouldReturnNotEmptyPendingMessagesWithTotal", senderClient.messageService.queryPendingMessagesWithTotal().done {
