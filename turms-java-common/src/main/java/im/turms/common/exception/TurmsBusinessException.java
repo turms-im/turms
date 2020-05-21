@@ -23,6 +23,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class TurmsBusinessException extends NoStackTraceException {
     private static final Map<TurmsStatusCode, TurmsBusinessException> EXCEPTION_POOL = new EnumMap<>(TurmsStatusCode.class);
@@ -102,5 +103,15 @@ public class TurmsBusinessException extends NoStackTraceException {
             }
         }
         return null;
+    }
+
+    public static CompletableFuture getFuture(TurmsStatusCode statusCode) {
+        return getFuture(statusCode, null);
+    }
+
+    public static CompletableFuture getFuture(TurmsStatusCode statusCode, @Nullable String reason) {
+        CompletableFuture<Object> future = new CompletableFuture<>();
+        future.completeExceptionally(get(statusCode, reason));
+        return future;
     }
 }
