@@ -27,6 +27,14 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class TurmsApplication {
     public static void main(String[] args) {
-        SpringApplication.run(TurmsApplication.class, args);
+        try {
+            SpringApplication.run(TurmsApplication.class, args);
+        } catch (Exception e) {
+            // Make sure that turms can exit if SpringApplication failed to bootstrap (e.g. PortInUseException)
+            // because there are still some non-daemon threads that are running after the context has been closed
+            // in org.springframework.boot.SpringApplication.handleRunFailure,
+            // which won't trigger im.turms.turms.config.spring.ApplicationContextConfig.handleContextClosedEvent.
+            System.exit(1);
+        }
     }
 }
