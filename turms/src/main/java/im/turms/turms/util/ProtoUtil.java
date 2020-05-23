@@ -23,10 +23,12 @@ import im.turms.common.constant.*;
 import im.turms.common.exception.TurmsBusinessException;
 import im.turms.common.model.bo.user.UserInfo;
 import im.turms.common.model.bo.user.UserStatusDetail;
+import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.message.CreateMessageRequest;
 import im.turms.turms.pojo.bo.UserOnlineInfo;
 import im.turms.turms.pojo.domain.Message;
 import im.turms.turms.pojo.domain.*;
+import lombok.extern.log4j.Log4j2;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -36,9 +38,23 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+@Log4j2
 public class ProtoUtil {
 
     private ProtoUtil() {
+    }
+
+    public static ByteBuffer getByteBuffer(TurmsNotification notification) {
+        ByteBuffer buffer = ByteBuffer.allocateDirect(notification.getSerializedSize());
+        CodedOutputStream output = CodedOutputStream.newInstance(buffer);
+        try {
+            notification.writeTo(output);
+            output.checkNoSpaceLeft();
+        } catch (Exception e) {
+            log.error(e);
+            return ByteBuffer.wrap(notification.toByteArray());
+        }
+        return buffer;
     }
 
     public static long parseRequestId(ByteBuffer turmsRequestBuffer) throws IOException {
