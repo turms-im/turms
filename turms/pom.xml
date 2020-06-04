@@ -19,16 +19,16 @@
     <properties>
         <java.version>11</java.version>
         <hazelcast.version>4.0.1</hazelcast.version>
-        <protobuf.version>3.11.4</protobuf.version>
+        <protobuf.version>3.12.2</protobuf.version>
         <guava.version>29.0-jre</guava.version>
         <rtree2.version>0.9-RC1</rtree2.version>
-        <rtree2d.version>0.9.0</rtree2d.version>
-        <spring-boot-admin-starter-client.version>2.2.2</spring-boot-admin-starter-client.version>
+        <rtree2d.version>0.10.0</rtree2d.version>
+        <spring-boot-admin-starter-client.version>2.2.3</spring-boot-admin-starter-client.version>
         <jmh.version>1.23</jmh.version>
-        <commons-io.version>2.6</commons-io.version>
+        <commons-io.version>2.7</commons-io.version>
         <aho-corasick-double-array-trie.version>1.2.2</aho-corasick-double-array-trie.version>
         <yauaa.version>5.17</yauaa.version>
-        <pf4j.version>3.2.0</pf4j.version>
+        <pf4j.version>3.3.1</pf4j.version>
         <swagger.version>3.0.0-SNAPSHOT</swagger.version>
 
         <replacer.version>1.5.3</replacer.version>
