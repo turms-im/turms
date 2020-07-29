@@ -1610,9 +1610,6 @@ export namespace im {
 
                 /** Session sessionId */
                 sessionId?: (string|null);
-
-                /** Session address */
-                address?: (string|null);
             }
 
             /** Represents a Session. */
@@ -1626,9 +1623,6 @@ export namespace im {
 
                 /** Session sessionId. */
                 public sessionId: string;
-
-                /** Session address. */
-                public address: string;
 
                 /**
                  * Encodes the specified Session message. Does not implicitly {@link im.turms.proto.Session.verify|verify} messages.

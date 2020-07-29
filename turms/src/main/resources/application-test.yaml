@@ -9,6 +9,9 @@ logging:
 spring:
   profiles:
     include: test-latest
+
+############################### Turms ###############################
+
 turms:
   database:
     mongo-properties:

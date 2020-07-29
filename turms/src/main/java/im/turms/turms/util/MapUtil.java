@@ -1,60 +1,51 @@
+/*
+ * Copyright (C) 2019 The Turms Project
+ * https://github.com/turms-im/turms
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package im.turms.turms.util;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.function.Function3;
+import reactor.function.Consumer3;
 
-import java.util.*;
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Consumer;
 
+/**
+ * @author James Chen
+ */
 public class MapUtil {
+
     private MapUtil() {
     }
 
-    public static <K, V> Map<K, V> deepMerge(Map<K, V> map1, Map<? extends K, ? extends V> map2) {
-        for (K key : map2.keySet()) {
-            V value1 = map1.get(key);
-            V value2 = map2.get(key);
-            if (value1 instanceof Collection && value2 instanceof Collection) {
-                if (!((Collection) value1).containsAll((Collection) value2)) {
-                    ((Collection) value1).addAll((Collection) value2);
-                }
-            } else if (value1 instanceof Map && value2 instanceof Map) {
-                deepMerge((Map) value1, (Map) value2);
-            } else {
-                V existingValue = map1.get(key);
-                if (existingValue == null || !existingValue.equals(value2)) {
-                    map1.put(key, value2);
-                }
-            }
-        }
-        return map1;
-    }
-
-    public static Map addValueKeyToAllLeaves(Object properties) {
-        if (properties instanceof Map) {
-            for (Map.Entry<String, Object> entry : ((Map<String, Object>) properties).entrySet()) {
-                Object value = entry.getValue();
-                entry.setValue(addValueKeyToAllLeaves(value));
-            }
-            return (Map) properties;
-        } else {
-            HashMap<Object, Object> map = new HashMap<>(1);
-            map.put("value", properties);
-            return map;
-        }
-    }
-
-    public static Mono<Boolean> fluxMerge(Function<Multimap<Long, Long>, Void> mapFiller, Function3<List<Mono<Boolean>>, Long, Set<Long>, Void> monosFiller) {
+    public static Mono<Boolean> fluxMerge(Consumer<Multimap<Long, Long>> mapFiller, Consumer3<List<Mono<Boolean>>, Long, Set<Long>> monosFiller) {
         HashMultimap<Long, Long> multimap = HashMultimap.create();
-        mapFiller.apply(multimap);
-        List<Mono<Boolean>> monos = new ArrayList<>(multimap.keySet().size());
-        for (Long key : multimap.keySet()) {
+        mapFiller.accept(multimap);
+        Set<Long> longs = multimap.keySet();
+        List<Mono<Boolean>> monos = new ArrayList<>(longs.size());
+        for (Long key : longs) {
             Set<Long> values = multimap.get(key);
-            monosFiller.apply(monos, key, values);
+            monosFiller.accept(monos, key, values);
         }
         return Flux.merge(monos).all(value -> value);
     }
+
 }

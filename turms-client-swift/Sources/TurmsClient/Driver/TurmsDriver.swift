@@ -9,9 +9,8 @@ public class TurmsDriver {
     private static let DEVICE_TYPE_FIELD = "dt"
     private static let USER_ONLINE_STATUS_FIELD = "us"
     private static let USER_LOCATION_FIELD = "loc"
-    private static let USER_DEVICE_DETAILS = "dd"
 
-    private var heartbeatInterval: Int = 20
+    private var heartbeatInterval: Int = 120
 
     private weak var turmsClient: TurmsClient!
     private var websocket: WebSocket?
@@ -30,7 +29,6 @@ public class TurmsDriver {
     private var lastRequestDate = Date(timeIntervalSince1970: 0)
     private var isLastRequestHeartbeat = false
 
-    private var address: String?
     private var sessionId: String?
 
     public init(_ turmsClient: TurmsClient, url: String? = nil, connectionTimeout: Int? = nil, minRequestsInterval: Int? = nil) {
@@ -102,14 +100,13 @@ public class TurmsDriver {
                             }
                             let notification = try! TurmsNotification(serializedData: data)
                             if notification.hasData, case .session = notification.data.kind! {
-                                self.address = notification.data.session.address
                                 self.sessionId = notification.data.session.sessionID
                             } else if notification.hasRequestID {
                                 let requestId = notification.requestID.value
                                 let handler = self.requestsMap[requestId]
                                 if notification.hasCode {
                                     let code = notification.code.value
-                                    if TurmsStatusCode.isSuccess(code) {
+                                    if TurmsStatusCode.isSuccessCode(code) {
                                         handler?.fulfill(notification)
                                     } else {
                                         if notification.hasReason {
@@ -229,7 +226,7 @@ public class TurmsDriver {
         if turmsClient.userService.userId != nil, turmsClient.userService.password != nil {
             switch error {
                 case .notAnUpgrade(let code, let headers):
-                    if code == 307, let address = headers["reason"], address.count > 0 {
+                    if code == 307, let address = headers["X-API-Reason"], address.count > 0 {
                         reconnect(address)
                     }
                     fallthrough

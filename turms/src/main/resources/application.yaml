@@ -1,8 +1,5 @@
 server:
-  error:
-    whitelabel:
-      enabled: false
-  port: 9510 #9510
+  port: 8510 #9510
   ssl:
     enabled: false # Enable SSL if needed. Make sure to mutate HTTP requests to HTTPS requests, or Netty will throw NotSslRecordException
     key-store: classpath:keystore-test.p12 # keytool -genkeypair -keyalg RSA -keysize 2048 -validity 3650 -alias turms -keystore keystore-test.p12 -storetype PKCS12 -storepass imturms
@@ -10,8 +7,6 @@ server:
     key-store-password: imturms
     key-alias: turms
   address: 0.0.0.0
-  netty:
-    connection-timeout: 10s # To mitigate the Slowloris DoS attack by lowering the timeout for the TCP connection handshake
 spring:
   application:
     name: turms
@@ -38,7 +33,8 @@ spring:
         password: turms
         register-once: false
   webflux:
-    date-format: yyyy-MM-dd'T'HH:mm:ssX
+    format:
+      date-time: yyyy-MM-dd'T'HH:mm:ssX
   codec:
     max-in-memory-size: 64KB
   autoconfigure:
@@ -48,17 +44,36 @@ management:
     web:
       exposure:
         include: "*"
+  metrics:
+    export:
+      datadog:
+        application-key:
 logging:
   file:
     name: ../logs/turms.log
   pattern:
     dateformat: yyyy-MM-dd HH:mm:ss.SSS,UTC
-turms-plugin:
+
+############################### Turms ###############################
+
+turms:
+  cluster:
+    node:
+      version: @project.version@
+    id: turms
+  service:
+    database:
+      mongo-properties:
+        default-properties:
+          uri: mongodb://localhost:29510/turms
+    message:
+      check-if-target-active-and-not-deleted: false
+  gateway:
+    session:
+      enable-authentication: false
+springfox:
+  documentation:
+    enabled: true
+#turms-plugin:
 #  mock:
 #    enabled: true
-turms:
-  database:
-    mongo-properties:
-      default-properties:
-        auto-index-creation: true
-        uri: mongodb://localhost:29510/turms

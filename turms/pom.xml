@@ -1,38 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2019 The Turms Project
+  ~ https://github.com/turms-im/turms
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.0.RELEASE</version>
+        <version>2.4.0-M1</version>
         <relativePath/>
     </parent>
+
     <groupId>im.turms</groupId>
     <artifactId>turms</artifactId>
-    <version>0.9.0-SNAPSHOT</version>
+    <version>0.10.0-SNAPSHOT</version>
     <name>turms</name>
-    <description>Turms is an open source, distributed, robust and blazingly fast instant messaging server capable of
-        solving a growing number of use cases
-    </description>
 
     <properties>
         <java.version>11</java.version>
-        <hazelcast.version>4.0.1</hazelcast.version>
+        <disruptor.version>3.4.2</disruptor.version>
         <protobuf.version>3.12.2</protobuf.version>
         <guava.version>29.0-jre</guava.version>
-        <rtree2.version>0.9-RC1</rtree2.version>
-        <rtree2d.version>0.10.0</rtree2d.version>
-        <spring-boot-admin-starter-client.version>2.2.3</spring-boot-admin-starter-client.version>
+        <spring-boot-admin-starter-client.version>2.2.4</spring-boot-admin-starter-client.version>
         <jmh.version>1.23</jmh.version>
         <commons-io.version>2.7</commons-io.version>
-        <aho-corasick-double-array-trie.version>1.2.2</aho-corasick-double-array-trie.version>
-        <yauaa.version>5.17</yauaa.version>
-        <pf4j.version>3.3.1</pf4j.version>
-        <swagger.version>3.0.0-SNAPSHOT</swagger.version>
+        <pf4j.version>3.4.0</pf4j.version>
+        <springfox-boot-starter.version>3.0.0</springfox-boot-starter.version>
 
-        <replacer.version>1.5.3</replacer.version>
-        <spring-boot-thin-layout.version>1.0.24.RELEASE</spring-boot-thin-layout.version>
+        <spring-boot-thin-layout.version>1.0.25.RELEASE</spring-boot-thin-layout.version>
 
         <swagger2markup.version>1.3.3</swagger2markup.version>
         <swagger2markup.plugin.version>1.3.7</swagger2markup.plugin.version>
@@ -42,9 +54,9 @@
         <asciidoctor-maven-plugin.version>1.5.6</asciidoctor-maven-plugin.version>
         <jruby.version>9.2.9.0</jruby.version>
         <junit-platform-surefire-provider.version>1.3.2</junit-platform-surefire-provider.version>
-        <spotbugs.version>4.0.0-beta4</spotbugs.version>
+        <spotbugs.version>4.0.6</spotbugs.version>
 
-        <swagger.input>http://127.0.0.1:9510/v2/api-docs</swagger.input>
+        <swagger.input>http://127.0.0.1:8510/v3/api-docs</swagger.input>
         <swagger.output.dir>${project.build.directory}/swagger</swagger.output.dir>
         <swagger.snippetOutput.dir>${project.build.directory}/asciidoc/snippets</swagger.snippetOutput.dir>
         <generated.asciidoc.directory>${project.build.directory}/asciidoc</generated.asciidoc.directory>
@@ -52,22 +64,18 @@
         <asciidoctor.html.output.directory>${project.basedir}/docs/html</asciidoctor.html.output.directory>
         <asciidoctor.pdf.output.directory>${project.basedir}/docs/pdf</asciidoctor.pdf.output.directory>
 
-        <replacer.file>${project.basedir}/src/main/java/im/turms/turms/compiler/CompilerOptions.java</replacer.file>
-        <replacer.turms.env>@env@</replacer.turms.env>
-
         <skipTests>true</skipTests>
         <skipITs>${skipTests}</skipITs>
         <skipUTs>${skipTests}</skipUTs>
 
-        <spotbugs-maven-plugin.version>3.1.12.2</spotbugs-maven-plugin.version>
-        <maven-surefire-plugin.version>3.0.0-M4</maven-surefire-plugin.version>
-        <maven-failsafe-plugin.version>3.0.0-M4</maven-failsafe-plugin.version>
+        <spotbugs-maven-plugin.version>4.0.4</spotbugs-maven-plugin.version>
+        <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
+        <maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-source-plugin.version>3.2.0</maven-source-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
-
-        <hibernate-validator-annotation-processor.version>6.1.2.Final</hibernate-validator-annotation-processor.version>
     </properties>
+
     <repositories>
         <repository>
             <id>spring-milestone</id>
@@ -79,32 +87,38 @@
             <name>Sonatype Nexus Snapshots</name>
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </repository>
-        <repository>
-            <id>jcenter-snapshots</id>
-            <name>jcenter</name>
-            <url>http://oss.jfrog.org/artifactory/oss-snapshot-local/</url>
-        </repository>
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-snapshots</id>
+            <url>https://repo.spring.io/snapshot</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>spring-milestones</id>
+            <url>https://repo.spring.io/milestone</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <dependencies>
         <dependency>
             <groupId>im.turms</groupId>
-            <artifactId>common</artifactId>
-            <version>0.9.0</version>
+            <artifactId>server-common</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.pf4j</groupId>
-            <artifactId>pf4j</artifactId>
-            <version>${pf4j.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
-            <groupId>io.projectreactor.addons</groupId>
-            <artifactId>reactor-extra</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.hazelcast</groupId>
-            <artifactId>hazelcast-spring</artifactId>
-            <version>${hazelcast.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -113,6 +127,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb-reactive</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis-reactive</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -128,16 +146,9 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-crypto</artifactId>
+            <groupId>com.lmax</groupId>
+            <artifactId>disruptor</artifactId>
+            <version>${disruptor.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.protobuf</groupId>
@@ -159,45 +170,25 @@
             <version>${commons-io.version}</version>
         </dependency>
         <dependency>
-            <groupId>nl.basjes.parse.useragent</groupId>
-            <artifactId>yauaa</artifactId>
-            <version>${yauaa.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.davidmoten</groupId>
-            <artifactId>rtree2</artifactId>
-            <version>${rtree2.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.plokhotnyuk.rtree2d</groupId>
-            <artifactId>rtree2d-core_2.13</artifactId>
-            <version>${rtree2d.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.hankcs</groupId>
-            <artifactId>aho-corasick-double-array-trie</artifactId>
-            <version>${aho-corasick-double-array-trie.version}</version>
-        </dependency>
-        <dependency>
             <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${swagger.version}</version>
+            <artifactId>springfox-boot-starter</artifactId>
+            <version>${springfox-boot-starter.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${swagger.version}</version>
+            <groupId>org.pf4j</groupId>
+            <artifactId>pf4j</artifactId>
+            <version>${pf4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-spring-webflux</artifactId>
-            <version>${swagger.version}</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
         </dependency>
+
         <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -213,7 +204,7 @@
         <dependency>
             <groupId>im.turms</groupId>
             <artifactId>turms-client-java</artifactId>
-            <version>0.9.0</version>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -233,13 +224,26 @@
             <version>${jmh.version}</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.hibernate.validator</groupId>
-            <artifactId>hibernate-validator-annotation-processor</artifactId>
-            <version>${hibernate-validator-annotation-processor.version}</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <!-- https://spotbugs.readthedocs.io/en/stable/maven.html -->
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>${spotbugs-maven-plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs</artifactId>
+                        <version>${spotbugs.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+
     <profiles>
         <profile>
             <id>artifact-swagger</id>
@@ -354,87 +358,9 @@
             </build>
         </profile>
         <profile>
-            <id>env-dev</id>
-            <properties>
-                <turms.env>DEV</turms.env>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.google.code.maven-replacer-plugin</groupId>
-                        <artifactId>replacer</artifactId>
-                        <version>${replacer.version}</version>
-                        <executions>
-                            <execution>
-                                <id>replace</id>
-                                <phase>generate-sources</phase>
-                                <goals>
-                                    <goal>replace</goal>
-                                </goals>
-                                <configuration>
-                                    <file>${replacer.file}</file>
-                                    <replacements>
-                                        <replacement>
-                                            <token>${replacer.turms.env}</token>
-                                            <value>${turms.env}</value>
-                                        </replacement>
-                                    </replacements>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>env-prod</id>
-            <properties>
-                <turms.env>PROD</turms.env>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.google.code.maven-replacer-plugin</groupId>
-                        <artifactId>replacer</artifactId>
-                        <version>${replacer.version}</version>
-                        <executions>
-                            <execution>
-                                <id>replace</id>
-                                <phase>generate-sources</phase>
-                                <goals>
-                                    <goal>replace</goal>
-                                </goals>
-                                <configuration>
-                                    <file>${replacer.file}</file>
-                                    <replacements>
-                                        <replacement>
-                                            <token>${replacer.turms.env}</token>
-                                            <value>${turms.env}</value>
-                                        </replacement>
-                                    </replacements>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
             <id>test</id>
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>com.github.spotbugs</groupId>
-                        <artifactId>spotbugs-maven-plugin</artifactId>
-                        <version>${spotbugs-maven-plugin.version}</version>
-                        <dependencies>
-                            <dependency>
-                                <groupId>com.github.spotbugs</groupId>
-                                <artifactId>spotbugs</artifactId>
-                                <version>${spotbugs.version}</version>
-                            </dependency>
-                        </dependencies>
-                    </plugin>
                     <plugin>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <version>${maven-surefire-plugin.version}</version>
@@ -481,16 +407,11 @@
                             <source>11</source>
                             <target>11</target>
                             <annotationProcessors>
-                                <annotationProcessor>
-                                    org.springframework.boot.configurationprocessor.ConfigurationMetadataAnnotationProcessor
-                                </annotationProcessor>
                                 <annotationProcessor>lombok.launch.AnnotationProcessorHider$AnnotationProcessor
                                 </annotationProcessor>
                                 <annotationProcessor>org.pf4j.processor.ExtensionAnnotationProcessor
                                 </annotationProcessor>
                                 <annotationProcessor>org.pf4j.processor.ExtensionAnnotationProcessor
-                                </annotationProcessor>
-                                <annotationProcessor>org.hibernate.validator.ap.ConstraintValidationProcessor
                                 </annotationProcessor>
                             </annotationProcessors>
                         </configuration>
@@ -542,7 +463,7 @@
             </build>
         </profile>
         <profile>
-            <!-- Use an independent profile to avoid distributing accidentally -->
+            <!-- Use an independent profile to avoid distributing by accident -->
             <id>distribution-turms</id>
             <build>
                 <plugins>

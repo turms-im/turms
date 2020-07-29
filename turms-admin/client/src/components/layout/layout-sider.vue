@@ -52,28 +52,30 @@ export default {
     },
     data() {
         const menuItems = [
-            {
-                key: 'statistics',
-                iconType: 'bar-chart',
-                title: this.$t('statistics'),
-                children: [
-                    {
-                        key: '/statistics/user',
-                        iconType: 'user',
-                        title: this.$t('userClass')
-                    },
-                    {
-                        key: '/statistics/group',
-                        iconType: 'team',
-                        title: this.$t('groupClass')
-                    },
-                    {
-                        key: '/statistics/message',
-                        iconType: 'message',
-                        title: this.$t('messageClass')
-                    }
-                ]
-            },
+            // TODO: We hide the statistics pages because the server side isn't ready for it.
+            //  And we will integrate Flink to do the job later.
+            // {
+            //     key: 'statistics',
+            //     iconType: 'bar-chart',
+            //     title: this.$t('statistics'),
+            //     children: [
+            //         {
+            //             key: '/statistics/user',
+            //             iconType: 'user',
+            //             title: this.$t('userClass')
+            //         },
+            //         {
+            //             key: '/statistics/group',
+            //             iconType: 'team',
+            //             title: this.$t('groupClass')
+            //         },
+            //         {
+            //             key: '/statistics/message',
+            //             iconType: 'message',
+            //             title: this.$t('messageClass')
+            //         }
+            //     ]
+            // },
             {
                 key: 'content',
                 iconType: 'profile',

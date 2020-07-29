@@ -52,12 +52,12 @@ class TurmsClient {
         }
     }
 
-    //Driver
+    // Driver
     get driver(): TurmsDriver {
         return this._driver;
     }
 
-    //Service
+    // Service
     get userService(): UserService {
         return this._userService;
     }
@@ -78,7 +78,7 @@ class TurmsClient {
         return this._notificationService;
     }
 
-    //Util
+    // Util
     static InputFileReader(): InputFileReader {
         return InputFileReader;
     }
@@ -98,7 +98,7 @@ if (root) {
         value: TurmsClient
     });
 } else {
-    console.error('Make sure to run turms-client in either browser or nodejs');
+    console.error('Make sure to run turms-client in either browser or Node.js');
 }
 
 export default TurmsClient;

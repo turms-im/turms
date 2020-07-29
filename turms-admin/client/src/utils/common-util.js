@@ -1,5 +1,11 @@
 export default class CommonUtil {
-    static upperFirst(name) {
-        return name.charAt(0).toUpperCase() + name.slice(1);
+
+    static splitByCapitals(text) {
+        return text.split(/(?=[A-Z])/).join(' ');
     }
+
+    static upperFirst(text) {
+        return text.charAt(0).toUpperCase() + text.slice(1);
+    }
+
 }

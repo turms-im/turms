@@ -17,7 +17,7 @@
 
 package im.turms.common.exception;
 
-import im.turms.common.TurmsStatusCode;
+import im.turms.common.constant.statuscode.TurmsStatusCode;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,6 +25,9 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * @author James Chen
+ */
 public class TurmsBusinessException extends NoStackTraceException {
     private static final Map<TurmsStatusCode, TurmsBusinessException> EXCEPTION_POOL = new EnumMap<>(TurmsStatusCode.class);
     private final TurmsStatusCode code;
@@ -114,4 +117,5 @@ public class TurmsBusinessException extends NoStackTraceException {
         future.completeExceptionally(get(statusCode, reason));
         return future;
     }
+
 }

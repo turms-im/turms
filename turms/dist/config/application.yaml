@@ -53,11 +53,18 @@ logging:
     name: ../logs/turms.log
   pattern:
     dateformat: yyyy-MM-dd HH:mm:ss.SSS,UTC
+springfox:
+  documentation:
+    enabled: false
+
+############################### Turms ###############################
+
 turms:
-  database:
-    mongo-properties:
-      default-properties:
-        auto-index-creation: true
-        #  mongodb://<user>:<password>@<url>:<port>/<dbname>
-        #  mongodb://host1:27017,host2:27017,host3:27017
-        uri: mongodb://localhost:29510/turms
+  service:
+    database:
+      mongo-properties:
+        default-properties:
+          auto-index-creation: true
+          #  mongodb://<user>:<password>@<url>:<port>/<dbname>
+          #  mongodb://host1:29510,host2:29510,host3:29510
+          uri: mongodb://localhost:29510/turms

@@ -1,9 +1,5 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-
-import StatisticsUserPane from '../components/pages/statistics/statistics-user-pane';
-import StatisticsGroupPane from '../components/pages/statistics/statistics-group-pane';
-import StatisticsMessage from '../components/pages/statistics/message/index';
 import ContentUser from '../components/pages/content/user/index';
 import ContentGroup from '../components/pages/content/group/index';
 import ContentMessage from '../components/pages/content/message/index';
@@ -18,20 +14,26 @@ const router = new VueRouter({
     routes: [
         {
             path: '/',
-            redirect: '/statistics/user'
+            redirect: '/content/user'
         },
-        {
-            path: '/statistics/user',
-            component: StatisticsUserPane
-        },
-        {
-            path: '/statistics/group',
-            component: StatisticsGroupPane
-        },
-        {
-            path: '/statistics/message',
-            component: StatisticsMessage
-        },
+        // TODO: We hide the statistics pages because the server side isn't ready for it.
+        //  And we will integrate Flink to do the job later.
+        // {
+        //     path: '/',
+        //     redirect: '/statistics/user'
+        // },
+        // {
+        //     path: '/statistics/user',
+        //     component: StatisticsUserPane
+        // },
+        // {
+        //     path: '/statistics/group',
+        //     component: StatisticsGroupPane
+        // },
+        // {
+        //     path: '/statistics/message',
+        //     component: StatisticsMessage
+        // },
         {
             path: '/content/user',
             component: ContentUser

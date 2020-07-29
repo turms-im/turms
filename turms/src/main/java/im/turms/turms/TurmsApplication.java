@@ -19,22 +19,30 @@ package im.turms.turms;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
-@SpringBootApplication
-@ConfigurationPropertiesScan
-@EnableScheduling
+/**
+ * @author James Chen
+ */
+@SpringBootApplication(
+        scanBasePackages = {"im.turms.turms", "im.turms.server.common"},
+        proxyBeanMethods = false)
 public class TurmsApplication {
+
     public static void main(String[] args) {
+        System.setProperty("log4j2.contextSelector", "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
         try {
             SpringApplication.run(TurmsApplication.class, args);
         } catch (Exception e) {
             // Make sure that turms can exit if SpringApplication failed to bootstrap (e.g. PortInUseException)
-            // because there are still some non-daemon threads that are running after the context has been closed
-            // in org.springframework.boot.SpringApplication.handleRunFailure,
-            // which won't trigger im.turms.turms.config.spring.ApplicationContextConfig.handleContextClosedEvent.
+            // because there are still some non-daemon threads running after the context has been closed
+
+            // Note that org.springframework.boot.SpringApplication.handleRunFailure may not trigger
+            // im.turms.turms.context.ApplicationContextConfig.handleContextClosedEvent
+            // because the context hadn't been initialized.
+
+            // Don't print the exception because Spring should have done it
             System.exit(1);
         }
     }
+
 }

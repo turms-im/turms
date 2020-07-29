@@ -3611,7 +3611,6 @@ $root.im = (function() {
                  * @memberof im.turms.proto
                  * @interface ISession
                  * @property {string|null} [sessionId] Session sessionId
-                 * @property {string|null} [address] Session address
                  */
 
                 /**
@@ -3638,14 +3637,6 @@ $root.im = (function() {
                 Session.prototype.sessionId = "";
 
                 /**
-                 * Session address.
-                 * @member {string} address
-                 * @memberof im.turms.proto.Session
-                 * @instance
-                 */
-                Session.prototype.address = "";
-
-                /**
                  * Encodes the specified Session message. Does not implicitly {@link im.turms.proto.Session.verify|verify} messages.
                  * @function encode
                  * @memberof im.turms.proto.Session
@@ -3659,8 +3650,6 @@ $root.im = (function() {
                         writer = $Writer.create();
                     if (message.sessionId != null && Object.hasOwnProperty.call(message, "sessionId"))
                         writer.uint32(/* id 1, wireType 2 =*/10).string(message.sessionId);
-                    if (message.address != null && Object.hasOwnProperty.call(message, "address"))
-                        writer.uint32(/* id 2, wireType 2 =*/18).string(message.address);
                     return writer;
                 };
 
@@ -3684,9 +3673,6 @@ $root.im = (function() {
                         switch (tag >>> 3) {
                         case 1:
                             message.sessionId = reader.string();
-                            break;
-                        case 2:
-                            message.address = reader.string();
                             break;
                         default:
                             reader.skipType(tag & 7);

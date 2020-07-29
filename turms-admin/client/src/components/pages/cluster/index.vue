@@ -7,13 +7,13 @@
         <div
             class="cluster-management-tabs"
         >
-            <a-tabs :default-active-key="tabTitles[0]">
+            <a-tabs>
                 <a-tab-pane
                     v-for="title in tabTitles"
-                    :key="title"
-                    :tab="title"
+                    :key="title.key"
+                    :tab="title.text"
                 >
-                    <cluster-config-pane :properties="currentConfig[title.toLowerCase()]" />
+                    <cluster-config-pane :properties="currentConfig[title.key]" />
                 </a-tab-pane>
             </a-tabs>
             <div class="cluster-management-tabs__action-group">
@@ -113,7 +113,10 @@ export default {
         tabTitles() {
             return Object.entries(this.currentConfig)
                 .filter(entry => Object.keys(entry[1]).length)
-                .map(entry => this.$util.upperFirst(entry[0]));
+                .map(entry => ({
+                    text: this.$util.splitByCapitals(this.$util.upperFirst(entry[0])),
+                    key: entry[0]
+                }));
         }
     },
     watch: {
@@ -180,7 +183,7 @@ export default {
                 });
         },
         fetchConfig() {
-            return this.$client.get('/cluster/config/metadata?withMutableFlag=true&withValue=true')
+            return this.$client.get('/cluster/config/metadata?withValue=true')
                 .catch(error => {
                     this.$error(this.$t('failedToFetchData'), error);
                 });

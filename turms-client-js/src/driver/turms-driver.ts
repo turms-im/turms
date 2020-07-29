@@ -11,15 +11,14 @@ import {ParsedNotification} from "../model/parsed-notification";
 import TurmsCloseStatus from "../model/turms-close-status";
 import TurmsClient from "../turms-client";
 import UserLocation from "../model/user-location";
+import {SessionDisconnectionReason} from "../model/session-disconnection-reason";
+import {LoginFailureReason} from "../model/login-failure-reason";
+// @ts-ignore
+import fetch from "unfetch/dist/unfetch.es";
 import TurmsNotification = im.turms.proto.TurmsNotification;
 import TurmsRequest = im.turms.proto.TurmsRequest;
 import UserStatus = im.turms.proto.UserStatus;
 import DeviceType = im.turms.proto.DeviceType;
-
-// Don't use "import fetch from 'unfetch'" because it throws if running in Node.js
-// Don't use "import * as fetch from 'unfetch'" because it throws if running in browser
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const fetch = require('unfetch');
 
 const COOKIE_REQUEST_ID = 'rid';
 const COOKIE_USER_ID = 'uid';
@@ -28,7 +27,7 @@ const COOKIE_USER_ONLINE_STATUS = 'us';
 const COOKIE_DEVICE_TYPE = 'dt';
 const COOKIE_LOCATION = 'loc';
 
-const HEARTBEAT_INTERVAL = 20 * 1000;
+const HEARTBEAT_INTERVAL = 120 * 1000;
 export default class TurmsDriver {
     private _heartbeatInterval: number;
 
@@ -53,7 +52,6 @@ export default class TurmsDriver {
 
     private _requestId: number;
     private _sessionId?: string;
-    private _address?: string;
 
     constructor(turmsClient: TurmsClient,
                 url?: string,
@@ -154,7 +152,6 @@ export default class TurmsDriver {
                     const isSessionInfo = notification.data && notification.data.session;
                     if (isSessionInfo) {
                         this._sessionId = notification.data.session.sessionId;
-                        this._address = notification.data.session.address;
                     } else {
                         const parsedNotification = NotificationUtil.transform(notification);
                         for (const listener of this._onNotificationListeners) {
@@ -167,7 +164,7 @@ export default class TurmsDriver {
                     }
                 });
                 // onClose will always be triggered when
-                // 1. rejected by a HTTP upgrade error response
+                // 1. rejected by the HTTP upgrade error response
                 // 2. disconnected no matter by error (after onError) or else
                 this._websocket.onClose.addListener(event => {
                     this._onWebsocketClose(event)
@@ -204,7 +201,7 @@ export default class TurmsDriver {
                 if (this._queryReasonWhenLoginFailed) {
                     return Promise.reject(error);
                 } else {
-                    return Promise.reject(`Failed to login due to 1. password mismatch; 2. the server doesn't exist or is unavailable`);
+                    return Promise.reject(`Failed to login due to 1. user doesn't exist or is inactive; 2. password mismatch; 3. the server doesn't exist or is unavailable`);
                 }
             });
     }
@@ -255,10 +252,10 @@ export default class TurmsDriver {
         document.cookie = `${COOKIE_USER_ID}=${userId}; path=/`;
         document.cookie = `${COOKIE_PASSWORD}=${escape(password)}; path=/`;
         if (userOnlineStatus) {
-            document.cookie = `${COOKIE_USER_ONLINE_STATUS}=${userOnlineStatus.toString()}; path=/`;
+            document.cookie = `${COOKIE_USER_ONLINE_STATUS}=${UserStatus[userOnlineStatus]}; path=/`;
         }
         if (deviceType) {
-            document.cookie = `${COOKIE_DEVICE_TYPE}=${deviceType.toString()}; path=/`;
+            document.cookie = `${COOKIE_DEVICE_TYPE}=${DeviceType[deviceType]}; path=/`;
         }
         if (location) {
             document.cookie = `${COOKIE_LOCATION}=${location.toString()}; path=/`;
@@ -315,14 +312,18 @@ export default class TurmsDriver {
                 if (this._queryReasonWhenDisconnected && userId && this._sessionId) {
                     const params = `userId=${userId}&deviceType=${deviceType}&sessionId=${this._sessionId}`;
                     return fetch(`${this._httpUrl}/reasons/disconnection?${params}`)
-                        .then(response => {
-                            return response.text()
-                                .then(text => {
-                                    const closeStatus = parseInt(text);
-                                    this._onClose(closeStatus, event.code, event.reason);
-                                });
-                        }).catch(error => {
+                        .catch(error => {
                             this._onClose(null, event.code, event.reason, new Error(`Failed to fetch the disconnection reason: ${error}`));
+                        })
+                        .then(response => {
+                            if (response.status === 200) {
+                                response.json()
+                                    .then((reason: SessionDisconnectionReason) => {
+                                        this._onClose(reason.closeCode, event.code, event.reason);
+                                    });
+                            } else {
+                                this._onClose(null, event.code, event.reason, new Error(`Failed to fetch the disconnection reason: ${response.statusText}`));
+                            }
                         });
                 } else {
                     this._onClose(null, event.code, event.reason);
@@ -331,21 +332,21 @@ export default class TurmsDriver {
         } else {
             if (this._queryReasonWhenLoginFailed && userId && this._requestId) {
                 const params = `userId=${userId}&deviceType=${deviceType}&requestId=${this._requestId}`;
-                return fetch(`${this._httpUrl}/reasons/login-failed?${params}`)
+                return fetch(`${this._httpUrl}/reasons/login-failure?${params}`)
+                    .catch(error => {
+                        throw new Error(`Failed to fetch the reason for login failure: ${error}`);
+                    })
                     .then(response => {
-                        if (response.status === 307) {
-                            return response.text().then(host => {
-                                if (host) {
-                                    return this.reconnect(host);
-                                } else {
-                                    return Promise.reject(new Error('Failed to login: 307'));
-                                }
+                        if (response.status === 200) {
+                            return response.json().then((reason: LoginFailureReason) => {
+                                const desc = reason.reason
+                                    ? `${reason.statusCode} - ${reason.reason}`
+                                    : reason.statusCode;
+                                return Promise.reject(new Error(`Failed to login: ${desc}`));
                             });
                         } else {
-                            throw new Error(response);
+                            throw new Error(`Failed to fetch the reason for login failure: ${response.statusText}`);
                         }
-                    }).catch(error => {
-                        throw new Error(`Failed to fetch the login-failed reason: ${error}`);
                     });
             }
             return Promise.reject(new Error('Failed to login'));
@@ -369,4 +370,5 @@ export default class TurmsDriver {
                 this._turmsClient.userService.location);
         }
     }
+
 }

@@ -1,5 +1,3 @@
-import {im} from "./proto-bundle";
-
 export interface ParsedNotification {
     requestId?: string;
     code?: number;

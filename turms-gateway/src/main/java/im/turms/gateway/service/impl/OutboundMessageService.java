@@ -1,0 +1,119 @@
+/*
+ * Copyright (C) 2019 The Turms Project
+ * https://github.com/turms-im/turms
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package im.turms.gateway.service.impl;
+
+import im.turms.common.model.dto.notification.TurmsNotification;
+import im.turms.gateway.manager.UserSessionsManager;
+import im.turms.gateway.plugin.extension.TurmsNotificationHandler;
+import im.turms.gateway.plugin.manager.TurmsPluginManager;
+import im.turms.gateway.pojo.bo.session.UserSession;
+import im.turms.server.common.cluster.node.Node;
+import im.turms.server.common.rpc.service.IOutboundMessageService;
+import im.turms.server.common.service.session.UserStatusService;
+import io.netty.buffer.ByteBuf;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * @author James Chen
+ */
+@Component
+@Validated
+@Log4j2
+public class OutboundMessageService implements IOutboundMessageService {
+
+    private final Node node;
+    private final SessionService sessionService;
+    private final UserStatusService userStatusService;
+    private final TurmsPluginManager turmsPluginManager;
+
+    public OutboundMessageService(
+            Node node,
+            SessionService sessionService,
+            UserStatusService userStatusService,
+            TurmsPluginManager turmsPluginManager) {
+        this.sessionService = sessionService;
+        this.userStatusService = userStatusService;
+        this.node = node;
+        this.turmsPluginManager = turmsPluginManager;
+    }
+
+    /**
+     * @param notificationData should be a data of TurmsNotification
+     * @return true if the notification has forwarded to all recipients
+     */
+    @Override
+    public boolean sendNotificationToLocalClients(
+            @NotNull ByteBuf notificationData,
+            @NotEmpty Set<Long> recipientIds) {
+        // Prepare data
+        boolean hasForwardedMessageToAllRecipients = true;
+        boolean triggerHandlers = node.getSharedProperties().getPlugin().isEnabled()
+                && !turmsPluginManager.getNotificationHandlerList().isEmpty();
+        Set<Long> offlineRecipientIds = triggerHandlers ? new HashSet<>() : Collections.emptySet();
+
+        // Send notification
+        for (Long recipientId : recipientIds) {
+            UserSessionsManager userSessionsManager = sessionService.getUserSessionsManager(recipientId);
+            if (userSessionsManager != null) {
+                for (UserSession userSession : userSessionsManager.getSessionMap().values()) {
+                    notificationData.retain();
+                    // This will decrease the reference count of the message
+                    userSession.getNotificationSink().next(notificationData);
+                }
+            } else {
+                hasForwardedMessageToAllRecipients = false;
+                if (triggerHandlers) {
+                    offlineRecipientIds.add(recipientId);
+                }
+            }
+        }
+
+        // Trigger plugins
+        if (triggerHandlers) {
+            TurmsNotification notification = null;
+            try {
+                notification = TurmsNotification.parseFrom(notificationData.nioBuffer());
+            } catch (Exception e) {
+                log.error("Failed to parse TurmsNotification", e);
+            }
+            if (notification != null) {
+                for (TurmsNotificationHandler handler : turmsPluginManager.getNotificationHandlerList()) {
+                    try {
+                        handler.handle(notification, recipientIds, offlineRecipientIds);
+                    } catch (Exception e) {
+                        log.error(e);
+                    }
+                }
+            }
+        }
+
+        // Release
+        notificationData.release();
+
+        return hasForwardedMessageToAllRecipients;
+    }
+
+}

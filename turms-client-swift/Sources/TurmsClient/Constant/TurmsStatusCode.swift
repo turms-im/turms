@@ -39,6 +39,7 @@ public enum TurmsStatusCode: Int {
     case guestsHaveBeenMuted
     case fileTooLarge
     case requestTooLarge
+    case forbiddenDeviceType
 
     case loggedInDevicesCannotOffline = 5001
     case notImplemented
@@ -99,10 +100,11 @@ extension TurmsStatusCode {
             case .guestsHaveBeenMuted: return "The guests of the group have been muted"
             case .fileTooLarge: return "The file is too large to upload"
             case .requestTooLarge: return "The request is too large"
+            case .forbiddenDeviceType: return "The device type is forbidden for the request"
         }
     }
     
-    public static func isSuccess(_ code: Int32) -> Bool {
+    public static func isSuccessCode(_ code: Int32) -> Bool {
         return 2000 <= code && code < 3000
     }
 }

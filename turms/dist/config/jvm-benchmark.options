@@ -2,6 +2,7 @@
 -Xmx1g
 
 -XX:+UseParallelGC
+-XX:-RestrictContended
 
 -XX:+DisableAttachMechanism
 -Xnoclassgc

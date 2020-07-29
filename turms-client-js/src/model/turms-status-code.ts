@@ -37,6 +37,7 @@ enum Code {
     GUESTS_HAVE_BEEN_MUTED,
     FILE_TOO_LARGE,
     REQUEST_TOO_LARGE,
+    FORBIDDEN_DEVICE_TYPE,
 
     SERVER_INTERNAL_ERROR = 5000,
     LOGGED_DEVICES_CANNOT_OFFLINE,
@@ -92,6 +93,7 @@ class TurmsStatusCode {
         [Code.GUESTS_HAVE_BEEN_MUTED]: "The guests of the group have been muted",
         [Code.FILE_TOO_LARGE]: "The file is too large to upload",
         [Code.REQUEST_TOO_LARGE]: "The request is too large",
+        [Code.FORBIDDEN_DEVICE_TYPE]: "The device type is forbidden for the request",
         [Code.LOGGED_DEVICES_CANNOT_OFFLINE]: "Cannot set logged in devices offline",
         [Code.NOT_IMPLEMENTED]: "Not Implemented",
         [Code.UNAVAILABLE]: "The service is unavailable",

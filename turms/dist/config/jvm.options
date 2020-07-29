@@ -2,6 +2,7 @@
 -Xmx1g
 
 -XX:+UseG1GC
+-XX:-RestrictContended
 
 -XX:+HeapDumpOnOutOfMemoryError
 -XX:HeapDumpPath=./turms_pid%p.hprof

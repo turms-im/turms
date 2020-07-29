@@ -33,7 +33,7 @@ module.exports = {
                 'allowFirstLine': false
             }
         }],
-        "vue/name-property-casing": ["error", "kebab-case"],
+        'vue/name-property-casing': ['error', 'kebab-case'],
         'vue/html-closing-bracket-spacing': ['error'],
         'vue/no-static-inline-styles': ['error']
     }

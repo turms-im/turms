@@ -70,7 +70,7 @@ import Logo from '../common/logo';
 import Vue from 'vue';
 import axios from 'axios';
 const JSONbig = require('json-bigint');
-const DEFAULT_URL = 'http://localhost:9510';
+const DEFAULT_URL = 'http://localhost:8510';
 export default {
     name: 'login-modal',
     components: {
@@ -99,7 +99,13 @@ export default {
         this.form = this.$form.createForm(this);
     },
     mounted() {
-        this.$refs.accountInput.focus();
+        if (this.$refs.accountInput) {
+            this.$refs.accountInput.focus();
+        } else {
+            setTimeout(() => {
+                this.$refs.accountInput.focus();
+            });
+        }
     },
     methods: {
         handleSubmit(e) {

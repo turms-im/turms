@@ -25,7 +25,7 @@
                 class="cluster-config-item__input"
             />
         </div>
-        <div v-if="pair[1].type === 'int' || pair[1].type === 'double'">
+        <div v-if="isNumberType(pair[1].type)">
             <a-input-number
                 v-model="pair[1].value"
                 :disabled="!pair[1].mutable"
@@ -55,9 +55,8 @@
             </a-select>
         </div>
         <div
-            v-if="pair[1].type !== 'string'
-                && pair[1].type !== 'int'
-                && pair[1].type !== 'double'
+            v-if="!isNumberType(pair[1].type)
+                && pair[1].type !== 'string'
                 && pair[1].type !== 'boolean'
                 && pair[1].type !== 'enum'"
         >
@@ -96,6 +95,13 @@ export default {
         },
         onRollbackClicked(item) {
             item.value = JSON.parse(JSON.stringify(item.defaultValue));
+        },
+        isNumberType(type) {
+            return type === 'int'
+                || type === 'long'
+                || type === 'short'
+                || type === 'float'
+                || type === 'double';
         }
     }
 };

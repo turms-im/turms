@@ -18,16 +18,16 @@
 package im.turms.turms.util;
 
 import com.google.protobuf.*;
-import im.turms.common.TurmsStatusCode;
 import im.turms.common.constant.*;
+import im.turms.common.constant.statuscode.TurmsStatusCode;
 import im.turms.common.exception.TurmsBusinessException;
-import im.turms.common.model.bo.user.UserInfo;
-import im.turms.common.model.bo.user.UserStatusDetail;
-import im.turms.common.model.dto.notification.TurmsNotification;
+import im.turms.common.model.bo.group.*;
+import im.turms.common.model.bo.message.MessageStatus;
+import im.turms.common.model.bo.user.*;
 import im.turms.common.model.dto.request.message.CreateMessageRequest;
-import im.turms.turms.pojo.bo.UserOnlineInfo;
-import im.turms.turms.pojo.domain.Message;
-import im.turms.turms.pojo.domain.*;
+import im.turms.server.common.bo.session.UserSessionsStatus;
+import im.turms.server.common.dao.domain.User;
+import im.turms.turms.workflow.dao.domain.Message;
 import lombok.extern.log4j.Log4j2;
 
 import javax.annotation.Nullable;
@@ -38,39 +38,41 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * @author James Chen
+ */
 @Log4j2
 public class ProtoUtil {
+
+    // im/turms/common/model/dto/request/TurmsRequest.java:55
+    private static final int TURMS_REQUEST_REQUEST_ID_TAG = 10;
 
     private ProtoUtil() {
     }
 
-    public static ByteBuffer getByteBuffer(TurmsNotification notification) {
-        ByteBuffer buffer = ByteBuffer.allocateDirect(notification.getSerializedSize());
-        CodedOutputStream output = CodedOutputStream.newInstance(buffer);
-        try {
-            notification.writeTo(output);
-            output.checkNoSpaceLeft();
-        } catch (Exception e) {
-            log.error(e);
-            return ByteBuffer.wrap(notification.toByteArray());
-        }
-        return buffer;
-    }
+    // TurmsRequest
 
     public static long parseRequestId(ByteBuffer turmsRequestBuffer) throws IOException {
+        // The CodedInputStream.newInstance should be efficient because it reuses the direct buffer
+        // see com.google.protobuf.CodedInputStream.newInstance(java.nio.ByteBuffer, boolean)
         CodedInputStream stream = CodedInputStream.newInstance(turmsRequestBuffer);
         int tag;
         do {
             tag = stream.readTag();
-            if (tag == 10) { // im/turms/common/model/dto/request/TurmsRequest.java:55
+            if (tag == TURMS_REQUEST_REQUEST_ID_TAG) {
                 Int64Value value = stream.readMessage(Int64Value.parser(), ExtensionRegistry.getEmptyRegistry());
                 if (value != null) {
                     return value.getValue();
+                } else {
+                    throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The requestId of TurmsRequest is null");
                 }
             }
+            stream.skipField(tag);
         } while (tag != 0);
-        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS);
+        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The requestId of TurmsRequest is missing");
     }
+
+    // Transformation
 
     public static im.turms.common.model.bo.message.Message.Builder message2proto(Message message) {
         im.turms.common.model.bo.message.Message.Builder builder = im.turms.common.model.bo.message.Message.newBuilder();
@@ -144,8 +146,8 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static im.turms.common.model.bo.user.UserFriendRequest.Builder friendRequest2proto(@NotNull UserFriendRequest userFriendRequest) {
-        im.turms.common.model.bo.user.UserFriendRequest.Builder builder = im.turms.common.model.bo.user.UserFriendRequest.newBuilder();
+    public static UserFriendRequest.Builder friendRequest2proto(@NotNull im.turms.turms.workflow.dao.domain.UserFriendRequest userFriendRequest) {
+        UserFriendRequest.Builder builder = UserFriendRequest.newBuilder();
         Long requestId = userFriendRequest.getId();
         Date creationDate = userFriendRequest.getCreationDate();
         String content = userFriendRequest.getContent();
@@ -181,9 +183,9 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static im.turms.common.model.bo.user.UserRelationship.Builder relationship2proto(@NotNull UserRelationship relationship) {
-        im.turms.common.model.bo.user.UserRelationship.Builder builder = im.turms.common.model.bo.user.UserRelationship.newBuilder();
-        UserRelationship.Key key = relationship.getKey();
+    public static UserRelationship.Builder relationship2proto(@NotNull im.turms.turms.workflow.dao.domain.UserRelationship relationship) {
+        UserRelationship.Builder builder = UserRelationship.newBuilder();
+        im.turms.turms.workflow.dao.domain.UserRelationship.Key key = relationship.getKey();
         Boolean isBlocked = relationship.getIsBlocked();
         Date establishmentDate = relationship.getEstablishmentDate();
         if (key != null) {
@@ -205,9 +207,9 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static im.turms.common.model.bo.user.UserRelationshipGroup.Builder relationshipGroup2proto(@NotNull UserRelationshipGroup relationshipGroup) {
-        im.turms.common.model.bo.user.UserRelationshipGroup.Builder builder = im.turms.common.model.bo.user.UserRelationshipGroup.newBuilder();
-        UserRelationshipGroup.Key key = relationshipGroup.getKey();
+    public static UserRelationshipGroup.Builder relationshipGroup2proto(@NotNull im.turms.turms.workflow.dao.domain.UserRelationshipGroup relationshipGroup) {
+        UserRelationshipGroup.Builder builder = UserRelationshipGroup.newBuilder();
+        im.turms.turms.workflow.dao.domain.UserRelationshipGroup.Key key = relationshipGroup.getKey();
         if (key != null) {
             Integer index = key.getGroupIndex();
             if (index != null) {
@@ -221,8 +223,8 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static im.turms.common.model.bo.group.Group.Builder group2proto(@NotNull Group group) {
-        im.turms.common.model.bo.group.Group.Builder builder = im.turms.common.model.bo.group.Group.newBuilder();
+    public static Group.Builder group2proto(@NotNull im.turms.turms.workflow.dao.domain.Group group) {
+        Group.Builder builder = Group.newBuilder();
         Long groupId = group.getId();
         Long typeId = group.getTypeId();
         Long creatorId = group.getCreatorId();
@@ -270,8 +272,8 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static im.turms.common.model.bo.group.GroupInvitation.Builder groupInvitation2proto(@NotNull GroupInvitation invitation) {
-        im.turms.common.model.bo.group.GroupInvitation.Builder builder = im.turms.common.model.bo.group.GroupInvitation.newBuilder();
+    public static GroupInvitation.Builder groupInvitation2proto(@NotNull im.turms.turms.workflow.dao.domain.GroupInvitation invitation) {
+        GroupInvitation.Builder builder = GroupInvitation.newBuilder();
         Long invitationId = invitation.getId();
         Date creationDate = invitation.getCreationDate();
         String content = invitation.getContent();
@@ -307,8 +309,8 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static im.turms.common.model.bo.group.GroupJoinRequest.Builder groupJoinRequest2proto(@NotNull GroupJoinRequest groupJoinRequest) {
-        im.turms.common.model.bo.group.GroupJoinRequest.Builder builder = im.turms.common.model.bo.group.GroupJoinRequest.newBuilder();
+    public static GroupJoinRequest.Builder groupJoinRequest2proto(@NotNull im.turms.turms.workflow.dao.domain.GroupJoinRequest groupJoinRequest) {
+        GroupJoinRequest.Builder builder = GroupJoinRequest.newBuilder();
         Long requestId = groupJoinRequest.getId();
         Date creationDate = groupJoinRequest.getCreationDate();
         String content = groupJoinRequest.getContent();
@@ -344,8 +346,8 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static im.turms.common.model.bo.group.GroupJoinQuestion.Builder groupJoinQuestion2proto(@NotNull GroupJoinQuestion question) {
-        im.turms.common.model.bo.group.GroupJoinQuestion.Builder builder = im.turms.common.model.bo.group.GroupJoinQuestion.newBuilder();
+    public static GroupJoinQuestion.Builder groupJoinQuestion2proto(@NotNull im.turms.turms.workflow.dao.domain.GroupJoinQuestion question) {
+        GroupJoinQuestion.Builder builder = GroupJoinQuestion.newBuilder();
         Long questionId = question.getId();
         Long groupId = question.getGroupId();
         String content = question.getQuestion();
@@ -364,9 +366,9 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static im.turms.common.model.bo.group.GroupMember.Builder groupMember2proto(@NotNull GroupMember groupMember) {
-        im.turms.common.model.bo.group.GroupMember.Builder builder = im.turms.common.model.bo.group.GroupMember.newBuilder();
-        GroupMember.Key key = groupMember.getKey();
+    public static GroupMember.Builder groupMember2proto(@NotNull im.turms.turms.workflow.dao.domain.GroupMember groupMember) {
+        GroupMember.Builder builder = GroupMember.newBuilder();
+        im.turms.turms.workflow.dao.domain.GroupMember.Key key = groupMember.getKey();
         if (key != null) {
             Long groupId = key.getGroupId();
             Long userId = key.getUserId();
@@ -396,9 +398,9 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static im.turms.common.model.bo.message.MessageStatus.Builder messageStatus2proto(MessageStatus messageStatus) {
-        im.turms.common.model.bo.message.MessageStatus.Builder builder = im.turms.common.model.bo.message.MessageStatus.newBuilder();
-        MessageStatus.Key key = messageStatus.getKey();
+    public static MessageStatus.Builder messageStatus2proto(im.turms.turms.workflow.dao.domain.MessageStatus messageStatus) {
+        MessageStatus.Builder builder = MessageStatus.newBuilder();
+        im.turms.turms.workflow.dao.domain.MessageStatus.Key key = messageStatus.getKey();
         if (key != null) {
             Long messageId = key.getMessageId();
             Long recipientId = key.getRecipientId();
@@ -470,39 +472,37 @@ public class ProtoUtil {
 
     public static UserStatusDetail.Builder userOnlineInfo2userStatus(
             @NotNull Long userId,
-            @Nullable UserOnlineInfo userOnlineInfo,
-            boolean shouldConvertInvisibleToOffline) {
+            @Nullable UserSessionsStatus userSessionsStatus,
+            boolean convertInvisibleToOffline) {
         UserStatusDetail.Builder builder = UserStatusDetail.newBuilder()
                 .setUserId(userId);
-        if (userOnlineInfo == null) {
+        if (userSessionsStatus == null) {
             builder.setUserStatus(UserStatus.OFFLINE);
         } else {
-            builder.setUserStatus(userOnlineInfo.getUserStatus(shouldConvertInvisibleToOffline));
-            builder.addAllUsingDeviceTypes(userOnlineInfo.getUsingDeviceTypes());
+            builder.setUserStatus(userSessionsStatus.getUserStatus(convertInvisibleToOffline));
+            builder.addAllUsingDeviceTypes(userSessionsStatus.getLoggedInDeviceTypes());
         }
         return builder;
     }
 
-    public static im.turms.common.model.bo.group.GroupMember.Builder userOnlineInfo2groupMember(
+    public static GroupMember.Builder userOnlineInfo2groupMember(
             @NotNull Long userId,
-            @Nullable UserOnlineInfo userOnlineInfo,
-            boolean shouldConvertInvisibleToOffline) {
-        im.turms.common.model.bo.group.GroupMember.Builder builder = im.turms.common.model.bo.group.GroupMember
+            @Nullable UserSessionsStatus userSessionsStatus,
+            boolean convertInvisibleToOffline) {
+        GroupMember.Builder builder = GroupMember
                 .newBuilder()
                 .setUserId(Int64Value.newBuilder().setValue(userId).build());
-        if (userOnlineInfo == null) {
+        if (userSessionsStatus == null) {
             builder.setUserStatus(UserStatus.OFFLINE);
         } else {
-            builder.setUserStatus(userOnlineInfo.getUserStatus(shouldConvertInvisibleToOffline));
-            Set<DeviceType> usingDeviceTypes = userOnlineInfo.getUsingDeviceTypes();
-            if (usingDeviceTypes != null) {
-                builder.addAllUsingDeviceTypes(userOnlineInfo.getUsingDeviceTypes());
-            }
+            builder.setUserStatus(userSessionsStatus.getUserStatus(convertInvisibleToOffline));
+            Set<DeviceType> usingDeviceTypes = userSessionsStatus.getLoggedInDeviceTypes();
+            builder.addAllUsingDeviceTypes(userSessionsStatus.getLoggedInDeviceTypes());
         }
         return builder;
     }
 
-    public static CreateMessageRequest.Builder fillCloneMessageRequest(
+    public static CreateMessageRequest.Builder cloneAndFillMessageRequest(
             @NotNull CreateMessageRequest request,
             @NotNull Message message) {
         CreateMessageRequest.Builder builder = request.toBuilder();
@@ -533,4 +533,5 @@ public class ProtoUtil {
         }
         return builder;
     }
+
 }

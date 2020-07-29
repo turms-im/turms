@@ -23,6 +23,11 @@ function appendUserTwoContainer(text, isError) {
 }
 
 function beautify(object) {
+    if (object instanceof Error) {
+        object = {
+            message: object.message
+        }
+    }
     return JSON.stringify(object, null, "\t");
 }
 
@@ -54,12 +59,14 @@ function start() {
             .then(() => {
                 appendUserOneContainer('login: User one has logged in');
                 return Promise.resolve();
-            }),
+            })
+            .catch(reason => appendUserOneContainer('Failed to log in ' + beautify(reason), true)),
         clientUserTwo.userService.login(USER_TWO_ID, '123')
             .then(() => {
                 appendUserTwoContainer('login: User two has logged in');
                 return Promise.resolve();
             })
+            .catch(reason => appendUserTwoContainer('Failed to log in ' + beautify(reason), true))
     ])
         .then(() => {
                 clientUserOne.messageService.queryPendingMessagesWithTotal(1)
@@ -74,7 +81,7 @@ function start() {
                 const intervalOne = setInterval(() => {
                     if (clientUserOne.driver.connected()) {
                         clientUserOne.messageService.sendMessage(
-                            "PRIVATE",
+                            false,
                             USER_TWO_ID,
                             new Date(),
                             "Hello Turms, My userId is " + USER_ONE_ID,
@@ -112,7 +119,7 @@ function start() {
                 const intervalTwo = setInterval(() => {
                     if (clientUserOne.driver.connected()) {
                         clientUserTwo.messageService.sendMessage(
-                            "PRIVATE",
+                            false,
                             USER_ONE_ID,
                             new Date(),
                             "Hello Community, My userId is " + USER_TWO_ID,
@@ -131,7 +138,7 @@ function start() {
             }
         )
         .catch(reason => {
-            appendUserOneContainer('Failed to log in' + beautify(reason), true);
-            appendUserTwoContainer('Failed to log in' + beautify(reason), true);
+            appendUserOneContainer('Failed to log in ' + beautify(reason), true);
+            appendUserTwoContainer('Failed to log in ' + beautify(reason), true);
         });
 }

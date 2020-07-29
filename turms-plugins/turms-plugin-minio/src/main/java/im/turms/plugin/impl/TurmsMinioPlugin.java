@@ -1,13 +1,31 @@
+/*
+ * Copyright (C) 2019 The Turms Project
+ * https://github.com/turms-im/turms
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package im.turms.plugin.impl;
 
-import im.turms.common.TurmsStatusCode;
 import im.turms.common.constant.ContentType;
+import im.turms.common.constant.statuscode.TurmsStatusCode;
 import im.turms.common.exception.TurmsBusinessException;
-import im.turms.turms.plugin.StorageServiceProvider;
-import im.turms.turms.plugin.TurmsPlugin;
-import im.turms.turms.property.TurmsProperties;
-import im.turms.turms.service.group.GroupMemberService;
-import im.turms.turms.service.message.MessageService;
+import im.turms.server.common.plugin.base.TurmsPlugin;
+import im.turms.server.common.property.TurmsProperties;
+import im.turms.server.common.property.env.service.business.StorageProperties;
+import im.turms.turms.plugin.extension.service.StorageServiceProvider;
+import im.turms.turms.workflow.service.impl.group.GroupMemberService;
+import im.turms.turms.workflow.service.impl.message.MessageService;
 import org.pf4j.Extension;
 import org.pf4j.PluginWrapper;
 import org.slf4j.Logger;
@@ -35,22 +53,26 @@ import java.net.URI;
 import java.time.Duration;
 import java.util.concurrent.*;
 
+/**
+ * @author James Chen
+ */
 public class TurmsMinioPlugin extends TurmsPlugin {
+
     public TurmsMinioPlugin(PluginWrapper wrapper) {
         super(wrapper);
     }
 
     @Extension
     public static class MinioStorageServiceProvider extends StorageServiceProvider {
+
         private static final Logger log = LoggerFactory.getLogger(MinioStorageServiceProvider.class);
 
-        private static final int TIMEOUT = 10;
-        private static final int DEFAULT_RETRY_INTERVAL = 30;
-        private static final int DEFAULT_RETRY_MAX_ATTEMPTS = 3;
+        private static final int TIMEOUT_SECONDS = 10;
 
         private S3AsyncClient client;
         private S3Presigner presigner;
         private TurmsProperties turmsProperties;
+        private StorageProperties storageProperties;
         private MessageService messageService;
         private MinioProperties minioProperties;
         private GroupMemberService groupMemberService;
@@ -65,32 +87,31 @@ public class TurmsMinioPlugin extends TurmsPlugin {
         public Mono<Void> deleteResource(@NotNull Long requesterId, @NotNull ContentType contentType, String keyStr, @Nullable Long keyNum) {
             return hasPermissionToDelete(requesterId, contentType, keyStr, keyNum)
                     .flatMap(hasPermission -> {
-                        if (hasPermission) {
-                            String key;
-                            switch (contentType) {
-                                case PROFILE:
-                                    key = requesterId.toString();
-                                    break;
-                                case GROUP_PROFILE:
-                                    if (keyNum != null) {
-                                        key = keyNum.toString();
-                                    } else {
-                                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The group ID must not be null"));
-                                    }
-                                    break;
-                                case ATTACHMENT:
-                                    return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The attachments cannot be deleted"));
-                                default:
-                                    return Mono.error(new IllegalStateException("Unexpected value: " + contentType));
-                            }
-                            DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
-                                    .bucket(getBucketName(contentType))
-                                    .key(key)
-                                    .build();
-                            return Mono.fromFuture(client.deleteObject(deleteObjectRequest)).then();
-                        } else {
+                        if (!hasPermission) {
                             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED));
                         }
+                        String key;
+                        switch (contentType) {
+                            case PROFILE:
+                                key = requesterId.toString();
+                                break;
+                            case GROUP_PROFILE:
+                                if (keyNum != null) {
+                                    key = keyNum.toString();
+                                } else {
+                                    return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The group ID must not be null"));
+                                }
+                                break;
+                            case ATTACHMENT:
+                                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The attachments cannot be deleted"));
+                            default:
+                                return Mono.error(new IllegalStateException("Unexpected value: " + contentType));
+                        }
+                        DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
+                                .bucket(getBucketName(contentType))
+                                .key(key)
+                                .build();
+                        return Mono.fromFuture(client.deleteObject(deleteObjectRequest)).then();
                     });
         }
 
@@ -130,67 +151,66 @@ public class TurmsMinioPlugin extends TurmsPlugin {
             int sizeLimit;
             switch (contentType) {
                 case PROFILE:
-                    sizeLimit = turmsProperties.getStorage().getProfileSizeLimit();
+                    sizeLimit = storageProperties.getProfileSizeLimit();
                     break;
                 case GROUP_PROFILE:
-                    sizeLimit = turmsProperties.getStorage().getGroupProfileSizeLimit();
+                    sizeLimit = storageProperties.getGroupProfileSizeLimit();
                     break;
                 case ATTACHMENT:
-                    sizeLimit = turmsProperties.getStorage().getAttachmentSizeLimit();
+                    sizeLimit = storageProperties.getAttachmentSizeLimit();
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + contentType);
             }
-            if (sizeLimit == 0 || contentLength <= sizeLimit) {
-                return hasPermissionToPut(requesterId, contentType, keyStr, keyNum)
-                        .flatMap(hasPermission -> {
-                            if (hasPermission) {
-                                String type;
-                                String objectKey;
-                                switch (contentType) {
-                                    case PROFILE:
-                                        type = turmsProperties.getStorage().getProfileContentType();
-                                        objectKey = requesterId.toString();
-                                        break;
-                                    case GROUP_PROFILE:
-                                        type = turmsProperties.getStorage().getGroupProfileContentType();
-                                        if (keyNum != null) {
-                                            objectKey = keyNum.toString();
-                                        } else {
-                                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The group ID must not be null"));
-                                        }
-                                        break;
-                                    case ATTACHMENT:
-                                        type = turmsProperties.getStorage().getAttachmentContentType();
-                                        if (keyNum != null) {
-                                            if (keyStr != null) {
-                                                objectKey = String.format("%d/%s", keyNum, keyStr);
-                                            } else {
-                                                objectKey = keyNum.toString();
-                                            }
-                                        } else {
-                                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The message ID must not be null"));
-                                        }
-                                        break;
-                                    default:
-                                        return Mono.error(new IllegalStateException("Unexpected value: " + contentType));
-                                }
-                                String url = presignedPutUrl(getBucketName(contentType), objectKey, type);
-                                return Mono.just(url);
-                            } else {
-                                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED));
-                            }
-                        });
-            } else {
+            if (sizeLimit != 0 && contentLength > sizeLimit) {
                 throw TurmsBusinessException.get(TurmsStatusCode.FILE_TOO_LARGE);
             }
+            return hasPermissionToPut(requesterId, contentType, keyStr, keyNum)
+                    .flatMap(hasPermission -> {
+                        if (!hasPermission) {
+                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED));
+                        }
+                        String type;
+                        String objectKey;
+                        switch (contentType) {
+                            case PROFILE:
+                                type = storageProperties.getProfileContentType();
+                                objectKey = requesterId.toString();
+                                break;
+                            case GROUP_PROFILE:
+                                type = storageProperties.getGroupProfileContentType();
+                                if (keyNum != null) {
+                                    objectKey = keyNum.toString();
+                                } else {
+                                    return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The group ID must not be null"));
+                                }
+                                break;
+                            case ATTACHMENT:
+                                type = storageProperties.getAttachmentContentType();
+                                if (keyNum != null) {
+                                    if (keyStr != null) {
+                                        objectKey = String.format("%d/%s", keyNum, keyStr);
+                                    } else {
+                                        objectKey = keyNum.toString();
+                                    }
+                                } else {
+                                    return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The message ID must not be null"));
+                                }
+                                break;
+                            default:
+                                return Mono.error(new IllegalStateException("Unexpected value: " + contentType));
+                        }
+                        String url = presignedPutUrl(getBucketName(contentType), objectKey, type);
+                        return Mono.just(url);
+                    });
         }
 
         private void setUp() {
             ApplicationContext context = getContext();
-            minioProperties = new MinioProperties(context.getEnvironment());
+            minioProperties = context.getBean(MinioProperties.class);
             if (minioProperties.isEnabled()) {
                 turmsProperties = context.getBean(TurmsProperties.class);
+                storageProperties = turmsProperties.getService().getStorage();
                 messageService = context.getBean(MessageService.class);
                 groupMemberService = context.getBean(GroupMemberService.class);
 
@@ -277,7 +297,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
             CreateBucketRequest request = CreateBucketRequest.builder()
                     .bucket(getBucketName(contentType))
                     .build();
-            client.createBucket(request).get(TIMEOUT, TimeUnit.SECONDS);
+            client.createBucket(request).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
         }
 
         private void putBucketPolicy(ContentType contentType) throws InterruptedException, ExecutionException, TimeoutException {
@@ -300,7 +320,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                         .bucket(bucket)
                         .policy(policy)
                         .build();
-                client.putBucketPolicy(policyRequest).get(TIMEOUT, TimeUnit.SECONDS);
+                client.putBucketPolicy(policyRequest).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
             }
         }
 
@@ -309,13 +329,13 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                 int days;
                 switch (contentType) {
                     case PROFILE:
-                        days = turmsProperties.getStorage().getProfileExpiration();
+                        days = storageProperties.getProfileExpiration();
                         break;
                     case GROUP_PROFILE:
-                        days = turmsProperties.getStorage().getGroupProfileExpiration();
+                        days = storageProperties.getGroupProfileExpiration();
                         break;
                     case ATTACHMENT:
-                        days = turmsProperties.getStorage().getAttachmentExpiration();
+                        days = storageProperties.getAttachmentExpiration();
                         break;
                     default:
                         throw new IllegalStateException("Unexpected value: " + contentType);
@@ -333,7 +353,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                             .bucket(getBucketName(contentType))
                             .lifecycleConfiguration(configuration)
                             .build();
-                    client.putBucketLifecycleConfiguration(request).get(TIMEOUT, TimeUnit.SECONDS);
+                    client.putBucketLifecycleConfiguration(request).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
                 }
             }
         }
@@ -343,7 +363,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                 HeadBucketRequest request = HeadBucketRequest.builder()
                         .bucket(getBucketName(contentType))
                         .build();
-                HeadBucketResponse response = client.headBucket(request).get(TIMEOUT, TimeUnit.SECONDS);
+                HeadBucketResponse response = client.headBucket(request).get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
                 return 200 == response.sdkHttpResponse().statusCode();
             } catch (Exception e) {
                 if (e.getCause() instanceof NoSuchBucketException) {
@@ -361,7 +381,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                     .build();
             GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
                     .getObjectRequest(getObjectRequest)
-                    .signatureDuration(turmsProperties.getStorage().getSignatureDurationForGet())
+                    .signatureDuration(storageProperties.getSignatureDurationForGet())
                     .build();
             PresignedGetObjectRequest request = presigner.presignGetObject(presignRequest);
             return request.url().toString();
@@ -377,7 +397,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
             PutObjectRequest putObjectRequest = builder.build();
             PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()
                     .putObjectRequest(putObjectRequest)
-                    .signatureDuration(turmsProperties.getStorage().getSignatureDurationForPut())
+                    .signatureDuration(storageProperties.getSignatureDurationForPut())
                     .build();
             PresignedPutObjectRequest request = presigner.presignPutObject(presignRequest);
             return request.url().toString();
@@ -442,5 +462,6 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                     throw new IllegalStateException("Unexpected value: " + contentType);
             }
         }
+
     }
 }

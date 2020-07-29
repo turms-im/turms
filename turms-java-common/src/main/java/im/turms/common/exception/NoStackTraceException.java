@@ -17,8 +17,17 @@
 
 package im.turms.common.exception;
 
+/**
+ * @author James Chen
+ */
 public class NoStackTraceException extends RuntimeException {
+
     public NoStackTraceException() {
         super("", null, false, false);
     }
+
+    public NoStackTraceException(String message) {
+        super(message, null, false, false);
+    }
+
 }
