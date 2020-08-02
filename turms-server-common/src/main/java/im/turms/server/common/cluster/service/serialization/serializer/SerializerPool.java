@@ -85,8 +85,8 @@ public class SerializerPool {
     /**
      * Usually used when deserializing
      */
-    public static <T> Serializer<T> getSerializer(int type) {
-        return SERIALIZERS_BY_ID.get(type);
+    public static <T> Serializer<T> getSerializer(int id) {
+        return SERIALIZERS_BY_ID.get(id);
     }
 
     /**

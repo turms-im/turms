@@ -33,7 +33,7 @@ describe('Create', async () => {
         expect(url).toBeTruthy();
     });
     it('uploadAttachment_shouldReturnUrl', async () => {
-        messageId = await turmsClient.messageService.sendMessage(ChatType.PRIVATE, '2', null, "I've attached a picture")
+        messageId = await turmsClient.messageService.sendMessage(false, '2', null, "I've attached a picture")
         const url = await turmsClient.storageService.uploadAttachment(messageId, ATTACHMENT);
         expect(url).toBeTruthy();
     });

@@ -71,10 +71,10 @@ public class RpcAcceptor implements RSocket {
 
     private RpcCallable<?> parseRpcRequest(ByteBuf buffer) {
         if (buffer.readableBytes() < Short.BYTES) {
-            throw RpcException.get(RpcErrorCode.INVALID_BUFFER_TYPE_NOT_FOUND, TurmsStatusCode.SERVER_INTERNAL_ERROR);
+            throw RpcException.get(RpcErrorCode.INVALID_BUFFER_TYPE, TurmsStatusCode.SERVER_INTERNAL_ERROR);
         }
-        int type = buffer.readShort();
-        Serializer<Object> serializer = SerializerPool.getSerializer(type);
+        int serializerId = buffer.readShort();
+        Serializer<Object> serializer = SerializerPool.getSerializer(serializerId);
         if (serializer == null) {
             throw RpcException.get(RpcErrorCode.SERIALIZER_FOR_REQUEST_NOT_FOUND, TurmsStatusCode.SERVER_INTERNAL_ERROR);
         }

@@ -40,7 +40,11 @@ public class SimultaneousLoginProperties {
     private LoginConflictStrategy loginConflictStrategy = LoginConflictStrategy.DISCONNECT_LOGGED_IN_DEVICES;
 
     @JsonView(MutablePropertiesView.class)
-    @Description("Whether to allow unknown devices coexist with known devices")
-    private boolean allowUnknownDeviceCoexistsWithKnownDevice = false;
+    @Description("Whether to allow the devices of DeviceType.UNKNOWN to login")
+    private boolean allowDeviceTypeUnknownLogin = true;
+
+    @JsonView(MutablePropertiesView.class)
+    @Description("Whether to allow the devices of DeviceType.OTHERS to login")
+    private boolean allowDeviceTypeOthersLogin = true;
 
 }

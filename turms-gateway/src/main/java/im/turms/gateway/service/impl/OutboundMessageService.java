@@ -19,22 +19,20 @@ package im.turms.gateway.service.impl;
 
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.gateway.manager.UserSessionsManager;
-import im.turms.gateway.plugin.extension.TurmsNotificationHandler;
+import im.turms.gateway.plugin.extension.NotificationHandler;
 import im.turms.gateway.plugin.manager.TurmsPluginManager;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.rpc.service.IOutboundMessageService;
-import im.turms.server.common.service.session.UserStatusService;
 import io.netty.buffer.ByteBuf;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
+import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author James Chen
@@ -46,16 +44,13 @@ public class OutboundMessageService implements IOutboundMessageService {
 
     private final Node node;
     private final SessionService sessionService;
-    private final UserStatusService userStatusService;
     private final TurmsPluginManager turmsPluginManager;
 
     public OutboundMessageService(
             Node node,
             SessionService sessionService,
-            UserStatusService userStatusService,
             TurmsPluginManager turmsPluginManager) {
         this.sessionService = sessionService;
-        this.userStatusService = userStatusService;
         this.node = node;
         this.turmsPluginManager = turmsPluginManager;
     }
@@ -93,27 +88,41 @@ public class OutboundMessageService implements IOutboundMessageService {
 
         // Trigger plugins
         if (triggerHandlers) {
-            TurmsNotification notification = null;
-            try {
-                notification = TurmsNotification.parseFrom(notificationData.nioBuffer());
-            } catch (Exception e) {
-                log.error("Failed to parse TurmsNotification", e);
-            }
-            if (notification != null) {
-                for (TurmsNotificationHandler handler : turmsPluginManager.getNotificationHandlerList()) {
-                    try {
-                        handler.handle(notification, recipientIds, offlineRecipientIds);
-                    } catch (Exception e) {
-                        log.error(e);
-                    }
-                }
-            }
+            triggerPlugins(notificationData, recipientIds, offlineRecipientIds);
         }
 
         // Release
         notificationData.release();
 
         return hasForwardedMessageToAllRecipients;
+    }
+
+    private void triggerPlugins(ByteBuf notificationData, Set<Long> recipientIds, Set<Long> offlineRecipientIds) {
+        TurmsNotification notification = null;
+        try {
+            notification = TurmsNotification.parseFrom(notificationData.nioBuffer());
+        } catch (Exception e) {
+            log.error("Failed to parse TurmsNotification", e);
+        }
+        if (notification != null) {
+            List<NotificationHandler> handlerList = turmsPluginManager.getNotificationHandlerList();
+            int size = handlerList.size();
+            if (size > 0) {
+                if (size == 1) {
+                    handlerList.iterator().next().handle(notification, recipientIds, offlineRecipientIds)
+                            .doOnError(log::error)
+                            .subscribe();
+                } else {
+                    List<Mono<Void>> monos = new ArrayList<>(size);
+                    for (NotificationHandler handler : handlerList) {
+                        monos.add(handler.handle(notification, recipientIds, offlineRecipientIds));
+                    }
+                    Mono.when(monos)
+                            .doOnError(log::error)
+                            .subscribe();
+                }
+            }
+        }
     }
 
 }

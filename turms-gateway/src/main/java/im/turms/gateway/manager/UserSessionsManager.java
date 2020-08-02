@@ -129,12 +129,14 @@ public final class UserSessionsManager {
     }
 
     public Set<DeviceType> getLoggedInDeviceTypes() {
-        return sessionMap != null ? sessionMap.keySet() : Collections.emptySet();
+        return sessionMap != null
+                ? sessionMap.keySet()
+                : Collections.emptySet();
     }
 
     /**
-     * @param session Don't remove this parameter to use "getSession(deviceType)"
-     *                because it needs to invoke hashcode to find session every time
+     * @param session Don't replace this parameter by using "getSession(deviceType)"
+     *                because it needs to call hashcode() to find session every time
      */
     private Timeout newHeartbeatTimeout(@NotNull @DeviceTypeConstraint DeviceType deviceType, @NotNull UserSession session, int heartbeatTimeoutSeconds) {
         return HEARTBEAT_TIMER.newTimeout(timeout -> {

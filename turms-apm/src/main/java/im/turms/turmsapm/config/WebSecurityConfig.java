@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.turmsapm.config;
+package im.turms.turmsapm.config;
 
 import de.codecentric.boot.admin.server.config.AdminServerProperties;
 import org.springframework.context.annotation.Configuration;

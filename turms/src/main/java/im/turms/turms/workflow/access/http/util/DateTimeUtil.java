@@ -165,10 +165,10 @@ public class DateTimeUtil {
         List<Pair<Date, Date>> dates = divide(dateRange.getStart(), dateRange.getEnd(), divideBy);
         List<Mono<StatisticsRecordDTO>> monos = new ArrayList<>(dates.size());
         for (Pair<Date, Date> datePair : dates) {
-            Mono<Long> result = function.apply(DateRange.of(datePair.getLeft(), datePair.getRight()));
-            monos.add(result.map(total -> new StatisticsRecordDTO(
-                    datePair.getLeft(),
-                    total)));
+            DateRange range = DateRange.of(datePair.getLeft(), datePair.getRight());
+            Mono<StatisticsRecordDTO> result = function.apply(range)
+                    .map(total -> new StatisticsRecordDTO(datePair.getLeft(), total));
+            monos.add(result);
         }
         return merge(monos);
     }

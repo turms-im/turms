@@ -61,10 +61,10 @@ import java.util.stream.Collectors;
 public class MongoConfig {
 
     private final TurmsPropertiesManager turmsPropertiesManager;
-    private static final int SERVICE_TYPE_NUMBER = 4;
+    private static final int SERVICE_TYPES_NUMBER = 4;
     // hash code of MongoProperties -> ReactiveMongoTemplate
     // because MongoProperties doesn't have a custom hashcode implementation but a native implementation
-    private static final Map<Integer, ReactiveMongoTemplate> TEMPLATE_MAP = Maps.newHashMapWithExpectedSize(SERVICE_TYPE_NUMBER);
+    private static final Map<Integer, ReactiveMongoTemplate> TEMPLATE_MAP = Maps.newHashMapWithExpectedSize(SERVICE_TYPES_NUMBER);
     private static final int DEFAULT_MONGO_PROPERTIES_HASHCODE = getPropertiesHashCode(new MongoProperties());
 
     public MongoConfig(TurmsPropertiesManager turmsPropertiesManager) {

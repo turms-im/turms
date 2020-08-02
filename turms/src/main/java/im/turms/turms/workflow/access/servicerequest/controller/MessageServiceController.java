@@ -198,9 +198,13 @@ public class MessageServiceController {
                     false, null, null, null, null,
                     Set.of(clientRequest.getUserId()), null, null,
                     Set.of(MessageDeliveryStatus.READY), 0, size)
-                    .doOnNext(message -> multimap.put(new PendingMessageKey(message.getIsGroupMessage(),
-                            message.getIsSystemMessage(),
-                            message.getIsGroupMessage() ? message.getTargetId() : message.getSenderId()), message))
+                    .doOnNext(message -> {
+                        Long targetId = message.getIsGroupMessage()
+                                ? message.getTargetId()
+                                : message.getSenderId();
+                        PendingMessageKey pendingMessageKey = new PendingMessageKey(message.getIsGroupMessage(), message.getIsSystemMessage(), targetId);
+                        multimap.put(pendingMessageKey, message);
+                    })
                     .collectList()
                     .flatMap(messages -> {
                         if (messages.isEmpty()) {

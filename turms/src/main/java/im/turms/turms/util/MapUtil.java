@@ -39,9 +39,9 @@ public class MapUtil {
     public static Mono<Boolean> fluxMerge(Consumer<Multimap<Long, Long>> mapFiller, Consumer3<List<Mono<Boolean>>, Long, Set<Long>> monosFiller) {
         HashMultimap<Long, Long> multimap = HashMultimap.create();
         mapFiller.accept(multimap);
-        Set<Long> longs = multimap.keySet();
-        List<Mono<Boolean>> monos = new ArrayList<>(longs.size());
-        for (Long key : longs) {
+        Set<Long> keys = multimap.keySet();
+        List<Mono<Boolean>> monos = new ArrayList<>(keys.size());
+        for (Long key : keys) {
             Set<Long> values = multimap.get(key);
             monosFiller.accept(monos, key, values);
         }

@@ -22,7 +22,10 @@ import im.turms.server.common.plugin.base.TurmsExtension;
 import im.turms.server.common.plugin.extension.UserLocationLogHandler;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
-import im.turms.turms.plugin.extension.handler.*;
+import im.turms.turms.plugin.extension.handler.AdminActionLogHandler;
+import im.turms.turms.plugin.extension.handler.ClientRequestHandler;
+import im.turms.turms.plugin.extension.handler.ExpiredMessageAutoDeletionNotificationHandler;
+import im.turms.turms.plugin.extension.handler.UserActionLogHandler;
 import im.turms.turms.plugin.extension.service.StorageServiceProvider;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
@@ -52,7 +55,6 @@ public class TurmsPluginManager implements ITurmsPluginManager {
     private List<UserLocationLogHandler> userLocationLogHandlerList;
     private List<ClientRequestHandler> clientRequestHandlerList;
     private List<ExpiredMessageAutoDeletionNotificationHandler> expiredMessageAutoDeletionNotificationHandlerList;
-    private List<NotificationHandler> notificationHandlerList;
     private StorageServiceProvider storageServiceProvider;
 
     private final boolean enabled;
@@ -79,7 +81,6 @@ public class TurmsPluginManager implements ITurmsPluginManager {
         userLocationLogHandlerList = pluginManager.getExtensions(UserLocationLogHandler.class);
         clientRequestHandlerList = pluginManager.getExtensions(ClientRequestHandler.class);
         expiredMessageAutoDeletionNotificationHandlerList = pluginManager.getExtensions(ExpiredMessageAutoDeletionNotificationHandler.class);
-        notificationHandlerList = pluginManager.getExtensions(NotificationHandler.class);
         List<StorageServiceProvider> storageServiceProviders = pluginManager.getExtensions(StorageServiceProvider.class);
         if (!storageServiceProviders.isEmpty()) {
             this.storageServiceProvider = storageServiceProviders.get(0);
@@ -87,7 +88,6 @@ public class TurmsPluginManager implements ITurmsPluginManager {
         }
         initExtensions(clientRequestHandlerList);
         initExtensions(expiredMessageAutoDeletionNotificationHandlerList);
-        initExtensions(notificationHandlerList);
     }
 
     @PreDestroy

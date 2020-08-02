@@ -17,7 +17,7 @@
 
 package im.turms.gateway.plugin.manager;
 
-import im.turms.gateway.plugin.extension.TurmsNotificationHandler;
+import im.turms.gateway.plugin.extension.NotificationHandler;
 import im.turms.gateway.plugin.extension.UserAuthenticator;
 import im.turms.gateway.plugin.extension.UserLoginActionLogHandler;
 import im.turms.gateway.plugin.extension.UserOnlineStatusChangeHandler;
@@ -52,7 +52,7 @@ public class TurmsPluginManager implements ITurmsPluginManager {
 
     private List<UserLoginActionLogHandler> userLoginActionLogHandlerList;
     private List<UserLocationLogHandler> userLocationLogHandlerList;
-    private List<TurmsNotificationHandler> notificationHandlerList;
+    private List<NotificationHandler> notificationHandlerList;
     private List<UserAuthenticator> userAuthenticatorList;
     private List<UserOnlineStatusChangeHandler> userOnlineStatusChangeHandlerList;
 
@@ -77,7 +77,7 @@ public class TurmsPluginManager implements ITurmsPluginManager {
         // getExtensions never return null
         userLoginActionLogHandlerList = pluginManager.getExtensions(UserLoginActionLogHandler.class);
         userLocationLogHandlerList = pluginManager.getExtensions(UserLocationLogHandler.class);
-        notificationHandlerList = pluginManager.getExtensions(TurmsNotificationHandler.class);
+        notificationHandlerList = pluginManager.getExtensions(NotificationHandler.class);
         userAuthenticatorList = pluginManager.getExtensions(UserAuthenticator.class);
         userOnlineStatusChangeHandlerList = pluginManager.getExtensions(UserOnlineStatusChangeHandler.class);
         initExtensions(userLoginActionLogHandlerList);

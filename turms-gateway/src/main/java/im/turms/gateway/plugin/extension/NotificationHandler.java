@@ -15,18 +15,23 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.turmsapm;
+package im.turms.gateway.plugin.extension;
 
-import de.codecentric.boot.admin.server.config.EnableAdminServer;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import im.turms.common.model.dto.notification.TurmsNotification;
+import im.turms.server.common.plugin.base.TurmsExtension;
+import reactor.core.publisher.Mono;
 
-@EnableAdminServer
-@SpringBootApplication
-public class TurmsApmApplication {
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.util.Set;
 
-    public static void main(String[] args) {
-        SpringApplication.run(TurmsApmApplication.class, args);
-    }
+/**
+ * Usually used to implement the custom push notification service
+ *
+ * @author James Chen
+ */
+public abstract class NotificationHandler extends TurmsExtension {
+
+    public abstract Mono<Void> handle(@NotNull TurmsNotification notification, @NotEmpty Set<Long> recipientIds, @NotNull Set<Long> offlineRecipientIds);
 
 }

@@ -44,6 +44,7 @@ import java.util.Set;
 @RestController
 @RequestMapping("/users/permission-groups")
 public class UserPermissionGroupController {
+
     private final UserPermissionGroupService userPermissionGroupService;
     private final PageUtil pageUtil;
 

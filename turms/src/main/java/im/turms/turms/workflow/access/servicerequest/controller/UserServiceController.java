@@ -45,7 +45,9 @@ import im.turms.turms.workflow.service.impl.user.onlineuser.SessionService;
 import im.turms.turms.workflow.service.impl.user.onlineuser.UsersNearbyService;
 import im.turms.turms.workflow.service.impl.user.relationship.UserRelationshipService;
 import org.springframework.data.geo.Point;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Controller;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.*;
@@ -149,7 +151,8 @@ public class UserServiceController {
                         maxNumber,
                         distance)
                         .collectList()
-                        .map(userIds -> userIds.isEmpty() ? RequestHandlerResultFactory.NO_CONTENT
+                        .map(userIds -> userIds.isEmpty()
+                                ? RequestHandlerResultFactory.NO_CONTENT
                                 : RequestHandlerResultFactory.get(TurmsNotification.Data
                                 .newBuilder()
                                 .setIds(Int64Values.newBuilder().addAllValues(userIds))
@@ -201,18 +204,19 @@ public class UserServiceController {
             //TODO : Access Control
             List<Long> userIds = request.getUsersIdsList();
             UsersOnlineStatuses.Builder statusesBuilder = UsersOnlineStatuses.newBuilder();
-            List<Mono<UserSessionsStatus>> monos = new ArrayList<>(userIds.size());
+            List<Mono<Pair<Long, UserSessionsStatus>>> monos = new ArrayList<>(userIds.size());
             for (Long targetUserId : userIds) {
-                monos.add(userStatusService.getUserSessionsStatus(targetUserId));
+                monos.add(userStatusService.getUserSessionsStatus(targetUserId)
+                        .map(sessionsStatus -> Pair.of(targetUserId, sessionsStatus)));
             }
-            return Mono.zip(monos, objects -> objects)
-                    .map(userSessionsStatusList -> {
-                        int userIdsCount = userIds.size();
-                        for (int i = 0; i < userIdsCount; i++) {
+            return Flux.merge(monos)
+                    .collectList()
+                    .map(userIdAndSessionsStatusList -> {
+                        for (Pair<Long, UserSessionsStatus> userIdAndSessionsStatus : userIdAndSessionsStatusList) {
                             statusesBuilder.addUserStatuses(ProtoUtil
                                     .userOnlineInfo2userStatus(
-                                            userIds.get(i),
-                                            (UserSessionsStatus) userSessionsStatusList[i],
+                                            userIdAndSessionsStatus.getFirst(),
+                                            userIdAndSessionsStatus.getSecond(),
                                             node.getSharedProperties().getService().getUser().isRespondOfflineIfInvisible())
                                     .build());
                         }

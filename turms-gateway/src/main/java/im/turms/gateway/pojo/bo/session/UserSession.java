@@ -50,7 +50,7 @@ public final class UserSession {
     /**
      * 1. Use StandaloneFluxSink<ByteBuf> instead of StandaloneFluxSink<TurmsNotification>
      * so that turms-gateway can transfer data through zero copy (if SSL is disabled)
-     * and don't need to parse it when the data comes from turms and don't need to parse them.
+     * and don't need to parse it when the data comes from turms.
      * <p>
      * 2. Although we can forward the same WebSocketMessage when there are different recipients connecting to the local turms-gateway,
      * we still use ByteBuf for code clarity and extensibility (we will integrate UDP in the future) and ByteBuf won't be copied in the scenario

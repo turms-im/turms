@@ -33,6 +33,7 @@ public class FlakeIdService implements ClusterService {
 
     public FlakeIdService(DiscoveryService discoveryService) {
         for (int i = 0; i < flakeIdGenerators.length; i++) {
+            // Reserve the dataCenterId value for future use.
             flakeIdGenerators[i] = new FlakeIdGenerator(0, 0);
         }
         // Listen to the member changes to get the local member index

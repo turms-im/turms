@@ -48,7 +48,8 @@ import reactor.netty.tcp.TcpServer;
 import java.net.InetSocketAddress;
 
 /**
- * The lifecycle of the local node is roughly the same as the local Spring server that communicates with for clients/admins
+ * The lifecycle of the local node is roughly the same with
+ * the local Spring (HTTP/WebSocket) server that communicates with clients/admins
  *
  * @author James Chen
  */
@@ -129,7 +130,6 @@ public class Node {
         sharedPropertyService = new SharedPropertyService(clusterId, turmsProperties, sharedConfigService);
         serializationService = new SerializationService();
         rpcService = new RpcService(clusterProperties.getRpc(), serializationService, discoveryService);
-        // We don't design a data center for turms currently but reserve the dataCenterId value for future use.
         flakeIdService = new FlakeIdService(discoveryService);
     }
 

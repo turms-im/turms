@@ -33,9 +33,6 @@ import javax.validation.constraints.Min;
 @Data
 public class DiscoveryProperties {
 
-    /**
-     * The local node will become "unavailable" if it cannot operate with the in heartbeatTimeoutInSeconds
-     */
     @Min(0)
     @Max(SharedConfigService.EXPIRABLE_RECORD_TTL)
     private int heartbeatTimeoutInSeconds = 10;

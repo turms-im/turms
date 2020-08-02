@@ -108,12 +108,12 @@ public class TurmsBusinessException extends NoStackTraceException {
         return null;
     }
 
-    public static CompletableFuture getFuture(TurmsStatusCode statusCode) {
+    public static <T> CompletableFuture<T> getFuture(TurmsStatusCode statusCode) {
         return getFuture(statusCode, null);
     }
 
-    public static CompletableFuture getFuture(TurmsStatusCode statusCode, @Nullable String reason) {
-        CompletableFuture<Object> future = new CompletableFuture<>();
+    public static <T> CompletableFuture<T> getFuture(TurmsStatusCode statusCode, @Nullable String reason) {
+        CompletableFuture<T> future = new CompletableFuture<>();
         future.completeExceptionally(get(statusCode, reason));
         return future;
     }

@@ -68,7 +68,9 @@ public class UserLoginActionService {
         boolean triggerHandlers = turmsPluginManager.isEnabled() && !turmsPluginManager.getUserLoginActionLogHandlerList().isEmpty();
         if (logUserLoginAction || triggerHandlers) {
             UserLoginActionLog loginAction = new UserLoginActionLog(logId, userId, loginDate, userLocation, ip, userStatus, loggingInDeviceType, deviceDetails);
-            log.info(loginAction);
+            if (logUserLoginAction) {
+                log.info(loginAction);
+            }
             if (triggerHandlers) {
                 triggerLoginHandlers(loginAction).subscribe();
             }
@@ -83,7 +85,9 @@ public class UserLoginActionService {
         boolean triggerHandlers = turmsPluginManager.isEnabled() && !turmsPluginManager.getUserLoginActionLogHandlerList().isEmpty();
         if (logUserLogoutAction || triggerHandlers) {
             UserLogoutActionLog logoutActionLog = new UserLogoutActionLog(logId, userId, logoutDate);
-            log.info(logoutActionLog);
+            if (logUserLogoutAction) {
+                log.info(logoutActionLog);
+            }
             if (triggerHandlers) {
                 triggerLogoutHandlers(logoutActionLog).subscribe();
             }

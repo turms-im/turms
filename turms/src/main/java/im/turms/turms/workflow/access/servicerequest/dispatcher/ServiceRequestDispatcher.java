@@ -111,7 +111,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
      */
     @Override
     public Mono<ServiceResponse> dispatch(ServiceRequest serviceRequest) {
-        // Validate
+        // 1. Validate
         Long userId = serviceRequest.getUserId();
         DeviceType deviceType = serviceRequest.getDeviceType();
         if (userId == null) {
@@ -139,7 +139,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.ILLEGAL_ARGUMENTS));
         }
 
-        // Transform and handle the request
+        // 2. Transform and handle the request
         ClientRequest clientRequest = new ClientRequest(
                 serviceRequest.getUserId(),
                 serviceRequest.getDeviceType(),
@@ -153,7 +153,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                 clientRequestMono = clientRequestMono.flatMap(clientRequestHandler::transform);
             }
         }
-        // Handle the result of the request
+        // 3. Handle the result of the request
         Mono<RequestHandlerResult> resultMono = clientRequestMono.flatMap(finalClientRequest -> {
             userActionLogService.tryLogAndTriggerLogHandlers(userId, deviceType, request);
             if (pluginEnabled && !clientClientRequestHandlerList.isEmpty()) {
@@ -170,17 +170,6 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         return handleResult(resultMono, userId, deviceType);
     }
 
-    /**
-     * Convert RequestResult to WebSocketMessage.
-     * <p>
-     * Case 1: If Mono<RequestResult> returns a RequestResult object -> TurmsStatusCode.getCode()
-     * <p>
-     * Case 2: If Mono<RequestResult> is Mono.empty() -> TurmsStatusCode.NO_CONTENT
-     * <p>
-     * Case 3: If Mono<RequestResult> throws a TurmsBusinessException -> TurmsStatusCode.getCode()
-     * <p>
-     * Case 4: If Mono<RequestResult> throws an exception of other types -> TurmsStatusCode.FAILED and throwable.getMessage()
-     */
     private Mono<ServiceResponse> handleResult(
             @NotNull Mono<RequestHandlerResult> result,
             @NotNull Long requesterId,

@@ -87,17 +87,9 @@ public class UserSimultaneousLoginService {
 
     private SetMultimap<DeviceType, DeviceType> newExclusiveDeviceFromStrategy(SimultaneousLoginStrategy strategy) {
         SetMultimap<DeviceType, DeviceType> newExclusiveDeviceTypes = HashMultimap.create(DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length, DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length);
-        boolean allowUnknownDevice = node.getSharedProperties()
-                .getGateway()
-                .getSimultaneousLogin()
-                .isAllowUnknownDeviceCoexistsWithKnownDevice();
         for (DeviceType deviceType : DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES) {
             // Every device type conflicts with itself
             newExclusiveDeviceTypes.put(deviceType, deviceType);
-            if (!allowUnknownDevice) {
-                addConflictedDeviceTypes(newExclusiveDeviceTypes, DeviceType.UNKNOWN, deviceType);
-                addConflictedDeviceTypes(newExclusiveDeviceTypes, DeviceType.OTHERS, deviceType);
-            }
         }
         switch (strategy) {
             case ALLOW_ONE_DEVICE_OF_EACH_DEVICE_TYPE_ONLINE:
@@ -149,6 +141,12 @@ public class UserSimultaneousLoginService {
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + strategy);
+        }
+        if (!node.getSharedProperties().getGateway().getSimultaneousLogin().isAllowDeviceTypeUnknownLogin()) {
+            newForbiddenDeviceTypes.add(DeviceType.UNKNOWN);
+        }
+        if (!node.getSharedProperties().getGateway().getSimultaneousLogin().isAllowDeviceTypeOthersLogin()) {
+            newForbiddenDeviceTypes.add(DeviceType.OTHERS);
         }
         return newForbiddenDeviceTypes;
     }

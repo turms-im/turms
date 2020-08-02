@@ -48,7 +48,7 @@ public class SessionProperties {
     @Min(0)
     private int minimumUpdateHeartbeatIntervalSeconds = 150 / 10;
 
-    @Description("Whether to enable to query the login failed reason")
+    @Description("Whether to enable to query the login failure reason")
     private boolean enableQueryLoginFailureReason = true;
 
     @Description("Whether to enable to query the disconnection reason")

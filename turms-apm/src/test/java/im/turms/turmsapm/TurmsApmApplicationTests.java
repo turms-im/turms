@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.turmsapm;
+package im.turms.turmsapm;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

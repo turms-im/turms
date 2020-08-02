@@ -23,23 +23,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * Responsibilities:
  * <p>
- * For users:
+ * For users: 1. Authentication; 2. Session representation; 3. Push notifications; 4. Backpressure (TODO)
  * <p>
- * 1. Authentication
+ * For monitoring: 1. Logging; 2. Request tracing (TODO)
  * <p>
- * 2. Session representation
- * <p>
- * 3. Backpressure (TODO)
- * <p>
- * For monitoring:
- * <p>
- * 1. Logging
- * <p>
- * 2. Request tracing (TODO)
- * <p>
- * For services:
- * <p>
- * 1. Service load balancing
+ * For services: 1. Service load balancing
  *
  * @author James Chen
  */

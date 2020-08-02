@@ -496,7 +496,6 @@ public class ProtoUtil {
             builder.setUserStatus(UserStatus.OFFLINE);
         } else {
             builder.setUserStatus(userSessionsStatus.getUserStatus(convertInvisibleToOffline));
-            Set<DeviceType> usingDeviceTypes = userSessionsStatus.getLoggedInDeviceTypes();
             builder.addAllUsingDeviceTypes(userSessionsStatus.getLoggedInDeviceTypes());
         }
         return builder;

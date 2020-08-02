@@ -71,7 +71,6 @@ public class TurmsMinioPlugin extends TurmsPlugin {
 
         private S3AsyncClient client;
         private S3Presigner presigner;
-        private TurmsProperties turmsProperties;
         private StorageProperties storageProperties;
         private MessageService messageService;
         private MinioProperties minioProperties;
@@ -209,7 +208,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
             ApplicationContext context = getContext();
             minioProperties = context.getBean(MinioProperties.class);
             if (minioProperties.isEnabled()) {
-                turmsProperties = context.getBean(TurmsProperties.class);
+                TurmsProperties turmsProperties = context.getBean(TurmsProperties.class);
                 storageProperties = turmsProperties.getService().getStorage();
                 messageService = context.getBean(MessageService.class);
                 groupMemberService = context.getBean(GroupMemberService.class);

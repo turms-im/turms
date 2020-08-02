@@ -40,7 +40,7 @@ public class DaoConstant {
     public static final Long DEFAULT_USER_PERMISSION_GROUP_ID = RESERVED_ID;
     public static final Long DEFAULT_GROUP_TYPE_ID = RESERVED_ID;
     public static final String DEFAULT_GROUP_TYPE_NAME = "DEFAULT";
-    public static final Integer DEFAULT_RELATIONSHIP_GROUP_INDEX = Math.toIntExact(RESERVED_ID);
+    public static final Integer DEFAULT_RELATIONSHIP_GROUP_INDEX = RESERVED_ID.intValue();
 
     public static final int MONGO_TRANSACTION_RETRIES_NUMBER = 3;
     public static final Duration MONGO_TRANSACTION_BACKOFF = Duration.ofSeconds(3);

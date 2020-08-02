@@ -175,8 +175,8 @@ public class TurmsPropertiesManager {
     }
 
     private static boolean isMutableProperty(Field field) {
-        if (field.isAnnotationPresent(JsonView.class)) {
-            JsonView jsonView = field.getDeclaredAnnotation(JsonView.class);
+        JsonView jsonView = field.getDeclaredAnnotation(JsonView.class);
+        if (jsonView != null) {
             for (Class<?> clazz : jsonView.value()) {
                 if (clazz == MutablePropertiesView.class) {
                     return true;

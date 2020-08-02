@@ -110,7 +110,7 @@ public class InboundRequestService {
 
     private boolean areRequestsTooFrequent(UserSession session) {
         int requestInterval = node.getSharedProperties().getGateway().getClientApi().getMinClientRequestsIntervalMillis();
-        if (requestInterval != 0) {
+        if (requestInterval > 0) {
             long lastRequestTimestamp = session.getLastRequestTimestampMillis();
             long now = System.currentTimeMillis();
             boolean areFrequent = now - lastRequestTimestamp < requestInterval;
