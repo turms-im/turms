@@ -63,4 +63,5 @@ public final class UserPermissionGroup {
         private Fields() {
         }
     }
+
 }

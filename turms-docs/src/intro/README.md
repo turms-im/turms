@@ -1,42 +1,50 @@
 ### Turms 是什么
 
-Turms是一套全球范围内最为先进且全能的开源即时通讯引擎。
+Turms是一套全球范围内最为先进的开源即时通讯引擎。
 
-[文档地址：https://turms-im.github.io/turms/](https://turms-im.github.io/turms/)
+若您需要基于Turms做二次开发，建议您阅读：[Turms文档](https://turms-im.github.io/docs/)
 
 ### Playground
 
-（以下Demo的版本始终为 https://github.com/turms-im/turms/releases 处发布的最新版）
+（当前Demo的版本为：[turms-v0.9.0-SNAPSHOT.20200406](https://github.com/turms-im/turms/releases/tag/v0.9.0-SNAPSHOT.20200406)）
 
-turms服务端的Demo地址（DEV配置，自带Mock数据）：http://120.24.57.206:9510/
+turms服务端的Demo地址（自带Mock数据）：http://120.24.57.206:9510/
 
 turms-admin的Demo地址（PROD配置）：http://47.99.56.54:9512/
 （登陆turms-admin时，在turms服务端地址栏处输入：http://120.24.57.206:9510/ ，且账号与密码均为：guest。该账号有查询与增加领域模型的权限，无更新与删除领域模型的权限）
 
 您还可以使用任意turms-client(java/js/swift)客户端，来登录该turms服务端，并与其他用户进行各种交互
 
+### 特性
+
+几乎所有的大中小型商用即时通讯解决方案的核心实现就是Turms一整套方案的实现。并且Turms解决方案也是全球即时通讯开源领域内唯一一个基于现代化架构与现代化工程技术，并且适合中大规模部署的解决方案。
+
+另外，Turms作为通用的即时通讯开源项目很难能可贵的一点是：Turms知道什么功能该做，什么功能不该做。具体原因可查阅 [Turms集合设计](https://turms-im.github.io/docs/for-developers/schema.html)。
+
 ### 组合
 
-| 名称                                                        | 描述                                                         |
-| ----------------------------------------------------------- | ------------------------------------------------------------ |
-| <span style="white-space:nowrap;">turms</span>              | Turms服务端。本质是一个易于集群部署、健壮、方便拓展、运作高效且业务独立的Java即时通信服务端程序 |
-| <span style="white-space:nowrap;">turms-client-js</span>    | 除了实现即时通讯的业务功能外，在底层还实现了与Turms服务端的交互逻辑（如路由跳转、自动重连、心跳检查等）。您在使用该库时，无需关心背后的逻辑 |
-| <span style="white-space:nowrap;">turms-client-java</span>  | 同上                                                         |
-| <span style="white-space:nowrap;">turms-client-swift</span> | 同上                                                         |
-| <span style="white-space:nowrap;">turms-admin</span>        | 为Turms服务端集群提供：运营数据统计、内容管理、集群配置等功能 |
-| <span style="white-space:nowrap;">turms-apm</span>          | 为Turms服务端集群提供监控功能                                |
-| <span style="white-space:nowrap;">turms-plugin</span>       | 事件（如用户上下线、消息接收与转发等事件）触发或服务被调用的时候，对应的自定义插件将被触发以实现各种各样定制功能 |
-| <span style="white-space:nowrap;">turms-plugin-minio</span> | 基于turms-plugin实现的存储服务插件。用于与MinIO服务端进行交互。 |
+| 名称                                                         | 描述                                                         |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| <span style="white-space:nowrap;">turms</span>               | Turms服务端。对用户提供各种IM业务逻辑的实现，对管理员提供基础数据管理、权限控制、集群配置等功能 |
+| <span style="white-space:nowrap;">turms-gateway</span>       | Turms客户端网关（推送服务端）。负责用户鉴权与会话保持、消息推送，以及Turms服务端的负载均衡等功能 |
+| <span style="white-space:nowrap;">turms-client-js</span>     | 对外暴露IM业务相关的API接口，并在底层实现与Turms服务端的各种交互逻辑（如路由跳转、自动重连、心跳检查等）。您在使用该库时，无需关心背后的逻辑 |
+| <span style="white-space:nowrap;">turms-client-java</span>   | 同上                                                         |
+| <span style="white-space:nowrap;">turms-client-swift</span>  | 同上                                                         |
+| <span style="white-space:nowrap;">turms-admin</span>         | 为Turms服务端集群提供：内容管理、集群配置等功能              |
+| <span style="white-space:nowrap;">turms-apm</span>           | 为Turms服务端集群提供监控与报警功能                          |
+| <span style="white-space:nowrap;">turms-plugin</span>        | 当指定事件（如用户上下线、消息接收与转发等）被触发时，turms和turms-gateway会调用对应的自定义插件以方便开发者实现各种各样定制化功能 |
+| <span style="white-space:nowrap;">turms-plugin-minio</span>  | 基于turms-plugin实现的存储服务插件。用于与MinIO服务端进行交互 |
+| <span style="white-space:nowrap;">turms-cli（TODO）</span>   | 尚未发布。负责Turms运行环境检测、集群自动搭建、Turms服务端的启动与守护等功能 |
+| <span style="white-space:nowrap;">turms-data（TODO）</span>  | 尚未发布。基于Flink生态的独立数据分析系统，负责实时ETL与业务数据统计分析，为turms的管理员统计接口与turms-admin报表等运营功能提供底层数据支持 |
+| <span style="white-space:nowrap;">turms-client-cpp（TODO）</span> | 尚未发布。                                                   |
 
 ### 参考架构
 
-虚线部分为可选服务，实线部分为必选服务。具体架构细节请参考该[文档](https://turms-im.github.io/turms/for-developers/architecture.html)。
-
-特别值得一提的是：在不引入服务发现服务端与负载均衡服务端的情况下，Turms服务端集群自身也能够完成服务发现与负载均衡功能。
+Turms的架构设计脱胎于标准的大中型商用即时通讯架构。下图为Turms的参考架构图，虚线部分为可选服务，实线部分为必选服务（补充：额外的日志系统与数据分析系统不在v1.0.0计划的体系当中）。Turms的整个架构设计中还有许多创新之处，具体架构细节请查阅该[Turms架构设计](https://turms-im.github.io/docs/for-developers/architecture.html)。
 
 ![](https://raw.githubusercontent.com/turms-im/assets/master/turms/reference-architecture.png)
 
-### 关于Demo
+### 关于带具体业务实现的Demo
 
 出于Turms引擎的定位，Turms并不打算在近期提供带UI与具体业务逻辑的客户端Demo。
 

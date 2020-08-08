@@ -46,13 +46,13 @@ public class FriendRequestProperties {
     @Min(0)
     private int friendRequestTimeToLiveHours = 30 * 24;
 
-    @JsonView(MutablePropertiesView.class)
-    @Description("Whether to delete expired when the cron expression is triggered")
-    private boolean deleteExpiredRequestsWhenCronTriggered = false;
-
     @Description("Clean or update the expired friend requests when the cron expression is triggered." +
             " Clean if deleteExpiredRequestsWhenCronTriggered is true and update if deleteExpiredRequestsWhenCronTriggered is false")
     @CronConstraint
     private String expiredUserFriendRequestsCheckerCron = CronConstant.DEFAULT_EXPIRED_USER_FRIEND_REQUESTS_CHECKER_CRON;
+
+    @JsonView(MutablePropertiesView.class)
+    @Description("Whether to delete expired when the cron expression is triggered")
+    private boolean deleteExpiredRequestsWhenCronTriggered = false;
 
 }

@@ -1,9 +1,8 @@
 module.exports = {
     title: 'Turms Documentation',
-    base: '/turms/',
-    dest: '../docs',
+    base: '/docs/',
     themeConfig: {
-        repo: 'https://github.com/turms-im/turms',
+        repo: 'https://github.com/turms-im/docs',
         lastUpdated: '上次更新',
         smoothScroll: false,
         sidebar: [
@@ -38,7 +37,9 @@ module.exports = {
                     '/for-developers/client-api',
                     '/for-developers/status-code',
                     '/for-developers/status-aware',
-                    '/for-developers/custom-plugin'
+                    '/for-developers/custom-plugin',
+                    '/for-developers/schema',
+                    '/for-developers/data-analytics',
                 ]
             }
         ]
