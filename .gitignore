@@ -44,3 +44,4 @@ turms-java-common/target/
 turms-client-js/coverage/
 turms-plugins/turms-plugin-minio/target/
 turms-client-js/types/turms/turms-client-js/tests/
+turms-docs/src/zh/.vuepress/dist/

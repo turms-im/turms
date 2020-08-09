@@ -19,8 +19,6 @@ package im.turms.turms.util;
 
 import com.google.protobuf.*;
 import im.turms.common.constant.*;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
-import im.turms.common.exception.TurmsBusinessException;
 import im.turms.common.model.bo.group.*;
 import im.turms.common.model.bo.message.MessageStatus;
 import im.turms.common.model.bo.user.*;
@@ -32,11 +30,8 @@ import lombok.extern.log4j.Log4j2;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
-import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author James Chen
@@ -44,32 +39,7 @@ import java.util.Set;
 @Log4j2
 public class ProtoUtil {
 
-    // im/turms/common/model/dto/request/TurmsRequest.java:55
-    private static final int TURMS_REQUEST_REQUEST_ID_TAG = 10;
-
     private ProtoUtil() {
-    }
-
-    // TurmsRequest
-
-    public static long parseRequestId(ByteBuffer turmsRequestBuffer) throws IOException {
-        // The CodedInputStream.newInstance should be efficient because it reuses the direct buffer
-        // see com.google.protobuf.CodedInputStream.newInstance(java.nio.ByteBuffer, boolean)
-        CodedInputStream stream = CodedInputStream.newInstance(turmsRequestBuffer);
-        int tag;
-        do {
-            tag = stream.readTag();
-            if (tag == TURMS_REQUEST_REQUEST_ID_TAG) {
-                Int64Value value = stream.readMessage(Int64Value.parser(), ExtensionRegistry.getEmptyRegistry());
-                if (value != null) {
-                    return value.getValue();
-                } else {
-                    throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The requestId of TurmsRequest is null");
-                }
-            }
-            stream.skipField(tag);
-        } while (tag != 0);
-        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The requestId of TurmsRequest is missing");
     }
 
     // Transformation

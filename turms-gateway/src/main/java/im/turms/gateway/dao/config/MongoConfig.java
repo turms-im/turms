@@ -24,8 +24,6 @@ import im.turms.server.common.dao.converter.IntegerToEnumConverter;
 import im.turms.server.common.dao.converter.IntegerToEnumConverterFactory;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.boot.autoconfigure.mongo.MongoClientSettingsBuilderCustomizer;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.boot.autoconfigure.mongo.ReactiveMongoClientFactory;
 import org.springframework.context.annotation.Bean;
@@ -42,8 +40,8 @@ import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.convert.NoOpDbRefResolver;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author James Chen
@@ -54,15 +52,11 @@ import java.util.stream.Collectors;
 public class MongoConfig {
 
     @Bean
-    public ReactiveMongoTemplate userMongoTemplate(
-            TurmsPropertiesManager turmsPropertiesManager,
-            ObjectProvider<MongoClientSettingsBuilderCustomizer> builderCustomizers,
-            ObjectProvider<MongoClientSettings> settings) {
+    public ReactiveMongoTemplate userMongoTemplate(TurmsPropertiesManager turmsPropertiesManager) {
         MongoProperties properties = turmsPropertiesManager.getLocalProperties().getGateway().getDatabase().getMongoProperties().getUser();
         // ReactiveMongoClientFactory
-        ReactiveMongoClientFactory factory = new ReactiveMongoClientFactory(properties, null,
-                builderCustomizers.orderedStream().collect(Collectors.toList()));
-        MongoClient mongoClient = factory.createMongoClient(settings.getIfAvailable());
+        ReactiveMongoClientFactory factory = new ReactiveMongoClientFactory(properties, null, Collections.emptyList());
+        MongoClient mongoClient = factory.createMongoClient(MongoClientSettings.builder().build());
         SimpleReactiveMongoDatabaseFactory databaseFactory = new SimpleReactiveMongoDatabaseFactory(mongoClient, properties.getMongoClientDatabase());
 
         // MongoMappingContext

@@ -26,6 +26,7 @@ import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Objects;
 
 /**
  * @author James Chen
@@ -42,6 +43,7 @@ public class TurmsRequestUtil {
     }
 
     public static long parseRequestId(ByteBuffer turmsRequestBuffer) {
+        Objects.requireNonNull(turmsRequestBuffer);
         // The CodedInputStream.newInstance should be efficient because it reuses the direct buffer
         // see com.google.protobuf.CodedInputStream.newInstance(java.nio.ByteBuffer, boolean)
         CodedInputStream stream = CodedInputStream.newInstance(turmsRequestBuffer);
@@ -51,7 +53,7 @@ public class TurmsRequestUtil {
                 tag = stream.readTag();
                 if (tag == TURMS_REQUEST_REQUEST_ID_TAG) {
                     Int64Value value = stream.readMessage(Int64Value.parser(), ExtensionRegistry.getEmptyRegistry());
-                    if (value != null) {
+                    if (value != null && !value.equals(value.getDefaultInstanceForType())) {
                         return value.getValue();
                     } else {
                         throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The requestId of TurmsRequest is null");
@@ -63,7 +65,8 @@ public class TurmsRequestUtil {
                 throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "Not a valid TurmsRequest");
             }
         } while (tag != 0);
-        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The requestId of TurmsRequest is missing");
+        // This should never happen because of the code "tag = stream.readTag();" above
+        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The requestId field of TurmsRequest is missing");
     }
 
 }
