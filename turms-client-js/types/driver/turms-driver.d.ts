@@ -2,6 +2,7 @@ import { im } from "../model/proto-bundle";
 import { ParsedNotification } from "../model/parsed-notification";
 import TurmsClient from "../turms-client";
 import UserLocation from "../model/user-location";
+import { SessionCloseInfo } from "../model/session-close-info";
 import TurmsNotification = im.turms.proto.TurmsNotification;
 import UserStatus = im.turms.proto.UserStatus;
 import DeviceType = im.turms.proto.DeviceType;
@@ -25,9 +26,8 @@ export default class TurmsDriver {
     private _heartbeatCallbacks;
     private _requestId;
     private _sessionId?;
-    private _address?;
     constructor(turmsClient: TurmsClient, url?: string, connectionTimeout?: number, requestTimeout?: number, minRequestsInterval?: number, httpUrl?: string, queryReasonWhenLoginFailed?: boolean, queryReasonWhenDisconnected?: boolean);
-    set onClose(value: any);
+    set onClose(value: (closeInfo: SessionCloseInfo) => void);
     get onNotificationListeners(): ((notification: ParsedNotification) => void)[];
     sendHeartbeat(): Promise<void>;
     connected(): boolean;
@@ -42,4 +42,5 @@ export default class TurmsDriver {
     private _onWebsocketOpen;
     private _onWebsocketClose;
     reconnect(host?: string): Promise<void>;
+    _getIfBusinessCloseStatus(closeCode: number): number;
 }

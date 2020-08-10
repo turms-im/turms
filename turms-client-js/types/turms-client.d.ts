@@ -5,6 +5,7 @@ import MessageService from "./service/message-service";
 import NotificationService from "./service/notification-service";
 import InputFileReader from "./util/input-file-reader";
 import StorageService from "./service/storage-service";
+import ClientOptions from "./client-options";
 declare class TurmsClient {
     private readonly _driver;
     private readonly _userService;
@@ -12,7 +13,7 @@ declare class TurmsClient {
     private readonly _messageService;
     private readonly _storageService;
     private readonly _notificationService;
-    constructor(url?: string, connectionTimeout?: number, requestTimeout?: number, minRequestsInterval?: number, storageServerUrl?: string, httpUrl?: string, queryReasonWhenLoginFailed?: boolean, queryReasonWhenDisconnected?: boolean);
+    constructor(urlOrOptions?: string | ClientOptions, connectionTimeout?: number, requestTimeout?: number, minRequestsInterval?: number, storageServerUrl?: string, httpUrl?: string, queryReasonWhenLoginFailed?: boolean, queryReasonWhenDisconnected?: boolean);
     get driver(): TurmsDriver;
     get userService(): UserService;
     get groupService(): GroupService;

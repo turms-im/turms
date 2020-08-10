@@ -15,6 +15,7 @@ import {SessionDisconnectionReason} from "../model/session-disconnection-reason"
 import {LoginFailureReason} from "../model/login-failure-reason";
 // @ts-ignore
 import fetch from "unfetch/dist/unfetch.es";
+import {SessionCloseInfo} from "../model/session-close-info";
 import TurmsNotification = im.turms.proto.TurmsNotification;
 import TurmsRequest = im.turms.proto.TurmsRequest;
 import UserStatus = im.turms.proto.UserStatus;
@@ -36,7 +37,7 @@ export default class TurmsDriver {
     private _websocket: any; //WebSocketAsPromised
     private _heartbeatTimer?: Timer;
     private _onNotificationListeners: ((notification: ParsedNotification) => void)[] = [];
-    private _onClose?: (closeStatus?: TurmsCloseStatus, wsStatusCode?: number, wsReason?: string, error?: Error) => void;
+    private _onClose?: (closeInfo: SessionCloseInfo) => void;
 
     private _url = 'ws://localhost:9510';
     private _httpUrl = 'http://localhost:9510';
@@ -72,7 +73,7 @@ export default class TurmsDriver {
         this._queryReasonWhenDisconnected = queryReasonWhenDisconnected;
     }
 
-    set onClose(value: any) {
+    set onClose(value: (closeInfo: SessionCloseInfo) => void) {
         this._onClose = value;
     }
 
@@ -302,7 +303,11 @@ export default class TurmsDriver {
         }
         if (this._isClosedByClient) {
             this._isClosedByClient = false;
-            this._onClose(TurmsCloseStatus.DISCONNECTED_BY_CLIENT, event.code, event.reason);
+            this._onClose({
+                closeStatus: TurmsCloseStatus.DISCONNECTED_BY_CLIENT,
+                webSocketStatusCode: event.code,
+                webSocketReason: event.reason
+            });
             return Promise.resolve();
         }
         const userId = this._turmsClient.userService.userId;
@@ -313,20 +318,38 @@ export default class TurmsDriver {
                     const params = `userId=${userId}&deviceType=${deviceType}&sessionId=${this._sessionId}`;
                     return fetch(`${this._httpUrl}/reasons/disconnection?${params}`)
                         .catch(error => {
-                            this._onClose(null, event.code, event.reason, new Error(`Failed to fetch the disconnection reason: ${error}`));
+                            this._onClose({
+                                closeStatus: this._getIfBusinessCloseStatus(event.code),
+                                webSocketStatusCode: event.code,
+                                webSocketReason: event.reason,
+                                error: new Error(`Failed to fetch the disconnection reason: ${error}`)
+                            });
                         })
                         .then(response => {
                             if (response.status === 200) {
                                 response.json()
                                     .then((reason: SessionDisconnectionReason) => {
-                                        this._onClose(reason.closeCode, event.code, event.reason);
+                                        this._onClose({
+                                            closeStatus: reason.closeCode,
+                                            webSocketStatusCode: event.code,
+                                            webSocketReason: event.reason
+                                        });
                                     });
                             } else {
-                                this._onClose(null, event.code, event.reason, new Error(`Failed to fetch the disconnection reason: ${response.statusText}`));
+                                this._onClose({
+                                    closeStatus: this._getIfBusinessCloseStatus(event.code),
+                                    webSocketStatusCode: event.code,
+                                    webSocketReason: event.reason,
+                                    error: new Error(`Failed to fetch the disconnection reason: ${response.statusText}`)
+                                });
                             }
                         });
                 } else {
-                    this._onClose(null, event.code, event.reason);
+                    this._onClose({
+                        closeStatus: this._getIfBusinessCloseStatus(event.code),
+                        webSocketStatusCode: event.code,
+                        webSocketReason: event.reason
+                    });
                 }
             }
         } else {
@@ -368,6 +391,12 @@ export default class TurmsDriver {
                 this._turmsClient.userService.deviceType,
                 this._turmsClient.userService.userOnlineStatus,
                 this._turmsClient.userService.location);
+        }
+    }
+
+    _getIfBusinessCloseStatus(closeCode: number) {
+        if (TurmsCloseStatus[closeCode]) {
+            return closeCode;
         }
     }
 

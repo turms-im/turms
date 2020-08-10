@@ -36,22 +36,22 @@ function start() {
     const clientUserTwo = new TurmsClient('ws://localhost:9510', 30 * 1000);
     const USER_ONE_ID = '1';
     const USER_TWO_ID = '2';
-    clientUserOne.driver.onClose = (closeStatus, wsStatusCode, wsReason, error) => {
-        appendUserOneContainer(`onClose: ${closeStatus}:${wsStatusCode}:${wsReason}:${error}`, error);
+    clientUserOne.driver.onClose = closeInfo => {
+        appendUserOneContainer(`onClose: ${beautify(closeInfo)}`);
     };
-    clientUserOne.notificationService.onNotification = (notification) => {
+    clientUserOne.notificationService.onNotification = notification => {
         appendUserOneContainer('onNotification: Receive a notification from other users or server: ' + beautify(notification));
     };
-    clientUserOne.messageService.onMessage = (message) => {
+    clientUserOne.messageService.onMessage = message => {
         appendUserOneContainer('onMessage: Receive a message from other users or server: ' + beautify(message));
     };
-    clientUserTwo.driver.onClose = (closeStatus, wsStatusCode, wsReason, error) => {
-        appendUserTwoContainer(`onClose: ${closeStatus}:${wsStatusCode}:${wsReason}:${error}`, error);
+    clientUserTwo.driver.onClose = closeInfo => {
+        appendUserTwoContainer(`onClose: ${beautify(closeInfo)}`);
     };
     clientUserTwo.notificationService.onNotification = (notification) => {
         appendUserTwoContainer('onNotification: Receive a notification from other users or server: ' + beautify(notification));
     };
-    clientUserTwo.messageService.onMessage = (message) => {
+    clientUserTwo.messageService.onMessage = message => {
         appendUserTwoContainer('onMessage: Receive a message from other users or server: ' + beautify(message));
     };
     return Promise.all([
