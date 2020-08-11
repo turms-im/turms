@@ -30,10 +30,10 @@ import lombok.EqualsAndHashCode;
 @Data
 public class SessionDisconnectionReasonKey {
 
-    private final long userId;
+    private final Long userId;
 
     private final DeviceType deviceType;
 
-    private final int sessionId;
+    private final Integer sessionId;
 
 }

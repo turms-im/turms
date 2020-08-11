@@ -96,6 +96,9 @@ public class WorkflowMediator {
                         : Mono.just(statusCode));
     }
 
+    /**
+     * @return true if the reason has been cached
+     */
     public Mono<Boolean> rejectLoginRequest(
             @NotNull TurmsStatusCode statusCode,
             @Nullable Long userId,
@@ -118,8 +121,7 @@ public class WorkflowMediator {
     // Session
 
     public void onSessionEstablished(UserSessionsManager userSessionsManager, DeviceType deviceType) {
-        if (node.getSharedPropertyService().getSharedProperties().getGateway().getSession()
-                .isNotifyClientsOfSessionInfoAfterConnected()) {
+        if (node.getSharedProperties().getGateway().getSession().isNotifyClientsOfSessionInfoAfterConnected()) {
             userSessionsManager.pushSessionNotification(deviceType);
         }
     }
@@ -171,7 +173,7 @@ public class WorkflowMediator {
             @Nullable Point userLocation,
             @Nullable String ip,
             @Nullable Map<String, String> deviceDetails) {
-        boolean enableAuthentication = node.getSharedPropertyService().getSharedProperties().getGateway().getSession().isEnableAuthentication();
+        boolean enableAuthentication = node.getSharedProperties().getGateway().getSession().isEnableAuthentication();
         if (!enableAuthentication) {
             return Mono.just(TurmsStatusCode.OK);
         }

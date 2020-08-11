@@ -23,10 +23,10 @@ import com.google.protobuf.Int64Value;
 import im.turms.common.constant.statuscode.TurmsStatusCode;
 import im.turms.common.exception.TurmsBusinessException;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.util.Assert;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Objects;
 
 /**
  * @author James Chen
@@ -43,7 +43,7 @@ public class TurmsRequestUtil {
     }
 
     public static long parseRequestId(ByteBuffer turmsRequestBuffer) {
-        Objects.requireNonNull(turmsRequestBuffer);
+        Assert.notNull(turmsRequestBuffer, "turmsRequestBuffer must not be null");
         // The CodedInputStream.newInstance should be efficient because it reuses the direct buffer
         // see com.google.protobuf.CodedInputStream.newInstance(java.nio.ByteBuffer, boolean)
         CodedInputStream stream = CodedInputStream.newInstance(turmsRequestBuffer);

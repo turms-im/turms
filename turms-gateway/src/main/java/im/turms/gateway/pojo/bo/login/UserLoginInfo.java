@@ -20,7 +20,7 @@ package im.turms.gateway.pojo.bo.login;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.UserStatus;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import org.springframework.data.geo.Point;
 
 import java.util.Map;
@@ -28,7 +28,7 @@ import java.util.Map;
 /**
  * @author James Chen
  */
-@Data
+@Getter
 @AllArgsConstructor
 public final class UserLoginInfo {
     private final Long userId;

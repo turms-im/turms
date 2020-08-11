@@ -191,6 +191,9 @@ public class SessionService implements ISessionService {
         return setLocalSessionOfflineByUserIdAndDeviceTypes(userId, DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET, closeStatus, new Date());
     }
 
+    /**
+     * @return true if the session exists and the update operation was successful
+     */
     public Mono<Boolean> updateHeartbeatTimestamp(
             @NotNull Long userId,
             @NotNull @DeviceTypeConstraint DeviceType deviceType) {
@@ -221,7 +224,7 @@ public class SessionService implements ISessionService {
             @Nullable Point userLocation,
             @Nullable String ip,
             @Nullable Map<String, String> deviceDetails) {
-        // Must fetch the latest status instead the status in the cache
+        // Must fetch the latest status instead of the status in the cache
         return userStatusService.fetchUserSessionsStatus(userId)
                 .flatMap(sessionsStatus -> {
                     // Check the current sessions status
@@ -246,11 +249,25 @@ public class SessionService implements ISessionService {
             @Nullable String ip,
             @Nullable Map<String, String> deviceDetails,
             @NotNull UserSessionsStatus sessionsStatus) {
+        // Try to update the global user status
         return userStatusService.addOnlineDeviceIfAbsent(userId, deviceType, userStatus, heartbeatTimeoutDuration, sessionsStatus)
                 .flatMap(wasSuccessful -> {
                     if (wasSuccessful) {
                         UserStatus finalUserStatus = userStatus != null ? userStatus : UserStatus.AVAILABLE;
-                        sessionsManagerByUserId.put(userId, new UserSessionsManager(userId, finalUserStatus, deviceType, userLocation, null, heartbeatTimeout, null));
+                        boolean[] managerExists = new boolean[]{true};
+                        UserSessionsManager manager = sessionsManagerByUserId.computeIfAbsent(userId, key -> {
+                            managerExists[0] = false;
+                            return new UserSessionsManager(userId, finalUserStatus, deviceType, userLocation, null, heartbeatTimeout, null);
+                        });
+                        if (managerExists[0]) {
+                            boolean added = manager.addSessionIfAbsent(deviceType, userLocation, null, heartbeatTimeout);
+                            // This should never happen
+                            if (!added) {
+                                manager.setDeviceOffline(deviceType, CloseStatusFactory.get(SessionCloseStatus.LOGIN_CONFLICT));
+                                manager.addSessionIfAbsent(deviceType, userLocation, null, heartbeatTimeout);
+                            }
+                        }
+
                         long logId = node.getFlakeIdService().nextId(ServiceType.LOG);
                         Date now = new Date();
                         if (userLocation != null && sessionLocationService.isLocationEnabled()) {

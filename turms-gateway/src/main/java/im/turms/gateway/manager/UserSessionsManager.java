@@ -33,6 +33,7 @@ import io.netty.util.HashedWheelTimer;
 import io.netty.util.Timeout;
 import lombok.Data;
 import org.springframework.data.geo.Point;
+import org.springframework.util.Assert;
 import org.springframework.web.reactive.socket.CloseStatus;
 import org.springframework.web.reactive.socket.WebSocketSession;
 import reactor.core.publisher.Sinks;
@@ -67,6 +68,9 @@ public final class UserSessionsManager {
             @Nullable WebSocketSession webSocketSession,
             int heartbeatTimeoutInSeconds,
             @Nullable Long logId) {
+        Assert.notNull(userId, "userId must not be null");
+        Assert.notNull(userStatus, "userStatus must not be null");
+        Assert.notNull(loggingInDeviceType, "loggingInDeviceType must not be null");
         UserSession session = new UserSession(
                 ThreadLocalRandom.current().nextInt(),
                 loggingInDeviceType,
@@ -83,10 +87,36 @@ public final class UserSessionsManager {
             session.setHeartbeatTimeout(heartbeatTimeout);
         }
         ConcurrentHashMap<DeviceType, UserSession> sessionMap = new ConcurrentHashMap<>(MapUtil.getCapability(DeviceTypeUtil.ALL_DEVICE_TYPES.length));
-        sessionMap.putIfAbsent(loggingInDeviceType, session);
+        sessionMap.put(loggingInDeviceType, session);
         this.userId = userId;
         this.userStatus = userStatus;
         this.sessionMap = sessionMap;
+    }
+
+    /**
+     * @return true if succeeds
+     */
+    public boolean addSessionIfAbsent(
+            @NotNull DeviceType loggingInDeviceType,
+            @Nullable Point userLocation,
+            @Nullable Long logId,
+            int heartbeatTimeoutInSeconds) {
+        UserSession userSession = new UserSession(
+                ThreadLocalRandom.current().nextInt(),
+                loggingInDeviceType,
+                new Date(),
+                userLocation,
+                null,
+                Sinks.unicast(),
+                null,
+                logId,
+                System.currentTimeMillis(),
+                0);
+        boolean added = sessionMap.putIfAbsent(loggingInDeviceType, userSession) == null;
+        if (added && heartbeatTimeoutInSeconds > 0) {
+            userSession.setHeartbeatTimeout(newHeartbeatTimeout(loggingInDeviceType, userSession, heartbeatTimeoutInSeconds));
+        }
+        return added;
     }
 
     public void setDeviceOffline(
@@ -98,7 +128,12 @@ public final class UserSessionsManager {
             if (timeout != null) {
                 timeout.cancel();
             }
-            session.getWebSocketSession().close(closeStatus).subscribe();
+            WebSocketSession webSocketSession = session.getWebSocketSession();
+            if (webSocketSession != null) {
+                webSocketSession.close(closeStatus).subscribe();
+            } else {
+                throw new IllegalStateException("The WebSocket session is missing for the session: " + session.getId());
+            }
             return null;
         });
     }

@@ -36,7 +36,7 @@ class TurmsRequestUtilTests {
 
     @Test
     void parseRequestId_shouldThrow_forNullArgument() {
-        assertThrows(NullPointerException.class, () -> TurmsRequestUtil.parseRequestId(null));
+        assertThrows(IllegalArgumentException.class, () -> TurmsRequestUtil.parseRequestId(null));
     }
 
     @Test
