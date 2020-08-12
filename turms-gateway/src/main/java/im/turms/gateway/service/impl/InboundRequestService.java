@@ -56,6 +56,7 @@ public class InboundRequestService {
 
     /**
      * @return a response to the request.
+     * If the return value is an exception, the session should be closed.
      */
     public Mono<TurmsNotification> processServiceRequest(ServiceRequest serviceRequest) {
         // Validate
