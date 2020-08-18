@@ -136,24 +136,26 @@ client.userService.login('1', '123')
 TurmsClient client = new TurmsClient(); // new TurmsClient("ws://any-turms-gateway-server.com");
 
 // Listen to the close event
-client.getDriver().setOnClose((closeStatus, wsStatusCode, wsReason, error) -> {
-    System.out.println(String.format("onClose: %d:%d:%s:%s",
+client.getDriver().setOnClose(info -> {
+    SessionCloseStatus closeStatus = info.getCloseStatus();
+    Throwable error = info.getError();
+    System.out.printf("onClose: %d:%d:%s:%s%n",
             closeStatus != null ? closeStatus.getCode() : null,
-            wsStatusCode,
-            wsReason,
-            error != null ? error.getMessage() : null));
+            info.getWebSocketStatus(),
+            info.getWebSocketReason(),
+            error != null ? error.getMessage() : null);
 });
 
 // Listen to inbound notifications
-client.getNotificationService().setOnNotification((notification) -> {
-    System.out.println(String.format("onNotification: Receive a notification from other users or server: %s",
-            notification.toString()));
+client.getNotificationService().setOnNotification(notification -> {
+    System.out.printf("onNotification: Receive a notification from other users or server: %s%n",
+            notification.toString());
 });
 
 // Listen to inbound messages
 client.getMessageService().setOnMessage((message, messageAddition) -> {
-    System.out.println(String.format("onMessage: Receive a message from other users or server: %s",
-            message.toString()));
+    System.out.printf("onMessage: Receive a message from other users or server: %s%n",
+            message.toString());
 });
 
 client.getUserService().login(1, "123")
@@ -163,7 +165,7 @@ client.getUserService().login(1, "123")
                     35.792657f,
                     100,
                     10)
-                    .thenAccept(ids -> System.out.println(String.format("user ids: %s", ids.toString())));
+                    .thenAccept(ids -> System.out.printf("user ids: %s%n", ids.toString()));
             client.getMessageService().sendMessage(
                     false,
                     1,
@@ -171,7 +173,7 @@ client.getUserService().login(1, "123")
                     "Hello Turms",
                     null,
                     30)
-                    .thenAccept(id -> System.out.println(String.format("message %d has been sent", id)));
+                    .thenAccept(id -> System.out.printf("message %d has been sent%n", id));
             client.getGroupService().createGroup(
                     "Turms Developers Group",
                     "This is a group for the developers who are interested in Turms",
@@ -179,7 +181,7 @@ client.getUserService().login(1, "123")
                     null,
                     null,
                     null)
-                    .thenAccept(id -> System.out.println(String.format("group %d has been created", id)));
+                    .thenAccept(id -> System.out.printf("group %d has been created%n", id));
         })
         .exceptionally(throwable -> {
             throwable.printStackTrace();
@@ -194,16 +196,17 @@ client.getUserService().login(1, "123")
 let client = TurmsClient() // TurmsClient("ws://any-turms-gateway-server.com")
 
 // Listen to the close event
-client.driver.onClose = { (closeStatus: TurmsCloseStatus?, wsStatusCode: Int?, wsReason: String?, error: Error?) -> Void in
+client.driver.onClose = { (closeInfo: SessionCloseInfo) -> Void in
     var closeStatusStr = ""
-    if let status = closeStatus {
+    if let status = closeInfo.closeStatus {
         closeStatusStr = String(status.rawValue)
     }
     var statusCodeStr = ""
-    if let code = wsStatusCode {
+    if let code = closeInfo.webSocketStatusCode {
         statusCodeStr = String(code)
     }
-    print("onClose: \(closeStatusStr):\(statusCodeStr):\(wsReason ?? ""):\(error?.localizedDescription ?? "")")
+    print("onClose: \(closeStatusStr):\(statusCodeStr):\(closeInfo.webSocketReason ??
+""):\(closeInfo.error?.localizedDescription ?? "")")
 }
 
 // Listen to inbound notifications
