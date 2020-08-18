@@ -58,7 +58,7 @@ class OutboundMessageServiceTests {
     @Test
     void sendNotificationToLocalClients_shouldReturnTrue_ifRecipientsAreOnline() {
         UserSessionsManager sessionsManager = mock(UserSessionsManager.class);
-        UserSession session = new UserSession(1, DeviceType.ANDROID, new Date(), new Point(1F, 1F), null, Sinks.unicast(), null, 1L, 0, 0);
+        UserSession session = new UserSession(1, DeviceType.ANDROID, new Date(), new Point(1F, 1F), null, Sinks.many().unicast().onBackpressureBuffer(), null, 1L, 0, 0);
         when(sessionsManager.getSessionMap())
                 .thenReturn(Map.of(DeviceType.ANDROID, session));
         OutboundMessageService outboundMessageService = newOutboundMessageService(sessionsManager);

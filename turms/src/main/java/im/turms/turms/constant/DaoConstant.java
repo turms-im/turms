@@ -19,7 +19,7 @@ package im.turms.turms.constant;
 
 import im.turms.common.exception.TurmsBusinessException;
 import org.springframework.dao.DuplicateKeyException;
-import reactor.retry.Retry;
+import reactor.util.retry.Retry;
 
 import java.time.Duration;
 
@@ -45,8 +45,8 @@ public class DaoConstant {
     public static final int MONGO_TRANSACTION_RETRIES_NUMBER = 3;
     public static final Duration MONGO_TRANSACTION_BACKOFF = Duration.ofSeconds(3);
 
-    public static final Retry<Object> TRANSACTION_RETRY = Retry.allBut(DuplicateKeyException.class, TurmsBusinessException.class)
+    public static final Retry TRANSACTION_RETRY = Retry.withThrowable(reactor.retry.Retry.allBut(DuplicateKeyException.class, TurmsBusinessException.class)
             .retryMax(MONGO_TRANSACTION_RETRIES_NUMBER)
-            .fixedBackoff(MONGO_TRANSACTION_BACKOFF);
+            .fixedBackoff(MONGO_TRANSACTION_BACKOFF));
 
 }

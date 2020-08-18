@@ -24,7 +24,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.geo.Point;
 import org.springframework.web.reactive.socket.WebSocketSession;
-import reactor.core.publisher.Sinks.StandaloneFluxSink;
+import reactor.core.publisher.Sinks;
 
 import java.util.Date;
 
@@ -48,7 +48,7 @@ public final class UserSession {
     private WebSocketSession webSocketSession;
 
     /**
-     * 1. Use StandaloneFluxSink<ByteBuf> instead of StandaloneFluxSink<TurmsNotification>
+     * 1. Use Sinks.Many<ByteBuf> instead of Sinks.Many<TurmsNotification>
      * so that turms-gateway can transfer data through zero copy (if SSL is disabled)
      * and don't need to parse it when the data comes from turms.
      * <p>
@@ -57,7 +57,7 @@ public final class UserSession {
      * so it's acceptable.
      * Note that the ByteBuf (TurmsNotification) comes from turms servers in most scenarios.
      */
-    private final StandaloneFluxSink<ByteBuf> notificationSink;
+    private final Sinks.Many<ByteBuf> notificationSink;
     private Timeout heartbeatTimeout;
     private Long logId;
     private volatile long lastHeartbeatTimestampMillis;

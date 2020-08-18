@@ -76,7 +76,7 @@ public class OutboundMessageService implements IOutboundMessageService {
                 for (UserSession userSession : userSessionsManager.getSessionMap().values()) {
                     notificationData.retain();
                     // This will decrease the reference count of the message
-                    userSession.getNotificationSink().next(notificationData);
+                    userSession.getNotificationSink().emitNext(notificationData);
                 }
             } else {
                 hasForwardedMessageToAllRecipients = false;

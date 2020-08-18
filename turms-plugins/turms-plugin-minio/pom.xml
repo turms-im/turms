@@ -13,7 +13,7 @@
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
 
-        <awssdk.version>2.13.61</awssdk.version>
+        <awssdk.version>2.13.76</awssdk.version>
         <lombok.version>1.18.12</lombok.version>
     </properties>
 

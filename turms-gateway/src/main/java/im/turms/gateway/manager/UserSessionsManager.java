@@ -77,7 +77,7 @@ public final class UserSessionsManager {
                 new Date(),
                 userLocation,
                 webSocketSession,
-                Sinks.unicast(),
+                Sinks.many().unicast().onBackpressureBuffer(),
                 null,
                 logId,
                 System.currentTimeMillis(),
@@ -107,7 +107,7 @@ public final class UserSessionsManager {
                 new Date(),
                 userLocation,
                 null,
-                Sinks.unicast(),
+                Sinks.many().unicast().onBackpressureBuffer(),
                 null,
                 logId,
                 System.currentTimeMillis(),
@@ -123,7 +123,7 @@ public final class UserSessionsManager {
             @NotNull DeviceType deviceType,
             @NotNull CloseStatus closeStatus) {
         sessionMap.computeIfPresent(deviceType, (key, session) -> {
-            session.getNotificationSink().complete();
+            session.getNotificationSink().emitComplete();
             Timeout timeout = session.getHeartbeatTimeout();
             if (timeout != null) {
                 timeout.cancel();
@@ -148,7 +148,7 @@ public final class UserSessionsManager {
                     .setData(TurmsNotification.Data.newBuilder().setSession(session))
                     .build();
             ByteBuf byteBuffer = ProtoUtil.getByteBuffer(notification);
-            userSession.getNotificationSink().next(byteBuffer);
+            userSession.getNotificationSink().emitNext(byteBuffer);
             return true;
         } else {
             return false;

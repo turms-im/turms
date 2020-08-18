@@ -25,7 +25,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.data.geo.Point;
 import org.springframework.web.reactive.socket.WebSocketSession;
 import reactor.core.publisher.Sinks;
-import reactor.core.publisher.Sinks.StandaloneFluxSink;
 
 import java.util.Date;
 
@@ -43,7 +42,7 @@ class UserSessionTests {
     private final Date loginDate = new Date();
     private final Point loginLocation = new Point(1F, 1F);
     private final WebSocketSession webSocketSession = mock(WebSocketSession.class);
-    private final StandaloneFluxSink<ByteBuf> notificationSink = Sinks.unicast();
+    private final Sinks.Many<ByteBuf> notificationSink = Sinks.many().unicast().onBackpressureBuffer();
     private final Timeout heartbeatTimeout = mock(Timeout.class);
     private final long logId = 1L;
     private final long lastHeartbeatTimestampMillis = 1L;

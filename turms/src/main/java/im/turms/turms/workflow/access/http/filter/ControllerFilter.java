@@ -90,18 +90,19 @@ public class ControllerFilter implements WebFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-        Object handlerMethodObject = requestMappingHandlerMapping.getHandler(exchange)
-                .toProcessor()
-                .peek();
-        if (isOpenApiEnabledAndOpenApiRequest(exchange)) {
-            return chain.filter(exchange);
-        }
-        if (handlerMethodObject instanceof HandlerMethod) {
-            HandlerMethod handlerMethod = (HandlerMethod) handlerMethodObject;
-            return filterHandlerMethod(handlerMethod, exchange, chain);
-        } else {
-            return filterUnhandledRequest(exchange, chain);
-        }
+        return requestMappingHandlerMapping.getHandler(exchange)
+                .share()
+                .flatMap(handlerMethodObject -> {
+                    if (isOpenApiEnabledAndOpenApiRequest(exchange)) {
+                        return chain.filter(exchange);
+                    }
+                    if (handlerMethodObject instanceof HandlerMethod) {
+                        HandlerMethod handlerMethod = (HandlerMethod) handlerMethodObject;
+                        return filterHandlerMethod(handlerMethod, exchange, chain);
+                    } else {
+                        return filterUnhandledRequest(exchange, chain);
+                    }
+                });
     }
 
     private Mono<Void> filterHandlerMethod(HandlerMethod handlerMethod, ServerWebExchange exchange, WebFilterChain chain) {
