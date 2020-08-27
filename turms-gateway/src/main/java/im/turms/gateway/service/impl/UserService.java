@@ -25,8 +25,10 @@ import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -45,28 +47,20 @@ public class UserService {
         this.passwordManager = passwordManager;
     }
 
-    /**
-     * AuthenticateAdmin the user through the ServerHttpRequest object during handshake.
-     * WARNING: Because during handshake the WebSocket APIs on Browser can only allowed to set the cookie value,
-     *
-     * @return the userId If the user information matches.
-     * return null If both the user ID and the token are unmatched.
-     */
     public Mono<Boolean> authenticate(
             @NotNull Long userId,
-            @NotNull String rawPassword) {
+            @Nullable String rawPassword) {
+        Assert.notNull(userId, "userId must not be null");
         Query query = new Query()
                 .addCriteria(Criteria.where(DomainFieldName.ID_FIELD_NAME).is(userId));
         query.fields().include(User.Fields.PASSWORD);
         return mongoTemplate.findOne(query, User.class)
-                .map(user -> {
-                    String encodedPassword = user.getPassword();
-                    return encodedPassword != null && passwordManager.matchesUserPassword(rawPassword, encodedPassword);
-                })
+                .map(user -> passwordManager.matchesUserPassword(rawPassword, user.getPassword()))
                 .defaultIfEmpty(false);
     }
 
     public Mono<Boolean> isActiveAndNotDeleted(@NotNull Long userId) {
+        Assert.notNull(userId, "userId must not be null");
         Query query = new Query()
                 .addCriteria(Criteria.where(DomainFieldName.ID_FIELD_NAME).is(userId))
                 .addCriteria(Criteria.where(User.Fields.IS_ACTIVE).is(true))

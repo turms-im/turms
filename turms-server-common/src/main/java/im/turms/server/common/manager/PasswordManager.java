@@ -25,6 +25,7 @@ import org.springframework.security.crypto.password.MessageDigestPasswordEncoder
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -71,22 +72,27 @@ public class PasswordManager {
         return encodePassword(userPasswordEncodingAlgorithm, rawPassword);
     }
 
-    public boolean matchesAdminPassword(@NotNull String rawPassword, @NotNull String encodedPassword) {
-        Assert.notNull(rawPassword, "rawPassword must not be null");
-        Assert.notNull(rawPassword, "encodedPassword must not be null");
+    public boolean matchesAdminPassword(@Nullable String rawPassword, @Nullable String encodedPassword) {
         return matchesPassword(adminPasswordEncodingAlgorithm, rawPassword, encodedPassword);
     }
 
-    public boolean matchesUserPassword(@NotNull String rawPassword, @NotNull String encodedPassword) {
-        Assert.notNull(rawPassword, "rawPassword must not be null");
-        Assert.notNull(rawPassword, "encodedPassword must not be null");
+    public boolean matchesUserPassword(@Nullable String rawPassword, @Nullable String encodedPassword) {
         return matchesPassword(userPasswordEncodingAlgorithm, rawPassword, encodedPassword);
     }
 
+    /**
+     * @return true if the passwords match.
+     * Note that the method returns true if both passwords are null
+     */
     public boolean matchesPassword(
-            PasswordEncodingAlgorithm strategy,
-            String rawPassword,
-            String encodedPassword) {
+            @NotNull PasswordEncodingAlgorithm strategy,
+            @Nullable String rawPassword,
+            @Nullable String encodedPassword) {
+        if (encodedPassword == null) {
+            return rawPassword == null;
+        } else if (rawPassword == null) {
+            return false;
+        }
         switch (strategy) {
             case BCRYPT:
                 return BCRYPT_PASSWORD_ENCODER.matches(rawPassword, encodedPassword);

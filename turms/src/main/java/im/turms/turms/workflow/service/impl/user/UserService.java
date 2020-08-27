@@ -37,7 +37,6 @@ import im.turms.turms.workflow.service.impl.group.GroupMemberService;
 import im.turms.turms.workflow.service.impl.user.onlineuser.SessionService;
 import im.turms.turms.workflow.service.impl.user.relationship.UserRelationshipGroupService;
 import im.turms.turms.workflow.service.impl.user.relationship.UserRelationshipService;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
@@ -138,16 +137,26 @@ public class UserService {
             @Nullable Boolean isActive) {
         Date now = new Date();
         id = id != null ? id : node.nextId(ServiceType.USER);
-        rawPassword = rawPassword != null ? rawPassword : RandomStringUtils.randomAlphanumeric(16);
+        String password = rawPassword != null
+                ? passwordManager.encodeUserPassword(rawPassword)
+                : null;
         name = name != null ? name : "";
         intro = intro != null ? intro : "";
-        profileAccess = profileAccess != null ? profileAccess : ProfileAccessStrategy.ALL;
-        permissionGroupId = permissionGroupId != null ? permissionGroupId : DaoConstant.DEFAULT_USER_PERMISSION_GROUP_ID;
-        isActive = isActive != null ? isActive : node.getSharedProperties().getService().getUser().isActivateUserWhenAdded();
-        Date date = registrationDate != null ? registrationDate : now;
+        profileAccess = profileAccess != null
+                ? profileAccess
+                : ProfileAccessStrategy.ALL;
+        permissionGroupId = permissionGroupId != null
+                ? permissionGroupId
+                : DaoConstant.DEFAULT_USER_PERMISSION_GROUP_ID;
+        isActive = isActive != null
+                ? isActive
+                : node.getSharedProperties().getService().getUser().isActivateUserWhenAdded();
+        Date date = registrationDate != null
+                ? registrationDate
+                : now;
         User user = new User(
                 id,
-                passwordManager.encodeUserPassword(rawPassword),
+                password,
                 name,
                 intro,
                 profileAccess,
