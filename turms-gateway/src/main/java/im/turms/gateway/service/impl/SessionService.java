@@ -34,7 +34,6 @@ import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.constraint.DeviceTypeConstraint;
 import im.turms.server.common.property.TurmsProperties;
-import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.rpc.request.SetUserOfflineRequest;
 import im.turms.server.common.rpc.service.ISessionService;
 import im.turms.server.common.service.session.SessionLocationService;
@@ -64,7 +63,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SessionService implements ISessionService {
 
     private final Node node;
-    private final TurmsPropertiesManager turmsPropertiesManager;
     private final TurmsPluginManager turmsPluginManager;
     private final ReasonCacheService reasonCacheService;
     private final SessionLocationService sessionLocationService;
@@ -73,12 +71,12 @@ public class SessionService implements ISessionService {
     private final UserSimultaneousLoginService userSimultaneousLoginService;
     private final boolean pluginEnabled;
     private final Map<Long, UserSessionsManager> sessionsManagerByUserId;
-    private final int heartbeatTimeout;
-    private final Duration heartbeatTimeoutDuration;
+    private int heartbeatTimeout;
+    private Duration heartbeatTimeoutDuration;
+    private int minimumUpdateHeartbeatIntervalSeconds;
 
     public SessionService(
             Node node,
-            TurmsPropertiesManager turmsPropertiesManager,
             TurmsPluginManager turmsPluginManager,
             UserLoginActionService userLoginActionService,
             SessionLocationService sessionLocationService,
@@ -86,7 +84,6 @@ public class SessionService implements ISessionService {
             UserStatusService userStatusService,
             UserSimultaneousLoginService userSimultaneousLoginService) {
         this.node = node;
-        this.turmsPropertiesManager = turmsPropertiesManager;
         this.userLoginActionService = userLoginActionService;
         this.sessionLocationService = sessionLocationService;
         this.turmsPluginManager = turmsPluginManager;
@@ -99,6 +96,11 @@ public class SessionService implements ISessionService {
         this.reasonCacheService = reasonCacheService;
         heartbeatTimeout = node.getSharedProperties().getGateway().getSession().getHeartbeatTimeoutSeconds();
         heartbeatTimeoutDuration = Duration.ofSeconds(heartbeatTimeout);
+        node.addPropertiesChangeListener(newProperties -> {
+            heartbeatTimeout = newProperties.getGateway().getSession().getHeartbeatTimeoutSeconds();
+            heartbeatTimeoutDuration = Duration.ofSeconds(heartbeatTimeout);
+            minimumUpdateHeartbeatIntervalSeconds = newProperties.getGateway().getSession().getMinimumUpdateHeartbeatIntervalSeconds();
+        });
     }
 
     @PreDestroy
@@ -209,7 +211,6 @@ public class SessionService implements ISessionService {
 
     public Mono<Boolean> updateHeartbeatTimestamp(@NotNull Long userId, @NotNull UserSession session) {
         long lastHeartbeatTimestampMillis = session.getLastHeartbeatTimestampMillis();
-        int minimumUpdateHeartbeatIntervalSeconds = turmsPropertiesManager.getLocalProperties().getGateway().getSession().getMinimumUpdateHeartbeatIntervalSeconds();
         boolean isAllowedToUpdate = (System.currentTimeMillis() - lastHeartbeatTimestampMillis) / 1000 > minimumUpdateHeartbeatIntervalSeconds;
         return isAllowedToUpdate
                 ? userStatusService.updateTtl(userId, heartbeatTimeoutDuration)
@@ -239,6 +240,44 @@ public class SessionService implements ISessionService {
                                         : Mono.just(TurmsStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE));
                     }
                 });
+    }
+
+    @Nullable
+    public UserSessionsManager getUserSessionsManager(@NotNull Long userId) {
+        return sessionsManagerByUserId.get(userId);
+    }
+
+    @Nullable
+    public UserSession getLocalUserSession(@NotNull Long userId, @NotNull DeviceType deviceType) {
+        UserSessionsManager userSessionsManager = sessionsManagerByUserId.get(userId);
+        return userSessionsManager != null ? userSessionsManager.getSession(deviceType) : null;
+    }
+
+    public int countLocalOnlineUsers() {
+        return sessionsManagerByUserId.size();
+    }
+
+    private Mono<Boolean> disconnectConflictedDeviceTypes(Long userId, DeviceType deviceType, UserSessionsStatus sessionsStatus) {
+        Set<DeviceType> conflictedDeviceTypes = userSimultaneousLoginService.getConflictedDeviceTypes(deviceType);
+        SetMultimap<String, DeviceType> nodeIdAndDeviceTypesMap = null;
+        for (DeviceType conflictedDeviceType : conflictedDeviceTypes) {
+            String nodeId = sessionsStatus.getNodeIdByDeviceType(conflictedDeviceType);
+            if (nodeId != null) {
+                if (nodeIdAndDeviceTypesMap == null) {
+                    nodeIdAndDeviceTypesMap = HashMultimap.create(3, 3);
+                }
+                nodeIdAndDeviceTypesMap.put(nodeId, deviceType);
+            }
+        }
+        List<Mono<Boolean>> disconnectionRequests = nodeIdAndDeviceTypesMap != null ? new LinkedList<>() : null;
+        if (nodeIdAndDeviceTypesMap != null) {
+            for (String nodeId : nodeIdAndDeviceTypesMap.keySet()) {
+                Set<DeviceType> deviceTypes = nodeIdAndDeviceTypesMap.get(nodeId);
+                SetUserOfflineRequest request = new SetUserOfflineRequest(userId, deviceTypes, CloseStatusFactory.get(SessionCloseStatus.DISCONNECTED_BY_CLIENT));
+                disconnectionRequests.add(node.getRpcService().requestResponse(nodeId, request));
+            }
+        }
+        return disconnectionRequests != null ? ReactorUtil.areAllTrue(disconnectionRequests) : Mono.just(true);
     }
 
     private Mono<TurmsStatusCode> addOnlineDeviceIfAbsent(
@@ -288,44 +327,6 @@ public class SessionService implements ISessionService {
                         return Mono.just(TurmsStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE);
                     }
                 });
-    }
-
-    @Nullable
-    public UserSessionsManager getUserSessionsManager(@NotNull Long userId) {
-        return sessionsManagerByUserId.get(userId);
-    }
-
-    @Nullable
-    public UserSession getLocalUserSession(@NotNull Long userId, @NotNull DeviceType deviceType) {
-        UserSessionsManager userSessionsManager = sessionsManagerByUserId.get(userId);
-        return userSessionsManager != null ? userSessionsManager.getSession(deviceType) : null;
-    }
-
-    public int countLocalOnlineUsers() {
-        return sessionsManagerByUserId.size();
-    }
-
-    private Mono<Boolean> disconnectConflictedDeviceTypes(Long userId, DeviceType deviceType, UserSessionsStatus sessionsStatus) {
-        Set<DeviceType> conflictedDeviceTypes = userSimultaneousLoginService.getConflictedDeviceTypes(deviceType);
-        SetMultimap<String, DeviceType> nodeIdAndDeviceTypesMap = null;
-        for (DeviceType conflictedDeviceType : conflictedDeviceTypes) {
-            String nodeId = sessionsStatus.getNodeIdByDeviceType(conflictedDeviceType);
-            if (nodeId != null) {
-                if (nodeIdAndDeviceTypesMap == null) {
-                    nodeIdAndDeviceTypesMap = HashMultimap.create(3, 3);
-                }
-                nodeIdAndDeviceTypesMap.put(nodeId, deviceType);
-            }
-        }
-        List<Mono<Boolean>> disconnectionRequests = nodeIdAndDeviceTypesMap != null ? new LinkedList<>() : null;
-        if (nodeIdAndDeviceTypesMap != null) {
-            for (String nodeId : nodeIdAndDeviceTypesMap.keySet()) {
-                Set<DeviceType> deviceTypes = nodeIdAndDeviceTypesMap.get(nodeId);
-                SetUserOfflineRequest request = new SetUserOfflineRequest(userId, deviceTypes, CloseStatusFactory.get(SessionCloseStatus.DISCONNECTED_BY_CLIENT));
-                disconnectionRequests.add(node.getRpcService().requestResponse(nodeId, request));
-            }
-        }
-        return disconnectionRequests != null ? ReactorUtil.areAllTrue(disconnectionRequests) : Mono.just(true);
     }
 
     private void removeSessionsManagerIfEmpty(@NotNull CloseStatus closeStatus, UserSessionsManager manager, Long userId) {

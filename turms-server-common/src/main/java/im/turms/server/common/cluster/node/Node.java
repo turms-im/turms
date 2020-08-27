@@ -46,6 +46,7 @@ import reactor.netty.ChannelBindException;
 import reactor.netty.tcp.TcpServer;
 
 import java.net.InetSocketAddress;
+import java.util.function.Consumer;
 
 /**
  * The lifecycle of the local node is roughly the same with
@@ -159,6 +160,10 @@ public class Node {
 
     public TurmsProperties getSharedProperties() {
         return sharedPropertyService.getSharedProperties();
+    }
+
+    public void addPropertiesChangeListener(Consumer<TurmsProperties> listener) {
+        sharedPropertyService.addListeners(listener);
     }
 
     public boolean isActive() {

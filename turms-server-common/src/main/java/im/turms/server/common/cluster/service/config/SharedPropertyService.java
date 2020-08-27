@@ -28,6 +28,9 @@ import org.springframework.data.mongodb.core.query.Update;
 import reactor.core.publisher.Mono;
 
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author James Chen
@@ -41,6 +44,8 @@ public class SharedPropertyService implements ClusterService {
     private final TurmsProperties localProperties;
     @Getter
     private TurmsProperties sharedProperties;
+
+    private final List<Consumer<TurmsProperties>> propertiesChangeListeners = new LinkedList<>();
 
     public SharedPropertyService(String clusterId, TurmsProperties localProperties, SharedConfigService sharedConfigService) {
         this.clusterId = clusterId;
@@ -62,6 +67,7 @@ public class SharedPropertyService implements ClusterService {
                             case REPLACE:
                             case UPDATE:
                                 sharedProperties = changedProperties.getTurmsProperties();
+                                notifyListeners(sharedProperties);
                                 break;
                             case INVALIDATE:
                                 log.warn("The shared properties has been removed from database unexpectedly");
@@ -98,6 +104,20 @@ public class SharedPropertyService implements ClusterService {
                     this.sharedProperties = turmsProperties;
                     log.info("Turms properties have been shared");
                 });
+    }
+
+    public void addListeners(Consumer<TurmsProperties> listener) {
+        propertiesChangeListeners.add(listener);
+    }
+
+    private void notifyListeners(TurmsProperties properties) {
+        for (Consumer<TurmsProperties> listener : propertiesChangeListeners) {
+            try {
+                listener.accept(properties);
+            } catch (Exception e) {
+                log.error("The properties listener {} failed to handle the new properties", listener.getClass().getName(), e);
+            }
+        }
     }
 
 }
