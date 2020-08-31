@@ -42,7 +42,10 @@ import reactor.core.publisher.Mono;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -117,7 +120,7 @@ public class RpcService implements ClusterService {
     }
 
     public <T> Flux<T> requestResponsesFromOtherServices(@NotNull RpcCallable<T> request, @NotNull Duration timeout, boolean rejectIfMissingAnyConnection) {
-        Set<Member> otherActiveConnectedServiceMembers = discoveryService.getOtherActiveConnectedServiceMembers();
+        List<Member> otherActiveConnectedServiceMembers = discoveryService.getOtherActiveConnectedServiceMemberList();
         if (!otherActiveConnectedServiceMembers.isEmpty()) {
             if (rejectIfMissingAnyConnection && !discoveryService.getConnectionManager().isHasConnectedToAllMembers()) {
                 return Flux.error(new ConnectionNotFoundException("Not all connections are established"));
@@ -149,7 +152,7 @@ public class RpcService implements ClusterService {
      * @return Member node ID -> Response
      */
     public <T> Mono<Map<String, T>> requestResponsesAsMapFromOtherServices(@NotNull RpcCallable<T> request, @NotNull Duration timeout, boolean rejectIfMissingAnyConnection) {
-        Set<Member> otherActiveConnectedServiceMembers = discoveryService.getOtherActiveConnectedServiceMembers();
+        List<Member> otherActiveConnectedServiceMembers = discoveryService.getOtherActiveConnectedServiceMemberList();
         if (!otherActiveConnectedServiceMembers.isEmpty()) {
             if (rejectIfMissingAnyConnection && !discoveryService.getLocalNodeStatusManager().getLocalMember().isActive()) {
                 return Mono.error(new ConnectionNotFoundException("Not all connections are established"));
@@ -201,7 +204,7 @@ public class RpcService implements ClusterService {
         }
     }
 
-    private Throwable tryLogAndTranslateThrowable(Throwable throwable, @Nullable String memberNodeId, @Nullable Set<Member> members) {
+    private Throwable tryLogAndTranslateThrowable(Throwable throwable, @Nullable String memberNodeId, @Nullable Collection<Member> members) {
         if (throwable instanceof ApplicationErrorException) {
             RpcException e = RpcException.parse((ApplicationErrorException) throwable);
             if (e != null) {

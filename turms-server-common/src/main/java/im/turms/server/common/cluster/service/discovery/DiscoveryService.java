@@ -43,6 +43,7 @@ import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * @author James Chen
@@ -70,22 +71,18 @@ public class DiscoveryService implements ClusterService {
     @Getter
     private Leader leader;
 
-    /**
-     * Don't use volatile for better performance
-     */
-    private boolean isClosing;
+    private volatile boolean isClosing;
 
     /**
      * Use independent collections to speed up query operations
      */
     @Getter
     private final Map<String, Member> allKnownMembers = new HashMap<>();
+
     @Getter
-    private final List<Member> activeConnectedServiceMemberList = new ArrayList<>();
+    private List<Member> activeServiceMemberList = new ArrayList<>();
     @Getter
     private List<Member> otherActiveConnectedServiceMemberList = Collections.emptyList();
-    @Getter
-    private final Set<Member> otherActiveConnectedServiceMembers = new HashSet<>();
 
     private final List<Consumer<Leader>> leadershipChangeListeners = new LinkedList<>();
     private final List<MembersChangeListener> membersChangeListeners = new LinkedList<>();
@@ -129,22 +126,24 @@ public class DiscoveryService implements ClusterService {
             @Override
             public void onMemberConnectionAdded(Member member) {
                 if (member.isActive() && member.getNodeType() == NodeType.SERVICE) {
-                    updateActiveConnectedServiceMembers(true, member);
+                    updateOtherActiveConnectedServiceMemberList(true, member);
                 }
             }
 
             @Override
             public void onMemberConnectionRemoved(Member member) {
-                updateActiveConnectedServiceMembers(false, member);
+                updateOtherActiveConnectedServiceMemberList(false, member);
             }
         });
     }
 
     @Override
     public void start() {
+        // Leadership
         listenLeadershipChangeEvent();
         localNodeStatusManager.tryBecomeLeader().block();
 
+        // Members
         sharedConfigService.ensureTtlIndex(new Criteria().andOperator(
                 Criteria.where(Member.Fields.isSeed).is(false)),
                 Member.Fields.lastHeartbeatDate,
@@ -224,12 +223,13 @@ public class DiscoveryService implements ClusterService {
                             case DELETE:
                                 String nodeId = ChangeStreamUtil.getStringFromId(event, Member.Key.Fields.nodeId);
                                 Member deletedMember = allKnownMembers.remove(nodeId);
-                                updateActiveConnectedServiceMembers(false, deletedMember);
+                                updateOtherActiveConnectedServiceMemberList(false, deletedMember);
                                 if (nodeId.equals(getLocalMember().getNodeId()) && !isClosing) {
                                     registerMember(getLocalMember()).subscribe();
                                 }
                                 break;
                         }
+                        updateActiveMembers(allKnownMembers.values());
                         connectionManager.updateHasConnectedToAllMembers(allKnownMembers.keySet());
                     }
                 })
@@ -247,7 +247,7 @@ public class DiscoveryService implements ClusterService {
             if (member.isActive()
                     && member.getNodeType() == NodeType.SERVICE
                     && connectionManager.isMemberConnected(member.getNodeId())) {
-                updateActiveConnectedServiceMembers(true, member);
+                updateOtherActiveConnectedServiceMemberList(true, member);
                 if (notifyMembersChangeFuture != null) {
                     notifyMembersChangeFuture.cancel(false);
                 }
@@ -260,20 +260,23 @@ public class DiscoveryService implements ClusterService {
         connectionManager.connectMemberUntilSucceedOrRemoved(member);
     }
 
-    private synchronized void updateActiveConnectedServiceMembers(boolean isAdd, Member member) {
-        if (isAdd) {
-            activeConnectedServiceMemberList.add(member);
-        } else {
-            activeConnectedServiceMemberList.remove(member);
-        }
-        if (!member.getNodeId().equals(localNodeStatusManager.getLocalMember().getNodeId())) {
+    private synchronized void updateActiveMembers(Collection<Member> allKnownMembers) {
+        activeServiceMemberList = allKnownMembers
+                .stream()
+                .filter(Member::isActive)
+                .collect(Collectors.toList());
+    }
+
+    private synchronized void updateOtherActiveConnectedServiceMemberList(boolean isAdd, Member member) {
+        boolean isLocalNode = member.getNodeId().equals(localNodeStatusManager.getLocalMember().getNodeId());
+        if (!isLocalNode) {
+            List<Member> tempOtherActiveConnectedServiceMemberList = Arrays.asList(otherActiveConnectedServiceMemberList.toArray(new Member[0]));
             if (isAdd) {
-                otherActiveConnectedServiceMembers.add(member);
+                tempOtherActiveConnectedServiceMemberList.add(member);
             } else {
-                otherActiveConnectedServiceMembers.remove(member);
+                tempOtherActiveConnectedServiceMemberList.remove(member);
             }
-            List<Member> otherActiveConnectedServiceMemberList = Arrays.asList(otherActiveConnectedServiceMembers.toArray(new Member[0]));
-            otherActiveConnectedServiceMemberList.sort((m1, m2) -> {
+            tempOtherActiveConnectedServiceMemberList.sort((m1, m2) -> {
                 int m1Priority = m1.getPriority();
                 int m2Priority = m2.getPriority();
                 if (m1Priority == m2Priority) {
@@ -284,13 +287,16 @@ public class DiscoveryService implements ClusterService {
                     return m1Priority < m2Priority ? -1 : 1;
                 }
             });
-            this.otherActiveConnectedServiceMemberList = otherActiveConnectedServiceMemberList;
+            otherActiveConnectedServiceMemberList = tempOtherActiveConnectedServiceMemberList;
         }
     }
 
+    /**
+     * @return null if the local node isn't active
+     */
     @Nullable
     public Integer getLocalServiceMemberIndex() {
-        int index = activeConnectedServiceMemberList.indexOf(getLocalMember());
+        int index = activeServiceMemberList.indexOf(getLocalMember());
         return index != -1 ? index : null;
     }
 
