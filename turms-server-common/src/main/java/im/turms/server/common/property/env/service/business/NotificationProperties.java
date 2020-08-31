@@ -114,4 +114,13 @@ public class NotificationProperties {
     @Description("Whether to notify members after its member information has been updated by others")
     private boolean notifyMemberAfterInfoUpdatedByOthers = true;
 
+    // Message
+    @JsonView(MutablePropertiesView.class)
+    @Description("Whether to notify the sender after the read receipt of a message has been updated by recipients")
+    private boolean notifySenderAfterReadStatusUpdatedByRecipients = true;
+
+    @JsonView(MutablePropertiesView.class)
+    @Description("Whether to notify the recipients after a message has been updated by the sender")
+    private boolean notifyRecipientsAfterMessageUpdatedBySender = true;
+
 }

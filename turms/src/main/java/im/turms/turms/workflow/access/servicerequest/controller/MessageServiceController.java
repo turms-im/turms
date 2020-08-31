@@ -315,13 +315,12 @@ public class MessageServiceController {
                             if (updatedOrDeleted == null || !updatedOrDeleted) {
                                 return Mono.error(TurmsBusinessException.get(TurmsStatusCode.RESOURCES_HAVE_CHANGED));
                             } else {
-                                return node.getSharedProperties().getService().getMessage().getReadReceipt().isEnabled()
+                                return node.getSharedProperties().getService().getNotification().isNotifySenderAfterReadStatusUpdatedByRecipients()
                                         ? messageService.queryMessageSenderId(messageId)
                                         .flatMap(senderId -> Mono.just(RequestHandlerResultFactory.get(
                                                 senderId,
                                                 clientRequest.getTurmsRequest(),
                                                 TurmsStatusCode.OK)))
-                                        // return OK because the update operation was successful
                                         : Mono.just(RequestHandlerResultFactory.ok());
                             }
                         });
@@ -343,11 +342,17 @@ public class MessageServiceController {
                         records,
                         recallDate,
                         null)
-                        .flatMap(wasSuccessful -> messageService.queryMessageRecipients(messageId) //TODO: optimize the notification logic
-                                .collect(Collectors.toSet())
-                                .map(recipientsIds -> recipientsIds.isEmpty()
-                                        ? RequestHandlerResultFactory.ok()
-                                        : RequestHandlerResultFactory.get(recipientsIds, clientRequest.getTurmsRequest())));
+                        .flatMap(wasSuccessful -> {
+                            if (node.getSharedProperties().getService().getNotification().isNotifyRecipientsAfterMessageUpdatedBySender()) {
+                                return messageService.queryMessageRecipients(messageId)
+                                        .collect(Collectors.toSet())
+                                        .map(recipientsIds -> recipientsIds.isEmpty()
+                                                ? RequestHandlerResultFactory.ok()
+                                                : RequestHandlerResultFactory.get(recipientsIds, clientRequest.getTurmsRequest()));
+                            } else {
+                                return Mono.just(RequestHandlerResultFactory.ok());
+                            }
+                        });
             }
         };
     }

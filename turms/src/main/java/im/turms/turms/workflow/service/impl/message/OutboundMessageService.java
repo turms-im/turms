@@ -76,14 +76,14 @@ public class OutboundMessageService {
         if (recipientIds.isEmpty()) {
             return Mono.just(true);
         }
-        int size = recipientIds.size();
-        if (size == 1) {
+        int recipientIdsSize = recipientIds.size();
+        if (recipientIdsSize == 1) {
             return forwardClientMessageByRecipientId(messageData, recipientIds.iterator().next());
         } else {
-            int expectedKeys = 4;
-            int expectedValuesPerKey = Math.min(1, recipientIds.size() / 4);
-            SetMultimap<String, Long> userIdsByNodeId = HashMultimap.create(expectedKeys, expectedValuesPerKey); // TODO
-            List<Mono<Pair<Long, Collection<String>>>> monos = new ArrayList<>(size);
+            int expectedMembersCount = Math.min(node.getDiscoveryService().getAllKnownMembers().size(), recipientIdsSize);
+            int expectedRecipientCountPerMember = Math.min(1, recipientIdsSize / expectedMembersCount);
+            SetMultimap<String, Long> userIdsByNodeId = HashMultimap.create(expectedMembersCount, expectedRecipientCountPerMember);
+            List<Mono<Pair<Long, Collection<String>>>> monos = new ArrayList<>(recipientIdsSize);
             for (Long recipientId : recipientIds) {
                 monos.add(userStatusService.getDeviceAndNodeIdMapByUserId(recipientId)
                         .map(map -> Pair.of(recipientId, map.values())));

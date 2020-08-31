@@ -33,6 +33,10 @@ public class ReadReceiptProperties {
     private boolean enabled = true;
 
     @JsonView(MutablePropertiesView.class)
+    @Description("Whether to allow to update the read status to \"unread\" from \"read\"")
+    private boolean allowMarkingReadMessagesAsUnread = false;
+
+    @JsonView(MutablePropertiesView.class)
     @Description("Whether to use server time to set the read date of messages")
     private boolean useServerTime = true;
 
