@@ -15,10 +15,11 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.cluster.service.rpc;
+package im.turms.server.common.cluster.exception;
 
 import im.turms.common.constant.statuscode.TurmsStatusCode;
 import im.turms.common.exception.NoStackTraceException;
+import im.turms.server.common.cluster.service.rpc.RpcErrorCode;
 import io.rsocket.exceptions.ApplicationErrorException;
 import io.rsocket.exceptions.Exceptions;
 import io.rsocket.frame.ErrorFrameCodec;
@@ -56,20 +57,24 @@ public class RpcException extends NoStackTraceException {
     private final TurmsStatusCode statusCode;
 
     @Nullable
-    private final String message;
+    private final String description;
 
     private RpcException(RpcErrorCode errorCode, TurmsStatusCode statusCode) {
         super(errorCode.getErrorCode() + "" + statusCode.getBusinessCode());
         this.errorCode = errorCode;
         this.statusCode = statusCode;
-        message = null;
+        description = null;
     }
 
-    private RpcException(RpcErrorCode errorCode, TurmsStatusCode statusCode, String message) {
-        super(errorCode.getErrorCode() + "" + statusCode.getBusinessCode() + message);
+    private RpcException(RpcErrorCode errorCode, TurmsStatusCode statusCode, String description) {
+        // FIXME: This is a terrible implementation to use getMessage() for both serialization and logging
+        //  (RSocket uses getMessage() of Throwable to serialize the throwable instance, see io.rsocket.frame.ErrorFrameCodec.encode(io.netty.buffer.ByteBufAllocator, int, java.lang.Throwable))
+        //  but getMessage() is also used to log throwable instances.
+        //  So we should use a custom encoder once the issue https://github.com/rsocket/rsocket-java/issues/741 has been fixed.
+        super(errorCode.getErrorCode() + "" + statusCode.getBusinessCode() + description);
         this.errorCode = errorCode;
         this.statusCode = statusCode;
-        this.message = message;
+        this.description = description;
     }
 
     public boolean isServerError() {
@@ -86,7 +91,6 @@ public class RpcException extends NoStackTraceException {
                 : EXCEPTION_POOL.computeIfAbsent(Pair.of(errorCode, statusCode), key -> new RpcException(errorCode, statusCode));
     }
 
-    // https://github.com/rsocket/rsocket-java/issues/741
     public static RpcException parse(ApplicationErrorException exception) {
         String exceptionMessage = exception.getMessage();
         if (exceptionMessage.isBlank()) {

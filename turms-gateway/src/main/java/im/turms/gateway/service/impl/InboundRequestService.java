@@ -26,7 +26,7 @@ import im.turms.common.exception.TurmsBusinessException;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.server.common.cluster.node.Node;
-import im.turms.server.common.cluster.service.rpc.RpcException;
+import im.turms.server.common.cluster.exception.RpcException;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.rpc.request.HandleServiceRequest;
@@ -56,7 +56,9 @@ public class InboundRequestService {
 
     /**
      * @return a response to the request.
-     * If the return value is an exception, the session should be closed.
+     * If the method returns Mono.error(exception), the session should be closed by upstream.
+     * If the method returns Mono.just(exception), the session should NOT be closed by upstream
+     * and the exception information will be forwarded to client.
      */
     public Mono<TurmsNotification> processServiceRequest(ServiceRequest serviceRequest) {
         // Validate

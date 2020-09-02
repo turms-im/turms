@@ -25,14 +25,16 @@ import im.turms.server.common.cluster.service.discovery.DiscoveryService;
  */
 public class FlakeIdService implements ClusterService {
 
+    private static final int FLAKE_ID_GENERATORS_LENGTH = ServiceType.values().length;
+
     /**
      * Use an array to mitigate the unnecessary thread contention.
      */
-    FlakeIdGenerator[] flakeIdGenerators = new FlakeIdGenerator[ServiceType.values().length];
+    private final FlakeIdGenerator[] flakeIdGenerators = new FlakeIdGenerator[FLAKE_ID_GENERATORS_LENGTH];
     private int previousLocalMemberIndex;
 
     public FlakeIdService(DiscoveryService discoveryService) {
-        for (int i = 0; i < flakeIdGenerators.length; i++) {
+        for (int i = 0; i < FLAKE_ID_GENERATORS_LENGTH; i++) {
             // Reserve the dataCenterId value for future use.
             flakeIdGenerators[i] = new FlakeIdGenerator(0, 0);
         }

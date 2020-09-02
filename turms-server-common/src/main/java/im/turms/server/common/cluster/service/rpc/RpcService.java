@@ -19,6 +19,7 @@ package im.turms.server.common.cluster.service.rpc;
 
 import im.turms.common.constant.statuscode.TurmsStatusCode;
 import im.turms.server.common.cluster.exception.ConnectionNotFoundException;
+import im.turms.server.common.cluster.exception.RpcException;
 import im.turms.server.common.cluster.exception.SocketInstanceNotFoundException;
 import im.turms.server.common.cluster.service.ClusterService;
 import im.turms.server.common.cluster.service.config.domain.discovery.Member;

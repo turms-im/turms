@@ -19,6 +19,7 @@ package im.turms.server.common.cluster.service.rpc;
 
 import im.turms.common.constant.statuscode.TurmsStatusCode;
 import im.turms.common.exception.TurmsBusinessException;
+import im.turms.server.common.cluster.exception.RpcException;
 import im.turms.server.common.cluster.service.serialization.serializer.Serializer;
 import im.turms.server.common.cluster.service.serialization.serializer.SerializerPool;
 import io.netty.buffer.ByteBuf;
