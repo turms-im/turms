@@ -56,7 +56,7 @@ public final class Message {
 
     /**
      * Not indexed because it has a low index selectivity
-     * and the clients cannot/shouldn't just query messages by chat type (there must come with other conditions)
+     * and the clients cannot/shouldn't just query messages by isGroupMessage (there must come with other conditions)
      * https://github.com/turms-im/turms/issues/336
      */
     @Field(Fields.IS_GROUP_MESSAGE)
@@ -103,7 +103,6 @@ public final class Message {
     }
 
     public static class Fields {
-        public static final String CHAT_TYPE = "ct";
         public static final String IS_GROUP_MESSAGE = "gm";
         public static final String IS_SYSTEM_MESSAGE = "sm";
         public static final String DELIVERY_DATE = "dyd";

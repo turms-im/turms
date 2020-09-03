@@ -816,9 +816,9 @@ public class MessageService {
                 .map(Message::getSenderId);
     }
 
-    public Flux<Message> queryChatTypes(@NotEmpty Set<Long> messageIds) {
+    public Flux<Message> queryMessagesIncludingIsGroupMessage(@NotEmpty Set<Long> messageIds) {
         Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(messageIds));
-        query.fields().include(Message.Fields.CHAT_TYPE);
+        query.fields().include(Message.Fields.IS_GROUP_MESSAGE);
         return mongoTemplate.find(query, Message.class, Message.COLLECTION_NAME);
     }
 
@@ -971,18 +971,19 @@ public class MessageService {
         } else {
             Set<Long> privateMessageIds = null;
             Set<Long> uncachedMessageIds = null;
+            int capacity = Math.max(1, messagesIds.size() / 2);
             for (Long messagesId : messagesIds) {
                 Message message = sentMessageCache.getIfPresent(messagesId);
                 if (message != null) {
                     if (!message.getIsGroupMessage()) {
                         if (privateMessageIds == null) {
-                            privateMessageIds = new HashSet<>();
+                            privateMessageIds = new HashSet<>(capacity);
                         }
                         privateMessageIds.add(messagesId);
                     }
                 } else {
                     if (uncachedMessageIds == null) {
-                        uncachedMessageIds = new HashSet<>();
+                        uncachedMessageIds = new HashSet<>(capacity);
                     }
                     uncachedMessageIds.add(messagesId);
                 }
@@ -991,25 +992,25 @@ public class MessageService {
                 return Mono.just(privateMessageIds != null ? privateMessageIds : Collections.emptySet());
             } else {
                 Set<Long> finalPrivateMessageIds = privateMessageIds;
-                return queryChatTypes(uncachedMessageIds)
+                return queryMessagesIncludingIsGroupMessage(uncachedMessageIds)
                         .collectList()
                         .map(messages -> {
-                            Set<Long> ids = null;
+                            Set<Long> uncachedPrivateMessageIds = null;
                             for (Message message : messages) {
                                 if (!message.getIsGroupMessage()) {
-                                    if (ids == null) {
-                                        ids = new HashSet<>();
+                                    if (uncachedPrivateMessageIds == null) {
+                                        uncachedPrivateMessageIds = new HashSet<>(Math.max(1, messages.size() / 2));
                                     }
-                                    ids.add(message.getId());
+                                    uncachedPrivateMessageIds.add(message.getId());
                                 }
                             }
-                            if (ids == null) {
+                            if (uncachedPrivateMessageIds == null) {
                                 return finalPrivateMessageIds == null ? Collections.emptySet() : finalPrivateMessageIds;
                             } else {
                                 if (finalPrivateMessageIds != null) {
-                                    ids.addAll(finalPrivateMessageIds);
+                                    uncachedPrivateMessageIds.addAll(finalPrivateMessageIds);
                                 }
-                                return ids;
+                                return uncachedPrivateMessageIds;
                             }
                         });
             }
