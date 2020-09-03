@@ -269,15 +269,17 @@ public class SessionService implements ISessionService {
                 nodeIdAndDeviceTypesMap.put(nodeId, deviceType);
             }
         }
-        List<Mono<Boolean>> disconnectionRequests = nodeIdAndDeviceTypesMap != null ? new LinkedList<>() : null;
         if (nodeIdAndDeviceTypesMap != null) {
+            List<Mono<Boolean>> disconnectionRequests = new LinkedList<>();
             for (String nodeId : nodeIdAndDeviceTypesMap.keySet()) {
                 Set<DeviceType> deviceTypes = nodeIdAndDeviceTypesMap.get(nodeId);
                 SetUserOfflineRequest request = new SetUserOfflineRequest(userId, deviceTypes, CloseStatusFactory.get(SessionCloseStatus.DISCONNECTED_BY_CLIENT));
                 disconnectionRequests.add(node.getRpcService().requestResponse(nodeId, request));
             }
+            return ReactorUtil.areAllTrue(disconnectionRequests);
+        } else {
+            return Mono.just(true);
         }
-        return disconnectionRequests != null ? ReactorUtil.areAllTrue(disconnectionRequests) : Mono.just(true);
     }
 
     private Mono<TurmsStatusCode> addOnlineDeviceIfAbsent(

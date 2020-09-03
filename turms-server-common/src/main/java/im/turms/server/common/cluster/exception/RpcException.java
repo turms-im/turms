@@ -38,7 +38,7 @@ import java.util.Map;
  * @see Exceptions#from(int, io.netty.buffer.ByteBuf)
  */
 @Getter
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public class RpcException extends NoStackTraceException {
 
     private static final Map<Pair<RpcErrorCode, TurmsStatusCode>, RpcException> EXCEPTION_POOL;
@@ -66,7 +66,7 @@ public class RpcException extends NoStackTraceException {
         description = null;
     }
 
-    private RpcException(RpcErrorCode errorCode, TurmsStatusCode statusCode, String description) {
+    private RpcException(RpcErrorCode errorCode, TurmsStatusCode statusCode, @Nullable String description) {
         // FIXME: This is a terrible implementation to use getMessage() for both serialization and logging
         //  (RSocket uses getMessage() of Throwable to serialize the throwable instance, see io.rsocket.frame.ErrorFrameCodec.encode(io.netty.buffer.ByteBufAllocator, int, java.lang.Throwable))
         //  but getMessage() is also used to log throwable instances.

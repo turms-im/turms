@@ -20,6 +20,7 @@ package im.turms.server.common.util;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -30,12 +31,15 @@ public class ReactorUtil {
     private ReactorUtil() {
     }
 
-    public static Mono<Boolean> areAllTrue(List<Mono<Boolean>> monos) {
+    public static Mono<Boolean> areAllTrue(@NotNull List<Mono<Boolean>> monos) {
+        if (monos.isEmpty()) {
+            return Mono.just(false);
+        }
         return Flux.merge(monos)
                 .collectList()
                 .map(results -> {
-                    for (Object result : results) {
-                        if (!(boolean) result) {
+                    for (boolean result : results) {
+                        if (!result) {
                             return false;
                         }
                     }
@@ -43,11 +47,14 @@ public class ReactorUtil {
                 });
     }
 
-    public static Mono<Boolean> atLeastOneTrue(List<Mono<Boolean>> monos) {
+    public static Mono<Boolean> atLeastOneTrue(@NotNull List<Mono<Boolean>> monos) {
+        if (monos.isEmpty()) {
+            return Mono.just(false);
+        }
         return Flux.merge(monos)
                 .collectList()
-                .map(booleans -> {
-                    for (Boolean result : booleans) {
+                .map(results -> {
+                    for (boolean result : results) {
                         if (result) {
                             return true;
                         }
