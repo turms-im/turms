@@ -35,6 +35,7 @@ import im.turms.turms.workflow.access.servicerequest.dto.ClientRequest;
 import im.turms.turms.workflow.access.servicerequest.dto.RequestHandlerResult;
 import im.turms.turms.workflow.access.servicerequest.dto.RequestHandlerResultFactory;
 import im.turms.turms.workflow.access.servicerequest.dto.ServiceResponseFactory;
+import im.turms.turms.workflow.service.impl.log.ActivityLogService;
 import im.turms.turms.workflow.service.impl.log.UserActionLogService;
 import im.turms.turms.workflow.service.impl.message.OutboundMessageService;
 import io.netty.buffer.ByteBuf;
@@ -64,6 +65,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
     private final Node node;
     private final OutboundMessageService outboundMessageService;
     private final UserActionLogService userActionLogService;
+    private final ActivityLogService activityLogService;
     private final TurmsPluginManager turmsPluginManager;
 
     private final Map<TurmsRequest.KindCase, ClientRequestHandler> router;
@@ -74,9 +76,11 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                                     OutboundMessageService outboundMessageService,
                                     TurmsPropertiesManager turmsPropertiesManager,
                                     TurmsPluginManager turmsPluginManager,
-                                    UserActionLogService userActionLogService) {
+                                    UserActionLogService userActionLogService,
+                                    ActivityLogService activityLogService) {
         this.outboundMessageService = outboundMessageService;
         router = getMappings((ConfigurableApplicationContext) context);
+        this.activityLogService = activityLogService;
         for (TurmsRequest.KindCase kindCase : TurmsRequest.KindCase.values()) {
             if (!router.containsKey(kindCase) && kindCase != KIND_NOT_SET) {
                 throw new IllegalStateException("No client request handler for the request type: " + kindCase.name());
@@ -154,17 +158,18 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             }
         }
         // 3. Handle the result of the request
-        Mono<RequestHandlerResult> resultMono = clientRequestMono.flatMap(finalClientRequest -> {
+        Mono<RequestHandlerResult> resultMono = clientRequestMono.flatMap(lastClientRequest -> {
             userActionLogService.tryLogAndTriggerLogHandlers(userId, deviceType, request);
+            activityLogService.tryLogClientRequest(lastClientRequest);
             if (pluginEnabled && !clientClientRequestHandlerList.isEmpty()) {
                 Mono<RequestHandlerResult> requestResultMono = Mono.empty();
                 for (im.turms.turms.plugin.extension.handler.ClientRequestHandler clientRequestHandler : clientClientRequestHandlerList) {
                     requestResultMono = requestResultMono
-                            .switchIfEmpty(clientRequestHandler.handleClientRequest(clientRequest));
+                            .switchIfEmpty(clientRequestHandler.handleClientRequest(lastClientRequest));
                 }
-                return requestResultMono.switchIfEmpty(handler.handle(clientRequest));
+                return requestResultMono.switchIfEmpty(handler.handle(lastClientRequest));
             } else {
-                return handler.handle(clientRequest);
+                return handler.handle(lastClientRequest);
             }
         });
         return handleResult(resultMono, userId, deviceType);

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.property.env.service.business;
+package im.turms.server.common.property.env.service.business.activity;
 
 import im.turms.server.common.constant.CronConstant;
 import im.turms.server.common.constraint.CronConstraint;
