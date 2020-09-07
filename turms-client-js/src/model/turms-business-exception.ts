@@ -6,9 +6,6 @@ export default class TurmsBusinessException {
     private readonly _code: number;
     private readonly _reason: string;
 
-    static URL_UNINITIALIZED = 'The baseUrl is uninitialized.';
-    static CLIENT_ALREADY_CONNECTED = 'The client has connected to the server. Please close it before logging in again.';
-
     constructor(code: number, reason: string) {
         this._code = code;
         this._reason = reason;

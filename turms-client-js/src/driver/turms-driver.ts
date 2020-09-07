@@ -119,7 +119,7 @@ export default class TurmsDriver {
         location?: UserLocation): Promise<void> {
         return new Promise((resolve, reject) => {
             if (this.connected()) {
-                reject(TurmsBusinessException.CLIENT_ALREADY_CONNECTED);
+                return TurmsBusinessException.fromCode(TurmsStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED);
             } else {
                 this._requestId = this._generateRandomId();
                 TurmsDriver._fillLoginInfo(this._requestId, userId, password, userOnlineStatus, deviceType, location);
