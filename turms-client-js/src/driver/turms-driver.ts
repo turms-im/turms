@@ -169,7 +169,7 @@ export default class TurmsDriver {
                 // 2. disconnected no matter by error (after onError) or else
                 this._websocket.onClose.addListener(event => {
                     this._onWebsocketClose(event)
-                        .then(() => resolve())
+                        .then(() => reject())
                         .catch(e => reject(e));
                 });
                 this._websocket.open()
@@ -177,11 +177,7 @@ export default class TurmsDriver {
                         this._onWebsocketOpen();
                         resolve();
                     })
-                    .catch((error) => {
-                        this._onWebsocketClose(error)
-                            .then(() => resolve())
-                            .catch(e => reject(e))
-                    });
+                    .catch(error => reject(error));
             }
         });
     }
@@ -297,8 +293,8 @@ export default class TurmsDriver {
     }
 
     private _onWebsocketClose(event: any): Promise<void> {
-        const wasLogged = !!(this._heartbeatTimer && this._heartbeatTimer.isRunning);
-        if (this._heartbeatTimer && this._heartbeatTimer.isRunning) {
+        const wasLogged = this._heartbeatTimer && this._heartbeatTimer.isRunning;
+        if (wasLogged) {
             this._heartbeatTimer.stop();
         }
         if (this._isClosedByClient) {

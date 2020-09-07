@@ -38,8 +38,6 @@ public class ActivityLoggingProperties {
     private LinkedHashSet<ActivityLoggingRequest> includedRequests;
     private LinkedHashSet<TurmsRequest.KindCase> excludedRequestNames;
 
-    private boolean onlyLogSuccessfulRequest = false;
-
     @NestedConfigurationProperty
     private StatisticsProperties statistics = new StatisticsProperties();
 
