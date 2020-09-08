@@ -8,7 +8,8 @@
     "build": "vuepress build src"
   },
   "devDependencies": {
-    "vuepress": "^1.5.3"
+    "vuepress": "^1.5.4",
+    "vuepress-plugin-mermaidjs": "^1.8.0"
   },
   "repository": {
     "type": "git",

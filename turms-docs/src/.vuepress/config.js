@@ -1,6 +1,9 @@
 module.exports = {
     title: 'Turms Documentation',
     base: '/docs/',
+    plugins: [
+        'vuepress-plugin-mermaidjs'
+    ],
     themeConfig: {
         repo: 'https://github.com/turms-im/docs',
         lastUpdated: '上次更新',
