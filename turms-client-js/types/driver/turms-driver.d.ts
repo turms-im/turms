@@ -8,7 +8,6 @@ import TurmsNotification = im.turms.proto.TurmsNotification;
 import UserStatus = im.turms.proto.UserStatus;
 import DeviceType = im.turms.proto.DeviceType;
 export default class TurmsDriver {
-    private _onNotificationListeners;
     private _wsUrl;
     private _httpUrl;
     private _connectionTimeout;
@@ -28,7 +27,6 @@ export default class TurmsDriver {
     constructor(url?: string, connectionTimeout?: number, requestTimeout?: number, minRequestsInterval?: number, httpUrl?: string, queryReasonWhenLoginFailed?: boolean, queryReasonWhenDisconnected?: boolean);
     initConnectionService(): ConnectionService;
     initSessionService(): SessionService;
-    get onNotificationListeners(): ((notification: ParsedNotification) => void)[];
     getStatus(): SessionStatus;
     isConnected(): boolean;
     isClosed(): boolean;
@@ -43,6 +41,10 @@ export default class TurmsDriver {
     reconnect(host?: string): Promise<void>;
     disconnect(): Promise<void>;
     send(message: im.turms.proto.ITurmsRequest): Promise<TurmsNotification>;
-    private _triggerOnLoginFail;
+    addOnNotificationListener(listener: ((notification: ParsedNotification) => void)): void;
+    private _onConnectionConnected;
+    private _onConnectionDisconnected;
+    private _triggerOnLoginFailure;
     private _triggerOnSessionDisconnected;
+    private _onMessage;
 }

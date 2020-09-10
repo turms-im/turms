@@ -12,7 +12,7 @@ export interface ConnectOptions {
     userOnlineStatus?: UserStatus;
     location?: UserLocation;
 }
-export interface DisconnectionInfo {
+export interface ConnectionDisconnectInfo {
     wasConnected: boolean;
     isClosedByClient: boolean;
     event: CloseEvent;
@@ -20,26 +20,25 @@ export interface DisconnectionInfo {
 export default class ConnectionService {
     private _stateStore;
     private _isClosedByClient;
-    private _wasConnected;
     private _disconnectionCallbacks;
     private _connectOptions;
-    private _connectionListeners;
-    private _disconnectionListeners;
-    private _messageListeners;
+    private _onConnectedListeners;
+    private _onDisconnectedListeners;
+    private _onMessageListeners;
     constructor(stateStore: StateStore);
     private _resetStates;
-    addConnectionListener(cb: () => void): void;
-    addDisconnectionListener(cb: (info: DisconnectionInfo) => Promise<void>): void;
-    addMessageListener(cb: (message: any) => void): void;
-    private _notifyConnectionListener;
-    private _notifyDisconnectionListeners;
-    private _notifyMessageListener;
+    addOnConnectedListener(listener: () => void): void;
+    addOnDisconnectedListener(listener: (info: ConnectionDisconnectInfo) => Promise<void>): void;
+    addOnMessageListener(listener: (message: any) => void): void;
+    private _notifyOnConnectedListener;
+    private _notifyOnDisconnectedListeners;
+    private _notifyOnMessageListener;
     private _triggerDisconnectCallbacks;
     connect(options: ConnectOptions): Promise<void>;
     disconnect(): Promise<void>;
     reconnect(host?: string): Promise<void>;
     private static _fillLoginInfo;
     private static _clearLoginInfo;
-    private _onWebsocketOpen;
-    private _onWebsocketClose;
+    private _onWebSocketOpen;
+    private _onWebSocketClose;
 }

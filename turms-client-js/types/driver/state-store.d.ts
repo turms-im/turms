@@ -10,12 +10,15 @@ export interface UserInfo {
 }
 export default class StateStore {
     private _websocket?;
+    private _isConnected;
     private _connectionRequestId?;
     private _sessionId?;
     private _lastRequestDate;
     private _userInfo;
     get websocket(): WebSocket;
     set websocket(value: WebSocket);
+    get isConnected(): boolean;
+    set isConnected(value: boolean);
     get connectionRequestId(): number;
     set connectionRequestId(value: number);
     get sessionId(): string;
@@ -24,5 +27,4 @@ export default class StateStore {
     set lastRequestDate(value: Date);
     get userInfo(): UserInfo;
     set userInfo(value: UserInfo);
-    get isConnected(): boolean;
 }
