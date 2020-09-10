@@ -20,8 +20,6 @@
 
 package im.turms.common.model.dto.request.user.relationship;
 
-import im.turms.common.constant.ResponseActionOuterClass;
-
 public final class UpdateFriendRequestRequestOuterClass {
   private UpdateFriendRequestRequestOuterClass() {}
   public static void registerAllExtensions(
@@ -62,7 +60,7 @@ public final class UpdateFriendRequestRequestOuterClass {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.WrappersProto.getDescriptor(),
-          ResponseActionOuterClass.getDescriptor(),
+          im.turms.common.constant.ResponseActionOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_UpdateFriendRequestRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -71,7 +69,7 @@ public final class UpdateFriendRequestRequestOuterClass {
         internal_static_im_turms_proto_UpdateFriendRequestRequest_descriptor,
         new java.lang.String[] { "RequestId", "ResponseAction", "Reason", });
     com.google.protobuf.WrappersProto.getDescriptor();
-    ResponseActionOuterClass.getDescriptor();
+    im.turms.common.constant.ResponseActionOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

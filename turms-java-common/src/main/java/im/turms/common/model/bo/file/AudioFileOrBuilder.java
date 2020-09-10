@@ -33,11 +33,11 @@ public interface AudioFileOrBuilder extends
    * <code>.im.turms.proto.AudioFile.Description description = 1;</code>
    * @return The description.
    */
-  AudioFile.Description getDescription();
+  im.turms.common.model.bo.file.AudioFile.Description getDescription();
   /**
    * <code>.im.turms.proto.AudioFile.Description description = 1;</code>
    */
-  AudioFile.DescriptionOrBuilder getDescriptionOrBuilder();
+  im.turms.common.model.bo.file.AudioFile.DescriptionOrBuilder getDescriptionOrBuilder();
 
   /**
    * <code>.google.protobuf.BytesValue data = 2;</code>

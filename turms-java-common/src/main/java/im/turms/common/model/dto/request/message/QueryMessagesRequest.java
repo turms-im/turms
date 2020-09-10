@@ -20,12 +20,10 @@
 
 package im.turms.common.model.dto.request.message;
 
-import im.turms.common.constant.MessageDeliveryStatus;
-
 /**
  * Protobuf type {@code im.turms.proto.QueryMessagesRequest}
  */
-public  final class QueryMessagesRequest extends
+public final class QueryMessagesRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.QueryMessagesRequest)
     QueryMessagesRequestOrBuilder {
@@ -199,15 +197,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return QueryMessagesRequestOuterClass.internal_static_im_turms_proto_QueryMessagesRequest_descriptor;
+    return im.turms.common.model.dto.request.message.QueryMessagesRequestOuterClass.internal_static_im_turms_proto_QueryMessagesRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return QueryMessagesRequestOuterClass.internal_static_im_turms_proto_QueryMessagesRequest_fieldAccessorTable
+    return im.turms.common.model.dto.request.message.QueryMessagesRequestOuterClass.internal_static_im_turms_proto_QueryMessagesRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            QueryMessagesRequest.class, QueryMessagesRequest.Builder.class);
+            im.turms.common.model.dto.request.message.QueryMessagesRequest.class, im.turms.common.model.dto.request.message.QueryMessagesRequest.Builder.class);
   }
 
   public static final int IDS_FIELD_NUMBER = 1;
@@ -216,6 +214,7 @@ private static final long serialVersionUID = 0L;
    * <code>repeated int64 ids = 1;</code>
    * @return A list containing the ids.
    */
+  @java.lang.Override
   public java.util.List<java.lang.Long>
       getIdsList() {
     return ids_;
@@ -243,6 +242,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int32Value size = 2;</code>
    * @return Whether the size field is set.
    */
+  @java.lang.Override
   public boolean hasSize() {
     return size_ != null;
   }
@@ -250,12 +250,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int32Value size = 2;</code>
    * @return The size.
    */
+  @java.lang.Override
   public com.google.protobuf.Int32Value getSize() {
     return size_ == null ? com.google.protobuf.Int32Value.getDefaultInstance() : size_;
   }
   /**
    * <code>.google.protobuf.Int32Value size = 2;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int32ValueOrBuilder getSizeOrBuilder() {
     return getSize();
   }
@@ -266,6 +268,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.BoolValue are_group_messages = 3;</code>
    * @return Whether the areGroupMessages field is set.
    */
+  @java.lang.Override
   public boolean hasAreGroupMessages() {
     return areGroupMessages_ != null;
   }
@@ -273,12 +276,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.BoolValue are_group_messages = 3;</code>
    * @return The areGroupMessages.
    */
+  @java.lang.Override
   public com.google.protobuf.BoolValue getAreGroupMessages() {
     return areGroupMessages_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : areGroupMessages_;
   }
   /**
    * <code>.google.protobuf.BoolValue are_group_messages = 3;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.BoolValueOrBuilder getAreGroupMessagesOrBuilder() {
     return getAreGroupMessages();
   }
@@ -289,6 +294,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.BoolValue are_system_messages = 4;</code>
    * @return Whether the areSystemMessages field is set.
    */
+  @java.lang.Override
   public boolean hasAreSystemMessages() {
     return areSystemMessages_ != null;
   }
@@ -296,12 +302,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.BoolValue are_system_messages = 4;</code>
    * @return The areSystemMessages.
    */
+  @java.lang.Override
   public com.google.protobuf.BoolValue getAreSystemMessages() {
     return areSystemMessages_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : areSystemMessages_;
   }
   /**
    * <code>.google.protobuf.BoolValue are_system_messages = 4;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.BoolValueOrBuilder getAreSystemMessagesOrBuilder() {
     return getAreSystemMessages();
   }
@@ -312,6 +320,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value from_id = 5;</code>
    * @return Whether the fromId field is set.
    */
+  @java.lang.Override
   public boolean hasFromId() {
     return fromId_ != null;
   }
@@ -319,12 +328,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value from_id = 5;</code>
    * @return The fromId.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getFromId() {
     return fromId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : fromId_;
   }
   /**
    * <code>.google.protobuf.Int64Value from_id = 5;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getFromIdOrBuilder() {
     return getFromId();
   }
@@ -335,6 +346,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value delivery_date_after = 6;</code>
    * @return Whether the deliveryDateAfter field is set.
    */
+  @java.lang.Override
   public boolean hasDeliveryDateAfter() {
     return deliveryDateAfter_ != null;
   }
@@ -342,12 +354,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value delivery_date_after = 6;</code>
    * @return The deliveryDateAfter.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getDeliveryDateAfter() {
     return deliveryDateAfter_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : deliveryDateAfter_;
   }
   /**
    * <code>.google.protobuf.Int64Value delivery_date_after = 6;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getDeliveryDateAfterOrBuilder() {
     return getDeliveryDateAfter();
   }
@@ -358,6 +372,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value delivery_date_before = 7;</code>
    * @return Whether the deliveryDateBefore field is set.
    */
+  @java.lang.Override
   public boolean hasDeliveryDateBefore() {
     return deliveryDateBefore_ != null;
   }
@@ -365,12 +380,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value delivery_date_before = 7;</code>
    * @return The deliveryDateBefore.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getDeliveryDateBefore() {
     return deliveryDateBefore_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : deliveryDateBefore_;
   }
   /**
    * <code>.google.protobuf.Int64Value delivery_date_before = 7;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getDeliveryDateBeforeOrBuilder() {
     return getDeliveryDateBefore();
   }
@@ -381,17 +398,17 @@ private static final long serialVersionUID = 0L;
    * <code>.im.turms.proto.MessageDeliveryStatus delivery_status = 8;</code>
    * @return The enum numeric value on the wire for deliveryStatus.
    */
-  public int getDeliveryStatusValue() {
+  @java.lang.Override public int getDeliveryStatusValue() {
     return deliveryStatus_;
   }
   /**
    * <code>.im.turms.proto.MessageDeliveryStatus delivery_status = 8;</code>
    * @return The deliveryStatus.
    */
-  public MessageDeliveryStatus getDeliveryStatus() {
+  @java.lang.Override public im.turms.common.constant.MessageDeliveryStatus getDeliveryStatus() {
     @SuppressWarnings("deprecation")
-    MessageDeliveryStatus result = MessageDeliveryStatus.valueOf(deliveryStatus_);
-    return result == null ? MessageDeliveryStatus.UNRECOGNIZED : result;
+    im.turms.common.constant.MessageDeliveryStatus result = im.turms.common.constant.MessageDeliveryStatus.valueOf(deliveryStatus_);
+    return result == null ? im.turms.common.constant.MessageDeliveryStatus.UNRECOGNIZED : result;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -434,7 +451,7 @@ private static final long serialVersionUID = 0L;
     if (deliveryDateBefore_ != null) {
       output.writeMessage(7, getDeliveryDateBefore());
     }
-    if (deliveryStatus_ != MessageDeliveryStatus.READY.getNumber()) {
+    if (deliveryStatus_ != im.turms.common.constant.MessageDeliveryStatus.READY.getNumber()) {
       output.writeEnum(8, deliveryStatus_);
     }
     unknownFields.writeTo(output);
@@ -484,7 +501,7 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(7, getDeliveryDateBefore());
     }
-    if (deliveryStatus_ != MessageDeliveryStatus.READY.getNumber()) {
+    if (deliveryStatus_ != im.turms.common.constant.MessageDeliveryStatus.READY.getNumber()) {
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(8, deliveryStatus_);
     }
@@ -498,10 +515,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof QueryMessagesRequest)) {
+    if (!(obj instanceof im.turms.common.model.dto.request.message.QueryMessagesRequest)) {
       return super.equals(obj);
     }
-    QueryMessagesRequest other = (QueryMessagesRequest) obj;
+    im.turms.common.model.dto.request.message.QueryMessagesRequest other = (im.turms.common.model.dto.request.message.QueryMessagesRequest) obj;
 
     if (!getIdsList()
         .equals(other.getIdsList())) return false;
@@ -582,69 +599,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static QueryMessagesRequest parseFrom(
+  public static im.turms.common.model.dto.request.message.QueryMessagesRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static QueryMessagesRequest parseFrom(
+  public static im.turms.common.model.dto.request.message.QueryMessagesRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static QueryMessagesRequest parseFrom(
+  public static im.turms.common.model.dto.request.message.QueryMessagesRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static QueryMessagesRequest parseFrom(
+  public static im.turms.common.model.dto.request.message.QueryMessagesRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static QueryMessagesRequest parseFrom(byte[] data)
+  public static im.turms.common.model.dto.request.message.QueryMessagesRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static QueryMessagesRequest parseFrom(
+  public static im.turms.common.model.dto.request.message.QueryMessagesRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static QueryMessagesRequest parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.message.QueryMessagesRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static QueryMessagesRequest parseFrom(
+  public static im.turms.common.model.dto.request.message.QueryMessagesRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static QueryMessagesRequest parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.message.QueryMessagesRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static QueryMessagesRequest parseDelimitedFrom(
+  public static im.turms.common.model.dto.request.message.QueryMessagesRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static QueryMessagesRequest parseFrom(
+  public static im.turms.common.model.dto.request.message.QueryMessagesRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static QueryMessagesRequest parseFrom(
+  public static im.turms.common.model.dto.request.message.QueryMessagesRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -657,7 +674,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(QueryMessagesRequest prototype) {
+  public static Builder newBuilder(im.turms.common.model.dto.request.message.QueryMessagesRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -678,18 +695,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.QueryMessagesRequest)
-          QueryMessagesRequestOrBuilder {
+      im.turms.common.model.dto.request.message.QueryMessagesRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return QueryMessagesRequestOuterClass.internal_static_im_turms_proto_QueryMessagesRequest_descriptor;
+      return im.turms.common.model.dto.request.message.QueryMessagesRequestOuterClass.internal_static_im_turms_proto_QueryMessagesRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return QueryMessagesRequestOuterClass.internal_static_im_turms_proto_QueryMessagesRequest_fieldAccessorTable
+      return im.turms.common.model.dto.request.message.QueryMessagesRequestOuterClass.internal_static_im_turms_proto_QueryMessagesRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              QueryMessagesRequest.class, QueryMessagesRequest.Builder.class);
+              im.turms.common.model.dto.request.message.QueryMessagesRequest.class, im.turms.common.model.dto.request.message.QueryMessagesRequest.Builder.class);
     }
 
     // Construct using im.turms.common.model.dto.request.message.QueryMessagesRequest.newBuilder()
@@ -756,17 +773,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return QueryMessagesRequestOuterClass.internal_static_im_turms_proto_QueryMessagesRequest_descriptor;
+      return im.turms.common.model.dto.request.message.QueryMessagesRequestOuterClass.internal_static_im_turms_proto_QueryMessagesRequest_descriptor;
     }
 
     @java.lang.Override
-    public QueryMessagesRequest getDefaultInstanceForType() {
-      return QueryMessagesRequest.getDefaultInstance();
+    public im.turms.common.model.dto.request.message.QueryMessagesRequest getDefaultInstanceForType() {
+      return im.turms.common.model.dto.request.message.QueryMessagesRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public QueryMessagesRequest build() {
-      QueryMessagesRequest result = buildPartial();
+    public im.turms.common.model.dto.request.message.QueryMessagesRequest build() {
+      im.turms.common.model.dto.request.message.QueryMessagesRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -774,8 +791,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public QueryMessagesRequest buildPartial() {
-      QueryMessagesRequest result = new QueryMessagesRequest(this);
+    public im.turms.common.model.dto.request.message.QueryMessagesRequest buildPartial() {
+      im.turms.common.model.dto.request.message.QueryMessagesRequest result = new im.turms.common.model.dto.request.message.QueryMessagesRequest(this);
       int from_bitField0_ = bitField0_;
       if (((bitField0_ & 0x00000001) != 0)) {
         ids_.makeImmutable();
@@ -851,16 +868,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof QueryMessagesRequest) {
-        return mergeFrom((QueryMessagesRequest)other);
+      if (other instanceof im.turms.common.model.dto.request.message.QueryMessagesRequest) {
+        return mergeFrom((im.turms.common.model.dto.request.message.QueryMessagesRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(QueryMessagesRequest other) {
-      if (other == QueryMessagesRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.dto.request.message.QueryMessagesRequest other) {
+      if (other == im.turms.common.model.dto.request.message.QueryMessagesRequest.getDefaultInstance()) return this;
       if (!other.ids_.isEmpty()) {
         if (ids_.isEmpty()) {
           ids_ = other.ids_;
@@ -907,11 +924,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      QueryMessagesRequest parsedMessage = null;
+      im.turms.common.model.dto.request.message.QueryMessagesRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (QueryMessagesRequest) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.dto.request.message.QueryMessagesRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -1720,7 +1737,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.MessageDeliveryStatus delivery_status = 8;</code>
      * @return The enum numeric value on the wire for deliveryStatus.
      */
-    public int getDeliveryStatusValue() {
+    @java.lang.Override public int getDeliveryStatusValue() {
       return deliveryStatus_;
     }
     /**
@@ -1729,6 +1746,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setDeliveryStatusValue(int value) {
+      
       deliveryStatus_ = value;
       onChanged();
       return this;
@@ -1737,17 +1755,18 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.MessageDeliveryStatus delivery_status = 8;</code>
      * @return The deliveryStatus.
      */
-    public MessageDeliveryStatus getDeliveryStatus() {
+    @java.lang.Override
+    public im.turms.common.constant.MessageDeliveryStatus getDeliveryStatus() {
       @SuppressWarnings("deprecation")
-      MessageDeliveryStatus result = MessageDeliveryStatus.valueOf(deliveryStatus_);
-      return result == null ? MessageDeliveryStatus.UNRECOGNIZED : result;
+      im.turms.common.constant.MessageDeliveryStatus result = im.turms.common.constant.MessageDeliveryStatus.valueOf(deliveryStatus_);
+      return result == null ? im.turms.common.constant.MessageDeliveryStatus.UNRECOGNIZED : result;
     }
     /**
      * <code>.im.turms.proto.MessageDeliveryStatus delivery_status = 8;</code>
      * @param value The deliveryStatus to set.
      * @return This builder for chaining.
      */
-    public Builder setDeliveryStatus(MessageDeliveryStatus value) {
+    public Builder setDeliveryStatus(im.turms.common.constant.MessageDeliveryStatus value) {
       if (value == null) {
         throw new NullPointerException();
       }
@@ -1783,12 +1802,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.QueryMessagesRequest)
-  private static final QueryMessagesRequest DEFAULT_INSTANCE;
+  private static final im.turms.common.model.dto.request.message.QueryMessagesRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new QueryMessagesRequest();
+    DEFAULT_INSTANCE = new im.turms.common.model.dto.request.message.QueryMessagesRequest();
   }
 
-  public static QueryMessagesRequest getDefaultInstance() {
+  public static im.turms.common.model.dto.request.message.QueryMessagesRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -1813,7 +1832,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public QueryMessagesRequest getDefaultInstanceForType() {
+  public im.turms.common.model.dto.request.message.QueryMessagesRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

@@ -20,12 +20,10 @@
 
 package im.turms.common.model.bo.user;
 
-import im.turms.common.constant.RequestStatus;
-
 /**
  * Protobuf type {@code im.turms.proto.UserFriendRequest}
  */
-public  final class UserFriendRequest extends
+public final class UserFriendRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.UserFriendRequest)
     UserFriendRequestOrBuilder {
@@ -186,15 +184,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return UserFriendRequestOuterClass.internal_static_im_turms_proto_UserFriendRequest_descriptor;
+    return im.turms.common.model.bo.user.UserFriendRequestOuterClass.internal_static_im_turms_proto_UserFriendRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return UserFriendRequestOuterClass.internal_static_im_turms_proto_UserFriendRequest_fieldAccessorTable
+    return im.turms.common.model.bo.user.UserFriendRequestOuterClass.internal_static_im_turms_proto_UserFriendRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            UserFriendRequest.class, UserFriendRequest.Builder.class);
+            im.turms.common.model.bo.user.UserFriendRequest.class, im.turms.common.model.bo.user.UserFriendRequest.Builder.class);
   }
 
   public static final int ID_FIELD_NUMBER = 1;
@@ -203,6 +201,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value id = 1;</code>
    * @return Whether the id field is set.
    */
+  @java.lang.Override
   public boolean hasId() {
     return id_ != null;
   }
@@ -210,12 +209,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value id = 1;</code>
    * @return The id.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getId() {
     return id_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : id_;
   }
   /**
    * <code>.google.protobuf.Int64Value id = 1;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getIdOrBuilder() {
     return getId();
   }
@@ -226,6 +227,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value creation_date = 2;</code>
    * @return Whether the creationDate field is set.
    */
+  @java.lang.Override
   public boolean hasCreationDate() {
     return creationDate_ != null;
   }
@@ -233,12 +235,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value creation_date = 2;</code>
    * @return The creationDate.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getCreationDate() {
     return creationDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : creationDate_;
   }
   /**
    * <code>.google.protobuf.Int64Value creation_date = 2;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getCreationDateOrBuilder() {
     return getCreationDate();
   }
@@ -249,6 +253,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue content = 3;</code>
    * @return Whether the content field is set.
    */
+  @java.lang.Override
   public boolean hasContent() {
     return content_ != null;
   }
@@ -256,12 +261,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue content = 3;</code>
    * @return The content.
    */
+  @java.lang.Override
   public com.google.protobuf.StringValue getContent() {
     return content_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : content_;
   }
   /**
    * <code>.google.protobuf.StringValue content = 3;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.StringValueOrBuilder getContentOrBuilder() {
     return getContent();
   }
@@ -272,17 +279,17 @@ private static final long serialVersionUID = 0L;
    * <code>.im.turms.proto.RequestStatus request_status = 4;</code>
    * @return The enum numeric value on the wire for requestStatus.
    */
-  public int getRequestStatusValue() {
+  @java.lang.Override public int getRequestStatusValue() {
     return requestStatus_;
   }
   /**
    * <code>.im.turms.proto.RequestStatus request_status = 4;</code>
    * @return The requestStatus.
    */
-  public RequestStatus getRequestStatus() {
+  @java.lang.Override public im.turms.common.constant.RequestStatus getRequestStatus() {
     @SuppressWarnings("deprecation")
-    RequestStatus result = RequestStatus.valueOf(requestStatus_);
-    return result == null ? RequestStatus.UNRECOGNIZED : result;
+    im.turms.common.constant.RequestStatus result = im.turms.common.constant.RequestStatus.valueOf(requestStatus_);
+    return result == null ? im.turms.common.constant.RequestStatus.UNRECOGNIZED : result;
   }
 
   public static final int REASON_FIELD_NUMBER = 5;
@@ -291,6 +298,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue reason = 5;</code>
    * @return Whether the reason field is set.
    */
+  @java.lang.Override
   public boolean hasReason() {
     return reason_ != null;
   }
@@ -298,12 +306,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue reason = 5;</code>
    * @return The reason.
    */
+  @java.lang.Override
   public com.google.protobuf.StringValue getReason() {
     return reason_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : reason_;
   }
   /**
    * <code>.google.protobuf.StringValue reason = 5;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.StringValueOrBuilder getReasonOrBuilder() {
     return getReason();
   }
@@ -314,6 +324,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value expiration_date = 6;</code>
    * @return Whether the expirationDate field is set.
    */
+  @java.lang.Override
   public boolean hasExpirationDate() {
     return expirationDate_ != null;
   }
@@ -321,12 +332,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value expiration_date = 6;</code>
    * @return The expirationDate.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getExpirationDate() {
     return expirationDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : expirationDate_;
   }
   /**
    * <code>.google.protobuf.Int64Value expiration_date = 6;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getExpirationDateOrBuilder() {
     return getExpirationDate();
   }
@@ -337,6 +350,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value requester_id = 7;</code>
    * @return Whether the requesterId field is set.
    */
+  @java.lang.Override
   public boolean hasRequesterId() {
     return requesterId_ != null;
   }
@@ -344,12 +358,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value requester_id = 7;</code>
    * @return The requesterId.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getRequesterId() {
     return requesterId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : requesterId_;
   }
   /**
    * <code>.google.protobuf.Int64Value requester_id = 7;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getRequesterIdOrBuilder() {
     return getRequesterId();
   }
@@ -360,6 +376,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value recipient_id = 8;</code>
    * @return Whether the recipientId field is set.
    */
+  @java.lang.Override
   public boolean hasRecipientId() {
     return recipientId_ != null;
   }
@@ -367,12 +384,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value recipient_id = 8;</code>
    * @return The recipientId.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getRecipientId() {
     return recipientId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : recipientId_;
   }
   /**
    * <code>.google.protobuf.Int64Value recipient_id = 8;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getRecipientIdOrBuilder() {
     return getRecipientId();
   }
@@ -400,7 +419,7 @@ private static final long serialVersionUID = 0L;
     if (content_ != null) {
       output.writeMessage(3, getContent());
     }
-    if (requestStatus_ != RequestStatus.PENDING.getNumber()) {
+    if (requestStatus_ != im.turms.common.constant.RequestStatus.PENDING.getNumber()) {
       output.writeEnum(4, requestStatus_);
     }
     if (reason_ != null) {
@@ -436,7 +455,7 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(3, getContent());
     }
-    if (requestStatus_ != RequestStatus.PENDING.getNumber()) {
+    if (requestStatus_ != im.turms.common.constant.RequestStatus.PENDING.getNumber()) {
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(4, requestStatus_);
     }
@@ -466,10 +485,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof UserFriendRequest)) {
+    if (!(obj instanceof im.turms.common.model.bo.user.UserFriendRequest)) {
       return super.equals(obj);
     }
-    UserFriendRequest other = (UserFriendRequest) obj;
+    im.turms.common.model.bo.user.UserFriendRequest other = (im.turms.common.model.bo.user.UserFriendRequest) obj;
 
     if (hasId() != other.hasId()) return false;
     if (hasId()) {
@@ -553,69 +572,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static UserFriendRequest parseFrom(
+  public static im.turms.common.model.bo.user.UserFriendRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UserFriendRequest parseFrom(
+  public static im.turms.common.model.bo.user.UserFriendRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UserFriendRequest parseFrom(
+  public static im.turms.common.model.bo.user.UserFriendRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UserFriendRequest parseFrom(
+  public static im.turms.common.model.bo.user.UserFriendRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UserFriendRequest parseFrom(byte[] data)
+  public static im.turms.common.model.bo.user.UserFriendRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UserFriendRequest parseFrom(
+  public static im.turms.common.model.bo.user.UserFriendRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UserFriendRequest parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.user.UserFriendRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UserFriendRequest parseFrom(
+  public static im.turms.common.model.bo.user.UserFriendRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UserFriendRequest parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.user.UserFriendRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static UserFriendRequest parseDelimitedFrom(
+  public static im.turms.common.model.bo.user.UserFriendRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UserFriendRequest parseFrom(
+  public static im.turms.common.model.bo.user.UserFriendRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UserFriendRequest parseFrom(
+  public static im.turms.common.model.bo.user.UserFriendRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -628,7 +647,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(UserFriendRequest prototype) {
+  public static Builder newBuilder(im.turms.common.model.bo.user.UserFriendRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -649,18 +668,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.UserFriendRequest)
-          UserFriendRequestOrBuilder {
+      im.turms.common.model.bo.user.UserFriendRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return UserFriendRequestOuterClass.internal_static_im_turms_proto_UserFriendRequest_descriptor;
+      return im.turms.common.model.bo.user.UserFriendRequestOuterClass.internal_static_im_turms_proto_UserFriendRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return UserFriendRequestOuterClass.internal_static_im_turms_proto_UserFriendRequest_fieldAccessorTable
+      return im.turms.common.model.bo.user.UserFriendRequestOuterClass.internal_static_im_turms_proto_UserFriendRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              UserFriendRequest.class, UserFriendRequest.Builder.class);
+              im.turms.common.model.bo.user.UserFriendRequest.class, im.turms.common.model.bo.user.UserFriendRequest.Builder.class);
     }
 
     // Construct using im.turms.common.model.bo.user.UserFriendRequest.newBuilder()
@@ -731,17 +750,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return UserFriendRequestOuterClass.internal_static_im_turms_proto_UserFriendRequest_descriptor;
+      return im.turms.common.model.bo.user.UserFriendRequestOuterClass.internal_static_im_turms_proto_UserFriendRequest_descriptor;
     }
 
     @java.lang.Override
-    public UserFriendRequest getDefaultInstanceForType() {
-      return UserFriendRequest.getDefaultInstance();
+    public im.turms.common.model.bo.user.UserFriendRequest getDefaultInstanceForType() {
+      return im.turms.common.model.bo.user.UserFriendRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public UserFriendRequest build() {
-      UserFriendRequest result = buildPartial();
+    public im.turms.common.model.bo.user.UserFriendRequest build() {
+      im.turms.common.model.bo.user.UserFriendRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -749,8 +768,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public UserFriendRequest buildPartial() {
-      UserFriendRequest result = new UserFriendRequest(this);
+    public im.turms.common.model.bo.user.UserFriendRequest buildPartial() {
+      im.turms.common.model.bo.user.UserFriendRequest result = new im.turms.common.model.bo.user.UserFriendRequest(this);
       if (idBuilder_ == null) {
         result.id_ = id_;
       } else {
@@ -825,16 +844,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof UserFriendRequest) {
-        return mergeFrom((UserFriendRequest)other);
+      if (other instanceof im.turms.common.model.bo.user.UserFriendRequest) {
+        return mergeFrom((im.turms.common.model.bo.user.UserFriendRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(UserFriendRequest other) {
-      if (other == UserFriendRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.bo.user.UserFriendRequest other) {
+      if (other == im.turms.common.model.bo.user.UserFriendRequest.getDefaultInstance()) return this;
       if (other.hasId()) {
         mergeId(other.getId());
       }
@@ -874,11 +893,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      UserFriendRequest parsedMessage = null;
+      im.turms.common.model.bo.user.UserFriendRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (UserFriendRequest) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.bo.user.UserFriendRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -1250,7 +1269,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.RequestStatus request_status = 4;</code>
      * @return The enum numeric value on the wire for requestStatus.
      */
-    public int getRequestStatusValue() {
+    @java.lang.Override public int getRequestStatusValue() {
       return requestStatus_;
     }
     /**
@@ -1259,6 +1278,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setRequestStatusValue(int value) {
+      
       requestStatus_ = value;
       onChanged();
       return this;
@@ -1267,17 +1287,18 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.RequestStatus request_status = 4;</code>
      * @return The requestStatus.
      */
-    public RequestStatus getRequestStatus() {
+    @java.lang.Override
+    public im.turms.common.constant.RequestStatus getRequestStatus() {
       @SuppressWarnings("deprecation")
-      RequestStatus result = RequestStatus.valueOf(requestStatus_);
-      return result == null ? RequestStatus.UNRECOGNIZED : result;
+      im.turms.common.constant.RequestStatus result = im.turms.common.constant.RequestStatus.valueOf(requestStatus_);
+      return result == null ? im.turms.common.constant.RequestStatus.UNRECOGNIZED : result;
     }
     /**
      * <code>.im.turms.proto.RequestStatus request_status = 4;</code>
      * @param value The requestStatus to set.
      * @return This builder for chaining.
      */
-    public Builder setRequestStatus(RequestStatus value) {
+    public Builder setRequestStatus(im.turms.common.constant.RequestStatus value) {
       if (value == null) {
         throw new NullPointerException();
       }
@@ -1789,12 +1810,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.UserFriendRequest)
-  private static final UserFriendRequest DEFAULT_INSTANCE;
+  private static final im.turms.common.model.bo.user.UserFriendRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new UserFriendRequest();
+    DEFAULT_INSTANCE = new im.turms.common.model.bo.user.UserFriendRequest();
   }
 
-  public static UserFriendRequest getDefaultInstance() {
+  public static im.turms.common.model.bo.user.UserFriendRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -1819,7 +1840,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public UserFriendRequest getDefaultInstanceForType() {
+  public im.turms.common.model.bo.user.UserFriendRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

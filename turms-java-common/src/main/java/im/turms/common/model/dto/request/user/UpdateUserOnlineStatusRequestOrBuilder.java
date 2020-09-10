@@ -20,9 +20,6 @@
 
 package im.turms.common.model.dto.request.user;
 
-import im.turms.common.constant.DeviceType;
-import im.turms.common.constant.UserStatus;
-
 public interface UpdateUserOnlineStatusRequestOrBuilder extends
     // @@protoc_insertion_point(interface_extends:im.turms.proto.UpdateUserOnlineStatusRequest)
     com.google.protobuf.MessageOrBuilder {
@@ -36,13 +33,13 @@ public interface UpdateUserOnlineStatusRequestOrBuilder extends
    * <code>.im.turms.proto.UserStatus user_status = 1;</code>
    * @return The userStatus.
    */
-  UserStatus getUserStatus();
+  im.turms.common.constant.UserStatus getUserStatus();
 
   /**
    * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
    * @return A list containing the deviceTypes.
    */
-  java.util.List<DeviceType> getDeviceTypesList();
+  java.util.List<im.turms.common.constant.DeviceType> getDeviceTypesList();
   /**
    * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
    * @return The count of deviceTypes.
@@ -53,7 +50,7 @@ public interface UpdateUserOnlineStatusRequestOrBuilder extends
    * @param index The index of the element to return.
    * @return The deviceTypes at the given index.
    */
-  DeviceType getDeviceTypes(int index);
+  im.turms.common.constant.DeviceType getDeviceTypes(int index);
   /**
    * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
    * @return A list containing the enum numeric values on the wire for deviceTypes.

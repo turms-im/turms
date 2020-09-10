@@ -23,7 +23,7 @@ package im.turms.common.model.bo.message;
 /**
  * Protobuf type {@code im.turms.proto.MessagesWithTotalList}
  */
-public  final class MessagesWithTotalList extends
+public final class MessagesWithTotalList extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.MessagesWithTotalList)
     MessagesWithTotalListOrBuilder {
@@ -69,11 +69,11 @@ private static final long serialVersionUID = 0L;
             break;
           case 10: {
             if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-              messagesWithTotalList_ = new java.util.ArrayList<MessagesWithTotal>();
+              messagesWithTotalList_ = new java.util.ArrayList<im.turms.common.model.bo.message.MessagesWithTotal>();
               mutable_bitField0_ |= 0x00000001;
             }
             messagesWithTotalList_.add(
-                input.readMessage(MessagesWithTotal.parser(), extensionRegistry));
+                input.readMessage(im.turms.common.model.bo.message.MessagesWithTotal.parser(), extensionRegistry));
             break;
           }
           default: {
@@ -100,48 +100,53 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return MessagesWithTotalListOuterClass.internal_static_im_turms_proto_MessagesWithTotalList_descriptor;
+    return im.turms.common.model.bo.message.MessagesWithTotalListOuterClass.internal_static_im_turms_proto_MessagesWithTotalList_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return MessagesWithTotalListOuterClass.internal_static_im_turms_proto_MessagesWithTotalList_fieldAccessorTable
+    return im.turms.common.model.bo.message.MessagesWithTotalListOuterClass.internal_static_im_turms_proto_MessagesWithTotalList_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            MessagesWithTotalList.class, MessagesWithTotalList.Builder.class);
+            im.turms.common.model.bo.message.MessagesWithTotalList.class, im.turms.common.model.bo.message.MessagesWithTotalList.Builder.class);
   }
 
   public static final int MESSAGES_WITH_TOTAL_LIST_FIELD_NUMBER = 1;
-  private java.util.List<MessagesWithTotal> messagesWithTotalList_;
+  private java.util.List<im.turms.common.model.bo.message.MessagesWithTotal> messagesWithTotalList_;
   /**
    * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
    */
-  public java.util.List<MessagesWithTotal> getMessagesWithTotalListList() {
+  @java.lang.Override
+  public java.util.List<im.turms.common.model.bo.message.MessagesWithTotal> getMessagesWithTotalListList() {
     return messagesWithTotalList_;
   }
   /**
    * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
    */
-  public java.util.List<? extends MessagesWithTotalOrBuilder>
+  @java.lang.Override
+  public java.util.List<? extends im.turms.common.model.bo.message.MessagesWithTotalOrBuilder> 
       getMessagesWithTotalListOrBuilderList() {
     return messagesWithTotalList_;
   }
   /**
    * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
    */
+  @java.lang.Override
   public int getMessagesWithTotalListCount() {
     return messagesWithTotalList_.size();
   }
   /**
    * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
    */
-  public MessagesWithTotal getMessagesWithTotalList(int index) {
+  @java.lang.Override
+  public im.turms.common.model.bo.message.MessagesWithTotal getMessagesWithTotalList(int index) {
     return messagesWithTotalList_.get(index);
   }
   /**
    * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
    */
-  public MessagesWithTotalOrBuilder getMessagesWithTotalListOrBuilder(
+  @java.lang.Override
+  public im.turms.common.model.bo.message.MessagesWithTotalOrBuilder getMessagesWithTotalListOrBuilder(
       int index) {
     return messagesWithTotalList_.get(index);
   }
@@ -186,10 +191,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof MessagesWithTotalList)) {
+    if (!(obj instanceof im.turms.common.model.bo.message.MessagesWithTotalList)) {
       return super.equals(obj);
     }
-    MessagesWithTotalList other = (MessagesWithTotalList) obj;
+    im.turms.common.model.bo.message.MessagesWithTotalList other = (im.turms.common.model.bo.message.MessagesWithTotalList) obj;
 
     if (!getMessagesWithTotalListList()
         .equals(other.getMessagesWithTotalListList())) return false;
@@ -213,69 +218,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static MessagesWithTotalList parseFrom(
+  public static im.turms.common.model.bo.message.MessagesWithTotalList parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static MessagesWithTotalList parseFrom(
+  public static im.turms.common.model.bo.message.MessagesWithTotalList parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static MessagesWithTotalList parseFrom(
+  public static im.turms.common.model.bo.message.MessagesWithTotalList parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static MessagesWithTotalList parseFrom(
+  public static im.turms.common.model.bo.message.MessagesWithTotalList parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static MessagesWithTotalList parseFrom(byte[] data)
+  public static im.turms.common.model.bo.message.MessagesWithTotalList parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static MessagesWithTotalList parseFrom(
+  public static im.turms.common.model.bo.message.MessagesWithTotalList parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static MessagesWithTotalList parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.message.MessagesWithTotalList parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static MessagesWithTotalList parseFrom(
+  public static im.turms.common.model.bo.message.MessagesWithTotalList parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static MessagesWithTotalList parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.message.MessagesWithTotalList parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static MessagesWithTotalList parseDelimitedFrom(
+  public static im.turms.common.model.bo.message.MessagesWithTotalList parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static MessagesWithTotalList parseFrom(
+  public static im.turms.common.model.bo.message.MessagesWithTotalList parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static MessagesWithTotalList parseFrom(
+  public static im.turms.common.model.bo.message.MessagesWithTotalList parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -288,7 +293,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(MessagesWithTotalList prototype) {
+  public static Builder newBuilder(im.turms.common.model.bo.message.MessagesWithTotalList prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -309,18 +314,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.MessagesWithTotalList)
-          MessagesWithTotalListOrBuilder {
+      im.turms.common.model.bo.message.MessagesWithTotalListOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return MessagesWithTotalListOuterClass.internal_static_im_turms_proto_MessagesWithTotalList_descriptor;
+      return im.turms.common.model.bo.message.MessagesWithTotalListOuterClass.internal_static_im_turms_proto_MessagesWithTotalList_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return MessagesWithTotalListOuterClass.internal_static_im_turms_proto_MessagesWithTotalList_fieldAccessorTable
+      return im.turms.common.model.bo.message.MessagesWithTotalListOuterClass.internal_static_im_turms_proto_MessagesWithTotalList_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              MessagesWithTotalList.class, MessagesWithTotalList.Builder.class);
+              im.turms.common.model.bo.message.MessagesWithTotalList.class, im.turms.common.model.bo.message.MessagesWithTotalList.Builder.class);
     }
 
     // Construct using im.turms.common.model.bo.message.MessagesWithTotalList.newBuilder()
@@ -354,17 +359,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return MessagesWithTotalListOuterClass.internal_static_im_turms_proto_MessagesWithTotalList_descriptor;
+      return im.turms.common.model.bo.message.MessagesWithTotalListOuterClass.internal_static_im_turms_proto_MessagesWithTotalList_descriptor;
     }
 
     @java.lang.Override
-    public MessagesWithTotalList getDefaultInstanceForType() {
-      return MessagesWithTotalList.getDefaultInstance();
+    public im.turms.common.model.bo.message.MessagesWithTotalList getDefaultInstanceForType() {
+      return im.turms.common.model.bo.message.MessagesWithTotalList.getDefaultInstance();
     }
 
     @java.lang.Override
-    public MessagesWithTotalList build() {
-      MessagesWithTotalList result = buildPartial();
+    public im.turms.common.model.bo.message.MessagesWithTotalList build() {
+      im.turms.common.model.bo.message.MessagesWithTotalList result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -372,8 +377,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public MessagesWithTotalList buildPartial() {
-      MessagesWithTotalList result = new MessagesWithTotalList(this);
+    public im.turms.common.model.bo.message.MessagesWithTotalList buildPartial() {
+      im.turms.common.model.bo.message.MessagesWithTotalList result = new im.turms.common.model.bo.message.MessagesWithTotalList(this);
       int from_bitField0_ = bitField0_;
       if (messagesWithTotalListBuilder_ == null) {
         if (((bitField0_ & 0x00000001) != 0)) {
@@ -422,16 +427,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof MessagesWithTotalList) {
-        return mergeFrom((MessagesWithTotalList)other);
+      if (other instanceof im.turms.common.model.bo.message.MessagesWithTotalList) {
+        return mergeFrom((im.turms.common.model.bo.message.MessagesWithTotalList)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(MessagesWithTotalList other) {
-      if (other == MessagesWithTotalList.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.bo.message.MessagesWithTotalList other) {
+      if (other == im.turms.common.model.bo.message.MessagesWithTotalList.getDefaultInstance()) return this;
       if (messagesWithTotalListBuilder_ == null) {
         if (!other.messagesWithTotalList_.isEmpty()) {
           if (messagesWithTotalList_.isEmpty()) {
@@ -473,11 +478,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      MessagesWithTotalList parsedMessage = null;
+      im.turms.common.model.bo.message.MessagesWithTotalList parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (MessagesWithTotalList) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.bo.message.MessagesWithTotalList) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -488,22 +493,22 @@ private static final long serialVersionUID = 0L;
     }
     private int bitField0_;
 
-    private java.util.List<MessagesWithTotal> messagesWithTotalList_ =
+    private java.util.List<im.turms.common.model.bo.message.MessagesWithTotal> messagesWithTotalList_ =
       java.util.Collections.emptyList();
     private void ensureMessagesWithTotalListIsMutable() {
       if (!((bitField0_ & 0x00000001) != 0)) {
-        messagesWithTotalList_ = new java.util.ArrayList<MessagesWithTotal>(messagesWithTotalList_);
+        messagesWithTotalList_ = new java.util.ArrayList<im.turms.common.model.bo.message.MessagesWithTotal>(messagesWithTotalList_);
         bitField0_ |= 0x00000001;
        }
     }
 
     private com.google.protobuf.RepeatedFieldBuilderV3<
-            MessagesWithTotal, MessagesWithTotal.Builder, MessagesWithTotalOrBuilder> messagesWithTotalListBuilder_;
+        im.turms.common.model.bo.message.MessagesWithTotal, im.turms.common.model.bo.message.MessagesWithTotal.Builder, im.turms.common.model.bo.message.MessagesWithTotalOrBuilder> messagesWithTotalListBuilder_;
 
     /**
      * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
      */
-    public java.util.List<MessagesWithTotal> getMessagesWithTotalListList() {
+    public java.util.List<im.turms.common.model.bo.message.MessagesWithTotal> getMessagesWithTotalListList() {
       if (messagesWithTotalListBuilder_ == null) {
         return java.util.Collections.unmodifiableList(messagesWithTotalList_);
       } else {
@@ -523,7 +528,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
      */
-    public MessagesWithTotal getMessagesWithTotalList(int index) {
+    public im.turms.common.model.bo.message.MessagesWithTotal getMessagesWithTotalList(int index) {
       if (messagesWithTotalListBuilder_ == null) {
         return messagesWithTotalList_.get(index);
       } else {
@@ -534,7 +539,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
      */
     public Builder setMessagesWithTotalList(
-        int index, MessagesWithTotal value) {
+        int index, im.turms.common.model.bo.message.MessagesWithTotal value) {
       if (messagesWithTotalListBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -551,7 +556,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
      */
     public Builder setMessagesWithTotalList(
-        int index, MessagesWithTotal.Builder builderForValue) {
+        int index, im.turms.common.model.bo.message.MessagesWithTotal.Builder builderForValue) {
       if (messagesWithTotalListBuilder_ == null) {
         ensureMessagesWithTotalListIsMutable();
         messagesWithTotalList_.set(index, builderForValue.build());
@@ -564,7 +569,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
      */
-    public Builder addMessagesWithTotalList(MessagesWithTotal value) {
+    public Builder addMessagesWithTotalList(im.turms.common.model.bo.message.MessagesWithTotal value) {
       if (messagesWithTotalListBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -581,7 +586,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
      */
     public Builder addMessagesWithTotalList(
-        int index, MessagesWithTotal value) {
+        int index, im.turms.common.model.bo.message.MessagesWithTotal value) {
       if (messagesWithTotalListBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -598,7 +603,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
      */
     public Builder addMessagesWithTotalList(
-        MessagesWithTotal.Builder builderForValue) {
+        im.turms.common.model.bo.message.MessagesWithTotal.Builder builderForValue) {
       if (messagesWithTotalListBuilder_ == null) {
         ensureMessagesWithTotalListIsMutable();
         messagesWithTotalList_.add(builderForValue.build());
@@ -612,7 +617,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
      */
     public Builder addMessagesWithTotalList(
-        int index, MessagesWithTotal.Builder builderForValue) {
+        int index, im.turms.common.model.bo.message.MessagesWithTotal.Builder builderForValue) {
       if (messagesWithTotalListBuilder_ == null) {
         ensureMessagesWithTotalListIsMutable();
         messagesWithTotalList_.add(index, builderForValue.build());
@@ -626,7 +631,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
      */
     public Builder addAllMessagesWithTotalList(
-        java.lang.Iterable<? extends MessagesWithTotal> values) {
+        java.lang.Iterable<? extends im.turms.common.model.bo.message.MessagesWithTotal> values) {
       if (messagesWithTotalListBuilder_ == null) {
         ensureMessagesWithTotalListIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -666,14 +671,14 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
      */
-    public MessagesWithTotal.Builder getMessagesWithTotalListBuilder(
+    public im.turms.common.model.bo.message.MessagesWithTotal.Builder getMessagesWithTotalListBuilder(
         int index) {
       return getMessagesWithTotalListFieldBuilder().getBuilder(index);
     }
     /**
      * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
      */
-    public MessagesWithTotalOrBuilder getMessagesWithTotalListOrBuilder(
+    public im.turms.common.model.bo.message.MessagesWithTotalOrBuilder getMessagesWithTotalListOrBuilder(
         int index) {
       if (messagesWithTotalListBuilder_ == null) {
         return messagesWithTotalList_.get(index);  } else {
@@ -683,7 +688,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
      */
-    public java.util.List<? extends MessagesWithTotalOrBuilder>
+    public java.util.List<? extends im.turms.common.model.bo.message.MessagesWithTotalOrBuilder> 
          getMessagesWithTotalListOrBuilderList() {
       if (messagesWithTotalListBuilder_ != null) {
         return messagesWithTotalListBuilder_.getMessageOrBuilderList();
@@ -694,31 +699,31 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
      */
-    public MessagesWithTotal.Builder addMessagesWithTotalListBuilder() {
+    public im.turms.common.model.bo.message.MessagesWithTotal.Builder addMessagesWithTotalListBuilder() {
       return getMessagesWithTotalListFieldBuilder().addBuilder(
-          MessagesWithTotal.getDefaultInstance());
+          im.turms.common.model.bo.message.MessagesWithTotal.getDefaultInstance());
     }
     /**
      * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
      */
-    public MessagesWithTotal.Builder addMessagesWithTotalListBuilder(
+    public im.turms.common.model.bo.message.MessagesWithTotal.Builder addMessagesWithTotalListBuilder(
         int index) {
       return getMessagesWithTotalListFieldBuilder().addBuilder(
-          index, MessagesWithTotal.getDefaultInstance());
+          index, im.turms.common.model.bo.message.MessagesWithTotal.getDefaultInstance());
     }
     /**
      * <code>repeated .im.turms.proto.MessagesWithTotal messages_with_total_list = 1;</code>
      */
-    public java.util.List<MessagesWithTotal.Builder>
+    public java.util.List<im.turms.common.model.bo.message.MessagesWithTotal.Builder> 
          getMessagesWithTotalListBuilderList() {
       return getMessagesWithTotalListFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-            MessagesWithTotal, MessagesWithTotal.Builder, MessagesWithTotalOrBuilder>
+        im.turms.common.model.bo.message.MessagesWithTotal, im.turms.common.model.bo.message.MessagesWithTotal.Builder, im.turms.common.model.bo.message.MessagesWithTotalOrBuilder> 
         getMessagesWithTotalListFieldBuilder() {
       if (messagesWithTotalListBuilder_ == null) {
         messagesWithTotalListBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-                MessagesWithTotal, MessagesWithTotal.Builder, MessagesWithTotalOrBuilder>(
+            im.turms.common.model.bo.message.MessagesWithTotal, im.turms.common.model.bo.message.MessagesWithTotal.Builder, im.turms.common.model.bo.message.MessagesWithTotalOrBuilder>(
                 messagesWithTotalList_,
                 ((bitField0_ & 0x00000001) != 0),
                 getParentForChildren(),
@@ -744,12 +749,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.MessagesWithTotalList)
-  private static final MessagesWithTotalList DEFAULT_INSTANCE;
+  private static final im.turms.common.model.bo.message.MessagesWithTotalList DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new MessagesWithTotalList();
+    DEFAULT_INSTANCE = new im.turms.common.model.bo.message.MessagesWithTotalList();
   }
 
-  public static MessagesWithTotalList getDefaultInstance() {
+  public static im.turms.common.model.bo.message.MessagesWithTotalList getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -774,7 +779,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public MessagesWithTotalList getDefaultInstanceForType() {
+  public im.turms.common.model.bo.message.MessagesWithTotalList getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

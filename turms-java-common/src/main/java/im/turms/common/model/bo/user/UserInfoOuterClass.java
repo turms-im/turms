@@ -20,8 +20,6 @@
 
 package im.turms.common.model.bo.user;
 
-import im.turms.common.constant.ProfileAccessStrategyOuterClass;
-
 public final class UserInfoOuterClass {
   private UserInfoOuterClass() {}
   public static void registerAllExtensions(
@@ -66,7 +64,7 @@ public final class UserInfoOuterClass {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.WrappersProto.getDescriptor(),
-          ProfileAccessStrategyOuterClass.getDescriptor(),
+          im.turms.common.constant.ProfileAccessStrategyOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_UserInfo_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -75,7 +73,7 @@ public final class UserInfoOuterClass {
         internal_static_im_turms_proto_UserInfo_descriptor,
         new java.lang.String[] { "Id", "Name", "Intro", "RegistrationDate", "DeletionDate", "Active", "ProfileAccessStrategy", });
     com.google.protobuf.WrappersProto.getDescriptor();
-    ProfileAccessStrategyOuterClass.getDescriptor();
+    im.turms.common.constant.ProfileAccessStrategyOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

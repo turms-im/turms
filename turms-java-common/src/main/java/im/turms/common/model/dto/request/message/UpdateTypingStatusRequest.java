@@ -23,7 +23,7 @@ package im.turms.common.model.dto.request.message;
 /**
  * Protobuf type {@code im.turms.proto.UpdateTypingStatusRequest}
  */
-public  final class UpdateTypingStatusRequest extends
+public final class UpdateTypingStatusRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.UpdateTypingStatusRequest)
     UpdateTypingStatusRequestOrBuilder {
@@ -96,15 +96,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return UpdateTypingStatusRequestOuterClass.internal_static_im_turms_proto_UpdateTypingStatusRequest_descriptor;
+    return im.turms.common.model.dto.request.message.UpdateTypingStatusRequestOuterClass.internal_static_im_turms_proto_UpdateTypingStatusRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return UpdateTypingStatusRequestOuterClass.internal_static_im_turms_proto_UpdateTypingStatusRequest_fieldAccessorTable
+    return im.turms.common.model.dto.request.message.UpdateTypingStatusRequestOuterClass.internal_static_im_turms_proto_UpdateTypingStatusRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            UpdateTypingStatusRequest.class, UpdateTypingStatusRequest.Builder.class);
+            im.turms.common.model.dto.request.message.UpdateTypingStatusRequest.class, im.turms.common.model.dto.request.message.UpdateTypingStatusRequest.Builder.class);
   }
 
   public static final int IS_GROUP_MESSAGE_FIELD_NUMBER = 1;
@@ -113,6 +113,7 @@ private static final long serialVersionUID = 0L;
    * <code>bool is_group_message = 1;</code>
    * @return The isGroupMessage.
    */
+  @java.lang.Override
   public boolean getIsGroupMessage() {
     return isGroupMessage_;
   }
@@ -123,6 +124,7 @@ private static final long serialVersionUID = 0L;
    * <code>int64 to_id = 2;</code>
    * @return The toId.
    */
+  @java.lang.Override
   public long getToId() {
     return toId_;
   }
@@ -174,10 +176,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof UpdateTypingStatusRequest)) {
+    if (!(obj instanceof im.turms.common.model.dto.request.message.UpdateTypingStatusRequest)) {
       return super.equals(obj);
     }
-    UpdateTypingStatusRequest other = (UpdateTypingStatusRequest) obj;
+    im.turms.common.model.dto.request.message.UpdateTypingStatusRequest other = (im.turms.common.model.dto.request.message.UpdateTypingStatusRequest) obj;
 
     if (getIsGroupMessage()
         != other.getIsGroupMessage()) return false;
@@ -205,69 +207,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static UpdateTypingStatusRequest parseFrom(
+  public static im.turms.common.model.dto.request.message.UpdateTypingStatusRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UpdateTypingStatusRequest parseFrom(
+  public static im.turms.common.model.dto.request.message.UpdateTypingStatusRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UpdateTypingStatusRequest parseFrom(
+  public static im.turms.common.model.dto.request.message.UpdateTypingStatusRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UpdateTypingStatusRequest parseFrom(
+  public static im.turms.common.model.dto.request.message.UpdateTypingStatusRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UpdateTypingStatusRequest parseFrom(byte[] data)
+  public static im.turms.common.model.dto.request.message.UpdateTypingStatusRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UpdateTypingStatusRequest parseFrom(
+  public static im.turms.common.model.dto.request.message.UpdateTypingStatusRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UpdateTypingStatusRequest parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.message.UpdateTypingStatusRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UpdateTypingStatusRequest parseFrom(
+  public static im.turms.common.model.dto.request.message.UpdateTypingStatusRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UpdateTypingStatusRequest parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.message.UpdateTypingStatusRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static UpdateTypingStatusRequest parseDelimitedFrom(
+  public static im.turms.common.model.dto.request.message.UpdateTypingStatusRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UpdateTypingStatusRequest parseFrom(
+  public static im.turms.common.model.dto.request.message.UpdateTypingStatusRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UpdateTypingStatusRequest parseFrom(
+  public static im.turms.common.model.dto.request.message.UpdateTypingStatusRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -280,7 +282,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(UpdateTypingStatusRequest prototype) {
+  public static Builder newBuilder(im.turms.common.model.dto.request.message.UpdateTypingStatusRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -301,18 +303,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.UpdateTypingStatusRequest)
-          UpdateTypingStatusRequestOrBuilder {
+      im.turms.common.model.dto.request.message.UpdateTypingStatusRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return UpdateTypingStatusRequestOuterClass.internal_static_im_turms_proto_UpdateTypingStatusRequest_descriptor;
+      return im.turms.common.model.dto.request.message.UpdateTypingStatusRequestOuterClass.internal_static_im_turms_proto_UpdateTypingStatusRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return UpdateTypingStatusRequestOuterClass.internal_static_im_turms_proto_UpdateTypingStatusRequest_fieldAccessorTable
+      return im.turms.common.model.dto.request.message.UpdateTypingStatusRequestOuterClass.internal_static_im_turms_proto_UpdateTypingStatusRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              UpdateTypingStatusRequest.class, UpdateTypingStatusRequest.Builder.class);
+              im.turms.common.model.dto.request.message.UpdateTypingStatusRequest.class, im.turms.common.model.dto.request.message.UpdateTypingStatusRequest.Builder.class);
     }
 
     // Construct using im.turms.common.model.dto.request.message.UpdateTypingStatusRequest.newBuilder()
@@ -343,17 +345,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return UpdateTypingStatusRequestOuterClass.internal_static_im_turms_proto_UpdateTypingStatusRequest_descriptor;
+      return im.turms.common.model.dto.request.message.UpdateTypingStatusRequestOuterClass.internal_static_im_turms_proto_UpdateTypingStatusRequest_descriptor;
     }
 
     @java.lang.Override
-    public UpdateTypingStatusRequest getDefaultInstanceForType() {
-      return UpdateTypingStatusRequest.getDefaultInstance();
+    public im.turms.common.model.dto.request.message.UpdateTypingStatusRequest getDefaultInstanceForType() {
+      return im.turms.common.model.dto.request.message.UpdateTypingStatusRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public UpdateTypingStatusRequest build() {
-      UpdateTypingStatusRequest result = buildPartial();
+    public im.turms.common.model.dto.request.message.UpdateTypingStatusRequest build() {
+      im.turms.common.model.dto.request.message.UpdateTypingStatusRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -361,8 +363,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public UpdateTypingStatusRequest buildPartial() {
-      UpdateTypingStatusRequest result = new UpdateTypingStatusRequest(this);
+    public im.turms.common.model.dto.request.message.UpdateTypingStatusRequest buildPartial() {
+      im.turms.common.model.dto.request.message.UpdateTypingStatusRequest result = new im.turms.common.model.dto.request.message.UpdateTypingStatusRequest(this);
       result.isGroupMessage_ = isGroupMessage_;
       result.toId_ = toId_;
       onBuilt();
@@ -403,16 +405,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof UpdateTypingStatusRequest) {
-        return mergeFrom((UpdateTypingStatusRequest)other);
+      if (other instanceof im.turms.common.model.dto.request.message.UpdateTypingStatusRequest) {
+        return mergeFrom((im.turms.common.model.dto.request.message.UpdateTypingStatusRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(UpdateTypingStatusRequest other) {
-      if (other == UpdateTypingStatusRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.dto.request.message.UpdateTypingStatusRequest other) {
+      if (other == im.turms.common.model.dto.request.message.UpdateTypingStatusRequest.getDefaultInstance()) return this;
       if (other.getIsGroupMessage() != false) {
         setIsGroupMessage(other.getIsGroupMessage());
       }
@@ -434,11 +436,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      UpdateTypingStatusRequest parsedMessage = null;
+      im.turms.common.model.dto.request.message.UpdateTypingStatusRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (UpdateTypingStatusRequest) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.dto.request.message.UpdateTypingStatusRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -453,6 +455,7 @@ private static final long serialVersionUID = 0L;
      * <code>bool is_group_message = 1;</code>
      * @return The isGroupMessage.
      */
+    @java.lang.Override
     public boolean getIsGroupMessage() {
       return isGroupMessage_;
     }
@@ -483,6 +486,7 @@ private static final long serialVersionUID = 0L;
      * <code>int64 to_id = 2;</code>
      * @return The toId.
      */
+    @java.lang.Override
     public long getToId() {
       return toId_;
     }
@@ -524,12 +528,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.UpdateTypingStatusRequest)
-  private static final UpdateTypingStatusRequest DEFAULT_INSTANCE;
+  private static final im.turms.common.model.dto.request.message.UpdateTypingStatusRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new UpdateTypingStatusRequest();
+    DEFAULT_INSTANCE = new im.turms.common.model.dto.request.message.UpdateTypingStatusRequest();
   }
 
-  public static UpdateTypingStatusRequest getDefaultInstance() {
+  public static im.turms.common.model.dto.request.message.UpdateTypingStatusRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -554,7 +558,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public UpdateTypingStatusRequest getDefaultInstanceForType() {
+  public im.turms.common.model.dto.request.message.UpdateTypingStatusRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

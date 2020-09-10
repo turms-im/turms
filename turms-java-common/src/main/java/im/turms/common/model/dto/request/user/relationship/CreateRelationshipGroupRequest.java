@@ -23,7 +23,7 @@ package im.turms.common.model.dto.request.user.relationship;
 /**
  * Protobuf type {@code im.turms.proto.CreateRelationshipGroupRequest}
  */
-public  final class CreateRelationshipGroupRequest extends
+public final class CreateRelationshipGroupRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.CreateRelationshipGroupRequest)
     CreateRelationshipGroupRequestOrBuilder {
@@ -93,15 +93,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return CreateRelationshipGroupRequestOuterClass.internal_static_im_turms_proto_CreateRelationshipGroupRequest_descriptor;
+    return im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequestOuterClass.internal_static_im_turms_proto_CreateRelationshipGroupRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return CreateRelationshipGroupRequestOuterClass.internal_static_im_turms_proto_CreateRelationshipGroupRequest_fieldAccessorTable
+    return im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequestOuterClass.internal_static_im_turms_proto_CreateRelationshipGroupRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            CreateRelationshipGroupRequest.class, CreateRelationshipGroupRequest.Builder.class);
+            im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest.class, im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest.Builder.class);
   }
 
   public static final int NAME_FIELD_NUMBER = 1;
@@ -110,6 +110,7 @@ private static final long serialVersionUID = 0L;
    * <code>string name = 1;</code>
    * @return The name.
    */
+  @java.lang.Override
   public java.lang.String getName() {
     java.lang.Object ref = name_;
     if (ref instanceof java.lang.String) {
@@ -126,6 +127,7 @@ private static final long serialVersionUID = 0L;
    * <code>string name = 1;</code>
    * @return The bytes for name.
    */
+  @java.lang.Override
   public com.google.protobuf.ByteString
       getNameBytes() {
     java.lang.Object ref = name_;
@@ -179,10 +181,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof CreateRelationshipGroupRequest)) {
+    if (!(obj instanceof im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest)) {
       return super.equals(obj);
     }
-    CreateRelationshipGroupRequest other = (CreateRelationshipGroupRequest) obj;
+    im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest other = (im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest) obj;
 
     if (!getName()
         .equals(other.getName())) return false;
@@ -204,69 +206,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static CreateRelationshipGroupRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static CreateRelationshipGroupRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static CreateRelationshipGroupRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static CreateRelationshipGroupRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static CreateRelationshipGroupRequest parseFrom(byte[] data)
+  public static im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static CreateRelationshipGroupRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static CreateRelationshipGroupRequest parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static CreateRelationshipGroupRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static CreateRelationshipGroupRequest parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static CreateRelationshipGroupRequest parseDelimitedFrom(
+  public static im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static CreateRelationshipGroupRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static CreateRelationshipGroupRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -279,7 +281,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(CreateRelationshipGroupRequest prototype) {
+  public static Builder newBuilder(im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -300,18 +302,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.CreateRelationshipGroupRequest)
-          CreateRelationshipGroupRequestOrBuilder {
+      im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return CreateRelationshipGroupRequestOuterClass.internal_static_im_turms_proto_CreateRelationshipGroupRequest_descriptor;
+      return im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequestOuterClass.internal_static_im_turms_proto_CreateRelationshipGroupRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return CreateRelationshipGroupRequestOuterClass.internal_static_im_turms_proto_CreateRelationshipGroupRequest_fieldAccessorTable
+      return im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequestOuterClass.internal_static_im_turms_proto_CreateRelationshipGroupRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              CreateRelationshipGroupRequest.class, CreateRelationshipGroupRequest.Builder.class);
+              im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest.class, im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest.Builder.class);
     }
 
     // Construct using im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest.newBuilder()
@@ -340,17 +342,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return CreateRelationshipGroupRequestOuterClass.internal_static_im_turms_proto_CreateRelationshipGroupRequest_descriptor;
+      return im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequestOuterClass.internal_static_im_turms_proto_CreateRelationshipGroupRequest_descriptor;
     }
 
     @java.lang.Override
-    public CreateRelationshipGroupRequest getDefaultInstanceForType() {
-      return CreateRelationshipGroupRequest.getDefaultInstance();
+    public im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest getDefaultInstanceForType() {
+      return im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public CreateRelationshipGroupRequest build() {
-      CreateRelationshipGroupRequest result = buildPartial();
+    public im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest build() {
+      im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -358,8 +360,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public CreateRelationshipGroupRequest buildPartial() {
-      CreateRelationshipGroupRequest result = new CreateRelationshipGroupRequest(this);
+    public im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest buildPartial() {
+      im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest result = new im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest(this);
       result.name_ = name_;
       onBuilt();
       return result;
@@ -399,16 +401,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof CreateRelationshipGroupRequest) {
-        return mergeFrom((CreateRelationshipGroupRequest)other);
+      if (other instanceof im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest) {
+        return mergeFrom((im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(CreateRelationshipGroupRequest other) {
-      if (other == CreateRelationshipGroupRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest other) {
+      if (other == im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest.getDefaultInstance()) return this;
       if (!other.getName().isEmpty()) {
         name_ = other.name_;
         onChanged();
@@ -428,11 +430,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      CreateRelationshipGroupRequest parsedMessage = null;
+      im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (CreateRelationshipGroupRequest) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -534,12 +536,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.CreateRelationshipGroupRequest)
-  private static final CreateRelationshipGroupRequest DEFAULT_INSTANCE;
+  private static final im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new CreateRelationshipGroupRequest();
+    DEFAULT_INSTANCE = new im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest();
   }
 
-  public static CreateRelationshipGroupRequest getDefaultInstance() {
+  public static im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -564,7 +566,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public CreateRelationshipGroupRequest getDefaultInstanceForType() {
+  public im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

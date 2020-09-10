@@ -20,8 +20,6 @@
 
 package im.turms.common.model.dto.request.user.relationship;
 
-import im.turms.common.constant.ResponseAction;
-
 public interface UpdateFriendRequestRequestOrBuilder extends
     // @@protoc_insertion_point(interface_extends:im.turms.proto.UpdateFriendRequestRequest)
     com.google.protobuf.MessageOrBuilder {
@@ -41,7 +39,7 @@ public interface UpdateFriendRequestRequestOrBuilder extends
    * <code>.im.turms.proto.ResponseAction responseAction = 2;</code>
    * @return The responseAction.
    */
-  ResponseAction getResponseAction();
+  im.turms.common.constant.ResponseAction getResponseAction();
 
   /**
    * <code>.google.protobuf.StringValue reason = 3;</code>

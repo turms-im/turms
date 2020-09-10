@@ -20,8 +20,6 @@
 
 package im.turms.common.model.dto.request.storage;
 
-import im.turms.common.constant.ContentType;
-
 public interface DeleteResourceRequestOrBuilder extends
     // @@protoc_insertion_point(interface_extends:im.turms.proto.DeleteResourceRequest)
     com.google.protobuf.MessageOrBuilder {
@@ -35,7 +33,7 @@ public interface DeleteResourceRequestOrBuilder extends
    * <code>.im.turms.proto.ContentType content_type = 1;</code>
    * @return The contentType.
    */
-  ContentType getContentType();
+  im.turms.common.constant.ContentType getContentType();
 
   /**
    * <code>.google.protobuf.StringValue key_str = 2;</code>

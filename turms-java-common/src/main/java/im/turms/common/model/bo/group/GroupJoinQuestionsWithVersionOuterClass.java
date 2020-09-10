@@ -59,7 +59,7 @@ public final class GroupJoinQuestionsWithVersionOuterClass {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.WrappersProto.getDescriptor(),
-          GroupJoinQuestionOuterClass.getDescriptor(),
+          im.turms.common.model.bo.group.GroupJoinQuestionOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_GroupJoinQuestionsWithVersion_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -68,7 +68,7 @@ public final class GroupJoinQuestionsWithVersionOuterClass {
         internal_static_im_turms_proto_GroupJoinQuestionsWithVersion_descriptor,
         new java.lang.String[] { "GroupJoinQuestions", "LastUpdatedDate", });
     com.google.protobuf.WrappersProto.getDescriptor();
-    GroupJoinQuestionOuterClass.getDescriptor();
+    im.turms.common.model.bo.group.GroupJoinQuestionOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -27,12 +27,12 @@ public interface MessagesOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.Message messages = 1;</code>
    */
-  java.util.List<Message>
+  java.util.List<im.turms.common.model.bo.message.Message> 
       getMessagesList();
   /**
    * <code>repeated .im.turms.proto.Message messages = 1;</code>
    */
-  Message getMessages(int index);
+  im.turms.common.model.bo.message.Message getMessages(int index);
   /**
    * <code>repeated .im.turms.proto.Message messages = 1;</code>
    */
@@ -40,11 +40,11 @@ public interface MessagesOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.Message messages = 1;</code>
    */
-  java.util.List<? extends MessageOrBuilder>
+  java.util.List<? extends im.turms.common.model.bo.message.MessageOrBuilder> 
       getMessagesOrBuilderList();
   /**
    * <code>repeated .im.turms.proto.Message messages = 1;</code>
    */
-  MessageOrBuilder getMessagesOrBuilder(
+  im.turms.common.model.bo.message.MessageOrBuilder getMessagesOrBuilder(
       int index);
 }

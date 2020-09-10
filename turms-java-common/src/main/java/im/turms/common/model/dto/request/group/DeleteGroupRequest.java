@@ -23,7 +23,7 @@ package im.turms.common.model.dto.request.group;
 /**
  * Protobuf type {@code im.turms.proto.DeleteGroupRequest}
  */
-public  final class DeleteGroupRequest extends
+public final class DeleteGroupRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.DeleteGroupRequest)
     DeleteGroupRequestOrBuilder {
@@ -91,15 +91,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return DeleteGroupRequestOuterClass.internal_static_im_turms_proto_DeleteGroupRequest_descriptor;
+    return im.turms.common.model.dto.request.group.DeleteGroupRequestOuterClass.internal_static_im_turms_proto_DeleteGroupRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return DeleteGroupRequestOuterClass.internal_static_im_turms_proto_DeleteGroupRequest_fieldAccessorTable
+    return im.turms.common.model.dto.request.group.DeleteGroupRequestOuterClass.internal_static_im_turms_proto_DeleteGroupRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            DeleteGroupRequest.class, DeleteGroupRequest.Builder.class);
+            im.turms.common.model.dto.request.group.DeleteGroupRequest.class, im.turms.common.model.dto.request.group.DeleteGroupRequest.Builder.class);
   }
 
   public static final int GROUP_ID_FIELD_NUMBER = 1;
@@ -108,6 +108,7 @@ private static final long serialVersionUID = 0L;
    * <code>int64 group_id = 1;</code>
    * @return The groupId.
    */
+  @java.lang.Override
   public long getGroupId() {
     return groupId_;
   }
@@ -152,10 +153,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof DeleteGroupRequest)) {
+    if (!(obj instanceof im.turms.common.model.dto.request.group.DeleteGroupRequest)) {
       return super.equals(obj);
     }
-    DeleteGroupRequest other = (DeleteGroupRequest) obj;
+    im.turms.common.model.dto.request.group.DeleteGroupRequest other = (im.turms.common.model.dto.request.group.DeleteGroupRequest) obj;
 
     if (getGroupId()
         != other.getGroupId()) return false;
@@ -178,69 +179,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static DeleteGroupRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.DeleteGroupRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static DeleteGroupRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.DeleteGroupRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static DeleteGroupRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.DeleteGroupRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static DeleteGroupRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.DeleteGroupRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static DeleteGroupRequest parseFrom(byte[] data)
+  public static im.turms.common.model.dto.request.group.DeleteGroupRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static DeleteGroupRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.DeleteGroupRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static DeleteGroupRequest parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.group.DeleteGroupRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static DeleteGroupRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.DeleteGroupRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static DeleteGroupRequest parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.group.DeleteGroupRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static DeleteGroupRequest parseDelimitedFrom(
+  public static im.turms.common.model.dto.request.group.DeleteGroupRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static DeleteGroupRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.DeleteGroupRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static DeleteGroupRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.DeleteGroupRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -253,7 +254,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(DeleteGroupRequest prototype) {
+  public static Builder newBuilder(im.turms.common.model.dto.request.group.DeleteGroupRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -274,18 +275,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.DeleteGroupRequest)
-          DeleteGroupRequestOrBuilder {
+      im.turms.common.model.dto.request.group.DeleteGroupRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return DeleteGroupRequestOuterClass.internal_static_im_turms_proto_DeleteGroupRequest_descriptor;
+      return im.turms.common.model.dto.request.group.DeleteGroupRequestOuterClass.internal_static_im_turms_proto_DeleteGroupRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return DeleteGroupRequestOuterClass.internal_static_im_turms_proto_DeleteGroupRequest_fieldAccessorTable
+      return im.turms.common.model.dto.request.group.DeleteGroupRequestOuterClass.internal_static_im_turms_proto_DeleteGroupRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              DeleteGroupRequest.class, DeleteGroupRequest.Builder.class);
+              im.turms.common.model.dto.request.group.DeleteGroupRequest.class, im.turms.common.model.dto.request.group.DeleteGroupRequest.Builder.class);
     }
 
     // Construct using im.turms.common.model.dto.request.group.DeleteGroupRequest.newBuilder()
@@ -314,17 +315,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return DeleteGroupRequestOuterClass.internal_static_im_turms_proto_DeleteGroupRequest_descriptor;
+      return im.turms.common.model.dto.request.group.DeleteGroupRequestOuterClass.internal_static_im_turms_proto_DeleteGroupRequest_descriptor;
     }
 
     @java.lang.Override
-    public DeleteGroupRequest getDefaultInstanceForType() {
-      return DeleteGroupRequest.getDefaultInstance();
+    public im.turms.common.model.dto.request.group.DeleteGroupRequest getDefaultInstanceForType() {
+      return im.turms.common.model.dto.request.group.DeleteGroupRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public DeleteGroupRequest build() {
-      DeleteGroupRequest result = buildPartial();
+    public im.turms.common.model.dto.request.group.DeleteGroupRequest build() {
+      im.turms.common.model.dto.request.group.DeleteGroupRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -332,8 +333,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public DeleteGroupRequest buildPartial() {
-      DeleteGroupRequest result = new DeleteGroupRequest(this);
+    public im.turms.common.model.dto.request.group.DeleteGroupRequest buildPartial() {
+      im.turms.common.model.dto.request.group.DeleteGroupRequest result = new im.turms.common.model.dto.request.group.DeleteGroupRequest(this);
       result.groupId_ = groupId_;
       onBuilt();
       return result;
@@ -373,16 +374,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof DeleteGroupRequest) {
-        return mergeFrom((DeleteGroupRequest)other);
+      if (other instanceof im.turms.common.model.dto.request.group.DeleteGroupRequest) {
+        return mergeFrom((im.turms.common.model.dto.request.group.DeleteGroupRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(DeleteGroupRequest other) {
-      if (other == DeleteGroupRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.dto.request.group.DeleteGroupRequest other) {
+      if (other == im.turms.common.model.dto.request.group.DeleteGroupRequest.getDefaultInstance()) return this;
       if (other.getGroupId() != 0L) {
         setGroupId(other.getGroupId());
       }
@@ -401,11 +402,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      DeleteGroupRequest parsedMessage = null;
+      im.turms.common.model.dto.request.group.DeleteGroupRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (DeleteGroupRequest) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.dto.request.group.DeleteGroupRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -420,6 +421,7 @@ private static final long serialVersionUID = 0L;
      * <code>int64 group_id = 1;</code>
      * @return The groupId.
      */
+    @java.lang.Override
     public long getGroupId() {
       return groupId_;
     }
@@ -461,12 +463,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.DeleteGroupRequest)
-  private static final DeleteGroupRequest DEFAULT_INSTANCE;
+  private static final im.turms.common.model.dto.request.group.DeleteGroupRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new DeleteGroupRequest();
+    DEFAULT_INSTANCE = new im.turms.common.model.dto.request.group.DeleteGroupRequest();
   }
 
-  public static DeleteGroupRequest getDefaultInstance() {
+  public static im.turms.common.model.dto.request.group.DeleteGroupRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -491,7 +493,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public DeleteGroupRequest getDefaultInstanceForType() {
+  public im.turms.common.model.dto.request.group.DeleteGroupRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

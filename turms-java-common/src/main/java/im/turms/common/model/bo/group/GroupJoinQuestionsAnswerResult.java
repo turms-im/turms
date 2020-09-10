@@ -23,7 +23,7 @@ package im.turms.common.model.bo.group;
 /**
  * Protobuf type {@code im.turms.proto.GroupJoinQuestionsAnswerResult}
  */
-public  final class GroupJoinQuestionsAnswerResult extends
+public final class GroupJoinQuestionsAnswerResult extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.GroupJoinQuestionsAnswerResult)
     GroupJoinQuestionsAnswerResultOrBuilder {
@@ -122,15 +122,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return GroupJoinQuestionsAnswerResultOuterClass.internal_static_im_turms_proto_GroupJoinQuestionsAnswerResult_descriptor;
+    return im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResultOuterClass.internal_static_im_turms_proto_GroupJoinQuestionsAnswerResult_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return GroupJoinQuestionsAnswerResultOuterClass.internal_static_im_turms_proto_GroupJoinQuestionsAnswerResult_fieldAccessorTable
+    return im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResultOuterClass.internal_static_im_turms_proto_GroupJoinQuestionsAnswerResult_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            GroupJoinQuestionsAnswerResult.class, GroupJoinQuestionsAnswerResult.Builder.class);
+            im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult.class, im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult.Builder.class);
   }
 
   public static final int SCORE_FIELD_NUMBER = 1;
@@ -139,6 +139,7 @@ private static final long serialVersionUID = 0L;
    * <code>int32 score = 1;</code>
    * @return The score.
    */
+  @java.lang.Override
   public int getScore() {
     return score_;
   }
@@ -149,6 +150,7 @@ private static final long serialVersionUID = 0L;
    * <code>repeated int64 questions_ids = 2;</code>
    * @return A list containing the questionsIds.
    */
+  @java.lang.Override
   public java.util.List<java.lang.Long>
       getQuestionsIdsList() {
     return questionsIds_;
@@ -176,6 +178,7 @@ private static final long serialVersionUID = 0L;
    * <code>bool joined = 3;</code>
    * @return The joined.
    */
+  @java.lang.Override
   public boolean getJoined() {
     return joined_;
   }
@@ -249,10 +252,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof GroupJoinQuestionsAnswerResult)) {
+    if (!(obj instanceof im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult)) {
       return super.equals(obj);
     }
-    GroupJoinQuestionsAnswerResult other = (GroupJoinQuestionsAnswerResult) obj;
+    im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult other = (im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult) obj;
 
     if (getScore()
         != other.getScore()) return false;
@@ -285,69 +288,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static GroupJoinQuestionsAnswerResult parseFrom(
+  public static im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static GroupJoinQuestionsAnswerResult parseFrom(
+  public static im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static GroupJoinQuestionsAnswerResult parseFrom(
+  public static im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static GroupJoinQuestionsAnswerResult parseFrom(
+  public static im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static GroupJoinQuestionsAnswerResult parseFrom(byte[] data)
+  public static im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static GroupJoinQuestionsAnswerResult parseFrom(
+  public static im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static GroupJoinQuestionsAnswerResult parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static GroupJoinQuestionsAnswerResult parseFrom(
+  public static im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static GroupJoinQuestionsAnswerResult parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static GroupJoinQuestionsAnswerResult parseDelimitedFrom(
+  public static im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static GroupJoinQuestionsAnswerResult parseFrom(
+  public static im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static GroupJoinQuestionsAnswerResult parseFrom(
+  public static im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -360,7 +363,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(GroupJoinQuestionsAnswerResult prototype) {
+  public static Builder newBuilder(im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -381,18 +384,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.GroupJoinQuestionsAnswerResult)
-          GroupJoinQuestionsAnswerResultOrBuilder {
+      im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResultOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return GroupJoinQuestionsAnswerResultOuterClass.internal_static_im_turms_proto_GroupJoinQuestionsAnswerResult_descriptor;
+      return im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResultOuterClass.internal_static_im_turms_proto_GroupJoinQuestionsAnswerResult_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return GroupJoinQuestionsAnswerResultOuterClass.internal_static_im_turms_proto_GroupJoinQuestionsAnswerResult_fieldAccessorTable
+      return im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResultOuterClass.internal_static_im_turms_proto_GroupJoinQuestionsAnswerResult_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              GroupJoinQuestionsAnswerResult.class, GroupJoinQuestionsAnswerResult.Builder.class);
+              im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult.class, im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult.Builder.class);
     }
 
     // Construct using im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult.newBuilder()
@@ -425,17 +428,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return GroupJoinQuestionsAnswerResultOuterClass.internal_static_im_turms_proto_GroupJoinQuestionsAnswerResult_descriptor;
+      return im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResultOuterClass.internal_static_im_turms_proto_GroupJoinQuestionsAnswerResult_descriptor;
     }
 
     @java.lang.Override
-    public GroupJoinQuestionsAnswerResult getDefaultInstanceForType() {
-      return GroupJoinQuestionsAnswerResult.getDefaultInstance();
+    public im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult getDefaultInstanceForType() {
+      return im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult.getDefaultInstance();
     }
 
     @java.lang.Override
-    public GroupJoinQuestionsAnswerResult build() {
-      GroupJoinQuestionsAnswerResult result = buildPartial();
+    public im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult build() {
+      im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -443,8 +446,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public GroupJoinQuestionsAnswerResult buildPartial() {
-      GroupJoinQuestionsAnswerResult result = new GroupJoinQuestionsAnswerResult(this);
+    public im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult buildPartial() {
+      im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult result = new im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult(this);
       int from_bitField0_ = bitField0_;
       result.score_ = score_;
       if (((bitField0_ & 0x00000001) != 0)) {
@@ -491,16 +494,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof GroupJoinQuestionsAnswerResult) {
-        return mergeFrom((GroupJoinQuestionsAnswerResult)other);
+      if (other instanceof im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult) {
+        return mergeFrom((im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(GroupJoinQuestionsAnswerResult other) {
-      if (other == GroupJoinQuestionsAnswerResult.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult other) {
+      if (other == im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult.getDefaultInstance()) return this;
       if (other.getScore() != 0) {
         setScore(other.getScore());
       }
@@ -532,11 +535,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      GroupJoinQuestionsAnswerResult parsedMessage = null;
+      im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (GroupJoinQuestionsAnswerResult) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -552,6 +555,7 @@ private static final long serialVersionUID = 0L;
      * <code>int32 score = 1;</code>
      * @return The score.
      */
+    @java.lang.Override
     public int getScore() {
       return score_;
     }
@@ -661,6 +665,7 @@ private static final long serialVersionUID = 0L;
      * <code>bool joined = 3;</code>
      * @return The joined.
      */
+    @java.lang.Override
     public boolean getJoined() {
       return joined_;
     }
@@ -702,12 +707,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.GroupJoinQuestionsAnswerResult)
-  private static final GroupJoinQuestionsAnswerResult DEFAULT_INSTANCE;
+  private static final im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new GroupJoinQuestionsAnswerResult();
+    DEFAULT_INSTANCE = new im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult();
   }
 
-  public static GroupJoinQuestionsAnswerResult getDefaultInstance() {
+  public static im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -732,7 +737,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public GroupJoinQuestionsAnswerResult getDefaultInstanceForType() {
+  public im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

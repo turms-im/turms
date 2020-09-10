@@ -23,7 +23,7 @@ package im.turms.common.model.dto.request.group;
 /**
  * Protobuf type {@code im.turms.proto.QueryJoinedGroupsInfosRequest}
  */
-public  final class QueryJoinedGroupsInfosRequest extends
+public final class QueryJoinedGroupsInfosRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.QueryJoinedGroupsInfosRequest)
     QueryJoinedGroupsInfosRequestOrBuilder {
@@ -99,15 +99,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return QueryJoinedGroupsInfosRequestOuterClass.internal_static_im_turms_proto_QueryJoinedGroupsInfosRequest_descriptor;
+    return im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequestOuterClass.internal_static_im_turms_proto_QueryJoinedGroupsInfosRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return QueryJoinedGroupsInfosRequestOuterClass.internal_static_im_turms_proto_QueryJoinedGroupsInfosRequest_fieldAccessorTable
+    return im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequestOuterClass.internal_static_im_turms_proto_QueryJoinedGroupsInfosRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            QueryJoinedGroupsInfosRequest.class, QueryJoinedGroupsInfosRequest.Builder.class);
+            im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest.class, im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest.Builder.class);
   }
 
   public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 1;
@@ -116,6 +116,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value last_updated_date = 1;</code>
    * @return Whether the lastUpdatedDate field is set.
    */
+  @java.lang.Override
   public boolean hasLastUpdatedDate() {
     return lastUpdatedDate_ != null;
   }
@@ -123,12 +124,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value last_updated_date = 1;</code>
    * @return The lastUpdatedDate.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getLastUpdatedDate() {
     return lastUpdatedDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : lastUpdatedDate_;
   }
   /**
    * <code>.google.protobuf.Int64Value last_updated_date = 1;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getLastUpdatedDateOrBuilder() {
     return getLastUpdatedDate();
   }
@@ -173,10 +176,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof QueryJoinedGroupsInfosRequest)) {
+    if (!(obj instanceof im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest)) {
       return super.equals(obj);
     }
-    QueryJoinedGroupsInfosRequest other = (QueryJoinedGroupsInfosRequest) obj;
+    im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest other = (im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest) obj;
 
     if (hasLastUpdatedDate() != other.hasLastUpdatedDate()) return false;
     if (hasLastUpdatedDate()) {
@@ -203,69 +206,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static QueryJoinedGroupsInfosRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static QueryJoinedGroupsInfosRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static QueryJoinedGroupsInfosRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static QueryJoinedGroupsInfosRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static QueryJoinedGroupsInfosRequest parseFrom(byte[] data)
+  public static im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static QueryJoinedGroupsInfosRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static QueryJoinedGroupsInfosRequest parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static QueryJoinedGroupsInfosRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static QueryJoinedGroupsInfosRequest parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static QueryJoinedGroupsInfosRequest parseDelimitedFrom(
+  public static im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static QueryJoinedGroupsInfosRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static QueryJoinedGroupsInfosRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -278,7 +281,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(QueryJoinedGroupsInfosRequest prototype) {
+  public static Builder newBuilder(im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -299,18 +302,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.QueryJoinedGroupsInfosRequest)
-          QueryJoinedGroupsInfosRequestOrBuilder {
+      im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return QueryJoinedGroupsInfosRequestOuterClass.internal_static_im_turms_proto_QueryJoinedGroupsInfosRequest_descriptor;
+      return im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequestOuterClass.internal_static_im_turms_proto_QueryJoinedGroupsInfosRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return QueryJoinedGroupsInfosRequestOuterClass.internal_static_im_turms_proto_QueryJoinedGroupsInfosRequest_fieldAccessorTable
+      return im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequestOuterClass.internal_static_im_turms_proto_QueryJoinedGroupsInfosRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              QueryJoinedGroupsInfosRequest.class, QueryJoinedGroupsInfosRequest.Builder.class);
+              im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest.class, im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest.Builder.class);
     }
 
     // Construct using im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest.newBuilder()
@@ -343,17 +346,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return QueryJoinedGroupsInfosRequestOuterClass.internal_static_im_turms_proto_QueryJoinedGroupsInfosRequest_descriptor;
+      return im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequestOuterClass.internal_static_im_turms_proto_QueryJoinedGroupsInfosRequest_descriptor;
     }
 
     @java.lang.Override
-    public QueryJoinedGroupsInfosRequest getDefaultInstanceForType() {
-      return QueryJoinedGroupsInfosRequest.getDefaultInstance();
+    public im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest getDefaultInstanceForType() {
+      return im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public QueryJoinedGroupsInfosRequest build() {
-      QueryJoinedGroupsInfosRequest result = buildPartial();
+    public im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest build() {
+      im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -361,8 +364,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public QueryJoinedGroupsInfosRequest buildPartial() {
-      QueryJoinedGroupsInfosRequest result = new QueryJoinedGroupsInfosRequest(this);
+    public im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest buildPartial() {
+      im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest result = new im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest(this);
       if (lastUpdatedDateBuilder_ == null) {
         result.lastUpdatedDate_ = lastUpdatedDate_;
       } else {
@@ -406,16 +409,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof QueryJoinedGroupsInfosRequest) {
-        return mergeFrom((QueryJoinedGroupsInfosRequest)other);
+      if (other instanceof im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest) {
+        return mergeFrom((im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(QueryJoinedGroupsInfosRequest other) {
-      if (other == QueryJoinedGroupsInfosRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest other) {
+      if (other == im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest.getDefaultInstance()) return this;
       if (other.hasLastUpdatedDate()) {
         mergeLastUpdatedDate(other.getLastUpdatedDate());
       }
@@ -434,11 +437,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      QueryJoinedGroupsInfosRequest parsedMessage = null;
+      im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (QueryJoinedGroupsInfosRequest) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -583,12 +586,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.QueryJoinedGroupsInfosRequest)
-  private static final QueryJoinedGroupsInfosRequest DEFAULT_INSTANCE;
+  private static final im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new QueryJoinedGroupsInfosRequest();
+    DEFAULT_INSTANCE = new im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest();
   }
 
-  public static QueryJoinedGroupsInfosRequest getDefaultInstance() {
+  public static im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -613,7 +616,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public QueryJoinedGroupsInfosRequest getDefaultInstanceForType() {
+  public im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

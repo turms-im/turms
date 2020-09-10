@@ -33,11 +33,11 @@ public interface VideoFileOrBuilder extends
    * <code>.im.turms.proto.VideoFile.Description description = 1;</code>
    * @return The description.
    */
-  VideoFile.Description getDescription();
+  im.turms.common.model.bo.file.VideoFile.Description getDescription();
   /**
    * <code>.im.turms.proto.VideoFile.Description description = 1;</code>
    */
-  VideoFile.DescriptionOrBuilder getDescriptionOrBuilder();
+  im.turms.common.model.bo.file.VideoFile.DescriptionOrBuilder getDescriptionOrBuilder();
 
   /**
    * <code>.google.protobuf.BytesValue data = 2;</code>

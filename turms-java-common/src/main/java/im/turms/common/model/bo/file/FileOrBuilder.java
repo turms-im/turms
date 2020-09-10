@@ -33,11 +33,11 @@ public interface FileOrBuilder extends
    * <code>.im.turms.proto.File.Description description = 1;</code>
    * @return The description.
    */
-  File.Description getDescription();
+  im.turms.common.model.bo.file.File.Description getDescription();
   /**
    * <code>.im.turms.proto.File.Description description = 1;</code>
    */
-  File.DescriptionOrBuilder getDescriptionOrBuilder();
+  im.turms.common.model.bo.file.File.DescriptionOrBuilder getDescriptionOrBuilder();
 
   /**
    * <code>.google.protobuf.BytesValue data = 2;</code>

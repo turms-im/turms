@@ -20,9 +20,6 @@
 
 package im.turms.common.model.dto.notification;
 
-import im.turms.common.model.dto.request.TurmsRequest;
-import im.turms.common.model.dto.request.TurmsRequestOrBuilder;
-
 public interface TurmsNotificationOrBuilder extends
     // @@protoc_insertion_point(interface_extends:im.turms.proto.TurmsNotification)
     com.google.protobuf.MessageOrBuilder {
@@ -96,11 +93,11 @@ public interface TurmsNotificationOrBuilder extends
    * <code>.im.turms.proto.TurmsNotification.Data data = 4;</code>
    * @return The data.
    */
-  TurmsNotification.Data getData();
+  im.turms.common.model.dto.notification.TurmsNotification.Data getData();
   /**
    * <code>.im.turms.proto.TurmsNotification.Data data = 4;</code>
    */
-  TurmsNotification.DataOrBuilder getDataOrBuilder();
+  im.turms.common.model.dto.notification.TurmsNotification.DataOrBuilder getDataOrBuilder();
 
   /**
    * <code>.im.turms.proto.TurmsRequest relayed_request = 5;</code>
@@ -111,11 +108,11 @@ public interface TurmsNotificationOrBuilder extends
    * <code>.im.turms.proto.TurmsRequest relayed_request = 5;</code>
    * @return The relayedRequest.
    */
-  TurmsRequest getRelayedRequest();
+  im.turms.common.model.dto.request.TurmsRequest getRelayedRequest();
   /**
    * <code>.im.turms.proto.TurmsRequest relayed_request = 5;</code>
    */
-  TurmsRequestOrBuilder getRelayedRequestOrBuilder();
+  im.turms.common.model.dto.request.TurmsRequestOrBuilder getRelayedRequestOrBuilder();
 
   /**
    * <pre>

@@ -23,7 +23,7 @@ package im.turms.common.model.dto.request.user;
 /**
  * Protobuf type {@code im.turms.proto.QueryUsersIdsNearbyRequest}
  */
-public  final class QueryUsersIdsNearbyRequest extends
+public final class QueryUsersIdsNearbyRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.QueryUsersIdsNearbyRequest)
     QueryUsersIdsNearbyRequestOrBuilder {
@@ -122,15 +122,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return QueryUsersIdsNearbyRequestOuterClass.internal_static_im_turms_proto_QueryUsersIdsNearbyRequest_descriptor;
+    return im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequestOuterClass.internal_static_im_turms_proto_QueryUsersIdsNearbyRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return QueryUsersIdsNearbyRequestOuterClass.internal_static_im_turms_proto_QueryUsersIdsNearbyRequest_fieldAccessorTable
+    return im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequestOuterClass.internal_static_im_turms_proto_QueryUsersIdsNearbyRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            QueryUsersIdsNearbyRequest.class, QueryUsersIdsNearbyRequest.Builder.class);
+            im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest.class, im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest.Builder.class);
   }
 
   public static final int LATITUDE_FIELD_NUMBER = 1;
@@ -139,6 +139,7 @@ private static final long serialVersionUID = 0L;
    * <code>float latitude = 1;</code>
    * @return The latitude.
    */
+  @java.lang.Override
   public float getLatitude() {
     return latitude_;
   }
@@ -149,6 +150,7 @@ private static final long serialVersionUID = 0L;
    * <code>float longitude = 2;</code>
    * @return The longitude.
    */
+  @java.lang.Override
   public float getLongitude() {
     return longitude_;
   }
@@ -159,6 +161,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.FloatValue distance = 3;</code>
    * @return Whether the distance field is set.
    */
+  @java.lang.Override
   public boolean hasDistance() {
     return distance_ != null;
   }
@@ -166,12 +169,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.FloatValue distance = 3;</code>
    * @return The distance.
    */
+  @java.lang.Override
   public com.google.protobuf.FloatValue getDistance() {
     return distance_ == null ? com.google.protobuf.FloatValue.getDefaultInstance() : distance_;
   }
   /**
    * <code>.google.protobuf.FloatValue distance = 3;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.FloatValueOrBuilder getDistanceOrBuilder() {
     return getDistance();
   }
@@ -182,6 +187,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int32Value maxNumber = 4;</code>
    * @return Whether the maxNumber field is set.
    */
+  @java.lang.Override
   public boolean hasMaxNumber() {
     return maxNumber_ != null;
   }
@@ -189,12 +195,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int32Value maxNumber = 4;</code>
    * @return The maxNumber.
    */
+  @java.lang.Override
   public com.google.protobuf.Int32Value getMaxNumber() {
     return maxNumber_ == null ? com.google.protobuf.Int32Value.getDefaultInstance() : maxNumber_;
   }
   /**
    * <code>.google.protobuf.Int32Value maxNumber = 4;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int32ValueOrBuilder getMaxNumberOrBuilder() {
     return getMaxNumber();
   }
@@ -260,10 +268,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof QueryUsersIdsNearbyRequest)) {
+    if (!(obj instanceof im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest)) {
       return super.equals(obj);
     }
-    QueryUsersIdsNearbyRequest other = (QueryUsersIdsNearbyRequest) obj;
+    im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest other = (im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest) obj;
 
     if (java.lang.Float.floatToIntBits(getLatitude())
         != java.lang.Float.floatToIntBits(
@@ -311,69 +319,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static QueryUsersIdsNearbyRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static QueryUsersIdsNearbyRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static QueryUsersIdsNearbyRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static QueryUsersIdsNearbyRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static QueryUsersIdsNearbyRequest parseFrom(byte[] data)
+  public static im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static QueryUsersIdsNearbyRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static QueryUsersIdsNearbyRequest parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static QueryUsersIdsNearbyRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static QueryUsersIdsNearbyRequest parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static QueryUsersIdsNearbyRequest parseDelimitedFrom(
+  public static im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static QueryUsersIdsNearbyRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static QueryUsersIdsNearbyRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -386,7 +394,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(QueryUsersIdsNearbyRequest prototype) {
+  public static Builder newBuilder(im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -407,18 +415,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.QueryUsersIdsNearbyRequest)
-          QueryUsersIdsNearbyRequestOrBuilder {
+      im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return QueryUsersIdsNearbyRequestOuterClass.internal_static_im_turms_proto_QueryUsersIdsNearbyRequest_descriptor;
+      return im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequestOuterClass.internal_static_im_turms_proto_QueryUsersIdsNearbyRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return QueryUsersIdsNearbyRequestOuterClass.internal_static_im_turms_proto_QueryUsersIdsNearbyRequest_fieldAccessorTable
+      return im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequestOuterClass.internal_static_im_turms_proto_QueryUsersIdsNearbyRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              QueryUsersIdsNearbyRequest.class, QueryUsersIdsNearbyRequest.Builder.class);
+              im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest.class, im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest.Builder.class);
     }
 
     // Construct using im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest.newBuilder()
@@ -461,17 +469,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return QueryUsersIdsNearbyRequestOuterClass.internal_static_im_turms_proto_QueryUsersIdsNearbyRequest_descriptor;
+      return im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequestOuterClass.internal_static_im_turms_proto_QueryUsersIdsNearbyRequest_descriptor;
     }
 
     @java.lang.Override
-    public QueryUsersIdsNearbyRequest getDefaultInstanceForType() {
-      return QueryUsersIdsNearbyRequest.getDefaultInstance();
+    public im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest getDefaultInstanceForType() {
+      return im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public QueryUsersIdsNearbyRequest build() {
-      QueryUsersIdsNearbyRequest result = buildPartial();
+    public im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest build() {
+      im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -479,8 +487,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public QueryUsersIdsNearbyRequest buildPartial() {
-      QueryUsersIdsNearbyRequest result = new QueryUsersIdsNearbyRequest(this);
+    public im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest buildPartial() {
+      im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest result = new im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest(this);
       result.latitude_ = latitude_;
       result.longitude_ = longitude_;
       if (distanceBuilder_ == null) {
@@ -531,16 +539,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof QueryUsersIdsNearbyRequest) {
-        return mergeFrom((QueryUsersIdsNearbyRequest)other);
+      if (other instanceof im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest) {
+        return mergeFrom((im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(QueryUsersIdsNearbyRequest other) {
-      if (other == QueryUsersIdsNearbyRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest other) {
+      if (other == im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest.getDefaultInstance()) return this;
       if (other.getLatitude() != 0F) {
         setLatitude(other.getLatitude());
       }
@@ -568,11 +576,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      QueryUsersIdsNearbyRequest parsedMessage = null;
+      im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (QueryUsersIdsNearbyRequest) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -587,6 +595,7 @@ private static final long serialVersionUID = 0L;
      * <code>float latitude = 1;</code>
      * @return The latitude.
      */
+    @java.lang.Override
     public float getLatitude() {
       return latitude_;
     }
@@ -617,6 +626,7 @@ private static final long serialVersionUID = 0L;
      * <code>float longitude = 2;</code>
      * @return The longitude.
      */
+    @java.lang.Override
     public float getLongitude() {
       return longitude_;
     }
@@ -896,12 +906,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.QueryUsersIdsNearbyRequest)
-  private static final QueryUsersIdsNearbyRequest DEFAULT_INSTANCE;
+  private static final im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new QueryUsersIdsNearbyRequest();
+    DEFAULT_INSTANCE = new im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest();
   }
 
-  public static QueryUsersIdsNearbyRequest getDefaultInstance() {
+  public static im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -926,7 +936,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public QueryUsersIdsNearbyRequest getDefaultInstanceForType() {
+  public im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

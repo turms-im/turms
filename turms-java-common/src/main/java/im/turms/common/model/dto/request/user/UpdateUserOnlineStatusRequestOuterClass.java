@@ -20,9 +20,6 @@
 
 package im.turms.common.model.dto.request.user;
 
-import im.turms.common.constant.DeviceTypeOuterClass;
-import im.turms.common.constant.UserStatusOuterClass;
-
 public final class UpdateUserOnlineStatusRequestOuterClass {
   private UpdateUserOnlineStatusRequestOuterClass() {}
   public static void registerAllExtensions(
@@ -60,8 +57,8 @@ public final class UpdateUserOnlineStatusRequestOuterClass {
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          UserStatusOuterClass.getDescriptor(),
-          DeviceTypeOuterClass.getDescriptor(),
+          im.turms.common.constant.UserStatusOuterClass.getDescriptor(),
+          im.turms.common.constant.DeviceTypeOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_UpdateUserOnlineStatusRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -69,8 +66,8 @@ public final class UpdateUserOnlineStatusRequestOuterClass {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_UpdateUserOnlineStatusRequest_descriptor,
         new java.lang.String[] { "UserStatus", "DeviceTypes", });
-    UserStatusOuterClass.getDescriptor();
-    DeviceTypeOuterClass.getDescriptor();
+    im.turms.common.constant.UserStatusOuterClass.getDescriptor();
+    im.turms.common.constant.DeviceTypeOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -23,7 +23,7 @@ package im.turms.common.model.bo.user;
 /**
  * Protobuf type {@code im.turms.proto.UserFriendRequestsWithVersion}
  */
-public  final class UserFriendRequestsWithVersion extends
+public final class UserFriendRequestsWithVersion extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.UserFriendRequestsWithVersion)
     UserFriendRequestsWithVersionOrBuilder {
@@ -69,11 +69,11 @@ private static final long serialVersionUID = 0L;
             break;
           case 10: {
             if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-              userFriendRequests_ = new java.util.ArrayList<UserFriendRequest>();
+              userFriendRequests_ = new java.util.ArrayList<im.turms.common.model.bo.user.UserFriendRequest>();
               mutable_bitField0_ |= 0x00000001;
             }
             userFriendRequests_.add(
-                input.readMessage(UserFriendRequest.parser(), extensionRegistry));
+                input.readMessage(im.turms.common.model.bo.user.UserFriendRequest.parser(), extensionRegistry));
             break;
           }
           case 18: {
@@ -113,48 +113,53 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return UserFriendRequestsWithVersionOuterClass.internal_static_im_turms_proto_UserFriendRequestsWithVersion_descriptor;
+    return im.turms.common.model.bo.user.UserFriendRequestsWithVersionOuterClass.internal_static_im_turms_proto_UserFriendRequestsWithVersion_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return UserFriendRequestsWithVersionOuterClass.internal_static_im_turms_proto_UserFriendRequestsWithVersion_fieldAccessorTable
+    return im.turms.common.model.bo.user.UserFriendRequestsWithVersionOuterClass.internal_static_im_turms_proto_UserFriendRequestsWithVersion_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            UserFriendRequestsWithVersion.class, UserFriendRequestsWithVersion.Builder.class);
+            im.turms.common.model.bo.user.UserFriendRequestsWithVersion.class, im.turms.common.model.bo.user.UserFriendRequestsWithVersion.Builder.class);
   }
 
   public static final int USER_FRIEND_REQUESTS_FIELD_NUMBER = 1;
-  private java.util.List<UserFriendRequest> userFriendRequests_;
+  private java.util.List<im.turms.common.model.bo.user.UserFriendRequest> userFriendRequests_;
   /**
    * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
    */
-  public java.util.List<UserFriendRequest> getUserFriendRequestsList() {
+  @java.lang.Override
+  public java.util.List<im.turms.common.model.bo.user.UserFriendRequest> getUserFriendRequestsList() {
     return userFriendRequests_;
   }
   /**
    * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
    */
-  public java.util.List<? extends UserFriendRequestOrBuilder>
+  @java.lang.Override
+  public java.util.List<? extends im.turms.common.model.bo.user.UserFriendRequestOrBuilder> 
       getUserFriendRequestsOrBuilderList() {
     return userFriendRequests_;
   }
   /**
    * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
    */
+  @java.lang.Override
   public int getUserFriendRequestsCount() {
     return userFriendRequests_.size();
   }
   /**
    * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
    */
-  public UserFriendRequest getUserFriendRequests(int index) {
+  @java.lang.Override
+  public im.turms.common.model.bo.user.UserFriendRequest getUserFriendRequests(int index) {
     return userFriendRequests_.get(index);
   }
   /**
    * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
    */
-  public UserFriendRequestOrBuilder getUserFriendRequestsOrBuilder(
+  @java.lang.Override
+  public im.turms.common.model.bo.user.UserFriendRequestOrBuilder getUserFriendRequestsOrBuilder(
       int index) {
     return userFriendRequests_.get(index);
   }
@@ -165,6 +170,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
    * @return Whether the lastUpdatedDate field is set.
    */
+  @java.lang.Override
   public boolean hasLastUpdatedDate() {
     return lastUpdatedDate_ != null;
   }
@@ -172,12 +178,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
    * @return The lastUpdatedDate.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getLastUpdatedDate() {
     return lastUpdatedDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : lastUpdatedDate_;
   }
   /**
    * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getLastUpdatedDateOrBuilder() {
     return getLastUpdatedDate();
   }
@@ -229,10 +237,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof UserFriendRequestsWithVersion)) {
+    if (!(obj instanceof im.turms.common.model.bo.user.UserFriendRequestsWithVersion)) {
       return super.equals(obj);
     }
-    UserFriendRequestsWithVersion other = (UserFriendRequestsWithVersion) obj;
+    im.turms.common.model.bo.user.UserFriendRequestsWithVersion other = (im.turms.common.model.bo.user.UserFriendRequestsWithVersion) obj;
 
     if (!getUserFriendRequestsList()
         .equals(other.getUserFriendRequestsList())) return false;
@@ -265,69 +273,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static UserFriendRequestsWithVersion parseFrom(
+  public static im.turms.common.model.bo.user.UserFriendRequestsWithVersion parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UserFriendRequestsWithVersion parseFrom(
+  public static im.turms.common.model.bo.user.UserFriendRequestsWithVersion parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UserFriendRequestsWithVersion parseFrom(
+  public static im.turms.common.model.bo.user.UserFriendRequestsWithVersion parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UserFriendRequestsWithVersion parseFrom(
+  public static im.turms.common.model.bo.user.UserFriendRequestsWithVersion parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UserFriendRequestsWithVersion parseFrom(byte[] data)
+  public static im.turms.common.model.bo.user.UserFriendRequestsWithVersion parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UserFriendRequestsWithVersion parseFrom(
+  public static im.turms.common.model.bo.user.UserFriendRequestsWithVersion parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UserFriendRequestsWithVersion parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.user.UserFriendRequestsWithVersion parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UserFriendRequestsWithVersion parseFrom(
+  public static im.turms.common.model.bo.user.UserFriendRequestsWithVersion parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UserFriendRequestsWithVersion parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.user.UserFriendRequestsWithVersion parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static UserFriendRequestsWithVersion parseDelimitedFrom(
+  public static im.turms.common.model.bo.user.UserFriendRequestsWithVersion parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UserFriendRequestsWithVersion parseFrom(
+  public static im.turms.common.model.bo.user.UserFriendRequestsWithVersion parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UserFriendRequestsWithVersion parseFrom(
+  public static im.turms.common.model.bo.user.UserFriendRequestsWithVersion parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -340,7 +348,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(UserFriendRequestsWithVersion prototype) {
+  public static Builder newBuilder(im.turms.common.model.bo.user.UserFriendRequestsWithVersion prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -361,18 +369,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.UserFriendRequestsWithVersion)
-          UserFriendRequestsWithVersionOrBuilder {
+      im.turms.common.model.bo.user.UserFriendRequestsWithVersionOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return UserFriendRequestsWithVersionOuterClass.internal_static_im_turms_proto_UserFriendRequestsWithVersion_descriptor;
+      return im.turms.common.model.bo.user.UserFriendRequestsWithVersionOuterClass.internal_static_im_turms_proto_UserFriendRequestsWithVersion_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return UserFriendRequestsWithVersionOuterClass.internal_static_im_turms_proto_UserFriendRequestsWithVersion_fieldAccessorTable
+      return im.turms.common.model.bo.user.UserFriendRequestsWithVersionOuterClass.internal_static_im_turms_proto_UserFriendRequestsWithVersion_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              UserFriendRequestsWithVersion.class, UserFriendRequestsWithVersion.Builder.class);
+              im.turms.common.model.bo.user.UserFriendRequestsWithVersion.class, im.turms.common.model.bo.user.UserFriendRequestsWithVersion.Builder.class);
     }
 
     // Construct using im.turms.common.model.bo.user.UserFriendRequestsWithVersion.newBuilder()
@@ -412,17 +420,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return UserFriendRequestsWithVersionOuterClass.internal_static_im_turms_proto_UserFriendRequestsWithVersion_descriptor;
+      return im.turms.common.model.bo.user.UserFriendRequestsWithVersionOuterClass.internal_static_im_turms_proto_UserFriendRequestsWithVersion_descriptor;
     }
 
     @java.lang.Override
-    public UserFriendRequestsWithVersion getDefaultInstanceForType() {
-      return UserFriendRequestsWithVersion.getDefaultInstance();
+    public im.turms.common.model.bo.user.UserFriendRequestsWithVersion getDefaultInstanceForType() {
+      return im.turms.common.model.bo.user.UserFriendRequestsWithVersion.getDefaultInstance();
     }
 
     @java.lang.Override
-    public UserFriendRequestsWithVersion build() {
-      UserFriendRequestsWithVersion result = buildPartial();
+    public im.turms.common.model.bo.user.UserFriendRequestsWithVersion build() {
+      im.turms.common.model.bo.user.UserFriendRequestsWithVersion result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -430,8 +438,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public UserFriendRequestsWithVersion buildPartial() {
-      UserFriendRequestsWithVersion result = new UserFriendRequestsWithVersion(this);
+    public im.turms.common.model.bo.user.UserFriendRequestsWithVersion buildPartial() {
+      im.turms.common.model.bo.user.UserFriendRequestsWithVersion result = new im.turms.common.model.bo.user.UserFriendRequestsWithVersion(this);
       int from_bitField0_ = bitField0_;
       if (userFriendRequestsBuilder_ == null) {
         if (((bitField0_ & 0x00000001) != 0)) {
@@ -485,16 +493,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof UserFriendRequestsWithVersion) {
-        return mergeFrom((UserFriendRequestsWithVersion)other);
+      if (other instanceof im.turms.common.model.bo.user.UserFriendRequestsWithVersion) {
+        return mergeFrom((im.turms.common.model.bo.user.UserFriendRequestsWithVersion)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(UserFriendRequestsWithVersion other) {
-      if (other == UserFriendRequestsWithVersion.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.bo.user.UserFriendRequestsWithVersion other) {
+      if (other == im.turms.common.model.bo.user.UserFriendRequestsWithVersion.getDefaultInstance()) return this;
       if (userFriendRequestsBuilder_ == null) {
         if (!other.userFriendRequests_.isEmpty()) {
           if (userFriendRequests_.isEmpty()) {
@@ -539,11 +547,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      UserFriendRequestsWithVersion parsedMessage = null;
+      im.turms.common.model.bo.user.UserFriendRequestsWithVersion parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (UserFriendRequestsWithVersion) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.bo.user.UserFriendRequestsWithVersion) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -554,22 +562,22 @@ private static final long serialVersionUID = 0L;
     }
     private int bitField0_;
 
-    private java.util.List<UserFriendRequest> userFriendRequests_ =
+    private java.util.List<im.turms.common.model.bo.user.UserFriendRequest> userFriendRequests_ =
       java.util.Collections.emptyList();
     private void ensureUserFriendRequestsIsMutable() {
       if (!((bitField0_ & 0x00000001) != 0)) {
-        userFriendRequests_ = new java.util.ArrayList<UserFriendRequest>(userFriendRequests_);
+        userFriendRequests_ = new java.util.ArrayList<im.turms.common.model.bo.user.UserFriendRequest>(userFriendRequests_);
         bitField0_ |= 0x00000001;
        }
     }
 
     private com.google.protobuf.RepeatedFieldBuilderV3<
-            UserFriendRequest, UserFriendRequest.Builder, UserFriendRequestOrBuilder> userFriendRequestsBuilder_;
+        im.turms.common.model.bo.user.UserFriendRequest, im.turms.common.model.bo.user.UserFriendRequest.Builder, im.turms.common.model.bo.user.UserFriendRequestOrBuilder> userFriendRequestsBuilder_;
 
     /**
      * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
      */
-    public java.util.List<UserFriendRequest> getUserFriendRequestsList() {
+    public java.util.List<im.turms.common.model.bo.user.UserFriendRequest> getUserFriendRequestsList() {
       if (userFriendRequestsBuilder_ == null) {
         return java.util.Collections.unmodifiableList(userFriendRequests_);
       } else {
@@ -589,7 +597,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
      */
-    public UserFriendRequest getUserFriendRequests(int index) {
+    public im.turms.common.model.bo.user.UserFriendRequest getUserFriendRequests(int index) {
       if (userFriendRequestsBuilder_ == null) {
         return userFriendRequests_.get(index);
       } else {
@@ -600,7 +608,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
      */
     public Builder setUserFriendRequests(
-        int index, UserFriendRequest value) {
+        int index, im.turms.common.model.bo.user.UserFriendRequest value) {
       if (userFriendRequestsBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -617,7 +625,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
      */
     public Builder setUserFriendRequests(
-        int index, UserFriendRequest.Builder builderForValue) {
+        int index, im.turms.common.model.bo.user.UserFriendRequest.Builder builderForValue) {
       if (userFriendRequestsBuilder_ == null) {
         ensureUserFriendRequestsIsMutable();
         userFriendRequests_.set(index, builderForValue.build());
@@ -630,7 +638,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
      */
-    public Builder addUserFriendRequests(UserFriendRequest value) {
+    public Builder addUserFriendRequests(im.turms.common.model.bo.user.UserFriendRequest value) {
       if (userFriendRequestsBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -647,7 +655,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
      */
     public Builder addUserFriendRequests(
-        int index, UserFriendRequest value) {
+        int index, im.turms.common.model.bo.user.UserFriendRequest value) {
       if (userFriendRequestsBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -664,7 +672,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
      */
     public Builder addUserFriendRequests(
-        UserFriendRequest.Builder builderForValue) {
+        im.turms.common.model.bo.user.UserFriendRequest.Builder builderForValue) {
       if (userFriendRequestsBuilder_ == null) {
         ensureUserFriendRequestsIsMutable();
         userFriendRequests_.add(builderForValue.build());
@@ -678,7 +686,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
      */
     public Builder addUserFriendRequests(
-        int index, UserFriendRequest.Builder builderForValue) {
+        int index, im.turms.common.model.bo.user.UserFriendRequest.Builder builderForValue) {
       if (userFriendRequestsBuilder_ == null) {
         ensureUserFriendRequestsIsMutable();
         userFriendRequests_.add(index, builderForValue.build());
@@ -692,7 +700,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
      */
     public Builder addAllUserFriendRequests(
-        java.lang.Iterable<? extends UserFriendRequest> values) {
+        java.lang.Iterable<? extends im.turms.common.model.bo.user.UserFriendRequest> values) {
       if (userFriendRequestsBuilder_ == null) {
         ensureUserFriendRequestsIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -732,14 +740,14 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
      */
-    public UserFriendRequest.Builder getUserFriendRequestsBuilder(
+    public im.turms.common.model.bo.user.UserFriendRequest.Builder getUserFriendRequestsBuilder(
         int index) {
       return getUserFriendRequestsFieldBuilder().getBuilder(index);
     }
     /**
      * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
      */
-    public UserFriendRequestOrBuilder getUserFriendRequestsOrBuilder(
+    public im.turms.common.model.bo.user.UserFriendRequestOrBuilder getUserFriendRequestsOrBuilder(
         int index) {
       if (userFriendRequestsBuilder_ == null) {
         return userFriendRequests_.get(index);  } else {
@@ -749,7 +757,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
      */
-    public java.util.List<? extends UserFriendRequestOrBuilder>
+    public java.util.List<? extends im.turms.common.model.bo.user.UserFriendRequestOrBuilder> 
          getUserFriendRequestsOrBuilderList() {
       if (userFriendRequestsBuilder_ != null) {
         return userFriendRequestsBuilder_.getMessageOrBuilderList();
@@ -760,31 +768,31 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
      */
-    public UserFriendRequest.Builder addUserFriendRequestsBuilder() {
+    public im.turms.common.model.bo.user.UserFriendRequest.Builder addUserFriendRequestsBuilder() {
       return getUserFriendRequestsFieldBuilder().addBuilder(
-          UserFriendRequest.getDefaultInstance());
+          im.turms.common.model.bo.user.UserFriendRequest.getDefaultInstance());
     }
     /**
      * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
      */
-    public UserFriendRequest.Builder addUserFriendRequestsBuilder(
+    public im.turms.common.model.bo.user.UserFriendRequest.Builder addUserFriendRequestsBuilder(
         int index) {
       return getUserFriendRequestsFieldBuilder().addBuilder(
-          index, UserFriendRequest.getDefaultInstance());
+          index, im.turms.common.model.bo.user.UserFriendRequest.getDefaultInstance());
     }
     /**
      * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
      */
-    public java.util.List<UserFriendRequest.Builder>
+    public java.util.List<im.turms.common.model.bo.user.UserFriendRequest.Builder> 
          getUserFriendRequestsBuilderList() {
       return getUserFriendRequestsFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-            UserFriendRequest, UserFriendRequest.Builder, UserFriendRequestOrBuilder>
+        im.turms.common.model.bo.user.UserFriendRequest, im.turms.common.model.bo.user.UserFriendRequest.Builder, im.turms.common.model.bo.user.UserFriendRequestOrBuilder> 
         getUserFriendRequestsFieldBuilder() {
       if (userFriendRequestsBuilder_ == null) {
         userFriendRequestsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-                UserFriendRequest, UserFriendRequest.Builder, UserFriendRequestOrBuilder>(
+            im.turms.common.model.bo.user.UserFriendRequest, im.turms.common.model.bo.user.UserFriendRequest.Builder, im.turms.common.model.bo.user.UserFriendRequestOrBuilder>(
                 userFriendRequests_,
                 ((bitField0_ & 0x00000001) != 0),
                 getParentForChildren(),
@@ -929,12 +937,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.UserFriendRequestsWithVersion)
-  private static final UserFriendRequestsWithVersion DEFAULT_INSTANCE;
+  private static final im.turms.common.model.bo.user.UserFriendRequestsWithVersion DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new UserFriendRequestsWithVersion();
+    DEFAULT_INSTANCE = new im.turms.common.model.bo.user.UserFriendRequestsWithVersion();
   }
 
-  public static UserFriendRequestsWithVersion getDefaultInstance() {
+  public static im.turms.common.model.bo.user.UserFriendRequestsWithVersion getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -959,7 +967,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public UserFriendRequestsWithVersion getDefaultInstanceForType() {
+  public im.turms.common.model.bo.user.UserFriendRequestsWithVersion getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

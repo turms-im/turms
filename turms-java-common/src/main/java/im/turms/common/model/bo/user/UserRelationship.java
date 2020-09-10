@@ -23,7 +23,7 @@ package im.turms.common.model.bo.user;
 /**
  * Protobuf type {@code im.turms.proto.UserRelationship}
  */
-public  final class UserRelationship extends
+public final class UserRelationship extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.UserRelationship)
     UserRelationshipOrBuilder {
@@ -151,15 +151,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return UserRelationshipOuterClass.internal_static_im_turms_proto_UserRelationship_descriptor;
+    return im.turms.common.model.bo.user.UserRelationshipOuterClass.internal_static_im_turms_proto_UserRelationship_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return UserRelationshipOuterClass.internal_static_im_turms_proto_UserRelationship_fieldAccessorTable
+    return im.turms.common.model.bo.user.UserRelationshipOuterClass.internal_static_im_turms_proto_UserRelationship_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            UserRelationship.class, UserRelationship.Builder.class);
+            im.turms.common.model.bo.user.UserRelationship.class, im.turms.common.model.bo.user.UserRelationship.Builder.class);
   }
 
   public static final int OWNER_ID_FIELD_NUMBER = 1;
@@ -168,6 +168,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value owner_id = 1;</code>
    * @return Whether the ownerId field is set.
    */
+  @java.lang.Override
   public boolean hasOwnerId() {
     return ownerId_ != null;
   }
@@ -175,12 +176,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value owner_id = 1;</code>
    * @return The ownerId.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getOwnerId() {
     return ownerId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : ownerId_;
   }
   /**
    * <code>.google.protobuf.Int64Value owner_id = 1;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getOwnerIdOrBuilder() {
     return getOwnerId();
   }
@@ -191,6 +194,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value related_user_id = 2;</code>
    * @return Whether the relatedUserId field is set.
    */
+  @java.lang.Override
   public boolean hasRelatedUserId() {
     return relatedUserId_ != null;
   }
@@ -198,12 +202,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value related_user_id = 2;</code>
    * @return The relatedUserId.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getRelatedUserId() {
     return relatedUserId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : relatedUserId_;
   }
   /**
    * <code>.google.protobuf.Int64Value related_user_id = 2;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getRelatedUserIdOrBuilder() {
     return getRelatedUserId();
   }
@@ -214,6 +220,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.BoolValue is_blocked = 3;</code>
    * @return Whether the isBlocked field is set.
    */
+  @java.lang.Override
   public boolean hasIsBlocked() {
     return isBlocked_ != null;
   }
@@ -221,12 +228,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.BoolValue is_blocked = 3;</code>
    * @return The isBlocked.
    */
+  @java.lang.Override
   public com.google.protobuf.BoolValue getIsBlocked() {
     return isBlocked_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : isBlocked_;
   }
   /**
    * <code>.google.protobuf.BoolValue is_blocked = 3;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.BoolValueOrBuilder getIsBlockedOrBuilder() {
     return getIsBlocked();
   }
@@ -237,6 +246,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value group_index = 4;</code>
    * @return Whether the groupIndex field is set.
    */
+  @java.lang.Override
   public boolean hasGroupIndex() {
     return groupIndex_ != null;
   }
@@ -244,12 +254,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value group_index = 4;</code>
    * @return The groupIndex.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getGroupIndex() {
     return groupIndex_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : groupIndex_;
   }
   /**
    * <code>.google.protobuf.Int64Value group_index = 4;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getGroupIndexOrBuilder() {
     return getGroupIndex();
   }
@@ -260,6 +272,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value establishment_date = 5;</code>
    * @return Whether the establishmentDate field is set.
    */
+  @java.lang.Override
   public boolean hasEstablishmentDate() {
     return establishmentDate_ != null;
   }
@@ -267,12 +280,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value establishment_date = 5;</code>
    * @return The establishmentDate.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getEstablishmentDate() {
     return establishmentDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : establishmentDate_;
   }
   /**
    * <code>.google.protobuf.Int64Value establishment_date = 5;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getEstablishmentDateOrBuilder() {
     return getEstablishmentDate();
   }
@@ -345,10 +360,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof UserRelationship)) {
+    if (!(obj instanceof im.turms.common.model.bo.user.UserRelationship)) {
       return super.equals(obj);
     }
-    UserRelationship other = (UserRelationship) obj;
+    im.turms.common.model.bo.user.UserRelationship other = (im.turms.common.model.bo.user.UserRelationship) obj;
 
     if (hasOwnerId() != other.hasOwnerId()) return false;
     if (hasOwnerId()) {
@@ -411,69 +426,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static UserRelationship parseFrom(
+  public static im.turms.common.model.bo.user.UserRelationship parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UserRelationship parseFrom(
+  public static im.turms.common.model.bo.user.UserRelationship parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UserRelationship parseFrom(
+  public static im.turms.common.model.bo.user.UserRelationship parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UserRelationship parseFrom(
+  public static im.turms.common.model.bo.user.UserRelationship parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UserRelationship parseFrom(byte[] data)
+  public static im.turms.common.model.bo.user.UserRelationship parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UserRelationship parseFrom(
+  public static im.turms.common.model.bo.user.UserRelationship parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UserRelationship parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.user.UserRelationship parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UserRelationship parseFrom(
+  public static im.turms.common.model.bo.user.UserRelationship parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UserRelationship parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.user.UserRelationship parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static UserRelationship parseDelimitedFrom(
+  public static im.turms.common.model.bo.user.UserRelationship parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UserRelationship parseFrom(
+  public static im.turms.common.model.bo.user.UserRelationship parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UserRelationship parseFrom(
+  public static im.turms.common.model.bo.user.UserRelationship parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -486,7 +501,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(UserRelationship prototype) {
+  public static Builder newBuilder(im.turms.common.model.bo.user.UserRelationship prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -507,18 +522,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.UserRelationship)
-          UserRelationshipOrBuilder {
+      im.turms.common.model.bo.user.UserRelationshipOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return UserRelationshipOuterClass.internal_static_im_turms_proto_UserRelationship_descriptor;
+      return im.turms.common.model.bo.user.UserRelationshipOuterClass.internal_static_im_turms_proto_UserRelationship_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return UserRelationshipOuterClass.internal_static_im_turms_proto_UserRelationship_fieldAccessorTable
+      return im.turms.common.model.bo.user.UserRelationshipOuterClass.internal_static_im_turms_proto_UserRelationship_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              UserRelationship.class, UserRelationship.Builder.class);
+              im.turms.common.model.bo.user.UserRelationship.class, im.turms.common.model.bo.user.UserRelationship.Builder.class);
     }
 
     // Construct using im.turms.common.model.bo.user.UserRelationship.newBuilder()
@@ -575,17 +590,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return UserRelationshipOuterClass.internal_static_im_turms_proto_UserRelationship_descriptor;
+      return im.turms.common.model.bo.user.UserRelationshipOuterClass.internal_static_im_turms_proto_UserRelationship_descriptor;
     }
 
     @java.lang.Override
-    public UserRelationship getDefaultInstanceForType() {
-      return UserRelationship.getDefaultInstance();
+    public im.turms.common.model.bo.user.UserRelationship getDefaultInstanceForType() {
+      return im.turms.common.model.bo.user.UserRelationship.getDefaultInstance();
     }
 
     @java.lang.Override
-    public UserRelationship build() {
-      UserRelationship result = buildPartial();
+    public im.turms.common.model.bo.user.UserRelationship build() {
+      im.turms.common.model.bo.user.UserRelationship result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -593,8 +608,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public UserRelationship buildPartial() {
-      UserRelationship result = new UserRelationship(this);
+    public im.turms.common.model.bo.user.UserRelationship buildPartial() {
+      im.turms.common.model.bo.user.UserRelationship result = new im.turms.common.model.bo.user.UserRelationship(this);
       if (ownerIdBuilder_ == null) {
         result.ownerId_ = ownerId_;
       } else {
@@ -658,16 +673,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof UserRelationship) {
-        return mergeFrom((UserRelationship)other);
+      if (other instanceof im.turms.common.model.bo.user.UserRelationship) {
+        return mergeFrom((im.turms.common.model.bo.user.UserRelationship)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(UserRelationship other) {
-      if (other == UserRelationship.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.bo.user.UserRelationship other) {
+      if (other == im.turms.common.model.bo.user.UserRelationship.getDefaultInstance()) return this;
       if (other.hasOwnerId()) {
         mergeOwnerId(other.getOwnerId());
       }
@@ -698,11 +713,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      UserRelationship parsedMessage = null;
+      im.turms.common.model.bo.user.UserRelationship parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (UserRelationship) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.bo.user.UserRelationship) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -1323,12 +1338,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.UserRelationship)
-  private static final UserRelationship DEFAULT_INSTANCE;
+  private static final im.turms.common.model.bo.user.UserRelationship DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new UserRelationship();
+    DEFAULT_INSTANCE = new im.turms.common.model.bo.user.UserRelationship();
   }
 
-  public static UserRelationship getDefaultInstance() {
+  public static im.turms.common.model.bo.user.UserRelationship getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -1353,7 +1368,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public UserRelationship getDefaultInstanceForType() {
+  public im.turms.common.model.bo.user.UserRelationship getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

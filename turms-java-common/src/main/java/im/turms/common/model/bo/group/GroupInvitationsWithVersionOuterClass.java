@@ -59,7 +59,7 @@ public final class GroupInvitationsWithVersionOuterClass {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.WrappersProto.getDescriptor(),
-          GroupInvitationOuterClass.getDescriptor(),
+          im.turms.common.model.bo.group.GroupInvitationOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_GroupInvitationsWithVersion_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -68,7 +68,7 @@ public final class GroupInvitationsWithVersionOuterClass {
         internal_static_im_turms_proto_GroupInvitationsWithVersion_descriptor,
         new java.lang.String[] { "GroupInvitations", "LastUpdatedDate", });
     com.google.protobuf.WrappersProto.getDescriptor();
-    GroupInvitationOuterClass.getDescriptor();
+    im.turms.common.model.bo.group.GroupInvitationOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -23,7 +23,7 @@ package im.turms.common.model.bo.common;
 /**
  * Protobuf type {@code im.turms.proto.Int64Values}
  */
-public  final class Int64Values extends
+public final class Int64Values extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.Int64Values)
     Int64ValuesOrBuilder {
@@ -112,15 +112,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return Int64ValuesOuterClass.internal_static_im_turms_proto_Int64Values_descriptor;
+    return im.turms.common.model.bo.common.Int64ValuesOuterClass.internal_static_im_turms_proto_Int64Values_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return Int64ValuesOuterClass.internal_static_im_turms_proto_Int64Values_fieldAccessorTable
+    return im.turms.common.model.bo.common.Int64ValuesOuterClass.internal_static_im_turms_proto_Int64Values_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            Int64Values.class, Int64Values.Builder.class);
+            im.turms.common.model.bo.common.Int64Values.class, im.turms.common.model.bo.common.Int64Values.Builder.class);
   }
 
   public static final int VALUES_FIELD_NUMBER = 1;
@@ -129,6 +129,7 @@ private static final long serialVersionUID = 0L;
    * <code>repeated int64 values = 1;</code>
    * @return A list containing the values.
    */
+  @java.lang.Override
   public java.util.List<java.lang.Long>
       getValuesList() {
     return values_;
@@ -205,10 +206,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof Int64Values)) {
+    if (!(obj instanceof im.turms.common.model.bo.common.Int64Values)) {
       return super.equals(obj);
     }
-    Int64Values other = (Int64Values) obj;
+    im.turms.common.model.bo.common.Int64Values other = (im.turms.common.model.bo.common.Int64Values) obj;
 
     if (!getValuesList()
         .equals(other.getValuesList())) return false;
@@ -232,69 +233,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static Int64Values parseFrom(
+  public static im.turms.common.model.bo.common.Int64Values parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static Int64Values parseFrom(
+  public static im.turms.common.model.bo.common.Int64Values parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static Int64Values parseFrom(
+  public static im.turms.common.model.bo.common.Int64Values parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static Int64Values parseFrom(
+  public static im.turms.common.model.bo.common.Int64Values parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static Int64Values parseFrom(byte[] data)
+  public static im.turms.common.model.bo.common.Int64Values parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static Int64Values parseFrom(
+  public static im.turms.common.model.bo.common.Int64Values parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static Int64Values parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.common.Int64Values parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static Int64Values parseFrom(
+  public static im.turms.common.model.bo.common.Int64Values parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static Int64Values parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.common.Int64Values parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static Int64Values parseDelimitedFrom(
+  public static im.turms.common.model.bo.common.Int64Values parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static Int64Values parseFrom(
+  public static im.turms.common.model.bo.common.Int64Values parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static Int64Values parseFrom(
+  public static im.turms.common.model.bo.common.Int64Values parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -307,7 +308,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(Int64Values prototype) {
+  public static Builder newBuilder(im.turms.common.model.bo.common.Int64Values prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -328,18 +329,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.Int64Values)
-          Int64ValuesOrBuilder {
+      im.turms.common.model.bo.common.Int64ValuesOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return Int64ValuesOuterClass.internal_static_im_turms_proto_Int64Values_descriptor;
+      return im.turms.common.model.bo.common.Int64ValuesOuterClass.internal_static_im_turms_proto_Int64Values_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return Int64ValuesOuterClass.internal_static_im_turms_proto_Int64Values_fieldAccessorTable
+      return im.turms.common.model.bo.common.Int64ValuesOuterClass.internal_static_im_turms_proto_Int64Values_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              Int64Values.class, Int64Values.Builder.class);
+              im.turms.common.model.bo.common.Int64Values.class, im.turms.common.model.bo.common.Int64Values.Builder.class);
     }
 
     // Construct using im.turms.common.model.bo.common.Int64Values.newBuilder()
@@ -368,17 +369,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return Int64ValuesOuterClass.internal_static_im_turms_proto_Int64Values_descriptor;
+      return im.turms.common.model.bo.common.Int64ValuesOuterClass.internal_static_im_turms_proto_Int64Values_descriptor;
     }
 
     @java.lang.Override
-    public Int64Values getDefaultInstanceForType() {
-      return Int64Values.getDefaultInstance();
+    public im.turms.common.model.bo.common.Int64Values getDefaultInstanceForType() {
+      return im.turms.common.model.bo.common.Int64Values.getDefaultInstance();
     }
 
     @java.lang.Override
-    public Int64Values build() {
-      Int64Values result = buildPartial();
+    public im.turms.common.model.bo.common.Int64Values build() {
+      im.turms.common.model.bo.common.Int64Values result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -386,8 +387,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public Int64Values buildPartial() {
-      Int64Values result = new Int64Values(this);
+    public im.turms.common.model.bo.common.Int64Values buildPartial() {
+      im.turms.common.model.bo.common.Int64Values result = new im.turms.common.model.bo.common.Int64Values(this);
       int from_bitField0_ = bitField0_;
       if (((bitField0_ & 0x00000001) != 0)) {
         values_.makeImmutable();
@@ -432,16 +433,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof Int64Values) {
-        return mergeFrom((Int64Values)other);
+      if (other instanceof im.turms.common.model.bo.common.Int64Values) {
+        return mergeFrom((im.turms.common.model.bo.common.Int64Values)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(Int64Values other) {
-      if (other == Int64Values.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.bo.common.Int64Values other) {
+      if (other == im.turms.common.model.bo.common.Int64Values.getDefaultInstance()) return this;
       if (!other.values_.isEmpty()) {
         if (values_.isEmpty()) {
           values_ = other.values_;
@@ -467,11 +468,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      Int64Values parsedMessage = null;
+      im.turms.common.model.bo.common.Int64Values parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (Int64Values) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.bo.common.Int64Values) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -577,12 +578,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.Int64Values)
-  private static final Int64Values DEFAULT_INSTANCE;
+  private static final im.turms.common.model.bo.common.Int64Values DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new Int64Values();
+    DEFAULT_INSTANCE = new im.turms.common.model.bo.common.Int64Values();
   }
 
-  public static Int64Values getDefaultInstance() {
+  public static im.turms.common.model.bo.common.Int64Values getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -607,7 +608,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public Int64Values getDefaultInstanceForType() {
+  public im.turms.common.model.bo.common.Int64Values getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

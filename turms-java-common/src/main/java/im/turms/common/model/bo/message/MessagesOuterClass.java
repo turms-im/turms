@@ -54,7 +54,7 @@ public final class MessagesOuterClass {
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          MessageOuterClass.getDescriptor(),
+          im.turms.common.model.bo.message.MessageOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_Messages_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -62,7 +62,7 @@ public final class MessagesOuterClass {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_Messages_descriptor,
         new java.lang.String[] { "Messages", });
-    MessageOuterClass.getDescriptor();
+    im.turms.common.model.bo.message.MessageOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

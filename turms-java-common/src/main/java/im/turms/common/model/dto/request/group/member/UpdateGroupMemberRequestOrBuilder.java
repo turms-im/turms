@@ -20,8 +20,6 @@
 
 package im.turms.common.model.dto.request.group.member;
 
-import im.turms.common.constant.GroupMemberRole;
-
 public interface UpdateGroupMemberRequestOrBuilder extends
     // @@protoc_insertion_point(interface_extends:im.turms.proto.UpdateGroupMemberRequest)
     com.google.protobuf.MessageOrBuilder {
@@ -62,7 +60,7 @@ public interface UpdateGroupMemberRequestOrBuilder extends
    * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
    * @return The role.
    */
-  GroupMemberRole getRole();
+  im.turms.common.constant.GroupMemberRole getRole();
 
   /**
    * <code>.google.protobuf.Int64Value mute_end_date = 5;</code>

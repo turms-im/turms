@@ -135,6 +135,10 @@ public enum RequestStatus
 
   public final com.google.protobuf.Descriptors.EnumValueDescriptor
       getValueDescriptor() {
+    if (this == UNRECOGNIZED) {
+      throw new java.lang.IllegalStateException(
+          "Can't get the descriptor of an unrecognized enum value.");
+    }
     return getDescriptor().getValues().get(ordinal());
   }
   public final com.google.protobuf.Descriptors.EnumDescriptor
@@ -143,7 +147,7 @@ public enum RequestStatus
   }
   public static final com.google.protobuf.Descriptors.EnumDescriptor
       getDescriptor() {
-    return RequestStatusOuterClass.getDescriptor().getEnumTypes().get(0);
+    return im.turms.common.constant.RequestStatusOuterClass.getDescriptor().getEnumTypes().get(0);
   }
 
   private static final RequestStatus[] VALUES = values();

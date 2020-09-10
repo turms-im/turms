@@ -20,8 +20,6 @@
 
 package im.turms.common.model.bo.user;
 
-import im.turms.common.constant.DeviceType;
-
 public interface UserSessionIdOrBuilder extends
     // @@protoc_insertion_point(interface_extends:im.turms.proto.UserSessionId)
     com.google.protobuf.MessageOrBuilder {
@@ -41,5 +39,5 @@ public interface UserSessionIdOrBuilder extends
    * <code>.im.turms.proto.DeviceType device_type = 2;</code>
    * @return The deviceType.
    */
-  DeviceType getDeviceType();
+  im.turms.common.constant.DeviceType getDeviceType();
 }

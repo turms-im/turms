@@ -20,17 +20,6 @@
 
 package im.turms.common.model.dto.notification;
 
-import im.turms.common.model.bo.common.Int64ValuesOuterClass;
-import im.turms.common.model.bo.common.Int64ValuesWithVersionOuterClass;
-import im.turms.common.model.bo.group.*;
-import im.turms.common.model.bo.message.MessageStatusesOuterClass;
-import im.turms.common.model.bo.message.MessagesOuterClass;
-import im.turms.common.model.bo.message.MessagesWithTotalListOuterClass;
-import im.turms.common.model.bo.signal.AcknowledgeOuterClass;
-import im.turms.common.model.bo.signal.SessionOuterClass;
-import im.turms.common.model.bo.user.*;
-import im.turms.common.model.dto.request.TurmsRequestOuterClass;
-
 public final class TurmsNotificationOuterClass {
   private TurmsNotificationOuterClass() {}
   public static void registerAllExtensions(
@@ -135,26 +124,26 @@ public final class TurmsNotificationOuterClass {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.WrappersProto.getDescriptor(),
-          AcknowledgeOuterClass.getDescriptor(),
-          SessionOuterClass.getDescriptor(),
-          TurmsRequestOuterClass.getDescriptor(),
-          Int64ValuesOuterClass.getDescriptor(),
-          Int64ValuesWithVersionOuterClass.getDescriptor(),
-          GroupInvitationsWithVersionOuterClass.getDescriptor(),
-          GroupJoinQuestionsAnswerResultOuterClass.getDescriptor(),
-          GroupJoinQuestionsWithVersionOuterClass.getDescriptor(),
-          GroupJoinRequestsWithVersionOuterClass.getDescriptor(),
-          GroupMembersWithVersionOuterClass.getDescriptor(),
-          GroupsWithVersionOuterClass.getDescriptor(),
-          MessageStatusesOuterClass.getDescriptor(),
-          MessagesOuterClass.getDescriptor(),
-          MessagesWithTotalListOuterClass.getDescriptor(),
-          UserFriendRequestsWithVersionOuterClass.getDescriptor(),
-          UserRelationshipGroupsWithVersionOuterClass.getDescriptor(),
-          UserRelationshipsWithVersionOuterClass.getDescriptor(),
-          UserSessionIdsOuterClass.getDescriptor(),
-          UsersInfosWithVersionOuterClass.getDescriptor(),
-          UsersOnlineStatusesOuterClass.getDescriptor(),
+          im.turms.common.model.bo.signal.AcknowledgeOuterClass.getDescriptor(),
+          im.turms.common.model.bo.signal.SessionOuterClass.getDescriptor(),
+          im.turms.common.model.dto.request.TurmsRequestOuterClass.getDescriptor(),
+          im.turms.common.model.bo.common.Int64ValuesOuterClass.getDescriptor(),
+          im.turms.common.model.bo.common.Int64ValuesWithVersionOuterClass.getDescriptor(),
+          im.turms.common.model.bo.group.GroupInvitationsWithVersionOuterClass.getDescriptor(),
+          im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResultOuterClass.getDescriptor(),
+          im.turms.common.model.bo.group.GroupJoinQuestionsWithVersionOuterClass.getDescriptor(),
+          im.turms.common.model.bo.group.GroupJoinRequestsWithVersionOuterClass.getDescriptor(),
+          im.turms.common.model.bo.group.GroupMembersWithVersionOuterClass.getDescriptor(),
+          im.turms.common.model.bo.group.GroupsWithVersionOuterClass.getDescriptor(),
+          im.turms.common.model.bo.message.MessageStatusesOuterClass.getDescriptor(),
+          im.turms.common.model.bo.message.MessagesOuterClass.getDescriptor(),
+          im.turms.common.model.bo.message.MessagesWithTotalListOuterClass.getDescriptor(),
+          im.turms.common.model.bo.user.UserFriendRequestsWithVersionOuterClass.getDescriptor(),
+          im.turms.common.model.bo.user.UserRelationshipGroupsWithVersionOuterClass.getDescriptor(),
+          im.turms.common.model.bo.user.UserRelationshipsWithVersionOuterClass.getDescriptor(),
+          im.turms.common.model.bo.user.UserSessionIdsOuterClass.getDescriptor(),
+          im.turms.common.model.bo.user.UsersInfosWithVersionOuterClass.getDescriptor(),
+          im.turms.common.model.bo.user.UsersOnlineStatusesOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_TurmsNotification_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -169,26 +158,26 @@ public final class TurmsNotificationOuterClass {
         internal_static_im_turms_proto_TurmsNotification_Data_descriptor,
         new java.lang.String[] { "Ids", "IdsWithVersion", "Url", "Acknowledge", "Session", "Messages", "MessageStatuses", "MessagesWithTotalList", "UsersInfosWithVersion", "UsersOnlineStatuses", "UserFriendRequestsWithVersion", "UserRelationshipGroupsWithVersion", "UserRelationshipsWithVersion", "UserSessionIds", "GroupInvitationsWithVersion", "GroupJoinQuestionAnswerResult", "GroupJoinRequestsWithVersion", "GroupJoinQuestionsWithVersion", "GroupMembersWithVersion", "GroupsWithVersion", "Kind", });
     com.google.protobuf.WrappersProto.getDescriptor();
-    AcknowledgeOuterClass.getDescriptor();
-    SessionOuterClass.getDescriptor();
-    TurmsRequestOuterClass.getDescriptor();
-    Int64ValuesOuterClass.getDescriptor();
-    Int64ValuesWithVersionOuterClass.getDescriptor();
-    GroupInvitationsWithVersionOuterClass.getDescriptor();
-    GroupJoinQuestionsAnswerResultOuterClass.getDescriptor();
-    GroupJoinQuestionsWithVersionOuterClass.getDescriptor();
-    GroupJoinRequestsWithVersionOuterClass.getDescriptor();
-    GroupMembersWithVersionOuterClass.getDescriptor();
-    GroupsWithVersionOuterClass.getDescriptor();
-    MessageStatusesOuterClass.getDescriptor();
-    MessagesOuterClass.getDescriptor();
-    MessagesWithTotalListOuterClass.getDescriptor();
-    UserFriendRequestsWithVersionOuterClass.getDescriptor();
-    UserRelationshipGroupsWithVersionOuterClass.getDescriptor();
-    UserRelationshipsWithVersionOuterClass.getDescriptor();
-    UserSessionIdsOuterClass.getDescriptor();
-    UsersInfosWithVersionOuterClass.getDescriptor();
-    UsersOnlineStatusesOuterClass.getDescriptor();
+    im.turms.common.model.bo.signal.AcknowledgeOuterClass.getDescriptor();
+    im.turms.common.model.bo.signal.SessionOuterClass.getDescriptor();
+    im.turms.common.model.dto.request.TurmsRequestOuterClass.getDescriptor();
+    im.turms.common.model.bo.common.Int64ValuesOuterClass.getDescriptor();
+    im.turms.common.model.bo.common.Int64ValuesWithVersionOuterClass.getDescriptor();
+    im.turms.common.model.bo.group.GroupInvitationsWithVersionOuterClass.getDescriptor();
+    im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResultOuterClass.getDescriptor();
+    im.turms.common.model.bo.group.GroupJoinQuestionsWithVersionOuterClass.getDescriptor();
+    im.turms.common.model.bo.group.GroupJoinRequestsWithVersionOuterClass.getDescriptor();
+    im.turms.common.model.bo.group.GroupMembersWithVersionOuterClass.getDescriptor();
+    im.turms.common.model.bo.group.GroupsWithVersionOuterClass.getDescriptor();
+    im.turms.common.model.bo.message.MessageStatusesOuterClass.getDescriptor();
+    im.turms.common.model.bo.message.MessagesOuterClass.getDescriptor();
+    im.turms.common.model.bo.message.MessagesWithTotalListOuterClass.getDescriptor();
+    im.turms.common.model.bo.user.UserFriendRequestsWithVersionOuterClass.getDescriptor();
+    im.turms.common.model.bo.user.UserRelationshipGroupsWithVersionOuterClass.getDescriptor();
+    im.turms.common.model.bo.user.UserRelationshipsWithVersionOuterClass.getDescriptor();
+    im.turms.common.model.bo.user.UserSessionIdsOuterClass.getDescriptor();
+    im.turms.common.model.bo.user.UsersInfosWithVersionOuterClass.getDescriptor();
+    im.turms.common.model.bo.user.UsersOnlineStatusesOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

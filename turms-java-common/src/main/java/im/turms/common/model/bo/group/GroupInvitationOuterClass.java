@@ -20,8 +20,6 @@
 
 package im.turms.common.model.bo.group;
 
-import im.turms.common.constant.RequestStatusOuterClass;
-
 public final class GroupInvitationOuterClass {
   private GroupInvitationOuterClass() {}
   public static void registerAllExtensions(
@@ -67,7 +65,7 @@ public final class GroupInvitationOuterClass {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.WrappersProto.getDescriptor(),
-          RequestStatusOuterClass.getDescriptor(),
+          im.turms.common.constant.RequestStatusOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_GroupInvitation_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -76,7 +74,7 @@ public final class GroupInvitationOuterClass {
         internal_static_im_turms_proto_GroupInvitation_descriptor,
         new java.lang.String[] { "Id", "CreationDate", "Content", "Status", "ExpirationDate", "GroupId", "InviterId", "InviteeId", });
     com.google.protobuf.WrappersProto.getDescriptor();
-    RequestStatusOuterClass.getDescriptor();
+    im.turms.common.constant.RequestStatusOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

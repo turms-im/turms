@@ -20,10 +20,6 @@
 
 package im.turms.common.model.bo.group;
 
-import im.turms.common.constant.DeviceType;
-import im.turms.common.constant.GroupMemberRole;
-import im.turms.common.constant.UserStatus;
-
 public interface GroupMemberOrBuilder extends
     // @@protoc_insertion_point(interface_extends:im.turms.proto.GroupMember)
     com.google.protobuf.MessageOrBuilder {
@@ -82,7 +78,7 @@ public interface GroupMemberOrBuilder extends
    * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
    * @return The role.
    */
-  GroupMemberRole getRole();
+  im.turms.common.constant.GroupMemberRole getRole();
 
   /**
    * <code>.google.protobuf.Int64Value join_date = 5;</code>
@@ -123,13 +119,13 @@ public interface GroupMemberOrBuilder extends
    * <code>.im.turms.proto.UserStatus user_status = 7;</code>
    * @return The userStatus.
    */
-  UserStatus getUserStatus();
+  im.turms.common.constant.UserStatus getUserStatus();
 
   /**
    * <code>repeated .im.turms.proto.DeviceType using_device_types = 8;</code>
    * @return A list containing the usingDeviceTypes.
    */
-  java.util.List<DeviceType> getUsingDeviceTypesList();
+  java.util.List<im.turms.common.constant.DeviceType> getUsingDeviceTypesList();
   /**
    * <code>repeated .im.turms.proto.DeviceType using_device_types = 8;</code>
    * @return The count of usingDeviceTypes.
@@ -140,7 +136,7 @@ public interface GroupMemberOrBuilder extends
    * @param index The index of the element to return.
    * @return The usingDeviceTypes at the given index.
    */
-  DeviceType getUsingDeviceTypes(int index);
+  im.turms.common.constant.DeviceType getUsingDeviceTypes(int index);
   /**
    * <code>repeated .im.turms.proto.DeviceType using_device_types = 8;</code>
    * @return A list containing the enum numeric values on the wire for usingDeviceTypes.

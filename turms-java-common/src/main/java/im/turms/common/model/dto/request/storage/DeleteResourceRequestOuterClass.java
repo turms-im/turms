@@ -20,8 +20,6 @@
 
 package im.turms.common.model.dto.request.storage;
 
-import im.turms.common.constant.ContentTypeOuterClass;
-
 public final class DeleteResourceRequestOuterClass {
   private DeleteResourceRequestOuterClass() {}
   public static void registerAllExtensions(
@@ -61,7 +59,7 @@ public final class DeleteResourceRequestOuterClass {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.WrappersProto.getDescriptor(),
-          ContentTypeOuterClass.getDescriptor(),
+          im.turms.common.constant.ContentTypeOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_DeleteResourceRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -70,7 +68,7 @@ public final class DeleteResourceRequestOuterClass {
         internal_static_im_turms_proto_DeleteResourceRequest_descriptor,
         new java.lang.String[] { "ContentType", "KeyStr", "KeyNum", });
     com.google.protobuf.WrappersProto.getDescriptor();
-    ContentTypeOuterClass.getDescriptor();
+    im.turms.common.constant.ContentTypeOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

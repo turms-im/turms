@@ -23,7 +23,7 @@ package im.turms.common.model.bo.signal;
 /**
  * Protobuf type {@code im.turms.proto.Session}
  */
-public  final class Session extends
+public final class Session extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.Session)
     SessionOrBuilder {
@@ -34,7 +34,6 @@ private static final long serialVersionUID = 0L;
   }
   private Session() {
     sessionId_ = "";
-    address_ = "";
   }
 
   @java.lang.Override
@@ -73,12 +72,6 @@ private static final long serialVersionUID = 0L;
             sessionId_ = s;
             break;
           }
-          case 18: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            address_ = s;
-            break;
-          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -100,15 +93,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return SessionOuterClass.internal_static_im_turms_proto_Session_descriptor;
+    return im.turms.common.model.bo.signal.SessionOuterClass.internal_static_im_turms_proto_Session_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return SessionOuterClass.internal_static_im_turms_proto_Session_fieldAccessorTable
+    return im.turms.common.model.bo.signal.SessionOuterClass.internal_static_im_turms_proto_Session_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            Session.class, Session.Builder.class);
+            im.turms.common.model.bo.signal.Session.class, im.turms.common.model.bo.signal.Session.Builder.class);
   }
 
   public static final int SESSION_ID_FIELD_NUMBER = 1;
@@ -117,6 +110,7 @@ private static final long serialVersionUID = 0L;
    * <code>string session_id = 1;</code>
    * @return The sessionId.
    */
+  @java.lang.Override
   public java.lang.String getSessionId() {
     java.lang.Object ref = sessionId_;
     if (ref instanceof java.lang.String) {
@@ -133,6 +127,7 @@ private static final long serialVersionUID = 0L;
    * <code>string session_id = 1;</code>
    * @return The bytes for sessionId.
    */
+  @java.lang.Override
   public com.google.protobuf.ByteString
       getSessionIdBytes() {
     java.lang.Object ref = sessionId_;
@@ -141,42 +136,6 @@ private static final long serialVersionUID = 0L;
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
       sessionId_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int ADDRESS_FIELD_NUMBER = 2;
-  private volatile java.lang.Object address_;
-  /**
-   * <code>string address = 2;</code>
-   * @return The address.
-   */
-  public java.lang.String getAddress() {
-    java.lang.Object ref = address_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      address_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>string address = 2;</code>
-   * @return The bytes for address.
-   */
-  public com.google.protobuf.ByteString
-      getAddressBytes() {
-    java.lang.Object ref = address_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      address_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
@@ -200,9 +159,6 @@ private static final long serialVersionUID = 0L;
     if (!getSessionIdBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 1, sessionId_);
     }
-    if (!getAddressBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, address_);
-    }
     unknownFields.writeTo(output);
   }
 
@@ -215,9 +171,6 @@ private static final long serialVersionUID = 0L;
     if (!getSessionIdBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, sessionId_);
     }
-    if (!getAddressBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, address_);
-    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -228,15 +181,13 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof Session)) {
+    if (!(obj instanceof im.turms.common.model.bo.signal.Session)) {
       return super.equals(obj);
     }
-    Session other = (Session) obj;
+    im.turms.common.model.bo.signal.Session other = (im.turms.common.model.bo.signal.Session) obj;
 
     if (!getSessionId()
         .equals(other.getSessionId())) return false;
-    if (!getAddress()
-        .equals(other.getAddress())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -250,76 +201,74 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + SESSION_ID_FIELD_NUMBER;
     hash = (53 * hash) + getSessionId().hashCode();
-    hash = (37 * hash) + ADDRESS_FIELD_NUMBER;
-    hash = (53 * hash) + getAddress().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static Session parseFrom(
+  public static im.turms.common.model.bo.signal.Session parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static Session parseFrom(
+  public static im.turms.common.model.bo.signal.Session parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static Session parseFrom(
+  public static im.turms.common.model.bo.signal.Session parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static Session parseFrom(
+  public static im.turms.common.model.bo.signal.Session parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static Session parseFrom(byte[] data)
+  public static im.turms.common.model.bo.signal.Session parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static Session parseFrom(
+  public static im.turms.common.model.bo.signal.Session parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static Session parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.signal.Session parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static Session parseFrom(
+  public static im.turms.common.model.bo.signal.Session parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static Session parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.signal.Session parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static Session parseDelimitedFrom(
+  public static im.turms.common.model.bo.signal.Session parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static Session parseFrom(
+  public static im.turms.common.model.bo.signal.Session parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static Session parseFrom(
+  public static im.turms.common.model.bo.signal.Session parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -332,7 +281,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(Session prototype) {
+  public static Builder newBuilder(im.turms.common.model.bo.signal.Session prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -353,18 +302,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.Session)
-          SessionOrBuilder {
+      im.turms.common.model.bo.signal.SessionOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return SessionOuterClass.internal_static_im_turms_proto_Session_descriptor;
+      return im.turms.common.model.bo.signal.SessionOuterClass.internal_static_im_turms_proto_Session_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return SessionOuterClass.internal_static_im_turms_proto_Session_fieldAccessorTable
+      return im.turms.common.model.bo.signal.SessionOuterClass.internal_static_im_turms_proto_Session_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              Session.class, Session.Builder.class);
+              im.turms.common.model.bo.signal.Session.class, im.turms.common.model.bo.signal.Session.Builder.class);
     }
 
     // Construct using im.turms.common.model.bo.signal.Session.newBuilder()
@@ -387,25 +336,23 @@ private static final long serialVersionUID = 0L;
       super.clear();
       sessionId_ = "";
 
-      address_ = "";
-
       return this;
     }
 
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return SessionOuterClass.internal_static_im_turms_proto_Session_descriptor;
+      return im.turms.common.model.bo.signal.SessionOuterClass.internal_static_im_turms_proto_Session_descriptor;
     }
 
     @java.lang.Override
-    public Session getDefaultInstanceForType() {
-      return Session.getDefaultInstance();
+    public im.turms.common.model.bo.signal.Session getDefaultInstanceForType() {
+      return im.turms.common.model.bo.signal.Session.getDefaultInstance();
     }
 
     @java.lang.Override
-    public Session build() {
-      Session result = buildPartial();
+    public im.turms.common.model.bo.signal.Session build() {
+      im.turms.common.model.bo.signal.Session result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -413,10 +360,9 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public Session buildPartial() {
-      Session result = new Session(this);
+    public im.turms.common.model.bo.signal.Session buildPartial() {
+      im.turms.common.model.bo.signal.Session result = new im.turms.common.model.bo.signal.Session(this);
       result.sessionId_ = sessionId_;
-      result.address_ = address_;
       onBuilt();
       return result;
     }
@@ -455,22 +401,18 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof Session) {
-        return mergeFrom((Session)other);
+      if (other instanceof im.turms.common.model.bo.signal.Session) {
+        return mergeFrom((im.turms.common.model.bo.signal.Session)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(Session other) {
-      if (other == Session.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.bo.signal.Session other) {
+      if (other == im.turms.common.model.bo.signal.Session.getDefaultInstance()) return this;
       if (!other.getSessionId().isEmpty()) {
         sessionId_ = other.sessionId_;
-        onChanged();
-      }
-      if (!other.getAddress().isEmpty()) {
-        address_ = other.address_;
         onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
@@ -488,11 +430,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      Session parsedMessage = null;
+      im.turms.common.model.bo.signal.Session parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (Session) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.bo.signal.Session) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -577,82 +519,6 @@ private static final long serialVersionUID = 0L;
       onChanged();
       return this;
     }
-
-    private java.lang.Object address_ = "";
-    /**
-     * <code>string address = 2;</code>
-     * @return The address.
-     */
-    public java.lang.String getAddress() {
-      java.lang.Object ref = address_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        address_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
-    }
-    /**
-     * <code>string address = 2;</code>
-     * @return The bytes for address.
-     */
-    public com.google.protobuf.ByteString
-        getAddressBytes() {
-      java.lang.Object ref = address_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        address_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>string address = 2;</code>
-     * @param value The address to set.
-     * @return This builder for chaining.
-     */
-    public Builder setAddress(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      address_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string address = 2;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearAddress() {
-      
-      address_ = getDefaultInstance().getAddress();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>string address = 2;</code>
-     * @param value The bytes for address to set.
-     * @return This builder for chaining.
-     */
-    public Builder setAddressBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      address_ = value;
-      onChanged();
-      return this;
-    }
     @java.lang.Override
     public final Builder setUnknownFields(
         final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -670,12 +536,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.Session)
-  private static final Session DEFAULT_INSTANCE;
+  private static final im.turms.common.model.bo.signal.Session DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new Session();
+    DEFAULT_INSTANCE = new im.turms.common.model.bo.signal.Session();
   }
 
-  public static Session getDefaultInstance() {
+  public static im.turms.common.model.bo.signal.Session getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -700,7 +566,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public Session getDefaultInstanceForType() {
+  public im.turms.common.model.bo.signal.Session getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

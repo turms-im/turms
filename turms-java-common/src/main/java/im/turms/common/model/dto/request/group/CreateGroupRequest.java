@@ -23,7 +23,7 @@ package im.turms.common.model.dto.request.group;
 /**
  * Protobuf type {@code im.turms.proto.CreateGroupRequest}
  */
-public  final class CreateGroupRequest extends
+public final class CreateGroupRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.CreateGroupRequest)
     CreateGroupRequestOrBuilder {
@@ -158,15 +158,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return CreateGroupRequestOuterClass.internal_static_im_turms_proto_CreateGroupRequest_descriptor;
+    return im.turms.common.model.dto.request.group.CreateGroupRequestOuterClass.internal_static_im_turms_proto_CreateGroupRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return CreateGroupRequestOuterClass.internal_static_im_turms_proto_CreateGroupRequest_fieldAccessorTable
+    return im.turms.common.model.dto.request.group.CreateGroupRequestOuterClass.internal_static_im_turms_proto_CreateGroupRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            CreateGroupRequest.class, CreateGroupRequest.Builder.class);
+            im.turms.common.model.dto.request.group.CreateGroupRequest.class, im.turms.common.model.dto.request.group.CreateGroupRequest.Builder.class);
   }
 
   public static final int NAME_FIELD_NUMBER = 1;
@@ -175,6 +175,7 @@ private static final long serialVersionUID = 0L;
    * <code>string name = 1;</code>
    * @return The name.
    */
+  @java.lang.Override
   public java.lang.String getName() {
     java.lang.Object ref = name_;
     if (ref instanceof java.lang.String) {
@@ -191,6 +192,7 @@ private static final long serialVersionUID = 0L;
    * <code>string name = 1;</code>
    * @return The bytes for name.
    */
+  @java.lang.Override
   public com.google.protobuf.ByteString
       getNameBytes() {
     java.lang.Object ref = name_;
@@ -211,6 +213,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue intro = 2;</code>
    * @return Whether the intro field is set.
    */
+  @java.lang.Override
   public boolean hasIntro() {
     return intro_ != null;
   }
@@ -218,12 +221,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue intro = 2;</code>
    * @return The intro.
    */
+  @java.lang.Override
   public com.google.protobuf.StringValue getIntro() {
     return intro_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : intro_;
   }
   /**
    * <code>.google.protobuf.StringValue intro = 2;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.StringValueOrBuilder getIntroOrBuilder() {
     return getIntro();
   }
@@ -234,6 +239,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue announcement = 3;</code>
    * @return Whether the announcement field is set.
    */
+  @java.lang.Override
   public boolean hasAnnouncement() {
     return announcement_ != null;
   }
@@ -241,12 +247,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue announcement = 3;</code>
    * @return The announcement.
    */
+  @java.lang.Override
   public com.google.protobuf.StringValue getAnnouncement() {
     return announcement_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : announcement_;
   }
   /**
    * <code>.google.protobuf.StringValue announcement = 3;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.StringValueOrBuilder getAnnouncementOrBuilder() {
     return getAnnouncement();
   }
@@ -257,6 +265,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int32Value minimum_score = 4;</code>
    * @return Whether the minimumScore field is set.
    */
+  @java.lang.Override
   public boolean hasMinimumScore() {
     return minimumScore_ != null;
   }
@@ -264,12 +273,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int32Value minimum_score = 4;</code>
    * @return The minimumScore.
    */
+  @java.lang.Override
   public com.google.protobuf.Int32Value getMinimumScore() {
     return minimumScore_ == null ? com.google.protobuf.Int32Value.getDefaultInstance() : minimumScore_;
   }
   /**
    * <code>.google.protobuf.Int32Value minimum_score = 4;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int32ValueOrBuilder getMinimumScoreOrBuilder() {
     return getMinimumScore();
   }
@@ -280,6 +291,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value group_type_id = 5;</code>
    * @return Whether the groupTypeId field is set.
    */
+  @java.lang.Override
   public boolean hasGroupTypeId() {
     return groupTypeId_ != null;
   }
@@ -287,12 +299,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value group_type_id = 5;</code>
    * @return The groupTypeId.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getGroupTypeId() {
     return groupTypeId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : groupTypeId_;
   }
   /**
    * <code>.google.protobuf.Int64Value group_type_id = 5;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getGroupTypeIdOrBuilder() {
     return getGroupTypeId();
   }
@@ -303,6 +317,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value mute_end_date = 6;</code>
    * @return Whether the muteEndDate field is set.
    */
+  @java.lang.Override
   public boolean hasMuteEndDate() {
     return muteEndDate_ != null;
   }
@@ -310,12 +325,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value mute_end_date = 6;</code>
    * @return The muteEndDate.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getMuteEndDate() {
     return muteEndDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : muteEndDate_;
   }
   /**
    * <code>.google.protobuf.Int64Value mute_end_date = 6;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getMuteEndDateOrBuilder() {
     return getMuteEndDate();
   }
@@ -394,10 +411,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof CreateGroupRequest)) {
+    if (!(obj instanceof im.turms.common.model.dto.request.group.CreateGroupRequest)) {
       return super.equals(obj);
     }
-    CreateGroupRequest other = (CreateGroupRequest) obj;
+    im.turms.common.model.dto.request.group.CreateGroupRequest other = (im.turms.common.model.dto.request.group.CreateGroupRequest) obj;
 
     if (!getName()
         .equals(other.getName())) return false;
@@ -464,69 +481,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static CreateGroupRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.CreateGroupRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static CreateGroupRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.CreateGroupRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static CreateGroupRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.CreateGroupRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static CreateGroupRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.CreateGroupRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static CreateGroupRequest parseFrom(byte[] data)
+  public static im.turms.common.model.dto.request.group.CreateGroupRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static CreateGroupRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.CreateGroupRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static CreateGroupRequest parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.group.CreateGroupRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static CreateGroupRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.CreateGroupRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static CreateGroupRequest parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.group.CreateGroupRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static CreateGroupRequest parseDelimitedFrom(
+  public static im.turms.common.model.dto.request.group.CreateGroupRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static CreateGroupRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.CreateGroupRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static CreateGroupRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.CreateGroupRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -539,7 +556,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(CreateGroupRequest prototype) {
+  public static Builder newBuilder(im.turms.common.model.dto.request.group.CreateGroupRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -560,18 +577,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.CreateGroupRequest)
-          CreateGroupRequestOrBuilder {
+      im.turms.common.model.dto.request.group.CreateGroupRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return CreateGroupRequestOuterClass.internal_static_im_turms_proto_CreateGroupRequest_descriptor;
+      return im.turms.common.model.dto.request.group.CreateGroupRequestOuterClass.internal_static_im_turms_proto_CreateGroupRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return CreateGroupRequestOuterClass.internal_static_im_turms_proto_CreateGroupRequest_fieldAccessorTable
+      return im.turms.common.model.dto.request.group.CreateGroupRequestOuterClass.internal_static_im_turms_proto_CreateGroupRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              CreateGroupRequest.class, CreateGroupRequest.Builder.class);
+              im.turms.common.model.dto.request.group.CreateGroupRequest.class, im.turms.common.model.dto.request.group.CreateGroupRequest.Builder.class);
     }
 
     // Construct using im.turms.common.model.dto.request.group.CreateGroupRequest.newBuilder()
@@ -630,17 +647,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return CreateGroupRequestOuterClass.internal_static_im_turms_proto_CreateGroupRequest_descriptor;
+      return im.turms.common.model.dto.request.group.CreateGroupRequestOuterClass.internal_static_im_turms_proto_CreateGroupRequest_descriptor;
     }
 
     @java.lang.Override
-    public CreateGroupRequest getDefaultInstanceForType() {
-      return CreateGroupRequest.getDefaultInstance();
+    public im.turms.common.model.dto.request.group.CreateGroupRequest getDefaultInstanceForType() {
+      return im.turms.common.model.dto.request.group.CreateGroupRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public CreateGroupRequest build() {
-      CreateGroupRequest result = buildPartial();
+    public im.turms.common.model.dto.request.group.CreateGroupRequest build() {
+      im.turms.common.model.dto.request.group.CreateGroupRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -648,8 +665,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public CreateGroupRequest buildPartial() {
-      CreateGroupRequest result = new CreateGroupRequest(this);
+    public im.turms.common.model.dto.request.group.CreateGroupRequest buildPartial() {
+      im.turms.common.model.dto.request.group.CreateGroupRequest result = new im.turms.common.model.dto.request.group.CreateGroupRequest(this);
       result.name_ = name_;
       if (introBuilder_ == null) {
         result.intro_ = intro_;
@@ -714,16 +731,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof CreateGroupRequest) {
-        return mergeFrom((CreateGroupRequest)other);
+      if (other instanceof im.turms.common.model.dto.request.group.CreateGroupRequest) {
+        return mergeFrom((im.turms.common.model.dto.request.group.CreateGroupRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(CreateGroupRequest other) {
-      if (other == CreateGroupRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.dto.request.group.CreateGroupRequest other) {
+      if (other == im.turms.common.model.dto.request.group.CreateGroupRequest.getDefaultInstance()) return this;
       if (!other.getName().isEmpty()) {
         name_ = other.name_;
         onChanged();
@@ -758,11 +775,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      CreateGroupRequest parsedMessage = null;
+      im.turms.common.model.dto.request.group.CreateGroupRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (CreateGroupRequest) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.dto.request.group.CreateGroupRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -1459,12 +1476,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.CreateGroupRequest)
-  private static final CreateGroupRequest DEFAULT_INSTANCE;
+  private static final im.turms.common.model.dto.request.group.CreateGroupRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new CreateGroupRequest();
+    DEFAULT_INSTANCE = new im.turms.common.model.dto.request.group.CreateGroupRequest();
   }
 
-  public static CreateGroupRequest getDefaultInstance() {
+  public static im.turms.common.model.dto.request.group.CreateGroupRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -1489,7 +1506,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public CreateGroupRequest getDefaultInstanceForType() {
+  public im.turms.common.model.dto.request.group.CreateGroupRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

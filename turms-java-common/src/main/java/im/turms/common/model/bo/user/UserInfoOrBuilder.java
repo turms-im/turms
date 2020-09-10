@@ -20,8 +20,6 @@
 
 package im.turms.common.model.bo.user;
 
-import im.turms.common.constant.ProfileAccessStrategy;
-
 public interface UserInfoOrBuilder extends
     // @@protoc_insertion_point(interface_extends:im.turms.proto.UserInfo)
     com.google.protobuf.MessageOrBuilder {
@@ -125,5 +123,5 @@ public interface UserInfoOrBuilder extends
    * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 7;</code>
    * @return The profileAccessStrategy.
    */
-  ProfileAccessStrategy getProfileAccessStrategy();
+  im.turms.common.constant.ProfileAccessStrategy getProfileAccessStrategy();
 }

@@ -35,16 +35,4 @@ public interface SessionOrBuilder extends
    */
   com.google.protobuf.ByteString
       getSessionIdBytes();
-
-  /**
-   * <code>string address = 2;</code>
-   * @return The address.
-   */
-  java.lang.String getAddress();
-  /**
-   * <code>string address = 2;</code>
-   * @return The bytes for address.
-   */
-  com.google.protobuf.ByteString
-      getAddressBytes();
 }

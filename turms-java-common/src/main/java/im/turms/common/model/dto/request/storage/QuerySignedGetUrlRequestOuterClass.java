@@ -20,8 +20,6 @@
 
 package im.turms.common.model.dto.request.storage;
 
-import im.turms.common.constant.ContentTypeOuterClass;
-
 public final class QuerySignedGetUrlRequestOuterClass {
   private QuerySignedGetUrlRequestOuterClass() {}
   public static void registerAllExtensions(
@@ -61,7 +59,7 @@ public final class QuerySignedGetUrlRequestOuterClass {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.WrappersProto.getDescriptor(),
-          ContentTypeOuterClass.getDescriptor(),
+          im.turms.common.constant.ContentTypeOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_QuerySignedGetUrlRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -70,7 +68,7 @@ public final class QuerySignedGetUrlRequestOuterClass {
         internal_static_im_turms_proto_QuerySignedGetUrlRequest_descriptor,
         new java.lang.String[] { "ContentType", "KeyStr", "KeyNum", });
     com.google.protobuf.WrappersProto.getDescriptor();
-    ContentTypeOuterClass.getDescriptor();
+    im.turms.common.constant.ContentTypeOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

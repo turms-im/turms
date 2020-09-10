@@ -46,9 +46,9 @@ public final class SessionOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\032model/signal/session.proto\022\016im.turms.p" +
-      "roto\".\n\007Session\022\022\n\nsession_id\030\001 \001(\t\022\017\n\007a" +
-      "ddress\030\002 \001(\tB&\n\037im.turms.common.model.bo" +
-      ".signalP\001\272\002\000b\006proto3"
+      "roto\"\035\n\007Session\022\022\n\nsession_id\030\001 \001(\tB&\n\037i" +
+      "m.turms.common.model.bo.signalP\001\272\002\000b\006pro" +
+      "to3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -59,7 +59,7 @@ public final class SessionOuterClass {
     internal_static_im_turms_proto_Session_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_Session_descriptor,
-        new java.lang.String[] { "SessionId", "Address", });
+        new java.lang.String[] { "SessionId", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -23,7 +23,7 @@ package im.turms.common.model.dto.request.group.enrollment;
 /**
  * Protobuf type {@code im.turms.proto.CreateGroupInvitationRequest}
  */
-public  final class CreateGroupInvitationRequest extends
+public final class CreateGroupInvitationRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.CreateGroupInvitationRequest)
     CreateGroupInvitationRequestOrBuilder {
@@ -103,15 +103,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return CreateGroupInvitationRequestOuterClass.internal_static_im_turms_proto_CreateGroupInvitationRequest_descriptor;
+    return im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequestOuterClass.internal_static_im_turms_proto_CreateGroupInvitationRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return CreateGroupInvitationRequestOuterClass.internal_static_im_turms_proto_CreateGroupInvitationRequest_fieldAccessorTable
+    return im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequestOuterClass.internal_static_im_turms_proto_CreateGroupInvitationRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            CreateGroupInvitationRequest.class, CreateGroupInvitationRequest.Builder.class);
+            im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest.class, im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest.Builder.class);
   }
 
   public static final int GROUP_ID_FIELD_NUMBER = 1;
@@ -120,6 +120,7 @@ private static final long serialVersionUID = 0L;
    * <code>int64 group_id = 1;</code>
    * @return The groupId.
    */
+  @java.lang.Override
   public long getGroupId() {
     return groupId_;
   }
@@ -130,6 +131,7 @@ private static final long serialVersionUID = 0L;
    * <code>int64 invitee_id = 2;</code>
    * @return The inviteeId.
    */
+  @java.lang.Override
   public long getInviteeId() {
     return inviteeId_;
   }
@@ -140,6 +142,7 @@ private static final long serialVersionUID = 0L;
    * <code>string content = 3;</code>
    * @return The content.
    */
+  @java.lang.Override
   public java.lang.String getContent() {
     java.lang.Object ref = content_;
     if (ref instanceof java.lang.String) {
@@ -156,6 +159,7 @@ private static final long serialVersionUID = 0L;
    * <code>string content = 3;</code>
    * @return The bytes for content.
    */
+  @java.lang.Override
   public com.google.protobuf.ByteString
       getContentBytes() {
     java.lang.Object ref = content_;
@@ -223,10 +227,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof CreateGroupInvitationRequest)) {
+    if (!(obj instanceof im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest)) {
       return super.equals(obj);
     }
-    CreateGroupInvitationRequest other = (CreateGroupInvitationRequest) obj;
+    im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest other = (im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest) obj;
 
     if (getGroupId()
         != other.getGroupId()) return false;
@@ -258,69 +262,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static CreateGroupInvitationRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static CreateGroupInvitationRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static CreateGroupInvitationRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static CreateGroupInvitationRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static CreateGroupInvitationRequest parseFrom(byte[] data)
+  public static im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static CreateGroupInvitationRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static CreateGroupInvitationRequest parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static CreateGroupInvitationRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static CreateGroupInvitationRequest parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static CreateGroupInvitationRequest parseDelimitedFrom(
+  public static im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static CreateGroupInvitationRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static CreateGroupInvitationRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -333,7 +337,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(CreateGroupInvitationRequest prototype) {
+  public static Builder newBuilder(im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -354,18 +358,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.CreateGroupInvitationRequest)
-          CreateGroupInvitationRequestOrBuilder {
+      im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return CreateGroupInvitationRequestOuterClass.internal_static_im_turms_proto_CreateGroupInvitationRequest_descriptor;
+      return im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequestOuterClass.internal_static_im_turms_proto_CreateGroupInvitationRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return CreateGroupInvitationRequestOuterClass.internal_static_im_turms_proto_CreateGroupInvitationRequest_fieldAccessorTable
+      return im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequestOuterClass.internal_static_im_turms_proto_CreateGroupInvitationRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              CreateGroupInvitationRequest.class, CreateGroupInvitationRequest.Builder.class);
+              im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest.class, im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest.Builder.class);
     }
 
     // Construct using im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest.newBuilder()
@@ -398,17 +402,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return CreateGroupInvitationRequestOuterClass.internal_static_im_turms_proto_CreateGroupInvitationRequest_descriptor;
+      return im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequestOuterClass.internal_static_im_turms_proto_CreateGroupInvitationRequest_descriptor;
     }
 
     @java.lang.Override
-    public CreateGroupInvitationRequest getDefaultInstanceForType() {
-      return CreateGroupInvitationRequest.getDefaultInstance();
+    public im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest getDefaultInstanceForType() {
+      return im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public CreateGroupInvitationRequest build() {
-      CreateGroupInvitationRequest result = buildPartial();
+    public im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest build() {
+      im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -416,8 +420,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public CreateGroupInvitationRequest buildPartial() {
-      CreateGroupInvitationRequest result = new CreateGroupInvitationRequest(this);
+    public im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest buildPartial() {
+      im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest result = new im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest(this);
       result.groupId_ = groupId_;
       result.inviteeId_ = inviteeId_;
       result.content_ = content_;
@@ -459,16 +463,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof CreateGroupInvitationRequest) {
-        return mergeFrom((CreateGroupInvitationRequest)other);
+      if (other instanceof im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest) {
+        return mergeFrom((im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(CreateGroupInvitationRequest other) {
-      if (other == CreateGroupInvitationRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest other) {
+      if (other == im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest.getDefaultInstance()) return this;
       if (other.getGroupId() != 0L) {
         setGroupId(other.getGroupId());
       }
@@ -494,11 +498,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      CreateGroupInvitationRequest parsedMessage = null;
+      im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (CreateGroupInvitationRequest) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -513,6 +517,7 @@ private static final long serialVersionUID = 0L;
      * <code>int64 group_id = 1;</code>
      * @return The groupId.
      */
+    @java.lang.Override
     public long getGroupId() {
       return groupId_;
     }
@@ -543,6 +548,7 @@ private static final long serialVersionUID = 0L;
      * <code>int64 invitee_id = 2;</code>
      * @return The inviteeId.
      */
+    @java.lang.Override
     public long getInviteeId() {
       return inviteeId_;
     }
@@ -660,12 +666,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.CreateGroupInvitationRequest)
-  private static final CreateGroupInvitationRequest DEFAULT_INSTANCE;
+  private static final im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new CreateGroupInvitationRequest();
+    DEFAULT_INSTANCE = new im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest();
   }
 
-  public static CreateGroupInvitationRequest getDefaultInstance() {
+  public static im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -690,7 +696,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public CreateGroupInvitationRequest getDefaultInstanceForType() {
+  public im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

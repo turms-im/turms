@@ -27,12 +27,12 @@ public interface GroupJoinRequestsWithVersionOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.GroupJoinRequest group_join_requests = 1;</code>
    */
-  java.util.List<GroupJoinRequest>
+  java.util.List<im.turms.common.model.bo.group.GroupJoinRequest> 
       getGroupJoinRequestsList();
   /**
    * <code>repeated .im.turms.proto.GroupJoinRequest group_join_requests = 1;</code>
    */
-  GroupJoinRequest getGroupJoinRequests(int index);
+  im.turms.common.model.bo.group.GroupJoinRequest getGroupJoinRequests(int index);
   /**
    * <code>repeated .im.turms.proto.GroupJoinRequest group_join_requests = 1;</code>
    */
@@ -40,12 +40,12 @@ public interface GroupJoinRequestsWithVersionOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.GroupJoinRequest group_join_requests = 1;</code>
    */
-  java.util.List<? extends GroupJoinRequestOrBuilder>
+  java.util.List<? extends im.turms.common.model.bo.group.GroupJoinRequestOrBuilder> 
       getGroupJoinRequestsOrBuilderList();
   /**
    * <code>repeated .im.turms.proto.GroupJoinRequest group_join_requests = 1;</code>
    */
-  GroupJoinRequestOrBuilder getGroupJoinRequestsOrBuilder(
+  im.turms.common.model.bo.group.GroupJoinRequestOrBuilder getGroupJoinRequestsOrBuilder(
       int index);
 
   /**

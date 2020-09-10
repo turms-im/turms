@@ -23,7 +23,7 @@ package im.turms.common.model.bo.user;
 /**
  * Protobuf type {@code im.turms.proto.UsersOnlineStatuses}
  */
-public  final class UsersOnlineStatuses extends
+public final class UsersOnlineStatuses extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.UsersOnlineStatuses)
     UsersOnlineStatusesOrBuilder {
@@ -69,11 +69,11 @@ private static final long serialVersionUID = 0L;
             break;
           case 10: {
             if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-              userStatuses_ = new java.util.ArrayList<UserStatusDetail>();
+              userStatuses_ = new java.util.ArrayList<im.turms.common.model.bo.user.UserStatusDetail>();
               mutable_bitField0_ |= 0x00000001;
             }
             userStatuses_.add(
-                input.readMessage(UserStatusDetail.parser(), extensionRegistry));
+                input.readMessage(im.turms.common.model.bo.user.UserStatusDetail.parser(), extensionRegistry));
             break;
           }
           default: {
@@ -100,48 +100,53 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return UsersOnlineStatusesOuterClass.internal_static_im_turms_proto_UsersOnlineStatuses_descriptor;
+    return im.turms.common.model.bo.user.UsersOnlineStatusesOuterClass.internal_static_im_turms_proto_UsersOnlineStatuses_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return UsersOnlineStatusesOuterClass.internal_static_im_turms_proto_UsersOnlineStatuses_fieldAccessorTable
+    return im.turms.common.model.bo.user.UsersOnlineStatusesOuterClass.internal_static_im_turms_proto_UsersOnlineStatuses_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            UsersOnlineStatuses.class, UsersOnlineStatuses.Builder.class);
+            im.turms.common.model.bo.user.UsersOnlineStatuses.class, im.turms.common.model.bo.user.UsersOnlineStatuses.Builder.class);
   }
 
   public static final int USER_STATUSES_FIELD_NUMBER = 1;
-  private java.util.List<UserStatusDetail> userStatuses_;
+  private java.util.List<im.turms.common.model.bo.user.UserStatusDetail> userStatuses_;
   /**
    * <code>repeated .im.turms.proto.UserStatusDetail user_statuses = 1;</code>
    */
-  public java.util.List<UserStatusDetail> getUserStatusesList() {
+  @java.lang.Override
+  public java.util.List<im.turms.common.model.bo.user.UserStatusDetail> getUserStatusesList() {
     return userStatuses_;
   }
   /**
    * <code>repeated .im.turms.proto.UserStatusDetail user_statuses = 1;</code>
    */
-  public java.util.List<? extends UserStatusDetailOrBuilder>
+  @java.lang.Override
+  public java.util.List<? extends im.turms.common.model.bo.user.UserStatusDetailOrBuilder> 
       getUserStatusesOrBuilderList() {
     return userStatuses_;
   }
   /**
    * <code>repeated .im.turms.proto.UserStatusDetail user_statuses = 1;</code>
    */
+  @java.lang.Override
   public int getUserStatusesCount() {
     return userStatuses_.size();
   }
   /**
    * <code>repeated .im.turms.proto.UserStatusDetail user_statuses = 1;</code>
    */
-  public UserStatusDetail getUserStatuses(int index) {
+  @java.lang.Override
+  public im.turms.common.model.bo.user.UserStatusDetail getUserStatuses(int index) {
     return userStatuses_.get(index);
   }
   /**
    * <code>repeated .im.turms.proto.UserStatusDetail user_statuses = 1;</code>
    */
-  public UserStatusDetailOrBuilder getUserStatusesOrBuilder(
+  @java.lang.Override
+  public im.turms.common.model.bo.user.UserStatusDetailOrBuilder getUserStatusesOrBuilder(
       int index) {
     return userStatuses_.get(index);
   }
@@ -186,10 +191,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof UsersOnlineStatuses)) {
+    if (!(obj instanceof im.turms.common.model.bo.user.UsersOnlineStatuses)) {
       return super.equals(obj);
     }
-    UsersOnlineStatuses other = (UsersOnlineStatuses) obj;
+    im.turms.common.model.bo.user.UsersOnlineStatuses other = (im.turms.common.model.bo.user.UsersOnlineStatuses) obj;
 
     if (!getUserStatusesList()
         .equals(other.getUserStatusesList())) return false;
@@ -213,69 +218,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static UsersOnlineStatuses parseFrom(
+  public static im.turms.common.model.bo.user.UsersOnlineStatuses parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UsersOnlineStatuses parseFrom(
+  public static im.turms.common.model.bo.user.UsersOnlineStatuses parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UsersOnlineStatuses parseFrom(
+  public static im.turms.common.model.bo.user.UsersOnlineStatuses parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UsersOnlineStatuses parseFrom(
+  public static im.turms.common.model.bo.user.UsersOnlineStatuses parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UsersOnlineStatuses parseFrom(byte[] data)
+  public static im.turms.common.model.bo.user.UsersOnlineStatuses parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UsersOnlineStatuses parseFrom(
+  public static im.turms.common.model.bo.user.UsersOnlineStatuses parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UsersOnlineStatuses parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.user.UsersOnlineStatuses parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UsersOnlineStatuses parseFrom(
+  public static im.turms.common.model.bo.user.UsersOnlineStatuses parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UsersOnlineStatuses parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.user.UsersOnlineStatuses parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static UsersOnlineStatuses parseDelimitedFrom(
+  public static im.turms.common.model.bo.user.UsersOnlineStatuses parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UsersOnlineStatuses parseFrom(
+  public static im.turms.common.model.bo.user.UsersOnlineStatuses parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UsersOnlineStatuses parseFrom(
+  public static im.turms.common.model.bo.user.UsersOnlineStatuses parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -288,7 +293,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(UsersOnlineStatuses prototype) {
+  public static Builder newBuilder(im.turms.common.model.bo.user.UsersOnlineStatuses prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -309,18 +314,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.UsersOnlineStatuses)
-          UsersOnlineStatusesOrBuilder {
+      im.turms.common.model.bo.user.UsersOnlineStatusesOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return UsersOnlineStatusesOuterClass.internal_static_im_turms_proto_UsersOnlineStatuses_descriptor;
+      return im.turms.common.model.bo.user.UsersOnlineStatusesOuterClass.internal_static_im_turms_proto_UsersOnlineStatuses_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return UsersOnlineStatusesOuterClass.internal_static_im_turms_proto_UsersOnlineStatuses_fieldAccessorTable
+      return im.turms.common.model.bo.user.UsersOnlineStatusesOuterClass.internal_static_im_turms_proto_UsersOnlineStatuses_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              UsersOnlineStatuses.class, UsersOnlineStatuses.Builder.class);
+              im.turms.common.model.bo.user.UsersOnlineStatuses.class, im.turms.common.model.bo.user.UsersOnlineStatuses.Builder.class);
     }
 
     // Construct using im.turms.common.model.bo.user.UsersOnlineStatuses.newBuilder()
@@ -354,17 +359,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return UsersOnlineStatusesOuterClass.internal_static_im_turms_proto_UsersOnlineStatuses_descriptor;
+      return im.turms.common.model.bo.user.UsersOnlineStatusesOuterClass.internal_static_im_turms_proto_UsersOnlineStatuses_descriptor;
     }
 
     @java.lang.Override
-    public UsersOnlineStatuses getDefaultInstanceForType() {
-      return UsersOnlineStatuses.getDefaultInstance();
+    public im.turms.common.model.bo.user.UsersOnlineStatuses getDefaultInstanceForType() {
+      return im.turms.common.model.bo.user.UsersOnlineStatuses.getDefaultInstance();
     }
 
     @java.lang.Override
-    public UsersOnlineStatuses build() {
-      UsersOnlineStatuses result = buildPartial();
+    public im.turms.common.model.bo.user.UsersOnlineStatuses build() {
+      im.turms.common.model.bo.user.UsersOnlineStatuses result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -372,8 +377,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public UsersOnlineStatuses buildPartial() {
-      UsersOnlineStatuses result = new UsersOnlineStatuses(this);
+    public im.turms.common.model.bo.user.UsersOnlineStatuses buildPartial() {
+      im.turms.common.model.bo.user.UsersOnlineStatuses result = new im.turms.common.model.bo.user.UsersOnlineStatuses(this);
       int from_bitField0_ = bitField0_;
       if (userStatusesBuilder_ == null) {
         if (((bitField0_ & 0x00000001) != 0)) {
@@ -422,16 +427,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof UsersOnlineStatuses) {
-        return mergeFrom((UsersOnlineStatuses)other);
+      if (other instanceof im.turms.common.model.bo.user.UsersOnlineStatuses) {
+        return mergeFrom((im.turms.common.model.bo.user.UsersOnlineStatuses)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(UsersOnlineStatuses other) {
-      if (other == UsersOnlineStatuses.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.bo.user.UsersOnlineStatuses other) {
+      if (other == im.turms.common.model.bo.user.UsersOnlineStatuses.getDefaultInstance()) return this;
       if (userStatusesBuilder_ == null) {
         if (!other.userStatuses_.isEmpty()) {
           if (userStatuses_.isEmpty()) {
@@ -473,11 +478,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      UsersOnlineStatuses parsedMessage = null;
+      im.turms.common.model.bo.user.UsersOnlineStatuses parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (UsersOnlineStatuses) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.bo.user.UsersOnlineStatuses) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -488,22 +493,22 @@ private static final long serialVersionUID = 0L;
     }
     private int bitField0_;
 
-    private java.util.List<UserStatusDetail> userStatuses_ =
+    private java.util.List<im.turms.common.model.bo.user.UserStatusDetail> userStatuses_ =
       java.util.Collections.emptyList();
     private void ensureUserStatusesIsMutable() {
       if (!((bitField0_ & 0x00000001) != 0)) {
-        userStatuses_ = new java.util.ArrayList<UserStatusDetail>(userStatuses_);
+        userStatuses_ = new java.util.ArrayList<im.turms.common.model.bo.user.UserStatusDetail>(userStatuses_);
         bitField0_ |= 0x00000001;
        }
     }
 
     private com.google.protobuf.RepeatedFieldBuilderV3<
-            UserStatusDetail, UserStatusDetail.Builder, UserStatusDetailOrBuilder> userStatusesBuilder_;
+        im.turms.common.model.bo.user.UserStatusDetail, im.turms.common.model.bo.user.UserStatusDetail.Builder, im.turms.common.model.bo.user.UserStatusDetailOrBuilder> userStatusesBuilder_;
 
     /**
      * <code>repeated .im.turms.proto.UserStatusDetail user_statuses = 1;</code>
      */
-    public java.util.List<UserStatusDetail> getUserStatusesList() {
+    public java.util.List<im.turms.common.model.bo.user.UserStatusDetail> getUserStatusesList() {
       if (userStatusesBuilder_ == null) {
         return java.util.Collections.unmodifiableList(userStatuses_);
       } else {
@@ -523,7 +528,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserStatusDetail user_statuses = 1;</code>
      */
-    public UserStatusDetail getUserStatuses(int index) {
+    public im.turms.common.model.bo.user.UserStatusDetail getUserStatuses(int index) {
       if (userStatusesBuilder_ == null) {
         return userStatuses_.get(index);
       } else {
@@ -534,7 +539,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.UserStatusDetail user_statuses = 1;</code>
      */
     public Builder setUserStatuses(
-        int index, UserStatusDetail value) {
+        int index, im.turms.common.model.bo.user.UserStatusDetail value) {
       if (userStatusesBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -551,7 +556,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.UserStatusDetail user_statuses = 1;</code>
      */
     public Builder setUserStatuses(
-        int index, UserStatusDetail.Builder builderForValue) {
+        int index, im.turms.common.model.bo.user.UserStatusDetail.Builder builderForValue) {
       if (userStatusesBuilder_ == null) {
         ensureUserStatusesIsMutable();
         userStatuses_.set(index, builderForValue.build());
@@ -564,7 +569,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserStatusDetail user_statuses = 1;</code>
      */
-    public Builder addUserStatuses(UserStatusDetail value) {
+    public Builder addUserStatuses(im.turms.common.model.bo.user.UserStatusDetail value) {
       if (userStatusesBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -581,7 +586,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.UserStatusDetail user_statuses = 1;</code>
      */
     public Builder addUserStatuses(
-        int index, UserStatusDetail value) {
+        int index, im.turms.common.model.bo.user.UserStatusDetail value) {
       if (userStatusesBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -598,7 +603,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.UserStatusDetail user_statuses = 1;</code>
      */
     public Builder addUserStatuses(
-        UserStatusDetail.Builder builderForValue) {
+        im.turms.common.model.bo.user.UserStatusDetail.Builder builderForValue) {
       if (userStatusesBuilder_ == null) {
         ensureUserStatusesIsMutable();
         userStatuses_.add(builderForValue.build());
@@ -612,7 +617,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.UserStatusDetail user_statuses = 1;</code>
      */
     public Builder addUserStatuses(
-        int index, UserStatusDetail.Builder builderForValue) {
+        int index, im.turms.common.model.bo.user.UserStatusDetail.Builder builderForValue) {
       if (userStatusesBuilder_ == null) {
         ensureUserStatusesIsMutable();
         userStatuses_.add(index, builderForValue.build());
@@ -626,7 +631,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.UserStatusDetail user_statuses = 1;</code>
      */
     public Builder addAllUserStatuses(
-        java.lang.Iterable<? extends UserStatusDetail> values) {
+        java.lang.Iterable<? extends im.turms.common.model.bo.user.UserStatusDetail> values) {
       if (userStatusesBuilder_ == null) {
         ensureUserStatusesIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -666,14 +671,14 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserStatusDetail user_statuses = 1;</code>
      */
-    public UserStatusDetail.Builder getUserStatusesBuilder(
+    public im.turms.common.model.bo.user.UserStatusDetail.Builder getUserStatusesBuilder(
         int index) {
       return getUserStatusesFieldBuilder().getBuilder(index);
     }
     /**
      * <code>repeated .im.turms.proto.UserStatusDetail user_statuses = 1;</code>
      */
-    public UserStatusDetailOrBuilder getUserStatusesOrBuilder(
+    public im.turms.common.model.bo.user.UserStatusDetailOrBuilder getUserStatusesOrBuilder(
         int index) {
       if (userStatusesBuilder_ == null) {
         return userStatuses_.get(index);  } else {
@@ -683,7 +688,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserStatusDetail user_statuses = 1;</code>
      */
-    public java.util.List<? extends UserStatusDetailOrBuilder>
+    public java.util.List<? extends im.turms.common.model.bo.user.UserStatusDetailOrBuilder> 
          getUserStatusesOrBuilderList() {
       if (userStatusesBuilder_ != null) {
         return userStatusesBuilder_.getMessageOrBuilderList();
@@ -694,31 +699,31 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserStatusDetail user_statuses = 1;</code>
      */
-    public UserStatusDetail.Builder addUserStatusesBuilder() {
+    public im.turms.common.model.bo.user.UserStatusDetail.Builder addUserStatusesBuilder() {
       return getUserStatusesFieldBuilder().addBuilder(
-          UserStatusDetail.getDefaultInstance());
+          im.turms.common.model.bo.user.UserStatusDetail.getDefaultInstance());
     }
     /**
      * <code>repeated .im.turms.proto.UserStatusDetail user_statuses = 1;</code>
      */
-    public UserStatusDetail.Builder addUserStatusesBuilder(
+    public im.turms.common.model.bo.user.UserStatusDetail.Builder addUserStatusesBuilder(
         int index) {
       return getUserStatusesFieldBuilder().addBuilder(
-          index, UserStatusDetail.getDefaultInstance());
+          index, im.turms.common.model.bo.user.UserStatusDetail.getDefaultInstance());
     }
     /**
      * <code>repeated .im.turms.proto.UserStatusDetail user_statuses = 1;</code>
      */
-    public java.util.List<UserStatusDetail.Builder>
+    public java.util.List<im.turms.common.model.bo.user.UserStatusDetail.Builder> 
          getUserStatusesBuilderList() {
       return getUserStatusesFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-            UserStatusDetail, UserStatusDetail.Builder, UserStatusDetailOrBuilder>
+        im.turms.common.model.bo.user.UserStatusDetail, im.turms.common.model.bo.user.UserStatusDetail.Builder, im.turms.common.model.bo.user.UserStatusDetailOrBuilder> 
         getUserStatusesFieldBuilder() {
       if (userStatusesBuilder_ == null) {
         userStatusesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-                UserStatusDetail, UserStatusDetail.Builder, UserStatusDetailOrBuilder>(
+            im.turms.common.model.bo.user.UserStatusDetail, im.turms.common.model.bo.user.UserStatusDetail.Builder, im.turms.common.model.bo.user.UserStatusDetailOrBuilder>(
                 userStatuses_,
                 ((bitField0_ & 0x00000001) != 0),
                 getParentForChildren(),
@@ -744,12 +749,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.UsersOnlineStatuses)
-  private static final UsersOnlineStatuses DEFAULT_INSTANCE;
+  private static final im.turms.common.model.bo.user.UsersOnlineStatuses DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new UsersOnlineStatuses();
+    DEFAULT_INSTANCE = new im.turms.common.model.bo.user.UsersOnlineStatuses();
   }
 
-  public static UsersOnlineStatuses getDefaultInstance() {
+  public static im.turms.common.model.bo.user.UsersOnlineStatuses getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -774,7 +779,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public UsersOnlineStatuses getDefaultInstanceForType() {
+  public im.turms.common.model.bo.user.UsersOnlineStatuses getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

@@ -23,7 +23,7 @@ package im.turms.common.model.dto.request.group.blacklist;
 /**
  * Protobuf type {@code im.turms.proto.CreateGroupBlacklistedUserRequest}
  */
-public  final class CreateGroupBlacklistedUserRequest extends
+public final class CreateGroupBlacklistedUserRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.CreateGroupBlacklistedUserRequest)
     CreateGroupBlacklistedUserRequestOrBuilder {
@@ -96,15 +96,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return CreateGroupBlacklistedUserRequestOuterClass.internal_static_im_turms_proto_CreateGroupBlacklistedUserRequest_descriptor;
+    return im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequestOuterClass.internal_static_im_turms_proto_CreateGroupBlacklistedUserRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return CreateGroupBlacklistedUserRequestOuterClass.internal_static_im_turms_proto_CreateGroupBlacklistedUserRequest_fieldAccessorTable
+    return im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequestOuterClass.internal_static_im_turms_proto_CreateGroupBlacklistedUserRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            CreateGroupBlacklistedUserRequest.class, CreateGroupBlacklistedUserRequest.Builder.class);
+            im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest.class, im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest.Builder.class);
   }
 
   public static final int GROUP_ID_FIELD_NUMBER = 1;
@@ -113,6 +113,7 @@ private static final long serialVersionUID = 0L;
    * <code>int64 group_id = 1;</code>
    * @return The groupId.
    */
+  @java.lang.Override
   public long getGroupId() {
     return groupId_;
   }
@@ -123,6 +124,7 @@ private static final long serialVersionUID = 0L;
    * <code>int64 blacklisted_user_id = 2;</code>
    * @return The blacklistedUserId.
    */
+  @java.lang.Override
   public long getBlacklistedUserId() {
     return blacklistedUserId_;
   }
@@ -174,10 +176,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof CreateGroupBlacklistedUserRequest)) {
+    if (!(obj instanceof im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest)) {
       return super.equals(obj);
     }
-    CreateGroupBlacklistedUserRequest other = (CreateGroupBlacklistedUserRequest) obj;
+    im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest other = (im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest) obj;
 
     if (getGroupId()
         != other.getGroupId()) return false;
@@ -205,69 +207,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static CreateGroupBlacklistedUserRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static CreateGroupBlacklistedUserRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static CreateGroupBlacklistedUserRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static CreateGroupBlacklistedUserRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static CreateGroupBlacklistedUserRequest parseFrom(byte[] data)
+  public static im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static CreateGroupBlacklistedUserRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static CreateGroupBlacklistedUserRequest parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static CreateGroupBlacklistedUserRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static CreateGroupBlacklistedUserRequest parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static CreateGroupBlacklistedUserRequest parseDelimitedFrom(
+  public static im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static CreateGroupBlacklistedUserRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static CreateGroupBlacklistedUserRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -280,7 +282,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(CreateGroupBlacklistedUserRequest prototype) {
+  public static Builder newBuilder(im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -301,18 +303,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.CreateGroupBlacklistedUserRequest)
-          CreateGroupBlacklistedUserRequestOrBuilder {
+      im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return CreateGroupBlacklistedUserRequestOuterClass.internal_static_im_turms_proto_CreateGroupBlacklistedUserRequest_descriptor;
+      return im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequestOuterClass.internal_static_im_turms_proto_CreateGroupBlacklistedUserRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return CreateGroupBlacklistedUserRequestOuterClass.internal_static_im_turms_proto_CreateGroupBlacklistedUserRequest_fieldAccessorTable
+      return im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequestOuterClass.internal_static_im_turms_proto_CreateGroupBlacklistedUserRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              CreateGroupBlacklistedUserRequest.class, CreateGroupBlacklistedUserRequest.Builder.class);
+              im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest.class, im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest.Builder.class);
     }
 
     // Construct using im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest.newBuilder()
@@ -343,17 +345,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return CreateGroupBlacklistedUserRequestOuterClass.internal_static_im_turms_proto_CreateGroupBlacklistedUserRequest_descriptor;
+      return im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequestOuterClass.internal_static_im_turms_proto_CreateGroupBlacklistedUserRequest_descriptor;
     }
 
     @java.lang.Override
-    public CreateGroupBlacklistedUserRequest getDefaultInstanceForType() {
-      return CreateGroupBlacklistedUserRequest.getDefaultInstance();
+    public im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest getDefaultInstanceForType() {
+      return im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public CreateGroupBlacklistedUserRequest build() {
-      CreateGroupBlacklistedUserRequest result = buildPartial();
+    public im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest build() {
+      im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -361,8 +363,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public CreateGroupBlacklistedUserRequest buildPartial() {
-      CreateGroupBlacklistedUserRequest result = new CreateGroupBlacklistedUserRequest(this);
+    public im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest buildPartial() {
+      im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest result = new im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest(this);
       result.groupId_ = groupId_;
       result.blacklistedUserId_ = blacklistedUserId_;
       onBuilt();
@@ -403,16 +405,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof CreateGroupBlacklistedUserRequest) {
-        return mergeFrom((CreateGroupBlacklistedUserRequest)other);
+      if (other instanceof im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest) {
+        return mergeFrom((im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(CreateGroupBlacklistedUserRequest other) {
-      if (other == CreateGroupBlacklistedUserRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest other) {
+      if (other == im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest.getDefaultInstance()) return this;
       if (other.getGroupId() != 0L) {
         setGroupId(other.getGroupId());
       }
@@ -434,11 +436,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      CreateGroupBlacklistedUserRequest parsedMessage = null;
+      im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (CreateGroupBlacklistedUserRequest) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -453,6 +455,7 @@ private static final long serialVersionUID = 0L;
      * <code>int64 group_id = 1;</code>
      * @return The groupId.
      */
+    @java.lang.Override
     public long getGroupId() {
       return groupId_;
     }
@@ -483,6 +486,7 @@ private static final long serialVersionUID = 0L;
      * <code>int64 blacklisted_user_id = 2;</code>
      * @return The blacklistedUserId.
      */
+    @java.lang.Override
     public long getBlacklistedUserId() {
       return blacklistedUserId_;
     }
@@ -524,12 +528,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.CreateGroupBlacklistedUserRequest)
-  private static final CreateGroupBlacklistedUserRequest DEFAULT_INSTANCE;
+  private static final im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new CreateGroupBlacklistedUserRequest();
+    DEFAULT_INSTANCE = new im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest();
   }
 
-  public static CreateGroupBlacklistedUserRequest getDefaultInstance() {
+  public static im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -554,7 +558,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public CreateGroupBlacklistedUserRequest getDefaultInstanceForType() {
+  public im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

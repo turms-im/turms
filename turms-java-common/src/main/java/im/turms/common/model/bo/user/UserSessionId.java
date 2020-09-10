@@ -20,12 +20,10 @@
 
 package im.turms.common.model.bo.user;
 
-import im.turms.common.constant.DeviceType;
-
 /**
  * Protobuf type {@code im.turms.proto.UserSessionId}
  */
-public  final class UserSessionId extends
+public final class UserSessionId extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.UserSessionId)
     UserSessionIdOrBuilder {
@@ -100,15 +98,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return UserSessionIdOuterClass.internal_static_im_turms_proto_UserSessionId_descriptor;
+    return im.turms.common.model.bo.user.UserSessionIdOuterClass.internal_static_im_turms_proto_UserSessionId_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return UserSessionIdOuterClass.internal_static_im_turms_proto_UserSessionId_fieldAccessorTable
+    return im.turms.common.model.bo.user.UserSessionIdOuterClass.internal_static_im_turms_proto_UserSessionId_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            UserSessionId.class, UserSessionId.Builder.class);
+            im.turms.common.model.bo.user.UserSessionId.class, im.turms.common.model.bo.user.UserSessionId.Builder.class);
   }
 
   public static final int USER_ID_FIELD_NUMBER = 1;
@@ -117,6 +115,7 @@ private static final long serialVersionUID = 0L;
    * <code>int64 user_id = 1;</code>
    * @return The userId.
    */
+  @java.lang.Override
   public long getUserId() {
     return userId_;
   }
@@ -127,17 +126,17 @@ private static final long serialVersionUID = 0L;
    * <code>.im.turms.proto.DeviceType device_type = 2;</code>
    * @return The enum numeric value on the wire for deviceType.
    */
-  public int getDeviceTypeValue() {
+  @java.lang.Override public int getDeviceTypeValue() {
     return deviceType_;
   }
   /**
    * <code>.im.turms.proto.DeviceType device_type = 2;</code>
    * @return The deviceType.
    */
-  public DeviceType getDeviceType() {
+  @java.lang.Override public im.turms.common.constant.DeviceType getDeviceType() {
     @SuppressWarnings("deprecation")
-    DeviceType result = DeviceType.valueOf(deviceType_);
-    return result == null ? DeviceType.UNRECOGNIZED : result;
+    im.turms.common.constant.DeviceType result = im.turms.common.constant.DeviceType.valueOf(deviceType_);
+    return result == null ? im.turms.common.constant.DeviceType.UNRECOGNIZED : result;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -157,7 +156,7 @@ private static final long serialVersionUID = 0L;
     if (userId_ != 0L) {
       output.writeInt64(1, userId_);
     }
-    if (deviceType_ != DeviceType.DESKTOP.getNumber()) {
+    if (deviceType_ != im.turms.common.constant.DeviceType.DESKTOP.getNumber()) {
       output.writeEnum(2, deviceType_);
     }
     unknownFields.writeTo(output);
@@ -173,7 +172,7 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt64Size(1, userId_);
     }
-    if (deviceType_ != DeviceType.DESKTOP.getNumber()) {
+    if (deviceType_ != im.turms.common.constant.DeviceType.DESKTOP.getNumber()) {
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(2, deviceType_);
     }
@@ -187,10 +186,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof UserSessionId)) {
+    if (!(obj instanceof im.turms.common.model.bo.user.UserSessionId)) {
       return super.equals(obj);
     }
-    UserSessionId other = (UserSessionId) obj;
+    im.turms.common.model.bo.user.UserSessionId other = (im.turms.common.model.bo.user.UserSessionId) obj;
 
     if (getUserId()
         != other.getUserId()) return false;
@@ -216,69 +215,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static UserSessionId parseFrom(
+  public static im.turms.common.model.bo.user.UserSessionId parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UserSessionId parseFrom(
+  public static im.turms.common.model.bo.user.UserSessionId parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UserSessionId parseFrom(
+  public static im.turms.common.model.bo.user.UserSessionId parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UserSessionId parseFrom(
+  public static im.turms.common.model.bo.user.UserSessionId parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UserSessionId parseFrom(byte[] data)
+  public static im.turms.common.model.bo.user.UserSessionId parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UserSessionId parseFrom(
+  public static im.turms.common.model.bo.user.UserSessionId parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UserSessionId parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.user.UserSessionId parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UserSessionId parseFrom(
+  public static im.turms.common.model.bo.user.UserSessionId parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UserSessionId parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.user.UserSessionId parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static UserSessionId parseDelimitedFrom(
+  public static im.turms.common.model.bo.user.UserSessionId parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UserSessionId parseFrom(
+  public static im.turms.common.model.bo.user.UserSessionId parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UserSessionId parseFrom(
+  public static im.turms.common.model.bo.user.UserSessionId parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -291,7 +290,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(UserSessionId prototype) {
+  public static Builder newBuilder(im.turms.common.model.bo.user.UserSessionId prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -312,18 +311,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.UserSessionId)
-          UserSessionIdOrBuilder {
+      im.turms.common.model.bo.user.UserSessionIdOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return UserSessionIdOuterClass.internal_static_im_turms_proto_UserSessionId_descriptor;
+      return im.turms.common.model.bo.user.UserSessionIdOuterClass.internal_static_im_turms_proto_UserSessionId_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return UserSessionIdOuterClass.internal_static_im_turms_proto_UserSessionId_fieldAccessorTable
+      return im.turms.common.model.bo.user.UserSessionIdOuterClass.internal_static_im_turms_proto_UserSessionId_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              UserSessionId.class, UserSessionId.Builder.class);
+              im.turms.common.model.bo.user.UserSessionId.class, im.turms.common.model.bo.user.UserSessionId.Builder.class);
     }
 
     // Construct using im.turms.common.model.bo.user.UserSessionId.newBuilder()
@@ -354,17 +353,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return UserSessionIdOuterClass.internal_static_im_turms_proto_UserSessionId_descriptor;
+      return im.turms.common.model.bo.user.UserSessionIdOuterClass.internal_static_im_turms_proto_UserSessionId_descriptor;
     }
 
     @java.lang.Override
-    public UserSessionId getDefaultInstanceForType() {
-      return UserSessionId.getDefaultInstance();
+    public im.turms.common.model.bo.user.UserSessionId getDefaultInstanceForType() {
+      return im.turms.common.model.bo.user.UserSessionId.getDefaultInstance();
     }
 
     @java.lang.Override
-    public UserSessionId build() {
-      UserSessionId result = buildPartial();
+    public im.turms.common.model.bo.user.UserSessionId build() {
+      im.turms.common.model.bo.user.UserSessionId result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -372,8 +371,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public UserSessionId buildPartial() {
-      UserSessionId result = new UserSessionId(this);
+    public im.turms.common.model.bo.user.UserSessionId buildPartial() {
+      im.turms.common.model.bo.user.UserSessionId result = new im.turms.common.model.bo.user.UserSessionId(this);
       result.userId_ = userId_;
       result.deviceType_ = deviceType_;
       onBuilt();
@@ -414,16 +413,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof UserSessionId) {
-        return mergeFrom((UserSessionId)other);
+      if (other instanceof im.turms.common.model.bo.user.UserSessionId) {
+        return mergeFrom((im.turms.common.model.bo.user.UserSessionId)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(UserSessionId other) {
-      if (other == UserSessionId.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.bo.user.UserSessionId other) {
+      if (other == im.turms.common.model.bo.user.UserSessionId.getDefaultInstance()) return this;
       if (other.getUserId() != 0L) {
         setUserId(other.getUserId());
       }
@@ -445,11 +444,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      UserSessionId parsedMessage = null;
+      im.turms.common.model.bo.user.UserSessionId parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (UserSessionId) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.bo.user.UserSessionId) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -464,6 +463,7 @@ private static final long serialVersionUID = 0L;
      * <code>int64 user_id = 1;</code>
      * @return The userId.
      */
+    @java.lang.Override
     public long getUserId() {
       return userId_;
     }
@@ -494,7 +494,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.DeviceType device_type = 2;</code>
      * @return The enum numeric value on the wire for deviceType.
      */
-    public int getDeviceTypeValue() {
+    @java.lang.Override public int getDeviceTypeValue() {
       return deviceType_;
     }
     /**
@@ -503,6 +503,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setDeviceTypeValue(int value) {
+      
       deviceType_ = value;
       onChanged();
       return this;
@@ -511,17 +512,18 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.DeviceType device_type = 2;</code>
      * @return The deviceType.
      */
-    public DeviceType getDeviceType() {
+    @java.lang.Override
+    public im.turms.common.constant.DeviceType getDeviceType() {
       @SuppressWarnings("deprecation")
-      DeviceType result = DeviceType.valueOf(deviceType_);
-      return result == null ? DeviceType.UNRECOGNIZED : result;
+      im.turms.common.constant.DeviceType result = im.turms.common.constant.DeviceType.valueOf(deviceType_);
+      return result == null ? im.turms.common.constant.DeviceType.UNRECOGNIZED : result;
     }
     /**
      * <code>.im.turms.proto.DeviceType device_type = 2;</code>
      * @param value The deviceType to set.
      * @return This builder for chaining.
      */
-    public Builder setDeviceType(DeviceType value) {
+    public Builder setDeviceType(im.turms.common.constant.DeviceType value) {
       if (value == null) {
         throw new NullPointerException();
       }
@@ -557,12 +559,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.UserSessionId)
-  private static final UserSessionId DEFAULT_INSTANCE;
+  private static final im.turms.common.model.bo.user.UserSessionId DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new UserSessionId();
+    DEFAULT_INSTANCE = new im.turms.common.model.bo.user.UserSessionId();
   }
 
-  public static UserSessionId getDefaultInstance() {
+  public static im.turms.common.model.bo.user.UserSessionId getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -587,7 +589,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public UserSessionId getDefaultInstanceForType() {
+  public im.turms.common.model.bo.user.UserSessionId getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

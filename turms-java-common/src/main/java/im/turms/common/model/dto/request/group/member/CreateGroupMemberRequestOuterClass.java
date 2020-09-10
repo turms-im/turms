@@ -20,8 +20,6 @@
 
 package im.turms.common.model.dto.request.group.member;
 
-import im.turms.common.constant.GroupMemberRoleOuterClass;
-
 public final class CreateGroupMemberRequestOuterClass {
   private CreateGroupMemberRequestOuterClass() {}
   public static void registerAllExtensions(
@@ -63,7 +61,7 @@ public final class CreateGroupMemberRequestOuterClass {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.WrappersProto.getDescriptor(),
-          GroupMemberRoleOuterClass.getDescriptor(),
+          im.turms.common.constant.GroupMemberRoleOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_CreateGroupMemberRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -72,7 +70,7 @@ public final class CreateGroupMemberRequestOuterClass {
         internal_static_im_turms_proto_CreateGroupMemberRequest_descriptor,
         new java.lang.String[] { "GroupId", "UserId", "Name", "Role", "MuteEndDate", });
     com.google.protobuf.WrappersProto.getDescriptor();
-    GroupMemberRoleOuterClass.getDescriptor();
+    im.turms.common.constant.GroupMemberRoleOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -23,7 +23,7 @@ package im.turms.common.model.bo.user;
 /**
  * Protobuf type {@code im.turms.proto.UserSessionIds}
  */
-public  final class UserSessionIds extends
+public final class UserSessionIds extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.UserSessionIds)
     UserSessionIdsOrBuilder {
@@ -69,11 +69,11 @@ private static final long serialVersionUID = 0L;
             break;
           case 10: {
             if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-              userSessionIds_ = new java.util.ArrayList<UserSessionId>();
+              userSessionIds_ = new java.util.ArrayList<im.turms.common.model.bo.user.UserSessionId>();
               mutable_bitField0_ |= 0x00000001;
             }
             userSessionIds_.add(
-                input.readMessage(UserSessionId.parser(), extensionRegistry));
+                input.readMessage(im.turms.common.model.bo.user.UserSessionId.parser(), extensionRegistry));
             break;
           }
           default: {
@@ -100,48 +100,53 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return UserSessionIdsOuterClass.internal_static_im_turms_proto_UserSessionIds_descriptor;
+    return im.turms.common.model.bo.user.UserSessionIdsOuterClass.internal_static_im_turms_proto_UserSessionIds_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return UserSessionIdsOuterClass.internal_static_im_turms_proto_UserSessionIds_fieldAccessorTable
+    return im.turms.common.model.bo.user.UserSessionIdsOuterClass.internal_static_im_turms_proto_UserSessionIds_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            UserSessionIds.class, UserSessionIds.Builder.class);
+            im.turms.common.model.bo.user.UserSessionIds.class, im.turms.common.model.bo.user.UserSessionIds.Builder.class);
   }
 
   public static final int USER_SESSION_IDS_FIELD_NUMBER = 1;
-  private java.util.List<UserSessionId> userSessionIds_;
+  private java.util.List<im.turms.common.model.bo.user.UserSessionId> userSessionIds_;
   /**
    * <code>repeated .im.turms.proto.UserSessionId user_session_ids = 1;</code>
    */
-  public java.util.List<UserSessionId> getUserSessionIdsList() {
+  @java.lang.Override
+  public java.util.List<im.turms.common.model.bo.user.UserSessionId> getUserSessionIdsList() {
     return userSessionIds_;
   }
   /**
    * <code>repeated .im.turms.proto.UserSessionId user_session_ids = 1;</code>
    */
-  public java.util.List<? extends UserSessionIdOrBuilder>
+  @java.lang.Override
+  public java.util.List<? extends im.turms.common.model.bo.user.UserSessionIdOrBuilder> 
       getUserSessionIdsOrBuilderList() {
     return userSessionIds_;
   }
   /**
    * <code>repeated .im.turms.proto.UserSessionId user_session_ids = 1;</code>
    */
+  @java.lang.Override
   public int getUserSessionIdsCount() {
     return userSessionIds_.size();
   }
   /**
    * <code>repeated .im.turms.proto.UserSessionId user_session_ids = 1;</code>
    */
-  public UserSessionId getUserSessionIds(int index) {
+  @java.lang.Override
+  public im.turms.common.model.bo.user.UserSessionId getUserSessionIds(int index) {
     return userSessionIds_.get(index);
   }
   /**
    * <code>repeated .im.turms.proto.UserSessionId user_session_ids = 1;</code>
    */
-  public UserSessionIdOrBuilder getUserSessionIdsOrBuilder(
+  @java.lang.Override
+  public im.turms.common.model.bo.user.UserSessionIdOrBuilder getUserSessionIdsOrBuilder(
       int index) {
     return userSessionIds_.get(index);
   }
@@ -186,10 +191,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof UserSessionIds)) {
+    if (!(obj instanceof im.turms.common.model.bo.user.UserSessionIds)) {
       return super.equals(obj);
     }
-    UserSessionIds other = (UserSessionIds) obj;
+    im.turms.common.model.bo.user.UserSessionIds other = (im.turms.common.model.bo.user.UserSessionIds) obj;
 
     if (!getUserSessionIdsList()
         .equals(other.getUserSessionIdsList())) return false;
@@ -213,69 +218,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static UserSessionIds parseFrom(
+  public static im.turms.common.model.bo.user.UserSessionIds parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UserSessionIds parseFrom(
+  public static im.turms.common.model.bo.user.UserSessionIds parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UserSessionIds parseFrom(
+  public static im.turms.common.model.bo.user.UserSessionIds parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UserSessionIds parseFrom(
+  public static im.turms.common.model.bo.user.UserSessionIds parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UserSessionIds parseFrom(byte[] data)
+  public static im.turms.common.model.bo.user.UserSessionIds parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UserSessionIds parseFrom(
+  public static im.turms.common.model.bo.user.UserSessionIds parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UserSessionIds parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.user.UserSessionIds parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UserSessionIds parseFrom(
+  public static im.turms.common.model.bo.user.UserSessionIds parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UserSessionIds parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.user.UserSessionIds parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static UserSessionIds parseDelimitedFrom(
+  public static im.turms.common.model.bo.user.UserSessionIds parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UserSessionIds parseFrom(
+  public static im.turms.common.model.bo.user.UserSessionIds parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UserSessionIds parseFrom(
+  public static im.turms.common.model.bo.user.UserSessionIds parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -288,7 +293,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(UserSessionIds prototype) {
+  public static Builder newBuilder(im.turms.common.model.bo.user.UserSessionIds prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -309,18 +314,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.UserSessionIds)
-          UserSessionIdsOrBuilder {
+      im.turms.common.model.bo.user.UserSessionIdsOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return UserSessionIdsOuterClass.internal_static_im_turms_proto_UserSessionIds_descriptor;
+      return im.turms.common.model.bo.user.UserSessionIdsOuterClass.internal_static_im_turms_proto_UserSessionIds_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return UserSessionIdsOuterClass.internal_static_im_turms_proto_UserSessionIds_fieldAccessorTable
+      return im.turms.common.model.bo.user.UserSessionIdsOuterClass.internal_static_im_turms_proto_UserSessionIds_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              UserSessionIds.class, UserSessionIds.Builder.class);
+              im.turms.common.model.bo.user.UserSessionIds.class, im.turms.common.model.bo.user.UserSessionIds.Builder.class);
     }
 
     // Construct using im.turms.common.model.bo.user.UserSessionIds.newBuilder()
@@ -354,17 +359,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return UserSessionIdsOuterClass.internal_static_im_turms_proto_UserSessionIds_descriptor;
+      return im.turms.common.model.bo.user.UserSessionIdsOuterClass.internal_static_im_turms_proto_UserSessionIds_descriptor;
     }
 
     @java.lang.Override
-    public UserSessionIds getDefaultInstanceForType() {
-      return UserSessionIds.getDefaultInstance();
+    public im.turms.common.model.bo.user.UserSessionIds getDefaultInstanceForType() {
+      return im.turms.common.model.bo.user.UserSessionIds.getDefaultInstance();
     }
 
     @java.lang.Override
-    public UserSessionIds build() {
-      UserSessionIds result = buildPartial();
+    public im.turms.common.model.bo.user.UserSessionIds build() {
+      im.turms.common.model.bo.user.UserSessionIds result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -372,8 +377,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public UserSessionIds buildPartial() {
-      UserSessionIds result = new UserSessionIds(this);
+    public im.turms.common.model.bo.user.UserSessionIds buildPartial() {
+      im.turms.common.model.bo.user.UserSessionIds result = new im.turms.common.model.bo.user.UserSessionIds(this);
       int from_bitField0_ = bitField0_;
       if (userSessionIdsBuilder_ == null) {
         if (((bitField0_ & 0x00000001) != 0)) {
@@ -422,16 +427,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof UserSessionIds) {
-        return mergeFrom((UserSessionIds)other);
+      if (other instanceof im.turms.common.model.bo.user.UserSessionIds) {
+        return mergeFrom((im.turms.common.model.bo.user.UserSessionIds)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(UserSessionIds other) {
-      if (other == UserSessionIds.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.bo.user.UserSessionIds other) {
+      if (other == im.turms.common.model.bo.user.UserSessionIds.getDefaultInstance()) return this;
       if (userSessionIdsBuilder_ == null) {
         if (!other.userSessionIds_.isEmpty()) {
           if (userSessionIds_.isEmpty()) {
@@ -473,11 +478,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      UserSessionIds parsedMessage = null;
+      im.turms.common.model.bo.user.UserSessionIds parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (UserSessionIds) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.bo.user.UserSessionIds) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -488,22 +493,22 @@ private static final long serialVersionUID = 0L;
     }
     private int bitField0_;
 
-    private java.util.List<UserSessionId> userSessionIds_ =
+    private java.util.List<im.turms.common.model.bo.user.UserSessionId> userSessionIds_ =
       java.util.Collections.emptyList();
     private void ensureUserSessionIdsIsMutable() {
       if (!((bitField0_ & 0x00000001) != 0)) {
-        userSessionIds_ = new java.util.ArrayList<UserSessionId>(userSessionIds_);
+        userSessionIds_ = new java.util.ArrayList<im.turms.common.model.bo.user.UserSessionId>(userSessionIds_);
         bitField0_ |= 0x00000001;
        }
     }
 
     private com.google.protobuf.RepeatedFieldBuilderV3<
-            UserSessionId, UserSessionId.Builder, UserSessionIdOrBuilder> userSessionIdsBuilder_;
+        im.turms.common.model.bo.user.UserSessionId, im.turms.common.model.bo.user.UserSessionId.Builder, im.turms.common.model.bo.user.UserSessionIdOrBuilder> userSessionIdsBuilder_;
 
     /**
      * <code>repeated .im.turms.proto.UserSessionId user_session_ids = 1;</code>
      */
-    public java.util.List<UserSessionId> getUserSessionIdsList() {
+    public java.util.List<im.turms.common.model.bo.user.UserSessionId> getUserSessionIdsList() {
       if (userSessionIdsBuilder_ == null) {
         return java.util.Collections.unmodifiableList(userSessionIds_);
       } else {
@@ -523,7 +528,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserSessionId user_session_ids = 1;</code>
      */
-    public UserSessionId getUserSessionIds(int index) {
+    public im.turms.common.model.bo.user.UserSessionId getUserSessionIds(int index) {
       if (userSessionIdsBuilder_ == null) {
         return userSessionIds_.get(index);
       } else {
@@ -534,7 +539,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.UserSessionId user_session_ids = 1;</code>
      */
     public Builder setUserSessionIds(
-        int index, UserSessionId value) {
+        int index, im.turms.common.model.bo.user.UserSessionId value) {
       if (userSessionIdsBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -551,7 +556,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.UserSessionId user_session_ids = 1;</code>
      */
     public Builder setUserSessionIds(
-        int index, UserSessionId.Builder builderForValue) {
+        int index, im.turms.common.model.bo.user.UserSessionId.Builder builderForValue) {
       if (userSessionIdsBuilder_ == null) {
         ensureUserSessionIdsIsMutable();
         userSessionIds_.set(index, builderForValue.build());
@@ -564,7 +569,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserSessionId user_session_ids = 1;</code>
      */
-    public Builder addUserSessionIds(UserSessionId value) {
+    public Builder addUserSessionIds(im.turms.common.model.bo.user.UserSessionId value) {
       if (userSessionIdsBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -581,7 +586,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.UserSessionId user_session_ids = 1;</code>
      */
     public Builder addUserSessionIds(
-        int index, UserSessionId value) {
+        int index, im.turms.common.model.bo.user.UserSessionId value) {
       if (userSessionIdsBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -598,7 +603,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.UserSessionId user_session_ids = 1;</code>
      */
     public Builder addUserSessionIds(
-        UserSessionId.Builder builderForValue) {
+        im.turms.common.model.bo.user.UserSessionId.Builder builderForValue) {
       if (userSessionIdsBuilder_ == null) {
         ensureUserSessionIdsIsMutable();
         userSessionIds_.add(builderForValue.build());
@@ -612,7 +617,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.UserSessionId user_session_ids = 1;</code>
      */
     public Builder addUserSessionIds(
-        int index, UserSessionId.Builder builderForValue) {
+        int index, im.turms.common.model.bo.user.UserSessionId.Builder builderForValue) {
       if (userSessionIdsBuilder_ == null) {
         ensureUserSessionIdsIsMutable();
         userSessionIds_.add(index, builderForValue.build());
@@ -626,7 +631,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.UserSessionId user_session_ids = 1;</code>
      */
     public Builder addAllUserSessionIds(
-        java.lang.Iterable<? extends UserSessionId> values) {
+        java.lang.Iterable<? extends im.turms.common.model.bo.user.UserSessionId> values) {
       if (userSessionIdsBuilder_ == null) {
         ensureUserSessionIdsIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -666,14 +671,14 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserSessionId user_session_ids = 1;</code>
      */
-    public UserSessionId.Builder getUserSessionIdsBuilder(
+    public im.turms.common.model.bo.user.UserSessionId.Builder getUserSessionIdsBuilder(
         int index) {
       return getUserSessionIdsFieldBuilder().getBuilder(index);
     }
     /**
      * <code>repeated .im.turms.proto.UserSessionId user_session_ids = 1;</code>
      */
-    public UserSessionIdOrBuilder getUserSessionIdsOrBuilder(
+    public im.turms.common.model.bo.user.UserSessionIdOrBuilder getUserSessionIdsOrBuilder(
         int index) {
       if (userSessionIdsBuilder_ == null) {
         return userSessionIds_.get(index);  } else {
@@ -683,7 +688,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserSessionId user_session_ids = 1;</code>
      */
-    public java.util.List<? extends UserSessionIdOrBuilder>
+    public java.util.List<? extends im.turms.common.model.bo.user.UserSessionIdOrBuilder> 
          getUserSessionIdsOrBuilderList() {
       if (userSessionIdsBuilder_ != null) {
         return userSessionIdsBuilder_.getMessageOrBuilderList();
@@ -694,31 +699,31 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserSessionId user_session_ids = 1;</code>
      */
-    public UserSessionId.Builder addUserSessionIdsBuilder() {
+    public im.turms.common.model.bo.user.UserSessionId.Builder addUserSessionIdsBuilder() {
       return getUserSessionIdsFieldBuilder().addBuilder(
-          UserSessionId.getDefaultInstance());
+          im.turms.common.model.bo.user.UserSessionId.getDefaultInstance());
     }
     /**
      * <code>repeated .im.turms.proto.UserSessionId user_session_ids = 1;</code>
      */
-    public UserSessionId.Builder addUserSessionIdsBuilder(
+    public im.turms.common.model.bo.user.UserSessionId.Builder addUserSessionIdsBuilder(
         int index) {
       return getUserSessionIdsFieldBuilder().addBuilder(
-          index, UserSessionId.getDefaultInstance());
+          index, im.turms.common.model.bo.user.UserSessionId.getDefaultInstance());
     }
     /**
      * <code>repeated .im.turms.proto.UserSessionId user_session_ids = 1;</code>
      */
-    public java.util.List<UserSessionId.Builder>
+    public java.util.List<im.turms.common.model.bo.user.UserSessionId.Builder> 
          getUserSessionIdsBuilderList() {
       return getUserSessionIdsFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-            UserSessionId, UserSessionId.Builder, UserSessionIdOrBuilder>
+        im.turms.common.model.bo.user.UserSessionId, im.turms.common.model.bo.user.UserSessionId.Builder, im.turms.common.model.bo.user.UserSessionIdOrBuilder> 
         getUserSessionIdsFieldBuilder() {
       if (userSessionIdsBuilder_ == null) {
         userSessionIdsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-                UserSessionId, UserSessionId.Builder, UserSessionIdOrBuilder>(
+            im.turms.common.model.bo.user.UserSessionId, im.turms.common.model.bo.user.UserSessionId.Builder, im.turms.common.model.bo.user.UserSessionIdOrBuilder>(
                 userSessionIds_,
                 ((bitField0_ & 0x00000001) != 0),
                 getParentForChildren(),
@@ -744,12 +749,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.UserSessionIds)
-  private static final UserSessionIds DEFAULT_INSTANCE;
+  private static final im.turms.common.model.bo.user.UserSessionIds DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new UserSessionIds();
+    DEFAULT_INSTANCE = new im.turms.common.model.bo.user.UserSessionIds();
   }
 
-  public static UserSessionIds getDefaultInstance() {
+  public static im.turms.common.model.bo.user.UserSessionIds getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -774,7 +779,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public UserSessionIds getDefaultInstanceForType() {
+  public im.turms.common.model.bo.user.UserSessionIds getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

@@ -20,10 +20,6 @@
 
 package im.turms.common.model.bo.group;
 
-import im.turms.common.constant.DeviceTypeOuterClass;
-import im.turms.common.constant.GroupMemberRoleOuterClass;
-import im.turms.common.constant.UserStatusOuterClass;
-
 public final class GroupMemberOuterClass {
   private GroupMemberOuterClass() {}
   public static void registerAllExtensions(
@@ -70,9 +66,9 @@ public final class GroupMemberOuterClass {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.WrappersProto.getDescriptor(),
-          GroupMemberRoleOuterClass.getDescriptor(),
-          UserStatusOuterClass.getDescriptor(),
-          DeviceTypeOuterClass.getDescriptor(),
+          im.turms.common.constant.GroupMemberRoleOuterClass.getDescriptor(),
+          im.turms.common.constant.UserStatusOuterClass.getDescriptor(),
+          im.turms.common.constant.DeviceTypeOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_GroupMember_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -81,9 +77,9 @@ public final class GroupMemberOuterClass {
         internal_static_im_turms_proto_GroupMember_descriptor,
         new java.lang.String[] { "GroupId", "UserId", "Name", "Role", "JoinDate", "MuteEndDate", "UserStatus", "UsingDeviceTypes", });
     com.google.protobuf.WrappersProto.getDescriptor();
-    GroupMemberRoleOuterClass.getDescriptor();
-    UserStatusOuterClass.getDescriptor();
-    DeviceTypeOuterClass.getDescriptor();
+    im.turms.common.constant.GroupMemberRoleOuterClass.getDescriptor();
+    im.turms.common.constant.UserStatusOuterClass.getDescriptor();
+    im.turms.common.constant.DeviceTypeOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

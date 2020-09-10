@@ -20,13 +20,10 @@
 
 package im.turms.common.model.bo.user;
 
-import im.turms.common.constant.DeviceType;
-import im.turms.common.constant.UserStatus;
-
 /**
  * Protobuf type {@code im.turms.proto.UserStatusDetail}
  */
-public  final class UserStatusDetail extends
+public final class UserStatusDetail extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.UserStatusDetail)
     UserStatusDetailOrBuilder {
@@ -129,15 +126,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return UserStatusDetailOuterClass.internal_static_im_turms_proto_UserStatusDetail_descriptor;
+    return im.turms.common.model.bo.user.UserStatusDetailOuterClass.internal_static_im_turms_proto_UserStatusDetail_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return UserStatusDetailOuterClass.internal_static_im_turms_proto_UserStatusDetail_fieldAccessorTable
+    return im.turms.common.model.bo.user.UserStatusDetailOuterClass.internal_static_im_turms_proto_UserStatusDetail_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            UserStatusDetail.class, UserStatusDetail.Builder.class);
+            im.turms.common.model.bo.user.UserStatusDetail.class, im.turms.common.model.bo.user.UserStatusDetail.Builder.class);
   }
 
   public static final int USER_ID_FIELD_NUMBER = 1;
@@ -146,6 +143,7 @@ private static final long serialVersionUID = 0L;
    * <code>int64 user_id = 1;</code>
    * @return The userId.
    */
+  @java.lang.Override
   public long getUserId() {
     return userId_;
   }
@@ -156,43 +154,45 @@ private static final long serialVersionUID = 0L;
    * <code>.im.turms.proto.UserStatus user_status = 2;</code>
    * @return The enum numeric value on the wire for userStatus.
    */
-  public int getUserStatusValue() {
+  @java.lang.Override public int getUserStatusValue() {
     return userStatus_;
   }
   /**
    * <code>.im.turms.proto.UserStatus user_status = 2;</code>
    * @return The userStatus.
    */
-  public UserStatus getUserStatus() {
+  @java.lang.Override public im.turms.common.constant.UserStatus getUserStatus() {
     @SuppressWarnings("deprecation")
-    UserStatus result = UserStatus.valueOf(userStatus_);
-    return result == null ? UserStatus.UNRECOGNIZED : result;
+    im.turms.common.constant.UserStatus result = im.turms.common.constant.UserStatus.valueOf(userStatus_);
+    return result == null ? im.turms.common.constant.UserStatus.UNRECOGNIZED : result;
   }
 
   public static final int USING_DEVICE_TYPES_FIELD_NUMBER = 3;
   private java.util.List<java.lang.Integer> usingDeviceTypes_;
   private static final com.google.protobuf.Internal.ListAdapter.Converter<
-      java.lang.Integer, DeviceType> usingDeviceTypes_converter_ =
+      java.lang.Integer, im.turms.common.constant.DeviceType> usingDeviceTypes_converter_ =
           new com.google.protobuf.Internal.ListAdapter.Converter<
-              java.lang.Integer, DeviceType>() {
-            public DeviceType convert(java.lang.Integer from) {
+              java.lang.Integer, im.turms.common.constant.DeviceType>() {
+            public im.turms.common.constant.DeviceType convert(java.lang.Integer from) {
               @SuppressWarnings("deprecation")
-              DeviceType result = DeviceType.valueOf(from);
-              return result == null ? DeviceType.UNRECOGNIZED : result;
+              im.turms.common.constant.DeviceType result = im.turms.common.constant.DeviceType.valueOf(from);
+              return result == null ? im.turms.common.constant.DeviceType.UNRECOGNIZED : result;
             }
           };
   /**
    * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
    * @return A list containing the usingDeviceTypes.
    */
-  public java.util.List<DeviceType> getUsingDeviceTypesList() {
+  @java.lang.Override
+  public java.util.List<im.turms.common.constant.DeviceType> getUsingDeviceTypesList() {
     return new com.google.protobuf.Internal.ListAdapter<
-        java.lang.Integer, DeviceType>(usingDeviceTypes_, usingDeviceTypes_converter_);
+        java.lang.Integer, im.turms.common.constant.DeviceType>(usingDeviceTypes_, usingDeviceTypes_converter_);
   }
   /**
    * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
    * @return The count of usingDeviceTypes.
    */
+  @java.lang.Override
   public int getUsingDeviceTypesCount() {
     return usingDeviceTypes_.size();
   }
@@ -201,13 +201,15 @@ private static final long serialVersionUID = 0L;
    * @param index The index of the element to return.
    * @return The usingDeviceTypes at the given index.
    */
-  public DeviceType getUsingDeviceTypes(int index) {
+  @java.lang.Override
+  public im.turms.common.constant.DeviceType getUsingDeviceTypes(int index) {
     return usingDeviceTypes_converter_.convert(usingDeviceTypes_.get(index));
   }
   /**
    * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
    * @return A list containing the enum numeric values on the wire for usingDeviceTypes.
    */
+  @java.lang.Override
   public java.util.List<java.lang.Integer>
   getUsingDeviceTypesValueList() {
     return usingDeviceTypes_;
@@ -217,6 +219,7 @@ private static final long serialVersionUID = 0L;
    * @param index The index of the value to return.
    * @return The enum numeric value on the wire of usingDeviceTypes at the given index.
    */
+  @java.lang.Override
   public int getUsingDeviceTypesValue(int index) {
     return usingDeviceTypes_.get(index);
   }
@@ -240,7 +243,7 @@ private static final long serialVersionUID = 0L;
     if (userId_ != 0L) {
       output.writeInt64(1, userId_);
     }
-    if (userStatus_ != UserStatus.AVAILABLE.getNumber()) {
+    if (userStatus_ != im.turms.common.constant.UserStatus.AVAILABLE.getNumber()) {
       output.writeEnum(2, userStatus_);
     }
     if (getUsingDeviceTypesList().size() > 0) {
@@ -263,7 +266,7 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt64Size(1, userId_);
     }
-    if (userStatus_ != UserStatus.AVAILABLE.getNumber()) {
+    if (userStatus_ != im.turms.common.constant.UserStatus.AVAILABLE.getNumber()) {
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(2, userStatus_);
     }
@@ -289,10 +292,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof UserStatusDetail)) {
+    if (!(obj instanceof im.turms.common.model.bo.user.UserStatusDetail)) {
       return super.equals(obj);
     }
-    UserStatusDetail other = (UserStatusDetail) obj;
+    im.turms.common.model.bo.user.UserStatusDetail other = (im.turms.common.model.bo.user.UserStatusDetail) obj;
 
     if (getUserId()
         != other.getUserId()) return false;
@@ -323,69 +326,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static UserStatusDetail parseFrom(
+  public static im.turms.common.model.bo.user.UserStatusDetail parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UserStatusDetail parseFrom(
+  public static im.turms.common.model.bo.user.UserStatusDetail parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UserStatusDetail parseFrom(
+  public static im.turms.common.model.bo.user.UserStatusDetail parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UserStatusDetail parseFrom(
+  public static im.turms.common.model.bo.user.UserStatusDetail parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UserStatusDetail parseFrom(byte[] data)
+  public static im.turms.common.model.bo.user.UserStatusDetail parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UserStatusDetail parseFrom(
+  public static im.turms.common.model.bo.user.UserStatusDetail parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UserStatusDetail parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.user.UserStatusDetail parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UserStatusDetail parseFrom(
+  public static im.turms.common.model.bo.user.UserStatusDetail parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UserStatusDetail parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.user.UserStatusDetail parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static UserStatusDetail parseDelimitedFrom(
+  public static im.turms.common.model.bo.user.UserStatusDetail parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UserStatusDetail parseFrom(
+  public static im.turms.common.model.bo.user.UserStatusDetail parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UserStatusDetail parseFrom(
+  public static im.turms.common.model.bo.user.UserStatusDetail parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -398,7 +401,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(UserStatusDetail prototype) {
+  public static Builder newBuilder(im.turms.common.model.bo.user.UserStatusDetail prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -419,18 +422,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.UserStatusDetail)
-          UserStatusDetailOrBuilder {
+      im.turms.common.model.bo.user.UserStatusDetailOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return UserStatusDetailOuterClass.internal_static_im_turms_proto_UserStatusDetail_descriptor;
+      return im.turms.common.model.bo.user.UserStatusDetailOuterClass.internal_static_im_turms_proto_UserStatusDetail_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return UserStatusDetailOuterClass.internal_static_im_turms_proto_UserStatusDetail_fieldAccessorTable
+      return im.turms.common.model.bo.user.UserStatusDetailOuterClass.internal_static_im_turms_proto_UserStatusDetail_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              UserStatusDetail.class, UserStatusDetail.Builder.class);
+              im.turms.common.model.bo.user.UserStatusDetail.class, im.turms.common.model.bo.user.UserStatusDetail.Builder.class);
     }
 
     // Construct using im.turms.common.model.bo.user.UserStatusDetail.newBuilder()
@@ -463,17 +466,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return UserStatusDetailOuterClass.internal_static_im_turms_proto_UserStatusDetail_descriptor;
+      return im.turms.common.model.bo.user.UserStatusDetailOuterClass.internal_static_im_turms_proto_UserStatusDetail_descriptor;
     }
 
     @java.lang.Override
-    public UserStatusDetail getDefaultInstanceForType() {
-      return UserStatusDetail.getDefaultInstance();
+    public im.turms.common.model.bo.user.UserStatusDetail getDefaultInstanceForType() {
+      return im.turms.common.model.bo.user.UserStatusDetail.getDefaultInstance();
     }
 
     @java.lang.Override
-    public UserStatusDetail build() {
-      UserStatusDetail result = buildPartial();
+    public im.turms.common.model.bo.user.UserStatusDetail build() {
+      im.turms.common.model.bo.user.UserStatusDetail result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -481,8 +484,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public UserStatusDetail buildPartial() {
-      UserStatusDetail result = new UserStatusDetail(this);
+    public im.turms.common.model.bo.user.UserStatusDetail buildPartial() {
+      im.turms.common.model.bo.user.UserStatusDetail result = new im.turms.common.model.bo.user.UserStatusDetail(this);
       int from_bitField0_ = bitField0_;
       result.userId_ = userId_;
       result.userStatus_ = userStatus_;
@@ -529,16 +532,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof UserStatusDetail) {
-        return mergeFrom((UserStatusDetail)other);
+      if (other instanceof im.turms.common.model.bo.user.UserStatusDetail) {
+        return mergeFrom((im.turms.common.model.bo.user.UserStatusDetail)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(UserStatusDetail other) {
-      if (other == UserStatusDetail.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.bo.user.UserStatusDetail other) {
+      if (other == im.turms.common.model.bo.user.UserStatusDetail.getDefaultInstance()) return this;
       if (other.getUserId() != 0L) {
         setUserId(other.getUserId());
       }
@@ -570,11 +573,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      UserStatusDetail parsedMessage = null;
+      im.turms.common.model.bo.user.UserStatusDetail parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (UserStatusDetail) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.bo.user.UserStatusDetail) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -590,6 +593,7 @@ private static final long serialVersionUID = 0L;
      * <code>int64 user_id = 1;</code>
      * @return The userId.
      */
+    @java.lang.Override
     public long getUserId() {
       return userId_;
     }
@@ -620,7 +624,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.UserStatus user_status = 2;</code>
      * @return The enum numeric value on the wire for userStatus.
      */
-    public int getUserStatusValue() {
+    @java.lang.Override public int getUserStatusValue() {
       return userStatus_;
     }
     /**
@@ -629,6 +633,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setUserStatusValue(int value) {
+      
       userStatus_ = value;
       onChanged();
       return this;
@@ -637,17 +642,18 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.UserStatus user_status = 2;</code>
      * @return The userStatus.
      */
-    public UserStatus getUserStatus() {
+    @java.lang.Override
+    public im.turms.common.constant.UserStatus getUserStatus() {
       @SuppressWarnings("deprecation")
-      UserStatus result = UserStatus.valueOf(userStatus_);
-      return result == null ? UserStatus.UNRECOGNIZED : result;
+      im.turms.common.constant.UserStatus result = im.turms.common.constant.UserStatus.valueOf(userStatus_);
+      return result == null ? im.turms.common.constant.UserStatus.UNRECOGNIZED : result;
     }
     /**
      * <code>.im.turms.proto.UserStatus user_status = 2;</code>
      * @param value The userStatus to set.
      * @return This builder for chaining.
      */
-    public Builder setUserStatus(UserStatus value) {
+    public Builder setUserStatus(im.turms.common.constant.UserStatus value) {
       if (value == null) {
         throw new NullPointerException();
       }
@@ -679,9 +685,9 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
      * @return A list containing the usingDeviceTypes.
      */
-    public java.util.List<DeviceType> getUsingDeviceTypesList() {
+    public java.util.List<im.turms.common.constant.DeviceType> getUsingDeviceTypesList() {
       return new com.google.protobuf.Internal.ListAdapter<
-          java.lang.Integer, DeviceType>(usingDeviceTypes_, usingDeviceTypes_converter_);
+          java.lang.Integer, im.turms.common.constant.DeviceType>(usingDeviceTypes_, usingDeviceTypes_converter_);
     }
     /**
      * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
@@ -695,7 +701,7 @@ private static final long serialVersionUID = 0L;
      * @param index The index of the element to return.
      * @return The usingDeviceTypes at the given index.
      */
-    public DeviceType getUsingDeviceTypes(int index) {
+    public im.turms.common.constant.DeviceType getUsingDeviceTypes(int index) {
       return usingDeviceTypes_converter_.convert(usingDeviceTypes_.get(index));
     }
     /**
@@ -705,7 +711,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setUsingDeviceTypes(
-        int index, DeviceType value) {
+        int index, im.turms.common.constant.DeviceType value) {
       if (value == null) {
         throw new NullPointerException();
       }
@@ -719,7 +725,7 @@ private static final long serialVersionUID = 0L;
      * @param value The usingDeviceTypes to add.
      * @return This builder for chaining.
      */
-    public Builder addUsingDeviceTypes(DeviceType value) {
+    public Builder addUsingDeviceTypes(im.turms.common.constant.DeviceType value) {
       if (value == null) {
         throw new NullPointerException();
       }
@@ -734,9 +740,9 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder addAllUsingDeviceTypes(
-        java.lang.Iterable<? extends DeviceType> values) {
+        java.lang.Iterable<? extends im.turms.common.constant.DeviceType> values) {
       ensureUsingDeviceTypesIsMutable();
-      for (DeviceType value : values) {
+      for (im.turms.common.constant.DeviceType value : values) {
         usingDeviceTypes_.add(value.getNumber());
       }
       onChanged();
@@ -823,12 +829,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.UserStatusDetail)
-  private static final UserStatusDetail DEFAULT_INSTANCE;
+  private static final im.turms.common.model.bo.user.UserStatusDetail DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new UserStatusDetail();
+    DEFAULT_INSTANCE = new im.turms.common.model.bo.user.UserStatusDetail();
   }
 
-  public static UserStatusDetail getDefaultInstance() {
+  public static im.turms.common.model.bo.user.UserStatusDetail getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -853,7 +859,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public UserStatusDetail getDefaultInstanceForType() {
+  public im.turms.common.model.bo.user.UserStatusDetail getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

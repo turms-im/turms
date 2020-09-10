@@ -20,13 +20,10 @@
 
 package im.turms.common.model.dto.request.user;
 
-import im.turms.common.constant.DeviceType;
-import im.turms.common.constant.UserStatus;
-
 /**
  * Protobuf type {@code im.turms.proto.UpdateUserOnlineStatusRequest}
  */
-public  final class UpdateUserOnlineStatusRequest extends
+public final class UpdateUserOnlineStatusRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.UpdateUserOnlineStatusRequest)
     UpdateUserOnlineStatusRequestOrBuilder {
@@ -124,15 +121,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return UpdateUserOnlineStatusRequestOuterClass.internal_static_im_turms_proto_UpdateUserOnlineStatusRequest_descriptor;
+    return im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequestOuterClass.internal_static_im_turms_proto_UpdateUserOnlineStatusRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return UpdateUserOnlineStatusRequestOuterClass.internal_static_im_turms_proto_UpdateUserOnlineStatusRequest_fieldAccessorTable
+    return im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequestOuterClass.internal_static_im_turms_proto_UpdateUserOnlineStatusRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            UpdateUserOnlineStatusRequest.class, UpdateUserOnlineStatusRequest.Builder.class);
+            im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest.class, im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest.Builder.class);
   }
 
   public static final int USER_STATUS_FIELD_NUMBER = 1;
@@ -141,43 +138,45 @@ private static final long serialVersionUID = 0L;
    * <code>.im.turms.proto.UserStatus user_status = 1;</code>
    * @return The enum numeric value on the wire for userStatus.
    */
-  public int getUserStatusValue() {
+  @java.lang.Override public int getUserStatusValue() {
     return userStatus_;
   }
   /**
    * <code>.im.turms.proto.UserStatus user_status = 1;</code>
    * @return The userStatus.
    */
-  public UserStatus getUserStatus() {
+  @java.lang.Override public im.turms.common.constant.UserStatus getUserStatus() {
     @SuppressWarnings("deprecation")
-    UserStatus result = UserStatus.valueOf(userStatus_);
-    return result == null ? UserStatus.UNRECOGNIZED : result;
+    im.turms.common.constant.UserStatus result = im.turms.common.constant.UserStatus.valueOf(userStatus_);
+    return result == null ? im.turms.common.constant.UserStatus.UNRECOGNIZED : result;
   }
 
   public static final int DEVICE_TYPES_FIELD_NUMBER = 2;
   private java.util.List<java.lang.Integer> deviceTypes_;
   private static final com.google.protobuf.Internal.ListAdapter.Converter<
-      java.lang.Integer, DeviceType> deviceTypes_converter_ =
+      java.lang.Integer, im.turms.common.constant.DeviceType> deviceTypes_converter_ =
           new com.google.protobuf.Internal.ListAdapter.Converter<
-              java.lang.Integer, DeviceType>() {
-            public DeviceType convert(java.lang.Integer from) {
+              java.lang.Integer, im.turms.common.constant.DeviceType>() {
+            public im.turms.common.constant.DeviceType convert(java.lang.Integer from) {
               @SuppressWarnings("deprecation")
-              DeviceType result = DeviceType.valueOf(from);
-              return result == null ? DeviceType.UNRECOGNIZED : result;
+              im.turms.common.constant.DeviceType result = im.turms.common.constant.DeviceType.valueOf(from);
+              return result == null ? im.turms.common.constant.DeviceType.UNRECOGNIZED : result;
             }
           };
   /**
    * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
    * @return A list containing the deviceTypes.
    */
-  public java.util.List<DeviceType> getDeviceTypesList() {
+  @java.lang.Override
+  public java.util.List<im.turms.common.constant.DeviceType> getDeviceTypesList() {
     return new com.google.protobuf.Internal.ListAdapter<
-        java.lang.Integer, DeviceType>(deviceTypes_, deviceTypes_converter_);
+        java.lang.Integer, im.turms.common.constant.DeviceType>(deviceTypes_, deviceTypes_converter_);
   }
   /**
    * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
    * @return The count of deviceTypes.
    */
+  @java.lang.Override
   public int getDeviceTypesCount() {
     return deviceTypes_.size();
   }
@@ -186,13 +185,15 @@ private static final long serialVersionUID = 0L;
    * @param index The index of the element to return.
    * @return The deviceTypes at the given index.
    */
-  public DeviceType getDeviceTypes(int index) {
+  @java.lang.Override
+  public im.turms.common.constant.DeviceType getDeviceTypes(int index) {
     return deviceTypes_converter_.convert(deviceTypes_.get(index));
   }
   /**
    * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
    * @return A list containing the enum numeric values on the wire for deviceTypes.
    */
+  @java.lang.Override
   public java.util.List<java.lang.Integer>
   getDeviceTypesValueList() {
     return deviceTypes_;
@@ -202,6 +203,7 @@ private static final long serialVersionUID = 0L;
    * @param index The index of the value to return.
    * @return The enum numeric value on the wire of deviceTypes at the given index.
    */
+  @java.lang.Override
   public int getDeviceTypesValue(int index) {
     return deviceTypes_.get(index);
   }
@@ -222,7 +224,7 @@ private static final long serialVersionUID = 0L;
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
     getSerializedSize();
-    if (userStatus_ != UserStatus.AVAILABLE.getNumber()) {
+    if (userStatus_ != im.turms.common.constant.UserStatus.AVAILABLE.getNumber()) {
       output.writeEnum(1, userStatus_);
     }
     if (getDeviceTypesList().size() > 0) {
@@ -241,7 +243,7 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (userStatus_ != UserStatus.AVAILABLE.getNumber()) {
+    if (userStatus_ != im.turms.common.constant.UserStatus.AVAILABLE.getNumber()) {
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(1, userStatus_);
     }
@@ -267,10 +269,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof UpdateUserOnlineStatusRequest)) {
+    if (!(obj instanceof im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest)) {
       return super.equals(obj);
     }
-    UpdateUserOnlineStatusRequest other = (UpdateUserOnlineStatusRequest) obj;
+    im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest other = (im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest) obj;
 
     if (userStatus_ != other.userStatus_) return false;
     if (!deviceTypes_.equals(other.deviceTypes_)) return false;
@@ -296,69 +298,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static UpdateUserOnlineStatusRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UpdateUserOnlineStatusRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UpdateUserOnlineStatusRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UpdateUserOnlineStatusRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UpdateUserOnlineStatusRequest parseFrom(byte[] data)
+  public static im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UpdateUserOnlineStatusRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UpdateUserOnlineStatusRequest parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UpdateUserOnlineStatusRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UpdateUserOnlineStatusRequest parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static UpdateUserOnlineStatusRequest parseDelimitedFrom(
+  public static im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UpdateUserOnlineStatusRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UpdateUserOnlineStatusRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -371,7 +373,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(UpdateUserOnlineStatusRequest prototype) {
+  public static Builder newBuilder(im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -392,18 +394,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.UpdateUserOnlineStatusRequest)
-          UpdateUserOnlineStatusRequestOrBuilder {
+      im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return UpdateUserOnlineStatusRequestOuterClass.internal_static_im_turms_proto_UpdateUserOnlineStatusRequest_descriptor;
+      return im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequestOuterClass.internal_static_im_turms_proto_UpdateUserOnlineStatusRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return UpdateUserOnlineStatusRequestOuterClass.internal_static_im_turms_proto_UpdateUserOnlineStatusRequest_fieldAccessorTable
+      return im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequestOuterClass.internal_static_im_turms_proto_UpdateUserOnlineStatusRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              UpdateUserOnlineStatusRequest.class, UpdateUserOnlineStatusRequest.Builder.class);
+              im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest.class, im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest.Builder.class);
     }
 
     // Construct using im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest.newBuilder()
@@ -434,17 +436,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return UpdateUserOnlineStatusRequestOuterClass.internal_static_im_turms_proto_UpdateUserOnlineStatusRequest_descriptor;
+      return im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequestOuterClass.internal_static_im_turms_proto_UpdateUserOnlineStatusRequest_descriptor;
     }
 
     @java.lang.Override
-    public UpdateUserOnlineStatusRequest getDefaultInstanceForType() {
-      return UpdateUserOnlineStatusRequest.getDefaultInstance();
+    public im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest getDefaultInstanceForType() {
+      return im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public UpdateUserOnlineStatusRequest build() {
-      UpdateUserOnlineStatusRequest result = buildPartial();
+    public im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest build() {
+      im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -452,8 +454,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public UpdateUserOnlineStatusRequest buildPartial() {
-      UpdateUserOnlineStatusRequest result = new UpdateUserOnlineStatusRequest(this);
+    public im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest buildPartial() {
+      im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest result = new im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest(this);
       int from_bitField0_ = bitField0_;
       result.userStatus_ = userStatus_;
       if (((bitField0_ & 0x00000001) != 0)) {
@@ -499,16 +501,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof UpdateUserOnlineStatusRequest) {
-        return mergeFrom((UpdateUserOnlineStatusRequest)other);
+      if (other instanceof im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest) {
+        return mergeFrom((im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(UpdateUserOnlineStatusRequest other) {
-      if (other == UpdateUserOnlineStatusRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest other) {
+      if (other == im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest.getDefaultInstance()) return this;
       if (other.userStatus_ != 0) {
         setUserStatusValue(other.getUserStatusValue());
       }
@@ -537,11 +539,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      UpdateUserOnlineStatusRequest parsedMessage = null;
+      im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (UpdateUserOnlineStatusRequest) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -557,7 +559,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.UserStatus user_status = 1;</code>
      * @return The enum numeric value on the wire for userStatus.
      */
-    public int getUserStatusValue() {
+    @java.lang.Override public int getUserStatusValue() {
       return userStatus_;
     }
     /**
@@ -566,6 +568,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setUserStatusValue(int value) {
+      
       userStatus_ = value;
       onChanged();
       return this;
@@ -574,17 +577,18 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.UserStatus user_status = 1;</code>
      * @return The userStatus.
      */
-    public UserStatus getUserStatus() {
+    @java.lang.Override
+    public im.turms.common.constant.UserStatus getUserStatus() {
       @SuppressWarnings("deprecation")
-      UserStatus result = UserStatus.valueOf(userStatus_);
-      return result == null ? UserStatus.UNRECOGNIZED : result;
+      im.turms.common.constant.UserStatus result = im.turms.common.constant.UserStatus.valueOf(userStatus_);
+      return result == null ? im.turms.common.constant.UserStatus.UNRECOGNIZED : result;
     }
     /**
      * <code>.im.turms.proto.UserStatus user_status = 1;</code>
      * @param value The userStatus to set.
      * @return This builder for chaining.
      */
-    public Builder setUserStatus(UserStatus value) {
+    public Builder setUserStatus(im.turms.common.constant.UserStatus value) {
       if (value == null) {
         throw new NullPointerException();
       }
@@ -616,9 +620,9 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
      * @return A list containing the deviceTypes.
      */
-    public java.util.List<DeviceType> getDeviceTypesList() {
+    public java.util.List<im.turms.common.constant.DeviceType> getDeviceTypesList() {
       return new com.google.protobuf.Internal.ListAdapter<
-          java.lang.Integer, DeviceType>(deviceTypes_, deviceTypes_converter_);
+          java.lang.Integer, im.turms.common.constant.DeviceType>(deviceTypes_, deviceTypes_converter_);
     }
     /**
      * <code>repeated .im.turms.proto.DeviceType device_types = 2;</code>
@@ -632,7 +636,7 @@ private static final long serialVersionUID = 0L;
      * @param index The index of the element to return.
      * @return The deviceTypes at the given index.
      */
-    public DeviceType getDeviceTypes(int index) {
+    public im.turms.common.constant.DeviceType getDeviceTypes(int index) {
       return deviceTypes_converter_.convert(deviceTypes_.get(index));
     }
     /**
@@ -642,7 +646,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setDeviceTypes(
-        int index, DeviceType value) {
+        int index, im.turms.common.constant.DeviceType value) {
       if (value == null) {
         throw new NullPointerException();
       }
@@ -656,7 +660,7 @@ private static final long serialVersionUID = 0L;
      * @param value The deviceTypes to add.
      * @return This builder for chaining.
      */
-    public Builder addDeviceTypes(DeviceType value) {
+    public Builder addDeviceTypes(im.turms.common.constant.DeviceType value) {
       if (value == null) {
         throw new NullPointerException();
       }
@@ -671,9 +675,9 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder addAllDeviceTypes(
-        java.lang.Iterable<? extends DeviceType> values) {
+        java.lang.Iterable<? extends im.turms.common.constant.DeviceType> values) {
       ensureDeviceTypesIsMutable();
-      for (DeviceType value : values) {
+      for (im.turms.common.constant.DeviceType value : values) {
         deviceTypes_.add(value.getNumber());
       }
       onChanged();
@@ -760,12 +764,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.UpdateUserOnlineStatusRequest)
-  private static final UpdateUserOnlineStatusRequest DEFAULT_INSTANCE;
+  private static final im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new UpdateUserOnlineStatusRequest();
+    DEFAULT_INSTANCE = new im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest();
   }
 
-  public static UpdateUserOnlineStatusRequest getDefaultInstance() {
+  public static im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -790,7 +794,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public UpdateUserOnlineStatusRequest getDefaultInstanceForType() {
+  public im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

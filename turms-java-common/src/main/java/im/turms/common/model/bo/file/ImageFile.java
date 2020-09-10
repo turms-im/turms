@@ -23,7 +23,7 @@ package im.turms.common.model.bo.file;
 /**
  * Protobuf type {@code im.turms.proto.ImageFile}
  */
-public  final class ImageFile extends
+public final class ImageFile extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.ImageFile)
     ImageFileOrBuilder {
@@ -66,11 +66,11 @@ private static final long serialVersionUID = 0L;
             done = true;
             break;
           case 10: {
-            ImageFile.Description.Builder subBuilder = null;
+            im.turms.common.model.bo.file.ImageFile.Description.Builder subBuilder = null;
             if (description_ != null) {
               subBuilder = description_.toBuilder();
             }
-            description_ = input.readMessage(ImageFile.Description.parser(), extensionRegistry);
+            description_ = input.readMessage(im.turms.common.model.bo.file.ImageFile.Description.parser(), extensionRegistry);
             if (subBuilder != null) {
               subBuilder.mergeFrom(description_);
               description_ = subBuilder.buildPartial();
@@ -112,15 +112,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return ImageFileOuterClass.internal_static_im_turms_proto_ImageFile_descriptor;
+    return im.turms.common.model.bo.file.ImageFileOuterClass.internal_static_im_turms_proto_ImageFile_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return ImageFileOuterClass.internal_static_im_turms_proto_ImageFile_fieldAccessorTable
+    return im.turms.common.model.bo.file.ImageFileOuterClass.internal_static_im_turms_proto_ImageFile_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            ImageFile.class, ImageFile.Builder.class);
+            im.turms.common.model.bo.file.ImageFile.class, im.turms.common.model.bo.file.ImageFile.Builder.class);
   }
 
   public interface DescriptionOrBuilder extends
@@ -187,7 +187,7 @@ private static final long serialVersionUID = 0L;
   /**
    * Protobuf type {@code im.turms.proto.ImageFile.Description}
    */
-  public  static final class Description extends
+  public static final class Description extends
       com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:im.turms.proto.ImageFile.Description)
       DescriptionOrBuilder {
@@ -296,15 +296,15 @@ private static final long serialVersionUID = 0L;
     }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ImageFileOuterClass.internal_static_im_turms_proto_ImageFile_Description_descriptor;
+      return im.turms.common.model.bo.file.ImageFileOuterClass.internal_static_im_turms_proto_ImageFile_Description_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ImageFileOuterClass.internal_static_im_turms_proto_ImageFile_Description_fieldAccessorTable
+      return im.turms.common.model.bo.file.ImageFileOuterClass.internal_static_im_turms_proto_ImageFile_Description_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ImageFile.Description.class, ImageFile.Description.Builder.class);
+              im.turms.common.model.bo.file.ImageFile.Description.class, im.turms.common.model.bo.file.ImageFile.Description.Builder.class);
     }
 
     public static final int URL_FIELD_NUMBER = 1;
@@ -313,6 +313,7 @@ private static final long serialVersionUID = 0L;
      * <code>string url = 1;</code>
      * @return The url.
      */
+    @java.lang.Override
     public java.lang.String getUrl() {
       java.lang.Object ref = url_;
       if (ref instanceof java.lang.String) {
@@ -329,6 +330,7 @@ private static final long serialVersionUID = 0L;
      * <code>string url = 1;</code>
      * @return The bytes for url.
      */
+    @java.lang.Override
     public com.google.protobuf.ByteString
         getUrlBytes() {
       java.lang.Object ref = url_;
@@ -349,6 +351,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.BoolValue original = 2;</code>
      * @return Whether the original field is set.
      */
+    @java.lang.Override
     public boolean hasOriginal() {
       return original_ != null;
     }
@@ -356,12 +359,14 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.BoolValue original = 2;</code>
      * @return The original.
      */
+    @java.lang.Override
     public com.google.protobuf.BoolValue getOriginal() {
       return original_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : original_;
     }
     /**
      * <code>.google.protobuf.BoolValue original = 2;</code>
      */
+    @java.lang.Override
     public com.google.protobuf.BoolValueOrBuilder getOriginalOrBuilder() {
       return getOriginal();
     }
@@ -372,6 +377,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int32Value image_size = 3;</code>
      * @return Whether the imageSize field is set.
      */
+    @java.lang.Override
     public boolean hasImageSize() {
       return imageSize_ != null;
     }
@@ -379,12 +385,14 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int32Value image_size = 3;</code>
      * @return The imageSize.
      */
+    @java.lang.Override
     public com.google.protobuf.Int32Value getImageSize() {
       return imageSize_ == null ? com.google.protobuf.Int32Value.getDefaultInstance() : imageSize_;
     }
     /**
      * <code>.google.protobuf.Int32Value image_size = 3;</code>
      */
+    @java.lang.Override
     public com.google.protobuf.Int32ValueOrBuilder getImageSizeOrBuilder() {
       return getImageSize();
     }
@@ -395,6 +403,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int32Value file_size = 4;</code>
      * @return Whether the fileSize field is set.
      */
+    @java.lang.Override
     public boolean hasFileSize() {
       return fileSize_ != null;
     }
@@ -402,12 +411,14 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int32Value file_size = 4;</code>
      * @return The fileSize.
      */
+    @java.lang.Override
     public com.google.protobuf.Int32Value getFileSize() {
       return fileSize_ == null ? com.google.protobuf.Int32Value.getDefaultInstance() : fileSize_;
     }
     /**
      * <code>.google.protobuf.Int32Value file_size = 4;</code>
      */
+    @java.lang.Override
     public com.google.protobuf.Int32ValueOrBuilder getFileSizeOrBuilder() {
       return getFileSize();
     }
@@ -472,10 +483,10 @@ private static final long serialVersionUID = 0L;
       if (obj == this) {
        return true;
       }
-      if (!(obj instanceof ImageFile.Description)) {
+      if (!(obj instanceof im.turms.common.model.bo.file.ImageFile.Description)) {
         return super.equals(obj);
       }
-      ImageFile.Description other = (ImageFile.Description) obj;
+      im.turms.common.model.bo.file.ImageFile.Description other = (im.turms.common.model.bo.file.ImageFile.Description) obj;
 
       if (!getUrl()
           .equals(other.getUrl())) return false;
@@ -524,69 +535,69 @@ private static final long serialVersionUID = 0L;
       return hash;
     }
 
-    public static ImageFile.Description parseFrom(
+    public static im.turms.common.model.bo.file.ImageFile.Description parseFrom(
         java.nio.ByteBuffer data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ImageFile.Description parseFrom(
+    public static im.turms.common.model.bo.file.ImageFile.Description parseFrom(
         java.nio.ByteBuffer data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ImageFile.Description parseFrom(
+    public static im.turms.common.model.bo.file.ImageFile.Description parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ImageFile.Description parseFrom(
+    public static im.turms.common.model.bo.file.ImageFile.Description parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ImageFile.Description parseFrom(byte[] data)
+    public static im.turms.common.model.bo.file.ImageFile.Description parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static ImageFile.Description parseFrom(
+    public static im.turms.common.model.bo.file.ImageFile.Description parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static ImageFile.Description parseFrom(java.io.InputStream input)
+    public static im.turms.common.model.bo.file.ImageFile.Description parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static ImageFile.Description parseFrom(
+    public static im.turms.common.model.bo.file.ImageFile.Description parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
-    public static ImageFile.Description parseDelimitedFrom(java.io.InputStream input)
+    public static im.turms.common.model.bo.file.ImageFile.Description parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input);
     }
-    public static ImageFile.Description parseDelimitedFrom(
+    public static im.turms.common.model.bo.file.ImageFile.Description parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
-    public static ImageFile.Description parseFrom(
+    public static im.turms.common.model.bo.file.ImageFile.Description parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return com.google.protobuf.GeneratedMessageV3
           .parseWithIOException(PARSER, input);
     }
-    public static ImageFile.Description parseFrom(
+    public static im.turms.common.model.bo.file.ImageFile.Description parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -599,7 +610,7 @@ private static final long serialVersionUID = 0L;
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
     }
-    public static Builder newBuilder(ImageFile.Description prototype) {
+    public static Builder newBuilder(im.turms.common.model.bo.file.ImageFile.Description prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
     @java.lang.Override
@@ -620,18 +631,18 @@ private static final long serialVersionUID = 0L;
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
         // @@protoc_insertion_point(builder_implements:im.turms.proto.ImageFile.Description)
-        ImageFile.DescriptionOrBuilder {
+        im.turms.common.model.bo.file.ImageFile.DescriptionOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return ImageFileOuterClass.internal_static_im_turms_proto_ImageFile_Description_descriptor;
+        return im.turms.common.model.bo.file.ImageFileOuterClass.internal_static_im_turms_proto_ImageFile_Description_descriptor;
       }
 
       @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return ImageFileOuterClass.internal_static_im_turms_proto_ImageFile_Description_fieldAccessorTable
+        return im.turms.common.model.bo.file.ImageFileOuterClass.internal_static_im_turms_proto_ImageFile_Description_fieldAccessorTable
             .ensureFieldAccessorsInitialized(
-                ImageFile.Description.class, ImageFile.Description.Builder.class);
+                im.turms.common.model.bo.file.ImageFile.Description.class, im.turms.common.model.bo.file.ImageFile.Description.Builder.class);
       }
 
       // Construct using im.turms.common.model.bo.file.ImageFile.Description.newBuilder()
@@ -678,17 +689,17 @@ private static final long serialVersionUID = 0L;
       @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return ImageFileOuterClass.internal_static_im_turms_proto_ImageFile_Description_descriptor;
+        return im.turms.common.model.bo.file.ImageFileOuterClass.internal_static_im_turms_proto_ImageFile_Description_descriptor;
       }
 
       @java.lang.Override
-      public ImageFile.Description getDefaultInstanceForType() {
-        return ImageFile.Description.getDefaultInstance();
+      public im.turms.common.model.bo.file.ImageFile.Description getDefaultInstanceForType() {
+        return im.turms.common.model.bo.file.ImageFile.Description.getDefaultInstance();
       }
 
       @java.lang.Override
-      public ImageFile.Description build() {
-        ImageFile.Description result = buildPartial();
+      public im.turms.common.model.bo.file.ImageFile.Description build() {
+        im.turms.common.model.bo.file.ImageFile.Description result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
@@ -696,8 +707,8 @@ private static final long serialVersionUID = 0L;
       }
 
       @java.lang.Override
-      public ImageFile.Description buildPartial() {
-        ImageFile.Description result = new ImageFile.Description(this);
+      public im.turms.common.model.bo.file.ImageFile.Description buildPartial() {
+        im.turms.common.model.bo.file.ImageFile.Description result = new im.turms.common.model.bo.file.ImageFile.Description(this);
         result.url_ = url_;
         if (originalBuilder_ == null) {
           result.original_ = original_;
@@ -752,16 +763,16 @@ private static final long serialVersionUID = 0L;
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof ImageFile.Description) {
-          return mergeFrom((ImageFile.Description)other);
+        if (other instanceof im.turms.common.model.bo.file.ImageFile.Description) {
+          return mergeFrom((im.turms.common.model.bo.file.ImageFile.Description)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
 
-      public Builder mergeFrom(ImageFile.Description other) {
-        if (other == ImageFile.Description.getDefaultInstance()) return this;
+      public Builder mergeFrom(im.turms.common.model.bo.file.ImageFile.Description other) {
+        if (other == im.turms.common.model.bo.file.ImageFile.Description.getDefaultInstance()) return this;
         if (!other.getUrl().isEmpty()) {
           url_ = other.url_;
           onChanged();
@@ -790,11 +801,11 @@ private static final long serialVersionUID = 0L;
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        ImageFile.Description parsedMessage = null;
+        im.turms.common.model.bo.file.ImageFile.Description parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (ImageFile.Description) e.getUnfinishedMessage();
+          parsedMessage = (im.turms.common.model.bo.file.ImageFile.Description) e.getUnfinishedMessage();
           throw e.unwrapIOException();
         } finally {
           if (parsedMessage != null) {
@@ -1253,12 +1264,12 @@ private static final long serialVersionUID = 0L;
     }
 
     // @@protoc_insertion_point(class_scope:im.turms.proto.ImageFile.Description)
-    private static final ImageFile.Description DEFAULT_INSTANCE;
+    private static final im.turms.common.model.bo.file.ImageFile.Description DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new ImageFile.Description();
+      DEFAULT_INSTANCE = new im.turms.common.model.bo.file.ImageFile.Description();
     }
 
-    public static ImageFile.Description getDefaultInstance() {
+    public static im.turms.common.model.bo.file.ImageFile.Description getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
@@ -1283,18 +1294,19 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public ImageFile.Description getDefaultInstanceForType() {
+    public im.turms.common.model.bo.file.ImageFile.Description getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
   }
 
   public static final int DESCRIPTION_FIELD_NUMBER = 1;
-  private ImageFile.Description description_;
+  private im.turms.common.model.bo.file.ImageFile.Description description_;
   /**
    * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
    * @return Whether the description field is set.
    */
+  @java.lang.Override
   public boolean hasDescription() {
     return description_ != null;
   }
@@ -1302,13 +1314,15 @@ private static final long serialVersionUID = 0L;
    * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
    * @return The description.
    */
-  public ImageFile.Description getDescription() {
-    return description_ == null ? ImageFile.Description.getDefaultInstance() : description_;
+  @java.lang.Override
+  public im.turms.common.model.bo.file.ImageFile.Description getDescription() {
+    return description_ == null ? im.turms.common.model.bo.file.ImageFile.Description.getDefaultInstance() : description_;
   }
   /**
    * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
    */
-  public ImageFile.DescriptionOrBuilder getDescriptionOrBuilder() {
+  @java.lang.Override
+  public im.turms.common.model.bo.file.ImageFile.DescriptionOrBuilder getDescriptionOrBuilder() {
     return getDescription();
   }
 
@@ -1318,6 +1332,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.BytesValue data = 2;</code>
    * @return Whether the data field is set.
    */
+  @java.lang.Override
   public boolean hasData() {
     return data_ != null;
   }
@@ -1325,12 +1340,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.BytesValue data = 2;</code>
    * @return The data.
    */
+  @java.lang.Override
   public com.google.protobuf.BytesValue getData() {
     return data_ == null ? com.google.protobuf.BytesValue.getDefaultInstance() : data_;
   }
   /**
    * <code>.google.protobuf.BytesValue data = 2;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.BytesValueOrBuilder getDataOrBuilder() {
     return getData();
   }
@@ -1382,10 +1399,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof ImageFile)) {
+    if (!(obj instanceof im.turms.common.model.bo.file.ImageFile)) {
       return super.equals(obj);
     }
-    ImageFile other = (ImageFile) obj;
+    im.turms.common.model.bo.file.ImageFile other = (im.turms.common.model.bo.file.ImageFile) obj;
 
     if (hasDescription() != other.hasDescription()) return false;
     if (hasDescription()) {
@@ -1421,69 +1438,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static ImageFile parseFrom(
+  public static im.turms.common.model.bo.file.ImageFile parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static ImageFile parseFrom(
+  public static im.turms.common.model.bo.file.ImageFile parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static ImageFile parseFrom(
+  public static im.turms.common.model.bo.file.ImageFile parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static ImageFile parseFrom(
+  public static im.turms.common.model.bo.file.ImageFile parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static ImageFile parseFrom(byte[] data)
+  public static im.turms.common.model.bo.file.ImageFile parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static ImageFile parseFrom(
+  public static im.turms.common.model.bo.file.ImageFile parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static ImageFile parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.file.ImageFile parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static ImageFile parseFrom(
+  public static im.turms.common.model.bo.file.ImageFile parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static ImageFile parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.file.ImageFile parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static ImageFile parseDelimitedFrom(
+  public static im.turms.common.model.bo.file.ImageFile parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static ImageFile parseFrom(
+  public static im.turms.common.model.bo.file.ImageFile parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static ImageFile parseFrom(
+  public static im.turms.common.model.bo.file.ImageFile parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -1496,7 +1513,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(ImageFile prototype) {
+  public static Builder newBuilder(im.turms.common.model.bo.file.ImageFile prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -1517,18 +1534,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.ImageFile)
-          ImageFileOrBuilder {
+      im.turms.common.model.bo.file.ImageFileOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return ImageFileOuterClass.internal_static_im_turms_proto_ImageFile_descriptor;
+      return im.turms.common.model.bo.file.ImageFileOuterClass.internal_static_im_turms_proto_ImageFile_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return ImageFileOuterClass.internal_static_im_turms_proto_ImageFile_fieldAccessorTable
+      return im.turms.common.model.bo.file.ImageFileOuterClass.internal_static_im_turms_proto_ImageFile_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ImageFile.class, ImageFile.Builder.class);
+              im.turms.common.model.bo.file.ImageFile.class, im.turms.common.model.bo.file.ImageFile.Builder.class);
     }
 
     // Construct using im.turms.common.model.bo.file.ImageFile.newBuilder()
@@ -1567,17 +1584,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return ImageFileOuterClass.internal_static_im_turms_proto_ImageFile_descriptor;
+      return im.turms.common.model.bo.file.ImageFileOuterClass.internal_static_im_turms_proto_ImageFile_descriptor;
     }
 
     @java.lang.Override
-    public ImageFile getDefaultInstanceForType() {
-      return ImageFile.getDefaultInstance();
+    public im.turms.common.model.bo.file.ImageFile getDefaultInstanceForType() {
+      return im.turms.common.model.bo.file.ImageFile.getDefaultInstance();
     }
 
     @java.lang.Override
-    public ImageFile build() {
-      ImageFile result = buildPartial();
+    public im.turms.common.model.bo.file.ImageFile build() {
+      im.turms.common.model.bo.file.ImageFile result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -1585,8 +1602,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public ImageFile buildPartial() {
-      ImageFile result = new ImageFile(this);
+    public im.turms.common.model.bo.file.ImageFile buildPartial() {
+      im.turms.common.model.bo.file.ImageFile result = new im.turms.common.model.bo.file.ImageFile(this);
       if (descriptionBuilder_ == null) {
         result.description_ = description_;
       } else {
@@ -1635,16 +1652,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof ImageFile) {
-        return mergeFrom((ImageFile)other);
+      if (other instanceof im.turms.common.model.bo.file.ImageFile) {
+        return mergeFrom((im.turms.common.model.bo.file.ImageFile)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(ImageFile other) {
-      if (other == ImageFile.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.bo.file.ImageFile other) {
+      if (other == im.turms.common.model.bo.file.ImageFile.getDefaultInstance()) return this;
       if (other.hasDescription()) {
         mergeDescription(other.getDescription());
       }
@@ -1666,11 +1683,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      ImageFile parsedMessage = null;
+      im.turms.common.model.bo.file.ImageFile parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (ImageFile) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.bo.file.ImageFile) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -1680,9 +1697,9 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private ImageFile.Description description_;
+    private im.turms.common.model.bo.file.ImageFile.Description description_;
     private com.google.protobuf.SingleFieldBuilderV3<
-        ImageFile.Description, ImageFile.Description.Builder, ImageFile.DescriptionOrBuilder> descriptionBuilder_;
+        im.turms.common.model.bo.file.ImageFile.Description, im.turms.common.model.bo.file.ImageFile.Description.Builder, im.turms.common.model.bo.file.ImageFile.DescriptionOrBuilder> descriptionBuilder_;
     /**
      * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
      * @return Whether the description field is set.
@@ -1694,9 +1711,9 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
      * @return The description.
      */
-    public ImageFile.Description getDescription() {
+    public im.turms.common.model.bo.file.ImageFile.Description getDescription() {
       if (descriptionBuilder_ == null) {
-        return description_ == null ? ImageFile.Description.getDefaultInstance() : description_;
+        return description_ == null ? im.turms.common.model.bo.file.ImageFile.Description.getDefaultInstance() : description_;
       } else {
         return descriptionBuilder_.getMessage();
       }
@@ -1704,7 +1721,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
      */
-    public Builder setDescription(ImageFile.Description value) {
+    public Builder setDescription(im.turms.common.model.bo.file.ImageFile.Description value) {
       if (descriptionBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -1721,7 +1738,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
      */
     public Builder setDescription(
-        ImageFile.Description.Builder builderForValue) {
+        im.turms.common.model.bo.file.ImageFile.Description.Builder builderForValue) {
       if (descriptionBuilder_ == null) {
         description_ = builderForValue.build();
         onChanged();
@@ -1734,11 +1751,11 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
      */
-    public Builder mergeDescription(ImageFile.Description value) {
+    public Builder mergeDescription(im.turms.common.model.bo.file.ImageFile.Description value) {
       if (descriptionBuilder_ == null) {
         if (description_ != null) {
           description_ =
-            ImageFile.Description.newBuilder(description_).mergeFrom(value).buildPartial();
+            im.turms.common.model.bo.file.ImageFile.Description.newBuilder(description_).mergeFrom(value).buildPartial();
         } else {
           description_ = value;
         }
@@ -1766,7 +1783,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
      */
-    public ImageFile.Description.Builder getDescriptionBuilder() {
+    public im.turms.common.model.bo.file.ImageFile.Description.Builder getDescriptionBuilder() {
       
       onChanged();
       return getDescriptionFieldBuilder().getBuilder();
@@ -1774,23 +1791,23 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
      */
-    public ImageFile.DescriptionOrBuilder getDescriptionOrBuilder() {
+    public im.turms.common.model.bo.file.ImageFile.DescriptionOrBuilder getDescriptionOrBuilder() {
       if (descriptionBuilder_ != null) {
         return descriptionBuilder_.getMessageOrBuilder();
       } else {
         return description_ == null ?
-            ImageFile.Description.getDefaultInstance() : description_;
+            im.turms.common.model.bo.file.ImageFile.Description.getDefaultInstance() : description_;
       }
     }
     /**
      * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        ImageFile.Description, ImageFile.Description.Builder, ImageFile.DescriptionOrBuilder>
+        im.turms.common.model.bo.file.ImageFile.Description, im.turms.common.model.bo.file.ImageFile.Description.Builder, im.turms.common.model.bo.file.ImageFile.DescriptionOrBuilder> 
         getDescriptionFieldBuilder() {
       if (descriptionBuilder_ == null) {
         descriptionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            ImageFile.Description, ImageFile.Description.Builder, ImageFile.DescriptionOrBuilder>(
+            im.turms.common.model.bo.file.ImageFile.Description, im.turms.common.model.bo.file.ImageFile.Description.Builder, im.turms.common.model.bo.file.ImageFile.DescriptionOrBuilder>(
                 getDescription(),
                 getParentForChildren(),
                 isClean());
@@ -1934,12 +1951,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.ImageFile)
-  private static final ImageFile DEFAULT_INSTANCE;
+  private static final im.turms.common.model.bo.file.ImageFile DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new ImageFile();
+    DEFAULT_INSTANCE = new im.turms.common.model.bo.file.ImageFile();
   }
 
-  public static ImageFile getDefaultInstance() {
+  public static im.turms.common.model.bo.file.ImageFile getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -1964,7 +1981,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public ImageFile getDefaultInstanceForType() {
+  public im.turms.common.model.bo.file.ImageFile getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

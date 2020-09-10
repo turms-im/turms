@@ -58,7 +58,7 @@ public final class UsersInfosWithVersionOuterClass {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.WrappersProto.getDescriptor(),
-          UserInfoOuterClass.getDescriptor(),
+          im.turms.common.model.bo.user.UserInfoOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_UsersInfosWithVersion_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -67,7 +67,7 @@ public final class UsersInfosWithVersionOuterClass {
         internal_static_im_turms_proto_UsersInfosWithVersion_descriptor,
         new java.lang.String[] { "UserInfos", "LastUpdatedDate", });
     com.google.protobuf.WrappersProto.getDescriptor();
-    UserInfoOuterClass.getDescriptor();
+    im.turms.common.model.bo.user.UserInfoOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

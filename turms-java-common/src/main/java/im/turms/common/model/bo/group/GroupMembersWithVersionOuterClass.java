@@ -58,7 +58,7 @@ public final class GroupMembersWithVersionOuterClass {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.WrappersProto.getDescriptor(),
-          GroupMemberOuterClass.getDescriptor(),
+          im.turms.common.model.bo.group.GroupMemberOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_GroupMembersWithVersion_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -67,7 +67,7 @@ public final class GroupMembersWithVersionOuterClass {
         internal_static_im_turms_proto_GroupMembersWithVersion_descriptor,
         new java.lang.String[] { "GroupMembers", "LastUpdatedDate", });
     com.google.protobuf.WrappersProto.getDescriptor();
-    GroupMemberOuterClass.getDescriptor();
+    im.turms.common.model.bo.group.GroupMemberOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

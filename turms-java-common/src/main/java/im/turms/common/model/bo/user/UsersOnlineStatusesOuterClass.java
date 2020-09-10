@@ -55,7 +55,7 @@ public final class UsersOnlineStatusesOuterClass {
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          UserStatusDetailOuterClass.getDescriptor(),
+          im.turms.common.model.bo.user.UserStatusDetailOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_UsersOnlineStatuses_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -63,7 +63,7 @@ public final class UsersOnlineStatusesOuterClass {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_UsersOnlineStatuses_descriptor,
         new java.lang.String[] { "UserStatuses", });
-    UserStatusDetailOuterClass.getDescriptor();
+    im.turms.common.model.bo.user.UserStatusDetailOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

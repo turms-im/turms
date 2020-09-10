@@ -20,8 +20,6 @@
 
 package im.turms.common.model.dto.request.message;
 
-import im.turms.common.constant.MessageDeliveryStatus;
-
 public interface QueryMessagesRequestOrBuilder extends
     // @@protoc_insertion_point(interface_extends:im.turms.proto.QueryMessagesRequest)
     com.google.protobuf.MessageOrBuilder {
@@ -142,5 +140,5 @@ public interface QueryMessagesRequestOrBuilder extends
    * <code>.im.turms.proto.MessageDeliveryStatus delivery_status = 8;</code>
    * @return The deliveryStatus.
    */
-  MessageDeliveryStatus getDeliveryStatus();
+  im.turms.common.constant.MessageDeliveryStatus getDeliveryStatus();
 }

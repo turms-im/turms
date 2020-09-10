@@ -20,9 +20,6 @@
 
 package im.turms.common.model.bo.user;
 
-import im.turms.common.constant.DeviceType;
-import im.turms.common.constant.UserStatus;
-
 public interface UserStatusDetailOrBuilder extends
     // @@protoc_insertion_point(interface_extends:im.turms.proto.UserStatusDetail)
     com.google.protobuf.MessageOrBuilder {
@@ -42,13 +39,13 @@ public interface UserStatusDetailOrBuilder extends
    * <code>.im.turms.proto.UserStatus user_status = 2;</code>
    * @return The userStatus.
    */
-  UserStatus getUserStatus();
+  im.turms.common.constant.UserStatus getUserStatus();
 
   /**
    * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
    * @return A list containing the usingDeviceTypes.
    */
-  java.util.List<DeviceType> getUsingDeviceTypesList();
+  java.util.List<im.turms.common.constant.DeviceType> getUsingDeviceTypesList();
   /**
    * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
    * @return The count of usingDeviceTypes.
@@ -59,7 +56,7 @@ public interface UserStatusDetailOrBuilder extends
    * @param index The index of the element to return.
    * @return The usingDeviceTypes at the given index.
    */
-  DeviceType getUsingDeviceTypes(int index);
+  im.turms.common.constant.DeviceType getUsingDeviceTypes(int index);
   /**
    * <code>repeated .im.turms.proto.DeviceType using_device_types = 3;</code>
    * @return A list containing the enum numeric values on the wire for usingDeviceTypes.

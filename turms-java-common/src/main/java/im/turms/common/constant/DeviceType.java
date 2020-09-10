@@ -126,6 +126,10 @@ public enum DeviceType
 
   public final com.google.protobuf.Descriptors.EnumValueDescriptor
       getValueDescriptor() {
+    if (this == UNRECOGNIZED) {
+      throw new java.lang.IllegalStateException(
+          "Can't get the descriptor of an unrecognized enum value.");
+    }
     return getDescriptor().getValues().get(ordinal());
   }
   public final com.google.protobuf.Descriptors.EnumDescriptor
@@ -134,7 +138,7 @@ public enum DeviceType
   }
   public static final com.google.protobuf.Descriptors.EnumDescriptor
       getDescriptor() {
-    return DeviceTypeOuterClass.getDescriptor().getEnumTypes().get(0);
+    return im.turms.common.constant.DeviceTypeOuterClass.getDescriptor().getEnumTypes().get(0);
   }
 
   private static final DeviceType[] VALUES = values();

@@ -23,7 +23,7 @@ package im.turms.common.model.bo.group;
 /**
  * Protobuf type {@code im.turms.proto.Group}
  */
-public  final class Group extends
+public final class Group extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.Group)
     GroupOrBuilder {
@@ -229,15 +229,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return GroupOuterClass.internal_static_im_turms_proto_Group_descriptor;
+    return im.turms.common.model.bo.group.GroupOuterClass.internal_static_im_turms_proto_Group_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return GroupOuterClass.internal_static_im_turms_proto_Group_fieldAccessorTable
+    return im.turms.common.model.bo.group.GroupOuterClass.internal_static_im_turms_proto_Group_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            Group.class, Group.Builder.class);
+            im.turms.common.model.bo.group.Group.class, im.turms.common.model.bo.group.Group.Builder.class);
   }
 
   public static final int ID_FIELD_NUMBER = 1;
@@ -246,6 +246,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value id = 1;</code>
    * @return Whether the id field is set.
    */
+  @java.lang.Override
   public boolean hasId() {
     return id_ != null;
   }
@@ -253,12 +254,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value id = 1;</code>
    * @return The id.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getId() {
     return id_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : id_;
   }
   /**
    * <code>.google.protobuf.Int64Value id = 1;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getIdOrBuilder() {
     return getId();
   }
@@ -269,6 +272,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value type_id = 2;</code>
    * @return Whether the typeId field is set.
    */
+  @java.lang.Override
   public boolean hasTypeId() {
     return typeId_ != null;
   }
@@ -276,12 +280,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value type_id = 2;</code>
    * @return The typeId.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getTypeId() {
     return typeId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : typeId_;
   }
   /**
    * <code>.google.protobuf.Int64Value type_id = 2;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getTypeIdOrBuilder() {
     return getTypeId();
   }
@@ -292,6 +298,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value creator_id = 3;</code>
    * @return Whether the creatorId field is set.
    */
+  @java.lang.Override
   public boolean hasCreatorId() {
     return creatorId_ != null;
   }
@@ -299,12 +306,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value creator_id = 3;</code>
    * @return The creatorId.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getCreatorId() {
     return creatorId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : creatorId_;
   }
   /**
    * <code>.google.protobuf.Int64Value creator_id = 3;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getCreatorIdOrBuilder() {
     return getCreatorId();
   }
@@ -315,6 +324,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value owner_id = 4;</code>
    * @return Whether the ownerId field is set.
    */
+  @java.lang.Override
   public boolean hasOwnerId() {
     return ownerId_ != null;
   }
@@ -322,12 +332,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value owner_id = 4;</code>
    * @return The ownerId.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getOwnerId() {
     return ownerId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : ownerId_;
   }
   /**
    * <code>.google.protobuf.Int64Value owner_id = 4;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getOwnerIdOrBuilder() {
     return getOwnerId();
   }
@@ -338,6 +350,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue name = 5;</code>
    * @return Whether the name field is set.
    */
+  @java.lang.Override
   public boolean hasName() {
     return name_ != null;
   }
@@ -345,12 +358,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue name = 5;</code>
    * @return The name.
    */
+  @java.lang.Override
   public com.google.protobuf.StringValue getName() {
     return name_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : name_;
   }
   /**
    * <code>.google.protobuf.StringValue name = 5;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.StringValueOrBuilder getNameOrBuilder() {
     return getName();
   }
@@ -361,6 +376,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue intro = 6;</code>
    * @return Whether the intro field is set.
    */
+  @java.lang.Override
   public boolean hasIntro() {
     return intro_ != null;
   }
@@ -368,12 +384,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue intro = 6;</code>
    * @return The intro.
    */
+  @java.lang.Override
   public com.google.protobuf.StringValue getIntro() {
     return intro_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : intro_;
   }
   /**
    * <code>.google.protobuf.StringValue intro = 6;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.StringValueOrBuilder getIntroOrBuilder() {
     return getIntro();
   }
@@ -384,6 +402,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue announcement = 7;</code>
    * @return Whether the announcement field is set.
    */
+  @java.lang.Override
   public boolean hasAnnouncement() {
     return announcement_ != null;
   }
@@ -391,12 +410,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue announcement = 7;</code>
    * @return The announcement.
    */
+  @java.lang.Override
   public com.google.protobuf.StringValue getAnnouncement() {
     return announcement_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : announcement_;
   }
   /**
    * <code>.google.protobuf.StringValue announcement = 7;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.StringValueOrBuilder getAnnouncementOrBuilder() {
     return getAnnouncement();
   }
@@ -407,6 +428,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value creation_date = 8;</code>
    * @return Whether the creationDate field is set.
    */
+  @java.lang.Override
   public boolean hasCreationDate() {
     return creationDate_ != null;
   }
@@ -414,12 +436,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value creation_date = 8;</code>
    * @return The creationDate.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getCreationDate() {
     return creationDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : creationDate_;
   }
   /**
    * <code>.google.protobuf.Int64Value creation_date = 8;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getCreationDateOrBuilder() {
     return getCreationDate();
   }
@@ -430,6 +454,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value deletion_date = 9;</code>
    * @return Whether the deletionDate field is set.
    */
+  @java.lang.Override
   public boolean hasDeletionDate() {
     return deletionDate_ != null;
   }
@@ -437,12 +462,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value deletion_date = 9;</code>
    * @return The deletionDate.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getDeletionDate() {
     return deletionDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : deletionDate_;
   }
   /**
    * <code>.google.protobuf.Int64Value deletion_date = 9;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getDeletionDateOrBuilder() {
     return getDeletionDate();
   }
@@ -453,6 +480,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value mute_end_date = 10;</code>
    * @return Whether the muteEndDate field is set.
    */
+  @java.lang.Override
   public boolean hasMuteEndDate() {
     return muteEndDate_ != null;
   }
@@ -460,12 +488,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value mute_end_date = 10;</code>
    * @return The muteEndDate.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getMuteEndDate() {
     return muteEndDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : muteEndDate_;
   }
   /**
    * <code>.google.protobuf.Int64Value mute_end_date = 10;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getMuteEndDateOrBuilder() {
     return getMuteEndDate();
   }
@@ -476,6 +506,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.BoolValue active = 11;</code>
    * @return Whether the active field is set.
    */
+  @java.lang.Override
   public boolean hasActive() {
     return active_ != null;
   }
@@ -483,12 +514,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.BoolValue active = 11;</code>
    * @return The active.
    */
+  @java.lang.Override
   public com.google.protobuf.BoolValue getActive() {
     return active_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : active_;
   }
   /**
    * <code>.google.protobuf.BoolValue active = 11;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.BoolValueOrBuilder getActiveOrBuilder() {
     return getActive();
   }
@@ -603,10 +636,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof Group)) {
+    if (!(obj instanceof im.turms.common.model.bo.group.Group)) {
       return super.equals(obj);
     }
-    Group other = (Group) obj;
+    im.turms.common.model.bo.group.Group other = (im.turms.common.model.bo.group.Group) obj;
 
     if (hasId() != other.hasId()) return false;
     if (hasId()) {
@@ -723,69 +756,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static Group parseFrom(
+  public static im.turms.common.model.bo.group.Group parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static Group parseFrom(
+  public static im.turms.common.model.bo.group.Group parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static Group parseFrom(
+  public static im.turms.common.model.bo.group.Group parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static Group parseFrom(
+  public static im.turms.common.model.bo.group.Group parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static Group parseFrom(byte[] data)
+  public static im.turms.common.model.bo.group.Group parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static Group parseFrom(
+  public static im.turms.common.model.bo.group.Group parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static Group parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.group.Group parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static Group parseFrom(
+  public static im.turms.common.model.bo.group.Group parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static Group parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.group.Group parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static Group parseDelimitedFrom(
+  public static im.turms.common.model.bo.group.Group parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static Group parseFrom(
+  public static im.turms.common.model.bo.group.Group parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static Group parseFrom(
+  public static im.turms.common.model.bo.group.Group parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -798,7 +831,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(Group prototype) {
+  public static Builder newBuilder(im.turms.common.model.bo.group.Group prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -819,18 +852,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.Group)
-          GroupOrBuilder {
+      im.turms.common.model.bo.group.GroupOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return GroupOuterClass.internal_static_im_turms_proto_Group_descriptor;
+      return im.turms.common.model.bo.group.GroupOuterClass.internal_static_im_turms_proto_Group_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return GroupOuterClass.internal_static_im_turms_proto_Group_fieldAccessorTable
+      return im.turms.common.model.bo.group.GroupOuterClass.internal_static_im_turms_proto_Group_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              Group.class, Group.Builder.class);
+              im.turms.common.model.bo.group.Group.class, im.turms.common.model.bo.group.Group.Builder.class);
     }
 
     // Construct using im.turms.common.model.bo.group.Group.newBuilder()
@@ -923,17 +956,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return GroupOuterClass.internal_static_im_turms_proto_Group_descriptor;
+      return im.turms.common.model.bo.group.GroupOuterClass.internal_static_im_turms_proto_Group_descriptor;
     }
 
     @java.lang.Override
-    public Group getDefaultInstanceForType() {
-      return Group.getDefaultInstance();
+    public im.turms.common.model.bo.group.Group getDefaultInstanceForType() {
+      return im.turms.common.model.bo.group.Group.getDefaultInstance();
     }
 
     @java.lang.Override
-    public Group build() {
-      Group result = buildPartial();
+    public im.turms.common.model.bo.group.Group build() {
+      im.turms.common.model.bo.group.Group result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -941,8 +974,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public Group buildPartial() {
-      Group result = new Group(this);
+    public im.turms.common.model.bo.group.Group buildPartial() {
+      im.turms.common.model.bo.group.Group result = new im.turms.common.model.bo.group.Group(this);
       if (idBuilder_ == null) {
         result.id_ = id_;
       } else {
@@ -1036,16 +1069,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof Group) {
-        return mergeFrom((Group)other);
+      if (other instanceof im.turms.common.model.bo.group.Group) {
+        return mergeFrom((im.turms.common.model.bo.group.Group)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(Group other) {
-      if (other == Group.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.bo.group.Group other) {
+      if (other == im.turms.common.model.bo.group.Group.getDefaultInstance()) return this;
       if (other.hasId()) {
         mergeId(other.getId());
       }
@@ -1094,11 +1127,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      Group parsedMessage = null;
+      im.turms.common.model.bo.group.Group parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (Group) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.bo.group.Group) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -2433,12 +2466,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.Group)
-  private static final Group DEFAULT_INSTANCE;
+  private static final im.turms.common.model.bo.group.Group DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new Group();
+    DEFAULT_INSTANCE = new im.turms.common.model.bo.group.Group();
   }
 
-  public static Group getDefaultInstance() {
+  public static im.turms.common.model.bo.group.Group getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -2463,7 +2496,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public Group getDefaultInstanceForType() {
+  public im.turms.common.model.bo.group.Group getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

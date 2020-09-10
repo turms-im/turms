@@ -23,7 +23,7 @@ package im.turms.common.model.bo.common;
 /**
  * Protobuf type {@code im.turms.proto.Int64ValuesWithVersion}
  */
-public  final class Int64ValuesWithVersion extends
+public final class Int64ValuesWithVersion extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.Int64ValuesWithVersion)
     Int64ValuesWithVersionOrBuilder {
@@ -125,15 +125,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return Int64ValuesWithVersionOuterClass.internal_static_im_turms_proto_Int64ValuesWithVersion_descriptor;
+    return im.turms.common.model.bo.common.Int64ValuesWithVersionOuterClass.internal_static_im_turms_proto_Int64ValuesWithVersion_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return Int64ValuesWithVersionOuterClass.internal_static_im_turms_proto_Int64ValuesWithVersion_fieldAccessorTable
+    return im.turms.common.model.bo.common.Int64ValuesWithVersionOuterClass.internal_static_im_turms_proto_Int64ValuesWithVersion_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            Int64ValuesWithVersion.class, Int64ValuesWithVersion.Builder.class);
+            im.turms.common.model.bo.common.Int64ValuesWithVersion.class, im.turms.common.model.bo.common.Int64ValuesWithVersion.Builder.class);
   }
 
   public static final int VALUES_FIELD_NUMBER = 1;
@@ -142,6 +142,7 @@ private static final long serialVersionUID = 0L;
    * <code>repeated int64 values = 1;</code>
    * @return A list containing the values.
    */
+  @java.lang.Override
   public java.util.List<java.lang.Long>
       getValuesList() {
     return values_;
@@ -169,6 +170,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
    * @return Whether the lastUpdatedDate field is set.
    */
+  @java.lang.Override
   public boolean hasLastUpdatedDate() {
     return lastUpdatedDate_ != null;
   }
@@ -176,12 +178,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
    * @return The lastUpdatedDate.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getLastUpdatedDate() {
     return lastUpdatedDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : lastUpdatedDate_;
   }
   /**
    * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getLastUpdatedDateOrBuilder() {
     return getLastUpdatedDate();
   }
@@ -248,10 +252,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof Int64ValuesWithVersion)) {
+    if (!(obj instanceof im.turms.common.model.bo.common.Int64ValuesWithVersion)) {
       return super.equals(obj);
     }
-    Int64ValuesWithVersion other = (Int64ValuesWithVersion) obj;
+    im.turms.common.model.bo.common.Int64ValuesWithVersion other = (im.turms.common.model.bo.common.Int64ValuesWithVersion) obj;
 
     if (!getValuesList()
         .equals(other.getValuesList())) return false;
@@ -284,69 +288,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static Int64ValuesWithVersion parseFrom(
+  public static im.turms.common.model.bo.common.Int64ValuesWithVersion parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static Int64ValuesWithVersion parseFrom(
+  public static im.turms.common.model.bo.common.Int64ValuesWithVersion parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static Int64ValuesWithVersion parseFrom(
+  public static im.turms.common.model.bo.common.Int64ValuesWithVersion parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static Int64ValuesWithVersion parseFrom(
+  public static im.turms.common.model.bo.common.Int64ValuesWithVersion parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static Int64ValuesWithVersion parseFrom(byte[] data)
+  public static im.turms.common.model.bo.common.Int64ValuesWithVersion parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static Int64ValuesWithVersion parseFrom(
+  public static im.turms.common.model.bo.common.Int64ValuesWithVersion parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static Int64ValuesWithVersion parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.common.Int64ValuesWithVersion parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static Int64ValuesWithVersion parseFrom(
+  public static im.turms.common.model.bo.common.Int64ValuesWithVersion parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static Int64ValuesWithVersion parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.common.Int64ValuesWithVersion parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static Int64ValuesWithVersion parseDelimitedFrom(
+  public static im.turms.common.model.bo.common.Int64ValuesWithVersion parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static Int64ValuesWithVersion parseFrom(
+  public static im.turms.common.model.bo.common.Int64ValuesWithVersion parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static Int64ValuesWithVersion parseFrom(
+  public static im.turms.common.model.bo.common.Int64ValuesWithVersion parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -359,7 +363,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(Int64ValuesWithVersion prototype) {
+  public static Builder newBuilder(im.turms.common.model.bo.common.Int64ValuesWithVersion prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -380,18 +384,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.Int64ValuesWithVersion)
-          Int64ValuesWithVersionOrBuilder {
+      im.turms.common.model.bo.common.Int64ValuesWithVersionOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return Int64ValuesWithVersionOuterClass.internal_static_im_turms_proto_Int64ValuesWithVersion_descriptor;
+      return im.turms.common.model.bo.common.Int64ValuesWithVersionOuterClass.internal_static_im_turms_proto_Int64ValuesWithVersion_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return Int64ValuesWithVersionOuterClass.internal_static_im_turms_proto_Int64ValuesWithVersion_fieldAccessorTable
+      return im.turms.common.model.bo.common.Int64ValuesWithVersionOuterClass.internal_static_im_turms_proto_Int64ValuesWithVersion_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              Int64ValuesWithVersion.class, Int64ValuesWithVersion.Builder.class);
+              im.turms.common.model.bo.common.Int64ValuesWithVersion.class, im.turms.common.model.bo.common.Int64ValuesWithVersion.Builder.class);
     }
 
     // Construct using im.turms.common.model.bo.common.Int64ValuesWithVersion.newBuilder()
@@ -426,17 +430,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return Int64ValuesWithVersionOuterClass.internal_static_im_turms_proto_Int64ValuesWithVersion_descriptor;
+      return im.turms.common.model.bo.common.Int64ValuesWithVersionOuterClass.internal_static_im_turms_proto_Int64ValuesWithVersion_descriptor;
     }
 
     @java.lang.Override
-    public Int64ValuesWithVersion getDefaultInstanceForType() {
-      return Int64ValuesWithVersion.getDefaultInstance();
+    public im.turms.common.model.bo.common.Int64ValuesWithVersion getDefaultInstanceForType() {
+      return im.turms.common.model.bo.common.Int64ValuesWithVersion.getDefaultInstance();
     }
 
     @java.lang.Override
-    public Int64ValuesWithVersion build() {
-      Int64ValuesWithVersion result = buildPartial();
+    public im.turms.common.model.bo.common.Int64ValuesWithVersion build() {
+      im.turms.common.model.bo.common.Int64ValuesWithVersion result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -444,8 +448,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public Int64ValuesWithVersion buildPartial() {
-      Int64ValuesWithVersion result = new Int64ValuesWithVersion(this);
+    public im.turms.common.model.bo.common.Int64ValuesWithVersion buildPartial() {
+      im.turms.common.model.bo.common.Int64ValuesWithVersion result = new im.turms.common.model.bo.common.Int64ValuesWithVersion(this);
       int from_bitField0_ = bitField0_;
       if (((bitField0_ & 0x00000001) != 0)) {
         values_.makeImmutable();
@@ -495,16 +499,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof Int64ValuesWithVersion) {
-        return mergeFrom((Int64ValuesWithVersion)other);
+      if (other instanceof im.turms.common.model.bo.common.Int64ValuesWithVersion) {
+        return mergeFrom((im.turms.common.model.bo.common.Int64ValuesWithVersion)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(Int64ValuesWithVersion other) {
-      if (other == Int64ValuesWithVersion.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.bo.common.Int64ValuesWithVersion other) {
+      if (other == im.turms.common.model.bo.common.Int64ValuesWithVersion.getDefaultInstance()) return this;
       if (!other.values_.isEmpty()) {
         if (values_.isEmpty()) {
           values_ = other.values_;
@@ -533,11 +537,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      Int64ValuesWithVersion parsedMessage = null;
+      im.turms.common.model.bo.common.Int64ValuesWithVersion parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (Int64ValuesWithVersion) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.bo.common.Int64ValuesWithVersion) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -762,12 +766,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.Int64ValuesWithVersion)
-  private static final Int64ValuesWithVersion DEFAULT_INSTANCE;
+  private static final im.turms.common.model.bo.common.Int64ValuesWithVersion DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new Int64ValuesWithVersion();
+    DEFAULT_INSTANCE = new im.turms.common.model.bo.common.Int64ValuesWithVersion();
   }
 
-  public static Int64ValuesWithVersion getDefaultInstance() {
+  public static im.turms.common.model.bo.common.Int64ValuesWithVersion getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -792,7 +796,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public Int64ValuesWithVersion getDefaultInstanceForType() {
+  public im.turms.common.model.bo.common.Int64ValuesWithVersion getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

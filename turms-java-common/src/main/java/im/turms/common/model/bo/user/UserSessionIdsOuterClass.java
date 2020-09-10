@@ -55,7 +55,7 @@ public final class UserSessionIdsOuterClass {
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          UserSessionIdOuterClass.getDescriptor(),
+          im.turms.common.model.bo.user.UserSessionIdOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_UserSessionIds_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -63,7 +63,7 @@ public final class UserSessionIdsOuterClass {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_UserSessionIds_descriptor,
         new java.lang.String[] { "UserSessionIds", });
-    UserSessionIdOuterClass.getDescriptor();
+    im.turms.common.model.bo.user.UserSessionIdOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -20,12 +20,10 @@
 
 package im.turms.common.model.dto.request.storage;
 
-import im.turms.common.constant.ContentType;
-
 /**
  * Protobuf type {@code im.turms.proto.DeleteResourceRequest}
  */
-public  final class DeleteResourceRequest extends
+public final class DeleteResourceRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.DeleteResourceRequest)
     DeleteResourceRequestOrBuilder {
@@ -121,15 +119,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return DeleteResourceRequestOuterClass.internal_static_im_turms_proto_DeleteResourceRequest_descriptor;
+    return im.turms.common.model.dto.request.storage.DeleteResourceRequestOuterClass.internal_static_im_turms_proto_DeleteResourceRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return DeleteResourceRequestOuterClass.internal_static_im_turms_proto_DeleteResourceRequest_fieldAccessorTable
+    return im.turms.common.model.dto.request.storage.DeleteResourceRequestOuterClass.internal_static_im_turms_proto_DeleteResourceRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            DeleteResourceRequest.class, DeleteResourceRequest.Builder.class);
+            im.turms.common.model.dto.request.storage.DeleteResourceRequest.class, im.turms.common.model.dto.request.storage.DeleteResourceRequest.Builder.class);
   }
 
   public static final int CONTENT_TYPE_FIELD_NUMBER = 1;
@@ -138,17 +136,17 @@ private static final long serialVersionUID = 0L;
    * <code>.im.turms.proto.ContentType content_type = 1;</code>
    * @return The enum numeric value on the wire for contentType.
    */
-  public int getContentTypeValue() {
+  @java.lang.Override public int getContentTypeValue() {
     return contentType_;
   }
   /**
    * <code>.im.turms.proto.ContentType content_type = 1;</code>
    * @return The contentType.
    */
-  public ContentType getContentType() {
+  @java.lang.Override public im.turms.common.constant.ContentType getContentType() {
     @SuppressWarnings("deprecation")
-    ContentType result = ContentType.valueOf(contentType_);
-    return result == null ? ContentType.UNRECOGNIZED : result;
+    im.turms.common.constant.ContentType result = im.turms.common.constant.ContentType.valueOf(contentType_);
+    return result == null ? im.turms.common.constant.ContentType.UNRECOGNIZED : result;
   }
 
   public static final int KEY_STR_FIELD_NUMBER = 2;
@@ -157,6 +155,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue key_str = 2;</code>
    * @return Whether the keyStr field is set.
    */
+  @java.lang.Override
   public boolean hasKeyStr() {
     return keyStr_ != null;
   }
@@ -164,12 +163,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue key_str = 2;</code>
    * @return The keyStr.
    */
+  @java.lang.Override
   public com.google.protobuf.StringValue getKeyStr() {
     return keyStr_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : keyStr_;
   }
   /**
    * <code>.google.protobuf.StringValue key_str = 2;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.StringValueOrBuilder getKeyStrOrBuilder() {
     return getKeyStr();
   }
@@ -180,6 +181,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value key_num = 3;</code>
    * @return Whether the keyNum field is set.
    */
+  @java.lang.Override
   public boolean hasKeyNum() {
     return keyNum_ != null;
   }
@@ -187,12 +189,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value key_num = 3;</code>
    * @return The keyNum.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getKeyNum() {
     return keyNum_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : keyNum_;
   }
   /**
    * <code>.google.protobuf.Int64Value key_num = 3;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getKeyNumOrBuilder() {
     return getKeyNum();
   }
@@ -211,7 +215,7 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (contentType_ != ContentType.PROFILE.getNumber()) {
+    if (contentType_ != im.turms.common.constant.ContentType.PROFILE.getNumber()) {
       output.writeEnum(1, contentType_);
     }
     if (keyStr_ != null) {
@@ -229,7 +233,7 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (contentType_ != ContentType.PROFILE.getNumber()) {
+    if (contentType_ != im.turms.common.constant.ContentType.PROFILE.getNumber()) {
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(1, contentType_);
     }
@@ -251,10 +255,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof DeleteResourceRequest)) {
+    if (!(obj instanceof im.turms.common.model.dto.request.storage.DeleteResourceRequest)) {
       return super.equals(obj);
     }
-    DeleteResourceRequest other = (DeleteResourceRequest) obj;
+    im.turms.common.model.dto.request.storage.DeleteResourceRequest other = (im.turms.common.model.dto.request.storage.DeleteResourceRequest) obj;
 
     if (contentType_ != other.contentType_) return false;
     if (hasKeyStr() != other.hasKeyStr()) return false;
@@ -293,69 +297,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static DeleteResourceRequest parseFrom(
+  public static im.turms.common.model.dto.request.storage.DeleteResourceRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static DeleteResourceRequest parseFrom(
+  public static im.turms.common.model.dto.request.storage.DeleteResourceRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static DeleteResourceRequest parseFrom(
+  public static im.turms.common.model.dto.request.storage.DeleteResourceRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static DeleteResourceRequest parseFrom(
+  public static im.turms.common.model.dto.request.storage.DeleteResourceRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static DeleteResourceRequest parseFrom(byte[] data)
+  public static im.turms.common.model.dto.request.storage.DeleteResourceRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static DeleteResourceRequest parseFrom(
+  public static im.turms.common.model.dto.request.storage.DeleteResourceRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static DeleteResourceRequest parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.storage.DeleteResourceRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static DeleteResourceRequest parseFrom(
+  public static im.turms.common.model.dto.request.storage.DeleteResourceRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static DeleteResourceRequest parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.storage.DeleteResourceRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static DeleteResourceRequest parseDelimitedFrom(
+  public static im.turms.common.model.dto.request.storage.DeleteResourceRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static DeleteResourceRequest parseFrom(
+  public static im.turms.common.model.dto.request.storage.DeleteResourceRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static DeleteResourceRequest parseFrom(
+  public static im.turms.common.model.dto.request.storage.DeleteResourceRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -368,7 +372,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(DeleteResourceRequest prototype) {
+  public static Builder newBuilder(im.turms.common.model.dto.request.storage.DeleteResourceRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -389,18 +393,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.DeleteResourceRequest)
-          DeleteResourceRequestOrBuilder {
+      im.turms.common.model.dto.request.storage.DeleteResourceRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return DeleteResourceRequestOuterClass.internal_static_im_turms_proto_DeleteResourceRequest_descriptor;
+      return im.turms.common.model.dto.request.storage.DeleteResourceRequestOuterClass.internal_static_im_turms_proto_DeleteResourceRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return DeleteResourceRequestOuterClass.internal_static_im_turms_proto_DeleteResourceRequest_fieldAccessorTable
+      return im.turms.common.model.dto.request.storage.DeleteResourceRequestOuterClass.internal_static_im_turms_proto_DeleteResourceRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              DeleteResourceRequest.class, DeleteResourceRequest.Builder.class);
+              im.turms.common.model.dto.request.storage.DeleteResourceRequest.class, im.turms.common.model.dto.request.storage.DeleteResourceRequest.Builder.class);
     }
 
     // Construct using im.turms.common.model.dto.request.storage.DeleteResourceRequest.newBuilder()
@@ -441,17 +445,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return DeleteResourceRequestOuterClass.internal_static_im_turms_proto_DeleteResourceRequest_descriptor;
+      return im.turms.common.model.dto.request.storage.DeleteResourceRequestOuterClass.internal_static_im_turms_proto_DeleteResourceRequest_descriptor;
     }
 
     @java.lang.Override
-    public DeleteResourceRequest getDefaultInstanceForType() {
-      return DeleteResourceRequest.getDefaultInstance();
+    public im.turms.common.model.dto.request.storage.DeleteResourceRequest getDefaultInstanceForType() {
+      return im.turms.common.model.dto.request.storage.DeleteResourceRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public DeleteResourceRequest build() {
-      DeleteResourceRequest result = buildPartial();
+    public im.turms.common.model.dto.request.storage.DeleteResourceRequest build() {
+      im.turms.common.model.dto.request.storage.DeleteResourceRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -459,8 +463,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public DeleteResourceRequest buildPartial() {
-      DeleteResourceRequest result = new DeleteResourceRequest(this);
+    public im.turms.common.model.dto.request.storage.DeleteResourceRequest buildPartial() {
+      im.turms.common.model.dto.request.storage.DeleteResourceRequest result = new im.turms.common.model.dto.request.storage.DeleteResourceRequest(this);
       result.contentType_ = contentType_;
       if (keyStrBuilder_ == null) {
         result.keyStr_ = keyStr_;
@@ -510,16 +514,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof DeleteResourceRequest) {
-        return mergeFrom((DeleteResourceRequest)other);
+      if (other instanceof im.turms.common.model.dto.request.storage.DeleteResourceRequest) {
+        return mergeFrom((im.turms.common.model.dto.request.storage.DeleteResourceRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(DeleteResourceRequest other) {
-      if (other == DeleteResourceRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.dto.request.storage.DeleteResourceRequest other) {
+      if (other == im.turms.common.model.dto.request.storage.DeleteResourceRequest.getDefaultInstance()) return this;
       if (other.contentType_ != 0) {
         setContentTypeValue(other.getContentTypeValue());
       }
@@ -544,11 +548,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      DeleteResourceRequest parsedMessage = null;
+      im.turms.common.model.dto.request.storage.DeleteResourceRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (DeleteResourceRequest) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.dto.request.storage.DeleteResourceRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -563,7 +567,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.ContentType content_type = 1;</code>
      * @return The enum numeric value on the wire for contentType.
      */
-    public int getContentTypeValue() {
+    @java.lang.Override public int getContentTypeValue() {
       return contentType_;
     }
     /**
@@ -572,6 +576,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setContentTypeValue(int value) {
+      
       contentType_ = value;
       onChanged();
       return this;
@@ -580,17 +585,18 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.ContentType content_type = 1;</code>
      * @return The contentType.
      */
-    public ContentType getContentType() {
+    @java.lang.Override
+    public im.turms.common.constant.ContentType getContentType() {
       @SuppressWarnings("deprecation")
-      ContentType result = ContentType.valueOf(contentType_);
-      return result == null ? ContentType.UNRECOGNIZED : result;
+      im.turms.common.constant.ContentType result = im.turms.common.constant.ContentType.valueOf(contentType_);
+      return result == null ? im.turms.common.constant.ContentType.UNRECOGNIZED : result;
     }
     /**
      * <code>.im.turms.proto.ContentType content_type = 1;</code>
      * @param value The contentType to set.
      * @return This builder for chaining.
      */
-    public Builder setContentType(ContentType value) {
+    public Builder setContentType(im.turms.common.constant.ContentType value) {
       if (value == null) {
         throw new NullPointerException();
       }
@@ -864,12 +870,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.DeleteResourceRequest)
-  private static final DeleteResourceRequest DEFAULT_INSTANCE;
+  private static final im.turms.common.model.dto.request.storage.DeleteResourceRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new DeleteResourceRequest();
+    DEFAULT_INSTANCE = new im.turms.common.model.dto.request.storage.DeleteResourceRequest();
   }
 
-  public static DeleteResourceRequest getDefaultInstance() {
+  public static im.turms.common.model.dto.request.storage.DeleteResourceRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -894,7 +900,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public DeleteResourceRequest getDefaultInstanceForType() {
+  public im.turms.common.model.dto.request.storage.DeleteResourceRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

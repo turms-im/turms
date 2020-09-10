@@ -23,7 +23,7 @@ package im.turms.common.model.bo.message;
 /**
  * Protobuf type {@code im.turms.proto.Message}
  */
-public  final class Message extends
+public final class Message extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.Message)
     MessageOrBuilder {
@@ -203,15 +203,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return MessageOuterClass.internal_static_im_turms_proto_Message_descriptor;
+    return im.turms.common.model.bo.message.MessageOuterClass.internal_static_im_turms_proto_Message_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return MessageOuterClass.internal_static_im_turms_proto_Message_fieldAccessorTable
+    return im.turms.common.model.bo.message.MessageOuterClass.internal_static_im_turms_proto_Message_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            Message.class, Message.Builder.class);
+            im.turms.common.model.bo.message.Message.class, im.turms.common.model.bo.message.Message.Builder.class);
   }
 
   public static final int ID_FIELD_NUMBER = 1;
@@ -220,6 +220,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value id = 1;</code>
    * @return Whether the id field is set.
    */
+  @java.lang.Override
   public boolean hasId() {
     return id_ != null;
   }
@@ -227,12 +228,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value id = 1;</code>
    * @return The id.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getId() {
     return id_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : id_;
   }
   /**
    * <code>.google.protobuf.Int64Value id = 1;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getIdOrBuilder() {
     return getId();
   }
@@ -243,6 +246,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value delivery_date = 2;</code>
    * @return Whether the deliveryDate field is set.
    */
+  @java.lang.Override
   public boolean hasDeliveryDate() {
     return deliveryDate_ != null;
   }
@@ -250,12 +254,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value delivery_date = 2;</code>
    * @return The deliveryDate.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getDeliveryDate() {
     return deliveryDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : deliveryDate_;
   }
   /**
    * <code>.google.protobuf.Int64Value delivery_date = 2;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getDeliveryDateOrBuilder() {
     return getDeliveryDate();
   }
@@ -266,6 +272,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value deletion_date = 3;</code>
    * @return Whether the deletionDate field is set.
    */
+  @java.lang.Override
   public boolean hasDeletionDate() {
     return deletionDate_ != null;
   }
@@ -273,12 +280,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value deletion_date = 3;</code>
    * @return The deletionDate.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getDeletionDate() {
     return deletionDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : deletionDate_;
   }
   /**
    * <code>.google.protobuf.Int64Value deletion_date = 3;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getDeletionDateOrBuilder() {
     return getDeletionDate();
   }
@@ -289,6 +298,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue text = 4;</code>
    * @return Whether the text field is set.
    */
+  @java.lang.Override
   public boolean hasText() {
     return text_ != null;
   }
@@ -296,12 +306,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue text = 4;</code>
    * @return The text.
    */
+  @java.lang.Override
   public com.google.protobuf.StringValue getText() {
     return text_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : text_;
   }
   /**
    * <code>.google.protobuf.StringValue text = 4;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.StringValueOrBuilder getTextOrBuilder() {
     return getText();
   }
@@ -312,6 +324,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value sender_id = 5;</code>
    * @return Whether the senderId field is set.
    */
+  @java.lang.Override
   public boolean hasSenderId() {
     return senderId_ != null;
   }
@@ -319,12 +332,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value sender_id = 5;</code>
    * @return The senderId.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getSenderId() {
     return senderId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : senderId_;
   }
   /**
    * <code>.google.protobuf.Int64Value sender_id = 5;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getSenderIdOrBuilder() {
     return getSenderId();
   }
@@ -335,6 +350,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value group_id = 6;</code>
    * @return Whether the groupId field is set.
    */
+  @java.lang.Override
   public boolean hasGroupId() {
     return groupId_ != null;
   }
@@ -342,12 +358,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value group_id = 6;</code>
    * @return The groupId.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getGroupId() {
     return groupId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : groupId_;
   }
   /**
    * <code>.google.protobuf.Int64Value group_id = 6;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getGroupIdOrBuilder() {
     return getGroupId();
   }
@@ -358,6 +376,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.BoolValue is_system_message = 7;</code>
    * @return Whether the isSystemMessage field is set.
    */
+  @java.lang.Override
   public boolean hasIsSystemMessage() {
     return isSystemMessage_ != null;
   }
@@ -365,12 +384,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.BoolValue is_system_message = 7;</code>
    * @return The isSystemMessage.
    */
+  @java.lang.Override
   public com.google.protobuf.BoolValue getIsSystemMessage() {
     return isSystemMessage_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : isSystemMessage_;
   }
   /**
    * <code>.google.protobuf.BoolValue is_system_message = 7;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.BoolValueOrBuilder getIsSystemMessageOrBuilder() {
     return getIsSystemMessage();
   }
@@ -381,6 +402,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value recipient_id = 8;</code>
    * @return Whether the recipientId field is set.
    */
+  @java.lang.Override
   public boolean hasRecipientId() {
     return recipientId_ != null;
   }
@@ -388,12 +410,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value recipient_id = 8;</code>
    * @return The recipientId.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getRecipientId() {
     return recipientId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : recipientId_;
   }
   /**
    * <code>.google.protobuf.Int64Value recipient_id = 8;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getRecipientIdOrBuilder() {
     return getRecipientId();
   }
@@ -404,6 +428,7 @@ private static final long serialVersionUID = 0L;
    * <code>repeated bytes records = 9;</code>
    * @return A list containing the records.
    */
+  @java.lang.Override
   public java.util.List<com.google.protobuf.ByteString>
       getRecordsList() {
     return records_;
@@ -525,10 +550,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof Message)) {
+    if (!(obj instanceof im.turms.common.model.bo.message.Message)) {
       return super.equals(obj);
     }
-    Message other = (Message) obj;
+    im.turms.common.model.bo.message.Message other = (im.turms.common.model.bo.message.Message) obj;
 
     if (hasId() != other.hasId()) return false;
     if (hasId()) {
@@ -624,69 +649,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static Message parseFrom(
+  public static im.turms.common.model.bo.message.Message parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static Message parseFrom(
+  public static im.turms.common.model.bo.message.Message parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static Message parseFrom(
+  public static im.turms.common.model.bo.message.Message parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static Message parseFrom(
+  public static im.turms.common.model.bo.message.Message parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static Message parseFrom(byte[] data)
+  public static im.turms.common.model.bo.message.Message parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static Message parseFrom(
+  public static im.turms.common.model.bo.message.Message parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static Message parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.message.Message parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static Message parseFrom(
+  public static im.turms.common.model.bo.message.Message parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static Message parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.message.Message parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static Message parseDelimitedFrom(
+  public static im.turms.common.model.bo.message.Message parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static Message parseFrom(
+  public static im.turms.common.model.bo.message.Message parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static Message parseFrom(
+  public static im.turms.common.model.bo.message.Message parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -699,7 +724,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(Message prototype) {
+  public static Builder newBuilder(im.turms.common.model.bo.message.Message prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -720,18 +745,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.Message)
-          MessageOrBuilder {
+      im.turms.common.model.bo.message.MessageOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return MessageOuterClass.internal_static_im_turms_proto_Message_descriptor;
+      return im.turms.common.model.bo.message.MessageOuterClass.internal_static_im_turms_proto_Message_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return MessageOuterClass.internal_static_im_turms_proto_Message_fieldAccessorTable
+      return im.turms.common.model.bo.message.MessageOuterClass.internal_static_im_turms_proto_Message_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              Message.class, Message.Builder.class);
+              im.turms.common.model.bo.message.Message.class, im.turms.common.model.bo.message.Message.Builder.class);
     }
 
     // Construct using im.turms.common.model.bo.message.Message.newBuilder()
@@ -808,17 +833,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return MessageOuterClass.internal_static_im_turms_proto_Message_descriptor;
+      return im.turms.common.model.bo.message.MessageOuterClass.internal_static_im_turms_proto_Message_descriptor;
     }
 
     @java.lang.Override
-    public Message getDefaultInstanceForType() {
-      return Message.getDefaultInstance();
+    public im.turms.common.model.bo.message.Message getDefaultInstanceForType() {
+      return im.turms.common.model.bo.message.Message.getDefaultInstance();
     }
 
     @java.lang.Override
-    public Message build() {
-      Message result = buildPartial();
+    public im.turms.common.model.bo.message.Message build() {
+      im.turms.common.model.bo.message.Message result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -826,8 +851,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public Message buildPartial() {
-      Message result = new Message(this);
+    public im.turms.common.model.bo.message.Message buildPartial() {
+      im.turms.common.model.bo.message.Message result = new im.turms.common.model.bo.message.Message(this);
       int from_bitField0_ = bitField0_;
       if (idBuilder_ == null) {
         result.id_ = id_;
@@ -912,16 +937,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof Message) {
-        return mergeFrom((Message)other);
+      if (other instanceof im.turms.common.model.bo.message.Message) {
+        return mergeFrom((im.turms.common.model.bo.message.Message)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(Message other) {
-      if (other == Message.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.bo.message.Message other) {
+      if (other == im.turms.common.model.bo.message.Message.getDefaultInstance()) return this;
       if (other.hasId()) {
         mergeId(other.getId());
       }
@@ -971,11 +996,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      Message parsedMessage = null;
+      im.turms.common.model.bo.message.Message parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (Message) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.bo.message.Message) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -2039,12 +2064,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.Message)
-  private static final Message DEFAULT_INSTANCE;
+  private static final im.turms.common.model.bo.message.Message DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new Message();
+    DEFAULT_INSTANCE = new im.turms.common.model.bo.message.Message();
   }
 
-  public static Message getDefaultInstance() {
+  public static im.turms.common.model.bo.message.Message getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -2069,7 +2094,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public Message getDefaultInstanceForType() {
+  public im.turms.common.model.bo.message.Message getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

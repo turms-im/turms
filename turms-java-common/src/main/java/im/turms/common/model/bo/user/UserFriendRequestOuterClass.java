@@ -20,8 +20,6 @@
 
 package im.turms.common.model.bo.user;
 
-import im.turms.common.constant.RequestStatusOuterClass;
-
 public final class UserFriendRequestOuterClass {
   private UserFriendRequestOuterClass() {}
   public static void registerAllExtensions(
@@ -67,7 +65,7 @@ public final class UserFriendRequestOuterClass {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.WrappersProto.getDescriptor(),
-          RequestStatusOuterClass.getDescriptor(),
+          im.turms.common.constant.RequestStatusOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_UserFriendRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -76,7 +74,7 @@ public final class UserFriendRequestOuterClass {
         internal_static_im_turms_proto_UserFriendRequest_descriptor,
         new java.lang.String[] { "Id", "CreationDate", "Content", "RequestStatus", "Reason", "ExpirationDate", "RequesterId", "RecipientId", });
     com.google.protobuf.WrappersProto.getDescriptor();
-    RequestStatusOuterClass.getDescriptor();
+    im.turms.common.constant.RequestStatusOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

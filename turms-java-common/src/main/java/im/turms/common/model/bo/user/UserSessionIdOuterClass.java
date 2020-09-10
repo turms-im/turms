@@ -20,8 +20,6 @@
 
 package im.turms.common.model.bo.user;
 
-import im.turms.common.constant.DeviceTypeOuterClass;
-
 public final class UserSessionIdOuterClass {
   private UserSessionIdOuterClass() {}
   public static void registerAllExtensions(
@@ -57,7 +55,7 @@ public final class UserSessionIdOuterClass {
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          DeviceTypeOuterClass.getDescriptor(),
+          im.turms.common.constant.DeviceTypeOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_UserSessionId_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -65,7 +63,7 @@ public final class UserSessionIdOuterClass {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_UserSessionId_descriptor,
         new java.lang.String[] { "UserId", "DeviceType", });
-    DeviceTypeOuterClass.getDescriptor();
+    im.turms.common.constant.DeviceTypeOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

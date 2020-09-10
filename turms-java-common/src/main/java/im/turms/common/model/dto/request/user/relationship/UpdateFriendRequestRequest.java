@@ -20,12 +20,10 @@
 
 package im.turms.common.model.dto.request.user.relationship;
 
-import im.turms.common.constant.ResponseAction;
-
 /**
  * Protobuf type {@code im.turms.proto.UpdateFriendRequestRequest}
  */
-public  final class UpdateFriendRequestRequest extends
+public final class UpdateFriendRequestRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.UpdateFriendRequestRequest)
     UpdateFriendRequestRequestOrBuilder {
@@ -113,15 +111,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return UpdateFriendRequestRequestOuterClass.internal_static_im_turms_proto_UpdateFriendRequestRequest_descriptor;
+    return im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequestOuterClass.internal_static_im_turms_proto_UpdateFriendRequestRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return UpdateFriendRequestRequestOuterClass.internal_static_im_turms_proto_UpdateFriendRequestRequest_fieldAccessorTable
+    return im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequestOuterClass.internal_static_im_turms_proto_UpdateFriendRequestRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            UpdateFriendRequestRequest.class, UpdateFriendRequestRequest.Builder.class);
+            im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest.class, im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest.Builder.class);
   }
 
   public static final int REQUESTID_FIELD_NUMBER = 1;
@@ -130,6 +128,7 @@ private static final long serialVersionUID = 0L;
    * <code>int64 requestId = 1;</code>
    * @return The requestId.
    */
+  @java.lang.Override
   public long getRequestId() {
     return requestId_;
   }
@@ -140,17 +139,17 @@ private static final long serialVersionUID = 0L;
    * <code>.im.turms.proto.ResponseAction responseAction = 2;</code>
    * @return The enum numeric value on the wire for responseAction.
    */
-  public int getResponseActionValue() {
+  @java.lang.Override public int getResponseActionValue() {
     return responseAction_;
   }
   /**
    * <code>.im.turms.proto.ResponseAction responseAction = 2;</code>
    * @return The responseAction.
    */
-  public ResponseAction getResponseAction() {
+  @java.lang.Override public im.turms.common.constant.ResponseAction getResponseAction() {
     @SuppressWarnings("deprecation")
-    ResponseAction result = ResponseAction.valueOf(responseAction_);
-    return result == null ? ResponseAction.UNRECOGNIZED : result;
+    im.turms.common.constant.ResponseAction result = im.turms.common.constant.ResponseAction.valueOf(responseAction_);
+    return result == null ? im.turms.common.constant.ResponseAction.UNRECOGNIZED : result;
   }
 
   public static final int REASON_FIELD_NUMBER = 3;
@@ -159,6 +158,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue reason = 3;</code>
    * @return Whether the reason field is set.
    */
+  @java.lang.Override
   public boolean hasReason() {
     return reason_ != null;
   }
@@ -166,12 +166,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue reason = 3;</code>
    * @return The reason.
    */
+  @java.lang.Override
   public com.google.protobuf.StringValue getReason() {
     return reason_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : reason_;
   }
   /**
    * <code>.google.protobuf.StringValue reason = 3;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.StringValueOrBuilder getReasonOrBuilder() {
     return getReason();
   }
@@ -193,7 +195,7 @@ private static final long serialVersionUID = 0L;
     if (requestId_ != 0L) {
       output.writeInt64(1, requestId_);
     }
-    if (responseAction_ != ResponseAction.ACCEPT.getNumber()) {
+    if (responseAction_ != im.turms.common.constant.ResponseAction.ACCEPT.getNumber()) {
       output.writeEnum(2, responseAction_);
     }
     if (reason_ != null) {
@@ -212,7 +214,7 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt64Size(1, requestId_);
     }
-    if (responseAction_ != ResponseAction.ACCEPT.getNumber()) {
+    if (responseAction_ != im.turms.common.constant.ResponseAction.ACCEPT.getNumber()) {
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(2, responseAction_);
     }
@@ -230,10 +232,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof UpdateFriendRequestRequest)) {
+    if (!(obj instanceof im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest)) {
       return super.equals(obj);
     }
-    UpdateFriendRequestRequest other = (UpdateFriendRequestRequest) obj;
+    im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest other = (im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest) obj;
 
     if (getRequestId()
         != other.getRequestId()) return false;
@@ -268,69 +270,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static UpdateFriendRequestRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UpdateFriendRequestRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UpdateFriendRequestRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UpdateFriendRequestRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UpdateFriendRequestRequest parseFrom(byte[] data)
+  public static im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UpdateFriendRequestRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UpdateFriendRequestRequest parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UpdateFriendRequestRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UpdateFriendRequestRequest parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static UpdateFriendRequestRequest parseDelimitedFrom(
+  public static im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UpdateFriendRequestRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UpdateFriendRequestRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -343,7 +345,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(UpdateFriendRequestRequest prototype) {
+  public static Builder newBuilder(im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -364,18 +366,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.UpdateFriendRequestRequest)
-          UpdateFriendRequestRequestOrBuilder {
+      im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return UpdateFriendRequestRequestOuterClass.internal_static_im_turms_proto_UpdateFriendRequestRequest_descriptor;
+      return im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequestOuterClass.internal_static_im_turms_proto_UpdateFriendRequestRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return UpdateFriendRequestRequestOuterClass.internal_static_im_turms_proto_UpdateFriendRequestRequest_fieldAccessorTable
+      return im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequestOuterClass.internal_static_im_turms_proto_UpdateFriendRequestRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              UpdateFriendRequestRequest.class, UpdateFriendRequestRequest.Builder.class);
+              im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest.class, im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest.Builder.class);
     }
 
     // Construct using im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest.newBuilder()
@@ -412,17 +414,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return UpdateFriendRequestRequestOuterClass.internal_static_im_turms_proto_UpdateFriendRequestRequest_descriptor;
+      return im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequestOuterClass.internal_static_im_turms_proto_UpdateFriendRequestRequest_descriptor;
     }
 
     @java.lang.Override
-    public UpdateFriendRequestRequest getDefaultInstanceForType() {
-      return UpdateFriendRequestRequest.getDefaultInstance();
+    public im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest getDefaultInstanceForType() {
+      return im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public UpdateFriendRequestRequest build() {
-      UpdateFriendRequestRequest result = buildPartial();
+    public im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest build() {
+      im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -430,8 +432,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public UpdateFriendRequestRequest buildPartial() {
-      UpdateFriendRequestRequest result = new UpdateFriendRequestRequest(this);
+    public im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest buildPartial() {
+      im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest result = new im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest(this);
       result.requestId_ = requestId_;
       result.responseAction_ = responseAction_;
       if (reasonBuilder_ == null) {
@@ -477,16 +479,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof UpdateFriendRequestRequest) {
-        return mergeFrom((UpdateFriendRequestRequest)other);
+      if (other instanceof im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest) {
+        return mergeFrom((im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(UpdateFriendRequestRequest other) {
-      if (other == UpdateFriendRequestRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest other) {
+      if (other == im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest.getDefaultInstance()) return this;
       if (other.getRequestId() != 0L) {
         setRequestId(other.getRequestId());
       }
@@ -511,11 +513,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      UpdateFriendRequestRequest parsedMessage = null;
+      im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (UpdateFriendRequestRequest) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -530,6 +532,7 @@ private static final long serialVersionUID = 0L;
      * <code>int64 requestId = 1;</code>
      * @return The requestId.
      */
+    @java.lang.Override
     public long getRequestId() {
       return requestId_;
     }
@@ -560,7 +563,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.ResponseAction responseAction = 2;</code>
      * @return The enum numeric value on the wire for responseAction.
      */
-    public int getResponseActionValue() {
+    @java.lang.Override public int getResponseActionValue() {
       return responseAction_;
     }
     /**
@@ -569,6 +572,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setResponseActionValue(int value) {
+      
       responseAction_ = value;
       onChanged();
       return this;
@@ -577,17 +581,18 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.ResponseAction responseAction = 2;</code>
      * @return The responseAction.
      */
-    public ResponseAction getResponseAction() {
+    @java.lang.Override
+    public im.turms.common.constant.ResponseAction getResponseAction() {
       @SuppressWarnings("deprecation")
-      ResponseAction result = ResponseAction.valueOf(responseAction_);
-      return result == null ? ResponseAction.UNRECOGNIZED : result;
+      im.turms.common.constant.ResponseAction result = im.turms.common.constant.ResponseAction.valueOf(responseAction_);
+      return result == null ? im.turms.common.constant.ResponseAction.UNRECOGNIZED : result;
     }
     /**
      * <code>.im.turms.proto.ResponseAction responseAction = 2;</code>
      * @param value The responseAction to set.
      * @return This builder for chaining.
      */
-    public Builder setResponseAction(ResponseAction value) {
+    public Builder setResponseAction(im.turms.common.constant.ResponseAction value) {
       if (value == null) {
         throw new NullPointerException();
       }
@@ -742,12 +747,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.UpdateFriendRequestRequest)
-  private static final UpdateFriendRequestRequest DEFAULT_INSTANCE;
+  private static final im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new UpdateFriendRequestRequest();
+    DEFAULT_INSTANCE = new im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest();
   }
 
-  public static UpdateFriendRequestRequest getDefaultInstance() {
+  public static im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -772,7 +777,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public UpdateFriendRequestRequest getDefaultInstanceForType() {
+  public im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

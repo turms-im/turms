@@ -23,7 +23,7 @@ package im.turms.common.model.dto.request.message;
 /**
  * Protobuf type {@code im.turms.proto.UpdateMessageRequest}
  */
-public  final class UpdateMessageRequest extends
+public final class UpdateMessageRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.UpdateMessageRequest)
     UpdateMessageRequestOrBuilder {
@@ -156,15 +156,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return UpdateMessageRequestOuterClass.internal_static_im_turms_proto_UpdateMessageRequest_descriptor;
+    return im.turms.common.model.dto.request.message.UpdateMessageRequestOuterClass.internal_static_im_turms_proto_UpdateMessageRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return UpdateMessageRequestOuterClass.internal_static_im_turms_proto_UpdateMessageRequest_fieldAccessorTable
+    return im.turms.common.model.dto.request.message.UpdateMessageRequestOuterClass.internal_static_im_turms_proto_UpdateMessageRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            UpdateMessageRequest.class, UpdateMessageRequest.Builder.class);
+            im.turms.common.model.dto.request.message.UpdateMessageRequest.class, im.turms.common.model.dto.request.message.UpdateMessageRequest.Builder.class);
   }
 
   public static final int MESSAGE_ID_FIELD_NUMBER = 1;
@@ -173,6 +173,7 @@ private static final long serialVersionUID = 0L;
    * <code>int64 message_id = 1;</code>
    * @return The messageId.
    */
+  @java.lang.Override
   public long getMessageId() {
     return messageId_;
   }
@@ -183,6 +184,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
    * @return Whether the isSystemMessage field is set.
    */
+  @java.lang.Override
   public boolean hasIsSystemMessage() {
     return isSystemMessage_ != null;
   }
@@ -190,12 +192,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
    * @return The isSystemMessage.
    */
+  @java.lang.Override
   public com.google.protobuf.BoolValue getIsSystemMessage() {
     return isSystemMessage_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : isSystemMessage_;
   }
   /**
    * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.BoolValueOrBuilder getIsSystemMessageOrBuilder() {
     return getIsSystemMessage();
   }
@@ -206,6 +210,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue text = 3;</code>
    * @return Whether the text field is set.
    */
+  @java.lang.Override
   public boolean hasText() {
     return text_ != null;
   }
@@ -213,12 +218,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue text = 3;</code>
    * @return The text.
    */
+  @java.lang.Override
   public com.google.protobuf.StringValue getText() {
     return text_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : text_;
   }
   /**
    * <code>.google.protobuf.StringValue text = 3;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.StringValueOrBuilder getTextOrBuilder() {
     return getText();
   }
@@ -229,6 +236,7 @@ private static final long serialVersionUID = 0L;
    * <code>repeated bytes records = 4;</code>
    * @return A list containing the records.
    */
+  @java.lang.Override
   public java.util.List<com.google.protobuf.ByteString>
       getRecordsList() {
     return records_;
@@ -255,6 +263,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value recall_date = 5;</code>
    * @return Whether the recallDate field is set.
    */
+  @java.lang.Override
   public boolean hasRecallDate() {
     return recallDate_ != null;
   }
@@ -262,12 +271,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value recall_date = 5;</code>
    * @return The recallDate.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getRecallDate() {
     return recallDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : recallDate_;
   }
   /**
    * <code>.google.protobuf.Int64Value recall_date = 5;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getRecallDateOrBuilder() {
     return getRecallDate();
   }
@@ -278,6 +289,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value read_date = 6;</code>
    * @return Whether the readDate field is set.
    */
+  @java.lang.Override
   public boolean hasReadDate() {
     return readDate_ != null;
   }
@@ -285,12 +297,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value read_date = 6;</code>
    * @return The readDate.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getReadDate() {
     return readDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : readDate_;
   }
   /**
    * <code>.google.protobuf.Int64Value read_date = 6;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getReadDateOrBuilder() {
     return getReadDate();
   }
@@ -375,10 +389,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof UpdateMessageRequest)) {
+    if (!(obj instanceof im.turms.common.model.dto.request.message.UpdateMessageRequest)) {
       return super.equals(obj);
     }
-    UpdateMessageRequest other = (UpdateMessageRequest) obj;
+    im.turms.common.model.dto.request.message.UpdateMessageRequest other = (im.turms.common.model.dto.request.message.UpdateMessageRequest) obj;
 
     if (getMessageId()
         != other.getMessageId()) return false;
@@ -443,69 +457,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static UpdateMessageRequest parseFrom(
+  public static im.turms.common.model.dto.request.message.UpdateMessageRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UpdateMessageRequest parseFrom(
+  public static im.turms.common.model.dto.request.message.UpdateMessageRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UpdateMessageRequest parseFrom(
+  public static im.turms.common.model.dto.request.message.UpdateMessageRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UpdateMessageRequest parseFrom(
+  public static im.turms.common.model.dto.request.message.UpdateMessageRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UpdateMessageRequest parseFrom(byte[] data)
+  public static im.turms.common.model.dto.request.message.UpdateMessageRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UpdateMessageRequest parseFrom(
+  public static im.turms.common.model.dto.request.message.UpdateMessageRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UpdateMessageRequest parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.message.UpdateMessageRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UpdateMessageRequest parseFrom(
+  public static im.turms.common.model.dto.request.message.UpdateMessageRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UpdateMessageRequest parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.message.UpdateMessageRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static UpdateMessageRequest parseDelimitedFrom(
+  public static im.turms.common.model.dto.request.message.UpdateMessageRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UpdateMessageRequest parseFrom(
+  public static im.turms.common.model.dto.request.message.UpdateMessageRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UpdateMessageRequest parseFrom(
+  public static im.turms.common.model.dto.request.message.UpdateMessageRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -518,7 +532,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(UpdateMessageRequest prototype) {
+  public static Builder newBuilder(im.turms.common.model.dto.request.message.UpdateMessageRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -539,18 +553,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.UpdateMessageRequest)
-          UpdateMessageRequestOrBuilder {
+      im.turms.common.model.dto.request.message.UpdateMessageRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return UpdateMessageRequestOuterClass.internal_static_im_turms_proto_UpdateMessageRequest_descriptor;
+      return im.turms.common.model.dto.request.message.UpdateMessageRequestOuterClass.internal_static_im_turms_proto_UpdateMessageRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return UpdateMessageRequestOuterClass.internal_static_im_turms_proto_UpdateMessageRequest_fieldAccessorTable
+      return im.turms.common.model.dto.request.message.UpdateMessageRequestOuterClass.internal_static_im_turms_proto_UpdateMessageRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              UpdateMessageRequest.class, UpdateMessageRequest.Builder.class);
+              im.turms.common.model.dto.request.message.UpdateMessageRequest.class, im.turms.common.model.dto.request.message.UpdateMessageRequest.Builder.class);
     }
 
     // Construct using im.turms.common.model.dto.request.message.UpdateMessageRequest.newBuilder()
@@ -605,17 +619,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return UpdateMessageRequestOuterClass.internal_static_im_turms_proto_UpdateMessageRequest_descriptor;
+      return im.turms.common.model.dto.request.message.UpdateMessageRequestOuterClass.internal_static_im_turms_proto_UpdateMessageRequest_descriptor;
     }
 
     @java.lang.Override
-    public UpdateMessageRequest getDefaultInstanceForType() {
-      return UpdateMessageRequest.getDefaultInstance();
+    public im.turms.common.model.dto.request.message.UpdateMessageRequest getDefaultInstanceForType() {
+      return im.turms.common.model.dto.request.message.UpdateMessageRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public UpdateMessageRequest build() {
-      UpdateMessageRequest result = buildPartial();
+    public im.turms.common.model.dto.request.message.UpdateMessageRequest build() {
+      im.turms.common.model.dto.request.message.UpdateMessageRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -623,8 +637,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public UpdateMessageRequest buildPartial() {
-      UpdateMessageRequest result = new UpdateMessageRequest(this);
+    public im.turms.common.model.dto.request.message.UpdateMessageRequest buildPartial() {
+      im.turms.common.model.dto.request.message.UpdateMessageRequest result = new im.turms.common.model.dto.request.message.UpdateMessageRequest(this);
       int from_bitField0_ = bitField0_;
       result.messageId_ = messageId_;
       if (isSystemMessageBuilder_ == null) {
@@ -690,16 +704,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof UpdateMessageRequest) {
-        return mergeFrom((UpdateMessageRequest)other);
+      if (other instanceof im.turms.common.model.dto.request.message.UpdateMessageRequest) {
+        return mergeFrom((im.turms.common.model.dto.request.message.UpdateMessageRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(UpdateMessageRequest other) {
-      if (other == UpdateMessageRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.dto.request.message.UpdateMessageRequest other) {
+      if (other == im.turms.common.model.dto.request.message.UpdateMessageRequest.getDefaultInstance()) return this;
       if (other.getMessageId() != 0L) {
         setMessageId(other.getMessageId());
       }
@@ -740,11 +754,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      UpdateMessageRequest parsedMessage = null;
+      im.turms.common.model.dto.request.message.UpdateMessageRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (UpdateMessageRequest) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.dto.request.message.UpdateMessageRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -760,6 +774,7 @@ private static final long serialVersionUID = 0L;
      * <code>int64 message_id = 1;</code>
      * @return The messageId.
      */
+    @java.lang.Override
     public long getMessageId() {
       return messageId_;
     }
@@ -1362,12 +1377,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.UpdateMessageRequest)
-  private static final UpdateMessageRequest DEFAULT_INSTANCE;
+  private static final im.turms.common.model.dto.request.message.UpdateMessageRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new UpdateMessageRequest();
+    DEFAULT_INSTANCE = new im.turms.common.model.dto.request.message.UpdateMessageRequest();
   }
 
-  public static UpdateMessageRequest getDefaultInstance() {
+  public static im.turms.common.model.dto.request.message.UpdateMessageRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -1392,7 +1407,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public UpdateMessageRequest getDefaultInstanceForType() {
+  public im.turms.common.model.dto.request.message.UpdateMessageRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

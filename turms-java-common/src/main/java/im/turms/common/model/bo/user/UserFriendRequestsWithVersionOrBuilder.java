@@ -27,12 +27,12 @@ public interface UserFriendRequestsWithVersionOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
    */
-  java.util.List<UserFriendRequest>
+  java.util.List<im.turms.common.model.bo.user.UserFriendRequest> 
       getUserFriendRequestsList();
   /**
    * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
    */
-  UserFriendRequest getUserFriendRequests(int index);
+  im.turms.common.model.bo.user.UserFriendRequest getUserFriendRequests(int index);
   /**
    * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
    */
@@ -40,12 +40,12 @@ public interface UserFriendRequestsWithVersionOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
    */
-  java.util.List<? extends UserFriendRequestOrBuilder>
+  java.util.List<? extends im.turms.common.model.bo.user.UserFriendRequestOrBuilder> 
       getUserFriendRequestsOrBuilderList();
   /**
    * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
    */
-  UserFriendRequestOrBuilder getUserFriendRequestsOrBuilder(
+  im.turms.common.model.bo.user.UserFriendRequestOrBuilder getUserFriendRequestsOrBuilder(
       int index);
 
   /**

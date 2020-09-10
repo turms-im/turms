@@ -20,17 +20,6 @@
 
 package im.turms.common.model.dto.request;
 
-import im.turms.common.model.dto.request.group.*;
-import im.turms.common.model.dto.request.group.blacklist.*;
-import im.turms.common.model.dto.request.group.enrollment.*;
-import im.turms.common.model.dto.request.group.member.*;
-import im.turms.common.model.dto.request.message.*;
-import im.turms.common.model.dto.request.signal.AckRequest;
-import im.turms.common.model.dto.request.signal.AckRequestOrBuilder;
-import im.turms.common.model.dto.request.storage.*;
-import im.turms.common.model.dto.request.user.*;
-import im.turms.common.model.dto.request.user.relationship.*;
-
 public interface TurmsRequestOrBuilder extends
     // @@protoc_insertion_point(interface_extends:im.turms.proto.TurmsRequest)
     com.google.protobuf.MessageOrBuilder {
@@ -82,7 +71,7 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.AckRequest ack_request = 2;</code>
    * @return The ackRequest.
    */
-  AckRequest getAckRequest();
+  im.turms.common.model.dto.request.signal.AckRequest getAckRequest();
   /**
    * <pre>
    * Signal
@@ -90,7 +79,7 @@ public interface TurmsRequestOrBuilder extends
    *
    * <code>.im.turms.proto.AckRequest ack_request = 2;</code>
    */
-  AckRequestOrBuilder getAckRequestOrBuilder();
+  im.turms.common.model.dto.request.signal.AckRequestOrBuilder getAckRequestOrBuilder();
 
   /**
    * <pre>
@@ -109,7 +98,7 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 3;</code>
    * @return The deleteResourceRequest.
    */
-  DeleteResourceRequest getDeleteResourceRequest();
+  im.turms.common.model.dto.request.storage.DeleteResourceRequest getDeleteResourceRequest();
   /**
    * <pre>
    * Storage
@@ -117,7 +106,7 @@ public interface TurmsRequestOrBuilder extends
    *
    * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 3;</code>
    */
-  DeleteResourceRequestOrBuilder getDeleteResourceRequestOrBuilder();
+  im.turms.common.model.dto.request.storage.DeleteResourceRequestOrBuilder getDeleteResourceRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.QuerySignedGetUrlRequest query_signed_get_url_request = 4;</code>
@@ -128,11 +117,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.QuerySignedGetUrlRequest query_signed_get_url_request = 4;</code>
    * @return The querySignedGetUrlRequest.
    */
-  QuerySignedGetUrlRequest getQuerySignedGetUrlRequest();
+  im.turms.common.model.dto.request.storage.QuerySignedGetUrlRequest getQuerySignedGetUrlRequest();
   /**
    * <code>.im.turms.proto.QuerySignedGetUrlRequest query_signed_get_url_request = 4;</code>
    */
-  QuerySignedGetUrlRequestOrBuilder getQuerySignedGetUrlRequestOrBuilder();
+  im.turms.common.model.dto.request.storage.QuerySignedGetUrlRequestOrBuilder getQuerySignedGetUrlRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.QuerySignedPutUrlRequest query_signed_put_url_request = 5;</code>
@@ -143,11 +132,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.QuerySignedPutUrlRequest query_signed_put_url_request = 5;</code>
    * @return The querySignedPutUrlRequest.
    */
-  QuerySignedPutUrlRequest getQuerySignedPutUrlRequest();
+  im.turms.common.model.dto.request.storage.QuerySignedPutUrlRequest getQuerySignedPutUrlRequest();
   /**
    * <code>.im.turms.proto.QuerySignedPutUrlRequest query_signed_put_url_request = 5;</code>
    */
-  QuerySignedPutUrlRequestOrBuilder getQuerySignedPutUrlRequestOrBuilder();
+  im.turms.common.model.dto.request.storage.QuerySignedPutUrlRequestOrBuilder getQuerySignedPutUrlRequestOrBuilder();
 
   /**
    * <pre>
@@ -166,7 +155,7 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.CreateMessageRequest create_message_request = 6;</code>
    * @return The createMessageRequest.
    */
-  CreateMessageRequest getCreateMessageRequest();
+  im.turms.common.model.dto.request.message.CreateMessageRequest getCreateMessageRequest();
   /**
    * <pre>
    * Message
@@ -174,7 +163,7 @@ public interface TurmsRequestOrBuilder extends
    *
    * <code>.im.turms.proto.CreateMessageRequest create_message_request = 6;</code>
    */
-  CreateMessageRequestOrBuilder getCreateMessageRequestOrBuilder();
+  im.turms.common.model.dto.request.message.CreateMessageRequestOrBuilder getCreateMessageRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.QueryMessageStatusesRequest query_message_statuses_request = 7;</code>
@@ -185,11 +174,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.QueryMessageStatusesRequest query_message_statuses_request = 7;</code>
    * @return The queryMessageStatusesRequest.
    */
-  QueryMessageStatusesRequest getQueryMessageStatusesRequest();
+  im.turms.common.model.dto.request.message.QueryMessageStatusesRequest getQueryMessageStatusesRequest();
   /**
    * <code>.im.turms.proto.QueryMessageStatusesRequest query_message_statuses_request = 7;</code>
    */
-  QueryMessageStatusesRequestOrBuilder getQueryMessageStatusesRequestOrBuilder();
+  im.turms.common.model.dto.request.message.QueryMessageStatusesRequestOrBuilder getQueryMessageStatusesRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.QueryMessagesRequest query_messages_request = 8;</code>
@@ -200,11 +189,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.QueryMessagesRequest query_messages_request = 8;</code>
    * @return The queryMessagesRequest.
    */
-  QueryMessagesRequest getQueryMessagesRequest();
+  im.turms.common.model.dto.request.message.QueryMessagesRequest getQueryMessagesRequest();
   /**
    * <code>.im.turms.proto.QueryMessagesRequest query_messages_request = 8;</code>
    */
-  QueryMessagesRequestOrBuilder getQueryMessagesRequestOrBuilder();
+  im.turms.common.model.dto.request.message.QueryMessagesRequestOrBuilder getQueryMessagesRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.QueryPendingMessagesWithTotalRequest query_pending_messages_with_total_request = 9;</code>
@@ -215,11 +204,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.QueryPendingMessagesWithTotalRequest query_pending_messages_with_total_request = 9;</code>
    * @return The queryPendingMessagesWithTotalRequest.
    */
-  QueryPendingMessagesWithTotalRequest getQueryPendingMessagesWithTotalRequest();
+  im.turms.common.model.dto.request.message.QueryPendingMessagesWithTotalRequest getQueryPendingMessagesWithTotalRequest();
   /**
    * <code>.im.turms.proto.QueryPendingMessagesWithTotalRequest query_pending_messages_with_total_request = 9;</code>
    */
-  QueryPendingMessagesWithTotalRequestOrBuilder getQueryPendingMessagesWithTotalRequestOrBuilder();
+  im.turms.common.model.dto.request.message.QueryPendingMessagesWithTotalRequestOrBuilder getQueryPendingMessagesWithTotalRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.UpdateMessageRequest update_message_request = 10;</code>
@@ -230,11 +219,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.UpdateMessageRequest update_message_request = 10;</code>
    * @return The updateMessageRequest.
    */
-  UpdateMessageRequest getUpdateMessageRequest();
+  im.turms.common.model.dto.request.message.UpdateMessageRequest getUpdateMessageRequest();
   /**
    * <code>.im.turms.proto.UpdateMessageRequest update_message_request = 10;</code>
    */
-  UpdateMessageRequestOrBuilder getUpdateMessageRequestOrBuilder();
+  im.turms.common.model.dto.request.message.UpdateMessageRequestOrBuilder getUpdateMessageRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.UpdateTypingStatusRequest update_typing_status_request = 11;</code>
@@ -245,11 +234,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.UpdateTypingStatusRequest update_typing_status_request = 11;</code>
    * @return The updateTypingStatusRequest.
    */
-  UpdateTypingStatusRequest getUpdateTypingStatusRequest();
+  im.turms.common.model.dto.request.message.UpdateTypingStatusRequest getUpdateTypingStatusRequest();
   /**
    * <code>.im.turms.proto.UpdateTypingStatusRequest update_typing_status_request = 11;</code>
    */
-  UpdateTypingStatusRequestOrBuilder getUpdateTypingStatusRequestOrBuilder();
+  im.turms.common.model.dto.request.message.UpdateTypingStatusRequestOrBuilder getUpdateTypingStatusRequestOrBuilder();
 
   /**
    * <pre>
@@ -268,7 +257,7 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
    * @return The queryUserProfileRequest.
    */
-  QueryUserProfileRequest getQueryUserProfileRequest();
+  im.turms.common.model.dto.request.user.QueryUserProfileRequest getQueryUserProfileRequest();
   /**
    * <pre>
    * User
@@ -276,7 +265,7 @@ public interface TurmsRequestOrBuilder extends
    *
    * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
    */
-  QueryUserProfileRequestOrBuilder getQueryUserProfileRequestOrBuilder();
+  im.turms.common.model.dto.request.user.QueryUserProfileRequestOrBuilder getQueryUserProfileRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.QueryUsersIdsNearbyRequest query_users_ids_nearby_request = 101;</code>
@@ -287,11 +276,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.QueryUsersIdsNearbyRequest query_users_ids_nearby_request = 101;</code>
    * @return The queryUsersIdsNearbyRequest.
    */
-  QueryUsersIdsNearbyRequest getQueryUsersIdsNearbyRequest();
+  im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest getQueryUsersIdsNearbyRequest();
   /**
    * <code>.im.turms.proto.QueryUsersIdsNearbyRequest query_users_ids_nearby_request = 101;</code>
    */
-  QueryUsersIdsNearbyRequestOrBuilder getQueryUsersIdsNearbyRequestOrBuilder();
+  im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequestOrBuilder getQueryUsersIdsNearbyRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.QueryUsersInfosNearbyRequest query_users_infos_nearby_request = 102;</code>
@@ -302,11 +291,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.QueryUsersInfosNearbyRequest query_users_infos_nearby_request = 102;</code>
    * @return The queryUsersInfosNearbyRequest.
    */
-  QueryUsersInfosNearbyRequest getQueryUsersInfosNearbyRequest();
+  im.turms.common.model.dto.request.user.QueryUsersInfosNearbyRequest getQueryUsersInfosNearbyRequest();
   /**
    * <code>.im.turms.proto.QueryUsersInfosNearbyRequest query_users_infos_nearby_request = 102;</code>
    */
-  QueryUsersInfosNearbyRequestOrBuilder getQueryUsersInfosNearbyRequestOrBuilder();
+  im.turms.common.model.dto.request.user.QueryUsersInfosNearbyRequestOrBuilder getQueryUsersInfosNearbyRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.QueryUsersOnlineStatusRequest query_users_online_status_request = 103;</code>
@@ -317,11 +306,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.QueryUsersOnlineStatusRequest query_users_online_status_request = 103;</code>
    * @return The queryUsersOnlineStatusRequest.
    */
-  QueryUsersOnlineStatusRequest getQueryUsersOnlineStatusRequest();
+  im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest getQueryUsersOnlineStatusRequest();
   /**
    * <code>.im.turms.proto.QueryUsersOnlineStatusRequest query_users_online_status_request = 103;</code>
    */
-  QueryUsersOnlineStatusRequestOrBuilder getQueryUsersOnlineStatusRequestOrBuilder();
+  im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequestOrBuilder getQueryUsersOnlineStatusRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 104;</code>
@@ -332,11 +321,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 104;</code>
    * @return The updateUserLocationRequest.
    */
-  UpdateUserLocationRequest getUpdateUserLocationRequest();
+  im.turms.common.model.dto.request.user.UpdateUserLocationRequest getUpdateUserLocationRequest();
   /**
    * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 104;</code>
    */
-  UpdateUserLocationRequestOrBuilder getUpdateUserLocationRequestOrBuilder();
+  im.turms.common.model.dto.request.user.UpdateUserLocationRequestOrBuilder getUpdateUserLocationRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 105;</code>
@@ -347,11 +336,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 105;</code>
    * @return The updateUserOnlineStatusRequest.
    */
-  UpdateUserOnlineStatusRequest getUpdateUserOnlineStatusRequest();
+  im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest getUpdateUserOnlineStatusRequest();
   /**
    * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 105;</code>
    */
-  UpdateUserOnlineStatusRequestOrBuilder getUpdateUserOnlineStatusRequestOrBuilder();
+  im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequestOrBuilder getUpdateUserOnlineStatusRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.UpdateUserRequest update_user_request = 106;</code>
@@ -362,11 +351,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.UpdateUserRequest update_user_request = 106;</code>
    * @return The updateUserRequest.
    */
-  UpdateUserRequest getUpdateUserRequest();
+  im.turms.common.model.dto.request.user.UpdateUserRequest getUpdateUserRequest();
   /**
    * <code>.im.turms.proto.UpdateUserRequest update_user_request = 106;</code>
    */
-  UpdateUserRequestOrBuilder getUpdateUserRequestOrBuilder();
+  im.turms.common.model.dto.request.user.UpdateUserRequestOrBuilder getUpdateUserRequestOrBuilder();
 
   /**
    * <pre>
@@ -385,7 +374,7 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
    * @return The createFriendRequestRequest.
    */
-  CreateFriendRequestRequest getCreateFriendRequestRequest();
+  im.turms.common.model.dto.request.user.relationship.CreateFriendRequestRequest getCreateFriendRequestRequest();
   /**
    * <pre>
    * User Relationship
@@ -393,7 +382,7 @@ public interface TurmsRequestOrBuilder extends
    *
    * <code>.im.turms.proto.CreateFriendRequestRequest create_friend_request_request = 200;</code>
    */
-  CreateFriendRequestRequestOrBuilder getCreateFriendRequestRequestOrBuilder();
+  im.turms.common.model.dto.request.user.relationship.CreateFriendRequestRequestOrBuilder getCreateFriendRequestRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.CreateRelationshipGroupRequest create_relationship_group_request = 201;</code>
@@ -404,11 +393,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.CreateRelationshipGroupRequest create_relationship_group_request = 201;</code>
    * @return The createRelationshipGroupRequest.
    */
-  CreateRelationshipGroupRequest getCreateRelationshipGroupRequest();
+  im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest getCreateRelationshipGroupRequest();
   /**
    * <code>.im.turms.proto.CreateRelationshipGroupRequest create_relationship_group_request = 201;</code>
    */
-  CreateRelationshipGroupRequestOrBuilder getCreateRelationshipGroupRequestOrBuilder();
+  im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequestOrBuilder getCreateRelationshipGroupRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.CreateRelationshipRequest create_relationship_request = 202;</code>
@@ -419,11 +408,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.CreateRelationshipRequest create_relationship_request = 202;</code>
    * @return The createRelationshipRequest.
    */
-  CreateRelationshipRequest getCreateRelationshipRequest();
+  im.turms.common.model.dto.request.user.relationship.CreateRelationshipRequest getCreateRelationshipRequest();
   /**
    * <code>.im.turms.proto.CreateRelationshipRequest create_relationship_request = 202;</code>
    */
-  CreateRelationshipRequestOrBuilder getCreateRelationshipRequestOrBuilder();
+  im.turms.common.model.dto.request.user.relationship.CreateRelationshipRequestOrBuilder getCreateRelationshipRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
@@ -434,11 +423,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
    * @return The deleteRelationshipGroupRequest.
    */
-  DeleteRelationshipGroupRequest getDeleteRelationshipGroupRequest();
+  im.turms.common.model.dto.request.user.relationship.DeleteRelationshipGroupRequest getDeleteRelationshipGroupRequest();
   /**
    * <code>.im.turms.proto.DeleteRelationshipGroupRequest delete_relationship_group_request = 203;</code>
    */
-  DeleteRelationshipGroupRequestOrBuilder getDeleteRelationshipGroupRequestOrBuilder();
+  im.turms.common.model.dto.request.user.relationship.DeleteRelationshipGroupRequestOrBuilder getDeleteRelationshipGroupRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
@@ -449,11 +438,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
    * @return The deleteRelationshipRequest.
    */
-  DeleteRelationshipRequest getDeleteRelationshipRequest();
+  im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest getDeleteRelationshipRequest();
   /**
    * <code>.im.turms.proto.DeleteRelationshipRequest delete_relationship_request = 204;</code>
    */
-  DeleteRelationshipRequestOrBuilder getDeleteRelationshipRequestOrBuilder();
+  im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequestOrBuilder getDeleteRelationshipRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
@@ -464,11 +453,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
    * @return The queryFriendRequestsRequest.
    */
-  QueryFriendRequestsRequest getQueryFriendRequestsRequest();
+  im.turms.common.model.dto.request.user.relationship.QueryFriendRequestsRequest getQueryFriendRequestsRequest();
   /**
    * <code>.im.turms.proto.QueryFriendRequestsRequest query_friend_requests_request = 205;</code>
    */
-  QueryFriendRequestsRequestOrBuilder getQueryFriendRequestsRequestOrBuilder();
+  im.turms.common.model.dto.request.user.relationship.QueryFriendRequestsRequestOrBuilder getQueryFriendRequestsRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.QueryRelatedUsersIdsRequest query_related_users_ids_request = 206;</code>
@@ -479,11 +468,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.QueryRelatedUsersIdsRequest query_related_users_ids_request = 206;</code>
    * @return The queryRelatedUsersIdsRequest.
    */
-  QueryRelatedUsersIdsRequest getQueryRelatedUsersIdsRequest();
+  im.turms.common.model.dto.request.user.relationship.QueryRelatedUsersIdsRequest getQueryRelatedUsersIdsRequest();
   /**
    * <code>.im.turms.proto.QueryRelatedUsersIdsRequest query_related_users_ids_request = 206;</code>
    */
-  QueryRelatedUsersIdsRequestOrBuilder getQueryRelatedUsersIdsRequestOrBuilder();
+  im.turms.common.model.dto.request.user.relationship.QueryRelatedUsersIdsRequestOrBuilder getQueryRelatedUsersIdsRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
@@ -494,11 +483,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
    * @return The queryRelationshipGroupsRequest.
    */
-  QueryRelationshipGroupsRequest getQueryRelationshipGroupsRequest();
+  im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest getQueryRelationshipGroupsRequest();
   /**
    * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
    */
-  QueryRelationshipGroupsRequestOrBuilder getQueryRelationshipGroupsRequestOrBuilder();
+  im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequestOrBuilder getQueryRelationshipGroupsRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
@@ -509,11 +498,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
    * @return The queryRelationshipsRequest.
    */
-  QueryRelationshipsRequest getQueryRelationshipsRequest();
+  im.turms.common.model.dto.request.user.relationship.QueryRelationshipsRequest getQueryRelationshipsRequest();
   /**
    * <code>.im.turms.proto.QueryRelationshipsRequest query_relationships_request = 208;</code>
    */
-  QueryRelationshipsRequestOrBuilder getQueryRelationshipsRequestOrBuilder();
+  im.turms.common.model.dto.request.user.relationship.QueryRelationshipsRequestOrBuilder getQueryRelationshipsRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
@@ -524,11 +513,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
    * @return The updateFriendRequestRequest.
    */
-  UpdateFriendRequestRequest getUpdateFriendRequestRequest();
+  im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest getUpdateFriendRequestRequest();
   /**
    * <code>.im.turms.proto.UpdateFriendRequestRequest update_friend_request_request = 209;</code>
    */
-  UpdateFriendRequestRequestOrBuilder getUpdateFriendRequestRequestOrBuilder();
+  im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequestOrBuilder getUpdateFriendRequestRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
@@ -539,11 +528,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
    * @return The updateRelationshipGroupRequest.
    */
-  UpdateRelationshipGroupRequest getUpdateRelationshipGroupRequest();
+  im.turms.common.model.dto.request.user.relationship.UpdateRelationshipGroupRequest getUpdateRelationshipGroupRequest();
   /**
    * <code>.im.turms.proto.UpdateRelationshipGroupRequest update_relationship_group_request = 210;</code>
    */
-  UpdateRelationshipGroupRequestOrBuilder getUpdateRelationshipGroupRequestOrBuilder();
+  im.turms.common.model.dto.request.user.relationship.UpdateRelationshipGroupRequestOrBuilder getUpdateRelationshipGroupRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
@@ -554,11 +543,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
    * @return The updateRelationshipRequest.
    */
-  UpdateRelationshipRequest getUpdateRelationshipRequest();
+  im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest getUpdateRelationshipRequest();
   /**
    * <code>.im.turms.proto.UpdateRelationshipRequest update_relationship_request = 211;</code>
    */
-  UpdateRelationshipRequestOrBuilder getUpdateRelationshipRequestOrBuilder();
+  im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequestOrBuilder getUpdateRelationshipRequestOrBuilder();
 
   /**
    * <pre>
@@ -577,7 +566,7 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
    * @return The createGroupRequest.
    */
-  CreateGroupRequest getCreateGroupRequest();
+  im.turms.common.model.dto.request.group.CreateGroupRequest getCreateGroupRequest();
   /**
    * <pre>
    * Group
@@ -585,7 +574,7 @@ public interface TurmsRequestOrBuilder extends
    *
    * <code>.im.turms.proto.CreateGroupRequest create_group_request = 300;</code>
    */
-  CreateGroupRequestOrBuilder getCreateGroupRequestOrBuilder();
+  im.turms.common.model.dto.request.group.CreateGroupRequestOrBuilder getCreateGroupRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.DeleteGroupRequest delete_group_request = 301;</code>
@@ -596,11 +585,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.DeleteGroupRequest delete_group_request = 301;</code>
    * @return The deleteGroupRequest.
    */
-  DeleteGroupRequest getDeleteGroupRequest();
+  im.turms.common.model.dto.request.group.DeleteGroupRequest getDeleteGroupRequest();
   /**
    * <code>.im.turms.proto.DeleteGroupRequest delete_group_request = 301;</code>
    */
-  DeleteGroupRequestOrBuilder getDeleteGroupRequestOrBuilder();
+  im.turms.common.model.dto.request.group.DeleteGroupRequestOrBuilder getDeleteGroupRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
@@ -611,11 +600,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
    * @return The queryGroupRequest.
    */
-  QueryGroupRequest getQueryGroupRequest();
+  im.turms.common.model.dto.request.group.QueryGroupRequest getQueryGroupRequest();
   /**
    * <code>.im.turms.proto.QueryGroupRequest query_group_request = 302;</code>
    */
-  QueryGroupRequestOrBuilder getQueryGroupRequestOrBuilder();
+  im.turms.common.model.dto.request.group.QueryGroupRequestOrBuilder getQueryGroupRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.QueryJoinedGroupsIdsRequest query_joined_groups_ids_request = 303;</code>
@@ -626,11 +615,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.QueryJoinedGroupsIdsRequest query_joined_groups_ids_request = 303;</code>
    * @return The queryJoinedGroupsIdsRequest.
    */
-  QueryJoinedGroupsIdsRequest getQueryJoinedGroupsIdsRequest();
+  im.turms.common.model.dto.request.group.QueryJoinedGroupsIdsRequest getQueryJoinedGroupsIdsRequest();
   /**
    * <code>.im.turms.proto.QueryJoinedGroupsIdsRequest query_joined_groups_ids_request = 303;</code>
    */
-  QueryJoinedGroupsIdsRequestOrBuilder getQueryJoinedGroupsIdsRequestOrBuilder();
+  im.turms.common.model.dto.request.group.QueryJoinedGroupsIdsRequestOrBuilder getQueryJoinedGroupsIdsRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.QueryJoinedGroupsInfosRequest query_joined_groups_infos_request = 304;</code>
@@ -641,11 +630,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.QueryJoinedGroupsInfosRequest query_joined_groups_infos_request = 304;</code>
    * @return The queryJoinedGroupsInfosRequest.
    */
-  QueryJoinedGroupsInfosRequest getQueryJoinedGroupsInfosRequest();
+  im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest getQueryJoinedGroupsInfosRequest();
   /**
    * <code>.im.turms.proto.QueryJoinedGroupsInfosRequest query_joined_groups_infos_request = 304;</code>
    */
-  QueryJoinedGroupsInfosRequestOrBuilder getQueryJoinedGroupsInfosRequestOrBuilder();
+  im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequestOrBuilder getQueryJoinedGroupsInfosRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.UpdateGroupRequest update_group_request = 305;</code>
@@ -656,11 +645,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.UpdateGroupRequest update_group_request = 305;</code>
    * @return The updateGroupRequest.
    */
-  UpdateGroupRequest getUpdateGroupRequest();
+  im.turms.common.model.dto.request.group.UpdateGroupRequest getUpdateGroupRequest();
   /**
    * <code>.im.turms.proto.UpdateGroupRequest update_group_request = 305;</code>
    */
-  UpdateGroupRequestOrBuilder getUpdateGroupRequestOrBuilder();
+  im.turms.common.model.dto.request.group.UpdateGroupRequestOrBuilder getUpdateGroupRequestOrBuilder();
 
   /**
    * <pre>
@@ -679,7 +668,7 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.CreateGroupBlacklistedUserRequest create_group_blacklisted_user_request = 400;</code>
    * @return The createGroupBlacklistedUserRequest.
    */
-  CreateGroupBlacklistedUserRequest getCreateGroupBlacklistedUserRequest();
+  im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest getCreateGroupBlacklistedUserRequest();
   /**
    * <pre>
    * Group Blacklist
@@ -687,7 +676,7 @@ public interface TurmsRequestOrBuilder extends
    *
    * <code>.im.turms.proto.CreateGroupBlacklistedUserRequest create_group_blacklisted_user_request = 400;</code>
    */
-  CreateGroupBlacklistedUserRequestOrBuilder getCreateGroupBlacklistedUserRequestOrBuilder();
+  im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequestOrBuilder getCreateGroupBlacklistedUserRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.DeleteGroupBlacklistedUserRequest delete_group_blacklisted_user_request = 401;</code>
@@ -698,11 +687,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.DeleteGroupBlacklistedUserRequest delete_group_blacklisted_user_request = 401;</code>
    * @return The deleteGroupBlacklistedUserRequest.
    */
-  DeleteGroupBlacklistedUserRequest getDeleteGroupBlacklistedUserRequest();
+  im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest getDeleteGroupBlacklistedUserRequest();
   /**
    * <code>.im.turms.proto.DeleteGroupBlacklistedUserRequest delete_group_blacklisted_user_request = 401;</code>
    */
-  DeleteGroupBlacklistedUserRequestOrBuilder getDeleteGroupBlacklistedUserRequestOrBuilder();
+  im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequestOrBuilder getDeleteGroupBlacklistedUserRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.QueryGroupBlacklistedUsersIdsRequest query_group_blacklisted_users_ids_request = 402;</code>
@@ -713,11 +702,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.QueryGroupBlacklistedUsersIdsRequest query_group_blacklisted_users_ids_request = 402;</code>
    * @return The queryGroupBlacklistedUsersIdsRequest.
    */
-  QueryGroupBlacklistedUsersIdsRequest getQueryGroupBlacklistedUsersIdsRequest();
+  im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUsersIdsRequest getQueryGroupBlacklistedUsersIdsRequest();
   /**
    * <code>.im.turms.proto.QueryGroupBlacklistedUsersIdsRequest query_group_blacklisted_users_ids_request = 402;</code>
    */
-  QueryGroupBlacklistedUsersIdsRequestOrBuilder getQueryGroupBlacklistedUsersIdsRequestOrBuilder();
+  im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUsersIdsRequestOrBuilder getQueryGroupBlacklistedUsersIdsRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.QueryGroupBlacklistedUsersInfosRequest query_group_blacklisted_users_infos_request = 403;</code>
@@ -728,11 +717,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.QueryGroupBlacklistedUsersInfosRequest query_group_blacklisted_users_infos_request = 403;</code>
    * @return The queryGroupBlacklistedUsersInfosRequest.
    */
-  QueryGroupBlacklistedUsersInfosRequest getQueryGroupBlacklistedUsersInfosRequest();
+  im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUsersInfosRequest getQueryGroupBlacklistedUsersInfosRequest();
   /**
    * <code>.im.turms.proto.QueryGroupBlacklistedUsersInfosRequest query_group_blacklisted_users_infos_request = 403;</code>
    */
-  QueryGroupBlacklistedUsersInfosRequestOrBuilder getQueryGroupBlacklistedUsersInfosRequestOrBuilder();
+  im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUsersInfosRequestOrBuilder getQueryGroupBlacklistedUsersInfosRequestOrBuilder();
 
   /**
    * <pre>
@@ -751,7 +740,7 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
    * @return The checkGroupJoinQuestionsAnswersRequest.
    */
-  CheckGroupJoinQuestionsAnswersRequest getCheckGroupJoinQuestionsAnswersRequest();
+  im.turms.common.model.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest getCheckGroupJoinQuestionsAnswersRequest();
   /**
    * <pre>
    * Group Enrollment
@@ -759,7 +748,7 @@ public interface TurmsRequestOrBuilder extends
    *
    * <code>.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest check_group_join_questions_answers_request = 500;</code>
    */
-  CheckGroupJoinQuestionsAnswersRequestOrBuilder getCheckGroupJoinQuestionsAnswersRequestOrBuilder();
+  im.turms.common.model.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequestOrBuilder getCheckGroupJoinQuestionsAnswersRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.CreateGroupInvitationRequest create_group_invitation_request = 501;</code>
@@ -770,11 +759,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.CreateGroupInvitationRequest create_group_invitation_request = 501;</code>
    * @return The createGroupInvitationRequest.
    */
-  CreateGroupInvitationRequest getCreateGroupInvitationRequest();
+  im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest getCreateGroupInvitationRequest();
   /**
    * <code>.im.turms.proto.CreateGroupInvitationRequest create_group_invitation_request = 501;</code>
    */
-  CreateGroupInvitationRequestOrBuilder getCreateGroupInvitationRequestOrBuilder();
+  im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequestOrBuilder getCreateGroupInvitationRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.CreateGroupJoinRequestRequest create_group_join_request_request = 502;</code>
@@ -785,11 +774,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.CreateGroupJoinRequestRequest create_group_join_request_request = 502;</code>
    * @return The createGroupJoinRequestRequest.
    */
-  CreateGroupJoinRequestRequest getCreateGroupJoinRequestRequest();
+  im.turms.common.model.dto.request.group.enrollment.CreateGroupJoinRequestRequest getCreateGroupJoinRequestRequest();
   /**
    * <code>.im.turms.proto.CreateGroupJoinRequestRequest create_group_join_request_request = 502;</code>
    */
-  CreateGroupJoinRequestRequestOrBuilder getCreateGroupJoinRequestRequestOrBuilder();
+  im.turms.common.model.dto.request.group.enrollment.CreateGroupJoinRequestRequestOrBuilder getCreateGroupJoinRequestRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
@@ -800,11 +789,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
    * @return The createGroupJoinQuestionRequest.
    */
-  CreateGroupJoinQuestionRequest getCreateGroupJoinQuestionRequest();
+  im.turms.common.model.dto.request.group.enrollment.CreateGroupJoinQuestionRequest getCreateGroupJoinQuestionRequest();
   /**
    * <code>.im.turms.proto.CreateGroupJoinQuestionRequest create_group_join_question_request = 503;</code>
    */
-  CreateGroupJoinQuestionRequestOrBuilder getCreateGroupJoinQuestionRequestOrBuilder();
+  im.turms.common.model.dto.request.group.enrollment.CreateGroupJoinQuestionRequestOrBuilder getCreateGroupJoinQuestionRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.DeleteGroupInvitationRequest delete_group_invitation_request = 504;</code>
@@ -815,11 +804,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.DeleteGroupInvitationRequest delete_group_invitation_request = 504;</code>
    * @return The deleteGroupInvitationRequest.
    */
-  DeleteGroupInvitationRequest getDeleteGroupInvitationRequest();
+  im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest getDeleteGroupInvitationRequest();
   /**
    * <code>.im.turms.proto.DeleteGroupInvitationRequest delete_group_invitation_request = 504;</code>
    */
-  DeleteGroupInvitationRequestOrBuilder getDeleteGroupInvitationRequestOrBuilder();
+  im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequestOrBuilder getDeleteGroupInvitationRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.DeleteGroupJoinRequestRequest delete_group_join_request_request = 505;</code>
@@ -830,11 +819,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.DeleteGroupJoinRequestRequest delete_group_join_request_request = 505;</code>
    * @return The deleteGroupJoinRequestRequest.
    */
-  DeleteGroupJoinRequestRequest getDeleteGroupJoinRequestRequest();
+  im.turms.common.model.dto.request.group.enrollment.DeleteGroupJoinRequestRequest getDeleteGroupJoinRequestRequest();
   /**
    * <code>.im.turms.proto.DeleteGroupJoinRequestRequest delete_group_join_request_request = 505;</code>
    */
-  DeleteGroupJoinRequestRequestOrBuilder getDeleteGroupJoinRequestRequestOrBuilder();
+  im.turms.common.model.dto.request.group.enrollment.DeleteGroupJoinRequestRequestOrBuilder getDeleteGroupJoinRequestRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
@@ -845,11 +834,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
    * @return The deleteGroupJoinQuestionRequest.
    */
-  DeleteGroupJoinQuestionRequest getDeleteGroupJoinQuestionRequest();
+  im.turms.common.model.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest getDeleteGroupJoinQuestionRequest();
   /**
    * <code>.im.turms.proto.DeleteGroupJoinQuestionRequest delete_group_join_question_request = 506;</code>
    */
-  DeleteGroupJoinQuestionRequestOrBuilder getDeleteGroupJoinQuestionRequestOrBuilder();
+  im.turms.common.model.dto.request.group.enrollment.DeleteGroupJoinQuestionRequestOrBuilder getDeleteGroupJoinQuestionRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.QueryGroupInvitationsRequest query_group_invitations_request = 507;</code>
@@ -860,11 +849,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.QueryGroupInvitationsRequest query_group_invitations_request = 507;</code>
    * @return The queryGroupInvitationsRequest.
    */
-  QueryGroupInvitationsRequest getQueryGroupInvitationsRequest();
+  im.turms.common.model.dto.request.group.enrollment.QueryGroupInvitationsRequest getQueryGroupInvitationsRequest();
   /**
    * <code>.im.turms.proto.QueryGroupInvitationsRequest query_group_invitations_request = 507;</code>
    */
-  QueryGroupInvitationsRequestOrBuilder getQueryGroupInvitationsRequestOrBuilder();
+  im.turms.common.model.dto.request.group.enrollment.QueryGroupInvitationsRequestOrBuilder getQueryGroupInvitationsRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.QueryGroupJoinRequestsRequest query_group_join_requests_request = 508;</code>
@@ -875,11 +864,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.QueryGroupJoinRequestsRequest query_group_join_requests_request = 508;</code>
    * @return The queryGroupJoinRequestsRequest.
    */
-  QueryGroupJoinRequestsRequest getQueryGroupJoinRequestsRequest();
+  im.turms.common.model.dto.request.group.enrollment.QueryGroupJoinRequestsRequest getQueryGroupJoinRequestsRequest();
   /**
    * <code>.im.turms.proto.QueryGroupJoinRequestsRequest query_group_join_requests_request = 508;</code>
    */
-  QueryGroupJoinRequestsRequestOrBuilder getQueryGroupJoinRequestsRequestOrBuilder();
+  im.turms.common.model.dto.request.group.enrollment.QueryGroupJoinRequestsRequestOrBuilder getQueryGroupJoinRequestsRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.QueryGroupJoinQuestionsRequest query_group_join_questions_request = 509;</code>
@@ -890,11 +879,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.QueryGroupJoinQuestionsRequest query_group_join_questions_request = 509;</code>
    * @return The queryGroupJoinQuestionsRequest.
    */
-  QueryGroupJoinQuestionsRequest getQueryGroupJoinQuestionsRequest();
+  im.turms.common.model.dto.request.group.enrollment.QueryGroupJoinQuestionsRequest getQueryGroupJoinQuestionsRequest();
   /**
    * <code>.im.turms.proto.QueryGroupJoinQuestionsRequest query_group_join_questions_request = 509;</code>
    */
-  QueryGroupJoinQuestionsRequestOrBuilder getQueryGroupJoinQuestionsRequestOrBuilder();
+  im.turms.common.model.dto.request.group.enrollment.QueryGroupJoinQuestionsRequestOrBuilder getQueryGroupJoinQuestionsRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
@@ -905,11 +894,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
    * @return The updateGroupJoinQuestionRequest.
    */
-  UpdateGroupJoinQuestionRequest getUpdateGroupJoinQuestionRequest();
+  im.turms.common.model.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest getUpdateGroupJoinQuestionRequest();
   /**
    * <code>.im.turms.proto.UpdateGroupJoinQuestionRequest update_group_join_question_request = 510;</code>
    */
-  UpdateGroupJoinQuestionRequestOrBuilder getUpdateGroupJoinQuestionRequestOrBuilder();
+  im.turms.common.model.dto.request.group.enrollment.UpdateGroupJoinQuestionRequestOrBuilder getUpdateGroupJoinQuestionRequestOrBuilder();
 
   /**
    * <pre>
@@ -928,7 +917,7 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 600;</code>
    * @return The createGroupMemberRequest.
    */
-  CreateGroupMemberRequest getCreateGroupMemberRequest();
+  im.turms.common.model.dto.request.group.member.CreateGroupMemberRequest getCreateGroupMemberRequest();
   /**
    * <pre>
    * Group Member
@@ -936,7 +925,7 @@ public interface TurmsRequestOrBuilder extends
    *
    * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 600;</code>
    */
-  CreateGroupMemberRequestOrBuilder getCreateGroupMemberRequestOrBuilder();
+  im.turms.common.model.dto.request.group.member.CreateGroupMemberRequestOrBuilder getCreateGroupMemberRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 601;</code>
@@ -947,11 +936,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 601;</code>
    * @return The deleteGroupMemberRequest.
    */
-  DeleteGroupMemberRequest getDeleteGroupMemberRequest();
+  im.turms.common.model.dto.request.group.member.DeleteGroupMemberRequest getDeleteGroupMemberRequest();
   /**
    * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 601;</code>
    */
-  DeleteGroupMemberRequestOrBuilder getDeleteGroupMemberRequestOrBuilder();
+  im.turms.common.model.dto.request.group.member.DeleteGroupMemberRequestOrBuilder getDeleteGroupMemberRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.QueryGroupMembersRequest query_group_members_request = 602;</code>
@@ -962,11 +951,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.QueryGroupMembersRequest query_group_members_request = 602;</code>
    * @return The queryGroupMembersRequest.
    */
-  QueryGroupMembersRequest getQueryGroupMembersRequest();
+  im.turms.common.model.dto.request.group.member.QueryGroupMembersRequest getQueryGroupMembersRequest();
   /**
    * <code>.im.turms.proto.QueryGroupMembersRequest query_group_members_request = 602;</code>
    */
-  QueryGroupMembersRequestOrBuilder getQueryGroupMembersRequestOrBuilder();
+  im.turms.common.model.dto.request.group.member.QueryGroupMembersRequestOrBuilder getQueryGroupMembersRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.UpdateGroupMemberRequest update_group_member_request = 603;</code>
@@ -977,11 +966,11 @@ public interface TurmsRequestOrBuilder extends
    * <code>.im.turms.proto.UpdateGroupMemberRequest update_group_member_request = 603;</code>
    * @return The updateGroupMemberRequest.
    */
-  UpdateGroupMemberRequest getUpdateGroupMemberRequest();
+  im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest getUpdateGroupMemberRequest();
   /**
    * <code>.im.turms.proto.UpdateGroupMemberRequest update_group_member_request = 603;</code>
    */
-  UpdateGroupMemberRequestOrBuilder getUpdateGroupMemberRequestOrBuilder();
+  im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequestOrBuilder getUpdateGroupMemberRequestOrBuilder();
 
-  public TurmsRequest.KindCase getKindCase();
+  public im.turms.common.model.dto.request.TurmsRequest.KindCase getKindCase();
 }

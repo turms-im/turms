@@ -23,7 +23,7 @@ package im.turms.common.model.dto.request.user;
 /**
  * Protobuf type {@code im.turms.proto.QueryUsersOnlineStatusRequest}
  */
-public  final class QueryUsersOnlineStatusRequest extends
+public final class QueryUsersOnlineStatusRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.QueryUsersOnlineStatusRequest)
     QueryUsersOnlineStatusRequestOrBuilder {
@@ -112,15 +112,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return QueryUsersOnlineStatusRequestOuterClass.internal_static_im_turms_proto_QueryUsersOnlineStatusRequest_descriptor;
+    return im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequestOuterClass.internal_static_im_turms_proto_QueryUsersOnlineStatusRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return QueryUsersOnlineStatusRequestOuterClass.internal_static_im_turms_proto_QueryUsersOnlineStatusRequest_fieldAccessorTable
+    return im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequestOuterClass.internal_static_im_turms_proto_QueryUsersOnlineStatusRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            QueryUsersOnlineStatusRequest.class, QueryUsersOnlineStatusRequest.Builder.class);
+            im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest.class, im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest.Builder.class);
   }
 
   public static final int USERS_IDS_FIELD_NUMBER = 1;
@@ -129,6 +129,7 @@ private static final long serialVersionUID = 0L;
    * <code>repeated int64 users_ids = 1;</code>
    * @return A list containing the usersIds.
    */
+  @java.lang.Override
   public java.util.List<java.lang.Long>
       getUsersIdsList() {
     return usersIds_;
@@ -205,10 +206,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof QueryUsersOnlineStatusRequest)) {
+    if (!(obj instanceof im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest)) {
       return super.equals(obj);
     }
-    QueryUsersOnlineStatusRequest other = (QueryUsersOnlineStatusRequest) obj;
+    im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest other = (im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest) obj;
 
     if (!getUsersIdsList()
         .equals(other.getUsersIdsList())) return false;
@@ -232,69 +233,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static QueryUsersOnlineStatusRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static QueryUsersOnlineStatusRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static QueryUsersOnlineStatusRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static QueryUsersOnlineStatusRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static QueryUsersOnlineStatusRequest parseFrom(byte[] data)
+  public static im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static QueryUsersOnlineStatusRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static QueryUsersOnlineStatusRequest parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static QueryUsersOnlineStatusRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static QueryUsersOnlineStatusRequest parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static QueryUsersOnlineStatusRequest parseDelimitedFrom(
+  public static im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static QueryUsersOnlineStatusRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static QueryUsersOnlineStatusRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -307,7 +308,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(QueryUsersOnlineStatusRequest prototype) {
+  public static Builder newBuilder(im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -328,18 +329,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.QueryUsersOnlineStatusRequest)
-          QueryUsersOnlineStatusRequestOrBuilder {
+      im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return QueryUsersOnlineStatusRequestOuterClass.internal_static_im_turms_proto_QueryUsersOnlineStatusRequest_descriptor;
+      return im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequestOuterClass.internal_static_im_turms_proto_QueryUsersOnlineStatusRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return QueryUsersOnlineStatusRequestOuterClass.internal_static_im_turms_proto_QueryUsersOnlineStatusRequest_fieldAccessorTable
+      return im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequestOuterClass.internal_static_im_turms_proto_QueryUsersOnlineStatusRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              QueryUsersOnlineStatusRequest.class, QueryUsersOnlineStatusRequest.Builder.class);
+              im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest.class, im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest.Builder.class);
     }
 
     // Construct using im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest.newBuilder()
@@ -368,17 +369,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return QueryUsersOnlineStatusRequestOuterClass.internal_static_im_turms_proto_QueryUsersOnlineStatusRequest_descriptor;
+      return im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequestOuterClass.internal_static_im_turms_proto_QueryUsersOnlineStatusRequest_descriptor;
     }
 
     @java.lang.Override
-    public QueryUsersOnlineStatusRequest getDefaultInstanceForType() {
-      return QueryUsersOnlineStatusRequest.getDefaultInstance();
+    public im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest getDefaultInstanceForType() {
+      return im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public QueryUsersOnlineStatusRequest build() {
-      QueryUsersOnlineStatusRequest result = buildPartial();
+    public im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest build() {
+      im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -386,8 +387,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public QueryUsersOnlineStatusRequest buildPartial() {
-      QueryUsersOnlineStatusRequest result = new QueryUsersOnlineStatusRequest(this);
+    public im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest buildPartial() {
+      im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest result = new im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest(this);
       int from_bitField0_ = bitField0_;
       if (((bitField0_ & 0x00000001) != 0)) {
         usersIds_.makeImmutable();
@@ -432,16 +433,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof QueryUsersOnlineStatusRequest) {
-        return mergeFrom((QueryUsersOnlineStatusRequest)other);
+      if (other instanceof im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest) {
+        return mergeFrom((im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(QueryUsersOnlineStatusRequest other) {
-      if (other == QueryUsersOnlineStatusRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest other) {
+      if (other == im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest.getDefaultInstance()) return this;
       if (!other.usersIds_.isEmpty()) {
         if (usersIds_.isEmpty()) {
           usersIds_ = other.usersIds_;
@@ -467,11 +468,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      QueryUsersOnlineStatusRequest parsedMessage = null;
+      im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (QueryUsersOnlineStatusRequest) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -577,12 +578,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.QueryUsersOnlineStatusRequest)
-  private static final QueryUsersOnlineStatusRequest DEFAULT_INSTANCE;
+  private static final im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new QueryUsersOnlineStatusRequest();
+    DEFAULT_INSTANCE = new im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest();
   }
 
-  public static QueryUsersOnlineStatusRequest getDefaultInstance() {
+  public static im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -607,7 +608,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public QueryUsersOnlineStatusRequest getDefaultInstanceForType() {
+  public im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

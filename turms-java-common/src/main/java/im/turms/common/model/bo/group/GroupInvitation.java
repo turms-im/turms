@@ -20,12 +20,10 @@
 
 package im.turms.common.model.bo.group;
 
-import im.turms.common.constant.RequestStatus;
-
 /**
  * Protobuf type {@code im.turms.proto.GroupInvitation}
  */
-public  final class GroupInvitation extends
+public final class GroupInvitation extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.GroupInvitation)
     GroupInvitationOrBuilder {
@@ -186,15 +184,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return GroupInvitationOuterClass.internal_static_im_turms_proto_GroupInvitation_descriptor;
+    return im.turms.common.model.bo.group.GroupInvitationOuterClass.internal_static_im_turms_proto_GroupInvitation_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return GroupInvitationOuterClass.internal_static_im_turms_proto_GroupInvitation_fieldAccessorTable
+    return im.turms.common.model.bo.group.GroupInvitationOuterClass.internal_static_im_turms_proto_GroupInvitation_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            GroupInvitation.class, GroupInvitation.Builder.class);
+            im.turms.common.model.bo.group.GroupInvitation.class, im.turms.common.model.bo.group.GroupInvitation.Builder.class);
   }
 
   public static final int ID_FIELD_NUMBER = 1;
@@ -203,6 +201,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value id = 1;</code>
    * @return Whether the id field is set.
    */
+  @java.lang.Override
   public boolean hasId() {
     return id_ != null;
   }
@@ -210,12 +209,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value id = 1;</code>
    * @return The id.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getId() {
     return id_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : id_;
   }
   /**
    * <code>.google.protobuf.Int64Value id = 1;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getIdOrBuilder() {
     return getId();
   }
@@ -226,6 +227,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value creation_date = 2;</code>
    * @return Whether the creationDate field is set.
    */
+  @java.lang.Override
   public boolean hasCreationDate() {
     return creationDate_ != null;
   }
@@ -233,12 +235,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value creation_date = 2;</code>
    * @return The creationDate.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getCreationDate() {
     return creationDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : creationDate_;
   }
   /**
    * <code>.google.protobuf.Int64Value creation_date = 2;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getCreationDateOrBuilder() {
     return getCreationDate();
   }
@@ -249,6 +253,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue content = 3;</code>
    * @return Whether the content field is set.
    */
+  @java.lang.Override
   public boolean hasContent() {
     return content_ != null;
   }
@@ -256,12 +261,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue content = 3;</code>
    * @return The content.
    */
+  @java.lang.Override
   public com.google.protobuf.StringValue getContent() {
     return content_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : content_;
   }
   /**
    * <code>.google.protobuf.StringValue content = 3;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.StringValueOrBuilder getContentOrBuilder() {
     return getContent();
   }
@@ -272,17 +279,17 @@ private static final long serialVersionUID = 0L;
    * <code>.im.turms.proto.RequestStatus status = 4;</code>
    * @return The enum numeric value on the wire for status.
    */
-  public int getStatusValue() {
+  @java.lang.Override public int getStatusValue() {
     return status_;
   }
   /**
    * <code>.im.turms.proto.RequestStatus status = 4;</code>
    * @return The status.
    */
-  public RequestStatus getStatus() {
+  @java.lang.Override public im.turms.common.constant.RequestStatus getStatus() {
     @SuppressWarnings("deprecation")
-    RequestStatus result = RequestStatus.valueOf(status_);
-    return result == null ? RequestStatus.UNRECOGNIZED : result;
+    im.turms.common.constant.RequestStatus result = im.turms.common.constant.RequestStatus.valueOf(status_);
+    return result == null ? im.turms.common.constant.RequestStatus.UNRECOGNIZED : result;
   }
 
   public static final int EXPIRATION_DATE_FIELD_NUMBER = 5;
@@ -291,6 +298,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value expiration_date = 5;</code>
    * @return Whether the expirationDate field is set.
    */
+  @java.lang.Override
   public boolean hasExpirationDate() {
     return expirationDate_ != null;
   }
@@ -298,12 +306,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value expiration_date = 5;</code>
    * @return The expirationDate.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getExpirationDate() {
     return expirationDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : expirationDate_;
   }
   /**
    * <code>.google.protobuf.Int64Value expiration_date = 5;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getExpirationDateOrBuilder() {
     return getExpirationDate();
   }
@@ -314,6 +324,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value group_id = 6;</code>
    * @return Whether the groupId field is set.
    */
+  @java.lang.Override
   public boolean hasGroupId() {
     return groupId_ != null;
   }
@@ -321,12 +332,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value group_id = 6;</code>
    * @return The groupId.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getGroupId() {
     return groupId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : groupId_;
   }
   /**
    * <code>.google.protobuf.Int64Value group_id = 6;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getGroupIdOrBuilder() {
     return getGroupId();
   }
@@ -337,6 +350,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value inviter_id = 7;</code>
    * @return Whether the inviterId field is set.
    */
+  @java.lang.Override
   public boolean hasInviterId() {
     return inviterId_ != null;
   }
@@ -344,12 +358,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value inviter_id = 7;</code>
    * @return The inviterId.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getInviterId() {
     return inviterId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : inviterId_;
   }
   /**
    * <code>.google.protobuf.Int64Value inviter_id = 7;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getInviterIdOrBuilder() {
     return getInviterId();
   }
@@ -360,6 +376,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value invitee_id = 8;</code>
    * @return Whether the inviteeId field is set.
    */
+  @java.lang.Override
   public boolean hasInviteeId() {
     return inviteeId_ != null;
   }
@@ -367,12 +384,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value invitee_id = 8;</code>
    * @return The inviteeId.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getInviteeId() {
     return inviteeId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : inviteeId_;
   }
   /**
    * <code>.google.protobuf.Int64Value invitee_id = 8;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getInviteeIdOrBuilder() {
     return getInviteeId();
   }
@@ -400,7 +419,7 @@ private static final long serialVersionUID = 0L;
     if (content_ != null) {
       output.writeMessage(3, getContent());
     }
-    if (status_ != RequestStatus.PENDING.getNumber()) {
+    if (status_ != im.turms.common.constant.RequestStatus.PENDING.getNumber()) {
       output.writeEnum(4, status_);
     }
     if (expirationDate_ != null) {
@@ -436,7 +455,7 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(3, getContent());
     }
-    if (status_ != RequestStatus.PENDING.getNumber()) {
+    if (status_ != im.turms.common.constant.RequestStatus.PENDING.getNumber()) {
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(4, status_);
     }
@@ -466,10 +485,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof GroupInvitation)) {
+    if (!(obj instanceof im.turms.common.model.bo.group.GroupInvitation)) {
       return super.equals(obj);
     }
-    GroupInvitation other = (GroupInvitation) obj;
+    im.turms.common.model.bo.group.GroupInvitation other = (im.turms.common.model.bo.group.GroupInvitation) obj;
 
     if (hasId() != other.hasId()) return false;
     if (hasId()) {
@@ -553,69 +572,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static GroupInvitation parseFrom(
+  public static im.turms.common.model.bo.group.GroupInvitation parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static GroupInvitation parseFrom(
+  public static im.turms.common.model.bo.group.GroupInvitation parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static GroupInvitation parseFrom(
+  public static im.turms.common.model.bo.group.GroupInvitation parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static GroupInvitation parseFrom(
+  public static im.turms.common.model.bo.group.GroupInvitation parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static GroupInvitation parseFrom(byte[] data)
+  public static im.turms.common.model.bo.group.GroupInvitation parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static GroupInvitation parseFrom(
+  public static im.turms.common.model.bo.group.GroupInvitation parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static GroupInvitation parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.group.GroupInvitation parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static GroupInvitation parseFrom(
+  public static im.turms.common.model.bo.group.GroupInvitation parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static GroupInvitation parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.group.GroupInvitation parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static GroupInvitation parseDelimitedFrom(
+  public static im.turms.common.model.bo.group.GroupInvitation parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static GroupInvitation parseFrom(
+  public static im.turms.common.model.bo.group.GroupInvitation parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static GroupInvitation parseFrom(
+  public static im.turms.common.model.bo.group.GroupInvitation parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -628,7 +647,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(GroupInvitation prototype) {
+  public static Builder newBuilder(im.turms.common.model.bo.group.GroupInvitation prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -649,18 +668,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.GroupInvitation)
-          GroupInvitationOrBuilder {
+      im.turms.common.model.bo.group.GroupInvitationOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return GroupInvitationOuterClass.internal_static_im_turms_proto_GroupInvitation_descriptor;
+      return im.turms.common.model.bo.group.GroupInvitationOuterClass.internal_static_im_turms_proto_GroupInvitation_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return GroupInvitationOuterClass.internal_static_im_turms_proto_GroupInvitation_fieldAccessorTable
+      return im.turms.common.model.bo.group.GroupInvitationOuterClass.internal_static_im_turms_proto_GroupInvitation_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              GroupInvitation.class, GroupInvitation.Builder.class);
+              im.turms.common.model.bo.group.GroupInvitation.class, im.turms.common.model.bo.group.GroupInvitation.Builder.class);
     }
 
     // Construct using im.turms.common.model.bo.group.GroupInvitation.newBuilder()
@@ -731,17 +750,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return GroupInvitationOuterClass.internal_static_im_turms_proto_GroupInvitation_descriptor;
+      return im.turms.common.model.bo.group.GroupInvitationOuterClass.internal_static_im_turms_proto_GroupInvitation_descriptor;
     }
 
     @java.lang.Override
-    public GroupInvitation getDefaultInstanceForType() {
-      return GroupInvitation.getDefaultInstance();
+    public im.turms.common.model.bo.group.GroupInvitation getDefaultInstanceForType() {
+      return im.turms.common.model.bo.group.GroupInvitation.getDefaultInstance();
     }
 
     @java.lang.Override
-    public GroupInvitation build() {
-      GroupInvitation result = buildPartial();
+    public im.turms.common.model.bo.group.GroupInvitation build() {
+      im.turms.common.model.bo.group.GroupInvitation result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -749,8 +768,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public GroupInvitation buildPartial() {
-      GroupInvitation result = new GroupInvitation(this);
+    public im.turms.common.model.bo.group.GroupInvitation buildPartial() {
+      im.turms.common.model.bo.group.GroupInvitation result = new im.turms.common.model.bo.group.GroupInvitation(this);
       if (idBuilder_ == null) {
         result.id_ = id_;
       } else {
@@ -825,16 +844,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof GroupInvitation) {
-        return mergeFrom((GroupInvitation)other);
+      if (other instanceof im.turms.common.model.bo.group.GroupInvitation) {
+        return mergeFrom((im.turms.common.model.bo.group.GroupInvitation)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(GroupInvitation other) {
-      if (other == GroupInvitation.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.bo.group.GroupInvitation other) {
+      if (other == im.turms.common.model.bo.group.GroupInvitation.getDefaultInstance()) return this;
       if (other.hasId()) {
         mergeId(other.getId());
       }
@@ -874,11 +893,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      GroupInvitation parsedMessage = null;
+      im.turms.common.model.bo.group.GroupInvitation parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (GroupInvitation) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.bo.group.GroupInvitation) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -1250,7 +1269,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.RequestStatus status = 4;</code>
      * @return The enum numeric value on the wire for status.
      */
-    public int getStatusValue() {
+    @java.lang.Override public int getStatusValue() {
       return status_;
     }
     /**
@@ -1259,6 +1278,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setStatusValue(int value) {
+      
       status_ = value;
       onChanged();
       return this;
@@ -1267,17 +1287,18 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.RequestStatus status = 4;</code>
      * @return The status.
      */
-    public RequestStatus getStatus() {
+    @java.lang.Override
+    public im.turms.common.constant.RequestStatus getStatus() {
       @SuppressWarnings("deprecation")
-      RequestStatus result = RequestStatus.valueOf(status_);
-      return result == null ? RequestStatus.UNRECOGNIZED : result;
+      im.turms.common.constant.RequestStatus result = im.turms.common.constant.RequestStatus.valueOf(status_);
+      return result == null ? im.turms.common.constant.RequestStatus.UNRECOGNIZED : result;
     }
     /**
      * <code>.im.turms.proto.RequestStatus status = 4;</code>
      * @param value The status to set.
      * @return This builder for chaining.
      */
-    public Builder setStatus(RequestStatus value) {
+    public Builder setStatus(im.turms.common.constant.RequestStatus value) {
       if (value == null) {
         throw new NullPointerException();
       }
@@ -1789,12 +1810,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.GroupInvitation)
-  private static final GroupInvitation DEFAULT_INSTANCE;
+  private static final im.turms.common.model.bo.group.GroupInvitation DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new GroupInvitation();
+    DEFAULT_INSTANCE = new im.turms.common.model.bo.group.GroupInvitation();
   }
 
-  public static GroupInvitation getDefaultInstance() {
+  public static im.turms.common.model.bo.group.GroupInvitation getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -1819,7 +1840,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public GroupInvitation getDefaultInstanceForType() {
+  public im.turms.common.model.bo.group.GroupInvitation getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

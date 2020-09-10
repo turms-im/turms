@@ -23,7 +23,7 @@ package im.turms.common.model.dto.request.group.enrollment;
 /**
  * Protobuf type {@code im.turms.proto.DeleteGroupInvitationRequest}
  */
-public  final class DeleteGroupInvitationRequest extends
+public final class DeleteGroupInvitationRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.DeleteGroupInvitationRequest)
     DeleteGroupInvitationRequestOrBuilder {
@@ -91,15 +91,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return DeleteGroupInvitationRequestOuterClass.internal_static_im_turms_proto_DeleteGroupInvitationRequest_descriptor;
+    return im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequestOuterClass.internal_static_im_turms_proto_DeleteGroupInvitationRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return DeleteGroupInvitationRequestOuterClass.internal_static_im_turms_proto_DeleteGroupInvitationRequest_fieldAccessorTable
+    return im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequestOuterClass.internal_static_im_turms_proto_DeleteGroupInvitationRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            DeleteGroupInvitationRequest.class, DeleteGroupInvitationRequest.Builder.class);
+            im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest.class, im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest.Builder.class);
   }
 
   public static final int INVITATION_ID_FIELD_NUMBER = 1;
@@ -108,6 +108,7 @@ private static final long serialVersionUID = 0L;
    * <code>int64 invitation_id = 1;</code>
    * @return The invitationId.
    */
+  @java.lang.Override
   public long getInvitationId() {
     return invitationId_;
   }
@@ -152,10 +153,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof DeleteGroupInvitationRequest)) {
+    if (!(obj instanceof im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest)) {
       return super.equals(obj);
     }
-    DeleteGroupInvitationRequest other = (DeleteGroupInvitationRequest) obj;
+    im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest other = (im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest) obj;
 
     if (getInvitationId()
         != other.getInvitationId()) return false;
@@ -178,69 +179,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static DeleteGroupInvitationRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static DeleteGroupInvitationRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static DeleteGroupInvitationRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static DeleteGroupInvitationRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static DeleteGroupInvitationRequest parseFrom(byte[] data)
+  public static im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static DeleteGroupInvitationRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static DeleteGroupInvitationRequest parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static DeleteGroupInvitationRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static DeleteGroupInvitationRequest parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static DeleteGroupInvitationRequest parseDelimitedFrom(
+  public static im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static DeleteGroupInvitationRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static DeleteGroupInvitationRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -253,7 +254,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(DeleteGroupInvitationRequest prototype) {
+  public static Builder newBuilder(im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -274,18 +275,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.DeleteGroupInvitationRequest)
-          DeleteGroupInvitationRequestOrBuilder {
+      im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return DeleteGroupInvitationRequestOuterClass.internal_static_im_turms_proto_DeleteGroupInvitationRequest_descriptor;
+      return im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequestOuterClass.internal_static_im_turms_proto_DeleteGroupInvitationRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return DeleteGroupInvitationRequestOuterClass.internal_static_im_turms_proto_DeleteGroupInvitationRequest_fieldAccessorTable
+      return im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequestOuterClass.internal_static_im_turms_proto_DeleteGroupInvitationRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              DeleteGroupInvitationRequest.class, DeleteGroupInvitationRequest.Builder.class);
+              im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest.class, im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest.Builder.class);
     }
 
     // Construct using im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest.newBuilder()
@@ -314,17 +315,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return DeleteGroupInvitationRequestOuterClass.internal_static_im_turms_proto_DeleteGroupInvitationRequest_descriptor;
+      return im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequestOuterClass.internal_static_im_turms_proto_DeleteGroupInvitationRequest_descriptor;
     }
 
     @java.lang.Override
-    public DeleteGroupInvitationRequest getDefaultInstanceForType() {
-      return DeleteGroupInvitationRequest.getDefaultInstance();
+    public im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest getDefaultInstanceForType() {
+      return im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public DeleteGroupInvitationRequest build() {
-      DeleteGroupInvitationRequest result = buildPartial();
+    public im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest build() {
+      im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -332,8 +333,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public DeleteGroupInvitationRequest buildPartial() {
-      DeleteGroupInvitationRequest result = new DeleteGroupInvitationRequest(this);
+    public im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest buildPartial() {
+      im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest result = new im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest(this);
       result.invitationId_ = invitationId_;
       onBuilt();
       return result;
@@ -373,16 +374,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof DeleteGroupInvitationRequest) {
-        return mergeFrom((DeleteGroupInvitationRequest)other);
+      if (other instanceof im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest) {
+        return mergeFrom((im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(DeleteGroupInvitationRequest other) {
-      if (other == DeleteGroupInvitationRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest other) {
+      if (other == im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest.getDefaultInstance()) return this;
       if (other.getInvitationId() != 0L) {
         setInvitationId(other.getInvitationId());
       }
@@ -401,11 +402,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      DeleteGroupInvitationRequest parsedMessage = null;
+      im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (DeleteGroupInvitationRequest) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -420,6 +421,7 @@ private static final long serialVersionUID = 0L;
      * <code>int64 invitation_id = 1;</code>
      * @return The invitationId.
      */
+    @java.lang.Override
     public long getInvitationId() {
       return invitationId_;
     }
@@ -461,12 +463,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.DeleteGroupInvitationRequest)
-  private static final DeleteGroupInvitationRequest DEFAULT_INSTANCE;
+  private static final im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new DeleteGroupInvitationRequest();
+    DEFAULT_INSTANCE = new im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest();
   }
 
-  public static DeleteGroupInvitationRequest getDefaultInstance() {
+  public static im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -491,7 +493,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public DeleteGroupInvitationRequest getDefaultInstanceForType() {
+  public im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

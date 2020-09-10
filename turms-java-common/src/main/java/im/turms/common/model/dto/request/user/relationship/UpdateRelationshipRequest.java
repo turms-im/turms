@@ -23,7 +23,7 @@ package im.turms.common.model.dto.request.user.relationship;
 /**
  * Protobuf type {@code im.turms.proto.UpdateRelationshipRequest}
  */
-public  final class UpdateRelationshipRequest extends
+public final class UpdateRelationshipRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.UpdateRelationshipRequest)
     UpdateRelationshipRequestOrBuilder {
@@ -130,15 +130,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return UpdateRelationshipRequestOuterClass.internal_static_im_turms_proto_UpdateRelationshipRequest_descriptor;
+    return im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequestOuterClass.internal_static_im_turms_proto_UpdateRelationshipRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return UpdateRelationshipRequestOuterClass.internal_static_im_turms_proto_UpdateRelationshipRequest_fieldAccessorTable
+    return im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequestOuterClass.internal_static_im_turms_proto_UpdateRelationshipRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            UpdateRelationshipRequest.class, UpdateRelationshipRequest.Builder.class);
+            im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest.class, im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest.Builder.class);
   }
 
   public static final int RELATED_USER_ID_FIELD_NUMBER = 1;
@@ -147,6 +147,7 @@ private static final long serialVersionUID = 0L;
    * <code>int64 related_user_id = 1;</code>
    * @return The relatedUserId.
    */
+  @java.lang.Override
   public long getRelatedUserId() {
     return relatedUserId_;
   }
@@ -157,6 +158,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.BoolValue blocked = 2;</code>
    * @return Whether the blocked field is set.
    */
+  @java.lang.Override
   public boolean hasBlocked() {
     return blocked_ != null;
   }
@@ -164,12 +166,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.BoolValue blocked = 2;</code>
    * @return The blocked.
    */
+  @java.lang.Override
   public com.google.protobuf.BoolValue getBlocked() {
     return blocked_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : blocked_;
   }
   /**
    * <code>.google.protobuf.BoolValue blocked = 2;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.BoolValueOrBuilder getBlockedOrBuilder() {
     return getBlocked();
   }
@@ -180,6 +184,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int32Value new_group_index = 3;</code>
    * @return Whether the newGroupIndex field is set.
    */
+  @java.lang.Override
   public boolean hasNewGroupIndex() {
     return newGroupIndex_ != null;
   }
@@ -187,12 +192,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int32Value new_group_index = 3;</code>
    * @return The newGroupIndex.
    */
+  @java.lang.Override
   public com.google.protobuf.Int32Value getNewGroupIndex() {
     return newGroupIndex_ == null ? com.google.protobuf.Int32Value.getDefaultInstance() : newGroupIndex_;
   }
   /**
    * <code>.google.protobuf.Int32Value new_group_index = 3;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int32ValueOrBuilder getNewGroupIndexOrBuilder() {
     return getNewGroupIndex();
   }
@@ -203,6 +210,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int32Value delete_group_index = 4;</code>
    * @return Whether the deleteGroupIndex field is set.
    */
+  @java.lang.Override
   public boolean hasDeleteGroupIndex() {
     return deleteGroupIndex_ != null;
   }
@@ -210,12 +218,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int32Value delete_group_index = 4;</code>
    * @return The deleteGroupIndex.
    */
+  @java.lang.Override
   public com.google.protobuf.Int32Value getDeleteGroupIndex() {
     return deleteGroupIndex_ == null ? com.google.protobuf.Int32Value.getDefaultInstance() : deleteGroupIndex_;
   }
   /**
    * <code>.google.protobuf.Int32Value delete_group_index = 4;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int32ValueOrBuilder getDeleteGroupIndexOrBuilder() {
     return getDeleteGroupIndex();
   }
@@ -281,10 +291,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof UpdateRelationshipRequest)) {
+    if (!(obj instanceof im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest)) {
       return super.equals(obj);
     }
-    UpdateRelationshipRequest other = (UpdateRelationshipRequest) obj;
+    im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest other = (im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest) obj;
 
     if (getRelatedUserId()
         != other.getRelatedUserId()) return false;
@@ -334,69 +344,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static UpdateRelationshipRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UpdateRelationshipRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UpdateRelationshipRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UpdateRelationshipRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UpdateRelationshipRequest parseFrom(byte[] data)
+  public static im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UpdateRelationshipRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UpdateRelationshipRequest parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UpdateRelationshipRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UpdateRelationshipRequest parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static UpdateRelationshipRequest parseDelimitedFrom(
+  public static im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UpdateRelationshipRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UpdateRelationshipRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -409,7 +419,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(UpdateRelationshipRequest prototype) {
+  public static Builder newBuilder(im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -430,18 +440,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.UpdateRelationshipRequest)
-          UpdateRelationshipRequestOrBuilder {
+      im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return UpdateRelationshipRequestOuterClass.internal_static_im_turms_proto_UpdateRelationshipRequest_descriptor;
+      return im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequestOuterClass.internal_static_im_turms_proto_UpdateRelationshipRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return UpdateRelationshipRequestOuterClass.internal_static_im_turms_proto_UpdateRelationshipRequest_fieldAccessorTable
+      return im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequestOuterClass.internal_static_im_turms_proto_UpdateRelationshipRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              UpdateRelationshipRequest.class, UpdateRelationshipRequest.Builder.class);
+              im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest.class, im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest.Builder.class);
     }
 
     // Construct using im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest.newBuilder()
@@ -488,17 +498,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return UpdateRelationshipRequestOuterClass.internal_static_im_turms_proto_UpdateRelationshipRequest_descriptor;
+      return im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequestOuterClass.internal_static_im_turms_proto_UpdateRelationshipRequest_descriptor;
     }
 
     @java.lang.Override
-    public UpdateRelationshipRequest getDefaultInstanceForType() {
-      return UpdateRelationshipRequest.getDefaultInstance();
+    public im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest getDefaultInstanceForType() {
+      return im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public UpdateRelationshipRequest build() {
-      UpdateRelationshipRequest result = buildPartial();
+    public im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest build() {
+      im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -506,8 +516,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public UpdateRelationshipRequest buildPartial() {
-      UpdateRelationshipRequest result = new UpdateRelationshipRequest(this);
+    public im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest buildPartial() {
+      im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest result = new im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest(this);
       result.relatedUserId_ = relatedUserId_;
       if (blockedBuilder_ == null) {
         result.blocked_ = blocked_;
@@ -562,16 +572,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof UpdateRelationshipRequest) {
-        return mergeFrom((UpdateRelationshipRequest)other);
+      if (other instanceof im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest) {
+        return mergeFrom((im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(UpdateRelationshipRequest other) {
-      if (other == UpdateRelationshipRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest other) {
+      if (other == im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest.getDefaultInstance()) return this;
       if (other.getRelatedUserId() != 0L) {
         setRelatedUserId(other.getRelatedUserId());
       }
@@ -599,11 +609,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      UpdateRelationshipRequest parsedMessage = null;
+      im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (UpdateRelationshipRequest) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -618,6 +628,7 @@ private static final long serialVersionUID = 0L;
      * <code>int64 related_user_id = 1;</code>
      * @return The relatedUserId.
      */
+    @java.lang.Override
     public long getRelatedUserId() {
       return relatedUserId_;
     }
@@ -1016,12 +1027,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.UpdateRelationshipRequest)
-  private static final UpdateRelationshipRequest DEFAULT_INSTANCE;
+  private static final im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new UpdateRelationshipRequest();
+    DEFAULT_INSTANCE = new im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest();
   }
 
-  public static UpdateRelationshipRequest getDefaultInstance() {
+  public static im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -1046,7 +1057,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public UpdateRelationshipRequest getDefaultInstanceForType() {
+  public im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

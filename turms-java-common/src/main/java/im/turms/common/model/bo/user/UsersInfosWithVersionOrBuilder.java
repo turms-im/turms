@@ -27,12 +27,12 @@ public interface UsersInfosWithVersionOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.UserInfo user_infos = 1;</code>
    */
-  java.util.List<UserInfo>
+  java.util.List<im.turms.common.model.bo.user.UserInfo> 
       getUserInfosList();
   /**
    * <code>repeated .im.turms.proto.UserInfo user_infos = 1;</code>
    */
-  UserInfo getUserInfos(int index);
+  im.turms.common.model.bo.user.UserInfo getUserInfos(int index);
   /**
    * <code>repeated .im.turms.proto.UserInfo user_infos = 1;</code>
    */
@@ -40,12 +40,12 @@ public interface UsersInfosWithVersionOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.UserInfo user_infos = 1;</code>
    */
-  java.util.List<? extends UserInfoOrBuilder>
+  java.util.List<? extends im.turms.common.model.bo.user.UserInfoOrBuilder> 
       getUserInfosOrBuilderList();
   /**
    * <code>repeated .im.turms.proto.UserInfo user_infos = 1;</code>
    */
-  UserInfoOrBuilder getUserInfosOrBuilder(
+  im.turms.common.model.bo.user.UserInfoOrBuilder getUserInfosOrBuilder(
       int index);
 
   /**

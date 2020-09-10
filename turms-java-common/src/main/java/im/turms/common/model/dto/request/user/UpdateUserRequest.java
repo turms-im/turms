@@ -20,12 +20,10 @@
 
 package im.turms.common.model.dto.request.user;
 
-import im.turms.common.constant.ProfileAccessStrategy;
-
 /**
  * Protobuf type {@code im.turms.proto.UpdateUserRequest}
  */
-public  final class UpdateUserRequest extends
+public final class UpdateUserRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.UpdateUserRequest)
     UpdateUserRequestOrBuilder {
@@ -134,15 +132,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return UpdateUserRequestOuterClass.internal_static_im_turms_proto_UpdateUserRequest_descriptor;
+    return im.turms.common.model.dto.request.user.UpdateUserRequestOuterClass.internal_static_im_turms_proto_UpdateUserRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return UpdateUserRequestOuterClass.internal_static_im_turms_proto_UpdateUserRequest_fieldAccessorTable
+    return im.turms.common.model.dto.request.user.UpdateUserRequestOuterClass.internal_static_im_turms_proto_UpdateUserRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            UpdateUserRequest.class, UpdateUserRequest.Builder.class);
+            im.turms.common.model.dto.request.user.UpdateUserRequest.class, im.turms.common.model.dto.request.user.UpdateUserRequest.Builder.class);
   }
 
   public static final int PASSWORD_FIELD_NUMBER = 1;
@@ -151,6 +149,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue password = 1;</code>
    * @return Whether the password field is set.
    */
+  @java.lang.Override
   public boolean hasPassword() {
     return password_ != null;
   }
@@ -158,12 +157,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue password = 1;</code>
    * @return The password.
    */
+  @java.lang.Override
   public com.google.protobuf.StringValue getPassword() {
     return password_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : password_;
   }
   /**
    * <code>.google.protobuf.StringValue password = 1;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.StringValueOrBuilder getPasswordOrBuilder() {
     return getPassword();
   }
@@ -174,6 +175,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue name = 2;</code>
    * @return Whether the name field is set.
    */
+  @java.lang.Override
   public boolean hasName() {
     return name_ != null;
   }
@@ -181,12 +183,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue name = 2;</code>
    * @return The name.
    */
+  @java.lang.Override
   public com.google.protobuf.StringValue getName() {
     return name_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : name_;
   }
   /**
    * <code>.google.protobuf.StringValue name = 2;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.StringValueOrBuilder getNameOrBuilder() {
     return getName();
   }
@@ -197,6 +201,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue intro = 3;</code>
    * @return Whether the intro field is set.
    */
+  @java.lang.Override
   public boolean hasIntro() {
     return intro_ != null;
   }
@@ -204,12 +209,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue intro = 3;</code>
    * @return The intro.
    */
+  @java.lang.Override
   public com.google.protobuf.StringValue getIntro() {
     return intro_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : intro_;
   }
   /**
    * <code>.google.protobuf.StringValue intro = 3;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.StringValueOrBuilder getIntroOrBuilder() {
     return getIntro();
   }
@@ -220,17 +227,17 @@ private static final long serialVersionUID = 0L;
    * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
    * @return The enum numeric value on the wire for profileAccessStrategy.
    */
-  public int getProfileAccessStrategyValue() {
+  @java.lang.Override public int getProfileAccessStrategyValue() {
     return profileAccessStrategy_;
   }
   /**
    * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
    * @return The profileAccessStrategy.
    */
-  public ProfileAccessStrategy getProfileAccessStrategy() {
+  @java.lang.Override public im.turms.common.constant.ProfileAccessStrategy getProfileAccessStrategy() {
     @SuppressWarnings("deprecation")
-    ProfileAccessStrategy result = ProfileAccessStrategy.valueOf(profileAccessStrategy_);
-    return result == null ? ProfileAccessStrategy.UNRECOGNIZED : result;
+    im.turms.common.constant.ProfileAccessStrategy result = im.turms.common.constant.ProfileAccessStrategy.valueOf(profileAccessStrategy_);
+    return result == null ? im.turms.common.constant.ProfileAccessStrategy.UNRECOGNIZED : result;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -256,7 +263,7 @@ private static final long serialVersionUID = 0L;
     if (intro_ != null) {
       output.writeMessage(3, getIntro());
     }
-    if (profileAccessStrategy_ != ProfileAccessStrategy.ALL.getNumber()) {
+    if (profileAccessStrategy_ != im.turms.common.constant.ProfileAccessStrategy.ALL.getNumber()) {
       output.writeEnum(4, profileAccessStrategy_);
     }
     unknownFields.writeTo(output);
@@ -280,7 +287,7 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(3, getIntro());
     }
-    if (profileAccessStrategy_ != ProfileAccessStrategy.ALL.getNumber()) {
+    if (profileAccessStrategy_ != im.turms.common.constant.ProfileAccessStrategy.ALL.getNumber()) {
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(4, profileAccessStrategy_);
     }
@@ -294,10 +301,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof UpdateUserRequest)) {
+    if (!(obj instanceof im.turms.common.model.dto.request.user.UpdateUserRequest)) {
       return super.equals(obj);
     }
-    UpdateUserRequest other = (UpdateUserRequest) obj;
+    im.turms.common.model.dto.request.user.UpdateUserRequest other = (im.turms.common.model.dto.request.user.UpdateUserRequest) obj;
 
     if (hasPassword() != other.hasPassword()) return false;
     if (hasPassword()) {
@@ -345,69 +352,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static UpdateUserRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.UpdateUserRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UpdateUserRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.UpdateUserRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UpdateUserRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.UpdateUserRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UpdateUserRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.UpdateUserRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UpdateUserRequest parseFrom(byte[] data)
+  public static im.turms.common.model.dto.request.user.UpdateUserRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UpdateUserRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.UpdateUserRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UpdateUserRequest parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.user.UpdateUserRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UpdateUserRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.UpdateUserRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UpdateUserRequest parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.user.UpdateUserRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static UpdateUserRequest parseDelimitedFrom(
+  public static im.turms.common.model.dto.request.user.UpdateUserRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UpdateUserRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.UpdateUserRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UpdateUserRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.UpdateUserRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -420,7 +427,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(UpdateUserRequest prototype) {
+  public static Builder newBuilder(im.turms.common.model.dto.request.user.UpdateUserRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -441,18 +448,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.UpdateUserRequest)
-          UpdateUserRequestOrBuilder {
+      im.turms.common.model.dto.request.user.UpdateUserRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return UpdateUserRequestOuterClass.internal_static_im_turms_proto_UpdateUserRequest_descriptor;
+      return im.turms.common.model.dto.request.user.UpdateUserRequestOuterClass.internal_static_im_turms_proto_UpdateUserRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return UpdateUserRequestOuterClass.internal_static_im_turms_proto_UpdateUserRequest_fieldAccessorTable
+      return im.turms.common.model.dto.request.user.UpdateUserRequestOuterClass.internal_static_im_turms_proto_UpdateUserRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              UpdateUserRequest.class, UpdateUserRequest.Builder.class);
+              im.turms.common.model.dto.request.user.UpdateUserRequest.class, im.turms.common.model.dto.request.user.UpdateUserRequest.Builder.class);
     }
 
     // Construct using im.turms.common.model.dto.request.user.UpdateUserRequest.newBuilder()
@@ -499,17 +506,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return UpdateUserRequestOuterClass.internal_static_im_turms_proto_UpdateUserRequest_descriptor;
+      return im.turms.common.model.dto.request.user.UpdateUserRequestOuterClass.internal_static_im_turms_proto_UpdateUserRequest_descriptor;
     }
 
     @java.lang.Override
-    public UpdateUserRequest getDefaultInstanceForType() {
-      return UpdateUserRequest.getDefaultInstance();
+    public im.turms.common.model.dto.request.user.UpdateUserRequest getDefaultInstanceForType() {
+      return im.turms.common.model.dto.request.user.UpdateUserRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public UpdateUserRequest build() {
-      UpdateUserRequest result = buildPartial();
+    public im.turms.common.model.dto.request.user.UpdateUserRequest build() {
+      im.turms.common.model.dto.request.user.UpdateUserRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -517,8 +524,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public UpdateUserRequest buildPartial() {
-      UpdateUserRequest result = new UpdateUserRequest(this);
+    public im.turms.common.model.dto.request.user.UpdateUserRequest buildPartial() {
+      im.turms.common.model.dto.request.user.UpdateUserRequest result = new im.turms.common.model.dto.request.user.UpdateUserRequest(this);
       if (passwordBuilder_ == null) {
         result.password_ = password_;
       } else {
@@ -573,16 +580,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof UpdateUserRequest) {
-        return mergeFrom((UpdateUserRequest)other);
+      if (other instanceof im.turms.common.model.dto.request.user.UpdateUserRequest) {
+        return mergeFrom((im.turms.common.model.dto.request.user.UpdateUserRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(UpdateUserRequest other) {
-      if (other == UpdateUserRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.dto.request.user.UpdateUserRequest other) {
+      if (other == im.turms.common.model.dto.request.user.UpdateUserRequest.getDefaultInstance()) return this;
       if (other.hasPassword()) {
         mergePassword(other.getPassword());
       }
@@ -610,11 +617,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      UpdateUserRequest parsedMessage = null;
+      im.turms.common.model.dto.request.user.UpdateUserRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (UpdateUserRequest) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.dto.request.user.UpdateUserRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -986,7 +993,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
      * @return The enum numeric value on the wire for profileAccessStrategy.
      */
-    public int getProfileAccessStrategyValue() {
+    @java.lang.Override public int getProfileAccessStrategyValue() {
       return profileAccessStrategy_;
     }
     /**
@@ -995,6 +1002,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setProfileAccessStrategyValue(int value) {
+      
       profileAccessStrategy_ = value;
       onChanged();
       return this;
@@ -1003,17 +1011,18 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
      * @return The profileAccessStrategy.
      */
-    public ProfileAccessStrategy getProfileAccessStrategy() {
+    @java.lang.Override
+    public im.turms.common.constant.ProfileAccessStrategy getProfileAccessStrategy() {
       @SuppressWarnings("deprecation")
-      ProfileAccessStrategy result = ProfileAccessStrategy.valueOf(profileAccessStrategy_);
-      return result == null ? ProfileAccessStrategy.UNRECOGNIZED : result;
+      im.turms.common.constant.ProfileAccessStrategy result = im.turms.common.constant.ProfileAccessStrategy.valueOf(profileAccessStrategy_);
+      return result == null ? im.turms.common.constant.ProfileAccessStrategy.UNRECOGNIZED : result;
     }
     /**
      * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
      * @param value The profileAccessStrategy to set.
      * @return This builder for chaining.
      */
-    public Builder setProfileAccessStrategy(ProfileAccessStrategy value) {
+    public Builder setProfileAccessStrategy(im.turms.common.constant.ProfileAccessStrategy value) {
       if (value == null) {
         throw new NullPointerException();
       }
@@ -1049,12 +1058,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.UpdateUserRequest)
-  private static final UpdateUserRequest DEFAULT_INSTANCE;
+  private static final im.turms.common.model.dto.request.user.UpdateUserRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new UpdateUserRequest();
+    DEFAULT_INSTANCE = new im.turms.common.model.dto.request.user.UpdateUserRequest();
   }
 
-  public static UpdateUserRequest getDefaultInstance() {
+  public static im.turms.common.model.dto.request.user.UpdateUserRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -1079,7 +1088,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public UpdateUserRequest getDefaultInstanceForType() {
+  public im.turms.common.model.dto.request.user.UpdateUserRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

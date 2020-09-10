@@ -20,8 +20,6 @@
 
 package im.turms.common.model.dto.request.user;
 
-import im.turms.common.constant.ProfileAccessStrategyOuterClass;
-
 public final class UpdateUserRequestOuterClass {
   private UpdateUserRequestOuterClass() {}
   public static void registerAllExtensions(
@@ -63,7 +61,7 @@ public final class UpdateUserRequestOuterClass {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.WrappersProto.getDescriptor(),
-          ProfileAccessStrategyOuterClass.getDescriptor(),
+          im.turms.common.constant.ProfileAccessStrategyOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_UpdateUserRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -72,7 +70,7 @@ public final class UpdateUserRequestOuterClass {
         internal_static_im_turms_proto_UpdateUserRequest_descriptor,
         new java.lang.String[] { "Password", "Name", "Intro", "ProfileAccessStrategy", });
     com.google.protobuf.WrappersProto.getDescriptor();
-    ProfileAccessStrategyOuterClass.getDescriptor();
+    im.turms.common.constant.ProfileAccessStrategyOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

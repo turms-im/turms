@@ -23,7 +23,7 @@ package im.turms.common.model.bo.group;
 /**
  * Protobuf type {@code im.turms.proto.GroupMembersWithVersion}
  */
-public  final class GroupMembersWithVersion extends
+public final class GroupMembersWithVersion extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.GroupMembersWithVersion)
     GroupMembersWithVersionOrBuilder {
@@ -69,11 +69,11 @@ private static final long serialVersionUID = 0L;
             break;
           case 10: {
             if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-              groupMembers_ = new java.util.ArrayList<GroupMember>();
+              groupMembers_ = new java.util.ArrayList<im.turms.common.model.bo.group.GroupMember>();
               mutable_bitField0_ |= 0x00000001;
             }
             groupMembers_.add(
-                input.readMessage(GroupMember.parser(), extensionRegistry));
+                input.readMessage(im.turms.common.model.bo.group.GroupMember.parser(), extensionRegistry));
             break;
           }
           case 18: {
@@ -113,48 +113,53 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return GroupMembersWithVersionOuterClass.internal_static_im_turms_proto_GroupMembersWithVersion_descriptor;
+    return im.turms.common.model.bo.group.GroupMembersWithVersionOuterClass.internal_static_im_turms_proto_GroupMembersWithVersion_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return GroupMembersWithVersionOuterClass.internal_static_im_turms_proto_GroupMembersWithVersion_fieldAccessorTable
+    return im.turms.common.model.bo.group.GroupMembersWithVersionOuterClass.internal_static_im_turms_proto_GroupMembersWithVersion_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            GroupMembersWithVersion.class, GroupMembersWithVersion.Builder.class);
+            im.turms.common.model.bo.group.GroupMembersWithVersion.class, im.turms.common.model.bo.group.GroupMembersWithVersion.Builder.class);
   }
 
   public static final int GROUP_MEMBERS_FIELD_NUMBER = 1;
-  private java.util.List<GroupMember> groupMembers_;
+  private java.util.List<im.turms.common.model.bo.group.GroupMember> groupMembers_;
   /**
    * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
    */
-  public java.util.List<GroupMember> getGroupMembersList() {
+  @java.lang.Override
+  public java.util.List<im.turms.common.model.bo.group.GroupMember> getGroupMembersList() {
     return groupMembers_;
   }
   /**
    * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
    */
-  public java.util.List<? extends GroupMemberOrBuilder>
+  @java.lang.Override
+  public java.util.List<? extends im.turms.common.model.bo.group.GroupMemberOrBuilder> 
       getGroupMembersOrBuilderList() {
     return groupMembers_;
   }
   /**
    * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
    */
+  @java.lang.Override
   public int getGroupMembersCount() {
     return groupMembers_.size();
   }
   /**
    * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
    */
-  public GroupMember getGroupMembers(int index) {
+  @java.lang.Override
+  public im.turms.common.model.bo.group.GroupMember getGroupMembers(int index) {
     return groupMembers_.get(index);
   }
   /**
    * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
    */
-  public GroupMemberOrBuilder getGroupMembersOrBuilder(
+  @java.lang.Override
+  public im.turms.common.model.bo.group.GroupMemberOrBuilder getGroupMembersOrBuilder(
       int index) {
     return groupMembers_.get(index);
   }
@@ -165,6 +170,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
    * @return Whether the lastUpdatedDate field is set.
    */
+  @java.lang.Override
   public boolean hasLastUpdatedDate() {
     return lastUpdatedDate_ != null;
   }
@@ -172,12 +178,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
    * @return The lastUpdatedDate.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getLastUpdatedDate() {
     return lastUpdatedDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : lastUpdatedDate_;
   }
   /**
    * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getLastUpdatedDateOrBuilder() {
     return getLastUpdatedDate();
   }
@@ -229,10 +237,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof GroupMembersWithVersion)) {
+    if (!(obj instanceof im.turms.common.model.bo.group.GroupMembersWithVersion)) {
       return super.equals(obj);
     }
-    GroupMembersWithVersion other = (GroupMembersWithVersion) obj;
+    im.turms.common.model.bo.group.GroupMembersWithVersion other = (im.turms.common.model.bo.group.GroupMembersWithVersion) obj;
 
     if (!getGroupMembersList()
         .equals(other.getGroupMembersList())) return false;
@@ -265,69 +273,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static GroupMembersWithVersion parseFrom(
+  public static im.turms.common.model.bo.group.GroupMembersWithVersion parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static GroupMembersWithVersion parseFrom(
+  public static im.turms.common.model.bo.group.GroupMembersWithVersion parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static GroupMembersWithVersion parseFrom(
+  public static im.turms.common.model.bo.group.GroupMembersWithVersion parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static GroupMembersWithVersion parseFrom(
+  public static im.turms.common.model.bo.group.GroupMembersWithVersion parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static GroupMembersWithVersion parseFrom(byte[] data)
+  public static im.turms.common.model.bo.group.GroupMembersWithVersion parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static GroupMembersWithVersion parseFrom(
+  public static im.turms.common.model.bo.group.GroupMembersWithVersion parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static GroupMembersWithVersion parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.group.GroupMembersWithVersion parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static GroupMembersWithVersion parseFrom(
+  public static im.turms.common.model.bo.group.GroupMembersWithVersion parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static GroupMembersWithVersion parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.group.GroupMembersWithVersion parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static GroupMembersWithVersion parseDelimitedFrom(
+  public static im.turms.common.model.bo.group.GroupMembersWithVersion parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static GroupMembersWithVersion parseFrom(
+  public static im.turms.common.model.bo.group.GroupMembersWithVersion parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static GroupMembersWithVersion parseFrom(
+  public static im.turms.common.model.bo.group.GroupMembersWithVersion parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -340,7 +348,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(GroupMembersWithVersion prototype) {
+  public static Builder newBuilder(im.turms.common.model.bo.group.GroupMembersWithVersion prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -361,18 +369,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.GroupMembersWithVersion)
-          GroupMembersWithVersionOrBuilder {
+      im.turms.common.model.bo.group.GroupMembersWithVersionOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return GroupMembersWithVersionOuterClass.internal_static_im_turms_proto_GroupMembersWithVersion_descriptor;
+      return im.turms.common.model.bo.group.GroupMembersWithVersionOuterClass.internal_static_im_turms_proto_GroupMembersWithVersion_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return GroupMembersWithVersionOuterClass.internal_static_im_turms_proto_GroupMembersWithVersion_fieldAccessorTable
+      return im.turms.common.model.bo.group.GroupMembersWithVersionOuterClass.internal_static_im_turms_proto_GroupMembersWithVersion_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              GroupMembersWithVersion.class, GroupMembersWithVersion.Builder.class);
+              im.turms.common.model.bo.group.GroupMembersWithVersion.class, im.turms.common.model.bo.group.GroupMembersWithVersion.Builder.class);
     }
 
     // Construct using im.turms.common.model.bo.group.GroupMembersWithVersion.newBuilder()
@@ -412,17 +420,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return GroupMembersWithVersionOuterClass.internal_static_im_turms_proto_GroupMembersWithVersion_descriptor;
+      return im.turms.common.model.bo.group.GroupMembersWithVersionOuterClass.internal_static_im_turms_proto_GroupMembersWithVersion_descriptor;
     }
 
     @java.lang.Override
-    public GroupMembersWithVersion getDefaultInstanceForType() {
-      return GroupMembersWithVersion.getDefaultInstance();
+    public im.turms.common.model.bo.group.GroupMembersWithVersion getDefaultInstanceForType() {
+      return im.turms.common.model.bo.group.GroupMembersWithVersion.getDefaultInstance();
     }
 
     @java.lang.Override
-    public GroupMembersWithVersion build() {
-      GroupMembersWithVersion result = buildPartial();
+    public im.turms.common.model.bo.group.GroupMembersWithVersion build() {
+      im.turms.common.model.bo.group.GroupMembersWithVersion result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -430,8 +438,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public GroupMembersWithVersion buildPartial() {
-      GroupMembersWithVersion result = new GroupMembersWithVersion(this);
+    public im.turms.common.model.bo.group.GroupMembersWithVersion buildPartial() {
+      im.turms.common.model.bo.group.GroupMembersWithVersion result = new im.turms.common.model.bo.group.GroupMembersWithVersion(this);
       int from_bitField0_ = bitField0_;
       if (groupMembersBuilder_ == null) {
         if (((bitField0_ & 0x00000001) != 0)) {
@@ -485,16 +493,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof GroupMembersWithVersion) {
-        return mergeFrom((GroupMembersWithVersion)other);
+      if (other instanceof im.turms.common.model.bo.group.GroupMembersWithVersion) {
+        return mergeFrom((im.turms.common.model.bo.group.GroupMembersWithVersion)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(GroupMembersWithVersion other) {
-      if (other == GroupMembersWithVersion.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.bo.group.GroupMembersWithVersion other) {
+      if (other == im.turms.common.model.bo.group.GroupMembersWithVersion.getDefaultInstance()) return this;
       if (groupMembersBuilder_ == null) {
         if (!other.groupMembers_.isEmpty()) {
           if (groupMembers_.isEmpty()) {
@@ -539,11 +547,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      GroupMembersWithVersion parsedMessage = null;
+      im.turms.common.model.bo.group.GroupMembersWithVersion parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (GroupMembersWithVersion) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.bo.group.GroupMembersWithVersion) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -554,22 +562,22 @@ private static final long serialVersionUID = 0L;
     }
     private int bitField0_;
 
-    private java.util.List<GroupMember> groupMembers_ =
+    private java.util.List<im.turms.common.model.bo.group.GroupMember> groupMembers_ =
       java.util.Collections.emptyList();
     private void ensureGroupMembersIsMutable() {
       if (!((bitField0_ & 0x00000001) != 0)) {
-        groupMembers_ = new java.util.ArrayList<GroupMember>(groupMembers_);
+        groupMembers_ = new java.util.ArrayList<im.turms.common.model.bo.group.GroupMember>(groupMembers_);
         bitField0_ |= 0x00000001;
        }
     }
 
     private com.google.protobuf.RepeatedFieldBuilderV3<
-            GroupMember, GroupMember.Builder, GroupMemberOrBuilder> groupMembersBuilder_;
+        im.turms.common.model.bo.group.GroupMember, im.turms.common.model.bo.group.GroupMember.Builder, im.turms.common.model.bo.group.GroupMemberOrBuilder> groupMembersBuilder_;
 
     /**
      * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
      */
-    public java.util.List<GroupMember> getGroupMembersList() {
+    public java.util.List<im.turms.common.model.bo.group.GroupMember> getGroupMembersList() {
       if (groupMembersBuilder_ == null) {
         return java.util.Collections.unmodifiableList(groupMembers_);
       } else {
@@ -589,7 +597,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
      */
-    public GroupMember getGroupMembers(int index) {
+    public im.turms.common.model.bo.group.GroupMember getGroupMembers(int index) {
       if (groupMembersBuilder_ == null) {
         return groupMembers_.get(index);
       } else {
@@ -600,7 +608,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
      */
     public Builder setGroupMembers(
-        int index, GroupMember value) {
+        int index, im.turms.common.model.bo.group.GroupMember value) {
       if (groupMembersBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -617,7 +625,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
      */
     public Builder setGroupMembers(
-        int index, GroupMember.Builder builderForValue) {
+        int index, im.turms.common.model.bo.group.GroupMember.Builder builderForValue) {
       if (groupMembersBuilder_ == null) {
         ensureGroupMembersIsMutable();
         groupMembers_.set(index, builderForValue.build());
@@ -630,7 +638,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
      */
-    public Builder addGroupMembers(GroupMember value) {
+    public Builder addGroupMembers(im.turms.common.model.bo.group.GroupMember value) {
       if (groupMembersBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -647,7 +655,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
      */
     public Builder addGroupMembers(
-        int index, GroupMember value) {
+        int index, im.turms.common.model.bo.group.GroupMember value) {
       if (groupMembersBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -664,7 +672,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
      */
     public Builder addGroupMembers(
-        GroupMember.Builder builderForValue) {
+        im.turms.common.model.bo.group.GroupMember.Builder builderForValue) {
       if (groupMembersBuilder_ == null) {
         ensureGroupMembersIsMutable();
         groupMembers_.add(builderForValue.build());
@@ -678,7 +686,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
      */
     public Builder addGroupMembers(
-        int index, GroupMember.Builder builderForValue) {
+        int index, im.turms.common.model.bo.group.GroupMember.Builder builderForValue) {
       if (groupMembersBuilder_ == null) {
         ensureGroupMembersIsMutable();
         groupMembers_.add(index, builderForValue.build());
@@ -692,7 +700,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
      */
     public Builder addAllGroupMembers(
-        java.lang.Iterable<? extends GroupMember> values) {
+        java.lang.Iterable<? extends im.turms.common.model.bo.group.GroupMember> values) {
       if (groupMembersBuilder_ == null) {
         ensureGroupMembersIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -732,14 +740,14 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
      */
-    public GroupMember.Builder getGroupMembersBuilder(
+    public im.turms.common.model.bo.group.GroupMember.Builder getGroupMembersBuilder(
         int index) {
       return getGroupMembersFieldBuilder().getBuilder(index);
     }
     /**
      * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
      */
-    public GroupMemberOrBuilder getGroupMembersOrBuilder(
+    public im.turms.common.model.bo.group.GroupMemberOrBuilder getGroupMembersOrBuilder(
         int index) {
       if (groupMembersBuilder_ == null) {
         return groupMembers_.get(index);  } else {
@@ -749,7 +757,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
      */
-    public java.util.List<? extends GroupMemberOrBuilder>
+    public java.util.List<? extends im.turms.common.model.bo.group.GroupMemberOrBuilder> 
          getGroupMembersOrBuilderList() {
       if (groupMembersBuilder_ != null) {
         return groupMembersBuilder_.getMessageOrBuilderList();
@@ -760,31 +768,31 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
      */
-    public GroupMember.Builder addGroupMembersBuilder() {
+    public im.turms.common.model.bo.group.GroupMember.Builder addGroupMembersBuilder() {
       return getGroupMembersFieldBuilder().addBuilder(
-          GroupMember.getDefaultInstance());
+          im.turms.common.model.bo.group.GroupMember.getDefaultInstance());
     }
     /**
      * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
      */
-    public GroupMember.Builder addGroupMembersBuilder(
+    public im.turms.common.model.bo.group.GroupMember.Builder addGroupMembersBuilder(
         int index) {
       return getGroupMembersFieldBuilder().addBuilder(
-          index, GroupMember.getDefaultInstance());
+          index, im.turms.common.model.bo.group.GroupMember.getDefaultInstance());
     }
     /**
      * <code>repeated .im.turms.proto.GroupMember group_members = 1;</code>
      */
-    public java.util.List<GroupMember.Builder>
+    public java.util.List<im.turms.common.model.bo.group.GroupMember.Builder> 
          getGroupMembersBuilderList() {
       return getGroupMembersFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-            GroupMember, GroupMember.Builder, GroupMemberOrBuilder>
+        im.turms.common.model.bo.group.GroupMember, im.turms.common.model.bo.group.GroupMember.Builder, im.turms.common.model.bo.group.GroupMemberOrBuilder> 
         getGroupMembersFieldBuilder() {
       if (groupMembersBuilder_ == null) {
         groupMembersBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-                GroupMember, GroupMember.Builder, GroupMemberOrBuilder>(
+            im.turms.common.model.bo.group.GroupMember, im.turms.common.model.bo.group.GroupMember.Builder, im.turms.common.model.bo.group.GroupMemberOrBuilder>(
                 groupMembers_,
                 ((bitField0_ & 0x00000001) != 0),
                 getParentForChildren(),
@@ -929,12 +937,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.GroupMembersWithVersion)
-  private static final GroupMembersWithVersion DEFAULT_INSTANCE;
+  private static final im.turms.common.model.bo.group.GroupMembersWithVersion DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new GroupMembersWithVersion();
+    DEFAULT_INSTANCE = new im.turms.common.model.bo.group.GroupMembersWithVersion();
   }
 
-  public static GroupMembersWithVersion getDefaultInstance() {
+  public static im.turms.common.model.bo.group.GroupMembersWithVersion getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -959,7 +967,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public GroupMembersWithVersion getDefaultInstanceForType() {
+  public im.turms.common.model.bo.group.GroupMembersWithVersion getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

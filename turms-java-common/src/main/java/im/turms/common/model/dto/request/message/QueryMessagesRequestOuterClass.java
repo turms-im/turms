@@ -20,8 +20,6 @@
 
 package im.turms.common.model.dto.request.message;
 
-import im.turms.common.constant.MessageDeliveryStatusOuterClass;
-
 public final class QueryMessagesRequestOuterClass {
   private QueryMessagesRequestOuterClass() {}
   public static void registerAllExtensions(
@@ -68,7 +66,7 @@ public final class QueryMessagesRequestOuterClass {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.WrappersProto.getDescriptor(),
-          MessageDeliveryStatusOuterClass.getDescriptor(),
+          im.turms.common.constant.MessageDeliveryStatusOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_QueryMessagesRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -77,7 +75,7 @@ public final class QueryMessagesRequestOuterClass {
         internal_static_im_turms_proto_QueryMessagesRequest_descriptor,
         new java.lang.String[] { "Ids", "Size", "AreGroupMessages", "AreSystemMessages", "FromId", "DeliveryDateAfter", "DeliveryDateBefore", "DeliveryStatus", });
     com.google.protobuf.WrappersProto.getDescriptor();
-    MessageDeliveryStatusOuterClass.getDescriptor();
+    im.turms.common.constant.MessageDeliveryStatusOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

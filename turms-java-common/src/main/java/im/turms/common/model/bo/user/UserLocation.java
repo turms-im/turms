@@ -23,7 +23,7 @@ package im.turms.common.model.bo.user;
 /**
  * Protobuf type {@code im.turms.proto.UserLocation}
  */
-public  final class UserLocation extends
+public final class UserLocation extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.UserLocation)
     UserLocationOrBuilder {
@@ -135,15 +135,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return UserLocationOuterClass.internal_static_im_turms_proto_UserLocation_descriptor;
+    return im.turms.common.model.bo.user.UserLocationOuterClass.internal_static_im_turms_proto_UserLocation_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return UserLocationOuterClass.internal_static_im_turms_proto_UserLocation_fieldAccessorTable
+    return im.turms.common.model.bo.user.UserLocationOuterClass.internal_static_im_turms_proto_UserLocation_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            UserLocation.class, UserLocation.Builder.class);
+            im.turms.common.model.bo.user.UserLocation.class, im.turms.common.model.bo.user.UserLocation.Builder.class);
   }
 
   public static final int LATITUDE_FIELD_NUMBER = 1;
@@ -152,6 +152,7 @@ private static final long serialVersionUID = 0L;
    * <code>float latitude = 1;</code>
    * @return The latitude.
    */
+  @java.lang.Override
   public float getLatitude() {
     return latitude_;
   }
@@ -162,6 +163,7 @@ private static final long serialVersionUID = 0L;
    * <code>float longitude = 2;</code>
    * @return The longitude.
    */
+  @java.lang.Override
   public float getLongitude() {
     return longitude_;
   }
@@ -172,6 +174,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue name = 3;</code>
    * @return Whether the name field is set.
    */
+  @java.lang.Override
   public boolean hasName() {
     return name_ != null;
   }
@@ -179,12 +182,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue name = 3;</code>
    * @return The name.
    */
+  @java.lang.Override
   public com.google.protobuf.StringValue getName() {
     return name_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : name_;
   }
   /**
    * <code>.google.protobuf.StringValue name = 3;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.StringValueOrBuilder getNameOrBuilder() {
     return getName();
   }
@@ -195,6 +200,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue address = 4;</code>
    * @return Whether the address field is set.
    */
+  @java.lang.Override
   public boolean hasAddress() {
     return address_ != null;
   }
@@ -202,12 +208,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue address = 4;</code>
    * @return The address.
    */
+  @java.lang.Override
   public com.google.protobuf.StringValue getAddress() {
     return address_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : address_;
   }
   /**
    * <code>.google.protobuf.StringValue address = 4;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.StringValueOrBuilder getAddressOrBuilder() {
     return getAddress();
   }
@@ -218,6 +226,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value timestamp = 5;</code>
    * @return Whether the timestamp field is set.
    */
+  @java.lang.Override
   public boolean hasTimestamp() {
     return timestamp_ != null;
   }
@@ -225,12 +234,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value timestamp = 5;</code>
    * @return The timestamp.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getTimestamp() {
     return timestamp_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : timestamp_;
   }
   /**
    * <code>.google.protobuf.Int64Value timestamp = 5;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getTimestampOrBuilder() {
     return getTimestamp();
   }
@@ -303,10 +314,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof UserLocation)) {
+    if (!(obj instanceof im.turms.common.model.bo.user.UserLocation)) {
       return super.equals(obj);
     }
-    UserLocation other = (UserLocation) obj;
+    im.turms.common.model.bo.user.UserLocation other = (im.turms.common.model.bo.user.UserLocation) obj;
 
     if (java.lang.Float.floatToIntBits(getLatitude())
         != java.lang.Float.floatToIntBits(
@@ -363,69 +374,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static UserLocation parseFrom(
+  public static im.turms.common.model.bo.user.UserLocation parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UserLocation parseFrom(
+  public static im.turms.common.model.bo.user.UserLocation parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UserLocation parseFrom(
+  public static im.turms.common.model.bo.user.UserLocation parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UserLocation parseFrom(
+  public static im.turms.common.model.bo.user.UserLocation parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UserLocation parseFrom(byte[] data)
+  public static im.turms.common.model.bo.user.UserLocation parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UserLocation parseFrom(
+  public static im.turms.common.model.bo.user.UserLocation parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UserLocation parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.user.UserLocation parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UserLocation parseFrom(
+  public static im.turms.common.model.bo.user.UserLocation parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UserLocation parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.user.UserLocation parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static UserLocation parseDelimitedFrom(
+  public static im.turms.common.model.bo.user.UserLocation parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UserLocation parseFrom(
+  public static im.turms.common.model.bo.user.UserLocation parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UserLocation parseFrom(
+  public static im.turms.common.model.bo.user.UserLocation parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -438,7 +449,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(UserLocation prototype) {
+  public static Builder newBuilder(im.turms.common.model.bo.user.UserLocation prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -459,18 +470,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.UserLocation)
-          UserLocationOrBuilder {
+      im.turms.common.model.bo.user.UserLocationOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return UserLocationOuterClass.internal_static_im_turms_proto_UserLocation_descriptor;
+      return im.turms.common.model.bo.user.UserLocationOuterClass.internal_static_im_turms_proto_UserLocation_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return UserLocationOuterClass.internal_static_im_turms_proto_UserLocation_fieldAccessorTable
+      return im.turms.common.model.bo.user.UserLocationOuterClass.internal_static_im_turms_proto_UserLocation_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              UserLocation.class, UserLocation.Builder.class);
+              im.turms.common.model.bo.user.UserLocation.class, im.turms.common.model.bo.user.UserLocation.Builder.class);
     }
 
     // Construct using im.turms.common.model.bo.user.UserLocation.newBuilder()
@@ -519,17 +530,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return UserLocationOuterClass.internal_static_im_turms_proto_UserLocation_descriptor;
+      return im.turms.common.model.bo.user.UserLocationOuterClass.internal_static_im_turms_proto_UserLocation_descriptor;
     }
 
     @java.lang.Override
-    public UserLocation getDefaultInstanceForType() {
-      return UserLocation.getDefaultInstance();
+    public im.turms.common.model.bo.user.UserLocation getDefaultInstanceForType() {
+      return im.turms.common.model.bo.user.UserLocation.getDefaultInstance();
     }
 
     @java.lang.Override
-    public UserLocation build() {
-      UserLocation result = buildPartial();
+    public im.turms.common.model.bo.user.UserLocation build() {
+      im.turms.common.model.bo.user.UserLocation result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -537,8 +548,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public UserLocation buildPartial() {
-      UserLocation result = new UserLocation(this);
+    public im.turms.common.model.bo.user.UserLocation buildPartial() {
+      im.turms.common.model.bo.user.UserLocation result = new im.turms.common.model.bo.user.UserLocation(this);
       result.latitude_ = latitude_;
       result.longitude_ = longitude_;
       if (nameBuilder_ == null) {
@@ -594,16 +605,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof UserLocation) {
-        return mergeFrom((UserLocation)other);
+      if (other instanceof im.turms.common.model.bo.user.UserLocation) {
+        return mergeFrom((im.turms.common.model.bo.user.UserLocation)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(UserLocation other) {
-      if (other == UserLocation.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.bo.user.UserLocation other) {
+      if (other == im.turms.common.model.bo.user.UserLocation.getDefaultInstance()) return this;
       if (other.getLatitude() != 0F) {
         setLatitude(other.getLatitude());
       }
@@ -634,11 +645,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      UserLocation parsedMessage = null;
+      im.turms.common.model.bo.user.UserLocation parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (UserLocation) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.bo.user.UserLocation) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -653,6 +664,7 @@ private static final long serialVersionUID = 0L;
      * <code>float latitude = 1;</code>
      * @return The latitude.
      */
+    @java.lang.Override
     public float getLatitude() {
       return latitude_;
     }
@@ -683,6 +695,7 @@ private static final long serialVersionUID = 0L;
      * <code>float longitude = 2;</code>
      * @return The longitude.
      */
+    @java.lang.Override
     public float getLongitude() {
       return longitude_;
     }
@@ -1081,12 +1094,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.UserLocation)
-  private static final UserLocation DEFAULT_INSTANCE;
+  private static final im.turms.common.model.bo.user.UserLocation DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new UserLocation();
+    DEFAULT_INSTANCE = new im.turms.common.model.bo.user.UserLocation();
   }
 
-  public static UserLocation getDefaultInstance() {
+  public static im.turms.common.model.bo.user.UserLocation getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -1111,7 +1124,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public UserLocation getDefaultInstanceForType() {
+  public im.turms.common.model.bo.user.UserLocation getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

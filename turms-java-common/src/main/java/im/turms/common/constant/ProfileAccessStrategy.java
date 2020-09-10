@@ -99,6 +99,10 @@ public enum ProfileAccessStrategy
 
   public final com.google.protobuf.Descriptors.EnumValueDescriptor
       getValueDescriptor() {
+    if (this == UNRECOGNIZED) {
+      throw new java.lang.IllegalStateException(
+          "Can't get the descriptor of an unrecognized enum value.");
+    }
     return getDescriptor().getValues().get(ordinal());
   }
   public final com.google.protobuf.Descriptors.EnumDescriptor
@@ -107,7 +111,7 @@ public enum ProfileAccessStrategy
   }
   public static final com.google.protobuf.Descriptors.EnumDescriptor
       getDescriptor() {
-    return ProfileAccessStrategyOuterClass.getDescriptor().getEnumTypes().get(0);
+    return im.turms.common.constant.ProfileAccessStrategyOuterClass.getDescriptor().getEnumTypes().get(0);
   }
 
   private static final ProfileAccessStrategy[] VALUES = values();

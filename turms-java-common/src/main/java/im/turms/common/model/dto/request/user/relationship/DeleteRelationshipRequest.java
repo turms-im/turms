@@ -23,7 +23,7 @@ package im.turms.common.model.dto.request.user.relationship;
 /**
  * Protobuf type {@code im.turms.proto.DeleteRelationshipRequest}
  */
-public  final class DeleteRelationshipRequest extends
+public final class DeleteRelationshipRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.DeleteRelationshipRequest)
     DeleteRelationshipRequestOrBuilder {
@@ -117,15 +117,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return DeleteRelationshipRequestOuterClass.internal_static_im_turms_proto_DeleteRelationshipRequest_descriptor;
+    return im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequestOuterClass.internal_static_im_turms_proto_DeleteRelationshipRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return DeleteRelationshipRequestOuterClass.internal_static_im_turms_proto_DeleteRelationshipRequest_fieldAccessorTable
+    return im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequestOuterClass.internal_static_im_turms_proto_DeleteRelationshipRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            DeleteRelationshipRequest.class, DeleteRelationshipRequest.Builder.class);
+            im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest.class, im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest.Builder.class);
   }
 
   public static final int RELATED_USER_ID_FIELD_NUMBER = 1;
@@ -134,6 +134,7 @@ private static final long serialVersionUID = 0L;
    * <code>int64 related_user_id = 1;</code>
    * @return The relatedUserId.
    */
+  @java.lang.Override
   public long getRelatedUserId() {
     return relatedUserId_;
   }
@@ -144,6 +145,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int32Value group_index = 2;</code>
    * @return Whether the groupIndex field is set.
    */
+  @java.lang.Override
   public boolean hasGroupIndex() {
     return groupIndex_ != null;
   }
@@ -151,12 +153,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int32Value group_index = 2;</code>
    * @return The groupIndex.
    */
+  @java.lang.Override
   public com.google.protobuf.Int32Value getGroupIndex() {
     return groupIndex_ == null ? com.google.protobuf.Int32Value.getDefaultInstance() : groupIndex_;
   }
   /**
    * <code>.google.protobuf.Int32Value group_index = 2;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int32ValueOrBuilder getGroupIndexOrBuilder() {
     return getGroupIndex();
   }
@@ -167,6 +171,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int32Value target_group_index = 3;</code>
    * @return Whether the targetGroupIndex field is set.
    */
+  @java.lang.Override
   public boolean hasTargetGroupIndex() {
     return targetGroupIndex_ != null;
   }
@@ -174,12 +179,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int32Value target_group_index = 3;</code>
    * @return The targetGroupIndex.
    */
+  @java.lang.Override
   public com.google.protobuf.Int32Value getTargetGroupIndex() {
     return targetGroupIndex_ == null ? com.google.protobuf.Int32Value.getDefaultInstance() : targetGroupIndex_;
   }
   /**
    * <code>.google.protobuf.Int32Value target_group_index = 3;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int32ValueOrBuilder getTargetGroupIndexOrBuilder() {
     return getTargetGroupIndex();
   }
@@ -238,10 +245,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof DeleteRelationshipRequest)) {
+    if (!(obj instanceof im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest)) {
       return super.equals(obj);
     }
-    DeleteRelationshipRequest other = (DeleteRelationshipRequest) obj;
+    im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest other = (im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest) obj;
 
     if (getRelatedUserId()
         != other.getRelatedUserId()) return false;
@@ -282,69 +289,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static DeleteRelationshipRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static DeleteRelationshipRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static DeleteRelationshipRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static DeleteRelationshipRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static DeleteRelationshipRequest parseFrom(byte[] data)
+  public static im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static DeleteRelationshipRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static DeleteRelationshipRequest parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static DeleteRelationshipRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static DeleteRelationshipRequest parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static DeleteRelationshipRequest parseDelimitedFrom(
+  public static im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static DeleteRelationshipRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static DeleteRelationshipRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -357,7 +364,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(DeleteRelationshipRequest prototype) {
+  public static Builder newBuilder(im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -378,18 +385,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.DeleteRelationshipRequest)
-          DeleteRelationshipRequestOrBuilder {
+      im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return DeleteRelationshipRequestOuterClass.internal_static_im_turms_proto_DeleteRelationshipRequest_descriptor;
+      return im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequestOuterClass.internal_static_im_turms_proto_DeleteRelationshipRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return DeleteRelationshipRequestOuterClass.internal_static_im_turms_proto_DeleteRelationshipRequest_fieldAccessorTable
+      return im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequestOuterClass.internal_static_im_turms_proto_DeleteRelationshipRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              DeleteRelationshipRequest.class, DeleteRelationshipRequest.Builder.class);
+              im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest.class, im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest.Builder.class);
     }
 
     // Construct using im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest.newBuilder()
@@ -430,17 +437,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return DeleteRelationshipRequestOuterClass.internal_static_im_turms_proto_DeleteRelationshipRequest_descriptor;
+      return im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequestOuterClass.internal_static_im_turms_proto_DeleteRelationshipRequest_descriptor;
     }
 
     @java.lang.Override
-    public DeleteRelationshipRequest getDefaultInstanceForType() {
-      return DeleteRelationshipRequest.getDefaultInstance();
+    public im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest getDefaultInstanceForType() {
+      return im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public DeleteRelationshipRequest build() {
-      DeleteRelationshipRequest result = buildPartial();
+    public im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest build() {
+      im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -448,8 +455,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public DeleteRelationshipRequest buildPartial() {
-      DeleteRelationshipRequest result = new DeleteRelationshipRequest(this);
+    public im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest buildPartial() {
+      im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest result = new im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest(this);
       result.relatedUserId_ = relatedUserId_;
       if (groupIndexBuilder_ == null) {
         result.groupIndex_ = groupIndex_;
@@ -499,16 +506,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof DeleteRelationshipRequest) {
-        return mergeFrom((DeleteRelationshipRequest)other);
+      if (other instanceof im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest) {
+        return mergeFrom((im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(DeleteRelationshipRequest other) {
-      if (other == DeleteRelationshipRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest other) {
+      if (other == im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest.getDefaultInstance()) return this;
       if (other.getRelatedUserId() != 0L) {
         setRelatedUserId(other.getRelatedUserId());
       }
@@ -533,11 +540,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      DeleteRelationshipRequest parsedMessage = null;
+      im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (DeleteRelationshipRequest) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -552,6 +559,7 @@ private static final long serialVersionUID = 0L;
      * <code>int64 related_user_id = 1;</code>
      * @return The relatedUserId.
      */
+    @java.lang.Override
     public long getRelatedUserId() {
       return relatedUserId_;
     }
@@ -831,12 +839,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.DeleteRelationshipRequest)
-  private static final DeleteRelationshipRequest DEFAULT_INSTANCE;
+  private static final im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new DeleteRelationshipRequest();
+    DEFAULT_INSTANCE = new im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest();
   }
 
-  public static DeleteRelationshipRequest getDefaultInstance() {
+  public static im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -861,7 +869,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public DeleteRelationshipRequest getDefaultInstanceForType() {
+  public im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

@@ -20,8 +20,6 @@
 
 package im.turms.common.model.dto.request.user;
 
-import im.turms.common.constant.ProfileAccessStrategy;
-
 public interface UpdateUserRequestOrBuilder extends
     // @@protoc_insertion_point(interface_extends:im.turms.proto.UpdateUserRequest)
     com.google.protobuf.MessageOrBuilder {
@@ -80,5 +78,5 @@ public interface UpdateUserRequestOrBuilder extends
    * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
    * @return The profileAccessStrategy.
    */
-  ProfileAccessStrategy getProfileAccessStrategy();
+  im.turms.common.constant.ProfileAccessStrategy getProfileAccessStrategy();
 }

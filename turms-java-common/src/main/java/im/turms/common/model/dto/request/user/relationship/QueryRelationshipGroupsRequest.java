@@ -23,7 +23,7 @@ package im.turms.common.model.dto.request.user.relationship;
 /**
  * Protobuf type {@code im.turms.proto.QueryRelationshipGroupsRequest}
  */
-public  final class QueryRelationshipGroupsRequest extends
+public final class QueryRelationshipGroupsRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.QueryRelationshipGroupsRequest)
     QueryRelationshipGroupsRequestOrBuilder {
@@ -99,15 +99,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return QueryRelationshipGroupsRequestOuterClass.internal_static_im_turms_proto_QueryRelationshipGroupsRequest_descriptor;
+    return im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequestOuterClass.internal_static_im_turms_proto_QueryRelationshipGroupsRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return QueryRelationshipGroupsRequestOuterClass.internal_static_im_turms_proto_QueryRelationshipGroupsRequest_fieldAccessorTable
+    return im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequestOuterClass.internal_static_im_turms_proto_QueryRelationshipGroupsRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            QueryRelationshipGroupsRequest.class, QueryRelationshipGroupsRequest.Builder.class);
+            im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest.class, im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest.Builder.class);
   }
 
   public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 1;
@@ -116,6 +116,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value last_updated_date = 1;</code>
    * @return Whether the lastUpdatedDate field is set.
    */
+  @java.lang.Override
   public boolean hasLastUpdatedDate() {
     return lastUpdatedDate_ != null;
   }
@@ -123,12 +124,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value last_updated_date = 1;</code>
    * @return The lastUpdatedDate.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getLastUpdatedDate() {
     return lastUpdatedDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : lastUpdatedDate_;
   }
   /**
    * <code>.google.protobuf.Int64Value last_updated_date = 1;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getLastUpdatedDateOrBuilder() {
     return getLastUpdatedDate();
   }
@@ -173,10 +176,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof QueryRelationshipGroupsRequest)) {
+    if (!(obj instanceof im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest)) {
       return super.equals(obj);
     }
-    QueryRelationshipGroupsRequest other = (QueryRelationshipGroupsRequest) obj;
+    im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest other = (im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest) obj;
 
     if (hasLastUpdatedDate() != other.hasLastUpdatedDate()) return false;
     if (hasLastUpdatedDate()) {
@@ -203,69 +206,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static QueryRelationshipGroupsRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static QueryRelationshipGroupsRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static QueryRelationshipGroupsRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static QueryRelationshipGroupsRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static QueryRelationshipGroupsRequest parseFrom(byte[] data)
+  public static im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static QueryRelationshipGroupsRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static QueryRelationshipGroupsRequest parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static QueryRelationshipGroupsRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static QueryRelationshipGroupsRequest parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static QueryRelationshipGroupsRequest parseDelimitedFrom(
+  public static im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static QueryRelationshipGroupsRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static QueryRelationshipGroupsRequest parseFrom(
+  public static im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -278,7 +281,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(QueryRelationshipGroupsRequest prototype) {
+  public static Builder newBuilder(im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -299,18 +302,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.QueryRelationshipGroupsRequest)
-          QueryRelationshipGroupsRequestOrBuilder {
+      im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return QueryRelationshipGroupsRequestOuterClass.internal_static_im_turms_proto_QueryRelationshipGroupsRequest_descriptor;
+      return im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequestOuterClass.internal_static_im_turms_proto_QueryRelationshipGroupsRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return QueryRelationshipGroupsRequestOuterClass.internal_static_im_turms_proto_QueryRelationshipGroupsRequest_fieldAccessorTable
+      return im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequestOuterClass.internal_static_im_turms_proto_QueryRelationshipGroupsRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              QueryRelationshipGroupsRequest.class, QueryRelationshipGroupsRequest.Builder.class);
+              im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest.class, im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest.Builder.class);
     }
 
     // Construct using im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest.newBuilder()
@@ -343,17 +346,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return QueryRelationshipGroupsRequestOuterClass.internal_static_im_turms_proto_QueryRelationshipGroupsRequest_descriptor;
+      return im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequestOuterClass.internal_static_im_turms_proto_QueryRelationshipGroupsRequest_descriptor;
     }
 
     @java.lang.Override
-    public QueryRelationshipGroupsRequest getDefaultInstanceForType() {
-      return QueryRelationshipGroupsRequest.getDefaultInstance();
+    public im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest getDefaultInstanceForType() {
+      return im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public QueryRelationshipGroupsRequest build() {
-      QueryRelationshipGroupsRequest result = buildPartial();
+    public im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest build() {
+      im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -361,8 +364,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public QueryRelationshipGroupsRequest buildPartial() {
-      QueryRelationshipGroupsRequest result = new QueryRelationshipGroupsRequest(this);
+    public im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest buildPartial() {
+      im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest result = new im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest(this);
       if (lastUpdatedDateBuilder_ == null) {
         result.lastUpdatedDate_ = lastUpdatedDate_;
       } else {
@@ -406,16 +409,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof QueryRelationshipGroupsRequest) {
-        return mergeFrom((QueryRelationshipGroupsRequest)other);
+      if (other instanceof im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest) {
+        return mergeFrom((im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(QueryRelationshipGroupsRequest other) {
-      if (other == QueryRelationshipGroupsRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest other) {
+      if (other == im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest.getDefaultInstance()) return this;
       if (other.hasLastUpdatedDate()) {
         mergeLastUpdatedDate(other.getLastUpdatedDate());
       }
@@ -434,11 +437,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      QueryRelationshipGroupsRequest parsedMessage = null;
+      im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (QueryRelationshipGroupsRequest) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -583,12 +586,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.QueryRelationshipGroupsRequest)
-  private static final QueryRelationshipGroupsRequest DEFAULT_INSTANCE;
+  private static final im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new QueryRelationshipGroupsRequest();
+    DEFAULT_INSTANCE = new im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest();
   }
 
-  public static QueryRelationshipGroupsRequest getDefaultInstance() {
+  public static im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -613,7 +616,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public QueryRelationshipGroupsRequest getDefaultInstanceForType() {
+  public im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

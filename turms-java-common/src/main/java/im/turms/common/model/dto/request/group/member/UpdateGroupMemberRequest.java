@@ -20,12 +20,10 @@
 
 package im.turms.common.model.dto.request.group.member;
 
-import im.turms.common.constant.GroupMemberRole;
-
 /**
  * Protobuf type {@code im.turms.proto.UpdateGroupMemberRequest}
  */
-public  final class UpdateGroupMemberRequest extends
+public final class UpdateGroupMemberRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.UpdateGroupMemberRequest)
     UpdateGroupMemberRequestOrBuilder {
@@ -131,15 +129,15 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return UpdateGroupMemberRequestOuterClass.internal_static_im_turms_proto_UpdateGroupMemberRequest_descriptor;
+    return im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequestOuterClass.internal_static_im_turms_proto_UpdateGroupMemberRequest_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return UpdateGroupMemberRequestOuterClass.internal_static_im_turms_proto_UpdateGroupMemberRequest_fieldAccessorTable
+    return im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequestOuterClass.internal_static_im_turms_proto_UpdateGroupMemberRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            UpdateGroupMemberRequest.class, UpdateGroupMemberRequest.Builder.class);
+            im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest.class, im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest.Builder.class);
   }
 
   public static final int GROUP_ID_FIELD_NUMBER = 1;
@@ -148,6 +146,7 @@ private static final long serialVersionUID = 0L;
    * <code>int64 group_id = 1;</code>
    * @return The groupId.
    */
+  @java.lang.Override
   public long getGroupId() {
     return groupId_;
   }
@@ -158,6 +157,7 @@ private static final long serialVersionUID = 0L;
    * <code>int64 member_id = 2;</code>
    * @return The memberId.
    */
+  @java.lang.Override
   public long getMemberId() {
     return memberId_;
   }
@@ -168,6 +168,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue name = 3;</code>
    * @return Whether the name field is set.
    */
+  @java.lang.Override
   public boolean hasName() {
     return name_ != null;
   }
@@ -175,12 +176,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.StringValue name = 3;</code>
    * @return The name.
    */
+  @java.lang.Override
   public com.google.protobuf.StringValue getName() {
     return name_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : name_;
   }
   /**
    * <code>.google.protobuf.StringValue name = 3;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.StringValueOrBuilder getNameOrBuilder() {
     return getName();
   }
@@ -191,17 +194,17 @@ private static final long serialVersionUID = 0L;
    * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
    * @return The enum numeric value on the wire for role.
    */
-  public int getRoleValue() {
+  @java.lang.Override public int getRoleValue() {
     return role_;
   }
   /**
    * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
    * @return The role.
    */
-  public GroupMemberRole getRole() {
+  @java.lang.Override public im.turms.common.constant.GroupMemberRole getRole() {
     @SuppressWarnings("deprecation")
-    GroupMemberRole result = GroupMemberRole.valueOf(role_);
-    return result == null ? GroupMemberRole.UNRECOGNIZED : result;
+    im.turms.common.constant.GroupMemberRole result = im.turms.common.constant.GroupMemberRole.valueOf(role_);
+    return result == null ? im.turms.common.constant.GroupMemberRole.UNRECOGNIZED : result;
   }
 
   public static final int MUTE_END_DATE_FIELD_NUMBER = 5;
@@ -210,6 +213,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value mute_end_date = 5;</code>
    * @return Whether the muteEndDate field is set.
    */
+  @java.lang.Override
   public boolean hasMuteEndDate() {
     return muteEndDate_ != null;
   }
@@ -217,12 +221,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value mute_end_date = 5;</code>
    * @return The muteEndDate.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getMuteEndDate() {
     return muteEndDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : muteEndDate_;
   }
   /**
    * <code>.google.protobuf.Int64Value mute_end_date = 5;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getMuteEndDateOrBuilder() {
     return getMuteEndDate();
   }
@@ -250,7 +256,7 @@ private static final long serialVersionUID = 0L;
     if (name_ != null) {
       output.writeMessage(3, getName());
     }
-    if (role_ != GroupMemberRole.OWNER.getNumber()) {
+    if (role_ != im.turms.common.constant.GroupMemberRole.OWNER.getNumber()) {
       output.writeEnum(4, role_);
     }
     if (muteEndDate_ != null) {
@@ -277,7 +283,7 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(3, getName());
     }
-    if (role_ != GroupMemberRole.OWNER.getNumber()) {
+    if (role_ != im.turms.common.constant.GroupMemberRole.OWNER.getNumber()) {
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(4, role_);
     }
@@ -295,10 +301,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof UpdateGroupMemberRequest)) {
+    if (!(obj instanceof im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest)) {
       return super.equals(obj);
     }
-    UpdateGroupMemberRequest other = (UpdateGroupMemberRequest) obj;
+    im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest other = (im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest) obj;
 
     if (getGroupId()
         != other.getGroupId()) return false;
@@ -347,69 +353,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static UpdateGroupMemberRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UpdateGroupMemberRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UpdateGroupMemberRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UpdateGroupMemberRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UpdateGroupMemberRequest parseFrom(byte[] data)
+  public static im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UpdateGroupMemberRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UpdateGroupMemberRequest parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UpdateGroupMemberRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UpdateGroupMemberRequest parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static UpdateGroupMemberRequest parseDelimitedFrom(
+  public static im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UpdateGroupMemberRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UpdateGroupMemberRequest parseFrom(
+  public static im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -422,7 +428,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(UpdateGroupMemberRequest prototype) {
+  public static Builder newBuilder(im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -443,18 +449,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.UpdateGroupMemberRequest)
-          UpdateGroupMemberRequestOrBuilder {
+      im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return UpdateGroupMemberRequestOuterClass.internal_static_im_turms_proto_UpdateGroupMemberRequest_descriptor;
+      return im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequestOuterClass.internal_static_im_turms_proto_UpdateGroupMemberRequest_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return UpdateGroupMemberRequestOuterClass.internal_static_im_turms_proto_UpdateGroupMemberRequest_fieldAccessorTable
+      return im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequestOuterClass.internal_static_im_turms_proto_UpdateGroupMemberRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              UpdateGroupMemberRequest.class, UpdateGroupMemberRequest.Builder.class);
+              im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest.class, im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest.Builder.class);
     }
 
     // Construct using im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest.newBuilder()
@@ -499,17 +505,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return UpdateGroupMemberRequestOuterClass.internal_static_im_turms_proto_UpdateGroupMemberRequest_descriptor;
+      return im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequestOuterClass.internal_static_im_turms_proto_UpdateGroupMemberRequest_descriptor;
     }
 
     @java.lang.Override
-    public UpdateGroupMemberRequest getDefaultInstanceForType() {
-      return UpdateGroupMemberRequest.getDefaultInstance();
+    public im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest getDefaultInstanceForType() {
+      return im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest.getDefaultInstance();
     }
 
     @java.lang.Override
-    public UpdateGroupMemberRequest build() {
-      UpdateGroupMemberRequest result = buildPartial();
+    public im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest build() {
+      im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -517,8 +523,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public UpdateGroupMemberRequest buildPartial() {
-      UpdateGroupMemberRequest result = new UpdateGroupMemberRequest(this);
+    public im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest buildPartial() {
+      im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest result = new im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest(this);
       result.groupId_ = groupId_;
       result.memberId_ = memberId_;
       if (nameBuilder_ == null) {
@@ -570,16 +576,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof UpdateGroupMemberRequest) {
-        return mergeFrom((UpdateGroupMemberRequest)other);
+      if (other instanceof im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest) {
+        return mergeFrom((im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(UpdateGroupMemberRequest other) {
-      if (other == UpdateGroupMemberRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest other) {
+      if (other == im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest.getDefaultInstance()) return this;
       if (other.getGroupId() != 0L) {
         setGroupId(other.getGroupId());
       }
@@ -610,11 +616,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      UpdateGroupMemberRequest parsedMessage = null;
+      im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (UpdateGroupMemberRequest) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -629,6 +635,7 @@ private static final long serialVersionUID = 0L;
      * <code>int64 group_id = 1;</code>
      * @return The groupId.
      */
+    @java.lang.Override
     public long getGroupId() {
       return groupId_;
     }
@@ -659,6 +666,7 @@ private static final long serialVersionUID = 0L;
      * <code>int64 member_id = 2;</code>
      * @return The memberId.
      */
+    @java.lang.Override
     public long getMemberId() {
       return memberId_;
     }
@@ -808,7 +816,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
      * @return The enum numeric value on the wire for role.
      */
-    public int getRoleValue() {
+    @java.lang.Override public int getRoleValue() {
       return role_;
     }
     /**
@@ -817,6 +825,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setRoleValue(int value) {
+      
       role_ = value;
       onChanged();
       return this;
@@ -825,17 +834,18 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
      * @return The role.
      */
-    public GroupMemberRole getRole() {
+    @java.lang.Override
+    public im.turms.common.constant.GroupMemberRole getRole() {
       @SuppressWarnings("deprecation")
-      GroupMemberRole result = GroupMemberRole.valueOf(role_);
-      return result == null ? GroupMemberRole.UNRECOGNIZED : result;
+      im.turms.common.constant.GroupMemberRole result = im.turms.common.constant.GroupMemberRole.valueOf(role_);
+      return result == null ? im.turms.common.constant.GroupMemberRole.UNRECOGNIZED : result;
     }
     /**
      * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
      * @param value The role to set.
      * @return This builder for chaining.
      */
-    public Builder setRole(GroupMemberRole value) {
+    public Builder setRole(im.turms.common.constant.GroupMemberRole value) {
       if (value == null) {
         throw new NullPointerException();
       }
@@ -990,12 +1000,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.UpdateGroupMemberRequest)
-  private static final UpdateGroupMemberRequest DEFAULT_INSTANCE;
+  private static final im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new UpdateGroupMemberRequest();
+    DEFAULT_INSTANCE = new im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest();
   }
 
-  public static UpdateGroupMemberRequest getDefaultInstance() {
+  public static im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -1020,7 +1030,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public UpdateGroupMemberRequest getDefaultInstanceForType() {
+  public im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

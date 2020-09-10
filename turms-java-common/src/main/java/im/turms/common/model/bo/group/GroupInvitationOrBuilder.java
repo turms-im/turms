@@ -20,8 +20,6 @@
 
 package im.turms.common.model.bo.group;
 
-import im.turms.common.constant.RequestStatus;
-
 public interface GroupInvitationOrBuilder extends
     // @@protoc_insertion_point(interface_extends:im.turms.proto.GroupInvitation)
     com.google.protobuf.MessageOrBuilder {
@@ -80,7 +78,7 @@ public interface GroupInvitationOrBuilder extends
    * <code>.im.turms.proto.RequestStatus status = 4;</code>
    * @return The status.
    */
-  RequestStatus getStatus();
+  im.turms.common.constant.RequestStatus getStatus();
 
   /**
    * <code>.google.protobuf.Int64Value expiration_date = 5;</code>

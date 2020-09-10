@@ -59,7 +59,7 @@ public final class UserRelationshipGroupsWithVersionOuterClass {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.WrappersProto.getDescriptor(),
-          UserRelationshipGroupOuterClass.getDescriptor(),
+          im.turms.common.model.bo.user.UserRelationshipGroupOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_UserRelationshipGroupsWithVersion_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -68,7 +68,7 @@ public final class UserRelationshipGroupsWithVersionOuterClass {
         internal_static_im_turms_proto_UserRelationshipGroupsWithVersion_descriptor,
         new java.lang.String[] { "UserRelationshipGroups", "LastUpdatedDate", });
     com.google.protobuf.WrappersProto.getDescriptor();
-    UserRelationshipGroupOuterClass.getDescriptor();
+    im.turms.common.model.bo.user.UserRelationshipGroupOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

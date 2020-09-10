@@ -33,11 +33,11 @@ public interface ImageFileOrBuilder extends
    * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
    * @return The description.
    */
-  ImageFile.Description getDescription();
+  im.turms.common.model.bo.file.ImageFile.Description getDescription();
   /**
    * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
    */
-  ImageFile.DescriptionOrBuilder getDescriptionOrBuilder();
+  im.turms.common.model.bo.file.ImageFile.DescriptionOrBuilder getDescriptionOrBuilder();
 
   /**
    * <code>.google.protobuf.BytesValue data = 2;</code>

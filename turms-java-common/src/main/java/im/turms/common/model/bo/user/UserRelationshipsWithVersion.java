@@ -23,7 +23,7 @@ package im.turms.common.model.bo.user;
 /**
  * Protobuf type {@code im.turms.proto.UserRelationshipsWithVersion}
  */
-public  final class UserRelationshipsWithVersion extends
+public final class UserRelationshipsWithVersion extends
     com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:im.turms.proto.UserRelationshipsWithVersion)
     UserRelationshipsWithVersionOrBuilder {
@@ -69,11 +69,11 @@ private static final long serialVersionUID = 0L;
             break;
           case 10: {
             if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-              userRelationships_ = new java.util.ArrayList<UserRelationship>();
+              userRelationships_ = new java.util.ArrayList<im.turms.common.model.bo.user.UserRelationship>();
               mutable_bitField0_ |= 0x00000001;
             }
             userRelationships_.add(
-                input.readMessage(UserRelationship.parser(), extensionRegistry));
+                input.readMessage(im.turms.common.model.bo.user.UserRelationship.parser(), extensionRegistry));
             break;
           }
           case 18: {
@@ -113,48 +113,53 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return UserRelationshipsWithVersionOuterClass.internal_static_im_turms_proto_UserRelationshipsWithVersion_descriptor;
+    return im.turms.common.model.bo.user.UserRelationshipsWithVersionOuterClass.internal_static_im_turms_proto_UserRelationshipsWithVersion_descriptor;
   }
 
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return UserRelationshipsWithVersionOuterClass.internal_static_im_turms_proto_UserRelationshipsWithVersion_fieldAccessorTable
+    return im.turms.common.model.bo.user.UserRelationshipsWithVersionOuterClass.internal_static_im_turms_proto_UserRelationshipsWithVersion_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            UserRelationshipsWithVersion.class, UserRelationshipsWithVersion.Builder.class);
+            im.turms.common.model.bo.user.UserRelationshipsWithVersion.class, im.turms.common.model.bo.user.UserRelationshipsWithVersion.Builder.class);
   }
 
   public static final int USER_RELATIONSHIPS_FIELD_NUMBER = 1;
-  private java.util.List<UserRelationship> userRelationships_;
+  private java.util.List<im.turms.common.model.bo.user.UserRelationship> userRelationships_;
   /**
    * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
    */
-  public java.util.List<UserRelationship> getUserRelationshipsList() {
+  @java.lang.Override
+  public java.util.List<im.turms.common.model.bo.user.UserRelationship> getUserRelationshipsList() {
     return userRelationships_;
   }
   /**
    * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
    */
-  public java.util.List<? extends UserRelationshipOrBuilder>
+  @java.lang.Override
+  public java.util.List<? extends im.turms.common.model.bo.user.UserRelationshipOrBuilder> 
       getUserRelationshipsOrBuilderList() {
     return userRelationships_;
   }
   /**
    * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
    */
+  @java.lang.Override
   public int getUserRelationshipsCount() {
     return userRelationships_.size();
   }
   /**
    * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
    */
-  public UserRelationship getUserRelationships(int index) {
+  @java.lang.Override
+  public im.turms.common.model.bo.user.UserRelationship getUserRelationships(int index) {
     return userRelationships_.get(index);
   }
   /**
    * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
    */
-  public UserRelationshipOrBuilder getUserRelationshipsOrBuilder(
+  @java.lang.Override
+  public im.turms.common.model.bo.user.UserRelationshipOrBuilder getUserRelationshipsOrBuilder(
       int index) {
     return userRelationships_.get(index);
   }
@@ -165,6 +170,7 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
    * @return Whether the lastUpdatedDate field is set.
    */
+  @java.lang.Override
   public boolean hasLastUpdatedDate() {
     return lastUpdatedDate_ != null;
   }
@@ -172,12 +178,14 @@ private static final long serialVersionUID = 0L;
    * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
    * @return The lastUpdatedDate.
    */
+  @java.lang.Override
   public com.google.protobuf.Int64Value getLastUpdatedDate() {
     return lastUpdatedDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : lastUpdatedDate_;
   }
   /**
    * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
    */
+  @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getLastUpdatedDateOrBuilder() {
     return getLastUpdatedDate();
   }
@@ -229,10 +237,10 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof UserRelationshipsWithVersion)) {
+    if (!(obj instanceof im.turms.common.model.bo.user.UserRelationshipsWithVersion)) {
       return super.equals(obj);
     }
-    UserRelationshipsWithVersion other = (UserRelationshipsWithVersion) obj;
+    im.turms.common.model.bo.user.UserRelationshipsWithVersion other = (im.turms.common.model.bo.user.UserRelationshipsWithVersion) obj;
 
     if (!getUserRelationshipsList()
         .equals(other.getUserRelationshipsList())) return false;
@@ -265,69 +273,69 @@ private static final long serialVersionUID = 0L;
     return hash;
   }
 
-  public static UserRelationshipsWithVersion parseFrom(
+  public static im.turms.common.model.bo.user.UserRelationshipsWithVersion parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UserRelationshipsWithVersion parseFrom(
+  public static im.turms.common.model.bo.user.UserRelationshipsWithVersion parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UserRelationshipsWithVersion parseFrom(
+  public static im.turms.common.model.bo.user.UserRelationshipsWithVersion parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UserRelationshipsWithVersion parseFrom(
+  public static im.turms.common.model.bo.user.UserRelationshipsWithVersion parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UserRelationshipsWithVersion parseFrom(byte[] data)
+  public static im.turms.common.model.bo.user.UserRelationshipsWithVersion parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static UserRelationshipsWithVersion parseFrom(
+  public static im.turms.common.model.bo.user.UserRelationshipsWithVersion parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static UserRelationshipsWithVersion parseFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.user.UserRelationshipsWithVersion parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UserRelationshipsWithVersion parseFrom(
+  public static im.turms.common.model.bo.user.UserRelationshipsWithVersion parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UserRelationshipsWithVersion parseDelimitedFrom(java.io.InputStream input)
+  public static im.turms.common.model.bo.user.UserRelationshipsWithVersion parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static UserRelationshipsWithVersion parseDelimitedFrom(
+  public static im.turms.common.model.bo.user.UserRelationshipsWithVersion parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static UserRelationshipsWithVersion parseFrom(
+  public static im.turms.common.model.bo.user.UserRelationshipsWithVersion parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static UserRelationshipsWithVersion parseFrom(
+  public static im.turms.common.model.bo.user.UserRelationshipsWithVersion parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -340,7 +348,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(UserRelationshipsWithVersion prototype) {
+  public static Builder newBuilder(im.turms.common.model.bo.user.UserRelationshipsWithVersion prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @java.lang.Override
@@ -361,18 +369,18 @@ private static final long serialVersionUID = 0L;
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:im.turms.proto.UserRelationshipsWithVersion)
-          UserRelationshipsWithVersionOrBuilder {
+      im.turms.common.model.bo.user.UserRelationshipsWithVersionOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return UserRelationshipsWithVersionOuterClass.internal_static_im_turms_proto_UserRelationshipsWithVersion_descriptor;
+      return im.turms.common.model.bo.user.UserRelationshipsWithVersionOuterClass.internal_static_im_turms_proto_UserRelationshipsWithVersion_descriptor;
     }
 
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return UserRelationshipsWithVersionOuterClass.internal_static_im_turms_proto_UserRelationshipsWithVersion_fieldAccessorTable
+      return im.turms.common.model.bo.user.UserRelationshipsWithVersionOuterClass.internal_static_im_turms_proto_UserRelationshipsWithVersion_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              UserRelationshipsWithVersion.class, UserRelationshipsWithVersion.Builder.class);
+              im.turms.common.model.bo.user.UserRelationshipsWithVersion.class, im.turms.common.model.bo.user.UserRelationshipsWithVersion.Builder.class);
     }
 
     // Construct using im.turms.common.model.bo.user.UserRelationshipsWithVersion.newBuilder()
@@ -412,17 +420,17 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return UserRelationshipsWithVersionOuterClass.internal_static_im_turms_proto_UserRelationshipsWithVersion_descriptor;
+      return im.turms.common.model.bo.user.UserRelationshipsWithVersionOuterClass.internal_static_im_turms_proto_UserRelationshipsWithVersion_descriptor;
     }
 
     @java.lang.Override
-    public UserRelationshipsWithVersion getDefaultInstanceForType() {
-      return UserRelationshipsWithVersion.getDefaultInstance();
+    public im.turms.common.model.bo.user.UserRelationshipsWithVersion getDefaultInstanceForType() {
+      return im.turms.common.model.bo.user.UserRelationshipsWithVersion.getDefaultInstance();
     }
 
     @java.lang.Override
-    public UserRelationshipsWithVersion build() {
-      UserRelationshipsWithVersion result = buildPartial();
+    public im.turms.common.model.bo.user.UserRelationshipsWithVersion build() {
+      im.turms.common.model.bo.user.UserRelationshipsWithVersion result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -430,8 +438,8 @@ private static final long serialVersionUID = 0L;
     }
 
     @java.lang.Override
-    public UserRelationshipsWithVersion buildPartial() {
-      UserRelationshipsWithVersion result = new UserRelationshipsWithVersion(this);
+    public im.turms.common.model.bo.user.UserRelationshipsWithVersion buildPartial() {
+      im.turms.common.model.bo.user.UserRelationshipsWithVersion result = new im.turms.common.model.bo.user.UserRelationshipsWithVersion(this);
       int from_bitField0_ = bitField0_;
       if (userRelationshipsBuilder_ == null) {
         if (((bitField0_ & 0x00000001) != 0)) {
@@ -485,16 +493,16 @@ private static final long serialVersionUID = 0L;
     }
     @java.lang.Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof UserRelationshipsWithVersion) {
-        return mergeFrom((UserRelationshipsWithVersion)other);
+      if (other instanceof im.turms.common.model.bo.user.UserRelationshipsWithVersion) {
+        return mergeFrom((im.turms.common.model.bo.user.UserRelationshipsWithVersion)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(UserRelationshipsWithVersion other) {
-      if (other == UserRelationshipsWithVersion.getDefaultInstance()) return this;
+    public Builder mergeFrom(im.turms.common.model.bo.user.UserRelationshipsWithVersion other) {
+      if (other == im.turms.common.model.bo.user.UserRelationshipsWithVersion.getDefaultInstance()) return this;
       if (userRelationshipsBuilder_ == null) {
         if (!other.userRelationships_.isEmpty()) {
           if (userRelationships_.isEmpty()) {
@@ -539,11 +547,11 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      UserRelationshipsWithVersion parsedMessage = null;
+      im.turms.common.model.bo.user.UserRelationshipsWithVersion parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (UserRelationshipsWithVersion) e.getUnfinishedMessage();
+        parsedMessage = (im.turms.common.model.bo.user.UserRelationshipsWithVersion) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -554,22 +562,22 @@ private static final long serialVersionUID = 0L;
     }
     private int bitField0_;
 
-    private java.util.List<UserRelationship> userRelationships_ =
+    private java.util.List<im.turms.common.model.bo.user.UserRelationship> userRelationships_ =
       java.util.Collections.emptyList();
     private void ensureUserRelationshipsIsMutable() {
       if (!((bitField0_ & 0x00000001) != 0)) {
-        userRelationships_ = new java.util.ArrayList<UserRelationship>(userRelationships_);
+        userRelationships_ = new java.util.ArrayList<im.turms.common.model.bo.user.UserRelationship>(userRelationships_);
         bitField0_ |= 0x00000001;
        }
     }
 
     private com.google.protobuf.RepeatedFieldBuilderV3<
-            UserRelationship, UserRelationship.Builder, UserRelationshipOrBuilder> userRelationshipsBuilder_;
+        im.turms.common.model.bo.user.UserRelationship, im.turms.common.model.bo.user.UserRelationship.Builder, im.turms.common.model.bo.user.UserRelationshipOrBuilder> userRelationshipsBuilder_;
 
     /**
      * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
      */
-    public java.util.List<UserRelationship> getUserRelationshipsList() {
+    public java.util.List<im.turms.common.model.bo.user.UserRelationship> getUserRelationshipsList() {
       if (userRelationshipsBuilder_ == null) {
         return java.util.Collections.unmodifiableList(userRelationships_);
       } else {
@@ -589,7 +597,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
      */
-    public UserRelationship getUserRelationships(int index) {
+    public im.turms.common.model.bo.user.UserRelationship getUserRelationships(int index) {
       if (userRelationshipsBuilder_ == null) {
         return userRelationships_.get(index);
       } else {
@@ -600,7 +608,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
      */
     public Builder setUserRelationships(
-        int index, UserRelationship value) {
+        int index, im.turms.common.model.bo.user.UserRelationship value) {
       if (userRelationshipsBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -617,7 +625,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
      */
     public Builder setUserRelationships(
-        int index, UserRelationship.Builder builderForValue) {
+        int index, im.turms.common.model.bo.user.UserRelationship.Builder builderForValue) {
       if (userRelationshipsBuilder_ == null) {
         ensureUserRelationshipsIsMutable();
         userRelationships_.set(index, builderForValue.build());
@@ -630,7 +638,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
      */
-    public Builder addUserRelationships(UserRelationship value) {
+    public Builder addUserRelationships(im.turms.common.model.bo.user.UserRelationship value) {
       if (userRelationshipsBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -647,7 +655,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
      */
     public Builder addUserRelationships(
-        int index, UserRelationship value) {
+        int index, im.turms.common.model.bo.user.UserRelationship value) {
       if (userRelationshipsBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
@@ -664,7 +672,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
      */
     public Builder addUserRelationships(
-        UserRelationship.Builder builderForValue) {
+        im.turms.common.model.bo.user.UserRelationship.Builder builderForValue) {
       if (userRelationshipsBuilder_ == null) {
         ensureUserRelationshipsIsMutable();
         userRelationships_.add(builderForValue.build());
@@ -678,7 +686,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
      */
     public Builder addUserRelationships(
-        int index, UserRelationship.Builder builderForValue) {
+        int index, im.turms.common.model.bo.user.UserRelationship.Builder builderForValue) {
       if (userRelationshipsBuilder_ == null) {
         ensureUserRelationshipsIsMutable();
         userRelationships_.add(index, builderForValue.build());
@@ -692,7 +700,7 @@ private static final long serialVersionUID = 0L;
      * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
      */
     public Builder addAllUserRelationships(
-        java.lang.Iterable<? extends UserRelationship> values) {
+        java.lang.Iterable<? extends im.turms.common.model.bo.user.UserRelationship> values) {
       if (userRelationshipsBuilder_ == null) {
         ensureUserRelationshipsIsMutable();
         com.google.protobuf.AbstractMessageLite.Builder.addAll(
@@ -732,14 +740,14 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
      */
-    public UserRelationship.Builder getUserRelationshipsBuilder(
+    public im.turms.common.model.bo.user.UserRelationship.Builder getUserRelationshipsBuilder(
         int index) {
       return getUserRelationshipsFieldBuilder().getBuilder(index);
     }
     /**
      * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
      */
-    public UserRelationshipOrBuilder getUserRelationshipsOrBuilder(
+    public im.turms.common.model.bo.user.UserRelationshipOrBuilder getUserRelationshipsOrBuilder(
         int index) {
       if (userRelationshipsBuilder_ == null) {
         return userRelationships_.get(index);  } else {
@@ -749,7 +757,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
      */
-    public java.util.List<? extends UserRelationshipOrBuilder>
+    public java.util.List<? extends im.turms.common.model.bo.user.UserRelationshipOrBuilder> 
          getUserRelationshipsOrBuilderList() {
       if (userRelationshipsBuilder_ != null) {
         return userRelationshipsBuilder_.getMessageOrBuilderList();
@@ -760,31 +768,31 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
      */
-    public UserRelationship.Builder addUserRelationshipsBuilder() {
+    public im.turms.common.model.bo.user.UserRelationship.Builder addUserRelationshipsBuilder() {
       return getUserRelationshipsFieldBuilder().addBuilder(
-          UserRelationship.getDefaultInstance());
+          im.turms.common.model.bo.user.UserRelationship.getDefaultInstance());
     }
     /**
      * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
      */
-    public UserRelationship.Builder addUserRelationshipsBuilder(
+    public im.turms.common.model.bo.user.UserRelationship.Builder addUserRelationshipsBuilder(
         int index) {
       return getUserRelationshipsFieldBuilder().addBuilder(
-          index, UserRelationship.getDefaultInstance());
+          index, im.turms.common.model.bo.user.UserRelationship.getDefaultInstance());
     }
     /**
      * <code>repeated .im.turms.proto.UserRelationship user_relationships = 1;</code>
      */
-    public java.util.List<UserRelationship.Builder>
+    public java.util.List<im.turms.common.model.bo.user.UserRelationship.Builder> 
          getUserRelationshipsBuilderList() {
       return getUserRelationshipsFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-            UserRelationship, UserRelationship.Builder, UserRelationshipOrBuilder>
+        im.turms.common.model.bo.user.UserRelationship, im.turms.common.model.bo.user.UserRelationship.Builder, im.turms.common.model.bo.user.UserRelationshipOrBuilder> 
         getUserRelationshipsFieldBuilder() {
       if (userRelationshipsBuilder_ == null) {
         userRelationshipsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-                UserRelationship, UserRelationship.Builder, UserRelationshipOrBuilder>(
+            im.turms.common.model.bo.user.UserRelationship, im.turms.common.model.bo.user.UserRelationship.Builder, im.turms.common.model.bo.user.UserRelationshipOrBuilder>(
                 userRelationships_,
                 ((bitField0_ & 0x00000001) != 0),
                 getParentForChildren(),
@@ -929,12 +937,12 @@ private static final long serialVersionUID = 0L;
   }
 
   // @@protoc_insertion_point(class_scope:im.turms.proto.UserRelationshipsWithVersion)
-  private static final UserRelationshipsWithVersion DEFAULT_INSTANCE;
+  private static final im.turms.common.model.bo.user.UserRelationshipsWithVersion DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new UserRelationshipsWithVersion();
+    DEFAULT_INSTANCE = new im.turms.common.model.bo.user.UserRelationshipsWithVersion();
   }
 
-  public static UserRelationshipsWithVersion getDefaultInstance() {
+  public static im.turms.common.model.bo.user.UserRelationshipsWithVersion getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -959,7 +967,7 @@ private static final long serialVersionUID = 0L;
   }
 
   @java.lang.Override
-  public UserRelationshipsWithVersion getDefaultInstanceForType() {
+  public im.turms.common.model.bo.user.UserRelationshipsWithVersion getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

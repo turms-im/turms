@@ -20,8 +20,6 @@
 
 package im.turms.common.model.bo.user;
 
-import im.turms.common.constant.RequestStatus;
-
 public interface UserFriendRequestOrBuilder extends
     // @@protoc_insertion_point(interface_extends:im.turms.proto.UserFriendRequest)
     com.google.protobuf.MessageOrBuilder {
@@ -80,7 +78,7 @@ public interface UserFriendRequestOrBuilder extends
    * <code>.im.turms.proto.RequestStatus request_status = 4;</code>
    * @return The requestStatus.
    */
-  RequestStatus getRequestStatus();
+  im.turms.common.constant.RequestStatus getRequestStatus();
 
   /**
    * <code>.google.protobuf.StringValue reason = 5;</code>

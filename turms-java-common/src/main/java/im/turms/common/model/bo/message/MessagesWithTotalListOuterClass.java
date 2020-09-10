@@ -56,7 +56,7 @@ public final class MessagesWithTotalListOuterClass {
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          MessagesWithTotalOuterClass.getDescriptor(),
+          im.turms.common.model.bo.message.MessagesWithTotalOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_MessagesWithTotalList_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -64,7 +64,7 @@ public final class MessagesWithTotalListOuterClass {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_MessagesWithTotalList_descriptor,
         new java.lang.String[] { "MessagesWithTotalList", });
-    MessagesWithTotalOuterClass.getDescriptor();
+    im.turms.common.model.bo.message.MessagesWithTotalOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)
