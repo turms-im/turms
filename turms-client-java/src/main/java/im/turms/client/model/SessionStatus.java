@@ -15,19 +15,13 @@
  * limitations under the License.
  */
 
-package im.turms.turmsapm;
+package im.turms.client.model;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
-class TurmsApmApplicationTests {
-
-    @Test
-    void contextLoads() {
-    }
-
+/**
+ * @author James Chen
+ */
+public enum SessionStatus {
+    CONNECTED,
+    DISCONNECTED,
+    CLOSED
 }

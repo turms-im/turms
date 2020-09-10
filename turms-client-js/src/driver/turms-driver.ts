@@ -24,20 +24,15 @@ import {SessionDisconnectInfo} from "../model/session-disconnect-info";
 import ReasonService from "./service/reason-service";
 import MessageService from "./service/message-service";
 import HeartbeatService from "./service/heartbeat-service";
-import ConnectionService, {DisconnectionInfo} from "./service/connection-service";
+import ConnectionService, {ConnectionDisconnectInfo} from "./service/connection-service";
 import SessionService, {SessionStatus} from "./service/session-service";
-import NotificationUtil from "../util/notification-util";
 import StateStore from "./state-store";
 import TurmsCloseStatus from "../model/turms-close-status";
 import TurmsNotification = im.turms.proto.TurmsNotification;
 import UserStatus = im.turms.proto.UserStatus;
 import DeviceType = im.turms.proto.DeviceType;
 
-const HEARTBEAT_INTERVAL = 120 * 1000;
-
 export default class TurmsDriver {
-
-    private _onNotificationListeners: ((notification: ParsedNotification) => void)[] = [];
 
     private _wsUrl = 'ws://localhost:9510';
     private _httpUrl = 'http://localhost:9510';
@@ -77,8 +72,8 @@ export default class TurmsDriver {
         this._stateStore = new StateStore();
 
         this._connectionService = this.initConnectionService();
-        this._heartbeatService = new HeartbeatService(this._stateStore, HEARTBEAT_INTERVAL, this._minRequestsInterval);
-        this._messageService = new MessageService(this._stateStore, this._requestTimeout);
+        this._heartbeatService = new HeartbeatService(this._stateStore, this._minRequestsInterval);
+        this._messageService = new MessageService(this._stateStore, this._requestTimeout, this._minRequestsInterval);
         this._reasonService = new ReasonService(this._stateStore, this._httpUrl);
         this._sessionService = this.initSessionService();
     }
@@ -86,44 +81,9 @@ export default class TurmsDriver {
     // Initializers
     initConnectionService(): ConnectionService {
         const connectionService = new ConnectionService(this._stateStore);
-        connectionService.addConnectionListener(() => {
-            this._heartbeatService.start();
-            this._sessionService.notifyOnSessionConnectedListeners();
-        });
-        connectionService.addDisconnectionListener((info): Promise<void> => {
-            this._heartbeatService.stop();
-            const isDisconnectOnLogin = !info.wasConnected;
-            if (isDisconnectOnLogin) {
-                return this._triggerOnLoginFail();
-            } else {
-                this._triggerOnSessionDisconnected(info);
-                return Promise.reject();
-            }
-        });
-        connectionService.addMessageListener(message => {
-            if (message && message.byteLength) {
-                const notification = TurmsNotification.decode(new Uint8Array(message));
-                const isSessionInfo = notification.data && notification.data.session;
-                if (isSessionInfo) {
-                    this._sessionService.sessionId = notification.data.session.sessionId;
-                } else {
-                    const parsedNotification = NotificationUtil.transform(notification);
-                    for (const listener of this._onNotificationListeners) {
-                        try {
-                            listener(parsedNotification as ParsedNotification);
-                        } catch (e) {
-                            console.error(e);
-                        }
-                    }
-                    if (notification && !notification.relayedRequest && notification.requestId) {
-                        const requestId = parseInt(notification.requestId.value);
-                        this._messageService.triggerOnNotificationReceived(requestId, notification);
-                    }
-                }
-            } else {
-                this._heartbeatService.notifyHeartbeatCallbacks();
-            }
-        })
+        connectionService.addOnConnectedListener(this._onConnectionConnected);
+        connectionService.addOnDisconnectedListener(this._onConnectionDisconnected);
+        connectionService.addOnMessageListener(this._onMessage)
         return connectionService;
     }
 
@@ -145,12 +105,6 @@ export default class TurmsDriver {
             }
         })
         return sessionService;
-    }
-
-    // Notification Hooks
-
-    get onNotificationListeners(): ((notification: ParsedNotification) => void)[] {
-        return this._onNotificationListeners;
     }
 
     // Session Service
@@ -231,7 +185,7 @@ export default class TurmsDriver {
         return new Promise((resolve, reject) => {
             if (this._stateStore.isConnected) {
                 try {
-                    const notification = this._messageService.sendRequest(message, this._minRequestsInterval);
+                    const notification = this._messageService.sendRequest(message);
                     this.resetHeartBeatTimer();
                     return notification;
                 } catch (e) {
@@ -243,9 +197,31 @@ export default class TurmsDriver {
         });
     }
 
+    addOnNotificationListener(listener: ((notification: ParsedNotification) => void)) {
+        this._messageService.addOnNotificationListener(listener);
+    }
+
     // Intermediary functions as a mediator between services
 
-    private _triggerOnLoginFail(): Promise<void> {
+    private _onConnectionConnected(): void {
+        this._heartbeatService.start();
+        this._sessionService.notifyOnSessionConnectedListeners();
+    }
+
+    private _onConnectionDisconnected(info): Promise<void> {
+        this._heartbeatService.stop();
+        const error = TurmsBusinessException.fromCode(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED);
+        this._heartbeatService.rejectHeartbeatCallbacks(error);
+        const isDisconnectOnLogin = !info.wasConnected;
+        if (isDisconnectOnLogin) {
+            return this._triggerOnLoginFailure();
+        } else {
+            this._triggerOnSessionDisconnected(info);
+            return Promise.reject();
+        }
+    }
+
+    private _triggerOnLoginFailure(): Promise<void> {
         if (this._queryReasonWhenLoginFailed) {
             return this._reasonService.queryLoginFailureReason()
                 .then(reason => {
@@ -263,7 +239,7 @@ export default class TurmsDriver {
         }
     }
 
-    private _triggerOnSessionDisconnected(info: DisconnectionInfo): void {
+    private _triggerOnSessionDisconnected(info: ConnectionDisconnectInfo): void {
         const event = info.event;
         if (info.isClosedByClient) {
             this._sessionService.notifyOnSessionClosedListeners(event, {
@@ -292,6 +268,25 @@ export default class TurmsDriver {
             } else {
                 this._sessionService.notifyOnSessionClosedListeners(event);
             }
+        }
+    }
+
+    private _onMessage(message) {
+        if (message && message.byteLength) {
+            let notification;
+            try {
+                notification = TurmsNotification.decode(new Uint8Array(message));
+            } catch (e) {
+                console.error(e);
+                return;
+            }
+            const isSessionInfo = notification.data && notification.data.session;
+            if (isSessionInfo) {
+                this._sessionService.sessionId = notification.data.session.sessionId;
+            }
+            this._messageService.triggerOnNotificationReceived(notification);
+        } else {
+            this._heartbeatService.notifyHeartbeatCallbacks();
         }
     }
 

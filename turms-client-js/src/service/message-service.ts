@@ -46,14 +46,13 @@ export default class MessageService {
     constructor(turmsClient: TurmsClient) {
         this._turmsClient = turmsClient;
         this._turmsClient.driver
-            .onNotificationListeners
-            .push(notification => {
+            .addOnNotificationListener(notification => {
                 if (this._onMessage != null && notification.relayedRequest) {
                     const request = notification.relayedRequest.createMessageRequest;
                     if (request) {
                         const message = MessageService._createMessageRequest2Message(notification.requesterId, request);
                         const addition = this._parseMessageAddition(message);
-                        this._onMessage(message as ParsedModel.Message, addition);
+                        this._onMessage(message, addition);
                     }
                 }
                 return null;

@@ -5,8 +5,8 @@ const TurmsClient = require("../../dist/turms-client");
 const client = new TurmsClient(); // new TurmsClient('ws://any-turms-server.com');
 
 // Listen to the close event
-client.driver.onClose = closeInfo => {
-    console.info(`onClose: ${JSON.stringify(closeInfo)}`);
+client.driver.onSessionDisconnected = disconnectInfo => {
+    console.info(`onSessionDisconnected: ${JSON.stringify(disconnectInfo)}`);
 };
 
 // Listen to inbound notifications

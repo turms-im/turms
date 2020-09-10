@@ -30,6 +30,7 @@ export interface UserInfo {
 export default class StateStore {
 
     private _websocket?: WebSocket;
+    private _isConnected: boolean;
     private _connectionRequestId?: number;
     private _sessionId?: string;
     private _lastRequestDate = new Date(0);
@@ -41,6 +42,14 @@ export default class StateStore {
 
     set websocket(value: WebSocket) {
         this._websocket = value;
+    }
+
+    get isConnected(): boolean {
+        return this._isConnected;
+    }
+
+    set isConnected(value: boolean) {
+        this._isConnected = value;
     }
 
     get connectionRequestId(): number {
@@ -73,12 +82,6 @@ export default class StateStore {
 
     set userInfo(value: UserInfo) {
         this._userInfo = value;
-    }
-
-    // Computed properties
-
-    get isConnected(): boolean {
-        return !!(this.websocket && this.websocket.readyState === WebSocket.OPEN);
     }
 
 }

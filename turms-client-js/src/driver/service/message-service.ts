@@ -20,6 +20,8 @@ import RequestUtil from "../../util/request-util";
 import TurmsStatusCode from "../../model/turms-status-code";
 import TurmsBusinessException from "../../model/turms-business-exception";
 import StateStore from "../state-store";
+import NotificationUtil from "../../util/notification-util";
+import {ParsedNotification} from "../../model/parsed-notification";
 import TurmsNotification = im.turms.proto.TurmsNotification;
 import TurmsRequest = im.turms.proto.TurmsRequest;
 
@@ -37,32 +39,52 @@ export default class MessageService {
 
     private _stateStore: StateStore;
 
+    private _minRequestsInterval?: number;
+    private _onNotificationListeners: ((notification: ParsedNotification) => void)[] = [];
     private _requestMap: Record<number, RequestCallback> = {};
     private _requestTimeout?: number;
 
-    constructor(stateStore: StateStore, requestTimeout?: number) {
+    constructor(stateStore: StateStore, requestTimeout?: number, minRequestsInterval?: number) {
         this._stateStore = stateStore;
         this._requestTimeout = requestTimeout;
+        this._minRequestsInterval = minRequestsInterval;
     }
 
+    // Listeners
+
+    addOnNotificationListener(listener: (notification: ParsedNotification) => void) {
+        this._onNotificationListeners.push(listener);
+    }
+
+    private _notifyOnNotificationListener(parsedNotification: ParsedNotification) {
+        for (const listener of this._onNotificationListeners) {
+            try {
+                listener(parsedNotification);
+            } catch (e) {
+                console.error(e);
+            }
+        }
+    }
+
+    // Request and notification
+
     sendRequest(
-        message: im.turms.proto.ITurmsRequest,
-        minRequestsInterval: number): Promise<TurmsNotification> {
-        const now = new Date();
-        const isFrequent = minRequestsInterval > 0 && now.getTime() - this._stateStore.lastRequestDate.getTime() > minRequestsInterval;
-        if (isFrequent) {
-            throw TurmsBusinessException.fromCode(TurmsStatusCode.CLIENT_REQUESTS_TOO_FREQUENT);
-        } else {
-            const requestId = RequestUtil.generateRandomId(this._requestMap);
-            message.requestId = {
-                value: '' + requestId
-            };
+        message: im.turms.proto.ITurmsRequest): Promise<TurmsNotification> {
+        return new Promise((resolve, reject) => {
+            const now = new Date();
+            const isFrequent = this._minRequestsInterval > 0 && now.getTime() - this._stateStore.lastRequestDate.getTime() <= this._minRequestsInterval;
+            if (isFrequent) {
+                throw TurmsBusinessException.fromCode(TurmsStatusCode.CLIENT_REQUESTS_TOO_FREQUENT);
+            } else {
+                const requestId = RequestUtil.generateRandomId(this._requestMap);
+                message.requestId = {
+                    value: '' + requestId
+                };
 
-            const data = TurmsRequest.encode(message).finish();
-            this._stateStore.websocket.send(data);
-            this._stateStore.lastRequestDate = now;
+                const data = TurmsRequest.encode(message).finish();
+                this._stateStore.websocket.send(data);
+                this._stateStore.lastRequestDate = now;
 
-            return new Promise((resolve, reject) => {
                 let timeoutId;
                 if (this._requestTimeout && this._requestTimeout > 0) {
                     timeoutId = setTimeout(() => {
@@ -75,24 +97,35 @@ export default class MessageService {
                     resolve,
                     reject
                 };
-            });
-        }
+            }
+        });
     }
 
-    triggerOnNotificationReceived(requestId: number, notification: TurmsNotification): void {
-        const cb = this._requestMap[requestId];
-        if (cb) {
-            if (cb.timeoutId) {
-                clearTimeout(cb.timeoutId);
-            }
-            clearTimeout()
-            delete this._requestMap[requestId];
-            if (notification.code && TurmsStatusCode.isSuccessCode(notification.code.value)) {
-                cb.resolve(notification);
-            } else {
-                cb.reject(TurmsBusinessException.fromNotification(notification));
+    triggerOnNotificationReceived(notification: TurmsNotification): void {
+        const isResponse = !notification.relayedRequest && notification.requestId;
+        if (isResponse) {
+            const requestId = parseInt(notification.requestId.value);
+            if (requestId) {
+                const cb = this._requestMap[requestId];
+                if (cb) {
+                    if (cb.timeoutId) {
+                        clearTimeout(cb.timeoutId);
+                    }
+                    delete this._requestMap[requestId];
+                    if (notification.code) {
+                        if (TurmsStatusCode.isSuccessCode(notification.code.value)) {
+                            cb.resolve(notification);
+                        } else {
+                            cb.reject(TurmsBusinessException.fromNotification(notification));
+                        }
+                    } else {
+                        cb.reject(TurmsBusinessException.fromMessage('Invalid notification: the code is missing'))
+                    }
+                }
             }
         }
+        const parsedNotification = NotificationUtil.transform(notification);
+        this._notifyOnNotificationListener(parsedNotification as ParsedNotification);
     }
 
 }

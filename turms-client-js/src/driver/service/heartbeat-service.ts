@@ -20,6 +20,13 @@ import TurmsBusinessException from "../../model/turms-business-exception";
 import TurmsStatusCode from "../../model/turms-status-code";
 import StateStore from "../state-store";
 
+interface Callback {
+    resolve: Function,
+    reject: Function
+}
+
+const HEARTBEAT_INTERVAL = 120 * 1000;
+
 export default class HeartbeatService {
 
     private static HEARTBEAT_REQUEST = new Uint8Array(0);
@@ -29,11 +36,11 @@ export default class HeartbeatService {
     private _heartbeatInterval: number;
     private _minRequestsInterval: number;
     private _heartbeatTimer?: Timer;
-    private _heartbeatCallbacks = [];
+    private _heartbeatCallbacks: Callback[] = [];
 
-    constructor(stateStore: StateStore, heartbeatInterval: number, minRequestsInterval: number) {
-        this._heartbeatInterval = heartbeatInterval;
+    constructor(stateStore: StateStore, minRequestsInterval: number, heartbeatInterval?: number) {
         this._minRequestsInterval = minRequestsInterval;
+        this._heartbeatInterval = heartbeatInterval || HEARTBEAT_INTERVAL;
     }
 
     start(): void {
@@ -66,7 +73,10 @@ export default class HeartbeatService {
         return new Promise((resolve, reject): void => {
             if (this._stateStore.isConnected) {
                 this._stateStore.websocket.send(HeartbeatService.HEARTBEAT_REQUEST);
-                this._heartbeatCallbacks.push(resolve);
+                this._heartbeatCallbacks.push({
+                    resolve,
+                    reject
+                });
             } else {
                 reject(TurmsBusinessException.fromCode(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED));
             }
@@ -75,7 +85,14 @@ export default class HeartbeatService {
 
     notifyHeartbeatCallbacks(): void {
         for (const cb of this._heartbeatCallbacks) {
-            cb();
+            cb.resolve();
+        }
+        this._heartbeatCallbacks = [];
+    }
+
+    rejectHeartbeatCallbacks(error: any): void {
+        for (const cb of this._heartbeatCallbacks) {
+            cb.reject(error);
         }
         this._heartbeatCallbacks = [];
     }

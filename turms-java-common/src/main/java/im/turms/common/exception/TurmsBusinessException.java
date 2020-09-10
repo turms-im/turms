@@ -18,6 +18,7 @@
 package im.turms.common.exception;
 
 import im.turms.common.constant.statuscode.TurmsStatusCode;
+import im.turms.common.model.dto.notification.TurmsNotification;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -106,6 +107,13 @@ public class TurmsBusinessException extends NoStackTraceException {
             }
         }
         return null;
+    }
+
+    public static TurmsBusinessException get(TurmsNotification notification) {
+        int code = notification.getCode().getValue();
+        return notification.hasReason()
+                ? TurmsBusinessException.get(code, notification.getReason().getValue())
+                : TurmsBusinessException.get(code);
     }
 
     public static <T> CompletableFuture<T> getFuture(TurmsStatusCode statusCode) {

@@ -15,19 +15,35 @@
  * limitations under the License.
  */
 
-package im.turms.turmsapm;
+package im.turms.client.model;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+/**
+ * @author James Chen
+ */
+public final class UserLocation {
 
-@ExtendWith(SpringExtension.class)
-@SpringBootTest
-class TurmsApmApplicationTests {
+    private float longitude;
+    private float latitude;
 
-    @Test
-    void contextLoads() {
+    public float getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(float longitude) {
+        this.longitude = longitude;
+    }
+
+    public float getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(float latitude) {
+        this.latitude = latitude;
+    }
+
+    @Override
+    public String toString() {
+        return longitude + ":" + latitude;
     }
 
 }

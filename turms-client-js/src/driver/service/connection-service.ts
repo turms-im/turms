@@ -41,7 +41,7 @@ export interface ConnectOptions {
     location?: UserLocation
 }
 
-export interface DisconnectionInfo {
+export interface ConnectionDisconnectInfo {
     wasConnected: boolean,
     isClosedByClient: boolean,
     event: CloseEvent
@@ -52,13 +52,12 @@ export default class ConnectionService {
     private _stateStore: StateStore;
 
     private _isClosedByClient = false;
-    private _wasConnected = false;
     private _disconnectionCallbacks;
     private _connectOptions = {} as ConnectOptions;
 
-    private _connectionListeners = []
-    private _disconnectionListeners = []
-    private _messageListeners = []
+    private _onConnectedListeners: (() => void)[] = [];
+    private _onDisconnectedListeners: ((info: ConnectionDisconnectInfo) => Promise<void>)[] = [];
+    private _onMessageListeners: ((message: any) => void)[] = [];
 
     constructor(stateStore: StateStore) {
         this._stateStore = stateStore;
@@ -67,35 +66,34 @@ export default class ConnectionService {
 
     private _resetStates(): void {
         this._stateStore.connectionRequestId = null;
-        this._disconnectionCallbacks = [];
         this._isClosedByClient = false;
-        this._wasConnected = false;
+        this._triggerDisconnectCallbacks();
     }
 
     // Listeners
 
-    addConnectionListener(cb: () => void): void {
-        this._connectionListeners.push(cb);
+    addOnConnectedListener(listener: () => void): void {
+        this._onConnectedListeners.push(listener);
     }
 
-    addDisconnectionListener(cb: (info: DisconnectionInfo) => Promise<void>): void {
-        this._disconnectionListeners.push(cb);
+    addOnDisconnectedListener(listener: (info: ConnectionDisconnectInfo) => Promise<void>): void {
+        this._onDisconnectedListeners.push(listener);
     }
 
-    addMessageListener(cb: (message: any) => void): void {
-        this._messageListeners.push(cb);
+    addOnMessageListener(listener: (message: any) => void): void {
+        this._onMessageListeners.push(listener);
     }
 
-    private _notifyConnectionListener(): void {
-        for (const cb of this._connectionListeners) {
-            cb();
+    private _notifyOnConnectedListener(): void {
+        for (const listener of this._onConnectedListeners) {
+            listener();
         }
     }
 
-    private _notifyDisconnectionListeners(info: DisconnectionInfo): Promise<void> {
+    private _notifyOnDisconnectedListeners(info: ConnectionDisconnectInfo): Promise<void> {
         let promise;
-        for (const cb of this._disconnectionListeners) {
-            const result = cb(info);
+        for (const listener of this._onDisconnectedListeners) {
+            const result = listener(info);
             if (!promise) {
                 promise = result;
             }
@@ -107,9 +105,9 @@ export default class ConnectionService {
         }
     }
 
-    private _notifyMessageListener(message: any): void {
-        for (const cb of this._messageListeners) {
-            cb(message);
+    private _notifyOnMessageListener(message: any): void {
+        for (const listener of this._onMessageListeners) {
+            listener(message);
         }
     }
 
@@ -142,9 +140,9 @@ export default class ConnectionService {
                 ws.binaryType = "arraybuffer";
                 this._stateStore.websocket = ws;
 
-                let timeoutId;
+                let connectTimeoutId;
                 if (options.connectTimeout && options.connectTimeout > 0) {
-                    timeoutId = setTimeout(() => {
+                    connectTimeoutId = setTimeout(() => {
                         reject(new Error('Connection Timeout'));
                     }, options.connectTimeout);
                 }
@@ -153,22 +151,22 @@ export default class ConnectionService {
                 // 1. rejected by the HTTP upgrade error response
                 // 2. disconnected no matter by error (after onError) or else
                 this._stateStore.websocket.onclose = (event): void => {
-                    if (timeoutId) {
-                        clearTimeout(timeoutId);
+                    if (connectTimeoutId) {
+                        clearTimeout(connectTimeoutId);
                     }
-                    this._onWebsocketClose(event)
+                    this._onWebSocketClose(event)
                         // for the case when redirecting successfully
                         .then(() => resolve())
                         .catch(e => reject(e));
                 };
                 this._stateStore.websocket.onopen = ((): void => {
-                    if (timeoutId) {
-                        clearTimeout(timeoutId);
+                    if (connectTimeoutId) {
+                        clearTimeout(connectTimeoutId);
                     }
-                    this._onWebsocketOpen();
+                    this._onWebSocketOpen();
                     resolve();
                 });
-                this._stateStore.websocket.onmessage = (event): void => this._notifyMessageListener(event.data);
+                this._stateStore.websocket.onmessage = (event): void => this._notifyOnMessageListener(event.data);
             }
         });
     }
@@ -226,17 +224,19 @@ export default class ConnectionService {
 
     // Lifecycle hooks
 
-    private _onWebsocketOpen(): void {
+    private _onWebSocketOpen(): void {
         ConnectionService._clearLoginInfo();
-        this._wasConnected = true;
-        this._notifyConnectionListener();
+        this._stateStore.isConnected = true;
+        this._notifyOnConnectedListener();
     }
 
-    private _onWebsocketClose(event: CloseEvent): Promise<void> {
+    private _onWebSocketClose(event: CloseEvent): Promise<void> {
         ConnectionService._clearLoginInfo();
+        const wasConnected = this._stateStore.isConnected;
+        this._stateStore.isConnected = false;
         this._triggerDisconnectCallbacks();
-        return this._notifyDisconnectionListeners({
-            wasConnected: this._wasConnected,
+        return this._notifyOnDisconnectedListeners({
+            wasConnected,
             isClosedByClient: this._isClosedByClient,
             event
         });

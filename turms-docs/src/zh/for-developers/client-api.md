@@ -82,7 +82,7 @@ Turms客户端目前支持JavaScript、Java与Swift这三种语言，对外暴�
 const client = new TurmsClient(); // new TurmsClient('ws://any-turms-gateway-server.com');
 
 // Listen to the close event
-client.driver.onClose = (closeStatus, wsStatusCode, wsReason, error) => {
+client.driver.onSessionClosed = (closeStatus, wsStatusCode, wsReason, error) => {
     console.info(`onClose: ${closeStatus}:${wsStatusCode}:${wsReason}:${error}`);
 };
 
@@ -136,7 +136,7 @@ client.userService.login('1', '123')
 TurmsClient client = new TurmsClient(); // new TurmsClient("ws://any-turms-gateway-server.com");
 
 // Listen to the close event
-client.getDriver().setOnClose(info -> {
+client.getDriver().onSessionClosed(info -> {
     SessionCloseStatus closeStatus = info.getCloseStatus();
     Throwable error = info.getError();
     System.out.printf("onClose: %d:%d:%s:%s%n",
