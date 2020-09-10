@@ -36,7 +36,6 @@ class TurmsClient {
                 urlOrOptions.queryReasonWhenDisconnected);
         } else {
             this._driver = new TurmsDriver(
-                this,
                 urlOrOptions,
                 connectionTimeout,
                 requestTimeout,

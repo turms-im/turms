@@ -36,8 +36,8 @@ function start() {
     const clientUserTwo = new TurmsClient('ws://localhost:9510', 30 * 1000);
     const USER_ONE_ID = '1';
     const USER_TWO_ID = '2';
-    clientUserOne.driver.onClose = closeInfo => {
-        appendUserOneContainer(`onClose: ${beautify(closeInfo)}`);
+    clientUserOne.driver.onSessionDisconnected = disconnectInfo => {
+        appendUserOneContainer(`onSessionDisconnected: ${beautify(disconnectInfo)}`);
     };
     clientUserOne.notificationService.onNotification = notification => {
         appendUserOneContainer('onNotification: Receive a notification from other users or server: ' + beautify(notification));
@@ -79,7 +79,7 @@ function start() {
                         }
                     });
                 const intervalOne = setInterval(() => {
-                    if (clientUserOne.driver.connected()) {
+                    if (clientUserOne.driver.isConnected()) {
                         clientUserOne.messageService.sendMessage(
                             false,
                             USER_TWO_ID,
@@ -117,7 +117,7 @@ function start() {
                         }
                     });
                 const intervalTwo = setInterval(() => {
-                    if (clientUserOne.driver.connected()) {
+                    if (clientUserOne.driver.isConnected()) {
                         clientUserTwo.messageService.sendMessage(
                             false,
                             USER_ONE_ID,

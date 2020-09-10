@@ -46,9 +46,7 @@ export default class GroupService {
             deleteGroupRequest: {
                 groupId
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-        });
+        }).then(() => null);
     }
 
     updateGroup(
@@ -80,9 +78,7 @@ export default class GroupService {
                 successorId: RequestUtil.wrapValueIfNotNull(successorId),
                 quitAfterTransfer: RequestUtil.wrapValueIfNotNull(quitAfterTransfer)
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-        });
+        }).then(() => null);
     }
 
     transferOwnership(groupId: string, successorId: string, quitAfterTransfer = false): Promise<void> {
@@ -113,7 +109,6 @@ export default class GroupService {
         if (RequestUtil.isFalsy(groupId)) {
             return TurmsBusinessException.notFalsy('groupId');
         }
-        // @ts-ignore
         return this._turmsClient.driver.send({
             queryGroupRequest: {
                 groupId,
@@ -139,7 +134,6 @@ export default class GroupService {
     }
 
     queryJoinedGroupsInfos(lastUpdatedDate?: Date): Promise<ParsedModel.GroupsWithVersion | undefined> {
-        // @ts-ignore
         return this._turmsClient.driver.send({
             queryJoinedGroupsInfosRequest: {
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
@@ -178,9 +172,7 @@ export default class GroupService {
             deleteGroupJoinQuestionRequest: {
                 questionId
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-        });
+        }).then(() => null);
     }
 
     updateGroupJoinQuestion(questionId: string, question?: string, answers?: string[], score?: number): Promise<void> {
@@ -197,9 +189,7 @@ export default class GroupService {
                 answers: answers,
                 score: RequestUtil.wrapValueIfNotNull(score)
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-        });
+        }).then(() => null);
     }
 
     // Group Blacklist
@@ -215,9 +205,7 @@ export default class GroupService {
                 blacklistedUserId: userId,
                 groupId
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-        });
+        }).then(() => null);
     }
 
     unblacklistUser(groupId: string, userId: string): Promise<void> {
@@ -232,9 +220,7 @@ export default class GroupService {
                 groupId,
                 unblacklistedUserId: userId
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-        });
+        }).then(() => null);
     }
 
     queryBlacklistedUsersIds(
@@ -257,7 +243,6 @@ export default class GroupService {
         if (RequestUtil.isFalsy(groupId)) {
             return TurmsBusinessException.notFalsy('groupId');
         }
-        // @ts-ignore
         return this._turmsClient.driver.send({
             queryGroupBlacklistedUsersInfosRequest: {
                 groupId,
@@ -294,16 +279,13 @@ export default class GroupService {
             deleteGroupInvitationRequest: {
                 invitationId
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-        });
+        }).then(() => null);
     }
 
     queryInvitationsByGroupId(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.GroupInvitationsWithVersion | undefined> {
         if (RequestUtil.isFalsy(groupId)) {
             return TurmsBusinessException.notFalsy('groupId');
         }
-        // @ts-ignore
         return this._turmsClient.driver.send({
             queryGroupInvitationsRequest: {
                 groupId: RequestUtil.wrapValueIfNotNull(groupId),
@@ -316,7 +298,6 @@ export default class GroupService {
         if (RequestUtil.isFalsy(areSentByMe)) {
             return TurmsBusinessException.notFalsy('areSentByMe');
         }
-        // @ts-ignore
         return this._turmsClient.driver.send({
             queryGroupInvitationsRequest: {
                 areSentByMe: RequestUtil.wrapValueIfNotNull(areSentByMe),
@@ -348,16 +329,13 @@ export default class GroupService {
             deleteGroupJoinRequestRequest: {
                 requestId
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-        });
+        }).then(() => null);
     }
 
     queryJoinRequests(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.GroupJoinRequestsWithVersion | undefined> {
         if (RequestUtil.isFalsy(groupId)) {
             return TurmsBusinessException.notFalsy('groupId');
         }
-        // @ts-ignore
         return this._turmsClient.driver.send({
             queryGroupJoinRequestsRequest: {
                 groupId: RequestUtil.wrapValueIfNotNull(groupId),
@@ -367,7 +345,6 @@ export default class GroupService {
     }
 
     querySentJoinRequests(lastUpdatedDate?: Date): Promise<ParsedModel.GroupJoinRequestsWithVersion | undefined> {
-        // @ts-ignore
         return this._turmsClient.driver.send({
             queryGroupJoinRequestsRequest: {
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
@@ -385,7 +362,6 @@ export default class GroupService {
         if (RequestUtil.isFalsy(groupId)) {
             return TurmsBusinessException.notFalsy('groupId');
         }
-        // @ts-ignore
         return this._turmsClient.driver.send({
             queryGroupJoinQuestionsRequest: {
                 groupId,
@@ -441,9 +417,7 @@ export default class GroupService {
                 role,
                 muteEndDate: RequestUtil.wrapTimeIfNotNull(muteEndDate)
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-        });
+        }).then(() => null);
     }
 
     quitGroup(groupId: string, successorId?: string, quitAfterTransfer?: boolean): Promise<void> {
@@ -457,9 +431,7 @@ export default class GroupService {
                 successorId: RequestUtil.wrapValueIfNotNull(successorId),
                 quitAfterTransfer: RequestUtil.wrapValueIfNotNull(quitAfterTransfer)
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-        });
+        }).then(() => null);
     }
 
     removeGroupMember(groupId: string, memberId: string): Promise<void> {
@@ -474,9 +446,7 @@ export default class GroupService {
                 groupId,
                 groupMemberId: memberId
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-        });
+        }).then(() => null);
     }
 
     updateGroupMemberInfo(
@@ -509,9 +479,7 @@ export default class GroupService {
                 role,
                 muteEndDate: RequestUtil.wrapTimeIfNotNull(muteEndDate)
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-        });
+        }).then(() => null);
     }
 
     muteGroupMember(groupId: string, memberId: string, muteEndDate: Date): Promise<void> {
@@ -535,7 +503,6 @@ export default class GroupService {
         if (RequestUtil.isFalsy(groupId)) {
             return TurmsBusinessException.notFalsy('groupId');
         }
-        // @ts-ignore
         return this._turmsClient.driver.send({
             queryGroupMembersRequest: {
                 groupId,
@@ -552,7 +519,6 @@ export default class GroupService {
         if (RequestUtil.isFalsy(membersIds)) {
             return TurmsBusinessException.notFalsy('membersIds', true);
         }
-        // @ts-ignore
         return this._turmsClient.driver.send({
             queryGroupMembersRequest: {
                 groupId,

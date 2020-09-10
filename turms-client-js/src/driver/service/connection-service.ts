@@ -1,0 +1,245 @@
+/*
+ * Copyright (C) 2019 The Turms Project
+ * https://github.com/turms-im/turms
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import UserLocation from "../../model/user-location";
+import TurmsBusinessException from "../../model/turms-business-exception";
+import TurmsStatusCode from "../../model/turms-status-code";
+import {im} from "../../model/proto-bundle";
+import StateStore from "../state-store";
+import DeviceType = im.turms.proto.DeviceType;
+import UserStatus = im.turms.proto.UserStatus;
+
+const COOKIE_REQUEST_ID = 'rid';
+const COOKIE_USER_ID = 'uid';
+const COOKIE_PASSWORD = 'pwd';
+const COOKIE_USER_ONLINE_STATUS = 'us';
+const COOKIE_DEVICE_TYPE = 'dt';
+const COOKIE_LOCATION = 'loc';
+
+export interface ConnectOptions {
+    wsUrl: string,
+    connectTimeout: number,
+
+    userId: string,
+    password: string,
+    deviceType?: DeviceType,
+    userOnlineStatus?: UserStatus,
+    location?: UserLocation
+}
+
+export interface DisconnectionInfo {
+    wasConnected: boolean,
+    isClosedByClient: boolean,
+    event: CloseEvent
+}
+
+export default class ConnectionService {
+
+    private _stateStore: StateStore;
+
+    private _isClosedByClient = false;
+    private _wasConnected = false;
+    private _disconnectionCallbacks;
+    private _connectOptions = {} as ConnectOptions;
+
+    private _connectionListeners = []
+    private _disconnectionListeners = []
+    private _messageListeners = []
+
+    constructor(stateStore: StateStore) {
+        this._stateStore = stateStore;
+        this._resetStates();
+    }
+
+    private _resetStates(): void {
+        this._stateStore.connectionRequestId = null;
+        this._disconnectionCallbacks = [];
+        this._isClosedByClient = false;
+        this._wasConnected = false;
+    }
+
+    // Listeners
+
+    addConnectionListener(cb: () => void): void {
+        this._connectionListeners.push(cb);
+    }
+
+    addDisconnectionListener(cb: (info: DisconnectionInfo) => Promise<void>): void {
+        this._disconnectionListeners.push(cb);
+    }
+
+    addMessageListener(cb: (message: any) => void): void {
+        this._messageListeners.push(cb);
+    }
+
+    private _notifyConnectionListener(): void {
+        for (const cb of this._connectionListeners) {
+            cb();
+        }
+    }
+
+    private _notifyDisconnectionListeners(info: DisconnectionInfo): Promise<void> {
+        let promise;
+        for (const cb of this._disconnectionListeners) {
+            const result = cb(info);
+            if (!promise) {
+                promise = result;
+            }
+        }
+        if (promise) {
+            return promise;
+        } else {
+            return Promise.reject();
+        }
+    }
+
+    private _notifyMessageListener(message: any): void {
+        for (const cb of this._messageListeners) {
+            cb(message);
+        }
+    }
+
+    private _triggerDisconnectCallbacks(): void {
+        for (const cb of this._disconnectionCallbacks) {
+            cb();
+        }
+        this._disconnectionCallbacks = [];
+    }
+
+    // Connection
+
+    connect(options: ConnectOptions): Promise<void> {
+        return new Promise((resolve, reject) => {
+            if (this._stateStore.isConnected) {
+                return TurmsBusinessException.fromCode(TurmsStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED);
+            } else {
+                this._resetStates();
+                this._stateStore.connectionRequestId = Math.floor(Math.random() * 16383) + 1;
+                ConnectionService._fillLoginInfo(this._stateStore.connectionRequestId, options.userId, options.password, options.userOnlineStatus, options.deviceType, options.location);
+                this._stateStore.userInfo = {
+                    userId: options.userId,
+                    deviceType: options.deviceType,
+                    userOnlineStatus: options.userOnlineStatus,
+                    location: options.location
+                }
+                this._connectOptions = options;
+
+                const ws = new WebSocket(options.wsUrl);
+                ws.binaryType = "arraybuffer";
+                this._stateStore.websocket = ws;
+
+                let timeoutId;
+                if (options.connectTimeout && options.connectTimeout > 0) {
+                    timeoutId = setTimeout(() => {
+                        reject(new Error('Connection Timeout'));
+                    }, options.connectTimeout);
+                }
+
+                // onClose will always be triggered with a CloseEvent instance when
+                // 1. rejected by the HTTP upgrade error response
+                // 2. disconnected no matter by error (after onError) or else
+                this._stateStore.websocket.onclose = (event): void => {
+                    if (timeoutId) {
+                        clearTimeout(timeoutId);
+                    }
+                    this._onWebsocketClose(event)
+                        // for the case when redirecting successfully
+                        .then(() => resolve())
+                        .catch(e => reject(e));
+                };
+                this._stateStore.websocket.onopen = ((): void => {
+                    if (timeoutId) {
+                        clearTimeout(timeoutId);
+                    }
+                    this._onWebsocketOpen();
+                    resolve();
+                });
+                this._stateStore.websocket.onmessage = (event): void => this._notifyMessageListener(event.data);
+            }
+        });
+    }
+
+    disconnect(): Promise<void> {
+        if (this._stateStore.isConnected || this._stateStore.websocket.readyState === WebSocket.CONNECTING) {
+            this._isClosedByClient = true;
+            return new Promise(resolve => {
+                this._disconnectionCallbacks.push(resolve);
+                this._stateStore.websocket.close();
+            });
+        } else {
+            return Promise.reject();
+        }
+    }
+
+    reconnect(host?: string): Promise<void> {
+        if (host) {
+            const isSecure = this._connectOptions.wsUrl && this._connectOptions.wsUrl.startsWith("wss://");
+            this._connectOptions.wsUrl = `${isSecure ? "wss://" : "ws://"}${host}`;
+        }
+        return this.connect(this._connectOptions);
+    }
+
+    private static _fillLoginInfo(
+        requestId: number,
+        userId: string,
+        password: string,
+        userOnlineStatus?: UserStatus,
+        deviceType?: DeviceType,
+        location?: UserLocation): void {
+        document.cookie = `${COOKIE_REQUEST_ID}=${requestId}; path=/`;
+        document.cookie = `${COOKIE_USER_ID}=${userId}; path=/`;
+        document.cookie = `${COOKIE_PASSWORD}=${escape(password)}; path=/`;
+        if (userOnlineStatus) {
+            document.cookie = `${COOKIE_USER_ONLINE_STATUS}=${UserStatus[userOnlineStatus]}; path=/`;
+        }
+        if (deviceType) {
+            document.cookie = `${COOKIE_DEVICE_TYPE}=${DeviceType[deviceType]}; path=/`;
+        }
+        if (location) {
+            document.cookie = `${COOKIE_LOCATION}=${location.toString()}; path=/`;
+        }
+    }
+
+    private static _clearLoginInfo(): void {
+        const now = new Date().toUTCString();
+        document.cookie = `${COOKIE_USER_ID}=;expires=${now}`;
+        document.cookie = `${COOKIE_PASSWORD}=;expires=${now}`;
+        document.cookie = `${COOKIE_USER_ONLINE_STATUS}=;expires=${now}`;
+        document.cookie = `${COOKIE_DEVICE_TYPE}=;expires=${now}`;
+        document.cookie = `${COOKIE_REQUEST_ID}=;expires=${now}`;
+        document.cookie = `${COOKIE_LOCATION}=;expires=${now}`;
+    }
+
+    // Lifecycle hooks
+
+    private _onWebsocketOpen(): void {
+        ConnectionService._clearLoginInfo();
+        this._wasConnected = true;
+        this._notifyConnectionListener();
+    }
+
+    private _onWebsocketClose(event: CloseEvent): Promise<void> {
+        ConnectionService._clearLoginInfo();
+        this._triggerDisconnectCallbacks();
+        return this._notifyDisconnectionListeners({
+            wasConnected: this._wasConnected,
+            isClosedByClient: this._isClosedByClient,
+            event
+        });
+    }
+
+}

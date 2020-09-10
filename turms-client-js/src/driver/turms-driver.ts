@@ -1,186 +1,203 @@
-import Timer from "../util/timer";
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
-import * as WebSocketAsPromised from "websocket-as-promised";
+/*
+ * Copyright (C) 2019 The Turms Project
+ * https://github.com/turms-im/turms
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import TurmsStatusCode from "../model/turms-status-code";
 import TurmsBusinessException from "../model/turms-business-exception";
 import {im} from "../model/proto-bundle";
-// @ts-ignore
-import NotificationUtil from "../util/notification-util";
 import {ParsedNotification} from "../model/parsed-notification";
-import TurmsCloseStatus from "../model/turms-close-status";
-import TurmsClient from "../turms-client";
 import UserLocation from "../model/user-location";
-import {SessionDisconnectionReason} from "../model/session-disconnection-reason";
-import {LoginFailureReason} from "../model/login-failure-reason";
-// @ts-ignore
-import fetch from "unfetch/dist/unfetch.es";
-import {SessionCloseInfo} from "../model/session-close-info";
+import {SessionDisconnectInfo} from "../model/session-disconnect-info";
+import ReasonService from "./service/reason-service";
+import MessageService from "./service/message-service";
+import HeartbeatService from "./service/heartbeat-service";
+import ConnectionService, {DisconnectionInfo} from "./service/connection-service";
+import SessionService, {SessionStatus} from "./service/session-service";
+import NotificationUtil from "../util/notification-util";
+import StateStore from "./state-store";
+import TurmsCloseStatus from "../model/turms-close-status";
 import TurmsNotification = im.turms.proto.TurmsNotification;
-import TurmsRequest = im.turms.proto.TurmsRequest;
 import UserStatus = im.turms.proto.UserStatus;
 import DeviceType = im.turms.proto.DeviceType;
 
-const COOKIE_REQUEST_ID = 'rid';
-const COOKIE_USER_ID = 'uid';
-const COOKIE_PASSWORD = 'pwd';
-const COOKIE_USER_ONLINE_STATUS = 'us';
-const COOKIE_DEVICE_TYPE = 'dt';
-const COOKIE_LOCATION = 'loc';
-
 const HEARTBEAT_INTERVAL = 120 * 1000;
+
 export default class TurmsDriver {
-    private _heartbeatInterval: number;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    private _turmsClient: TurmsClient;
-    private _websocket: any; //WebSocketAsPromised
-    private _heartbeatTimer?: Timer;
     private _onNotificationListeners: ((notification: ParsedNotification) => void)[] = [];
-    private _onClose?: (closeInfo: SessionCloseInfo) => void;
 
-    private _url = 'ws://localhost:9510';
+    private _wsUrl = 'ws://localhost:9510';
     private _httpUrl = 'http://localhost:9510';
     private _connectionTimeout = 10 * 1000;
     private _requestTimeout = 60 * 1000;
     private _minRequestsInterval = 0;
-    private _requestsMap = {};
-    private _lastRequestDate = new Date(0);
     private _queryReasonWhenLoginFailed = true;
     private _queryReasonWhenDisconnected = true;
-    private _isClosedByClient = false;
-    private _heartbeatCallbacks = [];
 
-    private _requestId: number;
-    private _sessionId?: string;
+    private _onSessionConnected: () => void;
+    private _onSessionDisconnected: (disconnectInfo: SessionDisconnectInfo) => void;
+    private _onSessionClosed: (disconnectInfo: SessionDisconnectInfo) => void;
 
-    constructor(turmsClient: TurmsClient,
-                url?: string,
+    private _stateStore: StateStore;
+
+    private _connectionService: ConnectionService;
+    private _heartbeatService: HeartbeatService;
+    private _messageService: MessageService;
+    private _reasonService: ReasonService;
+    private _sessionService: SessionService;
+
+    constructor(url?: string,
                 connectionTimeout?: number,
                 requestTimeout?: number,
                 minRequestsInterval?: number,
                 httpUrl?: string,
                 queryReasonWhenLoginFailed = true,
                 queryReasonWhenDisconnected = true) {
-        this._turmsClient = turmsClient;
-        if (url) this._url = url;
+        if (url) this._wsUrl = url;
         if (connectionTimeout) this._connectionTimeout = connectionTimeout;
         if (requestTimeout) this._requestTimeout = requestTimeout;
         if (minRequestsInterval) this._minRequestsInterval = minRequestsInterval;
-        this._heartbeatInterval = HEARTBEAT_INTERVAL;
         if (httpUrl) this._httpUrl = httpUrl;
         this._queryReasonWhenLoginFailed = queryReasonWhenLoginFailed;
         this._queryReasonWhenDisconnected = queryReasonWhenDisconnected;
+
+        this._stateStore = new StateStore();
+
+        this._connectionService = this.initConnectionService();
+        this._heartbeatService = new HeartbeatService(this._stateStore, HEARTBEAT_INTERVAL, this._minRequestsInterval);
+        this._messageService = new MessageService(this._stateStore, this._requestTimeout);
+        this._reasonService = new ReasonService(this._stateStore, this._httpUrl);
+        this._sessionService = this.initSessionService();
     }
 
-    set onClose(value: (closeInfo: SessionCloseInfo) => void) {
-        this._onClose = value;
+    // Initializers
+    initConnectionService(): ConnectionService {
+        const connectionService = new ConnectionService(this._stateStore);
+        connectionService.addConnectionListener(() => {
+            this._heartbeatService.start();
+            this._sessionService.notifyOnSessionConnectedListeners();
+        });
+        connectionService.addDisconnectionListener((info): Promise<void> => {
+            this._heartbeatService.stop();
+            const isDisconnectOnLogin = !info.wasConnected;
+            if (isDisconnectOnLogin) {
+                return this._triggerOnLoginFail();
+            } else {
+                this._triggerOnSessionDisconnected(info);
+                return Promise.reject();
+            }
+        });
+        connectionService.addMessageListener(message => {
+            if (message && message.byteLength) {
+                const notification = TurmsNotification.decode(new Uint8Array(message));
+                const isSessionInfo = notification.data && notification.data.session;
+                if (isSessionInfo) {
+                    this._sessionService.sessionId = notification.data.session.sessionId;
+                } else {
+                    const parsedNotification = NotificationUtil.transform(notification);
+                    for (const listener of this._onNotificationListeners) {
+                        try {
+                            listener(parsedNotification as ParsedNotification);
+                        } catch (e) {
+                            console.error(e);
+                        }
+                    }
+                    if (notification && !notification.relayedRequest && notification.requestId) {
+                        const requestId = parseInt(notification.requestId.value);
+                        this._messageService.triggerOnNotificationReceived(requestId, notification);
+                    }
+                }
+            } else {
+                this._heartbeatService.notifyHeartbeatCallbacks();
+            }
+        })
+        return connectionService;
     }
+
+    initSessionService(): SessionService {
+        const sessionService = new SessionService(this._stateStore);
+        sessionService.addOnSessionConnectedListeners(() => {
+            if (this._onSessionConnected) {
+                this._onSessionConnected();
+            }
+        });
+        sessionService.addOnSessionDisconnectedListeners(disconnectInfo => {
+            if (this._onSessionDisconnected) {
+                this._onSessionDisconnected(disconnectInfo);
+            }
+        });
+        sessionService.addOnSessionClosedListeners(disconnectInfo => {
+            if (this._onSessionClosed) {
+                this._onSessionClosed(disconnectInfo);
+            }
+        })
+        return sessionService;
+    }
+
+    // Notification Hooks
 
     get onNotificationListeners(): ((notification: ParsedNotification) => void)[] {
         return this._onNotificationListeners;
     }
 
+    // Session Service
+
+    getStatus(): SessionStatus {
+        return this._sessionService.getStatus();
+    }
+
+    isConnected(): boolean {
+        return this._sessionService.isConnected();
+    }
+
+    isClosed(): boolean {
+        return this._sessionService.isClosed();
+    }
+
+    set onSessionConnected(listener: () => void) {
+        this._onSessionConnected = listener;
+    }
+
+    set onSessionDisconnected(listener: (disconnectInfo: SessionDisconnectInfo) => void) {
+        this._onSessionDisconnected = listener;
+    }
+
+    set onSessionClosed(listener: (disconnectInfo: SessionDisconnectInfo) => void) {
+        this._onSessionClosed = listener;
+    }
+
+    // Heartbeat Service
+
+    startHeartbeat(): void {
+        this._heartbeatService.start();
+    }
+
+    stopHeartbeat(): void {
+        this._heartbeatService.stop();
+    }
+
     sendHeartbeat(): Promise<void> {
-        return new Promise((resolve, reject): void => {
-            if (this.connected()) {
-                this._lastRequestDate = new Date();
-                this._websocket.send(new Uint8Array(0));
-                this._heartbeatCallbacks.push(resolve);
-            } else {
-                reject(TurmsBusinessException.fromCode(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED));
-            }
-        });
+        return this._heartbeatService.send();
     }
 
-    connected(): boolean {
-        return this._websocket && this._websocket.isOpened;
+    resetHeartBeatTimer(): void {
+        this._heartbeatService.reset();
     }
 
-    disconnect(): Promise<void> {
-        if (this._websocket.isOpened || this._websocket.isOpening) {
-            this._isClosedByClient = true;
-            return this._websocket.close()
-                .then(() => {
-                    this._isClosedByClient = false;
-                }).catch(() => {
-                    this._isClosedByClient = false;
-                });
-        } else {
-            return Promise.reject();
-        }
-    }
-
-    private _connect(
-        userId: string,
-        password: string,
-        deviceType?: DeviceType,
-        userOnlineStatus?: UserStatus,
-        location?: UserLocation): Promise<void> {
-        return new Promise((resolve, reject) => {
-            if (this.connected()) {
-                return TurmsBusinessException.fromCode(TurmsStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED);
-            } else {
-                this._requestId = this._generateRandomId();
-                TurmsDriver._fillLoginInfo(this._requestId, userId, password, userOnlineStatus, deviceType, location);
-                this._websocket = new WebSocketAsPromised(this._url, {
-                    createWebSocket: (serverUrl): WebSocket => {
-                        const ws = new WebSocket(serverUrl);
-                        ws.binaryType = "arraybuffer";
-                        return ws;
-                    },
-                    attachRequestId: (data: Uint8Array): Uint8Array => data,
-                    packMessage: (data: Uint8Array): Uint8Array => data,
-                    unpackMessage: (data: ArrayBuffer): TurmsNotification | undefined => {
-                        if (data && data.byteLength) {
-                            return TurmsNotification.decode(new Uint8Array(data))
-                        } else {
-                            for (const callback of this._heartbeatCallbacks) {
-                                callback();
-                            }
-                            this._heartbeatCallbacks = [];
-                        }
-                    },
-                    connectionTimeout: this._connectionTimeout,
-                    timeout: this._requestTimeout,
-                    extractRequestId: (notification: TurmsNotification | undefined): number | undefined => {
-                        if (notification && !notification.relayedRequest && notification.requestId) {
-                            return parseInt(notification.requestId.value);
-                        }
-                    }
-                });
-                this._websocket.onUnpackedMessage.addListener((notification: TurmsNotification) => {
-                    const isSessionInfo = notification.data && notification.data.session;
-                    if (isSessionInfo) {
-                        this._sessionId = notification.data.session.sessionId;
-                    } else {
-                        const parsedNotification = NotificationUtil.transform(notification);
-                        for (const listener of this._onNotificationListeners) {
-                            try {
-                                listener(parsedNotification as ParsedNotification);
-                            } catch (e) {
-                                console.error(e);
-                            }
-                        }
-                    }
-                });
-                // onClose will always be triggered when
-                // 1. rejected by the HTTP upgrade error response
-                // 2. disconnected no matter by error (after onError) or else
-                this._websocket.onClose.addListener(event => {
-                    this._onWebsocketClose(event)
-                        .then(() => reject())
-                        .catch(e => reject(e));
-                });
-                this._websocket.open()
-                    .then(() => {
-                        this._onWebsocketOpen();
-                        resolve();
-                    })
-                    .catch(error => reject(error));
-            }
-        });
-    }
+    // Connection Service
 
     connect(
         userId: string,
@@ -188,49 +205,37 @@ export default class TurmsDriver {
         deviceType?: DeviceType,
         userOnlineStatus?: UserStatus,
         location?: UserLocation): Promise<void> {
-        return this._connect(userId, password, deviceType, userOnlineStatus, location)
-            .then(() => {
-                TurmsDriver._clearLoginInfo();
-                return Promise.resolve();
-            })
-            .catch(error => {
-                TurmsDriver._clearLoginInfo();
-                if (this._queryReasonWhenLoginFailed) {
-                    return Promise.reject(error);
-                } else {
-                    return Promise.reject(`Failed to login due to 1. user doesn't exist or is inactive; 2. password mismatch; 3. the server doesn't exist or is unavailable`);
-                }
-            });
+        return this._connectionService.connect({
+            wsUrl: this._wsUrl,
+            connectTimeout: this._connectionTimeout,
+
+            userId,
+            password,
+            deviceType,
+            userOnlineStatus,
+            location
+        });
     }
 
-    resetHeartBeatTimer(): void {
-        if (this._heartbeatTimer) {
-            this._heartbeatTimer.reset(this._heartbeatInterval);
-        }
+    reconnect(host?: string): Promise<void> {
+        return this._connectionService.reconnect(host);
     }
+
+    disconnect(): Promise<void> {
+        return this._connectionService.disconnect();
+    }
+
+    // Message Service
 
     send(message: im.turms.proto.ITurmsRequest): Promise<TurmsNotification> {
         return new Promise((resolve, reject) => {
-            if (this.connected()) {
-                const now = new Date();
-                if (!this._minRequestsInterval || now.getTime() - this._lastRequestDate.getTime() > this._minRequestsInterval) {
-                    this._lastRequestDate = now;
-                    const requestId = this._generateRandomId();
-                    message.requestId = {value: '' + requestId};
-                    const data = TurmsRequest.encode(message).finish();
-                    this._requestsMap[requestId] = resolve;
+            if (this._stateStore.isConnected) {
+                try {
+                    const notification = this._messageService.sendRequest(message, this._minRequestsInterval);
                     this.resetHeartBeatTimer();
-                    return this._websocket.sendRequest(data, {
-                        requestId: requestId
-                    }).then((notification: TurmsNotification) => {
-                        if (notification.code && TurmsStatusCode.isSuccessCode(notification.code.value)) {
-                            resolve(notification);
-                        } else {
-                            reject(TurmsBusinessException.fromNotification(notification));
-                        }
-                    });
-                } else {
-                    reject(TurmsBusinessException.fromCode(TurmsStatusCode.CLIENT_REQUESTS_TOO_FREQUENT));
+                    return notification;
+                } catch (e) {
+                    reject(e);
                 }
             } else {
                 reject(TurmsBusinessException.fromCode(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED));
@@ -238,161 +243,55 @@ export default class TurmsDriver {
         });
     }
 
-    private static _fillLoginInfo(
-        requestId: number,
-        userId: string,
-        password: string,
-        userOnlineStatus?: UserStatus,
-        deviceType?: DeviceType,
-        location?: UserLocation): void {
-        document.cookie = `${COOKIE_REQUEST_ID}=${requestId}; path=/`;
-        document.cookie = `${COOKIE_USER_ID}=${userId}; path=/`;
-        document.cookie = `${COOKIE_PASSWORD}=${escape(password)}; path=/`;
-        if (userOnlineStatus) {
-            document.cookie = `${COOKIE_USER_ONLINE_STATUS}=${UserStatus[userOnlineStatus]}; path=/`;
-        }
-        if (deviceType) {
-            document.cookie = `${COOKIE_DEVICE_TYPE}=${DeviceType[deviceType]}; path=/`;
-        }
-        if (location) {
-            document.cookie = `${COOKIE_LOCATION}=${location.toString()}; path=/`;
-        }
-    }
+    // Intermediary functions as a mediator between services
 
-    private static _clearLoginInfo(): void {
-        const now = new Date().toUTCString();
-        document.cookie = `${COOKIE_USER_ID}=;expires=${now}`;
-        document.cookie = `${COOKIE_PASSWORD}=;expires=${now}`;
-        document.cookie = `${COOKIE_USER_ONLINE_STATUS}=;expires=${now}`;
-        document.cookie = `${COOKIE_DEVICE_TYPE}=;expires=${now}`;
-        document.cookie = `${COOKIE_REQUEST_ID}=;expires=${now}`;
-        document.cookie = `${COOKIE_LOCATION}=;expires=${now}`;
-    }
-
-    private _generateRandomId(): number {
-        let id;
-        do {
-            id = Math.floor(Math.random() * 16384);
-        } while (Object.prototype.hasOwnProperty.call(this._requestsMap, id));
-        this._requestsMap[id] = true;
-        return id;
-    }
-
-    private _onWebsocketOpen(): void {
-        if (this._heartbeatTimer && this._heartbeatTimer.isRunning) {
-            this._heartbeatTimer.reset(this._heartbeatInterval);
+    private _triggerOnLoginFail(): Promise<void> {
+        if (this._queryReasonWhenLoginFailed) {
+            return this._reasonService.queryLoginFailureReason()
+                .then(reason => {
+                    if (reason.statusCode == 307) {
+                        return this.reconnect(reason.reason);
+                    } else {
+                        const desc = reason.reason
+                            ? `${reason.statusCode} - ${reason.reason}`
+                            : reason.statusCode;
+                        throw new Error(`Failed to login: ${desc}`);
+                    }
+                });
         } else {
-            this._heartbeatTimer = new Timer((): void => {
-                const difference = new Date().getTime() - this._lastRequestDate.getTime();
-                if (difference > this._minRequestsInterval) {
-                    this.sendHeartbeat().then(() => null);
-                }
-            }, this._heartbeatInterval);
-            this._heartbeatTimer.start();
+            return Promise.reject(new Error(`Failed to login due to 1. user doesn't exist or is inactive; 2. password mismatch; 3. the server doesn't exist or is unavailable`));
         }
     }
 
-    private _onWebsocketClose(event: any): Promise<void> {
-        const wasLogged = this._heartbeatTimer && this._heartbeatTimer.isRunning;
-        if (wasLogged) {
-            this._heartbeatTimer.stop();
-        }
-        if (this._isClosedByClient) {
-            this._isClosedByClient = false;
-            this._onClose({
-                closeStatus: TurmsCloseStatus.DISCONNECTED_BY_CLIENT,
-                webSocketStatusCode: event.code,
-                webSocketReason: event.reason
+    private _triggerOnSessionDisconnected(info: DisconnectionInfo): void {
+        const event = info.event;
+        if (info.isClosedByClient) {
+            this._sessionService.notifyOnSessionClosedListeners(event, {
+                code: TurmsCloseStatus.DISCONNECTED_BY_CLIENT
             });
-            return Promise.resolve();
-        }
-        const userId = this._turmsClient.userService.userId;
-        const deviceType = DeviceType[this._turmsClient.userService.deviceType];
-        if (wasLogged) {
-            if (this._onClose) {
-                if (this._queryReasonWhenDisconnected && userId && this._sessionId) {
-                    const params = `userId=${userId}&deviceType=${deviceType}&sessionId=${this._sessionId}`;
-                    return fetch(`${this._httpUrl}/reasons/disconnection?${params}`)
-                        .catch(error => {
-                            this._onClose({
-                                closeStatus: this._getIfBusinessCloseStatus(event.code),
-                                webSocketStatusCode: event.code,
-                                webSocketReason: event.reason,
-                                error: new Error(`Failed to fetch the disconnection reason: ${error}`)
-                            });
-                        })
-                        .then(response => {
-                            if (response.status === 200) {
-                                response.json()
-                                    .then((reason: SessionDisconnectionReason) => {
-                                        this._onClose({
-                                            closeStatus: reason.closeCode,
-                                            webSocketStatusCode: event.code,
-                                            webSocketReason: event.reason
-                                        });
-                                    });
-                            } else {
-                                this._onClose({
-                                    closeStatus: this._getIfBusinessCloseStatus(event.code),
-                                    webSocketStatusCode: event.code,
-                                    webSocketReason: event.reason,
-                                    error: new Error(`Failed to fetch the disconnection reason: ${response.statusText}`)
-                                });
-                            }
-                        });
-                } else {
-                    this._onClose({
-                        closeStatus: this._getIfBusinessCloseStatus(event.code),
-                        webSocketStatusCode: event.code,
-                        webSocketReason: event.reason
-                    });
-                }
-            }
         } else {
-            if (this._queryReasonWhenLoginFailed && userId && this._requestId) {
-                const params = `userId=${userId}&deviceType=${deviceType}&requestId=${this._requestId}`;
-                return fetch(`${this._httpUrl}/reasons/login-failure?${params}`)
-                    .catch(error => {
-                        throw new Error(`Failed to fetch the reason for login failure: ${error}`);
-                    })
-                    .then(response => {
-                        if (response.status === 200) {
-                            return response.json().then((reason: LoginFailureReason) => {
-                                const desc = reason.reason
-                                    ? `${reason.statusCode} - ${reason.reason}`
-                                    : reason.statusCode;
-                                return Promise.reject(new Error(`Failed to login: ${desc}`));
-                            });
+            if (this._queryReasonWhenDisconnected) {
+                this._reasonService.queryDisconnectionReason()
+                    .then(reason => {
+                        if (reason.closeCode == TurmsCloseStatus.REDIRECT) {
+                            this._sessionService.notifyOnSessionDisconnectedListeners(event, {
+                                code: reason.closeCode
+                            })
+                            this.reconnect(reason.reason).then(() => null);
                         } else {
-                            throw new Error(`Failed to fetch the reason for login failure: ${response.statusText}`);
+                            this._sessionService.notifyOnSessionClosedListeners(event, {
+                                code: reason.closeCode
+                            });
                         }
+                    })
+                    .catch(error => {
+                        this._sessionService.notifyOnSessionClosedListeners(event, {
+                            error
+                        });
                     });
+            } else {
+                this._sessionService.notifyOnSessionClosedListeners(event);
             }
-            return Promise.reject(new Error('Failed to login'));
-        }
-        return Promise.resolve();
-    }
-
-    reconnect(host?: string): Promise<void> {
-        if (host) {
-            const isSecure = this._url.startsWith("wss://");
-            this._url = `${isSecure ? "wss://" : "ws://"}${host}`;
-        }
-        if (!this._turmsClient.userService.userId || !this._turmsClient.userService.password) {
-            return Promise.reject();
-        } else {
-            return this.connect(
-                this._turmsClient.userService.userId,
-                this._turmsClient.userService.password,
-                this._turmsClient.userService.deviceType,
-                this._turmsClient.userService.userOnlineStatus,
-                this._turmsClient.userService.location);
-        }
-    }
-
-    _getIfBusinessCloseStatus(closeCode: number) {
-        if (TurmsCloseStatus[closeCode]) {
-            return closeCode;
         }
     }
 

@@ -31,6 +31,14 @@ export default class TurmsBusinessException {
         }
     }
 
+    static fromMessage(message?: string): TurmsBusinessException {
+        if (message) {
+            return new TurmsBusinessException(TurmsStatusCode.FAILED, message);
+        } else {
+            return TurmsBusinessException.fromCode(TurmsStatusCode.FAILED);
+        }
+    }
+
     static fromCode(code: number): TurmsBusinessException {
         return new TurmsBusinessException(code, TurmsStatusCode.getReason(code));
     }

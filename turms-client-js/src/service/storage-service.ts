@@ -132,10 +132,7 @@ export default class StorageService {
                 keyStr: RequestUtil.wrapValueIfNotNull(keyStr),
                 keyNum: RequestUtil.wrapValueIfNotNull(keyNum)
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-
-        });
+        }).then(() => null);
     }
 
     private _getBytesFromGetUrl(url: string): Promise<Uint8Array> {

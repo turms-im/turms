@@ -38,8 +38,7 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "protobufjs": "git+https://github.com/turms-im/protobuf.js.git",
-    "unfetch": "^4.1.0",
-    "websocket-as-promised": "^1.0.1"
+    "unfetch": "^4.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",

@@ -8,4 +8,5 @@ export default class RequestUtil {
     static throwIfAnyFalsy(...values: any[]): void;
     static throwIfAllFalsy(...values: any[]): void;
     static areAllFalsy(...values: any[]): boolean;
+    static generateRandomId(requestMap: Record<number, any>): number;
 }

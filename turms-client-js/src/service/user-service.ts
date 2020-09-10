@@ -129,9 +129,7 @@ export default class UserService {
             updateUserOnlineStatusRequest: {
                 userStatus: onlineStatus
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-        });
+        }).then(() => null);
     }
 
     disconnectOnlineDevices(deviceTypes: string[] | DeviceType[]): Promise<void> {
@@ -140,7 +138,7 @@ export default class UserService {
         }
         try {
             // @ts-ignore
-            deviceTypes = deviceTypes.map(type => {
+            deviceTypes = deviceTypes.map((type: string | DeviceType) => {
                 if (typeof type === 'string') {
                     try {
                         return ConstantTransformer.string2DeviceType(type);
@@ -149,7 +147,7 @@ export default class UserService {
                     }
                 } else {
                     if (type >= 0 && type <= DeviceType.UNKNOWN) {
-                        return type as DeviceType;
+                        return type;
                     } else {
                         throw TurmsBusinessException.illegalParam('illegal DeviceType');
                     }
@@ -163,9 +161,7 @@ export default class UserService {
                 userStatus: UserStatus.OFFLINE,
                 deviceTypes: deviceTypes as DeviceType[]
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-        });
+        }).then(() => null);
     }
 
     updatePassword(password: string): Promise<void> {
@@ -176,9 +172,7 @@ export default class UserService {
             updateUserRequest: {
                 password: RequestUtil.wrapValueIfNotNull(password)
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-        });
+        }).then(() => null);
     }
 
     updateProfile(
@@ -201,16 +195,13 @@ export default class UserService {
                 intro: RequestUtil.wrapValueIfNotNull(intro),
                 profileAccessStrategy: profileAccessStrategy
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-        });
+        }).then(() => null);
     }
 
     queryUserProfile(userId: string, lastUpdatedDate?: Date): Promise<ParsedModel.UserInfoWithVersion | undefined> {
         if (RequestUtil.isFalsy(userId)) {
             return TurmsBusinessException.notFalsy('userId');
         }
-        // @ts-ignore
         return this._turmsClient.driver.send({
             queryUserProfileRequest: {
                 userId: userId,
@@ -268,7 +259,6 @@ export default class UserService {
         if (RequestUtil.isFalsy(longitude)) {
             return TurmsBusinessException.notFalsy('longitude');
         }
-        // @ts-ignore
         return this._turmsClient.driver.send({
             queryUsersInfosNearbyRequest: {
                 latitude: latitude,
@@ -283,7 +273,6 @@ export default class UserService {
         if (RequestUtil.isFalsy(usersIds)) {
             return TurmsBusinessException.notFalsy('usersIds', true);
         }
-        // @ts-ignore
         return this._turmsClient.driver.send({
             queryUsersOnlineStatusRequest: {
                 usersIds
@@ -298,7 +287,6 @@ export default class UserService {
         isBlocked?: boolean,
         groupIndex?: number,
         lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion | undefined> {
-        // @ts-ignore
         return this._turmsClient.driver.send({
             queryRelationshipsRequest: {
                 relatedUsersIds,
@@ -343,9 +331,7 @@ export default class UserService {
                 isBlocked: isBlocked,
                 groupIndex: RequestUtil.wrapValueIfNotNull(groupIndex)
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-        });
+        }).then(() => null);
     }
 
     createFriendRelationship(userId: string, groupIndex?: number): Promise<void> {
@@ -366,9 +352,7 @@ export default class UserService {
                 groupIndex: RequestUtil.wrapValueIfNotNull(deleteGroupIndex),
                 targetGroupIndex: RequestUtil.wrapValueIfNotNull(targetGroupIndex)
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-        });
+        }).then(() => null);
     }
 
     updateRelationship(relatedUserId: string, isBlocked?: boolean, groupIndex?: number): Promise<void> {
@@ -384,9 +368,7 @@ export default class UserService {
                 blocked: RequestUtil.wrapValueIfNotNull(isBlocked),
                 newGroupIndex: RequestUtil.wrapValueIfNotNull(groupIndex)
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-        });
+        }).then(() => null);
     }
 
     sendFriendRequest(recipientId: string, content: string): Promise<string> {
@@ -424,13 +406,10 @@ export default class UserService {
                 responseAction: responseAction,
                 reason: RequestUtil.wrapValueIfNotNull(reason)
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-        });
+        }).then(() => null);
     }
 
     queryFriendRequests(areSentByMe: boolean, lastUpdatedDate?: Date): Promise<ParsedModel.UserFriendRequestsWithVersion | undefined> {
-        // @ts-ignore
         return this._turmsClient.driver.send({
             queryFriendRequestsRequest: {
                 areSentByMe: areSentByMe,
@@ -459,9 +438,7 @@ export default class UserService {
                 groupIndex,
                 targetGroupIndex: RequestUtil.wrapValueIfNotNull(targetGroupIndex)
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-        });
+        }).then(() => null);
     }
 
     updateRelationshipGroup(groupIndex: number, newName: string): Promise<void> {
@@ -476,13 +453,10 @@ export default class UserService {
                 groupIndex,
                 newName
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-        });
+        }).then(() => null);
     }
 
     queryRelationshipGroups(lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipGroupsWithVersion | undefined> {
-        // @ts-ignore
         return this._turmsClient.driver.send({
             queryRelationshipGroupsRequest: {
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
@@ -502,9 +476,7 @@ export default class UserService {
                 relatedUserId,
                 newGroupIndex: RequestUtil.wrapValueIfNotNull(groupIndex)
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-        });
+        }).then(() => null);
     }
 
     /**
@@ -527,8 +499,6 @@ export default class UserService {
                 name: RequestUtil.wrapValueIfNotNull(name),
                 address: RequestUtil.wrapValueIfNotNull(address)
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-        });
+        }).then(() => null);
     }
 }

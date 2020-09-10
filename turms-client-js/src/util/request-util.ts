@@ -53,4 +53,13 @@ export default class RequestUtil {
             return true;
         }
     }
+
+    static generateRandomId(requestMap: Record<number, any>): number {
+        let id;
+        do {
+            id = Math.floor(Math.random() * 16384);
+        } while (Object.prototype.hasOwnProperty.call(requestMap, id));
+        return id;
+    }
+
 }

@@ -8,6 +8,7 @@ export default class TurmsBusinessException {
     get reason(): string;
     toString(): string;
     static fromNotification(notification: TurmsNotification): TurmsBusinessException;
+    static fromMessage(message?: string): TurmsBusinessException;
     static fromCode(code: number): TurmsBusinessException;
     static illegalParam<T = never>(reason: string): Promise<T>;
     static notFalsy<T = never>(name: string, notEmpty?: boolean): Promise<T>;

@@ -123,9 +123,7 @@ export default class MessageService {
                 text: RequestUtil.wrapValueIfNotNull(text),
                 records
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-        });
+        }).then(() => null);
     }
 
     queryMessages(
@@ -144,7 +142,6 @@ export default class MessageService {
                 return TurmsBusinessException.illegalParam(e);
             }
         }
-        // @ts-ignore
         return this._turmsClient.driver.send({
             queryMessagesRequest: {
                 ids: RequestUtil.wrapValueIfNotNull(ids),
@@ -160,7 +157,6 @@ export default class MessageService {
     }
 
     queryPendingMessagesWithTotal(size = 1): Promise<ParsedModel.MessagesWithTotal[]> {
-        // @ts-ignore
         return this._turmsClient.driver.send({
             queryPendingMessagesWithTotalRequest: {
                 size: RequestUtil.wrapValueIfNotNull(size)
@@ -172,7 +168,6 @@ export default class MessageService {
         if (RequestUtil.isFalsy(messageId)) {
             return TurmsBusinessException.notFalsy('messageId');
         }
-        // @ts-ignore
         return this._turmsClient.driver.send({
             queryMessageStatusesRequest: {
                 messageId
@@ -189,9 +184,7 @@ export default class MessageService {
                 messageId,
                 recallDate: RequestUtil.wrapTimeIfNotNull(recallDate)
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-        });
+        }).then(() => null);
     }
 
     readMessage(messageId: string, readDate = new Date()): Promise<void> {
@@ -203,9 +196,7 @@ export default class MessageService {
                 messageId,
                 readDate: RequestUtil.wrapTimeIfNotNull(readDate)
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-        });
+        }).then(() => null);
     }
 
     markMessageUnread(messageId: string): Promise<void> {
@@ -221,9 +212,7 @@ export default class MessageService {
                 isGroupMessage,
                 toId: targetId
             }
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-        }).then(() => {
-        });
+        }).then(() => null);
     }
 
     isMentionEnabled(): boolean {
