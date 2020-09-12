@@ -1,10 +1,15 @@
-public struct TurmsBusinessException: Error {
+public struct TurmsBusinessError: Error {
     public let code: TurmsStatusCode
     public let reason: String
 
     init(_ code: TurmsStatusCode) {
         self.code = code
         self.reason = code.reason
+    }
+    
+    init(_ code: TurmsStatusCode, _ reason: String) {
+        self.code = code
+        self.reason = reason
     }
 
     init(_ code: Int32) {

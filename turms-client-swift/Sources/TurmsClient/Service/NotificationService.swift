@@ -7,8 +7,7 @@ public class NotificationService {
     init(_ turmsClient: TurmsClient) {
         self.turmsClient = turmsClient
         self.turmsClient.driver
-            .onNotificationListeners
-            .append {
+            .addOnNotificationListener {
                 if self.onNotification != nil, $0.hasRelayedRequest {
                     guard case .createMessageRequest = $0.relayedRequest.kind else {
                         self.onNotification!($0.relayedRequest)

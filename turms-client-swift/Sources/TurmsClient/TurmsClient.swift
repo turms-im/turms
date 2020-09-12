@@ -1,3 +1,5 @@
+import Foundation
+
 public class TurmsClient {
     public private(set) var driver: TurmsDriver!
     public private(set) var userService: UserService!
@@ -6,11 +8,10 @@ public class TurmsClient {
     public private(set) var storageService: StorageService!
     public private(set) var notificationService: NotificationService!
 
-    public init(_ url: String? = nil, connectionTimeout: Int? = nil, minRequestsInterval: Int? = nil, storageServerUrl: String? = nil) {
+    public init(_ url: String? = nil, connectTimeout: TimeInterval? = nil, minRequestsInterval: TimeInterval? = nil, storageServerUrl: String? = nil) {
         driver = TurmsDriver(
-            self,
             url: url,
-            connectionTimeout: connectionTimeout,
+            connectTimeout: connectTimeout,
             minRequestsInterval: minRequestsInterval)
         userService = UserService(self)
         groupService = GroupService(self)

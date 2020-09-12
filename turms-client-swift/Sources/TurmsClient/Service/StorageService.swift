@@ -18,7 +18,7 @@ public class StorageService {
             let url = "\(serverUrl!)/\(name)/\(userId)"
             return Promise.value(url)
         } catch {
-            return Promise(error: TurmsBusinessException(.illegalArguments))
+            return Promise(error: TurmsBusinessError(.illegalArguments))
         }
     }
 
@@ -31,7 +31,7 @@ public class StorageService {
         if let userId = turmsClient.userService.userId {
             return getSignedPutUrl(contentType: .profile, size: Int64(pictureSize), keyNum: userId)
         } else {
-            return Promise(error: TurmsBusinessException(.unauthorized))
+            return Promise(error: TurmsBusinessError(.unauthorized))
         }
     }
 
@@ -52,7 +52,7 @@ public class StorageService {
             let url = "\(serverUrl!)/\(name)/\(groupId)"
             return Promise.value(url)
         } catch {
-            return Promise(error: TurmsBusinessException(.illegalArguments))
+            return Promise(error: TurmsBusinessError(.illegalArguments))
         }
     }
 
@@ -127,7 +127,7 @@ public class StorageService {
                 .field("keyStr", keyStr)
                 .field("keyNum", keyNum)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     private func getBytesFromGetUrl(_ url: String) -> Promise<Data> {
@@ -142,10 +142,10 @@ public class StorageService {
                     if response.statusCode == 200 {
                         seal.fulfill(data!)
                     } else {
-                        seal.reject(TurmsBusinessException(4000))
+                        seal.reject(TurmsBusinessError(4000))
                     }
                 } else {
-                    seal.reject(TurmsBusinessException(4000))
+                    seal.reject(TurmsBusinessError(4000))
                 }
             }.resume()
         }
@@ -164,10 +164,10 @@ public class StorageService {
                     if response.statusCode == 200 {
                         seal.fulfill(url)
                     } else {
-                        seal.reject(TurmsBusinessException(4000))
+                        seal.reject(TurmsBusinessError(4000))
                     }
                 } else {
-                    seal.reject(TurmsBusinessException(4000))
+                    seal.reject(TurmsBusinessError(4000))
                 }
             }.resume()
         }
@@ -183,7 +183,7 @@ public class StorageService {
             case .attachment:
                 return "attachment"
             default:
-                throw TurmsBusinessException(.failed)
+                throw TurmsBusinessError(.failed)
         }
     }
 }

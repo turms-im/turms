@@ -1,12 +1,22 @@
 import Foundation
 
-public class UserInfoWithVersion {
-    var userInfo: UserInfo
-    var lastUpdatedDate: Int64
+public struct UserInfoWithVersion {
+    private var _userInfo: UserInfo
+    private var _lastUpdatedDate: Int64
+    
+    public var userInfo: UserInfo {
+        get { return _userInfo }
+        set { _userInfo = newValue }
+    }
+    
+    public var lastUpdatedDate: Int64 {
+        get { return _lastUpdatedDate }
+        set { _lastUpdatedDate = newValue }
+    }
 
     init(userInfo: UserInfo, lastUpdatedDate: Int64) {
-        self.userInfo = userInfo
-        self.lastUpdatedDate = lastUpdatedDate
+        self._userInfo = userInfo
+        self._lastUpdatedDate = lastUpdatedDate
     }
 
     public static func from(_ notification: TurmsNotification) throws -> UserInfoWithVersion {
@@ -16,7 +26,7 @@ public class UserInfoWithVersion {
                 lastUpdatedDate: notification.data.usersInfosWithVersion.lastUpdatedDate.value
             )
         } else {
-            throw TurmsBusinessException(.missingData)
+            throw TurmsBusinessError(.missingData)
         }
     }
 }

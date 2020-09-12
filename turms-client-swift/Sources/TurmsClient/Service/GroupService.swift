@@ -33,7 +33,7 @@ public class GroupService {
                 .request("deleteGroupRequest")
                 .field("groupId", groupId)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     public func updateGroup(
@@ -69,7 +69,7 @@ public class GroupService {
                 .field("successorId", successorId)
                 .field("quitAfterTransfer", quitAfterTransfer)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     public func transferOwnership(groupId: Int64, successorId: Int64, quitAfterTransfer: Bool = false) -> Promise<Void> {
@@ -80,7 +80,7 @@ public class GroupService {
                 .field("successorId", successorId)
                 .field("quitAfterTransfer", quitAfterTransfer)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     public func muteGroup(groupId: Int64, muteEndDate: Date) -> Promise<Void> {
@@ -90,7 +90,7 @@ public class GroupService {
                 .field("groupId", groupId)
                 .field("muteEndDate", muteEndDate)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     public func unmuteGroup(_ groupId: Int64) -> Promise<Void> {
@@ -143,7 +143,7 @@ public class GroupService {
                 .request("deleteGroupJoinQuestionRequest")
                 .field("questionId", questionId)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     public func updateGroupJoinQuestion(questionId: Int64, question: String? = nil, answers: [String]? = nil, score: Int32? = nil) -> Promise<Void> {
@@ -158,7 +158,7 @@ public class GroupService {
                 .field("answers", answers)
                 .field("score", score)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     // Group Blacklist
@@ -169,7 +169,7 @@ public class GroupService {
                 .field("blacklistedUserId", userId)
                 .field("groupId", groupId)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     public func unblacklistUser(groupId: Int64, userId: Int64) -> Promise<Void> {
@@ -179,7 +179,7 @@ public class GroupService {
                 .field("groupId", groupId)
                 .field("unblacklistedUserId", userId)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     public func queryBlacklistedUsersIds(
@@ -224,7 +224,7 @@ public class GroupService {
                 .request("deleteGroupInvitationRequest")
                 .field("invitationId", invitationId)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     public func queryInvitations(groupId: Int64, lastUpdatedDate: Date? = nil) -> Promise<GroupInvitationsWithVersion?> {
@@ -263,7 +263,7 @@ public class GroupService {
                 .request("deleteGroupJoinRequestRequest")
                 .field("requestId", requestId)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     public func queryJoinRequests(groupId: Int64, lastUpdatedDate: Date? = nil) -> Promise<GroupJoinRequestsWithVersion?> {
@@ -320,7 +320,7 @@ public class GroupService {
                 if let value = result {
                     return value
                 } else {
-                    throw TurmsBusinessException(.missingData)
+                    throw TurmsBusinessError(.missingData)
                 }
             }
     }
@@ -341,7 +341,7 @@ public class GroupService {
                 .field("role", role)
                 .field("muteEndDate", muteEndDate)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     public func quitGroup(groupId: Int64, successorId: Int64? = nil, quitAfterTransfer: Bool? = nil) -> Promise<Void> {
@@ -353,7 +353,7 @@ public class GroupService {
                 .field("successorId", successorId)
                 .field("quitAfterTransfer", quitAfterTransfer)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     public func removeGroupMember(groupId: Int64, memberId: Int64) -> Promise<Void> {
@@ -363,7 +363,7 @@ public class GroupService {
                 .field("groupId", groupId)
                 .field("groupMemberId", memberId)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     public func updateGroupMemberInfo(
@@ -384,7 +384,7 @@ public class GroupService {
                 .field("role", role)
                 .field("muteEndDate", muteEndDate)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     public func muteGroupMember(groupId: Int64, memberId: Int64, muteEndDate: Date) -> Promise<Void> {

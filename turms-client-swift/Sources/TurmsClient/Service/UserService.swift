@@ -7,7 +7,7 @@ public class UserService {
     var password: String?
     var location: Position?
     var userOnlineStatus: UserStatus?
-    var deviceType: DeviceType = .unknown
+    var deviceType: DeviceType?
 
     init(_ turmsClient: TurmsClient) {
         self.turmsClient = turmsClient
@@ -22,7 +22,7 @@ public class UserService {
         self.userId = userId
         self.password = password
         self.userOnlineStatus = userOnlineStatus!
-        self.deviceType = deviceType!
+        self.deviceType = deviceType ?? .ios
         self.location = location
         return turmsClient.driver.connect(
             userId: userId,
@@ -34,7 +34,7 @@ public class UserService {
 
     public func relogin() -> Promise<Void> {
         if userId == nil || password == nil {
-            return Promise(error: TurmsBusinessException(.clientUserIdAndPasswordMustNotNull))
+            return Promise(error: TurmsBusinessError(.clientUserIdAndPasswordMustNotNull))
         } else {
             return login(
                 userId: userId!,
@@ -51,14 +51,14 @@ public class UserService {
 
     public func updateUserOnlineStatus(_ onlineStatus: UserStatus) -> Promise<Void> {
         if onlineStatus == .offline {
-            return Promise(error: TurmsBusinessException(.illegalArguments))
+            return Promise(error: TurmsBusinessError(.illegalArguments))
         }
         return turmsClient.driver
             .send { $0
                 .request("updateUserOnlineStatusRequest")
                 .field("userStatus", onlineStatus)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     public func disconnectOnlineDevices(_ deviceTypes: [DeviceType]) -> Promise<Void> {
@@ -68,7 +68,7 @@ public class UserService {
                 .field("userStatus", UserStatus.offline)
                 .field("deviceTypes", deviceTypes)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     public func updatePassword(_ password: String) -> Promise<Void> {
@@ -77,7 +77,7 @@ public class UserService {
                 .request("updateUserRequest")
                 .field("password", password)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     public func updateProfile(
@@ -94,7 +94,7 @@ public class UserService {
                 .field("intro", intro)
                 .field("profileAccessStrategy", profileAccessStrategy)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     public func queryUserProfile(userId: Int64, lastUpdatedDate: Date? = nil) -> Promise<UserInfoWithVersion?> {
@@ -203,7 +203,7 @@ public class UserService {
                 .field("isBlocked", isBlocked)
                 .field("groupIndex", groupIndex)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     public func createFriendRelationship(userId: Int64, groupIndex: Int32? = nil) -> Promise<Void> {
@@ -228,7 +228,7 @@ public class UserService {
                 .field("groupIndex", deleteGroupIndex)
                 .field("targetGroupIndex", targetGroupIndex)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     public func updateRelationship(relatedUserId: Int64, isBlocked: Bool? = nil, groupIndex: Int32? = nil) -> Promise<Void> {
@@ -242,7 +242,7 @@ public class UserService {
                 .field("blocked", isBlocked)
                 .field("newGroupIndex", groupIndex)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     public func sendFriendRequest(recipientId: Int64, content: String) -> Promise<Int64> {
@@ -263,7 +263,7 @@ public class UserService {
                 .field("responseAction", responseAction)
                 .field("reason", reason)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     public func queryFriendRequests(_ areSentByMe: Bool, lastUpdatedDate: Date? = nil) -> Promise<UserFriendRequestsWithVersion?> {
@@ -292,7 +292,7 @@ public class UserService {
                 .field("groupIndex", groupIndex)
                 .field("targetGroupIndex", targetGroupIndex)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     public func updateRelationshipGroup(groupIndex: Int32, newName: String) -> Promise<Void> {
@@ -302,7 +302,7 @@ public class UserService {
                 .field("groupIndex", groupIndex)
                 .field("newName", newName)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     public func queryRelationshipGroups(_ lastUpdatedDate: Date? = nil) -> Promise<UserRelationshipGroupsWithVersion?> {
@@ -321,7 +321,7 @@ public class UserService {
                 .field("relatedUserId", relatedUserId)
                 .field("newGroupIndex", groupIndex)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     /**
@@ -338,6 +338,6 @@ public class UserService {
                 .field("name", name)
                 .field("address", address)
             }
-            .map { _ in () }
+            .asVoid()
     }
 }

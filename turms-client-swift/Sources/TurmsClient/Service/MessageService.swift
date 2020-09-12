@@ -25,8 +25,7 @@ public class MessageService {
     init(_ turmsClient: TurmsClient) {
         self.turmsClient = turmsClient
         self.turmsClient.driver
-            .onNotificationListeners
-            .append {
+            .addOnNotificationListener {
                 if self.onMessage != nil, $0.hasRelayedRequest {
                     if case .createMessageRequest(let request) = $0.relayedRequest.kind {
                         let message = MessageService.createMessage2Message($0.requesterID.value, request)
@@ -45,7 +44,7 @@ public class MessageService {
         records: [[UInt8]]? = nil,
         burnAfter: Int32? = nil) -> Promise<Int64> {
         if Validator.areAllNil(text, records) {
-            return Promise(error: TurmsBusinessException(.illegalArguments))
+            return Promise(error: TurmsBusinessError(.illegalArguments))
         }
         return turmsClient.driver
             .send { $0
@@ -88,7 +87,7 @@ public class MessageService {
                 .field("text", text)
                 .field("records", records)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     public func queryMessages(
@@ -140,7 +139,7 @@ public class MessageService {
                 .field("messageId", messageId)
                 .field("recallDate", recallDate)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     public func readMessage(messageId: Int64, readDate: Date = Date()) -> Promise<Void> {
@@ -150,7 +149,7 @@ public class MessageService {
                 .field("messageId", messageId)
                 .field("readDate", readDate)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     public func markMessageUnread(_ messageId: Int64) -> Promise<Void> {
@@ -166,7 +165,7 @@ public class MessageService {
                 .field("isGroupMessage", isGroupMessage)
                 .field("toId", toId)
             }
-            .map { _ in () }
+            .asVoid()
     }
 
     public func isMentionEnabled() -> Bool {

@@ -26,8 +26,6 @@ public struct Session {
 
   public var sessionID: String = String()
 
-  public var address: String = String()
-
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -41,14 +39,12 @@ extension Session: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
   public static let protoMessageName: String = _protobuf_package + ".Session"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "session_id"),
-    2: .same(proto: "address"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
       case 1: try decoder.decodeSingularStringField(value: &self.sessionID)
-      case 2: try decoder.decodeSingularStringField(value: &self.address)
       default: break
       }
     }
@@ -58,15 +54,11 @@ extension Session: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
     if !self.sessionID.isEmpty {
       try visitor.visitSingularStringField(value: self.sessionID, fieldNumber: 1)
     }
-    if !self.address.isEmpty {
-      try visitor.visitSingularStringField(value: self.address, fieldNumber: 2)
-    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: Session, rhs: Session) -> Bool {
     if lhs.sessionID != rhs.sessionID {return false}
-    if lhs.address != rhs.address {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
