@@ -16,7 +16,7 @@
  */
 
 import UserLocation from "../../model/user-location";
-import TurmsBusinessException from "../../model/turms-business-exception";
+import TurmsBusinessError from "../../model/turms-business-error";
 import TurmsStatusCode from "../../model/turms-status-code";
 import {im} from "../../model/proto-bundle";
 import StateStore from "../state-store";
@@ -52,7 +52,7 @@ export default class ConnectionService {
     private _stateStore: StateStore;
 
     private _isClosedByClient = false;
-    private _disconnectionCallbacks;
+    private _disconnectPromises = [];
     private _connectOptions = {} as ConnectOptions;
 
     private _onConnectedListeners: (() => void)[] = [];
@@ -67,7 +67,7 @@ export default class ConnectionService {
     private _resetStates(): void {
         this._stateStore.connectionRequestId = null;
         this._isClosedByClient = false;
-        this._triggerDisconnectCallbacks();
+        this._resolveDisconnectPromises();
     }
 
     // Listeners
@@ -105,17 +105,17 @@ export default class ConnectionService {
         }
     }
 
-    private _notifyOnMessageListener(message: any): void {
+    private _notifyOnMessageListeners(message: any): void {
         for (const listener of this._onMessageListeners) {
             listener(message);
         }
     }
 
-    private _triggerDisconnectCallbacks(): void {
-        for (const cb of this._disconnectionCallbacks) {
+    private _resolveDisconnectPromises(): void {
+        for (const cb of this._disconnectPromises) {
             cb();
         }
-        this._disconnectionCallbacks = [];
+        this._disconnectPromises = [];
     }
 
     // Connection
@@ -123,7 +123,7 @@ export default class ConnectionService {
     connect(options: ConnectOptions): Promise<void> {
         return new Promise((resolve, reject) => {
             if (this._stateStore.isConnected) {
-                return TurmsBusinessException.fromCode(TurmsStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED);
+                return TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED);
             } else {
                 this._resetStates();
                 this._stateStore.connectionRequestId = Math.floor(Math.random() * 16383) + 1;
@@ -166,7 +166,7 @@ export default class ConnectionService {
                     this._onWebSocketOpen();
                     resolve();
                 });
-                this._stateStore.websocket.onmessage = (event): void => this._notifyOnMessageListener(event.data);
+                this._stateStore.websocket.onmessage = (event): void => this._notifyOnMessageListeners(event.data);
             }
         });
     }
@@ -175,7 +175,7 @@ export default class ConnectionService {
         if (this._stateStore.isConnected || this._stateStore.websocket.readyState === WebSocket.CONNECTING) {
             this._isClosedByClient = true;
             return new Promise(resolve => {
-                this._disconnectionCallbacks.push(resolve);
+                this._disconnectPromises.push(resolve);
                 this._stateStore.websocket.close();
             });
         } else {
@@ -234,7 +234,7 @@ export default class ConnectionService {
         ConnectionService._clearLoginInfo();
         const wasConnected = this._stateStore.isConnected;
         this._stateStore.isConnected = false;
-        this._triggerDisconnectCallbacks();
+        this._resolveDisconnectPromises();
         return this._notifyOnDisconnectedListeners({
             wasConnected,
             isClosedByClient: this._isClosedByClient,

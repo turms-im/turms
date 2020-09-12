@@ -5,7 +5,7 @@ import RequestUtil from "../util/request-util";
 import {ParsedModel} from "../model/parsed-model";
 import NotificationUtil from "../util/notification-util";
 import MessageAddition from "../model/message-addition";
-import TurmsBusinessException from "../model/turms-business-exception";
+import TurmsBusinessError from "../model/turms-business-error";
 import File = im.turms.proto.File;
 import AudioFile = im.turms.proto.AudioFile;
 import VideoFile = im.turms.proto.VideoFile;
@@ -67,10 +67,10 @@ export default class MessageService {
         records?: Uint8Array[],
         burnAfter?: number): Promise<string> {
         if (RequestUtil.isFalsy(targetId)) {
-            return TurmsBusinessException.notFalsy('targetId');
+            return TurmsBusinessError.notFalsy('targetId');
         }
         if (RequestUtil.isFalsy(text) && RequestUtil.isFalsy(records)) {
-            return TurmsBusinessException.illegalParam('text and records must not all be null');
+            return TurmsBusinessError.illegalParam('text and records must not all be null');
         }
         if (!deliveryDate) {
             deliveryDate = new Date();
@@ -92,10 +92,10 @@ export default class MessageService {
         isGroupMessage: boolean,
         targetId: string): Promise<string> {
         if (RequestUtil.isFalsy(messageId)) {
-            return TurmsBusinessException.notFalsy('messageId');
+            return TurmsBusinessError.notFalsy('messageId');
         }
         if (RequestUtil.isFalsy(targetId)) {
-            return TurmsBusinessException.notFalsy('targetId');
+            return TurmsBusinessError.notFalsy('targetId');
         }
         return this._turmsClient.driver.send({
             createMessageRequest: {
@@ -111,7 +111,7 @@ export default class MessageService {
         text?: string,
         records?: Uint8Array[]): Promise<void> {
         if (RequestUtil.isFalsy(messageId)) {
-            return TurmsBusinessException.notFalsy('messageId');
+            return TurmsBusinessError.notFalsy('messageId');
         }
         if (RequestUtil.areAllFalsy(text, records)) {
             return Promise.resolve();
@@ -138,7 +138,7 @@ export default class MessageService {
             try {
                 deliveryStatus = ConstantTransformer.string2DeliveryStatus(deliveryStatus);
             } catch (e) {
-                return TurmsBusinessException.illegalParam(e);
+                return TurmsBusinessError.illegalParam(e);
             }
         }
         return this._turmsClient.driver.send({
@@ -165,7 +165,7 @@ export default class MessageService {
 
     queryMessageStatus(messageId: string): Promise<ParsedModel.MessageStatus[]> {
         if (RequestUtil.isFalsy(messageId)) {
-            return TurmsBusinessException.notFalsy('messageId');
+            return TurmsBusinessError.notFalsy('messageId');
         }
         return this._turmsClient.driver.send({
             queryMessageStatusesRequest: {
@@ -176,7 +176,7 @@ export default class MessageService {
 
     recallMessage(messageId: string, recallDate = new Date()): Promise<void> {
         if (RequestUtil.isFalsy(messageId)) {
-            return TurmsBusinessException.notFalsy('messageId');
+            return TurmsBusinessError.notFalsy('messageId');
         }
         return this._turmsClient.driver.send({
             updateMessageRequest: {
@@ -188,7 +188,7 @@ export default class MessageService {
 
     readMessage(messageId: string, readDate = new Date()): Promise<void> {
         if (RequestUtil.isFalsy(messageId)) {
-            return TurmsBusinessException.notFalsy('messageId');
+            return TurmsBusinessError.notFalsy('messageId');
         }
         return this._turmsClient.driver.send({
             updateMessageRequest: {
@@ -204,7 +204,7 @@ export default class MessageService {
 
     updateTypingStatusRequest(isGroupMessage: boolean, targetId: string): Promise<void> {
         if (RequestUtil.isFalsy(targetId)) {
-            return TurmsBusinessException.notFalsy('targetId');
+            return TurmsBusinessError.notFalsy('targetId');
         }
         return this._turmsClient.driver.send({
             updateTypingStatusRequest: {

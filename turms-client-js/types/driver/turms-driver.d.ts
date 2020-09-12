@@ -10,7 +10,7 @@ import DeviceType = im.turms.proto.DeviceType;
 export default class TurmsDriver {
     private _wsUrl;
     private _httpUrl;
-    private _connectionTimeout;
+    private _connectTimeout;
     private _requestTimeout;
     private _minRequestsInterval;
     private _queryReasonWhenLoginFailed;
@@ -24,7 +24,7 @@ export default class TurmsDriver {
     private _messageService;
     private _reasonService;
     private _sessionService;
-    constructor(url?: string, connectionTimeout?: number, requestTimeout?: number, minRequestsInterval?: number, httpUrl?: string, queryReasonWhenLoginFailed?: boolean, queryReasonWhenDisconnected?: boolean);
+    constructor(url?: string, connectTimeout?: number, requestTimeout?: number, minRequestsInterval?: number, httpUrl?: string, queryReasonWhenLoginFailed?: boolean, queryReasonWhenDisconnected?: boolean);
     initConnectionService(): ConnectionService;
     initSessionService(): SessionService;
     getStatus(): SessionStatus;
@@ -35,8 +35,8 @@ export default class TurmsDriver {
     set onSessionClosed(listener: (disconnectInfo: SessionDisconnectInfo) => void);
     startHeartbeat(): void;
     stopHeartbeat(): void;
+    resetHeartbeat(): void;
     sendHeartbeat(): Promise<void>;
-    resetHeartBeatTimer(): void;
     connect(userId: string, password: string, deviceType?: DeviceType, userOnlineStatus?: UserStatus, location?: UserLocation): Promise<void>;
     reconnect(host?: string): Promise<void>;
     disconnect(): Promise<void>;

@@ -1,7 +1,7 @@
 import TurmsClient from "../turms-client";
 import TurmsStatusCode from "../model/turms-status-code";
 import {im} from "../model/proto-bundle";
-import TurmsBusinessException from "../model/turms-business-exception";
+import TurmsBusinessError from "../model/turms-business-error";
 import RequestUtil from "../util/request-util";
 import NotificationUtil from "../util/notification-util";
 // @ts-ignore
@@ -45,7 +45,7 @@ export default class StorageService {
         if (userId) {
             return this._getSignedPutUrl(ContentType.PROFILE, pictureSize, null, userId);
         } else {
-            return Promise.reject(TurmsBusinessException.fromCode(TurmsStatusCode.UNAUTHORIZED.valueOf()));
+            return Promise.reject(TurmsBusinessError.fromCode(TurmsStatusCode.UNAUTHORIZED.valueOf()));
         }
     }
 

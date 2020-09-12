@@ -16,31 +16,26 @@
  */
 
 import Timer from "../../util/timer";
-import TurmsBusinessException from "../../model/turms-business-exception";
+import TurmsBusinessError from "../../model/turms-business-error";
 import TurmsStatusCode from "../../model/turms-status-code";
 import StateStore from "../state-store";
-
-interface Callback {
-    resolve: Function,
-    reject: Function
-}
-
-const HEARTBEAT_INTERVAL = 120 * 1000;
+import PromiseSeal from "../../model/promise-seal";
 
 export default class HeartbeatService {
 
-    private static HEARTBEAT_REQUEST = new Uint8Array(0);
+    private static readonly HEARTBEAT_INTERVAL = 120 * 1000;
+    private static readonly HEARTBEAT_REQUEST = new Uint8Array(0);
 
     private _stateStore: StateStore;
 
     private _heartbeatInterval: number;
     private _minRequestsInterval: number;
     private _heartbeatTimer?: Timer;
-    private _heartbeatCallbacks: Callback[] = [];
+    private _heartbeatPromises: PromiseSeal[] = [];
 
     constructor(stateStore: StateStore, minRequestsInterval: number, heartbeatInterval?: number) {
         this._minRequestsInterval = minRequestsInterval;
-        this._heartbeatInterval = heartbeatInterval || HEARTBEAT_INTERVAL;
+        this._heartbeatInterval = heartbeatInterval || HeartbeatService.HEARTBEAT_INTERVAL;
     }
 
     start(): void {
@@ -73,28 +68,28 @@ export default class HeartbeatService {
         return new Promise((resolve, reject): void => {
             if (this._stateStore.isConnected) {
                 this._stateStore.websocket.send(HeartbeatService.HEARTBEAT_REQUEST);
-                this._heartbeatCallbacks.push({
+                this._heartbeatPromises.push({
                     resolve,
                     reject
                 });
             } else {
-                reject(TurmsBusinessException.fromCode(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED));
+                reject(TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED));
             }
         });
     }
 
-    notifyHeartbeatCallbacks(): void {
-        for (const cb of this._heartbeatCallbacks) {
+    resolveHeartbeatPromises(): void {
+        for (const cb of this._heartbeatPromises) {
             cb.resolve();
         }
-        this._heartbeatCallbacks = [];
+        this._heartbeatPromises = [];
     }
 
-    rejectHeartbeatCallbacks(error: any): void {
-        for (const cb of this._heartbeatCallbacks) {
+    rejectHeartbeatPromises(error: any): void {
+        for (const cb of this._heartbeatPromises) {
             cb.reject(error);
         }
-        this._heartbeatCallbacks = [];
+        this._heartbeatPromises = [];
     }
 
 }

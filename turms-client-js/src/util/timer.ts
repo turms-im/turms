@@ -1,12 +1,12 @@
 export default class Timer {
     private _timerId?: number;
     private _interval?: number;
-    private _callback: Function;
+    private _callback: (...args: any[]) => void;
     private _lightMode: boolean;
     private _ignoreNextCall: boolean;
     private _isRunning: boolean;
 
-    constructor(callback: Function, interval: number, lightMode = true) {
+    constructor(callback: (...args: any[]) => void, interval: number, lightMode = true) {
         this._callback = (): void => {
             if (!this._ignoreNextCall) {
                 callback();
@@ -35,7 +35,7 @@ export default class Timer {
 
     start(): Timer {
         if (!this._timerId) {
-            this._timerId = setInterval(this._callback, this._interval);
+            this._timerId = window.setInterval(this._callback, this._interval);
         }
         this._isRunning = true;
         return this;

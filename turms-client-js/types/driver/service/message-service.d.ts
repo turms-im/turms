@@ -10,7 +10,7 @@ export default class MessageService {
     private _requestTimeout?;
     constructor(stateStore: StateStore, requestTimeout?: number, minRequestsInterval?: number);
     addOnNotificationListener(listener: (notification: ParsedNotification) => void): void;
-    private _notifyOnNotificationListener;
+    private _notifyOnNotificationListeners;
     sendRequest(message: im.turms.proto.ITurmsRequest): Promise<TurmsNotification>;
-    triggerOnNotificationReceived(notification: TurmsNotification): void;
+    didReceiveNotification(notification: TurmsNotification): void;
 }

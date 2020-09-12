@@ -16,7 +16,7 @@
  */
 
 import TurmsStatusCode from "../model/turms-status-code";
-import TurmsBusinessException from "../model/turms-business-exception";
+import TurmsBusinessError from "../model/turms-business-error";
 import {im} from "../model/proto-bundle";
 import {ParsedNotification} from "../model/parsed-notification";
 import UserLocation from "../model/user-location";
@@ -36,7 +36,7 @@ export default class TurmsDriver {
 
     private _wsUrl = 'ws://localhost:9510';
     private _httpUrl = 'http://localhost:9510';
-    private _connectionTimeout = 10 * 1000;
+    private _connectTimeout = 10 * 1000;
     private _requestTimeout = 60 * 1000;
     private _minRequestsInterval = 0;
     private _queryReasonWhenLoginFailed = true;
@@ -55,14 +55,14 @@ export default class TurmsDriver {
     private _sessionService: SessionService;
 
     constructor(url?: string,
-                connectionTimeout?: number,
+                connectTimeout?: number,
                 requestTimeout?: number,
                 minRequestsInterval?: number,
                 httpUrl?: string,
                 queryReasonWhenLoginFailed = true,
                 queryReasonWhenDisconnected = true) {
         if (url) this._wsUrl = url;
-        if (connectionTimeout) this._connectionTimeout = connectionTimeout;
+        if (connectTimeout) this._connectTimeout = connectTimeout;
         if (requestTimeout) this._requestTimeout = requestTimeout;
         if (minRequestsInterval) this._minRequestsInterval = minRequestsInterval;
         if (httpUrl) this._httpUrl = httpUrl;
@@ -143,12 +143,12 @@ export default class TurmsDriver {
         this._heartbeatService.stop();
     }
 
-    sendHeartbeat(): Promise<void> {
-        return this._heartbeatService.send();
+    resetHeartbeat(): void {
+        this._heartbeatService.reset();
     }
 
-    resetHeartBeatTimer(): void {
-        this._heartbeatService.reset();
+    sendHeartbeat(): Promise<void> {
+        return this._heartbeatService.send();
     }
 
     // Connection Service
@@ -161,7 +161,7 @@ export default class TurmsDriver {
         location?: UserLocation): Promise<void> {
         return this._connectionService.connect({
             wsUrl: this._wsUrl,
-            connectTimeout: this._connectionTimeout,
+            connectTimeout: this._connectTimeout,
 
             userId,
             password,
@@ -186,18 +186,18 @@ export default class TurmsDriver {
             if (this._stateStore.isConnected) {
                 try {
                     const notification = this._messageService.sendRequest(message);
-                    this.resetHeartBeatTimer();
+                    this.resetHeartbeat();
                     return notification;
                 } catch (e) {
                     reject(e);
                 }
             } else {
-                reject(TurmsBusinessException.fromCode(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED));
+                reject(TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED));
             }
         });
     }
 
-    addOnNotificationListener(listener: ((notification: ParsedNotification) => void)) {
+    addOnNotificationListener(listener: ((notification: ParsedNotification) => void)): void {
         this._messageService.addOnNotificationListener(listener);
     }
 
@@ -210,8 +210,8 @@ export default class TurmsDriver {
 
     private _onConnectionDisconnected(info): Promise<void> {
         this._heartbeatService.stop();
-        const error = TurmsBusinessException.fromCode(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED);
-        this._heartbeatService.rejectHeartbeatCallbacks(error);
+        const error = TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED);
+        this._heartbeatService.rejectHeartbeatPromises(error);
         const isDisconnectOnLogin = !info.wasConnected;
         if (isDisconnectOnLogin) {
             return this._triggerOnLoginFailure();
@@ -243,7 +243,7 @@ export default class TurmsDriver {
         const event = info.event;
         if (info.isClosedByClient) {
             this._sessionService.notifyOnSessionClosedListeners(event, {
-                code: TurmsCloseStatus.DISCONNECTED_BY_CLIENT
+                closeStatus: TurmsCloseStatus.DISCONNECTED_BY_CLIENT
             });
         } else {
             if (this._queryReasonWhenDisconnected) {
@@ -251,12 +251,12 @@ export default class TurmsDriver {
                     .then(reason => {
                         if (reason.closeCode == TurmsCloseStatus.REDIRECT) {
                             this._sessionService.notifyOnSessionDisconnectedListeners(event, {
-                                code: reason.closeCode
+                                closeStatus: reason.closeCode
                             })
                             this.reconnect(reason.reason).then(() => null);
                         } else {
                             this._sessionService.notifyOnSessionClosedListeners(event, {
-                                code: reason.closeCode
+                                closeStatus: reason.closeCode
                             });
                         }
                     })
@@ -271,22 +271,22 @@ export default class TurmsDriver {
         }
     }
 
-    private _onMessage(message) {
+    private _onMessage(message): void {
         if (message && message.byteLength) {
             let notification;
             try {
                 notification = TurmsNotification.decode(new Uint8Array(message));
             } catch (e) {
-                console.error(e);
+                console.error('Failed to parse TurmsNotification', e);
                 return;
             }
             const isSessionInfo = notification.data && notification.data.session;
             if (isSessionInfo) {
                 this._sessionService.sessionId = notification.data.session.sessionId;
             }
-            this._messageService.triggerOnNotificationReceived(notification);
+            this._messageService.didReceiveNotification(notification);
         } else {
-            this._heartbeatService.notifyHeartbeatCallbacks();
+            this._heartbeatService.resolveHeartbeatPromises();
         }
     }
 

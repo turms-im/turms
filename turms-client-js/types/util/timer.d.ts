@@ -5,7 +5,7 @@ export default class Timer {
     private _lightMode;
     private _ignoreNextCall;
     private _isRunning;
-    constructor(callback: Function, interval: number, lightMode?: boolean);
+    constructor(callback: (...args: any[]) => void, interval: number, lightMode?: boolean);
     get isRunning(): boolean;
     stop(): Timer;
     start(): Timer;

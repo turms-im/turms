@@ -20,7 +20,7 @@ export interface ConnectionDisconnectInfo {
 export default class ConnectionService {
     private _stateStore;
     private _isClosedByClient;
-    private _disconnectionCallbacks;
+    private _disconnectPromises;
     private _connectOptions;
     private _onConnectedListeners;
     private _onDisconnectedListeners;
@@ -32,8 +32,8 @@ export default class ConnectionService {
     addOnMessageListener(listener: (message: any) => void): void;
     private _notifyOnConnectedListener;
     private _notifyOnDisconnectedListeners;
-    private _notifyOnMessageListener;
-    private _triggerDisconnectCallbacks;
+    private _notifyOnMessageListeners;
+    private _resolveDisconnectPromises;
     connect(options: ConnectOptions): Promise<void>;
     disconnect(): Promise<void>;
     reconnect(host?: string): Promise<void>;
