@@ -135,13 +135,6 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         } catch (InvalidProtocolBufferException e) {
             return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.ILLEGAL_ARGUMENTS));
         }
-        if (request.getKindCase() == KIND_NOT_SET) {
-            return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.ILLEGAL_ARGUMENTS));
-        }
-        ClientRequestHandler handler = router.get(request.getKindCase());
-        if (handler == null) {
-            return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.ILLEGAL_ARGUMENTS));
-        }
 
         // 2. Transform and handle the request
         ClientRequest clientRequest = new ClientRequest(
@@ -159,18 +152,30 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         }
         // 3. Handle the result of the request
         Mono<RequestHandlerResult> resultMono = clientRequestMono.flatMap(lastClientRequest -> {
+            if (request.getKindCase() == KIND_NOT_SET) {
+                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS));
+            }
+            ClientRequestHandler handler = router.get(request.getKindCase());
+            if (handler == null) {
+                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS));
+            }
             userActionLogService.tryLogAndTriggerLogHandlers(userId, deviceType, request);
             activityLogService.tryLogClientRequest(lastClientRequest);
+            Mono<RequestHandlerResult> result;
             if (pluginEnabled && !clientClientRequestHandlerList.isEmpty()) {
                 Mono<RequestHandlerResult> requestResultMono = Mono.empty();
                 for (im.turms.turms.plugin.extension.handler.ClientRequestHandler clientRequestHandler : clientClientRequestHandlerList) {
                     requestResultMono = requestResultMono
                             .switchIfEmpty(clientRequestHandler.handleClientRequest(lastClientRequest));
                 }
-                return requestResultMono.switchIfEmpty(handler.handle(lastClientRequest));
+                result = requestResultMono.switchIfEmpty(handler.handle(lastClientRequest));
             } else {
-                return handler.handle(lastClientRequest);
+                result = handler.handle(lastClientRequest);
             }
+            return result
+                    .name("request")
+                    .tag("type", lastClientRequest.getTurmsRequest().getKindCase().name())
+                    .metrics();
         });
         return handleResult(resultMono, userId, deviceType);
     }
