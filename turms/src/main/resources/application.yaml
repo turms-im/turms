@@ -40,6 +40,9 @@ spring:
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
 management:
+#  metrics:
+#    enable:
+#      prometheus: false
   endpoints:
     web:
       exposure:
@@ -49,6 +52,9 @@ logging:
     name: ../logs/turms.log
   pattern:
     dateformat: yyyy-MM-dd HH:mm:ss.SSS,UTC
+springfox:
+  documentation:
+    enabled: true
 
 ############################### Turms ###############################
 
@@ -67,9 +73,6 @@ turms:
   gateway:
     session:
       enable-authentication: false
-springfox:
-  documentation:
-    enabled: true
 #turms-plugin:
 #  mock:
 #    enabled: true
