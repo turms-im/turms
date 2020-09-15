@@ -18,6 +18,7 @@
 package im.turms.server.common.cluster.service.rpc;
 
 import im.turms.common.constant.statuscode.TurmsStatusCode;
+import im.turms.common.util.RandomUtil;
 import im.turms.server.common.cluster.exception.ConnectionNotFoundException;
 import im.turms.server.common.cluster.exception.RpcException;
 import im.turms.server.common.cluster.exception.SocketInstanceNotFoundException;
@@ -47,7 +48,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author James Chen
@@ -82,7 +82,7 @@ public class RpcService implements ClusterService {
         if (size == 0) {
             return Mono.error(RpcException.get(RpcErrorCode.SERVICE_NOT_FOUND, TurmsStatusCode.UNAVAILABLE));
         } else {
-            int index = ThreadLocalRandom.current().nextInt() % size;
+            int index = RandomUtil.nextPositiveInt() % size;
             Member member = serviceMembers.get(index);
             return requestResponse(member.getNodeId(), request, timeoutDuration);
         }

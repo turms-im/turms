@@ -18,10 +18,10 @@
 package im.turms.server.common.cluster.service.idgen;
 
 
+import im.turms.common.util.RandomUtil;
 import jdk.internal.vm.annotation.Contended;
 import lombok.extern.log4j.Log4j2;
 
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -61,7 +61,7 @@ public class FlakeIdGenerator {
 
     // Because it's vulnerable if turms restarts after the clock goes backwards,
     // we randomize the sequenceNumber on init to decrease chance of collision
-    private final AtomicInteger sequenceNumber = new AtomicInteger(ThreadLocalRandom.current().nextInt(0, Integer.MAX_VALUE));
+    private final AtomicInteger sequenceNumber = new AtomicInteger(RandomUtil.nextPositiveInt());
 
     @Contended("nodeInfo")
     private int dataCenterId;

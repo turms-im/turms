@@ -22,6 +22,7 @@ import im.turms.common.constant.UserStatus;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.model.bo.signal.Session;
 import im.turms.common.model.dto.notification.TurmsNotification;
+import im.turms.common.util.RandomUtil;
 import im.turms.gateway.access.websocket.dto.CloseStatusFactory;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.server.common.constraint.DeviceTypeConstraint;
@@ -45,7 +46,6 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -72,7 +72,7 @@ public final class UserSessionsManager {
         Assert.notNull(userStatus, "userStatus must not be null");
         Assert.notNull(loggingInDeviceType, "loggingInDeviceType must not be null");
         UserSession session = new UserSession(
-                ThreadLocalRandom.current().nextInt(),
+                RandomUtil.nextPositiveInt(),
                 loggingInDeviceType,
                 new Date(),
                 userLocation,
@@ -102,7 +102,7 @@ public final class UserSessionsManager {
             @Nullable Long logId,
             int heartbeatTimeoutInSeconds) {
         UserSession userSession = new UserSession(
-                ThreadLocalRandom.current().nextInt(),
+                RandomUtil.nextPositiveInt(),
                 loggingInDeviceType,
                 new Date(),
                 userLocation,
