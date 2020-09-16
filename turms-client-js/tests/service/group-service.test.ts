@@ -20,7 +20,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-    if (turmsClient.driver.connected()) {
+    if (turmsClient.driver.isConnected()) {
         await turmsClient.driver.disconnect();
     }
 });

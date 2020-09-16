@@ -22,13 +22,13 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-    if (senderClient.driver.connected()) {
+    if (senderClient.driver.isConnected()) {
         await senderClient.driver.disconnect();
     }
-    if (recipientClient.driver.connected()) {
+    if (recipientClient.driver.isConnected()) {
         await recipientClient.driver.disconnect();
     }
-    if (groupMemberClient.driver.connected()) {
+    if (groupMemberClient.driver.isConnected()) {
         await groupMemberClient.driver.disconnect();
     }
 });

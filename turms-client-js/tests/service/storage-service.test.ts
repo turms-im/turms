@@ -1,8 +1,6 @@
 import Constants from "../helper/constants";
-import {im} from "../../src/model/proto-bundle";
 import TurmsClient from "../../src/turms-client";
 import {readFileSync} from 'fs';
-import ChatType = im.turms.proto.ChatType;
 
 let turmsClient: TurmsClient;
 const USER_ID = '1';
@@ -13,12 +11,15 @@ const ATTACHMENT: Buffer = PROFILE_PICTURE;
 let messageId;
 
 beforeAll(async () => {
-    turmsClient = new TurmsClient(Constants.WS_URL, null, null, null, Constants.STORAGE_SERVER_URL);
+    turmsClient = new TurmsClient({
+        wsUrl: Constants.WS_URL,
+        storageServerUrl: Constants.STORAGE_SERVER_URL
+    });
     await turmsClient.userService.login(USER_ID, "123");
 });
 
 afterAll(async () => {
-    if (turmsClient.driver.connected()) {
+    if (turmsClient.driver.isConnected()) {
         await turmsClient.driver.disconnect();
     }
 });
