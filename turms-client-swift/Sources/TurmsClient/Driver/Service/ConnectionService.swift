@@ -12,9 +12,9 @@ public class ConnectionService {
     private static let USER_ONLINE_STATUS_FIELD = "us"
     private static let USER_LOCATION_FIELD = "loc"
     private static let LOCATION_DELIMITER = ":"
-    
+
     private static let DEFAULT_WEBSOCKET_URL = "ws://localhost:9510"
-    private static let DEFAULT_CONNECT_TIMEOUT: TimeInterval = 30            
+    private static let DEFAULT_CONNECT_TIMEOUT: TimeInterval = 30
 
     private let stateStore: StateStore
     private let initialWsUrl: String

@@ -44,7 +44,7 @@ public struct SessionDisconnectInfo {
         set { _error = newValue }
     }
     
-    public init(wasConnected: Bool, isClosedByClient: Bool, isReconnecting: Bool, closeStatus: TurmsCloseStats? = nil, webSocketStatusCode: Int? = nil, webSocketReason: String? = nil, error: Error? = nil) {
+    public init(wasConnected: Bool, isClosedByClient: Bool, isReconnecting: Bool, closeStatus: TurmsCloseStatus? = nil, webSocketStatusCode: Int? = nil, webSocketReason: String? = nil, error: Error? = nil) {
         self._wasConnected = wasConnected
         self._isClosedByClient = isClosedByClient
         self._isReconnecting = isReconnecting

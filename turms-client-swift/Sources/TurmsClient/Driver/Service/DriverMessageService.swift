@@ -3,7 +3,7 @@ import PromiseKit
 
 class DriverMessageService {
     private static let DEFAULT_REQUEST_TIMEOUT: TimeInterval = 30
-    
+
     private let stateStore: StateStore
 
     private let requestTimeout: TimeInterval
@@ -14,7 +14,7 @@ class DriverMessageService {
 
     init(stateStore: StateStore, requestTimeout: TimeInterval?, minRequestInterval: TimeInterval?) {
         self.stateStore = stateStore
-        self.requestTimeout = requestTimeout ?? DEFAULT_REQUEST_TIMEOUT
+        self.requestTimeout = requestTimeout ?? DriverMessageService.DEFAULT_REQUEST_TIMEOUT
         self.minRequestInterval = minRequestInterval
     }
 
@@ -49,8 +49,8 @@ class DriverMessageService {
                 if isFrequent {
                     seal.reject(TurmsBusinessError(.clientRequestsTooFrequent))
                 } else {
-                    if (requestTimeout > 0) {
-                        after(.seconds(requestTimeout)).done {
+                    if requestTimeout > 0 {
+                        after(.seconds(Int(requestTimeout))).done {
                             seal.reject(TurmsBusinessError(.timeout))
                         }
                     }

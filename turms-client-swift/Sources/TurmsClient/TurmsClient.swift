@@ -8,9 +8,9 @@ public class TurmsClient {
     public private(set) var storageService: StorageService!
     public private(set) var notificationService: NotificationService!
 
-    public init(_ url: String? = nil, connectTimeout: TimeInterval? = nil, requestTimeout: TimeInterval? = nil, minRequestInterval: TimeInterval? = nil, heartbeatInterval: TimeInterval? = nil, storageServerUrl: String? = nil) {
+    public init(_ wsUrl: String? = nil, connectTimeout: TimeInterval? = nil, requestTimeout: TimeInterval? = nil, minRequestInterval: TimeInterval? = nil, heartbeatInterval: TimeInterval? = nil, storageServerUrl: String? = nil) {
         driver = TurmsDriver(
-            url: url,
+            wsUrl: wsUrl,
             connectTimeout: connectTimeout,
             requestTimeout: requestTimeout,
             minRequestInterval: minRequestInterval,

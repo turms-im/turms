@@ -6,7 +6,7 @@ public struct TurmsBusinessError: Error {
         self.code = code
         self.reason = code.reason
     }
-    
+
     init(_ code: TurmsStatusCode, _ reason: String) {
         self.code = code
         self.reason = reason
