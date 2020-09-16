@@ -40,6 +40,8 @@ import im.turms.server.common.service.session.SessionLocationService;
 import im.turms.server.common.service.session.UserStatusService;
 import im.turms.server.common.util.DeviceTypeUtil;
 import im.turms.server.common.util.ReactorUtil;
+import io.micrometer.core.instrument.Metrics;
+import io.micrometer.core.instrument.Tags;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -54,6 +56,8 @@ import javax.validation.constraints.NotNull;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static im.turms.gateway.constant.MetricsConstant.SESSION_COUNT_NAME;
 
 /**
  * @author James Chen
@@ -101,6 +105,8 @@ public class SessionService implements ISessionService {
             heartbeatTimeoutDuration = Duration.ofSeconds(heartbeatTimeout);
             minimumUpdateHeartbeatIntervalSeconds = newProperties.getGateway().getSession().getMinimumUpdateHeartbeatIntervalSeconds();
         });
+
+        Metrics.gaugeMapSize(SESSION_COUNT_NAME, Tags.empty(), sessionsManagerByUserId);
     }
 
     @PreDestroy

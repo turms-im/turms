@@ -54,6 +54,8 @@ import java.util.Map;
 import java.util.Set;
 
 import static im.turms.common.model.dto.request.TurmsRequest.KindCase.KIND_NOT_SET;
+import static im.turms.turms.constant.MetricsConstant.CLIENT_REQUEST_NAME;
+import static im.turms.turms.constant.MetricsConstant.CLIENT_REQUEST_TAG_TYPE;
 
 /**
  * @author James Chen
@@ -152,14 +154,19 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         }
         // 3. Handle the result of the request
         Mono<RequestHandlerResult> resultMono = clientRequestMono.flatMap(lastClientRequest -> {
-            if (request.getKindCase() == KIND_NOT_SET) {
+            TurmsRequest lastRequest = lastClientRequest.getTurmsRequest();
+            if (lastRequest == null) {
                 return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS));
             }
-            ClientRequestHandler handler = router.get(request.getKindCase());
+            TurmsRequest.KindCase kindCase = lastRequest.getKindCase();
+            if (kindCase == KIND_NOT_SET) {
+                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS));
+            }
+            ClientRequestHandler handler = router.get(kindCase);
             if (handler == null) {
                 return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS));
             }
-            userActionLogService.tryLogAndTriggerLogHandlers(userId, deviceType, request);
+            userActionLogService.tryLogAndTriggerLogHandlers(userId, deviceType, lastRequest);
             activityLogService.tryLogClientRequest(lastClientRequest);
             Mono<RequestHandlerResult> result;
             if (pluginEnabled && !clientClientRequestHandlerList.isEmpty()) {
@@ -173,8 +180,8 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                 result = handler.handle(lastClientRequest);
             }
             return result
-                    .name("request")
-                    .tag("type", lastClientRequest.getTurmsRequest().getKindCase().name())
+                    .name(CLIENT_REQUEST_NAME)
+                    .tag(CLIENT_REQUEST_TAG_TYPE, kindCase.name())
                     .metrics();
         });
         return handleResult(resultMono, userId, deviceType);
