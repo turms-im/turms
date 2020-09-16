@@ -20,7 +20,7 @@ export default class SessionService {
     addOnSessionDisconnectedListeners(listener: (disconnectInfo: SessionDisconnectInfo) => void): void;
     addOnSessionClosedListeners(listener: (disconnectInfo: SessionDisconnectInfo) => void): void;
     notifyOnSessionConnectedListeners(): void;
-    notifyOnSessionDisconnectedListeners(event: CloseEvent, info?: SessionDisconnectInfo): void;
-    notifyOnSessionClosedListeners(event: CloseEvent, info?: SessionDisconnectInfo): void;
+    notifyOnSessionDisconnectedListeners(event: CloseEvent, info: SessionDisconnectInfo): void;
+    notifyOnSessionClosedListeners(event: CloseEvent, info: SessionDisconnectInfo): void;
     private static _parseDisconnectInfo;
 }

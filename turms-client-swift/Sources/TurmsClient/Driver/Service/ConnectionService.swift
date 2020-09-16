@@ -193,16 +193,19 @@ public class ConnectionService {
             redirectHost = host
         }
 
-        let disconnectInfo = SessionDisconnectInfo(wasConnected: wasConnected, isClosedByClient: isClosedByClient, closeStatus: status, webSocketStatusCode: statusCode, webSocketReason: reason, error: error)
+        let shouldReconnect = isRedirectSignal && redirectHost != nil
+        let disconnectInfo = SessionDisconnectInfo(wasConnected: wasConnected, isClosedByClient: isClosedByClient, isReconnecting: shouldReconnect, closeStatus: status, webSocketStatusCode: statusCode, webSocketReason: reason, error: error)
         notifyOnDisconnectedListeners(disconnectInfo)
         if isRedirectSignal, let host = redirectHost {
             return reconnect(host)
                 .recover {
-                    self.notifyOnClosedListeners(disconnectInfo)
+                    let closeInfo = SessionDisconnectInfo(wasConnected: wasConnected, isClosedByClient: isClosedByClient, isReconnecting: false, closeStatus: status, webSocketStatusCode: statusCode, webSocketReason: reason, error: error)
+                    self.notifyOnClosedListeners(closeInfo)
                     throw $0
                 }
         } else {
-            notifyOnClosedListeners(disconnectInfo)
+            let closeInfo = SessionDisconnectInfo(wasConnected: wasConnected, isClosedByClient: isClosedByClient, isReconnecting: false, closeStatus: status, webSocketStatusCode: statusCode, webSocketReason: reason, error: error)
+            notifyOnClosedListeners(closeInfo)
             return Promise(error: TurmsBusinessError(.failed))
         }
     }

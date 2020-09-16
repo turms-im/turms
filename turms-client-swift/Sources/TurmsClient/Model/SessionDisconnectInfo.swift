@@ -3,6 +3,7 @@ import Foundation
 public struct SessionDisconnectInfo {
     private var _wasConnected: Bool
     private var _isClosedByClient: Bool
+    private var _isReconnecting: Bool
     private var _closeStatus: TurmsCloseStatus?
     private var _webSocketStatusCode: Int?
     private var _webSocketReason: String?
@@ -16,6 +17,11 @@ public struct SessionDisconnectInfo {
     public var isClosedByClient: Bool {
         get { return _isClosedByClient }
         set { _isClosedByClient = newValue }
+    }
+    
+    public var isReconnecting: Bool {
+        get { return _isReconnecting }
+        set { _isReconnecting = newValue }
     }
     
     public var closeStatus: TurmsCloseStatus? {
@@ -38,9 +44,10 @@ public struct SessionDisconnectInfo {
         set { _error = newValue }
     }
     
-    public init(wasConnected: Bool, isClosedByClient: Bool, closeStatus: TurmsCloseStatus? = nil, webSocketStatusCode: Int? = nil, webSocketReason: String? = nil, error: Error? = nil) {
+    public init(wasConnected: Bool, isClosedByClient: Bool, isReconnecting: Bool, closeStatus: TurmsCloseStats? = nil, webSocketStatusCode: Int? = nil, webSocketReason: String? = nil, error: Error? = nil) {
         self._wasConnected = wasConnected
         self._isClosedByClient = isClosedByClient
+        self._isReconnecting = isReconnecting
         self._closeStatus = closeStatus
         self._webSocketStatusCode = webSocketStatusCode
         self._webSocketReason = webSocketReason

@@ -241,8 +241,14 @@ export default class TurmsDriver {
 
     private _triggerOnSessionDisconnected(info: ConnectionDisconnectInfo): void {
         const event = info.event;
+        const requiredInfo: SessionDisconnectInfo = {
+            wasConnected: info.wasConnected,
+            isClosedByClient: info.isClosedByClient,
+            isReconnecting: false
+        };
         if (info.isClosedByClient) {
             this._sessionService.notifyOnSessionClosedListeners(event, {
+                ...requiredInfo,
                 closeStatus: TurmsCloseStatus.DISCONNECTED_BY_CLIENT
             });
         } else {
@@ -251,22 +257,26 @@ export default class TurmsDriver {
                     .then(reason => {
                         if (reason.closeCode == TurmsCloseStatus.REDIRECT) {
                             this._sessionService.notifyOnSessionDisconnectedListeners(event, {
+                                ...requiredInfo,
+                                isReconnecting: true,
                                 closeStatus: reason.closeCode
                             })
                             this.reconnect(reason.reason).then(() => null);
                         } else {
                             this._sessionService.notifyOnSessionClosedListeners(event, {
+                                ...requiredInfo,
                                 closeStatus: reason.closeCode
                             });
                         }
                     })
                     .catch(error => {
                         this._sessionService.notifyOnSessionClosedListeners(event, {
+                            ...requiredInfo,
                             error
                         });
                     });
             } else {
-                this._sessionService.notifyOnSessionClosedListeners(event);
+                this._sessionService.notifyOnSessionClosedListeners(event, requiredInfo);
             }
         }
     }
