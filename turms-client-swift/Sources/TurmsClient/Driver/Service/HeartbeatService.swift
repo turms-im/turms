@@ -2,21 +2,21 @@ import Foundation
 import PromiseKit
 
 class HeartbeatService {
-    private static let HEARTBEAT_INTERVAL: TimeInterval = 120
+    private static let DEFAULT_HEARTBEAT_INTERVAL: TimeInterval = 120
     private static let HEARTBEAT_REQUEST = Data()
 
     private let stateStore: StateStore
     private let createQueue = DispatchQueue(label: "im.turms.turmsclient.heartbeatservice.createqueue")
 
     private let heartbeatInterval: TimeInterval
-    private let minRequestsInterval: TimeInterval
+    private let minRequestInterval: TimeInterval
     private var heartbeatTimer: Timer?
     private var heartbeatPromises: [Resolver<Void>] = []
 
-    public init(stateStore: StateStore, minRequestsInterval: TimeInterval?, heartbeatInterval: TimeInterval? = nil) {
+    public init(stateStore: StateStore, minRequestInterval: TimeInterval?, heartbeatInterval: TimeInterval? = nil) {
         self.stateStore = stateStore
-        self.minRequestsInterval = minRequestsInterval ?? 0
-        self.heartbeatInterval = heartbeatInterval ?? HeartbeatService.HEARTBEAT_INTERVAL
+        self.minRequestInterval = minRequestInterval ?? 0
+        self.heartbeatInterval = heartbeatInterval ?? HeartbeatService.DEFAULT_HEARTBEAT_INTERVAL
     }
 
     func start() {
@@ -67,7 +67,7 @@ class HeartbeatService {
 
     @objc func checkAndSendHeartbeat() {
         let difference = Date().timeIntervalSince1970 - stateStore.lastRequestDate.timeIntervalSince1970
-        if difference > minRequestsInterval {
+        if difference > minRequestInterval {
             send()
         }
     }

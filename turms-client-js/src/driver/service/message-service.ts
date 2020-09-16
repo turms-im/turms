@@ -25,29 +25,33 @@ import {ParsedNotification} from "../../model/parsed-notification";
 import TurmsNotification = im.turms.proto.TurmsNotification;
 import TurmsRequest = im.turms.proto.TurmsRequest;
 
-/**
- * Handle TurmsRequest and TurnsNotification
- */
-
 interface RequestPromiseSeal {
     timeoutId?: number,
     resolve: (value?: unknown) => void;
     reject: (reason?: any) => void;
 }
 
+/**
+ * Handle TurmsRequest and TurnsNotification
+ */
 export default class MessageService {
+    private static readonly DEFAULT_REQUEST_TIMEOUT = 60 * 1000;
 
     private _stateStore: StateStore;
 
-    private _minRequestsInterval?: number;
+    private _requestTimeout: number;
+    private _minRequestInterval?: number;
     private _onNotificationListeners: ((notification: ParsedNotification) => void)[] = [];
     private _requestMap: Record<number, RequestPromiseSeal> = {};
-    private _requestTimeout?: number;
 
-    constructor(stateStore: StateStore, requestTimeout?: number, minRequestsInterval?: number) {
+    constructor(stateStore: StateStore, requestTimeout?: number, minRequestInterval?: number) {
         this._stateStore = stateStore;
-        this._requestTimeout = requestTimeout;
-        this._minRequestsInterval = minRequestsInterval;
+        if (!requestTimeout && requestTimeout !== 0) {
+            this._requestTimeout = MessageService.DEFAULT_REQUEST_TIMEOUT;
+        } else {
+            this._requestTimeout = requestTimeout;
+        }
+        this._minRequestInterval = minRequestInterval;
     }
 
     // Listeners
@@ -72,9 +76,9 @@ export default class MessageService {
         message: im.turms.proto.ITurmsRequest): Promise<TurmsNotification> {
         return new Promise((resolve, reject) => {
             const now = new Date();
-            const isFrequent = this._minRequestsInterval > 0 && now.getTime() - this._stateStore.lastRequestDate.getTime() <= this._minRequestsInterval;
+            const isFrequent = this._minRequestInterval > 0 && now.getTime() - this._stateStore.lastRequestDate.getTime() <= this._minRequestInterval;
             if (isFrequent) {
-                throw TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_REQUESTS_TOO_FREQUENT);
+                reject(TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_REQUESTS_TOO_FREQUENT));
             } else {
                 const requestId = RequestUtil.generateRandomId(this._requestMap);
                 message.requestId = {
@@ -86,10 +90,10 @@ export default class MessageService {
                 this._stateStore.lastRequestDate = now;
 
                 let timeoutId;
-                if (this._requestTimeout && this._requestTimeout > 0) {
+                if (this._requestTimeout > 0) {
                     timeoutId = setTimeout(() => {
                         delete this._requestMap[requestId];
-                        reject(new Error('Request timeout'));
+                        reject(TurmsBusinessError.fromCode(TurmsStatusCode.TIMEOUT));
                     }, this._requestTimeout);
                 }
                 this._requestMap[requestId] = {

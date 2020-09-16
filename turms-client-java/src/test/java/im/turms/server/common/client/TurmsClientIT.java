@@ -28,7 +28,7 @@ class TurmsClientIT {
 
     @Test
     void constructor_shouldReturnNotNullClientInstance() {
-        TurmsClient turmsClient = new TurmsClient(WS_URL, null, null, STORAGE_SERVER_URL);
+        TurmsClient turmsClient = new TurmsClient(WS_URL, STORAGE_SERVER_URL);
         assertNotNull(turmsClient);
     }
 }

@@ -22,9 +22,6 @@ public class TurmsDriver {
         set { _onSessionClosed = newValue }
     }
 
-    private var url: String
-    private var connectTimeout: TimeInterval
-
     private let stateStore: StateStore
 
     private let connectionService: ConnectionService
@@ -32,15 +29,12 @@ public class TurmsDriver {
     private let messageService: DriverMessageService
     private let sessionService: SessionService
 
-    public init(url: String? = nil, connectTimeout: TimeInterval? = nil, minRequestsInterval: TimeInterval? = nil) {
-        self.url = url ?? "ws://localhost:9510"
-        self.connectTimeout = connectTimeout ?? 10
-
+    public init(wsUrl: String? = nil, connectTimeout: TimeInterval? = nil, requestTimeout: TimeInterval? = nil, minRequestInterval: TimeInterval? = nil, heartbeatInterval: TimeInterval? = nil) {
         self.stateStore = StateStore()
 
-        self.connectionService = ConnectionService(stateStore: stateStore)
-        self.heartbeatService = HeartbeatService(stateStore: stateStore, minRequestsInterval: minRequestsInterval)
-        self.messageService = DriverMessageService(stateStore: stateStore, minRequestsInterval: minRequestsInterval)
+        self.connectionService = ConnectionService(stateStore: stateStore, wsUrl: wsUrl, connectTimeout: connectTimeout)
+        self.heartbeatService = HeartbeatService(stateStore: stateStore, minRequestInterval: minRequestInterval, heartbeatInterval: heartbeatInterval)
+        self.messageService = DriverMessageService(stateStore: stateStore, requestTimeout: requestTimeout, minRequestInterval: minRequestInterval)
         self.sessionService = SessionService(stateStore: stateStore)
 
         initConnectionService()
@@ -115,7 +109,7 @@ public class TurmsDriver {
     }
 
     public func connect(userId: Int64, password: String, deviceType: DeviceType? = nil, userOnlineStatus: UserStatus? = nil, location: Position? = nil) -> Promise<()> {
-        return connectionService.connect(wsUrl: url, connectTimeout: connectTimeout, userId: userId, password: password, deviceType: deviceType, userOnlineStatus: userOnlineStatus, location: location)
+        return connectionService.connect(userId: userId, password: password, deviceType: deviceType, userOnlineStatus: userOnlineStatus, location: location)
     }
 
     // Message Service

@@ -157,9 +157,9 @@ class InboundRequestServiceTests {
         GatewayProperties gateway = new GatewayProperties();
         ClientApiProperties clientApi = new ClientApiProperties();
         if (isFrequent) {
-            clientApi.setMinClientRequestsIntervalMillis(Integer.MAX_VALUE);
+            clientApi.setMinClientRequestIntervalMillis(Integer.MAX_VALUE);
         } else {
-            clientApi.setMinClientRequestsIntervalMillis(0);
+            clientApi.setMinClientRequestIntervalMillis(0);
         }
         gateway.setClientApi(clientApi);
         turmsProperties.setGateway(gateway);

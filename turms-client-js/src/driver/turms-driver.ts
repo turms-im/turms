@@ -34,11 +34,6 @@ import DeviceType = im.turms.proto.DeviceType;
 
 export default class TurmsDriver {
 
-    private _wsUrl = 'ws://localhost:9510';
-    private _httpUrl = 'http://localhost:9510';
-    private _connectTimeout = 10 * 1000;
-    private _requestTimeout = 60 * 1000;
-    private _minRequestsInterval = 0;
     private _queryReasonWhenLoginFailed = true;
     private _queryReasonWhenDisconnected = true;
 
@@ -54,33 +49,29 @@ export default class TurmsDriver {
     private _reasonService: ReasonService;
     private _sessionService: SessionService;
 
-    constructor(url?: string,
+    constructor(wsUrl?: string,
                 connectTimeout?: number,
                 requestTimeout?: number,
-                minRequestsInterval?: number,
+                minRequestInterval?: number,
+                heartbeatInterval?: number,
                 httpUrl?: string,
                 queryReasonWhenLoginFailed = true,
                 queryReasonWhenDisconnected = true) {
-        if (url) this._wsUrl = url;
-        if (connectTimeout) this._connectTimeout = connectTimeout;
-        if (requestTimeout) this._requestTimeout = requestTimeout;
-        if (minRequestsInterval) this._minRequestsInterval = minRequestsInterval;
-        if (httpUrl) this._httpUrl = httpUrl;
         this._queryReasonWhenLoginFailed = queryReasonWhenLoginFailed;
         this._queryReasonWhenDisconnected = queryReasonWhenDisconnected;
 
         this._stateStore = new StateStore();
 
-        this._connectionService = this.initConnectionService();
-        this._heartbeatService = new HeartbeatService(this._stateStore, this._minRequestsInterval);
-        this._messageService = new MessageService(this._stateStore, this._requestTimeout, this._minRequestsInterval);
-        this._reasonService = new ReasonService(this._stateStore, this._httpUrl);
+        this._connectionService = this.initConnectionService(wsUrl, httpUrl, connectTimeout);
+        this._heartbeatService = new HeartbeatService(this._stateStore, minRequestInterval, heartbeatInterval);
+        this._messageService = new MessageService(this._stateStore, requestTimeout, minRequestInterval);
+        this._reasonService = new ReasonService(this._stateStore, httpUrl);
         this._sessionService = this.initSessionService();
     }
 
     // Initializers
-    initConnectionService(): ConnectionService {
-        const connectionService = new ConnectionService(this._stateStore);
+    initConnectionService(wsUrl?: string, httpUrl?: string, connectTimeout?: number): ConnectionService {
+        const connectionService = new ConnectionService(this._stateStore, wsUrl, httpUrl, connectTimeout);
         connectionService.addOnConnectedListener(this._onConnectionConnected);
         connectionService.addOnDisconnectedListener(this._onConnectionDisconnected);
         connectionService.addOnMessageListener(this._onMessage)
@@ -160,9 +151,6 @@ export default class TurmsDriver {
         userOnlineStatus?: UserStatus,
         location?: UserLocation): Promise<void> {
         return this._connectionService.connect({
-            wsUrl: this._wsUrl,
-            connectTimeout: this._connectTimeout,
-
             userId,
             password,
             deviceType,

@@ -16,30 +16,33 @@ class TurmsClient {
     private readonly _notificationService: NotificationService;
 
     constructor(
-        urlOrOptions?: string | ClientOptions,
+        wsUrlOrOptions?: string | ClientOptions,
         connectionTimeout?: number,
         requestTimeout?: number,
-        minRequestsInterval?: number,
+        minRequestInterval?: number,
+        heartbeatInterval?: number,
         storageServerUrl?: string,
         httpUrl?: string,
         queryReasonWhenLoginFailed?: boolean,
         queryReasonWhenDisconnected?: boolean) {
-        if (typeof urlOrOptions === 'object') {
+        if (typeof wsUrlOrOptions === 'object') {
             return new TurmsClient(
-                urlOrOptions.url,
-                urlOrOptions.connectionTimeout,
-                urlOrOptions.requestTimeout,
-                urlOrOptions.minRequestsInterval,
-                urlOrOptions.storageServerUrl,
-                urlOrOptions.httpUrl,
-                urlOrOptions.queryReasonWhenLoginFailed,
-                urlOrOptions.queryReasonWhenDisconnected);
+                wsUrlOrOptions.wsUrl,
+                wsUrlOrOptions.connectionTimeout,
+                wsUrlOrOptions.requestTimeout,
+                wsUrlOrOptions.minRequestInterval,
+                wsUrlOrOptions.heartbeatInterval,
+                wsUrlOrOptions.storageServerUrl,
+                wsUrlOrOptions.httpUrl,
+                wsUrlOrOptions.queryReasonWhenLoginFailed,
+                wsUrlOrOptions.queryReasonWhenDisconnected);
         } else {
             this._driver = new TurmsDriver(
-                urlOrOptions,
+                wsUrlOrOptions,
                 connectionTimeout,
                 requestTimeout,
-                minRequestsInterval,
+                minRequestInterval,
+                heartbeatInterval,
                 httpUrl,
                 queryReasonWhenLoginFailed,
                 queryReasonWhenDisconnected);

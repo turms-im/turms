@@ -48,7 +48,8 @@ enum Code {
     CLIENT_SESSION_HAS_BEEN_CLOSED,
     CLIENT_SESSION_ALREADY_ESTABLISHED,
     CLIENT_REQUESTS_TOO_FREQUENT,
-    MISSING_DATA
+    MISSING_DATA,
+    TIMEOUT
 
 }
 
@@ -101,7 +102,8 @@ class TurmsStatusCode {
         [Code.CLIENT_SESSION_HAS_BEEN_CLOSED]: "The session has been closed",
         [Code.CLIENT_SESSION_ALREADY_ESTABLISHED]: "The session has been established",
         [Code.CLIENT_REQUESTS_TOO_FREQUENT]: "Client requests are too frequent",
-        [Code.MISSING_DATA]: "The data is missing"
+        [Code.MISSING_DATA]: "The data is missing",
+        [Code.TIMEOUT]: "The request has timed out"
     };
     private code: number;
     private reason: string;

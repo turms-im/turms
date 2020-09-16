@@ -38,6 +38,6 @@ public class ClientApiProperties {
     @JsonView(MutablePropertiesView.class)
     @Description("The minimum allowed interval between client requests")
     @Min(0)
-    private int minClientRequestsIntervalMillis = 0;
+    private int minClientRequestIntervalMillis = 0;
 
 }

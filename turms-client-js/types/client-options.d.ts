@@ -1,8 +1,9 @@
 export default interface ClientOptions {
-    url?: string;
+    wsUrl?: string;
     connectionTimeout?: number;
     requestTimeout?: number;
-    minRequestsInterval?: number;
+    minRequestInterval?: number;
+    heartbeatInterval?: number;
     storageServerUrl?: string;
     httpUrl?: string;
     queryReasonWhenLoginFailed?: boolean;

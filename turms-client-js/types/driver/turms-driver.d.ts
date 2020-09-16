@@ -8,11 +8,6 @@ import TurmsNotification = im.turms.proto.TurmsNotification;
 import UserStatus = im.turms.proto.UserStatus;
 import DeviceType = im.turms.proto.DeviceType;
 export default class TurmsDriver {
-    private _wsUrl;
-    private _httpUrl;
-    private _connectTimeout;
-    private _requestTimeout;
-    private _minRequestsInterval;
     private _queryReasonWhenLoginFailed;
     private _queryReasonWhenDisconnected;
     private _onSessionConnected;
@@ -24,8 +19,8 @@ export default class TurmsDriver {
     private _messageService;
     private _reasonService;
     private _sessionService;
-    constructor(url?: string, connectTimeout?: number, requestTimeout?: number, minRequestsInterval?: number, httpUrl?: string, queryReasonWhenLoginFailed?: boolean, queryReasonWhenDisconnected?: boolean);
-    initConnectionService(): ConnectionService;
+    constructor(wsUrl?: string, connectTimeout?: number, requestTimeout?: number, minRequestInterval?: number, heartbeatInterval?: number, httpUrl?: string, queryReasonWhenLoginFailed?: boolean, queryReasonWhenDisconnected?: boolean);
+    initConnectionService(wsUrl?: string, httpUrl?: string, connectTimeout?: number): ConnectionService;
     initSessionService(): SessionService;
     getStatus(): SessionStatus;
     isConnected(): boolean;

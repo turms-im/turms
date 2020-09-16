@@ -12,8 +12,13 @@ public class ConnectionService {
     private static let USER_ONLINE_STATUS_FIELD = "us"
     private static let USER_LOCATION_FIELD = "loc"
     private static let LOCATION_DELIMITER = ":"
+    
+    private static let DEFAULT_WEBSOCKET_URL = "ws://localhost:9510"
+    private static let DEFAULT_CONNECT_TIMEOUT: TimeInterval = 30            
 
     private let stateStore: StateStore
+    private let initialWsUrl: String
+    private let initialConnectTimeout: TimeInterval
 
     private var isClosedByClient = false
     private var disconnectPromises: [Resolver<()>] = []
@@ -24,8 +29,10 @@ public class ConnectionService {
     private var onClosedListeners: [(SessionDisconnectInfo) -> ()] = []
     private var onMessageListeners: [(Data) -> ()] = []
 
-    public init(stateStore: StateStore) {
+    public init(stateStore: StateStore, wsUrl: String? = nil, connectTimeout: TimeInterval? = nil) {
         self.stateStore = stateStore
+        self.initialWsUrl = wsUrl ?? ConnectionService.DEFAULT_WEBSOCKET_URL
+        self.initialConnectTimeout = connectTimeout ?? ConnectionService.DEFAULT_CONNECT_TIMEOUT
     }
 
     private func resetStates() {
@@ -76,22 +83,22 @@ public class ConnectionService {
 
     // Connection
 
-    public func connect(wsUrl: String, connectTimeout: TimeInterval?, userId: Int64, password: String, deviceType: DeviceType? = nil, userOnlineStatus: UserStatus? = nil, location: Position? = nil) -> Promise<()> {
+    public func connect(wsUrl: String? = nil, connectTimeout: TimeInterval? = nil, userId: Int64, password: String, deviceType: DeviceType? = nil, userOnlineStatus: UserStatus? = nil, location: Position? = nil) -> Promise<()> {
         return Promise { seal in
             if stateStore.isConnected {
                 seal.reject(TurmsBusinessError(.clientSessionAlreadyEstablished))
             } else {
                 resetStates()
-                connectOptions.wsUrl = wsUrl
-                connectOptions.connectTimeout = connectTimeout
+                connectOptions.wsUrl = wsUrl ?? initialWsUrl
+                connectOptions.connectTimeout = connectTimeout ?? initialConnectTimeout
                 connectOptions.userId = userId
                 connectOptions.password = password
                 connectOptions.deviceType = deviceType
                 connectOptions.userOnlineStatus = userOnlineStatus
                 connectOptions.location = location
                 var request = URLRequest(
-                    url: URL(string: wsUrl)!,
-                    timeoutInterval: connectTimeout ?? 0)
+                    url: URL(string: wsUrl ?? initialWsUrl)!,
+                    timeoutInterval: connectTimeout ?? initialConnectTimeout)
                 let connectRequestId = Int64.random(in: 1..<Int64.max)
                 request.addValue(String(connectRequestId), forHTTPHeaderField: ConnectionService.REQUEST_ID_FIELD)
                 request.addValue(String(userId), forHTTPHeaderField: ConnectionService.USER_ID_FIELD)
@@ -145,7 +152,7 @@ public class ConnectionService {
             let url = "\(urlProtocol)\(hostStr)"
             connectOptions.wsUrl = url
         }
-        return connect(wsUrl: connectOptions.wsUrl!, connectTimeout: connectOptions.connectTimeout, userId: connectOptions.userId!, password: connectOptions.password!, deviceType: connectOptions.deviceType, userOnlineStatus: connectOptions.userOnlineStatus, location: connectOptions.location)
+        return connect(wsUrl: connectOptions.wsUrl, connectTimeout: connectOptions.connectTimeout, userId: connectOptions.userId!, password: connectOptions.password!, deviceType: connectOptions.deviceType, userOnlineStatus: connectOptions.userOnlineStatus, location: connectOptions.location)
     }
 
     public func disconnect() -> Promise<()> {

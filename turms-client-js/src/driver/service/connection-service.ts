@@ -31,8 +31,8 @@ const COOKIE_DEVICE_TYPE = 'dt';
 const COOKIE_LOCATION = 'loc';
 
 export interface ConnectOptions {
-    wsUrl: string,
-    connectTimeout: number,
+    wsUrl?: string,
+    connectTimeout?: number,
 
     userId: string,
     password: string,
@@ -49,18 +49,34 @@ export interface ConnectionDisconnectInfo {
 
 export default class ConnectionService {
 
+    private static readonly DEFAULT_WEBSOCKET_URL = 'ws://localhost:9510';
+    private static readonly DEFAULT_HTTP_URL = 'http://localhost:9510';
+    private static readonly DEFAULT_CONNECT_TIMEOUT = 30 * 1000;
+
     private _stateStore: StateStore;
+    private readonly _initialWsUrl: string;
+    private readonly _initialHttpUrl: string;
+    private readonly _initialConnectTimeout: number;
 
     private _isClosedByClient = false;
     private _disconnectPromises = [];
     private _connectOptions = {} as ConnectOptions;
 
+    private  _minRequestInterval = 0;
+
     private _onConnectedListeners: (() => void)[] = [];
     private _onDisconnectedListeners: ((info: ConnectionDisconnectInfo) => Promise<void>)[] = [];
     private _onMessageListeners: ((message: any) => void)[] = [];
 
-    constructor(stateStore: StateStore) {
+    constructor(stateStore: StateStore, wsUrl?: string, httpUrl?: string, connectTimeout?: number) {
         this._stateStore = stateStore;
+        this._initialWsUrl = wsUrl || ConnectionService.DEFAULT_WEBSOCKET_URL;
+        this._initialHttpUrl = httpUrl || ConnectionService.DEFAULT_HTTP_URL;
+        if (!connectTimeout && connectTimeout !== 0) {
+            this._initialConnectTimeout = ConnectionService.DEFAULT_CONNECT_TIMEOUT;
+        } else {
+            this._initialConnectTimeout = connectTimeout;
+        }
         this._resetStates();
     }
 

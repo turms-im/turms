@@ -44,7 +44,8 @@ declare enum Code {
     CLIENT_SESSION_HAS_BEEN_CLOSED = 6001,
     CLIENT_SESSION_ALREADY_ESTABLISHED = 6002,
     CLIENT_REQUESTS_TOO_FREQUENT = 6003,
-    MISSING_DATA = 6004
+    MISSING_DATA = 6004,
+    TIMEOUT = 6005
 }
 declare class TurmsStatusCode {
     private static _code2ReasonMap;

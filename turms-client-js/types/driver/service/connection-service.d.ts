@@ -4,8 +4,8 @@ import StateStore from "../state-store";
 import DeviceType = im.turms.proto.DeviceType;
 import UserStatus = im.turms.proto.UserStatus;
 export interface ConnectOptions {
-    wsUrl: string;
-    connectTimeout: number;
+    wsUrl?: string;
+    connectTimeout?: number;
     userId: string;
     password: string;
     deviceType?: DeviceType;
@@ -18,14 +18,21 @@ export interface ConnectionDisconnectInfo {
     event: CloseEvent;
 }
 export default class ConnectionService {
+    private static readonly DEFAULT_WEBSOCKET_URL;
+    private static readonly DEFAULT_HTTP_URL;
+    private static readonly DEFAULT_CONNECT_TIMEOUT;
     private _stateStore;
+    private readonly _initialWsUrl;
+    private readonly _initialHttpUrl;
+    private readonly _initialConnectTimeout;
     private _isClosedByClient;
     private _disconnectPromises;
     private _connectOptions;
+    private _minRequestInterval;
     private _onConnectedListeners;
     private _onDisconnectedListeners;
     private _onMessageListeners;
-    constructor(stateStore: StateStore);
+    constructor(stateStore: StateStore, wsUrl?: string, httpUrl?: string, connectTimeout?: number);
     private _resetStates;
     addOnConnectedListener(listener: () => void): void;
     addOnDisconnectedListener(listener: (info: ConnectionDisconnectInfo) => Promise<void>): void;

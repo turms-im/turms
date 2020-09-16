@@ -13,7 +13,7 @@ declare class TurmsClient {
     private readonly _messageService;
     private readonly _storageService;
     private readonly _notificationService;
-    constructor(urlOrOptions?: string | ClientOptions, connectionTimeout?: number, requestTimeout?: number, minRequestsInterval?: number, storageServerUrl?: string, httpUrl?: string, queryReasonWhenLoginFailed?: boolean, queryReasonWhenDisconnected?: boolean);
+    constructor(wsUrlOrOptions?: string | ClientOptions, connectionTimeout?: number, requestTimeout?: number, minRequestInterval?: number, heartbeatInterval?: number, storageServerUrl?: string, httpUrl?: string, queryReasonWhenLoginFailed?: boolean, queryReasonWhenDisconnected?: boolean);
     get driver(): TurmsDriver;
     get userService(): UserService;
     get groupService(): GroupService;

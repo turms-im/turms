@@ -2,16 +2,20 @@ import Foundation
 import PromiseKit
 
 class DriverMessageService {
+    private static let DEFAULT_REQUEST_TIMEOUT: TimeInterval = 30
+    
     private let stateStore: StateStore
 
-    private let minRequestsInterval: TimeInterval?
+    private let requestTimeout: TimeInterval
+    private let minRequestInterval: TimeInterval?
     private var onNotificationListeners: [(TurmsNotification) -> ()] = []
     private var requestMap: [Int64: Resolver<TurmsNotification>] = [:]
     private var lastRequestDate = Date(timeIntervalSince1970: 0)
 
-    init(stateStore: StateStore, minRequestsInterval: TimeInterval?) {
+    init(stateStore: StateStore, requestTimeout: TimeInterval?, minRequestInterval: TimeInterval?) {
         self.stateStore = stateStore
-        self.minRequestsInterval = minRequestsInterval
+        self.requestTimeout = requestTimeout ?? DEFAULT_REQUEST_TIMEOUT
+        self.minRequestInterval = minRequestInterval
     }
 
     // Listeners
@@ -41,10 +45,15 @@ class DriverMessageService {
         return Promise { seal in
             if stateStore.isConnected {
                 let now = Date()
-                let isFrequent = minRequestsInterval != nil && now.timeIntervalSince1970 - lastRequestDate.timeIntervalSince1970 <= minRequestsInterval!
+                let isFrequent = minRequestInterval != nil && now.timeIntervalSince1970 - lastRequestDate.timeIntervalSince1970 <= minRequestInterval!
                 if isFrequent {
                     seal.reject(TurmsBusinessError(.clientRequestsTooFrequent))
                 } else {
+                    if (requestTimeout > 0) {
+                        after(.seconds(requestTimeout)).done {
+                            seal.reject(TurmsBusinessError(.timeout))
+                        }
+                    }
                     let data = try! request.serializedData()
                     requestMap.updateValue(seal, forKey: request.requestID.value)
                     stateStore.lastRequestDate = now

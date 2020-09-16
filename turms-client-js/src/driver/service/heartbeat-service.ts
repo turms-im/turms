@@ -23,19 +23,19 @@ import PromiseSeal from "../../model/promise-seal";
 
 export default class HeartbeatService {
 
-    private static readonly HEARTBEAT_INTERVAL = 120 * 1000;
+    private static readonly DEFAULT_HEARTBEAT_INTERVAL = 120 * 1000;
     private static readonly HEARTBEAT_REQUEST = new Uint8Array(0);
 
     private _stateStore: StateStore;
 
     private _heartbeatInterval: number;
-    private _minRequestsInterval: number;
+    private _minRequestInterval: number;
     private _heartbeatTimer?: Timer;
     private _heartbeatPromises: PromiseSeal[] = [];
 
-    constructor(stateStore: StateStore, minRequestsInterval: number, heartbeatInterval?: number) {
-        this._minRequestsInterval = minRequestsInterval;
-        this._heartbeatInterval = heartbeatInterval || HeartbeatService.HEARTBEAT_INTERVAL;
+    constructor(stateStore: StateStore, minRequestInterval: number, heartbeatInterval?: number) {
+        this._minRequestInterval = minRequestInterval;
+        this._heartbeatInterval = heartbeatInterval || HeartbeatService.DEFAULT_HEARTBEAT_INTERVAL;
     }
 
     start(): void {
@@ -44,7 +44,7 @@ export default class HeartbeatService {
         } else {
             this._heartbeatTimer = new Timer((): void => {
                 const difference = new Date().getTime() - this._stateStore.lastRequestDate.getTime();
-                if (difference > this._minRequestsInterval) {
+                if (difference > this._minRequestInterval) {
                     this.send().then(() => null);
                 }
             }, this._heartbeatInterval);
