@@ -120,7 +120,7 @@ public class ConfigController {
                 Map<String, Object> propertiesWithMetadata = turmsPropertiesManager.mergePropertiesWithMetadata(propertyValueMap, metadata);
                 return ResponseFactory.okIfTruthy(propertiesWithMetadata);
             } catch (IOException e) {
-                throw TurmsBusinessException.get(TurmsStatusCode.SERVER_INTERNAL_ERROR, e.toString());
+                throw TurmsBusinessException.get(TurmsStatusCode.SERVER_INTERNAL_ERROR, e);
             }
         } else {
             return ResponseFactory.okIfTruthy(metadata);

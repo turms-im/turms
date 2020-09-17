@@ -35,7 +35,7 @@ import java.nio.ByteBuffer;
 public class TurmsRequestUtil {
 
     /**
-     * @see im.turms.common.model.dto.request.TurmsRequest:83
+     * @see im.turms.common.model.dto.request.TurmsRequest:72
      */
     private static final int TURMS_REQUEST_REQUEST_ID_TAG = 10;
 

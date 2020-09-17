@@ -37,4 +37,9 @@ public class NoStackTraceException extends RuntimeException {
         this.setStackTrace(null);
     }
 
+    public NoStackTraceException(Throwable cause) {
+        super(cause);
+        this.setStackTrace(null);
+    }
+
 }

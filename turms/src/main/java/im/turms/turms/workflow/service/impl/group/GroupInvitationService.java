@@ -133,7 +133,8 @@ public class GroupInvitationService {
             @NotNull String content) {
         int contentLimit = node.getSharedProperties().getService().getGroup().getGroupInvitationContentLimit();
         if (content.length() > contentLimit) {
-            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, String.format("The content has exceeded the character limit (%d)", contentLimit));
+            String reason = "The content has exceeded the character limit: " + contentLimit;
+            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, reason);
         }
         return groupMemberService
                 .isAllowedToInviteOrAdd(groupId, inviterId, null)

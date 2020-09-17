@@ -198,9 +198,9 @@ public class UserFriendRequestService {
                 .getContentLimit();
         boolean hasExceededLimit = contentLimit != 0 && content.length() > contentLimit;
         if (hasExceededLimit || requesterId.equals(recipientId)) {
-            String reason = hasExceededLimit ?
-                    String.format("The content has exceeded the character limit (%d)", contentLimit) :
-                    "The requester ID must not equal the recipient ID";
+            String reason = hasExceededLimit
+                    ? "The content has exceeded the character limit: " + contentLimit
+                    : "The requester ID must not equal the recipient ID";
             throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, reason);
         }
         // if requester is stranger for recipient, requester isn't blocked and already a friend.

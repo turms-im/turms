@@ -136,7 +136,8 @@ public class GroupJoinRequestService {
         int contentLimit = node.getSharedProperties()
                 .getService().getGroup().getGroupJoinRequestContentLimit();
         if (content.length() > contentLimit) {
-            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, String.format("The content has exceeded the character limit (%d)", contentLimit));
+            String reason = "The content has exceeded the character limit: " + contentLimit;
+            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, reason);
         }
         return groupMemberService.isBlacklisted(groupId, requesterId)
                 .flatMap(isBlacklisted -> {

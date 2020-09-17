@@ -46,6 +46,12 @@ public class TurmsBusinessException extends NoStackTraceException {
         this.reason = reason;
     }
 
+    private TurmsBusinessException(@NotNull TurmsStatusCode code, @Nullable Throwable cause) {
+        super(cause);
+        this.code = code;
+        this.reason = null;
+    }
+
     @Override
     public String toString() {
         return String.format("code: %d, reason: %s", code.getBusinessCode(), reason);
@@ -103,6 +109,10 @@ public class TurmsBusinessException extends NoStackTraceException {
         } else {
             return get(code);
         }
+    }
+
+    public static TurmsBusinessException get(@NotNull TurmsStatusCode code, @Nullable Throwable cause) {
+        return new TurmsBusinessException(code, cause);
     }
 
     public static TurmsBusinessException get(int statusCode, @Nullable String reason) {

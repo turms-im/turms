@@ -94,7 +94,7 @@ public class RpcAcceptor implements RSocket {
         try {
             return rpcRequest.isAsync() ? rpcRequest.callAsync() : Mono.just(rpcRequest.call());
         } catch (TurmsBusinessException e) {
-            return Mono.error(RpcException.get(RpcErrorCode.FAILED_TO_RUN_RPC, e.getCode(), e.toString()));
+            return Mono.error(RpcException.get(RpcErrorCode.FAILED_TO_RUN_RPC, e.getCode(), e.getReason()));
         } catch (Exception e) {
             return Mono.error(RpcException.get(RpcErrorCode.FAILED_TO_RUN_RPC, TurmsStatusCode.FAILED, e.toString()));
         }
