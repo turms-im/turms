@@ -20,11 +20,10 @@ package im.turms.common.exception;
 import im.turms.common.constant.statuscode.TurmsStatusCode;
 import im.turms.common.model.dto.notification.TurmsNotification;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * @author James Chen
@@ -42,7 +41,7 @@ public class TurmsBusinessException extends NoStackTraceException {
         return reason;
     }
 
-    private TurmsBusinessException(@Nonnull TurmsStatusCode code, @Nullable String reason) {
+    private TurmsBusinessException(@NotNull TurmsStatusCode code, @Nullable String reason) {
         this.code = code;
         this.reason = reason;
     }
@@ -79,8 +78,14 @@ public class TurmsBusinessException extends NoStackTraceException {
         return result;
     }
 
-    public static TurmsBusinessException get(@Nonnull TurmsStatusCode code) {
-        return EXCEPTION_POOL.computeIfAbsent(code, key -> new TurmsBusinessException(code, code.getReason()));
+    public static TurmsBusinessException get(@NotNull TurmsStatusCode code) {
+        TurmsBusinessException exception = EXCEPTION_POOL.get(code);
+        if (exception != null) {
+            return exception;
+        } else {
+            TurmsBusinessException newException = new TurmsBusinessException(code, code.getReason());
+            return EXCEPTION_POOL.put(code, newException);
+        }
     }
 
     public static TurmsBusinessException get(int statusCode) {
@@ -92,8 +97,8 @@ public class TurmsBusinessException extends NoStackTraceException {
         return null;
     }
 
-    public static TurmsBusinessException get(@Nonnull TurmsStatusCode code, @Nullable String reason) {
-        if (reason != null && !reason.isBlank()) {
+    public static TurmsBusinessException get(@NotNull TurmsStatusCode code, @Nullable String reason) {
+        if (reason != null && !reason.isEmpty()) {
             return new TurmsBusinessException(code, reason);
         } else {
             return get(code);
@@ -114,16 +119,6 @@ public class TurmsBusinessException extends NoStackTraceException {
         return notification.hasReason()
                 ? TurmsBusinessException.get(code, notification.getReason().getValue())
                 : TurmsBusinessException.get(code);
-    }
-
-    public static <T> CompletableFuture<T> getFuture(TurmsStatusCode statusCode) {
-        return getFuture(statusCode, null);
-    }
-
-    public static <T> CompletableFuture<T> getFuture(TurmsStatusCode statusCode, @Nullable String reason) {
-        CompletableFuture<T> future = new CompletableFuture<>();
-        future.completeExceptionally(get(statusCode, reason));
-        return future;
     }
 
 }

@@ -10,8 +10,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
         <protobuf-maven-plugin.version>0.6.1</protobuf-maven-plugin.version>
         <protobuf.version>3.13.0</protobuf.version>
         <jsr305.version>3.0.2</jsr305.version>

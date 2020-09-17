@@ -36,7 +36,7 @@ public class Validator {
                 throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The required values must not be null");
             } else {
                 if (o instanceof String) {
-                    if (((String) o).isBlank()) {
+                    if (((String) o).isEmpty()) {
                         throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The string value must not be blank");
                     }
                 } else if (o instanceof Collection && ((Collection<?>) o).isEmpty()) {
@@ -56,7 +56,7 @@ public class Validator {
         for (Object o : array) {
             if (o != null) {
                 if (o instanceof String) {
-                    if (!((String) o).isBlank()) {
+                    if (!((String) o).isEmpty()) {
                         return false;
                     }
                 } else if (o instanceof Collection) {
@@ -83,4 +83,5 @@ public class Validator {
         }
         return true;
     }
+
 }

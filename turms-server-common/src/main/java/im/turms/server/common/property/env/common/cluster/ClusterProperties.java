@@ -18,6 +18,7 @@
 package im.turms.server.common.property.env.common.cluster;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import im.turms.server.common.property.metadata.AbsctractProperties;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
 import lombok.Data;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
@@ -26,7 +27,7 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
  * @author James Chen
  */
 @Data
-public class ClusterProperties {
+public class ClusterProperties extends AbsctractProperties {
 
     private String id = "turms";
 

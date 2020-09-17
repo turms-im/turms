@@ -88,9 +88,10 @@ public class GroupServiceController {
             Integer minimumScore = request.hasMinimumScore() ? request.getMinimumScore().getValue() : null;
             Long groupTypeId = request.hasGroupTypeId() ? request.getGroupTypeId().getValue() : null;
             Date muteEndDate = request.hasMuteEndDate() ? new Date(request.getMuteEndDate().getValue()) : null;
+            Long creatorIdAndOwnerId = clientRequest.getUserId();
             return groupService.authAndCreateGroup(
-                    clientRequest.getUserId(),
-                    clientRequest.getUserId(),
+                    creatorIdAndOwnerId,
+                    creatorIdAndOwnerId,
                     request.getName(),
                     intro,
                     announcement,
@@ -111,7 +112,7 @@ public class GroupServiceController {
             return groupMemberService
                     .isOwner(clientRequest.getUserId(), request.getGroupId())
                     .flatMap(authenticated -> {
-                        if (authenticated == null || !authenticated) {
+                        if (!authenticated) {
                             return Mono.just(RequestHandlerResultFactory.get(TurmsStatusCode.UNAUTHORIZED));
                         }
                         if (node.getSharedProperties().getService().getNotification().isNotifyMembersAfterGroupDeleted()) {
