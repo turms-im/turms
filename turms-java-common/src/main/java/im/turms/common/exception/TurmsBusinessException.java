@@ -24,6 +24,7 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author James Chen
@@ -59,29 +60,20 @@ public class TurmsBusinessException extends NoStackTraceException {
 
     @Override
     public boolean equals(Object o) {
-        if (o == this) {
+        if (this == o) {
             return true;
         }
-        if (o instanceof TurmsBusinessException) {
-            TurmsBusinessException other = (TurmsBusinessException) o;
-            if (code == other.getCode()) {
-                if (reason != null) {
-                    return reason.equals(other.reason);
-                } else {
-                    return other.reason == null;
-                }
-            }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
         }
-        return false;
+        TurmsBusinessException that = (TurmsBusinessException) o;
+        return code == that.code
+                && Objects.equals(reason, that.reason);
     }
 
     @Override
     public int hashCode() {
-        final int PRIME = 59;
-        int result = 1;
-        result = (result * PRIME) + code.hashCode();
-        result = (result * PRIME) + (reason == null ? 0 : reason.hashCode());
-        return result;
+        return Objects.hash(code, reason);
     }
 
     public static TurmsBusinessException get(@NotNull TurmsStatusCode code) {

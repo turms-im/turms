@@ -22,24 +22,26 @@ package im.turms.common.exception;
  */
 public class NoStackTraceException extends RuntimeException {
 
-    /**
-     * Don't call the following parent constructor because android sdk 21 doesn't have it
-     *
-     * @see java.lang.RuntimeException#RuntimeException(java.lang.String, java.lang.Throwable, boolean, boolean)
-     */
     public NoStackTraceException() {
         super();
-        this.setStackTrace(null);
     }
 
     public NoStackTraceException(String message) {
         super(message);
-        this.setStackTrace(null);
     }
 
     public NoStackTraceException(Throwable cause) {
         super(cause);
-        this.setStackTrace(null);
+    }
+
+    /**
+     * Don't call the following parent constructor to avoid filling in stack trace because android sdk 21 doesn't have it
+     *
+     * @see java.lang.RuntimeException#RuntimeException(java.lang.String, java.lang.Throwable, boolean, boolean)
+     */
+    @Override
+    public Throwable fillInStackTrace() {
+        return this;
     }
 
 }

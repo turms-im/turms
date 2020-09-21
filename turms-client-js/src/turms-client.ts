@@ -21,6 +21,7 @@ class TurmsClient {
         requestTimeout?: number,
         minRequestInterval?: number,
         heartbeatInterval?: number,
+        ackMessageInterval?: number,
         storageServerUrl?: string,
         httpUrl?: string,
         queryReasonWhenLoginFailed?: boolean,
@@ -32,6 +33,7 @@ class TurmsClient {
                 wsUrlOrOptions.requestTimeout,
                 wsUrlOrOptions.minRequestInterval,
                 wsUrlOrOptions.heartbeatInterval,
+                wsUrlOrOptions.ackMessageInterval,
                 wsUrlOrOptions.storageServerUrl,
                 wsUrlOrOptions.httpUrl,
                 wsUrlOrOptions.queryReasonWhenLoginFailed,
@@ -48,7 +50,7 @@ class TurmsClient {
                 queryReasonWhenDisconnected);
             this._userService = new UserService(this);
             this._groupService = new GroupService(this);
-            this._messageService = new MessageService(this);
+            this._messageService = new MessageService(this, ackMessageInterval);
             this._storageService = new StorageService(this, storageServerUrl);
             this._notificationService = new NotificationService(this);
         }

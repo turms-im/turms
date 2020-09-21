@@ -20,7 +20,9 @@ package unit.im.turms.gateway.util;
 import com.google.protobuf.Int64Value;
 import im.turms.common.exception.TurmsBusinessException;
 import im.turms.common.model.dto.request.TurmsRequest;
+import im.turms.common.model.dto.request.message.CreateMessageRequest;
 import im.turms.common.model.dto.request.signal.AckRequest;
+import im.turms.gateway.pojo.dto.SimpleTurmsRequest;
 import im.turms.gateway.util.TurmsRequestUtil;
 import org.junit.jupiter.api.Test;
 
@@ -35,52 +37,55 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class TurmsRequestUtilTests {
 
     @Test
-    void parseRequestId_shouldThrow_forNullArgument() {
-        assertThrows(IllegalArgumentException.class, () -> TurmsRequestUtil.parseRequestId(null));
+    void parseSimpleRequest_shouldThrow_forNullArgument() {
+        assertThrows(IllegalArgumentException.class, () -> TurmsRequestUtil.parseSimpleRequest(null));
     }
 
     @Test
-    void parseRequestId_shouldThrow_forEmptyRequest() {
+    void parseSimpleRequest_shouldThrow_forEmptyRequest() {
         ByteBuffer emptyRequest = TurmsRequest.newBuilder()
                 .buildPartial()
                 .toByteString()
                 .asReadOnlyByteBuffer();
 
-        assertThrows(TurmsBusinessException.class, () -> TurmsRequestUtil.parseRequestId(emptyRequest));
+        assertThrows(TurmsBusinessException.class, () -> TurmsRequestUtil.parseSimpleRequest(emptyRequest));
     }
 
     @Test
-    void parseRequestId_shouldThrow_forPartialRequestWithoutRequestId() {
+    void parseSimpleRequest_shouldThrow_forPartialRequestWithoutRequestId() {
         ByteBuffer partialRequestWithoutRequestId = TurmsRequest.newBuilder()
                 .setAckRequest(AckRequest.newBuilder().build())
                 .build()
                 .toByteString()
                 .asReadOnlyByteBuffer();
 
-        assertThrows(TurmsBusinessException.class, () -> TurmsRequestUtil.parseRequestId(partialRequestWithoutRequestId));
+        assertThrows(TurmsBusinessException.class, () -> TurmsRequestUtil.parseSimpleRequest(partialRequestWithoutRequestId));
     }
 
     @Test
-    void parseRequestId_shouldThrow_forPartialRequestWithNullRequestId() {
+    void parseSimpleRequest_shouldThrow_forPartialRequestWithNullRequestId() {
         ByteBuffer partialRequestWithNullRequestId = TurmsRequest.newBuilder()
                 .setRequestId(Int64Value.newBuilder().build())
                 .build()
                 .toByteString()
                 .asReadOnlyByteBuffer();
 
-        assertThrows(TurmsBusinessException.class, () -> TurmsRequestUtil.parseRequestId(partialRequestWithNullRequestId));
+        assertThrows(TurmsBusinessException.class, () -> TurmsRequestUtil.parseSimpleRequest(partialRequestWithNullRequestId));
     }
 
     @Test
-    void parseRequestId_shouldReturnRequestId_ifRequestIdExists() {
+    void parseSimpleRequest_shouldReturnRequestIdAndType_ifRequestIdExists() {
         long requestId = 1000L;
         ByteBuffer requestWithRequestId = TurmsRequest.newBuilder()
                 .setRequestId(Int64Value.newBuilder().setValue(requestId).build())
+                .setCreateMessageRequest(CreateMessageRequest.newBuilder().buildPartial())
                 .build()
                 .toByteString()
                 .asReadOnlyByteBuffer();
 
-        assertEquals(requestId, TurmsRequestUtil.parseRequestId(requestWithRequestId));
+        SimpleTurmsRequest request = TurmsRequestUtil.parseSimpleRequest(requestWithRequestId);
+        assertEquals(requestId, request.getRequestId());
+        assertEquals(TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, request.getType());
     }
 
 }

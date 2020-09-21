@@ -22,11 +22,15 @@ import com.google.protobuf.ExtensionRegistry;
 import com.google.protobuf.Int64Value;
 import im.turms.common.constant.statuscode.TurmsStatusCode;
 import im.turms.common.exception.TurmsBusinessException;
+import im.turms.common.model.dto.request.TurmsRequest;
+import im.turms.gateway.pojo.dto.SimpleTurmsRequest;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.KIND_NOT_SET;
 
 /**
  * @author James Chen
@@ -42,31 +46,45 @@ public class TurmsRequestUtil {
     private TurmsRequestUtil() {
     }
 
-    public static long parseRequestId(ByteBuffer turmsRequestBuffer) {
+    public static SimpleTurmsRequest parseSimpleRequest(ByteBuffer turmsRequestBuffer) {
         Assert.notNull(turmsRequestBuffer, "turmsRequestBuffer must not be null");
         // The CodedInputStream.newInstance should be efficient because it reuses the direct buffer
         // see com.google.protobuf.CodedInputStream.newInstance(java.nio.ByteBuffer, boolean)
         CodedInputStream stream = CodedInputStream.newInstance(turmsRequestBuffer);
-        int tag;
-        do {
-            try {
-                tag = stream.readTag();
+        try {
+            long requestId = Long.MIN_VALUE;
+            TurmsRequest.KindCase type;
+            while (true) {
+                int tag = stream.readTag();
                 if (tag == TURMS_REQUEST_REQUEST_ID_TAG) {
                     Int64Value value = stream.readMessage(Int64Value.parser(), ExtensionRegistry.getEmptyRegistry());
                     if (value != null && !value.equals(value.getDefaultInstanceForType())) {
-                        return value.getValue();
+                        requestId = value.getValue();
                     } else {
                         throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The requestId of TurmsRequest is null");
                     }
                 } else {
-                    stream.skipField(tag);
+                    // key = (field_number << 3) | wire_type
+                    int kindFieldNumber = tag >>> 3;
+                    type = TurmsRequest.KindCase.forNumber(kindFieldNumber);
+                    if (type == null || type == KIND_NOT_SET) {
+                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "Not a valid TurmsRequest");
+                    }
+                    break;
                 }
-            } catch (IOException e) {
+            }
+            if (requestId != Long.MIN_VALUE) {
+                return new SimpleTurmsRequest(requestId, type);
+            } else {
                 throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "Not a valid TurmsRequest");
             }
-        } while (tag != 0);
-        // This should never happen because of the code "tag = stream.readTag();" above
-        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The requestId field of TurmsRequest is missing");
+        } catch (IOException e) {
+            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "Not a valid TurmsRequest");
+        }
+    }
+
+    public static boolean isSignalRequest(TurmsRequest.KindCase type) {
+        return type == TurmsRequest.KindCase.ACK_REQUEST;
     }
 
 }

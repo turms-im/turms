@@ -6,12 +6,15 @@ import MessageDeliveryStatus = im.turms.proto.MessageDeliveryStatus;
 export default class MessageService {
     private static readonly DEFAULT_MENTIONED_USER_IDS_PARSER;
     private _turmsClient;
+    private _ackMessageTimerId?;
+    private _unacknowledgedMessageIds;
     private _mentionedUserIdsParser?;
     private _onMessage?;
     get onMessage(): (message: ParsedModel.Message, messageAddition: MessageAddition) => void;
     set onMessage(value: (message: ParsedModel.Message, messageAddition: MessageAddition) => void);
-    constructor(turmsClient: TurmsClient);
+    constructor(turmsClient: TurmsClient, ackMessageInterval?: number);
     sendMessage(isGroupMessage: boolean, targetId: string, deliveryDate?: Date, text?: string, records?: Uint8Array[], burnAfter?: number): Promise<string>;
+    ackMessages(messageIds: string[]): Promise<void>;
     forwardMessage(messageId: string, isGroupMessage: boolean, targetId: string): Promise<string>;
     updateSentMessage(messageId: string, text?: string, records?: Uint8Array[]): Promise<void>;
     queryMessages(ids?: string[], areGroupMessages?: boolean, areSystemMessages?: boolean, fromId?: string, deliveryDateAfter?: Date, deliveryDateBefore?: Date, deliveryStatus?: string | MessageDeliveryStatus, size?: number): Promise<ParsedModel.Message[]>;
@@ -32,6 +35,7 @@ export default class MessageService {
     static generateImageRecordByDescription(url: string, fileSize?: number, imageSize?: number, original?: boolean): Uint8Array;
     static generateFileRecordByDate(data: ArrayBuffer): Uint8Array;
     static generateFileRecordByDescription(url: string, format?: string, size?: number): Uint8Array;
+    private _startAckMessagesTimer;
     private _parseMessageAddition;
     private static _createMessageRequest2Message;
 }

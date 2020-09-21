@@ -34,7 +34,6 @@ public class HandleServiceRequestSerializer implements Serializer<HandleServiceR
         ServiceRequest request = data.getServiceRequest();
         output.writeLong(request.getUserId());
         output.writeByte(request.getDeviceType().getNumber());
-        output.writeLong(request.getRequestId());
     }
 
     @Override
@@ -43,15 +42,14 @@ public class HandleServiceRequestSerializer implements Serializer<HandleServiceR
         ByteBuf firstByteBuf = input.readSlice(length);
         long userId = firstByteBuf.readLong();
         DeviceType deviceType = DeviceType.forNumber(firstByteBuf.readByte());
-        long requestId = firstByteBuf.readLong();
         ByteBuf turmsRequestBuffer = input.slice();
-        ServiceRequest serviceRequest = new ServiceRequest(userId, deviceType, requestId, turmsRequestBuffer);
+        ServiceRequest serviceRequest = new ServiceRequest(userId, deviceType, null, null, turmsRequestBuffer);
         return new HandleServiceRequest(serviceRequest);
     }
 
     @Override
     public int initialCapacity(HandleServiceRequest data) {
-        return Long.BYTES * 2 + Byte.BYTES;
+        return Long.BYTES + Byte.BYTES;
     }
 
     @Override

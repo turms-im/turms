@@ -32,6 +32,8 @@ export default class MessageService {
     };
 
     private _turmsClient: TurmsClient;
+    private _ackMessageTimerId?: number;
+    private _unacknowledgedMessageIds: number[] = [];
     private _mentionedUserIdsParser?: (message: ParsedModel.Message) => string[];
     private _onMessage?: (message: ParsedModel.Message, messageAddition: MessageAddition) => void;
 
@@ -43,8 +45,11 @@ export default class MessageService {
         this._onMessage = value;
     }
 
-    constructor(turmsClient: TurmsClient) {
+    constructor(turmsClient: TurmsClient, ackMessageInterval?: number) {
         this._turmsClient = turmsClient;
+        if (typeof ackMessageInterval === 'number' && ackMessageInterval > 0) {
+            this._ackMessageTimerId = this._startAckMessagesTimer(ackMessageInterval);
+        }
         this._turmsClient.driver
             .addOnNotificationListener(notification => {
                 if (this._onMessage != null && notification.relayedRequest) {
@@ -85,6 +90,18 @@ export default class MessageService {
                 burnAfter: RequestUtil.wrapValueIfNotNull(burnAfter)
             }
         }).then(n => NotificationUtil.getFirstVal(n, 'ids', true));
+    }
+
+
+    ackMessages(messageIds: string[]): Promise<void> {
+        if (RequestUtil.isFalsy(messageIds)) {
+            return TurmsBusinessError.notFalsy('messageIds', true);
+        }
+        return this._turmsClient.driver.send({
+            ackRequest: {
+                messagesIds: messageIds
+            }
+        }).then(() => null)
     }
 
     forwardMessage(
@@ -322,6 +339,18 @@ export default class MessageService {
                 size: RequestUtil.wrapValueIfNotNull(size)
             }
         }).finish();
+    }
+
+    private _startAckMessagesTimer(ackMessageInterval: number): number {
+        return window.setInterval(() => {
+            if (!this._unacknowledgedMessageIds.length) {
+                const unacknowledgedMessageIds = JSON.parse(JSON.stringify(this._unacknowledgedMessageIds));
+                this.ackMessages(unacknowledgedMessageIds)
+                    .then(() => {
+                        this._unacknowledgedMessageIds = this._unacknowledgedMessageIds.filter(id => !unacknowledgedMessageIds.includes(id))
+                    });
+            }
+        }, ackMessageInterval);
     }
 
     private _parseMessageAddition(message: ParsedModel.Message): MessageAddition {

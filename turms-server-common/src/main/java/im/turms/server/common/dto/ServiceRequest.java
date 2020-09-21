@@ -18,6 +18,7 @@
 package im.turms.server.common.dto;
 
 import im.turms.common.constant.DeviceType;
+import im.turms.common.model.dto.request.TurmsRequest;
 import io.netty.buffer.ByteBuf;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,6 +33,7 @@ public final class ServiceRequest {
     private final Long userId;
     private final DeviceType deviceType;
     private final Long requestId;
+    private final TurmsRequest.KindCase type;
 
     /**
      * Note that turms-gateway doesn't parse and validate the request for better performance (zero copy)
@@ -45,6 +47,7 @@ public final class ServiceRequest {
                 "userId=" + userId +
                 ", deviceType=" + deviceType +
                 ", requestId=" + requestId +
+                ", type=" + type +
                 '}';
     }
 

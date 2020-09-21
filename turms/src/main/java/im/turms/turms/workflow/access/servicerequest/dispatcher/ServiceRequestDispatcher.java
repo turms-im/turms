@@ -112,7 +112,8 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
     }
 
     /**
-     * The backpressure should be supported by RSocket
+     * turms-gateway is responsible for the flow control of client requests
+     * and RSocket is responsible for the backpressure between turms and turms-gateway
      * so we don't check the request rate here
      */
     @Override
@@ -142,7 +143,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         ClientRequest clientRequest = new ClientRequest(
                 serviceRequest.getUserId(),
                 serviceRequest.getDeviceType(),
-                serviceRequest.getRequestId(),
+                request.getRequestId().getValue(),
                 request,
                 serviceRequest.getTurmsRequestBuffer());
         Mono<ClientRequest> clientRequestMono = Mono.just(clientRequest);
