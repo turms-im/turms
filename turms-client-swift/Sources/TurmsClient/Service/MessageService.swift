@@ -19,21 +19,42 @@ public class MessageService {
     }
 
     private weak var turmsClient: TurmsClient!
+    private var unacknowledgedMessageIds: [Int64] = []
     private var mentionedUserIdsParser: ((Message) -> [Int64])?
     public var onMessage: ((Message, MessageAddition) -> Void)?
 
-    init(_ turmsClient: TurmsClient) {
+    init(_ turmsClient: TurmsClient, _ ackMessageInterval: TimeInterval?) {
         self.turmsClient = turmsClient
+        if let interval = ackMessageInterval, interval > 0 {
+            startAckMessagesTimer(interval)
+        }
         self.turmsClient.driver
             .addOnNotificationListener {
                 if self.onMessage != nil, $0.hasRelayedRequest {
                     if case .createMessageRequest(let request) = $0.relayedRequest.kind {
+                        if let interval = ackMessageInterval {
+                            let messageId = request.messageID.value
+                            if interval > 0 {
+                                self.unacknowledgedMessageIds.append(messageId)
+                            } else {
+                                self.ackMessages([messageId])
+                            }
+                        }
                         let message = MessageService.createMessage2Message($0.requesterID.value, request)
                         let addition = self.parseMessageAddition(message)
                         self.onMessage!(message, addition)
                     }
                 }
             }
+    }
+
+    public func ackMessages(_ messageIds: [Int64]) -> Promise<Void> {
+        return turmsClient.driver
+            .send { $0
+                .request("ackRequest")
+                .field("messagesIds", messageIds)
+            }
+            .asVoid()
     }
 
     public func sendMessage(
@@ -272,6 +293,30 @@ public class MessageService {
                 $0.description_p.size.value = size!
             }
         }.serializedData()
+    }
+
+    private func startAckMessagesTimer(_ ackMessageInterval: TimeInterval) {
+        Timer.scheduledTimer(timeInterval: ackMessageInterval, target: self, selector: #selector(fireAckMessagesTimer), userInfo: nil, repeats: true)
+    }
+
+    @objc func fireAckMessagesTimer() {
+        if !unacknowledgedMessageIds.isEmpty {
+            var unacknowledgedMessageIdList: [Int64] = []
+            repeat {
+                let messageId = unacknowledgedMessageIds.popLast()
+                if let id = messageId {
+                    unacknowledgedMessageIdList.append(id)
+                } else {
+                    break
+                }
+            } while true
+            if !unacknowledgedMessageIdList.isEmpty {
+                ackMessages(unacknowledgedMessageIdList)
+                    .catch { _ in
+                        self.unacknowledgedMessageIds.append(contentsOf: unacknowledgedMessageIdList)
+                    }
+            }
+        }
     }
 
     private func parseMessageAddition(_ message: Message) -> MessageAddition {
