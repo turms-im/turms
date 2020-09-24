@@ -76,7 +76,7 @@ public class UserSimultaneousLoginService {
         return forbiddenDeviceTypes.contains(deviceType);
     }
 
-    public boolean shouldDisconnectLoggingInDevice() {
+    public boolean shouldDisconnectLoggingInDeviceIfConflicts() {
         LoginConflictStrategy conflictStrategy = node
                 .getSharedProperties()
                 .getGateway()

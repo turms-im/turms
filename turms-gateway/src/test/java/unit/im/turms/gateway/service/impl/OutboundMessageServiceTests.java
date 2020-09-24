@@ -32,9 +32,7 @@ import io.netty.channel.unix.PreferredDirectByteBufAllocator;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.geo.Point;
 import reactor.core.publisher.Mono;
-import reactor.core.publisher.Sinks;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -51,14 +49,14 @@ class OutboundMessageServiceTests {
 
     @Test
     void constructor_shouldReturnInstance() {
-        OutboundMessageService outboundMessageService = new OutboundMessageService(null, null, null);
+        OutboundMessageService outboundMessageService = new OutboundMessageService(null, null, null, null);
         assertNotNull(outboundMessageService);
     }
 
     @Test
     void sendNotificationToLocalClients_shouldReturnTrue_ifRecipientsAreOnline() {
         UserSessionsManager sessionsManager = mock(UserSessionsManager.class);
-        UserSession session = new UserSession(1, DeviceType.ANDROID, new Date(), new Point(1F, 1F), null, Sinks.many().unicast().onBackpressureBuffer(), null, 1L, 0, 0);
+        UserSession session = new UserSession(DeviceType.ANDROID, new Point(1F, 1F), null);
         when(sessionsManager.getSessionMap())
                 .thenReturn(Map.of(DeviceType.ANDROID, session));
         OutboundMessageService outboundMessageService = newOutboundMessageService(sessionsManager);
@@ -98,7 +96,7 @@ class OutboundMessageServiceTests {
         SessionService sessionService = mock(SessionService.class);
         when(sessionService.getUserSessionsManager(any()))
                 .thenReturn(userSessionsManager);
-        return new OutboundMessageService(node, sessionService, pluginManager);
+        return new OutboundMessageService(node, sessionService, null, pluginManager);
     }
 
 }

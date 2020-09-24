@@ -23,6 +23,7 @@ package im.turms.common.constant.statuscode;
 public enum SessionCloseStatus {
 
     REDIRECT(4300),
+    SWITCH(4301),
 
     ILLEGAL_REQUEST(4400),
     HEARTBEAT_TIMEOUT(4401),

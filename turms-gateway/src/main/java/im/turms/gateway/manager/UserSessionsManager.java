@@ -22,7 +22,7 @@ import im.turms.common.constant.UserStatus;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.model.bo.signal.Session;
 import im.turms.common.model.dto.notification.TurmsNotification;
-import im.turms.common.util.RandomUtil;
+import im.turms.gateway.access.udp.UdpDispatcher;
 import im.turms.gateway.access.websocket.dto.CloseStatusFactory;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.server.common.constraint.DeviceTypeConstraint;
@@ -36,13 +36,10 @@ import lombok.Data;
 import org.springframework.data.geo.Point;
 import org.springframework.util.Assert;
 import org.springframework.web.reactive.socket.CloseStatus;
-import org.springframework.web.reactive.socket.WebSocketSession;
-import reactor.core.publisher.Sinks;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -54,6 +51,9 @@ import java.util.concurrent.TimeUnit;
 @Data
 public final class UserSessionsManager {
 
+    /**
+     * The count of pending timeouts should be roughly the same as the count of online/connected sessions
+     */
     private static final HashedWheelTimer HEARTBEAT_TIMER = new HashedWheelTimer();
 
     private final Long userId;
@@ -65,28 +65,21 @@ public final class UserSessionsManager {
             @NotNull UserStatus userStatus,
             @NotNull DeviceType loggingInDeviceType,
             @Nullable Point userLocation,
-            @Nullable WebSocketSession webSocketSession,
-            int heartbeatTimeoutInSeconds,
+            int closeIdleSessionAfterMillis,
+            int switchProtocolAfterMillis,
             @Nullable Long logId) {
         Assert.notNull(userId, "userId must not be null");
         Assert.notNull(userStatus, "userStatus must not be null");
         Assert.notNull(loggingInDeviceType, "loggingInDeviceType must not be null");
         UserSession session = new UserSession(
-                RandomUtil.nextPositiveInt(),
                 loggingInDeviceType,
-                new Date(),
                 userLocation,
-                webSocketSession,
-                Sinks.many().unicast().onBackpressureBuffer(),
-                null,
-                logId,
-                System.currentTimeMillis(),
-                0);
-        if (heartbeatTimeoutInSeconds > 0) {
-            Timeout heartbeatTimeout = newHeartbeatTimeout(loggingInDeviceType, session, heartbeatTimeoutInSeconds);
+                logId);
+        if (closeIdleSessionAfterMillis > 0) {
+            Timeout heartbeatTimeout = newHeartbeatTimeout(loggingInDeviceType, session, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
             session.setHeartbeatTimeout(heartbeatTimeout);
         }
-        ConcurrentHashMap<DeviceType, UserSession> sessionMap = new ConcurrentHashMap<>(MapUtil.getCapability(DeviceTypeUtil.ALL_DEVICE_TYPES.length));
+        ConcurrentHashMap<DeviceType, UserSession> sessionMap = new ConcurrentHashMap<>(MapUtil.getCapability(DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length));
         sessionMap.put(loggingInDeviceType, session);
         this.userId = userId;
         this.userStatus = userStatus;
@@ -100,21 +93,16 @@ public final class UserSessionsManager {
             @NotNull DeviceType loggingInDeviceType,
             @Nullable Point userLocation,
             @Nullable Long logId,
-            int heartbeatTimeoutInSeconds) {
+            int closeIdleSessionAfterMillis,
+            int switchProtocolAfterMillis) {
+        Assert.notNull(loggingInDeviceType, "loggingInDeviceType must not be null");
         UserSession userSession = new UserSession(
-                RandomUtil.nextPositiveInt(),
                 loggingInDeviceType,
-                new Date(),
                 userLocation,
-                null,
-                Sinks.many().unicast().onBackpressureBuffer(),
-                null,
-                logId,
-                System.currentTimeMillis(),
-                0);
+                logId);
         boolean added = sessionMap.putIfAbsent(loggingInDeviceType, userSession) == null;
-        if (added && heartbeatTimeoutInSeconds > 0) {
-            userSession.setHeartbeatTimeout(newHeartbeatTimeout(loggingInDeviceType, userSession, heartbeatTimeoutInSeconds));
+        if (added && closeIdleSessionAfterMillis > 0) {
+            userSession.setHeartbeatTimeout(newHeartbeatTimeout(loggingInDeviceType, userSession, closeIdleSessionAfterMillis, switchProtocolAfterMillis));
         }
         return added;
     }
@@ -123,17 +111,7 @@ public final class UserSessionsManager {
             @NotNull DeviceType deviceType,
             @NotNull CloseStatus closeStatus) {
         sessionMap.computeIfPresent(deviceType, (key, session) -> {
-            session.getNotificationSink().emitComplete();
-            Timeout timeout = session.getHeartbeatTimeout();
-            if (timeout != null) {
-                timeout.cancel();
-            }
-            WebSocketSession webSocketSession = session.getWebSocketSession();
-            if (webSocketSession != null) {
-                webSocketSession.close(closeStatus).subscribe();
-            } else {
-                throw new IllegalStateException("The WebSocket session is missing for the session: " + session.getId());
-            }
+            session.close(closeStatus);
             return null;
         });
     }
@@ -148,7 +126,7 @@ public final class UserSessionsManager {
                     .setData(TurmsNotification.Data.newBuilder().setSession(session))
                     .build();
             ByteBuf byteBuffer = ProtoUtil.getByteBuffer(notification);
-            userSession.getNotificationSink().emitNext(byteBuffer);
+            userSession.getNotificationSink().tryEmitNext(byteBuffer);
             return true;
         } else {
             return false;
@@ -173,15 +151,23 @@ public final class UserSessionsManager {
      * @param session Don't replace this parameter by using "getSession(deviceType)"
      *                because it needs to call hashcode() to find session every time
      */
-    private Timeout newHeartbeatTimeout(@NotNull @DeviceTypeConstraint DeviceType deviceType, @NotNull UserSession session, int heartbeatTimeoutSeconds) {
+    private Timeout newHeartbeatTimeout(@NotNull @DeviceTypeConstraint DeviceType deviceType, @NotNull UserSession session, int closeIdleSessionAfterMillis, int switchProtocolAfterMillis) {
         return HEARTBEAT_TIMER.newTimeout(timeout -> {
-                    long now = System.currentTimeMillis();
-                    int elapsedTime = (int) ((now - session.getLastHeartbeatTimestampMillis()) / 1000);
-                    if (elapsedTime > heartbeatTimeoutSeconds) {
-                        setDeviceOffline(deviceType, CloseStatusFactory.get(SessionCloseStatus.HEARTBEAT_TIMEOUT));
+                    if (session.isOpen()) {
+                        long now = System.currentTimeMillis();
+                        int heartbeatElapsedTime = (int) (now - session.getLastHeartbeatTimestampMillis());
+                        if (heartbeatElapsedTime > closeIdleSessionAfterMillis) {
+                            setDeviceOffline(deviceType, CloseStatusFactory.get(SessionCloseStatus.HEARTBEAT_TIMEOUT));
+                        } else {
+                            int requestElapsedTime = (int) (now - session.getLastRequestTimestampMillis());
+                            if (requestElapsedTime > switchProtocolAfterMillis && session.isConnected() && UdpDispatcher.isEnabled() && deviceType != DeviceType.BROWSER) {
+                                session.disconnect();
+                            }
+                            newHeartbeatTimeout(deviceType, session, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
+                        }
                     }
                 },
-                Math.max(heartbeatTimeoutSeconds / 3, 1),
+                Math.max(closeIdleSessionAfterMillis / 3, 1),
                 TimeUnit.SECONDS);
     }
 

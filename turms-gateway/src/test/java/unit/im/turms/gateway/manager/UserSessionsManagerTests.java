@@ -43,23 +43,23 @@ class UserSessionsManagerTests {
 
     @Test
     void constructor_shouldSucceed_ifRequiredParamsExist() {
-        UserSessionsManager manager = new UserSessionsManager(userId, userStatus, deviceType, null, null, 0, null);
+        UserSessionsManager manager = new UserSessionsManager(userId, userStatus, deviceType, null, 0, 0, null);
         assertNotNull(manager);
     }
 
     @Test
     void constructor_shouldThrow_ifRequiredParamsNotExist() {
         assertThrows(IllegalArgumentException.class, () ->
-                new UserSessionsManager(null, userStatus, deviceType, null, null, 0, null));
+                new UserSessionsManager(null, userStatus, deviceType, null, 0, 0, null));
         assertThrows(IllegalArgumentException.class, () ->
-                new UserSessionsManager(userId, null, deviceType, null, null, 0, null));
+                new UserSessionsManager(userId, null, deviceType, null, 0, 0, null));
         assertThrows(IllegalArgumentException.class, () ->
-                new UserSessionsManager(userId, userStatus, null, null, null, 0, null));
+                new UserSessionsManager(userId, userStatus, null, null, 0, 0, null));
     }
 
     @Test
     void setDeviceOffline_shouldSucceed() {
-        UserSessionsManager manager = new UserSessionsManager(userId, userStatus, deviceType, null, null, 0, null);
+        UserSessionsManager manager = new UserSessionsManager(userId, userStatus, deviceType, null, 0, 0, null);
         WebSocketSession session = mock(WebSocketSession.class);
         when(session.close(any())).thenReturn(Mono.empty());
         manager.getSession(deviceType).setWebSocketSession(session);
@@ -71,35 +71,35 @@ class UserSessionsManagerTests {
 
     @Test
     void pushSessionNotification_shouldReturnTrue_ifSessionExists() {
-        UserSessionsManager manager = new UserSessionsManager(userId, userStatus, deviceType, null, null, 0, null);
+        UserSessionsManager manager = new UserSessionsManager(userId, userStatus, deviceType, null, 0, 0, null);
         assertTrue(manager.pushSessionNotification(deviceType));
     }
 
     @Test
     void pushSessionNotification_shouldReturnFalse_ifSessionNotExists() {
-        UserSessionsManager manager = new UserSessionsManager(userId, userStatus, DeviceType.ANDROID, null, null, 0, null);
+        UserSessionsManager manager = new UserSessionsManager(userId, userStatus, DeviceType.ANDROID, null, 0, 0, null);
         assertFalse(manager.pushSessionNotification(DeviceType.IOS));
     }
 
     @Test
     void getSession_shouldReturnSession() {
-        UserSessionsManager manager = new UserSessionsManager(userId, userStatus, deviceType, null, null, 0, null);
+        UserSessionsManager manager = new UserSessionsManager(userId, userStatus, deviceType, null, 0, 0, null);
         assertNotNull(manager.getSession(deviceType));
     }
 
     @Test
     void getSessionsNumber_shouldBeThree_forThreeSessions() {
-        UserSessionsManager manager = new UserSessionsManager(userId, userStatus, DeviceType.ANDROID, null, null, 0, null);
-        manager.addSessionIfAbsent(DeviceType.IOS, null, null, 1);
-        manager.addSessionIfAbsent(DeviceType.DESKTOP, null, null, 1);
+        UserSessionsManager manager = new UserSessionsManager(userId, userStatus, DeviceType.ANDROID, null, 0, 0, null);
+        manager.addSessionIfAbsent(DeviceType.IOS, null, null, 1, 0);
+        manager.addSessionIfAbsent(DeviceType.DESKTOP, null, null, 1, 0);
         assertEquals(3, manager.getSessionsNumber());
     }
 
     @Test
     void getLoggedInDeviceTypes_shouldBeSame() {
-        UserSessionsManager manager = new UserSessionsManager(userId, userStatus, DeviceType.ANDROID, null, null, 0, null);
-        manager.addSessionIfAbsent(DeviceType.IOS, null, null, 1);
-        manager.addSessionIfAbsent(DeviceType.DESKTOP, null, null, 1);
+        UserSessionsManager manager = new UserSessionsManager(userId, userStatus, DeviceType.ANDROID, null, 0, 0, null);
+        manager.addSessionIfAbsent(DeviceType.IOS, null, null, 1, 0);
+        manager.addSessionIfAbsent(DeviceType.DESKTOP, null, null, 1, 0);
 
         Set<DeviceType> loggedInDeviceTypes = manager.getLoggedInDeviceTypes();
 

@@ -38,15 +38,23 @@ public class SessionProperties {
     private boolean useOperatingSystemClassAsDefaultDeviceType = false;
 
     @JsonView(MutablePropertiesView.class)
-    @Description("A session will be closed if turms server doesn't receive any request (including heartbeat request) from the client during heartbeatTimeoutSeconds." +
+    @Description("A session will be closed if turms server doesn't receive any request (including heartbeat request) from the client during closeIdleSessionAfterSeconds." +
             "References: https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=207243549&idx=1&sn=4ebe4beb8123f1b5ab58810ac8bc5994&scene=0#rd")
     @Min(0)
-    private int heartbeatTimeoutSeconds = 150;
+    private int closeIdleSessionAfterSeconds = 150;
 
     @JsonView(MutablePropertiesView.class)
-    @Description("The minimum allowable interval of heartbeat update operations to avoid frequent updates")
+    @Description("If the turms server only receives heartbeat requests from the client during switchProtocolAfterSeconds, " +
+            "the websocket connection will be closed with the close status \"SWITCH\" to indicate the client " +
+            "should keep sending heartbeat requests over UDP if they want to keep online. " +
+            "Note: 1. The property only works if UDP is enabled; 2. For browser clients, UDP isn't supported")
     @Min(0)
-    private int minimumUpdateHeartbeatIntervalSeconds = 150 / 10;
+    private int switchProtocolAfterSeconds = closeIdleSessionAfterSeconds * 3;
+
+    @JsonView(MutablePropertiesView.class)
+    @Description("The minimum interval to refresh the heartbeat status by client requests to avoid refreshing the heartbeat status frequently")
+    @Min(0)
+    private int minHeartbeatIntervalSeconds = closeIdleSessionAfterSeconds / 10;
 
     @Description("Whether to enable to query the login failure reason")
     private boolean enableQueryLoginFailureReason = true;
@@ -77,10 +85,4 @@ public class SessionProperties {
     @Min(1)
     private int loginFailureReasonExpireAfter = 30;
 
-    /**
-     * If the turms server only receives heartbeat requests from the client during maxIdleTime,
-     * the session will be closed when the session cleaner detects it.
-     */
-//    @JsonView(MutablePropertiesView.class)
-//    private int idleHeartbeatTimeoutSeconds = 0;
 }

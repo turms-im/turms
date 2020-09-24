@@ -1,5 +1,6 @@
 enum TurmsCloseStatus {
     REDIRECT = 4300,
+    SWITCH,
 
     ILLEGAL_REQUEST = 4400,
     HEARTBEAT_TIMEOUT,

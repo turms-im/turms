@@ -1,5 +1,6 @@
 declare enum TurmsCloseStatus {
     REDIRECT = 4300,
+    SWITCH = 4301,
     ILLEGAL_REQUEST = 4400,
     HEARTBEAT_TIMEOUT = 4401,
     DISCONNECTED_BY_CLIENT = 4402,

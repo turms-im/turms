@@ -38,13 +38,14 @@ import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
- * A mediator between the underlying technical implementation
- * and the implementation of business logic (i.e. services)
+ * A mediator between the underlying technical implementation (i.e. the UDP/WebSocket access layer)
+ * and the implementation of business logic (i.e. the service layer)
  *
  * @author James Chen
  */
@@ -117,6 +118,10 @@ public class WorkflowMediator {
     public Mono<Boolean> setLocalUserDeviceOffline(Long userId, DeviceType deviceType, CloseStatus closeStatus) {
         return sessionService.setLocalSessionOfflineByUserIdAndDeviceType(userId, deviceType, closeStatus);
     }
+    
+    public Mono<Boolean> authAndSetLocalUserDeviceOffline(Long userId, DeviceType deviceType, CloseStatus closeStatus, int sessionId) {
+        return sessionService.authAndSetLocalSessionOfflineByUserIdAndDeviceType(userId, deviceType, closeStatus, sessionId);
+    }
 
     // Session
 
@@ -134,6 +139,10 @@ public class WorkflowMediator {
 
     public Mono<Boolean> processHeartbeatRequest(long userId, DeviceType deviceType) {
         return sessionService.updateHeartbeatTimestamp(userId, deviceType);
+    }
+
+    public Mono<UserSession> authAndProcessHeartbeatRequest(long userId, DeviceType deviceType, int sessionId) {
+        return sessionService.authAndUpdateHeartbeatTimestamp(userId, deviceType, sessionId);
     }
 
     // Plugin

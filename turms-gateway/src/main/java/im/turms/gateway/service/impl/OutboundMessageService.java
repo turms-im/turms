@@ -17,7 +17,11 @@
 
 package im.turms.gateway.service.impl;
 
+import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.model.dto.notification.TurmsNotification;
+import im.turms.common.model.dto.udpsignal.UdpNotificationType;
+import im.turms.gateway.access.udp.UdpDispatcher;
+import im.turms.gateway.access.websocket.dto.CloseStatusFactory;
 import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.plugin.extension.NotificationHandler;
 import im.turms.gateway.plugin.manager.TurmsPluginManager;
@@ -44,14 +48,17 @@ public class OutboundMessageService implements IOutboundMessageService {
 
     private final Node node;
     private final SessionService sessionService;
+    private final UdpDispatcher udpDispatcher;
     private final TurmsPluginManager turmsPluginManager;
 
     public OutboundMessageService(
             Node node,
             SessionService sessionService,
+            UdpDispatcher udpDispatcher,
             TurmsPluginManager turmsPluginManager) {
-        this.sessionService = sessionService;
         this.node = node;
+        this.sessionService = sessionService;
+        this.udpDispatcher = udpDispatcher;
         this.turmsPluginManager = turmsPluginManager;
     }
 
@@ -67,7 +74,9 @@ public class OutboundMessageService implements IOutboundMessageService {
         boolean hasForwardedMessageToAllRecipients = true;
         boolean triggerHandlers = node.getSharedProperties().getPlugin().isEnabled()
                 && !turmsPluginManager.getNotificationHandlerList().isEmpty();
-        Set<Long> offlineRecipientIds = triggerHandlers ? new HashSet<>() : Collections.emptySet();
+        Set<Long> offlineRecipientIds = triggerHandlers
+                ? new HashSet<>(Math.max(1, recipientIds.size() / 2))
+                : Collections.emptySet();
 
         // Send notification
         for (Long recipientId : recipientIds) {
@@ -76,7 +85,12 @@ public class OutboundMessageService implements IOutboundMessageService {
                 for (UserSession userSession : userSessionsManager.getSessionMap().values()) {
                     notificationData.retain();
                     // This will decrease the reference count of the message
-                    userSession.getNotificationSink().emitNext(notificationData);
+                    userSession.getNotificationSink().tryEmitNext(notificationData);
+                    if (userSession.isDisconnected()) {
+                        sessionService.setLocalSessionOfflineByUserIdAndDeviceType(recipientId, userSession.getDeviceType(), CloseStatusFactory.get(SessionCloseStatus.SWITCH))
+                                .subscribe(ignored -> udpDispatcher.sendSignal(userSession.getAddress(), UdpNotificationType.OPEN_CONNECTION));
+                        userSession.setConnectionRecovering(true);
+                    }
                 }
             } else {
                 hasForwardedMessageToAllRecipients = false;

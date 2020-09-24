@@ -33,7 +33,7 @@ export default class MessageService {
 
     private _turmsClient: TurmsClient;
     private _ackMessageTimerId?: number;
-    private _unacknowledgedMessageIds: number[] = [];
+    private _unacknowledgedMessageIds: string[] = [];
     private _mentionedUserIdsParser?: (message: ParsedModel.Message) => string[];
     private _onMessage?: (message: ParsedModel.Message, messageAddition: MessageAddition) => void;
 
@@ -91,7 +91,6 @@ export default class MessageService {
             }
         }).then(n => NotificationUtil.getFirstVal(n, 'ids', true));
     }
-
 
     ackMessages(messageIds: string[]): Promise<void> {
         if (RequestUtil.isFalsy(messageIds)) {
