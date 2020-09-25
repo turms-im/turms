@@ -62,7 +62,7 @@ public final class UserSession {
      * so it's acceptable.
      * Note that the ByteBuf (TurmsNotification) comes from turms servers in most scenarios.
      */
-    private Sinks.Many<ByteBuf> notificationSink = Sinks.many().unicast().onBackpressureBuffer();
+    private final Sinks.Many<ByteBuf> notificationSink = Sinks.many().unicast().onBackpressureBuffer();
     private Timeout heartbeatTimeout;
     private Long logId;
     private volatile long lastHeartbeatTimestampMillis;

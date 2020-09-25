@@ -1,6 +1,5 @@
 import TurmsClient from "../turms-client";
 import {im} from "../model/proto-bundle";
-import ConstantTransformer from "../util/constant-transformer";
 import RequestUtil from "../util/request-util";
 import {ParsedModel} from "../model/parsed-model";
 import NotificationUtil from "../util/notification-util";
@@ -151,10 +150,9 @@ export default class MessageService {
         deliveryStatus?: string | MessageDeliveryStatus,
         size = 50): Promise<ParsedModel.Message[]> {
         if (typeof deliveryStatus === 'string') {
-            try {
-                deliveryStatus = ConstantTransformer.string2DeliveryStatus(deliveryStatus);
-            } catch (e) {
-                return TurmsBusinessError.illegalParam(e);
+            deliveryStatus = MessageDeliveryStatus[deliveryStatus] as MessageDeliveryStatus;
+            if (RequestUtil.isFalsy(deliveryStatus)) {
+                return TurmsBusinessError.notFalsy("deliveryStatus");
             }
         }
         return this._turmsClient.driver.send({

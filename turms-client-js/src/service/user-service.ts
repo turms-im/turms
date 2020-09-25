@@ -1,5 +1,4 @@
 import TurmsClient from "../turms-client";
-import ConstantTransformer from "../util/constant-transformer";
 import {im} from "../model/proto-bundle";
 import RequestUtil from "../util/request-util";
 import {ParsedModel} from "../model/parsed-model";
@@ -81,11 +80,11 @@ export default class UserService {
         this._userId = userId;
         this._password = password;
         if (typeof deviceType === 'string') {
-            try {
-                this._deviceType = ConstantTransformer.string2DeviceType(deviceType);
-            } catch (e) {
-                return TurmsBusinessError.illegalParam(e);
+            deviceType = DeviceType[deviceType] as DeviceType;
+            if (RequestUtil.isFalsy(deviceType)) {
+                return TurmsBusinessError.notFalsy("deviceType");
             }
+            this._deviceType = deviceType;
         } else if (typeof deviceType === 'number') {
             if (deviceType >= 0 && deviceType <= DeviceType.UNKNOWN) {
                 this._deviceType = deviceType;
@@ -118,10 +117,9 @@ export default class UserService {
             return TurmsBusinessError.notFalsy('onlineStatus');
         }
         if (typeof onlineStatus === 'string') {
-            try {
-                onlineStatus = ConstantTransformer.string2UserOnlineStatus(onlineStatus);
-            } catch (e) {
-                return TurmsBusinessError.illegalParam(e);
+            onlineStatus = UserStatus[onlineStatus] as UserStatus;
+            if (RequestUtil.isFalsy(onlineStatus)) {
+                return TurmsBusinessError.notFalsy("onlineStatus");
             }
         }
         if (onlineStatus === UserStatus.OFFLINE) {
@@ -142,10 +140,9 @@ export default class UserService {
             // @ts-ignore
             deviceTypes = deviceTypes.map((type: string | DeviceType) => {
                 if (typeof type === 'string') {
-                    try {
-                        return ConstantTransformer.string2DeviceType(type);
-                    } catch (e) {
-                        throw TurmsBusinessError.illegalParam(e);
+                    type = DeviceType[type] as DeviceType;
+                    if (RequestUtil.isFalsy(type)) {
+                        return TurmsBusinessError.notFalsy("deviceType");
                     }
                 } else {
                     if (type >= 0 && type <= DeviceType.UNKNOWN) {
@@ -185,10 +182,9 @@ export default class UserService {
             return Promise.resolve();
         }
         if (typeof profileAccessStrategy === 'string') {
-            try {
-                profileAccessStrategy = ConstantTransformer.string2ProfileAccessStrategy(profileAccessStrategy);
-            } catch (e) {
-                return TurmsBusinessError.illegalParam(e);
+            profileAccessStrategy = ProfileAccessStrategy[profileAccessStrategy] as ProfileAccessStrategy;
+            if (RequestUtil.isFalsy(profileAccessStrategy)) {
+                return TurmsBusinessError.notFalsy("profileAccessStrategy");
             }
         }
         return this._turmsClient.driver.send({
@@ -396,10 +392,9 @@ export default class UserService {
             return TurmsBusinessError.notFalsy('responseAction');
         }
         if (typeof responseAction === 'string') {
-            try {
-                responseAction = ConstantTransformer.string2ResponseAction(responseAction);
-            } catch (e) {
-                return TurmsBusinessError.illegalParam(e);
+            responseAction = ResponseAction[responseAction] as ResponseAction;
+            if (RequestUtil.isFalsy(responseAction)) {
+                return TurmsBusinessError.notFalsy("reponseAction");
             }
         }
         return this._turmsClient.driver.send({

@@ -51,6 +51,7 @@ export default class TurmsBusinessError extends Error {
 
     // The method is used to avoid the duplicate string declaration to reduce the file size
     static notFalsy<T = never>(name: string, notEmpty = false): Promise<T> {
-        return this.illegalParam(`${name} must be not null${notEmpty ? ' or empty' : ''}`);
+        const emptyPlaceholder = notEmpty ? ' or empty' : '';
+        return this.illegalParam(`${name} must not be null${emptyPlaceholder} or an invalid param`);
     }
 }

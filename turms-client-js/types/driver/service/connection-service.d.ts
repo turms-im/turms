@@ -28,7 +28,6 @@ export default class ConnectionService {
     private _isClosedByClient;
     private _disconnectPromises;
     private _connectOptions;
-    private _minRequestInterval;
     private _onConnectedListeners;
     private _onDisconnectedListeners;
     private _onMessageListeners;

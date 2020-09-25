@@ -28,14 +28,12 @@ import java.util.EnumMap;
 import java.util.Map;
 
 /**
- * To get a better performance, we don't design
- *
  * @author James Chen
  */
 public class UdpSignalResponseBufferPool {
 
     private static final Map<TurmsStatusCode, ByteBuf> CODE_POOL = new EnumMap<>(TurmsStatusCode.class);
-    private static final Map<UdpNotificationType, ByteBuf> COMMAND_POOL = new EnumMap<>(UdpNotificationType.class);
+    private static final Map<UdpNotificationType, ByteBuf> NOTIFICATION_POOL = new EnumMap<>(UdpNotificationType.class);
 
     private UdpSignalResponseBufferPool() {
     }
@@ -52,10 +50,10 @@ public class UdpSignalResponseBufferPool {
         });
     }
 
-    public static ByteBuf get(UdpNotificationType command) {
-        return COMMAND_POOL.computeIfAbsent(command, key -> {
+    public static ByteBuf get(UdpNotificationType type) {
+        return NOTIFICATION_POOL.computeIfAbsent(type, key -> {
             ByteBuf buffer = Unpooled.directBuffer(Byte.BYTES);
-            buffer.writeByte(command.ordinal() + 1);
+            buffer.writeByte(key.ordinal() + 1);
             return Unpooled.unreleasableBuffer(buffer);
         });
     }

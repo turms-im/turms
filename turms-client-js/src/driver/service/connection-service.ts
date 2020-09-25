@@ -62,8 +62,6 @@ export default class ConnectionService {
     private _disconnectPromises = [];
     private _connectOptions = {} as ConnectOptions;
 
-    private  _minRequestInterval = 0;
-
     private _onConnectedListeners: (() => void)[] = [];
     private _onDisconnectedListeners: ((info: ConnectionDisconnectInfo) => Promise<void>)[] = [];
     private _onMessageListeners: ((message: any) => void)[] = [];

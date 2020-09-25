@@ -76,8 +76,7 @@ public final class UserSessionsManager {
                 userLocation,
                 logId);
         if (closeIdleSessionAfterMillis > 0) {
-            Timeout heartbeatTimeout = newHeartbeatTimeout(loggingInDeviceType, session, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
-            session.setHeartbeatTimeout(heartbeatTimeout);
+            updateSessionHeartbeatTimeout(loggingInDeviceType, session, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
         }
         ConcurrentHashMap<DeviceType, UserSession> sessionMap = new ConcurrentHashMap<>(MapUtil.getCapability(DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length));
         sessionMap.put(loggingInDeviceType, session);
@@ -102,7 +101,7 @@ public final class UserSessionsManager {
                 logId);
         boolean added = sessionMap.putIfAbsent(loggingInDeviceType, userSession) == null;
         if (added && closeIdleSessionAfterMillis > 0) {
-            userSession.setHeartbeatTimeout(newHeartbeatTimeout(loggingInDeviceType, userSession, closeIdleSessionAfterMillis, switchProtocolAfterMillis));
+            updateSessionHeartbeatTimeout(loggingInDeviceType, userSession, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
         }
         return added;
     }
@@ -151,8 +150,8 @@ public final class UserSessionsManager {
      * @param session Don't replace this parameter by using "getSession(deviceType)"
      *                because it needs to call hashcode() to find session every time
      */
-    private Timeout newHeartbeatTimeout(@NotNull @DeviceTypeConstraint DeviceType deviceType, @NotNull UserSession session, int closeIdleSessionAfterMillis, int switchProtocolAfterMillis) {
-        return HEARTBEAT_TIMER.newTimeout(timeout -> {
+    private void updateSessionHeartbeatTimeout(@NotNull @DeviceTypeConstraint DeviceType deviceType, @NotNull UserSession session, int closeIdleSessionAfterMillis, int switchProtocolAfterMillis) {
+        Timeout newTimeout = HEARTBEAT_TIMER.newTimeout(timeout -> {
                     if (session.isOpen()) {
                         long now = System.currentTimeMillis();
                         int heartbeatElapsedTime = (int) (now - session.getLastHeartbeatTimestampMillis());
@@ -163,12 +162,13 @@ public final class UserSessionsManager {
                             if (requestElapsedTime > switchProtocolAfterMillis && session.isConnected() && UdpDispatcher.isEnabled() && deviceType != DeviceType.BROWSER) {
                                 session.disconnect();
                             }
-                            newHeartbeatTimeout(deviceType, session, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
+                            updateSessionHeartbeatTimeout(deviceType, session, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
                         }
                     }
                 },
                 Math.max(closeIdleSessionAfterMillis / 3, 1),
                 TimeUnit.SECONDS);
+        session.setHeartbeatTimeout(newTimeout);
     }
 
 }

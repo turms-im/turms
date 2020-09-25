@@ -1,5 +1,4 @@
 import TurmsClient from "../turms-client";
-import ConstantTransformer from "../util/constant-transformer";
 import {im} from "../model/proto-bundle";
 import RequestUtil from "../util/request-util";
 import {ParsedModel} from "../model/parsed-model";
@@ -403,10 +402,9 @@ export default class GroupService {
             return TurmsBusinessError.notFalsy('userId');
         }
         if (typeof role === 'string') {
-            try {
-                role = ConstantTransformer.string2GroupMemberRole(role);
-            } catch (e) {
-                return TurmsBusinessError.illegalParam(e);
+            role = GroupMemberRole[role] as GroupMemberRole;
+            if (RequestUtil.isFalsy(role)) {
+                return TurmsBusinessError.notFalsy("role");
             }
         }
         return this._turmsClient.driver.send({
@@ -465,10 +463,9 @@ export default class GroupService {
             return Promise.resolve();
         }
         if (typeof role === 'string') {
-            try {
-                role = ConstantTransformer.string2GroupMemberRole(role);
-            } catch (e) {
-                return TurmsBusinessError.illegalParam(e);
+            role = GroupMemberRole[role] as GroupMemberRole;
+            if (RequestUtil.isFalsy(role)) {
+                return TurmsBusinessError.notFalsy("role");
             }
         }
         return this._turmsClient.driver.send({

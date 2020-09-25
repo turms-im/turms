@@ -38,7 +38,6 @@ import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
-import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -118,7 +117,7 @@ public class WorkflowMediator {
     public Mono<Boolean> setLocalUserDeviceOffline(Long userId, DeviceType deviceType, CloseStatus closeStatus) {
         return sessionService.setLocalSessionOfflineByUserIdAndDeviceType(userId, deviceType, closeStatus);
     }
-    
+
     public Mono<Boolean> authAndSetLocalUserDeviceOffline(Long userId, DeviceType deviceType, CloseStatus closeStatus, int sessionId) {
         return sessionService.authAndSetLocalSessionOfflineByUserIdAndDeviceType(userId, deviceType, closeStatus, sessionId);
     }
