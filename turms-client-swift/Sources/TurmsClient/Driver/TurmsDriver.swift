@@ -44,29 +44,29 @@ public class TurmsDriver {
     // Initializers
 
     private func initConnectionService() {
-        connectionService.addOnConnectedListener {
-            self.onConnectionConnected()
+        connectionService.addOnConnectedListener { [weak self] in
+            self?.onConnectionConnected()
         }
-        connectionService.addOnDisconnectedListener {
-            self.onConnectionDisconnected($0)
+        connectionService.addOnDisconnectedListener { [weak self] in
+            self?.onConnectionDisconnected($0)
         }
-        connectionService.addOnClosedListener {
-            self.onConnectionClosed($0)
+        connectionService.addOnClosedListener { [weak self] in
+            self?.onConnectionClosed($0)
         }
-        connectionService.addOnMessageListener {
-            self.onMessage($0)
+        connectionService.addOnMessageListener { [weak self] in
+            self?.onMessage($0)
         }
     }
 
     private func initSessionService() {
-        sessionService.addOnSessionConnectedListeners {
-            self.onSessionConnected?()
+        sessionService.addOnSessionConnectedListeners { [weak self] in
+            self?.onSessionConnected?()
         }
-        sessionService.addOnSessionDisconnectedListeners {
-            self.onSessionDisconnected?($0)
+        sessionService.addOnSessionDisconnectedListeners { [weak self] in
+            self?.onSessionDisconnected?($0)
         }
-        sessionService.addOnSessionClosedListeners {
-            self.onSessionClosed?($0)
+        sessionService.addOnSessionClosedListeners { [weak self] in
+            self?.onSessionClosed?($0)
         }
     }
 

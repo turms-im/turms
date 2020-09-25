@@ -39,7 +39,7 @@ class HeartbeatService {
     func send() -> Promise<Void> {
         return Promise { seal in
             if stateStore.isConnected {
-                stateStore.websocket!.write(data: HeartbeatService.HEARTBEAT_REQUEST) {
+                stateStore.websocket?.write(data: HeartbeatService.HEARTBEAT_REQUEST) {
                     self.heartbeatPromises.append(seal)
                 }
             } else {

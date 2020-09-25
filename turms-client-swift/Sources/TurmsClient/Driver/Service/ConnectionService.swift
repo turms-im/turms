@@ -113,24 +113,24 @@ public class ConnectionService {
                     request.addValue(userLocation.toString(), forHTTPHeaderField: ConnectionService.USER_LOCATION_FIELD)
                 }
                 let websocket = WebSocket(request: request)
-                websocket.onEvent = { event in
+                websocket.onEvent = { [weak self] event in
                     switch event {
                     case .binary(let data):
-                        self.notifyOnMessageListeners(data)
+                        self?.notifyOnMessageListeners(data)
                     case .connected:
-                        self.onWebSocketOpen()
+                        self?.onWebSocketOpen()
                         seal.fulfill(())
                     case .disconnected(let reason, let websocketCode):
-                        self.onWebsocketClose(false, statusCode: Int(websocketCode), reason: reason)
+                        self?.onWebsocketClose(false, statusCode: Int(websocketCode), reason: reason)
                             .done {
                                 seal.fulfill(())
                             }.catch {
                                 seal.reject($0)
                             }
                     case .cancelled: // disconnect by client and won't trigger the "disconnected" event
-                        self.onWebsocketClose(true)
+                        self?.onWebsocketClose(true)
                     case .error(let error):
-                        self.onWebsocketClose(false, error: error)
+                        self?.onWebsocketClose(false, error: error)
                             .done {
                                 seal.fulfill(())
                             }.catch {
@@ -205,9 +205,9 @@ public class ConnectionService {
         notifyOnDisconnectedListeners(disconnectInfo)
         if isRedirectSignal, let host = redirectHost {
             return reconnect(host)
-                .recover {
+                .recover { [weak self] in
                     let closeInfo = SessionDisconnectInfo(wasConnected: wasConnected, isClosedByClient: isClosedByClient, isReconnecting: false, closeStatus: status, webSocketStatusCode: statusCode, webSocketReason: reason, error: error)
-                    self.notifyOnClosedListeners(closeInfo)
+                    self?.notifyOnClosedListeners(closeInfo)
                     throw $0
                 }
         } else {

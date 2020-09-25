@@ -2,7 +2,7 @@ import Foundation
 
 public enum TurmsCloseStatus: Int {
     case redirect = 4300
-    case switch
+    case switchProtocol
     case illegalRequest = 4400
     case heartbeatTimeout
     case disconnectedByClient

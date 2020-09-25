@@ -2,6 +2,8 @@ import Foundation
 import Starscream
 
 public class StateStore {
+    // Note: Do NOT set the property weak because it only be referenced here
+    // and it will be deinited unexpectedly if it's weak
     private var _webSocket: WebSocket?
     private var _isConnected: Bool = false
     private var _connectionRequestId: Int?

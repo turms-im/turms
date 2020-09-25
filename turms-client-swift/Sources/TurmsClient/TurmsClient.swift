@@ -1,7 +1,7 @@
 import Foundation
 
 public class TurmsClient {
-    public private(set) var driver: TurmsDriver!
+    public private(set) var driver: TurmsDriver
     public private(set) var userService: UserService!
     public private(set) var groupService: GroupService!
     public private(set) var messageService: MessageService!
