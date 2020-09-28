@@ -209,7 +209,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                         return Mono.just(RequestHandlerResultFactory.get(exception.getCode()));
                     } else {
                         log.error("Failed to handle the client request", throwable);
-                        return Mono.just(RequestHandlerResultFactory.get(TurmsStatusCode.FAILED, throwable.toString()));
+                        return Mono.just(RequestHandlerResultFactory.get(TurmsStatusCode.FAILED, throwable.getMessage()));
                     }
                 })
                 .map(requestHandlerResult -> ServiceResponseFactory.get(

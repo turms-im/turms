@@ -19,6 +19,7 @@ package im.turms.common.constant.statuscode;
 
 /**
  * @author James Chen
+ * @apiNote "Reserved Status Code Ranges" - https://tools.ietf.org/html/rfc6455#page-47
  */
 public enum SessionCloseStatus {
 

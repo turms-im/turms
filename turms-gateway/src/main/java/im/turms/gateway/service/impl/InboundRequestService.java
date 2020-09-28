@@ -97,10 +97,10 @@ public class InboundRequestService {
                                     if (rpcException.isServerError()) {
                                         log.error("Failed to respond to the request: {}. {}", serviceRequest, throwable);
                                     }
-                                    serviceResponse = new ServiceResponse(null, rpcException.getStatusCode(), throwable.toString());
+                                    serviceResponse = new ServiceResponse(null, rpcException.getStatusCode(), throwable.getMessage());
                                 } else {
                                     log.error("Failed to respond to the request: {}", serviceRequest, throwable);
-                                    serviceResponse = new ServiceResponse(null, TurmsStatusCode.SERVER_INTERNAL_ERROR, throwable.toString());
+                                    serviceResponse = new ServiceResponse(null, TurmsStatusCode.SERVER_INTERNAL_ERROR, throwable.getMessage());
                                 }
                                 return Mono.just(serviceResponse);
                             })

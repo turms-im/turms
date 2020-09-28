@@ -34,6 +34,10 @@ public class NoStackTraceException extends RuntimeException {
         super(cause);
     }
 
+    public NoStackTraceException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
     /**
      * Don't call the following parent constructor to avoid filling in stack trace because android sdk 21 doesn't have it
      *

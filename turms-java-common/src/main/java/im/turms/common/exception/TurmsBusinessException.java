@@ -34,28 +34,24 @@ public class TurmsBusinessException extends NoStackTraceException {
     private final TurmsStatusCode code;
     private final String reason;
 
+    private TurmsBusinessException(@NotNull TurmsStatusCode code, @Nullable String reason) {
+        super(formatMessage(code, reason));
+        this.code = code;
+        this.reason = reason;
+    }
+
+    private TurmsBusinessException(@NotNull TurmsStatusCode code, @Nullable Throwable cause) {
+        super(formatMessage(code, null), cause);
+        this.code = code;
+        this.reason = null;
+    }
+
     public TurmsStatusCode getCode() {
         return code;
     }
 
     public String getReason() {
         return reason;
-    }
-
-    private TurmsBusinessException(@NotNull TurmsStatusCode code, @Nullable String reason) {
-        this.code = code;
-        this.reason = reason;
-    }
-
-    private TurmsBusinessException(@NotNull TurmsStatusCode code, @Nullable Throwable cause) {
-        super(cause);
-        this.code = code;
-        this.reason = null;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("code: %d, reason: %s", code.getBusinessCode(), reason);
     }
 
     @Override
@@ -121,6 +117,14 @@ public class TurmsBusinessException extends NoStackTraceException {
         return notification.hasReason()
                 ? TurmsBusinessException.get(code, notification.getReason().getValue())
                 : TurmsBusinessException.get(code);
+    }
+
+    private static String formatMessage(@NotNull TurmsStatusCode code, @Nullable String reason) {
+        if (reason != null) {
+            return "code: " + code.getBusinessCode() + ", reason: " + reason;
+        } else {
+            return "code: " + code.getBusinessCode();
+        }
     }
 
 }
