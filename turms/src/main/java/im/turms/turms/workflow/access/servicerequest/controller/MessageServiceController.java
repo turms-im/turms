@@ -259,13 +259,14 @@ public class MessageServiceController {
                 deliveryStatus = request.getDeliveryStatus();
             }
             Integer size = request.hasSize() ? pageUtil.getSize(request.getSize().getValue()) : null;
+            Long userId = clientRequest.getUserId();
             return messageService.authAndQueryCompleteMessages(
                     true,
                     idList,
                     areGroupMessages,
                     areSystemMessages,
                     fromId,
-                    clientRequest.getUserId(),
+                    userId,
                     DateRange.of(deliveryDateAfter, deliveryDateBefore),
                     null,
                     deliveryStatus,
@@ -285,13 +286,17 @@ public class MessageServiceController {
                         TurmsNotification.Data data = TurmsNotification.Data.newBuilder()
                                 .setMessages(messagesList)
                                 .build();
-                        Set<Long> messagesIds = Sets.newHashSetWithExpectedSize(messages.size());
+                        Set<Long> messageIds = Sets.newHashSetWithExpectedSize(messages.size());
                         for (Message message : messages) {
-                            messagesIds.add(message.getId());
+                            messageIds.add(message.getId());
                         }
                         return Mono.just(RequestHandlerResultFactory.get(data))
-                                .flatMap(response -> messageStatusService.acknowledge(messagesIds)
-                                        .thenReturn(response));
+                                .flatMap(response -> {
+                                    boolean updateReadDate = node.getSharedProperties().getService().getMessage()
+                                            .isUpdateReadDateWhenUserQueryingMessage();
+                                    return messageStatusService.updateMessagesDeliveryStatus(userId, messageIds, MessageDeliveryStatus.RECEIVED, updateReadDate)
+                                            .thenReturn(response);
+                                });
                     });
         };
     }

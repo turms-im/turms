@@ -125,9 +125,7 @@ public class WorkflowMediator {
     // Session
 
     public void onSessionEstablished(UserSessionsManager userSessionsManager, DeviceType deviceType) {
-        if (node.getSharedProperties().getGateway().getSession().isNotifyClientsOfSessionInfoAfterConnected()) {
-            userSessionsManager.pushSessionNotification(deviceType);
-        }
+        sessionService.onSessionEstablished(userSessionsManager, deviceType);
     }
 
     // Request

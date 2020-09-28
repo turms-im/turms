@@ -15,16 +15,23 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.constant;
+package im.turms.gateway.service.impl;
+
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Metrics;
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Service;
 
 /**
  * @author James Chen
  */
-public class MetricsConstant {
 
-    private MetricsConstant() {
-    }
+@Service
+@Log4j2
+public class MetricsService {
 
-    public static final String LOGGED_IN_USERS_COUNTER_NAME = "user.logged_in";
-    public static final String ONLINE_USERS_GAUGE_NAME = "user.online";
+    @Getter
+    private final MeterRegistry registry = Metrics.globalRegistry;
+
 }

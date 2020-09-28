@@ -18,8 +18,6 @@
 package im.turms.turms.workflow.service.impl.group;
 
 import com.google.protobuf.Int64Value;
-import com.mongodb.client.result.DeleteResult;
-import com.mongodb.client.result.UpdateResult;
 import im.turms.common.constant.GroupMemberRole;
 import im.turms.common.constant.GroupUpdateStrategy;
 import im.turms.common.constant.statuscode.TurmsStatusCode;
@@ -37,8 +35,10 @@ import im.turms.turms.workflow.dao.domain.Group;
 import im.turms.turms.workflow.dao.domain.GroupMember;
 import im.turms.turms.workflow.dao.domain.GroupType;
 import im.turms.turms.workflow.dao.domain.UserPermissionGroup;
+import im.turms.turms.workflow.service.impl.statistics.MetricsService;
 import im.turms.turms.workflow.service.impl.user.UserPermissionGroupService;
 import im.turms.turms.workflow.service.impl.user.UserVersionService;
+import io.micrometer.core.instrument.Counter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
@@ -60,6 +60,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static im.turms.turms.constant.DaoConstant.*;
+import static im.turms.turms.constant.MetricsConstant.CREATED_GROUPS_COUNTER_NAME;
+import static im.turms.turms.constant.MetricsConstant.DELETED_GROUPS_COUNTER_NAME;
 import static im.turms.turms.workflow.dao.domain.GroupMember.Fields.ID_GROUP_ID;
 import static im.turms.turms.workflow.dao.domain.GroupMember.Fields.ID_USER_ID;
 
@@ -78,6 +80,9 @@ public class GroupService {
     private final GroupVersionService groupVersionService;
     private final UserPermissionGroupService userPermissionGroupService;
 
+    private final Counter createdGroupsCounter;
+    private final Counter deletedGroupsCounter;
+
     public GroupService(
             Node node,
             @Qualifier("groupMongoTemplate") ReactiveMongoTemplate mongoTemplate,
@@ -85,7 +90,8 @@ public class GroupService {
             GroupTypeService groupTypeService,
             UserVersionService userVersionService,
             GroupVersionService groupVersionService,
-            UserPermissionGroupService userPermissionGroupService) {
+            UserPermissionGroupService userPermissionGroupService,
+            MetricsService metricsService) {
         this.node = node;
         this.groupMemberService = groupMemberService;
         this.groupTypeService = groupTypeService;
@@ -93,6 +99,9 @@ public class GroupService {
         this.userVersionService = userVersionService;
         this.groupVersionService = groupVersionService;
         this.userPermissionGroupService = userPermissionGroupService;
+
+        createdGroupsCounter = metricsService.getRegistry().counter(CREATED_GROUPS_COUNTER_NAME);
+        deletedGroupsCounter = metricsService.getRegistry().counter(DELETED_GROUPS_COUNTER_NAME);
     }
 
     public Mono<Group> createGroup(
@@ -124,8 +133,11 @@ public class GroupService {
                                     now,
                                     null,
                                     operations))
-                            .flatMap(results -> groupVersionService.upsert(groupId, now)
-                                    .thenReturn(results.getT1()));
+                            .flatMap(results -> {
+                                createdGroupsCounter.increment();
+                                return groupVersionService.upsert(groupId, now)
+                                        .thenReturn(results.getT1());
+                            });
                 })
                 .retryWhen(TRANSACTION_RETRY)
                 .singleOrEmpty();
@@ -186,10 +198,22 @@ public class GroupService {
                     if (finalShouldDeleteLogically) {
                         Update update = new Update().set(Group.Fields.DELETION_DATE, new Date());
                         updateOrRemoveMono = operations.updateMulti(query, update, Group.class, Group.COLLECTION_NAME)
-                                .map(UpdateResult::wasAcknowledged);
+                                .map(result -> {
+                                    long count = result.getModifiedCount();
+                                    if (count > 0) {
+                                        deletedGroupsCounter.increment(count);
+                                    }
+                                    return result.wasAcknowledged();
+                                });
                     } else {
                         updateOrRemoveMono = operations.remove(query, Group.class, Group.COLLECTION_NAME)
-                                .map(DeleteResult::wasAcknowledged);
+                                .map(result -> {
+                                    long count = result.getDeletedCount();
+                                    if (count > 0) {
+                                        deletedGroupsCounter.increment(count);
+                                    }
+                                    return result.wasAcknowledged();
+                                });
                     }
                     return updateOrRemoveMono.flatMap(acknowledged -> acknowledged != null && acknowledged
                             ? groupMemberService.deleteAllGroupMembers(groupIds, operations, false)

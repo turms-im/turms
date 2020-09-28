@@ -41,7 +41,8 @@ import im.turms.server.common.service.session.SessionLocationService;
 import im.turms.server.common.service.session.UserStatusService;
 import im.turms.server.common.util.DeviceTypeUtil;
 import im.turms.server.common.util.ReactorUtil;
-import io.micrometer.core.instrument.Metrics;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tags;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
@@ -58,7 +59,8 @@ import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static im.turms.gateway.constant.MetricsConstant.SESSION_COUNT_NAME;
+import static im.turms.gateway.constant.MetricsConstant.LOGGED_IN_USERS_COUNTER_NAME;
+import static im.turms.gateway.constant.MetricsConstant.ONLINE_USERS_GAUGE_NAME;
 
 /**
  * @author James Chen
@@ -81,6 +83,8 @@ public class SessionService implements ISessionService {
     private int minHeartbeatIntervalMillis;
     private int switchProtocolAfterMillis;
 
+    private final Counter loggedInUsersCounter;
+
     public SessionService(
             Node node,
             TurmsPluginManager turmsPluginManager,
@@ -88,7 +92,8 @@ public class SessionService implements ISessionService {
             SessionLocationService sessionLocationService,
             ReasonCacheService reasonCacheService,
             UserStatusService userStatusService,
-            UserSimultaneousLoginService userSimultaneousLoginService) {
+            UserSimultaneousLoginService userSimultaneousLoginService,
+            MetricsService metricsService) {
         this.node = node;
         this.userLoginActionService = userLoginActionService;
         this.sessionLocationService = sessionLocationService;
@@ -114,7 +119,9 @@ public class SessionService implements ISessionService {
             switchProtocolAfterMillis = newSessionProperties.getSwitchProtocolAfterSeconds() * 1000;
         });
 
-        Metrics.gaugeMapSize(SESSION_COUNT_NAME, Tags.empty(), sessionsManagerByUserId);
+        MeterRegistry registry = metricsService.getRegistry();
+        loggedInUsersCounter = registry.counter(LOGGED_IN_USERS_COUNTER_NAME);
+        registry.gaugeMapSize(ONLINE_USERS_GAUGE_NAME, Tags.empty(), sessionsManagerByUserId);
     }
 
     @PreDestroy
@@ -330,6 +337,13 @@ public class SessionService implements ISessionService {
             return ReactorUtil.areAllTrue(disconnectionRequests);
         } else {
             return Mono.just(true);
+        }
+    }
+
+    public void onSessionEstablished(UserSessionsManager userSessionsManager, DeviceType deviceType) {
+        loggedInUsersCounter.increment();
+        if (node.getSharedProperties().getGateway().getSession().isNotifyClientsOfSessionInfoAfterConnected()) {
+            userSessionsManager.pushSessionNotification(deviceType);
         }
     }
 

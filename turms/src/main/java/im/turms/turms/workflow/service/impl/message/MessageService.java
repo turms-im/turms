@@ -44,7 +44,9 @@ import im.turms.turms.workflow.dao.domain.Message;
 import im.turms.turms.workflow.dao.domain.MessageStatus;
 import im.turms.turms.workflow.dao.util.AggregationUtil;
 import im.turms.turms.workflow.service.impl.group.GroupMemberService;
+import im.turms.turms.workflow.service.impl.statistics.MetricsService;
 import im.turms.turms.workflow.service.impl.user.UserService;
+import io.micrometer.core.instrument.Counter;
 import lombok.Getter;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +75,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static im.turms.common.constant.statuscode.TurmsStatusCode.*;
+import static im.turms.turms.constant.MetricsConstant.*;
 
 /**
  * @author James Chen
@@ -93,6 +96,7 @@ public class MessageService {
     private final TimeType timeType;
     private final Cache<Long, Message> sentMessageCache;
 
+    private final Counter sentMessageCounter;
     @Autowired
     public MessageService(
             @Qualifier("messageMongoTemplate") ReactiveMongoTemplate mongoTemplate,
@@ -103,7 +107,8 @@ public class MessageService {
             UserService userService,
             OutboundMessageService outboundMessageService,
             TurmsPluginManager turmsPluginManager,
-            TrivialTaskManager taskManager) {
+            TrivialTaskManager taskManager,
+            MetricsService metricsService) {
         this.mongoTemplate = mongoTemplate;
         this.node = node;
         this.messageStatusService = messageStatusService;
@@ -124,6 +129,7 @@ public class MessageService {
             sentMessageCache = null;
         }
 
+        sentMessageCounter = metricsService.getRegistry().counter(SENT_MESSAGES_COUNTER_NAME);
         // Set up the checker for expired messages join requests
         taskManager.reschedule(
                 "messagesChecker",
@@ -865,7 +871,7 @@ public class MessageService {
                         }
                         return saveMono.map(message -> {
                             if (message.getId() != null && sentMessageCache != null) {
-                                addSentMessage2Cache(message);
+                                cacheSentMessage(message);
                             }
                             return Pair.of(message, recipientsIds);
                         });
@@ -958,8 +964,9 @@ public class MessageService {
                         isSystemMessage, text, records, burnAfter, deliveryDate, referenceId, null);
             }
             return messageMono.doOnSuccess(msg -> {
+                sentMessageCounter.increment();
                 if (msg.getId() != null && sentMessageCache != null) {
-                    addSentMessage2Cache(msg);
+                    cacheSentMessage(msg);
                 }
             }).thenReturn(true);
         }
@@ -1017,7 +1024,7 @@ public class MessageService {
         }
     }
 
-    private void addSentMessage2Cache(@NotNull Message message) {
+    private void cacheSentMessage(@NotNull Message message) {
         sentMessageCache.put(message.getId(), new Message(
                 message.getId(),
                 message.getIsGroupMessage(),

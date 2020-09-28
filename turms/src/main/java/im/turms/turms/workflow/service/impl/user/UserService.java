@@ -17,7 +17,6 @@
 
 package im.turms.turms.workflow.service.impl.user;
 
-import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import im.turms.common.constant.ProfileAccessStrategy;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
@@ -30,13 +29,16 @@ import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.manager.PasswordManager;
 import im.turms.turms.bo.DateRange;
 import im.turms.turms.constant.DaoConstant;
+import im.turms.turms.constant.MetricsConstant;
 import im.turms.turms.constraint.ProfileAccessConstraint;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
 import im.turms.turms.workflow.dao.builder.UpdateBuilder;
 import im.turms.turms.workflow.service.impl.group.GroupMemberService;
+import im.turms.turms.workflow.service.impl.statistics.MetricsService;
 import im.turms.turms.workflow.service.impl.user.onlineuser.SessionService;
 import im.turms.turms.workflow.service.impl.user.relationship.UserRelationshipGroupService;
 import im.turms.turms.workflow.service.impl.user.relationship.UserRelationshipService;
+import io.micrometer.core.instrument.Counter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
@@ -70,6 +72,9 @@ public class UserService {
     private final PasswordManager passwordManager;
     private final ReactiveMongoTemplate mongoTemplate;
 
+    private final Counter registeredUsersCounter;
+    private final Counter deletedUsersCounter;
+
     public UserService(
             Node node,
             @Qualifier("userMongoTemplate") ReactiveMongoTemplate mongoTemplate,
@@ -78,7 +83,8 @@ public class UserService {
             @Lazy GroupMemberService groupMemberService,
             UserVersionService userVersionService,
             UserRelationshipGroupService userRelationshipGroupService,
-            SessionService sessionService) {
+            SessionService sessionService,
+            MetricsService metricsService) {
         this.node = node;
         this.mongoTemplate = mongoTemplate;
         this.passwordManager = passwordManager;
@@ -87,6 +93,9 @@ public class UserService {
         this.userVersionService = userVersionService;
         this.userRelationshipGroupService = userRelationshipGroupService;
         this.sessionService = sessionService;
+
+        registeredUsersCounter = metricsService.getRegistry().counter(MetricsConstant.REGISTERED_USERS_COUNTER_NAME);
+        deletedUsersCounter = metricsService.getRegistry().counter(MetricsConstant.DELETED_USERS_COUNTER_NAME);
     }
 
     public Mono<Boolean> isActiveAndNotDeleted(@NotNull Long userId) {
@@ -172,7 +181,8 @@ public class UserService {
                         .then(userVersionService.upsertEmptyUserVersion(user.getId(), date, operations))
                         .thenReturn(user))
                 .retryWhen(DaoConstant.TRANSACTION_RETRY)
-                .singleOrEmpty();
+                .singleOrEmpty()
+                .doOnSuccess(ignored -> registeredUsersCounter.increment());
     }
 
     public Mono<Boolean> isAllowToQueryUserProfile(
@@ -265,7 +275,13 @@ public class UserService {
         } else {
             deleteOrUpdateMono = mongoTemplate.inTransaction()
                     .execute(operations -> operations.remove(query, User.class, User.COLLECTION_NAME)
-                            .map(DeleteResult::wasAcknowledged)
+                            .map(result -> {
+                                long count = result.getDeletedCount();
+                                if (count > 0) {
+                                    deletedUsersCounter.increment(count);
+                                }
+                                return result.wasAcknowledged();
+                            })
                             .flatMap(acknowledged -> acknowledged != null && acknowledged
                                     ? userRelationshipService.deleteAllRelationships(userIds, operations, false)
                                     .then(userRelationshipGroupService.deleteAllRelationshipGroups(userIds, operations, false))
