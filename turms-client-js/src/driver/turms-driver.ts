@@ -56,13 +56,14 @@ export default class TurmsDriver {
                 heartbeatInterval?: number,
                 httpUrl?: string,
                 queryReasonWhenLoginFailed = true,
-                queryReasonWhenDisconnected = true) {
+                queryReasonWhenDisconnected = true,
+                storePassword?: boolean) {
         this._queryReasonWhenLoginFailed = queryReasonWhenLoginFailed;
         this._queryReasonWhenDisconnected = queryReasonWhenDisconnected;
 
         this._stateStore = new StateStore();
 
-        this._connectionService = this.initConnectionService(wsUrl, httpUrl, connectTimeout);
+        this._connectionService = this.initConnectionService(wsUrl, httpUrl, connectTimeout, storePassword);
         this._heartbeatService = new HeartbeatService(this._stateStore, minRequestInterval, heartbeatInterval);
         this._messageService = new MessageService(this._stateStore, requestTimeout, minRequestInterval);
         this._reasonService = new ReasonService(this._stateStore, httpUrl);
@@ -70,8 +71,8 @@ export default class TurmsDriver {
     }
 
     // Initializers
-    initConnectionService(wsUrl?: string, httpUrl?: string, connectTimeout?: number): ConnectionService {
-        const connectionService = new ConnectionService(this._stateStore, wsUrl, httpUrl, connectTimeout);
+    initConnectionService(wsUrl?: string, httpUrl?: string, connectTimeout?: number, storePassword?: boolean): ConnectionService {
+        const connectionService = new ConnectionService(this._stateStore, wsUrl, httpUrl, connectTimeout, storePassword);
         connectionService.addOnConnectedListener(this._onConnectionConnected);
         connectionService.addOnDisconnectedListener(this._onConnectionDisconnected);
         connectionService.addOnMessageListener(this._onMessage)

@@ -8,5 +8,6 @@ export default interface ClientOptions {
     storageServerUrl?: string,
     httpUrl?: string,
     queryReasonWhenLoginFailed?: boolean,
-    queryReasonWhenDisconnected?: boolean
+    queryReasonWhenDisconnected?: boolean,
+    storePassword?: boolean
 }

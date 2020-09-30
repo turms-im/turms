@@ -25,13 +25,14 @@ export default class ConnectionService {
     private readonly _initialWsUrl;
     private readonly _initialHttpUrl;
     private readonly _initialConnectTimeout;
+    private readonly _storePassword;
     private _isClosedByClient;
     private _disconnectPromises;
     private _connectOptions;
     private _onConnectedListeners;
     private _onDisconnectedListeners;
     private _onMessageListeners;
-    constructor(stateStore: StateStore, wsUrl?: string, httpUrl?: string, connectTimeout?: number);
+    constructor(stateStore: StateStore, wsUrl?: string, httpUrl?: string, connectTimeout?: number, storePassword?: boolean);
     private _resetStates;
     addOnConnectedListener(listener: () => void): void;
     addOnDisconnectedListener(listener: (info: ConnectionDisconnectInfo) => Promise<void>): void;

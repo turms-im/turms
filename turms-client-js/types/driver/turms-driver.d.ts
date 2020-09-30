@@ -19,8 +19,8 @@ export default class TurmsDriver {
     private _messageService;
     private _reasonService;
     private _sessionService;
-    constructor(wsUrl?: string, connectTimeout?: number, requestTimeout?: number, minRequestInterval?: number, heartbeatInterval?: number, httpUrl?: string, queryReasonWhenLoginFailed?: boolean, queryReasonWhenDisconnected?: boolean);
-    initConnectionService(wsUrl?: string, httpUrl?: string, connectTimeout?: number): ConnectionService;
+    constructor(wsUrl?: string, connectTimeout?: number, requestTimeout?: number, minRequestInterval?: number, heartbeatInterval?: number, httpUrl?: string, queryReasonWhenLoginFailed?: boolean, queryReasonWhenDisconnected?: boolean, storePassword?: boolean);
+    initConnectionService(wsUrl?: string, httpUrl?: string, connectTimeout?: number, storePassword?: boolean): ConnectionService;
     initSessionService(): SessionService;
     getStatus(): SessionStatus;
     isConnected(): boolean;

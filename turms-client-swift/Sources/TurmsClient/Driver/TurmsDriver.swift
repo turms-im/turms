@@ -29,10 +29,10 @@ public class TurmsDriver {
     private let messageService: DriverMessageService
     private let sessionService: SessionService
 
-    public init(wsUrl: String? = nil, connectTimeout: TimeInterval? = nil, requestTimeout: TimeInterval? = nil, minRequestInterval: TimeInterval? = nil, heartbeatInterval: TimeInterval? = nil) {
+    public init(wsUrl: String? = nil, connectTimeout: TimeInterval? = nil, requestTimeout: TimeInterval? = nil, minRequestInterval: TimeInterval? = nil, heartbeatInterval: TimeInterval? = nil, storePassword: Bool? = nil) {
         self.stateStore = StateStore()
 
-        self.connectionService = ConnectionService(stateStore: stateStore, wsUrl: wsUrl, connectTimeout: connectTimeout)
+        self.connectionService = ConnectionService(stateStore: stateStore, wsUrl: wsUrl, connectTimeout: connectTimeout, storePassword: storePassword)
         self.heartbeatService = HeartbeatService(stateStore: stateStore, minRequestInterval: minRequestInterval, heartbeatInterval: heartbeatInterval)
         self.messageService = DriverMessageService(stateStore: stateStore, requestTimeout: requestTimeout, minRequestInterval: minRequestInterval)
         self.sessionService = SessionService(stateStore: stateStore)

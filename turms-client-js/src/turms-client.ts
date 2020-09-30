@@ -25,7 +25,8 @@ class TurmsClient {
         storageServerUrl?: string,
         httpUrl?: string,
         queryReasonWhenLoginFailed?: boolean,
-        queryReasonWhenDisconnected?: boolean) {
+        queryReasonWhenDisconnected?: boolean,
+        storePassword?: boolean) {
         if (typeof wsUrlOrOptions === 'object') {
             return new TurmsClient(
                 wsUrlOrOptions.wsUrl,
@@ -37,7 +38,8 @@ class TurmsClient {
                 wsUrlOrOptions.storageServerUrl,
                 wsUrlOrOptions.httpUrl,
                 wsUrlOrOptions.queryReasonWhenLoginFailed,
-                wsUrlOrOptions.queryReasonWhenDisconnected);
+                wsUrlOrOptions.queryReasonWhenDisconnected,
+                wsUrlOrOptions.storePassword);
         } else {
             this._driver = new TurmsDriver(
                 wsUrlOrOptions,
@@ -47,7 +49,8 @@ class TurmsClient {
                 heartbeatInterval,
                 httpUrl,
                 queryReasonWhenLoginFailed,
-                queryReasonWhenDisconnected);
+                queryReasonWhenDisconnected,
+                storePassword);
             this._userService = new UserService(this);
             this._groupService = new GroupService(this);
             this._messageService = new MessageService(this, ackMessageInterval);

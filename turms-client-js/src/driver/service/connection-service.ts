@@ -57,6 +57,7 @@ export default class ConnectionService {
     private readonly _initialWsUrl: string;
     private readonly _initialHttpUrl: string;
     private readonly _initialConnectTimeout: number;
+    private readonly _storePassword: boolean;
 
     private _isClosedByClient = false;
     private _disconnectPromises = [];
@@ -66,7 +67,7 @@ export default class ConnectionService {
     private _onDisconnectedListeners: ((info: ConnectionDisconnectInfo) => Promise<void>)[] = [];
     private _onMessageListeners: ((message: any) => void)[] = [];
 
-    constructor(stateStore: StateStore, wsUrl?: string, httpUrl?: string, connectTimeout?: number) {
+    constructor(stateStore: StateStore, wsUrl?: string, httpUrl?: string, connectTimeout?: number, storePassword = true) {
         this._stateStore = stateStore;
         this._initialWsUrl = wsUrl || ConnectionService.DEFAULT_WEBSOCKET_URL;
         this._initialHttpUrl = httpUrl || ConnectionService.DEFAULT_HTTP_URL;
@@ -75,6 +76,7 @@ export default class ConnectionService {
         } else {
             this._initialConnectTimeout = connectTimeout;
         }
+        this._storePassword = storePassword;
         this._resetStates();
     }
 
@@ -148,7 +150,10 @@ export default class ConnectionService {
                     userOnlineStatus: options.userOnlineStatus,
                     location: options.location
                 }
-                this._connectOptions = options;
+                this._connectOptions = JSON.parse(JSON.stringify(options));
+                if (!this._storePassword) {
+                    delete this._connectOptions["password"];
+                }
 
                 const ws = new WebSocket(options.wsUrl);
                 ws.binaryType = "arraybuffer";

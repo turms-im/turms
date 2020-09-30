@@ -9,4 +9,5 @@ export default interface ClientOptions {
     httpUrl?: string;
     queryReasonWhenLoginFailed?: boolean;
     queryReasonWhenDisconnected?: boolean;
+    storePassword?: boolean;
 }

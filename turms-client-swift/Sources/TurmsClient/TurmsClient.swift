@@ -8,13 +8,14 @@ public class TurmsClient {
     public private(set) var storageService: StorageService!
     public private(set) var notificationService: NotificationService!
 
-    public init(_ wsUrl: String? = nil, connectTimeout: TimeInterval? = nil, requestTimeout: TimeInterval? = nil, minRequestInterval: TimeInterval? = nil, heartbeatInterval: TimeInterval? = nil, ackMessageInterval: TimeInterval? = nil, storageServerUrl: String? = nil) {
+    public init(_ wsUrl: String? = nil, connectTimeout: TimeInterval? = nil, requestTimeout: TimeInterval? = nil, minRequestInterval: TimeInterval? = nil, heartbeatInterval: TimeInterval? = nil, ackMessageInterval: TimeInterval? = nil, storageServerUrl: String? = nil, storePassword: Bool? = nil) {
         driver = TurmsDriver(
             wsUrl: wsUrl,
             connectTimeout: connectTimeout,
             requestTimeout: requestTimeout,
             minRequestInterval: minRequestInterval,
-            heartbeatInterval: heartbeatInterval)
+            heartbeatInterval: heartbeatInterval,
+            storePassword: storePassword)
         userService = UserService(self)
         groupService = GroupService(self)
         messageService = MessageService(self, ackMessageInterval)
