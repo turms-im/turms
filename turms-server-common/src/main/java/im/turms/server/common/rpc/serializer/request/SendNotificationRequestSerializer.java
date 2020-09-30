@@ -40,7 +40,7 @@ public class SendNotificationRequestSerializer implements Serializer<SendNotific
     public void write(ByteBuf output, SendNotificationRequest data) {
         short recipientsNumber = (short) data.getRecipientIds().size();
         if (recipientsNumber == 0) {
-            throw new IllegalArgumentException("The recipientsIds must be greater than 0");
+            throw new IllegalArgumentException("The number of recipients must be greater than 0");
         }
         output.writeShort(recipientsNumber);
         for (Long id : data.getRecipientIds()) {

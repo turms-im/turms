@@ -32,6 +32,6 @@ import java.util.List;
  */
 public abstract class ExpiredMessageAutoDeletionNotificationHandler extends TurmsExtension {
 
-    public abstract Mono<Boolean> allowDeleting(@NotEmpty List<Message> message);
+    public abstract Mono<List<Message>> getMessagesToDelete(@NotEmpty List<Message> messages);
 
 }

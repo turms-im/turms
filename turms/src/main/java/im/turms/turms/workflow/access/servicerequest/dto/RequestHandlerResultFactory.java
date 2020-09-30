@@ -122,9 +122,9 @@ public class RequestHandlerResultFactory {
     }
 
     public static RequestHandlerResult get(
-            @NotEmpty Set<Long> recipientsIds,
+            @NotEmpty Set<Long> recipientIds,
             @NotNull TurmsRequest dataForRecipient) {
-        return new RequestHandlerResult(null, false, recipientsIds, dataForRecipient, TurmsStatusCode.OK, null);
+        return new RequestHandlerResult(null, false, recipientIds, dataForRecipient, TurmsStatusCode.OK, null);
     }
 
     public static RequestHandlerResult get(

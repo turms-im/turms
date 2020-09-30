@@ -49,6 +49,7 @@ import im.turms.turms.workflow.service.impl.statistics.MetricsService;
 import im.turms.turms.workflow.service.impl.user.UserService;
 import io.micrometer.core.instrument.Counter;
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -81,6 +82,7 @@ import static im.turms.turms.constant.MetricsConstant.SENT_MESSAGES_COUNTER_NAME
  * @author James Chen
  */
 @Service
+@Log4j2
 public class MessageService {
 
     private final ReactiveMongoTemplate mongoTemplate;
@@ -512,37 +514,51 @@ public class MessageService {
                     if (expiredMessageIds.isEmpty()) {
                         return Mono.just(true);
                     } else {
-                        Query messagesQuery = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(expiredMessageIds));
-                        Mono<Boolean> allowedMono = Mono.just(true);
-                        if (pluginEnabled) {
-                            allowedMono = mongoTemplate.find(messagesQuery, Message.class, Message.COLLECTION_NAME)
+                        Mono<List<Long>> messageIdsToDeleteMono = Mono.just(expiredMessageIds);
+                        List<ExpiredMessageAutoDeletionNotificationHandler> handlerList = turmsPluginManager.getExpiredMessageAutoDeletionNotificationHandlerList();
+                        if (pluginEnabled && !handlerList.isEmpty()) {
+                            Query messagesQuery = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(expiredMessageIds));
+                            messageIdsToDeleteMono = mongoTemplate.find(messagesQuery, Message.class, Message.COLLECTION_NAME)
                                     .collectList()
                                     .flatMap(messages -> {
-                                        Mono<Boolean> mono = Mono.just(true);
-                                        for (ExpiredMessageAutoDeletionNotificationHandler handler : turmsPluginManager.getExpiredMessageAutoDeletionNotificationHandlerList()) {
-                                            mono = mono.defaultIfEmpty(true)
-                                                    .flatMap(allowed -> allowed
-                                                            ? handler.allowDeleting(messages)
-                                                            : Mono.just(false));
+                                        Mono<List<Message>> mono = Mono.just(messages);
+                                        for (ExpiredMessageAutoDeletionNotificationHandler handler : handlerList) {
+                                            mono = mono.flatMap(handler::getMessagesToDelete);
                                         }
                                         return mono;
+                                    })
+                                    .map(messages -> {
+                                        List<Long> messageIds = new ArrayList<>(messages.size());
+                                        for (Message message : messages) {
+                                            messageIds.add(message.getId());
+                                        }
+                                        return messageIds;
                                     });
                         }
-                        return allowedMono.flatMap(allowed -> {
-                            if (allowed) {
-                                return mongoTemplate.inTransaction()
+                        return messageIdsToDeleteMono
+                                .flatMap(messageIds -> mongoTemplate.inTransaction()
                                         .execute(operations -> {
-                                            Query messagesStatusesQuery = new Query().addCriteria(Criteria.where(MessageStatus.Fields.ID_MESSAGE_ID).in(expiredMessageIds));
+                                            Query messagesQuery = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(messageIds));
+                                            Query messageStatusesQuery = new Query().addCriteria(Criteria.where(MessageStatus.Fields.ID_MESSAGE_ID).in(messageIds));
                                             return operations.remove(messagesQuery, Message.class, Message.COLLECTION_NAME)
-                                                    .then(operations.remove(messagesStatusesQuery, MessageStatus.class, MessageStatus.COLLECTION_NAME)
-                                                            .thenReturn(true));
+                                                    .flatMap(deleteResult -> {
+                                                        if (deleteResult.wasAcknowledged()) {
+                                                            return operations.remove(messageStatusesQuery, MessageStatus.class, MessageStatus.COLLECTION_NAME)
+                                                                    .map(result -> {
+                                                                        if (result.wasAcknowledged()) {
+                                                                            return true;
+                                                                        } else {
+                                                                            throw new IllegalStateException("Failed to acknowledge the delete operation of message statues");
+                                                                        }
+                                                                    });
+                                                        } else {
+                                                            return Mono.error(new IllegalStateException("Failed to acknowledge the delete operation of messages"));
+                                                        }
+                                                    });
                                         })
                                         .retryWhen(DaoConstant.TRANSACTION_RETRY)
-                                        .singleOrEmpty();
-                            } else {
-                                return Mono.just(false);
-                            }
-                        });
+                                        .singleOrEmpty())
+                                .defaultIfEmpty(true);
                     }
                 });
     }
