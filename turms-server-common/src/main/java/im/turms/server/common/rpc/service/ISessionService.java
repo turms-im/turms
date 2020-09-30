@@ -18,7 +18,7 @@
 package im.turms.server.common.rpc.service;
 
 import im.turms.common.constant.DeviceType;
-import im.turms.server.common.constraint.DeviceTypeConstraint;
+import im.turms.server.common.constraint.ValidDeviceType;
 import org.springframework.web.reactive.socket.CloseStatus;
 import reactor.core.publisher.Mono;
 
@@ -33,7 +33,7 @@ public interface ISessionService {
 
     Mono<Boolean> setLocalSessionOfflineByUserIdAndDeviceTypes(
             @NotNull Long userId,
-            @NotEmpty Set<@DeviceTypeConstraint DeviceType> deviceTypes,
+            @NotEmpty Set<@ValidDeviceType DeviceType> deviceTypes,
             @NotNull CloseStatus closeStatus);
 
     Mono<Boolean> setLocalUserOffline(

@@ -67,4 +67,10 @@ public class DeviceTypeUtil {
         }
     }
 
+    public static void validDeviceType(DeviceType deviceType) {
+        if (deviceType == DeviceType.UNRECOGNIZED) {
+            throw new IllegalArgumentException("The device type must not be UNRECOGNIZED");
+        }
+    }
+
 }

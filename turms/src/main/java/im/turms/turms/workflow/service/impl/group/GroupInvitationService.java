@@ -29,13 +29,15 @@ import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.manager.TrivialTaskManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
+import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.bo.DateRange;
-import im.turms.turms.constraint.RequestStatusConstraint;
+import im.turms.turms.constraint.ValidRequestStatus;
 import im.turms.turms.util.ProtoUtil;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
 import im.turms.turms.workflow.dao.builder.UpdateBuilder;
 import im.turms.turms.workflow.dao.domain.GroupInvitation;
 import im.turms.turms.workflow.service.impl.user.UserVersionService;
+import im.turms.turms.workflow.service.util.DomainConstraintUtil;
 import im.turms.turms.workflow.service.util.RequestStatusUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
@@ -43,7 +45,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -64,7 +65,6 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
  * @author James Chen
  */
 @Service
-@Validated
 public class GroupInvitationService {
 
     private final Node node;
@@ -130,11 +130,14 @@ public class GroupInvitationService {
             @NotNull Long groupId,
             @NotNull Long inviterId,
             @NotNull Long inviteeId,
-            @NotNull String content) {
-        int contentLimit = node.getSharedProperties().getService().getGroup().getGroupInvitationContentLimit();
-        if (content.length() > contentLimit) {
-            String reason = "The content has exceeded the character limit: " + contentLimit;
-            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, reason);
+            @Nullable String content) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+            AssertUtil.notNull(inviterId, "inviterId");
+            AssertUtil.notNull(inviteeId, "inviteeId");
+            validInvitationContentLength(content);
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
         }
         return groupMemberService
                 .isAllowedToInviteOrAdd(groupId, inviterId, null)
@@ -149,7 +152,8 @@ public class GroupInvitationService {
                                     return Mono.error(TurmsBusinessException.get(TurmsStatusCode.TARGET_USERS_UNAUTHORIZED));
                                 }
                                 if (strategy.getGroupInvitationStrategy().requireAcceptance()) {
-                                    return createGroupInvitation(null, groupId, inviterId, inviteeId, content,
+                                    String finalContent = content != null ? content : "";
+                                    return createGroupInvitation(null, groupId, inviterId, inviteeId, finalContent,
                                             RequestStatus.PENDING, null, null, null);
                                 } else {
                                     return Mono.error(TurmsBusinessException.get(TurmsStatusCode.REDUNDANT_REQUEST));
@@ -163,21 +167,35 @@ public class GroupInvitationService {
             @NotNull Long groupId,
             @NotNull Long inviterId,
             @NotNull Long inviteeId,
-            @NotNull String content,
-            @Nullable @RequestStatusConstraint RequestStatus status,
+            @Nullable String content,
+            @Nullable @ValidRequestStatus RequestStatus status,
             @Nullable @PastOrPresent Date creationDate,
             @Nullable @PastOrPresent Date responseDate,
             @Nullable Date expirationDate) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+            AssertUtil.notNull(inviterId, "inviterId");
+            AssertUtil.notNull(inviteeId, "inviteeId");
+            validInvitationContentLength(content);
+            DomainConstraintUtil.validRequestStatus(status);
+            AssertUtil.pastOrPresent(creationDate, "creationDate");
+            AssertUtil.pastOrPresent(responseDate, "responseDate");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         id = id != null ? id : node.nextId(ServiceType.GROUP_INVITATION);
+        if (content == null) {
+            content = "";
+        }
         if (creationDate == null) {
             creationDate = new Date();
         }
         if (expirationDate == null) {
             int groupInvitationTimeToLiveHours = node.getSharedProperties().getService().getGroup()
                     .getGroupInvitationTimeToLiveHours();
-            if (groupInvitationTimeToLiveHours == 0) {
-                expirationDate = Date.from(Instant.now()
-                        .plus(groupInvitationTimeToLiveHours, ChronoUnit.HOURS));
+            if (groupInvitationTimeToLiveHours > 0) {
+                Instant expirationInstant = Instant.now().plus(groupInvitationTimeToLiveHours, ChronoUnit.HOURS);
+                expirationDate = Date.from(expirationInstant);
             }
         }
         if (status == null) {
@@ -192,6 +210,11 @@ public class GroupInvitationService {
     }
 
     public Mono<GroupInvitation> queryGroupIdAndStatus(@NotNull Long invitationId) {
+        try {
+            AssertUtil.notNull(invitationId, "invitationId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query().addCriteria(where(ID_FIELD_NAME).is(invitationId));
         query.fields()
                 .include(GroupInvitation.Fields.GROUP_ID)
@@ -210,9 +233,14 @@ public class GroupInvitationService {
     public Mono<Boolean> recallPendingGroupInvitation(
             @NotNull Long requesterId,
             @NotNull Long invitationId) {
+        try {
+            AssertUtil.notNull(requesterId, "requesterId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (!node.getSharedProperties()
                 .getService().getGroup().isAllowRecallingPendingGroupInvitationByOwnerAndManager()) {
-            throw TurmsBusinessException.get(TurmsStatusCode.DISABLED_FUNCTION);
+            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.DISABLED_FUNCTION));
         }
         return queryGroupIdAndStatus(invitationId)
                 .flatMap(invitation -> {
@@ -236,25 +264,33 @@ public class GroupInvitationService {
     }
 
     public Flux<GroupInvitation> queryGroupInvitationsByInviteeId(@NotNull Long inviteeId) {
+        try {
+            AssertUtil.notNull(inviteeId, "inviteeId");
+        } catch (TurmsBusinessException e) {
+            return Flux.error(e);
+        }
         Query query = new Query()
                 .addCriteria(where(GroupInvitation.Fields.INVITEE_ID).is(inviteeId));
         return queryExpirableData(query);
     }
 
     public Flux<GroupInvitation> queryGroupInvitationsByInviterId(@NotNull Long inviterId) {
+        try {
+            AssertUtil.notNull(inviterId, "inviterId");
+        } catch (TurmsBusinessException e) {
+            return Flux.error(e);
+        }
         Query query = new Query()
                 .addCriteria(where(GroupInvitation.Fields.INVITER_ID).is(inviterId));
         return queryExpirableData(query);
     }
 
-    public Flux<GroupInvitation> queryGroupInvitationsByInviteeIdOrInviterId(@NotNull Long userId) {
-        Query query = new Query()
-                .addCriteria(where(GroupInvitation.Fields.INVITEE_ID).is(userId)
-                        .orOperator(where(GroupInvitation.Fields.INVITER_ID).is(userId)));
-        return queryExpirableData(query);
-    }
-
     public Flux<GroupInvitation> queryGroupInvitationsByGroupId(@NotNull Long groupId) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+        } catch (TurmsBusinessException e) {
+            return Flux.error(e);
+        }
         Query query = new Query()
                 .addCriteria(where(GroupInvitation.Fields.GROUP_ID).is(groupId));
         return queryExpirableData(query);
@@ -264,6 +300,11 @@ public class GroupInvitationService {
             @NotNull Long userId,
             boolean areSentByUser,
             @Nullable Date lastUpdatedDate) {
+        try {
+            AssertUtil.notNull(userId, "userId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Mono<Date> versionMono = areSentByUser
                 ? userVersionService.querySentGroupInvitationsLastUpdatedDate(userId)
                 : userVersionService.queryReceivedGroupInvitationsLastUpdatedDate(userId);
@@ -329,6 +370,11 @@ public class GroupInvitationService {
     }
 
     public Mono<Long> queryInviteeIdByInvitationId(@NotNull Long invitationId) {
+        try {
+            AssertUtil.notNull(invitationId, "invitationId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query().addCriteria(where(ID_FIELD_NAME).is(invitationId));
         query.fields().include(GroupInvitation.Fields.INVITEE_ID);
         return mongoTemplate.findOne(query, GroupInvitation.class, GroupInvitation.COLLECTION_NAME)
@@ -393,18 +439,27 @@ public class GroupInvitationService {
     }
 
     public Mono<Boolean> updateInvitations(
-            @NotEmpty Set<Long> ids,
+            @NotEmpty Set<Long> invitationIds,
             @Nullable Long inviterId,
             @Nullable Long inviteeId,
             @Nullable String content,
-            @Nullable @RequestStatusConstraint RequestStatus status,
+            @Nullable @ValidRequestStatus RequestStatus status,
             @Nullable @PastOrPresent Date creationDate,
             @Nullable @PastOrPresent Date responseDate,
             @Nullable Date expirationDate) {
+        try {
+            AssertUtil.notEmpty(invitationIds, "invitationIds");
+            validInvitationContentLength(content);
+            DomainConstraintUtil.validRequestStatus(status);
+            AssertUtil.pastOrPresent(creationDate, "creationDate");
+            AssertUtil.pastOrPresent(responseDate, "responseDate");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (Validator.areAllNull(inviterId, inviteeId, content, status, creationDate, expirationDate)) {
             return Mono.just(true);
         }
-        Query query = new Query().addCriteria(where(ID_FIELD_NAME).in(ids));
+        Query query = new Query().addCriteria(where(ID_FIELD_NAME).in(invitationIds));
         Update update = UpdateBuilder
                 .newBuilder()
                 .setIfNotNull(GroupInvitation.Fields.INVITER_ID, inviterId)
@@ -430,4 +485,14 @@ public class GroupInvitationService {
                             : groupInvitation;
                 });
     }
+
+    private void validInvitationContentLength(@Nullable String content) {
+        if (content != null) {
+            int contentLimit = node.getSharedProperties().getService().getGroup().getGroupJoinRequestContentLimit();
+            if (contentLimit > 0) {
+                AssertUtil.max(content.length(), "content", contentLimit);
+            }
+        }
+    }
+
 }

@@ -22,7 +22,6 @@ import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.service.session.SessionLocationService;
 import im.turms.turms.workflow.service.impl.user.UserService;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Flux;
 
 import javax.annotation.Nullable;
@@ -33,7 +32,6 @@ import java.util.stream.Collectors;
  * @author James Chen
  */
 @Service
-@Validated
 public class UsersNearbyService {
 
     private final UserService userService;

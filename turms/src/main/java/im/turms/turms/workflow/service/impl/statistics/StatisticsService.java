@@ -23,7 +23,6 @@ import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.rpc.request.CountOnlineUsersRequest;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.math.MathFlux;
@@ -35,7 +34,6 @@ import java.util.Map;
  */
 
 @Service
-@Validated
 @Log4j2
 public class StatisticsService {
 

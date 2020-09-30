@@ -28,10 +28,10 @@ import im.turms.gateway.plugin.manager.TurmsPluginManager;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.rpc.service.IOutboundMessageService;
+import im.turms.server.common.util.AssertUtil;
 import io.netty.buffer.ByteBuf;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotEmpty;
@@ -42,7 +42,6 @@ import java.util.*;
  * @author James Chen
  */
 @Component
-@Validated
 @Log4j2
 public class OutboundMessageService implements IOutboundMessageService {
 
@@ -70,6 +69,8 @@ public class OutboundMessageService implements IOutboundMessageService {
     public boolean sendNotificationToLocalClients(
             @NotNull ByteBuf notificationData,
             @NotEmpty Set<Long> recipientIds) {
+        AssertUtil.notNull(notificationData, "notificationData");
+        AssertUtil.notEmpty(recipientIds, "recipientIds");
         // Prepare data
         boolean hasForwardedMessageToAllRecipients = true;
         boolean triggerHandlers = node.getSharedProperties().getPlugin().isEnabled()
@@ -111,7 +112,9 @@ public class OutboundMessageService implements IOutboundMessageService {
         return hasForwardedMessageToAllRecipients;
     }
 
-    private void triggerPlugins(ByteBuf notificationData, Set<Long> recipientIds, Set<Long> offlineRecipientIds) {
+    private void triggerPlugins(@NotNull ByteBuf notificationData,
+                                @NotNull Set<Long> recipientIds,
+                                @NotNull Set<Long> offlineRecipientIds) {
         TurmsNotification notification = null;
         try {
             notification = TurmsNotification.parseFrom(notificationData.nioBuffer());

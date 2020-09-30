@@ -19,7 +19,7 @@ package im.turms.server.common.property.env.service.business;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.constant.CronConstant;
-import im.turms.server.common.constraint.CronConstraint;
+import im.turms.server.common.constraint.ValidCron;
 import im.turms.server.common.property.metadata.annotation.Description;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
 import lombok.Data;
@@ -74,7 +74,7 @@ public class GroupProperties {
 
     @Description("Clean or update the expired group join requests when the cron expression is triggered." +
             " Clean if deleteExpiredGroupJoinRequestsWhenCronTriggered is true and update if deleteExpiredGroupJoinRequestsWhenCronTriggered is false")
-    @CronConstraint
+    @ValidCron
     private String expiredGroupJoinRequestsCheckerCron = CronConstant.DEFAULT_EXPIRED_GROUP_JOIN_REQUESTS_CHECKER_CRON;
 
     @Description("Clean or update the expired group invitations when the cron expression is triggered." +

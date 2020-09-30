@@ -19,13 +19,16 @@ package im.turms.turms.workflow.service.impl.user.onlineuser;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
+import im.turms.common.exception.TurmsBusinessException;
 import im.turms.server.common.cluster.node.Node;
+import im.turms.server.common.constraint.ValidDeviceType;
 import im.turms.server.common.rpc.request.SetUserOfflineRequest;
 import im.turms.server.common.service.session.UserStatusService;
+import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.ReactorUtil;
+import im.turms.turms.workflow.service.util.DomainConstraintUtil;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.reactive.socket.CloseStatus;
 import reactor.core.publisher.Mono;
 
@@ -37,7 +40,6 @@ import java.util.*;
  * @author James Chen
  */
 @Service
-@Validated
 public class SessionService {
 
     private final Node node;
@@ -54,6 +56,11 @@ public class SessionService {
      * @return true if at least one device of the user was online
      */
     public Mono<Boolean> disconnect(@NotNull Long userId, @NotNull SessionCloseStatus closeStatus) {
+        try {
+            AssertUtil.notNull(closeStatus, "closeStatus");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return userStatusService.getNodeIdAndDeviceMapByUserId(userId)
                 .flatMap(nodeIdAndDeviceTypeMap -> {
                     List<Mono<Boolean>> monos = new LinkedList<>();
@@ -70,8 +77,20 @@ public class SessionService {
     /**
      * @return true if was online
      */
-    public Mono<Boolean> disconnect(@NotNull Long userId, @Nullable Set<DeviceType> deviceTypes, @NotNull SessionCloseStatus closeStatus) {
-        if (deviceTypes == null || deviceTypes.isEmpty()) {
+    public Mono<Boolean> disconnect(@NotNull Long userId,
+                                    @NotNull Set<@ValidDeviceType DeviceType> deviceTypes,
+                                    @NotNull SessionCloseStatus closeStatus) {
+        try {
+            AssertUtil.notNull(userId, "userId");
+            AssertUtil.notNull(deviceTypes, "deviceTypes");
+            AssertUtil.notNull(closeStatus, "closeStatus");
+            for (DeviceType deviceType : deviceTypes) {
+                DomainConstraintUtil.validDeviceType(deviceType);
+            }
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
+        if (deviceTypes.isEmpty()) {
             return disconnect(userId, closeStatus);
         }
         int size = deviceTypes.size();
@@ -98,7 +117,14 @@ public class SessionService {
     /**
      * @return true if was online
      */
-    public Mono<Boolean> disconnect(@NotNull Long userId, @NotNull DeviceType deviceType, @NotNull SessionCloseStatus closeStatus) {
+    public Mono<Boolean> disconnect(@NotNull Long userId,
+                                    @NotNull @ValidDeviceType DeviceType deviceType,
+                                    @NotNull SessionCloseStatus closeStatus) {
+        try {
+            AssertUtil.notNull(closeStatus, "closeStatus");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return userStatusService.getNodeIdByUserIdAndDeviceType(userId, deviceType)
                 .flatMap(nodeId -> {
                     CloseStatus status = new CloseStatus(closeStatus.getCode(), closeStatus.name());
@@ -109,6 +135,12 @@ public class SessionService {
     }
 
     public Mono<Boolean> disconnect(@NotNull Set<Long> userIds, @NotNull SessionCloseStatus closeStatus) {
+        try {
+            AssertUtil.notNull(userIds, "userIds");
+            AssertUtil.notNull(closeStatus, "closeStatus");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         switch (userIds.size()) {
             case 0:
                 return Mono.just(true);
@@ -123,7 +155,15 @@ public class SessionService {
         }
     }
 
-    public Mono<Boolean> disconnect(@NotNull Set<Long> userIds, @Nullable Set<DeviceType> deviceTypes, @NotNull SessionCloseStatus closeStatus) {
+    public Mono<Boolean> disconnect(@NotNull Set<Long> userIds,
+                                    @Nullable Set<@ValidDeviceType DeviceType> deviceTypes,
+                                    @NotNull SessionCloseStatus closeStatus) {
+        try {
+            AssertUtil.notNull(userIds, "userIds");
+            AssertUtil.notNull(closeStatus, "closeStatus");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (deviceTypes == null || deviceTypes.isEmpty()) {
             return disconnect(userIds, closeStatus);
         } else {

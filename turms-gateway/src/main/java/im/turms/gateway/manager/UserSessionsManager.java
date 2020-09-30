@@ -25,7 +25,7 @@ import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.gateway.access.udp.UdpDispatcher;
 import im.turms.gateway.access.websocket.dto.CloseStatusFactory;
 import im.turms.gateway.pojo.bo.session.UserSession;
-import im.turms.server.common.constraint.DeviceTypeConstraint;
+import im.turms.server.common.constraint.ValidDeviceType;
 import im.turms.server.common.util.DeviceTypeUtil;
 import im.turms.server.common.util.MapUtil;
 import im.turms.server.common.util.ProtoUtil;
@@ -150,7 +150,7 @@ public final class UserSessionsManager {
      * @param session Don't replace this parameter by using "getSession(deviceType)"
      *                because it needs to call hashcode() to find session every time
      */
-    private void updateSessionHeartbeatTimeout(@NotNull @DeviceTypeConstraint DeviceType deviceType, @NotNull UserSession session, int closeIdleSessionAfterMillis, int switchProtocolAfterMillis) {
+    private void updateSessionHeartbeatTimeout(@NotNull @ValidDeviceType DeviceType deviceType, @NotNull UserSession session, int closeIdleSessionAfterMillis, int switchProtocolAfterMillis) {
         Timeout newTimeout = HEARTBEAT_TIMER.newTimeout(timeout -> {
                     if (session.isOpen()) {
                         long now = System.currentTimeMillis();

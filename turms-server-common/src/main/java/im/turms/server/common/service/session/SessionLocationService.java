@@ -24,12 +24,15 @@ import im.turms.common.exception.TurmsBusinessException;
 import im.turms.server.common.bo.log.UserLocationLog;
 import im.turms.server.common.bo.session.UserSessionId;
 import im.turms.server.common.cluster.node.Node;
+import im.turms.server.common.constraint.ValidDeviceType;
 import im.turms.server.common.plugin.base.ITurmsPluginManager;
 import im.turms.server.common.plugin.extension.UserLocationLogHandler;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.LocationProperties;
 import im.turms.server.common.redis.RedisEntryId;
 import im.turms.server.common.redis.RedisSerializationContextPool;
+import im.turms.server.common.util.AssertUtil;
+import im.turms.server.common.util.DeviceTypeUtil;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -39,7 +42,6 @@ import org.springframework.data.redis.connection.RedisGeoCommands;
 import org.springframework.data.redis.core.ReactiveGeoOperations;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -53,7 +55,6 @@ import java.util.List;
  * @author James Chen
  */
 @Service
-@Validated
 @Log4j2
 public class SessionLocationService {
 
@@ -88,7 +89,19 @@ public class SessionLocationService {
     /**
      * Usually used when a user just go online.
      */
-    public Mono<Boolean> upsertUserLocation(@NotNull Long userId, @NotNull DeviceType deviceType, @NotNull Point userLocation, @NotNull Date timestamp) {
+    public Mono<Boolean> upsertUserLocation(@NotNull Long userId,
+                                            @NotNull @ValidDeviceType DeviceType deviceType,
+                                            @NotNull Point userLocation,
+                                            @NotNull Date timestamp) {
+        try {
+            AssertUtil.notNull(userId, "userId");
+            AssertUtil.notNull(deviceType, "deviceType");
+            DeviceTypeUtil.validDeviceType(deviceType);
+            AssertUtil.notNull(userLocation, "userLocation");
+            AssertUtil.notNull(timestamp, "timestamp");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (!locationEnabled) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.DISABLED_FUNCTION));
         }
@@ -116,7 +129,14 @@ public class SessionLocationService {
         }
     }
 
-    public Mono<Void> removeUserLocation(@NotNull Long userId, @NotNull DeviceType deviceType) {
+    public Mono<Void> removeUserLocation(@NotNull Long userId, @NotNull @ValidDeviceType DeviceType deviceType) {
+        try {
+            AssertUtil.notNull(userId, "userId");
+            AssertUtil.notNull(deviceType, "deviceType");
+            DeviceTypeUtil.validDeviceType(deviceType);
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (!locationEnabled) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.DISABLED_FUNCTION));
         }
@@ -126,30 +146,16 @@ public class SessionLocationService {
         return mono.then();
     }
 
-    private void tryLogLocation(Long userId, DeviceType deviceType, Point coordinates, Date timestamp) {
-        boolean logUserLocation = node.getSharedProperties().getService().getLog().isLogUserLocation();
-        List<UserLocationLogHandler> handlerList = turmsPluginManager.getUserLocationLogHandlerList();
-        boolean triggerHandlers = turmsPluginManager.isEnabled() && !handlerList.isEmpty();
-        if (logUserLocation || triggerHandlers) {
-            UserLocationLog userLocationLog = new UserLocationLog(userId, deviceType, coordinates, timestamp);
-            if (logUserLocation) {
-                log.info(userLocationLog);
-            }
-            if (triggerHandlers) {
-                List<Mono<Void>> monos = new ArrayList<>(handlerList.size());
-                for (UserLocationLogHandler handler : handlerList) {
-                    monos.add(handler.handleUserLocationLog(userLocationLog));
-                }
-                Mono.when(monos).subscribe();
-            }
-        }
-    }
-
     public Flux<Long> queryNearestUserIds(
             @NotNull Long userId,
             @Nullable DeviceType deviceType,
             @Nullable Short maxPeopleNumber,
             @Nullable Double maxDistance) {
+        try {
+            AssertUtil.notNull(userId, "userId");
+        } catch (TurmsBusinessException e) {
+            return Flux.error(e);
+        }
         if (!locationEnabled) {
             return Flux.error(TurmsBusinessException.get(TurmsStatusCode.DISABLED_FUNCTION));
         }
@@ -185,9 +191,16 @@ public class SessionLocationService {
 
     public Flux<UserSessionId> queryNearestUserSessionIds(
             @NotNull Long userId,
-            @NotNull DeviceType deviceType,
+            @NotNull @ValidDeviceType DeviceType deviceType,
             @Nullable Short maxPeopleNumber,
             @Nullable Double maxDistance) {
+        try {
+            AssertUtil.notNull(userId, "userId");
+            AssertUtil.notNull(deviceType, "deviceType");
+            DeviceTypeUtil.validDeviceType(deviceType);
+        } catch (TurmsBusinessException e) {
+            return Flux.error(e);
+        }
         if (!locationEnabled || geoByUserSessionIdOperations == null) {
             return Flux.error(TurmsBusinessException.get(TurmsStatusCode.DISABLED_FUNCTION));
         }
@@ -214,13 +227,39 @@ public class SessionLocationService {
                 .map(geoLocationGeoResult -> geoLocationGeoResult.getContent().getName());
     }
 
-    public Mono<Point> getUserLocation(@NotNull Long userId, @NotNull DeviceType deviceType) {
+    public Mono<Point> getUserLocation(@NotNull Long userId, @NotNull @ValidDeviceType DeviceType deviceType) {
+        try {
+            AssertUtil.notNull(userId, "userId");
+            AssertUtil.notNull(deviceType, "deviceType");
+            DeviceTypeUtil.validDeviceType(deviceType);
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (locationEnabled) {
             return treatUserIdAndDeviceTypeAsUniqueUser
                     ? geoByUserSessionIdOperations.position(RedisEntryId.LOCATION, new UserSessionId(userId, deviceType))
                     : geoByUserIdOperations.position(RedisEntryId.LOCATION, userId);
         } else {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.DISABLED_FUNCTION));
+        }
+    }
+
+    private void tryLogLocation(Long userId, DeviceType deviceType, Point coordinates, Date timestamp) {
+        boolean logUserLocation = node.getSharedProperties().getService().getLog().isLogUserLocation();
+        List<UserLocationLogHandler> handlerList = turmsPluginManager.getUserLocationLogHandlerList();
+        boolean triggerHandlers = turmsPluginManager.isEnabled() && !handlerList.isEmpty();
+        if (logUserLocation || triggerHandlers) {
+            UserLocationLog userLocationLog = new UserLocationLog(userId, deviceType, coordinates, timestamp);
+            if (logUserLocation) {
+                log.info(userLocationLog);
+            }
+            if (triggerHandlers) {
+                List<Mono<Void>> monos = new ArrayList<>(handlerList.size());
+                for (UserLocationLogHandler handler : handlerList) {
+                    monos.add(handler.handleUserLocationLog(userLocationLog));
+                }
+                Mono.when(monos).subscribe();
+            }
         }
     }
 

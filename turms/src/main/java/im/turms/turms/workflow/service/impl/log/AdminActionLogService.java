@@ -19,8 +19,8 @@ package im.turms.turms.workflow.service.impl.log;
 
 import com.mongodb.DBObject;
 import im.turms.server.common.cluster.node.Node;
-import im.turms.server.common.constraint.IpAddressConstraint;
-import im.turms.server.common.constraint.NoWhitespaceConstraint;
+import im.turms.server.common.constraint.NoWhitespace;
+import im.turms.server.common.constraint.ValidIpAddress;
 import im.turms.turms.bo.AdminActionLog;
 import im.turms.turms.plugin.extension.handler.AdminActionLogHandler;
 import im.turms.turms.plugin.manager.TurmsPluginManager;
@@ -50,10 +50,10 @@ public class AdminActionLogService {
     }
 
     public void tryLogAndTriggerHandlers(
-            @NotNull @NoWhitespaceConstraint String account,
+            @NotNull @NoWhitespace String account,
             @NotNull @PastOrPresent Date timestamp,
-            @NotNull @IpAddressConstraint String ip,
-            @NotNull @NoWhitespaceConstraint String action,
+            @NotNull @ValidIpAddress String ip,
+            @NotNull @NoWhitespace String action,
             @Nullable DBObject params,
             @Nullable DBObject body) {
         boolean logAdminAction = node.getSharedProperties().getService().getLog().isLogAdminAction();

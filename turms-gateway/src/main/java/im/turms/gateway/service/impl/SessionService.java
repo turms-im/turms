@@ -23,6 +23,7 @@ import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.UserStatus;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.constant.statuscode.TurmsStatusCode;
+import im.turms.common.exception.TurmsBusinessException;
 import im.turms.gateway.access.websocket.dto.CloseStatusFactory;
 import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.plugin.extension.UserOnlineStatusChangeHandler;
@@ -32,13 +33,14 @@ import im.turms.gateway.service.impl.log.UserLoginActionService;
 import im.turms.server.common.bo.session.UserSessionsStatus;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
-import im.turms.server.common.constraint.DeviceTypeConstraint;
+import im.turms.server.common.constraint.ValidDeviceType;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.env.gateway.SessionProperties;
 import im.turms.server.common.rpc.request.SetUserOfflineRequest;
 import im.turms.server.common.rpc.service.ISessionService;
 import im.turms.server.common.service.session.SessionLocationService;
 import im.turms.server.common.service.session.UserStatusService;
+import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.DeviceTypeUtil;
 import im.turms.server.common.util.ReactorUtil;
 import io.micrometer.core.instrument.Counter;
@@ -46,7 +48,6 @@ import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tags;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.reactive.socket.CloseStatus;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -66,7 +67,6 @@ import static im.turms.gateway.constant.MetricsConstant.ONLINE_USERS_GAUGE_NAME;
  * @author James Chen
  */
 @Service
-@Validated
 public class SessionService implements ISessionService {
 
     private final Node node;
@@ -135,8 +135,13 @@ public class SessionService implements ISessionService {
      */
     public Mono<Boolean> setLocalSessionOfflineByUserIdAndDeviceType(
             @NotNull Long userId,
-            @NotNull @DeviceTypeConstraint DeviceType deviceType,
+            @NotNull @ValidDeviceType DeviceType deviceType,
             @NotNull CloseStatus closeStatus) {
+        try {
+            AssertUtil.notNull(deviceType, "deviceType");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return setLocalSessionOfflineByUserIdAndDeviceTypes(userId, Collections.singleton(deviceType), closeStatus, new Date());
     }
 
@@ -146,12 +151,22 @@ public class SessionService implements ISessionService {
     @Override
     public Mono<Boolean> setLocalSessionOfflineByUserIdAndDeviceTypes(
             @NotNull Long userId,
-            @NotEmpty Set<@DeviceTypeConstraint DeviceType> deviceTypes,
+            @NotEmpty Set<@ValidDeviceType DeviceType> deviceTypes,
             @NotNull CloseStatus closeStatus) {
         return setLocalSessionOfflineByUserIdAndDeviceTypes(userId, deviceTypes, closeStatus, new Date());
     }
 
-    public Mono<Boolean> authAndSetLocalSessionOfflineByUserIdAndDeviceType(Long userId, DeviceType deviceType, CloseStatus closeStatus, int sessionId) {
+    public Mono<Boolean> authAndSetLocalSessionOfflineByUserIdAndDeviceType(@NotNull Long userId,
+                                                                            @NotNull DeviceType deviceType,
+                                                                            @NotNull CloseStatus closeStatus,
+                                                                            int sessionId) {
+        try {
+            AssertUtil.notNull(userId, "userId");
+            AssertUtil.notNull(deviceType, "deviceType");
+            AssertUtil.notNull(closeStatus, "closeStatus");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         UserSessionsManager manager = getUserSessionsManager(userId);
         if (manager == null) {
             return Mono.just(false);
@@ -166,9 +181,14 @@ public class SessionService implements ISessionService {
 
     public Mono<Boolean> setLocalSessionOfflineByUserIdAndDeviceTypes(
             @NotNull Long userId,
-            @NotEmpty Set<@DeviceTypeConstraint DeviceType> deviceTypes,
+            @NotEmpty Set<@ValidDeviceType DeviceType> deviceTypes,
             @NotNull CloseStatus closeStatus,
             @NotNull Date disconnectionDate) {
+        try {
+            AssertUtil.notNull(userId, "userId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         UserSessionsManager manager = getUserSessionsManager(userId);
         if (manager == null) {
             return Mono.just(false);
@@ -178,10 +198,17 @@ public class SessionService implements ISessionService {
 
     public Mono<Boolean> setLocalSessionOfflineByUserIdAndDeviceTypes0(
             @NotNull Long userId,
-            @NotEmpty Set<@DeviceTypeConstraint DeviceType> deviceTypes,
+            @NotEmpty Set<@ValidDeviceType DeviceType> deviceTypes,
             @NotNull CloseStatus closeStatus,
             @NotNull Date disconnectionDate,
             @NotNull UserSessionsManager manager) {
+        try {
+            AssertUtil.notNull(closeStatus, "closeStatus");
+            AssertUtil.notNull(disconnectionDate, "disconnectionDate");
+            AssertUtil.notNull(manager, "manager");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         // Don't close the real session (connection) first and then remove the session status in Redis
         // because it will make problem if a client logins again while the session status in Redis hasn't been removed
         return userStatusService.removeStatusByUserIdAndDeviceTypes(userId, deviceTypes)
@@ -218,7 +245,13 @@ public class SessionService implements ISessionService {
                 });
     }
 
-    public Mono<Void> clearAllLocalSessions(Date disconnectionDate, CloseStatus closeStatus) {
+    public Mono<Void> clearAllLocalSessions(@NotNull Date disconnectionDate, @NotNull CloseStatus closeStatus) {
+        try {
+            AssertUtil.notNull(disconnectionDate, "disconnectionDate");
+            AssertUtil.notNull(closeStatus, "closeStatus");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         List<Mono<Boolean>> monos = new LinkedList<>();
         for (Map.Entry<Long, UserSessionsManager> entry : sessionsManagerByUserId.entrySet()) {
             Long userId = entry.getKey();
@@ -241,7 +274,14 @@ public class SessionService implements ISessionService {
      */
     public Mono<Boolean> updateHeartbeatTimestamp(
             @NotNull Long userId,
-            @NotNull @DeviceTypeConstraint DeviceType deviceType) {
+            @NotNull @ValidDeviceType DeviceType deviceType) {
+        try {
+            AssertUtil.notNull(userId, "userId");
+            AssertUtil.notNull(deviceType, "deviceType");
+            DeviceTypeUtil.validDeviceType(deviceType);
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         UserSessionsManager userSessionsManager = getUserSessionsManager(userId);
         if (userSessionsManager != null) {
             UserSession session = userSessionsManager.getSession(deviceType);
@@ -253,6 +293,12 @@ public class SessionService implements ISessionService {
     }
 
     public Mono<Boolean> updateHeartbeatTimestamp(@NotNull Long userId, @NotNull UserSession session) {
+        try {
+            AssertUtil.notNull(userId, "userId");
+            AssertUtil.notNull(session, "session");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         long lastHeartbeatTimestampMillis = session.getLastHeartbeatTimestampMillis();
         boolean isAllowedToUpdate = System.currentTimeMillis() - lastHeartbeatTimestampMillis > minHeartbeatIntervalMillis;
         return isAllowedToUpdate
@@ -261,7 +307,13 @@ public class SessionService implements ISessionService {
                 : Mono.just(true);
     }
 
-    public Mono<UserSession> authAndUpdateHeartbeatTimestamp(long userId, DeviceType deviceType, int sessionId) {
+    public Mono<UserSession> authAndUpdateHeartbeatTimestamp(long userId, @NotNull @ValidDeviceType DeviceType deviceType, int sessionId) {
+        try {
+            AssertUtil.notNull(deviceType, "deviceType");
+            DeviceTypeUtil.validDeviceType(deviceType);
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         UserSessionsManager userSessionsManager = getUserSessionsManager(userId);
         if (userSessionsManager != null) {
             UserSession session = userSessionsManager.getSession(deviceType);
@@ -280,6 +332,12 @@ public class SessionService implements ISessionService {
             @Nullable Point userLocation,
             @Nullable String ip,
             @Nullable Map<String, String> deviceDetails) {
+        try {
+            AssertUtil.notNull(deviceType, "deviceType");
+            DeviceTypeUtil.validDeviceType(deviceType);
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         // Must fetch the latest status instead of the status in the cache
         return userStatusService.fetchUserSessionsStatus(userId)
                 .flatMap(sessionsStatus -> {
@@ -302,11 +360,14 @@ public class SessionService implements ISessionService {
 
     @Nullable
     public UserSessionsManager getUserSessionsManager(@NotNull Long userId) {
+        AssertUtil.notNull(userId, "userId");
         return sessionsManagerByUserId.get(userId);
     }
 
     @Nullable
     public UserSession getLocalUserSession(@NotNull Long userId, @NotNull DeviceType deviceType) {
+        AssertUtil.notNull(userId, "userId");
+        AssertUtil.notNull(deviceType, "deviceType");
         UserSessionsManager userSessionsManager = sessionsManagerByUserId.get(userId);
         return userSessionsManager != null ? userSessionsManager.getSession(deviceType) : null;
     }
@@ -315,7 +376,17 @@ public class SessionService implements ISessionService {
         return sessionsManagerByUserId.size();
     }
 
-    private Mono<Boolean> disconnectConflictedDeviceTypes(Long userId, DeviceType deviceType, UserSessionsStatus sessionsStatus) {
+    private Mono<Boolean> disconnectConflictedDeviceTypes(@NotNull Long userId,
+                                                          @NotNull @ValidDeviceType DeviceType deviceType,
+                                                          @NotNull UserSessionsStatus sessionsStatus) {
+        try {
+            AssertUtil.notNull(userId, "userId");
+            AssertUtil.notNull(deviceType, "deviceType");
+            DeviceTypeUtil.validDeviceType(deviceType);
+            AssertUtil.notNull(sessionsStatus, "sessionsStatus");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Set<DeviceType> conflictedDeviceTypes = userSimultaneousLoginService.getConflictedDeviceTypes(deviceType);
         SetMultimap<String, DeviceType> nodeIdAndDeviceTypesMap = null;
         for (DeviceType conflictedDeviceType : conflictedDeviceTypes) {
@@ -340,7 +411,8 @@ public class SessionService implements ISessionService {
         }
     }
 
-    public void onSessionEstablished(UserSessionsManager userSessionsManager, DeviceType deviceType) {
+    public void onSessionEstablished(@NotNull UserSessionsManager userSessionsManager,
+                                     @NotNull @ValidDeviceType DeviceType deviceType) {
         loggedInUsersCounter.increment();
         if (node.getSharedProperties().getGateway().getSession().isNotifyClientsOfSessionInfoAfterConnected()) {
             userSessionsManager.pushSessionNotification(deviceType);
@@ -379,7 +451,7 @@ public class SessionService implements ISessionService {
                         if (userLocation != null && sessionLocationService.isLocationEnabled()) {
                             return sessionLocationService.upsertUserLocation(userId, deviceType, userLocation, now)
                                     .doOnSuccess(hasUpsertedLocation -> {
-                                        if (hasUpsertedLocation) {
+                                        if (hasUpsertedLocation != null && hasUpsertedLocation) {
                                             userLoginActionService
                                                     .tryLogLoginActionAndTriggerHandlers(logId, userId, finalUserStatus, deviceType, userLocation, ip, deviceDetails, now);
                                         }
@@ -396,7 +468,7 @@ public class SessionService implements ISessionService {
                 });
     }
 
-    private void removeSessionsManagerIfEmpty(@NotNull CloseStatus closeStatus, UserSessionsManager manager, Long userId) {
+    private void removeSessionsManagerIfEmpty(@NotNull CloseStatus closeStatus, @NotNull UserSessionsManager manager, @NotNull Long userId) {
         if (manager.getSessionsNumber() == 0) {
             sessionsManagerByUserId.remove(userId);
         }

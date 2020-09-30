@@ -29,7 +29,8 @@ import im.turms.common.util.Validator;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.config.ChangeStreamUtil;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
-import im.turms.server.common.constraint.NoWhitespaceConstraint;
+import im.turms.server.common.constraint.NoWhitespace;
+import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
 import im.turms.turms.workflow.dao.builder.UpdateBuilder;
@@ -42,7 +43,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -59,7 +59,6 @@ import java.util.Set;
  */
 @Log4j2
 @Service
-@Validated
 public class GroupTypeService {
 
     private final Node node;
@@ -135,7 +134,7 @@ public class GroupTypeService {
     }
 
     public Mono<GroupType> addGroupType(
-            @NotNull @NoWhitespaceConstraint String name,
+            @NotNull @NoWhitespace String name,
             @NotNull @Min(1) Integer groupSizeLimit,
             @NotNull GroupInvitationStrategy groupInvitationStrategy,
             @NotNull GroupJoinStrategy groupJoinStrategy,
@@ -145,6 +144,22 @@ public class GroupTypeService {
             @NotNull Boolean selfInfoUpdatable,
             @NotNull Boolean enableReadReceipt,
             @NotNull Boolean messageEditable) {
+        try {
+            AssertUtil.notNull(name, "name");
+            AssertUtil.noWhitespace(name, "name");
+            AssertUtil.notNull(groupSizeLimit, "groupSizeLimit");
+            AssertUtil.min(groupSizeLimit, "groupSizeLimit", 1);
+            AssertUtil.notNull(groupInvitationStrategy, "groupInvitationStrategy");
+            AssertUtil.notNull(groupJoinStrategy, "groupJoinStrategy");
+            AssertUtil.notNull(groupInfoUpdateStrategy, "groupInfoUpdateStrategy");
+            AssertUtil.notNull(memberInfoUpdateStrategy, "memberInfoUpdateStrategy");
+            AssertUtil.notNull(guestSpeakable, "guestSpeakable");
+            AssertUtil.notNull(selfInfoUpdatable, "selfInfoUpdatable");
+            AssertUtil.notNull(enableReadReceipt, "enableReadReceipt");
+            AssertUtil.notNull(messageEditable, "messageEditable");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Long id = node.nextId(ServiceType.GROUP_TYPE);
         GroupType groupType = new GroupType(
                 id,
@@ -164,7 +179,7 @@ public class GroupTypeService {
 
     public Mono<Boolean> updateGroupTypes(
             @NotEmpty Set<Long> ids,
-            @Nullable @NoWhitespaceConstraint String name,
+            @Nullable @NoWhitespace String name,
             @Nullable @Min(1) Integer groupSizeLimit,
             @Nullable GroupInvitationStrategy groupInvitationStrategy,
             @Nullable GroupJoinStrategy groupJoinStrategy,
@@ -174,6 +189,13 @@ public class GroupTypeService {
             @Nullable Boolean selfInfoUpdatable,
             @Nullable Boolean enableReadReceipt,
             @Nullable Boolean messageEditable) {
+        try {
+            AssertUtil.notEmpty(ids, "ids");
+            AssertUtil.noWhitespace(name, "name");
+            AssertUtil.min(groupSizeLimit, "groupSizeLimit", 1);
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (Validator.areAllNull(name,
                 groupSizeLimit,
                 groupInvitationStrategy,
@@ -206,7 +228,7 @@ public class GroupTypeService {
     public Mono<Boolean> deleteGroupTypes(@Nullable Set<Long> groupTypeIds) {
         if (groupTypeIds != null) {
             if (groupTypeIds.contains(DaoConstant.DEFAULT_GROUP_TYPE_ID)) {
-                throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The default group type cannot be deleted");
+                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The default group type cannot be deleted"));
             }
             for (Long id : groupTypeIds) {
                 groupTypeMap.remove(id);
@@ -227,6 +249,11 @@ public class GroupTypeService {
     }
 
     public Mono<GroupType> queryGroupType(@NotNull Long groupTypeId) {
+        try {
+            AssertUtil.notNull(groupTypeId, "groupTypeId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         GroupType groupType = groupTypeMap.get(groupTypeId);
         if (groupType != null) {
             return Mono.just(groupType);
@@ -237,6 +264,11 @@ public class GroupTypeService {
     }
 
     public Mono<Boolean> groupTypeExists(@NotNull Long groupTypeId) {
+        try {
+            AssertUtil.notNull(groupTypeId, "groupTypeId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         GroupType groupType = groupTypeMap.get(groupTypeId);
         if (groupType != null) {
             return Mono.just(true);

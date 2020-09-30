@@ -26,6 +26,7 @@ import im.turms.common.util.Validator;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.config.ChangeStreamUtil;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
+import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
 import im.turms.turms.workflow.dao.builder.UpdateBuilder;
@@ -38,7 +39,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -55,7 +55,6 @@ import java.util.Set;
  */
 @Log4j2
 @Service
-@Validated
 public class UserPermissionGroupService {
 
     private final Map<Long, UserPermissionGroup> userPermissionGroupMap = new HashMap<>();
@@ -124,30 +123,43 @@ public class UserPermissionGroupService {
     }
 
     public Mono<UserPermissionGroup> addUserPermissionGroup(
-            @Nullable Long id,
+            @Nullable Long groupId,
             @NotNull Set<Long> creatableGroupTypeIds,
             @NotNull Integer ownedGroupLimit,
             @NotNull Integer ownedGroupLimitForEachGroupType,
             @NotNull Map<Long, Integer> groupTypeLimitMap) {
-        if (id == null) {
-            id = node.nextId(ServiceType.USER_PERMISSION_GROUP);
+        try {
+            AssertUtil.notNull(creatableGroupTypeIds, "creatableGroupTypeIds");
+            AssertUtil.notNull(ownedGroupLimit, "ownedGroupLimit");
+            AssertUtil.notNull(ownedGroupLimitForEachGroupType, "ownedGroupLimitForEachGroupType");
+            AssertUtil.notNull(groupTypeLimitMap, "groupTypeLimitMap");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
+        if (groupId == null) {
+            groupId = node.nextId(ServiceType.USER_PERMISSION_GROUP);
         }
         UserPermissionGroup userPermissionGroup = new UserPermissionGroup(
-                id,
+                groupId,
                 creatableGroupTypeIds,
                 ownedGroupLimit,
                 ownedGroupLimitForEachGroupType,
                 groupTypeLimitMap);
-        userPermissionGroupMap.put(id, userPermissionGroup);
+        userPermissionGroupMap.put(groupId, userPermissionGroup);
         return mongoTemplate.insert(userPermissionGroup, UserPermissionGroup.COLLECTION_NAME);
     }
 
     public Mono<Boolean> updateUserPermissionGroups(
-            @NotEmpty Set<Long> ids,
+            @NotEmpty Set<Long> groupIds,
             @Nullable Set<Long> creatableGroupTypeIds,
             @Nullable Integer ownedGroupLimit,
             @Nullable Integer ownedGroupLimitForEachGroupType,
             @Nullable Map<Long, Integer> groupTypeLimitMap) {
+        try {
+            AssertUtil.notEmpty(groupIds, "groupIds");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (Validator.areAllNull(
                 creatableGroupTypeIds,
                 ownedGroupLimit,
@@ -155,7 +167,7 @@ public class UserPermissionGroupService {
                 groupTypeLimitMap)) {
             return Mono.just(true);
         }
-        Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(ids));
+        Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(groupIds));
         Update update = UpdateBuilder.newBuilder()
                 .setIfNotNull(UserPermissionGroup.Fields.CREATABLE_GROUP_TYPE_IDS, creatableGroupTypeIds)
                 .setIfNotNull(UserPermissionGroup.Fields.OWNED_GROUP_LIMIT, ownedGroupLimit)
@@ -166,12 +178,12 @@ public class UserPermissionGroupService {
                 .map(UpdateResult::wasAcknowledged);
     }
 
-    public Mono<Boolean> deleteUserPermissionGroups(@Nullable Set<Long> ids) {
-        if (ids != null) {
-            if (ids.contains(DaoConstant.DEFAULT_USER_PERMISSION_GROUP_ID)) {
-                throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The default user permission group cannot be deleted");
+    public Mono<Boolean> deleteUserPermissionGroups(@Nullable Set<Long> groupIds) {
+        if (groupIds != null) {
+            if (groupIds.contains(DaoConstant.DEFAULT_USER_PERMISSION_GROUP_ID)) {
+                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The default user permission group cannot be deleted"));
             }
-            for (Long id : ids) {
+            for (Long id : groupIds) {
                 userPermissionGroupMap.remove(id);
             }
         } else {
@@ -183,19 +195,24 @@ public class UserPermissionGroupService {
         }
         Query query = QueryBuilder
                 .newBuilder()
-                .addInIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
+                .addInIfNotNull(DaoConstant.ID_FIELD_NAME, groupIds)
                 .buildQuery();
         return mongoTemplate.remove(query, UserPermissionGroup.class, UserPermissionGroup.COLLECTION_NAME)
                 .map(DeleteResult::wasAcknowledged);
     }
 
-    public Mono<UserPermissionGroup> queryUserPermissionGroup(@NotNull Long id) {
-        UserPermissionGroup userPermissionGroup = userPermissionGroupMap.get(id);
+    public Mono<UserPermissionGroup> queryUserPermissionGroup(@NotNull Long groupId) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
+        UserPermissionGroup userPermissionGroup = userPermissionGroupMap.get(groupId);
         if (userPermissionGroup != null) {
             return Mono.just(userPermissionGroup);
         } else {
-            return mongoTemplate.findById(id, UserPermissionGroup.class, UserPermissionGroup.COLLECTION_NAME)
-                    .doOnNext(type -> userPermissionGroupMap.put(id, type));
+            return mongoTemplate.findById(groupId, UserPermissionGroup.class, UserPermissionGroup.COLLECTION_NAME)
+                    .doOnNext(type -> userPermissionGroupMap.put(groupId, type));
         }
     }
 
@@ -204,15 +221,20 @@ public class UserPermissionGroupService {
                 .flatMap(this::queryUserPermissionGroup);
     }
 
-    public Mono<Boolean> userPermissionGroupExists(@NotNull Long id) {
-        UserPermissionGroup userPermissionGroup = userPermissionGroupMap.get(id);
+    public Mono<Boolean> userPermissionGroupExists(@NotNull Long groupId) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
+        UserPermissionGroup userPermissionGroup = userPermissionGroupMap.get(groupId);
         if (userPermissionGroup != null) {
             return Mono.just(true);
         } else {
-            Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(id));
+            Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(groupId));
             return mongoTemplate.findOne(query, UserPermissionGroup.class, UserPermissionGroup.COLLECTION_NAME)
                     .map(type -> {
-                        userPermissionGroupMap.put(id, type);
+                        userPermissionGroupMap.put(groupId, type);
                         return true;
                     })
                     .defaultIfEmpty(false);

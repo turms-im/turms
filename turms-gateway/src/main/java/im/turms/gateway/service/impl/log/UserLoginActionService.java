@@ -27,7 +27,6 @@ import im.turms.server.common.cluster.node.Node;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
@@ -41,7 +40,6 @@ import java.util.Map;
  * @author James Chen
  */
 @Service
-@Validated
 @Log4j2
 public class UserLoginActionService {
 

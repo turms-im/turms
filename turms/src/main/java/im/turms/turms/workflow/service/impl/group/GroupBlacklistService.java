@@ -27,14 +27,17 @@ import im.turms.common.model.bo.user.UserInfo;
 import im.turms.common.model.bo.user.UsersInfosWithVersion;
 import im.turms.common.util.Validator;
 import im.turms.server.common.dao.domain.User;
+import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.bo.DateRange;
 import im.turms.turms.constant.DaoConstant;
+import im.turms.turms.constraint.ValidGroupBlacklistedUserKey;
 import im.turms.turms.util.MapUtil;
 import im.turms.turms.util.ProtoUtil;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
 import im.turms.turms.workflow.dao.builder.UpdateBuilder;
 import im.turms.turms.workflow.dao.domain.GroupBlacklistedUser;
 import im.turms.turms.workflow.service.impl.user.UserService;
+import im.turms.turms.workflow.service.util.DomainConstraintUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
@@ -42,7 +45,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -58,7 +60,6 @@ import java.util.stream.Collectors;
  * @author James Chen
  */
 @Service
-@Validated
 public class GroupBlacklistService {
 
     private final ReactiveMongoTemplate mongoTemplate;
@@ -82,6 +83,11 @@ public class GroupBlacklistService {
             @NotNull Long groupId,
             @NotNull Long blacklistedUserId,
             @Nullable ReactiveMongoOperations operations) {
+        try {
+            AssertUtil.notNull(blacklistedUserId, "blacklistedUserId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return groupMemberService.isOwnerOrManager(requesterId, groupId)
                 .flatMap(authenticated -> authenticated != null && authenticated
                         ? groupMemberService.isGroupMember(groupId, blacklistedUserId)
@@ -128,6 +134,11 @@ public class GroupBlacklistService {
             @NotNull Long unblacklistedUserId,
             @Nullable ReactiveMongoOperations operations,
             boolean updateBlacklistVersion) {
+        try {
+            AssertUtil.notNull(unblacklistedUserId, "unblacklistedUserId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return groupMemberService
                 .isOwnerOrManager(requesterId, groupId)
                 .flatMap(authenticated -> {
@@ -153,6 +164,11 @@ public class GroupBlacklistService {
     }
 
     public Flux<Long> queryGroupBlacklistedUsersIds(@NotNull Long groupId) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+        } catch (TurmsBusinessException e) {
+            return Flux.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(GroupBlacklistedUser.Fields.ID_GROUP_ID).is(groupId));
         query.fields().include(GroupBlacklistedUser.Fields.ID_USER_ID);
         return mongoTemplate
@@ -195,6 +211,11 @@ public class GroupBlacklistService {
     public Mono<Int64ValuesWithVersion> queryGroupBlacklistedUsersIdsWithVersion(
             @NotNull Long groupId,
             @Nullable Date lastUpdatedDate) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return groupVersionService
                 .queryBlacklistVersion(groupId)
                 .flatMap(version -> {
@@ -259,6 +280,14 @@ public class GroupBlacklistService {
             @NotNull Long userId,
             @NotNull Long requesterId,
             @Nullable @PastOrPresent Date blockDate) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+            AssertUtil.notNull(userId, "userId");
+            AssertUtil.notNull(requesterId, "requesterId");
+            AssertUtil.pastOrPresent(blockDate, "blockDate");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (blockDate == null) {
             blockDate = new Date();
         }
@@ -271,6 +300,13 @@ public class GroupBlacklistService {
             @NotEmpty Set<Long> userIds,
             @Nullable @PastOrPresent Date blockDate,
             @Nullable Long requesterId) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+            AssertUtil.notEmpty(userIds, "userIds");
+            AssertUtil.pastOrPresent(blockDate, "blockDate");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (Validator.areAllNull(blockDate, requesterId)) {
             return Mono.just(true);
         }
@@ -287,9 +323,18 @@ public class GroupBlacklistService {
     }
 
     public Mono<Boolean> updateBlacklistedUsers(
-            @NotEmpty Set<GroupBlacklistedUser.Key> keys,
+            @NotEmpty Set<GroupBlacklistedUser.@ValidGroupBlacklistedUserKey Key> keys,
             @Nullable @PastOrPresent Date blockDate,
             @Nullable Long requesterId) {
+        try {
+            AssertUtil.notEmpty(keys, "keys");
+            for (GroupBlacklistedUser.Key key : keys) {
+                DomainConstraintUtil.validGroupBlacklistedUserKey(key);
+            }
+            AssertUtil.pastOrPresent(blockDate, "blockDate");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (Validator.areAllNull(blockDate, requesterId)) {
             return Mono.just(true);
         }
@@ -304,7 +349,15 @@ public class GroupBlacklistService {
                 requesterId)));
     }
 
-    public Mono<Boolean> deleteBlacklistedUsers(@NotEmpty Set<GroupBlacklistedUser.Key> keys) {
+    public Mono<Boolean> deleteBlacklistedUsers(@NotEmpty Set<GroupBlacklistedUser.@ValidGroupBlacklistedUserKey Key> keys) {
+        try {
+            AssertUtil.notEmpty(keys, "keys");
+            for (GroupBlacklistedUser.Key key : keys) {
+                DomainConstraintUtil.validGroupBlacklistedUserKey(key);
+            }
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return MapUtil.fluxMerge(multimap -> {
             for (GroupBlacklistedUser.Key key : keys) {
                 multimap.put(key.getGroupId(), key.getUserId());
@@ -313,10 +366,17 @@ public class GroupBlacklistService {
     }
 
     public Mono<Boolean> deleteBlacklistedUsers(@NotNull Long groupId, @NotEmpty Set<Long> userIds) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+            AssertUtil.notEmpty(userIds, "userIds");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query()
                 .addCriteria(Criteria.where(GroupBlacklistedUser.Fields.ID_GROUP_ID).is(groupId))
                 .addCriteria(Criteria.where(GroupBlacklistedUser.Fields.ID_USER_ID).in(userIds));
         return mongoTemplate.remove(query, GroupBlacklistedUser.class, GroupBlacklistedUser.COLLECTION_NAME)
                 .map(DeleteResult::wasAcknowledged);
     }
+
 }

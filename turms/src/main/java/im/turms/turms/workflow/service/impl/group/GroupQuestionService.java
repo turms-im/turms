@@ -28,13 +28,15 @@ import im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion;
 import im.turms.common.util.Validator;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
+import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.bo.GroupQuestionIdAndAnswer;
 import im.turms.turms.constant.DaoConstant;
-import im.turms.turms.constraint.GroupQuestionIdAndAnswerConstraint;
+import im.turms.turms.constraint.ValidGroupQuestionIdAndAnswer;
 import im.turms.turms.util.ProtoUtil;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
 import im.turms.turms.workflow.dao.builder.UpdateBuilder;
 import im.turms.turms.workflow.dao.domain.GroupJoinQuestion;
+import im.turms.turms.workflow.service.util.DomainConstraintUtil;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
@@ -42,12 +44,12 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
 import javax.annotation.Nullable;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -60,7 +62,6 @@ import java.util.stream.Collectors;
  * @author James Chen
  */
 @Service
-@Validated
 public class GroupQuestionService {
 
     private final Node node;
@@ -86,6 +87,12 @@ public class GroupQuestionService {
             @NotNull Long questionId,
             @NotNull String answer,
             @Nullable Long groupId) {
+        try {
+            AssertUtil.notNull(questionId, "questionId");
+            AssertUtil.notNull(answer, "answer");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query()
                 .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(questionId))
                 .addCriteria(Criteria.where(GroupJoinQuestion.Fields.ANSWERS).in(answer));
@@ -100,8 +107,16 @@ public class GroupQuestionService {
      * group join questions ids -> score
      */
     public Mono<Pair<List<Long>, Integer>> checkGroupQuestionAnswersAndCountScore(
-            @NotEmpty Set<@GroupQuestionIdAndAnswerConstraint GroupQuestionIdAndAnswer> questionIdAndAnswers,
+            @NotEmpty Set<@ValidGroupQuestionIdAndAnswer GroupQuestionIdAndAnswer> questionIdAndAnswers,
             @Nullable Long groupId) {
+        try {
+            AssertUtil.notEmpty(questionIdAndAnswers, "questionIdAndAnswers");
+            for (GroupQuestionIdAndAnswer idAndAnswer : questionIdAndAnswers) {
+                DomainConstraintUtil.validGroupQuestionIdAndAnswer(idAndAnswer);
+            }
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         List<Mono<Pair<Long, Integer>>> checks = new ArrayList<>(questionIdAndAnswers.size());
         for (GroupQuestionIdAndAnswer entry : questionIdAndAnswers) {
             checks.add(checkGroupQuestionAnswerAndCountScore(entry.getId(), entry.getAnswer(), groupId)
@@ -122,7 +137,16 @@ public class GroupQuestionService {
 
     public Mono<GroupJoinQuestionsAnswerResult> checkGroupQuestionAnswerAndJoin(
             @NotNull Long requesterId,
-            @NotEmpty Set<@GroupQuestionIdAndAnswerConstraint GroupQuestionIdAndAnswer> questionIdAndAnswers) {
+            @NotEmpty Set<@ValidGroupQuestionIdAndAnswer GroupQuestionIdAndAnswer> questionIdAndAnswers) {
+        try {
+            AssertUtil.notNull(requesterId, "requesterId");
+            AssertUtil.notEmpty(questionIdAndAnswers, "questionIdAndAnswers");
+            for (GroupQuestionIdAndAnswer idAndAnswer : questionIdAndAnswers) {
+                DomainConstraintUtil.validGroupQuestionIdAndAnswer(idAndAnswer);
+            }
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Long firstQuestionId = questionIdAndAnswers.iterator().next().getId();
         return queryGroupId(firstQuestionId)
                 .flatMap(groupId -> groupMemberService.isBlacklisted(groupId, requesterId)
@@ -160,9 +184,14 @@ public class GroupQuestionService {
             @NotNull Long groupId,
             @NotNull String question,
             @NotEmpty Set<String> answers,
-            @NotNull Integer score) {
-        if (score < 0) {
-            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The score must be greater than or equal to 0");
+            @NotNull @Min(0) Integer score) {
+        try {
+            AssertUtil.notNull(question, "question");
+            AssertUtil.notEmpty(answers, "answers");
+            AssertUtil.notNull(score, "score");
+            AssertUtil.min(score, "score", 0);
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
         }
         return groupMemberService.isAllowedToCreateJoinQuestion(requesterId, groupId)
                 .flatMap(allowed -> allowed != null && allowed
@@ -174,7 +203,16 @@ public class GroupQuestionService {
             @NotNull Long groupId,
             @NotNull String question,
             @NotEmpty Set<String> answers,
-            @NotNull Integer score) {
+            @NotNull @Min(0) Integer score) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+            AssertUtil.notNull(question, "question");
+            AssertUtil.notEmpty(answers, "answers");
+            AssertUtil.notNull(score, "score");
+            AssertUtil.min(score, "score", 0);
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         GroupJoinQuestion groupJoinQuestion = new GroupJoinQuestion(
                 node.nextId(ServiceType.GROUP_JOIN_QUESTION),
                 groupId,
@@ -187,6 +225,11 @@ public class GroupQuestionService {
     }
 
     public Mono<Long> queryGroupId(@NotNull Long questionId) {
+        try {
+            AssertUtil.notNull(questionId, "questionId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(questionId));
         query.fields().include(GroupJoinQuestion.Fields.GROUP_ID);
         return mongoTemplate.findOne(query, GroupJoinQuestion.class, GroupJoinQuestion.COLLECTION_NAME)
@@ -196,6 +239,11 @@ public class GroupQuestionService {
     public Mono<Boolean> authAndDeleteGroupJoinQuestion(
             @NotNull Long requesterId,
             @NotNull Long questionId) {
+        try {
+            AssertUtil.notNull(requesterId, "requesterId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return queryGroupId(questionId)
                 .flatMap(groupId -> groupMemberService.isOwnerOrManager(requesterId, groupId)
                         .flatMap(authenticated -> {
@@ -252,12 +300,14 @@ public class GroupQuestionService {
             @NotNull Long groupId,
             boolean withAnswers,
             @Nullable Date lastUpdatedDate) {
-        Mono<Boolean> authenticated;
-        if (withAnswers) {
-            authenticated = groupMemberService.isOwnerOrManager(requesterId, groupId);
-        } else {
-            authenticated = Mono.just(true);
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
         }
+        Mono<Boolean> authenticated = withAnswers
+                ? groupMemberService.isOwnerOrManager(requesterId, groupId)
+                : Mono.just(true);
         return authenticated
                 .flatMap(isAuthenticated -> isAuthenticated != null && isAuthenticated
                         ? groupVersionService.queryGroupJoinQuestionsVersion(groupId)
@@ -290,12 +340,16 @@ public class GroupQuestionService {
             @NotNull Long questionId,
             @Nullable String question,
             @Nullable Set<String> answers,
-            @Nullable Integer score) {
+            @Nullable @Min(0) Integer score) {
+        try {
+            AssertUtil.notNull(requesterId, "requesterId");
+            AssertUtil.notNull(questionId, "questionId");
+            AssertUtil.min(score, "score", 0);
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (Validator.areAllNull(question, answers, score)) {
             return Mono.just(true);
-        }
-        if (score != null && score < 0) {
-            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The score must be greater than or equal to 0");
         }
         return queryGroupId(questionId)
                 .flatMap(groupId -> groupMemberService.isOwnerOrManager(requesterId, groupId)
@@ -323,7 +377,13 @@ public class GroupQuestionService {
             @Nullable Long groupId,
             @Nullable String question,
             @Nullable Set<String> answers,
-            @Nullable Integer score) {
+            @Nullable @Min(0) Integer score) {
+        try {
+            AssertUtil.notNull(ids, "ids");
+            AssertUtil.min(score, "score", 0);
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (Validator.areAllFalsy(groupId, question, answers, score)) {
             return Mono.just(true);
         }

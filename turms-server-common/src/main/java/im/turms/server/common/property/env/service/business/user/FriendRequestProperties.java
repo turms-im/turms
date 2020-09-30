@@ -19,7 +19,7 @@ package im.turms.server.common.property.env.service.business.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.constant.CronConstant;
-import im.turms.server.common.constraint.CronConstraint;
+import im.turms.server.common.constraint.ValidCron;
 import im.turms.server.common.property.metadata.annotation.Description;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
 import lombok.Data;
@@ -48,7 +48,7 @@ public class FriendRequestProperties {
 
     @Description("Clean or update the expired friend requests when the cron expression is triggered." +
             " Clean if deleteExpiredRequestsWhenCronTriggered is true and update if deleteExpiredRequestsWhenCronTriggered is false")
-    @CronConstraint
+    @ValidCron
     private String expiredUserFriendRequestsCheckerCron = CronConstant.DEFAULT_EXPIRED_USER_FRIEND_REQUESTS_CHECKER_CRON;
 
     @JsonView(MutablePropertiesView.class)

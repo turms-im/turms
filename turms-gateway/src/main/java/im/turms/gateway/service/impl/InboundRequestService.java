@@ -34,7 +34,6 @@ import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.rpc.request.HandleServiceRequest;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
@@ -44,7 +43,6 @@ import javax.validation.constraints.NotNull;
  * @author James Chen
  */
 @Service
-@Validated
 @Log4j2
 public class InboundRequestService {
 

@@ -19,7 +19,7 @@ package im.turms.server.common.property.env.service.business.message;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.constant.CronConstant;
-import im.turms.server.common.constraint.CronConstraint;
+import im.turms.server.common.constraint.ValidCron;
 import im.turms.server.common.property.constant.TimeType;
 import im.turms.server.common.property.metadata.annotation.Description;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
@@ -73,7 +73,7 @@ public class MessageProperties {
     private int messageTimeToLiveHours = 0;
 
     @Description("Clean the expired messages when the cron expression is triggered")
-    @CronConstraint
+    @ValidCron
     private String expiredMessagesCheckerCron = CronConstant.DEFAULT_EXPIRED_MESSAGES_CHECKER_CRON;
 
     @JsonView(MutablePropertiesView.class)

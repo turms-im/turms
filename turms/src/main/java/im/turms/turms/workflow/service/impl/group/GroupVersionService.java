@@ -19,6 +19,8 @@ package im.turms.turms.workflow.service.impl.group;
 
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import im.turms.common.exception.TurmsBusinessException;
+import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
 import im.turms.turms.workflow.dao.domain.GroupVersion;
@@ -29,7 +31,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
@@ -42,7 +43,6 @@ import java.util.Set;
  * @author James Chen
  */
 @Service
-@Validated
 public class GroupVersionService {
     private final ReactiveMongoTemplate mongoTemplate;
 
@@ -51,36 +51,66 @@ public class GroupVersionService {
     }
 
     public Mono<Date> queryInfoVersion(@NotNull Long groupId) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query(Criteria.where(DaoConstant.ID_FIELD_NAME).is(groupId));
         query.fields().include(GroupVersion.Fields.INFO);
         return mongoTemplate.findOne(query, GroupVersion.class, GroupVersion.COLLECTION_NAME).map(GroupVersion::getInfo);
     }
 
     public Mono<Date> queryMembersVersion(@NotNull Long groupId) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query(Criteria.where(DaoConstant.ID_FIELD_NAME).is(groupId));
         query.fields().include(GroupVersion.Fields.MEMBERS);
         return mongoTemplate.findOne(query, GroupVersion.class, GroupVersion.COLLECTION_NAME).map(GroupVersion::getMembers);
     }
 
     public Mono<Date> queryBlacklistVersion(@NotNull Long groupId) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query(Criteria.where(DaoConstant.ID_FIELD_NAME).is(groupId));
         query.fields().include(GroupVersion.Fields.BLACKLIST);
         return mongoTemplate.findOne(query, GroupVersion.class, GroupVersion.COLLECTION_NAME).map(GroupVersion::getBlacklist);
     }
 
     public Mono<Date> queryGroupJoinRequestsVersion(@NotNull Long groupId) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query(Criteria.where(DaoConstant.ID_FIELD_NAME).is(groupId));
         query.fields().include(GroupVersion.Fields.JOIN_REQUESTS);
         return mongoTemplate.findOne(query, GroupVersion.class, GroupVersion.COLLECTION_NAME).map(GroupVersion::getJoinRequests);
     }
 
     public Mono<Date> queryGroupJoinQuestionsVersion(@NotNull Long groupId) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query(Criteria.where(DaoConstant.ID_FIELD_NAME).is(groupId));
         query.fields().include(GroupVersion.Fields.JOIN_QUESTIONS);
         return mongoTemplate.findOne(query, GroupVersion.class, GroupVersion.COLLECTION_NAME).map(GroupVersion::getJoinQuestions);
     }
 
     public Mono<Date> queryGroupInvitationsVersion(@NotNull Long groupId) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query(Criteria.where(DaoConstant.ID_FIELD_NAME).is(groupId));
         query.fields().include(GroupVersion.Fields.INVITATIONS);
         return mongoTemplate.findOne(query, GroupVersion.class, GroupVersion.COLLECTION_NAME).map(GroupVersion::getInvitations);
@@ -93,6 +123,11 @@ public class GroupVersionService {
             boolean updateBlacklist,
             boolean joinRequests,
             boolean joinQuestions) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(groupId));
         Update update = new Update();
         Date now = new Date();
@@ -148,6 +183,12 @@ public class GroupVersionService {
     }
 
     public Mono<Boolean> updateSpecificVersion(@NotNull Long groupId, @NotNull String field) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+            AssertUtil.notNull(field, "field");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(groupId));
         Update update = new Update().set(field, new Date());
         return mongoTemplate.updateFirst(query, update, GroupVersion.class, GroupVersion.COLLECTION_NAME)
@@ -155,12 +196,22 @@ public class GroupVersionService {
     }
 
     public Mono<Boolean> updateSpecificVersion(@NotNull String field) {
+        try {
+            AssertUtil.notNull(field, "field");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Update update = new Update().set(field, new Date());
         return mongoTemplate.updateMulti(new Query(), update, GroupVersion.class, GroupVersion.COLLECTION_NAME)
                 .map(UpdateResult::wasAcknowledged);
     }
 
     public Mono<Boolean> updateSpecificVersion(@Nullable Set<Long> groupIds, @NotNull String field) {
+        try {
+            AssertUtil.notNull(field, "field");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = QueryBuilder
                 .newBuilder()
                 .addInIfNotNull(DaoConstant.ID_FIELD_NAME, groupIds)
@@ -171,11 +222,22 @@ public class GroupVersionService {
     }
 
     public Mono<Boolean> upsert(@NotNull Long groupId, @NotNull Date timestamp) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+            AssertUtil.notNull(timestamp, "timestamp");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         GroupVersion version = new GroupVersion(groupId, timestamp, timestamp, timestamp, timestamp, timestamp, timestamp);
         return mongoTemplate.insert(version, GroupVersion.COLLECTION_NAME).thenReturn(true);
     }
 
     public Mono<Boolean> delete(@NotEmpty Set<Long> groupIds, @Nullable ReactiveMongoOperations operations) {
+        try {
+            AssertUtil.notEmpty(groupIds, "groupIds");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(groupIds));
         ReactiveMongoOperations mongoOperations = operations != null ? operations : mongoTemplate;
         return mongoOperations.remove(query, GroupVersion.class, GroupVersion.COLLECTION_NAME)

@@ -27,10 +27,11 @@ import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.manager.PasswordManager;
+import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.bo.DateRange;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.constant.MetricsConstant;
-import im.turms.turms.constraint.ProfileAccessConstraint;
+import im.turms.turms.constraint.ValidProfileAccess;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
 import im.turms.turms.workflow.dao.builder.UpdateBuilder;
 import im.turms.turms.workflow.service.impl.group.GroupMemberService;
@@ -38,6 +39,7 @@ import im.turms.turms.workflow.service.impl.statistics.MetricsService;
 import im.turms.turms.workflow.service.impl.user.onlineuser.SessionService;
 import im.turms.turms.workflow.service.impl.user.relationship.UserRelationshipGroupService;
 import im.turms.turms.workflow.service.impl.user.relationship.UserRelationshipService;
+import im.turms.turms.workflow.service.util.DomainConstraintUtil;
 import io.micrometer.core.instrument.Counter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
@@ -46,7 +48,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -60,7 +61,6 @@ import java.util.*;
  * @author James Chen
  */
 @Component
-@Validated
 public class UserService {
 
     private final GroupMemberService groupMemberService;
@@ -98,19 +98,19 @@ public class UserService {
         deletedUsersCounter = metricsService.getRegistry().counter(MetricsConstant.DELETED_USERS_COUNTER_NAME);
     }
 
-    public Mono<Boolean> isActiveAndNotDeleted(@NotNull Long userId) {
-        Query query = new Query()
-                .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(userId))
-                .addCriteria(Criteria.where(User.Fields.IS_ACTIVE).is(true))
-                .addCriteria(Criteria.where(User.Fields.DELETION_DATE).is(null));
-        return mongoTemplate.exists(query, User.class, User.COLLECTION_NAME);
-    }
-
     public Mono<Boolean> isAllowedToSendMessageToTarget(
             @NotNull Boolean isGroupMessage,
             @NotNull Boolean isSystemMessage,
             @NotNull Long requesterId,
             @NotNull Long targetId) {
+        try {
+            AssertUtil.notNull(isGroupMessage, "isGroupMessage");
+            AssertUtil.notNull(isSystemMessage, "isSystemMessage");
+            AssertUtil.notNull(requesterId, "requesterId");
+            AssertUtil.notNull(targetId, "targetId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (isSystemMessage) {
             return Mono.just(true);
         }
@@ -140,10 +140,16 @@ public class UserService {
             @Nullable String rawPassword,
             @Nullable String name,
             @Nullable String intro,
-            @Nullable @ProfileAccessConstraint ProfileAccessStrategy profileAccess,
+            @Nullable @ValidProfileAccess ProfileAccessStrategy profileAccess,
             @Nullable Long permissionGroupId,
             @Nullable @PastOrPresent Date registrationDate,
             @Nullable Boolean isActive) {
+        try {
+            DomainConstraintUtil.validProfileAccess(profileAccess);
+            AssertUtil.pastOrPresent(registrationDate, "registrationDate");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Date now = new Date();
         id = id != null ? id : node.nextId(ServiceType.USER);
         String password = rawPassword != null
@@ -188,6 +194,12 @@ public class UserService {
     public Mono<Boolean> isAllowToQueryUserProfile(
             @NotNull Long requesterId,
             @NotNull Long targetUserId) {
+        try {
+            AssertUtil.notNull(requesterId, "requesterId");
+            AssertUtil.notNull(targetUserId, "targetUserId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(targetUserId));
         query.fields().include(User.Fields.PROFILE_ACCESS);
         return mongoTemplate.findOne(query, User.class, User.COLLECTION_NAME)
@@ -210,6 +222,11 @@ public class UserService {
             @NotNull Long requesterId,
             @NotNull Long userId,
             boolean queryDeletedRecords) {
+        try {
+            AssertUtil.notNull(userId, "userId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return authAndQueryUsersProfiles(requesterId, Set.of(userId), queryDeletedRecords).singleOrEmpty();
     }
 
@@ -217,6 +234,12 @@ public class UserService {
             @NotNull Long requesterId,
             @NotEmpty Set<Long> userIds,
             boolean queryDeletedRecords) {
+        try {
+            AssertUtil.notNull(requesterId, "requesterId");
+            AssertUtil.notEmpty(userIds, "userIds");
+        } catch (TurmsBusinessException e) {
+            return Flux.error(e);
+        }
         List<Mono<Boolean>> monos = new ArrayList<>(userIds.size());
         for (Long userId : userIds) {
             monos.add(isAllowToQueryUserProfile(requesterId, userId)
@@ -234,6 +257,11 @@ public class UserService {
     }
 
     public Flux<User> queryUsersProfiles(@NotEmpty Set<Long> userIds, boolean queryDeletedRecords) {
+        try {
+            AssertUtil.notEmpty(userIds, "userIds");
+        } catch (TurmsBusinessException e) {
+            return Flux.error(e);
+        }
         Query query = QueryBuilder
                 .newBuilder()
                 .add(Criteria.where(DaoConstant.ID_FIELD_NAME).in(userIds))
@@ -251,6 +279,11 @@ public class UserService {
     }
 
     public Mono<Long> queryUserPermissionGroupId(@NotNull Long userId) {
+        try {
+            AssertUtil.notNull(userId, "userId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(userId));
         query.fields().include(User.Fields.PERMISSION_GROUP_ID);
         return mongoTemplate.findOne(query, User.class, User.COLLECTION_NAME)
@@ -260,6 +293,11 @@ public class UserService {
     public Mono<Boolean> deleteUsers(
             @NotEmpty Set<Long> userIds,
             @Nullable Boolean deleteLogically) {
+        try {
+            AssertUtil.notEmpty(userIds, "userIds");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(userIds));
         Mono<Boolean> deleteOrUpdateMono;
         if (deleteLogically == null) {
@@ -298,6 +336,11 @@ public class UserService {
     }
 
     public Mono<Boolean> userExists(@NotNull Long userId, boolean queryDeletedRecords) {
+        try {
+            AssertUtil.notNull(userId, "userId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = QueryBuilder
                 .newBuilder()
                 .add(Criteria.where(DaoConstant.ID_FIELD_NAME).is(userId))
@@ -311,10 +354,15 @@ public class UserService {
             @Nullable String rawPassword,
             @Nullable String name,
             @Nullable String intro,
-            @Nullable @ProfileAccessConstraint ProfileAccessStrategy profileAccessStrategy,
+            @Nullable @ValidProfileAccess ProfileAccessStrategy profileAccessStrategy,
             @Nullable Long permissionGroupId,
             @Nullable Boolean isActive,
             @Nullable @PastOrPresent Date registrationDate) {
+        try {
+            AssertUtil.notNull(userId, "userId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return updateUsers(Collections.singleton(userId),
                 rawPassword,
                 name,
@@ -387,10 +435,17 @@ public class UserService {
             @Nullable String rawPassword,
             @Nullable String name,
             @Nullable String intro,
-            @Nullable @ProfileAccessConstraint ProfileAccessStrategy profileAccessStrategy,
+            @Nullable @ValidProfileAccess ProfileAccessStrategy profileAccessStrategy,
             @Nullable Long permissionGroupId,
             @Nullable @PastOrPresent Date registrationDate,
             @Nullable Boolean isActive) {
+        try {
+            AssertUtil.notEmpty(userIds, "userIds");
+            DomainConstraintUtil.validProfileAccess(profileAccessStrategy);
+            AssertUtil.pastOrPresent(registrationDate, "registrationDate");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (Validator.areAllFalsy(rawPassword,
                 name,
                 intro,
@@ -425,6 +480,14 @@ public class UserService {
                         return Mono.just(false);
                     }
                 });
+    }
+
+    private Mono<Boolean> isActiveAndNotDeleted(@NotNull Long userId) {
+        Query query = new Query()
+                .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(userId))
+                .addCriteria(Criteria.where(User.Fields.IS_ACTIVE).is(true))
+                .addCriteria(Criteria.where(User.Fields.DELETION_DATE).is(null));
+        return mongoTemplate.exists(query, User.class, User.COLLECTION_NAME);
     }
 
 }

@@ -29,8 +29,9 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.stereotype.Component;
 
 /**
- * Don't use @Validated because it has a noticeable impact on performance (CglibAopProxy)
- * so we disable it and don't validate properties
+ * Don't use @Validated and hibernate-validator because it has a
+ * noticeable impact on performance (CglibAopProxy + Reflection)
+ * so we validate properties manually.
  *
  * @author James Chen
  */

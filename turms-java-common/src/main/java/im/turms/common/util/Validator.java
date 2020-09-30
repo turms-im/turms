@@ -46,9 +46,9 @@ public class Validator {
         }
     }
 
-    public static void throwIfAllFalsy(@NotEmpty Object... array) {
+    public static void throwIfAllFalsy(String message, @NotEmpty Object... array) {
         if (areAllFalsy(array)) {
-            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The optional values cannot be all falsy");
+            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, message);
         }
     }
 

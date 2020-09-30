@@ -22,7 +22,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.SetMultimap;
 import im.turms.common.constant.DeviceType;
 import im.turms.server.common.cluster.node.Node;
-import im.turms.server.common.constraint.DeviceTypeConstraint;
+import im.turms.server.common.constraint.ValidDeviceType;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.constant.LoginConflictStrategy;
 import im.turms.server.common.property.constant.SimultaneousLoginStrategy;
@@ -68,7 +68,7 @@ public class UserSimultaneousLoginService {
         forbiddenDeviceTypes = newForbiddenDeviceTypesFromStrategy(strategy);
     }
 
-    public Set<DeviceType> getConflictedDeviceTypes(@NotNull @DeviceTypeConstraint DeviceType deviceType) {
+    public Set<DeviceType> getConflictedDeviceTypes(@NotNull @ValidDeviceType DeviceType deviceType) {
         return exclusiveDeviceTypes.get(deviceType);
     }
 
@@ -153,7 +153,7 @@ public class UserSimultaneousLoginService {
 
     private void addDeviceTypeConflictedWithAllTypes(
             Multimap<DeviceType, DeviceType> exclusiveDeviceTypes,
-            @NotNull @DeviceTypeConstraint DeviceType deviceType) {
+            @NotNull @ValidDeviceType DeviceType deviceType) {
         for (DeviceType type : DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES) {
             addConflictedDeviceTypes(exclusiveDeviceTypes, deviceType, type);
         }
@@ -161,8 +161,8 @@ public class UserSimultaneousLoginService {
 
     private void addConflictedDeviceTypes(
             Multimap<DeviceType, DeviceType> exclusiveDeviceTypes,
-            @NotNull @DeviceTypeConstraint DeviceType deviceTypeOne,
-            @NotNull @DeviceTypeConstraint DeviceType deviceTypeTwo) {
+            @NotNull @ValidDeviceType DeviceType deviceTypeOne,
+            @NotNull @ValidDeviceType DeviceType deviceTypeTwo) {
         exclusiveDeviceTypes.put(deviceTypeOne, deviceTypeTwo);
         exclusiveDeviceTypes.put(deviceTypeTwo, deviceTypeOne);
     }

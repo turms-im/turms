@@ -15,28 +15,17 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.service.impl;
+package im.turms.turms.constraint;
 
-import im.turms.server.common.rpc.service.IStatisticsService;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.stereotype.Service;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author James Chen
  */
-@Service
-@Log4j2
-public class StatisticsService implements IStatisticsService {
-
-    private final SessionService sessionService;
-
-    public StatisticsService(SessionService sessionService) {
-        this.sessionService = sessionService;
-    }
-
-    @Override
-    public int countLocalOnlineUsers() {
-        return sessionService.countLocalOnlineUsers();
-    }
-
+@Target({ElementType.PARAMETER, ElementType.TYPE_USE})
+@Retention(RetentionPolicy.SOURCE)
+public @interface ValidUserRelationshipGroupKey {
 }

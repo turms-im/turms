@@ -30,15 +30,17 @@ import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.manager.TrivialTaskManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
+import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.bo.DateRange;
 import im.turms.turms.constant.DaoConstant;
-import im.turms.turms.constraint.RequestStatusConstraint;
-import im.turms.turms.constraint.ResponseActionConstraint;
+import im.turms.turms.constraint.ValidRequestStatus;
+import im.turms.turms.constraint.ValidResponseAction;
 import im.turms.turms.util.ProtoUtil;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
 import im.turms.turms.workflow.dao.builder.UpdateBuilder;
 import im.turms.turms.workflow.dao.domain.UserFriendRequest;
 import im.turms.turms.workflow.service.impl.user.UserVersionService;
+import im.turms.turms.workflow.service.util.DomainConstraintUtil;
 import im.turms.turms.workflow.service.util.RequestStatusUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
@@ -47,7 +49,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
@@ -64,7 +65,6 @@ import java.util.Set;
  * @author James Chen
  */
 @Service
-@Validated
 public class UserFriendRequestService {
 
     private final Node node;
@@ -126,6 +126,12 @@ public class UserFriendRequestService {
     public Mono<Boolean> hasPendingFriendRequest(
             @NotNull Long requesterId,
             @NotNull Long recipientId) {
+        try {
+            AssertUtil.notNull(requesterId, "requesterId");
+            AssertUtil.notNull(recipientId, "recipientId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Date now = new Date();
         Query query = new Query()
                 .addCriteria(Criteria.where(UserFriendRequest.Fields.REQUESTER_ID).is(requesterId))
@@ -140,16 +146,22 @@ public class UserFriendRequestService {
             @NotNull Long requesterId,
             @NotNull Long recipientId,
             @NotNull String content,
-            @Nullable @RequestStatusConstraint RequestStatus status,
+            @Nullable @ValidRequestStatus RequestStatus status,
             @Nullable @PastOrPresent Date creationDate,
             @Nullable @PastOrPresent Date responseDate,
             @Nullable Date expirationDate,
             @Nullable String reason) {
-        if (status == RequestStatus.UNRECOGNIZED || requesterId.equals(recipientId)) {
-            String failedReason = status == RequestStatus.UNRECOGNIZED ?
-                    "The request status must not be UNRECOGNIZED" :
-                    "The requester ID must not equal the recipient ID";
-            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, failedReason);
+        try {
+            AssertUtil.notNull(requesterId, "requesterId");
+            AssertUtil.notNull(recipientId, "recipientId");
+            AssertUtil.notNull(content, "content");
+            validFriendRequestContentLength(content);
+            DomainConstraintUtil.validRequestStatus(status);
+            AssertUtil.pastOrPresent(creationDate, "creationDate");
+            AssertUtil.pastOrPresent(responseDate, "responseDate");
+            AssertUtil.state(!requesterId.equals(recipientId), "The requester ID must not equal to the recipient ID");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
         }
         id = id != null ? id : node.nextId(ServiceType.USER_FRIEND_REQUEST);
         Date now = new Date();
@@ -189,19 +201,18 @@ public class UserFriendRequestService {
     public Mono<UserFriendRequest> authAndCreateFriendRequest(
             @NotNull Long requesterId,
             @NotNull Long recipientId,
-            @NotNull String content,
+            @Nullable String content,
             @NotNull @PastOrPresent Date creationDate) {
-        int contentLimit = node.getSharedProperties()
-                .getService()
-                .getUser()
-                .getFriendRequest()
-                .getContentLimit();
-        boolean hasExceededLimit = contentLimit != 0 && content.length() > contentLimit;
-        if (hasExceededLimit || requesterId.equals(recipientId)) {
-            String reason = hasExceededLimit
-                    ? "The content has exceeded the character limit: " + contentLimit
-                    : "The requester ID must not equal the recipient ID";
-            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, reason);
+        try {
+            AssertUtil.notNull(requesterId, "requesterId");
+            AssertUtil.notNull(recipientId, "recipientId");
+            AssertUtil.notNull(content, "content");
+            validFriendRequestContentLength(content);
+            AssertUtil.notNull(creationDate, "creationDate");
+            AssertUtil.pastOrPresent(creationDate, "creationDate");
+            AssertUtil.state(!requesterId.equals(recipientId), "The requester ID must not equal to the recipient ID");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
         }
         // if requester is stranger for recipient, requester isn't blocked and already a friend.
         return userRelationshipService.isStranger(recipientId, requesterId)
@@ -216,9 +227,12 @@ public class UserFriendRequestService {
                         } else {
                             requestExistsMono = hasPendingOrDeclinedOrIgnoredOrExpiredRequest(requesterId, recipientId);
                         }
-                        return requestExistsMono.flatMap(requestExists -> requestExists != null && !requestExists
-                                ? createFriendRequest(null, requesterId, recipientId, content, RequestStatus.PENDING, creationDate, null, null, null)
-                                : Mono.error(TurmsBusinessException.get(TurmsStatusCode.FRIEND_REQUEST_HAS_EXISTED)));
+                        return requestExistsMono.flatMap(requestExists -> {
+                            String finalContent = content != null ? content : "";
+                            return requestExists != null && !requestExists
+                                    ? createFriendRequest(null, requesterId, recipientId, finalContent, RequestStatus.PENDING, creationDate, null, null, null)
+                                    : Mono.error(TurmsBusinessException.get(TurmsStatusCode.FRIEND_REQUEST_HAS_EXISTED));
+                        });
                     } else {
                         return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED));
                     }
@@ -228,6 +242,12 @@ public class UserFriendRequestService {
     private Mono<Boolean> hasPendingOrDeclinedOrIgnoredOrExpiredRequest(
             @NotNull Long requesterId,
             @NotNull Long recipientId) {
+        try {
+            AssertUtil.notNull(requesterId, "requesterId");
+            AssertUtil.notNull(recipientId, "recipientId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         // Do not need to check expirationDate because both PENDING status or EXPIRED status has been used
         Query query = new Query()
                 .addCriteria(Criteria.where(UserFriendRequest.Fields.REQUESTER_ID).is(requesterId))
@@ -239,14 +259,16 @@ public class UserFriendRequestService {
 
     public Mono<Boolean> updatePendingFriendRequestStatus(
             @NotNull Long requestId,
-            @NotNull @RequestStatusConstraint RequestStatus requestStatus,
+            @NotNull @ValidRequestStatus RequestStatus requestStatus,
             @Nullable String reason,
             @Nullable ReactiveMongoOperations operations) {
-        if (requestStatus == RequestStatus.UNRECOGNIZED || requestStatus == RequestStatus.PENDING) {
-            String failedReason = requestStatus == RequestStatus.UNRECOGNIZED ?
-                    "The request status must not be UNRECOGNIZED" :
-                    "The request status must not be PENDING";
-            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, failedReason);
+        try {
+            AssertUtil.notNull(requestId, "requestId");
+            AssertUtil.notNull(requestStatus, "requestStatus");
+            DomainConstraintUtil.validRequestStatus(requestStatus);
+            AssertUtil.state(requestStatus != RequestStatus.PENDING, "The request status must not be PENDING");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
         }
         Query query = new Query()
                 .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(requestId))
@@ -267,22 +289,29 @@ public class UserFriendRequestService {
     }
 
     public Mono<Boolean> updateFriendRequests(
-            @NotEmpty Set<Long> ids,
+            @NotEmpty Set<Long> requestIds,
             @Nullable Long requesterId,
             @Nullable Long recipientId,
             @Nullable String content,
-            @Nullable @RequestStatusConstraint RequestStatus status,
+            @Nullable @ValidRequestStatus RequestStatus status,
             @Nullable String reason,
             @Nullable @PastOrPresent Date creationDate,
             @Nullable @PastOrPresent Date responseDate,
             @Nullable Date expirationDate) {
+        try {
+            AssertUtil.notEmpty(requestIds, "requestIds");
+            validFriendRequestContentLength(content);
+            DomainConstraintUtil.validRequestStatus(status);
+            AssertUtil.pastOrPresent(creationDate, "creationDate");
+            AssertUtil.pastOrPresent(responseDate, "responseDate");
+            AssertUtil.state(requesterId == null || !requesterId.equals(recipientId), "The requester ID must not equal the recipient ID");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (Validator.areAllNull(requesterId, recipientId, content, status, reason, creationDate, responseDate, expirationDate)) {
             return Mono.just(true);
         }
-        if (requesterId != null && requesterId.equals(recipientId)) {
-            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The requester ID must not equal the recipient ID");
-        }
-        Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(ids));
+        Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(requestIds));
         Update update = UpdateBuilder
                 .newBuilder()
                 .setIfNotNull(UserFriendRequest.Fields.REQUESTER_ID, requesterId)
@@ -298,6 +327,11 @@ public class UserFriendRequestService {
     }
 
     public Mono<Long> queryRecipientId(@NotNull Long requestId) {
+        try {
+            AssertUtil.notNull(requestId, "requestId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(requestId));
         query.fields().include(UserFriendRequest.Fields.RECIPIENT_ID);
         return mongoTemplate.findOne(query, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME)
@@ -305,6 +339,11 @@ public class UserFriendRequestService {
     }
 
     public Mono<UserFriendRequest> queryRequesterAndRecipient(@NotNull Long requestId) {
+        try {
+            AssertUtil.notNull(requestId, "requestId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(requestId));
         query.fields()
                 .include(UserFriendRequest.Fields.REQUESTER_ID)
@@ -315,33 +354,37 @@ public class UserFriendRequestService {
     public Mono<Boolean> handleFriendRequest(
             @NotNull Long friendRequestId,
             @NotNull Long requesterId,
-            @NotNull @ResponseActionConstraint ResponseAction action,
+            @NotNull @ValidResponseAction ResponseAction action,
             @Nullable String reason) {
-        if (action != ResponseAction.UNRECOGNIZED) {
-            return queryRequesterAndRecipient(friendRequestId)
-                    .flatMap(request -> {
-                        if (!request.getRecipientId().equals(requesterId)) {
-                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED));
-                        }
-                        switch (action) {
-                            case ACCEPT:
-                                return mongoTemplate.inTransaction()
-                                        .execute(operations -> updatePendingFriendRequestStatus(friendRequestId, RequestStatus.ACCEPTED, reason, operations)
-                                                .then(userRelationshipService.friendTwoUsers(request.getRequesterId(), requesterId, operations))
-                                                .thenReturn(true))
-                                        .retryWhen(DaoConstant.TRANSACTION_RETRY)
-                                        .singleOrEmpty();
-                            case IGNORE:
-                                return updatePendingFriendRequestStatus(friendRequestId, RequestStatus.IGNORED, reason, null);
-                            case DECLINE:
-                                return updatePendingFriendRequestStatus(friendRequestId, RequestStatus.DECLINED, reason, null);
-                            default:
-                                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The response action must not be UNRECOGNIZED"));
-                        }
-                    });
-        } else {
-            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The response action must not be UNRECOGNIZED");
+        try {
+            AssertUtil.notNull(friendRequestId, "friendRequestId");
+            AssertUtil.notNull(requesterId, "requesterId");
+            AssertUtil.notNull(action, "action");
+            DomainConstraintUtil.validResponseAction(action);
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
         }
+        return queryRequesterAndRecipient(friendRequestId)
+                .flatMap(request -> {
+                    if (!request.getRecipientId().equals(requesterId)) {
+                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED));
+                    }
+                    switch (action) {
+                        case ACCEPT:
+                            return mongoTemplate.inTransaction()
+                                    .execute(operations -> updatePendingFriendRequestStatus(friendRequestId, RequestStatus.ACCEPTED, reason, operations)
+                                            .then(userRelationshipService.friendTwoUsers(request.getRequesterId(), requesterId, operations))
+                                            .thenReturn(true))
+                                    .retryWhen(DaoConstant.TRANSACTION_RETRY)
+                                    .singleOrEmpty();
+                        case IGNORE:
+                            return updatePendingFriendRequestStatus(friendRequestId, RequestStatus.IGNORED, reason, null);
+                        case DECLINE:
+                            return updatePendingFriendRequestStatus(friendRequestId, RequestStatus.DECLINED, reason, null);
+                        default:
+                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The response action must not be UNRECOGNIZED"));
+                    }
+                });
     }
 
     public Mono<UserFriendRequestsWithVersion> queryFriendRequestsWithVersion(
@@ -379,12 +422,22 @@ public class UserFriendRequestService {
     }
 
     public Flux<UserFriendRequest> queryFriendRequestsByRecipientId(@NotNull Long recipientId) {
+        try {
+            AssertUtil.notNull(recipientId, "recipientId");
+        } catch (TurmsBusinessException e) {
+            return Flux.error(e);
+        }
         Query query = new Query()
                 .addCriteria(Criteria.where(UserFriendRequest.Fields.RECIPIENT_ID).is(recipientId));
         return queryExpirableData(query);
     }
 
     public Flux<UserFriendRequest> queryFriendRequestsByRequesterId(@NotNull Long requesterId) {
+        try {
+            AssertUtil.notNull(requesterId, "requesterId");
+        } catch (TurmsBusinessException e) {
+            return Flux.error(e);
+        }
         Query query = new Query()
                 .addCriteria(Criteria.where(UserFriendRequest.Fields.REQUESTER_ID).is(requesterId));
         return queryExpirableData(query);
@@ -453,6 +506,19 @@ public class UserFriendRequestService {
                 .addBetweenIfNotNull(UserFriendRequest.Fields.EXPIRATION_DATE, expirationDateRange)
                 .buildQuery();
         return mongoTemplate.count(query, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME);
+    }
+
+    private void validFriendRequestContentLength(@Nullable String content) {
+        if (content != null) {
+            int contentLimit = node.getSharedProperties()
+                    .getService()
+                    .getUser()
+                    .getFriendRequest()
+                    .getContentLimit();
+            if (contentLimit > -1) {
+                AssertUtil.max(content.length(), "content", contentLimit);
+            }
+        }
     }
 
 }

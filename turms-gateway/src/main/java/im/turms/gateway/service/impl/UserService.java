@@ -17,15 +17,16 @@
 
 package im.turms.gateway.service.impl;
 
+import im.turms.common.exception.TurmsBusinessException;
 import im.turms.gateway.constant.DomainFieldName;
 import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.manager.PasswordManager;
+import im.turms.server.common.util.AssertUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
@@ -50,7 +51,11 @@ public class UserService {
     public Mono<Boolean> authenticate(
             @NotNull Long userId,
             @Nullable String rawPassword) {
-        Assert.notNull(userId, "userId must not be null");
+        try {
+            AssertUtil.notNull(userId, "userId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query()
                 .addCriteria(Criteria.where(DomainFieldName.ID_FIELD_NAME).is(userId));
         query.fields().include(User.Fields.PASSWORD);
@@ -60,7 +65,11 @@ public class UserService {
     }
 
     public Mono<Boolean> isActiveAndNotDeleted(@NotNull Long userId) {
-        Assert.notNull(userId, "userId must not be null");
+        try {
+            AssertUtil.notNull(userId, "userId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query()
                 .addCriteria(Criteria.where(DomainFieldName.ID_FIELD_NAME).is(userId))
                 .addCriteria(Criteria.where(User.Fields.IS_ACTIVE).is(true))

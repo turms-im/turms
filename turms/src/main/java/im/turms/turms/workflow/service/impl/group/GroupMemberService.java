@@ -27,16 +27,18 @@ import im.turms.common.util.Validator;
 import im.turms.server.common.bo.session.UserSessionsStatus;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.service.session.UserStatusService;
+import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.bo.DateRange;
 import im.turms.turms.bo.InvitableAndInvitationStrategy;
-import im.turms.turms.constraint.GroupMemberKeyConstraint;
-import im.turms.turms.constraint.GroupMemberRoleConstraint;
+import im.turms.turms.constraint.ValidGroupMemberKey;
+import im.turms.turms.constraint.ValidGroupMemberRole;
 import im.turms.turms.util.MapUtil;
 import im.turms.turms.util.ProtoUtil;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
 import im.turms.turms.workflow.dao.builder.UpdateBuilder;
 import im.turms.turms.workflow.dao.domain.GroupBlacklistedUser;
 import im.turms.turms.workflow.dao.domain.GroupMember;
+import im.turms.turms.workflow.service.util.DomainConstraintUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
@@ -44,7 +46,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
@@ -63,7 +64,6 @@ import java.util.stream.Collectors;
  * @author James Chen
  */
 @Service
-@Validated
 public class GroupMemberService {
 
     private final Node node;
@@ -88,11 +88,20 @@ public class GroupMemberService {
     public Mono<GroupMember> addGroupMember(
             @NotNull Long groupId,
             @NotNull Long userId,
-            @NotNull @GroupMemberRoleConstraint GroupMemberRole groupMemberRole,
+            @NotNull @ValidGroupMemberRole GroupMemberRole groupMemberRole,
             @Nullable String name,
             @Nullable @PastOrPresent Date joinDate,
             @Nullable Date muteEndDate,
             @Nullable ReactiveMongoOperations operations) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+            AssertUtil.notNull(userId, "userId");
+            AssertUtil.notNull(groupMemberRole, "groupMemberRole");
+            DomainConstraintUtil.validGroupMemberRole(groupMemberRole);
+            AssertUtil.pastOrPresent(joinDate, "joinDate");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (joinDate == null) {
             joinDate = new Date();
         }
@@ -113,10 +122,15 @@ public class GroupMemberService {
             @NotNull Long requesterId,
             @NotNull Long groupId,
             @NotNull Long userId,
-            @NotNull @GroupMemberRoleConstraint GroupMemberRole groupMemberRole,
+            @NotNull @ValidGroupMemberRole GroupMemberRole groupMemberRole,
             @Nullable String name,
             @Nullable Date muteEndDate,
             @Nullable ReactiveMongoOperations operations) {
+        try {
+            AssertUtil.notNull(userId, "userId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return isAllowedToInviteOrAdd(groupId, requesterId, groupMemberRole)
                 .flatMap(allowed -> {
                     if (allowed.isInvitable()) {
@@ -137,6 +151,13 @@ public class GroupMemberService {
             @NotNull Long deleteMemberId,
             @Nullable Long successorId,
             @Nullable Boolean quitAfterTransfer) {
+        try {
+            AssertUtil.notNull(requesterId, "requesterId");
+            AssertUtil.notNull(groupId, "groupId");
+            AssertUtil.notNull(deleteMemberId, "deleteMemberId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (successorId != null) {
             quitAfterTransfer = quitAfterTransfer != null ? quitAfterTransfer : false;
             return groupService.authAndTransferGroupOwnership(
@@ -160,6 +181,12 @@ public class GroupMemberService {
             @NotEmpty Set<Long> deleteMemberIds,
             @Nullable ReactiveMongoOperations operations,
             boolean updateGroupMembersVersion) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+            AssertUtil.notEmpty(deleteMemberIds, "deleteMemberIds");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query()
                 .addCriteria(Criteria.where(GroupMember.Fields.ID_GROUP_ID).is(groupId))
                 .addCriteria(Criteria.where(GroupMember.Fields.ID_USER_ID).in(deleteMemberIds));
@@ -180,11 +207,16 @@ public class GroupMemberService {
             @NotNull Long groupId,
             @NotNull Long memberId,
             @Nullable String name,
-            @Nullable @GroupMemberRoleConstraint GroupMemberRole role,
+            @Nullable @ValidGroupMemberRole GroupMemberRole role,
             @Nullable @PastOrPresent Date joinDate,
             @Nullable Date muteEndDate,
             @Nullable ReactiveMongoOperations operations,
             boolean updateGroupMembersVersion) {
+        try {
+            AssertUtil.notNull(memberId, "memberId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return updateGroupMembers(groupId, Set.of(memberId), name, role, joinDate, muteEndDate, operations, updateGroupMembersVersion);
     }
 
@@ -192,11 +224,19 @@ public class GroupMemberService {
             @NotNull Long groupId,
             @NotEmpty Set<Long> memberIds,
             @Nullable String name,
-            @Nullable @GroupMemberRoleConstraint GroupMemberRole role,
+            @Nullable @ValidGroupMemberRole GroupMemberRole role,
             @Nullable @PastOrPresent Date joinDate,
             @Nullable Date muteEndDate,
             @Nullable ReactiveMongoOperations operations,
             boolean updateGroupMembersVersion) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+            AssertUtil.notEmpty(memberIds, "memberIds");
+            DomainConstraintUtil.validGroupMemberRole(role);
+            AssertUtil.pastOrPresent(joinDate, "joinDate");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (Validator.areAllNull(name, role, joinDate, muteEndDate)) {
             return Mono.just(true);
         }
@@ -229,13 +269,23 @@ public class GroupMemberService {
     }
 
     public Mono<Boolean> updateGroupMembers(
-            @NotEmpty Set<GroupMember.@GroupMemberKeyConstraint Key> keys,
+            @NotEmpty Set<GroupMember.@ValidGroupMemberKey Key> keys,
             @Nullable String name,
-            @Nullable @GroupMemberRoleConstraint GroupMemberRole role,
+            @Nullable @ValidGroupMemberRole GroupMemberRole role,
             @Nullable @PastOrPresent Date joinDate,
             @Nullable Date muteEndDate,
             @Nullable ReactiveMongoOperations operations,
-            @NotNull Boolean updateGroupMembersVersion) {
+            boolean updateGroupMembersVersion) {
+        try {
+            AssertUtil.notEmpty(keys, "keys");
+            for (GroupMember.Key key : keys) {
+                DomainConstraintUtil.validGroupMemberKey(key);
+            }
+            DomainConstraintUtil.validGroupMemberRole(role);
+            AssertUtil.pastOrPresent(joinDate, "joinDate");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (Validator.areAllNull(name, role, joinDate, muteEndDate)) {
             return Mono.just(true);
         }
@@ -255,6 +305,11 @@ public class GroupMemberService {
     }
 
     public Flux<Long> getMembersIdsByGroupId(@NotNull Long groupId) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+        } catch (TurmsBusinessException e) {
+            return Flux.error(e);
+        }
         Query query = new Query()
                 .addCriteria(Criteria.where(GroupMember.Fields.ID_GROUP_ID).is(groupId));
         query.fields().include(GroupMember.Fields.ID_USER_ID);
@@ -263,6 +318,12 @@ public class GroupMemberService {
     }
 
     public Mono<Boolean> isGroupMember(@NotNull Long groupId, @NotNull Long userId) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+            AssertUtil.notNull(userId, "userId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query()
                 .addCriteria(Criteria.where(GroupMember.Fields.ID_GROUP_ID).is(groupId))
                 .addCriteria(Criteria.where(GroupMember.Fields.ID_USER_ID).is(userId));
@@ -270,6 +331,12 @@ public class GroupMemberService {
     }
 
     public Mono<Boolean> isBlacklisted(@NotNull Long groupId, @NotNull Long userId) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+            AssertUtil.notNull(userId, "userId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query()
                 .addCriteria(Criteria.where(GroupMember.Fields.ID_GROUP_ID).is(groupId))
                 .addCriteria(Criteria.where(GroupMember.Fields.ID_USER_ID).is(userId));
@@ -279,7 +346,13 @@ public class GroupMemberService {
     public Mono<InvitableAndInvitationStrategy> isAllowedToInviteOrAdd(
             @NotNull Long groupId,
             @NotNull Long inviterId,
-            @Nullable @GroupMemberRoleConstraint GroupMemberRole targetRole) {
+            @Nullable @ValidGroupMemberRole GroupMemberRole targetRole) {
+        try {
+            AssertUtil.notNull(inviterId, "inviterId");
+            DomainConstraintUtil.validGroupMemberRole(targetRole);
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return groupService.queryGroupType(groupId)
                 .flatMap(groupType -> {
                     GroupInvitationStrategy groupInvitationStrategy = groupType.getInvitationStrategy();
@@ -338,7 +411,9 @@ public class GroupMemberService {
                 });
     }
 
-    // Note that a blacklisted user is never a group member
+    /**
+     * Note that a blacklisted user is never a group member
+     */
     public Mono<Boolean> isAllowedToSendMessage(@NotNull Long groupId, @NotNull Long senderId) {
         return isGroupMember(groupId, senderId)
                 .flatMap(isGroupMember -> {
@@ -348,72 +423,62 @@ public class GroupMemberService {
                                     if (isGroupMuted) {
                                         return Mono.error(TurmsBusinessException.get(TurmsStatusCode.GROUP_HAS_BEEN_MUTED));
                                     } else {
-                                        if (node.getSharedProperties().getService().getMessage()
-                                                .isCheckIfTargetActiveAndNotDeleted()) {
-                                            return groupService.isGroupActiveAndNotDeleted(groupId)
-                                                    .flatMap(isGroupActiveAndNotDeleted -> {
-                                                        if (isGroupActiveAndNotDeleted) {
-                                                            return isMemberMuted(groupId, senderId)
-                                                                    .map(muted -> {
-                                                                        if (muted) {
-                                                                            throw TurmsBusinessException.get(TurmsStatusCode.MEMBER_HAS_BEEN_MUTED);
-                                                                        } else {
-                                                                            return true;
-                                                                        }
-                                                                    });
-                                                        } else {
-                                                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_ACTIVE));
-                                                        }
-                                                    });
-                                        } else {
-                                            return isMemberMuted(groupId, senderId)
-                                                    .map(muted -> {
-                                                        if (muted) {
-                                                            throw TurmsBusinessException.get(TurmsStatusCode.GROUP_HAS_BEEN_MUTED);
-                                                        } else {
-                                                            return true;
-                                                        }
-                                                    });
-                                        }
+                                        return node.getSharedProperties().getService().getMessage().isCheckIfTargetActiveAndNotDeleted()
+                                                ? groupService.isGroupActiveAndNotDeleted(groupId)
+                                                : Mono.just(true);
+                                    }
+                                })
+                                .flatMap(isGroupActiveAndNotDeleted -> {
+                                    if (isGroupActiveAndNotDeleted) {
+                                        return isMemberMuted(groupId, senderId)
+                                                .map(muted -> {
+                                                    if (muted) {
+                                                        throw TurmsBusinessException.get(TurmsStatusCode.MEMBER_HAS_BEEN_MUTED);
+                                                    } else {
+                                                        return true;
+                                                    }
+                                                });
+                                    } else {
+                                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_ACTIVE));
                                     }
                                 });
                     } else {
                         return groupService.queryGroupType(groupId)
                                 .flatMap(type -> {
                                     Boolean speakable = type.getGuestSpeakable();
-                                    if (speakable != null && speakable) {
-                                        return groupService.isGroupMuted(groupId)
-                                                .flatMap(isGroupMuted -> {
-                                                    if (isGroupMuted) {
-                                                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.GROUP_HAS_BEEN_MUTED));
+                                    return speakable != null && speakable
+                                            ? groupService.isGroupMuted(groupId)
+                                            : Mono.error(TurmsBusinessException.get(TurmsStatusCode.GUESTS_HAVE_BEEN_MUTED));
+                                })
+                                .switchIfEmpty(Mono.error(TurmsBusinessException.get(TurmsStatusCode.TYPE_NOT_EXISTS)))
+                                .flatMap(isGroupMuted -> isGroupMuted
+                                        ? Mono.error(TurmsBusinessException.get(TurmsStatusCode.GROUP_HAS_BEEN_MUTED))
+                                        : groupService.isGroupActiveAndNotDeleted(groupId))
+                                .flatMap(isGroupActiveAndNotDeleted -> {
+                                    if (isGroupActiveAndNotDeleted) {
+                                        return isBlacklisted(groupId, senderId)
+                                                .map(isBlacklisted -> {
+                                                    if (isBlacklisted) {
+                                                        throw TurmsBusinessException.get(TurmsStatusCode.USER_HAS_BEEN_BLACKLISTED);
                                                     } else {
-                                                        return groupService.isGroupActiveAndNotDeleted(groupId)
-                                                                .flatMap(isGroupActiveAndNotDeleted -> {
-                                                                    if (isGroupActiveAndNotDeleted) {
-                                                                        return isBlacklisted(groupId, senderId)
-                                                                                .map(isBlacklisted -> {
-                                                                                    if (isBlacklisted) {
-                                                                                        throw TurmsBusinessException.get(TurmsStatusCode.USER_HAS_BEEN_BLACKLISTED);
-                                                                                    } else {
-                                                                                        return true;
-                                                                                    }
-                                                                                });
-                                                                    } else {
-                                                                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_ACTIVE));
-                                                                    }
-                                                                });
+                                                        return true;
                                                     }
                                                 });
                                     } else {
-                                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.GUESTS_HAVE_BEEN_MUTED));
+                                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_ACTIVE));
                                     }
-                                })
-                                .switchIfEmpty(Mono.error(TurmsBusinessException.get(TurmsStatusCode.TYPE_NOT_EXISTS)));
+                                });
                     }
                 });
     }
 
     public Mono<Boolean> isMemberMuted(@NotNull Long groupId, @NotNull Long userId) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+            AssertUtil.notNull(userId, "userId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query()
                 .addCriteria(Criteria.where(GroupMember.Fields.ID_GROUP_ID).is(groupId))
                 .addCriteria(Criteria.where(GroupMember.Fields.ID_USER_ID).is(userId))
@@ -422,6 +487,12 @@ public class GroupMemberService {
     }
 
     public Mono<GroupMemberRole> queryGroupMemberRole(@NotNull Long userId, @NotNull Long groupId) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+            AssertUtil.notNull(userId, "userId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query()
                 .addCriteria(Criteria.where(GroupMember.Fields.ID_USER_ID).is(userId))
                 .addCriteria(Criteria.where(GroupMember.Fields.ID_GROUP_ID).is(groupId));
@@ -431,23 +502,23 @@ public class GroupMemberService {
     }
 
     public Mono<Boolean> isOwner(@NotNull Long userId, @NotNull Long groupId) {
-        Mono<GroupMemberRole> role = queryGroupMemberRole(userId, groupId);
-        return role.map(memberRole -> memberRole == GroupMemberRole.OWNER)
+        return queryGroupMemberRole(userId, groupId)
+                .map(memberRole -> memberRole == GroupMemberRole.OWNER)
                 .defaultIfEmpty(false);
     }
 
     public Mono<Boolean> isOwnerOrManager(@NotNull Long userId, @NotNull Long groupId) {
-        Mono<GroupMemberRole> role = queryGroupMemberRole(userId, groupId);
-        return role.map(memberRole -> memberRole == GroupMemberRole.OWNER
-                || memberRole == GroupMemberRole.MANAGER)
+        return queryGroupMemberRole(userId, groupId)
+                .map(memberRole -> memberRole == GroupMemberRole.OWNER
+                        || memberRole == GroupMemberRole.MANAGER)
                 .defaultIfEmpty(false);
     }
 
     public Mono<Boolean> isOwnerOrManagerOrMember(@NotNull Long userId, @NotNull Long groupId) {
-        Mono<GroupMemberRole> role = queryGroupMemberRole(userId, groupId);
-        return role.map(memberRole -> memberRole == GroupMemberRole.OWNER
-                || memberRole == GroupMemberRole.MANAGER
-                || memberRole == GroupMemberRole.MEMBER)
+        return queryGroupMemberRole(userId, groupId)
+                .map(memberRole -> memberRole == GroupMemberRole.OWNER
+                        || memberRole == GroupMemberRole.MANAGER
+                        || memberRole == GroupMemberRole.MEMBER)
                 .defaultIfEmpty(false);
     }
 
@@ -455,6 +526,11 @@ public class GroupMemberService {
             @NotEmpty Set<Long> userIds,
             @Nullable Integer page,
             @Nullable Integer size) {
+        try {
+            AssertUtil.notEmpty(userIds, "userIds");
+        } catch (TurmsBusinessException e) {
+            return Flux.error(e);
+        }
         Query query = QueryBuilder
                 .newBuilder()
                 .addInIfNotNull(GroupMember.Fields.ID_USER_ID, userIds)
@@ -465,6 +541,11 @@ public class GroupMemberService {
     }
 
     public Mono<Set<Long>> queryUsersJoinedGroupsMembersIds(@NotEmpty Set<Long> userIds) {
+        try {
+            AssertUtil.notEmpty(userIds, "userIds");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return queryUsersJoinedGroupsIds(userIds, null, null)
                 .collect(Collectors.toSet())
                 .flatMap(groupsIds -> groupsIds.isEmpty()
@@ -479,6 +560,11 @@ public class GroupMemberService {
     }
 
     public Flux<Long> queryGroupMembersIds(@NotNull Long groupId) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+        } catch (TurmsBusinessException e) {
+            return Flux.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(GroupMember.Fields.ID_GROUP_ID).is(groupId));
         query.fields().include(GroupMember.Fields.ID_USER_ID);
         return mongoTemplate.find(query, GroupMember.class, GroupMember.COLLECTION_NAME)
@@ -486,6 +572,11 @@ public class GroupMemberService {
     }
 
     public Flux<Long> queryGroupMembersIds(@NotEmpty Set<Long> groupIds) {
+        try {
+            AssertUtil.notEmpty(groupIds, "groupIds");
+        } catch (TurmsBusinessException e) {
+            return Flux.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(GroupMember.Fields.ID_GROUP_ID).in(groupIds));
         query.fields().include(GroupMember.Fields.ID_USER_ID);
         return mongoTemplate.find(query, GroupMember.class, GroupMember.COLLECTION_NAME)
@@ -495,11 +586,20 @@ public class GroupMemberService {
     public Flux<GroupMember> queryGroupsMembers(
             @Nullable Set<Long> groupIds,
             @Nullable Set<Long> userIds,
-            @Nullable Set<@GroupMemberRoleConstraint GroupMemberRole> roles,
+            @Nullable Set<@ValidGroupMemberRole GroupMemberRole> roles,
             @Nullable DateRange joinDateRange,
             @Nullable DateRange muteEndDateRange,
             @Nullable Integer page,
             @Nullable Integer size) {
+        if (roles != null) {
+            try {
+                for (GroupMemberRole role : roles) {
+                    DomainConstraintUtil.validGroupMemberRole(role);
+                }
+            } catch (TurmsBusinessException e) {
+                return Flux.error(e);
+            }
+        }
         Query query = QueryBuilder
                 .newBuilder()
                 .addInIfNotNull(GroupMember.Fields.ID_GROUP_ID, groupIds)
@@ -514,9 +614,18 @@ public class GroupMemberService {
     public Mono<Long> countMembers(
             @Nullable Set<Long> groupIds,
             @Nullable Set<Long> userIds,
-            @Nullable Set<@GroupMemberRoleConstraint GroupMemberRole> roles,
+            @Nullable Set<@ValidGroupMemberRole GroupMemberRole> roles,
             @Nullable DateRange joinDateRange,
             @Nullable DateRange muteEndDateRange) {
+        if (roles != null) {
+            try {
+                for (GroupMemberRole role : roles) {
+                    DomainConstraintUtil.validGroupMemberRole(role);
+                }
+            } catch (TurmsBusinessException e) {
+                return Mono.error(e);
+            }
+        }
         Query query = QueryBuilder
                 .newBuilder()
                 .addInIfNotNull(GroupMember.Fields.ID_GROUP_ID, groupIds)
@@ -543,6 +652,14 @@ public class GroupMemberService {
     }
 
     public Mono<Boolean> deleteGroupsMembers(@NotEmpty Set<GroupMember.Key> keys, boolean updateGroupsMembersVersion) {
+        try {
+            AssertUtil.notEmpty(keys, "keys");
+            for (GroupMember.Key key : keys) {
+                DomainConstraintUtil.validGroupMemberKey(key);
+            }
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return MapUtil.fluxMerge(map -> {
             for (GroupMember.Key key : keys) {
                 map.put(key.getGroupId(), key.getUserId());
@@ -550,22 +667,33 @@ public class GroupMemberService {
         }, (monos, key, values) -> monos.add(deleteGroupMembers(key, values, null, updateGroupsMembersVersion)));
     }
 
-    public Flux<GroupMember> queryGroupMembers(@NotNull Long groupId, @NotEmpty Set<Long> membersIds) {
+    public Flux<GroupMember> queryGroupMembers(@NotNull Long groupId, @NotEmpty Set<Long> memberIds) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+            AssertUtil.notEmpty(memberIds, "memberIds");
+        } catch (TurmsBusinessException e) {
+            return Flux.error(e);
+        }
         Query query = new Query()
                 .addCriteria(Criteria.where(GroupMember.Fields.ID_GROUP_ID).is(groupId))
-                .addCriteria(Criteria.where(GroupMember.Fields.ID_USER_ID).in(membersIds));
+                .addCriteria(Criteria.where(GroupMember.Fields.ID_USER_ID).in(memberIds));
         return mongoTemplate.find(query, GroupMember.class, GroupMember.COLLECTION_NAME);
     }
 
     public Mono<GroupMembersWithVersion> authAndQueryGroupMembers(
             @NotNull Long requesterId,
             @NotNull Long groupId,
-            @NotEmpty Set<Long> membersIds,
+            @NotEmpty Set<Long> memberIds,
             boolean withStatus) {
+        try {
+            AssertUtil.notEmpty(memberIds, "memberIds");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return isGroupMember(groupId, requesterId)
                 .flatMap(isGroupMember -> isGroupMember == null || !isGroupMember
                         ? Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED))
-                        : queryGroupMembers(groupId, membersIds).collectList())
+                        : queryGroupMembers(groupId, memberIds).collectList())
                 .flatMap(members -> {
                     if (members.isEmpty()) {
                         return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NO_CONTENT));
@@ -627,24 +755,26 @@ public class GroupMemberService {
             @NotNull Long groupId,
             @NotNull Long memberId,
             @Nullable String name,
-            @Nullable @GroupMemberRoleConstraint GroupMemberRole role,
+            @Nullable @ValidGroupMemberRole GroupMemberRole role,
             @Nullable Date muteEndDate) {
-        Mono<Boolean> authorized;
+        try {
+            AssertUtil.notNull(memberId, "memberId");
+            DomainConstraintUtil.validGroupMemberRole(role);
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
+        Mono<Boolean> isAuthorizedMono;
         if (role != null) {
-            authorized = isOwner(requesterId, groupId);
+            isAuthorizedMono = isOwner(requesterId, groupId);
         } else if (muteEndDate != null || (name != null && !requesterId.equals(memberId))) {
-            authorized = isOwnerOrManager(requesterId, groupId);
+            isAuthorizedMono = isOwnerOrManager(requesterId, groupId);
         } else {
             return Mono.just(true);
         }
-        return authorized
-                .flatMap(isAuthorized -> {
-                    if (isAuthorized != null && isAuthorized) {
-                        return updateGroupMember(groupId, memberId, name, role, new Date(), muteEndDate, null, false);
-                    } else {
-                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED));
-                    }
-                });
+        return isAuthorizedMono
+                .flatMap(isAuthorized -> isAuthorized != null && isAuthorized
+                        ? updateGroupMember(groupId, memberId, name, role, new Date(), muteEndDate, null, false)
+                        : Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED)));
     }
 
     public Mono<Boolean> deleteAllGroupMembers(
@@ -669,6 +799,11 @@ public class GroupMemberService {
     }
 
     public Flux<Long> queryGroupManagersAndOwnerId(@NotNull Long groupId) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+        } catch (TurmsBusinessException e) {
+            return Flux.error(e);
+        }
         Query query = new Query()
                 .addCriteria(Criteria.where(GroupMember.Fields.ID_GROUP_ID).is(groupId))
                 .addCriteria(Criteria.where(GroupMember.Fields.ROLE)
@@ -680,6 +815,12 @@ public class GroupMemberService {
     private Mono<GroupMembersWithVersion> fillMembersBuilderWithStatus(
             @NotNull List<GroupMember> members,
             @NotNull GroupMembersWithVersion.Builder builder) {
+        try {
+            AssertUtil.notNull(members, "members");
+            AssertUtil.notNull(builder, "builder");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         List<Mono<UserSessionsStatus>> monoList = new ArrayList<>(members.size());
         for (GroupMember member : members) {
             Long userId = member.getKey().getUserId();
@@ -704,6 +845,12 @@ public class GroupMemberService {
     }
 
     public Mono<Boolean> exists(@NotNull Long groupId, @NotNull Long userId) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+            AssertUtil.notNull(userId, "userId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query()
                 .addCriteria(Criteria.where(GroupMember.Fields.ID_GROUP_ID).is(groupId))
                 .addCriteria(Criteria.where(GroupMember.Fields.ID_USER_ID).is(userId));

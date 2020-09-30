@@ -19,6 +19,8 @@ package im.turms.turms.workflow.service.impl.user;
 
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import im.turms.common.exception.TurmsBusinessException;
+import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.workflow.dao.domain.UserVersion;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
@@ -27,7 +29,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
@@ -35,7 +36,6 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Objects;
 import java.util.Set;
 
 import static im.turms.turms.constant.DaoConstant.ID_FIELD_NAME;
@@ -44,7 +44,6 @@ import static im.turms.turms.constant.DaoConstant.ID_FIELD_NAME;
  * @author James Chen
  */
 @Service
-@Validated
 public class UserVersionService {
 
     private final ReactiveMongoTemplate mongoTemplate;
@@ -54,7 +53,11 @@ public class UserVersionService {
     }
 
     public Mono<Date> queryRelationshipsLastUpdatedDate(@NotNull Long userId) {
-        Objects.requireNonNull(userId);
+        try {
+            AssertUtil.notNull(userId, "userId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).is(userId));
         query.fields().include(UserVersion.Fields.RELATIONSHIPS);
         return mongoTemplate.findOne(query, UserVersion.class, UserVersion.COLLECTION_NAME)
@@ -62,7 +65,11 @@ public class UserVersionService {
     }
 
     public Mono<Date> querySentGroupInvitationsLastUpdatedDate(@NotNull Long userId) {
-        Objects.requireNonNull(userId);
+        try {
+            AssertUtil.notNull(userId, "userId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).is(userId));
         query.fields().include(UserVersion.Fields.SENT_GROUP_INVITATIONS);
         return mongoTemplate.findOne(query, UserVersion.class, UserVersion.COLLECTION_NAME)
@@ -70,7 +77,11 @@ public class UserVersionService {
     }
 
     public Mono<Date> queryReceivedGroupInvitationsLastUpdatedDate(@NotNull Long userId) {
-        Objects.requireNonNull(userId);
+        try {
+            AssertUtil.notNull(userId, "userId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).is(userId));
         query.fields().include(UserVersion.Fields.RECEIVED_GROUP_INVITATIONS);
         return mongoTemplate.findOne(query, UserVersion.class, UserVersion.COLLECTION_NAME)
@@ -78,7 +89,11 @@ public class UserVersionService {
     }
 
     public Mono<Date> queryGroupJoinRequestsVersion(@NotNull Long userId) {
-        Objects.requireNonNull(userId);
+        try {
+            AssertUtil.notNull(userId, "userId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).is(userId));
         query.fields().include(UserVersion.Fields.GROUP_JOIN_REQUESTS);
         return mongoTemplate.findOne(query, UserVersion.class, UserVersion.COLLECTION_NAME)
@@ -86,7 +101,11 @@ public class UserVersionService {
     }
 
     public Mono<Date> queryRelationshipGroupsLastUpdatedDate(@NotNull Long userId) {
-        Objects.requireNonNull(userId);
+        try {
+            AssertUtil.notNull(userId, "userId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).is(userId));
         query.fields().include(UserVersion.Fields.RELATIONSHIP_GROUPS);
         return mongoTemplate.findOne(query, UserVersion.class, UserVersion.COLLECTION_NAME)
@@ -94,7 +113,11 @@ public class UserVersionService {
     }
 
     public Mono<Date> queryJoinedGroupVersion(@NotNull Long userId) {
-        Objects.requireNonNull(userId);
+        try {
+            AssertUtil.notNull(userId, "userId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).is(userId));
         query.fields().include(UserVersion.Fields.JOINED_GROUPS);
         return mongoTemplate.findOne(query, UserVersion.class, UserVersion.COLLECTION_NAME)
@@ -102,7 +125,11 @@ public class UserVersionService {
     }
 
     public Mono<Date> querySentFriendRequestsVersion(@NotNull Long userId) {
-        Objects.requireNonNull(userId);
+        try {
+            AssertUtil.notNull(userId, "userId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).is(userId));
         query.fields().include(UserVersion.Fields.SENT_FRIEND_REQUESTS);
         return mongoTemplate.findOne(query, UserVersion.class, UserVersion.COLLECTION_NAME)
@@ -110,7 +137,11 @@ public class UserVersionService {
     }
 
     public Mono<Date> queryReceivedFriendRequestsVersion(@NotNull Long userId) {
-        Objects.requireNonNull(userId);
+        try {
+            AssertUtil.notNull(userId, "userId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).is(userId));
         query.fields().include(UserVersion.Fields.RECEIVED_FRIEND_REQUESTS);
         return mongoTemplate.findOne(query, UserVersion.class, UserVersion.COLLECTION_NAME)
@@ -121,15 +152,18 @@ public class UserVersionService {
             @NotNull Long userId,
             @NotNull Date timestamp,
             @Nullable ReactiveMongoOperations operations) {
-        Objects.requireNonNull(userId);
-        Objects.requireNonNull(timestamp);
+        try {
+            AssertUtil.notNull(userId, "userId");
+            AssertUtil.notNull(timestamp, "timestamp");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         UserVersion userVersion = new UserVersion(userId, timestamp, timestamp, timestamp, timestamp, timestamp, timestamp, timestamp, timestamp, timestamp);
         ReactiveMongoOperations mongoOperations = operations != null ? operations : mongoTemplate;
         return mongoOperations.save(userVersion, UserVersion.COLLECTION_NAME);
     }
 
     public Mono<Boolean> updateRelationshipsVersion(@NotNull Long userId, @Nullable ReactiveMongoOperations operations) {
-        Objects.requireNonNull(userId);
         return updateSpecificVersion(userId, operations, UserVersion.Fields.RELATIONSHIPS);
     }
 
@@ -182,6 +216,12 @@ public class UserVersionService {
     }
 
     public Mono<Boolean> updateSpecificVersion(@NotEmpty Set<Long> userIds, @Nullable ReactiveMongoOperations operations, @NotEmpty String... fields) {
+        try {
+            AssertUtil.notEmpty(userIds, "userIds");
+            AssertUtil.notEmpty(fields, "fields");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).in(userIds));
         Update update = new Update();
         Date now = new Date();
@@ -196,6 +236,11 @@ public class UserVersionService {
     public Mono<Boolean> delete(
             @NotEmpty Set<Long> userIds,
             @Nullable ReactiveMongoOperations operations) {
+        try {
+            AssertUtil.notEmpty(userIds, "userIds");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).in(userIds));
         ReactiveMongoOperations mongoOperations = operations != null ? operations : mongoTemplate;
         return mongoOperations.remove(query, UserVersion.COLLECTION_NAME)

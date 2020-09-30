@@ -27,6 +27,7 @@ import im.turms.common.model.bo.group.GroupsWithVersion;
 import im.turms.common.util.Validator;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
+import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.bo.DateRange;
 import im.turms.turms.util.ProtoUtil;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
@@ -47,7 +48,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -69,7 +69,6 @@ import static im.turms.turms.workflow.dao.domain.GroupMember.Fields.ID_USER_ID;
  * @author James Chen
  */
 @Service
-@Validated
 public class GroupService {
 
     private final Node node;
@@ -116,6 +115,16 @@ public class GroupService {
             @Nullable @PastOrPresent Date deletionDate,
             @Nullable Date muteEndDate,
             @Nullable Boolean isActive) {
+        try {
+            AssertUtil.notNull(creatorId, "creatorId");
+            AssertUtil.notNull(ownerId, "ownerId");
+            AssertUtil.min(minimumScore, "minimumScore", 0);
+            AssertUtil.pastOrPresent(creationDate, "creationDate");
+            AssertUtil.pastOrPresent(deletionDate, "deletionDate");
+            AssertUtil.before(creationDate, deletionDate, "creationDate", "deletionDate");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         isActive = isActive != null ? isActive : node.getSharedProperties().getService().getGroup().isActivateGroupWhenCreated();
         Long groupId = node.nextId(ServiceType.GROUP);
         Group group = new Group(groupId, groupTypeId, creatorId, ownerId, groupName, intro,
@@ -155,8 +164,14 @@ public class GroupService {
             @Nullable @PastOrPresent Date deletionDate,
             @Nullable Date muteEndDate,
             @Nullable Boolean isActive) {
-        if (creationDate != null && deletionDate != null && deletionDate.before(creationDate)) {
-            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The deletion date must not be before the creation date");
+        try {
+            AssertUtil.notNull(ownerId, "ownerId");
+            AssertUtil.min(minimumScore, "minimumScore", 0);
+            AssertUtil.pastOrPresent(creationDate, "creationDate");
+            AssertUtil.pastOrPresent(deletionDate, "deletionDate");
+            AssertUtil.before(creationDate, deletionDate, "creationDate", "deletionDate");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
         }
         if (groupTypeId == null) {
             groupTypeId = DEFAULT_GROUP_TYPE_ID;
@@ -255,12 +270,22 @@ public class GroupService {
     }
 
     public Mono<Long> queryGroupTypeId(@NotNull Long groupId) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).is(groupId));
         return mongoTemplate.findOne(query, Group.class, Group.COLLECTION_NAME)
                 .map(Group::getTypeId);
     }
 
     public Mono<Integer> queryGroupMinimumScore(@NotNull Long groupId) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).is(groupId));
         return mongoTemplate.findOne(query, Group.class, Group.COLLECTION_NAME)
                 .map(Group::getMinimumScore);
@@ -272,6 +297,11 @@ public class GroupService {
             @NotNull Long successorId,
             boolean quitAfterTransfer,
             @Nullable ReactiveMongoOperations operations) {
+        try {
+            AssertUtil.notNull(successorId, "successorId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return groupMemberService
                 .isOwner(requesterId, groupId)
                 .flatMap(isOwner -> isOwner != null && isOwner
@@ -280,6 +310,11 @@ public class GroupService {
     }
 
     public Mono<Long> queryGroupOwnerId(@NotNull Long groupId) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).is(groupId));
         query.fields().include(Group.Fields.OWNER_ID);
         return mongoTemplate.findOne(query, Group.class, Group.COLLECTION_NAME)
@@ -292,6 +327,12 @@ public class GroupService {
             @NotNull Long successorId,
             boolean quitAfterTransfer,
             @Nullable ReactiveMongoOperations operations) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+            AssertUtil.notNull(successorId, "successorId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Mono<Long> queryOwnerIdMono = helperCurrentOwnerId != null
                 ? Mono.just(helperCurrentOwnerId)
                 : queryGroupOwnerId(groupId);
@@ -307,12 +348,11 @@ public class GroupService {
                                         return Mono.error(TurmsBusinessException
                                                 .get(TurmsStatusCode.OWNED_RESOURCE_LIMIT_REACHED));
                                     }
-                                    Mono<Boolean> deleteOrUpdateOwnerMono;
                                     if (quitAfterTransfer) {
-                                        deleteOrUpdateOwnerMono = groupMemberService.deleteGroupMembers(
+                                        return groupMemberService.deleteGroupMembers(
                                                 groupId, Set.of(ownerId), operations, false);
                                     } else {
-                                        deleteOrUpdateOwnerMono = groupMemberService.updateGroupMember(
+                                        return groupMemberService.updateGroupMember(
                                                 groupId,
                                                 ownerId,
                                                 null,
@@ -322,21 +362,30 @@ public class GroupService {
                                                 operations,
                                                 false);
                                     }
-                                    Mono<Boolean> update = groupMemberService.updateGroupMember(
-                                            groupId,
-                                            successorId,
-                                            null,
-                                            GroupMemberRole.OWNER,
-                                            null,
-                                            null,
-                                            operations,
-                                            true);
-                                    return Mono.zip(deleteOrUpdateOwnerMono, update)
-                                            .map(results -> results.getT1() && results.getT2());
+                                })
+                                .flatMap(isDeletedOrUpdated -> {
+                                    if (isDeletedOrUpdated) {
+                                        return groupMemberService.updateGroupMember(
+                                                groupId,
+                                                successorId,
+                                                null,
+                                                GroupMemberRole.OWNER,
+                                                null,
+                                                null,
+                                                operations,
+                                                true);
+                                    } else {
+                                        return Mono.just(false);
+                                    }
                                 })));
     }
 
     public Mono<GroupType> queryGroupType(@NotNull Long groupId) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).is(groupId));
         query.fields().include(Group.Fields.TYPE_ID);
         return mongoTemplate.findOne(query, Group.class, Group.COLLECTION_NAME)
@@ -357,6 +406,15 @@ public class GroupService {
             @Nullable @PastOrPresent Date deletionDate,
             @Nullable Date muteEndDate,
             @Nullable ReactiveMongoOperations operations) {
+        try {
+            AssertUtil.notEmpty(groupIds, "groupIds");
+            AssertUtil.min(minimumScore, "minimumScore", 0);
+            AssertUtil.pastOrPresent(creationDate, "creationDate");
+            AssertUtil.pastOrPresent(deletionDate, "deletionDate");
+            AssertUtil.before(creationDate, deletionDate, "creationDate", "deletionDate");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (Validator.areAllNull(typeId, creatorId, ownerId, name, intro, announcement,
                 minimumScore, isActive, creationDate, deletionDate, muteEndDate)) {
             return Mono.just(true);
@@ -405,6 +463,14 @@ public class GroupService {
             @Nullable @PastOrPresent Date deletionDate,
             @Nullable Date muteEndDate,
             @Nullable ReactiveMongoOperations operations) {
+        try {
+            AssertUtil.min(minimumScore, "minimumScore", 0);
+            AssertUtil.pastOrPresent(creationDate, "creationDate");
+            AssertUtil.pastOrPresent(deletionDate, "deletionDate");
+            AssertUtil.before(creationDate, deletionDate, "creationDate", "deletionDate");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (Validator.areAllNull(typeId, creatorId, ownerId, name, intro, announcement,
                 minimumScore, isActive, creationDate, deletionDate, muteEndDate)) {
             return Mono.just(true);
@@ -431,11 +497,6 @@ public class GroupService {
                         : Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED)));
     }
 
-    private Mono<Long> countUserOwnedGroupNumber(@NotNull Long ownerId) {
-        Query query = new Query().addCriteria(Criteria.where(Group.Fields.OWNER_ID).is(ownerId));
-        return mongoTemplate.count(query, Group.class, Group.COLLECTION_NAME);
-    }
-
     public Mono<GroupsWithVersion> queryGroupWithVersion(
             @NotNull Long groupId,
             @Nullable Date lastUpdatedDate) {
@@ -450,12 +511,22 @@ public class GroupService {
                 .switchIfEmpty(Mono.error(TurmsBusinessException.get(TurmsStatusCode.ALREADY_UP_TO_DATE)));
     }
 
-    private Flux<Group> queryGroups(@NotEmpty List<Long> groupsIds) {
-        Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).in(groupsIds));
+    private Flux<Group> queryGroups(@NotEmpty List<Long> groupIds) {
+        try {
+            AssertUtil.notEmpty(groupIds, "groupIds");
+        } catch (TurmsBusinessException e) {
+            return Flux.error(e);
+        }
+        Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).in(groupIds));
         return mongoTemplate.find(query, Group.class, Group.COLLECTION_NAME);
     }
 
     public Flux<Long> queryJoinedGroupsIds(@NotNull Long memberId) {
+        try {
+            AssertUtil.notNull(memberId, "memberId");
+        } catch (TurmsBusinessException e) {
+            return Flux.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(ID_USER_ID).is(memberId));
         query.fields().include(ID_GROUP_ID);
         return mongoTemplate
@@ -540,6 +611,15 @@ public class GroupService {
             @Nullable Date muteEndDate,
             @Nullable Long successorId,
             @NotNull Boolean quitAfterTransfer) {
+        try {
+            AssertUtil.notEmpty(groupIds, "groupIds");
+            AssertUtil.min(minimumScore, "minimumScore", 0);
+            AssertUtil.pastOrPresent(creationDate, "creationDate");
+            AssertUtil.pastOrPresent(deletionDate, "deletionDate");
+            AssertUtil.before(creationDate, deletionDate, "creationDate", "deletionDate");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (Validator.areAllNull(
                 typeId,
                 creatorId,
@@ -597,6 +677,16 @@ public class GroupService {
             @Nullable Date muteEndDate,
             @Nullable Long successorId,
             boolean quitAfterTransfer) {
+        try {
+            AssertUtil.notNull(requesterId, "requesterId");
+            AssertUtil.notNull(groupId, "groupId");
+            AssertUtil.min(minimumScore, "minimumScore", 0);
+            AssertUtil.pastOrPresent(creationDate, "creationDate");
+            AssertUtil.pastOrPresent(deletionDate, "deletionDate");
+            AssertUtil.before(creationDate, deletionDate, "creationDate", "deletionDate");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Mono<Boolean> authorizeMono = Mono.just(true);
         if (successorId != null || typeId != null) {
             authorizeMono = groupMemberService.isOwner(requesterId, groupId);
@@ -639,6 +729,11 @@ public class GroupService {
     public Mono<Boolean> isAllowedToCreateGroupAndHaveGroupType(
             @NotNull Long requesterId,
             @NotNull Long groupTypeId) {
+        try {
+            AssertUtil.notNull(groupTypeId, "groupTypeId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Mono<UserPermissionGroup> userPermissionGroupMono = userPermissionGroupService.queryUserPermissionGroupByUserId(requesterId);
         return userPermissionGroupMono
                 .flatMap(userPermissionGroup -> isAllowedToCreateGroup(requesterId, userPermissionGroup)
@@ -650,12 +745,14 @@ public class GroupService {
     public Mono<Boolean> isAllowedToCreateGroup(
             @NotNull Long requesterId,
             @Nullable UserPermissionGroup auxiliaryUserPermissionGroup) {
-        Mono<UserPermissionGroup> userPermissionGroupMono;
-        if (auxiliaryUserPermissionGroup != null) {
-            userPermissionGroupMono = Mono.just(auxiliaryUserPermissionGroup);
-        } else {
-            userPermissionGroupMono = userPermissionGroupService.queryUserPermissionGroupByUserId(requesterId);
+        try {
+            AssertUtil.notNull(requesterId, "requesterId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
         }
+        Mono<UserPermissionGroup> userPermissionGroupMono = auxiliaryUserPermissionGroup != null
+                ? Mono.just(auxiliaryUserPermissionGroup)
+                : userPermissionGroupService.queryUserPermissionGroupByUserId(requesterId);
         return userPermissionGroupMono
                 .flatMap(userPermissionGroup -> {
                     if (userPermissionGroup.getOwnedGroupLimit() == Integer.MAX_VALUE) {
@@ -678,6 +775,11 @@ public class GroupService {
             @NotNull Long requesterId,
             @NotNull Long groupTypeId,
             @Nullable UserPermissionGroup auxiliaryUserPermissionGroup) {
+        try {
+            AssertUtil.notNull(requesterId, "requesterId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return groupTypeService.groupTypeExists(groupTypeId)
                 .flatMap(existed -> {
                     if (existed != null && existed) {
@@ -712,6 +814,11 @@ public class GroupService {
     }
 
     public Mono<Long> countOwnedGroups(@NotNull Long ownerId) {
+        try {
+            AssertUtil.notNull(ownerId, "ownerId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query()
                 .addCriteria(Criteria.where(Group.Fields.OWNER_ID).is(ownerId));
         return mongoTemplate.count(query, Group.class, Group.COLLECTION_NAME);
@@ -720,6 +827,12 @@ public class GroupService {
     public Mono<Long> countOwnedGroups(
             @NotNull Long ownerId,
             @NotNull Long groupTypeId) {
+        try {
+            AssertUtil.notNull(ownerId, "ownerId");
+            AssertUtil.notNull(groupTypeId, "groupTypeId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query()
                 .addCriteria(Criteria.where(Group.Fields.OWNER_ID).is(ownerId))
                 .addCriteria(Criteria.where(Group.Fields.TYPE_ID).is(groupTypeId));
@@ -774,6 +887,11 @@ public class GroupService {
     }
 
     public Flux<Long> queryGroupMembersIds(@NotNull Long groupId) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+        } catch (TurmsBusinessException e) {
+            return Flux.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(ID_GROUP_ID).is(groupId));
         query.fields().include(ID_USER_ID);
         return mongoTemplate.find(query, GroupMember.class, GroupMember.COLLECTION_NAME)
@@ -781,6 +899,11 @@ public class GroupService {
     }
 
     public Mono<Boolean> isGroupMuted(@NotNull Long groupId) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query()
                 .addCriteria(Criteria.where(ID_FIELD_NAME).is(groupId))
                 .addCriteria(Criteria.where(Group.Fields.MUTE_END_DATE).gt(new Date()));
@@ -788,6 +911,11 @@ public class GroupService {
     }
 
     public Mono<Boolean> isGroupActiveAndNotDeleted(@NotNull Long groupId) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query()
                 .addCriteria(Criteria.where(ID_FIELD_NAME).is(groupId))
                 .addCriteria(Criteria.where(Group.Fields.IS_ACTIVE).is(true))
@@ -795,19 +923,20 @@ public class GroupService {
         return mongoTemplate.exists(query, Group.class, Group.COLLECTION_NAME);
     }
 
-    private Mono<Set<Long>> getGroupIdsFromGroupIdsAndMemberIds(@Nullable Set<Long> ids, @Nullable Set<Long> memberIds) {
+    private Mono<Set<Long>> getGroupIdsFromGroupIdsAndMemberIds(@Nullable Set<Long> groupIds, @Nullable Set<Long> memberIds) {
         if (memberIds != null) {
             Mono<Set<Long>> joinedGroupIdsMono = groupMemberService
                     .queryUsersJoinedGroupsIds(memberIds, null, null)
                     .collect(Collectors.toSet());
-            return ids != null ?
-                    joinedGroupIdsMono.map(groupIds -> {
-                        groupIds.addAll(ids);
-                        return groupIds;
+            return groupIds != null ?
+                    joinedGroupIdsMono.map(ids -> {
+                        ids.addAll(groupIds);
+                        return ids;
                     })
                     : joinedGroupIdsMono;
         } else {
-            return ids != null ? Mono.just(ids) : Mono.empty();
+            return groupIds != null ? Mono.just(groupIds) : Mono.empty();
         }
     }
+
 }

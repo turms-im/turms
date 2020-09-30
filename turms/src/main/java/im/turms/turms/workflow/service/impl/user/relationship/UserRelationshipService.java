@@ -24,8 +24,10 @@ import im.turms.common.exception.TurmsBusinessException;
 import im.turms.common.model.bo.common.Int64ValuesWithVersion;
 import im.turms.common.model.bo.user.UserRelationshipsWithVersion;
 import im.turms.common.util.Validator;
+import im.turms.server.common.util.AssertUtil;
+import im.turms.server.common.util.ReactorUtil;
 import im.turms.turms.bo.DateRange;
-import im.turms.turms.constraint.UserRelationshipKeyConstraint;
+import im.turms.turms.constraint.ValidUserRelationshipKey;
 import im.turms.turms.util.MapUtil;
 import im.turms.turms.util.ProtoUtil;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
@@ -34,6 +36,7 @@ import im.turms.turms.workflow.dao.domain.UserRelationship;
 import im.turms.turms.workflow.dao.domain.UserRelationshipGroupMember;
 import im.turms.turms.workflow.dao.domain.UserVersion;
 import im.turms.turms.workflow.service.impl.user.UserVersionService;
+import im.turms.turms.workflow.service.util.DomainConstraintUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
@@ -42,7 +45,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -61,7 +63,6 @@ import static im.turms.turms.workflow.dao.domain.UserRelationshipGroupMember.Fie
  * @author James Chen
  */
 @Service
-@Validated
 public class UserRelationshipService {
 
     private final UserVersionService userVersionService;
@@ -80,6 +81,12 @@ public class UserRelationshipService {
     public Mono<Boolean> deleteOneSidedRelationships(
             @NotEmpty Set<Long> ownerIds,
             @NotEmpty Set<Long> relatedUsersIds) {
+        try {
+            AssertUtil.notEmpty(ownerIds, "ownerIds");
+            AssertUtil.notEmpty(relatedUsersIds, "relatedUsersIds");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return mongoTemplate.inTransaction()
                 .execute(operations -> {
                     Query query = new Query()
@@ -100,6 +107,11 @@ public class UserRelationshipService {
             @NotEmpty Set<Long> usersIds,
             @Nullable ReactiveMongoOperations operations,
             boolean updateRelationshipsVersion) {
+        try {
+            AssertUtil.notEmpty(usersIds, "usersIds");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query()
                 .addCriteria(new Criteria().orOperator(
                         Criteria.where(UserRelationship.Fields.ID_OWNER_ID).in(usersIds),
@@ -126,7 +138,15 @@ public class UserRelationshipService {
         }
     }
 
-    public Mono<Boolean> deleteOneSidedRelationships(@NotEmpty Set<UserRelationship.@UserRelationshipKeyConstraint Key> keys) {
+    public Mono<Boolean> deleteOneSidedRelationships(@NotEmpty Set<UserRelationship.@ValidUserRelationshipKey Key> keys) {
+        try {
+            AssertUtil.notEmpty(keys, "keys");
+            for (UserRelationship.Key key : keys) {
+                DomainConstraintUtil.validRelationshipKey(key);
+            }
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return MapUtil.fluxMerge(multimap -> {
             for (UserRelationship.Key key : keys) {
                 multimap.put(key.getOwnerId(), key.getRelatedUserId());
@@ -138,6 +158,12 @@ public class UserRelationshipService {
             @NotNull Long ownerId,
             @NotNull Long relatedUserId,
             @Nullable ReactiveMongoOperations operations) {
+        try {
+            AssertUtil.notNull(ownerId, "ownerId");
+            AssertUtil.notNull(relatedUserId, "relatedUserId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (operations != null) {
             Query query = new Query()
                     .addCriteria(Criteria.where(UserRelationship.Fields.ID_OWNER_ID).is(ownerId))
@@ -162,6 +188,12 @@ public class UserRelationshipService {
     public Mono<Boolean> deleteTwoSidedRelationships(
             @NotNull Long userOneId,
             @NotNull Long userTwoId) {
+        try {
+            AssertUtil.notNull(userOneId, "userOneId");
+            AssertUtil.notNull(userTwoId, "userTwoId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return mongoTemplate.inTransaction()
                 .execute(operations -> deleteOneSidedRelationship(userOneId, userTwoId, operations)
                         .zipWith(deleteOneSidedRelationship(userTwoId, userOneId, operations))
@@ -190,6 +222,11 @@ public class UserRelationshipService {
             @NotNull Integer groupIndex,
             @Nullable Boolean isBlocked,
             @Nullable Date lastUpdatedDate) {
+        try {
+            AssertUtil.notNull(groupIndex, "groupIndex");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return userVersionService.queryRelationshipsLastUpdatedDate(ownerId)
                 .flatMap(date -> {
                     if (lastUpdatedDate == null || lastUpdatedDate.before(date)) {
@@ -400,8 +437,12 @@ public class UserRelationshipService {
             @NotNull Long userOneId,
             @NotNull Long userTwoId,
             @Nullable ReactiveMongoOperations operations) {
-        if (userOneId.equals(userTwoId)) {
-            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The ID of user one must not equal the ID of user two");
+        try {
+            AssertUtil.notNull(userOneId, "userOneId");
+            AssertUtil.notNull(userTwoId, "userTwoId");
+            AssertUtil.state(!userOneId.equals(userTwoId), "The ID of user one must not equal to the ID of user two");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
         }
         Date now = new Date();
         if (operations != null) {
@@ -428,21 +469,27 @@ public class UserRelationshipService {
             @Nullable @PastOrPresent Date establishmentDate,
             @NotNull Boolean upsert,
             @Nullable ReactiveMongoOperations operations) {
-        if (ownerId.equals(relatedUserId)) {
-            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The owner ID must not equal the related user ID");
+        try {
+            AssertUtil.notNull(ownerId, "ownerId");
+            AssertUtil.notNull(relatedUserId, "relatedUserId");
+            AssertUtil.pastOrPresent(establishmentDate, "establishmentDate");
+            AssertUtil.notNull(upsert, "upsert");
+            AssertUtil.state(!ownerId.equals(relatedUserId), "The owner ID must not equal to the related user ID");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
         }
         isBlocked = isBlocked != null && isBlocked;
         establishmentDate = establishmentDate != null ? establishmentDate : new Date();
         UserRelationship userRelationship = new UserRelationship(ownerId, relatedUserId, isBlocked, establishmentDate);
-        List<Mono<?>> monos = new LinkedList<>();
+        List<Mono<Boolean>> monos = new LinkedList<>();
         ReactiveMongoOperations mongoOperations = operations != null ? operations : mongoTemplate;
         if (upsert) {
-            monos.add(mongoOperations.save(userRelationship, UserRelationship.COLLECTION_NAME));
+            monos.add(mongoOperations.save(userRelationship, UserRelationship.COLLECTION_NAME).thenReturn(true));
         } else {
-            monos.add(mongoOperations.insert(userRelationship, UserRelationship.COLLECTION_NAME));
+            monos.add(mongoOperations.insert(userRelationship, UserRelationship.COLLECTION_NAME).thenReturn(true));
         }
         if (newGroupIndex != null && deleteGroupIndex != null && !newGroupIndex.equals(deleteGroupIndex)) {
-            monos.add(moveToNewGroup(ownerId, relatedUserId, deleteGroupIndex, newGroupIndex));
+            monos.add(moveToNewGroup(ownerId, relatedUserId, deleteGroupIndex, newGroupIndex).thenReturn(true));
         } else {
             if (newGroupIndex != null) {
                 Mono<Boolean> add = userRelationshipGroupService.addRelatedUserToRelationshipGroups(
@@ -456,15 +503,7 @@ public class UserRelationshipService {
                 monos.add(delete);
             }
         }
-        return Mono.zip(monos, objects -> objects)
-                .map(objects -> {
-                    for (Object object : objects) {
-                        if (object instanceof Boolean && !((Boolean) object)) {
-                            return false;
-                        }
-                    }
-                    return true;
-                })
+        return ReactorUtil.areAllTrue(monos)
                 .onErrorMap(DuplicateKeyException.class, e -> TurmsBusinessException.get(TurmsStatusCode.RELATIONSHIP_HAS_ESTABLISHED));
     }
 
@@ -473,6 +512,14 @@ public class UserRelationshipService {
             @NotNull Long relatedUserId,
             @NotNull Integer deleteGroupIndex,
             @NotNull Integer newGroupIndex) {
+        try {
+            AssertUtil.notNull(ownerId, "ownerId");
+            AssertUtil.notNull(relatedUserId, "relatedUserId");
+            AssertUtil.notNull(deleteGroupIndex, "deleteGroupIndex");
+            AssertUtil.notNull(newGroupIndex, "newGroupIndex");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query()
                 .addCriteria(Criteria.where(UserRelationship.Fields.ID_OWNER_ID).is(ownerId))
                 .addCriteria(Criteria.where(UserRelationship.Fields.ID_RELATED_USER_ID).is(relatedUserId))
@@ -482,6 +529,12 @@ public class UserRelationshipService {
     }
 
     public Mono<Boolean> isBlocked(@NotNull Long ownerId, @NotNull Long relatedUserId) {
+        try {
+            AssertUtil.notNull(ownerId, "ownerId");
+            AssertUtil.notNull(relatedUserId, "relatedUserId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query()
                 .addCriteria(Criteria.where(UserRelationship.Fields.ID_OWNER_ID).is(ownerId))
                 .addCriteria(Criteria.where(UserRelationship.Fields.ID_RELATED_USER_ID).is(relatedUserId))
@@ -490,6 +543,12 @@ public class UserRelationshipService {
     }
 
     public Mono<Boolean> isNotBlocked(@NotNull Long ownerId, @NotNull Long relatedUserId) {
+        try {
+            AssertUtil.notNull(ownerId, "ownerId");
+            AssertUtil.notNull(relatedUserId, "relatedUserId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query()
                 .addCriteria(Criteria.where(UserRelationship.Fields.ID_OWNER_ID).is(ownerId))
                 .addCriteria(Criteria.where(UserRelationship.Fields.ID_RELATED_USER_ID).is(relatedUserId))
@@ -499,6 +558,12 @@ public class UserRelationshipService {
     }
 
     public Mono<Boolean> isRelatedAndAllowed(@NotNull Long ownerId, @NotNull Long relatedUserId) {
+        try {
+            AssertUtil.notNull(ownerId, "ownerId");
+            AssertUtil.notNull(relatedUserId, "relatedUserId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(UserRelationship.Fields.ID_OWNER_ID).is(ownerId))
                 .addCriteria(Criteria.where(UserRelationship.Fields.ID_RELATED_USER_ID).is(relatedUserId))
                 .addCriteria(Criteria.where(UserRelationship.Fields.IS_BLOCKED).is(false));
@@ -506,9 +571,18 @@ public class UserRelationshipService {
     }
 
     public Mono<Boolean> updateUserOneSidedRelationships(
-            @NotEmpty Set<UserRelationship.@UserRelationshipKeyConstraint Key> keys,
+            @NotEmpty Set<UserRelationship.@ValidUserRelationshipKey Key> keys,
             @Nullable Boolean isBlocked,
             @Nullable @PastOrPresent Date establishmentDate) {
+        try {
+            AssertUtil.notEmpty(keys, "ownerId");
+            for (UserRelationship.Key key : keys) {
+                DomainConstraintUtil.validRelationshipKey(key);
+            }
+            AssertUtil.pastOrPresent(establishmentDate, "establishmentDate");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return MapUtil.fluxMerge(map -> {
             for (UserRelationship.Key key : keys) {
                 map.put(key.getOwnerId(), key.getRelatedUserId());
@@ -521,6 +595,13 @@ public class UserRelationshipService {
             @NotEmpty Set<Long> relatedUsersIds,
             @Nullable Boolean isBlocked,
             @Nullable @PastOrPresent Date establishmentDate) {
+        try {
+            AssertUtil.notNull(ownerId, "ownerId");
+            AssertUtil.notEmpty(relatedUsersIds, "relatedUsersIds");
+            AssertUtil.pastOrPresent(establishmentDate, "establishmentDate");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (Validator.areAllNull(isBlocked, establishmentDate)) {
             return Mono.just(true);
         }
@@ -542,6 +623,12 @@ public class UserRelationshipService {
     public Mono<Boolean> isStranger(
             @NotNull Long userOneId,
             @NotNull Long userTwoId) {
+        try {
+            AssertUtil.notNull(userOneId, "userOneId");
+            AssertUtil.notNull(userTwoId, "userTwoId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query()
                 .addCriteria(Criteria.where(UserRelationship.Fields.ID_OWNER_ID).is(userTwoId))
                 .addCriteria(Criteria.where(UserRelationship.Fields.ID_RELATED_USER_ID).is(userOneId))
@@ -552,6 +639,13 @@ public class UserRelationshipService {
     public Mono<Boolean> hasOneSidedRelationship(
             @NotNull Long ownerId,
             @NotNull Long relatedUserId) {
+        try {
+            AssertUtil.notNull(ownerId, "ownerId");
+            AssertUtil.notNull(relatedUserId, "relatedUserId");
+            AssertUtil.state(!ownerId.equals(relatedUserId), "The owner ID must not equal to the related user ID");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query()
                 .addCriteria(Criteria.where(UserRelationship.Fields.ID_OWNER_ID).is(ownerId))
                 .addCriteria(Criteria.where(UserRelationship.Fields.ID_RELATED_USER_ID).is(relatedUserId));

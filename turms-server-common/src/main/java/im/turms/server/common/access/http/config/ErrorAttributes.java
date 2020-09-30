@@ -51,7 +51,7 @@ public class ErrorAttributes {
             errorStatus = HttpStatus.valueOf(code.getHttpStatusCode());
             message = code.getReason();
         } else {
-            if (throwable instanceof ConstraintViolationException || throwable instanceof NullPointerException) {
+            if (throwable instanceof ConstraintViolationException) {
                 errorStatus = HttpStatus.valueOf(TurmsStatusCode.ILLEGAL_ARGUMENTS.getHttpStatusCode());
             } else if (throwable instanceof DuplicateKeyException) {
                 errorStatus = HttpStatus.valueOf(TurmsStatusCode.DUPLICATE_KEY.getHttpStatusCode());

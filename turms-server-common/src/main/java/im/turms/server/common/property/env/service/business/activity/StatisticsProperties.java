@@ -18,7 +18,7 @@
 package im.turms.server.common.property.env.service.business.activity;
 
 import im.turms.server.common.constant.CronConstant;
-import im.turms.server.common.constraint.CronConstraint;
+import im.turms.server.common.constraint.ValidCron;
 import im.turms.server.common.property.metadata.annotation.Description;
 import lombok.Data;
 
@@ -29,7 +29,7 @@ import lombok.Data;
 public class StatisticsProperties {
 
     @Description("The cron expression to specify the time to log online users' number")
-    @CronConstraint
+    @ValidCron
     private String onlineUsersNumberLoggingCron = CronConstant.DEFAULT_ONLINE_USERS_NUMBER_LOGGING_CRON;
 
     @Description("Whether to log online users number")

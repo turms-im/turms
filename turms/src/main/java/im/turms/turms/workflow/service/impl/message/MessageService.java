@@ -33,6 +33,7 @@ import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.manager.TrivialTaskManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.constant.TimeType;
+import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.bo.DateRange;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.plugin.extension.handler.ExpiredMessageAutoDeletionNotificationHandler;
@@ -58,7 +59,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
@@ -75,13 +75,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static im.turms.common.constant.statuscode.TurmsStatusCode.*;
-import static im.turms.turms.constant.MetricsConstant.*;
+import static im.turms.turms.constant.MetricsConstant.SENT_MESSAGES_COUNTER_NAME;
 
 /**
  * @author James Chen
  */
 @Service
-@Validated
 public class MessageService {
 
     private final ReactiveMongoTemplate mongoTemplate;
@@ -97,6 +96,7 @@ public class MessageService {
     private final Cache<Long, Message> sentMessageCache;
 
     private final Counter sentMessageCounter;
+
     @Autowired
     public MessageService(
             @Qualifier("messageMongoTemplate") ReactiveMongoTemplate mongoTemplate,
@@ -148,6 +148,12 @@ public class MessageService {
     }
 
     public Mono<Boolean> isMessageSentByUser(@NotNull Long messageId, @NotNull Long senderId) {
+        try {
+            AssertUtil.notNull(messageId, "messageId");
+            AssertUtil.notNull(senderId, "senderId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (sentMessageCache != null) {
             Message message = sentMessageCache.getIfPresent(messageId);
             if (message != null) {
@@ -161,6 +167,12 @@ public class MessageService {
     }
 
     public Mono<Boolean> isMessageSentToUser(@NotNull Long messageId, @NotNull Long recipientId) {
+        try {
+            AssertUtil.notNull(messageId, "messageId");
+            AssertUtil.notNull(recipientId, "recipientId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (sentMessageCache != null) {
             Message message = sentMessageCache.getIfPresent(messageId);
             if (message != null && !message.getIsGroupMessage()) {
@@ -174,16 +186,17 @@ public class MessageService {
 
     public Mono<Boolean> isMessageSentToUserOrByUser(@NotNull Long messageId, @NotNull Long userId) {
         return isMessageSentToUser(messageId, userId)
-                .flatMap(isSentToUser -> {
-                    if (isSentToUser) {
-                        return Mono.just(true);
-                    } else {
-                        return isMessageSentByUser(messageId, userId);
-                    }
-                });
+                .flatMap(isSentToUser -> isSentToUser
+                        ? Mono.just(true)
+                        : isMessageSentByUser(messageId, userId));
     }
 
     public Mono<Boolean> isMessageRecallable(@NotNull Long messageId) {
+        try {
+            AssertUtil.notNull(messageId, "messageId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Mono<Message> messageMono = null;
         if (sentMessageCache != null) {
             Message message = sentMessageCache.getIfPresent(messageId);
@@ -224,26 +237,29 @@ public class MessageService {
             @Nullable MessageDeliveryStatus deliveryStatus,
             @Nullable Integer page,
             @Nullable Integer size) {
-        if (deliveryStatus == MessageDeliveryStatus.READY
-                || deliveryStatus == MessageDeliveryStatus.RECEIVED) {
-            return queryMessages(
-                    closeToDate,
-                    messageIds,
-                    areGroupMessages,
-                    areSystemMessages,
-                    senderId != null ? Set.of(senderId) : null,
-                    targetId != null ? Set.of(targetId) : null,
-                    deliveryDateRange,
-                    deletionDateRange,
-                    Set.of(deliveryStatus),
-                    page,
-                    size);
-        } else {
-            throw TurmsBusinessException.get(ILLEGAL_ARGUMENTS);
+        if (deliveryStatus != MessageDeliveryStatus.READY && deliveryStatus != MessageDeliveryStatus.RECEIVED) {
+            return Flux.error(TurmsBusinessException.get(ILLEGAL_ARGUMENTS, "deliveryStatus must be READY or RECEIVED"));
         }
+        return queryMessages(
+                closeToDate,
+                messageIds,
+                areGroupMessages,
+                areSystemMessages,
+                senderId != null ? Set.of(senderId) : null,
+                targetId != null ? Set.of(targetId) : null,
+                deliveryDateRange,
+                deletionDateRange,
+                Set.of(deliveryStatus),
+                page,
+                size);
     }
 
     public Mono<Message> queryMessage(@NotNull Long messageId) {
+        try {
+            AssertUtil.notNull(messageId, "messageId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(messageId));
         return mongoTemplate.findOne(query, Message.class, Message.COLLECTION_NAME);
     }
@@ -315,21 +331,17 @@ public class MessageService {
             @Nullable @PastOrPresent Date deliveryDate,
             @Nullable Long referenceId,
             @Nullable ReactiveMongoOperations operations) {
-        if (text != null && text.length() > node.getSharedProperties().getService().getMessage().getMaxTextLimit()) {
-            throw TurmsBusinessException.get(ILLEGAL_ARGUMENTS);
-        }
-        int maxRecordsSize = node.getSharedProperties()
-                .getService()
-                .getMessage()
-                .getMaxRecordsSizeBytes();
-        if (records != null && maxRecordsSize != 0) {
-            int count = 0;
-            for (byte[] record : records) {
-                count = record.length;
-            }
-            if (count > maxRecordsSize) {
-                throw TurmsBusinessException.get(ILLEGAL_ARGUMENTS);
-            }
+        try {
+            AssertUtil.notNull(senderId, "senderId");
+            AssertUtil.notNull(targetId, "targetId");
+            AssertUtil.notNull(isGroupMessage, "isGroupMessage");
+            AssertUtil.notNull(isSystemMessage, "isSystemMessage");
+            AssertUtil.maxLength(text, "text", node.getSharedProperties().getService().getMessage().getMaxTextLimit());
+            validRecordsLength(records);
+            AssertUtil.min(burnAfter, "burnAfter", 0);
+            AssertUtil.pastOrPresent(deliveryDate, "deliveryDate");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
         }
         if (timeType == TimeType.LOCAL_SERVER_TIME || deliveryDate == null) {
             deliveryDate = new Date();
@@ -364,6 +376,15 @@ public class MessageService {
             @NotNull Long targetId,
             @Nullable Set<Long> auxiliaryMemberIds,
             @Nullable ReactiveMongoOperations operations) {
+        try {
+            AssertUtil.notNull(messageId, "messageId");
+            AssertUtil.notNull(isGroupMessage, "isGroupMessage");
+            AssertUtil.notNull(isSystemMessage, "isSystemMessage");
+            AssertUtil.notNull(senderId, "senderId");
+            AssertUtil.notNull(targetId, "targetId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         ReactiveMongoOperations mongoOperations = operations != null ? operations : mongoTemplate;
         if (isGroupMessage) {
             Mono<Set<Long>> memberIdsMono;
@@ -424,7 +445,18 @@ public class MessageService {
             @Nullable @PastOrPresent Date deliveryDate,
             @Nullable Long referenceId,
             @Nullable Set<Long> auxiliaryMemberIds) {
-        Validator.throwIfAllFalsy(text, records);
+        try {
+            AssertUtil.notNull(senderId, "senderId");
+            AssertUtil.notNull(targetId, "targetId");
+            AssertUtil.notNull(isGroupMessage, "isGroupMessage");
+            AssertUtil.notNull(isSystemMessage, "isSystemMessage");
+            AssertUtil.maxLength(text, "text", node.getSharedProperties().getService().getMessage().getMaxTextLimit());
+            validRecordsLength(records);
+            AssertUtil.min(burnAfter, "burnAfter", 0);
+            AssertUtil.pastOrPresent(deliveryDate, "deliveryDate");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (timeType == TimeType.LOCAL_SERVER_TIME || deliveryDate == null) {
             deliveryDate = new Date();
         }
@@ -460,6 +492,11 @@ public class MessageService {
     }
 
     public Flux<Long> queryExpiredMessagesIds(@NotNull Integer timeToLiveHours) {
+        try {
+            AssertUtil.notNull(timeToLiveHours, "timeToLiveHours");
+        } catch (TurmsBusinessException e) {
+            return Flux.error(e);
+        }
         Date beforeDate = Date.from(Instant.now().minus(timeToLiveHours, ChronoUnit.HOURS));
         Query query = new Query()
                 .addCriteria(Criteria.where(Message.Fields.DELIVERY_DATE).lt(beforeDate));
@@ -471,12 +508,11 @@ public class MessageService {
     public Mono<Boolean> deleteExpiredMessagesAndStatuses(@NotNull Integer timeToLiveHours) {
         return queryExpiredMessagesIds(timeToLiveHours)
                 .collectList()
-                .flatMap(expiredMessagesIds -> {
-                    if (expiredMessagesIds.isEmpty()) {
+                .flatMap(expiredMessageIds -> {
+                    if (expiredMessageIds.isEmpty()) {
                         return Mono.just(true);
                     } else {
-                        Query messagesQuery = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(expiredMessagesIds));
-                        Query messagesStatusesQuery = new Query().addCriteria(Criteria.where(MessageStatus.Fields.ID_MESSAGE_ID).in(expiredMessagesIds));
+                        Query messagesQuery = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(expiredMessageIds));
                         Mono<Boolean> allowedMono = Mono.just(true);
                         if (pluginEnabled) {
                             allowedMono = mongoTemplate.find(messagesQuery, Message.class, Message.COLLECTION_NAME)
@@ -485,13 +521,9 @@ public class MessageService {
                                         Mono<Boolean> mono = Mono.just(true);
                                         for (ExpiredMessageAutoDeletionNotificationHandler handler : turmsPluginManager.getExpiredMessageAutoDeletionNotificationHandlerList()) {
                                             mono = mono.defaultIfEmpty(true)
-                                                    .flatMap(allowed -> {
-                                                        if (allowed) {
-                                                            return handler.allowDeleting(messages);
-                                                        } else {
-                                                            return Mono.just(false);
-                                                        }
-                                                    });
+                                                    .flatMap(allowed -> allowed
+                                                            ? handler.allowDeleting(messages)
+                                                            : Mono.just(false));
                                         }
                                         return mono;
                                     });
@@ -499,9 +531,12 @@ public class MessageService {
                         return allowedMono.flatMap(allowed -> {
                             if (allowed) {
                                 return mongoTemplate.inTransaction()
-                                        .execute(operations -> operations.remove(messagesQuery, Message.class, Message.COLLECTION_NAME)
-                                                .then(operations.remove(messagesStatusesQuery, MessageStatus.class, MessageStatus.COLLECTION_NAME)
-                                                        .thenReturn(true)))
+                                        .execute(operations -> {
+                                            Query messagesStatusesQuery = new Query().addCriteria(Criteria.where(MessageStatus.Fields.ID_MESSAGE_ID).in(expiredMessageIds));
+                                            return operations.remove(messagesQuery, Message.class, Message.COLLECTION_NAME)
+                                                    .then(operations.remove(messagesStatusesQuery, MessageStatus.class, MessageStatus.COLLECTION_NAME)
+                                                            .thenReturn(true));
+                                        })
                                         .retryWhen(DaoConstant.TRANSACTION_RETRY)
                                         .singleOrEmpty();
                             } else {
@@ -563,6 +598,13 @@ public class MessageService {
             @Nullable List<byte[]> records,
             @Nullable @Min(0) Integer burnAfter,
             @Nullable ReactiveMongoOperations operations) {
+        try {
+            AssertUtil.notEmpty(messageIds, "messageIds");
+            AssertUtil.maxLength(text, "text", node.getSharedProperties().getService().getMessage().getMaxTextLimit());
+            validRecordsLength(records);
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (Validator.areAllNull(isSystemMessage, text, records, burnAfter)) {
             return Mono.just(true);
         }
@@ -583,6 +625,11 @@ public class MessageService {
             @Nullable List<byte[]> records,
             @Nullable @Min(0) Integer burnAfter,
             @Nullable ReactiveMongoOperations operations) {
+        try {
+            AssertUtil.notNull(messageId, "messageId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return updateMessage(Collections.singleton(messageId), isSystemMessage, text,
                 records, burnAfter, operations);
     }
@@ -638,8 +685,7 @@ public class MessageService {
                 Message.class);
     }
 
-    public Mono<Long> countGroupsThatSentMessages(
-            @Nullable DateRange dateRange) {
+    public Mono<Long> countGroupsThatSentMessages(@Nullable DateRange dateRange) {
         Criteria criteria = QueryBuilder.newBuilder()
                 .addBetweenIfNotNull(Message.Fields.DELIVERY_DATE, dateRange)
                 .add(Criteria.where(Message.Fields.IS_GROUP_MESSAGE).is(true))
@@ -787,6 +833,15 @@ public class MessageService {
             @Nullable List<byte[]> records,
             @Nullable @PastOrPresent Date recallDate,
             @Nullable @PastOrPresent Date readDate) {
+        try {
+            AssertUtil.notNull(messageId, "messageId");
+            AssertUtil.maxLength(text, "text", node.getSharedProperties().getService().getMessage().getMaxTextLimit());
+            validRecordsLength(records);
+            AssertUtil.pastOrPresent(recallDate, "recallDate");
+            AssertUtil.pastOrPresent(readDate, "readDate");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         boolean shouldUpdateMessage = text != null || (records != null && !records.isEmpty());
         boolean shouldUpdateMessageStatus = recallDate != null || readDate != null;
         if (shouldUpdateMessage && shouldUpdateMessageStatus) {
@@ -809,6 +864,11 @@ public class MessageService {
     }
 
     public Flux<Long> queryMessageRecipients(@NotNull Long messageId) {
+        try {
+            AssertUtil.notNull(messageId, "messageId");
+        } catch (TurmsBusinessException e) {
+            return Flux.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(MessageStatus.Fields.ID_MESSAGE_ID).is(messageId));
         query.fields().include(MessageStatus.Fields.ID_RECIPIENT_ID);
         return mongoTemplate.find(query, MessageStatus.class, MessageStatus.COLLECTION_NAME)
@@ -816,6 +876,11 @@ public class MessageService {
     }
 
     public Mono<Long> queryMessageSenderId(@NotNull Long messageId) {
+        try {
+            AssertUtil.notNull(messageId, "messageId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(messageId));
         query.fields().include(Message.Fields.SENDER_ID);
         return mongoTemplate.findOne(query, Message.class, Message.COLLECTION_NAME)
@@ -823,6 +888,11 @@ public class MessageService {
     }
 
     public Flux<Message> queryMessagesIncludingIsGroupMessage(@NotEmpty Set<Long> messageIds) {
+        try {
+            AssertUtil.notEmpty(messageIds, "messageIds");
+        } catch (TurmsBusinessException e) {
+            return Flux.error(e);
+        }
         Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(messageIds));
         query.fields().include(Message.Fields.IS_GROUP_MESSAGE);
         return mongoTemplate.find(query, Message.class, Message.COLLECTION_NAME);
@@ -840,6 +910,13 @@ public class MessageService {
             @Nullable @Min(0) Integer burnAfter,
             @Nullable @PastOrPresent Date deliveryDate,
             @Nullable Long referenceId) {
+        try {
+            AssertUtil.maxLength(text, "text", node.getSharedProperties().getService().getMessage().getMaxTextLimit());
+            validRecordsLength(records);
+            AssertUtil.pastOrPresent(deliveryDate, "deliveryDate");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return userService.isAllowedToSendMessageToTarget(isGroupMessage, isSystemMessage, senderId, targetId)
                 .flatMap(allowed -> {
                     if (allowed == null || !allowed) {
@@ -913,12 +990,22 @@ public class MessageService {
             @NotNull Long targetId,
             @Nullable @Min(0) Integer burnAfter,
             @Nullable Long referenceId) {
-        Validator.throwIfAllFalsy(text, records);
+        try {
+            AssertUtil.notNull(isGroupMessage, "isGroupMessage");
+            AssertUtil.notNull(isSystemMessage, "isSystemMessage");
+            AssertUtil.notNull(targetId, "targetId");
+            AssertUtil.min(burnAfter, "burnAfter", 0);
+            Validator.throwIfAllFalsy("text and records cannot be both null", text, records);
+            AssertUtil.maxLength(text, "text", node.getSharedProperties().getService().getMessage().getMaxTextLimit());
+            validRecordsLength(records);
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (senderId == null) {
             if (isSystemMessage) {
                 senderId = DaoConstant.ADMIN_REQUESTER_ID;
             } else {
-                throw TurmsBusinessException.get(ILLEGAL_ARGUMENTS);
+                return Mono.error(TurmsBusinessException.get(ILLEGAL_ARGUMENTS, "senderId must not be null for user messages"));
             }
         }
         Date deliveryDate = new Date();
@@ -965,21 +1052,26 @@ public class MessageService {
             }
             return messageMono.doOnSuccess(msg -> {
                 sentMessageCounter.increment();
-                if (msg.getId() != null && sentMessageCache != null) {
+                if (msg != null && msg.getId() != null && sentMessageCache != null) {
                     cacheSentMessage(msg);
                 }
             }).thenReturn(true);
         }
     }
 
-    public Mono<Set<Long>> filterPrivateMessages(Set<Long> messagesIds) {
-        if (messagesIds.isEmpty()) {
+    public Mono<Set<Long>> filterPrivateMessages(@NotNull Set<Long> messageIds) {
+        try {
+            AssertUtil.notNull(messageIds, "messageIds");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
+        if (messageIds.isEmpty()) {
             return Mono.just(Collections.emptySet());
         } else {
             Set<Long> privateMessageIds = null;
             Set<Long> uncachedMessageIds = null;
-            int capacity = Math.max(1, messagesIds.size() / 2);
-            for (Long messagesId : messagesIds) {
+            int capacity = Math.max(1, messageIds.size() / 2);
+            for (Long messagesId : messageIds) {
                 Message message = sentMessageCache.getIfPresent(messagesId);
                 if (message != null) {
                     if (!message.getIsGroupMessage()) {
@@ -1038,4 +1130,23 @@ public class MessageService {
                 null,
                 null));
     }
+
+    private void validRecordsLength(List<byte[]> records) {
+        if (records != null) {
+            int maxRecordsSize = node.getSharedProperties()
+                    .getService()
+                    .getMessage()
+                    .getMaxRecordsSizeBytes();
+            if (maxRecordsSize > -1) {
+                int count = 0;
+                for (byte[] record : records) {
+                    count += record.length;
+                }
+                if (count > maxRecordsSize) {
+                    throw TurmsBusinessException.get(ILLEGAL_ARGUMENTS, "The total size of records must be less than or equal to " + maxRecordsSize);
+                }
+            }
+        }
+    }
+
 }

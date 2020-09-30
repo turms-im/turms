@@ -27,12 +27,14 @@ import im.turms.common.constant.statuscode.TurmsStatusCode;
 import im.turms.common.exception.TurmsBusinessException;
 import im.turms.server.common.bo.session.UserSessionsStatus;
 import im.turms.server.common.cluster.node.Node;
+import im.turms.server.common.constraint.ValidDeviceType;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
+import im.turms.server.common.util.AssertUtil;
+import im.turms.server.common.util.DeviceTypeUtil;
 import org.springframework.data.redis.core.ReactiveHashOperations;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -46,7 +48,6 @@ import java.util.*;
  * @author James Chen
  */
 @Service
-@Validated
 public class UserStatusService {
 
     private static final Byte STATUS_KEY_STATUS = 's';
@@ -97,7 +98,14 @@ public class UserStatusService {
         }
     }
 
-    public Mono<String> getNodeIdByUserIdAndDeviceType(@NotNull Long userId, @NotNull DeviceType deviceType) {
+    public Mono<String> getNodeIdByUserIdAndDeviceType(@NotNull Long userId, @NotNull @ValidDeviceType DeviceType deviceType) {
+        try {
+            AssertUtil.notNull(userId, "userId");
+            AssertUtil.notNull(deviceType, "deviceType");
+            DeviceTypeUtil.validDeviceType(deviceType);
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return getUserSessionsStatus(userId)
                 .flatMap(sessionsStatus -> {
                     String nodeId = sessionsStatus.getOnlineDeviceTypeAndNodeIdMap().get(deviceType);
@@ -106,6 +114,11 @@ public class UserStatusService {
     }
 
     public Mono<Map<DeviceType, String>> getDeviceAndNodeIdMapByUserId(@NotNull Long userId) {
+        try {
+            AssertUtil.notNull(userId, "userId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (cacheUserSessionsStatus) {
             UserSessionsStatus sessionsStatus = userSessionsStatusCache.getIfPresent(userId);
             if (sessionsStatus != null) {
@@ -136,6 +149,12 @@ public class UserStatusService {
     }
 
     public Mono<Boolean> updateOnlineUsersStatus(@NotEmpty Set<Long> userIds, @NotNull UserStatus userStatus) {
+        try {
+            AssertUtil.notEmpty(userIds, "userIds");
+            AssertUtil.notNull(userStatus, "userStatus");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         int size = userIds.size();
         switch (size) {
             case 0:
@@ -152,11 +171,17 @@ public class UserStatusService {
     }
 
     public Mono<Boolean> updateOnlineUserStatus(@NotNull Long userId, @NotNull UserStatus userStatus) {
-        if (userStatus == UserStatus.UNRECOGNIZED || userStatus == UserStatus.OFFLINE) {
-            String failedReason = userStatus == UserStatus.UNRECOGNIZED ?
-                    "The user status must not be UNRECOGNIZED" :
-                    "The online user status must not be OFFLINE";
-            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, failedReason);
+        try {
+            AssertUtil.notNull(userId, "userId");
+            AssertUtil.notNull(userStatus, "userStatus");
+            if (userStatus == UserStatus.UNRECOGNIZED) {
+                throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The user status must not be UNRECOGNIZED");
+            }
+            if (userStatus == UserStatus.OFFLINE) {
+                throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The online user status must not be OFFLINE");
+            }
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
         }
         return sessionOperations
                 .put(userId, STATUS_KEY_STATUS, userStatus)
@@ -164,10 +189,21 @@ public class UserStatusService {
     }
 
     public Mono<Boolean> updateTtl(@NotNull Long userId, @NotNull Duration timeout) {
+        try {
+            AssertUtil.notNull(userId, "userId");
+            AssertUtil.notNull(timeout, "timeout");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return redisTemplate.expire(userId, timeout).timeout(operationTimeout);
     }
 
     public Mono<UserSessionsStatus> getUserSessionsStatus(@NotNull Long userId) {
+        try {
+            AssertUtil.notNull(userId, "userId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         if (cacheUserSessionsStatus) {
             UserSessionsStatus sessionsStatus = userSessionsStatusCache.getIfPresent(userId);
             if (sessionsStatus != null) {
@@ -178,6 +214,11 @@ public class UserStatusService {
     }
 
     public Mono<UserSessionsStatus> fetchUserSessionsStatus(@NotNull Long userId) {
+        try {
+            AssertUtil.notNull(userId, "userId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return sessionOperations.entries(userId)
                 .timeout(operationTimeout)
                 .collectList()
@@ -219,14 +260,33 @@ public class UserStatusService {
      *
      * @see UserStatusService#fetchUserSessionsStatus(java.lang.Long)
      */
-    public Mono<Boolean> removeStatusByUserIdAndDeviceTypes(Long userId, @NotNull Set<DeviceType> deviceTypes) {
+    public Mono<Boolean> removeStatusByUserIdAndDeviceTypes(@NotNull Long userId, @NotEmpty Set<DeviceType> deviceTypes) {
+        try {
+            AssertUtil.notNull(userId, "userId");
+            AssertUtil.notEmpty(deviceTypes, "deviceTypes");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         DeviceType[] deviceTypesArray = deviceTypes.toArray(new DeviceType[0]);
         return sessionOperations.remove(userId, (Object[]) deviceTypesArray)
                 .timeout(operationTimeout)
                 .map(number -> number > 0);
     }
 
-    public Mono<Boolean> addOnlineDeviceIfAbsent(Long userId, DeviceType deviceType, @Nullable UserStatus userStatus, Duration heartbeatTimeout, @NotNull UserSessionsStatus sessionsStatus) {
+    public Mono<Boolean> addOnlineDeviceIfAbsent(@NotNull Long userId,
+                                                 @NotNull @ValidDeviceType DeviceType deviceType,
+                                                 @Nullable UserStatus userStatus,
+                                                 @NotNull Duration heartbeatTimeout,
+                                                 @NotNull UserSessionsStatus sessionsStatus) {
+        try {
+            AssertUtil.notNull(userId, "userId");
+            AssertUtil.notNull(deviceType, "deviceType");
+            DeviceTypeUtil.validDeviceType(deviceType);
+            AssertUtil.notNull(heartbeatTimeout, "heartbeatTimeout");
+            AssertUtil.notNull(sessionsStatus, "sessionsStatus");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         String nodeId = node.getNodeId();
         Mono<Boolean> updateMono;
         if (userStatus != null) {
