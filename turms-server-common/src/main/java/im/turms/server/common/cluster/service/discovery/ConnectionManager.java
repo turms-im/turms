@@ -25,11 +25,14 @@ import io.netty.util.concurrent.DefaultThreadFactory;
 import io.rsocket.RSocket;
 import io.rsocket.SocketAcceptor;
 import io.rsocket.core.RSocketConnector;
+import io.rsocket.micrometer.MicrometerDuplexConnectionInterceptor;
+import io.rsocket.micrometer.MicrometerRSocketInterceptor;
 import io.rsocket.transport.netty.client.TcpClientTransport;
 import jdk.internal.vm.annotation.Contended;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Mono;
+import reactor.netty.Metrics;
 import reactor.netty.tcp.TcpClient;
 
 import java.time.Duration;
@@ -162,6 +165,13 @@ public class ConnectionManager {
                 .runOn(eventLoopGroup);
         TcpClientTransport transport = TcpClientTransport.create(client);
         return RSocketConnector.create()
+                .interceptors(registry -> {
+                    MicrometerDuplexConnectionInterceptor connectionInterceptor = new MicrometerDuplexConnectionInterceptor(Metrics.REGISTRY);
+                    MicrometerRSocketInterceptor interactionInterceptor = new MicrometerRSocketInterceptor(Metrics.REGISTRY);
+                    registry.forConnection(connectionInterceptor);
+                    registry.forRequester(interactionInterceptor);
+                    registry.forResponder(interactionInterceptor);
+                })
                 .keepAlive(keepaliveInterval, keepaliveTimeout)
                 .acceptor(SocketAcceptor.with(RpcService.getRpcAcceptor()))
                 .connect(transport);
