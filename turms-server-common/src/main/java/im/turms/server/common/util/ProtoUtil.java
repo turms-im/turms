@@ -17,12 +17,13 @@
 
 package im.turms.server.common.util;
 
+import com.google.protobuf.CodedOutputStream;
 import com.google.protobuf.GeneratedMessageV3;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufOutputStream;
 import io.netty.buffer.PooledByteBufAllocator;
 import lombok.extern.log4j.Log4j2;
-import reactor.core.Exceptions;
+
+import java.nio.ByteBuffer;
 
 /**
  * @author James Chen
@@ -33,19 +34,18 @@ public class ProtoUtil {
     private ProtoUtil() {
     }
 
-    /**
-     * There haven't a good way to allocate pooled direct byte buffer
-     * so we use the heap buffer for now
-     */
     public static ByteBuf getByteBuffer(GeneratedMessageV3 message) {
-        ByteBuf buffer = PooledByteBufAllocator.DEFAULT.buffer();
-        ByteBufOutputStream bos = new ByteBufOutputStream(buffer);
+        ByteBuf output = PooledByteBufAllocator.DEFAULT.directBuffer(message.getSerializedSize());
         try {
-            message.writeTo(bos);
+            ByteBuffer buffer = output.nioBuffer(0, output.writableBytes());
+            CodedOutputStream stream = CodedOutputStream.newInstance(buffer);
+            message.writeTo(stream);
+            output.writerIndex(buffer.capacity());
         } catch (Exception e) {
-            throw Exceptions.propagate(e);
+            output.release();
+            throw new RuntimeException(e);
         }
-        return buffer;
+        return output;
     }
 
 }
