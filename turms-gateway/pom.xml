@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.4.0-M2</version>
+        <version>2.4.0-M3</version>
         <relativePath/>
     </parent>
 
@@ -35,9 +35,8 @@
     <properties>
         <disruptor.version>3.4.2</disruptor.version>
         <yauaa.version>5.19</yauaa.version>
-        <jmh.version>1.25</jmh.version>
+        <jmh.version>1.25.2</jmh.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <mockito.version>3.5.0</mockito.version>
     </properties>
 
     <repositories>
@@ -115,13 +114,11 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-inline</artifactId>
-            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
