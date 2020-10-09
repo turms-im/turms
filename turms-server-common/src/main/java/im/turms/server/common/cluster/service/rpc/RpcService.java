@@ -207,7 +207,12 @@ public class RpcService implements ClusterService {
 
     private Throwable tryLogAndTranslateThrowable(Throwable throwable, @Nullable String memberNodeId, @Nullable Collection<Member> members) {
         if (throwable instanceof ApplicationErrorException) {
-            RpcException e = RpcException.parse((ApplicationErrorException) throwable);
+            RpcException e = null;
+            try {
+                e = RpcException.parse((ApplicationErrorException) throwable);
+            } catch (Exception exception) {
+                log.error(exception);
+            }
             if (e != null) {
                 if (e.isServerError()) {
                     if (memberNodeId != null) {

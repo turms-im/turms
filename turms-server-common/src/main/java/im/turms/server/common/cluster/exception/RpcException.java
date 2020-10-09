@@ -32,6 +32,9 @@ import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
+import static im.turms.common.constant.statuscode.TurmsStatusCode.STATUS_CODE_LENGTH;
+import static im.turms.server.common.cluster.service.rpc.RpcErrorCode.ERROR_CODE_LENGTH;
+
 /**
  * @author James Chen
  * @see ErrorFrameCodec#encode(io.netty.buffer.ByteBufAllocator, int, java.lang.Throwable)
@@ -42,8 +45,6 @@ import java.util.Map;
 public class RpcException extends NoStackTraceException {
 
     private static final Map<Pair<RpcErrorCode, TurmsStatusCode>, RpcException> EXCEPTION_POOL;
-    private static final int ERROR_CODE_LENGTH = 1;
-    private static final int STATUS_CODE_LENGTH = 4;
 
     static {
         int initialCapacity = (RpcErrorCode.values().length * TurmsStatusCode.values().length) / 2;
@@ -93,28 +94,44 @@ public class RpcException extends NoStackTraceException {
 
     public static RpcException parse(ApplicationErrorException exception) {
         String exceptionMessage = exception.getMessage();
-        if (exceptionMessage.isBlank()) {
+        if (exceptionMessage == null || exceptionMessage.isBlank()) {
             return null;
         }
+        RpcErrorCode errorCode = parseErrorCode(exceptionMessage);
+        TurmsStatusCode statusCode = parseStatusCode(exceptionMessage);
+        String message = null;
+        if (exceptionMessage.length() > ERROR_CODE_LENGTH + STATUS_CODE_LENGTH) {
+            message = exceptionMessage.substring(ERROR_CODE_LENGTH + STATUS_CODE_LENGTH);
+        }
+        return new RpcException(errorCode, statusCode, message);
+    }
+
+    private static RpcErrorCode parseErrorCode(String exceptionMessage) {
+        RpcErrorCode rpcErrorCode;
         try {
             int errorCode = Integer.parseInt(exceptionMessage.substring(0, ERROR_CODE_LENGTH));
-            int statusCode = Integer.parseInt(exceptionMessage.substring(ERROR_CODE_LENGTH, ERROR_CODE_LENGTH + STATUS_CODE_LENGTH));
-            String message = null;
-            if (exceptionMessage.length() > ERROR_CODE_LENGTH + STATUS_CODE_LENGTH) {
-                message = exceptionMessage.substring(ERROR_CODE_LENGTH + STATUS_CODE_LENGTH);
-            }
-            RpcErrorCode rpcErrorCode = RpcErrorCode.from(errorCode);
-            if (rpcErrorCode == null) {
-                return null;
-            }
-            TurmsStatusCode turmsStatusCode = TurmsStatusCode.from(statusCode);
-            if (turmsStatusCode == null) {
-                return null;
-            }
-            return new RpcException(rpcErrorCode, turmsStatusCode, message);
+            rpcErrorCode = RpcErrorCode.from(errorCode);
         } catch (Exception e) {
-            return null;
+            rpcErrorCode = null;
         }
+        if (rpcErrorCode == null) {
+            throw new IllegalArgumentException("Failed to parse error code for message: " + exceptionMessage);
+        }
+        return rpcErrorCode;
+    }
+
+    private static TurmsStatusCode parseStatusCode(String exceptionMessage) {
+        TurmsStatusCode turmsStatusCode;
+        try {
+            int statusCode = Integer.parseInt(exceptionMessage.substring(ERROR_CODE_LENGTH, ERROR_CODE_LENGTH + STATUS_CODE_LENGTH));
+            turmsStatusCode = TurmsStatusCode.from(statusCode);
+        } catch (Exception e) {
+            turmsStatusCode = null;
+        }
+        if (turmsStatusCode == null) {
+            throw new IllegalArgumentException("Failed to parse status code for message: " + exceptionMessage);
+        }
+        return turmsStatusCode;
     }
 
 }

@@ -35,6 +35,8 @@ public enum RpcErrorCode {
     SERIALIZER_FOR_RETURN_VALUE_NOT_FOUND(7),
     SERIALIZER_FAILED_TO_DESERIALIZE(8);
 
+    public static final int ERROR_CODE_LENGTH = 1;
+
     @Getter
     private final int errorCode;
 
