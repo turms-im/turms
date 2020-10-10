@@ -26,8 +26,11 @@ import lombok.Data;
 @Data
 public class UdpProperties {
 
-    private boolean enabled = true;
-    private String address = "0.0.0.0";
+    /**
+     * We disable UDP currently until clients support UDP
+     */
+    private boolean enabled = false;
+    private String host = "0.0.0.0";
     private int port = 10510;
 
 }

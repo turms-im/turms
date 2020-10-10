@@ -91,6 +91,15 @@ public class TurmsBusinessException extends NoStackTraceException {
         return null;
     }
 
+    public static TurmsBusinessException get(int statusCode, @Nullable String reason) {
+        for (TurmsStatusCode value : TurmsStatusCode.values()) {
+            if (value.getBusinessCode() == statusCode) {
+                return get(value, reason);
+            }
+        }
+        return null;
+    }
+
     public static TurmsBusinessException get(@NotNull TurmsStatusCode code, @Nullable String reason) {
         if (reason != null && !reason.isEmpty()) {
             return new TurmsBusinessException(code, reason);
@@ -101,15 +110,6 @@ public class TurmsBusinessException extends NoStackTraceException {
 
     public static TurmsBusinessException get(@NotNull TurmsStatusCode code, @Nullable Throwable cause) {
         return new TurmsBusinessException(code, cause);
-    }
-
-    public static TurmsBusinessException get(int statusCode, @Nullable String reason) {
-        for (TurmsStatusCode value : TurmsStatusCode.values()) {
-            if (value.getBusinessCode() == statusCode) {
-                return get(value, reason);
-            }
-        }
-        return null;
     }
 
     public static TurmsBusinessException get(TurmsNotification notification) {

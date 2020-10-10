@@ -99,10 +99,9 @@ public class RpcException extends NoStackTraceException {
         }
         RpcErrorCode errorCode = parseErrorCode(exceptionMessage);
         TurmsStatusCode statusCode = parseStatusCode(exceptionMessage);
-        String message = null;
-        if (exceptionMessage.length() > ERROR_CODE_LENGTH + STATUS_CODE_LENGTH) {
-            message = exceptionMessage.substring(ERROR_CODE_LENGTH + STATUS_CODE_LENGTH);
-        }
+        String message = exceptionMessage.length() > ERROR_CODE_LENGTH + STATUS_CODE_LENGTH
+                ? exceptionMessage.substring(ERROR_CODE_LENGTH + STATUS_CODE_LENGTH)
+                : null;
         return new RpcException(errorCode, statusCode, message);
     }
 

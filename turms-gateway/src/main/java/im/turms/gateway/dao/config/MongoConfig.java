@@ -40,7 +40,6 @@ import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.convert.NoOpDbRefResolver;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -55,7 +54,7 @@ public class MongoConfig {
     public ReactiveMongoTemplate userMongoTemplate(TurmsPropertiesManager turmsPropertiesManager) {
         MongoProperties properties = turmsPropertiesManager.getLocalProperties().getGateway().getDatabase().getMongoProperties().getUser();
         // ReactiveMongoClientFactory
-        ReactiveMongoClientFactory factory = new ReactiveMongoClientFactory(properties, null, Collections.emptyList());
+        ReactiveMongoClientFactory factory = new ReactiveMongoClientFactory(null);
         MongoClient mongoClient = factory.createMongoClient(MongoClientSettings.builder().build());
         SimpleReactiveMongoDatabaseFactory databaseFactory = new SimpleReactiveMongoDatabaseFactory(mongoClient, properties.getMongoClientDatabase());
 

@@ -209,8 +209,7 @@ public class MongoConfig {
                     ? turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getDefaultProperties()
                     : properties;
             // ReactiveMongoClientFactory
-            ReactiveMongoClientFactory factory = new ReactiveMongoClientFactory(currentProperties, null,
-                    builderCustomizers.orderedStream().collect(Collectors.toList()));
+            ReactiveMongoClientFactory factory = new ReactiveMongoClientFactory(builderCustomizers.orderedStream().collect(Collectors.toList()));
             MongoClient mongoClient = factory.createMongoClient(settings.getIfAvailable());
             SimpleReactiveMongoDatabaseFactory databaseFactory = new SimpleReactiveMongoDatabaseFactory(mongoClient, currentProperties.getMongoClientDatabase());
 

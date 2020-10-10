@@ -77,12 +77,10 @@ public class ServiceAddressManager implements IServiceAddressManager {
                     this.addressCollector = getAddressCollector(properties);
                     this.discoveryProperties = properties.getGateway().getDiscovery();
                     serviceAddress = addressCollector.getWsAddress();
-                    for (Consumer<String> listener : onAddressChangeListeners) {
-                        listener.accept(serviceAddress);
-                    }
                 } catch (Exception e) {
-                    log.error(e);
+                    log.error("Failed to update address collector", e);
                 }
+                triggerOnAddressChangeListeners(serviceAddress);
             }
         });
     }
@@ -105,6 +103,16 @@ public class ServiceAddressManager implements IServiceAddressManager {
         return discoveryProperties.getAdvertiseStrategy() != newDiscoveryProperties.getAdvertiseStrategy()
                 || !StringUtils.equals(discoveryProperties.getAdvertiseHost(), newDiscoveryProperties.getAdvertiseHost())
                 || discoveryProperties.isAttachPortToHost() != newDiscoveryProperties.isAttachPortToHost();
+    }
+
+    private void triggerOnAddressChangeListeners(String serviceAddress) {
+        for (Consumer<String> listener : onAddressChangeListeners) {
+            try {
+                listener.accept(serviceAddress);
+            } catch (Exception e) {
+                log.error("Failed to run onAddressChangeListener", e);
+            }
+        }
     }
 
 }

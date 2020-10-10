@@ -62,7 +62,7 @@ public class OutboundMessageService implements IOutboundMessageService {
     }
 
     /**
-     * @param notificationData should be a data of TurmsNotification
+     * @param notificationData should be a data serialized from TurmsNotification
      * @return true if the notification has forwarded to all recipients
      */
     @Override
@@ -107,7 +107,13 @@ public class OutboundMessageService implements IOutboundMessageService {
         }
 
         // Release
-        notificationData.release();
+        boolean isReleased = notificationData.release();
+        if (!isReleased) {
+            int count = notificationData.nioBufferCount();
+            log.warn("The notificationData hasn't been released. The reference count is " + count);
+            while (!notificationData.release()) {
+            }
+        }
 
         return hasForwardedMessageToAllRecipients;
     }

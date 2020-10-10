@@ -92,11 +92,13 @@ public class RpcAcceptor implements RSocket {
 
     public <T> Mono<T> runRpcRequest(RpcCallable<T> rpcRequest) {
         try {
-            return rpcRequest.isAsync() ? rpcRequest.callAsync() : Mono.just(rpcRequest.call());
+            return rpcRequest.isAsync()
+                    ? rpcRequest.callAsync()
+                    : Mono.just(rpcRequest.call());
         } catch (TurmsBusinessException e) {
             return Mono.error(RpcException.get(RpcErrorCode.FAILED_TO_RUN_RPC, e.getCode(), e.getReason()));
         } catch (Exception e) {
-            return Mono.error(RpcException.get(RpcErrorCode.FAILED_TO_RUN_RPC, TurmsStatusCode.FAILED, e.toString()));
+            return Mono.error(RpcException.get(RpcErrorCode.FAILED_TO_RUN_RPC, TurmsStatusCode.SERVER_INTERNAL_ERROR, e.toString()));
         }
     }
 
@@ -108,11 +110,9 @@ public class RpcAcceptor implements RSocket {
             }
             short serializerId = (short) returnValueSerializer.getSerializerId().getId();
             int initialCapacity = returnValueSerializer.initialCapacity(returnValue);
-            if (initialCapacity < 1) {
-                initialCapacity = 256 + Short.BYTES;
-            } else {
-                initialCapacity = initialCapacity + Short.BYTES;
-            }
+            initialCapacity = initialCapacity > -1
+                    ? initialCapacity + Short.BYTES
+                    : 256 + Short.BYTES;
             ByteBuf outputBuffer = PooledByteBufAllocator.DEFAULT.directBuffer(initialCapacity);
             outputBuffer.writeShort(serializerId);
             returnValueSerializer.write(outputBuffer, returnValue);
@@ -123,7 +123,7 @@ public class RpcAcceptor implements RSocket {
             }
             return DefaultPayload.create(outputBuffer);
         } else {
-            // We don't pass TurmsStatusCode.NO_CONTENT for better performance
+            // Pass an empty payload instead of TurmsStatusCode.NO_CONTENT for better performance
             return EmptyPayload.INSTANCE;
         }
     }

@@ -19,6 +19,9 @@ package im.turms.common.util;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * @author James Chen
+ */
 public class RandomUtil {
 
     private RandomUtil() {

@@ -20,6 +20,7 @@ package im.turms.gateway.access.udp;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.constant.statuscode.TurmsStatusCode;
+import im.turms.common.exception.TurmsBusinessException;
 import im.turms.common.model.dto.udpsignal.UdpNotificationType;
 import im.turms.common.model.dto.udpsignal.UdpRequestType;
 import im.turms.common.model.dto.udpsignal.UdpSignalRequest;
@@ -68,17 +69,16 @@ public class UdpDispatcher {
             notificationSink = Sinks.many().unicast().onBackpressureBuffer();
             connection = UdpServer.create()
                     .option(ChannelOption.SO_REUSEADDR, true)
-                    .host(udpProperties.getAddress())
+                    .host(udpProperties.getHost())
                     .port(udpProperties.getPort())
                     .handle((inbound, outbound) -> {
                         Flux<DatagramPacket> responseFlux = inbound.receiveObject()
                                 .cast(DatagramPacket.class)
                                 .flatMap(packet -> handleDatagramPackage(packet)
-                                        .map(code -> new DatagramPacket(UdpSignalResponseBufferPool.get(code), packet.sender())))
-                                .onErrorResume(throwable -> Mono.empty());
+                                        .onErrorContinue((throwable, o) -> handleExceptionForIncomingPacket(throwable))
+                                        .map(code -> new DatagramPacket(UdpSignalResponseBufferPool.get(code), packet.sender())));
                         Flux<DatagramPacket> notificationFlux = notificationSink.asFlux()
-                                .map(notification -> new DatagramPacket(UdpSignalResponseBufferPool.get(notification.getSecond()), notification.getFirst()))
-                                .onErrorResume(throwable -> Mono.empty());
+                                .map(notification -> new DatagramPacket(UdpSignalResponseBufferPool.get(notification.getSecond()), notification.getFirst()));
                         Flux<DatagramPacket> outputFlux = responseFlux.mergeWith(notificationFlux);
                         outbound.sendObject(outputFlux, o -> true)
                                 .then()
@@ -134,6 +134,20 @@ public class UdpDispatcher {
             }
         } else {
             return Mono.just(TurmsStatusCode.ILLEGAL_DATE_FORMAT);
+        }
+    }
+
+    private TurmsStatusCode handleExceptionForIncomingPacket(Throwable throwable) {
+        if (throwable instanceof TurmsBusinessException) {
+            TurmsBusinessException exception = (TurmsBusinessException) throwable;
+            TurmsStatusCode code = exception.getCode();
+            if (code.isServerError()) {
+                log.error("Failed to handle incoming package", throwable);
+            }
+            return code;
+        } else {
+            log.error("Failed to handle incoming package", throwable);
+            return TurmsStatusCode.SERVER_INTERNAL_ERROR;
         }
     }
 

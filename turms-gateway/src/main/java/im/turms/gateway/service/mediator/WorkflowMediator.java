@@ -166,7 +166,7 @@ public class WorkflowMediator {
         }
     }
 
-    // private
+    // Internal implementation
 
     /**
      * @return OK, UNAUTHORIZED, NOT_ACTIVE

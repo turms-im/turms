@@ -67,7 +67,7 @@ public class SharedConfigService implements ClusterService {
         properties.setUri(uri);
         // Note that "properties.setAutoIndexCreation(true)" itself won't work
         // because it won't be passed to the MongoMappingContext instance
-        ReactiveMongoClientFactory factory = new ReactiveMongoClientFactory(properties, null, null);
+        ReactiveMongoClientFactory factory = new ReactiveMongoClientFactory(null);
         MongoClientSettings clientSettings = MongoClientSettings.builder().build();
         MongoClient mongoClient = factory.createMongoClient(clientSettings);
         SimpleReactiveMongoDatabaseFactory databaseFactory = new SimpleReactiveMongoDatabaseFactory(mongoClient, properties.getMongoClientDatabase());

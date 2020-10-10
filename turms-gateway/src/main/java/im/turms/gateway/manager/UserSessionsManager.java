@@ -78,11 +78,10 @@ public final class UserSessionsManager {
         if (closeIdleSessionAfterMillis > 0) {
             updateSessionHeartbeatTimeout(loggingInDeviceType, session, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
         }
-        ConcurrentHashMap<DeviceType, UserSession> sessionMap = new ConcurrentHashMap<>(MapUtil.getCapability(DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length));
-        sessionMap.put(loggingInDeviceType, session);
         this.userId = userId;
         this.userStatus = userStatus;
-        this.sessionMap = sessionMap;
+        sessionMap = new ConcurrentHashMap<>(MapUtil.getCapability(DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length));
+        sessionMap.put(loggingInDeviceType, session);
     }
 
     /**
