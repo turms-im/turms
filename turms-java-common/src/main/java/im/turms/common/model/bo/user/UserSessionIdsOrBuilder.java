@@ -27,7 +27,7 @@ public interface UserSessionIdsOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.UserSessionId user_session_ids = 1;</code>
    */
-  java.util.List<im.turms.common.model.bo.user.UserSessionId> 
+  java.util.List<im.turms.common.model.bo.user.UserSessionId>
       getUserSessionIdsList();
   /**
    * <code>repeated .im.turms.proto.UserSessionId user_session_ids = 1;</code>
@@ -40,7 +40,7 @@ public interface UserSessionIdsOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.UserSessionId user_session_ids = 1;</code>
    */
-  java.util.List<? extends im.turms.common.model.bo.user.UserSessionIdOrBuilder> 
+  java.util.List<? extends im.turms.common.model.bo.user.UserSessionIdOrBuilder>
       getUserSessionIdsOrBuilderList();
   /**
    * <code>repeated .im.turms.proto.UserSessionId user_session_ids = 1;</code>

@@ -137,7 +137,7 @@ private static final long serialVersionUID = 0L;
    * <code>repeated .im.turms.proto.UserRelationshipGroup user_relationship_groups = 1;</code>
    */
   @java.lang.Override
-  public java.util.List<? extends im.turms.common.model.bo.user.UserRelationshipGroupOrBuilder> 
+  public java.util.List<? extends im.turms.common.model.bo.user.UserRelationshipGroupOrBuilder>
       getUserRelationshipGroupsOrBuilderList() {
     return userRelationshipGroups_;
   }
@@ -521,7 +521,7 @@ private static final long serialVersionUID = 0L;
             userRelationshipGroupsBuilder_ = null;
             userRelationshipGroups_ = other.userRelationshipGroups_;
             bitField0_ = (bitField0_ & ~0x00000001);
-            userRelationshipGroupsBuilder_ = 
+            userRelationshipGroupsBuilder_ =
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                  getUserRelationshipGroupsFieldBuilder() : null;
           } else {
@@ -757,7 +757,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserRelationshipGroup user_relationship_groups = 1;</code>
      */
-    public java.util.List<? extends im.turms.common.model.bo.user.UserRelationshipGroupOrBuilder> 
+    public java.util.List<? extends im.turms.common.model.bo.user.UserRelationshipGroupOrBuilder>
          getUserRelationshipGroupsOrBuilderList() {
       if (userRelationshipGroupsBuilder_ != null) {
         return userRelationshipGroupsBuilder_.getMessageOrBuilderList();
@@ -783,12 +783,12 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserRelationshipGroup user_relationship_groups = 1;</code>
      */
-    public java.util.List<im.turms.common.model.bo.user.UserRelationshipGroup.Builder> 
+    public java.util.List<im.turms.common.model.bo.user.UserRelationshipGroup.Builder>
          getUserRelationshipGroupsBuilderList() {
       return getUserRelationshipGroupsFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        im.turms.common.model.bo.user.UserRelationshipGroup, im.turms.common.model.bo.user.UserRelationshipGroup.Builder, im.turms.common.model.bo.user.UserRelationshipGroupOrBuilder> 
+        im.turms.common.model.bo.user.UserRelationshipGroup, im.turms.common.model.bo.user.UserRelationshipGroup.Builder, im.turms.common.model.bo.user.UserRelationshipGroupOrBuilder>
         getUserRelationshipGroupsFieldBuilder() {
       if (userRelationshipGroupsBuilder_ == null) {
         userRelationshipGroupsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
@@ -889,7 +889,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
      */
     public com.google.protobuf.Int64Value.Builder getLastUpdatedDateBuilder() {
-      
+
       onChanged();
       return getLastUpdatedDateFieldBuilder().getBuilder();
     }
@@ -908,7 +908,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> 
+        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
         getLastUpdatedDateFieldBuilder() {
       if (lastUpdatedDateBuilder_ == null) {
         lastUpdatedDateBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<

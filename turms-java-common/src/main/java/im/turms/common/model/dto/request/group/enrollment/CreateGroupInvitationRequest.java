@@ -148,7 +148,7 @@ private static final long serialVersionUID = 0L;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
-      com.google.protobuf.ByteString bs = 
+      com.google.protobuf.ByteString bs =
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
       content_ = s;
@@ -164,7 +164,7 @@ private static final long serialVersionUID = 0L;
       getContentBytes() {
     java.lang.Object ref = content_;
     if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
+      com.google.protobuf.ByteString b =
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
       content_ = b;
@@ -527,7 +527,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setGroupId(long value) {
-      
+
       groupId_ = value;
       onChanged();
       return this;
@@ -537,7 +537,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearGroupId() {
-      
+
       groupId_ = 0L;
       onChanged();
       return this;
@@ -558,7 +558,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setInviteeId(long value) {
-      
+
       inviteeId_ = value;
       onChanged();
       return this;
@@ -568,7 +568,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearInviteeId() {
-      
+
       inviteeId_ = 0L;
       onChanged();
       return this;
@@ -599,7 +599,7 @@ private static final long serialVersionUID = 0L;
         getContentBytes() {
       java.lang.Object ref = content_;
       if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         content_ = b;
@@ -618,7 +618,7 @@ private static final long serialVersionUID = 0L;
       if (value == null) {
     throw new NullPointerException();
   }
-  
+
       content_ = value;
       onChanged();
       return this;
@@ -628,7 +628,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearContent() {
-      
+
       content_ = getDefaultInstance().getContent();
       onChanged();
       return this;
@@ -644,7 +644,7 @@ private static final long serialVersionUID = 0L;
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-      
+
       content_ = value;
       onChanged();
       return this;

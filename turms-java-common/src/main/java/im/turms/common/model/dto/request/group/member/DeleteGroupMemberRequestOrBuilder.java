@@ -31,10 +31,10 @@ public interface DeleteGroupMemberRequestOrBuilder extends
   long getGroupId();
 
   /**
-   * <code>int64 group_member_id = 2;</code>
-   * @return The groupMemberId.
+   * <code>int64 member_id = 2;</code>
+   * @return The memberId.
    */
-  long getGroupMemberId();
+  long getMemberId();
 
   /**
    * <code>.google.protobuf.Int64Value successor_id = 3;</code>

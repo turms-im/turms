@@ -31,8 +31,8 @@ public interface CreateGroupBlacklistedUserRequestOrBuilder extends
   long getGroupId();
 
   /**
-   * <code>int64 blacklisted_user_id = 2;</code>
-   * @return The blacklistedUserId.
+   * <code>int64 user_id = 2;</code>
+   * @return The userId.
    */
-  long getBlacklistedUserId();
+  long getUserId();
 }

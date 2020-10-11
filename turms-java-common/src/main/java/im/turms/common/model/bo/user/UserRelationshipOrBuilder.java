@@ -55,19 +55,19 @@ public interface UserRelationshipOrBuilder extends
   com.google.protobuf.Int64ValueOrBuilder getRelatedUserIdOrBuilder();
 
   /**
-   * <code>.google.protobuf.BoolValue is_blocked = 3;</code>
-   * @return Whether the isBlocked field is set.
+   * <code>.google.protobuf.BoolValue blocked = 3;</code>
+   * @return Whether the blocked field is set.
    */
-  boolean hasIsBlocked();
+  boolean hasBlocked();
   /**
-   * <code>.google.protobuf.BoolValue is_blocked = 3;</code>
-   * @return The isBlocked.
+   * <code>.google.protobuf.BoolValue blocked = 3;</code>
+   * @return The blocked.
    */
-  com.google.protobuf.BoolValue getIsBlocked();
+  com.google.protobuf.BoolValue getBlocked();
   /**
-   * <code>.google.protobuf.BoolValue is_blocked = 3;</code>
+   * <code>.google.protobuf.BoolValue blocked = 3;</code>
    */
-  com.google.protobuf.BoolValueOrBuilder getIsBlockedOrBuilder();
+  com.google.protobuf.BoolValueOrBuilder getBlockedOrBuilder();
 
   /**
    * <code>.google.protobuf.Int64Value group_index = 4;</code>

@@ -1105,7 +1105,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int32Value size = 2;</code>
      */
     public com.google.protobuf.Int32Value.Builder getSizeBuilder() {
-      
+
       onChanged();
       return getSizeFieldBuilder().getBuilder();
     }
@@ -1124,7 +1124,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int32Value size = 2;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder> 
+        com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder>
         getSizeFieldBuilder() {
       if (sizeBuilder_ == null) {
         sizeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -1224,7 +1224,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.BoolValue are_group_messages = 3;</code>
      */
     public com.google.protobuf.BoolValue.Builder getAreGroupMessagesBuilder() {
-      
+
       onChanged();
       return getAreGroupMessagesFieldBuilder().getBuilder();
     }
@@ -1243,7 +1243,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.BoolValue are_group_messages = 3;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder> 
+        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder>
         getAreGroupMessagesFieldBuilder() {
       if (areGroupMessagesBuilder_ == null) {
         areGroupMessagesBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -1343,7 +1343,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.BoolValue are_system_messages = 4;</code>
      */
     public com.google.protobuf.BoolValue.Builder getAreSystemMessagesBuilder() {
-      
+
       onChanged();
       return getAreSystemMessagesFieldBuilder().getBuilder();
     }
@@ -1362,7 +1362,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.BoolValue are_system_messages = 4;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder> 
+        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder>
         getAreSystemMessagesFieldBuilder() {
       if (areSystemMessagesBuilder_ == null) {
         areSystemMessagesBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -1462,7 +1462,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value from_id = 5;</code>
      */
     public com.google.protobuf.Int64Value.Builder getFromIdBuilder() {
-      
+
       onChanged();
       return getFromIdFieldBuilder().getBuilder();
     }
@@ -1481,7 +1481,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value from_id = 5;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> 
+        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
         getFromIdFieldBuilder() {
       if (fromIdBuilder_ == null) {
         fromIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -1581,7 +1581,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value delivery_date_after = 6;</code>
      */
     public com.google.protobuf.Int64Value.Builder getDeliveryDateAfterBuilder() {
-      
+
       onChanged();
       return getDeliveryDateAfterFieldBuilder().getBuilder();
     }
@@ -1600,7 +1600,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value delivery_date_after = 6;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> 
+        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
         getDeliveryDateAfterFieldBuilder() {
       if (deliveryDateAfterBuilder_ == null) {
         deliveryDateAfterBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -1700,7 +1700,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value delivery_date_before = 7;</code>
      */
     public com.google.protobuf.Int64Value.Builder getDeliveryDateBeforeBuilder() {
-      
+
       onChanged();
       return getDeliveryDateBeforeFieldBuilder().getBuilder();
     }
@@ -1719,7 +1719,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value delivery_date_before = 7;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> 
+        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
         getDeliveryDateBeforeFieldBuilder() {
       if (deliveryDateBeforeBuilder_ == null) {
         deliveryDateBeforeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -1746,7 +1746,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setDeliveryStatusValue(int value) {
-      
+
       deliveryStatus_ = value;
       onChanged();
       return this;
@@ -1770,7 +1770,7 @@ private static final long serialVersionUID = 0L;
       if (value == null) {
         throw new NullPointerException();
       }
-      
+
       deliveryStatus_ = value.getNumber();
       onChanged();
       return this;
@@ -1780,7 +1780,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearDeliveryStatus() {
-      
+
       deliveryStatus_ = 0;
       onChanged();
       return this;

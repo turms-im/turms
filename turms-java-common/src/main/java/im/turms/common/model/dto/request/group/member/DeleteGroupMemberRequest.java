@@ -72,7 +72,7 @@ private static final long serialVersionUID = 0L;
           }
           case 16: {
 
-            groupMemberId_ = input.readInt64();
+            memberId_ = input.readInt64();
             break;
           }
           case 26: {
@@ -144,15 +144,15 @@ private static final long serialVersionUID = 0L;
     return groupId_;
   }
 
-  public static final int GROUP_MEMBER_ID_FIELD_NUMBER = 2;
-  private long groupMemberId_;
+  public static final int MEMBER_ID_FIELD_NUMBER = 2;
+  private long memberId_;
   /**
-   * <code>int64 group_member_id = 2;</code>
-   * @return The groupMemberId.
+   * <code>int64 member_id = 2;</code>
+   * @return The memberId.
    */
   @java.lang.Override
-  public long getGroupMemberId() {
-    return groupMemberId_;
+  public long getMemberId() {
+    return memberId_;
   }
 
   public static final int SUCCESSOR_ID_FIELD_NUMBER = 3;
@@ -224,8 +224,8 @@ private static final long serialVersionUID = 0L;
     if (groupId_ != 0L) {
       output.writeInt64(1, groupId_);
     }
-    if (groupMemberId_ != 0L) {
-      output.writeInt64(2, groupMemberId_);
+    if (memberId_ != 0L) {
+      output.writeInt64(2, memberId_);
     }
     if (successorId_ != null) {
       output.writeMessage(3, getSuccessorId());
@@ -246,9 +246,9 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt64Size(1, groupId_);
     }
-    if (groupMemberId_ != 0L) {
+    if (memberId_ != 0L) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(2, groupMemberId_);
+        .computeInt64Size(2, memberId_);
     }
     if (successorId_ != null) {
       size += com.google.protobuf.CodedOutputStream
@@ -275,8 +275,8 @@ private static final long serialVersionUID = 0L;
 
     if (getGroupId()
         != other.getGroupId()) return false;
-    if (getGroupMemberId()
-        != other.getGroupMemberId()) return false;
+    if (getMemberId()
+        != other.getMemberId()) return false;
     if (hasSuccessorId() != other.hasSuccessorId()) return false;
     if (hasSuccessorId()) {
       if (!getSuccessorId()
@@ -301,9 +301,9 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + GROUP_ID_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getGroupId());
-    hash = (37 * hash) + GROUP_MEMBER_ID_FIELD_NUMBER;
+    hash = (37 * hash) + MEMBER_ID_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getGroupMemberId());
+        getMemberId());
     if (hasSuccessorId()) {
       hash = (37 * hash) + SUCCESSOR_ID_FIELD_NUMBER;
       hash = (53 * hash) + getSuccessorId().hashCode();
@@ -447,7 +447,7 @@ private static final long serialVersionUID = 0L;
       super.clear();
       groupId_ = 0L;
 
-      groupMemberId_ = 0L;
+      memberId_ = 0L;
 
       if (successorIdBuilder_ == null) {
         successorId_ = null;
@@ -488,7 +488,7 @@ private static final long serialVersionUID = 0L;
     public im.turms.common.model.dto.request.group.member.DeleteGroupMemberRequest buildPartial() {
       im.turms.common.model.dto.request.group.member.DeleteGroupMemberRequest result = new im.turms.common.model.dto.request.group.member.DeleteGroupMemberRequest(this);
       result.groupId_ = groupId_;
-      result.groupMemberId_ = groupMemberId_;
+      result.memberId_ = memberId_;
       if (successorIdBuilder_ == null) {
         result.successorId_ = successorId_;
       } else {
@@ -550,8 +550,8 @@ private static final long serialVersionUID = 0L;
       if (other.getGroupId() != 0L) {
         setGroupId(other.getGroupId());
       }
-      if (other.getGroupMemberId() != 0L) {
-        setGroupMemberId(other.getGroupMemberId());
+      if (other.getMemberId() != 0L) {
+        setMemberId(other.getMemberId());
       }
       if (other.hasSuccessorId()) {
         mergeSuccessorId(other.getSuccessorId());
@@ -603,7 +603,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setGroupId(long value) {
-      
+
       groupId_ = value;
       onChanged();
       return this;
@@ -613,39 +613,39 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearGroupId() {
-      
+
       groupId_ = 0L;
       onChanged();
       return this;
     }
 
-    private long groupMemberId_ ;
+    private long memberId_ ;
     /**
-     * <code>int64 group_member_id = 2;</code>
-     * @return The groupMemberId.
+     * <code>int64 member_id = 2;</code>
+     * @return The memberId.
      */
     @java.lang.Override
-    public long getGroupMemberId() {
-      return groupMemberId_;
+    public long getMemberId() {
+      return memberId_;
     }
     /**
-     * <code>int64 group_member_id = 2;</code>
-     * @param value The groupMemberId to set.
+     * <code>int64 member_id = 2;</code>
+     * @param value The memberId to set.
      * @return This builder for chaining.
      */
-    public Builder setGroupMemberId(long value) {
-      
-      groupMemberId_ = value;
+    public Builder setMemberId(long value) {
+
+      memberId_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>int64 group_member_id = 2;</code>
+     * <code>int64 member_id = 2;</code>
      * @return This builder for chaining.
      */
-    public Builder clearGroupMemberId() {
-      
-      groupMemberId_ = 0L;
+    public Builder clearMemberId() {
+
+      memberId_ = 0L;
       onChanged();
       return this;
     }
@@ -737,7 +737,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value successor_id = 3;</code>
      */
     public com.google.protobuf.Int64Value.Builder getSuccessorIdBuilder() {
-      
+
       onChanged();
       return getSuccessorIdFieldBuilder().getBuilder();
     }
@@ -756,7 +756,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value successor_id = 3;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> 
+        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
         getSuccessorIdFieldBuilder() {
       if (successorIdBuilder_ == null) {
         successorIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -856,7 +856,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.BoolValue quit_after_transfer = 4;</code>
      */
     public com.google.protobuf.BoolValue.Builder getQuitAfterTransferBuilder() {
-      
+
       onChanged();
       return getQuitAfterTransferFieldBuilder().getBuilder();
     }
@@ -875,7 +875,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.BoolValue quit_after_transfer = 4;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder> 
+        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder>
         getQuitAfterTransferFieldBuilder() {
       if (quitAfterTransferBuilder_ == null) {
         quitAfterTransferBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<

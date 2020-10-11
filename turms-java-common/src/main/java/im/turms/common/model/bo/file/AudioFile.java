@@ -319,7 +319,7 @@ private static final long serialVersionUID = 0L;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         url_ = s;
@@ -335,7 +335,7 @@ private static final long serialVersionUID = 0L;
         getUrlBytes() {
       java.lang.Object ref = url_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         url_ = b;
@@ -840,7 +840,7 @@ private static final long serialVersionUID = 0L;
           getUrlBytes() {
         java.lang.Object ref = url_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           url_ = b;
@@ -859,7 +859,7 @@ private static final long serialVersionUID = 0L;
         if (value == null) {
     throw new NullPointerException();
   }
-  
+
         url_ = value;
         onChanged();
         return this;
@@ -869,7 +869,7 @@ private static final long serialVersionUID = 0L;
        * @return This builder for chaining.
        */
       public Builder clearUrl() {
-        
+
         url_ = getDefaultInstance().getUrl();
         onChanged();
         return this;
@@ -885,7 +885,7 @@ private static final long serialVersionUID = 0L;
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        
+
         url_ = value;
         onChanged();
         return this;
@@ -978,7 +978,7 @@ private static final long serialVersionUID = 0L;
        * <code>.google.protobuf.Int32Value duration = 2;</code>
        */
       public com.google.protobuf.Int32Value.Builder getDurationBuilder() {
-        
+
         onChanged();
         return getDurationFieldBuilder().getBuilder();
       }
@@ -997,7 +997,7 @@ private static final long serialVersionUID = 0L;
        * <code>.google.protobuf.Int32Value duration = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder> 
+          com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder>
           getDurationFieldBuilder() {
         if (durationBuilder_ == null) {
           durationBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -1097,7 +1097,7 @@ private static final long serialVersionUID = 0L;
        * <code>.google.protobuf.Int32Value size = 3;</code>
        */
       public com.google.protobuf.Int32Value.Builder getSizeBuilder() {
-        
+
         onChanged();
         return getSizeFieldBuilder().getBuilder();
       }
@@ -1116,7 +1116,7 @@ private static final long serialVersionUID = 0L;
        * <code>.google.protobuf.Int32Value size = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder> 
+          com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder>
           getSizeFieldBuilder() {
         if (sizeBuilder_ == null) {
           sizeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -1216,7 +1216,7 @@ private static final long serialVersionUID = 0L;
        * <code>.google.protobuf.StringValue format = 4;</code>
        */
       public com.google.protobuf.StringValue.Builder getFormatBuilder() {
-        
+
         onChanged();
         return getFormatFieldBuilder().getBuilder();
       }
@@ -1235,7 +1235,7 @@ private static final long serialVersionUID = 0L;
        * <code>.google.protobuf.StringValue format = 4;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> 
+          com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>
           getFormatFieldBuilder() {
         if (formatBuilder_ == null) {
           formatBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -1784,7 +1784,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.AudioFile.Description description = 1;</code>
      */
     public im.turms.common.model.bo.file.AudioFile.Description.Builder getDescriptionBuilder() {
-      
+
       onChanged();
       return getDescriptionFieldBuilder().getBuilder();
     }
@@ -1803,7 +1803,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.AudioFile.Description description = 1;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.bo.file.AudioFile.Description, im.turms.common.model.bo.file.AudioFile.Description.Builder, im.turms.common.model.bo.file.AudioFile.DescriptionOrBuilder> 
+        im.turms.common.model.bo.file.AudioFile.Description, im.turms.common.model.bo.file.AudioFile.Description.Builder, im.turms.common.model.bo.file.AudioFile.DescriptionOrBuilder>
         getDescriptionFieldBuilder() {
       if (descriptionBuilder_ == null) {
         descriptionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -1903,7 +1903,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.BytesValue data = 2;</code>
      */
     public com.google.protobuf.BytesValue.Builder getDataBuilder() {
-      
+
       onChanged();
       return getDataFieldBuilder().getBuilder();
     }
@@ -1922,7 +1922,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.BytesValue data = 2;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.BytesValue, com.google.protobuf.BytesValue.Builder, com.google.protobuf.BytesValueOrBuilder> 
+        com.google.protobuf.BytesValue, com.google.protobuf.BytesValue.Builder, com.google.protobuf.BytesValueOrBuilder>
         getDataFieldBuilder() {
       if (dataBuilder_ == null) {
         dataBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<

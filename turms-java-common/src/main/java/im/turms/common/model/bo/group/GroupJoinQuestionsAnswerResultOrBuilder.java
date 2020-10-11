@@ -31,21 +31,21 @@ public interface GroupJoinQuestionsAnswerResultOrBuilder extends
   int getScore();
 
   /**
-   * <code>repeated int64 questions_ids = 2;</code>
-   * @return A list containing the questionsIds.
+   * <code>repeated int64 question_ids = 2;</code>
+   * @return A list containing the questionIds.
    */
-  java.util.List<java.lang.Long> getQuestionsIdsList();
+  java.util.List<java.lang.Long> getQuestionIdsList();
   /**
-   * <code>repeated int64 questions_ids = 2;</code>
-   * @return The count of questionsIds.
+   * <code>repeated int64 question_ids = 2;</code>
+   * @return The count of questionIds.
    */
-  int getQuestionsIdsCount();
+  int getQuestionIdsCount();
   /**
-   * <code>repeated int64 questions_ids = 2;</code>
+   * <code>repeated int64 question_ids = 2;</code>
    * @param index The index of the element to return.
-   * @return The questionsIds at the given index.
+   * @return The questionIds at the given index.
    */
-  long getQuestionsIds(int index);
+  long getQuestionIds(int index);
 
   /**
    * <code>bool joined = 3;</code>

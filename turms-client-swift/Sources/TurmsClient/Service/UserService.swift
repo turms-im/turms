@@ -110,7 +110,7 @@ public class UserService {
     public func queryUserIdsNearby(latitude: Float, longitude: Float, distance: Int32? = nil, maxNumber: Int32? = nil) -> Promise<[Int64]> {
         return turmsClient.driver
             .send { $0
-                .request("queryUsersIdsNearbyRequest")
+                .request("queryUserIdsNearbyRequest")
                 .field("latitude", latitude)
                 .field("longitude", longitude)
                 .field("distance", distance)
@@ -122,7 +122,7 @@ public class UserService {
     public func queryUserSessionIdsNearby(latitude: Float, longitude: Float, distance: Int32? = nil, maxNumber: Int32? = nil) -> Promise<[UserSessionId]> {
         return turmsClient.driver
             .send { $0
-                .request("queryUsersIdsNearbyRequest")
+                .request("queryUserIdsNearbyRequest")
                 .field("latitude", latitude)
                 .field("longitude", longitude)
                 .field("distance", distance)
@@ -131,10 +131,10 @@ public class UserService {
             .map { $0.data.userSessionIds.userSessionIds }
     }
 
-    public func queryUsersInfosNearby(latitude: Float, longitude: Float, distance: Int32? = nil, maxNumber: Int32? = nil) -> Promise<[UserInfo]> {
+    public func queryUserInfosNearby(latitude: Float, longitude: Float, distance: Int32? = nil, maxNumber: Int32? = nil) -> Promise<[UserInfo]> {
         return turmsClient.driver
             .send { $0
-                .request("queryUsersInfosNearbyRequest")
+                .request("queryUserInfosNearbyRequest")
                 .field("latitude", latitude)
                 .field("longitude", longitude)
                 .field("distance", distance)
@@ -143,11 +143,11 @@ public class UserService {
             .map { $0.data.usersInfosWithVersion.userInfos }
     }
 
-    public func queryUsersOnlineStatusRequest(_ usersIds: [Int64]) -> Promise<[UserStatusDetail]> {
+    public func queryUserOnlineStatusesRequest(_ userIds: [Int64]) -> Promise<[UserStatusDetail]> {
         return turmsClient.driver
             .send { $0
-                .request("queryUsersOnlineStatusRequest")
-                .field("usersIds", usersIds)
+                .request("queryUserOnlineStatusesRequest")
+                .field("userIds", userIds)
             }
             .map { $0.data.usersOnlineStatuses.userStatuses }
     }
@@ -155,26 +155,26 @@ public class UserService {
     // Relationship
 
     public func queryRelationships(
-        relatedUsersIds: [Int64]? = nil,
+        relatedUserIds: [Int64]? = nil,
         isBlocked: Bool? = nil,
         groupIndex: Int32? = nil,
         lastUpdatedDate: Date? = nil) -> Promise<UserRelationshipsWithVersion?> {
         return turmsClient.driver
             .send { $0
                 .request("queryRelationshipsRequest")
-                .field("relatedUsersIds", relatedUsersIds)
-                .field("isBlocked", isBlocked)
+                .field("userIds", relatedUserIds)
+                .field("blocked", isBlocked)
                 .field("groupIndex", groupIndex)
                 .field("lastUpdatedDate", lastUpdatedDate)
             }
             .map { try $0.data.kind?.getKindData(UserRelationshipsWithVersion.self) }
     }
 
-    public func queryRelatedUsersIds(isBlocked: Bool? = nil, groupIndex: Int32? = nil, lastUpdatedDate: Date? = nil) -> Promise<Int64ValuesWithVersion?> {
+    public func queryRelatedUserIds(isBlocked: Bool? = nil, groupIndex: Int32? = nil, lastUpdatedDate: Date? = nil) -> Promise<Int64ValuesWithVersion?> {
         return turmsClient.driver
             .send { $0
-                .request("queryRelatedUsersIdsRequest")
-                .field("isBlocked", isBlocked)
+                .request("queryRelatedUserIdsRequest")
+                .field("blocked", isBlocked)
                 .field("groupIndex", groupIndex)
                 .field("lastUpdatedDate", lastUpdatedDate)
             }
@@ -200,7 +200,7 @@ public class UserService {
             .send { $0
                 .request("createRelationshipRequest")
                 .field("userId", userId)
-                .field("isBlocked", isBlocked)
+                .field("blocked", isBlocked)
                 .field("groupIndex", groupIndex)
             }
             .asVoid()
@@ -224,7 +224,7 @@ public class UserService {
         return turmsClient.driver
             .send { $0
                 .request("deleteRelationshipRequest")
-                .field("relatedUserId", relatedUserId)
+                .field("userId", relatedUserId)
                 .field("groupIndex", deleteGroupIndex)
                 .field("targetGroupIndex", targetGroupIndex)
             }
@@ -238,7 +238,7 @@ public class UserService {
         return turmsClient.driver
             .send { $0
                 .request("updateRelationshipRequest")
-                .field("relatedUserId", relatedUserId)
+                .field("userId", relatedUserId)
                 .field("blocked", isBlocked)
                 .field("newGroupIndex", groupIndex)
             }
@@ -318,7 +318,7 @@ public class UserService {
         return turmsClient.driver
             .send { $0
                 .request("updateRelationshipRequest")
-                .field("relatedUserId", relatedUserId)
+                .field("userId", relatedUserId)
                 .field("newGroupIndex", groupIndex)
             }
             .asVoid()

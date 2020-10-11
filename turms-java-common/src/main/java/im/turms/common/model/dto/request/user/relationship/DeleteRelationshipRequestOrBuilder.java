@@ -25,10 +25,10 @@ public interface DeleteRelationshipRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>int64 related_user_id = 1;</code>
-   * @return The relatedUserId.
+   * <code>int64 user_id = 1;</code>
+   * @return The userId.
    */
-  long getRelatedUserId();
+  long getUserId();
 
   /**
    * <code>.google.protobuf.Int32Value group_index = 2;</code>

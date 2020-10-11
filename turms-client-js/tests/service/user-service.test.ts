@@ -127,20 +127,20 @@ describe('Query', () => {
         const sessionIds = await turmsClient.userService.queryUserSessionIdsNearby(1, 1);
         expect(userIds || sessionIds).toBeTruthy();
     });
-    it('queryUsersInfosNearby_shouldReturnUsersInfos', async () => {
-        const result = await turmsClient.userService.queryUsersInfosNearby(1, 1);
+    it('queryUserInfosNearby_shouldReturnUsersInfos', async () => {
+        const result = await turmsClient.userService.queryUserInfosNearby(1, 1);
         expect(result).toBeTruthy();
     });
-    it('queryUsersOnlineStatusRequest_shouldUsersOnlineStatus', async () => {
-        const result = await turmsClient.userService.queryUsersOnlineStatusRequest(['1']);
+    it('queryUserOnlineStatusesRequest_shouldUsersOnlineStatus', async () => {
+        const result = await turmsClient.userService.queryUserOnlineStatusesRequest(['1']);
         expect(result[0].userStatus).toEqual(userStatus);
     });
     it('queryRelationships_shouldReturnUserRelationshipsWithVersion', async () => {
         const result = await turmsClient.userService.queryRelationships(['2']);
         expect(result).toBeTruthy();
     });
-    it('queryRelatedUsersIds_shouldReturnRelatedUsersIds', async () => {
-        const result = await turmsClient.userService.queryRelatedUsersIds();
+    it('queryRelatedUserIds_shouldReturnRelatedUserIds', async () => {
+        const result = await turmsClient.userService.queryRelatedUserIds();
         expect(result).toBeTruthy();
     });
     it('queryFriends_shouldReturnFriendRelationships', async () => {

@@ -46,21 +46,21 @@ public interface QueryGroupMembersRequestOrBuilder extends
   com.google.protobuf.Int64ValueOrBuilder getLastUpdatedDateOrBuilder();
 
   /**
-   * <code>repeated int64 group_members_ids = 3;</code>
-   * @return A list containing the groupMembersIds.
+   * <code>repeated int64 member_ids = 3;</code>
+   * @return A list containing the memberIds.
    */
-  java.util.List<java.lang.Long> getGroupMembersIdsList();
+  java.util.List<java.lang.Long> getMemberIdsList();
   /**
-   * <code>repeated int64 group_members_ids = 3;</code>
-   * @return The count of groupMembersIds.
+   * <code>repeated int64 member_ids = 3;</code>
+   * @return The count of memberIds.
    */
-  int getGroupMembersIdsCount();
+  int getMemberIdsCount();
   /**
-   * <code>repeated int64 group_members_ids = 3;</code>
+   * <code>repeated int64 member_ids = 3;</code>
    * @param index The index of the element to return.
-   * @return The groupMembersIds at the given index.
+   * @return The memberIds at the given index.
    */
-  long getGroupMembersIds(int index);
+  long getMemberIds(int index);
 
   /**
    * <code>.google.protobuf.BoolValue with_status = 4;</code>

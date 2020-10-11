@@ -718,7 +718,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.StringValue password = 1;</code>
      */
     public com.google.protobuf.StringValue.Builder getPasswordBuilder() {
-      
+
       onChanged();
       return getPasswordFieldBuilder().getBuilder();
     }
@@ -737,7 +737,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.StringValue password = 1;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> 
+        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>
         getPasswordFieldBuilder() {
       if (passwordBuilder_ == null) {
         passwordBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -837,7 +837,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.StringValue name = 2;</code>
      */
     public com.google.protobuf.StringValue.Builder getNameBuilder() {
-      
+
       onChanged();
       return getNameFieldBuilder().getBuilder();
     }
@@ -856,7 +856,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.StringValue name = 2;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> 
+        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>
         getNameFieldBuilder() {
       if (nameBuilder_ == null) {
         nameBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -956,7 +956,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.StringValue intro = 3;</code>
      */
     public com.google.protobuf.StringValue.Builder getIntroBuilder() {
-      
+
       onChanged();
       return getIntroFieldBuilder().getBuilder();
     }
@@ -975,7 +975,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.StringValue intro = 3;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> 
+        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>
         getIntroFieldBuilder() {
       if (introBuilder_ == null) {
         introBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -1002,7 +1002,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setProfileAccessStrategyValue(int value) {
-      
+
       profileAccessStrategy_ = value;
       onChanged();
       return this;
@@ -1026,7 +1026,7 @@ private static final long serialVersionUID = 0L;
       if (value == null) {
         throw new NullPointerException();
       }
-      
+
       profileAccessStrategy_ = value.getNumber();
       onChanged();
       return this;
@@ -1036,7 +1036,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearProfileAccessStrategy() {
-      
+
       profileAccessStrategy_ = 0;
       onChanged();
       return this;

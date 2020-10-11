@@ -473,7 +473,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setUserId(long value) {
-      
+
       userId_ = value;
       onChanged();
       return this;
@@ -483,7 +483,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearUserId() {
-      
+
       userId_ = 0L;
       onChanged();
       return this;
@@ -503,7 +503,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setDeviceTypeValue(int value) {
-      
+
       deviceType_ = value;
       onChanged();
       return this;
@@ -527,7 +527,7 @@ private static final long serialVersionUID = 0L;
       if (value == null) {
         throw new NullPointerException();
       }
-      
+
       deviceType_ = value.getNumber();
       onChanged();
       return this;
@@ -537,7 +537,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearDeviceType() {
-      
+
       deviceType_ = 0;
       onChanged();
       return this;

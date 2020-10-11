@@ -33,7 +33,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private QueryRelationshipsRequest() {
-    relatedUsersIds_ = emptyLongList();
+    userIds_ = emptyLongList();
   }
 
   @java.lang.Override
@@ -69,34 +69,34 @@ private static final long serialVersionUID = 0L;
             break;
           case 8: {
             if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-              relatedUsersIds_ = newLongList();
+              userIds_ = newLongList();
               mutable_bitField0_ |= 0x00000001;
             }
-            relatedUsersIds_.addLong(input.readInt64());
+            userIds_.addLong(input.readInt64());
             break;
           }
           case 10: {
             int length = input.readRawVarint32();
             int limit = input.pushLimit(length);
             if (!((mutable_bitField0_ & 0x00000001) != 0) && input.getBytesUntilLimit() > 0) {
-              relatedUsersIds_ = newLongList();
+              userIds_ = newLongList();
               mutable_bitField0_ |= 0x00000001;
             }
             while (input.getBytesUntilLimit() > 0) {
-              relatedUsersIds_.addLong(input.readInt64());
+              userIds_.addLong(input.readInt64());
             }
             input.popLimit(limit);
             break;
           }
           case 18: {
             com.google.protobuf.BoolValue.Builder subBuilder = null;
-            if (isBlocked_ != null) {
-              subBuilder = isBlocked_.toBuilder();
+            if (blocked_ != null) {
+              subBuilder = blocked_.toBuilder();
             }
-            isBlocked_ = input.readMessage(com.google.protobuf.BoolValue.parser(), extensionRegistry);
+            blocked_ = input.readMessage(com.google.protobuf.BoolValue.parser(), extensionRegistry);
             if (subBuilder != null) {
-              subBuilder.mergeFrom(isBlocked_);
-              isBlocked_ = subBuilder.buildPartial();
+              subBuilder.mergeFrom(blocked_);
+              blocked_ = subBuilder.buildPartial();
             }
 
             break;
@@ -143,7 +143,7 @@ private static final long serialVersionUID = 0L;
           e).setUnfinishedMessage(this);
     } finally {
       if (((mutable_bitField0_ & 0x00000001) != 0)) {
-        relatedUsersIds_.makeImmutable(); // C
+        userIds_.makeImmutable(); // C
       }
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
@@ -162,58 +162,58 @@ private static final long serialVersionUID = 0L;
             im.turms.common.model.dto.request.user.relationship.QueryRelationshipsRequest.class, im.turms.common.model.dto.request.user.relationship.QueryRelationshipsRequest.Builder.class);
   }
 
-  public static final int RELATED_USERS_IDS_FIELD_NUMBER = 1;
-  private com.google.protobuf.Internal.LongList relatedUsersIds_;
+  public static final int USER_IDS_FIELD_NUMBER = 1;
+  private com.google.protobuf.Internal.LongList userIds_;
   /**
-   * <code>repeated int64 related_users_ids = 1;</code>
-   * @return A list containing the relatedUsersIds.
+   * <code>repeated int64 user_ids = 1;</code>
+   * @return A list containing the userIds.
    */
   @java.lang.Override
   public java.util.List<java.lang.Long>
-      getRelatedUsersIdsList() {
-    return relatedUsersIds_;
+      getUserIdsList() {
+    return userIds_;
   }
   /**
-   * <code>repeated int64 related_users_ids = 1;</code>
-   * @return The count of relatedUsersIds.
+   * <code>repeated int64 user_ids = 1;</code>
+   * @return The count of userIds.
    */
-  public int getRelatedUsersIdsCount() {
-    return relatedUsersIds_.size();
+  public int getUserIdsCount() {
+    return userIds_.size();
   }
   /**
-   * <code>repeated int64 related_users_ids = 1;</code>
+   * <code>repeated int64 user_ids = 1;</code>
    * @param index The index of the element to return.
-   * @return The relatedUsersIds at the given index.
+   * @return The userIds at the given index.
    */
-  public long getRelatedUsersIds(int index) {
-    return relatedUsersIds_.getLong(index);
+  public long getUserIds(int index) {
+    return userIds_.getLong(index);
   }
-  private int relatedUsersIdsMemoizedSerializedSize = -1;
+  private int userIdsMemoizedSerializedSize = -1;
 
-  public static final int IS_BLOCKED_FIELD_NUMBER = 2;
-  private com.google.protobuf.BoolValue isBlocked_;
+  public static final int BLOCKED_FIELD_NUMBER = 2;
+  private com.google.protobuf.BoolValue blocked_;
   /**
-   * <code>.google.protobuf.BoolValue is_blocked = 2;</code>
-   * @return Whether the isBlocked field is set.
+   * <code>.google.protobuf.BoolValue blocked = 2;</code>
+   * @return Whether the blocked field is set.
    */
   @java.lang.Override
-  public boolean hasIsBlocked() {
-    return isBlocked_ != null;
+  public boolean hasBlocked() {
+    return blocked_ != null;
   }
   /**
-   * <code>.google.protobuf.BoolValue is_blocked = 2;</code>
-   * @return The isBlocked.
+   * <code>.google.protobuf.BoolValue blocked = 2;</code>
+   * @return The blocked.
    */
   @java.lang.Override
-  public com.google.protobuf.BoolValue getIsBlocked() {
-    return isBlocked_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : isBlocked_;
+  public com.google.protobuf.BoolValue getBlocked() {
+    return blocked_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : blocked_;
   }
   /**
-   * <code>.google.protobuf.BoolValue is_blocked = 2;</code>
+   * <code>.google.protobuf.BoolValue blocked = 2;</code>
    */
   @java.lang.Override
-  public com.google.protobuf.BoolValueOrBuilder getIsBlockedOrBuilder() {
-    return getIsBlocked();
+  public com.google.protobuf.BoolValueOrBuilder getBlockedOrBuilder() {
+    return getBlocked();
   }
 
   public static final int GROUP_INDEX_FIELD_NUMBER = 3;
@@ -283,15 +283,15 @@ private static final long serialVersionUID = 0L;
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
     getSerializedSize();
-    if (getRelatedUsersIdsList().size() > 0) {
+    if (getUserIdsList().size() > 0) {
       output.writeUInt32NoTag(10);
-      output.writeUInt32NoTag(relatedUsersIdsMemoizedSerializedSize);
+      output.writeUInt32NoTag(userIdsMemoizedSerializedSize);
     }
-    for (int i = 0; i < relatedUsersIds_.size(); i++) {
-      output.writeInt64NoTag(relatedUsersIds_.getLong(i));
+    for (int i = 0; i < userIds_.size(); i++) {
+      output.writeInt64NoTag(userIds_.getLong(i));
     }
-    if (isBlocked_ != null) {
-      output.writeMessage(2, getIsBlocked());
+    if (blocked_ != null) {
+      output.writeMessage(2, getBlocked());
     }
     if (groupIndex_ != null) {
       output.writeMessage(3, getGroupIndex());
@@ -310,21 +310,21 @@ private static final long serialVersionUID = 0L;
     size = 0;
     {
       int dataSize = 0;
-      for (int i = 0; i < relatedUsersIds_.size(); i++) {
+      for (int i = 0; i < userIds_.size(); i++) {
         dataSize += com.google.protobuf.CodedOutputStream
-          .computeInt64SizeNoTag(relatedUsersIds_.getLong(i));
+          .computeInt64SizeNoTag(userIds_.getLong(i));
       }
       size += dataSize;
-      if (!getRelatedUsersIdsList().isEmpty()) {
+      if (!getUserIdsList().isEmpty()) {
         size += 1;
         size += com.google.protobuf.CodedOutputStream
             .computeInt32SizeNoTag(dataSize);
       }
-      relatedUsersIdsMemoizedSerializedSize = dataSize;
+      userIdsMemoizedSerializedSize = dataSize;
     }
-    if (isBlocked_ != null) {
+    if (blocked_ != null) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(2, getIsBlocked());
+        .computeMessageSize(2, getBlocked());
     }
     if (groupIndex_ != null) {
       size += com.google.protobuf.CodedOutputStream
@@ -349,12 +349,12 @@ private static final long serialVersionUID = 0L;
     }
     im.turms.common.model.dto.request.user.relationship.QueryRelationshipsRequest other = (im.turms.common.model.dto.request.user.relationship.QueryRelationshipsRequest) obj;
 
-    if (!getRelatedUsersIdsList()
-        .equals(other.getRelatedUsersIdsList())) return false;
-    if (hasIsBlocked() != other.hasIsBlocked()) return false;
-    if (hasIsBlocked()) {
-      if (!getIsBlocked()
-          .equals(other.getIsBlocked())) return false;
+    if (!getUserIdsList()
+        .equals(other.getUserIdsList())) return false;
+    if (hasBlocked() != other.hasBlocked()) return false;
+    if (hasBlocked()) {
+      if (!getBlocked()
+          .equals(other.getBlocked())) return false;
     }
     if (hasGroupIndex() != other.hasGroupIndex()) return false;
     if (hasGroupIndex()) {
@@ -377,13 +377,13 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    if (getRelatedUsersIdsCount() > 0) {
-      hash = (37 * hash) + RELATED_USERS_IDS_FIELD_NUMBER;
-      hash = (53 * hash) + getRelatedUsersIdsList().hashCode();
+    if (getUserIdsCount() > 0) {
+      hash = (37 * hash) + USER_IDS_FIELD_NUMBER;
+      hash = (53 * hash) + getUserIdsList().hashCode();
     }
-    if (hasIsBlocked()) {
-      hash = (37 * hash) + IS_BLOCKED_FIELD_NUMBER;
-      hash = (53 * hash) + getIsBlocked().hashCode();
+    if (hasBlocked()) {
+      hash = (37 * hash) + BLOCKED_FIELD_NUMBER;
+      hash = (53 * hash) + getBlocked().hashCode();
     }
     if (hasGroupIndex()) {
       hash = (37 * hash) + GROUP_INDEX_FIELD_NUMBER;
@@ -526,13 +526,13 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      relatedUsersIds_ = emptyLongList();
+      userIds_ = emptyLongList();
       bitField0_ = (bitField0_ & ~0x00000001);
-      if (isBlockedBuilder_ == null) {
-        isBlocked_ = null;
+      if (blockedBuilder_ == null) {
+        blocked_ = null;
       } else {
-        isBlocked_ = null;
-        isBlockedBuilder_ = null;
+        blocked_ = null;
+        blockedBuilder_ = null;
       }
       if (groupIndexBuilder_ == null) {
         groupIndex_ = null;
@@ -574,14 +574,14 @@ private static final long serialVersionUID = 0L;
       im.turms.common.model.dto.request.user.relationship.QueryRelationshipsRequest result = new im.turms.common.model.dto.request.user.relationship.QueryRelationshipsRequest(this);
       int from_bitField0_ = bitField0_;
       if (((bitField0_ & 0x00000001) != 0)) {
-        relatedUsersIds_.makeImmutable();
+        userIds_.makeImmutable();
         bitField0_ = (bitField0_ & ~0x00000001);
       }
-      result.relatedUsersIds_ = relatedUsersIds_;
-      if (isBlockedBuilder_ == null) {
-        result.isBlocked_ = isBlocked_;
+      result.userIds_ = userIds_;
+      if (blockedBuilder_ == null) {
+        result.blocked_ = blocked_;
       } else {
-        result.isBlocked_ = isBlockedBuilder_.build();
+        result.blocked_ = blockedBuilder_.build();
       }
       if (groupIndexBuilder_ == null) {
         result.groupIndex_ = groupIndex_;
@@ -641,18 +641,18 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(im.turms.common.model.dto.request.user.relationship.QueryRelationshipsRequest other) {
       if (other == im.turms.common.model.dto.request.user.relationship.QueryRelationshipsRequest.getDefaultInstance()) return this;
-      if (!other.relatedUsersIds_.isEmpty()) {
-        if (relatedUsersIds_.isEmpty()) {
-          relatedUsersIds_ = other.relatedUsersIds_;
+      if (!other.userIds_.isEmpty()) {
+        if (userIds_.isEmpty()) {
+          userIds_ = other.userIds_;
           bitField0_ = (bitField0_ & ~0x00000001);
         } else {
-          ensureRelatedUsersIdsIsMutable();
-          relatedUsersIds_.addAll(other.relatedUsersIds_);
+          ensureUserIdsIsMutable();
+          userIds_.addAll(other.userIds_);
         }
         onChanged();
       }
-      if (other.hasIsBlocked()) {
-        mergeIsBlocked(other.getIsBlocked());
+      if (other.hasBlocked()) {
+        mergeBlocked(other.getBlocked());
       }
       if (other.hasGroupIndex()) {
         mergeGroupIndex(other.getGroupIndex());
@@ -690,202 +690,202 @@ private static final long serialVersionUID = 0L;
     }
     private int bitField0_;
 
-    private com.google.protobuf.Internal.LongList relatedUsersIds_ = emptyLongList();
-    private void ensureRelatedUsersIdsIsMutable() {
+    private com.google.protobuf.Internal.LongList userIds_ = emptyLongList();
+    private void ensureUserIdsIsMutable() {
       if (!((bitField0_ & 0x00000001) != 0)) {
-        relatedUsersIds_ = mutableCopy(relatedUsersIds_);
+        userIds_ = mutableCopy(userIds_);
         bitField0_ |= 0x00000001;
        }
     }
     /**
-     * <code>repeated int64 related_users_ids = 1;</code>
-     * @return A list containing the relatedUsersIds.
+     * <code>repeated int64 user_ids = 1;</code>
+     * @return A list containing the userIds.
      */
     public java.util.List<java.lang.Long>
-        getRelatedUsersIdsList() {
+        getUserIdsList() {
       return ((bitField0_ & 0x00000001) != 0) ?
-               java.util.Collections.unmodifiableList(relatedUsersIds_) : relatedUsersIds_;
+               java.util.Collections.unmodifiableList(userIds_) : userIds_;
     }
     /**
-     * <code>repeated int64 related_users_ids = 1;</code>
-     * @return The count of relatedUsersIds.
+     * <code>repeated int64 user_ids = 1;</code>
+     * @return The count of userIds.
      */
-    public int getRelatedUsersIdsCount() {
-      return relatedUsersIds_.size();
+    public int getUserIdsCount() {
+      return userIds_.size();
     }
     /**
-     * <code>repeated int64 related_users_ids = 1;</code>
+     * <code>repeated int64 user_ids = 1;</code>
      * @param index The index of the element to return.
-     * @return The relatedUsersIds at the given index.
+     * @return The userIds at the given index.
      */
-    public long getRelatedUsersIds(int index) {
-      return relatedUsersIds_.getLong(index);
+    public long getUserIds(int index) {
+      return userIds_.getLong(index);
     }
     /**
-     * <code>repeated int64 related_users_ids = 1;</code>
+     * <code>repeated int64 user_ids = 1;</code>
      * @param index The index to set the value at.
-     * @param value The relatedUsersIds to set.
+     * @param value The userIds to set.
      * @return This builder for chaining.
      */
-    public Builder setRelatedUsersIds(
+    public Builder setUserIds(
         int index, long value) {
-      ensureRelatedUsersIdsIsMutable();
-      relatedUsersIds_.setLong(index, value);
+      ensureUserIdsIsMutable();
+      userIds_.setLong(index, value);
       onChanged();
       return this;
     }
     /**
-     * <code>repeated int64 related_users_ids = 1;</code>
-     * @param value The relatedUsersIds to add.
+     * <code>repeated int64 user_ids = 1;</code>
+     * @param value The userIds to add.
      * @return This builder for chaining.
      */
-    public Builder addRelatedUsersIds(long value) {
-      ensureRelatedUsersIdsIsMutable();
-      relatedUsersIds_.addLong(value);
+    public Builder addUserIds(long value) {
+      ensureUserIdsIsMutable();
+      userIds_.addLong(value);
       onChanged();
       return this;
     }
     /**
-     * <code>repeated int64 related_users_ids = 1;</code>
-     * @param values The relatedUsersIds to add.
+     * <code>repeated int64 user_ids = 1;</code>
+     * @param values The userIds to add.
      * @return This builder for chaining.
      */
-    public Builder addAllRelatedUsersIds(
+    public Builder addAllUserIds(
         java.lang.Iterable<? extends java.lang.Long> values) {
-      ensureRelatedUsersIdsIsMutable();
+      ensureUserIdsIsMutable();
       com.google.protobuf.AbstractMessageLite.Builder.addAll(
-          values, relatedUsersIds_);
+          values, userIds_);
       onChanged();
       return this;
     }
     /**
-     * <code>repeated int64 related_users_ids = 1;</code>
+     * <code>repeated int64 user_ids = 1;</code>
      * @return This builder for chaining.
      */
-    public Builder clearRelatedUsersIds() {
-      relatedUsersIds_ = emptyLongList();
+    public Builder clearUserIds() {
+      userIds_ = emptyLongList();
       bitField0_ = (bitField0_ & ~0x00000001);
       onChanged();
       return this;
     }
 
-    private com.google.protobuf.BoolValue isBlocked_;
+    private com.google.protobuf.BoolValue blocked_;
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder> isBlockedBuilder_;
+        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder> blockedBuilder_;
     /**
-     * <code>.google.protobuf.BoolValue is_blocked = 2;</code>
-     * @return Whether the isBlocked field is set.
+     * <code>.google.protobuf.BoolValue blocked = 2;</code>
+     * @return Whether the blocked field is set.
      */
-    public boolean hasIsBlocked() {
-      return isBlockedBuilder_ != null || isBlocked_ != null;
+    public boolean hasBlocked() {
+      return blockedBuilder_ != null || blocked_ != null;
     }
     /**
-     * <code>.google.protobuf.BoolValue is_blocked = 2;</code>
-     * @return The isBlocked.
+     * <code>.google.protobuf.BoolValue blocked = 2;</code>
+     * @return The blocked.
      */
-    public com.google.protobuf.BoolValue getIsBlocked() {
-      if (isBlockedBuilder_ == null) {
-        return isBlocked_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : isBlocked_;
+    public com.google.protobuf.BoolValue getBlocked() {
+      if (blockedBuilder_ == null) {
+        return blocked_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : blocked_;
       } else {
-        return isBlockedBuilder_.getMessage();
+        return blockedBuilder_.getMessage();
       }
     }
     /**
-     * <code>.google.protobuf.BoolValue is_blocked = 2;</code>
+     * <code>.google.protobuf.BoolValue blocked = 2;</code>
      */
-    public Builder setIsBlocked(com.google.protobuf.BoolValue value) {
-      if (isBlockedBuilder_ == null) {
+    public Builder setBlocked(com.google.protobuf.BoolValue value) {
+      if (blockedBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
-        isBlocked_ = value;
+        blocked_ = value;
         onChanged();
       } else {
-        isBlockedBuilder_.setMessage(value);
+        blockedBuilder_.setMessage(value);
       }
 
       return this;
     }
     /**
-     * <code>.google.protobuf.BoolValue is_blocked = 2;</code>
+     * <code>.google.protobuf.BoolValue blocked = 2;</code>
      */
-    public Builder setIsBlocked(
+    public Builder setBlocked(
         com.google.protobuf.BoolValue.Builder builderForValue) {
-      if (isBlockedBuilder_ == null) {
-        isBlocked_ = builderForValue.build();
+      if (blockedBuilder_ == null) {
+        blocked_ = builderForValue.build();
         onChanged();
       } else {
-        isBlockedBuilder_.setMessage(builderForValue.build());
+        blockedBuilder_.setMessage(builderForValue.build());
       }
 
       return this;
     }
     /**
-     * <code>.google.protobuf.BoolValue is_blocked = 2;</code>
+     * <code>.google.protobuf.BoolValue blocked = 2;</code>
      */
-    public Builder mergeIsBlocked(com.google.protobuf.BoolValue value) {
-      if (isBlockedBuilder_ == null) {
-        if (isBlocked_ != null) {
-          isBlocked_ =
-            com.google.protobuf.BoolValue.newBuilder(isBlocked_).mergeFrom(value).buildPartial();
+    public Builder mergeBlocked(com.google.protobuf.BoolValue value) {
+      if (blockedBuilder_ == null) {
+        if (blocked_ != null) {
+          blocked_ =
+            com.google.protobuf.BoolValue.newBuilder(blocked_).mergeFrom(value).buildPartial();
         } else {
-          isBlocked_ = value;
+          blocked_ = value;
         }
         onChanged();
       } else {
-        isBlockedBuilder_.mergeFrom(value);
+        blockedBuilder_.mergeFrom(value);
       }
 
       return this;
     }
     /**
-     * <code>.google.protobuf.BoolValue is_blocked = 2;</code>
+     * <code>.google.protobuf.BoolValue blocked = 2;</code>
      */
-    public Builder clearIsBlocked() {
-      if (isBlockedBuilder_ == null) {
-        isBlocked_ = null;
+    public Builder clearBlocked() {
+      if (blockedBuilder_ == null) {
+        blocked_ = null;
         onChanged();
       } else {
-        isBlocked_ = null;
-        isBlockedBuilder_ = null;
+        blocked_ = null;
+        blockedBuilder_ = null;
       }
 
       return this;
     }
     /**
-     * <code>.google.protobuf.BoolValue is_blocked = 2;</code>
+     * <code>.google.protobuf.BoolValue blocked = 2;</code>
      */
-    public com.google.protobuf.BoolValue.Builder getIsBlockedBuilder() {
-      
+    public com.google.protobuf.BoolValue.Builder getBlockedBuilder() {
+
       onChanged();
-      return getIsBlockedFieldBuilder().getBuilder();
+      return getBlockedFieldBuilder().getBuilder();
     }
     /**
-     * <code>.google.protobuf.BoolValue is_blocked = 2;</code>
+     * <code>.google.protobuf.BoolValue blocked = 2;</code>
      */
-    public com.google.protobuf.BoolValueOrBuilder getIsBlockedOrBuilder() {
-      if (isBlockedBuilder_ != null) {
-        return isBlockedBuilder_.getMessageOrBuilder();
+    public com.google.protobuf.BoolValueOrBuilder getBlockedOrBuilder() {
+      if (blockedBuilder_ != null) {
+        return blockedBuilder_.getMessageOrBuilder();
       } else {
-        return isBlocked_ == null ?
-            com.google.protobuf.BoolValue.getDefaultInstance() : isBlocked_;
+        return blocked_ == null ?
+            com.google.protobuf.BoolValue.getDefaultInstance() : blocked_;
       }
     }
     /**
-     * <code>.google.protobuf.BoolValue is_blocked = 2;</code>
+     * <code>.google.protobuf.BoolValue blocked = 2;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder> 
-        getIsBlockedFieldBuilder() {
-      if (isBlockedBuilder_ == null) {
-        isBlockedBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder>
+        getBlockedFieldBuilder() {
+      if (blockedBuilder_ == null) {
+        blockedBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
             com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder>(
-                getIsBlocked(),
+                getBlocked(),
                 getParentForChildren(),
                 isClean());
-        isBlocked_ = null;
+        blocked_ = null;
       }
-      return isBlockedBuilder_;
+      return blockedBuilder_;
     }
 
     private com.google.protobuf.Int32Value groupIndex_;
@@ -975,7 +975,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int32Value group_index = 3;</code>
      */
     public com.google.protobuf.Int32Value.Builder getGroupIndexBuilder() {
-      
+
       onChanged();
       return getGroupIndexFieldBuilder().getBuilder();
     }
@@ -994,7 +994,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int32Value group_index = 3;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder> 
+        com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder>
         getGroupIndexFieldBuilder() {
       if (groupIndexBuilder_ == null) {
         groupIndexBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -1094,7 +1094,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value last_updated_date = 4;</code>
      */
     public com.google.protobuf.Int64Value.Builder getLastUpdatedDateBuilder() {
-      
+
       onChanged();
       return getLastUpdatedDateFieldBuilder().getBuilder();
     }
@@ -1113,7 +1113,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value last_updated_date = 4;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> 
+        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
         getLastUpdatedDateFieldBuilder() {
       if (lastUpdatedDateBuilder_ == null) {
         lastUpdatedDateBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<

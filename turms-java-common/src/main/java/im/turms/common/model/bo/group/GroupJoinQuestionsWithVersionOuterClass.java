@@ -33,7 +33,7 @@ public final class GroupJoinQuestionsWithVersionOuterClass {
   }
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_im_turms_proto_GroupJoinQuestionsWithVersion_descriptor;
-  static final 
+  static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_im_turms_proto_GroupJoinQuestionsWithVersion_fieldAccessorTable;
 

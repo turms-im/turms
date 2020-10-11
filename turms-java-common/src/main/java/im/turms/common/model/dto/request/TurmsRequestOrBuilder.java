@@ -268,49 +268,49 @@ public interface TurmsRequestOrBuilder extends
   im.turms.common.model.dto.request.user.QueryUserProfileRequestOrBuilder getQueryUserProfileRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.QueryUsersIdsNearbyRequest query_users_ids_nearby_request = 101;</code>
-   * @return Whether the queryUsersIdsNearbyRequest field is set.
+   * <code>.im.turms.proto.QueryUserIdsNearbyRequest query_user_ids_nearby_request = 101;</code>
+   * @return Whether the queryUserIdsNearbyRequest field is set.
    */
-  boolean hasQueryUsersIdsNearbyRequest();
+  boolean hasQueryUserIdsNearbyRequest();
   /**
-   * <code>.im.turms.proto.QueryUsersIdsNearbyRequest query_users_ids_nearby_request = 101;</code>
-   * @return The queryUsersIdsNearbyRequest.
+   * <code>.im.turms.proto.QueryUserIdsNearbyRequest query_user_ids_nearby_request = 101;</code>
+   * @return The queryUserIdsNearbyRequest.
    */
-  im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequest getQueryUsersIdsNearbyRequest();
+  im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest getQueryUserIdsNearbyRequest();
   /**
-   * <code>.im.turms.proto.QueryUsersIdsNearbyRequest query_users_ids_nearby_request = 101;</code>
+   * <code>.im.turms.proto.QueryUserIdsNearbyRequest query_user_ids_nearby_request = 101;</code>
    */
-  im.turms.common.model.dto.request.user.QueryUsersIdsNearbyRequestOrBuilder getQueryUsersIdsNearbyRequestOrBuilder();
+  im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequestOrBuilder getQueryUserIdsNearbyRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.QueryUsersInfosNearbyRequest query_users_infos_nearby_request = 102;</code>
-   * @return Whether the queryUsersInfosNearbyRequest field is set.
+   * <code>.im.turms.proto.QueryUserInfosNearbyRequest query_user_infos_nearby_request = 102;</code>
+   * @return Whether the queryUserInfosNearbyRequest field is set.
    */
-  boolean hasQueryUsersInfosNearbyRequest();
+  boolean hasQueryUserInfosNearbyRequest();
   /**
-   * <code>.im.turms.proto.QueryUsersInfosNearbyRequest query_users_infos_nearby_request = 102;</code>
-   * @return The queryUsersInfosNearbyRequest.
+   * <code>.im.turms.proto.QueryUserInfosNearbyRequest query_user_infos_nearby_request = 102;</code>
+   * @return The queryUserInfosNearbyRequest.
    */
-  im.turms.common.model.dto.request.user.QueryUsersInfosNearbyRequest getQueryUsersInfosNearbyRequest();
+  im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest getQueryUserInfosNearbyRequest();
   /**
-   * <code>.im.turms.proto.QueryUsersInfosNearbyRequest query_users_infos_nearby_request = 102;</code>
+   * <code>.im.turms.proto.QueryUserInfosNearbyRequest query_user_infos_nearby_request = 102;</code>
    */
-  im.turms.common.model.dto.request.user.QueryUsersInfosNearbyRequestOrBuilder getQueryUsersInfosNearbyRequestOrBuilder();
+  im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequestOrBuilder getQueryUserInfosNearbyRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.QueryUsersOnlineStatusRequest query_users_online_status_request = 103;</code>
-   * @return Whether the queryUsersOnlineStatusRequest field is set.
+   * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 103;</code>
+   * @return Whether the queryUserOnlineStatusesRequest field is set.
    */
-  boolean hasQueryUsersOnlineStatusRequest();
+  boolean hasQueryUserOnlineStatusesRequest();
   /**
-   * <code>.im.turms.proto.QueryUsersOnlineStatusRequest query_users_online_status_request = 103;</code>
-   * @return The queryUsersOnlineStatusRequest.
+   * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 103;</code>
+   * @return The queryUserOnlineStatusesRequest.
    */
-  im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequest getQueryUsersOnlineStatusRequest();
+  im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest getQueryUserOnlineStatusesRequest();
   /**
-   * <code>.im.turms.proto.QueryUsersOnlineStatusRequest query_users_online_status_request = 103;</code>
+   * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 103;</code>
    */
-  im.turms.common.model.dto.request.user.QueryUsersOnlineStatusRequestOrBuilder getQueryUsersOnlineStatusRequestOrBuilder();
+  im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequestOrBuilder getQueryUserOnlineStatusesRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 104;</code>
@@ -460,19 +460,19 @@ public interface TurmsRequestOrBuilder extends
   im.turms.common.model.dto.request.user.relationship.QueryFriendRequestsRequestOrBuilder getQueryFriendRequestsRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.QueryRelatedUsersIdsRequest query_related_users_ids_request = 206;</code>
-   * @return Whether the queryRelatedUsersIdsRequest field is set.
+   * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
+   * @return Whether the queryRelatedUserIdsRequest field is set.
    */
-  boolean hasQueryRelatedUsersIdsRequest();
+  boolean hasQueryRelatedUserIdsRequest();
   /**
-   * <code>.im.turms.proto.QueryRelatedUsersIdsRequest query_related_users_ids_request = 206;</code>
-   * @return The queryRelatedUsersIdsRequest.
+   * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
+   * @return The queryRelatedUserIdsRequest.
    */
-  im.turms.common.model.dto.request.user.relationship.QueryRelatedUsersIdsRequest getQueryRelatedUsersIdsRequest();
+  im.turms.common.model.dto.request.user.relationship.QueryRelatedUserIdsRequest getQueryRelatedUserIdsRequest();
   /**
-   * <code>.im.turms.proto.QueryRelatedUsersIdsRequest query_related_users_ids_request = 206;</code>
+   * <code>.im.turms.proto.QueryRelatedUserIdsRequest query_related_user_ids_request = 206;</code>
    */
-  im.turms.common.model.dto.request.user.relationship.QueryRelatedUsersIdsRequestOrBuilder getQueryRelatedUsersIdsRequestOrBuilder();
+  im.turms.common.model.dto.request.user.relationship.QueryRelatedUserIdsRequestOrBuilder getQueryRelatedUserIdsRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.QueryRelationshipGroupsRequest query_relationship_groups_request = 207;</code>
@@ -607,34 +607,34 @@ public interface TurmsRequestOrBuilder extends
   im.turms.common.model.dto.request.group.QueryGroupRequestOrBuilder getQueryGroupRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.QueryJoinedGroupsIdsRequest query_joined_groups_ids_request = 303;</code>
-   * @return Whether the queryJoinedGroupsIdsRequest field is set.
+   * <code>.im.turms.proto.QueryJoinedGroupIdsRequest query_joined_group_ids_request = 303;</code>
+   * @return Whether the queryJoinedGroupIdsRequest field is set.
    */
-  boolean hasQueryJoinedGroupsIdsRequest();
+  boolean hasQueryJoinedGroupIdsRequest();
   /**
-   * <code>.im.turms.proto.QueryJoinedGroupsIdsRequest query_joined_groups_ids_request = 303;</code>
-   * @return The queryJoinedGroupsIdsRequest.
+   * <code>.im.turms.proto.QueryJoinedGroupIdsRequest query_joined_group_ids_request = 303;</code>
+   * @return The queryJoinedGroupIdsRequest.
    */
-  im.turms.common.model.dto.request.group.QueryJoinedGroupsIdsRequest getQueryJoinedGroupsIdsRequest();
+  im.turms.common.model.dto.request.group.QueryJoinedGroupIdsRequest getQueryJoinedGroupIdsRequest();
   /**
-   * <code>.im.turms.proto.QueryJoinedGroupsIdsRequest query_joined_groups_ids_request = 303;</code>
+   * <code>.im.turms.proto.QueryJoinedGroupIdsRequest query_joined_group_ids_request = 303;</code>
    */
-  im.turms.common.model.dto.request.group.QueryJoinedGroupsIdsRequestOrBuilder getQueryJoinedGroupsIdsRequestOrBuilder();
+  im.turms.common.model.dto.request.group.QueryJoinedGroupIdsRequestOrBuilder getQueryJoinedGroupIdsRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.QueryJoinedGroupsInfosRequest query_joined_groups_infos_request = 304;</code>
-   * @return Whether the queryJoinedGroupsInfosRequest field is set.
+   * <code>.im.turms.proto.QueryJoinedGroupInfosRequest query_joined_group_infos_request = 304;</code>
+   * @return Whether the queryJoinedGroupInfosRequest field is set.
    */
-  boolean hasQueryJoinedGroupsInfosRequest();
+  boolean hasQueryJoinedGroupInfosRequest();
   /**
-   * <code>.im.turms.proto.QueryJoinedGroupsInfosRequest query_joined_groups_infos_request = 304;</code>
-   * @return The queryJoinedGroupsInfosRequest.
+   * <code>.im.turms.proto.QueryJoinedGroupInfosRequest query_joined_group_infos_request = 304;</code>
+   * @return The queryJoinedGroupInfosRequest.
    */
-  im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequest getQueryJoinedGroupsInfosRequest();
+  im.turms.common.model.dto.request.group.QueryJoinedGroupInfosRequest getQueryJoinedGroupInfosRequest();
   /**
-   * <code>.im.turms.proto.QueryJoinedGroupsInfosRequest query_joined_groups_infos_request = 304;</code>
+   * <code>.im.turms.proto.QueryJoinedGroupInfosRequest query_joined_group_infos_request = 304;</code>
    */
-  im.turms.common.model.dto.request.group.QueryJoinedGroupsInfosRequestOrBuilder getQueryJoinedGroupsInfosRequestOrBuilder();
+  im.turms.common.model.dto.request.group.QueryJoinedGroupInfosRequestOrBuilder getQueryJoinedGroupInfosRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.UpdateGroupRequest update_group_request = 305;</code>
@@ -694,34 +694,34 @@ public interface TurmsRequestOrBuilder extends
   im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequestOrBuilder getDeleteGroupBlacklistedUserRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.QueryGroupBlacklistedUsersIdsRequest query_group_blacklisted_users_ids_request = 402;</code>
-   * @return Whether the queryGroupBlacklistedUsersIdsRequest field is set.
+   * <code>.im.turms.proto.QueryGroupBlacklistedUserIdsRequest query_group_blacklisted_user_ids_request = 402;</code>
+   * @return Whether the queryGroupBlacklistedUserIdsRequest field is set.
    */
-  boolean hasQueryGroupBlacklistedUsersIdsRequest();
+  boolean hasQueryGroupBlacklistedUserIdsRequest();
   /**
-   * <code>.im.turms.proto.QueryGroupBlacklistedUsersIdsRequest query_group_blacklisted_users_ids_request = 402;</code>
-   * @return The queryGroupBlacklistedUsersIdsRequest.
+   * <code>.im.turms.proto.QueryGroupBlacklistedUserIdsRequest query_group_blacklisted_user_ids_request = 402;</code>
+   * @return The queryGroupBlacklistedUserIdsRequest.
    */
-  im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUsersIdsRequest getQueryGroupBlacklistedUsersIdsRequest();
+  im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest getQueryGroupBlacklistedUserIdsRequest();
   /**
-   * <code>.im.turms.proto.QueryGroupBlacklistedUsersIdsRequest query_group_blacklisted_users_ids_request = 402;</code>
+   * <code>.im.turms.proto.QueryGroupBlacklistedUserIdsRequest query_group_blacklisted_user_ids_request = 402;</code>
    */
-  im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUsersIdsRequestOrBuilder getQueryGroupBlacklistedUsersIdsRequestOrBuilder();
+  im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequestOrBuilder getQueryGroupBlacklistedUserIdsRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.QueryGroupBlacklistedUsersInfosRequest query_group_blacklisted_users_infos_request = 403;</code>
-   * @return Whether the queryGroupBlacklistedUsersInfosRequest field is set.
+   * <code>.im.turms.proto.QueryGroupBlacklistedUserInfosRequest query_group_blacklisted_user_infos_request = 403;</code>
+   * @return Whether the queryGroupBlacklistedUserInfosRequest field is set.
    */
-  boolean hasQueryGroupBlacklistedUsersInfosRequest();
+  boolean hasQueryGroupBlacklistedUserInfosRequest();
   /**
-   * <code>.im.turms.proto.QueryGroupBlacklistedUsersInfosRequest query_group_blacklisted_users_infos_request = 403;</code>
-   * @return The queryGroupBlacklistedUsersInfosRequest.
+   * <code>.im.turms.proto.QueryGroupBlacklistedUserInfosRequest query_group_blacklisted_user_infos_request = 403;</code>
+   * @return The queryGroupBlacklistedUserInfosRequest.
    */
-  im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUsersInfosRequest getQueryGroupBlacklistedUsersInfosRequest();
+  im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest getQueryGroupBlacklistedUserInfosRequest();
   /**
-   * <code>.im.turms.proto.QueryGroupBlacklistedUsersInfosRequest query_group_blacklisted_users_infos_request = 403;</code>
+   * <code>.im.turms.proto.QueryGroupBlacklistedUserInfosRequest query_group_blacklisted_user_infos_request = 403;</code>
    */
-  im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUsersInfosRequestOrBuilder getQueryGroupBlacklistedUsersInfosRequestOrBuilder();
+  im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequestOrBuilder getQueryGroupBlacklistedUserInfosRequestOrBuilder();
 
   /**
    * <pre>

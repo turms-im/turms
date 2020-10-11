@@ -94,21 +94,21 @@ describe('Query', () => {
         const groupWithVersion = await turmsClient.groupService.queryGroup(groupId);
         expect(groupWithVersion.group.id).toEqual(groupId);
     });
-    it('queryJoinedGroupsIds_shouldEqualNewGroupId', async () => {
-        const joinedGroupsIdsWithVersion = await turmsClient.groupService.queryJoinedGroupsIds();
+    it('queryJoinedGroupIds_shouldEqualNewGroupId', async () => {
+        const joinedGroupsIdsWithVersion = await turmsClient.groupService.queryJoinedGroupIds();
         expect(joinedGroupsIdsWithVersion.ids).toContain(groupId);
     });
-    it('queryJoinedGroupsInfos_shouldEqualNewGroupId', async () => {
-        const groupWithVersion = await turmsClient.groupService.queryJoinedGroupsInfos();
+    it('queryJoinedGroupInfos_shouldEqualNewGroupId', async () => {
+        const groupWithVersion = await turmsClient.groupService.queryJoinedGroupInfos();
         let groupIds = groupWithVersion.groups.map(group => group.id);
         expect(groupIds).toContain(groupId);
     });
-    it('queryBlacklistedUsersIds_shouldEqualBlacklistedUserId', async () => {
-        const blacklistedUsersIdsWithVersion = await turmsClient.groupService.queryBlacklistedUsersIds(groupId);
-        expect(blacklistedUsersIdsWithVersion.ids[0]).toEqual(GROUP_BLACKLISTED_USER_ID);
+    it('queryBlacklistedUserIds_shouldEqualBlacklistedUserId', async () => {
+        const blacklistedUserIdsWithVersion = await turmsClient.groupService.queryBlacklistedUserIds(groupId);
+        expect(blacklistedUserIdsWithVersion.ids[0]).toEqual(GROUP_BLACKLISTED_USER_ID);
     });
-    it('queryBlacklistedUsersInfos_shouldEqualBlacklistedUserId', async () => {
-        const usersInfosWithVersion = await turmsClient.groupService.queryBlacklistedUsersInfos(groupId);
+    it('queryBlacklistedUserInfos_shouldEqualBlacklistedUserId', async () => {
+        const usersInfosWithVersion = await turmsClient.groupService.queryBlacklistedUserInfos(groupId);
         expect(usersInfosWithVersion.userInfos[0].id).toEqual(GROUP_BLACKLISTED_USER_ID);
     });
     it('queryInvitationsByGroupId_shouldEqualNewInvitationId', async () => {
@@ -127,8 +127,8 @@ describe('Query', () => {
         const groupMembersWithVersion = await turmsClient.groupService.queryGroupMembers(groupId, true);
         expect(groupMembersWithVersion.groupMembers[1].userId).toEqual(GROUP_MEMBER_ID);
     });
-    it('queryGroupMembersByMembersIds_shouldEqualNewMemberId', async () => {
-        const groupMembersWithVersion = await turmsClient.groupService.queryGroupMembersByMembersIds(groupId, [GROUP_MEMBER_ID], true);
+    it('queryGroupMembersByMemberIds_shouldEqualNewMemberId', async () => {
+        const groupMembersWithVersion = await turmsClient.groupService.queryGroupMembersByMemberIds(groupId, [GROUP_MEMBER_ID], true);
         expect(groupMembersWithVersion.groupMembers[0].userId).toEqual(GROUP_MEMBER_ID);
     });
     it('answerGroupQuestions_shouldReturnAnswerResult', async () => {

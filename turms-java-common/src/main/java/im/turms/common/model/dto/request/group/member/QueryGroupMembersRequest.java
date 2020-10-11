@@ -33,7 +33,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private QueryGroupMembersRequest() {
-    groupMembersIds_ = emptyLongList();
+    memberIds_ = emptyLongList();
   }
 
   @java.lang.Override
@@ -87,21 +87,21 @@ private static final long serialVersionUID = 0L;
           }
           case 24: {
             if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-              groupMembersIds_ = newLongList();
+              memberIds_ = newLongList();
               mutable_bitField0_ |= 0x00000001;
             }
-            groupMembersIds_.addLong(input.readInt64());
+            memberIds_.addLong(input.readInt64());
             break;
           }
           case 26: {
             int length = input.readRawVarint32();
             int limit = input.pushLimit(length);
             if (!((mutable_bitField0_ & 0x00000001) != 0) && input.getBytesUntilLimit() > 0) {
-              groupMembersIds_ = newLongList();
+              memberIds_ = newLongList();
               mutable_bitField0_ |= 0x00000001;
             }
             while (input.getBytesUntilLimit() > 0) {
-              groupMembersIds_.addLong(input.readInt64());
+              memberIds_.addLong(input.readInt64());
             }
             input.popLimit(limit);
             break;
@@ -135,7 +135,7 @@ private static final long serialVersionUID = 0L;
           e).setUnfinishedMessage(this);
     } finally {
       if (((mutable_bitField0_ & 0x00000001) != 0)) {
-        groupMembersIds_.makeImmutable(); // C
+        memberIds_.makeImmutable(); // C
       }
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
@@ -191,33 +191,33 @@ private static final long serialVersionUID = 0L;
     return getLastUpdatedDate();
   }
 
-  public static final int GROUP_MEMBERS_IDS_FIELD_NUMBER = 3;
-  private com.google.protobuf.Internal.LongList groupMembersIds_;
+  public static final int MEMBER_IDS_FIELD_NUMBER = 3;
+  private com.google.protobuf.Internal.LongList memberIds_;
   /**
-   * <code>repeated int64 group_members_ids = 3;</code>
-   * @return A list containing the groupMembersIds.
+   * <code>repeated int64 member_ids = 3;</code>
+   * @return A list containing the memberIds.
    */
   @java.lang.Override
   public java.util.List<java.lang.Long>
-      getGroupMembersIdsList() {
-    return groupMembersIds_;
+      getMemberIdsList() {
+    return memberIds_;
   }
   /**
-   * <code>repeated int64 group_members_ids = 3;</code>
-   * @return The count of groupMembersIds.
+   * <code>repeated int64 member_ids = 3;</code>
+   * @return The count of memberIds.
    */
-  public int getGroupMembersIdsCount() {
-    return groupMembersIds_.size();
+  public int getMemberIdsCount() {
+    return memberIds_.size();
   }
   /**
-   * <code>repeated int64 group_members_ids = 3;</code>
+   * <code>repeated int64 member_ids = 3;</code>
    * @param index The index of the element to return.
-   * @return The groupMembersIds at the given index.
+   * @return The memberIds at the given index.
    */
-  public long getGroupMembersIds(int index) {
-    return groupMembersIds_.getLong(index);
+  public long getMemberIds(int index) {
+    return memberIds_.getLong(index);
   }
-  private int groupMembersIdsMemoizedSerializedSize = -1;
+  private int memberIdsMemoizedSerializedSize = -1;
 
   public static final int WITH_STATUS_FIELD_NUMBER = 4;
   private com.google.protobuf.BoolValue withStatus_;
@@ -266,12 +266,12 @@ private static final long serialVersionUID = 0L;
     if (lastUpdatedDate_ != null) {
       output.writeMessage(2, getLastUpdatedDate());
     }
-    if (getGroupMembersIdsList().size() > 0) {
+    if (getMemberIdsList().size() > 0) {
       output.writeUInt32NoTag(26);
-      output.writeUInt32NoTag(groupMembersIdsMemoizedSerializedSize);
+      output.writeUInt32NoTag(memberIdsMemoizedSerializedSize);
     }
-    for (int i = 0; i < groupMembersIds_.size(); i++) {
-      output.writeInt64NoTag(groupMembersIds_.getLong(i));
+    for (int i = 0; i < memberIds_.size(); i++) {
+      output.writeInt64NoTag(memberIds_.getLong(i));
     }
     if (withStatus_ != null) {
       output.writeMessage(4, getWithStatus());
@@ -295,17 +295,17 @@ private static final long serialVersionUID = 0L;
     }
     {
       int dataSize = 0;
-      for (int i = 0; i < groupMembersIds_.size(); i++) {
+      for (int i = 0; i < memberIds_.size(); i++) {
         dataSize += com.google.protobuf.CodedOutputStream
-          .computeInt64SizeNoTag(groupMembersIds_.getLong(i));
+          .computeInt64SizeNoTag(memberIds_.getLong(i));
       }
       size += dataSize;
-      if (!getGroupMembersIdsList().isEmpty()) {
+      if (!getMemberIdsList().isEmpty()) {
         size += 1;
         size += com.google.protobuf.CodedOutputStream
             .computeInt32SizeNoTag(dataSize);
       }
-      groupMembersIdsMemoizedSerializedSize = dataSize;
+      memberIdsMemoizedSerializedSize = dataSize;
     }
     if (withStatus_ != null) {
       size += com.google.protobuf.CodedOutputStream
@@ -333,8 +333,8 @@ private static final long serialVersionUID = 0L;
       if (!getLastUpdatedDate()
           .equals(other.getLastUpdatedDate())) return false;
     }
-    if (!getGroupMembersIdsList()
-        .equals(other.getGroupMembersIdsList())) return false;
+    if (!getMemberIdsList()
+        .equals(other.getMemberIdsList())) return false;
     if (hasWithStatus() != other.hasWithStatus()) return false;
     if (hasWithStatus()) {
       if (!getWithStatus()
@@ -358,9 +358,9 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + LAST_UPDATED_DATE_FIELD_NUMBER;
       hash = (53 * hash) + getLastUpdatedDate().hashCode();
     }
-    if (getGroupMembersIdsCount() > 0) {
-      hash = (37 * hash) + GROUP_MEMBERS_IDS_FIELD_NUMBER;
-      hash = (53 * hash) + getGroupMembersIdsList().hashCode();
+    if (getMemberIdsCount() > 0) {
+      hash = (37 * hash) + MEMBER_IDS_FIELD_NUMBER;
+      hash = (53 * hash) + getMemberIdsList().hashCode();
     }
     if (hasWithStatus()) {
       hash = (37 * hash) + WITH_STATUS_FIELD_NUMBER;
@@ -507,7 +507,7 @@ private static final long serialVersionUID = 0L;
         lastUpdatedDate_ = null;
         lastUpdatedDateBuilder_ = null;
       }
-      groupMembersIds_ = emptyLongList();
+      memberIds_ = emptyLongList();
       bitField0_ = (bitField0_ & ~0x00000001);
       if (withStatusBuilder_ == null) {
         withStatus_ = null;
@@ -549,10 +549,10 @@ private static final long serialVersionUID = 0L;
         result.lastUpdatedDate_ = lastUpdatedDateBuilder_.build();
       }
       if (((bitField0_ & 0x00000001) != 0)) {
-        groupMembersIds_.makeImmutable();
+        memberIds_.makeImmutable();
         bitField0_ = (bitField0_ & ~0x00000001);
       }
-      result.groupMembersIds_ = groupMembersIds_;
+      result.memberIds_ = memberIds_;
       if (withStatusBuilder_ == null) {
         result.withStatus_ = withStatus_;
       } else {
@@ -612,13 +612,13 @@ private static final long serialVersionUID = 0L;
       if (other.hasLastUpdatedDate()) {
         mergeLastUpdatedDate(other.getLastUpdatedDate());
       }
-      if (!other.groupMembersIds_.isEmpty()) {
-        if (groupMembersIds_.isEmpty()) {
-          groupMembersIds_ = other.groupMembersIds_;
+      if (!other.memberIds_.isEmpty()) {
+        if (memberIds_.isEmpty()) {
+          memberIds_ = other.memberIds_;
           bitField0_ = (bitField0_ & ~0x00000001);
         } else {
-          ensureGroupMembersIdsIsMutable();
-          groupMembersIds_.addAll(other.groupMembersIds_);
+          ensureMemberIdsIsMutable();
+          memberIds_.addAll(other.memberIds_);
         }
         onChanged();
       }
@@ -670,7 +670,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setGroupId(long value) {
-      
+
       groupId_ = value;
       onChanged();
       return this;
@@ -680,7 +680,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearGroupId() {
-      
+
       groupId_ = 0L;
       onChanged();
       return this;
@@ -773,7 +773,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
      */
     public com.google.protobuf.Int64Value.Builder getLastUpdatedDateBuilder() {
-      
+
       onChanged();
       return getLastUpdatedDateFieldBuilder().getBuilder();
     }
@@ -792,7 +792,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> 
+        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
         getLastUpdatedDateFieldBuilder() {
       if (lastUpdatedDateBuilder_ == null) {
         lastUpdatedDateBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -805,80 +805,80 @@ private static final long serialVersionUID = 0L;
       return lastUpdatedDateBuilder_;
     }
 
-    private com.google.protobuf.Internal.LongList groupMembersIds_ = emptyLongList();
-    private void ensureGroupMembersIdsIsMutable() {
+    private com.google.protobuf.Internal.LongList memberIds_ = emptyLongList();
+    private void ensureMemberIdsIsMutable() {
       if (!((bitField0_ & 0x00000001) != 0)) {
-        groupMembersIds_ = mutableCopy(groupMembersIds_);
+        memberIds_ = mutableCopy(memberIds_);
         bitField0_ |= 0x00000001;
        }
     }
     /**
-     * <code>repeated int64 group_members_ids = 3;</code>
-     * @return A list containing the groupMembersIds.
+     * <code>repeated int64 member_ids = 3;</code>
+     * @return A list containing the memberIds.
      */
     public java.util.List<java.lang.Long>
-        getGroupMembersIdsList() {
+        getMemberIdsList() {
       return ((bitField0_ & 0x00000001) != 0) ?
-               java.util.Collections.unmodifiableList(groupMembersIds_) : groupMembersIds_;
+               java.util.Collections.unmodifiableList(memberIds_) : memberIds_;
     }
     /**
-     * <code>repeated int64 group_members_ids = 3;</code>
-     * @return The count of groupMembersIds.
+     * <code>repeated int64 member_ids = 3;</code>
+     * @return The count of memberIds.
      */
-    public int getGroupMembersIdsCount() {
-      return groupMembersIds_.size();
+    public int getMemberIdsCount() {
+      return memberIds_.size();
     }
     /**
-     * <code>repeated int64 group_members_ids = 3;</code>
+     * <code>repeated int64 member_ids = 3;</code>
      * @param index The index of the element to return.
-     * @return The groupMembersIds at the given index.
+     * @return The memberIds at the given index.
      */
-    public long getGroupMembersIds(int index) {
-      return groupMembersIds_.getLong(index);
+    public long getMemberIds(int index) {
+      return memberIds_.getLong(index);
     }
     /**
-     * <code>repeated int64 group_members_ids = 3;</code>
+     * <code>repeated int64 member_ids = 3;</code>
      * @param index The index to set the value at.
-     * @param value The groupMembersIds to set.
+     * @param value The memberIds to set.
      * @return This builder for chaining.
      */
-    public Builder setGroupMembersIds(
+    public Builder setMemberIds(
         int index, long value) {
-      ensureGroupMembersIdsIsMutable();
-      groupMembersIds_.setLong(index, value);
+      ensureMemberIdsIsMutable();
+      memberIds_.setLong(index, value);
       onChanged();
       return this;
     }
     /**
-     * <code>repeated int64 group_members_ids = 3;</code>
-     * @param value The groupMembersIds to add.
+     * <code>repeated int64 member_ids = 3;</code>
+     * @param value The memberIds to add.
      * @return This builder for chaining.
      */
-    public Builder addGroupMembersIds(long value) {
-      ensureGroupMembersIdsIsMutable();
-      groupMembersIds_.addLong(value);
+    public Builder addMemberIds(long value) {
+      ensureMemberIdsIsMutable();
+      memberIds_.addLong(value);
       onChanged();
       return this;
     }
     /**
-     * <code>repeated int64 group_members_ids = 3;</code>
-     * @param values The groupMembersIds to add.
+     * <code>repeated int64 member_ids = 3;</code>
+     * @param values The memberIds to add.
      * @return This builder for chaining.
      */
-    public Builder addAllGroupMembersIds(
+    public Builder addAllMemberIds(
         java.lang.Iterable<? extends java.lang.Long> values) {
-      ensureGroupMembersIdsIsMutable();
+      ensureMemberIdsIsMutable();
       com.google.protobuf.AbstractMessageLite.Builder.addAll(
-          values, groupMembersIds_);
+          values, memberIds_);
       onChanged();
       return this;
     }
     /**
-     * <code>repeated int64 group_members_ids = 3;</code>
+     * <code>repeated int64 member_ids = 3;</code>
      * @return This builder for chaining.
      */
-    public Builder clearGroupMembersIds() {
-      groupMembersIds_ = emptyLongList();
+    public Builder clearMemberIds() {
+      memberIds_ = emptyLongList();
       bitField0_ = (bitField0_ & ~0x00000001);
       onChanged();
       return this;
@@ -971,7 +971,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.BoolValue with_status = 4;</code>
      */
     public com.google.protobuf.BoolValue.Builder getWithStatusBuilder() {
-      
+
       onChanged();
       return getWithStatusFieldBuilder().getBuilder();
     }
@@ -990,7 +990,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.BoolValue with_status = 4;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder> 
+        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder>
         getWithStatusFieldBuilder() {
       if (withStatusBuilder_ == null) {
         withStatusBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<

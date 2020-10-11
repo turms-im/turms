@@ -33,7 +33,7 @@ public final class Int64ValuesOuterClass {
   }
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_im_turms_proto_Int64Values_descriptor;
-  static final 
+  static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_im_turms_proto_Int64Values_fieldAccessorTable;
 

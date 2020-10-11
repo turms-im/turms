@@ -33,7 +33,7 @@ public final class UpdateRelationshipRequestOuterClass {
   }
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_im_turms_proto_UpdateRelationshipRequest_descriptor;
-  static final 
+  static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_im_turms_proto_UpdateRelationshipRequest_fieldAccessorTable;
 
@@ -47,14 +47,14 @@ public final class UpdateRelationshipRequestOuterClass {
     java.lang.String[] descriptorData = {
       "\n;request/user/relationship/update_relat" +
       "ionship_request.proto\022\016im.turms.proto\032\036g" +
-      "oogle/protobuf/wrappers.proto\"\320\001\n\031Update" +
-      "RelationshipRequest\022\027\n\017related_user_id\030\001" +
-      " \001(\003\022+\n\007blocked\030\002 \001(\0132\032.google.protobuf." +
-      "BoolValue\0224\n\017new_group_index\030\003 \001(\0132\033.goo" +
-      "gle.protobuf.Int32Value\0227\n\022delete_group_" +
-      "index\030\004 \001(\0132\033.google.protobuf.Int32Value" +
-      "B:\n3im.turms.common.model.dto.request.us" +
-      "er.relationshipP\001\272\002\000b\006proto3"
+      "oogle/protobuf/wrappers.proto\"\310\001\n\031Update" +
+      "RelationshipRequest\022\017\n\007user_id\030\001 \001(\003\022+\n\007" +
+      "blocked\030\002 \001(\0132\032.google.protobuf.BoolValu" +
+      "e\0224\n\017new_group_index\030\003 \001(\0132\033.google.prot" +
+      "obuf.Int32Value\0227\n\022delete_group_index\030\004 " +
+      "\001(\0132\033.google.protobuf.Int32ValueB:\n3im.t" +
+      "urms.common.model.dto.request.user.relat" +
+      "ionshipP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -66,7 +66,7 @@ public final class UpdateRelationshipRequestOuterClass {
     internal_static_im_turms_proto_UpdateRelationshipRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_UpdateRelationshipRequest_descriptor,
-        new java.lang.String[] { "RelatedUserId", "Blocked", "NewGroupIndex", "DeleteGroupIndex", });
+        new java.lang.String[] { "UserId", "Blocked", "NewGroupIndex", "DeleteGroupIndex", });
     com.google.protobuf.WrappersProto.getDescriptor();
   }
 

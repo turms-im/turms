@@ -27,7 +27,7 @@ public interface GroupsWithVersionOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.Group groups = 1;</code>
    */
-  java.util.List<im.turms.common.model.bo.group.Group> 
+  java.util.List<im.turms.common.model.bo.group.Group>
       getGroupsList();
   /**
    * <code>repeated .im.turms.proto.Group groups = 1;</code>
@@ -40,7 +40,7 @@ public interface GroupsWithVersionOrBuilder extends
   /**
    * <code>repeated .im.turms.proto.Group groups = 1;</code>
    */
-  java.util.List<? extends im.turms.common.model.bo.group.GroupOrBuilder> 
+  java.util.List<? extends im.turms.common.model.bo.group.GroupOrBuilder>
       getGroupsOrBuilderList();
   /**
    * <code>repeated .im.turms.proto.Group groups = 1;</code>

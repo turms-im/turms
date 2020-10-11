@@ -72,7 +72,7 @@ private static final long serialVersionUID = 0L;
           }
           case 16: {
 
-            blacklistedUserId_ = input.readInt64();
+            userId_ = input.readInt64();
             break;
           }
           default: {
@@ -118,15 +118,15 @@ private static final long serialVersionUID = 0L;
     return groupId_;
   }
 
-  public static final int BLACKLISTED_USER_ID_FIELD_NUMBER = 2;
-  private long blacklistedUserId_;
+  public static final int USER_ID_FIELD_NUMBER = 2;
+  private long userId_;
   /**
-   * <code>int64 blacklisted_user_id = 2;</code>
-   * @return The blacklistedUserId.
+   * <code>int64 user_id = 2;</code>
+   * @return The userId.
    */
   @java.lang.Override
-  public long getBlacklistedUserId() {
-    return blacklistedUserId_;
+  public long getUserId() {
+    return userId_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -146,8 +146,8 @@ private static final long serialVersionUID = 0L;
     if (groupId_ != 0L) {
       output.writeInt64(1, groupId_);
     }
-    if (blacklistedUserId_ != 0L) {
-      output.writeInt64(2, blacklistedUserId_);
+    if (userId_ != 0L) {
+      output.writeInt64(2, userId_);
     }
     unknownFields.writeTo(output);
   }
@@ -162,9 +162,9 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt64Size(1, groupId_);
     }
-    if (blacklistedUserId_ != 0L) {
+    if (userId_ != 0L) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(2, blacklistedUserId_);
+        .computeInt64Size(2, userId_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -183,8 +183,8 @@ private static final long serialVersionUID = 0L;
 
     if (getGroupId()
         != other.getGroupId()) return false;
-    if (getBlacklistedUserId()
-        != other.getBlacklistedUserId()) return false;
+    if (getUserId()
+        != other.getUserId()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -199,9 +199,9 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + GROUP_ID_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getGroupId());
-    hash = (37 * hash) + BLACKLISTED_USER_ID_FIELD_NUMBER;
+    hash = (37 * hash) + USER_ID_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getBlacklistedUserId());
+        getUserId());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -337,7 +337,7 @@ private static final long serialVersionUID = 0L;
       super.clear();
       groupId_ = 0L;
 
-      blacklistedUserId_ = 0L;
+      userId_ = 0L;
 
       return this;
     }
@@ -366,7 +366,7 @@ private static final long serialVersionUID = 0L;
     public im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest buildPartial() {
       im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest result = new im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest(this);
       result.groupId_ = groupId_;
-      result.blacklistedUserId_ = blacklistedUserId_;
+      result.userId_ = userId_;
       onBuilt();
       return result;
     }
@@ -418,8 +418,8 @@ private static final long serialVersionUID = 0L;
       if (other.getGroupId() != 0L) {
         setGroupId(other.getGroupId());
       }
-      if (other.getBlacklistedUserId() != 0L) {
-        setBlacklistedUserId(other.getBlacklistedUserId());
+      if (other.getUserId() != 0L) {
+        setUserId(other.getUserId());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -465,7 +465,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setGroupId(long value) {
-      
+
       groupId_ = value;
       onChanged();
       return this;
@@ -475,39 +475,39 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearGroupId() {
-      
+
       groupId_ = 0L;
       onChanged();
       return this;
     }
 
-    private long blacklistedUserId_ ;
+    private long userId_ ;
     /**
-     * <code>int64 blacklisted_user_id = 2;</code>
-     * @return The blacklistedUserId.
+     * <code>int64 user_id = 2;</code>
+     * @return The userId.
      */
     @java.lang.Override
-    public long getBlacklistedUserId() {
-      return blacklistedUserId_;
+    public long getUserId() {
+      return userId_;
     }
     /**
-     * <code>int64 blacklisted_user_id = 2;</code>
-     * @param value The blacklistedUserId to set.
+     * <code>int64 user_id = 2;</code>
+     * @param value The userId to set.
      * @return This builder for chaining.
      */
-    public Builder setBlacklistedUserId(long value) {
-      
-      blacklistedUserId_ = value;
+    public Builder setUserId(long value) {
+
+      userId_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>int64 blacklisted_user_id = 2;</code>
+     * <code>int64 user_id = 2;</code>
      * @return This builder for chaining.
      */
-    public Builder clearBlacklistedUserId() {
-      
-      blacklistedUserId_ = 0L;
+    public Builder clearUserId() {
+
+      userId_ = 0L;
       onChanged();
       return this;
     }

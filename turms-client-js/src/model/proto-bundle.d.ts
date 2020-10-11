@@ -759,8 +759,8 @@ export namespace im {
                 /** GroupJoinQuestionsAnswerResult score */
                 score?: (number|null);
 
-                /** GroupJoinQuestionsAnswerResult questionsIds */
-                questionsIds?: (string[]|null);
+                /** GroupJoinQuestionsAnswerResult questionIds */
+                questionIds?: (string[]|null);
 
                 /** GroupJoinQuestionsAnswerResult joined */
                 joined?: (boolean|null);
@@ -778,8 +778,8 @@ export namespace im {
                 /** GroupJoinQuestionsAnswerResult score. */
                 public score: number;
 
-                /** GroupJoinQuestionsAnswerResult questionsIds. */
-                public questionsIds: string[];
+                /** GroupJoinQuestionsAnswerResult questionIds. */
+                public questionIds: string[];
 
                 /** GroupJoinQuestionsAnswerResult joined. */
                 public joined: boolean;
@@ -2000,8 +2000,8 @@ export namespace im {
                 /** UserRelationship relatedUserId */
                 relatedUserId?: (google.protobuf.IInt64Value|null);
 
-                /** UserRelationship isBlocked */
-                isBlocked?: (google.protobuf.IBoolValue|null);
+                /** UserRelationship blocked */
+                blocked?: (google.protobuf.IBoolValue|null);
 
                 /** UserRelationship groupIndex */
                 groupIndex?: (google.protobuf.IInt64Value|null);
@@ -2025,8 +2025,8 @@ export namespace im {
                 /** UserRelationship relatedUserId. */
                 public relatedUserId?: (google.protobuf.IInt64Value|null);
 
-                /** UserRelationship isBlocked. */
-                public isBlocked?: (google.protobuf.IBoolValue|null);
+                /** UserRelationship blocked. */
+                public blocked?: (google.protobuf.IBoolValue|null);
 
                 /** UserRelationship groupIndex. */
                 public groupIndex?: (google.protobuf.IInt64Value|null);
@@ -2543,8 +2543,8 @@ export namespace im {
                 /** CreateGroupBlacklistedUserRequest groupId */
                 groupId?: (string|null);
 
-                /** CreateGroupBlacklistedUserRequest blacklistedUserId */
-                blacklistedUserId?: (string|null);
+                /** CreateGroupBlacklistedUserRequest userId */
+                userId?: (string|null);
             }
 
             /** Represents a CreateGroupBlacklistedUserRequest. */
@@ -2559,8 +2559,8 @@ export namespace im {
                 /** CreateGroupBlacklistedUserRequest groupId. */
                 public groupId: string;
 
-                /** CreateGroupBlacklistedUserRequest blacklistedUserId. */
-                public blacklistedUserId: string;
+                /** CreateGroupBlacklistedUserRequest userId. */
+                public userId: string;
 
                 /**
                  * Encodes the specified CreateGroupBlacklistedUserRequest message. Does not implicitly {@link im.turms.proto.CreateGroupBlacklistedUserRequest.verify|verify} messages.
@@ -2587,8 +2587,8 @@ export namespace im {
                 /** DeleteGroupBlacklistedUserRequest groupId */
                 groupId?: (string|null);
 
-                /** DeleteGroupBlacklistedUserRequest unblacklistedUserId */
-                unblacklistedUserId?: (string|null);
+                /** DeleteGroupBlacklistedUserRequest userId */
+                userId?: (string|null);
             }
 
             /** Represents a DeleteGroupBlacklistedUserRequest. */
@@ -2603,8 +2603,8 @@ export namespace im {
                 /** DeleteGroupBlacklistedUserRequest groupId. */
                 public groupId: string;
 
-                /** DeleteGroupBlacklistedUserRequest unblacklistedUserId. */
-                public unblacklistedUserId: string;
+                /** DeleteGroupBlacklistedUserRequest userId. */
+                public userId: string;
 
                 /**
                  * Encodes the specified DeleteGroupBlacklistedUserRequest message. Does not implicitly {@link im.turms.proto.DeleteGroupBlacklistedUserRequest.verify|verify} messages.
@@ -2625,92 +2625,92 @@ export namespace im {
                 public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.DeleteGroupBlacklistedUserRequest;
             }
 
-            /** Properties of a QueryGroupBlacklistedUsersIdsRequest. */
-            interface IQueryGroupBlacklistedUsersIdsRequest {
+            /** Properties of a QueryGroupBlacklistedUserIdsRequest. */
+            interface IQueryGroupBlacklistedUserIdsRequest {
 
-                /** QueryGroupBlacklistedUsersIdsRequest groupId */
+                /** QueryGroupBlacklistedUserIdsRequest groupId */
                 groupId?: (string|null);
 
-                /** QueryGroupBlacklistedUsersIdsRequest lastUpdatedDate */
+                /** QueryGroupBlacklistedUserIdsRequest lastUpdatedDate */
                 lastUpdatedDate?: (google.protobuf.IInt64Value|null);
             }
 
-            /** Represents a QueryGroupBlacklistedUsersIdsRequest. */
-            class QueryGroupBlacklistedUsersIdsRequest implements IQueryGroupBlacklistedUsersIdsRequest {
+            /** Represents a QueryGroupBlacklistedUserIdsRequest. */
+            class QueryGroupBlacklistedUserIdsRequest implements IQueryGroupBlacklistedUserIdsRequest {
 
                 /**
-                 * Constructs a new QueryGroupBlacklistedUsersIdsRequest.
+                 * Constructs a new QueryGroupBlacklistedUserIdsRequest.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: im.turms.proto.IQueryGroupBlacklistedUsersIdsRequest);
+                constructor(properties?: im.turms.proto.IQueryGroupBlacklistedUserIdsRequest);
 
-                /** QueryGroupBlacklistedUsersIdsRequest groupId. */
+                /** QueryGroupBlacklistedUserIdsRequest groupId. */
                 public groupId: string;
 
-                /** QueryGroupBlacklistedUsersIdsRequest lastUpdatedDate. */
+                /** QueryGroupBlacklistedUserIdsRequest lastUpdatedDate. */
                 public lastUpdatedDate?: (google.protobuf.IInt64Value|null);
 
                 /**
-                 * Encodes the specified QueryGroupBlacklistedUsersIdsRequest message. Does not implicitly {@link im.turms.proto.QueryGroupBlacklistedUsersIdsRequest.verify|verify} messages.
-                 * @param message QueryGroupBlacklistedUsersIdsRequest message or plain object to encode
+                 * Encodes the specified QueryGroupBlacklistedUserIdsRequest message. Does not implicitly {@link im.turms.proto.QueryGroupBlacklistedUserIdsRequest.verify|verify} messages.
+                 * @param message QueryGroupBlacklistedUserIdsRequest message or plain object to encode
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                public static encode(message: im.turms.proto.IQueryGroupBlacklistedUsersIdsRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: im.turms.proto.IQueryGroupBlacklistedUserIdsRequest, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
-                 * Decodes a QueryGroupBlacklistedUsersIdsRequest message from the specified reader or buffer.
+                 * Decodes a QueryGroupBlacklistedUserIdsRequest message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns QueryGroupBlacklistedUsersIdsRequest
+                 * @returns QueryGroupBlacklistedUserIdsRequest
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QueryGroupBlacklistedUsersIdsRequest;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QueryGroupBlacklistedUserIdsRequest;
             }
 
-            /** Properties of a QueryGroupBlacklistedUsersInfosRequest. */
-            interface IQueryGroupBlacklistedUsersInfosRequest {
+            /** Properties of a QueryGroupBlacklistedUserInfosRequest. */
+            interface IQueryGroupBlacklistedUserInfosRequest {
 
-                /** QueryGroupBlacklistedUsersInfosRequest groupId */
+                /** QueryGroupBlacklistedUserInfosRequest groupId */
                 groupId?: (string|null);
 
-                /** QueryGroupBlacklistedUsersInfosRequest lastUpdatedDate */
+                /** QueryGroupBlacklistedUserInfosRequest lastUpdatedDate */
                 lastUpdatedDate?: (google.protobuf.IInt64Value|null);
             }
 
-            /** Represents a QueryGroupBlacklistedUsersInfosRequest. */
-            class QueryGroupBlacklistedUsersInfosRequest implements IQueryGroupBlacklistedUsersInfosRequest {
+            /** Represents a QueryGroupBlacklistedUserInfosRequest. */
+            class QueryGroupBlacklistedUserInfosRequest implements IQueryGroupBlacklistedUserInfosRequest {
 
                 /**
-                 * Constructs a new QueryGroupBlacklistedUsersInfosRequest.
+                 * Constructs a new QueryGroupBlacklistedUserInfosRequest.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: im.turms.proto.IQueryGroupBlacklistedUsersInfosRequest);
+                constructor(properties?: im.turms.proto.IQueryGroupBlacklistedUserInfosRequest);
 
-                /** QueryGroupBlacklistedUsersInfosRequest groupId. */
+                /** QueryGroupBlacklistedUserInfosRequest groupId. */
                 public groupId: string;
 
-                /** QueryGroupBlacklistedUsersInfosRequest lastUpdatedDate. */
+                /** QueryGroupBlacklistedUserInfosRequest lastUpdatedDate. */
                 public lastUpdatedDate?: (google.protobuf.IInt64Value|null);
 
                 /**
-                 * Encodes the specified QueryGroupBlacklistedUsersInfosRequest message. Does not implicitly {@link im.turms.proto.QueryGroupBlacklistedUsersInfosRequest.verify|verify} messages.
-                 * @param message QueryGroupBlacklistedUsersInfosRequest message or plain object to encode
+                 * Encodes the specified QueryGroupBlacklistedUserInfosRequest message. Does not implicitly {@link im.turms.proto.QueryGroupBlacklistedUserInfosRequest.verify|verify} messages.
+                 * @param message QueryGroupBlacklistedUserInfosRequest message or plain object to encode
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                public static encode(message: im.turms.proto.IQueryGroupBlacklistedUsersInfosRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: im.turms.proto.IQueryGroupBlacklistedUserInfosRequest, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
-                 * Decodes a QueryGroupBlacklistedUsersInfosRequest message from the specified reader or buffer.
+                 * Decodes a QueryGroupBlacklistedUserInfosRequest message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns QueryGroupBlacklistedUsersInfosRequest
+                 * @returns QueryGroupBlacklistedUserInfosRequest
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QueryGroupBlacklistedUsersInfosRequest;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QueryGroupBlacklistedUserInfosRequest;
             }
 
             /** Properties of a CreateGroupRequest. */
@@ -3389,8 +3389,8 @@ export namespace im {
                 /** DeleteGroupMemberRequest groupId */
                 groupId?: (string|null);
 
-                /** DeleteGroupMemberRequest groupMemberId */
-                groupMemberId?: (string|null);
+                /** DeleteGroupMemberRequest memberId */
+                memberId?: (string|null);
 
                 /** DeleteGroupMemberRequest successorId */
                 successorId?: (google.protobuf.IInt64Value|null);
@@ -3411,8 +3411,8 @@ export namespace im {
                 /** DeleteGroupMemberRequest groupId. */
                 public groupId: string;
 
-                /** DeleteGroupMemberRequest groupMemberId. */
-                public groupMemberId: string;
+                /** DeleteGroupMemberRequest memberId. */
+                public memberId: string;
 
                 /** DeleteGroupMemberRequest successorId. */
                 public successorId?: (google.protobuf.IInt64Value|null);
@@ -3448,8 +3448,8 @@ export namespace im {
                 /** QueryGroupMembersRequest lastUpdatedDate */
                 lastUpdatedDate?: (google.protobuf.IInt64Value|null);
 
-                /** QueryGroupMembersRequest groupMembersIds */
-                groupMembersIds?: (string[]|null);
+                /** QueryGroupMembersRequest memberIds */
+                memberIds?: (string[]|null);
 
                 /** QueryGroupMembersRequest withStatus */
                 withStatus?: (google.protobuf.IBoolValue|null);
@@ -3470,8 +3470,8 @@ export namespace im {
                 /** QueryGroupMembersRequest lastUpdatedDate. */
                 public lastUpdatedDate?: (google.protobuf.IInt64Value|null);
 
-                /** QueryGroupMembersRequest groupMembersIds. */
-                public groupMembersIds: string[];
+                /** QueryGroupMembersRequest memberIds. */
+                public memberIds: string[];
 
                 /** QueryGroupMembersRequest withStatus. */
                 public withStatus?: (google.protobuf.IBoolValue|null);
@@ -3601,80 +3601,80 @@ export namespace im {
                 public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QueryGroupRequest;
             }
 
-            /** Properties of a QueryJoinedGroupsIdsRequest. */
-            interface IQueryJoinedGroupsIdsRequest {
+            /** Properties of a QueryJoinedGroupIdsRequest. */
+            interface IQueryJoinedGroupIdsRequest {
 
-                /** QueryJoinedGroupsIdsRequest lastUpdatedDate */
+                /** QueryJoinedGroupIdsRequest lastUpdatedDate */
                 lastUpdatedDate?: (google.protobuf.IInt64Value|null);
             }
 
-            /** Represents a QueryJoinedGroupsIdsRequest. */
-            class QueryJoinedGroupsIdsRequest implements IQueryJoinedGroupsIdsRequest {
+            /** Represents a QueryJoinedGroupIdsRequest. */
+            class QueryJoinedGroupIdsRequest implements IQueryJoinedGroupIdsRequest {
 
                 /**
-                 * Constructs a new QueryJoinedGroupsIdsRequest.
+                 * Constructs a new QueryJoinedGroupIdsRequest.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: im.turms.proto.IQueryJoinedGroupsIdsRequest);
+                constructor(properties?: im.turms.proto.IQueryJoinedGroupIdsRequest);
 
-                /** QueryJoinedGroupsIdsRequest lastUpdatedDate. */
+                /** QueryJoinedGroupIdsRequest lastUpdatedDate. */
                 public lastUpdatedDate?: (google.protobuf.IInt64Value|null);
 
                 /**
-                 * Encodes the specified QueryJoinedGroupsIdsRequest message. Does not implicitly {@link im.turms.proto.QueryJoinedGroupsIdsRequest.verify|verify} messages.
-                 * @param message QueryJoinedGroupsIdsRequest message or plain object to encode
+                 * Encodes the specified QueryJoinedGroupIdsRequest message. Does not implicitly {@link im.turms.proto.QueryJoinedGroupIdsRequest.verify|verify} messages.
+                 * @param message QueryJoinedGroupIdsRequest message or plain object to encode
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                public static encode(message: im.turms.proto.IQueryJoinedGroupsIdsRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: im.turms.proto.IQueryJoinedGroupIdsRequest, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
-                 * Decodes a QueryJoinedGroupsIdsRequest message from the specified reader or buffer.
+                 * Decodes a QueryJoinedGroupIdsRequest message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns QueryJoinedGroupsIdsRequest
+                 * @returns QueryJoinedGroupIdsRequest
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QueryJoinedGroupsIdsRequest;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QueryJoinedGroupIdsRequest;
             }
 
-            /** Properties of a QueryJoinedGroupsInfosRequest. */
-            interface IQueryJoinedGroupsInfosRequest {
+            /** Properties of a QueryJoinedGroupInfosRequest. */
+            interface IQueryJoinedGroupInfosRequest {
 
-                /** QueryJoinedGroupsInfosRequest lastUpdatedDate */
+                /** QueryJoinedGroupInfosRequest lastUpdatedDate */
                 lastUpdatedDate?: (google.protobuf.IInt64Value|null);
             }
 
-            /** Represents a QueryJoinedGroupsInfosRequest. */
-            class QueryJoinedGroupsInfosRequest implements IQueryJoinedGroupsInfosRequest {
+            /** Represents a QueryJoinedGroupInfosRequest. */
+            class QueryJoinedGroupInfosRequest implements IQueryJoinedGroupInfosRequest {
 
                 /**
-                 * Constructs a new QueryJoinedGroupsInfosRequest.
+                 * Constructs a new QueryJoinedGroupInfosRequest.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: im.turms.proto.IQueryJoinedGroupsInfosRequest);
+                constructor(properties?: im.turms.proto.IQueryJoinedGroupInfosRequest);
 
-                /** QueryJoinedGroupsInfosRequest lastUpdatedDate. */
+                /** QueryJoinedGroupInfosRequest lastUpdatedDate. */
                 public lastUpdatedDate?: (google.protobuf.IInt64Value|null);
 
                 /**
-                 * Encodes the specified QueryJoinedGroupsInfosRequest message. Does not implicitly {@link im.turms.proto.QueryJoinedGroupsInfosRequest.verify|verify} messages.
-                 * @param message QueryJoinedGroupsInfosRequest message or plain object to encode
+                 * Encodes the specified QueryJoinedGroupInfosRequest message. Does not implicitly {@link im.turms.proto.QueryJoinedGroupInfosRequest.verify|verify} messages.
+                 * @param message QueryJoinedGroupInfosRequest message or plain object to encode
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                public static encode(message: im.turms.proto.IQueryJoinedGroupsInfosRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: im.turms.proto.IQueryJoinedGroupInfosRequest, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
-                 * Decodes a QueryJoinedGroupsInfosRequest message from the specified reader or buffer.
+                 * Decodes a QueryJoinedGroupInfosRequest message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns QueryJoinedGroupsInfosRequest
+                 * @returns QueryJoinedGroupInfosRequest
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QueryJoinedGroupsInfosRequest;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QueryJoinedGroupInfosRequest;
             }
 
             /** Properties of an UpdateGroupRequest. */
@@ -4114,8 +4114,8 @@ export namespace im {
             /** Properties of an AckRequest. */
             interface IAckRequest {
 
-                /** AckRequest messagesIds */
-                messagesIds?: (string[]|null);
+                /** AckRequest messageIds */
+                messageIds?: (string[]|null);
             }
 
             /** Represents an AckRequest. */
@@ -4127,8 +4127,8 @@ export namespace im {
                  */
                 constructor(properties?: im.turms.proto.IAckRequest);
 
-                /** AckRequest messagesIds. */
-                public messagesIds: string[];
+                /** AckRequest messageIds. */
+                public messageIds: string[];
 
                 /**
                  * Encodes the specified AckRequest message. Does not implicitly {@link im.turms.proto.AckRequest.verify|verify} messages.
@@ -4344,14 +4344,14 @@ export namespace im {
                 /** TurmsRequest queryUserProfileRequest */
                 queryUserProfileRequest?: (im.turms.proto.IQueryUserProfileRequest|null);
 
-                /** TurmsRequest queryUsersIdsNearbyRequest */
-                queryUsersIdsNearbyRequest?: (im.turms.proto.IQueryUsersIdsNearbyRequest|null);
+                /** TurmsRequest queryUserIdsNearbyRequest */
+                queryUserIdsNearbyRequest?: (im.turms.proto.IQueryUserIdsNearbyRequest|null);
 
-                /** TurmsRequest queryUsersInfosNearbyRequest */
-                queryUsersInfosNearbyRequest?: (im.turms.proto.IQueryUsersInfosNearbyRequest|null);
+                /** TurmsRequest queryUserInfosNearbyRequest */
+                queryUserInfosNearbyRequest?: (im.turms.proto.IQueryUserInfosNearbyRequest|null);
 
-                /** TurmsRequest queryUsersOnlineStatusRequest */
-                queryUsersOnlineStatusRequest?: (im.turms.proto.IQueryUsersOnlineStatusRequest|null);
+                /** TurmsRequest queryUserOnlineStatusesRequest */
+                queryUserOnlineStatusesRequest?: (im.turms.proto.IQueryUserOnlineStatusesRequest|null);
 
                 /** TurmsRequest updateUserLocationRequest */
                 updateUserLocationRequest?: (im.turms.proto.IUpdateUserLocationRequest|null);
@@ -4380,8 +4380,8 @@ export namespace im {
                 /** TurmsRequest queryFriendRequestsRequest */
                 queryFriendRequestsRequest?: (im.turms.proto.IQueryFriendRequestsRequest|null);
 
-                /** TurmsRequest queryRelatedUsersIdsRequest */
-                queryRelatedUsersIdsRequest?: (im.turms.proto.IQueryRelatedUsersIdsRequest|null);
+                /** TurmsRequest queryRelatedUserIdsRequest */
+                queryRelatedUserIdsRequest?: (im.turms.proto.IQueryRelatedUserIdsRequest|null);
 
                 /** TurmsRequest queryRelationshipGroupsRequest */
                 queryRelationshipGroupsRequest?: (im.turms.proto.IQueryRelationshipGroupsRequest|null);
@@ -4407,11 +4407,11 @@ export namespace im {
                 /** TurmsRequest queryGroupRequest */
                 queryGroupRequest?: (im.turms.proto.IQueryGroupRequest|null);
 
-                /** TurmsRequest queryJoinedGroupsIdsRequest */
-                queryJoinedGroupsIdsRequest?: (im.turms.proto.IQueryJoinedGroupsIdsRequest|null);
+                /** TurmsRequest queryJoinedGroupIdsRequest */
+                queryJoinedGroupIdsRequest?: (im.turms.proto.IQueryJoinedGroupIdsRequest|null);
 
-                /** TurmsRequest queryJoinedGroupsInfosRequest */
-                queryJoinedGroupsInfosRequest?: (im.turms.proto.IQueryJoinedGroupsInfosRequest|null);
+                /** TurmsRequest queryJoinedGroupInfosRequest */
+                queryJoinedGroupInfosRequest?: (im.turms.proto.IQueryJoinedGroupInfosRequest|null);
 
                 /** TurmsRequest updateGroupRequest */
                 updateGroupRequest?: (im.turms.proto.IUpdateGroupRequest|null);
@@ -4422,11 +4422,11 @@ export namespace im {
                 /** TurmsRequest deleteGroupBlacklistedUserRequest */
                 deleteGroupBlacklistedUserRequest?: (im.turms.proto.IDeleteGroupBlacklistedUserRequest|null);
 
-                /** TurmsRequest queryGroupBlacklistedUsersIdsRequest */
-                queryGroupBlacklistedUsersIdsRequest?: (im.turms.proto.IQueryGroupBlacklistedUsersIdsRequest|null);
+                /** TurmsRequest queryGroupBlacklistedUserIdsRequest */
+                queryGroupBlacklistedUserIdsRequest?: (im.turms.proto.IQueryGroupBlacklistedUserIdsRequest|null);
 
-                /** TurmsRequest queryGroupBlacklistedUsersInfosRequest */
-                queryGroupBlacklistedUsersInfosRequest?: (im.turms.proto.IQueryGroupBlacklistedUsersInfosRequest|null);
+                /** TurmsRequest queryGroupBlacklistedUserInfosRequest */
+                queryGroupBlacklistedUserInfosRequest?: (im.turms.proto.IQueryGroupBlacklistedUserInfosRequest|null);
 
                 /** TurmsRequest checkGroupJoinQuestionsAnswersRequest */
                 checkGroupJoinQuestionsAnswersRequest?: (im.turms.proto.ICheckGroupJoinQuestionsAnswersRequest|null);
@@ -4519,14 +4519,14 @@ export namespace im {
                 /** TurmsRequest queryUserProfileRequest. */
                 public queryUserProfileRequest?: (im.turms.proto.IQueryUserProfileRequest|null);
 
-                /** TurmsRequest queryUsersIdsNearbyRequest. */
-                public queryUsersIdsNearbyRequest?: (im.turms.proto.IQueryUsersIdsNearbyRequest|null);
+                /** TurmsRequest queryUserIdsNearbyRequest. */
+                public queryUserIdsNearbyRequest?: (im.turms.proto.IQueryUserIdsNearbyRequest|null);
 
-                /** TurmsRequest queryUsersInfosNearbyRequest. */
-                public queryUsersInfosNearbyRequest?: (im.turms.proto.IQueryUsersInfosNearbyRequest|null);
+                /** TurmsRequest queryUserInfosNearbyRequest. */
+                public queryUserInfosNearbyRequest?: (im.turms.proto.IQueryUserInfosNearbyRequest|null);
 
-                /** TurmsRequest queryUsersOnlineStatusRequest. */
-                public queryUsersOnlineStatusRequest?: (im.turms.proto.IQueryUsersOnlineStatusRequest|null);
+                /** TurmsRequest queryUserOnlineStatusesRequest. */
+                public queryUserOnlineStatusesRequest?: (im.turms.proto.IQueryUserOnlineStatusesRequest|null);
 
                 /** TurmsRequest updateUserLocationRequest. */
                 public updateUserLocationRequest?: (im.turms.proto.IUpdateUserLocationRequest|null);
@@ -4555,8 +4555,8 @@ export namespace im {
                 /** TurmsRequest queryFriendRequestsRequest. */
                 public queryFriendRequestsRequest?: (im.turms.proto.IQueryFriendRequestsRequest|null);
 
-                /** TurmsRequest queryRelatedUsersIdsRequest. */
-                public queryRelatedUsersIdsRequest?: (im.turms.proto.IQueryRelatedUsersIdsRequest|null);
+                /** TurmsRequest queryRelatedUserIdsRequest. */
+                public queryRelatedUserIdsRequest?: (im.turms.proto.IQueryRelatedUserIdsRequest|null);
 
                 /** TurmsRequest queryRelationshipGroupsRequest. */
                 public queryRelationshipGroupsRequest?: (im.turms.proto.IQueryRelationshipGroupsRequest|null);
@@ -4582,11 +4582,11 @@ export namespace im {
                 /** TurmsRequest queryGroupRequest. */
                 public queryGroupRequest?: (im.turms.proto.IQueryGroupRequest|null);
 
-                /** TurmsRequest queryJoinedGroupsIdsRequest. */
-                public queryJoinedGroupsIdsRequest?: (im.turms.proto.IQueryJoinedGroupsIdsRequest|null);
+                /** TurmsRequest queryJoinedGroupIdsRequest. */
+                public queryJoinedGroupIdsRequest?: (im.turms.proto.IQueryJoinedGroupIdsRequest|null);
 
-                /** TurmsRequest queryJoinedGroupsInfosRequest. */
-                public queryJoinedGroupsInfosRequest?: (im.turms.proto.IQueryJoinedGroupsInfosRequest|null);
+                /** TurmsRequest queryJoinedGroupInfosRequest. */
+                public queryJoinedGroupInfosRequest?: (im.turms.proto.IQueryJoinedGroupInfosRequest|null);
 
                 /** TurmsRequest updateGroupRequest. */
                 public updateGroupRequest?: (im.turms.proto.IUpdateGroupRequest|null);
@@ -4597,11 +4597,11 @@ export namespace im {
                 /** TurmsRequest deleteGroupBlacklistedUserRequest. */
                 public deleteGroupBlacklistedUserRequest?: (im.turms.proto.IDeleteGroupBlacklistedUserRequest|null);
 
-                /** TurmsRequest queryGroupBlacklistedUsersIdsRequest. */
-                public queryGroupBlacklistedUsersIdsRequest?: (im.turms.proto.IQueryGroupBlacklistedUsersIdsRequest|null);
+                /** TurmsRequest queryGroupBlacklistedUserIdsRequest. */
+                public queryGroupBlacklistedUserIdsRequest?: (im.turms.proto.IQueryGroupBlacklistedUserIdsRequest|null);
 
-                /** TurmsRequest queryGroupBlacklistedUsersInfosRequest. */
-                public queryGroupBlacklistedUsersInfosRequest?: (im.turms.proto.IQueryGroupBlacklistedUsersInfosRequest|null);
+                /** TurmsRequest queryGroupBlacklistedUserInfosRequest. */
+                public queryGroupBlacklistedUserInfosRequest?: (im.turms.proto.IQueryGroupBlacklistedUserInfosRequest|null);
 
                 /** TurmsRequest checkGroupJoinQuestionsAnswersRequest. */
                 public checkGroupJoinQuestionsAnswersRequest?: (im.turms.proto.ICheckGroupJoinQuestionsAnswersRequest|null);
@@ -4649,7 +4649,7 @@ export namespace im {
                 public updateGroupMemberRequest?: (im.turms.proto.IUpdateGroupMemberRequest|null);
 
                 /** TurmsRequest kind. */
-                public kind?: ("ackRequest"|"deleteResourceRequest"|"querySignedGetUrlRequest"|"querySignedPutUrlRequest"|"createMessageRequest"|"queryMessageStatusesRequest"|"queryMessagesRequest"|"queryPendingMessagesWithTotalRequest"|"updateMessageRequest"|"updateTypingStatusRequest"|"queryUserProfileRequest"|"queryUsersIdsNearbyRequest"|"queryUsersInfosNearbyRequest"|"queryUsersOnlineStatusRequest"|"updateUserLocationRequest"|"updateUserOnlineStatusRequest"|"updateUserRequest"|"createFriendRequestRequest"|"createRelationshipGroupRequest"|"createRelationshipRequest"|"deleteRelationshipGroupRequest"|"deleteRelationshipRequest"|"queryFriendRequestsRequest"|"queryRelatedUsersIdsRequest"|"queryRelationshipGroupsRequest"|"queryRelationshipsRequest"|"updateFriendRequestRequest"|"updateRelationshipGroupRequest"|"updateRelationshipRequest"|"createGroupRequest"|"deleteGroupRequest"|"queryGroupRequest"|"queryJoinedGroupsIdsRequest"|"queryJoinedGroupsInfosRequest"|"updateGroupRequest"|"createGroupBlacklistedUserRequest"|"deleteGroupBlacklistedUserRequest"|"queryGroupBlacklistedUsersIdsRequest"|"queryGroupBlacklistedUsersInfosRequest"|"checkGroupJoinQuestionsAnswersRequest"|"createGroupInvitationRequest"|"createGroupJoinRequestRequest"|"createGroupJoinQuestionRequest"|"deleteGroupInvitationRequest"|"deleteGroupJoinRequestRequest"|"deleteGroupJoinQuestionRequest"|"queryGroupInvitationsRequest"|"queryGroupJoinRequestsRequest"|"queryGroupJoinQuestionsRequest"|"updateGroupJoinQuestionRequest"|"createGroupMemberRequest"|"deleteGroupMemberRequest"|"queryGroupMembersRequest"|"updateGroupMemberRequest");
+                public kind?: ("ackRequest"|"deleteResourceRequest"|"querySignedGetUrlRequest"|"querySignedPutUrlRequest"|"createMessageRequest"|"queryMessageStatusesRequest"|"queryMessagesRequest"|"queryPendingMessagesWithTotalRequest"|"updateMessageRequest"|"updateTypingStatusRequest"|"queryUserProfileRequest"|"queryUserIdsNearbyRequest"|"queryUserInfosNearbyRequest"|"queryUserOnlineStatusesRequest"|"updateUserLocationRequest"|"updateUserOnlineStatusRequest"|"updateUserRequest"|"createFriendRequestRequest"|"createRelationshipGroupRequest"|"createRelationshipRequest"|"deleteRelationshipGroupRequest"|"deleteRelationshipRequest"|"queryFriendRequestsRequest"|"queryRelatedUserIdsRequest"|"queryRelationshipGroupsRequest"|"queryRelationshipsRequest"|"updateFriendRequestRequest"|"updateRelationshipGroupRequest"|"updateRelationshipRequest"|"createGroupRequest"|"deleteGroupRequest"|"queryGroupRequest"|"queryJoinedGroupIdsRequest"|"queryJoinedGroupInfosRequest"|"updateGroupRequest"|"createGroupBlacklistedUserRequest"|"deleteGroupBlacklistedUserRequest"|"queryGroupBlacklistedUserIdsRequest"|"queryGroupBlacklistedUserInfosRequest"|"checkGroupJoinQuestionsAnswersRequest"|"createGroupInvitationRequest"|"createGroupJoinRequestRequest"|"createGroupJoinQuestionRequest"|"deleteGroupInvitationRequest"|"deleteGroupJoinRequestRequest"|"deleteGroupJoinQuestionRequest"|"queryGroupInvitationsRequest"|"queryGroupJoinRequestsRequest"|"queryGroupJoinQuestionsRequest"|"updateGroupJoinQuestionRequest"|"createGroupMemberRequest"|"deleteGroupMemberRequest"|"queryGroupMembersRequest"|"updateGroupMemberRequest");
 
                 /**
                  * Encodes the specified TurmsRequest message. Does not implicitly {@link im.turms.proto.TurmsRequest.verify|verify} messages.
@@ -4668,6 +4668,156 @@ export namespace im {
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
                 public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.TurmsRequest;
+            }
+
+            /** Properties of a QueryUserIdsNearbyRequest. */
+            interface IQueryUserIdsNearbyRequest {
+
+                /** QueryUserIdsNearbyRequest latitude */
+                latitude?: (number|null);
+
+                /** QueryUserIdsNearbyRequest longitude */
+                longitude?: (number|null);
+
+                /** QueryUserIdsNearbyRequest distance */
+                distance?: (google.protobuf.IFloatValue|null);
+
+                /** QueryUserIdsNearbyRequest maxNumber */
+                maxNumber?: (google.protobuf.IInt32Value|null);
+            }
+
+            /** Represents a QueryUserIdsNearbyRequest. */
+            class QueryUserIdsNearbyRequest implements IQueryUserIdsNearbyRequest {
+
+                /**
+                 * Constructs a new QueryUserIdsNearbyRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: im.turms.proto.IQueryUserIdsNearbyRequest);
+
+                /** QueryUserIdsNearbyRequest latitude. */
+                public latitude: number;
+
+                /** QueryUserIdsNearbyRequest longitude. */
+                public longitude: number;
+
+                /** QueryUserIdsNearbyRequest distance. */
+                public distance?: (google.protobuf.IFloatValue|null);
+
+                /** QueryUserIdsNearbyRequest maxNumber. */
+                public maxNumber?: (google.protobuf.IInt32Value|null);
+
+                /**
+                 * Encodes the specified QueryUserIdsNearbyRequest message. Does not implicitly {@link im.turms.proto.QueryUserIdsNearbyRequest.verify|verify} messages.
+                 * @param message QueryUserIdsNearbyRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: im.turms.proto.IQueryUserIdsNearbyRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a QueryUserIdsNearbyRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns QueryUserIdsNearbyRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QueryUserIdsNearbyRequest;
+            }
+
+            /** Properties of a QueryUserInfosNearbyRequest. */
+            interface IQueryUserInfosNearbyRequest {
+
+                /** QueryUserInfosNearbyRequest latitude */
+                latitude?: (number|null);
+
+                /** QueryUserInfosNearbyRequest longitude */
+                longitude?: (number|null);
+
+                /** QueryUserInfosNearbyRequest distance */
+                distance?: (google.protobuf.IFloatValue|null);
+
+                /** QueryUserInfosNearbyRequest maxNumber */
+                maxNumber?: (google.protobuf.IInt32Value|null);
+            }
+
+            /** Represents a QueryUserInfosNearbyRequest. */
+            class QueryUserInfosNearbyRequest implements IQueryUserInfosNearbyRequest {
+
+                /**
+                 * Constructs a new QueryUserInfosNearbyRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: im.turms.proto.IQueryUserInfosNearbyRequest);
+
+                /** QueryUserInfosNearbyRequest latitude. */
+                public latitude: number;
+
+                /** QueryUserInfosNearbyRequest longitude. */
+                public longitude: number;
+
+                /** QueryUserInfosNearbyRequest distance. */
+                public distance?: (google.protobuf.IFloatValue|null);
+
+                /** QueryUserInfosNearbyRequest maxNumber. */
+                public maxNumber?: (google.protobuf.IInt32Value|null);
+
+                /**
+                 * Encodes the specified QueryUserInfosNearbyRequest message. Does not implicitly {@link im.turms.proto.QueryUserInfosNearbyRequest.verify|verify} messages.
+                 * @param message QueryUserInfosNearbyRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: im.turms.proto.IQueryUserInfosNearbyRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a QueryUserInfosNearbyRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns QueryUserInfosNearbyRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QueryUserInfosNearbyRequest;
+            }
+
+            /** Properties of a QueryUserOnlineStatusesRequest. */
+            interface IQueryUserOnlineStatusesRequest {
+
+                /** QueryUserOnlineStatusesRequest userIds */
+                userIds?: (string[]|null);
+            }
+
+            /** Represents a QueryUserOnlineStatusesRequest. */
+            class QueryUserOnlineStatusesRequest implements IQueryUserOnlineStatusesRequest {
+
+                /**
+                 * Constructs a new QueryUserOnlineStatusesRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: im.turms.proto.IQueryUserOnlineStatusesRequest);
+
+                /** QueryUserOnlineStatusesRequest userIds. */
+                public userIds: string[];
+
+                /**
+                 * Encodes the specified QueryUserOnlineStatusesRequest message. Does not implicitly {@link im.turms.proto.QueryUserOnlineStatusesRequest.verify|verify} messages.
+                 * @param message QueryUserOnlineStatusesRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: im.turms.proto.IQueryUserOnlineStatusesRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a QueryUserOnlineStatusesRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns QueryUserOnlineStatusesRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QueryUserOnlineStatusesRequest;
             }
 
             /** Properties of a QueryUserProfileRequest. */
@@ -4712,156 +4862,6 @@ export namespace im {
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
                 public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QueryUserProfileRequest;
-            }
-
-            /** Properties of a QueryUsersIdsNearbyRequest. */
-            interface IQueryUsersIdsNearbyRequest {
-
-                /** QueryUsersIdsNearbyRequest latitude */
-                latitude?: (number|null);
-
-                /** QueryUsersIdsNearbyRequest longitude */
-                longitude?: (number|null);
-
-                /** QueryUsersIdsNearbyRequest distance */
-                distance?: (google.protobuf.IFloatValue|null);
-
-                /** QueryUsersIdsNearbyRequest maxNumber */
-                maxNumber?: (google.protobuf.IInt32Value|null);
-            }
-
-            /** Represents a QueryUsersIdsNearbyRequest. */
-            class QueryUsersIdsNearbyRequest implements IQueryUsersIdsNearbyRequest {
-
-                /**
-                 * Constructs a new QueryUsersIdsNearbyRequest.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: im.turms.proto.IQueryUsersIdsNearbyRequest);
-
-                /** QueryUsersIdsNearbyRequest latitude. */
-                public latitude: number;
-
-                /** QueryUsersIdsNearbyRequest longitude. */
-                public longitude: number;
-
-                /** QueryUsersIdsNearbyRequest distance. */
-                public distance?: (google.protobuf.IFloatValue|null);
-
-                /** QueryUsersIdsNearbyRequest maxNumber. */
-                public maxNumber?: (google.protobuf.IInt32Value|null);
-
-                /**
-                 * Encodes the specified QueryUsersIdsNearbyRequest message. Does not implicitly {@link im.turms.proto.QueryUsersIdsNearbyRequest.verify|verify} messages.
-                 * @param message QueryUsersIdsNearbyRequest message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: im.turms.proto.IQueryUsersIdsNearbyRequest, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes a QueryUsersIdsNearbyRequest message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns QueryUsersIdsNearbyRequest
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QueryUsersIdsNearbyRequest;
-            }
-
-            /** Properties of a QueryUsersInfosNearbyRequest. */
-            interface IQueryUsersInfosNearbyRequest {
-
-                /** QueryUsersInfosNearbyRequest latitude */
-                latitude?: (number|null);
-
-                /** QueryUsersInfosNearbyRequest longitude */
-                longitude?: (number|null);
-
-                /** QueryUsersInfosNearbyRequest distance */
-                distance?: (google.protobuf.IFloatValue|null);
-
-                /** QueryUsersInfosNearbyRequest maxNumber */
-                maxNumber?: (google.protobuf.IUInt32Value|null);
-            }
-
-            /** Represents a QueryUsersInfosNearbyRequest. */
-            class QueryUsersInfosNearbyRequest implements IQueryUsersInfosNearbyRequest {
-
-                /**
-                 * Constructs a new QueryUsersInfosNearbyRequest.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: im.turms.proto.IQueryUsersInfosNearbyRequest);
-
-                /** QueryUsersInfosNearbyRequest latitude. */
-                public latitude: number;
-
-                /** QueryUsersInfosNearbyRequest longitude. */
-                public longitude: number;
-
-                /** QueryUsersInfosNearbyRequest distance. */
-                public distance?: (google.protobuf.IFloatValue|null);
-
-                /** QueryUsersInfosNearbyRequest maxNumber. */
-                public maxNumber?: (google.protobuf.IUInt32Value|null);
-
-                /**
-                 * Encodes the specified QueryUsersInfosNearbyRequest message. Does not implicitly {@link im.turms.proto.QueryUsersInfosNearbyRequest.verify|verify} messages.
-                 * @param message QueryUsersInfosNearbyRequest message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: im.turms.proto.IQueryUsersInfosNearbyRequest, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes a QueryUsersInfosNearbyRequest message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns QueryUsersInfosNearbyRequest
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QueryUsersInfosNearbyRequest;
-            }
-
-            /** Properties of a QueryUsersOnlineStatusRequest. */
-            interface IQueryUsersOnlineStatusRequest {
-
-                /** QueryUsersOnlineStatusRequest usersIds */
-                usersIds?: (string[]|null);
-            }
-
-            /** Represents a QueryUsersOnlineStatusRequest. */
-            class QueryUsersOnlineStatusRequest implements IQueryUsersOnlineStatusRequest {
-
-                /**
-                 * Constructs a new QueryUsersOnlineStatusRequest.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: im.turms.proto.IQueryUsersOnlineStatusRequest);
-
-                /** QueryUsersOnlineStatusRequest usersIds. */
-                public usersIds: string[];
-
-                /**
-                 * Encodes the specified QueryUsersOnlineStatusRequest message. Does not implicitly {@link im.turms.proto.QueryUsersOnlineStatusRequest.verify|verify} messages.
-                 * @param message QueryUsersOnlineStatusRequest message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: im.turms.proto.IQueryUsersOnlineStatusRequest, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes a QueryUsersOnlineStatusRequest message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns QueryUsersOnlineStatusRequest
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QueryUsersOnlineStatusRequest;
             }
 
             /** Properties of a CreateFriendRequestRequest. */
@@ -4952,8 +4952,8 @@ export namespace im {
                 /** CreateRelationshipRequest userId */
                 userId?: (string|null);
 
-                /** CreateRelationshipRequest isBlocked */
-                isBlocked?: (boolean|null);
+                /** CreateRelationshipRequest blocked */
+                blocked?: (boolean|null);
 
                 /** CreateRelationshipRequest groupIndex */
                 groupIndex?: (google.protobuf.IInt32Value|null);
@@ -4971,8 +4971,8 @@ export namespace im {
                 /** CreateRelationshipRequest userId. */
                 public userId: string;
 
-                /** CreateRelationshipRequest isBlocked. */
-                public isBlocked: boolean;
+                /** CreateRelationshipRequest blocked. */
+                public blocked: boolean;
 
                 /** CreateRelationshipRequest groupIndex. */
                 public groupIndex?: (google.protobuf.IInt32Value|null);
@@ -5093,8 +5093,8 @@ export namespace im {
             /** Properties of a DeleteRelationshipRequest. */
             interface IDeleteRelationshipRequest {
 
-                /** DeleteRelationshipRequest relatedUserId */
-                relatedUserId?: (string|null);
+                /** DeleteRelationshipRequest userId */
+                userId?: (string|null);
 
                 /** DeleteRelationshipRequest groupIndex */
                 groupIndex?: (google.protobuf.IInt32Value|null);
@@ -5112,8 +5112,8 @@ export namespace im {
                  */
                 constructor(properties?: im.turms.proto.IDeleteRelationshipRequest);
 
-                /** DeleteRelationshipRequest relatedUserId. */
-                public relatedUserId: string;
+                /** DeleteRelationshipRequest userId. */
+                public userId: string;
 
                 /** DeleteRelationshipRequest groupIndex. */
                 public groupIndex?: (google.protobuf.IInt32Value|null);
@@ -5184,54 +5184,54 @@ export namespace im {
                 public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QueryFriendRequestsRequest;
             }
 
-            /** Properties of a QueryRelatedUsersIdsRequest. */
-            interface IQueryRelatedUsersIdsRequest {
+            /** Properties of a QueryRelatedUserIdsRequest. */
+            interface IQueryRelatedUserIdsRequest {
 
-                /** QueryRelatedUsersIdsRequest isBlocked */
-                isBlocked?: (google.protobuf.IBoolValue|null);
+                /** QueryRelatedUserIdsRequest blocked */
+                blocked?: (google.protobuf.IBoolValue|null);
 
-                /** QueryRelatedUsersIdsRequest groupIndex */
+                /** QueryRelatedUserIdsRequest groupIndex */
                 groupIndex?: (google.protobuf.IInt32Value|null);
 
-                /** QueryRelatedUsersIdsRequest lastUpdatedDate */
+                /** QueryRelatedUserIdsRequest lastUpdatedDate */
                 lastUpdatedDate?: (google.protobuf.IInt64Value|null);
             }
 
-            /** Represents a QueryRelatedUsersIdsRequest. */
-            class QueryRelatedUsersIdsRequest implements IQueryRelatedUsersIdsRequest {
+            /** Represents a QueryRelatedUserIdsRequest. */
+            class QueryRelatedUserIdsRequest implements IQueryRelatedUserIdsRequest {
 
                 /**
-                 * Constructs a new QueryRelatedUsersIdsRequest.
+                 * Constructs a new QueryRelatedUserIdsRequest.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: im.turms.proto.IQueryRelatedUsersIdsRequest);
+                constructor(properties?: im.turms.proto.IQueryRelatedUserIdsRequest);
 
-                /** QueryRelatedUsersIdsRequest isBlocked. */
-                public isBlocked?: (google.protobuf.IBoolValue|null);
+                /** QueryRelatedUserIdsRequest blocked. */
+                public blocked?: (google.protobuf.IBoolValue|null);
 
-                /** QueryRelatedUsersIdsRequest groupIndex. */
+                /** QueryRelatedUserIdsRequest groupIndex. */
                 public groupIndex?: (google.protobuf.IInt32Value|null);
 
-                /** QueryRelatedUsersIdsRequest lastUpdatedDate. */
+                /** QueryRelatedUserIdsRequest lastUpdatedDate. */
                 public lastUpdatedDate?: (google.protobuf.IInt64Value|null);
 
                 /**
-                 * Encodes the specified QueryRelatedUsersIdsRequest message. Does not implicitly {@link im.turms.proto.QueryRelatedUsersIdsRequest.verify|verify} messages.
-                 * @param message QueryRelatedUsersIdsRequest message or plain object to encode
+                 * Encodes the specified QueryRelatedUserIdsRequest message. Does not implicitly {@link im.turms.proto.QueryRelatedUserIdsRequest.verify|verify} messages.
+                 * @param message QueryRelatedUserIdsRequest message or plain object to encode
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                public static encode(message: im.turms.proto.IQueryRelatedUsersIdsRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: im.turms.proto.IQueryRelatedUserIdsRequest, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
-                 * Decodes a QueryRelatedUsersIdsRequest message from the specified reader or buffer.
+                 * Decodes a QueryRelatedUserIdsRequest message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns QueryRelatedUsersIdsRequest
+                 * @returns QueryRelatedUserIdsRequest
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QueryRelatedUsersIdsRequest;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QueryRelatedUserIdsRequest;
             }
 
             /** Properties of a QueryRelationshipGroupsRequest. */
@@ -5275,11 +5275,11 @@ export namespace im {
             /** Properties of a QueryRelationshipsRequest. */
             interface IQueryRelationshipsRequest {
 
-                /** QueryRelationshipsRequest relatedUsersIds */
-                relatedUsersIds?: (string[]|null);
+                /** QueryRelationshipsRequest userIds */
+                userIds?: (string[]|null);
 
-                /** QueryRelationshipsRequest isBlocked */
-                isBlocked?: (google.protobuf.IBoolValue|null);
+                /** QueryRelationshipsRequest blocked */
+                blocked?: (google.protobuf.IBoolValue|null);
 
                 /** QueryRelationshipsRequest groupIndex */
                 groupIndex?: (google.protobuf.IInt32Value|null);
@@ -5297,11 +5297,11 @@ export namespace im {
                  */
                 constructor(properties?: im.turms.proto.IQueryRelationshipsRequest);
 
-                /** QueryRelationshipsRequest relatedUsersIds. */
-                public relatedUsersIds: string[];
+                /** QueryRelationshipsRequest userIds. */
+                public userIds: string[];
 
-                /** QueryRelationshipsRequest isBlocked. */
-                public isBlocked?: (google.protobuf.IBoolValue|null);
+                /** QueryRelationshipsRequest blocked. */
+                public blocked?: (google.protobuf.IBoolValue|null);
 
                 /** QueryRelationshipsRequest groupIndex. */
                 public groupIndex?: (google.protobuf.IInt32Value|null);
@@ -5425,8 +5425,8 @@ export namespace im {
             /** Properties of an UpdateRelationshipRequest. */
             interface IUpdateRelationshipRequest {
 
-                /** UpdateRelationshipRequest relatedUserId */
-                relatedUserId?: (string|null);
+                /** UpdateRelationshipRequest userId */
+                userId?: (string|null);
 
                 /** UpdateRelationshipRequest blocked */
                 blocked?: (google.protobuf.IBoolValue|null);
@@ -5447,8 +5447,8 @@ export namespace im {
                  */
                 constructor(properties?: im.turms.proto.IUpdateRelationshipRequest);
 
-                /** UpdateRelationshipRequest relatedUserId. */
-                public relatedUserId: string;
+                /** UpdateRelationshipRequest userId. */
+                public userId: string;
 
                 /** UpdateRelationshipRequest blocked. */
                 public blocked?: (google.protobuf.IBoolValue|null);

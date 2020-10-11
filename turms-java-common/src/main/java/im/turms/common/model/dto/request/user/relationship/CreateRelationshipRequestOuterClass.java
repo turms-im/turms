@@ -33,7 +33,7 @@ public final class CreateRelationshipRequestOuterClass {
   }
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_im_turms_proto_CreateRelationshipRequest_descriptor;
-  static final 
+  static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_im_turms_proto_CreateRelationshipRequest_fieldAccessorTable;
 
@@ -47,12 +47,12 @@ public final class CreateRelationshipRequestOuterClass {
     java.lang.String[] descriptorData = {
       "\n;request/user/relationship/create_relat" +
       "ionship_request.proto\022\016im.turms.proto\032\036g" +
-      "oogle/protobuf/wrappers.proto\"r\n\031CreateR" +
-      "elationshipRequest\022\017\n\007user_id\030\001 \001(\003\022\022\n\ni" +
-      "s_blocked\030\002 \001(\010\0220\n\013group_index\030\003 \001(\0132\033.g" +
-      "oogle.protobuf.Int32ValueB:\n3im.turms.co" +
-      "mmon.model.dto.request.user.relationship" +
-      "P\001\272\002\000b\006proto3"
+      "oogle/protobuf/wrappers.proto\"o\n\031CreateR" +
+      "elationshipRequest\022\017\n\007user_id\030\001 \001(\003\022\017\n\007b" +
+      "locked\030\002 \001(\010\0220\n\013group_index\030\003 \001(\0132\033.goog" +
+      "le.protobuf.Int32ValueB:\n3im.turms.commo" +
+      "n.model.dto.request.user.relationshipP\001\272" +
+      "\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -64,7 +64,7 @@ public final class CreateRelationshipRequestOuterClass {
     internal_static_im_turms_proto_CreateRelationshipRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_CreateRelationshipRequest_descriptor,
-        new java.lang.String[] { "UserId", "IsBlocked", "GroupIndex", });
+        new java.lang.String[] { "UserId", "Blocked", "GroupIndex", });
     com.google.protobuf.WrappersProto.getDescriptor();
   }
 

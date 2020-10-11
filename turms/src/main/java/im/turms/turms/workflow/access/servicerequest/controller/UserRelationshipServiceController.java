@@ -102,7 +102,7 @@ public class UserRelationshipServiceController {
             return userRelationshipService.upsertOneSidedRelationship(
                     clientRequest.getUserId(),
                     request.getUserId(),
-                    request.getIsBlocked(),
+                    request.getBlocked(),
                     groupIndex,
                     null,
                     new Date(),
@@ -124,7 +124,7 @@ public class UserRelationshipServiceController {
                     request.getTargetGroupIndex().getValue() : DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX;
             if (node.getSharedProperties().getService().getNotification()
                     .isNotifyMembersAfterOneSidedRelationshipGroupUpdatedByOthers()) {
-                return userRelationshipGroupService.queryRelatedUsersIdsInRelationshipGroup(
+                return userRelationshipGroupService.queryRelatedUserIdsInRelationshipGroup(
                         clientRequest.getUserId(),
                         groupIndex)
                         .collect(Collectors.toSet())
@@ -153,16 +153,16 @@ public class UserRelationshipServiceController {
             if (deleteTwoSidedRelationships) {
                 deleteMono = userRelationshipService.deleteTwoSidedRelationships(
                         clientRequest.getUserId(),
-                        request.getRelatedUserId());
+                        request.getUserId());
             } else {
                 deleteMono = userRelationshipService.deleteOneSidedRelationship(
                         clientRequest.getUserId(),
-                        request.getRelatedUserId(),
+                        request.getUserId(),
                         null);
             }
             return deleteMono.map(deleted -> deleted != null && deleted
                     && node.getSharedProperties().getService().getNotification().isNotifyMemberAfterRemovedFromRelationshipGroupByOthers()
-                    ? RequestHandlerResultFactory.get(request.getRelatedUserId(), clientRequest.getTurmsRequest())
+                    ? RequestHandlerResultFactory.get(request.getUserId(), clientRequest.getTurmsRequest())
                     : RequestHandlerResultFactory.okIfTrue(deleted));
         };
     }
@@ -184,14 +184,14 @@ public class UserRelationshipServiceController {
         };
     }
 
-    @ServiceRequestMapping(QUERY_RELATED_USERS_IDS_REQUEST)
-    public ClientRequestHandler handleQueryRelatedUsersIdsRequest() {
+    @ServiceRequestMapping(QUERY_RELATED_USER_IDS_REQUEST)
+    public ClientRequestHandler handleQueryRelatedUserIdsRequest() {
         return clientRequest -> {
-            QueryRelatedUsersIdsRequest request = clientRequest.getTurmsRequest().getQueryRelatedUsersIdsRequest();
+            QueryRelatedUserIdsRequest request = clientRequest.getTurmsRequest().getQueryRelatedUserIdsRequest();
             int groupIndex = request.hasGroupIndex() ? request.getGroupIndex().getValue() : DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX;
             Date lastUpdatedDate = request.hasLastUpdatedDate() ? new Date(request.getLastUpdatedDate().getValue()) : null;
-            Boolean isBlocked = request.hasIsBlocked() ? request.getIsBlocked().getValue() : null;
-            return userRelationshipService.queryRelatedUsersIdsWithVersion(
+            Boolean isBlocked = request.hasBlocked() ? request.getBlocked().getValue() : null;
+            return userRelationshipService.queryRelatedUserIdsWithVersion(
                     clientRequest.getUserId(),
                     groupIndex,
                     isBlocked,
@@ -227,10 +227,10 @@ public class UserRelationshipServiceController {
         return clientRequest -> {
             QueryRelationshipsRequest request = clientRequest.getTurmsRequest()
                     .getQueryRelationshipsRequest();
-            Set<Long> ids = request.getRelatedUsersIdsCount() != 0 ?
-                    new HashSet<>(request.getRelatedUsersIdsList()) : null;
+            Set<Long> ids = request.getUserIdsCount() != 0 ?
+                    new HashSet<>(request.getUserIdsList()) : null;
             int groupIndex = request.hasGroupIndex() ? request.getGroupIndex().getValue() : DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX;
-            Boolean isBlocked = request.hasIsBlocked() ? request.getIsBlocked().getValue() : null;
+            Boolean isBlocked = request.hasBlocked() ? request.getBlocked().getValue() : null;
             Date lastUpdatedDate = request.hasLastUpdatedDate() ?
                     new Date(request.getLastUpdatedDate().getValue()) : null;
             return userRelationshipService.queryRelationshipsWithVersion(
@@ -286,7 +286,7 @@ public class UserRelationshipServiceController {
             Integer deleteGroupIndex = request.hasDeleteGroupIndex() ? request.getDeleteGroupIndex().getValue() : null;
             return userRelationshipService.upsertOneSidedRelationship(
                     clientRequest.getUserId(),
-                    request.getRelatedUserId(),
+                    request.getUserId(),
                     isBlocked,
                     newGroupIndex,
                     deleteGroupIndex,
@@ -295,7 +295,7 @@ public class UserRelationshipServiceController {
                     null)
                     .map(upserted -> upserted != null && upserted
                             && node.getSharedProperties().getService().getNotification().isNotifyRelatedUserAfterOneSidedRelationshipUpdatedByOthers()
-                            ? RequestHandlerResultFactory.get(request.getRelatedUserId(), clientRequest.getTurmsRequest())
+                            ? RequestHandlerResultFactory.get(request.getUserId(), clientRequest.getTurmsRequest())
                             : RequestHandlerResultFactory.okIfTrue(upserted));
         };
     }

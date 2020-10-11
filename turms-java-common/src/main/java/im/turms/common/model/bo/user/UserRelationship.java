@@ -93,13 +93,13 @@ private static final long serialVersionUID = 0L;
           }
           case 26: {
             com.google.protobuf.BoolValue.Builder subBuilder = null;
-            if (isBlocked_ != null) {
-              subBuilder = isBlocked_.toBuilder();
+            if (blocked_ != null) {
+              subBuilder = blocked_.toBuilder();
             }
-            isBlocked_ = input.readMessage(com.google.protobuf.BoolValue.parser(), extensionRegistry);
+            blocked_ = input.readMessage(com.google.protobuf.BoolValue.parser(), extensionRegistry);
             if (subBuilder != null) {
-              subBuilder.mergeFrom(isBlocked_);
-              isBlocked_ = subBuilder.buildPartial();
+              subBuilder.mergeFrom(blocked_);
+              blocked_ = subBuilder.buildPartial();
             }
 
             break;
@@ -214,30 +214,30 @@ private static final long serialVersionUID = 0L;
     return getRelatedUserId();
   }
 
-  public static final int IS_BLOCKED_FIELD_NUMBER = 3;
-  private com.google.protobuf.BoolValue isBlocked_;
+  public static final int BLOCKED_FIELD_NUMBER = 3;
+  private com.google.protobuf.BoolValue blocked_;
   /**
-   * <code>.google.protobuf.BoolValue is_blocked = 3;</code>
-   * @return Whether the isBlocked field is set.
+   * <code>.google.protobuf.BoolValue blocked = 3;</code>
+   * @return Whether the blocked field is set.
    */
   @java.lang.Override
-  public boolean hasIsBlocked() {
-    return isBlocked_ != null;
+  public boolean hasBlocked() {
+    return blocked_ != null;
   }
   /**
-   * <code>.google.protobuf.BoolValue is_blocked = 3;</code>
-   * @return The isBlocked.
+   * <code>.google.protobuf.BoolValue blocked = 3;</code>
+   * @return The blocked.
    */
   @java.lang.Override
-  public com.google.protobuf.BoolValue getIsBlocked() {
-    return isBlocked_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : isBlocked_;
+  public com.google.protobuf.BoolValue getBlocked() {
+    return blocked_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : blocked_;
   }
   /**
-   * <code>.google.protobuf.BoolValue is_blocked = 3;</code>
+   * <code>.google.protobuf.BoolValue blocked = 3;</code>
    */
   @java.lang.Override
-  public com.google.protobuf.BoolValueOrBuilder getIsBlockedOrBuilder() {
-    return getIsBlocked();
+  public com.google.protobuf.BoolValueOrBuilder getBlockedOrBuilder() {
+    return getBlocked();
   }
 
   public static final int GROUP_INDEX_FIELD_NUMBER = 4;
@@ -312,8 +312,8 @@ private static final long serialVersionUID = 0L;
     if (relatedUserId_ != null) {
       output.writeMessage(2, getRelatedUserId());
     }
-    if (isBlocked_ != null) {
-      output.writeMessage(3, getIsBlocked());
+    if (blocked_ != null) {
+      output.writeMessage(3, getBlocked());
     }
     if (groupIndex_ != null) {
       output.writeMessage(4, getGroupIndex());
@@ -338,9 +338,9 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(2, getRelatedUserId());
     }
-    if (isBlocked_ != null) {
+    if (blocked_ != null) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(3, getIsBlocked());
+        .computeMessageSize(3, getBlocked());
     }
     if (groupIndex_ != null) {
       size += com.google.protobuf.CodedOutputStream
@@ -375,10 +375,10 @@ private static final long serialVersionUID = 0L;
       if (!getRelatedUserId()
           .equals(other.getRelatedUserId())) return false;
     }
-    if (hasIsBlocked() != other.hasIsBlocked()) return false;
-    if (hasIsBlocked()) {
-      if (!getIsBlocked()
-          .equals(other.getIsBlocked())) return false;
+    if (hasBlocked() != other.hasBlocked()) return false;
+    if (hasBlocked()) {
+      if (!getBlocked()
+          .equals(other.getBlocked())) return false;
     }
     if (hasGroupIndex() != other.hasGroupIndex()) return false;
     if (hasGroupIndex()) {
@@ -409,9 +409,9 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + RELATED_USER_ID_FIELD_NUMBER;
       hash = (53 * hash) + getRelatedUserId().hashCode();
     }
-    if (hasIsBlocked()) {
-      hash = (37 * hash) + IS_BLOCKED_FIELD_NUMBER;
-      hash = (53 * hash) + getIsBlocked().hashCode();
+    if (hasBlocked()) {
+      hash = (37 * hash) + BLOCKED_FIELD_NUMBER;
+      hash = (53 * hash) + getBlocked().hashCode();
     }
     if (hasGroupIndex()) {
       hash = (37 * hash) + GROUP_INDEX_FIELD_NUMBER;
@@ -566,11 +566,11 @@ private static final long serialVersionUID = 0L;
         relatedUserId_ = null;
         relatedUserIdBuilder_ = null;
       }
-      if (isBlockedBuilder_ == null) {
-        isBlocked_ = null;
+      if (blockedBuilder_ == null) {
+        blocked_ = null;
       } else {
-        isBlocked_ = null;
-        isBlockedBuilder_ = null;
+        blocked_ = null;
+        blockedBuilder_ = null;
       }
       if (groupIndexBuilder_ == null) {
         groupIndex_ = null;
@@ -620,10 +620,10 @@ private static final long serialVersionUID = 0L;
       } else {
         result.relatedUserId_ = relatedUserIdBuilder_.build();
       }
-      if (isBlockedBuilder_ == null) {
-        result.isBlocked_ = isBlocked_;
+      if (blockedBuilder_ == null) {
+        result.blocked_ = blocked_;
       } else {
-        result.isBlocked_ = isBlockedBuilder_.build();
+        result.blocked_ = blockedBuilder_.build();
       }
       if (groupIndexBuilder_ == null) {
         result.groupIndex_ = groupIndex_;
@@ -689,8 +689,8 @@ private static final long serialVersionUID = 0L;
       if (other.hasRelatedUserId()) {
         mergeRelatedUserId(other.getRelatedUserId());
       }
-      if (other.hasIsBlocked()) {
-        mergeIsBlocked(other.getIsBlocked());
+      if (other.hasBlocked()) {
+        mergeBlocked(other.getBlocked());
       }
       if (other.hasGroupIndex()) {
         mergeGroupIndex(other.getGroupIndex());
@@ -814,7 +814,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value owner_id = 1;</code>
      */
     public com.google.protobuf.Int64Value.Builder getOwnerIdBuilder() {
-      
+
       onChanged();
       return getOwnerIdFieldBuilder().getBuilder();
     }
@@ -833,7 +833,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value owner_id = 1;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> 
+        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
         getOwnerIdFieldBuilder() {
       if (ownerIdBuilder_ == null) {
         ownerIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -933,7 +933,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value related_user_id = 2;</code>
      */
     public com.google.protobuf.Int64Value.Builder getRelatedUserIdBuilder() {
-      
+
       onChanged();
       return getRelatedUserIdFieldBuilder().getBuilder();
     }
@@ -952,7 +952,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value related_user_id = 2;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> 
+        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
         getRelatedUserIdFieldBuilder() {
       if (relatedUserIdBuilder_ == null) {
         relatedUserIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -965,123 +965,123 @@ private static final long serialVersionUID = 0L;
       return relatedUserIdBuilder_;
     }
 
-    private com.google.protobuf.BoolValue isBlocked_;
+    private com.google.protobuf.BoolValue blocked_;
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder> isBlockedBuilder_;
+        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder> blockedBuilder_;
     /**
-     * <code>.google.protobuf.BoolValue is_blocked = 3;</code>
-     * @return Whether the isBlocked field is set.
+     * <code>.google.protobuf.BoolValue blocked = 3;</code>
+     * @return Whether the blocked field is set.
      */
-    public boolean hasIsBlocked() {
-      return isBlockedBuilder_ != null || isBlocked_ != null;
+    public boolean hasBlocked() {
+      return blockedBuilder_ != null || blocked_ != null;
     }
     /**
-     * <code>.google.protobuf.BoolValue is_blocked = 3;</code>
-     * @return The isBlocked.
+     * <code>.google.protobuf.BoolValue blocked = 3;</code>
+     * @return The blocked.
      */
-    public com.google.protobuf.BoolValue getIsBlocked() {
-      if (isBlockedBuilder_ == null) {
-        return isBlocked_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : isBlocked_;
+    public com.google.protobuf.BoolValue getBlocked() {
+      if (blockedBuilder_ == null) {
+        return blocked_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : blocked_;
       } else {
-        return isBlockedBuilder_.getMessage();
+        return blockedBuilder_.getMessage();
       }
     }
     /**
-     * <code>.google.protobuf.BoolValue is_blocked = 3;</code>
+     * <code>.google.protobuf.BoolValue blocked = 3;</code>
      */
-    public Builder setIsBlocked(com.google.protobuf.BoolValue value) {
-      if (isBlockedBuilder_ == null) {
+    public Builder setBlocked(com.google.protobuf.BoolValue value) {
+      if (blockedBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
-        isBlocked_ = value;
+        blocked_ = value;
         onChanged();
       } else {
-        isBlockedBuilder_.setMessage(value);
+        blockedBuilder_.setMessage(value);
       }
 
       return this;
     }
     /**
-     * <code>.google.protobuf.BoolValue is_blocked = 3;</code>
+     * <code>.google.protobuf.BoolValue blocked = 3;</code>
      */
-    public Builder setIsBlocked(
+    public Builder setBlocked(
         com.google.protobuf.BoolValue.Builder builderForValue) {
-      if (isBlockedBuilder_ == null) {
-        isBlocked_ = builderForValue.build();
+      if (blockedBuilder_ == null) {
+        blocked_ = builderForValue.build();
         onChanged();
       } else {
-        isBlockedBuilder_.setMessage(builderForValue.build());
+        blockedBuilder_.setMessage(builderForValue.build());
       }
 
       return this;
     }
     /**
-     * <code>.google.protobuf.BoolValue is_blocked = 3;</code>
+     * <code>.google.protobuf.BoolValue blocked = 3;</code>
      */
-    public Builder mergeIsBlocked(com.google.protobuf.BoolValue value) {
-      if (isBlockedBuilder_ == null) {
-        if (isBlocked_ != null) {
-          isBlocked_ =
-            com.google.protobuf.BoolValue.newBuilder(isBlocked_).mergeFrom(value).buildPartial();
+    public Builder mergeBlocked(com.google.protobuf.BoolValue value) {
+      if (blockedBuilder_ == null) {
+        if (blocked_ != null) {
+          blocked_ =
+            com.google.protobuf.BoolValue.newBuilder(blocked_).mergeFrom(value).buildPartial();
         } else {
-          isBlocked_ = value;
+          blocked_ = value;
         }
         onChanged();
       } else {
-        isBlockedBuilder_.mergeFrom(value);
+        blockedBuilder_.mergeFrom(value);
       }
 
       return this;
     }
     /**
-     * <code>.google.protobuf.BoolValue is_blocked = 3;</code>
+     * <code>.google.protobuf.BoolValue blocked = 3;</code>
      */
-    public Builder clearIsBlocked() {
-      if (isBlockedBuilder_ == null) {
-        isBlocked_ = null;
+    public Builder clearBlocked() {
+      if (blockedBuilder_ == null) {
+        blocked_ = null;
         onChanged();
       } else {
-        isBlocked_ = null;
-        isBlockedBuilder_ = null;
+        blocked_ = null;
+        blockedBuilder_ = null;
       }
 
       return this;
     }
     /**
-     * <code>.google.protobuf.BoolValue is_blocked = 3;</code>
+     * <code>.google.protobuf.BoolValue blocked = 3;</code>
      */
-    public com.google.protobuf.BoolValue.Builder getIsBlockedBuilder() {
-      
+    public com.google.protobuf.BoolValue.Builder getBlockedBuilder() {
+
       onChanged();
-      return getIsBlockedFieldBuilder().getBuilder();
+      return getBlockedFieldBuilder().getBuilder();
     }
     /**
-     * <code>.google.protobuf.BoolValue is_blocked = 3;</code>
+     * <code>.google.protobuf.BoolValue blocked = 3;</code>
      */
-    public com.google.protobuf.BoolValueOrBuilder getIsBlockedOrBuilder() {
-      if (isBlockedBuilder_ != null) {
-        return isBlockedBuilder_.getMessageOrBuilder();
+    public com.google.protobuf.BoolValueOrBuilder getBlockedOrBuilder() {
+      if (blockedBuilder_ != null) {
+        return blockedBuilder_.getMessageOrBuilder();
       } else {
-        return isBlocked_ == null ?
-            com.google.protobuf.BoolValue.getDefaultInstance() : isBlocked_;
+        return blocked_ == null ?
+            com.google.protobuf.BoolValue.getDefaultInstance() : blocked_;
       }
     }
     /**
-     * <code>.google.protobuf.BoolValue is_blocked = 3;</code>
+     * <code>.google.protobuf.BoolValue blocked = 3;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder> 
-        getIsBlockedFieldBuilder() {
-      if (isBlockedBuilder_ == null) {
-        isBlockedBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder>
+        getBlockedFieldBuilder() {
+      if (blockedBuilder_ == null) {
+        blockedBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
             com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder>(
-                getIsBlocked(),
+                getBlocked(),
                 getParentForChildren(),
                 isClean());
-        isBlocked_ = null;
+        blocked_ = null;
       }
-      return isBlockedBuilder_;
+      return blockedBuilder_;
     }
 
     private com.google.protobuf.Int64Value groupIndex_;
@@ -1171,7 +1171,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value group_index = 4;</code>
      */
     public com.google.protobuf.Int64Value.Builder getGroupIndexBuilder() {
-      
+
       onChanged();
       return getGroupIndexFieldBuilder().getBuilder();
     }
@@ -1190,7 +1190,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value group_index = 4;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> 
+        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
         getGroupIndexFieldBuilder() {
       if (groupIndexBuilder_ == null) {
         groupIndexBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -1290,7 +1290,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value establishment_date = 5;</code>
      */
     public com.google.protobuf.Int64Value.Builder getEstablishmentDateBuilder() {
-      
+
       onChanged();
       return getEstablishmentDateFieldBuilder().getBuilder();
     }
@@ -1309,7 +1309,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value establishment_date = 5;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> 
+        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
         getEstablishmentDateFieldBuilder() {
       if (establishmentDateBuilder_ == null) {
         establishmentDateBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<

@@ -576,7 +576,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setContentTypeValue(int value) {
-      
+
       contentType_ = value;
       onChanged();
       return this;
@@ -600,7 +600,7 @@ private static final long serialVersionUID = 0L;
       if (value == null) {
         throw new NullPointerException();
       }
-      
+
       contentType_ = value.getNumber();
       onChanged();
       return this;
@@ -610,7 +610,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearContentType() {
-      
+
       contentType_ = 0;
       onChanged();
       return this;
@@ -703,7 +703,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.StringValue key_str = 2;</code>
      */
     public com.google.protobuf.StringValue.Builder getKeyStrBuilder() {
-      
+
       onChanged();
       return getKeyStrFieldBuilder().getBuilder();
     }
@@ -722,7 +722,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.StringValue key_str = 2;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> 
+        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>
         getKeyStrFieldBuilder() {
       if (keyStrBuilder_ == null) {
         keyStrBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -822,7 +822,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value key_num = 3;</code>
      */
     public com.google.protobuf.Int64Value.Builder getKeyNumBuilder() {
-      
+
       onChanged();
       return getKeyNumFieldBuilder().getBuilder();
     }
@@ -841,7 +841,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value key_num = 3;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> 
+        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
         getKeyNumFieldBuilder() {
       if (keyNumBuilder_ == null) {
         keyNumBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<

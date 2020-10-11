@@ -1098,7 +1098,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value id = 1;</code>
      */
     public com.google.protobuf.Int64Value.Builder getIdBuilder() {
-      
+
       onChanged();
       return getIdFieldBuilder().getBuilder();
     }
@@ -1117,7 +1117,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value id = 1;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> 
+        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
         getIdFieldBuilder() {
       if (idBuilder_ == null) {
         idBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -1217,7 +1217,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value delivery_date = 2;</code>
      */
     public com.google.protobuf.Int64Value.Builder getDeliveryDateBuilder() {
-      
+
       onChanged();
       return getDeliveryDateFieldBuilder().getBuilder();
     }
@@ -1236,7 +1236,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value delivery_date = 2;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> 
+        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
         getDeliveryDateFieldBuilder() {
       if (deliveryDateBuilder_ == null) {
         deliveryDateBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -1336,7 +1336,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value deletion_date = 3;</code>
      */
     public com.google.protobuf.Int64Value.Builder getDeletionDateBuilder() {
-      
+
       onChanged();
       return getDeletionDateFieldBuilder().getBuilder();
     }
@@ -1355,7 +1355,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value deletion_date = 3;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> 
+        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
         getDeletionDateFieldBuilder() {
       if (deletionDateBuilder_ == null) {
         deletionDateBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -1455,7 +1455,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.StringValue text = 4;</code>
      */
     public com.google.protobuf.StringValue.Builder getTextBuilder() {
-      
+
       onChanged();
       return getTextFieldBuilder().getBuilder();
     }
@@ -1474,7 +1474,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.StringValue text = 4;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> 
+        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>
         getTextFieldBuilder() {
       if (textBuilder_ == null) {
         textBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -1574,7 +1574,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value sender_id = 5;</code>
      */
     public com.google.protobuf.Int64Value.Builder getSenderIdBuilder() {
-      
+
       onChanged();
       return getSenderIdFieldBuilder().getBuilder();
     }
@@ -1593,7 +1593,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value sender_id = 5;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> 
+        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
         getSenderIdFieldBuilder() {
       if (senderIdBuilder_ == null) {
         senderIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -1693,7 +1693,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value group_id = 6;</code>
      */
     public com.google.protobuf.Int64Value.Builder getGroupIdBuilder() {
-      
+
       onChanged();
       return getGroupIdFieldBuilder().getBuilder();
     }
@@ -1712,7 +1712,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value group_id = 6;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> 
+        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
         getGroupIdFieldBuilder() {
       if (groupIdBuilder_ == null) {
         groupIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -1812,7 +1812,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.BoolValue is_system_message = 7;</code>
      */
     public com.google.protobuf.BoolValue.Builder getIsSystemMessageBuilder() {
-      
+
       onChanged();
       return getIsSystemMessageFieldBuilder().getBuilder();
     }
@@ -1831,7 +1831,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.BoolValue is_system_message = 7;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder> 
+        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder>
         getIsSystemMessageFieldBuilder() {
       if (isSystemMessageBuilder_ == null) {
         isSystemMessageBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -1931,7 +1931,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value recipient_id = 8;</code>
      */
     public com.google.protobuf.Int64Value.Builder getRecipientIdBuilder() {
-      
+
       onChanged();
       return getRecipientIdFieldBuilder().getBuilder();
     }
@@ -1950,7 +1950,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value recipient_id = 8;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> 
+        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
         getRecipientIdFieldBuilder() {
       if (recipientIdBuilder_ == null) {
         recipientIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<

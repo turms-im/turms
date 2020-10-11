@@ -72,7 +72,7 @@ private static final long serialVersionUID = 0L;
           }
           case 16: {
 
-            isBlocked_ = input.readBool();
+            blocked_ = input.readBool();
             break;
           }
           case 26: {
@@ -131,15 +131,15 @@ private static final long serialVersionUID = 0L;
     return userId_;
   }
 
-  public static final int IS_BLOCKED_FIELD_NUMBER = 2;
-  private boolean isBlocked_;
+  public static final int BLOCKED_FIELD_NUMBER = 2;
+  private boolean blocked_;
   /**
-   * <code>bool is_blocked = 2;</code>
-   * @return The isBlocked.
+   * <code>bool blocked = 2;</code>
+   * @return The blocked.
    */
   @java.lang.Override
-  public boolean getIsBlocked() {
-    return isBlocked_;
+  public boolean getBlocked() {
+    return blocked_;
   }
 
   public static final int GROUP_INDEX_FIELD_NUMBER = 3;
@@ -185,8 +185,8 @@ private static final long serialVersionUID = 0L;
     if (userId_ != 0L) {
       output.writeInt64(1, userId_);
     }
-    if (isBlocked_ != false) {
-      output.writeBool(2, isBlocked_);
+    if (blocked_ != false) {
+      output.writeBool(2, blocked_);
     }
     if (groupIndex_ != null) {
       output.writeMessage(3, getGroupIndex());
@@ -204,9 +204,9 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt64Size(1, userId_);
     }
-    if (isBlocked_ != false) {
+    if (blocked_ != false) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(2, isBlocked_);
+        .computeBoolSize(2, blocked_);
     }
     if (groupIndex_ != null) {
       size += com.google.protobuf.CodedOutputStream
@@ -229,8 +229,8 @@ private static final long serialVersionUID = 0L;
 
     if (getUserId()
         != other.getUserId()) return false;
-    if (getIsBlocked()
-        != other.getIsBlocked()) return false;
+    if (getBlocked()
+        != other.getBlocked()) return false;
     if (hasGroupIndex() != other.hasGroupIndex()) return false;
     if (hasGroupIndex()) {
       if (!getGroupIndex()
@@ -250,9 +250,9 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + USER_ID_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getUserId());
-    hash = (37 * hash) + IS_BLOCKED_FIELD_NUMBER;
+    hash = (37 * hash) + BLOCKED_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-        getIsBlocked());
+        getBlocked());
     if (hasGroupIndex()) {
       hash = (37 * hash) + GROUP_INDEX_FIELD_NUMBER;
       hash = (53 * hash) + getGroupIndex().hashCode();
@@ -392,7 +392,7 @@ private static final long serialVersionUID = 0L;
       super.clear();
       userId_ = 0L;
 
-      isBlocked_ = false;
+      blocked_ = false;
 
       if (groupIndexBuilder_ == null) {
         groupIndex_ = null;
@@ -427,7 +427,7 @@ private static final long serialVersionUID = 0L;
     public im.turms.common.model.dto.request.user.relationship.CreateRelationshipRequest buildPartial() {
       im.turms.common.model.dto.request.user.relationship.CreateRelationshipRequest result = new im.turms.common.model.dto.request.user.relationship.CreateRelationshipRequest(this);
       result.userId_ = userId_;
-      result.isBlocked_ = isBlocked_;
+      result.blocked_ = blocked_;
       if (groupIndexBuilder_ == null) {
         result.groupIndex_ = groupIndex_;
       } else {
@@ -484,8 +484,8 @@ private static final long serialVersionUID = 0L;
       if (other.getUserId() != 0L) {
         setUserId(other.getUserId());
       }
-      if (other.getIsBlocked() != false) {
-        setIsBlocked(other.getIsBlocked());
+      if (other.getBlocked() != false) {
+        setBlocked(other.getBlocked());
       }
       if (other.hasGroupIndex()) {
         mergeGroupIndex(other.getGroupIndex());
@@ -534,7 +534,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setUserId(long value) {
-      
+
       userId_ = value;
       onChanged();
       return this;
@@ -544,39 +544,39 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearUserId() {
-      
+
       userId_ = 0L;
       onChanged();
       return this;
     }
 
-    private boolean isBlocked_ ;
+    private boolean blocked_ ;
     /**
-     * <code>bool is_blocked = 2;</code>
-     * @return The isBlocked.
+     * <code>bool blocked = 2;</code>
+     * @return The blocked.
      */
     @java.lang.Override
-    public boolean getIsBlocked() {
-      return isBlocked_;
+    public boolean getBlocked() {
+      return blocked_;
     }
     /**
-     * <code>bool is_blocked = 2;</code>
-     * @param value The isBlocked to set.
+     * <code>bool blocked = 2;</code>
+     * @param value The blocked to set.
      * @return This builder for chaining.
      */
-    public Builder setIsBlocked(boolean value) {
-      
-      isBlocked_ = value;
+    public Builder setBlocked(boolean value) {
+
+      blocked_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>bool is_blocked = 2;</code>
+     * <code>bool blocked = 2;</code>
      * @return This builder for chaining.
      */
-    public Builder clearIsBlocked() {
-      
-      isBlocked_ = false;
+    public Builder clearBlocked() {
+
+      blocked_ = false;
       onChanged();
       return this;
     }
@@ -668,7 +668,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int32Value group_index = 3;</code>
      */
     public com.google.protobuf.Int32Value.Builder getGroupIndexBuilder() {
-      
+
       onChanged();
       return getGroupIndexFieldBuilder().getBuilder();
     }
@@ -687,7 +687,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int32Value group_index = 3;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder> 
+        com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder>
         getGroupIndexFieldBuilder() {
       if (groupIndexBuilder_ == null) {
         groupIndexBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<

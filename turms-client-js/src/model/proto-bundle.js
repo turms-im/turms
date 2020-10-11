@@ -1678,7 +1678,7 @@ $root.im = (function() {
                  * @memberof im.turms.proto
                  * @interface IGroupJoinQuestionsAnswerResult
                  * @property {number|null} [score] GroupJoinQuestionsAnswerResult score
-                 * @property {Array.<string>|null} [questionsIds] GroupJoinQuestionsAnswerResult questionsIds
+                 * @property {Array.<string>|null} [questionIds] GroupJoinQuestionsAnswerResult questionIds
                  * @property {boolean|null} [joined] GroupJoinQuestionsAnswerResult joined
                  */
 
@@ -1691,7 +1691,7 @@ $root.im = (function() {
                  * @param {im.turms.proto.IGroupJoinQuestionsAnswerResult=} [properties] Properties to set
                  */
                 function GroupJoinQuestionsAnswerResult(properties) {
-                    this.questionsIds = [];
+                    this.questionIds = [];
                     if (properties)
                         for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                             if (properties[keys[i]] != null)
@@ -1707,12 +1707,12 @@ $root.im = (function() {
                 GroupJoinQuestionsAnswerResult.prototype.score = 0;
 
                 /**
-                 * GroupJoinQuestionsAnswerResult questionsIds.
-                 * @member {Array.<string>} questionsIds
+                 * GroupJoinQuestionsAnswerResult questionIds.
+                 * @member {Array.<string>} questionIds
                  * @memberof im.turms.proto.GroupJoinQuestionsAnswerResult
                  * @instance
                  */
-                GroupJoinQuestionsAnswerResult.prototype.questionsIds = $util.emptyArray;
+                GroupJoinQuestionsAnswerResult.prototype.questionIds = $util.emptyArray;
 
                 /**
                  * GroupJoinQuestionsAnswerResult joined.
@@ -1736,10 +1736,10 @@ $root.im = (function() {
                         writer = $Writer.create();
                     if (message.score != null && Object.hasOwnProperty.call(message, "score"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int32(message.score);
-                    if (message.questionsIds != null && message.questionsIds.length) {
+                    if (message.questionIds != null && message.questionIds.length) {
                         writer.uint32(/* id 2, wireType 2 =*/18).fork();
-                        for (var i = 0; i < message.questionsIds.length; ++i)
-                            writer.int64(message.questionsIds[i]);
+                        for (var i = 0; i < message.questionIds.length; ++i)
+                            writer.int64(message.questionIds[i]);
                         writer.ldelim();
                     }
                     if (message.joined != null && Object.hasOwnProperty.call(message, "joined"))
@@ -1769,14 +1769,14 @@ $root.im = (function() {
                             message.score = reader.int32();
                             break;
                         case 2:
-                            if (!(message.questionsIds && message.questionsIds.length))
-                                message.questionsIds = [];
+                            if (!(message.questionIds && message.questionIds.length))
+                                message.questionIds = [];
                             if ((tag & 7) === 2) {
                                 var end2 = reader.uint32() + reader.pos;
                                 while (reader.pos < end2)
-                                    message.questionsIds.push(reader.int64().toString());
+                                    message.questionIds.push(reader.int64().toString());
                             } else
-                                message.questionsIds.push(reader.int64().toString());
+                                message.questionIds.push(reader.int64().toString());
                             break;
                         case 3:
                             message.joined = reader.bool();
@@ -4467,7 +4467,7 @@ $root.im = (function() {
                  * @interface IUserRelationship
                  * @property {google.protobuf.IInt64Value|null} [ownerId] UserRelationship ownerId
                  * @property {google.protobuf.IInt64Value|null} [relatedUserId] UserRelationship relatedUserId
-                 * @property {google.protobuf.IBoolValue|null} [isBlocked] UserRelationship isBlocked
+                 * @property {google.protobuf.IBoolValue|null} [blocked] UserRelationship blocked
                  * @property {google.protobuf.IInt64Value|null} [groupIndex] UserRelationship groupIndex
                  * @property {google.protobuf.IInt64Value|null} [establishmentDate] UserRelationship establishmentDate
                  */
@@ -4504,12 +4504,12 @@ $root.im = (function() {
                 UserRelationship.prototype.relatedUserId = null;
 
                 /**
-                 * UserRelationship isBlocked.
-                 * @member {google.protobuf.IBoolValue|null|undefined} isBlocked
+                 * UserRelationship blocked.
+                 * @member {google.protobuf.IBoolValue|null|undefined} blocked
                  * @memberof im.turms.proto.UserRelationship
                  * @instance
                  */
-                UserRelationship.prototype.isBlocked = null;
+                UserRelationship.prototype.blocked = null;
 
                 /**
                  * UserRelationship groupIndex.
@@ -4543,8 +4543,8 @@ $root.im = (function() {
                         $root.google.protobuf.Int64Value.encode(message.ownerId, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
                     if (message.relatedUserId != null && Object.hasOwnProperty.call(message, "relatedUserId"))
                         $root.google.protobuf.Int64Value.encode(message.relatedUserId, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    if (message.isBlocked != null && Object.hasOwnProperty.call(message, "isBlocked"))
-                        $root.google.protobuf.BoolValue.encode(message.isBlocked, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                    if (message.blocked != null && Object.hasOwnProperty.call(message, "blocked"))
+                        $root.google.protobuf.BoolValue.encode(message.blocked, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                     if (message.groupIndex != null && Object.hasOwnProperty.call(message, "groupIndex"))
                         $root.google.protobuf.Int64Value.encode(message.groupIndex, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
                     if (message.establishmentDate != null && Object.hasOwnProperty.call(message, "establishmentDate"))
@@ -4577,7 +4577,7 @@ $root.im = (function() {
                             message.relatedUserId = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
                             break;
                         case 3:
-                            message.isBlocked = $root.google.protobuf.BoolValue.decode(reader, reader.uint32());
+                            message.blocked = $root.google.protobuf.BoolValue.decode(reader, reader.uint32());
                             break;
                         case 4:
                             message.groupIndex = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
@@ -5699,7 +5699,7 @@ $root.im = (function() {
                  * @memberof im.turms.proto
                  * @interface ICreateGroupBlacklistedUserRequest
                  * @property {string|null} [groupId] CreateGroupBlacklistedUserRequest groupId
-                 * @property {string|null} [blacklistedUserId] CreateGroupBlacklistedUserRequest blacklistedUserId
+                 * @property {string|null} [userId] CreateGroupBlacklistedUserRequest userId
                  */
 
                 /**
@@ -5726,12 +5726,12 @@ $root.im = (function() {
                 CreateGroupBlacklistedUserRequest.prototype.groupId = "0";
 
                 /**
-                 * CreateGroupBlacklistedUserRequest blacklistedUserId.
-                 * @member {string} blacklistedUserId
+                 * CreateGroupBlacklistedUserRequest userId.
+                 * @member {string} userId
                  * @memberof im.turms.proto.CreateGroupBlacklistedUserRequest
                  * @instance
                  */
-                CreateGroupBlacklistedUserRequest.prototype.blacklistedUserId = "0";
+                CreateGroupBlacklistedUserRequest.prototype.userId = "0";
 
                 /**
                  * Encodes the specified CreateGroupBlacklistedUserRequest message. Does not implicitly {@link im.turms.proto.CreateGroupBlacklistedUserRequest.verify|verify} messages.
@@ -5747,8 +5747,8 @@ $root.im = (function() {
                         writer = $Writer.create();
                     if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.groupId);
-                    if (message.blacklistedUserId != null && Object.hasOwnProperty.call(message, "blacklistedUserId"))
-                        writer.uint32(/* id 2, wireType 0 =*/16).int64(message.blacklistedUserId);
+                    if (message.userId != null && Object.hasOwnProperty.call(message, "userId"))
+                        writer.uint32(/* id 2, wireType 0 =*/16).int64(message.userId);
                     return writer;
                 };
 
@@ -5774,7 +5774,7 @@ $root.im = (function() {
                             message.groupId = reader.int64().toString();
                             break;
                         case 2:
-                            message.blacklistedUserId = reader.int64().toString();
+                            message.userId = reader.int64().toString();
                             break;
                         default:
                             reader.skipType(tag & 7);
@@ -5794,7 +5794,7 @@ $root.im = (function() {
                  * @memberof im.turms.proto
                  * @interface IDeleteGroupBlacklistedUserRequest
                  * @property {string|null} [groupId] DeleteGroupBlacklistedUserRequest groupId
-                 * @property {string|null} [unblacklistedUserId] DeleteGroupBlacklistedUserRequest unblacklistedUserId
+                 * @property {string|null} [userId] DeleteGroupBlacklistedUserRequest userId
                  */
 
                 /**
@@ -5821,12 +5821,12 @@ $root.im = (function() {
                 DeleteGroupBlacklistedUserRequest.prototype.groupId = "0";
 
                 /**
-                 * DeleteGroupBlacklistedUserRequest unblacklistedUserId.
-                 * @member {string} unblacklistedUserId
+                 * DeleteGroupBlacklistedUserRequest userId.
+                 * @member {string} userId
                  * @memberof im.turms.proto.DeleteGroupBlacklistedUserRequest
                  * @instance
                  */
-                DeleteGroupBlacklistedUserRequest.prototype.unblacklistedUserId = "0";
+                DeleteGroupBlacklistedUserRequest.prototype.userId = "0";
 
                 /**
                  * Encodes the specified DeleteGroupBlacklistedUserRequest message. Does not implicitly {@link im.turms.proto.DeleteGroupBlacklistedUserRequest.verify|verify} messages.
@@ -5842,8 +5842,8 @@ $root.im = (function() {
                         writer = $Writer.create();
                     if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.groupId);
-                    if (message.unblacklistedUserId != null && Object.hasOwnProperty.call(message, "unblacklistedUserId"))
-                        writer.uint32(/* id 2, wireType 0 =*/16).int64(message.unblacklistedUserId);
+                    if (message.userId != null && Object.hasOwnProperty.call(message, "userId"))
+                        writer.uint32(/* id 2, wireType 0 =*/16).int64(message.userId);
                     return writer;
                 };
 
@@ -5869,7 +5869,7 @@ $root.im = (function() {
                             message.groupId = reader.int64().toString();
                             break;
                         case 2:
-                            message.unblacklistedUserId = reader.int64().toString();
+                            message.userId = reader.int64().toString();
                             break;
                         default:
                             reader.skipType(tag & 7);
@@ -5882,25 +5882,25 @@ $root.im = (function() {
                 return DeleteGroupBlacklistedUserRequest;
             })();
 
-            proto.QueryGroupBlacklistedUsersIdsRequest = (function() {
+            proto.QueryGroupBlacklistedUserIdsRequest = (function() {
 
                 /**
-                 * Properties of a QueryGroupBlacklistedUsersIdsRequest.
+                 * Properties of a QueryGroupBlacklistedUserIdsRequest.
                  * @memberof im.turms.proto
-                 * @interface IQueryGroupBlacklistedUsersIdsRequest
-                 * @property {string|null} [groupId] QueryGroupBlacklistedUsersIdsRequest groupId
-                 * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryGroupBlacklistedUsersIdsRequest lastUpdatedDate
+                 * @interface IQueryGroupBlacklistedUserIdsRequest
+                 * @property {string|null} [groupId] QueryGroupBlacklistedUserIdsRequest groupId
+                 * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryGroupBlacklistedUserIdsRequest lastUpdatedDate
                  */
 
                 /**
-                 * Constructs a new QueryGroupBlacklistedUsersIdsRequest.
+                 * Constructs a new QueryGroupBlacklistedUserIdsRequest.
                  * @memberof im.turms.proto
-                 * @classdesc Represents a QueryGroupBlacklistedUsersIdsRequest.
-                 * @implements IQueryGroupBlacklistedUsersIdsRequest
+                 * @classdesc Represents a QueryGroupBlacklistedUserIdsRequest.
+                 * @implements IQueryGroupBlacklistedUserIdsRequest
                  * @constructor
-                 * @param {im.turms.proto.IQueryGroupBlacklistedUsersIdsRequest=} [properties] Properties to set
+                 * @param {im.turms.proto.IQueryGroupBlacklistedUserIdsRequest=} [properties] Properties to set
                  */
-                function QueryGroupBlacklistedUsersIdsRequest(properties) {
+                function QueryGroupBlacklistedUserIdsRequest(properties) {
                     if (properties)
                         for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                             if (properties[keys[i]] != null)
@@ -5908,31 +5908,31 @@ $root.im = (function() {
                 }
 
                 /**
-                 * QueryGroupBlacklistedUsersIdsRequest groupId.
+                 * QueryGroupBlacklistedUserIdsRequest groupId.
                  * @member {string} groupId
-                 * @memberof im.turms.proto.QueryGroupBlacklistedUsersIdsRequest
+                 * @memberof im.turms.proto.QueryGroupBlacklistedUserIdsRequest
                  * @instance
                  */
-                QueryGroupBlacklistedUsersIdsRequest.prototype.groupId = "0";
+                QueryGroupBlacklistedUserIdsRequest.prototype.groupId = "0";
 
                 /**
-                 * QueryGroupBlacklistedUsersIdsRequest lastUpdatedDate.
+                 * QueryGroupBlacklistedUserIdsRequest lastUpdatedDate.
                  * @member {google.protobuf.IInt64Value|null|undefined} lastUpdatedDate
-                 * @memberof im.turms.proto.QueryGroupBlacklistedUsersIdsRequest
+                 * @memberof im.turms.proto.QueryGroupBlacklistedUserIdsRequest
                  * @instance
                  */
-                QueryGroupBlacklistedUsersIdsRequest.prototype.lastUpdatedDate = null;
+                QueryGroupBlacklistedUserIdsRequest.prototype.lastUpdatedDate = null;
 
                 /**
-                 * Encodes the specified QueryGroupBlacklistedUsersIdsRequest message. Does not implicitly {@link im.turms.proto.QueryGroupBlacklistedUsersIdsRequest.verify|verify} messages.
+                 * Encodes the specified QueryGroupBlacklistedUserIdsRequest message. Does not implicitly {@link im.turms.proto.QueryGroupBlacklistedUserIdsRequest.verify|verify} messages.
                  * @function encode
-                 * @memberof im.turms.proto.QueryGroupBlacklistedUsersIdsRequest
+                 * @memberof im.turms.proto.QueryGroupBlacklistedUserIdsRequest
                  * @static
-                 * @param {im.turms.proto.IQueryGroupBlacklistedUsersIdsRequest} message QueryGroupBlacklistedUsersIdsRequest message or plain object to encode
+                 * @param {im.turms.proto.IQueryGroupBlacklistedUserIdsRequest} message QueryGroupBlacklistedUserIdsRequest message or plain object to encode
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                QueryGroupBlacklistedUsersIdsRequest.encode = function encode(message, writer) {
+                QueryGroupBlacklistedUserIdsRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
                     if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
@@ -5943,20 +5943,20 @@ $root.im = (function() {
                 };
 
                 /**
-                 * Decodes a QueryGroupBlacklistedUsersIdsRequest message from the specified reader or buffer.
+                 * Decodes a QueryGroupBlacklistedUserIdsRequest message from the specified reader or buffer.
                  * @function decode
-                 * @memberof im.turms.proto.QueryGroupBlacklistedUsersIdsRequest
+                 * @memberof im.turms.proto.QueryGroupBlacklistedUserIdsRequest
                  * @static
                  * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
                  * @param {number} [length] Message length if known beforehand
-                 * @returns {im.turms.proto.QueryGroupBlacklistedUsersIdsRequest} QueryGroupBlacklistedUsersIdsRequest
+                 * @returns {im.turms.proto.QueryGroupBlacklistedUserIdsRequest} QueryGroupBlacklistedUserIdsRequest
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                QueryGroupBlacklistedUsersIdsRequest.decode = function decode(reader, length) {
+                QueryGroupBlacklistedUserIdsRequest.decode = function decode(reader, length) {
                     if (!(reader instanceof $Reader))
                         reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.QueryGroupBlacklistedUsersIdsRequest();
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.QueryGroupBlacklistedUserIdsRequest();
                     while (reader.pos < end) {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
@@ -5974,28 +5974,28 @@ $root.im = (function() {
                     return message;
                 };
 
-                return QueryGroupBlacklistedUsersIdsRequest;
+                return QueryGroupBlacklistedUserIdsRequest;
             })();
 
-            proto.QueryGroupBlacklistedUsersInfosRequest = (function() {
+            proto.QueryGroupBlacklistedUserInfosRequest = (function() {
 
                 /**
-                 * Properties of a QueryGroupBlacklistedUsersInfosRequest.
+                 * Properties of a QueryGroupBlacklistedUserInfosRequest.
                  * @memberof im.turms.proto
-                 * @interface IQueryGroupBlacklistedUsersInfosRequest
-                 * @property {string|null} [groupId] QueryGroupBlacklistedUsersInfosRequest groupId
-                 * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryGroupBlacklistedUsersInfosRequest lastUpdatedDate
+                 * @interface IQueryGroupBlacklistedUserInfosRequest
+                 * @property {string|null} [groupId] QueryGroupBlacklistedUserInfosRequest groupId
+                 * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryGroupBlacklistedUserInfosRequest lastUpdatedDate
                  */
 
                 /**
-                 * Constructs a new QueryGroupBlacklistedUsersInfosRequest.
+                 * Constructs a new QueryGroupBlacklistedUserInfosRequest.
                  * @memberof im.turms.proto
-                 * @classdesc Represents a QueryGroupBlacklistedUsersInfosRequest.
-                 * @implements IQueryGroupBlacklistedUsersInfosRequest
+                 * @classdesc Represents a QueryGroupBlacklistedUserInfosRequest.
+                 * @implements IQueryGroupBlacklistedUserInfosRequest
                  * @constructor
-                 * @param {im.turms.proto.IQueryGroupBlacklistedUsersInfosRequest=} [properties] Properties to set
+                 * @param {im.turms.proto.IQueryGroupBlacklistedUserInfosRequest=} [properties] Properties to set
                  */
-                function QueryGroupBlacklistedUsersInfosRequest(properties) {
+                function QueryGroupBlacklistedUserInfosRequest(properties) {
                     if (properties)
                         for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                             if (properties[keys[i]] != null)
@@ -6003,31 +6003,31 @@ $root.im = (function() {
                 }
 
                 /**
-                 * QueryGroupBlacklistedUsersInfosRequest groupId.
+                 * QueryGroupBlacklistedUserInfosRequest groupId.
                  * @member {string} groupId
-                 * @memberof im.turms.proto.QueryGroupBlacklistedUsersInfosRequest
+                 * @memberof im.turms.proto.QueryGroupBlacklistedUserInfosRequest
                  * @instance
                  */
-                QueryGroupBlacklistedUsersInfosRequest.prototype.groupId = "0";
+                QueryGroupBlacklistedUserInfosRequest.prototype.groupId = "0";
 
                 /**
-                 * QueryGroupBlacklistedUsersInfosRequest lastUpdatedDate.
+                 * QueryGroupBlacklistedUserInfosRequest lastUpdatedDate.
                  * @member {google.protobuf.IInt64Value|null|undefined} lastUpdatedDate
-                 * @memberof im.turms.proto.QueryGroupBlacklistedUsersInfosRequest
+                 * @memberof im.turms.proto.QueryGroupBlacklistedUserInfosRequest
                  * @instance
                  */
-                QueryGroupBlacklistedUsersInfosRequest.prototype.lastUpdatedDate = null;
+                QueryGroupBlacklistedUserInfosRequest.prototype.lastUpdatedDate = null;
 
                 /**
-                 * Encodes the specified QueryGroupBlacklistedUsersInfosRequest message. Does not implicitly {@link im.turms.proto.QueryGroupBlacklistedUsersInfosRequest.verify|verify} messages.
+                 * Encodes the specified QueryGroupBlacklistedUserInfosRequest message. Does not implicitly {@link im.turms.proto.QueryGroupBlacklistedUserInfosRequest.verify|verify} messages.
                  * @function encode
-                 * @memberof im.turms.proto.QueryGroupBlacklistedUsersInfosRequest
+                 * @memberof im.turms.proto.QueryGroupBlacklistedUserInfosRequest
                  * @static
-                 * @param {im.turms.proto.IQueryGroupBlacklistedUsersInfosRequest} message QueryGroupBlacklistedUsersInfosRequest message or plain object to encode
+                 * @param {im.turms.proto.IQueryGroupBlacklistedUserInfosRequest} message QueryGroupBlacklistedUserInfosRequest message or plain object to encode
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                QueryGroupBlacklistedUsersInfosRequest.encode = function encode(message, writer) {
+                QueryGroupBlacklistedUserInfosRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
                     if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
@@ -6038,20 +6038,20 @@ $root.im = (function() {
                 };
 
                 /**
-                 * Decodes a QueryGroupBlacklistedUsersInfosRequest message from the specified reader or buffer.
+                 * Decodes a QueryGroupBlacklistedUserInfosRequest message from the specified reader or buffer.
                  * @function decode
-                 * @memberof im.turms.proto.QueryGroupBlacklistedUsersInfosRequest
+                 * @memberof im.turms.proto.QueryGroupBlacklistedUserInfosRequest
                  * @static
                  * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
                  * @param {number} [length] Message length if known beforehand
-                 * @returns {im.turms.proto.QueryGroupBlacklistedUsersInfosRequest} QueryGroupBlacklistedUsersInfosRequest
+                 * @returns {im.turms.proto.QueryGroupBlacklistedUserInfosRequest} QueryGroupBlacklistedUserInfosRequest
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                QueryGroupBlacklistedUsersInfosRequest.decode = function decode(reader, length) {
+                QueryGroupBlacklistedUserInfosRequest.decode = function decode(reader, length) {
                     if (!(reader instanceof $Reader))
                         reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.QueryGroupBlacklistedUsersInfosRequest();
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.QueryGroupBlacklistedUserInfosRequest();
                     while (reader.pos < end) {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
@@ -6069,7 +6069,7 @@ $root.im = (function() {
                     return message;
                 };
 
-                return QueryGroupBlacklistedUsersInfosRequest;
+                return QueryGroupBlacklistedUserInfosRequest;
             })();
 
             proto.CreateGroupRequest = (function() {
@@ -7550,7 +7550,7 @@ $root.im = (function() {
                  * @memberof im.turms.proto
                  * @interface IDeleteGroupMemberRequest
                  * @property {string|null} [groupId] DeleteGroupMemberRequest groupId
-                 * @property {string|null} [groupMemberId] DeleteGroupMemberRequest groupMemberId
+                 * @property {string|null} [memberId] DeleteGroupMemberRequest memberId
                  * @property {google.protobuf.IInt64Value|null} [successorId] DeleteGroupMemberRequest successorId
                  * @property {google.protobuf.IBoolValue|null} [quitAfterTransfer] DeleteGroupMemberRequest quitAfterTransfer
                  */
@@ -7579,12 +7579,12 @@ $root.im = (function() {
                 DeleteGroupMemberRequest.prototype.groupId = "0";
 
                 /**
-                 * DeleteGroupMemberRequest groupMemberId.
-                 * @member {string} groupMemberId
+                 * DeleteGroupMemberRequest memberId.
+                 * @member {string} memberId
                  * @memberof im.turms.proto.DeleteGroupMemberRequest
                  * @instance
                  */
-                DeleteGroupMemberRequest.prototype.groupMemberId = "0";
+                DeleteGroupMemberRequest.prototype.memberId = "0";
 
                 /**
                  * DeleteGroupMemberRequest successorId.
@@ -7616,8 +7616,8 @@ $root.im = (function() {
                         writer = $Writer.create();
                     if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.groupId);
-                    if (message.groupMemberId != null && Object.hasOwnProperty.call(message, "groupMemberId"))
-                        writer.uint32(/* id 2, wireType 0 =*/16).int64(message.groupMemberId);
+                    if (message.memberId != null && Object.hasOwnProperty.call(message, "memberId"))
+                        writer.uint32(/* id 2, wireType 0 =*/16).int64(message.memberId);
                     if (message.successorId != null && Object.hasOwnProperty.call(message, "successorId"))
                         $root.google.protobuf.Int64Value.encode(message.successorId, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                     if (message.quitAfterTransfer != null && Object.hasOwnProperty.call(message, "quitAfterTransfer"))
@@ -7647,7 +7647,7 @@ $root.im = (function() {
                             message.groupId = reader.int64().toString();
                             break;
                         case 2:
-                            message.groupMemberId = reader.int64().toString();
+                            message.memberId = reader.int64().toString();
                             break;
                         case 3:
                             message.successorId = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
@@ -7674,7 +7674,7 @@ $root.im = (function() {
                  * @interface IQueryGroupMembersRequest
                  * @property {string|null} [groupId] QueryGroupMembersRequest groupId
                  * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryGroupMembersRequest lastUpdatedDate
-                 * @property {Array.<string>|null} [groupMembersIds] QueryGroupMembersRequest groupMembersIds
+                 * @property {Array.<string>|null} [memberIds] QueryGroupMembersRequest memberIds
                  * @property {google.protobuf.IBoolValue|null} [withStatus] QueryGroupMembersRequest withStatus
                  */
 
@@ -7687,7 +7687,7 @@ $root.im = (function() {
                  * @param {im.turms.proto.IQueryGroupMembersRequest=} [properties] Properties to set
                  */
                 function QueryGroupMembersRequest(properties) {
-                    this.groupMembersIds = [];
+                    this.memberIds = [];
                     if (properties)
                         for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                             if (properties[keys[i]] != null)
@@ -7711,12 +7711,12 @@ $root.im = (function() {
                 QueryGroupMembersRequest.prototype.lastUpdatedDate = null;
 
                 /**
-                 * QueryGroupMembersRequest groupMembersIds.
-                 * @member {Array.<string>} groupMembersIds
+                 * QueryGroupMembersRequest memberIds.
+                 * @member {Array.<string>} memberIds
                  * @memberof im.turms.proto.QueryGroupMembersRequest
                  * @instance
                  */
-                QueryGroupMembersRequest.prototype.groupMembersIds = $util.emptyArray;
+                QueryGroupMembersRequest.prototype.memberIds = $util.emptyArray;
 
                 /**
                  * QueryGroupMembersRequest withStatus.
@@ -7742,10 +7742,10 @@ $root.im = (function() {
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.groupId);
                     if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
                         $root.google.protobuf.Int64Value.encode(message.lastUpdatedDate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    if (message.groupMembersIds != null && message.groupMembersIds.length) {
+                    if (message.memberIds != null && message.memberIds.length) {
                         writer.uint32(/* id 3, wireType 2 =*/26).fork();
-                        for (var i = 0; i < message.groupMembersIds.length; ++i)
-                            writer.int64(message.groupMembersIds[i]);
+                        for (var i = 0; i < message.memberIds.length; ++i)
+                            writer.int64(message.memberIds[i]);
                         writer.ldelim();
                     }
                     if (message.withStatus != null && Object.hasOwnProperty.call(message, "withStatus"))
@@ -7778,14 +7778,14 @@ $root.im = (function() {
                             message.lastUpdatedDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
                             break;
                         case 3:
-                            if (!(message.groupMembersIds && message.groupMembersIds.length))
-                                message.groupMembersIds = [];
+                            if (!(message.memberIds && message.memberIds.length))
+                                message.memberIds = [];
                             if ((tag & 7) === 2) {
                                 var end2 = reader.uint32() + reader.pos;
                                 while (reader.pos < end2)
-                                    message.groupMembersIds.push(reader.int64().toString());
+                                    message.memberIds.push(reader.int64().toString());
                             } else
-                                message.groupMembersIds.push(reader.int64().toString());
+                                message.memberIds.push(reader.int64().toString());
                             break;
                         case 4:
                             message.withStatus = $root.google.protobuf.BoolValue.decode(reader, reader.uint32());
@@ -8033,24 +8033,24 @@ $root.im = (function() {
                 return QueryGroupRequest;
             })();
 
-            proto.QueryJoinedGroupsIdsRequest = (function() {
+            proto.QueryJoinedGroupIdsRequest = (function() {
 
                 /**
-                 * Properties of a QueryJoinedGroupsIdsRequest.
+                 * Properties of a QueryJoinedGroupIdsRequest.
                  * @memberof im.turms.proto
-                 * @interface IQueryJoinedGroupsIdsRequest
-                 * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryJoinedGroupsIdsRequest lastUpdatedDate
+                 * @interface IQueryJoinedGroupIdsRequest
+                 * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryJoinedGroupIdsRequest lastUpdatedDate
                  */
 
                 /**
-                 * Constructs a new QueryJoinedGroupsIdsRequest.
+                 * Constructs a new QueryJoinedGroupIdsRequest.
                  * @memberof im.turms.proto
-                 * @classdesc Represents a QueryJoinedGroupsIdsRequest.
-                 * @implements IQueryJoinedGroupsIdsRequest
+                 * @classdesc Represents a QueryJoinedGroupIdsRequest.
+                 * @implements IQueryJoinedGroupIdsRequest
                  * @constructor
-                 * @param {im.turms.proto.IQueryJoinedGroupsIdsRequest=} [properties] Properties to set
+                 * @param {im.turms.proto.IQueryJoinedGroupIdsRequest=} [properties] Properties to set
                  */
-                function QueryJoinedGroupsIdsRequest(properties) {
+                function QueryJoinedGroupIdsRequest(properties) {
                     if (properties)
                         for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                             if (properties[keys[i]] != null)
@@ -8058,23 +8058,23 @@ $root.im = (function() {
                 }
 
                 /**
-                 * QueryJoinedGroupsIdsRequest lastUpdatedDate.
+                 * QueryJoinedGroupIdsRequest lastUpdatedDate.
                  * @member {google.protobuf.IInt64Value|null|undefined} lastUpdatedDate
-                 * @memberof im.turms.proto.QueryJoinedGroupsIdsRequest
+                 * @memberof im.turms.proto.QueryJoinedGroupIdsRequest
                  * @instance
                  */
-                QueryJoinedGroupsIdsRequest.prototype.lastUpdatedDate = null;
+                QueryJoinedGroupIdsRequest.prototype.lastUpdatedDate = null;
 
                 /**
-                 * Encodes the specified QueryJoinedGroupsIdsRequest message. Does not implicitly {@link im.turms.proto.QueryJoinedGroupsIdsRequest.verify|verify} messages.
+                 * Encodes the specified QueryJoinedGroupIdsRequest message. Does not implicitly {@link im.turms.proto.QueryJoinedGroupIdsRequest.verify|verify} messages.
                  * @function encode
-                 * @memberof im.turms.proto.QueryJoinedGroupsIdsRequest
+                 * @memberof im.turms.proto.QueryJoinedGroupIdsRequest
                  * @static
-                 * @param {im.turms.proto.IQueryJoinedGroupsIdsRequest} message QueryJoinedGroupsIdsRequest message or plain object to encode
+                 * @param {im.turms.proto.IQueryJoinedGroupIdsRequest} message QueryJoinedGroupIdsRequest message or plain object to encode
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                QueryJoinedGroupsIdsRequest.encode = function encode(message, writer) {
+                QueryJoinedGroupIdsRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
                     if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
@@ -8083,20 +8083,20 @@ $root.im = (function() {
                 };
 
                 /**
-                 * Decodes a QueryJoinedGroupsIdsRequest message from the specified reader or buffer.
+                 * Decodes a QueryJoinedGroupIdsRequest message from the specified reader or buffer.
                  * @function decode
-                 * @memberof im.turms.proto.QueryJoinedGroupsIdsRequest
+                 * @memberof im.turms.proto.QueryJoinedGroupIdsRequest
                  * @static
                  * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
                  * @param {number} [length] Message length if known beforehand
-                 * @returns {im.turms.proto.QueryJoinedGroupsIdsRequest} QueryJoinedGroupsIdsRequest
+                 * @returns {im.turms.proto.QueryJoinedGroupIdsRequest} QueryJoinedGroupIdsRequest
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                QueryJoinedGroupsIdsRequest.decode = function decode(reader, length) {
+                QueryJoinedGroupIdsRequest.decode = function decode(reader, length) {
                     if (!(reader instanceof $Reader))
                         reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.QueryJoinedGroupsIdsRequest();
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.QueryJoinedGroupIdsRequest();
                     while (reader.pos < end) {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
@@ -8111,27 +8111,27 @@ $root.im = (function() {
                     return message;
                 };
 
-                return QueryJoinedGroupsIdsRequest;
+                return QueryJoinedGroupIdsRequest;
             })();
 
-            proto.QueryJoinedGroupsInfosRequest = (function() {
+            proto.QueryJoinedGroupInfosRequest = (function() {
 
                 /**
-                 * Properties of a QueryJoinedGroupsInfosRequest.
+                 * Properties of a QueryJoinedGroupInfosRequest.
                  * @memberof im.turms.proto
-                 * @interface IQueryJoinedGroupsInfosRequest
-                 * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryJoinedGroupsInfosRequest lastUpdatedDate
+                 * @interface IQueryJoinedGroupInfosRequest
+                 * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryJoinedGroupInfosRequest lastUpdatedDate
                  */
 
                 /**
-                 * Constructs a new QueryJoinedGroupsInfosRequest.
+                 * Constructs a new QueryJoinedGroupInfosRequest.
                  * @memberof im.turms.proto
-                 * @classdesc Represents a QueryJoinedGroupsInfosRequest.
-                 * @implements IQueryJoinedGroupsInfosRequest
+                 * @classdesc Represents a QueryJoinedGroupInfosRequest.
+                 * @implements IQueryJoinedGroupInfosRequest
                  * @constructor
-                 * @param {im.turms.proto.IQueryJoinedGroupsInfosRequest=} [properties] Properties to set
+                 * @param {im.turms.proto.IQueryJoinedGroupInfosRequest=} [properties] Properties to set
                  */
-                function QueryJoinedGroupsInfosRequest(properties) {
+                function QueryJoinedGroupInfosRequest(properties) {
                     if (properties)
                         for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                             if (properties[keys[i]] != null)
@@ -8139,23 +8139,23 @@ $root.im = (function() {
                 }
 
                 /**
-                 * QueryJoinedGroupsInfosRequest lastUpdatedDate.
+                 * QueryJoinedGroupInfosRequest lastUpdatedDate.
                  * @member {google.protobuf.IInt64Value|null|undefined} lastUpdatedDate
-                 * @memberof im.turms.proto.QueryJoinedGroupsInfosRequest
+                 * @memberof im.turms.proto.QueryJoinedGroupInfosRequest
                  * @instance
                  */
-                QueryJoinedGroupsInfosRequest.prototype.lastUpdatedDate = null;
+                QueryJoinedGroupInfosRequest.prototype.lastUpdatedDate = null;
 
                 /**
-                 * Encodes the specified QueryJoinedGroupsInfosRequest message. Does not implicitly {@link im.turms.proto.QueryJoinedGroupsInfosRequest.verify|verify} messages.
+                 * Encodes the specified QueryJoinedGroupInfosRequest message. Does not implicitly {@link im.turms.proto.QueryJoinedGroupInfosRequest.verify|verify} messages.
                  * @function encode
-                 * @memberof im.turms.proto.QueryJoinedGroupsInfosRequest
+                 * @memberof im.turms.proto.QueryJoinedGroupInfosRequest
                  * @static
-                 * @param {im.turms.proto.IQueryJoinedGroupsInfosRequest} message QueryJoinedGroupsInfosRequest message or plain object to encode
+                 * @param {im.turms.proto.IQueryJoinedGroupInfosRequest} message QueryJoinedGroupInfosRequest message or plain object to encode
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                QueryJoinedGroupsInfosRequest.encode = function encode(message, writer) {
+                QueryJoinedGroupInfosRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
                     if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
@@ -8164,20 +8164,20 @@ $root.im = (function() {
                 };
 
                 /**
-                 * Decodes a QueryJoinedGroupsInfosRequest message from the specified reader or buffer.
+                 * Decodes a QueryJoinedGroupInfosRequest message from the specified reader or buffer.
                  * @function decode
-                 * @memberof im.turms.proto.QueryJoinedGroupsInfosRequest
+                 * @memberof im.turms.proto.QueryJoinedGroupInfosRequest
                  * @static
                  * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
                  * @param {number} [length] Message length if known beforehand
-                 * @returns {im.turms.proto.QueryJoinedGroupsInfosRequest} QueryJoinedGroupsInfosRequest
+                 * @returns {im.turms.proto.QueryJoinedGroupInfosRequest} QueryJoinedGroupInfosRequest
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                QueryJoinedGroupsInfosRequest.decode = function decode(reader, length) {
+                QueryJoinedGroupInfosRequest.decode = function decode(reader, length) {
                     if (!(reader instanceof $Reader))
                         reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.QueryJoinedGroupsInfosRequest();
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.QueryJoinedGroupInfosRequest();
                     while (reader.pos < end) {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
@@ -8192,7 +8192,7 @@ $root.im = (function() {
                     return message;
                 };
 
-                return QueryJoinedGroupsInfosRequest;
+                return QueryJoinedGroupInfosRequest;
             })();
 
             proto.UpdateGroupRequest = (function() {
@@ -9180,7 +9180,7 @@ $root.im = (function() {
                  * Properties of an AckRequest.
                  * @memberof im.turms.proto
                  * @interface IAckRequest
-                 * @property {Array.<string>|null} [messagesIds] AckRequest messagesIds
+                 * @property {Array.<string>|null} [messageIds] AckRequest messageIds
                  */
 
                 /**
@@ -9192,7 +9192,7 @@ $root.im = (function() {
                  * @param {im.turms.proto.IAckRequest=} [properties] Properties to set
                  */
                 function AckRequest(properties) {
-                    this.messagesIds = [];
+                    this.messageIds = [];
                     if (properties)
                         for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                             if (properties[keys[i]] != null)
@@ -9200,12 +9200,12 @@ $root.im = (function() {
                 }
 
                 /**
-                 * AckRequest messagesIds.
-                 * @member {Array.<string>} messagesIds
+                 * AckRequest messageIds.
+                 * @member {Array.<string>} messageIds
                  * @memberof im.turms.proto.AckRequest
                  * @instance
                  */
-                AckRequest.prototype.messagesIds = $util.emptyArray;
+                AckRequest.prototype.messageIds = $util.emptyArray;
 
                 /**
                  * Encodes the specified AckRequest message. Does not implicitly {@link im.turms.proto.AckRequest.verify|verify} messages.
@@ -9219,10 +9219,10 @@ $root.im = (function() {
                 AckRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.messagesIds != null && message.messagesIds.length) {
+                    if (message.messageIds != null && message.messageIds.length) {
                         writer.uint32(/* id 1, wireType 2 =*/10).fork();
-                        for (var i = 0; i < message.messagesIds.length; ++i)
-                            writer.int64(message.messagesIds[i]);
+                        for (var i = 0; i < message.messageIds.length; ++i)
+                            writer.int64(message.messageIds[i]);
                         writer.ldelim();
                     }
                     return writer;
@@ -9247,14 +9247,14 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            if (!(message.messagesIds && message.messagesIds.length))
-                                message.messagesIds = [];
+                            if (!(message.messageIds && message.messageIds.length))
+                                message.messageIds = [];
                             if ((tag & 7) === 2) {
                                 var end2 = reader.uint32() + reader.pos;
                                 while (reader.pos < end2)
-                                    message.messagesIds.push(reader.int64().toString());
+                                    message.messageIds.push(reader.int64().toString());
                             } else
-                                message.messagesIds.push(reader.int64().toString());
+                                message.messageIds.push(reader.int64().toString());
                             break;
                         default:
                             reader.skipType(tag & 7);
@@ -9626,9 +9626,9 @@ $root.im = (function() {
                  * @property {im.turms.proto.IUpdateMessageRequest|null} [updateMessageRequest] TurmsRequest updateMessageRequest
                  * @property {im.turms.proto.IUpdateTypingStatusRequest|null} [updateTypingStatusRequest] TurmsRequest updateTypingStatusRequest
                  * @property {im.turms.proto.IQueryUserProfileRequest|null} [queryUserProfileRequest] TurmsRequest queryUserProfileRequest
-                 * @property {im.turms.proto.IQueryUsersIdsNearbyRequest|null} [queryUsersIdsNearbyRequest] TurmsRequest queryUsersIdsNearbyRequest
-                 * @property {im.turms.proto.IQueryUsersInfosNearbyRequest|null} [queryUsersInfosNearbyRequest] TurmsRequest queryUsersInfosNearbyRequest
-                 * @property {im.turms.proto.IQueryUsersOnlineStatusRequest|null} [queryUsersOnlineStatusRequest] TurmsRequest queryUsersOnlineStatusRequest
+                 * @property {im.turms.proto.IQueryUserIdsNearbyRequest|null} [queryUserIdsNearbyRequest] TurmsRequest queryUserIdsNearbyRequest
+                 * @property {im.turms.proto.IQueryUserInfosNearbyRequest|null} [queryUserInfosNearbyRequest] TurmsRequest queryUserInfosNearbyRequest
+                 * @property {im.turms.proto.IQueryUserOnlineStatusesRequest|null} [queryUserOnlineStatusesRequest] TurmsRequest queryUserOnlineStatusesRequest
                  * @property {im.turms.proto.IUpdateUserLocationRequest|null} [updateUserLocationRequest] TurmsRequest updateUserLocationRequest
                  * @property {im.turms.proto.IUpdateUserOnlineStatusRequest|null} [updateUserOnlineStatusRequest] TurmsRequest updateUserOnlineStatusRequest
                  * @property {im.turms.proto.IUpdateUserRequest|null} [updateUserRequest] TurmsRequest updateUserRequest
@@ -9638,7 +9638,7 @@ $root.im = (function() {
                  * @property {im.turms.proto.IDeleteRelationshipGroupRequest|null} [deleteRelationshipGroupRequest] TurmsRequest deleteRelationshipGroupRequest
                  * @property {im.turms.proto.IDeleteRelationshipRequest|null} [deleteRelationshipRequest] TurmsRequest deleteRelationshipRequest
                  * @property {im.turms.proto.IQueryFriendRequestsRequest|null} [queryFriendRequestsRequest] TurmsRequest queryFriendRequestsRequest
-                 * @property {im.turms.proto.IQueryRelatedUsersIdsRequest|null} [queryRelatedUsersIdsRequest] TurmsRequest queryRelatedUsersIdsRequest
+                 * @property {im.turms.proto.IQueryRelatedUserIdsRequest|null} [queryRelatedUserIdsRequest] TurmsRequest queryRelatedUserIdsRequest
                  * @property {im.turms.proto.IQueryRelationshipGroupsRequest|null} [queryRelationshipGroupsRequest] TurmsRequest queryRelationshipGroupsRequest
                  * @property {im.turms.proto.IQueryRelationshipsRequest|null} [queryRelationshipsRequest] TurmsRequest queryRelationshipsRequest
                  * @property {im.turms.proto.IUpdateFriendRequestRequest|null} [updateFriendRequestRequest] TurmsRequest updateFriendRequestRequest
@@ -9647,13 +9647,13 @@ $root.im = (function() {
                  * @property {im.turms.proto.ICreateGroupRequest|null} [createGroupRequest] TurmsRequest createGroupRequest
                  * @property {im.turms.proto.IDeleteGroupRequest|null} [deleteGroupRequest] TurmsRequest deleteGroupRequest
                  * @property {im.turms.proto.IQueryGroupRequest|null} [queryGroupRequest] TurmsRequest queryGroupRequest
-                 * @property {im.turms.proto.IQueryJoinedGroupsIdsRequest|null} [queryJoinedGroupsIdsRequest] TurmsRequest queryJoinedGroupsIdsRequest
-                 * @property {im.turms.proto.IQueryJoinedGroupsInfosRequest|null} [queryJoinedGroupsInfosRequest] TurmsRequest queryJoinedGroupsInfosRequest
+                 * @property {im.turms.proto.IQueryJoinedGroupIdsRequest|null} [queryJoinedGroupIdsRequest] TurmsRequest queryJoinedGroupIdsRequest
+                 * @property {im.turms.proto.IQueryJoinedGroupInfosRequest|null} [queryJoinedGroupInfosRequest] TurmsRequest queryJoinedGroupInfosRequest
                  * @property {im.turms.proto.IUpdateGroupRequest|null} [updateGroupRequest] TurmsRequest updateGroupRequest
                  * @property {im.turms.proto.ICreateGroupBlacklistedUserRequest|null} [createGroupBlacklistedUserRequest] TurmsRequest createGroupBlacklistedUserRequest
                  * @property {im.turms.proto.IDeleteGroupBlacklistedUserRequest|null} [deleteGroupBlacklistedUserRequest] TurmsRequest deleteGroupBlacklistedUserRequest
-                 * @property {im.turms.proto.IQueryGroupBlacklistedUsersIdsRequest|null} [queryGroupBlacklistedUsersIdsRequest] TurmsRequest queryGroupBlacklistedUsersIdsRequest
-                 * @property {im.turms.proto.IQueryGroupBlacklistedUsersInfosRequest|null} [queryGroupBlacklistedUsersInfosRequest] TurmsRequest queryGroupBlacklistedUsersInfosRequest
+                 * @property {im.turms.proto.IQueryGroupBlacklistedUserIdsRequest|null} [queryGroupBlacklistedUserIdsRequest] TurmsRequest queryGroupBlacklistedUserIdsRequest
+                 * @property {im.turms.proto.IQueryGroupBlacklistedUserInfosRequest|null} [queryGroupBlacklistedUserInfosRequest] TurmsRequest queryGroupBlacklistedUserInfosRequest
                  * @property {im.turms.proto.ICheckGroupJoinQuestionsAnswersRequest|null} [checkGroupJoinQuestionsAnswersRequest] TurmsRequest checkGroupJoinQuestionsAnswersRequest
                  * @property {im.turms.proto.ICreateGroupInvitationRequest|null} [createGroupInvitationRequest] TurmsRequest createGroupInvitationRequest
                  * @property {im.turms.proto.ICreateGroupJoinRequestRequest|null} [createGroupJoinRequestRequest] TurmsRequest createGroupJoinRequestRequest
@@ -9783,28 +9783,28 @@ $root.im = (function() {
                 TurmsRequest.prototype.queryUserProfileRequest = null;
 
                 /**
-                 * TurmsRequest queryUsersIdsNearbyRequest.
-                 * @member {im.turms.proto.IQueryUsersIdsNearbyRequest|null|undefined} queryUsersIdsNearbyRequest
+                 * TurmsRequest queryUserIdsNearbyRequest.
+                 * @member {im.turms.proto.IQueryUserIdsNearbyRequest|null|undefined} queryUserIdsNearbyRequest
                  * @memberof im.turms.proto.TurmsRequest
                  * @instance
                  */
-                TurmsRequest.prototype.queryUsersIdsNearbyRequest = null;
+                TurmsRequest.prototype.queryUserIdsNearbyRequest = null;
 
                 /**
-                 * TurmsRequest queryUsersInfosNearbyRequest.
-                 * @member {im.turms.proto.IQueryUsersInfosNearbyRequest|null|undefined} queryUsersInfosNearbyRequest
+                 * TurmsRequest queryUserInfosNearbyRequest.
+                 * @member {im.turms.proto.IQueryUserInfosNearbyRequest|null|undefined} queryUserInfosNearbyRequest
                  * @memberof im.turms.proto.TurmsRequest
                  * @instance
                  */
-                TurmsRequest.prototype.queryUsersInfosNearbyRequest = null;
+                TurmsRequest.prototype.queryUserInfosNearbyRequest = null;
 
                 /**
-                 * TurmsRequest queryUsersOnlineStatusRequest.
-                 * @member {im.turms.proto.IQueryUsersOnlineStatusRequest|null|undefined} queryUsersOnlineStatusRequest
+                 * TurmsRequest queryUserOnlineStatusesRequest.
+                 * @member {im.turms.proto.IQueryUserOnlineStatusesRequest|null|undefined} queryUserOnlineStatusesRequest
                  * @memberof im.turms.proto.TurmsRequest
                  * @instance
                  */
-                TurmsRequest.prototype.queryUsersOnlineStatusRequest = null;
+                TurmsRequest.prototype.queryUserOnlineStatusesRequest = null;
 
                 /**
                  * TurmsRequest updateUserLocationRequest.
@@ -9879,12 +9879,12 @@ $root.im = (function() {
                 TurmsRequest.prototype.queryFriendRequestsRequest = null;
 
                 /**
-                 * TurmsRequest queryRelatedUsersIdsRequest.
-                 * @member {im.turms.proto.IQueryRelatedUsersIdsRequest|null|undefined} queryRelatedUsersIdsRequest
+                 * TurmsRequest queryRelatedUserIdsRequest.
+                 * @member {im.turms.proto.IQueryRelatedUserIdsRequest|null|undefined} queryRelatedUserIdsRequest
                  * @memberof im.turms.proto.TurmsRequest
                  * @instance
                  */
-                TurmsRequest.prototype.queryRelatedUsersIdsRequest = null;
+                TurmsRequest.prototype.queryRelatedUserIdsRequest = null;
 
                 /**
                  * TurmsRequest queryRelationshipGroupsRequest.
@@ -9951,20 +9951,20 @@ $root.im = (function() {
                 TurmsRequest.prototype.queryGroupRequest = null;
 
                 /**
-                 * TurmsRequest queryJoinedGroupsIdsRequest.
-                 * @member {im.turms.proto.IQueryJoinedGroupsIdsRequest|null|undefined} queryJoinedGroupsIdsRequest
+                 * TurmsRequest queryJoinedGroupIdsRequest.
+                 * @member {im.turms.proto.IQueryJoinedGroupIdsRequest|null|undefined} queryJoinedGroupIdsRequest
                  * @memberof im.turms.proto.TurmsRequest
                  * @instance
                  */
-                TurmsRequest.prototype.queryJoinedGroupsIdsRequest = null;
+                TurmsRequest.prototype.queryJoinedGroupIdsRequest = null;
 
                 /**
-                 * TurmsRequest queryJoinedGroupsInfosRequest.
-                 * @member {im.turms.proto.IQueryJoinedGroupsInfosRequest|null|undefined} queryJoinedGroupsInfosRequest
+                 * TurmsRequest queryJoinedGroupInfosRequest.
+                 * @member {im.turms.proto.IQueryJoinedGroupInfosRequest|null|undefined} queryJoinedGroupInfosRequest
                  * @memberof im.turms.proto.TurmsRequest
                  * @instance
                  */
-                TurmsRequest.prototype.queryJoinedGroupsInfosRequest = null;
+                TurmsRequest.prototype.queryJoinedGroupInfosRequest = null;
 
                 /**
                  * TurmsRequest updateGroupRequest.
@@ -9991,20 +9991,20 @@ $root.im = (function() {
                 TurmsRequest.prototype.deleteGroupBlacklistedUserRequest = null;
 
                 /**
-                 * TurmsRequest queryGroupBlacklistedUsersIdsRequest.
-                 * @member {im.turms.proto.IQueryGroupBlacklistedUsersIdsRequest|null|undefined} queryGroupBlacklistedUsersIdsRequest
+                 * TurmsRequest queryGroupBlacklistedUserIdsRequest.
+                 * @member {im.turms.proto.IQueryGroupBlacklistedUserIdsRequest|null|undefined} queryGroupBlacklistedUserIdsRequest
                  * @memberof im.turms.proto.TurmsRequest
                  * @instance
                  */
-                TurmsRequest.prototype.queryGroupBlacklistedUsersIdsRequest = null;
+                TurmsRequest.prototype.queryGroupBlacklistedUserIdsRequest = null;
 
                 /**
-                 * TurmsRequest queryGroupBlacklistedUsersInfosRequest.
-                 * @member {im.turms.proto.IQueryGroupBlacklistedUsersInfosRequest|null|undefined} queryGroupBlacklistedUsersInfosRequest
+                 * TurmsRequest queryGroupBlacklistedUserInfosRequest.
+                 * @member {im.turms.proto.IQueryGroupBlacklistedUserInfosRequest|null|undefined} queryGroupBlacklistedUserInfosRequest
                  * @memberof im.turms.proto.TurmsRequest
                  * @instance
                  */
-                TurmsRequest.prototype.queryGroupBlacklistedUsersInfosRequest = null;
+                TurmsRequest.prototype.queryGroupBlacklistedUserInfosRequest = null;
 
                 /**
                  * TurmsRequest checkGroupJoinQuestionsAnswersRequest.
@@ -10131,12 +10131,12 @@ $root.im = (function() {
 
                 /**
                  * TurmsRequest kind.
-                 * @member {"ackRequest"|"deleteResourceRequest"|"querySignedGetUrlRequest"|"querySignedPutUrlRequest"|"createMessageRequest"|"queryMessageStatusesRequest"|"queryMessagesRequest"|"queryPendingMessagesWithTotalRequest"|"updateMessageRequest"|"updateTypingStatusRequest"|"queryUserProfileRequest"|"queryUsersIdsNearbyRequest"|"queryUsersInfosNearbyRequest"|"queryUsersOnlineStatusRequest"|"updateUserLocationRequest"|"updateUserOnlineStatusRequest"|"updateUserRequest"|"createFriendRequestRequest"|"createRelationshipGroupRequest"|"createRelationshipRequest"|"deleteRelationshipGroupRequest"|"deleteRelationshipRequest"|"queryFriendRequestsRequest"|"queryRelatedUsersIdsRequest"|"queryRelationshipGroupsRequest"|"queryRelationshipsRequest"|"updateFriendRequestRequest"|"updateRelationshipGroupRequest"|"updateRelationshipRequest"|"createGroupRequest"|"deleteGroupRequest"|"queryGroupRequest"|"queryJoinedGroupsIdsRequest"|"queryJoinedGroupsInfosRequest"|"updateGroupRequest"|"createGroupBlacklistedUserRequest"|"deleteGroupBlacklistedUserRequest"|"queryGroupBlacklistedUsersIdsRequest"|"queryGroupBlacklistedUsersInfosRequest"|"checkGroupJoinQuestionsAnswersRequest"|"createGroupInvitationRequest"|"createGroupJoinRequestRequest"|"createGroupJoinQuestionRequest"|"deleteGroupInvitationRequest"|"deleteGroupJoinRequestRequest"|"deleteGroupJoinQuestionRequest"|"queryGroupInvitationsRequest"|"queryGroupJoinRequestsRequest"|"queryGroupJoinQuestionsRequest"|"updateGroupJoinQuestionRequest"|"createGroupMemberRequest"|"deleteGroupMemberRequest"|"queryGroupMembersRequest"|"updateGroupMemberRequest"|undefined} kind
+                 * @member {"ackRequest"|"deleteResourceRequest"|"querySignedGetUrlRequest"|"querySignedPutUrlRequest"|"createMessageRequest"|"queryMessageStatusesRequest"|"queryMessagesRequest"|"queryPendingMessagesWithTotalRequest"|"updateMessageRequest"|"updateTypingStatusRequest"|"queryUserProfileRequest"|"queryUserIdsNearbyRequest"|"queryUserInfosNearbyRequest"|"queryUserOnlineStatusesRequest"|"updateUserLocationRequest"|"updateUserOnlineStatusRequest"|"updateUserRequest"|"createFriendRequestRequest"|"createRelationshipGroupRequest"|"createRelationshipRequest"|"deleteRelationshipGroupRequest"|"deleteRelationshipRequest"|"queryFriendRequestsRequest"|"queryRelatedUserIdsRequest"|"queryRelationshipGroupsRequest"|"queryRelationshipsRequest"|"updateFriendRequestRequest"|"updateRelationshipGroupRequest"|"updateRelationshipRequest"|"createGroupRequest"|"deleteGroupRequest"|"queryGroupRequest"|"queryJoinedGroupIdsRequest"|"queryJoinedGroupInfosRequest"|"updateGroupRequest"|"createGroupBlacklistedUserRequest"|"deleteGroupBlacklistedUserRequest"|"queryGroupBlacklistedUserIdsRequest"|"queryGroupBlacklistedUserInfosRequest"|"checkGroupJoinQuestionsAnswersRequest"|"createGroupInvitationRequest"|"createGroupJoinRequestRequest"|"createGroupJoinQuestionRequest"|"deleteGroupInvitationRequest"|"deleteGroupJoinRequestRequest"|"deleteGroupJoinQuestionRequest"|"queryGroupInvitationsRequest"|"queryGroupJoinRequestsRequest"|"queryGroupJoinQuestionsRequest"|"updateGroupJoinQuestionRequest"|"createGroupMemberRequest"|"deleteGroupMemberRequest"|"queryGroupMembersRequest"|"updateGroupMemberRequest"|undefined} kind
                  * @memberof im.turms.proto.TurmsRequest
                  * @instance
                  */
                 Object.defineProperty(TurmsRequest.prototype, "kind", {
-                    get: $util.oneOfGetter($oneOfFields = ["ackRequest", "deleteResourceRequest", "querySignedGetUrlRequest", "querySignedPutUrlRequest", "createMessageRequest", "queryMessageStatusesRequest", "queryMessagesRequest", "queryPendingMessagesWithTotalRequest", "updateMessageRequest", "updateTypingStatusRequest", "queryUserProfileRequest", "queryUsersIdsNearbyRequest", "queryUsersInfosNearbyRequest", "queryUsersOnlineStatusRequest", "updateUserLocationRequest", "updateUserOnlineStatusRequest", "updateUserRequest", "createFriendRequestRequest", "createRelationshipGroupRequest", "createRelationshipRequest", "deleteRelationshipGroupRequest", "deleteRelationshipRequest", "queryFriendRequestsRequest", "queryRelatedUsersIdsRequest", "queryRelationshipGroupsRequest", "queryRelationshipsRequest", "updateFriendRequestRequest", "updateRelationshipGroupRequest", "updateRelationshipRequest", "createGroupRequest", "deleteGroupRequest", "queryGroupRequest", "queryJoinedGroupsIdsRequest", "queryJoinedGroupsInfosRequest", "updateGroupRequest", "createGroupBlacklistedUserRequest", "deleteGroupBlacklistedUserRequest", "queryGroupBlacklistedUsersIdsRequest", "queryGroupBlacklistedUsersInfosRequest", "checkGroupJoinQuestionsAnswersRequest", "createGroupInvitationRequest", "createGroupJoinRequestRequest", "createGroupJoinQuestionRequest", "deleteGroupInvitationRequest", "deleteGroupJoinRequestRequest", "deleteGroupJoinQuestionRequest", "queryGroupInvitationsRequest", "queryGroupJoinRequestsRequest", "queryGroupJoinQuestionsRequest", "updateGroupJoinQuestionRequest", "createGroupMemberRequest", "deleteGroupMemberRequest", "queryGroupMembersRequest", "updateGroupMemberRequest"]),
+                    get: $util.oneOfGetter($oneOfFields = ["ackRequest", "deleteResourceRequest", "querySignedGetUrlRequest", "querySignedPutUrlRequest", "createMessageRequest", "queryMessageStatusesRequest", "queryMessagesRequest", "queryPendingMessagesWithTotalRequest", "updateMessageRequest", "updateTypingStatusRequest", "queryUserProfileRequest", "queryUserIdsNearbyRequest", "queryUserInfosNearbyRequest", "queryUserOnlineStatusesRequest", "updateUserLocationRequest", "updateUserOnlineStatusRequest", "updateUserRequest", "createFriendRequestRequest", "createRelationshipGroupRequest", "createRelationshipRequest", "deleteRelationshipGroupRequest", "deleteRelationshipRequest", "queryFriendRequestsRequest", "queryRelatedUserIdsRequest", "queryRelationshipGroupsRequest", "queryRelationshipsRequest", "updateFriendRequestRequest", "updateRelationshipGroupRequest", "updateRelationshipRequest", "createGroupRequest", "deleteGroupRequest", "queryGroupRequest", "queryJoinedGroupIdsRequest", "queryJoinedGroupInfosRequest", "updateGroupRequest", "createGroupBlacklistedUserRequest", "deleteGroupBlacklistedUserRequest", "queryGroupBlacklistedUserIdsRequest", "queryGroupBlacklistedUserInfosRequest", "checkGroupJoinQuestionsAnswersRequest", "createGroupInvitationRequest", "createGroupJoinRequestRequest", "createGroupJoinQuestionRequest", "deleteGroupInvitationRequest", "deleteGroupJoinRequestRequest", "deleteGroupJoinQuestionRequest", "queryGroupInvitationsRequest", "queryGroupJoinRequestsRequest", "queryGroupJoinQuestionsRequest", "updateGroupJoinQuestionRequest", "createGroupMemberRequest", "deleteGroupMemberRequest", "queryGroupMembersRequest", "updateGroupMemberRequest"]),
                     set: $util.oneOfSetter($oneOfFields)
                 });
 
@@ -10176,12 +10176,12 @@ $root.im = (function() {
                         $root.im.turms.proto.UpdateTypingStatusRequest.encode(message.updateTypingStatusRequest, writer.uint32(/* id 11, wireType 2 =*/90).fork()).ldelim();
                     if (message.queryUserProfileRequest != null && Object.hasOwnProperty.call(message, "queryUserProfileRequest"))
                         $root.im.turms.proto.QueryUserProfileRequest.encode(message.queryUserProfileRequest, writer.uint32(/* id 100, wireType 2 =*/802).fork()).ldelim();
-                    if (message.queryUsersIdsNearbyRequest != null && Object.hasOwnProperty.call(message, "queryUsersIdsNearbyRequest"))
-                        $root.im.turms.proto.QueryUsersIdsNearbyRequest.encode(message.queryUsersIdsNearbyRequest, writer.uint32(/* id 101, wireType 2 =*/810).fork()).ldelim();
-                    if (message.queryUsersInfosNearbyRequest != null && Object.hasOwnProperty.call(message, "queryUsersInfosNearbyRequest"))
-                        $root.im.turms.proto.QueryUsersInfosNearbyRequest.encode(message.queryUsersInfosNearbyRequest, writer.uint32(/* id 102, wireType 2 =*/818).fork()).ldelim();
-                    if (message.queryUsersOnlineStatusRequest != null && Object.hasOwnProperty.call(message, "queryUsersOnlineStatusRequest"))
-                        $root.im.turms.proto.QueryUsersOnlineStatusRequest.encode(message.queryUsersOnlineStatusRequest, writer.uint32(/* id 103, wireType 2 =*/826).fork()).ldelim();
+                    if (message.queryUserIdsNearbyRequest != null && Object.hasOwnProperty.call(message, "queryUserIdsNearbyRequest"))
+                        $root.im.turms.proto.QueryUserIdsNearbyRequest.encode(message.queryUserIdsNearbyRequest, writer.uint32(/* id 101, wireType 2 =*/810).fork()).ldelim();
+                    if (message.queryUserInfosNearbyRequest != null && Object.hasOwnProperty.call(message, "queryUserInfosNearbyRequest"))
+                        $root.im.turms.proto.QueryUserInfosNearbyRequest.encode(message.queryUserInfosNearbyRequest, writer.uint32(/* id 102, wireType 2 =*/818).fork()).ldelim();
+                    if (message.queryUserOnlineStatusesRequest != null && Object.hasOwnProperty.call(message, "queryUserOnlineStatusesRequest"))
+                        $root.im.turms.proto.QueryUserOnlineStatusesRequest.encode(message.queryUserOnlineStatusesRequest, writer.uint32(/* id 103, wireType 2 =*/826).fork()).ldelim();
                     if (message.updateUserLocationRequest != null && Object.hasOwnProperty.call(message, "updateUserLocationRequest"))
                         $root.im.turms.proto.UpdateUserLocationRequest.encode(message.updateUserLocationRequest, writer.uint32(/* id 104, wireType 2 =*/834).fork()).ldelim();
                     if (message.updateUserOnlineStatusRequest != null && Object.hasOwnProperty.call(message, "updateUserOnlineStatusRequest"))
@@ -10200,8 +10200,8 @@ $root.im = (function() {
                         $root.im.turms.proto.DeleteRelationshipRequest.encode(message.deleteRelationshipRequest, writer.uint32(/* id 204, wireType 2 =*/1634).fork()).ldelim();
                     if (message.queryFriendRequestsRequest != null && Object.hasOwnProperty.call(message, "queryFriendRequestsRequest"))
                         $root.im.turms.proto.QueryFriendRequestsRequest.encode(message.queryFriendRequestsRequest, writer.uint32(/* id 205, wireType 2 =*/1642).fork()).ldelim();
-                    if (message.queryRelatedUsersIdsRequest != null && Object.hasOwnProperty.call(message, "queryRelatedUsersIdsRequest"))
-                        $root.im.turms.proto.QueryRelatedUsersIdsRequest.encode(message.queryRelatedUsersIdsRequest, writer.uint32(/* id 206, wireType 2 =*/1650).fork()).ldelim();
+                    if (message.queryRelatedUserIdsRequest != null && Object.hasOwnProperty.call(message, "queryRelatedUserIdsRequest"))
+                        $root.im.turms.proto.QueryRelatedUserIdsRequest.encode(message.queryRelatedUserIdsRequest, writer.uint32(/* id 206, wireType 2 =*/1650).fork()).ldelim();
                     if (message.queryRelationshipGroupsRequest != null && Object.hasOwnProperty.call(message, "queryRelationshipGroupsRequest"))
                         $root.im.turms.proto.QueryRelationshipGroupsRequest.encode(message.queryRelationshipGroupsRequest, writer.uint32(/* id 207, wireType 2 =*/1658).fork()).ldelim();
                     if (message.queryRelationshipsRequest != null && Object.hasOwnProperty.call(message, "queryRelationshipsRequest"))
@@ -10218,20 +10218,20 @@ $root.im = (function() {
                         $root.im.turms.proto.DeleteGroupRequest.encode(message.deleteGroupRequest, writer.uint32(/* id 301, wireType 2 =*/2410).fork()).ldelim();
                     if (message.queryGroupRequest != null && Object.hasOwnProperty.call(message, "queryGroupRequest"))
                         $root.im.turms.proto.QueryGroupRequest.encode(message.queryGroupRequest, writer.uint32(/* id 302, wireType 2 =*/2418).fork()).ldelim();
-                    if (message.queryJoinedGroupsIdsRequest != null && Object.hasOwnProperty.call(message, "queryJoinedGroupsIdsRequest"))
-                        $root.im.turms.proto.QueryJoinedGroupsIdsRequest.encode(message.queryJoinedGroupsIdsRequest, writer.uint32(/* id 303, wireType 2 =*/2426).fork()).ldelim();
-                    if (message.queryJoinedGroupsInfosRequest != null && Object.hasOwnProperty.call(message, "queryJoinedGroupsInfosRequest"))
-                        $root.im.turms.proto.QueryJoinedGroupsInfosRequest.encode(message.queryJoinedGroupsInfosRequest, writer.uint32(/* id 304, wireType 2 =*/2434).fork()).ldelim();
+                    if (message.queryJoinedGroupIdsRequest != null && Object.hasOwnProperty.call(message, "queryJoinedGroupIdsRequest"))
+                        $root.im.turms.proto.QueryJoinedGroupIdsRequest.encode(message.queryJoinedGroupIdsRequest, writer.uint32(/* id 303, wireType 2 =*/2426).fork()).ldelim();
+                    if (message.queryJoinedGroupInfosRequest != null && Object.hasOwnProperty.call(message, "queryJoinedGroupInfosRequest"))
+                        $root.im.turms.proto.QueryJoinedGroupInfosRequest.encode(message.queryJoinedGroupInfosRequest, writer.uint32(/* id 304, wireType 2 =*/2434).fork()).ldelim();
                     if (message.updateGroupRequest != null && Object.hasOwnProperty.call(message, "updateGroupRequest"))
                         $root.im.turms.proto.UpdateGroupRequest.encode(message.updateGroupRequest, writer.uint32(/* id 305, wireType 2 =*/2442).fork()).ldelim();
                     if (message.createGroupBlacklistedUserRequest != null && Object.hasOwnProperty.call(message, "createGroupBlacklistedUserRequest"))
                         $root.im.turms.proto.CreateGroupBlacklistedUserRequest.encode(message.createGroupBlacklistedUserRequest, writer.uint32(/* id 400, wireType 2 =*/3202).fork()).ldelim();
                     if (message.deleteGroupBlacklistedUserRequest != null && Object.hasOwnProperty.call(message, "deleteGroupBlacklistedUserRequest"))
                         $root.im.turms.proto.DeleteGroupBlacklistedUserRequest.encode(message.deleteGroupBlacklistedUserRequest, writer.uint32(/* id 401, wireType 2 =*/3210).fork()).ldelim();
-                    if (message.queryGroupBlacklistedUsersIdsRequest != null && Object.hasOwnProperty.call(message, "queryGroupBlacklistedUsersIdsRequest"))
-                        $root.im.turms.proto.QueryGroupBlacklistedUsersIdsRequest.encode(message.queryGroupBlacklistedUsersIdsRequest, writer.uint32(/* id 402, wireType 2 =*/3218).fork()).ldelim();
-                    if (message.queryGroupBlacklistedUsersInfosRequest != null && Object.hasOwnProperty.call(message, "queryGroupBlacklistedUsersInfosRequest"))
-                        $root.im.turms.proto.QueryGroupBlacklistedUsersInfosRequest.encode(message.queryGroupBlacklistedUsersInfosRequest, writer.uint32(/* id 403, wireType 2 =*/3226).fork()).ldelim();
+                    if (message.queryGroupBlacklistedUserIdsRequest != null && Object.hasOwnProperty.call(message, "queryGroupBlacklistedUserIdsRequest"))
+                        $root.im.turms.proto.QueryGroupBlacklistedUserIdsRequest.encode(message.queryGroupBlacklistedUserIdsRequest, writer.uint32(/* id 402, wireType 2 =*/3218).fork()).ldelim();
+                    if (message.queryGroupBlacklistedUserInfosRequest != null && Object.hasOwnProperty.call(message, "queryGroupBlacklistedUserInfosRequest"))
+                        $root.im.turms.proto.QueryGroupBlacklistedUserInfosRequest.encode(message.queryGroupBlacklistedUserInfosRequest, writer.uint32(/* id 403, wireType 2 =*/3226).fork()).ldelim();
                     if (message.checkGroupJoinQuestionsAnswersRequest != null && Object.hasOwnProperty.call(message, "checkGroupJoinQuestionsAnswersRequest"))
                         $root.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest.encode(message.checkGroupJoinQuestionsAnswersRequest, writer.uint32(/* id 500, wireType 2 =*/4002).fork()).ldelim();
                     if (message.createGroupInvitationRequest != null && Object.hasOwnProperty.call(message, "createGroupInvitationRequest"))
@@ -10320,13 +10320,13 @@ $root.im = (function() {
                             message.queryUserProfileRequest = $root.im.turms.proto.QueryUserProfileRequest.decode(reader, reader.uint32());
                             break;
                         case 101:
-                            message.queryUsersIdsNearbyRequest = $root.im.turms.proto.QueryUsersIdsNearbyRequest.decode(reader, reader.uint32());
+                            message.queryUserIdsNearbyRequest = $root.im.turms.proto.QueryUserIdsNearbyRequest.decode(reader, reader.uint32());
                             break;
                         case 102:
-                            message.queryUsersInfosNearbyRequest = $root.im.turms.proto.QueryUsersInfosNearbyRequest.decode(reader, reader.uint32());
+                            message.queryUserInfosNearbyRequest = $root.im.turms.proto.QueryUserInfosNearbyRequest.decode(reader, reader.uint32());
                             break;
                         case 103:
-                            message.queryUsersOnlineStatusRequest = $root.im.turms.proto.QueryUsersOnlineStatusRequest.decode(reader, reader.uint32());
+                            message.queryUserOnlineStatusesRequest = $root.im.turms.proto.QueryUserOnlineStatusesRequest.decode(reader, reader.uint32());
                             break;
                         case 104:
                             message.updateUserLocationRequest = $root.im.turms.proto.UpdateUserLocationRequest.decode(reader, reader.uint32());
@@ -10356,7 +10356,7 @@ $root.im = (function() {
                             message.queryFriendRequestsRequest = $root.im.turms.proto.QueryFriendRequestsRequest.decode(reader, reader.uint32());
                             break;
                         case 206:
-                            message.queryRelatedUsersIdsRequest = $root.im.turms.proto.QueryRelatedUsersIdsRequest.decode(reader, reader.uint32());
+                            message.queryRelatedUserIdsRequest = $root.im.turms.proto.QueryRelatedUserIdsRequest.decode(reader, reader.uint32());
                             break;
                         case 207:
                             message.queryRelationshipGroupsRequest = $root.im.turms.proto.QueryRelationshipGroupsRequest.decode(reader, reader.uint32());
@@ -10383,10 +10383,10 @@ $root.im = (function() {
                             message.queryGroupRequest = $root.im.turms.proto.QueryGroupRequest.decode(reader, reader.uint32());
                             break;
                         case 303:
-                            message.queryJoinedGroupsIdsRequest = $root.im.turms.proto.QueryJoinedGroupsIdsRequest.decode(reader, reader.uint32());
+                            message.queryJoinedGroupIdsRequest = $root.im.turms.proto.QueryJoinedGroupIdsRequest.decode(reader, reader.uint32());
                             break;
                         case 304:
-                            message.queryJoinedGroupsInfosRequest = $root.im.turms.proto.QueryJoinedGroupsInfosRequest.decode(reader, reader.uint32());
+                            message.queryJoinedGroupInfosRequest = $root.im.turms.proto.QueryJoinedGroupInfosRequest.decode(reader, reader.uint32());
                             break;
                         case 305:
                             message.updateGroupRequest = $root.im.turms.proto.UpdateGroupRequest.decode(reader, reader.uint32());
@@ -10398,10 +10398,10 @@ $root.im = (function() {
                             message.deleteGroupBlacklistedUserRequest = $root.im.turms.proto.DeleteGroupBlacklistedUserRequest.decode(reader, reader.uint32());
                             break;
                         case 402:
-                            message.queryGroupBlacklistedUsersIdsRequest = $root.im.turms.proto.QueryGroupBlacklistedUsersIdsRequest.decode(reader, reader.uint32());
+                            message.queryGroupBlacklistedUserIdsRequest = $root.im.turms.proto.QueryGroupBlacklistedUserIdsRequest.decode(reader, reader.uint32());
                             break;
                         case 403:
-                            message.queryGroupBlacklistedUsersInfosRequest = $root.im.turms.proto.QueryGroupBlacklistedUsersInfosRequest.decode(reader, reader.uint32());
+                            message.queryGroupBlacklistedUserInfosRequest = $root.im.turms.proto.QueryGroupBlacklistedUserInfosRequest.decode(reader, reader.uint32());
                             break;
                         case 500:
                             message.checkGroupJoinQuestionsAnswersRequest = $root.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest.decode(reader, reader.uint32());
@@ -10457,6 +10457,345 @@ $root.im = (function() {
                 };
 
                 return TurmsRequest;
+            })();
+
+            proto.QueryUserIdsNearbyRequest = (function() {
+
+                /**
+                 * Properties of a QueryUserIdsNearbyRequest.
+                 * @memberof im.turms.proto
+                 * @interface IQueryUserIdsNearbyRequest
+                 * @property {number|null} [latitude] QueryUserIdsNearbyRequest latitude
+                 * @property {number|null} [longitude] QueryUserIdsNearbyRequest longitude
+                 * @property {google.protobuf.IFloatValue|null} [distance] QueryUserIdsNearbyRequest distance
+                 * @property {google.protobuf.IInt32Value|null} [maxNumber] QueryUserIdsNearbyRequest maxNumber
+                 */
+
+                /**
+                 * Constructs a new QueryUserIdsNearbyRequest.
+                 * @memberof im.turms.proto
+                 * @classdesc Represents a QueryUserIdsNearbyRequest.
+                 * @implements IQueryUserIdsNearbyRequest
+                 * @constructor
+                 * @param {im.turms.proto.IQueryUserIdsNearbyRequest=} [properties] Properties to set
+                 */
+                function QueryUserIdsNearbyRequest(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * QueryUserIdsNearbyRequest latitude.
+                 * @member {number} latitude
+                 * @memberof im.turms.proto.QueryUserIdsNearbyRequest
+                 * @instance
+                 */
+                QueryUserIdsNearbyRequest.prototype.latitude = 0;
+
+                /**
+                 * QueryUserIdsNearbyRequest longitude.
+                 * @member {number} longitude
+                 * @memberof im.turms.proto.QueryUserIdsNearbyRequest
+                 * @instance
+                 */
+                QueryUserIdsNearbyRequest.prototype.longitude = 0;
+
+                /**
+                 * QueryUserIdsNearbyRequest distance.
+                 * @member {google.protobuf.IFloatValue|null|undefined} distance
+                 * @memberof im.turms.proto.QueryUserIdsNearbyRequest
+                 * @instance
+                 */
+                QueryUserIdsNearbyRequest.prototype.distance = null;
+
+                /**
+                 * QueryUserIdsNearbyRequest maxNumber.
+                 * @member {google.protobuf.IInt32Value|null|undefined} maxNumber
+                 * @memberof im.turms.proto.QueryUserIdsNearbyRequest
+                 * @instance
+                 */
+                QueryUserIdsNearbyRequest.prototype.maxNumber = null;
+
+                /**
+                 * Encodes the specified QueryUserIdsNearbyRequest message. Does not implicitly {@link im.turms.proto.QueryUserIdsNearbyRequest.verify|verify} messages.
+                 * @function encode
+                 * @memberof im.turms.proto.QueryUserIdsNearbyRequest
+                 * @static
+                 * @param {im.turms.proto.IQueryUserIdsNearbyRequest} message QueryUserIdsNearbyRequest message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                QueryUserIdsNearbyRequest.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.latitude != null && Object.hasOwnProperty.call(message, "latitude"))
+                        writer.uint32(/* id 1, wireType 5 =*/13).float(message.latitude);
+                    if (message.longitude != null && Object.hasOwnProperty.call(message, "longitude"))
+                        writer.uint32(/* id 2, wireType 5 =*/21).float(message.longitude);
+                    if (message.distance != null && Object.hasOwnProperty.call(message, "distance"))
+                        $root.google.protobuf.FloatValue.encode(message.distance, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                    if (message.maxNumber != null && Object.hasOwnProperty.call(message, "maxNumber"))
+                        $root.google.protobuf.Int32Value.encode(message.maxNumber, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+                    return writer;
+                };
+
+                /**
+                 * Decodes a QueryUserIdsNearbyRequest message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof im.turms.proto.QueryUserIdsNearbyRequest
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {im.turms.proto.QueryUserIdsNearbyRequest} QueryUserIdsNearbyRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                QueryUserIdsNearbyRequest.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.QueryUserIdsNearbyRequest();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        case 1:
+                            message.latitude = reader.float();
+                            break;
+                        case 2:
+                            message.longitude = reader.float();
+                            break;
+                        case 3:
+                            message.distance = $root.google.protobuf.FloatValue.decode(reader, reader.uint32());
+                            break;
+                        case 4:
+                            message.maxNumber = $root.google.protobuf.Int32Value.decode(reader, reader.uint32());
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+
+                return QueryUserIdsNearbyRequest;
+            })();
+
+            proto.QueryUserInfosNearbyRequest = (function() {
+
+                /**
+                 * Properties of a QueryUserInfosNearbyRequest.
+                 * @memberof im.turms.proto
+                 * @interface IQueryUserInfosNearbyRequest
+                 * @property {number|null} [latitude] QueryUserInfosNearbyRequest latitude
+                 * @property {number|null} [longitude] QueryUserInfosNearbyRequest longitude
+                 * @property {google.protobuf.IFloatValue|null} [distance] QueryUserInfosNearbyRequest distance
+                 * @property {google.protobuf.IInt32Value|null} [maxNumber] QueryUserInfosNearbyRequest maxNumber
+                 */
+
+                /**
+                 * Constructs a new QueryUserInfosNearbyRequest.
+                 * @memberof im.turms.proto
+                 * @classdesc Represents a QueryUserInfosNearbyRequest.
+                 * @implements IQueryUserInfosNearbyRequest
+                 * @constructor
+                 * @param {im.turms.proto.IQueryUserInfosNearbyRequest=} [properties] Properties to set
+                 */
+                function QueryUserInfosNearbyRequest(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * QueryUserInfosNearbyRequest latitude.
+                 * @member {number} latitude
+                 * @memberof im.turms.proto.QueryUserInfosNearbyRequest
+                 * @instance
+                 */
+                QueryUserInfosNearbyRequest.prototype.latitude = 0;
+
+                /**
+                 * QueryUserInfosNearbyRequest longitude.
+                 * @member {number} longitude
+                 * @memberof im.turms.proto.QueryUserInfosNearbyRequest
+                 * @instance
+                 */
+                QueryUserInfosNearbyRequest.prototype.longitude = 0;
+
+                /**
+                 * QueryUserInfosNearbyRequest distance.
+                 * @member {google.protobuf.IFloatValue|null|undefined} distance
+                 * @memberof im.turms.proto.QueryUserInfosNearbyRequest
+                 * @instance
+                 */
+                QueryUserInfosNearbyRequest.prototype.distance = null;
+
+                /**
+                 * QueryUserInfosNearbyRequest maxNumber.
+                 * @member {google.protobuf.IInt32Value|null|undefined} maxNumber
+                 * @memberof im.turms.proto.QueryUserInfosNearbyRequest
+                 * @instance
+                 */
+                QueryUserInfosNearbyRequest.prototype.maxNumber = null;
+
+                /**
+                 * Encodes the specified QueryUserInfosNearbyRequest message. Does not implicitly {@link im.turms.proto.QueryUserInfosNearbyRequest.verify|verify} messages.
+                 * @function encode
+                 * @memberof im.turms.proto.QueryUserInfosNearbyRequest
+                 * @static
+                 * @param {im.turms.proto.IQueryUserInfosNearbyRequest} message QueryUserInfosNearbyRequest message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                QueryUserInfosNearbyRequest.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.latitude != null && Object.hasOwnProperty.call(message, "latitude"))
+                        writer.uint32(/* id 1, wireType 5 =*/13).float(message.latitude);
+                    if (message.longitude != null && Object.hasOwnProperty.call(message, "longitude"))
+                        writer.uint32(/* id 2, wireType 5 =*/21).float(message.longitude);
+                    if (message.distance != null && Object.hasOwnProperty.call(message, "distance"))
+                        $root.google.protobuf.FloatValue.encode(message.distance, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                    if (message.maxNumber != null && Object.hasOwnProperty.call(message, "maxNumber"))
+                        $root.google.protobuf.Int32Value.encode(message.maxNumber, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+                    return writer;
+                };
+
+                /**
+                 * Decodes a QueryUserInfosNearbyRequest message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof im.turms.proto.QueryUserInfosNearbyRequest
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {im.turms.proto.QueryUserInfosNearbyRequest} QueryUserInfosNearbyRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                QueryUserInfosNearbyRequest.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.QueryUserInfosNearbyRequest();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        case 1:
+                            message.latitude = reader.float();
+                            break;
+                        case 2:
+                            message.longitude = reader.float();
+                            break;
+                        case 3:
+                            message.distance = $root.google.protobuf.FloatValue.decode(reader, reader.uint32());
+                            break;
+                        case 4:
+                            message.maxNumber = $root.google.protobuf.Int32Value.decode(reader, reader.uint32());
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+
+                return QueryUserInfosNearbyRequest;
+            })();
+
+            proto.QueryUserOnlineStatusesRequest = (function() {
+
+                /**
+                 * Properties of a QueryUserOnlineStatusesRequest.
+                 * @memberof im.turms.proto
+                 * @interface IQueryUserOnlineStatusesRequest
+                 * @property {Array.<string>|null} [userIds] QueryUserOnlineStatusesRequest userIds
+                 */
+
+                /**
+                 * Constructs a new QueryUserOnlineStatusesRequest.
+                 * @memberof im.turms.proto
+                 * @classdesc Represents a QueryUserOnlineStatusesRequest.
+                 * @implements IQueryUserOnlineStatusesRequest
+                 * @constructor
+                 * @param {im.turms.proto.IQueryUserOnlineStatusesRequest=} [properties] Properties to set
+                 */
+                function QueryUserOnlineStatusesRequest(properties) {
+                    this.userIds = [];
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * QueryUserOnlineStatusesRequest userIds.
+                 * @member {Array.<string>} userIds
+                 * @memberof im.turms.proto.QueryUserOnlineStatusesRequest
+                 * @instance
+                 */
+                QueryUserOnlineStatusesRequest.prototype.userIds = $util.emptyArray;
+
+                /**
+                 * Encodes the specified QueryUserOnlineStatusesRequest message. Does not implicitly {@link im.turms.proto.QueryUserOnlineStatusesRequest.verify|verify} messages.
+                 * @function encode
+                 * @memberof im.turms.proto.QueryUserOnlineStatusesRequest
+                 * @static
+                 * @param {im.turms.proto.IQueryUserOnlineStatusesRequest} message QueryUserOnlineStatusesRequest message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                QueryUserOnlineStatusesRequest.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.userIds != null && message.userIds.length) {
+                        writer.uint32(/* id 1, wireType 2 =*/10).fork();
+                        for (var i = 0; i < message.userIds.length; ++i)
+                            writer.int64(message.userIds[i]);
+                        writer.ldelim();
+                    }
+                    return writer;
+                };
+
+                /**
+                 * Decodes a QueryUserOnlineStatusesRequest message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof im.turms.proto.QueryUserOnlineStatusesRequest
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {im.turms.proto.QueryUserOnlineStatusesRequest} QueryUserOnlineStatusesRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                QueryUserOnlineStatusesRequest.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.QueryUserOnlineStatusesRequest();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        case 1:
+                            if (!(message.userIds && message.userIds.length))
+                                message.userIds = [];
+                            if ((tag & 7) === 2) {
+                                var end2 = reader.uint32() + reader.pos;
+                                while (reader.pos < end2)
+                                    message.userIds.push(reader.int64().toString());
+                            } else
+                                message.userIds.push(reader.int64().toString());
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+
+                return QueryUserOnlineStatusesRequest;
             })();
 
             proto.QueryUserProfileRequest = (function() {
@@ -10552,345 +10891,6 @@ $root.im = (function() {
                 };
 
                 return QueryUserProfileRequest;
-            })();
-
-            proto.QueryUsersIdsNearbyRequest = (function() {
-
-                /**
-                 * Properties of a QueryUsersIdsNearbyRequest.
-                 * @memberof im.turms.proto
-                 * @interface IQueryUsersIdsNearbyRequest
-                 * @property {number|null} [latitude] QueryUsersIdsNearbyRequest latitude
-                 * @property {number|null} [longitude] QueryUsersIdsNearbyRequest longitude
-                 * @property {google.protobuf.IFloatValue|null} [distance] QueryUsersIdsNearbyRequest distance
-                 * @property {google.protobuf.IInt32Value|null} [maxNumber] QueryUsersIdsNearbyRequest maxNumber
-                 */
-
-                /**
-                 * Constructs a new QueryUsersIdsNearbyRequest.
-                 * @memberof im.turms.proto
-                 * @classdesc Represents a QueryUsersIdsNearbyRequest.
-                 * @implements IQueryUsersIdsNearbyRequest
-                 * @constructor
-                 * @param {im.turms.proto.IQueryUsersIdsNearbyRequest=} [properties] Properties to set
-                 */
-                function QueryUsersIdsNearbyRequest(properties) {
-                    if (properties)
-                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                            if (properties[keys[i]] != null)
-                                this[keys[i]] = properties[keys[i]];
-                }
-
-                /**
-                 * QueryUsersIdsNearbyRequest latitude.
-                 * @member {number} latitude
-                 * @memberof im.turms.proto.QueryUsersIdsNearbyRequest
-                 * @instance
-                 */
-                QueryUsersIdsNearbyRequest.prototype.latitude = 0;
-
-                /**
-                 * QueryUsersIdsNearbyRequest longitude.
-                 * @member {number} longitude
-                 * @memberof im.turms.proto.QueryUsersIdsNearbyRequest
-                 * @instance
-                 */
-                QueryUsersIdsNearbyRequest.prototype.longitude = 0;
-
-                /**
-                 * QueryUsersIdsNearbyRequest distance.
-                 * @member {google.protobuf.IFloatValue|null|undefined} distance
-                 * @memberof im.turms.proto.QueryUsersIdsNearbyRequest
-                 * @instance
-                 */
-                QueryUsersIdsNearbyRequest.prototype.distance = null;
-
-                /**
-                 * QueryUsersIdsNearbyRequest maxNumber.
-                 * @member {google.protobuf.IInt32Value|null|undefined} maxNumber
-                 * @memberof im.turms.proto.QueryUsersIdsNearbyRequest
-                 * @instance
-                 */
-                QueryUsersIdsNearbyRequest.prototype.maxNumber = null;
-
-                /**
-                 * Encodes the specified QueryUsersIdsNearbyRequest message. Does not implicitly {@link im.turms.proto.QueryUsersIdsNearbyRequest.verify|verify} messages.
-                 * @function encode
-                 * @memberof im.turms.proto.QueryUsersIdsNearbyRequest
-                 * @static
-                 * @param {im.turms.proto.IQueryUsersIdsNearbyRequest} message QueryUsersIdsNearbyRequest message or plain object to encode
-                 * @param {$protobuf.Writer} [writer] Writer to encode to
-                 * @returns {$protobuf.Writer} Writer
-                 */
-                QueryUsersIdsNearbyRequest.encode = function encode(message, writer) {
-                    if (!writer)
-                        writer = $Writer.create();
-                    if (message.latitude != null && Object.hasOwnProperty.call(message, "latitude"))
-                        writer.uint32(/* id 1, wireType 5 =*/13).float(message.latitude);
-                    if (message.longitude != null && Object.hasOwnProperty.call(message, "longitude"))
-                        writer.uint32(/* id 2, wireType 5 =*/21).float(message.longitude);
-                    if (message.distance != null && Object.hasOwnProperty.call(message, "distance"))
-                        $root.google.protobuf.FloatValue.encode(message.distance, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.maxNumber != null && Object.hasOwnProperty.call(message, "maxNumber"))
-                        $root.google.protobuf.Int32Value.encode(message.maxNumber, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-                    return writer;
-                };
-
-                /**
-                 * Decodes a QueryUsersIdsNearbyRequest message from the specified reader or buffer.
-                 * @function decode
-                 * @memberof im.turms.proto.QueryUsersIdsNearbyRequest
-                 * @static
-                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @param {number} [length] Message length if known beforehand
-                 * @returns {im.turms.proto.QueryUsersIdsNearbyRequest} QueryUsersIdsNearbyRequest
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                QueryUsersIdsNearbyRequest.decode = function decode(reader, length) {
-                    if (!(reader instanceof $Reader))
-                        reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.QueryUsersIdsNearbyRequest();
-                    while (reader.pos < end) {
-                        var tag = reader.uint32();
-                        switch (tag >>> 3) {
-                        case 1:
-                            message.latitude = reader.float();
-                            break;
-                        case 2:
-                            message.longitude = reader.float();
-                            break;
-                        case 3:
-                            message.distance = $root.google.protobuf.FloatValue.decode(reader, reader.uint32());
-                            break;
-                        case 4:
-                            message.maxNumber = $root.google.protobuf.Int32Value.decode(reader, reader.uint32());
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
-                        }
-                    }
-                    return message;
-                };
-
-                return QueryUsersIdsNearbyRequest;
-            })();
-
-            proto.QueryUsersInfosNearbyRequest = (function() {
-
-                /**
-                 * Properties of a QueryUsersInfosNearbyRequest.
-                 * @memberof im.turms.proto
-                 * @interface IQueryUsersInfosNearbyRequest
-                 * @property {number|null} [latitude] QueryUsersInfosNearbyRequest latitude
-                 * @property {number|null} [longitude] QueryUsersInfosNearbyRequest longitude
-                 * @property {google.protobuf.IFloatValue|null} [distance] QueryUsersInfosNearbyRequest distance
-                 * @property {google.protobuf.IUInt32Value|null} [maxNumber] QueryUsersInfosNearbyRequest maxNumber
-                 */
-
-                /**
-                 * Constructs a new QueryUsersInfosNearbyRequest.
-                 * @memberof im.turms.proto
-                 * @classdesc Represents a QueryUsersInfosNearbyRequest.
-                 * @implements IQueryUsersInfosNearbyRequest
-                 * @constructor
-                 * @param {im.turms.proto.IQueryUsersInfosNearbyRequest=} [properties] Properties to set
-                 */
-                function QueryUsersInfosNearbyRequest(properties) {
-                    if (properties)
-                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                            if (properties[keys[i]] != null)
-                                this[keys[i]] = properties[keys[i]];
-                }
-
-                /**
-                 * QueryUsersInfosNearbyRequest latitude.
-                 * @member {number} latitude
-                 * @memberof im.turms.proto.QueryUsersInfosNearbyRequest
-                 * @instance
-                 */
-                QueryUsersInfosNearbyRequest.prototype.latitude = 0;
-
-                /**
-                 * QueryUsersInfosNearbyRequest longitude.
-                 * @member {number} longitude
-                 * @memberof im.turms.proto.QueryUsersInfosNearbyRequest
-                 * @instance
-                 */
-                QueryUsersInfosNearbyRequest.prototype.longitude = 0;
-
-                /**
-                 * QueryUsersInfosNearbyRequest distance.
-                 * @member {google.protobuf.IFloatValue|null|undefined} distance
-                 * @memberof im.turms.proto.QueryUsersInfosNearbyRequest
-                 * @instance
-                 */
-                QueryUsersInfosNearbyRequest.prototype.distance = null;
-
-                /**
-                 * QueryUsersInfosNearbyRequest maxNumber.
-                 * @member {google.protobuf.IUInt32Value|null|undefined} maxNumber
-                 * @memberof im.turms.proto.QueryUsersInfosNearbyRequest
-                 * @instance
-                 */
-                QueryUsersInfosNearbyRequest.prototype.maxNumber = null;
-
-                /**
-                 * Encodes the specified QueryUsersInfosNearbyRequest message. Does not implicitly {@link im.turms.proto.QueryUsersInfosNearbyRequest.verify|verify} messages.
-                 * @function encode
-                 * @memberof im.turms.proto.QueryUsersInfosNearbyRequest
-                 * @static
-                 * @param {im.turms.proto.IQueryUsersInfosNearbyRequest} message QueryUsersInfosNearbyRequest message or plain object to encode
-                 * @param {$protobuf.Writer} [writer] Writer to encode to
-                 * @returns {$protobuf.Writer} Writer
-                 */
-                QueryUsersInfosNearbyRequest.encode = function encode(message, writer) {
-                    if (!writer)
-                        writer = $Writer.create();
-                    if (message.latitude != null && Object.hasOwnProperty.call(message, "latitude"))
-                        writer.uint32(/* id 1, wireType 5 =*/13).float(message.latitude);
-                    if (message.longitude != null && Object.hasOwnProperty.call(message, "longitude"))
-                        writer.uint32(/* id 2, wireType 5 =*/21).float(message.longitude);
-                    if (message.distance != null && Object.hasOwnProperty.call(message, "distance"))
-                        $root.google.protobuf.FloatValue.encode(message.distance, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.maxNumber != null && Object.hasOwnProperty.call(message, "maxNumber"))
-                        $root.google.protobuf.UInt32Value.encode(message.maxNumber, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-                    return writer;
-                };
-
-                /**
-                 * Decodes a QueryUsersInfosNearbyRequest message from the specified reader or buffer.
-                 * @function decode
-                 * @memberof im.turms.proto.QueryUsersInfosNearbyRequest
-                 * @static
-                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @param {number} [length] Message length if known beforehand
-                 * @returns {im.turms.proto.QueryUsersInfosNearbyRequest} QueryUsersInfosNearbyRequest
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                QueryUsersInfosNearbyRequest.decode = function decode(reader, length) {
-                    if (!(reader instanceof $Reader))
-                        reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.QueryUsersInfosNearbyRequest();
-                    while (reader.pos < end) {
-                        var tag = reader.uint32();
-                        switch (tag >>> 3) {
-                        case 1:
-                            message.latitude = reader.float();
-                            break;
-                        case 2:
-                            message.longitude = reader.float();
-                            break;
-                        case 3:
-                            message.distance = $root.google.protobuf.FloatValue.decode(reader, reader.uint32());
-                            break;
-                        case 4:
-                            message.maxNumber = $root.google.protobuf.UInt32Value.decode(reader, reader.uint32());
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
-                        }
-                    }
-                    return message;
-                };
-
-                return QueryUsersInfosNearbyRequest;
-            })();
-
-            proto.QueryUsersOnlineStatusRequest = (function() {
-
-                /**
-                 * Properties of a QueryUsersOnlineStatusRequest.
-                 * @memberof im.turms.proto
-                 * @interface IQueryUsersOnlineStatusRequest
-                 * @property {Array.<string>|null} [usersIds] QueryUsersOnlineStatusRequest usersIds
-                 */
-
-                /**
-                 * Constructs a new QueryUsersOnlineStatusRequest.
-                 * @memberof im.turms.proto
-                 * @classdesc Represents a QueryUsersOnlineStatusRequest.
-                 * @implements IQueryUsersOnlineStatusRequest
-                 * @constructor
-                 * @param {im.turms.proto.IQueryUsersOnlineStatusRequest=} [properties] Properties to set
-                 */
-                function QueryUsersOnlineStatusRequest(properties) {
-                    this.usersIds = [];
-                    if (properties)
-                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                            if (properties[keys[i]] != null)
-                                this[keys[i]] = properties[keys[i]];
-                }
-
-                /**
-                 * QueryUsersOnlineStatusRequest usersIds.
-                 * @member {Array.<string>} usersIds
-                 * @memberof im.turms.proto.QueryUsersOnlineStatusRequest
-                 * @instance
-                 */
-                QueryUsersOnlineStatusRequest.prototype.usersIds = $util.emptyArray;
-
-                /**
-                 * Encodes the specified QueryUsersOnlineStatusRequest message. Does not implicitly {@link im.turms.proto.QueryUsersOnlineStatusRequest.verify|verify} messages.
-                 * @function encode
-                 * @memberof im.turms.proto.QueryUsersOnlineStatusRequest
-                 * @static
-                 * @param {im.turms.proto.IQueryUsersOnlineStatusRequest} message QueryUsersOnlineStatusRequest message or plain object to encode
-                 * @param {$protobuf.Writer} [writer] Writer to encode to
-                 * @returns {$protobuf.Writer} Writer
-                 */
-                QueryUsersOnlineStatusRequest.encode = function encode(message, writer) {
-                    if (!writer)
-                        writer = $Writer.create();
-                    if (message.usersIds != null && message.usersIds.length) {
-                        writer.uint32(/* id 1, wireType 2 =*/10).fork();
-                        for (var i = 0; i < message.usersIds.length; ++i)
-                            writer.int64(message.usersIds[i]);
-                        writer.ldelim();
-                    }
-                    return writer;
-                };
-
-                /**
-                 * Decodes a QueryUsersOnlineStatusRequest message from the specified reader or buffer.
-                 * @function decode
-                 * @memberof im.turms.proto.QueryUsersOnlineStatusRequest
-                 * @static
-                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @param {number} [length] Message length if known beforehand
-                 * @returns {im.turms.proto.QueryUsersOnlineStatusRequest} QueryUsersOnlineStatusRequest
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                QueryUsersOnlineStatusRequest.decode = function decode(reader, length) {
-                    if (!(reader instanceof $Reader))
-                        reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.QueryUsersOnlineStatusRequest();
-                    while (reader.pos < end) {
-                        var tag = reader.uint32();
-                        switch (tag >>> 3) {
-                        case 1:
-                            if (!(message.usersIds && message.usersIds.length))
-                                message.usersIds = [];
-                            if ((tag & 7) === 2) {
-                                var end2 = reader.uint32() + reader.pos;
-                                while (reader.pos < end2)
-                                    message.usersIds.push(reader.int64().toString());
-                            } else
-                                message.usersIds.push(reader.int64().toString());
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
-                        }
-                    }
-                    return message;
-                };
-
-                return QueryUsersOnlineStatusRequest;
             })();
 
             proto.CreateFriendRequestRequest = (function() {
@@ -11076,7 +11076,7 @@ $root.im = (function() {
                  * @memberof im.turms.proto
                  * @interface ICreateRelationshipRequest
                  * @property {string|null} [userId] CreateRelationshipRequest userId
-                 * @property {boolean|null} [isBlocked] CreateRelationshipRequest isBlocked
+                 * @property {boolean|null} [blocked] CreateRelationshipRequest blocked
                  * @property {google.protobuf.IInt32Value|null} [groupIndex] CreateRelationshipRequest groupIndex
                  */
 
@@ -11104,12 +11104,12 @@ $root.im = (function() {
                 CreateRelationshipRequest.prototype.userId = "0";
 
                 /**
-                 * CreateRelationshipRequest isBlocked.
-                 * @member {boolean} isBlocked
+                 * CreateRelationshipRequest blocked.
+                 * @member {boolean} blocked
                  * @memberof im.turms.proto.CreateRelationshipRequest
                  * @instance
                  */
-                CreateRelationshipRequest.prototype.isBlocked = false;
+                CreateRelationshipRequest.prototype.blocked = false;
 
                 /**
                  * CreateRelationshipRequest groupIndex.
@@ -11133,8 +11133,8 @@ $root.im = (function() {
                         writer = $Writer.create();
                     if (message.userId != null && Object.hasOwnProperty.call(message, "userId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.userId);
-                    if (message.isBlocked != null && Object.hasOwnProperty.call(message, "isBlocked"))
-                        writer.uint32(/* id 2, wireType 0 =*/16).bool(message.isBlocked);
+                    if (message.blocked != null && Object.hasOwnProperty.call(message, "blocked"))
+                        writer.uint32(/* id 2, wireType 0 =*/16).bool(message.blocked);
                     if (message.groupIndex != null && Object.hasOwnProperty.call(message, "groupIndex"))
                         $root.google.protobuf.Int32Value.encode(message.groupIndex, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                     return writer;
@@ -11162,7 +11162,7 @@ $root.im = (function() {
                             message.userId = reader.int64().toString();
                             break;
                         case 2:
-                            message.isBlocked = reader.bool();
+                            message.blocked = reader.bool();
                             break;
                         case 3:
                             message.groupIndex = $root.google.protobuf.Int32Value.decode(reader, reader.uint32());
@@ -11388,7 +11388,7 @@ $root.im = (function() {
                  * Properties of a DeleteRelationshipRequest.
                  * @memberof im.turms.proto
                  * @interface IDeleteRelationshipRequest
-                 * @property {string|null} [relatedUserId] DeleteRelationshipRequest relatedUserId
+                 * @property {string|null} [userId] DeleteRelationshipRequest userId
                  * @property {google.protobuf.IInt32Value|null} [groupIndex] DeleteRelationshipRequest groupIndex
                  * @property {google.protobuf.IInt32Value|null} [targetGroupIndex] DeleteRelationshipRequest targetGroupIndex
                  */
@@ -11409,12 +11409,12 @@ $root.im = (function() {
                 }
 
                 /**
-                 * DeleteRelationshipRequest relatedUserId.
-                 * @member {string} relatedUserId
+                 * DeleteRelationshipRequest userId.
+                 * @member {string} userId
                  * @memberof im.turms.proto.DeleteRelationshipRequest
                  * @instance
                  */
-                DeleteRelationshipRequest.prototype.relatedUserId = "0";
+                DeleteRelationshipRequest.prototype.userId = "0";
 
                 /**
                  * DeleteRelationshipRequest groupIndex.
@@ -11444,8 +11444,8 @@ $root.im = (function() {
                 DeleteRelationshipRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.relatedUserId != null && Object.hasOwnProperty.call(message, "relatedUserId"))
-                        writer.uint32(/* id 1, wireType 0 =*/8).int64(message.relatedUserId);
+                    if (message.userId != null && Object.hasOwnProperty.call(message, "userId"))
+                        writer.uint32(/* id 1, wireType 0 =*/8).int64(message.userId);
                     if (message.groupIndex != null && Object.hasOwnProperty.call(message, "groupIndex"))
                         $root.google.protobuf.Int32Value.encode(message.groupIndex, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     if (message.targetGroupIndex != null && Object.hasOwnProperty.call(message, "targetGroupIndex"))
@@ -11472,7 +11472,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.relatedUserId = reader.int64().toString();
+                            message.userId = reader.int64().toString();
                             break;
                         case 2:
                             message.groupIndex = $root.google.protobuf.Int32Value.decode(reader, reader.uint32());
@@ -11586,26 +11586,26 @@ $root.im = (function() {
                 return QueryFriendRequestsRequest;
             })();
 
-            proto.QueryRelatedUsersIdsRequest = (function() {
+            proto.QueryRelatedUserIdsRequest = (function() {
 
                 /**
-                 * Properties of a QueryRelatedUsersIdsRequest.
+                 * Properties of a QueryRelatedUserIdsRequest.
                  * @memberof im.turms.proto
-                 * @interface IQueryRelatedUsersIdsRequest
-                 * @property {google.protobuf.IBoolValue|null} [isBlocked] QueryRelatedUsersIdsRequest isBlocked
-                 * @property {google.protobuf.IInt32Value|null} [groupIndex] QueryRelatedUsersIdsRequest groupIndex
-                 * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryRelatedUsersIdsRequest lastUpdatedDate
+                 * @interface IQueryRelatedUserIdsRequest
+                 * @property {google.protobuf.IBoolValue|null} [blocked] QueryRelatedUserIdsRequest blocked
+                 * @property {google.protobuf.IInt32Value|null} [groupIndex] QueryRelatedUserIdsRequest groupIndex
+                 * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryRelatedUserIdsRequest lastUpdatedDate
                  */
 
                 /**
-                 * Constructs a new QueryRelatedUsersIdsRequest.
+                 * Constructs a new QueryRelatedUserIdsRequest.
                  * @memberof im.turms.proto
-                 * @classdesc Represents a QueryRelatedUsersIdsRequest.
-                 * @implements IQueryRelatedUsersIdsRequest
+                 * @classdesc Represents a QueryRelatedUserIdsRequest.
+                 * @implements IQueryRelatedUserIdsRequest
                  * @constructor
-                 * @param {im.turms.proto.IQueryRelatedUsersIdsRequest=} [properties] Properties to set
+                 * @param {im.turms.proto.IQueryRelatedUserIdsRequest=} [properties] Properties to set
                  */
-                function QueryRelatedUsersIdsRequest(properties) {
+                function QueryRelatedUserIdsRequest(properties) {
                     if (properties)
                         for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                             if (properties[keys[i]] != null)
@@ -11613,43 +11613,43 @@ $root.im = (function() {
                 }
 
                 /**
-                 * QueryRelatedUsersIdsRequest isBlocked.
-                 * @member {google.protobuf.IBoolValue|null|undefined} isBlocked
-                 * @memberof im.turms.proto.QueryRelatedUsersIdsRequest
+                 * QueryRelatedUserIdsRequest blocked.
+                 * @member {google.protobuf.IBoolValue|null|undefined} blocked
+                 * @memberof im.turms.proto.QueryRelatedUserIdsRequest
                  * @instance
                  */
-                QueryRelatedUsersIdsRequest.prototype.isBlocked = null;
+                QueryRelatedUserIdsRequest.prototype.blocked = null;
 
                 /**
-                 * QueryRelatedUsersIdsRequest groupIndex.
+                 * QueryRelatedUserIdsRequest groupIndex.
                  * @member {google.protobuf.IInt32Value|null|undefined} groupIndex
-                 * @memberof im.turms.proto.QueryRelatedUsersIdsRequest
+                 * @memberof im.turms.proto.QueryRelatedUserIdsRequest
                  * @instance
                  */
-                QueryRelatedUsersIdsRequest.prototype.groupIndex = null;
+                QueryRelatedUserIdsRequest.prototype.groupIndex = null;
 
                 /**
-                 * QueryRelatedUsersIdsRequest lastUpdatedDate.
+                 * QueryRelatedUserIdsRequest lastUpdatedDate.
                  * @member {google.protobuf.IInt64Value|null|undefined} lastUpdatedDate
-                 * @memberof im.turms.proto.QueryRelatedUsersIdsRequest
+                 * @memberof im.turms.proto.QueryRelatedUserIdsRequest
                  * @instance
                  */
-                QueryRelatedUsersIdsRequest.prototype.lastUpdatedDate = null;
+                QueryRelatedUserIdsRequest.prototype.lastUpdatedDate = null;
 
                 /**
-                 * Encodes the specified QueryRelatedUsersIdsRequest message. Does not implicitly {@link im.turms.proto.QueryRelatedUsersIdsRequest.verify|verify} messages.
+                 * Encodes the specified QueryRelatedUserIdsRequest message. Does not implicitly {@link im.turms.proto.QueryRelatedUserIdsRequest.verify|verify} messages.
                  * @function encode
-                 * @memberof im.turms.proto.QueryRelatedUsersIdsRequest
+                 * @memberof im.turms.proto.QueryRelatedUserIdsRequest
                  * @static
-                 * @param {im.turms.proto.IQueryRelatedUsersIdsRequest} message QueryRelatedUsersIdsRequest message or plain object to encode
+                 * @param {im.turms.proto.IQueryRelatedUserIdsRequest} message QueryRelatedUserIdsRequest message or plain object to encode
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                QueryRelatedUsersIdsRequest.encode = function encode(message, writer) {
+                QueryRelatedUserIdsRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.isBlocked != null && Object.hasOwnProperty.call(message, "isBlocked"))
-                        $root.google.protobuf.BoolValue.encode(message.isBlocked, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                    if (message.blocked != null && Object.hasOwnProperty.call(message, "blocked"))
+                        $root.google.protobuf.BoolValue.encode(message.blocked, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
                     if (message.groupIndex != null && Object.hasOwnProperty.call(message, "groupIndex"))
                         $root.google.protobuf.Int32Value.encode(message.groupIndex, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
@@ -11658,25 +11658,25 @@ $root.im = (function() {
                 };
 
                 /**
-                 * Decodes a QueryRelatedUsersIdsRequest message from the specified reader or buffer.
+                 * Decodes a QueryRelatedUserIdsRequest message from the specified reader or buffer.
                  * @function decode
-                 * @memberof im.turms.proto.QueryRelatedUsersIdsRequest
+                 * @memberof im.turms.proto.QueryRelatedUserIdsRequest
                  * @static
                  * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
                  * @param {number} [length] Message length if known beforehand
-                 * @returns {im.turms.proto.QueryRelatedUsersIdsRequest} QueryRelatedUsersIdsRequest
+                 * @returns {im.turms.proto.QueryRelatedUserIdsRequest} QueryRelatedUserIdsRequest
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                QueryRelatedUsersIdsRequest.decode = function decode(reader, length) {
+                QueryRelatedUserIdsRequest.decode = function decode(reader, length) {
                     if (!(reader instanceof $Reader))
                         reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.QueryRelatedUsersIdsRequest();
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.QueryRelatedUserIdsRequest();
                     while (reader.pos < end) {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.isBlocked = $root.google.protobuf.BoolValue.decode(reader, reader.uint32());
+                            message.blocked = $root.google.protobuf.BoolValue.decode(reader, reader.uint32());
                             break;
                         case 2:
                             message.groupIndex = $root.google.protobuf.Int32Value.decode(reader, reader.uint32());
@@ -11692,7 +11692,7 @@ $root.im = (function() {
                     return message;
                 };
 
-                return QueryRelatedUsersIdsRequest;
+                return QueryRelatedUserIdsRequest;
             })();
 
             proto.QueryRelationshipGroupsRequest = (function() {
@@ -11782,8 +11782,8 @@ $root.im = (function() {
                  * Properties of a QueryRelationshipsRequest.
                  * @memberof im.turms.proto
                  * @interface IQueryRelationshipsRequest
-                 * @property {Array.<string>|null} [relatedUsersIds] QueryRelationshipsRequest relatedUsersIds
-                 * @property {google.protobuf.IBoolValue|null} [isBlocked] QueryRelationshipsRequest isBlocked
+                 * @property {Array.<string>|null} [userIds] QueryRelationshipsRequest userIds
+                 * @property {google.protobuf.IBoolValue|null} [blocked] QueryRelationshipsRequest blocked
                  * @property {google.protobuf.IInt32Value|null} [groupIndex] QueryRelationshipsRequest groupIndex
                  * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryRelationshipsRequest lastUpdatedDate
                  */
@@ -11797,7 +11797,7 @@ $root.im = (function() {
                  * @param {im.turms.proto.IQueryRelationshipsRequest=} [properties] Properties to set
                  */
                 function QueryRelationshipsRequest(properties) {
-                    this.relatedUsersIds = [];
+                    this.userIds = [];
                     if (properties)
                         for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                             if (properties[keys[i]] != null)
@@ -11805,20 +11805,20 @@ $root.im = (function() {
                 }
 
                 /**
-                 * QueryRelationshipsRequest relatedUsersIds.
-                 * @member {Array.<string>} relatedUsersIds
+                 * QueryRelationshipsRequest userIds.
+                 * @member {Array.<string>} userIds
                  * @memberof im.turms.proto.QueryRelationshipsRequest
                  * @instance
                  */
-                QueryRelationshipsRequest.prototype.relatedUsersIds = $util.emptyArray;
+                QueryRelationshipsRequest.prototype.userIds = $util.emptyArray;
 
                 /**
-                 * QueryRelationshipsRequest isBlocked.
-                 * @member {google.protobuf.IBoolValue|null|undefined} isBlocked
+                 * QueryRelationshipsRequest blocked.
+                 * @member {google.protobuf.IBoolValue|null|undefined} blocked
                  * @memberof im.turms.proto.QueryRelationshipsRequest
                  * @instance
                  */
-                QueryRelationshipsRequest.prototype.isBlocked = null;
+                QueryRelationshipsRequest.prototype.blocked = null;
 
                 /**
                  * QueryRelationshipsRequest groupIndex.
@@ -11848,14 +11848,14 @@ $root.im = (function() {
                 QueryRelationshipsRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.relatedUsersIds != null && message.relatedUsersIds.length) {
+                    if (message.userIds != null && message.userIds.length) {
                         writer.uint32(/* id 1, wireType 2 =*/10).fork();
-                        for (var i = 0; i < message.relatedUsersIds.length; ++i)
-                            writer.int64(message.relatedUsersIds[i]);
+                        for (var i = 0; i < message.userIds.length; ++i)
+                            writer.int64(message.userIds[i]);
                         writer.ldelim();
                     }
-                    if (message.isBlocked != null && Object.hasOwnProperty.call(message, "isBlocked"))
-                        $root.google.protobuf.BoolValue.encode(message.isBlocked, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                    if (message.blocked != null && Object.hasOwnProperty.call(message, "blocked"))
+                        $root.google.protobuf.BoolValue.encode(message.blocked, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     if (message.groupIndex != null && Object.hasOwnProperty.call(message, "groupIndex"))
                         $root.google.protobuf.Int32Value.encode(message.groupIndex, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                     if (message.lastUpdatedDate != null && Object.hasOwnProperty.call(message, "lastUpdatedDate"))
@@ -11882,17 +11882,17 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            if (!(message.relatedUsersIds && message.relatedUsersIds.length))
-                                message.relatedUsersIds = [];
+                            if (!(message.userIds && message.userIds.length))
+                                message.userIds = [];
                             if ((tag & 7) === 2) {
                                 var end2 = reader.uint32() + reader.pos;
                                 while (reader.pos < end2)
-                                    message.relatedUsersIds.push(reader.int64().toString());
+                                    message.userIds.push(reader.int64().toString());
                             } else
-                                message.relatedUsersIds.push(reader.int64().toString());
+                                message.userIds.push(reader.int64().toString());
                             break;
                         case 2:
-                            message.isBlocked = $root.google.protobuf.BoolValue.decode(reader, reader.uint32());
+                            message.blocked = $root.google.protobuf.BoolValue.decode(reader, reader.uint32());
                             break;
                         case 3:
                             message.groupIndex = $root.google.protobuf.Int32Value.decode(reader, reader.uint32());
@@ -12121,7 +12121,7 @@ $root.im = (function() {
                  * Properties of an UpdateRelationshipRequest.
                  * @memberof im.turms.proto
                  * @interface IUpdateRelationshipRequest
-                 * @property {string|null} [relatedUserId] UpdateRelationshipRequest relatedUserId
+                 * @property {string|null} [userId] UpdateRelationshipRequest userId
                  * @property {google.protobuf.IBoolValue|null} [blocked] UpdateRelationshipRequest blocked
                  * @property {google.protobuf.IInt32Value|null} [newGroupIndex] UpdateRelationshipRequest newGroupIndex
                  * @property {google.protobuf.IInt32Value|null} [deleteGroupIndex] UpdateRelationshipRequest deleteGroupIndex
@@ -12143,12 +12143,12 @@ $root.im = (function() {
                 }
 
                 /**
-                 * UpdateRelationshipRequest relatedUserId.
-                 * @member {string} relatedUserId
+                 * UpdateRelationshipRequest userId.
+                 * @member {string} userId
                  * @memberof im.turms.proto.UpdateRelationshipRequest
                  * @instance
                  */
-                UpdateRelationshipRequest.prototype.relatedUserId = "0";
+                UpdateRelationshipRequest.prototype.userId = "0";
 
                 /**
                  * UpdateRelationshipRequest blocked.
@@ -12186,8 +12186,8 @@ $root.im = (function() {
                 UpdateRelationshipRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
-                    if (message.relatedUserId != null && Object.hasOwnProperty.call(message, "relatedUserId"))
-                        writer.uint32(/* id 1, wireType 0 =*/8).int64(message.relatedUserId);
+                    if (message.userId != null && Object.hasOwnProperty.call(message, "userId"))
+                        writer.uint32(/* id 1, wireType 0 =*/8).int64(message.userId);
                     if (message.blocked != null && Object.hasOwnProperty.call(message, "blocked"))
                         $root.google.protobuf.BoolValue.encode(message.blocked, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     if (message.newGroupIndex != null && Object.hasOwnProperty.call(message, "newGroupIndex"))
@@ -12216,7 +12216,7 @@ $root.im = (function() {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
                         case 1:
-                            message.relatedUserId = reader.int64().toString();
+                            message.userId = reader.int64().toString();
                             break;
                         case 2:
                             message.blocked = $root.google.protobuf.BoolValue.decode(reader, reader.uint32());

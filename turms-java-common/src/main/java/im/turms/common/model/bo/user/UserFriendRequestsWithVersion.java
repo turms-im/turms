@@ -137,7 +137,7 @@ private static final long serialVersionUID = 0L;
    * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
    */
   @java.lang.Override
-  public java.util.List<? extends im.turms.common.model.bo.user.UserFriendRequestOrBuilder> 
+  public java.util.List<? extends im.turms.common.model.bo.user.UserFriendRequestOrBuilder>
       getUserFriendRequestsOrBuilderList() {
     return userFriendRequests_;
   }
@@ -521,7 +521,7 @@ private static final long serialVersionUID = 0L;
             userFriendRequestsBuilder_ = null;
             userFriendRequests_ = other.userFriendRequests_;
             bitField0_ = (bitField0_ & ~0x00000001);
-            userFriendRequestsBuilder_ = 
+            userFriendRequestsBuilder_ =
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                  getUserFriendRequestsFieldBuilder() : null;
           } else {
@@ -757,7 +757,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
      */
-    public java.util.List<? extends im.turms.common.model.bo.user.UserFriendRequestOrBuilder> 
+    public java.util.List<? extends im.turms.common.model.bo.user.UserFriendRequestOrBuilder>
          getUserFriendRequestsOrBuilderList() {
       if (userFriendRequestsBuilder_ != null) {
         return userFriendRequestsBuilder_.getMessageOrBuilderList();
@@ -783,12 +783,12 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserFriendRequest user_friend_requests = 1;</code>
      */
-    public java.util.List<im.turms.common.model.bo.user.UserFriendRequest.Builder> 
+    public java.util.List<im.turms.common.model.bo.user.UserFriendRequest.Builder>
          getUserFriendRequestsBuilderList() {
       return getUserFriendRequestsFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        im.turms.common.model.bo.user.UserFriendRequest, im.turms.common.model.bo.user.UserFriendRequest.Builder, im.turms.common.model.bo.user.UserFriendRequestOrBuilder> 
+        im.turms.common.model.bo.user.UserFriendRequest, im.turms.common.model.bo.user.UserFriendRequest.Builder, im.turms.common.model.bo.user.UserFriendRequestOrBuilder>
         getUserFriendRequestsFieldBuilder() {
       if (userFriendRequestsBuilder_ == null) {
         userFriendRequestsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
@@ -889,7 +889,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
      */
     public com.google.protobuf.Int64Value.Builder getLastUpdatedDateBuilder() {
-      
+
       onChanged();
       return getLastUpdatedDateFieldBuilder().getBuilder();
     }
@@ -908,7 +908,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> 
+        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
         getLastUpdatedDateFieldBuilder() {
       if (lastUpdatedDateBuilder_ == null) {
         lastUpdatedDateBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<

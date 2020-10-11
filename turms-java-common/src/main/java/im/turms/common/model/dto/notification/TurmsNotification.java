@@ -2495,7 +2495,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.Int64Values ids = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.common.Int64Values, im.turms.common.model.bo.common.Int64Values.Builder, im.turms.common.model.bo.common.Int64ValuesOrBuilder> 
+          im.turms.common.model.bo.common.Int64Values, im.turms.common.model.bo.common.Int64Values.Builder, im.turms.common.model.bo.common.Int64ValuesOrBuilder>
           getIdsFieldBuilder() {
         if (idsBuilder_ == null) {
           if (!(kindCase_ == 1)) {
@@ -2636,7 +2636,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.Int64ValuesWithVersion ids_with_version = 2;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.common.Int64ValuesWithVersion, im.turms.common.model.bo.common.Int64ValuesWithVersion.Builder, im.turms.common.model.bo.common.Int64ValuesWithVersionOrBuilder> 
+          im.turms.common.model.bo.common.Int64ValuesWithVersion, im.turms.common.model.bo.common.Int64ValuesWithVersion.Builder, im.turms.common.model.bo.common.Int64ValuesWithVersionOrBuilder>
           getIdsWithVersionFieldBuilder() {
         if (idsWithVersionBuilder_ == null) {
           if (!(kindCase_ == 2)) {
@@ -2777,7 +2777,7 @@ private static final long serialVersionUID = 0L;
        * <code>.google.protobuf.StringValue url = 3;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> 
+          com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>
           getUrlFieldBuilder() {
         if (urlBuilder_ == null) {
           if (!(kindCase_ == 3)) {
@@ -2918,7 +2918,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.Acknowledge acknowledge = 4;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.signal.Acknowledge, im.turms.common.model.bo.signal.Acknowledge.Builder, im.turms.common.model.bo.signal.AcknowledgeOrBuilder> 
+          im.turms.common.model.bo.signal.Acknowledge, im.turms.common.model.bo.signal.Acknowledge.Builder, im.turms.common.model.bo.signal.AcknowledgeOrBuilder>
           getAcknowledgeFieldBuilder() {
         if (acknowledgeBuilder_ == null) {
           if (!(kindCase_ == 4)) {
@@ -3059,7 +3059,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.Session session = 5;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.signal.Session, im.turms.common.model.bo.signal.Session.Builder, im.turms.common.model.bo.signal.SessionOrBuilder> 
+          im.turms.common.model.bo.signal.Session, im.turms.common.model.bo.signal.Session.Builder, im.turms.common.model.bo.signal.SessionOrBuilder>
           getSessionFieldBuilder() {
         if (sessionBuilder_ == null) {
           if (!(kindCase_ == 5)) {
@@ -3200,7 +3200,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.Messages messages = 6;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.message.Messages, im.turms.common.model.bo.message.Messages.Builder, im.turms.common.model.bo.message.MessagesOrBuilder> 
+          im.turms.common.model.bo.message.Messages, im.turms.common.model.bo.message.Messages.Builder, im.turms.common.model.bo.message.MessagesOrBuilder>
           getMessagesFieldBuilder() {
         if (messagesBuilder_ == null) {
           if (!(kindCase_ == 6)) {
@@ -3341,7 +3341,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.MessageStatuses message_statuses = 7;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.message.MessageStatuses, im.turms.common.model.bo.message.MessageStatuses.Builder, im.turms.common.model.bo.message.MessageStatusesOrBuilder> 
+          im.turms.common.model.bo.message.MessageStatuses, im.turms.common.model.bo.message.MessageStatuses.Builder, im.turms.common.model.bo.message.MessageStatusesOrBuilder>
           getMessageStatusesFieldBuilder() {
         if (messageStatusesBuilder_ == null) {
           if (!(kindCase_ == 7)) {
@@ -3482,7 +3482,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.MessagesWithTotalList messages_with_total_list = 8;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.message.MessagesWithTotalList, im.turms.common.model.bo.message.MessagesWithTotalList.Builder, im.turms.common.model.bo.message.MessagesWithTotalListOrBuilder> 
+          im.turms.common.model.bo.message.MessagesWithTotalList, im.turms.common.model.bo.message.MessagesWithTotalList.Builder, im.turms.common.model.bo.message.MessagesWithTotalListOrBuilder>
           getMessagesWithTotalListFieldBuilder() {
         if (messagesWithTotalListBuilder_ == null) {
           if (!(kindCase_ == 8)) {
@@ -3623,7 +3623,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.UsersInfosWithVersion users_infos_with_version = 9;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.user.UsersInfosWithVersion, im.turms.common.model.bo.user.UsersInfosWithVersion.Builder, im.turms.common.model.bo.user.UsersInfosWithVersionOrBuilder> 
+          im.turms.common.model.bo.user.UsersInfosWithVersion, im.turms.common.model.bo.user.UsersInfosWithVersion.Builder, im.turms.common.model.bo.user.UsersInfosWithVersionOrBuilder>
           getUsersInfosWithVersionFieldBuilder() {
         if (usersInfosWithVersionBuilder_ == null) {
           if (!(kindCase_ == 9)) {
@@ -3764,7 +3764,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.UsersOnlineStatuses users_online_statuses = 10;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.user.UsersOnlineStatuses, im.turms.common.model.bo.user.UsersOnlineStatuses.Builder, im.turms.common.model.bo.user.UsersOnlineStatusesOrBuilder> 
+          im.turms.common.model.bo.user.UsersOnlineStatuses, im.turms.common.model.bo.user.UsersOnlineStatuses.Builder, im.turms.common.model.bo.user.UsersOnlineStatusesOrBuilder>
           getUsersOnlineStatusesFieldBuilder() {
         if (usersOnlineStatusesBuilder_ == null) {
           if (!(kindCase_ == 10)) {
@@ -3905,7 +3905,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.UserFriendRequestsWithVersion user_friend_requests_with_version = 11;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.user.UserFriendRequestsWithVersion, im.turms.common.model.bo.user.UserFriendRequestsWithVersion.Builder, im.turms.common.model.bo.user.UserFriendRequestsWithVersionOrBuilder> 
+          im.turms.common.model.bo.user.UserFriendRequestsWithVersion, im.turms.common.model.bo.user.UserFriendRequestsWithVersion.Builder, im.turms.common.model.bo.user.UserFriendRequestsWithVersionOrBuilder>
           getUserFriendRequestsWithVersionFieldBuilder() {
         if (userFriendRequestsWithVersionBuilder_ == null) {
           if (!(kindCase_ == 11)) {
@@ -4046,7 +4046,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.UserRelationshipGroupsWithVersion user_relationship_groups_with_version = 12;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.user.UserRelationshipGroupsWithVersion, im.turms.common.model.bo.user.UserRelationshipGroupsWithVersion.Builder, im.turms.common.model.bo.user.UserRelationshipGroupsWithVersionOrBuilder> 
+          im.turms.common.model.bo.user.UserRelationshipGroupsWithVersion, im.turms.common.model.bo.user.UserRelationshipGroupsWithVersion.Builder, im.turms.common.model.bo.user.UserRelationshipGroupsWithVersionOrBuilder>
           getUserRelationshipGroupsWithVersionFieldBuilder() {
         if (userRelationshipGroupsWithVersionBuilder_ == null) {
           if (!(kindCase_ == 12)) {
@@ -4187,7 +4187,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.UserRelationshipsWithVersion user_relationships_with_version = 13;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.user.UserRelationshipsWithVersion, im.turms.common.model.bo.user.UserRelationshipsWithVersion.Builder, im.turms.common.model.bo.user.UserRelationshipsWithVersionOrBuilder> 
+          im.turms.common.model.bo.user.UserRelationshipsWithVersion, im.turms.common.model.bo.user.UserRelationshipsWithVersion.Builder, im.turms.common.model.bo.user.UserRelationshipsWithVersionOrBuilder>
           getUserRelationshipsWithVersionFieldBuilder() {
         if (userRelationshipsWithVersionBuilder_ == null) {
           if (!(kindCase_ == 13)) {
@@ -4328,7 +4328,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.UserSessionIds user_session_ids = 14;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.user.UserSessionIds, im.turms.common.model.bo.user.UserSessionIds.Builder, im.turms.common.model.bo.user.UserSessionIdsOrBuilder> 
+          im.turms.common.model.bo.user.UserSessionIds, im.turms.common.model.bo.user.UserSessionIds.Builder, im.turms.common.model.bo.user.UserSessionIdsOrBuilder>
           getUserSessionIdsFieldBuilder() {
         if (userSessionIdsBuilder_ == null) {
           if (!(kindCase_ == 14)) {
@@ -4469,7 +4469,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 15;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.group.GroupInvitationsWithVersion, im.turms.common.model.bo.group.GroupInvitationsWithVersion.Builder, im.turms.common.model.bo.group.GroupInvitationsWithVersionOrBuilder> 
+          im.turms.common.model.bo.group.GroupInvitationsWithVersion, im.turms.common.model.bo.group.GroupInvitationsWithVersion.Builder, im.turms.common.model.bo.group.GroupInvitationsWithVersionOrBuilder>
           getGroupInvitationsWithVersionFieldBuilder() {
         if (groupInvitationsWithVersionBuilder_ == null) {
           if (!(kindCase_ == 15)) {
@@ -4610,7 +4610,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.GroupJoinQuestionsAnswerResult group_join_question_answer_result = 16;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult, im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult.Builder, im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResultOrBuilder> 
+          im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult, im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult.Builder, im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResultOrBuilder>
           getGroupJoinQuestionAnswerResultFieldBuilder() {
         if (groupJoinQuestionAnswerResultBuilder_ == null) {
           if (!(kindCase_ == 16)) {
@@ -4751,7 +4751,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.GroupJoinRequestsWithVersion group_join_requests_with_version = 17;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.group.GroupJoinRequestsWithVersion, im.turms.common.model.bo.group.GroupJoinRequestsWithVersion.Builder, im.turms.common.model.bo.group.GroupJoinRequestsWithVersionOrBuilder> 
+          im.turms.common.model.bo.group.GroupJoinRequestsWithVersion, im.turms.common.model.bo.group.GroupJoinRequestsWithVersion.Builder, im.turms.common.model.bo.group.GroupJoinRequestsWithVersionOrBuilder>
           getGroupJoinRequestsWithVersionFieldBuilder() {
         if (groupJoinRequestsWithVersionBuilder_ == null) {
           if (!(kindCase_ == 17)) {
@@ -4892,7 +4892,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.GroupJoinQuestionsWithVersion group_join_questions_with_version = 18;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion, im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion.Builder, im.turms.common.model.bo.group.GroupJoinQuestionsWithVersionOrBuilder> 
+          im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion, im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion.Builder, im.turms.common.model.bo.group.GroupJoinQuestionsWithVersionOrBuilder>
           getGroupJoinQuestionsWithVersionFieldBuilder() {
         if (groupJoinQuestionsWithVersionBuilder_ == null) {
           if (!(kindCase_ == 18)) {
@@ -5033,7 +5033,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.GroupMembersWithVersion group_members_with_version = 19;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.group.GroupMembersWithVersion, im.turms.common.model.bo.group.GroupMembersWithVersion.Builder, im.turms.common.model.bo.group.GroupMembersWithVersionOrBuilder> 
+          im.turms.common.model.bo.group.GroupMembersWithVersion, im.turms.common.model.bo.group.GroupMembersWithVersion.Builder, im.turms.common.model.bo.group.GroupMembersWithVersionOrBuilder>
           getGroupMembersWithVersionFieldBuilder() {
         if (groupMembersWithVersionBuilder_ == null) {
           if (!(kindCase_ == 19)) {
@@ -5174,7 +5174,7 @@ private static final long serialVersionUID = 0L;
        * <code>.im.turms.proto.GroupsWithVersion groups_with_version = 20;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.group.GroupsWithVersion, im.turms.common.model.bo.group.GroupsWithVersion.Builder, im.turms.common.model.bo.group.GroupsWithVersionOrBuilder> 
+          im.turms.common.model.bo.group.GroupsWithVersion, im.turms.common.model.bo.group.GroupsWithVersion.Builder, im.turms.common.model.bo.group.GroupsWithVersionOrBuilder>
           getGroupsWithVersionFieldBuilder() {
         if (groupsWithVersionBuilder_ == null) {
           if (!(kindCase_ == 20)) {
@@ -6020,7 +6020,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value request_id = 1;</code>
      */
     public com.google.protobuf.Int64Value.Builder getRequestIdBuilder() {
-      
+
       onChanged();
       return getRequestIdFieldBuilder().getBuilder();
     }
@@ -6049,7 +6049,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value request_id = 1;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> 
+        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
         getRequestIdFieldBuilder() {
       if (requestIdBuilder_ == null) {
         requestIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -6149,7 +6149,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int32Value code = 2;</code>
      */
     public com.google.protobuf.Int32Value.Builder getCodeBuilder() {
-      
+
       onChanged();
       return getCodeFieldBuilder().getBuilder();
     }
@@ -6168,7 +6168,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int32Value code = 2;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder> 
+        com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder>
         getCodeFieldBuilder() {
       if (codeBuilder_ == null) {
         codeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -6268,7 +6268,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.StringValue reason = 3;</code>
      */
     public com.google.protobuf.StringValue.Builder getReasonBuilder() {
-      
+
       onChanged();
       return getReasonFieldBuilder().getBuilder();
     }
@@ -6287,7 +6287,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.StringValue reason = 3;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> 
+        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>
         getReasonFieldBuilder() {
       if (reasonBuilder_ == null) {
         reasonBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -6387,7 +6387,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.TurmsNotification.Data data = 4;</code>
      */
     public im.turms.common.model.dto.notification.TurmsNotification.Data.Builder getDataBuilder() {
-      
+
       onChanged();
       return getDataFieldBuilder().getBuilder();
     }
@@ -6406,7 +6406,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.TurmsNotification.Data data = 4;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.notification.TurmsNotification.Data, im.turms.common.model.dto.notification.TurmsNotification.Data.Builder, im.turms.common.model.dto.notification.TurmsNotification.DataOrBuilder> 
+        im.turms.common.model.dto.notification.TurmsNotification.Data, im.turms.common.model.dto.notification.TurmsNotification.Data.Builder, im.turms.common.model.dto.notification.TurmsNotification.DataOrBuilder>
         getDataFieldBuilder() {
       if (dataBuilder_ == null) {
         dataBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -6506,7 +6506,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.TurmsRequest relayed_request = 5;</code>
      */
     public im.turms.common.model.dto.request.TurmsRequest.Builder getRelayedRequestBuilder() {
-      
+
       onChanged();
       return getRelayedRequestFieldBuilder().getBuilder();
     }
@@ -6525,7 +6525,7 @@ private static final long serialVersionUID = 0L;
      * <code>.im.turms.proto.TurmsRequest relayed_request = 5;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.TurmsRequest, im.turms.common.model.dto.request.TurmsRequest.Builder, im.turms.common.model.dto.request.TurmsRequestOrBuilder> 
+        im.turms.common.model.dto.request.TurmsRequest, im.turms.common.model.dto.request.TurmsRequest.Builder, im.turms.common.model.dto.request.TurmsRequestOrBuilder>
         getRelayedRequestFieldBuilder() {
       if (relayedRequestBuilder_ == null) {
         relayedRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -6667,7 +6667,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value requester_id = 6;</code>
      */
     public com.google.protobuf.Int64Value.Builder getRequesterIdBuilder() {
-      
+
       onChanged();
       return getRequesterIdFieldBuilder().getBuilder();
     }
@@ -6698,7 +6698,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int64Value requester_id = 6;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> 
+        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
         getRequesterIdFieldBuilder() {
       if (requesterIdBuilder_ == null) {
         requesterIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<

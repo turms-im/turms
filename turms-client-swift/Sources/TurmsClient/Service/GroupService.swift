@@ -107,19 +107,19 @@ public class GroupService {
             .map { try GroupWithVersion.from($0) }
     }
 
-    public func queryJoinedGroupsIds(_ lastUpdatedDate: Date? = nil) -> Promise<Int64ValuesWithVersion?> {
+    public func queryJoinedGroupIds(_ lastUpdatedDate: Date? = nil) -> Promise<Int64ValuesWithVersion?> {
         return turmsClient.driver
             .send { $0
-                .request("queryJoinedGroupsIdsRequest")
+                .request("queryJoinedGroupIdsRequest")
                 .field("lastUpdatedDate", lastUpdatedDate)
             }
             .map { try $0.data.kind?.getKindData(Int64ValuesWithVersion.self) }
     }
 
-    public func queryJoinedGroupsInfos(_ lastUpdatedDate: Date? = nil) -> Promise<GroupsWithVersion?> {
+    public func queryJoinedGroupInfos(_ lastUpdatedDate: Date? = nil) -> Promise<GroupsWithVersion?> {
         return turmsClient.driver
             .send { $0
-                .request("queryJoinedGroupsInfosRequest")
+                .request("queryJoinedGroupInfosRequest")
                 .field("lastUpdatedDate", lastUpdatedDate)
             }
             .map { try $0.data.kind?.getKindData(GroupsWithVersion.self) }
@@ -166,7 +166,7 @@ public class GroupService {
         return turmsClient.driver
             .send { $0
                 .request("createGroupBlacklistedUserRequest")
-                .field("blacklistedUserId", userId)
+                .field("userId", userId)
                 .field("groupId", groupId)
             }
             .asVoid()
@@ -177,29 +177,29 @@ public class GroupService {
             .send { $0
                 .request("deleteGroupBlacklistedUserRequest")
                 .field("groupId", groupId)
-                .field("unblacklistedUserId", userId)
+                .field("userId", userId)
             }
             .asVoid()
     }
 
-    public func queryBlacklistedUsersIds(
+    public func queryBlacklistedUserIds(
         groupId: Int64,
         lastUpdatedDate: Date? = nil) -> Promise<Int64ValuesWithVersion?> {
         return turmsClient.driver
             .send { $0
-                .request("queryGroupBlacklistedUsersIdsRequest")
+                .request("queryGroupBlacklistedUserIdsRequest")
                 .field("groupId", groupId)
                 .field("lastUpdatedDate", lastUpdatedDate)
             }
             .map { try $0.data.kind?.getKindData(Int64ValuesWithVersion.self) }
     }
 
-    public func queryBlacklistedUsersInfos(
+    public func queryBlacklistedUserInfos(
         groupId: Int64,
         lastUpdatedDate: Date? = nil) -> Promise<UsersInfosWithVersion?> {
         return turmsClient.driver
             .send { $0
-                .request("queryGroupBlacklistedUsersInfosRequest")
+                .request("queryGroupBlacklistedUserInfosRequest")
                 .field("groupId", groupId)
                 .field("lastUpdatedDate", lastUpdatedDate)
             }
@@ -349,7 +349,7 @@ public class GroupService {
             .send { $0
                 .request("deleteGroupMemberRequest")
                 .field("groupId", groupId)
-                .field("groupMemberId", turmsClient.userService.userId)
+                .field("memberId", turmsClient.userService.userId)
                 .field("successorId", successorId)
                 .field("quitAfterTransfer", quitAfterTransfer)
             }
@@ -361,7 +361,7 @@ public class GroupService {
             .send { $0
                 .request("deleteGroupMemberRequest")
                 .field("groupId", groupId)
-                .field("groupMemberId", memberId)
+                .field("memberId", memberId)
             }
             .asVoid()
     }
@@ -412,12 +412,12 @@ public class GroupService {
             .map { try $0.data.kind?.getKindData(GroupMembersWithVersion.self) }
     }
 
-    public func queryGroupMembersByMembersIds(groupId: Int64, membersIds: [Int64], withStatus: Bool = false) -> Promise<GroupMembersWithVersion?> {
+    public func queryGroupMembersByMemberIds(groupId: Int64, memberIds: [Int64], withStatus: Bool = false) -> Promise<GroupMembersWithVersion?> {
         return turmsClient.driver
             .send { $0
                 .request("queryGroupMembersRequest")
                 .field("groupId", groupId)
-                .field("groupMembersIds", membersIds)
+                .field("memberIds", memberIds)
                 .field("withStatus", withStatus)
             }
             .map { try $0.data.kind?.getKindData(GroupMembersWithVersion.self) }

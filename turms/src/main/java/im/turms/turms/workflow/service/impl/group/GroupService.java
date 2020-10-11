@@ -521,7 +521,7 @@ public class GroupService {
         return mongoTemplate.find(query, Group.class, Group.COLLECTION_NAME);
     }
 
-    public Flux<Long> queryJoinedGroupsIds(@NotNull Long memberId) {
+    public Flux<Long> queryJoinedGroupIds(@NotNull Long memberId) {
         try {
             AssertUtil.notNull(memberId, "memberId");
         } catch (TurmsBusinessException e) {
@@ -535,21 +535,21 @@ public class GroupService {
     }
 
     public Flux<Group> queryJoinedGroups(@NotNull Long memberId) {
-        return queryJoinedGroupsIds(memberId)
+        return queryJoinedGroupIds(memberId)
                 .collectList()
                 .flatMapMany(groupIds -> groupIds.isEmpty()
                         ? Flux.empty()
                         : this.queryGroups(groupIds));
     }
 
-    public Mono<Int64ValuesWithVersion> queryJoinedGroupsIdsWithVersion(
+    public Mono<Int64ValuesWithVersion> queryJoinedGroupIdsWithVersion(
             @NotNull Long memberId,
             @Nullable Date lastUpdatedDate) {
         return userVersionService
                 .queryJoinedGroupVersion(memberId)
                 .flatMap(version -> {
                     if (lastUpdatedDate == null || lastUpdatedDate.before(version)) {
-                        return queryJoinedGroupsIds(memberId)
+                        return queryJoinedGroupIds(memberId)
                                 .collectList()
                                 .map(ids -> {
                                     if (ids.isEmpty()) {

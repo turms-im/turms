@@ -69,14 +69,14 @@ class UserServiceTests: XCTestCase {
         // Query
 
         TestUtil.assertCompleted("queryUserProfile_shouldReturnUserInfoWithVersion", turmsClient.userService.queryUserProfile(userId: 1))
-        TestUtil.assertCompleted("queryUserIdsNearby_shouldReturnUsersIds", turmsClient.userService.queryUserIdsNearby(latitude: 1, longitude: 1))
-        TestUtil.assertCompleted("queryUserSessionIdsNearby_shouldReturnUsersIds", turmsClient.userService.queryUserSessionIdsNearby(latitude: 1, longitude: 1))
-        TestUtil.assertCompleted("queryUsersInfosNearby_shouldReturnUsersInfos", turmsClient.userService.queryUsersInfosNearby(latitude: 1, longitude: 1))
-        TestUtil.assertCompleted("queryUsersOnlineStatusRequest_shouldUsersOnlineStatus", turmsClient.userService.queryUsersOnlineStatusRequest([1]).done {
+        TestUtil.assertCompleted("queryUserIdsNearby_shouldReturnUserIds", turmsClient.userService.queryUserIdsNearby(latitude: 1, longitude: 1))
+        TestUtil.assertCompleted("queryUserSessionIdsNearby_shouldReturnUserIds", turmsClient.userService.queryUserSessionIdsNearby(latitude: 1, longitude: 1))
+        TestUtil.assertCompleted("queryUserInfosNearby_shouldReturnUsersInfos", turmsClient.userService.queryUserInfosNearby(latitude: 1, longitude: 1))
+        TestUtil.assertCompleted("queryUserOnlineStatusesRequest_shouldUsersOnlineStatus", turmsClient.userService.queryUserOnlineStatusesRequest([1]).done {
             XCTAssertEqual($0[0].userStatus, userStatus)
         })
-        TestUtil.assertCompleted("queryRelationships_shouldReturnUserRelationshipsWithVersion", turmsClient.userService.queryRelationships(relatedUsersIds: [2]))
-        TestUtil.assertCompleted("queryRelatedUsersIds_shouldReturnRelatedUsersIds", turmsClient.userService.queryRelatedUsersIds())
+        TestUtil.assertCompleted("queryRelationships_shouldReturnUserRelationshipsWithVersion", turmsClient.userService.queryRelationships(relatedUserIds: [2]))
+        TestUtil.assertCompleted("queryRelatedUserIds_shouldReturnRelatedUserIds", turmsClient.userService.queryRelatedUserIds())
         TestUtil.assertCompleted("queryFriends_shouldReturnFriendRelationships", turmsClient.userService.queryFriends())
         TestUtil.assertCompleted("queryBlacklistedUsers_shouldReturnBlacklist", turmsClient.userService.queryBlacklistedUsers())
         TestUtil.assertCompleted("queryFriendRequests_shouldReturnFriendRequests", turmsClient.userService.queryFriendRequests(true))

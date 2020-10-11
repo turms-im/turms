@@ -33,7 +33,7 @@ public final class DeleteGroupBlacklistedUserRequestOuterClass {
   }
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_im_turms_proto_DeleteGroupBlacklistedUserRequest_descriptor;
-  static final 
+  static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_im_turms_proto_DeleteGroupBlacklistedUserRequest_fieldAccessorTable;
 
@@ -47,10 +47,10 @@ public final class DeleteGroupBlacklistedUserRequestOuterClass {
     java.lang.String[] descriptorData = {
       "\nCrequest/group/blacklist/delete_group_b" +
       "lacklisted_user_request.proto\022\016im.turms." +
-      "proto\"T\n!DeleteGroupBlacklistedUserReque" +
-      "st\022\020\n\010group_id\030\001 \001(\003\022\035\n\025unblacklisted_us" +
-      "er_id\030\002 \001(\003B8\n1im.turms.common.model.dto" +
-      ".request.group.blacklistP\001\272\002\000b\006proto3"
+      "proto\"F\n!DeleteGroupBlacklistedUserReque" +
+      "st\022\020\n\010group_id\030\001 \001(\003\022\017\n\007user_id\030\002 \001(\003B8\n" +
+      "1im.turms.common.model.dto.request.group" +
+      ".blacklistP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -61,7 +61,7 @@ public final class DeleteGroupBlacklistedUserRequestOuterClass {
     internal_static_im_turms_proto_DeleteGroupBlacklistedUserRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_DeleteGroupBlacklistedUserRequest_descriptor,
-        new java.lang.String[] { "GroupId", "UnblacklistedUserId", });
+        new java.lang.String[] { "GroupId", "UserId", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

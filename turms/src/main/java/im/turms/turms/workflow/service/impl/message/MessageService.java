@@ -398,12 +398,12 @@ public class MessageService {
                         .collect(Collectors.toSet());
             }
             return memberIdsMono
-                    .flatMap(membersIds -> {
-                        if (membersIds.isEmpty()) {
+                    .flatMap(memberIds -> {
+                        if (memberIds.isEmpty()) {
                             return Mono.just(true);
                         } else {
-                            List<MessageStatus> messageStatuses = new ArrayList<>(membersIds.size());
-                            for (Long memberId : membersIds) {
+                            List<MessageStatus> messageStatuses = new ArrayList<>(memberIds.size());
+                            for (Long memberId : memberIds) {
                                 messageStatuses.add(new MessageStatus(
                                         messageId,
                                         targetId,

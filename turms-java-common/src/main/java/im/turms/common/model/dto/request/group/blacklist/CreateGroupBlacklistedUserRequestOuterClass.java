@@ -33,7 +33,7 @@ public final class CreateGroupBlacklistedUserRequestOuterClass {
   }
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_im_turms_proto_CreateGroupBlacklistedUserRequest_descriptor;
-  static final 
+  static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_im_turms_proto_CreateGroupBlacklistedUserRequest_fieldAccessorTable;
 
@@ -47,10 +47,10 @@ public final class CreateGroupBlacklistedUserRequestOuterClass {
     java.lang.String[] descriptorData = {
       "\nCrequest/group/blacklist/create_group_b" +
       "lacklisted_user_request.proto\022\016im.turms." +
-      "proto\"R\n!CreateGroupBlacklistedUserReque" +
-      "st\022\020\n\010group_id\030\001 \001(\003\022\033\n\023blacklisted_user" +
-      "_id\030\002 \001(\003B8\n1im.turms.common.model.dto.r" +
-      "equest.group.blacklistP\001\272\002\000b\006proto3"
+      "proto\"F\n!CreateGroupBlacklistedUserReque" +
+      "st\022\020\n\010group_id\030\001 \001(\003\022\017\n\007user_id\030\002 \001(\003B8\n" +
+      "1im.turms.common.model.dto.request.group" +
+      ".blacklistP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -61,7 +61,7 @@ public final class CreateGroupBlacklistedUserRequestOuterClass {
     internal_static_im_turms_proto_CreateGroupBlacklistedUserRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_CreateGroupBlacklistedUserRequest_descriptor,
-        new java.lang.String[] { "GroupId", "BlacklistedUserId", });
+        new java.lang.String[] { "GroupId", "UserId", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

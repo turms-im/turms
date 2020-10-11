@@ -163,7 +163,7 @@ public class GroupBlacklistService {
                 });
     }
 
-    public Flux<Long> queryGroupBlacklistedUsersIds(@NotNull Long groupId) {
+    public Flux<Long> queryGroupBlacklistedUserIds(@NotNull Long groupId) {
         try {
             AssertUtil.notNull(groupId, "groupId");
         } catch (TurmsBusinessException e) {
@@ -208,7 +208,7 @@ public class GroupBlacklistService {
         return mongoTemplate.count(query, GroupBlacklistedUser.class, GroupBlacklistedUser.COLLECTION_NAME);
     }
 
-    public Mono<Int64ValuesWithVersion> queryGroupBlacklistedUsersIdsWithVersion(
+    public Mono<Int64ValuesWithVersion> queryGroupBlacklistedUserIdsWithVersion(
             @NotNull Long groupId,
             @Nullable Date lastUpdatedDate) {
         try {
@@ -220,7 +220,7 @@ public class GroupBlacklistService {
                 .queryBlacklistVersion(groupId)
                 .flatMap(version -> {
                     if (lastUpdatedDate == null || lastUpdatedDate.before(version)) {
-                        return queryGroupBlacklistedUsersIds(groupId)
+                        return queryGroupBlacklistedUserIds(groupId)
                                 .collect(Collectors.toSet())
                                 .map(ids -> {
                                     if (ids.isEmpty()) {
@@ -239,14 +239,14 @@ public class GroupBlacklistService {
                 .switchIfEmpty(Mono.error(TurmsBusinessException.get(TurmsStatusCode.ALREADY_UP_TO_DATE)));
     }
 
-    public Mono<UsersInfosWithVersion> queryGroupBlacklistedUsersInfosWithVersion(
+    public Mono<UsersInfosWithVersion> queryGroupBlacklistedUserInfosWithVersion(
             @NotNull Long groupId,
             @Nullable Date lastUpdatedDate) {
         return groupVersionService
                 .queryBlacklistVersion(groupId)
                 .flatMap(version -> {
                     if (lastUpdatedDate == null || lastUpdatedDate.before(version)) {
-                        return queryGroupBlacklistedUsersIds(groupId)
+                        return queryGroupBlacklistedUserIds(groupId)
                                 .collect(Collectors.toSet())
                                 .flatMapMany(ids -> {
                                     if (ids.isEmpty()) {

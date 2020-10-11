@@ -124,17 +124,17 @@ export default class GroupService {
         });
     }
 
-    queryJoinedGroupsIds(lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion | undefined> {
+    queryJoinedGroupIds(lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion | undefined> {
         return this._turmsClient.driver.send({
-            queryJoinedGroupsIdsRequest: {
+            queryJoinedGroupIdsRequest: {
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
         }).then(n => NotificationUtil.getIdsWithVer(n));
     }
 
-    queryJoinedGroupsInfos(lastUpdatedDate?: Date): Promise<ParsedModel.GroupsWithVersion | undefined> {
+    queryJoinedGroupInfos(lastUpdatedDate?: Date): Promise<ParsedModel.GroupsWithVersion | undefined> {
         return this._turmsClient.driver.send({
-            queryJoinedGroupsInfosRequest: {
+            queryJoinedGroupInfosRequest: {
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
         }).then(n => NotificationUtil.getAndTransform(n, 'groupsWithVersion'));
@@ -201,7 +201,7 @@ export default class GroupService {
         }
         return this._turmsClient.driver.send({
             createGroupBlacklistedUserRequest: {
-                blacklistedUserId: userId,
+                userId,
                 groupId
             }
         }).then(() => null);
@@ -217,33 +217,33 @@ export default class GroupService {
         return this._turmsClient.driver.send({
             deleteGroupBlacklistedUserRequest: {
                 groupId,
-                unblacklistedUserId: userId
+                userId
             }
         }).then(() => null);
     }
 
-    queryBlacklistedUsersIds(
+    queryBlacklistedUserIds(
         groupId: string,
         lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion | undefined> {
         if (RequestUtil.isFalsy(groupId)) {
             return TurmsBusinessError.notFalsy('groupId');
         }
         return this._turmsClient.driver.send({
-            queryGroupBlacklistedUsersIdsRequest: {
+            queryGroupBlacklistedUserIdsRequest: {
                 groupId,
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
         }).then(n => NotificationUtil.getIdsWithVer(n));
     }
 
-    queryBlacklistedUsersInfos(
+    queryBlacklistedUserInfos(
         groupId: string,
         lastUpdatedDate?: Date): Promise<ParsedModel.UsersInfosWithVersion | undefined> {
         if (RequestUtil.isFalsy(groupId)) {
             return TurmsBusinessError.notFalsy('groupId');
         }
         return this._turmsClient.driver.send({
-            queryGroupBlacklistedUsersInfosRequest: {
+            queryGroupBlacklistedUserInfosRequest: {
                 groupId,
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
@@ -425,7 +425,7 @@ export default class GroupService {
         return this._turmsClient.driver.send({
             deleteGroupMemberRequest: {
                 groupId,
-                groupMemberId: this._turmsClient.userService.userId,
+                memberId: this._turmsClient.userService.userId,
                 successorId: RequestUtil.wrapValueIfNotNull(successorId),
                 quitAfterTransfer: RequestUtil.wrapValueIfNotNull(quitAfterTransfer)
             }
@@ -442,7 +442,7 @@ export default class GroupService {
         return this._turmsClient.driver.send({
             deleteGroupMemberRequest: {
                 groupId,
-                groupMemberId: memberId
+                memberId
             }
         }).then(() => null);
     }
@@ -509,17 +509,17 @@ export default class GroupService {
         }).then(n => NotificationUtil.getAndTransform(n, 'groupMembersWithVersion'));
     }
 
-    queryGroupMembersByMembersIds(groupId: string, membersIds: string[], withStatus = false): Promise<ParsedModel.GroupMembersWithVersion | undefined> {
+    queryGroupMembersByMemberIds(groupId: string, memberIds: string[], withStatus = false): Promise<ParsedModel.GroupMembersWithVersion | undefined> {
         if (RequestUtil.isFalsy(groupId)) {
             return TurmsBusinessError.notFalsy('groupId');
         }
-        if (RequestUtil.isFalsy(membersIds)) {
-            return TurmsBusinessError.notFalsy('membersIds', true);
+        if (RequestUtil.isFalsy(memberIds)) {
+            return TurmsBusinessError.notFalsy('memberIds', true);
         }
         return this._turmsClient.driver.send({
             queryGroupMembersRequest: {
                 groupId,
-                groupMembersIds: membersIds,
+                memberIds,
                 withStatus: RequestUtil.wrapValueIfNotNull(withStatus)
             }
         }).then(n => NotificationUtil.getAndTransform(n, 'groupMembersWithVersion'));

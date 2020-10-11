@@ -97,7 +97,7 @@ export default class MessageService {
         }
         return this._turmsClient.driver.send({
             ackRequest: {
-                messagesIds: messageIds
+                messageIds
             }
         }).then(() => null)
     }

@@ -109,10 +109,10 @@ public class UserServiceController {
         };
     }
 
-    @ServiceRequestMapping(QUERY_USERS_IDS_NEARBY_REQUEST)
-    public ClientRequestHandler handleQueryUsersIdsNearbyRequest() {
+    @ServiceRequestMapping(QUERY_USER_IDS_NEARBY_REQUEST)
+    public ClientRequestHandler handleQueryUserIdsNearbyRequest() {
         return clientRequest -> {
-            QueryUsersIdsNearbyRequest request = clientRequest.getTurmsRequest().getQueryUsersIdsNearbyRequest();
+            QueryUserIdsNearbyRequest request = clientRequest.getTurmsRequest().getQueryUserIdsNearbyRequest();
             Double distance = request.hasDistance() ? (double) request.getDistance().getValue() : null;
             Short maxNumber = request.hasMaxNumber() ? (short) request.getMaxNumber().getValue() : null;
             Mono<Boolean> updateMono = sessionLocationService.upsertUserLocation(
@@ -161,10 +161,10 @@ public class UserServiceController {
         };
     }
 
-    @ServiceRequestMapping(QUERY_USERS_INFOS_NEARBY_REQUEST)
+    @ServiceRequestMapping(QUERY_USER_INFOS_NEARBY_REQUEST)
     public ClientRequestHandler handleQueryUsersInfosNearbyRequest() {
         return clientRequest -> {
-            QueryUsersInfosNearbyRequest request = clientRequest.getTurmsRequest().getQueryUsersInfosNearbyRequest();
+            QueryUserInfosNearbyRequest request = clientRequest.getTurmsRequest().getQueryUserInfosNearbyRequest();
             Double distance = request.hasDistance() ? (double) request.getDistance().getValue() : null;
             Short maxNumber = request.hasMaxNumber() ? (short) request.getMaxNumber().getValue() : null;
             Mono<Boolean> updateMono = sessionLocationService.upsertUserLocation(
@@ -194,15 +194,15 @@ public class UserServiceController {
         };
     }
 
-    @ServiceRequestMapping(QUERY_USERS_ONLINE_STATUS_REQUEST)
+    @ServiceRequestMapping(QUERY_USER_ONLINE_STATUSES_REQUEST)
     public ClientRequestHandler handleQueryUsersOnlineStatusRequest() {
         return clientRequest -> {
-            QueryUsersOnlineStatusRequest request = clientRequest.getTurmsRequest().getQueryUsersOnlineStatusRequest();
-            if (request.getUsersIdsCount() == 0) {
+            QueryUserOnlineStatusesRequest request = clientRequest.getTurmsRequest().getQueryUserOnlineStatusesRequest();
+            if (request.getUserIdsCount() == 0) {
                 return Mono.empty();
             }
             //TODO : Access Control
-            List<Long> userIds = request.getUsersIdsList();
+            List<Long> userIds = request.getUserIdsList();
             UsersOnlineStatuses.Builder statusesBuilder = UsersOnlineStatuses.newBuilder();
             List<Mono<Pair<Long, UserSessionsStatus>>> monos = new ArrayList<>(userIds.size());
             for (Long targetUserId : userIds) {
@@ -270,11 +270,11 @@ public class UserServiceController {
                 Mono<Set<Long>> queryMembersIds = notifyMembers
                         ? groupMemberService.queryUsersJoinedGroupsMembersIds(Set.of(clientRequest.getUserId()))
                         : Mono.just(Collections.emptySet());
-                Mono<Set<Long>> queryRelatedUsersIds = notifyRelatedUser
-                        ? userRelationshipService.queryRelatedUsersIds(Set.of(clientRequest.getUserId()), false)
+                Mono<Set<Long>> queryRelatedUserIds = notifyRelatedUser
+                        ? userRelationshipService.queryRelatedUserIds(Set.of(clientRequest.getUserId()), false)
                         .collect(Collectors.toSet())
                         : Mono.just(Collections.emptySet());
-                return queryMembersIds.zipWith(queryRelatedUsersIds)
+                return queryMembersIds.zipWith(queryRelatedUserIds)
                         .map(results -> {
                             results.getT1().addAll(results.getT2());
                             return results.getT1().isEmpty()
@@ -305,11 +305,11 @@ public class UserServiceController {
                     .flatMap(updated -> {
                         if (updated != null && updated
                                 && node.getSharedProperties().getService().getNotification().isNotifyRelatedUsersAfterOtherRelatedUserInfoUpdated()) {
-                            return userRelationshipService.queryRelatedUsersIds(Set.of(clientRequest.getUserId()), false)
+                            return userRelationshipService.queryRelatedUserIds(Set.of(clientRequest.getUserId()), false)
                                     .collect(Collectors.toSet())
-                                    .map(relatedUsersIds -> relatedUsersIds.isEmpty()
+                                    .map(relatedUserIds -> relatedUserIds.isEmpty()
                                             ? RequestHandlerResultFactory.ok()
-                                            : RequestHandlerResultFactory.get(relatedUsersIds, clientRequest.getTurmsRequest()));
+                                            : RequestHandlerResultFactory.get(relatedUserIds, clientRequest.getTurmsRequest()));
                         } else {
                             return Mono.just(RequestHandlerResultFactory.okIfTrue(updated));
                         }

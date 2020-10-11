@@ -33,7 +33,7 @@ public final class QueryRelationshipsRequestOuterClass {
   }
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_im_turms_proto_QueryRelationshipsRequest_descriptor;
-  static final 
+  static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_im_turms_proto_QueryRelationshipsRequest_fieldAccessorTable;
 
@@ -47,14 +47,14 @@ public final class QueryRelationshipsRequestOuterClass {
     java.lang.String[] descriptorData = {
       "\n;request/user/relationship/query_relati" +
       "onships_request.proto\022\016im.turms.proto\032\036g" +
-      "oogle/protobuf/wrappers.proto\"\320\001\n\031QueryR" +
-      "elationshipsRequest\022\031\n\021related_users_ids" +
-      "\030\001 \003(\003\022.\n\nis_blocked\030\002 \001(\0132\032.google.prot" +
-      "obuf.BoolValue\0220\n\013group_index\030\003 \001(\0132\033.go" +
-      "ogle.protobuf.Int32Value\0226\n\021last_updated" +
-      "_date\030\004 \001(\0132\033.google.protobuf.Int64Value" +
-      "B:\n3im.turms.common.model.dto.request.us" +
-      "er.relationshipP\001\272\002\000b\006proto3"
+      "oogle/protobuf/wrappers.proto\"\304\001\n\031QueryR" +
+      "elationshipsRequest\022\020\n\010user_ids\030\001 \003(\003\022+\n" +
+      "\007blocked\030\002 \001(\0132\032.google.protobuf.BoolVal" +
+      "ue\0220\n\013group_index\030\003 \001(\0132\033.google.protobu" +
+      "f.Int32Value\0226\n\021last_updated_date\030\004 \001(\0132" +
+      "\033.google.protobuf.Int64ValueB:\n3im.turms" +
+      ".common.model.dto.request.user.relations" +
+      "hipP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -66,7 +66,7 @@ public final class QueryRelationshipsRequestOuterClass {
     internal_static_im_turms_proto_QueryRelationshipsRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_QueryRelationshipsRequest_descriptor,
-        new java.lang.String[] { "RelatedUsersIds", "IsBlocked", "GroupIndex", "LastUpdatedDate", });
+        new java.lang.String[] { "UserIds", "Blocked", "GroupIndex", "LastUpdatedDate", });
     com.google.protobuf.WrappersProto.getDescriptor();
   }
 

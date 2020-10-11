@@ -33,7 +33,7 @@ public final class CreateGroupInvitationRequestOuterClass {
   }
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_im_turms_proto_CreateGroupInvitationRequest_descriptor;
-  static final 
+  static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_im_turms_proto_CreateGroupInvitationRequest_fieldAccessorTable;
 

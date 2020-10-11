@@ -25,36 +25,36 @@ public interface QueryRelationshipsRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>repeated int64 related_users_ids = 1;</code>
-   * @return A list containing the relatedUsersIds.
+   * <code>repeated int64 user_ids = 1;</code>
+   * @return A list containing the userIds.
    */
-  java.util.List<java.lang.Long> getRelatedUsersIdsList();
+  java.util.List<java.lang.Long> getUserIdsList();
   /**
-   * <code>repeated int64 related_users_ids = 1;</code>
-   * @return The count of relatedUsersIds.
+   * <code>repeated int64 user_ids = 1;</code>
+   * @return The count of userIds.
    */
-  int getRelatedUsersIdsCount();
+  int getUserIdsCount();
   /**
-   * <code>repeated int64 related_users_ids = 1;</code>
+   * <code>repeated int64 user_ids = 1;</code>
    * @param index The index of the element to return.
-   * @return The relatedUsersIds at the given index.
+   * @return The userIds at the given index.
    */
-  long getRelatedUsersIds(int index);
+  long getUserIds(int index);
 
   /**
-   * <code>.google.protobuf.BoolValue is_blocked = 2;</code>
-   * @return Whether the isBlocked field is set.
+   * <code>.google.protobuf.BoolValue blocked = 2;</code>
+   * @return Whether the blocked field is set.
    */
-  boolean hasIsBlocked();
+  boolean hasBlocked();
   /**
-   * <code>.google.protobuf.BoolValue is_blocked = 2;</code>
-   * @return The isBlocked.
+   * <code>.google.protobuf.BoolValue blocked = 2;</code>
+   * @return The blocked.
    */
-  com.google.protobuf.BoolValue getIsBlocked();
+  com.google.protobuf.BoolValue getBlocked();
   /**
-   * <code>.google.protobuf.BoolValue is_blocked = 2;</code>
+   * <code>.google.protobuf.BoolValue blocked = 2;</code>
    */
-  com.google.protobuf.BoolValueOrBuilder getIsBlockedOrBuilder();
+  com.google.protobuf.BoolValueOrBuilder getBlockedOrBuilder();
 
   /**
    * <code>.google.protobuf.Int32Value group_index = 3;</code>

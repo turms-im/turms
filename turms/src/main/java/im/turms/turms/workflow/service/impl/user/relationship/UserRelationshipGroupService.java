@@ -161,7 +161,7 @@ public class UserRelationshipGroupService {
                 .map(member -> member.getKey().getGroupIndex());
     }
 
-    public Flux<Long> queryRelatedUsersIdsInRelationshipGroup(
+    public Flux<Long> queryRelatedUserIdsInRelationshipGroup(
             @NotNull Long ownerId,
             @NotNull Integer groupIndex) {
         try {

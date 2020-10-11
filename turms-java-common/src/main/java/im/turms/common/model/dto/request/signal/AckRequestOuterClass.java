@@ -33,7 +33,7 @@ public final class AckRequestOuterClass {
   }
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_im_turms_proto_AckRequest_descriptor;
-  static final 
+  static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_im_turms_proto_AckRequest_fieldAccessorTable;
 
@@ -46,9 +46,9 @@ public final class AckRequestOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n request/signal/ack_request.proto\022\016im.t" +
-      "urms.proto\"\"\n\nAckRequest\022\024\n\014messages_ids" +
-      "\030\001 \003(\003B/\n(im.turms.common.model.dto.requ" +
-      "est.signalP\001\272\002\000b\006proto3"
+      "urms.proto\"!\n\nAckRequest\022\023\n\013message_ids\030" +
+      "\001 \003(\003B/\n(im.turms.common.model.dto.reque" +
+      "st.signalP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -59,7 +59,7 @@ public final class AckRequestOuterClass {
     internal_static_im_turms_proto_AckRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_AckRequest_descriptor,
-        new java.lang.String[] { "MessagesIds", });
+        new java.lang.String[] { "MessageIds", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -52,7 +52,7 @@ public class MessageService {
         return turmsClient.driver
             .send { $0
                 .request("ackRequest")
-                .field("messagesIds", messageIds)
+                .field("messageIds", messageIds)
             }
             .asVoid()
     }

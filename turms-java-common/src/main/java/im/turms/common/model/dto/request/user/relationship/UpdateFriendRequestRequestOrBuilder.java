@@ -25,18 +25,18 @@ public interface UpdateFriendRequestRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>int64 requestId = 1;</code>
+   * <code>int64 request_id = 1;</code>
    * @return The requestId.
    */
   long getRequestId();
 
   /**
-   * <code>.im.turms.proto.ResponseAction responseAction = 2;</code>
+   * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
    * @return The enum numeric value on the wire for responseAction.
    */
   int getResponseActionValue();
   /**
-   * <code>.im.turms.proto.ResponseAction responseAction = 2;</code>
+   * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
    * @return The responseAction.
    */
   im.turms.common.constant.ResponseAction getResponseAction();

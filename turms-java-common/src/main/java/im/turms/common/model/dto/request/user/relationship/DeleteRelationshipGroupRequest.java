@@ -499,7 +499,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setGroupIndex(int value) {
-      
+
       groupIndex_ = value;
       onChanged();
       return this;
@@ -509,7 +509,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearGroupIndex() {
-      
+
       groupIndex_ = 0;
       onChanged();
       return this;
@@ -602,7 +602,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int32Value target_group_index = 2;</code>
      */
     public com.google.protobuf.Int32Value.Builder getTargetGroupIndexBuilder() {
-      
+
       onChanged();
       return getTargetGroupIndexFieldBuilder().getBuilder();
     }
@@ -621,7 +621,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int32Value target_group_index = 2;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder> 
+        com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder>
         getTargetGroupIndexFieldBuilder() {
       if (targetGroupIndexBuilder_ == null) {
         targetGroupIndexBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<

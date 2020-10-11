@@ -33,7 +33,7 @@ public final class UpdateFriendRequestRequestOuterClass {
   }
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_im_turms_proto_UpdateFriendRequestRequest_descriptor;
-  static final 
+  static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_im_turms_proto_UpdateFriendRequestRequest_fieldAccessorTable;
 
@@ -48,13 +48,13 @@ public final class UpdateFriendRequestRequestOuterClass {
       "\n=request/user/relationship/update_frien" +
       "d_request_request.proto\022\016im.turms.proto\032" +
       "\036google/protobuf/wrappers.proto\032\036constan" +
-      "t/response_action.proto\"\225\001\n\032UpdateFriend" +
-      "RequestRequest\022\021\n\trequestId\030\001 \001(\003\0226\n\016res" +
-      "ponseAction\030\002 \001(\0162\036.im.turms.proto.Respo" +
-      "nseAction\022,\n\006reason\030\003 \001(\0132\034.google.proto" +
-      "buf.StringValueB:\n3im.turms.common.model" +
-      ".dto.request.user.relationshipP\001\272\002\000b\006pro" +
-      "to3"
+      "t/response_action.proto\"\227\001\n\032UpdateFriend" +
+      "RequestRequest\022\022\n\nrequest_id\030\001 \001(\003\0227\n\017re" +
+      "sponse_action\030\002 \001(\0162\036.im.turms.proto.Res" +
+      "ponseAction\022,\n\006reason\030\003 \001(\0132\034.google.pro" +
+      "tobuf.StringValueB:\n3im.turms.common.mod" +
+      "el.dto.request.user.relationshipP\001\272\002\000b\006p" +
+      "roto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

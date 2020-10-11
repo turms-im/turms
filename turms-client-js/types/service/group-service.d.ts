@@ -13,15 +13,15 @@ export default class GroupService {
     muteGroup(groupId: string, muteEndDate: Date): Promise<void>;
     unmuteGroup(groupId: string): Promise<void>;
     queryGroup(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.GroupWithVersion | undefined>;
-    queryJoinedGroupsIds(lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion | undefined>;
-    queryJoinedGroupsInfos(lastUpdatedDate?: Date): Promise<ParsedModel.GroupsWithVersion | undefined>;
+    queryJoinedGroupIds(lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion | undefined>;
+    queryJoinedGroupInfos(lastUpdatedDate?: Date): Promise<ParsedModel.GroupsWithVersion | undefined>;
     addGroupJoinQuestion(groupId: string, question: string, answers: string[], score: number): Promise<string>;
     deleteGroupJoinQuestion(questionId: string): Promise<void>;
     updateGroupJoinQuestion(questionId: string, question?: string, answers?: string[], score?: number): Promise<void>;
     blacklistUser(groupId: string, userId: string): Promise<void>;
     unblacklistUser(groupId: string, userId: string): Promise<void>;
-    queryBlacklistedUsersIds(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion | undefined>;
-    queryBlacklistedUsersInfos(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.UsersInfosWithVersion | undefined>;
+    queryBlacklistedUserIds(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion | undefined>;
+    queryBlacklistedUserInfos(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.UsersInfosWithVersion | undefined>;
     createInvitation(groupId: string, inviteeId: string, content: string): Promise<string>;
     deleteInvitation(invitationId: string): Promise<void>;
     queryInvitationsByGroupId(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.GroupInvitationsWithVersion | undefined>;
@@ -41,5 +41,5 @@ export default class GroupService {
     muteGroupMember(groupId: string, memberId: string, muteEndDate: Date): Promise<void>;
     unmuteGroupMember(groupId: string, memberId: string): Promise<void>;
     queryGroupMembers(groupId: string, withStatus?: boolean, lastUpdatedDate?: Date): Promise<ParsedModel.GroupMembersWithVersion | undefined>;
-    queryGroupMembersByMembersIds(groupId: string, membersIds: string[], withStatus?: boolean): Promise<ParsedModel.GroupMembersWithVersion | undefined>;
+    queryGroupMembersByMemberIds(groupId: string, memberIds: string[], withStatus?: boolean): Promise<ParsedModel.GroupMembersWithVersion | undefined>;
 }

@@ -124,7 +124,7 @@ private static final long serialVersionUID = 0L;
    * <code>repeated .im.turms.proto.UserSessionId user_session_ids = 1;</code>
    */
   @java.lang.Override
-  public java.util.List<? extends im.turms.common.model.bo.user.UserSessionIdOrBuilder> 
+  public java.util.List<? extends im.turms.common.model.bo.user.UserSessionIdOrBuilder>
       getUserSessionIdsOrBuilderList() {
     return userSessionIds_;
   }
@@ -455,7 +455,7 @@ private static final long serialVersionUID = 0L;
             userSessionIdsBuilder_ = null;
             userSessionIds_ = other.userSessionIds_;
             bitField0_ = (bitField0_ & ~0x00000001);
-            userSessionIdsBuilder_ = 
+            userSessionIdsBuilder_ =
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                  getUserSessionIdsFieldBuilder() : null;
           } else {
@@ -688,7 +688,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserSessionId user_session_ids = 1;</code>
      */
-    public java.util.List<? extends im.turms.common.model.bo.user.UserSessionIdOrBuilder> 
+    public java.util.List<? extends im.turms.common.model.bo.user.UserSessionIdOrBuilder>
          getUserSessionIdsOrBuilderList() {
       if (userSessionIdsBuilder_ != null) {
         return userSessionIdsBuilder_.getMessageOrBuilderList();
@@ -714,12 +714,12 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.UserSessionId user_session_ids = 1;</code>
      */
-    public java.util.List<im.turms.common.model.bo.user.UserSessionId.Builder> 
+    public java.util.List<im.turms.common.model.bo.user.UserSessionId.Builder>
          getUserSessionIdsBuilderList() {
       return getUserSessionIdsFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        im.turms.common.model.bo.user.UserSessionId, im.turms.common.model.bo.user.UserSessionId.Builder, im.turms.common.model.bo.user.UserSessionIdOrBuilder> 
+        im.turms.common.model.bo.user.UserSessionId, im.turms.common.model.bo.user.UserSessionId.Builder, im.turms.common.model.bo.user.UserSessionIdOrBuilder>
         getUserSessionIdsFieldBuilder() {
       if (userSessionIdsBuilder_ == null) {
         userSessionIdsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<

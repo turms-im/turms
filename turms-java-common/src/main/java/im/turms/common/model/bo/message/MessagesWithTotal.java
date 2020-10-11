@@ -172,7 +172,7 @@ private static final long serialVersionUID = 0L;
    * <code>repeated .im.turms.proto.Message messages = 4;</code>
    */
   @java.lang.Override
-  public java.util.List<? extends im.turms.common.model.bo.message.MessageOrBuilder> 
+  public java.util.List<? extends im.turms.common.model.bo.message.MessageOrBuilder>
       getMessagesOrBuilderList() {
     return messages_;
   }
@@ -556,7 +556,7 @@ private static final long serialVersionUID = 0L;
             messagesBuilder_ = null;
             messages_ = other.messages_;
             bitField0_ = (bitField0_ & ~0x00000001);
-            messagesBuilder_ = 
+            messagesBuilder_ =
               com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
                  getMessagesFieldBuilder() : null;
           } else {
@@ -609,7 +609,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setTotal(int value) {
-      
+
       total_ = value;
       onChanged();
       return this;
@@ -619,7 +619,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearTotal() {
-      
+
       total_ = 0;
       onChanged();
       return this;
@@ -640,7 +640,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setIsGroupMessage(boolean value) {
-      
+
       isGroupMessage_ = value;
       onChanged();
       return this;
@@ -650,7 +650,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearIsGroupMessage() {
-      
+
       isGroupMessage_ = false;
       onChanged();
       return this;
@@ -671,7 +671,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setFromId(long value) {
-      
+
       fromId_ = value;
       onChanged();
       return this;
@@ -681,7 +681,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearFromId() {
-      
+
       fromId_ = 0L;
       onChanged();
       return this;
@@ -882,7 +882,7 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.Message messages = 4;</code>
      */
-    public java.util.List<? extends im.turms.common.model.bo.message.MessageOrBuilder> 
+    public java.util.List<? extends im.turms.common.model.bo.message.MessageOrBuilder>
          getMessagesOrBuilderList() {
       if (messagesBuilder_ != null) {
         return messagesBuilder_.getMessageOrBuilderList();
@@ -908,12 +908,12 @@ private static final long serialVersionUID = 0L;
     /**
      * <code>repeated .im.turms.proto.Message messages = 4;</code>
      */
-    public java.util.List<im.turms.common.model.bo.message.Message.Builder> 
+    public java.util.List<im.turms.common.model.bo.message.Message.Builder>
          getMessagesBuilderList() {
       return getMessagesFieldBuilder().getBuilderList();
     }
     private com.google.protobuf.RepeatedFieldBuilderV3<
-        im.turms.common.model.bo.message.Message, im.turms.common.model.bo.message.Message.Builder, im.turms.common.model.bo.message.MessageOrBuilder> 
+        im.turms.common.model.bo.message.Message, im.turms.common.model.bo.message.Message.Builder, im.turms.common.model.bo.message.MessageOrBuilder>
         getMessagesFieldBuilder() {
       if (messagesBuilder_ == null) {
         messagesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<

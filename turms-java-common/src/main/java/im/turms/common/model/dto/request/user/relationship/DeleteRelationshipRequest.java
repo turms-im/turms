@@ -67,7 +67,7 @@ private static final long serialVersionUID = 0L;
             break;
           case 8: {
 
-            relatedUserId_ = input.readInt64();
+            userId_ = input.readInt64();
             break;
           }
           case 18: {
@@ -128,15 +128,15 @@ private static final long serialVersionUID = 0L;
             im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest.class, im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest.Builder.class);
   }
 
-  public static final int RELATED_USER_ID_FIELD_NUMBER = 1;
-  private long relatedUserId_;
+  public static final int USER_ID_FIELD_NUMBER = 1;
+  private long userId_;
   /**
-   * <code>int64 related_user_id = 1;</code>
-   * @return The relatedUserId.
+   * <code>int64 user_id = 1;</code>
+   * @return The userId.
    */
   @java.lang.Override
-  public long getRelatedUserId() {
-    return relatedUserId_;
+  public long getUserId() {
+    return userId_;
   }
 
   public static final int GROUP_INDEX_FIELD_NUMBER = 2;
@@ -205,8 +205,8 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (relatedUserId_ != 0L) {
-      output.writeInt64(1, relatedUserId_);
+    if (userId_ != 0L) {
+      output.writeInt64(1, userId_);
     }
     if (groupIndex_ != null) {
       output.writeMessage(2, getGroupIndex());
@@ -223,9 +223,9 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (relatedUserId_ != 0L) {
+    if (userId_ != 0L) {
       size += com.google.protobuf.CodedOutputStream
-        .computeInt64Size(1, relatedUserId_);
+        .computeInt64Size(1, userId_);
     }
     if (groupIndex_ != null) {
       size += com.google.protobuf.CodedOutputStream
@@ -250,8 +250,8 @@ private static final long serialVersionUID = 0L;
     }
     im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest other = (im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest) obj;
 
-    if (getRelatedUserId()
-        != other.getRelatedUserId()) return false;
+    if (getUserId()
+        != other.getUserId()) return false;
     if (hasGroupIndex() != other.hasGroupIndex()) return false;
     if (hasGroupIndex()) {
       if (!getGroupIndex()
@@ -273,9 +273,9 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + RELATED_USER_ID_FIELD_NUMBER;
+    hash = (37 * hash) + USER_ID_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getRelatedUserId());
+        getUserId());
     if (hasGroupIndex()) {
       hash = (37 * hash) + GROUP_INDEX_FIELD_NUMBER;
       hash = (53 * hash) + getGroupIndex().hashCode();
@@ -417,7 +417,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      relatedUserId_ = 0L;
+      userId_ = 0L;
 
       if (groupIndexBuilder_ == null) {
         groupIndex_ = null;
@@ -457,7 +457,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest buildPartial() {
       im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest result = new im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest(this);
-      result.relatedUserId_ = relatedUserId_;
+      result.userId_ = userId_;
       if (groupIndexBuilder_ == null) {
         result.groupIndex_ = groupIndex_;
       } else {
@@ -516,8 +516,8 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest other) {
       if (other == im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest.getDefaultInstance()) return this;
-      if (other.getRelatedUserId() != 0L) {
-        setRelatedUserId(other.getRelatedUserId());
+      if (other.getUserId() != 0L) {
+        setUserId(other.getUserId());
       }
       if (other.hasGroupIndex()) {
         mergeGroupIndex(other.getGroupIndex());
@@ -554,33 +554,33 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private long relatedUserId_ ;
+    private long userId_ ;
     /**
-     * <code>int64 related_user_id = 1;</code>
-     * @return The relatedUserId.
+     * <code>int64 user_id = 1;</code>
+     * @return The userId.
      */
     @java.lang.Override
-    public long getRelatedUserId() {
-      return relatedUserId_;
+    public long getUserId() {
+      return userId_;
     }
     /**
-     * <code>int64 related_user_id = 1;</code>
-     * @param value The relatedUserId to set.
+     * <code>int64 user_id = 1;</code>
+     * @param value The userId to set.
      * @return This builder for chaining.
      */
-    public Builder setRelatedUserId(long value) {
-      
-      relatedUserId_ = value;
+    public Builder setUserId(long value) {
+
+      userId_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>int64 related_user_id = 1;</code>
+     * <code>int64 user_id = 1;</code>
      * @return This builder for chaining.
      */
-    public Builder clearRelatedUserId() {
-      
-      relatedUserId_ = 0L;
+    public Builder clearUserId() {
+
+      userId_ = 0L;
       onChanged();
       return this;
     }
@@ -672,7 +672,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int32Value group_index = 2;</code>
      */
     public com.google.protobuf.Int32Value.Builder getGroupIndexBuilder() {
-      
+
       onChanged();
       return getGroupIndexFieldBuilder().getBuilder();
     }
@@ -691,7 +691,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int32Value group_index = 2;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder> 
+        com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder>
         getGroupIndexFieldBuilder() {
       if (groupIndexBuilder_ == null) {
         groupIndexBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -791,7 +791,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int32Value target_group_index = 3;</code>
      */
     public com.google.protobuf.Int32Value.Builder getTargetGroupIndexBuilder() {
-      
+
       onChanged();
       return getTargetGroupIndexFieldBuilder().getBuilder();
     }
@@ -810,7 +810,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.Int32Value target_group_index = 3;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder> 
+        com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder>
         getTargetGroupIndexFieldBuilder() {
       if (targetGroupIndexBuilder_ == null) {
         targetGroupIndexBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<

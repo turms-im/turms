@@ -33,7 +33,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private GroupJoinQuestionsAnswerResult() {
-    questionsIds_ = emptyLongList();
+    questionIds_ = emptyLongList();
   }
 
   @java.lang.Override
@@ -74,21 +74,21 @@ private static final long serialVersionUID = 0L;
           }
           case 16: {
             if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-              questionsIds_ = newLongList();
+              questionIds_ = newLongList();
               mutable_bitField0_ |= 0x00000001;
             }
-            questionsIds_.addLong(input.readInt64());
+            questionIds_.addLong(input.readInt64());
             break;
           }
           case 18: {
             int length = input.readRawVarint32();
             int limit = input.pushLimit(length);
             if (!((mutable_bitField0_ & 0x00000001) != 0) && input.getBytesUntilLimit() > 0) {
-              questionsIds_ = newLongList();
+              questionIds_ = newLongList();
               mutable_bitField0_ |= 0x00000001;
             }
             while (input.getBytesUntilLimit() > 0) {
-              questionsIds_.addLong(input.readInt64());
+              questionIds_.addLong(input.readInt64());
             }
             input.popLimit(limit);
             break;
@@ -114,7 +114,7 @@ private static final long serialVersionUID = 0L;
           e).setUnfinishedMessage(this);
     } finally {
       if (((mutable_bitField0_ & 0x00000001) != 0)) {
-        questionsIds_.makeImmutable(); // C
+        questionIds_.makeImmutable(); // C
       }
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
@@ -144,33 +144,33 @@ private static final long serialVersionUID = 0L;
     return score_;
   }
 
-  public static final int QUESTIONS_IDS_FIELD_NUMBER = 2;
-  private com.google.protobuf.Internal.LongList questionsIds_;
+  public static final int QUESTION_IDS_FIELD_NUMBER = 2;
+  private com.google.protobuf.Internal.LongList questionIds_;
   /**
-   * <code>repeated int64 questions_ids = 2;</code>
-   * @return A list containing the questionsIds.
+   * <code>repeated int64 question_ids = 2;</code>
+   * @return A list containing the questionIds.
    */
   @java.lang.Override
   public java.util.List<java.lang.Long>
-      getQuestionsIdsList() {
-    return questionsIds_;
+      getQuestionIdsList() {
+    return questionIds_;
   }
   /**
-   * <code>repeated int64 questions_ids = 2;</code>
-   * @return The count of questionsIds.
+   * <code>repeated int64 question_ids = 2;</code>
+   * @return The count of questionIds.
    */
-  public int getQuestionsIdsCount() {
-    return questionsIds_.size();
+  public int getQuestionIdsCount() {
+    return questionIds_.size();
   }
   /**
-   * <code>repeated int64 questions_ids = 2;</code>
+   * <code>repeated int64 question_ids = 2;</code>
    * @param index The index of the element to return.
-   * @return The questionsIds at the given index.
+   * @return The questionIds at the given index.
    */
-  public long getQuestionsIds(int index) {
-    return questionsIds_.getLong(index);
+  public long getQuestionIds(int index) {
+    return questionIds_.getLong(index);
   }
-  private int questionsIdsMemoizedSerializedSize = -1;
+  private int questionIdsMemoizedSerializedSize = -1;
 
   public static final int JOINED_FIELD_NUMBER = 3;
   private boolean joined_;
@@ -201,12 +201,12 @@ private static final long serialVersionUID = 0L;
     if (score_ != 0) {
       output.writeInt32(1, score_);
     }
-    if (getQuestionsIdsList().size() > 0) {
+    if (getQuestionIdsList().size() > 0) {
       output.writeUInt32NoTag(18);
-      output.writeUInt32NoTag(questionsIdsMemoizedSerializedSize);
+      output.writeUInt32NoTag(questionIdsMemoizedSerializedSize);
     }
-    for (int i = 0; i < questionsIds_.size(); i++) {
-      output.writeInt64NoTag(questionsIds_.getLong(i));
+    for (int i = 0; i < questionIds_.size(); i++) {
+      output.writeInt64NoTag(questionIds_.getLong(i));
     }
     if (joined_ != false) {
       output.writeBool(3, joined_);
@@ -226,17 +226,17 @@ private static final long serialVersionUID = 0L;
     }
     {
       int dataSize = 0;
-      for (int i = 0; i < questionsIds_.size(); i++) {
+      for (int i = 0; i < questionIds_.size(); i++) {
         dataSize += com.google.protobuf.CodedOutputStream
-          .computeInt64SizeNoTag(questionsIds_.getLong(i));
+          .computeInt64SizeNoTag(questionIds_.getLong(i));
       }
       size += dataSize;
-      if (!getQuestionsIdsList().isEmpty()) {
+      if (!getQuestionIdsList().isEmpty()) {
         size += 1;
         size += com.google.protobuf.CodedOutputStream
             .computeInt32SizeNoTag(dataSize);
       }
-      questionsIdsMemoizedSerializedSize = dataSize;
+      questionIdsMemoizedSerializedSize = dataSize;
     }
     if (joined_ != false) {
       size += com.google.protobuf.CodedOutputStream
@@ -259,8 +259,8 @@ private static final long serialVersionUID = 0L;
 
     if (getScore()
         != other.getScore()) return false;
-    if (!getQuestionsIdsList()
-        .equals(other.getQuestionsIdsList())) return false;
+    if (!getQuestionIdsList()
+        .equals(other.getQuestionIdsList())) return false;
     if (getJoined()
         != other.getJoined()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
@@ -276,9 +276,9 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + SCORE_FIELD_NUMBER;
     hash = (53 * hash) + getScore();
-    if (getQuestionsIdsCount() > 0) {
-      hash = (37 * hash) + QUESTIONS_IDS_FIELD_NUMBER;
-      hash = (53 * hash) + getQuestionsIdsList().hashCode();
+    if (getQuestionIdsCount() > 0) {
+      hash = (37 * hash) + QUESTION_IDS_FIELD_NUMBER;
+      hash = (53 * hash) + getQuestionIdsList().hashCode();
     }
     hash = (37 * hash) + JOINED_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
@@ -418,7 +418,7 @@ private static final long serialVersionUID = 0L;
       super.clear();
       score_ = 0;
 
-      questionsIds_ = emptyLongList();
+      questionIds_ = emptyLongList();
       bitField0_ = (bitField0_ & ~0x00000001);
       joined_ = false;
 
@@ -451,10 +451,10 @@ private static final long serialVersionUID = 0L;
       int from_bitField0_ = bitField0_;
       result.score_ = score_;
       if (((bitField0_ & 0x00000001) != 0)) {
-        questionsIds_.makeImmutable();
+        questionIds_.makeImmutable();
         bitField0_ = (bitField0_ & ~0x00000001);
       }
-      result.questionsIds_ = questionsIds_;
+      result.questionIds_ = questionIds_;
       result.joined_ = joined_;
       onBuilt();
       return result;
@@ -507,13 +507,13 @@ private static final long serialVersionUID = 0L;
       if (other.getScore() != 0) {
         setScore(other.getScore());
       }
-      if (!other.questionsIds_.isEmpty()) {
-        if (questionsIds_.isEmpty()) {
-          questionsIds_ = other.questionsIds_;
+      if (!other.questionIds_.isEmpty()) {
+        if (questionIds_.isEmpty()) {
+          questionIds_ = other.questionIds_;
           bitField0_ = (bitField0_ & ~0x00000001);
         } else {
-          ensureQuestionsIdsIsMutable();
-          questionsIds_.addAll(other.questionsIds_);
+          ensureQuestionIdsIsMutable();
+          questionIds_.addAll(other.questionIds_);
         }
         onChanged();
       }
@@ -565,7 +565,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setScore(int value) {
-      
+
       score_ = value;
       onChanged();
       return this;
@@ -575,86 +575,86 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearScore() {
-      
+
       score_ = 0;
       onChanged();
       return this;
     }
 
-    private com.google.protobuf.Internal.LongList questionsIds_ = emptyLongList();
-    private void ensureQuestionsIdsIsMutable() {
+    private com.google.protobuf.Internal.LongList questionIds_ = emptyLongList();
+    private void ensureQuestionIdsIsMutable() {
       if (!((bitField0_ & 0x00000001) != 0)) {
-        questionsIds_ = mutableCopy(questionsIds_);
+        questionIds_ = mutableCopy(questionIds_);
         bitField0_ |= 0x00000001;
        }
     }
     /**
-     * <code>repeated int64 questions_ids = 2;</code>
-     * @return A list containing the questionsIds.
+     * <code>repeated int64 question_ids = 2;</code>
+     * @return A list containing the questionIds.
      */
     public java.util.List<java.lang.Long>
-        getQuestionsIdsList() {
+        getQuestionIdsList() {
       return ((bitField0_ & 0x00000001) != 0) ?
-               java.util.Collections.unmodifiableList(questionsIds_) : questionsIds_;
+               java.util.Collections.unmodifiableList(questionIds_) : questionIds_;
     }
     /**
-     * <code>repeated int64 questions_ids = 2;</code>
-     * @return The count of questionsIds.
+     * <code>repeated int64 question_ids = 2;</code>
+     * @return The count of questionIds.
      */
-    public int getQuestionsIdsCount() {
-      return questionsIds_.size();
+    public int getQuestionIdsCount() {
+      return questionIds_.size();
     }
     /**
-     * <code>repeated int64 questions_ids = 2;</code>
+     * <code>repeated int64 question_ids = 2;</code>
      * @param index The index of the element to return.
-     * @return The questionsIds at the given index.
+     * @return The questionIds at the given index.
      */
-    public long getQuestionsIds(int index) {
-      return questionsIds_.getLong(index);
+    public long getQuestionIds(int index) {
+      return questionIds_.getLong(index);
     }
     /**
-     * <code>repeated int64 questions_ids = 2;</code>
+     * <code>repeated int64 question_ids = 2;</code>
      * @param index The index to set the value at.
-     * @param value The questionsIds to set.
+     * @param value The questionIds to set.
      * @return This builder for chaining.
      */
-    public Builder setQuestionsIds(
+    public Builder setQuestionIds(
         int index, long value) {
-      ensureQuestionsIdsIsMutable();
-      questionsIds_.setLong(index, value);
+      ensureQuestionIdsIsMutable();
+      questionIds_.setLong(index, value);
       onChanged();
       return this;
     }
     /**
-     * <code>repeated int64 questions_ids = 2;</code>
-     * @param value The questionsIds to add.
+     * <code>repeated int64 question_ids = 2;</code>
+     * @param value The questionIds to add.
      * @return This builder for chaining.
      */
-    public Builder addQuestionsIds(long value) {
-      ensureQuestionsIdsIsMutable();
-      questionsIds_.addLong(value);
+    public Builder addQuestionIds(long value) {
+      ensureQuestionIdsIsMutable();
+      questionIds_.addLong(value);
       onChanged();
       return this;
     }
     /**
-     * <code>repeated int64 questions_ids = 2;</code>
-     * @param values The questionsIds to add.
+     * <code>repeated int64 question_ids = 2;</code>
+     * @param values The questionIds to add.
      * @return This builder for chaining.
      */
-    public Builder addAllQuestionsIds(
+    public Builder addAllQuestionIds(
         java.lang.Iterable<? extends java.lang.Long> values) {
-      ensureQuestionsIdsIsMutable();
+      ensureQuestionIdsIsMutable();
       com.google.protobuf.AbstractMessageLite.Builder.addAll(
-          values, questionsIds_);
+          values, questionIds_);
       onChanged();
       return this;
     }
     /**
-     * <code>repeated int64 questions_ids = 2;</code>
+     * <code>repeated int64 question_ids = 2;</code>
      * @return This builder for chaining.
      */
-    public Builder clearQuestionsIds() {
-      questionsIds_ = emptyLongList();
+    public Builder clearQuestionIds() {
+      questionIds_ = emptyLongList();
       bitField0_ = (bitField0_ & ~0x00000001);
       onChanged();
       return this;
@@ -675,7 +675,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setJoined(boolean value) {
-      
+
       joined_ = value;
       onChanged();
       return this;
@@ -685,7 +685,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearJoined() {
-      
+
       joined_ = false;
       onChanged();
       return this;

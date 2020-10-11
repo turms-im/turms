@@ -31,10 +31,10 @@ public interface CreateRelationshipRequestOrBuilder extends
   long getUserId();
 
   /**
-   * <code>bool is_blocked = 2;</code>
-   * @return The isBlocked.
+   * <code>bool blocked = 2;</code>
+   * @return The blocked.
    */
-  boolean getIsBlocked();
+  boolean getBlocked();
 
   /**
    * <code>.google.protobuf.Int32Value group_index = 3;</code>

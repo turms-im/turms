@@ -33,7 +33,7 @@ public final class DeleteRelationshipRequestOuterClass {
   }
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_im_turms_proto_DeleteRelationshipRequest_descriptor;
-  static final 
+  static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_im_turms_proto_DeleteRelationshipRequest_fieldAccessorTable;
 
@@ -47,13 +47,13 @@ public final class DeleteRelationshipRequestOuterClass {
     java.lang.String[] descriptorData = {
       "\n;request/user/relationship/delete_relat" +
       "ionship_request.proto\022\016im.turms.proto\032\036g" +
-      "oogle/protobuf/wrappers.proto\"\237\001\n\031Delete" +
-      "RelationshipRequest\022\027\n\017related_user_id\030\001" +
-      " \001(\003\0220\n\013group_index\030\002 \001(\0132\033.google.proto" +
-      "buf.Int32Value\0227\n\022target_group_index\030\003 \001" +
-      "(\0132\033.google.protobuf.Int32ValueB:\n3im.tu" +
-      "rms.common.model.dto.request.user.relati" +
-      "onshipP\001\272\002\000b\006proto3"
+      "oogle/protobuf/wrappers.proto\"\227\001\n\031Delete" +
+      "RelationshipRequest\022\017\n\007user_id\030\001 \001(\003\0220\n\013" +
+      "group_index\030\002 \001(\0132\033.google.protobuf.Int3" +
+      "2Value\0227\n\022target_group_index\030\003 \001(\0132\033.goo" +
+      "gle.protobuf.Int32ValueB:\n3im.turms.comm" +
+      "on.model.dto.request.user.relationshipP\001" +
+      "\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -65,7 +65,7 @@ public final class DeleteRelationshipRequestOuterClass {
     internal_static_im_turms_proto_DeleteRelationshipRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_DeleteRelationshipRequest_descriptor,
-        new java.lang.String[] { "RelatedUserId", "GroupIndex", "TargetGroupIndex", });
+        new java.lang.String[] { "UserId", "GroupIndex", "TargetGroupIndex", });
     com.google.protobuf.WrappersProto.getDescriptor();
   }
 

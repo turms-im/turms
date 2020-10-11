@@ -122,10 +122,10 @@ private static final long serialVersionUID = 0L;
             im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest.class, im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest.Builder.class);
   }
 
-  public static final int REQUESTID_FIELD_NUMBER = 1;
+  public static final int REQUEST_ID_FIELD_NUMBER = 1;
   private long requestId_;
   /**
-   * <code>int64 requestId = 1;</code>
+   * <code>int64 request_id = 1;</code>
    * @return The requestId.
    */
   @java.lang.Override
@@ -133,17 +133,17 @@ private static final long serialVersionUID = 0L;
     return requestId_;
   }
 
-  public static final int RESPONSEACTION_FIELD_NUMBER = 2;
+  public static final int RESPONSE_ACTION_FIELD_NUMBER = 2;
   private int responseAction_;
   /**
-   * <code>.im.turms.proto.ResponseAction responseAction = 2;</code>
+   * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
    * @return The enum numeric value on the wire for responseAction.
    */
   @java.lang.Override public int getResponseActionValue() {
     return responseAction_;
   }
   /**
-   * <code>.im.turms.proto.ResponseAction responseAction = 2;</code>
+   * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
    * @return The responseAction.
    */
   @java.lang.Override public im.turms.common.constant.ResponseAction getResponseAction() {
@@ -256,10 +256,10 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
-    hash = (37 * hash) + REQUESTID_FIELD_NUMBER;
+    hash = (37 * hash) + REQUEST_ID_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getRequestId());
-    hash = (37 * hash) + RESPONSEACTION_FIELD_NUMBER;
+    hash = (37 * hash) + RESPONSE_ACTION_FIELD_NUMBER;
     hash = (53 * hash) + responseAction_;
     if (hasReason()) {
       hash = (37 * hash) + REASON_FIELD_NUMBER;
@@ -529,7 +529,7 @@ private static final long serialVersionUID = 0L;
 
     private long requestId_ ;
     /**
-     * <code>int64 requestId = 1;</code>
+     * <code>int64 request_id = 1;</code>
      * @return The requestId.
      */
     @java.lang.Override
@@ -537,22 +537,22 @@ private static final long serialVersionUID = 0L;
       return requestId_;
     }
     /**
-     * <code>int64 requestId = 1;</code>
+     * <code>int64 request_id = 1;</code>
      * @param value The requestId to set.
      * @return This builder for chaining.
      */
     public Builder setRequestId(long value) {
-      
+
       requestId_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>int64 requestId = 1;</code>
+     * <code>int64 request_id = 1;</code>
      * @return This builder for chaining.
      */
     public Builder clearRequestId() {
-      
+
       requestId_ = 0L;
       onChanged();
       return this;
@@ -560,25 +560,25 @@ private static final long serialVersionUID = 0L;
 
     private int responseAction_ = 0;
     /**
-     * <code>.im.turms.proto.ResponseAction responseAction = 2;</code>
+     * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
      * @return The enum numeric value on the wire for responseAction.
      */
     @java.lang.Override public int getResponseActionValue() {
       return responseAction_;
     }
     /**
-     * <code>.im.turms.proto.ResponseAction responseAction = 2;</code>
+     * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
      * @param value The enum numeric value on the wire for responseAction to set.
      * @return This builder for chaining.
      */
     public Builder setResponseActionValue(int value) {
-      
+
       responseAction_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>.im.turms.proto.ResponseAction responseAction = 2;</code>
+     * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
      * @return The responseAction.
      */
     @java.lang.Override
@@ -588,7 +588,7 @@ private static final long serialVersionUID = 0L;
       return result == null ? im.turms.common.constant.ResponseAction.UNRECOGNIZED : result;
     }
     /**
-     * <code>.im.turms.proto.ResponseAction responseAction = 2;</code>
+     * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
      * @param value The responseAction to set.
      * @return This builder for chaining.
      */
@@ -596,17 +596,17 @@ private static final long serialVersionUID = 0L;
       if (value == null) {
         throw new NullPointerException();
       }
-      
+
       responseAction_ = value.getNumber();
       onChanged();
       return this;
     }
     /**
-     * <code>.im.turms.proto.ResponseAction responseAction = 2;</code>
+     * <code>.im.turms.proto.ResponseAction response_action = 2;</code>
      * @return This builder for chaining.
      */
     public Builder clearResponseAction() {
-      
+
       responseAction_ = 0;
       onChanged();
       return this;
@@ -699,7 +699,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.StringValue reason = 3;</code>
      */
     public com.google.protobuf.StringValue.Builder getReasonBuilder() {
-      
+
       onChanged();
       return getReasonFieldBuilder().getBuilder();
     }
@@ -718,7 +718,7 @@ private static final long serialVersionUID = 0L;
      * <code>.google.protobuf.StringValue reason = 3;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> 
+        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>
         getReasonFieldBuilder() {
       if (reasonBuilder_ == null) {
         reasonBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<

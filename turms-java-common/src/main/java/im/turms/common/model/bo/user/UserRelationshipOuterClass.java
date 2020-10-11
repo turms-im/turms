@@ -33,7 +33,7 @@ public final class UserRelationshipOuterClass {
   }
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_im_turms_proto_UserRelationship_descriptor;
-  static final 
+  static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_im_turms_proto_UserRelationship_fieldAccessorTable;
 
@@ -47,15 +47,15 @@ public final class UserRelationshipOuterClass {
     java.lang.String[] descriptorData = {
       "\n\"model/user/user_relationship.proto\022\016im" +
       ".turms.proto\032\036google/protobuf/wrappers.p" +
-      "roto\"\222\002\n\020UserRelationship\022-\n\010owner_id\030\001 " +
+      "roto\"\217\002\n\020UserRelationship\022-\n\010owner_id\030\001 " +
       "\001(\0132\033.google.protobuf.Int64Value\0224\n\017rela" +
       "ted_user_id\030\002 \001(\0132\033.google.protobuf.Int6" +
-      "4Value\022.\n\nis_blocked\030\003 \001(\0132\032.google.prot" +
-      "obuf.BoolValue\0220\n\013group_index\030\004 \001(\0132\033.go" +
-      "ogle.protobuf.Int64Value\0227\n\022establishmen" +
-      "t_date\030\005 \001(\0132\033.google.protobuf.Int64Valu" +
-      "eB$\n\035im.turms.common.model.bo.userP\001\272\002\000b" +
-      "\006proto3"
+      "4Value\022+\n\007blocked\030\003 \001(\0132\032.google.protobu" +
+      "f.BoolValue\0220\n\013group_index\030\004 \001(\0132\033.googl" +
+      "e.protobuf.Int64Value\0227\n\022establishment_d" +
+      "ate\030\005 \001(\0132\033.google.protobuf.Int64ValueB$" +
+      "\n\035im.turms.common.model.bo.userP\001\272\002\000b\006pr" +
+      "oto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -67,7 +67,7 @@ public final class UserRelationshipOuterClass {
     internal_static_im_turms_proto_UserRelationship_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_UserRelationship_descriptor,
-        new java.lang.String[] { "OwnerId", "RelatedUserId", "IsBlocked", "GroupIndex", "EstablishmentDate", });
+        new java.lang.String[] { "OwnerId", "RelatedUserId", "Blocked", "GroupIndex", "EstablishmentDate", });
     com.google.protobuf.WrappersProto.getDescriptor();
   }
 
