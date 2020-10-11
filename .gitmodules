@@ -1,0 +1,9 @@
+[submodule "turms-client-js/src/proto"]
+	path = turms-client-js/src/proto
+	url = https://github.com/turms-im/proto.git
+[submodule "turms-java-common/src/proto"]
+	path = turms-java-common/src/proto
+	url = https://github.com/turms-im/proto.git
+[submodule "turms-client-swift/Protos"]
+	path = turms-client-swift/Protos
+	url = https://github.com/turms-im/proto.git
