@@ -26,7 +26,7 @@ public struct DeleteGroupBlacklistedUserRequest {
 
   public var groupID: Int64 = 0
 
-  public var unblacklistedUserID: Int64 = 0
+  public var userID: Int64 = 0
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -41,14 +41,14 @@ extension DeleteGroupBlacklistedUserRequest: SwiftProtobuf.Message, SwiftProtobu
   public static let protoMessageName: String = _protobuf_package + ".DeleteGroupBlacklistedUserRequest"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "group_id"),
-    2: .standard(proto: "unblacklisted_user_id"),
+    2: .standard(proto: "user_id"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
       case 1: try decoder.decodeSingularInt64Field(value: &self.groupID)
-      case 2: try decoder.decodeSingularInt64Field(value: &self.unblacklistedUserID)
+      case 2: try decoder.decodeSingularInt64Field(value: &self.userID)
       default: break
       }
     }
@@ -58,15 +58,15 @@ extension DeleteGroupBlacklistedUserRequest: SwiftProtobuf.Message, SwiftProtobu
     if self.groupID != 0 {
       try visitor.visitSingularInt64Field(value: self.groupID, fieldNumber: 1)
     }
-    if self.unblacklistedUserID != 0 {
-      try visitor.visitSingularInt64Field(value: self.unblacklistedUserID, fieldNumber: 2)
+    if self.userID != 0 {
+      try visitor.visitSingularInt64Field(value: self.userID, fieldNumber: 2)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: DeleteGroupBlacklistedUserRequest, rhs: DeleteGroupBlacklistedUserRequest) -> Bool {
     if lhs.groupID != rhs.groupID {return false}
-    if lhs.unblacklistedUserID != rhs.unblacklistedUserID {return false}
+    if lhs.userID != rhs.userID {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

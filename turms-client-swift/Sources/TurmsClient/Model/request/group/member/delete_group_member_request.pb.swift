@@ -29,9 +29,9 @@ public struct DeleteGroupMemberRequest {
     set {_uniqueStorage()._groupID = newValue}
   }
 
-  public var groupMemberID: Int64 {
-    get {return _storage._groupMemberID}
-    set {_uniqueStorage()._groupMemberID = newValue}
+  public var memberID: Int64 {
+    get {return _storage._memberID}
+    set {_uniqueStorage()._memberID = newValue}
   }
 
   public var successorID: SwiftProtobuf.Google_Protobuf_Int64Value {
@@ -67,14 +67,14 @@ extension DeleteGroupMemberRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
   public static let protoMessageName: String = _protobuf_package + ".DeleteGroupMemberRequest"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "group_id"),
-    2: .standard(proto: "group_member_id"),
+    2: .standard(proto: "member_id"),
     3: .standard(proto: "successor_id"),
     4: .standard(proto: "quit_after_transfer"),
   ]
 
   fileprivate class _StorageClass {
     var _groupID: Int64 = 0
-    var _groupMemberID: Int64 = 0
+    var _memberID: Int64 = 0
     var _successorID: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
     var _quitAfterTransfer: SwiftProtobuf.Google_Protobuf_BoolValue? = nil
 
@@ -84,7 +84,7 @@ extension DeleteGroupMemberRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
 
     init(copying source: _StorageClass) {
       _groupID = source._groupID
-      _groupMemberID = source._groupMemberID
+      _memberID = source._memberID
       _successorID = source._successorID
       _quitAfterTransfer = source._quitAfterTransfer
     }
@@ -103,7 +103,7 @@ extension DeleteGroupMemberRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
       while let fieldNumber = try decoder.nextFieldNumber() {
         switch fieldNumber {
         case 1: try decoder.decodeSingularInt64Field(value: &_storage._groupID)
-        case 2: try decoder.decodeSingularInt64Field(value: &_storage._groupMemberID)
+        case 2: try decoder.decodeSingularInt64Field(value: &_storage._memberID)
         case 3: try decoder.decodeSingularMessageField(value: &_storage._successorID)
         case 4: try decoder.decodeSingularMessageField(value: &_storage._quitAfterTransfer)
         default: break
@@ -117,8 +117,8 @@ extension DeleteGroupMemberRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
       if _storage._groupID != 0 {
         try visitor.visitSingularInt64Field(value: _storage._groupID, fieldNumber: 1)
       }
-      if _storage._groupMemberID != 0 {
-        try visitor.visitSingularInt64Field(value: _storage._groupMemberID, fieldNumber: 2)
+      if _storage._memberID != 0 {
+        try visitor.visitSingularInt64Field(value: _storage._memberID, fieldNumber: 2)
       }
       if let v = _storage._successorID {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
@@ -136,7 +136,7 @@ extension DeleteGroupMemberRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
         let _storage = _args.0
         let rhs_storage = _args.1
         if _storage._groupID != rhs_storage._groupID {return false}
-        if _storage._groupMemberID != rhs_storage._groupMemberID {return false}
+        if _storage._memberID != rhs_storage._memberID {return false}
         if _storage._successorID != rhs_storage._successorID {return false}
         if _storage._quitAfterTransfer != rhs_storage._quitAfterTransfer {return false}
         return true

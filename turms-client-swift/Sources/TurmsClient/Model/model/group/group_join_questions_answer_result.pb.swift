@@ -26,7 +26,7 @@ public struct GroupJoinQuestionsAnswerResult {
 
   public var score: Int32 = 0
 
-  public var questionsIds: [Int64] = []
+  public var questionIds: [Int64] = []
 
   public var joined: Bool = false
 
@@ -43,7 +43,7 @@ extension GroupJoinQuestionsAnswerResult: SwiftProtobuf.Message, SwiftProtobuf._
   public static let protoMessageName: String = _protobuf_package + ".GroupJoinQuestionsAnswerResult"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "score"),
-    2: .standard(proto: "questions_ids"),
+    2: .standard(proto: "question_ids"),
     3: .same(proto: "joined"),
   ]
 
@@ -51,7 +51,7 @@ extension GroupJoinQuestionsAnswerResult: SwiftProtobuf.Message, SwiftProtobuf._
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
       case 1: try decoder.decodeSingularInt32Field(value: &self.score)
-      case 2: try decoder.decodeRepeatedInt64Field(value: &self.questionsIds)
+      case 2: try decoder.decodeRepeatedInt64Field(value: &self.questionIds)
       case 3: try decoder.decodeSingularBoolField(value: &self.joined)
       default: break
       }
@@ -62,8 +62,8 @@ extension GroupJoinQuestionsAnswerResult: SwiftProtobuf.Message, SwiftProtobuf._
     if self.score != 0 {
       try visitor.visitSingularInt32Field(value: self.score, fieldNumber: 1)
     }
-    if !self.questionsIds.isEmpty {
-      try visitor.visitPackedInt64Field(value: self.questionsIds, fieldNumber: 2)
+    if !self.questionIds.isEmpty {
+      try visitor.visitPackedInt64Field(value: self.questionIds, fieldNumber: 2)
     }
     if self.joined != false {
       try visitor.visitSingularBoolField(value: self.joined, fieldNumber: 3)
@@ -73,7 +73,7 @@ extension GroupJoinQuestionsAnswerResult: SwiftProtobuf.Message, SwiftProtobuf._
 
   public static func ==(lhs: GroupJoinQuestionsAnswerResult, rhs: GroupJoinQuestionsAnswerResult) -> Bool {
     if lhs.score != rhs.score {return false}
-    if lhs.questionsIds != rhs.questionsIds {return false}
+    if lhs.questionIds != rhs.questionIds {return false}
     if lhs.joined != rhs.joined {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true

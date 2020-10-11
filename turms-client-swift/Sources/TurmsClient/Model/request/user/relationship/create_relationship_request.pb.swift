@@ -29,9 +29,9 @@ public struct CreateRelationshipRequest {
     set {_uniqueStorage()._userID = newValue}
   }
 
-  public var isBlocked: Bool {
-    get {return _storage._isBlocked}
-    set {_uniqueStorage()._isBlocked = newValue}
+  public var blocked: Bool {
+    get {return _storage._blocked}
+    set {_uniqueStorage()._blocked = newValue}
   }
 
   public var groupIndex: SwiftProtobuf.Google_Protobuf_Int32Value {
@@ -58,13 +58,13 @@ extension CreateRelationshipRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
   public static let protoMessageName: String = _protobuf_package + ".CreateRelationshipRequest"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "user_id"),
-    2: .standard(proto: "is_blocked"),
+    2: .same(proto: "blocked"),
     3: .standard(proto: "group_index"),
   ]
 
   fileprivate class _StorageClass {
     var _userID: Int64 = 0
-    var _isBlocked: Bool = false
+    var _blocked: Bool = false
     var _groupIndex: SwiftProtobuf.Google_Protobuf_Int32Value? = nil
 
     static let defaultInstance = _StorageClass()
@@ -73,7 +73,7 @@ extension CreateRelationshipRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
 
     init(copying source: _StorageClass) {
       _userID = source._userID
-      _isBlocked = source._isBlocked
+      _blocked = source._blocked
       _groupIndex = source._groupIndex
     }
   }
@@ -91,7 +91,7 @@ extension CreateRelationshipRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
       while let fieldNumber = try decoder.nextFieldNumber() {
         switch fieldNumber {
         case 1: try decoder.decodeSingularInt64Field(value: &_storage._userID)
-        case 2: try decoder.decodeSingularBoolField(value: &_storage._isBlocked)
+        case 2: try decoder.decodeSingularBoolField(value: &_storage._blocked)
         case 3: try decoder.decodeSingularMessageField(value: &_storage._groupIndex)
         default: break
         }
@@ -104,8 +104,8 @@ extension CreateRelationshipRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
       if _storage._userID != 0 {
         try visitor.visitSingularInt64Field(value: _storage._userID, fieldNumber: 1)
       }
-      if _storage._isBlocked != false {
-        try visitor.visitSingularBoolField(value: _storage._isBlocked, fieldNumber: 2)
+      if _storage._blocked != false {
+        try visitor.visitSingularBoolField(value: _storage._blocked, fieldNumber: 2)
       }
       if let v = _storage._groupIndex {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
@@ -120,7 +120,7 @@ extension CreateRelationshipRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
         let _storage = _args.0
         let rhs_storage = _args.1
         if _storage._userID != rhs_storage._userID {return false}
-        if _storage._isBlocked != rhs_storage._isBlocked {return false}
+        if _storage._blocked != rhs_storage._blocked {return false}
         if _storage._groupIndex != rhs_storage._groupIndex {return false}
         return true
       }

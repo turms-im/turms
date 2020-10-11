@@ -57,8 +57,8 @@ fileprivate let _protobuf_package = "im.turms.proto"
 extension UpdateFriendRequestRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".UpdateFriendRequestRequest"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "requestId"),
-    2: .same(proto: "responseAction"),
+    1: .standard(proto: "request_id"),
+    2: .standard(proto: "response_action"),
     3: .same(proto: "reason"),
   ]
 

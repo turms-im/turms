@@ -133,28 +133,28 @@ public struct TurmsRequest {
     set {_uniqueStorage()._kind = .queryUserProfileRequest(newValue)}
   }
 
-  public var queryUsersIdsNearbyRequest: QueryUsersIdsNearbyRequest {
+  public var queryUserIdsNearbyRequest: QueryUserIdsNearbyRequest {
     get {
-      if case .queryUsersIdsNearbyRequest(let v)? = _storage._kind {return v}
-      return QueryUsersIdsNearbyRequest()
+      if case .queryUserIdsNearbyRequest(let v)? = _storage._kind {return v}
+      return QueryUserIdsNearbyRequest()
     }
-    set {_uniqueStorage()._kind = .queryUsersIdsNearbyRequest(newValue)}
+    set {_uniqueStorage()._kind = .queryUserIdsNearbyRequest(newValue)}
   }
 
-  public var queryUsersInfosNearbyRequest: QueryUsersInfosNearbyRequest {
+  public var queryUserInfosNearbyRequest: QueryUserInfosNearbyRequest {
     get {
-      if case .queryUsersInfosNearbyRequest(let v)? = _storage._kind {return v}
-      return QueryUsersInfosNearbyRequest()
+      if case .queryUserInfosNearbyRequest(let v)? = _storage._kind {return v}
+      return QueryUserInfosNearbyRequest()
     }
-    set {_uniqueStorage()._kind = .queryUsersInfosNearbyRequest(newValue)}
+    set {_uniqueStorage()._kind = .queryUserInfosNearbyRequest(newValue)}
   }
 
-  public var queryUsersOnlineStatusRequest: QueryUsersOnlineStatusRequest {
+  public var queryUserOnlineStatusesRequest: QueryUserOnlineStatusesRequest {
     get {
-      if case .queryUsersOnlineStatusRequest(let v)? = _storage._kind {return v}
-      return QueryUsersOnlineStatusRequest()
+      if case .queryUserOnlineStatusesRequest(let v)? = _storage._kind {return v}
+      return QueryUserOnlineStatusesRequest()
     }
-    set {_uniqueStorage()._kind = .queryUsersOnlineStatusRequest(newValue)}
+    set {_uniqueStorage()._kind = .queryUserOnlineStatusesRequest(newValue)}
   }
 
   public var updateUserLocationRequest: UpdateUserLocationRequest {
@@ -230,12 +230,12 @@ public struct TurmsRequest {
     set {_uniqueStorage()._kind = .queryFriendRequestsRequest(newValue)}
   }
 
-  public var queryRelatedUsersIdsRequest: QueryRelatedUsersIdsRequest {
+  public var queryRelatedUserIdsRequest: QueryRelatedUserIdsRequest {
     get {
-      if case .queryRelatedUsersIdsRequest(let v)? = _storage._kind {return v}
-      return QueryRelatedUsersIdsRequest()
+      if case .queryRelatedUserIdsRequest(let v)? = _storage._kind {return v}
+      return QueryRelatedUserIdsRequest()
     }
-    set {_uniqueStorage()._kind = .queryRelatedUsersIdsRequest(newValue)}
+    set {_uniqueStorage()._kind = .queryRelatedUserIdsRequest(newValue)}
   }
 
   public var queryRelationshipGroupsRequest: QueryRelationshipGroupsRequest {
@@ -303,20 +303,20 @@ public struct TurmsRequest {
     set {_uniqueStorage()._kind = .queryGroupRequest(newValue)}
   }
 
-  public var queryJoinedGroupsIdsRequest: QueryJoinedGroupsIdsRequest {
+  public var queryJoinedGroupIdsRequest: QueryJoinedGroupIdsRequest {
     get {
-      if case .queryJoinedGroupsIdsRequest(let v)? = _storage._kind {return v}
-      return QueryJoinedGroupsIdsRequest()
+      if case .queryJoinedGroupIdsRequest(let v)? = _storage._kind {return v}
+      return QueryJoinedGroupIdsRequest()
     }
-    set {_uniqueStorage()._kind = .queryJoinedGroupsIdsRequest(newValue)}
+    set {_uniqueStorage()._kind = .queryJoinedGroupIdsRequest(newValue)}
   }
 
-  public var queryJoinedGroupsInfosRequest: QueryJoinedGroupsInfosRequest {
+  public var queryJoinedGroupInfosRequest: QueryJoinedGroupInfosRequest {
     get {
-      if case .queryJoinedGroupsInfosRequest(let v)? = _storage._kind {return v}
-      return QueryJoinedGroupsInfosRequest()
+      if case .queryJoinedGroupInfosRequest(let v)? = _storage._kind {return v}
+      return QueryJoinedGroupInfosRequest()
     }
-    set {_uniqueStorage()._kind = .queryJoinedGroupsInfosRequest(newValue)}
+    set {_uniqueStorage()._kind = .queryJoinedGroupInfosRequest(newValue)}
   }
 
   public var updateGroupRequest: UpdateGroupRequest {
@@ -344,20 +344,20 @@ public struct TurmsRequest {
     set {_uniqueStorage()._kind = .deleteGroupBlacklistedUserRequest(newValue)}
   }
 
-  public var queryGroupBlacklistedUsersIdsRequest: QueryGroupBlacklistedUsersIdsRequest {
+  public var queryGroupBlacklistedUserIdsRequest: QueryGroupBlacklistedUserIdsRequest {
     get {
-      if case .queryGroupBlacklistedUsersIdsRequest(let v)? = _storage._kind {return v}
-      return QueryGroupBlacklistedUsersIdsRequest()
+      if case .queryGroupBlacklistedUserIdsRequest(let v)? = _storage._kind {return v}
+      return QueryGroupBlacklistedUserIdsRequest()
     }
-    set {_uniqueStorage()._kind = .queryGroupBlacklistedUsersIdsRequest(newValue)}
+    set {_uniqueStorage()._kind = .queryGroupBlacklistedUserIdsRequest(newValue)}
   }
 
-  public var queryGroupBlacklistedUsersInfosRequest: QueryGroupBlacklistedUsersInfosRequest {
+  public var queryGroupBlacklistedUserInfosRequest: QueryGroupBlacklistedUserInfosRequest {
     get {
-      if case .queryGroupBlacklistedUsersInfosRequest(let v)? = _storage._kind {return v}
-      return QueryGroupBlacklistedUsersInfosRequest()
+      if case .queryGroupBlacklistedUserInfosRequest(let v)? = _storage._kind {return v}
+      return QueryGroupBlacklistedUserInfosRequest()
     }
-    set {_uniqueStorage()._kind = .queryGroupBlacklistedUsersInfosRequest(newValue)}
+    set {_uniqueStorage()._kind = .queryGroupBlacklistedUserInfosRequest(newValue)}
   }
 
   /// Group Enrollment
@@ -500,9 +500,9 @@ public struct TurmsRequest {
     case updateTypingStatusRequest(UpdateTypingStatusRequest)
     /// User
     case queryUserProfileRequest(QueryUserProfileRequest)
-    case queryUsersIdsNearbyRequest(QueryUsersIdsNearbyRequest)
-    case queryUsersInfosNearbyRequest(QueryUsersInfosNearbyRequest)
-    case queryUsersOnlineStatusRequest(QueryUsersOnlineStatusRequest)
+    case queryUserIdsNearbyRequest(QueryUserIdsNearbyRequest)
+    case queryUserInfosNearbyRequest(QueryUserInfosNearbyRequest)
+    case queryUserOnlineStatusesRequest(QueryUserOnlineStatusesRequest)
     case updateUserLocationRequest(UpdateUserLocationRequest)
     case updateUserOnlineStatusRequest(UpdateUserOnlineStatusRequest)
     case updateUserRequest(UpdateUserRequest)
@@ -513,7 +513,7 @@ public struct TurmsRequest {
     case deleteRelationshipGroupRequest(DeleteRelationshipGroupRequest)
     case deleteRelationshipRequest(DeleteRelationshipRequest)
     case queryFriendRequestsRequest(QueryFriendRequestsRequest)
-    case queryRelatedUsersIdsRequest(QueryRelatedUsersIdsRequest)
+    case queryRelatedUserIdsRequest(QueryRelatedUserIdsRequest)
     case queryRelationshipGroupsRequest(QueryRelationshipGroupsRequest)
     case queryRelationshipsRequest(QueryRelationshipsRequest)
     case updateFriendRequestRequest(UpdateFriendRequestRequest)
@@ -523,14 +523,14 @@ public struct TurmsRequest {
     case createGroupRequest(CreateGroupRequest)
     case deleteGroupRequest(DeleteGroupRequest)
     case queryGroupRequest(QueryGroupRequest)
-    case queryJoinedGroupsIdsRequest(QueryJoinedGroupsIdsRequest)
-    case queryJoinedGroupsInfosRequest(QueryJoinedGroupsInfosRequest)
+    case queryJoinedGroupIdsRequest(QueryJoinedGroupIdsRequest)
+    case queryJoinedGroupInfosRequest(QueryJoinedGroupInfosRequest)
     case updateGroupRequest(UpdateGroupRequest)
     /// Group Blacklist
     case createGroupBlacklistedUserRequest(CreateGroupBlacklistedUserRequest)
     case deleteGroupBlacklistedUserRequest(DeleteGroupBlacklistedUserRequest)
-    case queryGroupBlacklistedUsersIdsRequest(QueryGroupBlacklistedUsersIdsRequest)
-    case queryGroupBlacklistedUsersInfosRequest(QueryGroupBlacklistedUsersInfosRequest)
+    case queryGroupBlacklistedUserIdsRequest(QueryGroupBlacklistedUserIdsRequest)
+    case queryGroupBlacklistedUserInfosRequest(QueryGroupBlacklistedUserInfosRequest)
     /// Group Enrollment
     case checkGroupJoinQuestionsAnswersRequest(CheckGroupJoinQuestionsAnswersRequest)
     case createGroupInvitationRequest(CreateGroupInvitationRequest)
@@ -563,9 +563,9 @@ public struct TurmsRequest {
       case (.updateMessageRequest(let l), .updateMessageRequest(let r)): return l == r
       case (.updateTypingStatusRequest(let l), .updateTypingStatusRequest(let r)): return l == r
       case (.queryUserProfileRequest(let l), .queryUserProfileRequest(let r)): return l == r
-      case (.queryUsersIdsNearbyRequest(let l), .queryUsersIdsNearbyRequest(let r)): return l == r
-      case (.queryUsersInfosNearbyRequest(let l), .queryUsersInfosNearbyRequest(let r)): return l == r
-      case (.queryUsersOnlineStatusRequest(let l), .queryUsersOnlineStatusRequest(let r)): return l == r
+      case (.queryUserIdsNearbyRequest(let l), .queryUserIdsNearbyRequest(let r)): return l == r
+      case (.queryUserInfosNearbyRequest(let l), .queryUserInfosNearbyRequest(let r)): return l == r
+      case (.queryUserOnlineStatusesRequest(let l), .queryUserOnlineStatusesRequest(let r)): return l == r
       case (.updateUserLocationRequest(let l), .updateUserLocationRequest(let r)): return l == r
       case (.updateUserOnlineStatusRequest(let l), .updateUserOnlineStatusRequest(let r)): return l == r
       case (.updateUserRequest(let l), .updateUserRequest(let r)): return l == r
@@ -575,7 +575,7 @@ public struct TurmsRequest {
       case (.deleteRelationshipGroupRequest(let l), .deleteRelationshipGroupRequest(let r)): return l == r
       case (.deleteRelationshipRequest(let l), .deleteRelationshipRequest(let r)): return l == r
       case (.queryFriendRequestsRequest(let l), .queryFriendRequestsRequest(let r)): return l == r
-      case (.queryRelatedUsersIdsRequest(let l), .queryRelatedUsersIdsRequest(let r)): return l == r
+      case (.queryRelatedUserIdsRequest(let l), .queryRelatedUserIdsRequest(let r)): return l == r
       case (.queryRelationshipGroupsRequest(let l), .queryRelationshipGroupsRequest(let r)): return l == r
       case (.queryRelationshipsRequest(let l), .queryRelationshipsRequest(let r)): return l == r
       case (.updateFriendRequestRequest(let l), .updateFriendRequestRequest(let r)): return l == r
@@ -584,13 +584,13 @@ public struct TurmsRequest {
       case (.createGroupRequest(let l), .createGroupRequest(let r)): return l == r
       case (.deleteGroupRequest(let l), .deleteGroupRequest(let r)): return l == r
       case (.queryGroupRequest(let l), .queryGroupRequest(let r)): return l == r
-      case (.queryJoinedGroupsIdsRequest(let l), .queryJoinedGroupsIdsRequest(let r)): return l == r
-      case (.queryJoinedGroupsInfosRequest(let l), .queryJoinedGroupsInfosRequest(let r)): return l == r
+      case (.queryJoinedGroupIdsRequest(let l), .queryJoinedGroupIdsRequest(let r)): return l == r
+      case (.queryJoinedGroupInfosRequest(let l), .queryJoinedGroupInfosRequest(let r)): return l == r
       case (.updateGroupRequest(let l), .updateGroupRequest(let r)): return l == r
       case (.createGroupBlacklistedUserRequest(let l), .createGroupBlacklistedUserRequest(let r)): return l == r
       case (.deleteGroupBlacklistedUserRequest(let l), .deleteGroupBlacklistedUserRequest(let r)): return l == r
-      case (.queryGroupBlacklistedUsersIdsRequest(let l), .queryGroupBlacklistedUsersIdsRequest(let r)): return l == r
-      case (.queryGroupBlacklistedUsersInfosRequest(let l), .queryGroupBlacklistedUsersInfosRequest(let r)): return l == r
+      case (.queryGroupBlacklistedUserIdsRequest(let l), .queryGroupBlacklistedUserIdsRequest(let r)): return l == r
+      case (.queryGroupBlacklistedUserInfosRequest(let l), .queryGroupBlacklistedUserInfosRequest(let r)): return l == r
       case (.checkGroupJoinQuestionsAnswersRequest(let l), .checkGroupJoinQuestionsAnswersRequest(let r)): return l == r
       case (.createGroupInvitationRequest(let l), .createGroupInvitationRequest(let r)): return l == r
       case (.createGroupJoinRequestRequest(let l), .createGroupJoinRequestRequest(let r)): return l == r
@@ -636,9 +636,9 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
     10: .standard(proto: "update_message_request"),
     11: .standard(proto: "update_typing_status_request"),
     100: .standard(proto: "query_user_profile_request"),
-    101: .standard(proto: "query_users_ids_nearby_request"),
-    102: .standard(proto: "query_users_infos_nearby_request"),
-    103: .standard(proto: "query_users_online_status_request"),
+    101: .standard(proto: "query_user_ids_nearby_request"),
+    102: .standard(proto: "query_user_infos_nearby_request"),
+    103: .standard(proto: "query_user_online_statuses_request"),
     104: .standard(proto: "update_user_location_request"),
     105: .standard(proto: "update_user_online_status_request"),
     106: .standard(proto: "update_user_request"),
@@ -648,7 +648,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
     203: .standard(proto: "delete_relationship_group_request"),
     204: .standard(proto: "delete_relationship_request"),
     205: .standard(proto: "query_friend_requests_request"),
-    206: .standard(proto: "query_related_users_ids_request"),
+    206: .standard(proto: "query_related_user_ids_request"),
     207: .standard(proto: "query_relationship_groups_request"),
     208: .standard(proto: "query_relationships_request"),
     209: .standard(proto: "update_friend_request_request"),
@@ -657,13 +657,13 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
     300: .standard(proto: "create_group_request"),
     301: .standard(proto: "delete_group_request"),
     302: .standard(proto: "query_group_request"),
-    303: .standard(proto: "query_joined_groups_ids_request"),
-    304: .standard(proto: "query_joined_groups_infos_request"),
+    303: .standard(proto: "query_joined_group_ids_request"),
+    304: .standard(proto: "query_joined_group_infos_request"),
     305: .standard(proto: "update_group_request"),
     400: .standard(proto: "create_group_blacklisted_user_request"),
     401: .standard(proto: "delete_group_blacklisted_user_request"),
-    402: .standard(proto: "query_group_blacklisted_users_ids_request"),
-    403: .standard(proto: "query_group_blacklisted_users_infos_request"),
+    402: .standard(proto: "query_group_blacklisted_user_ids_request"),
+    403: .standard(proto: "query_group_blacklisted_user_infos_request"),
     500: .standard(proto: "check_group_join_questions_answers_request"),
     501: .standard(proto: "create_group_invitation_request"),
     502: .standard(proto: "create_group_join_request_request"),
@@ -797,29 +797,29 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .queryUserProfileRequest(v)}
         case 101:
-          var v: QueryUsersIdsNearbyRequest?
+          var v: QueryUserIdsNearbyRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
-            if case .queryUsersIdsNearbyRequest(let m) = current {v = m}
+            if case .queryUserIdsNearbyRequest(let m) = current {v = m}
           }
           try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._kind = .queryUsersIdsNearbyRequest(v)}
+          if let v = v {_storage._kind = .queryUserIdsNearbyRequest(v)}
         case 102:
-          var v: QueryUsersInfosNearbyRequest?
+          var v: QueryUserInfosNearbyRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
-            if case .queryUsersInfosNearbyRequest(let m) = current {v = m}
+            if case .queryUserInfosNearbyRequest(let m) = current {v = m}
           }
           try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._kind = .queryUsersInfosNearbyRequest(v)}
+          if let v = v {_storage._kind = .queryUserInfosNearbyRequest(v)}
         case 103:
-          var v: QueryUsersOnlineStatusRequest?
+          var v: QueryUserOnlineStatusesRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
-            if case .queryUsersOnlineStatusRequest(let m) = current {v = m}
+            if case .queryUserOnlineStatusesRequest(let m) = current {v = m}
           }
           try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._kind = .queryUsersOnlineStatusRequest(v)}
+          if let v = v {_storage._kind = .queryUserOnlineStatusesRequest(v)}
         case 104:
           var v: UpdateUserLocationRequest?
           if let current = _storage._kind {
@@ -893,13 +893,13 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .queryFriendRequestsRequest(v)}
         case 206:
-          var v: QueryRelatedUsersIdsRequest?
+          var v: QueryRelatedUserIdsRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
-            if case .queryRelatedUsersIdsRequest(let m) = current {v = m}
+            if case .queryRelatedUserIdsRequest(let m) = current {v = m}
           }
           try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._kind = .queryRelatedUsersIdsRequest(v)}
+          if let v = v {_storage._kind = .queryRelatedUserIdsRequest(v)}
         case 207:
           var v: QueryRelationshipGroupsRequest?
           if let current = _storage._kind {
@@ -965,21 +965,21 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .queryGroupRequest(v)}
         case 303:
-          var v: QueryJoinedGroupsIdsRequest?
+          var v: QueryJoinedGroupIdsRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
-            if case .queryJoinedGroupsIdsRequest(let m) = current {v = m}
+            if case .queryJoinedGroupIdsRequest(let m) = current {v = m}
           }
           try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._kind = .queryJoinedGroupsIdsRequest(v)}
+          if let v = v {_storage._kind = .queryJoinedGroupIdsRequest(v)}
         case 304:
-          var v: QueryJoinedGroupsInfosRequest?
+          var v: QueryJoinedGroupInfosRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
-            if case .queryJoinedGroupsInfosRequest(let m) = current {v = m}
+            if case .queryJoinedGroupInfosRequest(let m) = current {v = m}
           }
           try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._kind = .queryJoinedGroupsInfosRequest(v)}
+          if let v = v {_storage._kind = .queryJoinedGroupInfosRequest(v)}
         case 305:
           var v: UpdateGroupRequest?
           if let current = _storage._kind {
@@ -1005,21 +1005,21 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .deleteGroupBlacklistedUserRequest(v)}
         case 402:
-          var v: QueryGroupBlacklistedUsersIdsRequest?
+          var v: QueryGroupBlacklistedUserIdsRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
-            if case .queryGroupBlacklistedUsersIdsRequest(let m) = current {v = m}
+            if case .queryGroupBlacklistedUserIdsRequest(let m) = current {v = m}
           }
           try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._kind = .queryGroupBlacklistedUsersIdsRequest(v)}
+          if let v = v {_storage._kind = .queryGroupBlacklistedUserIdsRequest(v)}
         case 403:
-          var v: QueryGroupBlacklistedUsersInfosRequest?
+          var v: QueryGroupBlacklistedUserInfosRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
-            if case .queryGroupBlacklistedUsersInfosRequest(let m) = current {v = m}
+            if case .queryGroupBlacklistedUserInfosRequest(let m) = current {v = m}
           }
           try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._kind = .queryGroupBlacklistedUsersInfosRequest(v)}
+          if let v = v {_storage._kind = .queryGroupBlacklistedUserInfosRequest(v)}
         case 500:
           var v: CheckGroupJoinQuestionsAnswersRequest?
           if let current = _storage._kind {
@@ -1174,11 +1174,11 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
         try visitor.visitSingularMessageField(value: v, fieldNumber: 11)
       case .queryUserProfileRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 100)
-      case .queryUsersIdsNearbyRequest(let v)?:
+      case .queryUserIdsNearbyRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 101)
-      case .queryUsersInfosNearbyRequest(let v)?:
+      case .queryUserInfosNearbyRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 102)
-      case .queryUsersOnlineStatusRequest(let v)?:
+      case .queryUserOnlineStatusesRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 103)
       case .updateUserLocationRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 104)
@@ -1198,7 +1198,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
         try visitor.visitSingularMessageField(value: v, fieldNumber: 204)
       case .queryFriendRequestsRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 205)
-      case .queryRelatedUsersIdsRequest(let v)?:
+      case .queryRelatedUserIdsRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 206)
       case .queryRelationshipGroupsRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 207)
@@ -1216,9 +1216,9 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
         try visitor.visitSingularMessageField(value: v, fieldNumber: 301)
       case .queryGroupRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 302)
-      case .queryJoinedGroupsIdsRequest(let v)?:
+      case .queryJoinedGroupIdsRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 303)
-      case .queryJoinedGroupsInfosRequest(let v)?:
+      case .queryJoinedGroupInfosRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 304)
       case .updateGroupRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 305)
@@ -1226,9 +1226,9 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
         try visitor.visitSingularMessageField(value: v, fieldNumber: 400)
       case .deleteGroupBlacklistedUserRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 401)
-      case .queryGroupBlacklistedUsersIdsRequest(let v)?:
+      case .queryGroupBlacklistedUserIdsRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 402)
-      case .queryGroupBlacklistedUsersInfosRequest(let v)?:
+      case .queryGroupBlacklistedUserInfosRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 403)
       case .checkGroupJoinQuestionsAnswersRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 500)

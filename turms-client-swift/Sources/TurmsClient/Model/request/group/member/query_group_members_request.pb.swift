@@ -38,9 +38,9 @@ public struct QueryGroupMembersRequest {
   /// Clears the value of `lastUpdatedDate`. Subsequent reads from it will return its default value.
   public mutating func clearLastUpdatedDate() {_uniqueStorage()._lastUpdatedDate = nil}
 
-  public var groupMembersIds: [Int64] {
-    get {return _storage._groupMembersIds}
-    set {_uniqueStorage()._groupMembersIds = newValue}
+  public var memberIds: [Int64] {
+    get {return _storage._memberIds}
+    set {_uniqueStorage()._memberIds = newValue}
   }
 
   public var withStatus: SwiftProtobuf.Google_Protobuf_BoolValue {
@@ -68,14 +68,14 @@ extension QueryGroupMembersRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "group_id"),
     2: .standard(proto: "last_updated_date"),
-    3: .standard(proto: "group_members_ids"),
+    3: .standard(proto: "member_ids"),
     4: .standard(proto: "with_status"),
   ]
 
   fileprivate class _StorageClass {
     var _groupID: Int64 = 0
     var _lastUpdatedDate: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
-    var _groupMembersIds: [Int64] = []
+    var _memberIds: [Int64] = []
     var _withStatus: SwiftProtobuf.Google_Protobuf_BoolValue? = nil
 
     static let defaultInstance = _StorageClass()
@@ -85,7 +85,7 @@ extension QueryGroupMembersRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
     init(copying source: _StorageClass) {
       _groupID = source._groupID
       _lastUpdatedDate = source._lastUpdatedDate
-      _groupMembersIds = source._groupMembersIds
+      _memberIds = source._memberIds
       _withStatus = source._withStatus
     }
   }
@@ -104,7 +104,7 @@ extension QueryGroupMembersRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
         switch fieldNumber {
         case 1: try decoder.decodeSingularInt64Field(value: &_storage._groupID)
         case 2: try decoder.decodeSingularMessageField(value: &_storage._lastUpdatedDate)
-        case 3: try decoder.decodeRepeatedInt64Field(value: &_storage._groupMembersIds)
+        case 3: try decoder.decodeRepeatedInt64Field(value: &_storage._memberIds)
         case 4: try decoder.decodeSingularMessageField(value: &_storage._withStatus)
         default: break
         }
@@ -120,8 +120,8 @@ extension QueryGroupMembersRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
       if let v = _storage._lastUpdatedDate {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
       }
-      if !_storage._groupMembersIds.isEmpty {
-        try visitor.visitPackedInt64Field(value: _storage._groupMembersIds, fieldNumber: 3)
+      if !_storage._memberIds.isEmpty {
+        try visitor.visitPackedInt64Field(value: _storage._memberIds, fieldNumber: 3)
       }
       if let v = _storage._withStatus {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
@@ -137,7 +137,7 @@ extension QueryGroupMembersRequest: SwiftProtobuf.Message, SwiftProtobuf._Messag
         let rhs_storage = _args.1
         if _storage._groupID != rhs_storage._groupID {return false}
         if _storage._lastUpdatedDate != rhs_storage._lastUpdatedDate {return false}
-        if _storage._groupMembersIds != rhs_storage._groupMembersIds {return false}
+        if _storage._memberIds != rhs_storage._memberIds {return false}
         if _storage._withStatus != rhs_storage._withStatus {return false}
         return true
       }

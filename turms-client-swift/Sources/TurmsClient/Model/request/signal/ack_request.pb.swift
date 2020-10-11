@@ -24,7 +24,7 @@ public struct AckRequest {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  public var messagesIds: [Int64] = []
+  public var messageIds: [Int64] = []
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -38,27 +38,27 @@ fileprivate let _protobuf_package = "im.turms.proto"
 extension AckRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".AckRequest"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "messages_ids"),
+    1: .standard(proto: "message_ids"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-      case 1: try decoder.decodeRepeatedInt64Field(value: &self.messagesIds)
+      case 1: try decoder.decodeRepeatedInt64Field(value: &self.messageIds)
       default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if !self.messagesIds.isEmpty {
-      try visitor.visitPackedInt64Field(value: self.messagesIds, fieldNumber: 1)
+    if !self.messageIds.isEmpty {
+      try visitor.visitPackedInt64Field(value: self.messageIds, fieldNumber: 1)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: AckRequest, rhs: AckRequest) -> Bool {
-    if lhs.messagesIds != rhs.messagesIds {return false}
+    if lhs.messageIds != rhs.messageIds {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

@@ -24,19 +24,19 @@ public struct QueryRelationshipsRequest {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  public var relatedUsersIds: [Int64] {
-    get {return _storage._relatedUsersIds}
-    set {_uniqueStorage()._relatedUsersIds = newValue}
+  public var userIds: [Int64] {
+    get {return _storage._userIds}
+    set {_uniqueStorage()._userIds = newValue}
   }
 
-  public var isBlocked: SwiftProtobuf.Google_Protobuf_BoolValue {
-    get {return _storage._isBlocked ?? SwiftProtobuf.Google_Protobuf_BoolValue()}
-    set {_uniqueStorage()._isBlocked = newValue}
+  public var blocked: SwiftProtobuf.Google_Protobuf_BoolValue {
+    get {return _storage._blocked ?? SwiftProtobuf.Google_Protobuf_BoolValue()}
+    set {_uniqueStorage()._blocked = newValue}
   }
-  /// Returns true if `isBlocked` has been explicitly set.
-  public var hasIsBlocked: Bool {return _storage._isBlocked != nil}
-  /// Clears the value of `isBlocked`. Subsequent reads from it will return its default value.
-  public mutating func clearIsBlocked() {_uniqueStorage()._isBlocked = nil}
+  /// Returns true if `blocked` has been explicitly set.
+  public var hasBlocked: Bool {return _storage._blocked != nil}
+  /// Clears the value of `blocked`. Subsequent reads from it will return its default value.
+  public mutating func clearBlocked() {_uniqueStorage()._blocked = nil}
 
   public var groupIndex: SwiftProtobuf.Google_Protobuf_Int32Value {
     get {return _storage._groupIndex ?? SwiftProtobuf.Google_Protobuf_Int32Value()}
@@ -70,15 +70,15 @@ fileprivate let _protobuf_package = "im.turms.proto"
 extension QueryRelationshipsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".QueryRelationshipsRequest"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "related_users_ids"),
-    2: .standard(proto: "is_blocked"),
+    1: .standard(proto: "user_ids"),
+    2: .same(proto: "blocked"),
     3: .standard(proto: "group_index"),
     4: .standard(proto: "last_updated_date"),
   ]
 
   fileprivate class _StorageClass {
-    var _relatedUsersIds: [Int64] = []
-    var _isBlocked: SwiftProtobuf.Google_Protobuf_BoolValue? = nil
+    var _userIds: [Int64] = []
+    var _blocked: SwiftProtobuf.Google_Protobuf_BoolValue? = nil
     var _groupIndex: SwiftProtobuf.Google_Protobuf_Int32Value? = nil
     var _lastUpdatedDate: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
 
@@ -87,8 +87,8 @@ extension QueryRelationshipsRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
     private init() {}
 
     init(copying source: _StorageClass) {
-      _relatedUsersIds = source._relatedUsersIds
-      _isBlocked = source._isBlocked
+      _userIds = source._userIds
+      _blocked = source._blocked
       _groupIndex = source._groupIndex
       _lastUpdatedDate = source._lastUpdatedDate
     }
@@ -106,8 +106,8 @@ extension QueryRelationshipsRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
     try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
       while let fieldNumber = try decoder.nextFieldNumber() {
         switch fieldNumber {
-        case 1: try decoder.decodeRepeatedInt64Field(value: &_storage._relatedUsersIds)
-        case 2: try decoder.decodeSingularMessageField(value: &_storage._isBlocked)
+        case 1: try decoder.decodeRepeatedInt64Field(value: &_storage._userIds)
+        case 2: try decoder.decodeSingularMessageField(value: &_storage._blocked)
         case 3: try decoder.decodeSingularMessageField(value: &_storage._groupIndex)
         case 4: try decoder.decodeSingularMessageField(value: &_storage._lastUpdatedDate)
         default: break
@@ -118,10 +118,10 @@ extension QueryRelationshipsRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
-      if !_storage._relatedUsersIds.isEmpty {
-        try visitor.visitPackedInt64Field(value: _storage._relatedUsersIds, fieldNumber: 1)
+      if !_storage._userIds.isEmpty {
+        try visitor.visitPackedInt64Field(value: _storage._userIds, fieldNumber: 1)
       }
-      if let v = _storage._isBlocked {
+      if let v = _storage._blocked {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
       }
       if let v = _storage._groupIndex {
@@ -139,8 +139,8 @@ extension QueryRelationshipsRequest: SwiftProtobuf.Message, SwiftProtobuf._Messa
       let storagesAreEqual: Bool = withExtendedLifetime((lhs._storage, rhs._storage)) { (_args: (_StorageClass, _StorageClass)) in
         let _storage = _args.0
         let rhs_storage = _args.1
-        if _storage._relatedUsersIds != rhs_storage._relatedUsersIds {return false}
-        if _storage._isBlocked != rhs_storage._isBlocked {return false}
+        if _storage._userIds != rhs_storage._userIds {return false}
+        if _storage._blocked != rhs_storage._blocked {return false}
         if _storage._groupIndex != rhs_storage._groupIndex {return false}
         if _storage._lastUpdatedDate != rhs_storage._lastUpdatedDate {return false}
         return true
