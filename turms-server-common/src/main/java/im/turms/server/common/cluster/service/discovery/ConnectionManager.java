@@ -20,6 +20,7 @@ package im.turms.server.common.cluster.service.discovery;
 import im.turms.server.common.cluster.service.config.domain.discovery.Member;
 import im.turms.server.common.cluster.service.rpc.RpcService;
 import im.turms.server.common.property.env.common.cluster.DiscoveryProperties;
+import im.turms.server.common.util.SslUtil;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.rsocket.RSocket;
@@ -31,6 +32,7 @@ import io.rsocket.transport.netty.client.TcpClientTransport;
 import jdk.internal.vm.annotation.Contended;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.boot.web.server.Ssl;
 import reactor.core.publisher.Mono;
 import reactor.netty.Metrics;
 import reactor.netty.tcp.TcpClient;
@@ -46,6 +48,7 @@ import java.util.concurrent.TimeUnit;
 @Log4j2
 public class ConnectionManager {
 
+    private final Ssl ssl;
     private final Duration keepaliveInterval;
     private final Duration keepaliveTimeout;
     private final Duration reconnectInterval;
@@ -71,6 +74,7 @@ public class ConnectionManager {
 
     public ConnectionManager(DiscoveryService discoveryService, DiscoveryProperties discoveryProperties, int outputThreadNumber) {
         this.discoveryService = discoveryService;
+        this.ssl = discoveryProperties.getClientSsl();
         keepaliveInterval = Duration.ofSeconds(discoveryProperties.getHeartbeatIntervalInSeconds());
         keepaliveTimeout = Duration.ofSeconds(discoveryProperties.getHeartbeatTimeoutInSeconds());
         reconnectInterval = Duration.ofSeconds(discoveryProperties.getReconnectIntervalInSeconds());
@@ -162,6 +166,7 @@ public class ConnectionManager {
         TcpClient client = TcpClient.create()
                 .host(host)
                 .port(port)
+                .secure(sslContextSpec -> SslUtil.configureSslContextSpec(sslContextSpec, ssl))
                 .runOn(eventLoopGroup);
         TcpClientTransport transport = TcpClientTransport.create(client);
         return RSocketConnector.create()

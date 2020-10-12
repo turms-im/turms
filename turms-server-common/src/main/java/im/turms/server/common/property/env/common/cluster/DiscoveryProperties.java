@@ -23,6 +23,7 @@ import im.turms.server.common.property.constant.AdvertiseStrategy;
 import im.turms.server.common.property.metadata.annotation.Description;
 import lombok.Data;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
+import org.springframework.boot.web.server.Ssl;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -50,6 +51,12 @@ public class DiscoveryProperties {
 
     @NestedConfigurationProperty
     private AdvertiseProperties advertise = new AdvertiseProperties();
+
+    @NestedConfigurationProperty
+    private Ssl clientSsl = new Ssl();
+
+    @NestedConfigurationProperty
+    private Ssl serverSsl = new Ssl();
 
     @Data
     public static class AdvertiseProperties {

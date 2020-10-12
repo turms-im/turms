@@ -28,9 +28,11 @@ import im.turms.server.common.manager.address.IServiceAddressManager;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.cluster.ClusterProperties;
+import im.turms.server.common.property.env.common.cluster.DiscoveryProperties;
 import im.turms.server.common.property.env.common.cluster.NodeProperties;
 import im.turms.server.common.property.env.common.cluster.NodeProperties.NetworkProperties;
 import im.turms.server.common.property.env.common.cluster.SharedConfigProperties;
+import im.turms.server.common.util.SslUtil;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.rsocket.SocketAcceptor;
@@ -40,6 +42,7 @@ import io.rsocket.transport.netty.server.TcpServerTransport;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.boot.web.server.Ssl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.StringUtils;
 import reactor.netty.ChannelBindException;
@@ -88,6 +91,7 @@ public class Node {
         ClusterProperties clusterProperties = turmsProperties.getCluster();
         NodeProperties nodeProperties = clusterProperties.getNode();
         SharedConfigProperties sharedConfigProperties = clusterProperties.getSharedConfig();
+        DiscoveryProperties discoveryProperties = clusterProperties.getDiscovery();
         NetworkProperties networkProperties = nodeProperties.getNetwork();
 
         NodeVersion nodeVersion;
@@ -106,7 +110,8 @@ public class Node {
                 networkProperties.getPort(),
                 networkProperties.isAutoIncrement(),
                 networkProperties.getPortCount(),
-                clusterProperties.getRpc().getInputThreadNumber());
+                clusterProperties.getRpc().getInputThreadNumber(),
+                discoveryProperties.getServerSsl());
         InetSocketAddress address = serverChannel.address();
         String clusterId = clusterProperties.getId();
         String nodeId = nodeProperties.getId();
@@ -124,7 +129,7 @@ public class Node {
                 address.getHostString(),
                 address.getPort(),
                 clusterProperties.getRpc().getOutputThreadNumber(),
-                clusterProperties.getDiscovery(),
+                discoveryProperties,
                 serviceAddressManager,
                 sharedConfigService);
 
@@ -184,7 +189,12 @@ public class Node {
 
     // Private
 
-    private CloseableChannel setupLocalDiscoveryServer(String host, int port, boolean autoIncrement, int portCount, int inputThreadNumber) {
+    private CloseableChannel setupLocalDiscoveryServer(String host,
+                                                       int port,
+                                                       boolean autoIncrement,
+                                                       int portCount,
+                                                       int inputThreadNumber,
+                                                       Ssl serverSsl) {
         int currentPort = port;
         NioEventLoopGroup eventLoopGroup = new NioEventLoopGroup(inputThreadNumber, new DefaultThreadFactory("member-input"));
 
@@ -194,7 +204,8 @@ public class Node {
                 InetSocketAddress inetSocketAddress = new InetSocketAddress(host, currentPort);
                 TcpServer tcpServer = TcpServer.create()
                         .runOn(eventLoopGroup)
-                        .bindAddress(() -> inetSocketAddress);
+                        .bindAddress(() -> inetSocketAddress)
+                        .secure(spec -> SslUtil.configureSslContextSpec(spec, serverSsl));
                 TcpServerTransport transport = TcpServerTransport.create(tcpServer);
                 CloseableChannel channel = RSocketServer
                         .create(SocketAcceptor.with(RpcService.getRpcAcceptor()))
