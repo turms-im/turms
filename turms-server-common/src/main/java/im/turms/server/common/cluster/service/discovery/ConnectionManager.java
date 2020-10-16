@@ -166,7 +166,7 @@ public class ConnectionManager {
         TcpClient client = TcpClient.create()
                 .host(host)
                 .port(port)
-                .secure(sslContextSpec -> SslUtil.configureSslContextSpec(sslContextSpec, ssl))
+                .secure(sslContextSpec -> SslUtil.configureSslContextSpec(sslContextSpec, ssl, false))
                 .runOn(eventLoopGroup);
         TcpClientTransport transport = TcpClientTransport.create(client);
         return RSocketConnector.create()

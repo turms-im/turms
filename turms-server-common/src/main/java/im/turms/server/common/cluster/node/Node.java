@@ -205,7 +205,7 @@ public class Node {
                 TcpServer tcpServer = TcpServer.create()
                         .runOn(eventLoopGroup)
                         .bindAddress(() -> inetSocketAddress)
-                        .secure(spec -> SslUtil.configureSslContextSpec(spec, serverSsl));
+                        .secure(spec -> SslUtil.configureSslContextSpec(spec, serverSsl, true));
                 TcpServerTransport transport = TcpServerTransport.create(tcpServer);
                 CloseableChannel channel = RSocketServer
                         .create(SocketAcceptor.with(RpcService.getRpcAcceptor()))

@@ -23,6 +23,7 @@ import org.springframework.boot.web.server.Ssl;
 import reactor.netty.tcp.SslProvider;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 
 /**
  * @author James Chen
@@ -33,16 +34,16 @@ public class SslUtil {
     }
 
     @Nullable
-    public static SslContextBuilder getSslContextBuilder(Ssl ssl) {
+    public static SslContextBuilder getSslContextBuilder(Ssl ssl, boolean forServer) {
         if (ssl.isEnabled()) {
-            MySslServerCustomizer sslServerCustomizer = new MySslServerCustomizer(ssl);
+            MySslServerCustomizer sslServerCustomizer = new MySslServerCustomizer(ssl, forServer);
             return sslServerCustomizer.getContextBuilder();
         }
         return null;
     }
 
-    public static void configureSslContextSpec(SslProvider.SslContextSpec sslContextSpec, Ssl ssl) {
-        SslContextBuilder builder = getSslContextBuilder(ssl);
+    public static void configureSslContextSpec(SslProvider.SslContextSpec sslContextSpec, Ssl ssl, boolean forServer) {
+        SslContextBuilder builder = getSslContextBuilder(ssl, forServer);
         if (builder != null) {
             sslContextSpec.sslContext(builder);
         }
@@ -50,13 +51,34 @@ public class SslUtil {
 
     private static class MySslServerCustomizer extends SslServerCustomizer {
 
-        public MySslServerCustomizer(Ssl ssl) {
+        private final boolean forServer;
+        private final Ssl ssl;
+
+        public MySslServerCustomizer(Ssl ssl, boolean forServer) {
             super(ssl, null, null);
+            this.ssl = ssl;
+            this.forServer = forServer;
         }
 
         @Override
         public SslContextBuilder getContextBuilder() {
-            return super.getContextBuilder();
+            return forServer
+                    ? super.getContextBuilder()
+                    : getClientContextBuilder();
+        }
+
+        private SslContextBuilder getClientContextBuilder() {
+            SslContextBuilder builder = SslContextBuilder
+                    .forClient()
+                    .keyManager(getKeyManagerFactory(ssl, null))
+                    .trustManager(getTrustManagerFactory(ssl, null));
+            if (ssl.getEnabledProtocols() != null) {
+                builder.protocols(ssl.getEnabledProtocols());
+            }
+            if (ssl.getCiphers() != null) {
+                builder.ciphers(Arrays.asList(ssl.getCiphers()));
+            }
+            return builder;
         }
 
     }
