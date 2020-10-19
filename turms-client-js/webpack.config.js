@@ -8,7 +8,6 @@ module.exports = (env, argv) => {
             'turms-client': './src/turms-client.ts',
             'turms-client.min': './src/turms-client.ts'
         },
-        devtool: 'inline-source-map',
         module: {
             rules: [
                 {
@@ -29,7 +28,6 @@ module.exports = (env, argv) => {
                         }
                     },
                     test: /min\.js$/,
-                    sourceMap: false,
                     extractComments: false
                 }),
             ],
