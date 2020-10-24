@@ -436,8 +436,7 @@ public class SessionService implements ISessionService {
                     UserStatus finalUserStatus = userStatus != null ? userStatus : UserStatus.AVAILABLE;
                     UserSessionsManager manager = sessionsManagerByUserId.computeIfAbsent(userId, key ->
                             new UserSessionsManager(userId, finalUserStatus, deviceType, position, closeIdleSessionAfterMillis, switchProtocolAfterMillis, null));
-                    UserSession session;
-                    session = manager.addSessionIfAbsent(deviceType, position, null, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
+                    UserSession session = manager.addSessionIfAbsent(deviceType, position, null, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
                     // This should never happen
                     if (session == null) {
                         manager.setDeviceOffline(deviceType, CloseStatusFactory.get(SessionCloseStatus.LOGIN_CONFLICT));

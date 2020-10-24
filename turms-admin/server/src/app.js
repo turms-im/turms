@@ -3,7 +3,6 @@ const path = require('path');
 const express = require('express');
 const compression = require('compression');
 const history = require('connect-history-api-fallback');
-const chalk = require('chalk');
 
 const port = process.env.PORT || 7510;
 const DIST_DIR = path.resolve(__dirname, '../../dist');
@@ -19,5 +18,5 @@ app.get('/', function(req, res) {
 });
 
 app.listen(port, () => {
-    console.log(chalk.yellow(`turms-admin is running on port ${port}`));
+    console.info(`turms-admin is running on port ${port}`);
 });
