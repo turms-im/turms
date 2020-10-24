@@ -325,11 +325,11 @@ public class SessionService implements ISessionService {
         return Mono.empty();
     }
 
-    public Mono<TurmsStatusCode> tryRegisterOnlineUser(
+    public Mono<UserSession> tryRegisterOnlineUser(
             @NotNull Long userId,
             @NotNull DeviceType deviceType,
             @Nullable UserStatus userStatus,
-            @Nullable Point userLocation,
+            @Nullable Point position,
             @Nullable String ip,
             @Nullable Map<String, String> deviceDetails) {
         try {
@@ -343,16 +343,16 @@ public class SessionService implements ISessionService {
                 .flatMap(sessionsStatus -> {
                     // Check the current sessions status
                     if (sessionsStatus.getUserStatus() == UserStatus.OFFLINE) {
-                        return addOnlineDeviceIfAbsent(userId, deviceType, userStatus, userLocation, ip, deviceDetails, sessionsStatus);
+                        return addOnlineDeviceIfAbsent(userId, deviceType, userStatus, position, ip, deviceDetails, sessionsStatus);
                     } else {
                         boolean conflicts = sessionsStatus.getLoggedInDeviceTypes().contains(deviceType);
                         if (conflicts && userSimultaneousLoginService.shouldDisconnectLoggingInDeviceIfConflicts()) {
-                            return Mono.just(TurmsStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE);
+                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE));
                         } else {
                             return disconnectConflictedDeviceTypes(userId, deviceType, sessionsStatus)
                                     .flatMap(wasSuccessful -> wasSuccessful
-                                            ? addOnlineDeviceIfAbsent(userId, deviceType, userStatus, userLocation, ip, deviceDetails, sessionsStatus)
-                                            : Mono.just(TurmsStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE));
+                                            ? addOnlineDeviceIfAbsent(userId, deviceType, userStatus, position, ip, deviceDetails, sessionsStatus)
+                                            : Mono.error(TurmsBusinessException.get(TurmsStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE)));
                         }
                     }
                 });
@@ -419,51 +419,49 @@ public class SessionService implements ISessionService {
         }
     }
 
-    private Mono<TurmsStatusCode> addOnlineDeviceIfAbsent(
+    private Mono<UserSession> addOnlineDeviceIfAbsent(
             @NotNull Long userId,
             @NotNull DeviceType deviceType,
             @Nullable UserStatus userStatus,
-            @Nullable Point userLocation,
+            @Nullable Point position,
             @Nullable String ip,
             @Nullable Map<String, String> deviceDetails,
             @NotNull UserSessionsStatus sessionsStatus) {
         // Try to update the global user status
         return userStatusService.addOnlineDeviceIfAbsent(userId, deviceType, userStatus, closeIdleSessionAfterDuration, sessionsStatus)
                 .flatMap(wasSuccessful -> {
-                    if (wasSuccessful) {
-                        UserStatus finalUserStatus = userStatus != null ? userStatus : UserStatus.AVAILABLE;
-                        boolean[] managerExists = new boolean[]{true};
-                        UserSessionsManager manager = sessionsManagerByUserId.computeIfAbsent(userId, key -> {
-                            managerExists[0] = false;
-                            return new UserSessionsManager(userId, finalUserStatus, deviceType, userLocation, closeIdleSessionAfterMillis, switchProtocolAfterMillis, null);
-                        });
-                        if (managerExists[0]) {
-                            boolean added = manager.addSessionIfAbsent(deviceType, userLocation, null, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
-                            // This should never happen
-                            if (!added) {
-                                manager.setDeviceOffline(deviceType, CloseStatusFactory.get(SessionCloseStatus.LOGIN_CONFLICT));
-                                manager.addSessionIfAbsent(deviceType, userLocation, null, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
-                            }
+                    if (!wasSuccessful) {
+                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE));
+                    }
+                    UserStatus finalUserStatus = userStatus != null ? userStatus : UserStatus.AVAILABLE;
+                    UserSessionsManager manager = sessionsManagerByUserId.computeIfAbsent(userId, key ->
+                            new UserSessionsManager(userId, finalUserStatus, deviceType, position, closeIdleSessionAfterMillis, switchProtocolAfterMillis, null));
+                    UserSession session;
+                    session = manager.addSessionIfAbsent(deviceType, position, null, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
+                    // This should never happen
+                    if (session == null) {
+                        manager.setDeviceOffline(deviceType, CloseStatusFactory.get(SessionCloseStatus.LOGIN_CONFLICT));
+                        session = manager.addSessionIfAbsent(deviceType, position, null, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
+                        if (session == null) {
+                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_INTERNAL_ERROR));
                         }
+                    }
 
-                        long logId = node.getFlakeIdService().nextId(ServiceType.LOG);
-                        Date now = new Date();
-                        if (userLocation != null && sessionLocationService.isLocationEnabled()) {
-                            return sessionLocationService.upsertUserLocation(userId, deviceType, userLocation, now)
-                                    .doOnSuccess(hasUpsertedLocation -> {
-                                        if (hasUpsertedLocation != null && hasUpsertedLocation) {
-                                            userLoginActionService
-                                                    .tryLogLoginActionAndTriggerHandlers(logId, userId, finalUserStatus, deviceType, userLocation, ip, deviceDetails, now);
-                                        }
-                                    })
-                                    .thenReturn(TurmsStatusCode.OK);
-                        } else {
-                            userLoginActionService
-                                    .tryLogLoginActionAndTriggerHandlers(logId, userId, finalUserStatus, deviceType, userLocation, ip, deviceDetails, now);
-                            return Mono.just(TurmsStatusCode.OK);
-                        }
+                    long logId = node.getFlakeIdService().nextId(ServiceType.LOG);
+                    Date now = new Date();
+                    if (position != null && sessionLocationService.isLocationEnabled()) {
+                        return sessionLocationService.upsertUserLocation(userId, deviceType, position, now)
+                                .doOnSuccess(hasUpsertedLocation -> {
+                                    if (hasUpsertedLocation != null && hasUpsertedLocation) {
+                                        userLoginActionService
+                                                .tryLogLoginActionAndTriggerHandlers(logId, userId, finalUserStatus, deviceType, position, ip, deviceDetails, now);
+                                    }
+                                })
+                                .thenReturn(session);
                     } else {
-                        return Mono.just(TurmsStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE);
+                        userLoginActionService
+                                .tryLogLoginActionAndTriggerHandlers(logId, userId, finalUserStatus, deviceType, position, ip, deviceDetails, now);
+                        return Mono.just(session);
                     }
                 });
     }

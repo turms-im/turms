@@ -30,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 class UserSessionTests {
 
+    private final Long userId = 1L;
     private final DeviceType deviceType = DeviceType.ANDROID;
     private final Point loginLocation = new Point(1F, 1F);
     private final long logId = 1L;
@@ -37,6 +38,7 @@ class UserSessionTests {
     @Test
     void constructor_shouldReturnInstance() {
         UserSession userSession = new UserSession(
+                userId,
                 deviceType,
                 loginLocation,
                 logId);
@@ -46,6 +48,7 @@ class UserSessionTests {
     @Test
     void getters_shouldGetValues() {
         UserSession userSession = new UserSession(
+                userId,
                 deviceType,
                 loginLocation,
                 logId);

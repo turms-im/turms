@@ -39,7 +39,6 @@ import org.springframework.web.reactive.socket.CloseStatus;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -58,13 +57,13 @@ public final class UserSessionsManager {
 
     private final Long userId;
     private UserStatus userStatus;
-    private final Map<DeviceType, UserSession> sessionMap;
+    private final Map<DeviceType, UserSession> sessionMap = new ConcurrentHashMap<>(MapUtil.getCapability(DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length));
 
     public UserSessionsManager(
             @NotNull Long userId,
             @NotNull UserStatus userStatus,
             @NotNull DeviceType loggingInDeviceType,
-            @Nullable Point userLocation,
+            @Nullable Point position,
             int closeIdleSessionAfterMillis,
             int switchProtocolAfterMillis,
             @Nullable Long logId) {
@@ -72,37 +71,40 @@ public final class UserSessionsManager {
         Assert.notNull(userStatus, "userStatus must not be null");
         Assert.notNull(loggingInDeviceType, "loggingInDeviceType must not be null");
         UserSession session = new UserSession(
+                userId,
                 loggingInDeviceType,
-                userLocation,
+                position,
                 logId);
         if (closeIdleSessionAfterMillis > 0) {
             updateSessionHeartbeatTimeout(loggingInDeviceType, session, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
         }
         this.userId = userId;
         this.userStatus = userStatus;
-        sessionMap = new ConcurrentHashMap<>(MapUtil.getCapability(DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length));
         sessionMap.put(loggingInDeviceType, session);
     }
 
-    /**
-     * @return true if succeeds
-     */
-    public boolean addSessionIfAbsent(
+    @Nullable
+    public UserSession addSessionIfAbsent(
             @NotNull DeviceType loggingInDeviceType,
-            @Nullable Point userLocation,
+            @Nullable Point position,
             @Nullable Long logId,
             int closeIdleSessionAfterMillis,
             int switchProtocolAfterMillis) {
         Assert.notNull(loggingInDeviceType, "loggingInDeviceType must not be null");
         UserSession userSession = new UserSession(
+                userId,
                 loggingInDeviceType,
-                userLocation,
+                position,
                 logId);
         boolean added = sessionMap.putIfAbsent(loggingInDeviceType, userSession) == null;
-        if (added && closeIdleSessionAfterMillis > 0) {
-            updateSessionHeartbeatTimeout(loggingInDeviceType, userSession, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
+        if (added) {
+            if (closeIdleSessionAfterMillis > 0) {
+                updateSessionHeartbeatTimeout(loggingInDeviceType, userSession, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
+            }
+            return userSession;
+        } else {
+            return null;
         }
-        return added;
     }
 
     public void setDeviceOffline(
@@ -123,7 +125,7 @@ public final class UserSessionsManager {
             TurmsNotification notification = TurmsNotification.newBuilder()
                     .setData(TurmsNotification.Data.newBuilder().setSession(session))
                     .build();
-            ByteBuf byteBuffer = ProtoUtil.getByteBuffer(notification);
+            ByteBuf byteBuffer = ProtoUtil.getDirectByteBuffer(notification);
             userSession.getNotificationSink().tryEmitNext(byteBuffer);
             return true;
         } else {
@@ -140,13 +142,11 @@ public final class UserSessionsManager {
     }
 
     public Set<DeviceType> getLoggedInDeviceTypes() {
-        return sessionMap != null
-                ? sessionMap.keySet()
-                : Collections.emptySet();
+        return sessionMap.keySet();
     }
 
     /**
-     * @param session Don't replace this parameter by using "getSession(deviceType)"
+     * @param session Don't remove this parameter by using "getSession(deviceType)"
      *                because it needs to call hashcode() to find session every time
      */
     private void updateSessionHeartbeatTimeout(@NotNull @ValidDeviceType DeviceType deviceType, @NotNull UserSession session, int closeIdleSessionAfterMillis, int switchProtocolAfterMillis) {
@@ -165,7 +165,7 @@ public final class UserSessionsManager {
                         }
                     }
                 },
-                Math.max(closeIdleSessionAfterMillis / 3, 1),
+                Math.max(closeIdleSessionAfterMillis / 3000, 1),
                 TimeUnit.SECONDS);
         session.setHeartbeatTimeout(newTimeout);
     }

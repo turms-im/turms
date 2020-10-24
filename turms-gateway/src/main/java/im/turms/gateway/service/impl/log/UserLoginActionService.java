@@ -58,14 +58,14 @@ public class UserLoginActionService {
             @NotNull Long userId,
             @NotNull UserStatus userStatus,
             @NotNull DeviceType loggingInDeviceType,
-            @Nullable Point userLocation,
+            @Nullable Point position,
             @NotNull String ip,
             @Nullable Map<String, String> deviceDetails,
             @NotNull Date loginDate) {
         boolean logUserLoginAction = node.getSharedProperties().getGateway().getLog().isLogUserLoginAction();
         boolean triggerHandlers = turmsPluginManager.isEnabled() && !turmsPluginManager.getUserLoginActionLogHandlerList().isEmpty();
         if (logUserLoginAction || triggerHandlers) {
-            UserLoginActionLog loginAction = new UserLoginActionLog(logId, userId, loginDate, userLocation, ip, userStatus, loggingInDeviceType, deviceDetails);
+            UserLoginActionLog loginAction = new UserLoginActionLog(logId, userId, loginDate, position, ip, userStatus, loggingInDeviceType, deviceDetails);
             if (logUserLoginAction) {
                 log.info(loginAction);
             }

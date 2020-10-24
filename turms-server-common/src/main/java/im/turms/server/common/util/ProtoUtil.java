@@ -18,7 +18,7 @@
 package im.turms.server.common.util;
 
 import com.google.protobuf.CodedOutputStream;
-import com.google.protobuf.GeneratedMessageV3;
+import com.google.protobuf.MessageLite;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import lombok.extern.log4j.Log4j2;
@@ -34,7 +34,7 @@ public class ProtoUtil {
     private ProtoUtil() {
     }
 
-    public static ByteBuf getByteBuffer(GeneratedMessageV3 message) {
+    public static ByteBuf getDirectByteBuffer(MessageLite message) {
         ByteBuf output = PooledByteBufAllocator.DEFAULT.directBuffer(message.getSerializedSize());
         try {
             ByteBuffer buffer = output.nioBuffer(0, output.writableBytes());

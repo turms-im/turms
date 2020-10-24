@@ -64,4 +64,9 @@ public enum SessionCloseStatus {
     public boolean is(int code) {
         return this.code == code;
     }
+
+    public boolean isServerError() {
+        return 4500 <= code && code < 4600;
+    }
+
 }

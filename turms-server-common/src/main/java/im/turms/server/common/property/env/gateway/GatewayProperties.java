@@ -63,9 +63,13 @@ public class GatewayProperties {
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private TurmsRedisProperties redis = new TurmsRedisProperties();
-    
+
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private UdpProperties udp = new UdpProperties();
+
+    @JsonView(MutablePropertiesView.class)
+    @NestedConfigurationProperty
+    private TcpProperties tcp = new TcpProperties();
 
 }

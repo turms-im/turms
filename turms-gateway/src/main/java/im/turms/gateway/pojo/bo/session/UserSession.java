@@ -28,6 +28,7 @@ import org.springframework.data.geo.Point;
 import org.springframework.web.reactive.socket.CloseStatus;
 import org.springframework.web.reactive.socket.WebSocketSession;
 import reactor.core.publisher.Sinks;
+import reactor.util.concurrent.Queues;
 
 import javax.validation.constraints.NotNull;
 import java.net.InetSocketAddress;
@@ -41,6 +42,7 @@ public final class UserSession {
 
     private final int id = RandomUtil.nextPositiveInt();
 
+    private final Long userId;
     private final DeviceType deviceType;
     private final Date loginDate;
     private Point loginLocation;
@@ -62,7 +64,8 @@ public final class UserSession {
      * so it's acceptable.
      * Note that the ByteBuf (TurmsNotification) comes from turms servers in most scenarios.
      */
-    private final Sinks.Many<ByteBuf> notificationSink = Sinks.many().unicast().onBackpressureBuffer();
+    private final Sinks.Many<ByteBuf> notificationSink = Sinks.many().unicast()
+            .onBackpressureBuffer(Queues.<ByteBuf>unbounded(64).get());
     private Timeout heartbeatTimeout;
     private Long logId;
     private volatile long lastHeartbeatTimestampMillis;
@@ -71,10 +74,12 @@ public final class UserSession {
     private volatile boolean isConnectionRecovering;
     private SessionStatus status = SessionStatus.CLOSED;
 
-    public UserSession(DeviceType loggingInDeviceType,
+    public UserSession(Long userId,
+                       DeviceType loggingInDeviceType,
                        Point loginLocation,
                        Long logId) {
         Date now = new Date();
+        this.userId = userId;
         this.deviceType = loggingInDeviceType;
         this.loginDate = now;
         this.loginLocation = loginLocation;
@@ -98,16 +103,18 @@ public final class UserSession {
         if (heartbeatTimeout != null) {
             heartbeatTimeout.cancel();
         }
-        if (webSocketSession != null) {
-            webSocketSession.close(closeStatus).subscribe();
+        WebSocketSession session = webSocketSession;
+        if (session != null) {
+            session.close(closeStatus).subscribe();
             webSocketSession = null;
         }
     }
 
     public void disconnect() {
-        if (webSocketSession != null) {
+        WebSocketSession session = webSocketSession;
+        if (session != null) {
             CloseStatus closeStatus = CloseStatusFactory.get(SessionCloseStatus.SWITCH);
-            webSocketSession.close(closeStatus).subscribe();
+            session.close(closeStatus).subscribe();
             webSocketSession = null;
         }
         updateStatus();

@@ -19,8 +19,11 @@ package im.turms.gateway.service.mediator;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.UserStatus;
+import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.constant.statuscode.TurmsStatusCode;
+import im.turms.common.exception.TurmsBusinessException;
 import im.turms.common.model.dto.notification.TurmsNotification;
+import im.turms.gateway.access.websocket.dto.CloseStatusFactory;
 import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.plugin.extension.UserAuthenticator;
 import im.turms.gateway.plugin.extension.UserOnlineStatusChangeHandler;
@@ -79,21 +82,21 @@ public class WorkflowMediator {
 
     // Login
 
-    public Mono<TurmsStatusCode> processLoginRequest(
+    public Mono<UserSession> processLoginRequest(
             @NotNull Long userId,
             @Nullable String password,
             @NotNull DeviceType deviceType,
             @Nullable UserStatus userStatus,
-            @Nullable Point userLocation,
+            @Nullable Point position,
             @Nullable String ip,
             @Nullable Map<String, String> deviceDetails) {
         if (userSimultaneousLoginService.isForbiddenDeviceType(deviceType)) {
-            return Mono.just(TurmsStatusCode.FORBIDDEN_DEVICE_TYPE);
+            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.FORBIDDEN_DEVICE_TYPE));
         }
-        return authenticate(userId, password, deviceType, userStatus, userLocation, ip, deviceDetails)
+        return authenticate(userId, password, deviceType, userStatus, position, ip, deviceDetails)
                 .flatMap(statusCode -> statusCode == TurmsStatusCode.OK
-                        ? sessionService.tryRegisterOnlineUser(userId, deviceType, userStatus, userLocation, ip, deviceDetails)
-                        : Mono.just(statusCode));
+                        ? sessionService.tryRegisterOnlineUser(userId, deviceType, userStatus, position, ip, deviceDetails)
+                        : Mono.error(TurmsBusinessException.get(statusCode)));
     }
 
     /**
@@ -114,6 +117,10 @@ public class WorkflowMediator {
     /**
      * @return true if the user was online
      */
+    public Mono<Boolean> setLocalUserDeviceOffline(Long userId, DeviceType deviceType, SessionCloseStatus closeStatus) {
+        return sessionService.setLocalSessionOfflineByUserIdAndDeviceType(userId, deviceType, CloseStatusFactory.get(closeStatus));
+    }
+
     public Mono<Boolean> setLocalUserDeviceOffline(Long userId, DeviceType deviceType, CloseStatus closeStatus) {
         return sessionService.setLocalSessionOfflineByUserIdAndDeviceType(userId, deviceType, closeStatus);
     }
@@ -176,7 +183,7 @@ public class WorkflowMediator {
             @Nullable String password,
             @NotNull DeviceType deviceType,
             @Nullable UserStatus userStatus,
-            @Nullable Point userLocation,
+            @Nullable Point position,
             @Nullable String ip,
             @Nullable Map<String, String> deviceDetails) {
         boolean enableAuthentication = node.getSharedProperties().getGateway().getSession().isEnableAuthentication();
@@ -192,7 +199,7 @@ public class WorkflowMediator {
                         password,
                         deviceType,
                         userStatus,
-                        userLocation,
+                        position,
                         ip,
                         deviceDetails);
                 for (UserAuthenticator authenticator : authenticatorList) {

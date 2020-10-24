@@ -23,6 +23,7 @@ import com.google.protobuf.Int64Value;
 import im.turms.common.constant.statuscode.TurmsStatusCode;
 import im.turms.common.exception.TurmsBusinessException;
 import im.turms.common.model.dto.request.TurmsRequest;
+import im.turms.common.model.dto.request.user.CreateSessionRequest;
 import im.turms.gateway.pojo.dto.SimpleTurmsRequest;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.util.Assert;
@@ -30,6 +31,7 @@ import org.springframework.util.Assert;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.CREATE_SESSION_REQUEST;
 import static im.turms.common.model.dto.request.TurmsRequest.KindCase.KIND_NOT_SET;
 
 /**
@@ -42,6 +44,7 @@ public class TurmsRequestUtil {
      * @see im.turms.common.model.dto.request.TurmsRequest:72
      */
     private static final int TURMS_REQUEST_REQUEST_ID_TAG = 10;
+    private static final ExtensionRegistry REGISTRY = ExtensionRegistry.getEmptyRegistry();
 
     private TurmsRequestUtil() {
     }
@@ -57,7 +60,7 @@ public class TurmsRequestUtil {
             while (true) {
                 int tag = stream.readTag();
                 if (tag == TURMS_REQUEST_REQUEST_ID_TAG) {
-                    Int64Value value = stream.readMessage(Int64Value.parser(), ExtensionRegistry.getEmptyRegistry());
+                    Int64Value value = stream.readMessage(Int64Value.parser(), REGISTRY);
                     if (value != null && !value.equals(value.getDefaultInstanceForType())) {
                         requestId = value.getValue();
                     } else {
@@ -74,7 +77,11 @@ public class TurmsRequestUtil {
                 }
             }
             if (requestId != Long.MIN_VALUE) {
-                return new SimpleTurmsRequest(requestId, type);
+                CreateSessionRequest createSessionRequest = null;
+                if (type == CREATE_SESSION_REQUEST) {
+                    createSessionRequest = stream.readMessage(CreateSessionRequest.parser(), REGISTRY);
+                }
+                return new SimpleTurmsRequest(requestId, type, createSessionRequest);
             } else {
                 throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "Not a valid TurmsRequest");
             }

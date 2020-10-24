@@ -15,25 +15,25 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.pojo.bo.session;
+package im.turms.server.common.property.env.gateway;
 
-import im.turms.common.constant.DeviceType;
-import lombok.AllArgsConstructor;
+
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import org.springframework.boot.web.server.Ssl;
 
 /**
  * @author James Chen
  */
-@AllArgsConstructor
-@EqualsAndHashCode
 @Data
-public class SessionDisconnectionReasonKey {
+public class TcpProperties {
 
-    private final Long userId;
+    /**
+     * We disable TCP currently until clients support TCP
+     */
+    private boolean enabled = false;
+    private String host = "0.0.0.0";
+    private int port = 11510;
 
-    private final DeviceType deviceType;
-
-    private final Integer sessionId;
+    Ssl ssl = new Ssl();
 
 }

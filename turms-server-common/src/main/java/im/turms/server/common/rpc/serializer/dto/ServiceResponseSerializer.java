@@ -68,7 +68,7 @@ public class ServiceResponseSerializer implements Serializer<ServiceResponse> {
     public ByteBuf byteBufToComposite(ServiceResponse data) {
         TurmsNotification.Data dataForRequester = data.getDataForRequester();
         return dataForRequester != null
-                ? ProtoUtil.getByteBuffer(dataForRequester)
+                ? ProtoUtil.getDirectByteBuffer(dataForRequester)
                 : null;
     }
 

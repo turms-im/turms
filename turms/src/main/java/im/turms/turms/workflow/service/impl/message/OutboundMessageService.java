@@ -54,7 +54,7 @@ public class OutboundMessageService {
     public Mono<Boolean> forwardNotification(
             @NotNull TurmsNotification notification,
             @NotNull Set<Long> recipientIds) {
-        ByteBuf notificationData = ProtoUtil.getByteBuffer(notification);
+        ByteBuf notificationData = ProtoUtil.getDirectByteBuffer(notification);
         return forwardNotification(notificationData, recipientIds);
     }
 

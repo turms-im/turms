@@ -227,7 +227,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         if (dataForRecipients == null || recipients.isEmpty()) {
             return Mono.empty();
         }
-        ByteBuf notificationForRecipients = ProtoUtil.getByteBuffer(TurmsNotification
+        ByteBuf notificationForRecipients = ProtoUtil.getDirectByteBuffer(TurmsNotification
                 .newBuilder()
                 .setRelayedRequest(dataForRecipients)
                 .setRequesterId(Int64Value.newBuilder().setValue(requesterId).build())

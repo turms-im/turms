@@ -91,13 +91,13 @@ public class SessionLocationService {
      */
     public Mono<Boolean> upsertUserLocation(@NotNull Long userId,
                                             @NotNull @ValidDeviceType DeviceType deviceType,
-                                            @NotNull Point userLocation,
+                                            @NotNull Point position,
                                             @NotNull Date timestamp) {
         try {
             AssertUtil.notNull(userId, "userId");
             AssertUtil.notNull(deviceType, "deviceType");
             DeviceTypeUtil.validDeviceType(deviceType);
-            AssertUtil.notNull(userLocation, "userLocation");
+            AssertUtil.notNull(position, "position");
             AssertUtil.notNull(timestamp, "timestamp");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
@@ -107,25 +107,25 @@ public class SessionLocationService {
         }
         if (treatUserIdAndDeviceTypeAsUniqueUser) {
             UserSessionId userSessionId = new UserSessionId(userId, deviceType);
-            return geoByUserSessionIdOperations.add(RedisEntryId.LOCATION, userLocation, userSessionId)
+            return geoByUserSessionIdOperations.add(RedisEntryId.LOCATION, position, userSessionId)
                     .flatMap(o -> o > 0
                             ? Mono.just(true)
                             // Redis doesn't support atomic upsert operation for GeoHash
                             // so we do it in this way as a workaround
                             : geoByUserSessionIdOperations.remove(RedisEntryId.LOCATION, userSessionId)
-                            .then(geoByUserSessionIdOperations.add(RedisEntryId.LOCATION, userLocation, userSessionId))
+                            .then(geoByUserSessionIdOperations.add(RedisEntryId.LOCATION, position, userSessionId))
                             .map(number -> number > 0))
-                    .doOnSuccess(o -> tryLogLocation(userId, deviceType, userLocation, timestamp));
+                    .doOnSuccess(o -> tryLogLocation(userId, deviceType, position, timestamp));
         } else {
-            return geoByUserIdOperations.add(RedisEntryId.LOCATION, userLocation, userId)
+            return geoByUserIdOperations.add(RedisEntryId.LOCATION, position, userId)
                     .flatMap(o -> o > 0
                             ? Mono.just(true)
                             // Redis doesn't support atomic upsert operation for GeoHash
                             // so we do it in this way as a workaround
                             : geoByUserIdOperations.remove(RedisEntryId.LOCATION, userId)
-                            .then(geoByUserIdOperations.add(RedisEntryId.LOCATION, userLocation, userId))
+                            .then(geoByUserIdOperations.add(RedisEntryId.LOCATION, position, userId))
                             .map(number -> number > 0))
-                    .doOnSuccess(o -> tryLogLocation(userId, deviceType, userLocation, timestamp));
+                    .doOnSuccess(o -> tryLogLocation(userId, deviceType, position, timestamp));
         }
     }
 

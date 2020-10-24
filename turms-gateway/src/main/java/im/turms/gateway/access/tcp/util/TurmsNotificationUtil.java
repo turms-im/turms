@@ -15,20 +15,27 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.dto;
+package im.turms.gateway.access.tcp.util;
 
+import com.google.protobuf.Int32Value;
+import com.google.protobuf.Int64Value;
 import im.turms.common.constant.statuscode.TurmsStatusCode;
 import im.turms.common.model.dto.notification.TurmsNotification;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 
 /**
  * @author James Chen
  */
-@Data
-@AllArgsConstructor
-public final class ServiceResponse {
-    private final TurmsNotification.Data dataForRequester;
-    private final TurmsStatusCode code;
-    private final String reason;
+public class TurmsNotificationUtil {
+
+    private TurmsNotificationUtil() {
+    }
+
+    public static TurmsNotification sessionClosed(long requestId) {
+        return TurmsNotification
+                .newBuilder()
+                .setRequestId(Int64Value.newBuilder().setValue(requestId).build())
+                .setCode(Int32Value.newBuilder().setValue(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED.getBusinessCode()).build())
+                .build();
+    }
+
 }

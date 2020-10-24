@@ -15,25 +15,24 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.pojo.bo.session;
+package im.turms.server.common.util;
 
-import im.turms.common.constant.DeviceType;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import im.turms.common.exception.TurmsBusinessException;
 
 /**
  * @author James Chen
  */
-@AllArgsConstructor
-@EqualsAndHashCode
-@Data
-public class SessionDisconnectionReasonKey {
+public class ExceptionUtil {
 
-    private final Long userId;
+    private ExceptionUtil() {
+    }
 
-    private final DeviceType deviceType;
-
-    private final Integer sessionId;
+    public static boolean isClientError(Throwable throwable) {
+        if (throwable instanceof TurmsBusinessException) {
+            return ((TurmsBusinessException) throwable).getCode().isServerError();
+        } else {
+            return false;
+        }
+    }
 
 }
