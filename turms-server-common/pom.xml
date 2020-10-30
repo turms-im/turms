@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.4.0-M4</version>
+        <version>2.4.0-RC1</version>
     </parent>
 
     <groupId>im.turms</groupId>
@@ -41,7 +41,7 @@
 
     <properties>
         <commons-collections4.version>4.4</commons-collections4.version>
-        <guava.version>29.0-jre</guava.version>
+        <guava.version>30.0-jre</guava.version>
         <pf4j.version>3.4.1</pf4j.version>
     </properties>
 
