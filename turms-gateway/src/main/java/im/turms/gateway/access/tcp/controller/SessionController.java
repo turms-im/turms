@@ -34,6 +34,7 @@ import im.turms.server.common.util.ExceptionUtil;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Mono;
+import reactor.netty.Connection;
 
 import java.util.Map;
 
@@ -88,7 +89,8 @@ public class SessionController {
                 ip,
                 deviceDetails)
                 .map(session -> {
-                    session.setConnection(new TcpConnection(sessionWrapper.getConnection()));
+                    Connection connection = sessionWrapper.getConnection();
+                    session.setConnection(new TcpConnection(connection, !connection.isDisposed()));
                     sessionWrapper.setUserSession(session);
                     return new RequestHandlerResult(TurmsStatusCode.OK);
                 })

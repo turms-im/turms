@@ -43,6 +43,10 @@ public abstract class NetConnection {
     @Getter
     private volatile boolean isConnectionRecovering;
 
+    public NetConnection(boolean isConnected) {
+        this.isConnected = isConnected;
+    }
+
     public void close(@NotNull CloseReason closeReason) {
         isConnected = false;
         isConnectionRecovering = false;

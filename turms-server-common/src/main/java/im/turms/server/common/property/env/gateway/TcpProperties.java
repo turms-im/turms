@@ -19,6 +19,7 @@ package im.turms.server.common.property.env.gateway;
 
 
 import lombok.Data;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.boot.web.server.Ssl;
 
 /**
@@ -34,6 +35,7 @@ public class TcpProperties {
     private String host = "0.0.0.0";
     private int port = 11510;
 
+    @NestedConfigurationProperty
     Ssl ssl = new Ssl();
 
 }

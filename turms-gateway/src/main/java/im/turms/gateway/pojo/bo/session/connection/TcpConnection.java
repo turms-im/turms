@@ -36,8 +36,8 @@ public class TcpConnection extends NetConnection {
 
     private final Connection connection;
 
-    public TcpConnection(Connection connection) {
-        super();
+    public TcpConnection(Connection connection, boolean isConnected) {
+        super(isConnected);
         this.connection = connection;
     }
 

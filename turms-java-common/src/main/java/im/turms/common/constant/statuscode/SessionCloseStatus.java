@@ -67,8 +67,8 @@ public enum SessionCloseStatus {
         return code;
     }
 
-    public boolean is(int wsCode) {
-        return this.code == wsCode;
+    public boolean is(int code) {
+        return this.code == code;
     }
 
     public boolean isServerError() {

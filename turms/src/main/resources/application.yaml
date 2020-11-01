@@ -1,3 +1,4 @@
+# HTTP(S) configuration
 server:
   port: 8510 #9510
   ssl:
@@ -7,6 +8,7 @@ server:
     key-store-password: imturms
     key-alias: turms
   address: 0.0.0.0
+
 spring:
   application:
     name: turms
@@ -63,6 +65,21 @@ turms:
     node:
       version: @project.version@
     id: turms
+    discovery:
+      client-ssl:
+        enabled: false # Enable SSL if needed
+        enabled-protocols: TLSv1.2,TLSv1.3
+        key-store: classpath:keystore-test.p12 # keytool -genkeypair -keyalg RSA -keysize 2048 -validity 3650 -alias turms -keystore keystore-test.p12 -storetype PKCS12 -storepass imturms
+        key-store-type: PKCS12
+        key-store-password: imturms
+        key-alias: turms
+      server-ssl:
+        enabled: false # Enable SSL if needed
+        enabled-protocols: TLSv1.2,TLSv1.3
+        key-store: classpath:keystore-test.p12 # keytool -genkeypair -keyalg RSA -keysize 2048 -validity 3650 -alias turms -keystore keystore-test.p12 -storetype PKCS12 -storepass imturms
+        key-store-type: PKCS12
+        key-store-password: imturms
+        key-alias: turms
   service:
     database:
       mongo-properties:

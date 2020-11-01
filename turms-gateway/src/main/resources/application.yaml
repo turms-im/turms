@@ -2,20 +2,46 @@ turms:
   cluster:
     node:
       version: @project.version@
+    discovery:
+      client-ssl:
+        enabled: false # Enable SSL if needed
+        enabled-protocols: TLSv1.2,TLSv1.3
+        key-store: classpath:keystore-test.p12 # keytool -genkeypair -keyalg RSA -keysize 2048 -validity 3650 -alias turms -keystore keystore-test.p12 -storetype PKCS12 -storepass imturms
+        key-store-type: PKCS12
+        key-store-password: imturms
+        key-alias: turms
+      server-ssl:
+        enabled: false # Enable SSL if needed
+        enabled-protocols: TLSv1.2,TLSv1.3
+        key-store: classpath:keystore-test.p12 # keytool -genkeypair -keyalg RSA -keysize 2048 -validity 3650 -alias turms -keystore keystore-test.p12 -storetype PKCS12 -storepass imturms
+        key-store-type: PKCS12
+        key-store-password: imturms
+        key-alias: turms
   service:
     message:
       check-if-target-active-and-not-deleted: false
   gateway:
     session:
       enable-authentication: false
+    tcp:
+      ssl:
+        enabled: false # Enable SSL if needed
+        enabled-protocols: TLSv1.2,TLSv1.3
+        key-store: classpath:keystore-test.p12 # keytool -genkeypair -keyalg RSA -keysize 2048 -validity 3650 -alias turms -keystore keystore-test.p12 -storetype PKCS12 -storepass imturms
+        key-store-type: PKCS12
+        key-store-password: imturms
+        key-alias: turms
+
+# WebSocket configuration
 server:
+  address: 0.0.0.0
   port: 9510
   ssl:
     enabled: false # Enable SSL if needed. Make sure to mutate HTTP requests to HTTPS requests, or Netty will throw NotSslRecordException
+    enabled-protocols: TLSv1.2,TLSv1.3
     key-store: classpath:keystore-test.p12 # keytool -genkeypair -keyalg RSA -keysize 2048 -validity 3650 -alias turms -keystore keystore-test.p12 -storetype PKCS12 -storepass imturms
     key-store-type: PKCS12
     key-store-password: imturms
     key-alias: turms
-  address: 0.0.0.0
   netty:
     connection-timeout: 10s # To mitigate the Slowloris DoS attack by lowering the timeout for the TCP connection handshake

@@ -33,23 +33,23 @@ public class WebSocketConnection extends NetConnection {
 
     private final WebSocketSession connection;
 
-    public WebSocketConnection(WebSocketSession connection) {
-        super();
+    public WebSocketConnection(WebSocketSession connection, boolean isConnected) {
+        super(isConnected);
         this.connection = connection;
     }
 
     @Override
     public void close(@NotNull CloseReason closeReason) {
         super.close(closeReason);
+        CloseStatus closeStatus;
         if (closeReason.isTurmsStatusCode()) {
             TurmsStatusCode code = TurmsStatusCode.from(closeReason.getCode());
             SessionCloseStatus sessionCloseStatus = CloseReasonUtil.statusCodeToCloseStatus(code);
-            CloseStatus closeStatus = new CloseStatus(sessionCloseStatus.getCode(), closeReason.getReason());
-            connection.close(closeStatus).subscribe();
+            closeStatus = new CloseStatus(sessionCloseStatus.getCode(), closeReason.getReason());
         } else {
-            CloseStatus closeStatus = new CloseStatus(closeReason.getCode(), closeReason.getReason());
-            connection.close(closeStatus).subscribe();
+            closeStatus = new CloseStatus(closeReason.getCode(), closeReason.getReason());
         }
+        connection.close(closeStatus).subscribe();
     }
 
 }
