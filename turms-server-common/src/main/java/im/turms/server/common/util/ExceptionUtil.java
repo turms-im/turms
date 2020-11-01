@@ -17,6 +17,7 @@
 
 package im.turms.server.common.util;
 
+import im.turms.common.constant.statuscode.TurmsStatusCode;
 import im.turms.common.exception.TurmsBusinessException;
 
 /**
@@ -30,6 +31,14 @@ public class ExceptionUtil {
     public static boolean isClientError(Throwable throwable) {
         if (throwable instanceof TurmsBusinessException) {
             return ((TurmsBusinessException) throwable).getCode().isServerError();
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean isStatusCode(Throwable throwable, TurmsStatusCode statusCode) {
+        if (throwable instanceof TurmsBusinessException) {
+            return ((TurmsBusinessException) throwable).getCode() == statusCode;
         } else {
             return false;
         }

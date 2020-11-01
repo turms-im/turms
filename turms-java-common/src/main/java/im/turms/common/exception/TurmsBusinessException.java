@@ -30,7 +30,16 @@ import java.util.Objects;
  * @author James Chen
  */
 public class TurmsBusinessException extends NoStackTraceException {
-    private static final Map<TurmsStatusCode, TurmsBusinessException> EXCEPTION_POOL = new EnumMap<>(TurmsStatusCode.class);
+
+    private static final Map<TurmsStatusCode, TurmsBusinessException> exceptionPool = new EnumMap<>(TurmsStatusCode.class);
+
+    static {
+        for (TurmsStatusCode code : TurmsStatusCode.values()) {
+            TurmsBusinessException exception = new TurmsBusinessException(code, code.getReason());
+            exceptionPool.put(code, exception);
+        }
+    }
+
     private final TurmsStatusCode code;
     private final String reason;
 
@@ -46,40 +55,8 @@ public class TurmsBusinessException extends NoStackTraceException {
         this.reason = null;
     }
 
-    public TurmsStatusCode getCode() {
-        return code;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        TurmsBusinessException that = (TurmsBusinessException) o;
-        return code == that.code
-                && Objects.equals(reason, that.reason);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(code, reason);
-    }
-
     public static TurmsBusinessException get(@NotNull TurmsStatusCode code) {
-        TurmsBusinessException exception = EXCEPTION_POOL.get(code);
-        if (exception != null) {
-            return exception;
-        } else {
-            TurmsBusinessException newException = new TurmsBusinessException(code, code.getReason());
-            return EXCEPTION_POOL.put(code, newException);
-        }
+        return exceptionPool.get(code);
     }
 
     public static TurmsBusinessException get(int statusCode) {
@@ -125,6 +102,32 @@ public class TurmsBusinessException extends NoStackTraceException {
         } else {
             return "code: " + code.getBusinessCode();
         }
+    }
+
+    public TurmsStatusCode getCode() {
+        return code;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        TurmsBusinessException that = (TurmsBusinessException) o;
+        return code == that.code
+                && Objects.equals(reason, that.reason);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(code, reason);
     }
 
 }

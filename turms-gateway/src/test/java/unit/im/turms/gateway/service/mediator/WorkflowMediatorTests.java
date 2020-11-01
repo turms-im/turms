@@ -30,6 +30,7 @@ import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.env.gateway.GatewayProperties;
 import im.turms.server.common.property.env.gateway.SessionProperties;
+import im.turms.server.common.util.ExceptionUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.socket.CloseStatus;
 import reactor.core.publisher.Mono;
@@ -61,40 +62,40 @@ class WorkflowMediatorTests {
     @Test
     void processLoginRequest_shouldReturnForbiddenDeviceType_ifIsForbiddenDeviceType() {
         WorkflowMediator mediator = newWorkflowMediator(true, true, true, true);
-        Mono<TurmsStatusCode> result = mediator.processLoginRequest(userId, null, deviceType, null, null, null, null);
+        Mono<UserSession> result = mediator.processLoginRequest(userId, null, deviceType, null, null, null, null);
 
         StepVerifier.create(result)
-                .expectNext(TurmsStatusCode.FORBIDDEN_DEVICE_TYPE)
-                .verifyComplete();
+                .expectErrorMatches(throwable -> ExceptionUtil.isStatusCode(throwable, TurmsStatusCode.FORBIDDEN_DEVICE_TYPE))
+                .verify();
     }
 
     @Test
     void processLoginRequest_shouldReturnUnauthorized_ifIsUnauthorized() {
         WorkflowMediator mediator = newWorkflowMediator(true, true, false, false);
-        Mono<TurmsStatusCode> result = mediator.processLoginRequest(userId, null, deviceType, null, null, null, null);
+        Mono<UserSession> result = mediator.processLoginRequest(userId, null, deviceType, null, null, null, null);
 
         StepVerifier.create(result)
-                .expectNext(TurmsStatusCode.UNAUTHORIZED)
-                .verifyComplete();
+                .expectErrorMatches(throwable -> ExceptionUtil.isStatusCode(throwable, TurmsStatusCode.UNAUTHORIZED))
+                .verify();
     }
 
     @Test
     void processLoginRequest_shouldReturnNotActive_ifUserIsNotActive() {
         WorkflowMediator mediator = newWorkflowMediator(true, false, false, false);
-        Mono<TurmsStatusCode> result = mediator.processLoginRequest(userId, null, deviceType, null, null, null, null);
+        Mono<UserSession> result = mediator.processLoginRequest(userId, null, deviceType, null, null, null, null);
 
         StepVerifier.create(result)
-                .expectNext(TurmsStatusCode.NOT_ACTIVE)
-                .verifyComplete();
+                .expectErrorMatches(throwable -> ExceptionUtil.isStatusCode(throwable, TurmsStatusCode.NOT_ACTIVE))
+                .verify();
     }
 
     @Test
     void processLoginRequest_shouldReturnNotActive_ifUserIsActiveAndAuthenticated() {
         WorkflowMediator mediator = newWorkflowMediator(true, true, true, false);
-        Mono<TurmsStatusCode> result = mediator.processLoginRequest(userId, null, deviceType, null, null, null, null);
+        Mono<UserSession> result = mediator.processLoginRequest(userId, null, deviceType, null, null, null, null);
 
         StepVerifier.create(result)
-                .expectNext(TurmsStatusCode.OK)
+                .expectNextCount(1)
                 .verifyComplete();
     }
 
@@ -197,8 +198,9 @@ class WorkflowMediatorTests {
                 .thenReturn(Mono.just(true));
 
         SessionService sessionService = mock(SessionService.class);
+        UserSession userSession = mock(UserSession.class);
         when(sessionService.tryRegisterOnlineUser(any(), any(), any(), any(), any(), any()))
-                .thenReturn(Mono.just(TurmsStatusCode.OK));
+                .thenReturn(Mono.just(userSession));
         when(sessionService.setLocalSessionOfflineByUserIdAndDeviceType(any(), any(), any()))
                 .thenReturn(Mono.just(true));
         when(sessionService.updateHeartbeatTimestamp(any(), any(DeviceType.class)))

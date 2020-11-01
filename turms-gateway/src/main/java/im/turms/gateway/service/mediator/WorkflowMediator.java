@@ -23,7 +23,6 @@ import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.constant.statuscode.TurmsStatusCode;
 import im.turms.common.exception.TurmsBusinessException;
 import im.turms.common.model.dto.notification.TurmsNotification;
-import im.turms.gateway.access.websocket.dto.CloseStatusFactory;
 import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.plugin.extension.UserAuthenticator;
 import im.turms.gateway.plugin.extension.UserOnlineStatusChangeHandler;
@@ -32,6 +31,7 @@ import im.turms.gateway.pojo.bo.login.UserLoginInfo;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.service.impl.*;
 import im.turms.server.common.cluster.node.Node;
+import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.dto.ServiceRequest;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.geo.Point;
@@ -46,7 +46,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A mediator between the underlying technical implementation (i.e. the UDP/WebSocket access layer)
+ * A mediator between the underlying technical implementation (i.e. the TCP/UDP/WebSocket access layer)
  * and the implementation of business logic (i.e. the service layer)
  *
  * @author James Chen
@@ -118,15 +118,22 @@ public class WorkflowMediator {
      * @return true if the user was online
      */
     public Mono<Boolean> setLocalUserDeviceOffline(Long userId, DeviceType deviceType, SessionCloseStatus closeStatus) {
-        return sessionService.setLocalSessionOfflineByUserIdAndDeviceType(userId, deviceType, CloseStatusFactory.get(closeStatus));
+        CloseReason closeReason = CloseReason.get(closeStatus);
+        return sessionService.setLocalSessionOfflineByUserIdAndDeviceType(userId, deviceType, closeReason);
     }
 
     public Mono<Boolean> setLocalUserDeviceOffline(Long userId, DeviceType deviceType, CloseStatus closeStatus) {
-        return sessionService.setLocalSessionOfflineByUserIdAndDeviceType(userId, deviceType, closeStatus);
+        CloseReason closeReason = CloseReason.get(closeStatus);
+        return sessionService.setLocalSessionOfflineByUserIdAndDeviceType(userId, deviceType, closeReason);
+    }
+
+    public Mono<Boolean> setLocalUserDeviceOffline(Long userId, DeviceType deviceType, CloseReason closeReason) {
+        return sessionService.setLocalSessionOfflineByUserIdAndDeviceType(userId, deviceType, closeReason);
     }
 
     public Mono<Boolean> authAndSetLocalUserDeviceOffline(Long userId, DeviceType deviceType, CloseStatus closeStatus, int sessionId) {
-        return sessionService.authAndSetLocalSessionOfflineByUserIdAndDeviceType(userId, deviceType, closeStatus, sessionId);
+        CloseReason closeReason = CloseReason.get(closeStatus);
+        return sessionService.authAndSetLocalSessionOfflineByUserIdAndDeviceType(userId, deviceType, closeReason, sessionId);
     }
 
     // Session

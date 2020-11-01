@@ -22,14 +22,12 @@ import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.TcpProperties;
 import im.turms.server.common.util.SslUtil;
 import org.reactivestreams.Publisher;
-import reactor.core.publisher.Mono;
 import reactor.netty.DisposableServer;
 import reactor.netty.NettyInbound;
 import reactor.netty.NettyOutbound;
 import reactor.netty.tcp.TcpServer;
 
 import javax.annotation.Nullable;
-
 import java.util.function.BiFunction;
 
 import static io.netty.channel.ChannelOption.*;

@@ -23,9 +23,10 @@ import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.model.bo.signal.Session;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.gateway.access.udp.UdpDispatcher;
-import im.turms.gateway.access.websocket.dto.CloseStatusFactory;
 import im.turms.gateway.pojo.bo.session.UserSession;
+import im.turms.gateway.pojo.bo.session.connection.NetConnection;
 import im.turms.server.common.constraint.ValidDeviceType;
+import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.util.DeviceTypeUtil;
 import im.turms.server.common.util.MapUtil;
 import im.turms.server.common.util.ProtoUtil;
@@ -35,7 +36,6 @@ import io.netty.util.Timeout;
 import lombok.Data;
 import org.springframework.data.geo.Point;
 import org.springframework.util.Assert;
-import org.springframework.web.reactive.socket.CloseStatus;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -109,9 +109,9 @@ public final class UserSessionsManager {
 
     public void setDeviceOffline(
             @NotNull DeviceType deviceType,
-            @NotNull CloseStatus closeStatus) {
+            @NotNull CloseReason closeReason) {
         sessionMap.computeIfPresent(deviceType, (key, session) -> {
-            session.close(closeStatus);
+            session.close(closeReason);
             return null;
         });
     }
@@ -155,11 +155,13 @@ public final class UserSessionsManager {
                         long now = System.currentTimeMillis();
                         int heartbeatElapsedTime = (int) (now - session.getLastHeartbeatTimestampMillis());
                         if (heartbeatElapsedTime > closeIdleSessionAfterMillis) {
-                            setDeviceOffline(deviceType, CloseStatusFactory.get(SessionCloseStatus.HEARTBEAT_TIMEOUT));
+                            CloseReason closeReason = CloseReason.get(SessionCloseStatus.HEARTBEAT_TIMEOUT);
+                            setDeviceOffline(deviceType, closeReason);
                         } else {
                             int requestElapsedTime = (int) (now - session.getLastRequestTimestampMillis());
-                            if (requestElapsedTime > switchProtocolAfterMillis && session.isConnected() && UdpDispatcher.isEnabled() && deviceType != DeviceType.BROWSER) {
-                                session.disconnect();
+                            NetConnection connection = session.getConnection();
+                            if (requestElapsedTime > switchProtocolAfterMillis && connection.isConnected() && UdpDispatcher.isEnabled() && deviceType != DeviceType.BROWSER) {
+                                connection.switchToUdp();
                             }
                             updateSessionHeartbeatTimeout(deviceType, session, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
                         }

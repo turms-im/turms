@@ -169,7 +169,7 @@ public class ProtoUtil {
             }
         }
         if (isBlocked != null) {
-            builder.setIsBlocked(BoolValue.newBuilder().setValue(isBlocked).build());
+            builder.setBlocked(BoolValue.newBuilder().setValue(isBlocked).build());
         }
         if (establishmentDate != null) {
             builder.setEstablishmentDate(Int64Value.newBuilder().setValue(establishmentDate.getTime()).build());

@@ -17,9 +17,12 @@
 
 package im.turms.common.constant.statuscode;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author James Chen
- * @apiNote "Reserved Status Code Ranges" - https://tools.ietf.org/html/rfc6455#page-47
+ * @see <a href="https://tools.ietf.org/html/rfc6455#page-47">Reserved Status Code Ranges</a>
  */
 public enum SessionCloseStatus {
 
@@ -42,27 +45,30 @@ public enum SessionCloseStatus {
 
     UNKNOWN_ERROR(4900);
 
+    private static final Map<Integer, SessionCloseStatus> codeMap = new HashMap<>((int) (SessionCloseStatus.values().length / 0.5));
+
+    static {
+        for (SessionCloseStatus status : SessionCloseStatus.values()) {
+            codeMap.put(status.code, status);
+        }
+    }
+
     private final int code;
 
     SessionCloseStatus(int code) {
         this.code = code;
     }
 
+    public static SessionCloseStatus get(int code) {
+        return codeMap.get(code);
+    }
+
     public int getCode() {
         return code;
     }
 
-    public static SessionCloseStatus get(int code) {
-        for (SessionCloseStatus status : SessionCloseStatus.values()) {
-            if (status.code == code) {
-                return status;
-            }
-        }
-        return null;
-    }
-
-    public boolean is(int code) {
-        return this.code == code;
+    public boolean is(int wsCode) {
+        return this.code == wsCode;
     }
 
     public boolean isServerError() {

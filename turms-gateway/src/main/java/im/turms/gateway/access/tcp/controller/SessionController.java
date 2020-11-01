@@ -17,8 +17,6 @@
 
 package im.turms.gateway.access.tcp.controller;
 
-import com.google.protobuf.Int32Value;
-import com.google.protobuf.Int64Value;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.UserStatus;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
@@ -30,6 +28,7 @@ import im.turms.common.model.dto.request.user.CreateSessionRequest;
 import im.turms.gateway.access.tcp.dto.RequestHandlerResult;
 import im.turms.gateway.access.tcp.model.UserSessionWrapper;
 import im.turms.gateway.pojo.bo.session.UserSession;
+import im.turms.gateway.pojo.bo.session.connection.TcpConnection;
 import im.turms.gateway.service.mediator.WorkflowMediator;
 import im.turms.server.common.util.ExceptionUtil;
 import org.springframework.data.geo.Point;
@@ -50,24 +49,13 @@ public class SessionController {
         this.workflowMediator = workflowMediator;
     }
 
-    public Mono<TurmsNotification> handleDeleteSessionRequest(UserSessionWrapper sessionWrapper, long requestId) {
-        TurmsNotification closeNotification = TurmsNotification
-                .newBuilder()
-                .setRequestId(Int64Value.newBuilder().setValue(requestId).build())
-                .setCode(Int32Value.newBuilder().setValue(TurmsStatusCode.OK.getBusinessCode()).build())
-                .build();
-        return sessionWrapper.getConnection()
-                .outbound()
-                .sendObject(closeNotification)
-                .then()
-                .flatMap(unused -> {
-                    UserSession session = sessionWrapper.getUserSession();
-                    if (session != null) {
-                        workflowMediator.setLocalUserDeviceOffline(session.getUserId(), session.getDeviceType(), SessionCloseStatus.DISCONNECTED_BY_CLIENT)
-                                .subscribe();
-                    }
-                    return Mono.empty();
-                });
+    public Mono<TurmsNotification> handleDeleteSessionRequest(UserSessionWrapper sessionWrapper) {
+        UserSession session = sessionWrapper.getUserSession();
+        if (session != null) {
+            workflowMediator.setLocalUserDeviceOffline(session.getUserId(), session.getDeviceType(), SessionCloseStatus.DISCONNECTED_BY_CLIENT)
+                    .subscribe();
+        }
+        return Mono.empty();
     }
 
     public Mono<RequestHandlerResult> handleCreateSessionRequest(UserSessionWrapper sessionWrapper, CreateSessionRequest createSessionRequest, String ip) {
@@ -100,11 +88,7 @@ public class SessionController {
                 ip,
                 deviceDetails)
                 .map(session -> {
-                    session.getNotificationSink()
-                            .asFlux()
-                            .subscribe(byteBuf -> sessionWrapper.getOutputSink().tryEmitNext(byteBuf),
-                                    throwable -> sessionWrapper.close(),
-                                    sessionWrapper::close);
+                    session.setConnection(new TcpConnection(sessionWrapper.getConnection()));
                     sessionWrapper.setUserSession(session);
                     return new RequestHandlerResult(TurmsStatusCode.OK);
                 })

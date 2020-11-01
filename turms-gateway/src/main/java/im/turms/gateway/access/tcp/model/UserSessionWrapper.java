@@ -18,11 +18,7 @@
 package im.turms.gateway.access.tcp.model;
 
 import im.turms.gateway.pojo.bo.session.UserSession;
-import io.netty.buffer.ByteBuf;
 import lombok.Data;
-import org.springframework.web.reactive.socket.CloseStatus;
-import reactor.core.publisher.MonoSink;
-import reactor.core.publisher.Sinks;
 import reactor.netty.Connection;
 
 /**
@@ -32,40 +28,26 @@ import reactor.netty.Connection;
 public class UserSessionWrapper {
 
     private final Connection connection;
-    private final Sinks.Many<ByteBuf> outputSink;
-    private final MonoSink<Void> completeSink;
     private UserSession userSession;
-    private volatile boolean isOpen;
 
-    public UserSessionWrapper(Connection connection,
-                              Sinks.Many<ByteBuf> outputSink,
-                              MonoSink<Void> completeSink,
-                              boolean isOpen) {
+    public UserSessionWrapper(Connection connection) {
         this.connection = connection;
-        this.outputSink = outputSink;
-        this.completeSink = completeSink;
-        this.isOpen = isOpen;
+    }
+
+    public void setUserSession(UserSession userSession) {
+        this.userSession = userSession;
+        connection.outbound()
+                .send(userSession.getNotificationSink().asFlux(), byteBuf -> true)
+                .then()
+                .subscribe();
     }
 
     public boolean hasUserSession() {
         return userSession != null;
     }
 
-    public void close() {
-        // No need to synchronize
-        if (isOpen) {
-            isOpen = false;
-            outputSink.tryEmitComplete();
-            completeSink.success();
-            UserSession session = userSession;
-            if (session != null) {
-                session.close(CloseStatus.NORMAL);
-            }
-        }
-    }
-
     public boolean isAvailable() {
-        return !connection.isDisposed() && isOpen;
+        return !connection.isDisposed() && userSession != null && userSession.isOpen();
     }
 
 }

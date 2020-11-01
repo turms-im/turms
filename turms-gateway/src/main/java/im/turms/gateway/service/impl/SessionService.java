@@ -24,7 +24,6 @@ import im.turms.common.constant.UserStatus;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.constant.statuscode.TurmsStatusCode;
 import im.turms.common.exception.TurmsBusinessException;
-import im.turms.gateway.access.websocket.dto.CloseStatusFactory;
 import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.plugin.extension.UserOnlineStatusChangeHandler;
 import im.turms.gateway.plugin.manager.TurmsPluginManager;
@@ -34,6 +33,7 @@ import im.turms.server.common.bo.session.UserSessionsStatus;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.constraint.ValidDeviceType;
+import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.env.gateway.SessionProperties;
 import im.turms.server.common.rpc.request.SetUserOfflineRequest;
@@ -48,7 +48,6 @@ import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tags;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.socket.CloseStatus;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -126,7 +125,8 @@ public class SessionService implements ISessionService {
 
     @PreDestroy
     public void destroy() {
-        clearAllLocalSessions(new Date(), CloseStatusFactory.get(SessionCloseStatus.SERVER_CLOSED))
+        CloseReason closeReason = CloseReason.get(SessionCloseStatus.SERVER_CLOSED);
+        clearAllLocalSessions(new Date(), closeReason)
                 .subscribe();
     }
 
@@ -136,13 +136,13 @@ public class SessionService implements ISessionService {
     public Mono<Boolean> setLocalSessionOfflineByUserIdAndDeviceType(
             @NotNull Long userId,
             @NotNull @ValidDeviceType DeviceType deviceType,
-            @NotNull CloseStatus closeStatus) {
+            @NotNull CloseReason closeReason) {
         try {
             AssertUtil.notNull(deviceType, "deviceType");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        return setLocalSessionOfflineByUserIdAndDeviceTypes(userId, Collections.singleton(deviceType), closeStatus, new Date());
+        return setLocalSessionOfflineByUserIdAndDeviceTypes(userId, Collections.singleton(deviceType), closeReason, new Date());
     }
 
     /**
@@ -152,18 +152,18 @@ public class SessionService implements ISessionService {
     public Mono<Boolean> setLocalSessionOfflineByUserIdAndDeviceTypes(
             @NotNull Long userId,
             @NotEmpty Set<@ValidDeviceType DeviceType> deviceTypes,
-            @NotNull CloseStatus closeStatus) {
-        return setLocalSessionOfflineByUserIdAndDeviceTypes(userId, deviceTypes, closeStatus, new Date());
+            @NotNull CloseReason closeReason) {
+        return setLocalSessionOfflineByUserIdAndDeviceTypes(userId, deviceTypes, closeReason, new Date());
     }
 
     public Mono<Boolean> authAndSetLocalSessionOfflineByUserIdAndDeviceType(@NotNull Long userId,
                                                                             @NotNull DeviceType deviceType,
-                                                                            @NotNull CloseStatus closeStatus,
+                                                                            @NotNull CloseReason closeReason,
                                                                             int sessionId) {
         try {
             AssertUtil.notNull(userId, "userId");
             AssertUtil.notNull(deviceType, "deviceType");
-            AssertUtil.notNull(closeStatus, "closeStatus");
+            AssertUtil.notNull(closeReason, "closeReason");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
@@ -173,7 +173,7 @@ public class SessionService implements ISessionService {
         }
         UserSession session = manager.getSession(deviceType);
         if (session.getId() == sessionId) {
-            return setLocalSessionOfflineByUserIdAndDeviceTypes0(userId, Collections.singleton(deviceType), closeStatus, new Date(), manager);
+            return setLocalSessionOfflineByUserIdAndDeviceTypes0(userId, Collections.singleton(deviceType), closeReason, new Date(), manager);
         } else {
             return Mono.just(false);
         }
@@ -182,7 +182,7 @@ public class SessionService implements ISessionService {
     public Mono<Boolean> setLocalSessionOfflineByUserIdAndDeviceTypes(
             @NotNull Long userId,
             @NotEmpty Set<@ValidDeviceType DeviceType> deviceTypes,
-            @NotNull CloseStatus closeStatus,
+            @NotNull CloseReason closeReason,
             @NotNull Date disconnectionDate) {
         try {
             AssertUtil.notNull(userId, "userId");
@@ -193,26 +193,27 @@ public class SessionService implements ISessionService {
         if (manager == null) {
             return Mono.just(false);
         }
-        return setLocalSessionOfflineByUserIdAndDeviceTypes0(userId, deviceTypes, closeStatus, disconnectionDate, manager);
+        return setLocalSessionOfflineByUserIdAndDeviceTypes0(userId, deviceTypes, closeReason, disconnectionDate, manager);
     }
 
     public Mono<Boolean> setLocalSessionOfflineByUserIdAndDeviceTypes0(
             @NotNull Long userId,
             @NotEmpty Set<@ValidDeviceType DeviceType> deviceTypes,
-            @NotNull CloseStatus closeStatus,
+            @NotNull CloseReason closeReason,
             @NotNull Date disconnectionDate,
             @NotNull UserSessionsManager manager) {
         try {
-            AssertUtil.notNull(closeStatus, "closeStatus");
+            AssertUtil.notNull(closeReason, "closeReason");
             AssertUtil.notNull(disconnectionDate, "disconnectionDate");
             AssertUtil.notNull(manager, "manager");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        // Don't close the real session (connection) first and then remove the session status in Redis
+        // Don't close the session (connection) first and then remove the session status in Redis
         // because it will make problem if a client logins again while the session status in Redis hasn't been removed
         return userStatusService.removeStatusByUserIdAndDeviceTypes(userId, deviceTypes)
                 .flatMap(ignored -> {
+                    // Update the session information in Redis
                     List<Mono<UserSession>> disconnectMonos = new ArrayList<>(deviceTypes.size());
                     for (DeviceType deviceType : deviceTypes) {
                         UserSession session = manager.getSession(deviceType);
@@ -221,7 +222,7 @@ public class SessionService implements ISessionService {
                             if (sessionLocationService.isLocationEnabled()) {
                                 if (cacheDisconnectionReason) {
                                     int sessionId = session.getId();
-                                    disconnectMonos.add(reasonCacheService.cacheDisconnectionReason(userId, deviceType, sessionId, closeStatus)
+                                    disconnectMonos.add(reasonCacheService.cacheDisconnectionReason(userId, deviceType, sessionId, closeReason)
                                             .then(sessionLocationService.removeUserLocation(userId, deviceType))
                                             .thenReturn(session));
                                 } else {
@@ -230,25 +231,26 @@ public class SessionService implements ISessionService {
                                 }
                             } else if (cacheDisconnectionReason) {
                                 int sessionId = session.getId();
-                                disconnectMonos.add(reasonCacheService.cacheDisconnectionReason(userId, deviceType, sessionId, closeStatus)
+                                disconnectMonos.add(reasonCacheService.cacheDisconnectionReason(userId, deviceType, sessionId, closeReason)
                                         .thenReturn(session));
                             }
                         }
                     }
                     return Flux.merge(disconnectMonos)
                             .doOnNext(session -> {
+                                // Log and disconnect
                                 userLoginActionService.tryLogLogoutActionAndTriggerHandlers(session.getLogId(), userId, disconnectionDate);
-                                manager.setDeviceOffline(session.getDeviceType(), closeStatus);
-                                removeSessionsManagerIfEmpty(closeStatus, manager, userId);
+                                manager.setDeviceOffline(session.getDeviceType(), closeReason);
+                                removeSessionsManagerIfEmpty(closeReason, manager, userId);
                             })
                             .then(Mono.just(true));
                 });
     }
 
-    public Mono<Void> clearAllLocalSessions(@NotNull Date disconnectionDate, @NotNull CloseStatus closeStatus) {
+    public Mono<Void> clearAllLocalSessions(@NotNull Date disconnectionDate, @NotNull CloseReason closeReason) {
         try {
             AssertUtil.notNull(disconnectionDate, "disconnectionDate");
-            AssertUtil.notNull(closeStatus, "closeStatus");
+            AssertUtil.notNull(closeReason, "closeReason");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
@@ -256,7 +258,7 @@ public class SessionService implements ISessionService {
         for (Map.Entry<Long, UserSessionsManager> entry : sessionsManagerByUserId.entrySet()) {
             Long userId = entry.getKey();
             Set<DeviceType> loggedInDeviceTypes = entry.getValue().getLoggedInDeviceTypes();
-            Mono<Boolean> mono = setLocalSessionOfflineByUserIdAndDeviceTypes(userId, loggedInDeviceTypes, closeStatus, disconnectionDate);
+            Mono<Boolean> mono = setLocalSessionOfflineByUserIdAndDeviceTypes(userId, loggedInDeviceTypes, closeReason, disconnectionDate);
             monos.add(mono);
         }
         return Mono.when(monos);
@@ -265,8 +267,8 @@ public class SessionService implements ISessionService {
     @Override
     public Mono<Boolean> setLocalUserOffline(
             @NotNull Long userId,
-            @NotNull CloseStatus closeStatus) {
-        return setLocalSessionOfflineByUserIdAndDeviceTypes(userId, DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET, closeStatus, new Date());
+            @NotNull CloseReason closeReason) {
+        return setLocalSessionOfflineByUserIdAndDeviceTypes(userId, DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET, closeReason, new Date());
     }
 
     /**
@@ -285,7 +287,7 @@ public class SessionService implements ISessionService {
         UserSessionsManager userSessionsManager = getUserSessionsManager(userId);
         if (userSessionsManager != null) {
             UserSession session = userSessionsManager.getSession(deviceType);
-            if (session != null && !session.isConnectionRecovering()) {
+            if (session != null && !session.getConnection().isConnectionRecovering()) {
                 return updateHeartbeatTimestamp(userId, session);
             }
         }
@@ -317,7 +319,7 @@ public class SessionService implements ISessionService {
         UserSessionsManager userSessionsManager = getUserSessionsManager(userId);
         if (userSessionsManager != null) {
             UserSession session = userSessionsManager.getSession(deviceType);
-            if (session != null && session.getId() == sessionId && !session.isConnectionRecovering()) {
+            if (session != null && session.getId() == sessionId && !session.getConnection().isConnectionRecovering()) {
                 return updateHeartbeatTimestamp(userId, session)
                         .flatMap(updated -> updated ? Mono.just(session) : Mono.empty());
             }
@@ -325,6 +327,11 @@ public class SessionService implements ISessionService {
         return Mono.empty();
     }
 
+    /**
+     * For the case that the client recovers from UDP to TCP/WebSocket:
+     * Return the local session if the client connects to the machine that owns the existing session;
+     * Return a new session and disconnect the remote session if the existing session is on a different machine.
+     */
     public Mono<UserSession> tryRegisterOnlineUser(
             @NotNull Long userId,
             @NotNull DeviceType deviceType,
@@ -346,14 +353,22 @@ public class SessionService implements ISessionService {
                         return addOnlineDeviceIfAbsent(userId, deviceType, userStatus, position, ip, deviceDetails, sessionsStatus);
                     } else {
                         boolean conflicts = sessionsStatus.getLoggedInDeviceTypes().contains(deviceType);
-                        if (conflicts && userSimultaneousLoginService.shouldDisconnectLoggingInDeviceIfConflicts()) {
-                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE));
-                        } else {
-                            return disconnectConflictedDeviceTypes(userId, deviceType, sessionsStatus)
-                                    .flatMap(wasSuccessful -> wasSuccessful
-                                            ? addOnlineDeviceIfAbsent(userId, deviceType, userStatus, position, ip, deviceDetails, sessionsStatus)
-                                            : Mono.error(TurmsBusinessException.get(TurmsStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE)));
+                        if (conflicts) {
+                            UserSession session = getLocalUserSession(userId, deviceType);
+                            boolean isSessionOnLocal = session != null && !session.getConnection().isConnected();
+                            if (isSessionOnLocal) {
+                                // Note that the downstream should replace the disconnected connection
+                                // with the connected TCP/WebSocket connection
+                                // TODO: update session info in Redis
+                                return Mono.just(session);
+                            } else if (userSimultaneousLoginService.shouldDisconnectLoggingInDeviceIfConflicts()) {
+                                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE));
+                            }
                         }
+                        return disconnectConflictedDeviceTypes(userId, deviceType, sessionsStatus)
+                                .flatMap(wasSuccessful -> wasSuccessful
+                                        ? addOnlineDeviceIfAbsent(userId, deviceType, userStatus, position, ip, deviceDetails, sessionsStatus)
+                                        : Mono.error(TurmsBusinessException.get(TurmsStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE)));
                     }
                 });
     }
@@ -402,7 +417,8 @@ public class SessionService implements ISessionService {
             List<Mono<Boolean>> disconnectionRequests = new LinkedList<>();
             for (String nodeId : nodeIdAndDeviceTypesMap.keySet()) {
                 Set<DeviceType> deviceTypes = nodeIdAndDeviceTypesMap.get(nodeId);
-                SetUserOfflineRequest request = new SetUserOfflineRequest(userId, deviceTypes, CloseStatusFactory.get(SessionCloseStatus.DISCONNECTED_BY_CLIENT));
+                CloseReason closeReason = CloseReason.get(SessionCloseStatus.DISCONNECTED_BY_CLIENT);
+                SetUserOfflineRequest request = new SetUserOfflineRequest(userId, deviceTypes, closeReason);
                 disconnectionRequests.add(node.getRpcService().requestResponse(nodeId, request));
             }
             return ReactorUtil.areAllTrue(disconnectionRequests);
@@ -439,7 +455,7 @@ public class SessionService implements ISessionService {
                     UserSession session = manager.addSessionIfAbsent(deviceType, position, null, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
                     // This should never happen
                     if (session == null) {
-                        manager.setDeviceOffline(deviceType, CloseStatusFactory.get(SessionCloseStatus.LOGIN_CONFLICT));
+                        manager.setDeviceOffline(deviceType, CloseReason.get(SessionCloseStatus.LOGIN_CONFLICT));
                         session = manager.addSessionIfAbsent(deviceType, position, null, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
                         if (session == null) {
                             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_INTERNAL_ERROR));
@@ -465,7 +481,7 @@ public class SessionService implements ISessionService {
                 });
     }
 
-    private void removeSessionsManagerIfEmpty(@NotNull CloseStatus closeStatus, @NotNull UserSessionsManager manager, @NotNull Long userId) {
+    private void removeSessionsManagerIfEmpty(@NotNull CloseReason closeReason, @NotNull UserSessionsManager manager, @NotNull Long userId) {
         if (manager.getSessionsNumber() == 0) {
             sessionsManagerByUserId.remove(userId);
         }
@@ -473,7 +489,7 @@ public class SessionService implements ISessionService {
             List<UserOnlineStatusChangeHandler> handlerList = turmsPluginManager.getUserOnlineStatusChangeHandlerList();
             if (!handlerList.isEmpty()) {
                 for (UserOnlineStatusChangeHandler handler : handlerList) {
-                    handler.goOffline(manager, closeStatus).subscribe();
+                    handler.goOffline(manager, closeReason).subscribe();
                 }
             }
         }

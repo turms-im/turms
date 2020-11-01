@@ -53,6 +53,7 @@ import java.net.InetSocketAddress;
 @Component
 public class UdpDispatcher {
 
+    public static UdpDispatcher instance;
     private static final int REQUEST_LENGTH = Long.BYTES + Byte.BYTES * 2 + Integer.BYTES;
     @Getter
     private static boolean isEnabled;
@@ -62,6 +63,7 @@ public class UdpDispatcher {
     private final Connection connection;
 
     public UdpDispatcher(WorkflowMediator workflowMediator, TurmsPropertiesManager propertiesManager) {
+        instance = this;
         UdpProperties udpProperties = propertiesManager.getLocalProperties().getGateway().getUdp();
         this.workflowMediator = workflowMediator;
         isEnabled = udpProperties.isEnabled();
@@ -120,7 +122,7 @@ public class UdpDispatcher {
                     return workflowMediator.authAndProcessHeartbeatRequest(userId, deviceType, sessionId)
                             .map(session -> {
                                 // Update the address because it may has changed
-                                session.setAddress(senderAddress);
+                                session.getConnection().setAddress(senderAddress);
                                 return TurmsStatusCode.OK;
                             })
                             .onErrorReturn(TurmsStatusCode.FAILED)

@@ -19,10 +19,10 @@ package im.turms.server.common.rpc.request;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.server.common.cluster.service.rpc.RpcCallable;
+import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.rpc.service.ISessionService;
 import lombok.Getter;
 import org.springframework.context.ApplicationContext;
-import org.springframework.web.reactive.socket.CloseStatus;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
@@ -39,15 +39,15 @@ public class SetUserOfflineRequest extends RpcCallable<Boolean> {
 
     private final Long userId;
     private final Set<DeviceType> deviceTypes;
-    private final CloseStatus closeStatus;
+    private final CloseReason closeReason;
 
     public SetUserOfflineRequest(
             @NotNull Long userId,
             @Nullable Set<DeviceType> deviceTypes,
-            @NotNull CloseStatus closeStatus) {
+            @NotNull CloseReason closeReason) {
         this.userId = userId;
         this.deviceTypes = deviceTypes;
-        this.closeStatus = closeStatus;
+        this.closeReason = closeReason;
     }
 
     @Override
@@ -64,8 +64,8 @@ public class SetUserOfflineRequest extends RpcCallable<Boolean> {
     @Override
     public Mono<Boolean> callAsync() {
         return deviceTypes != null && !deviceTypes.isEmpty()
-                ? sessionService.setLocalSessionOfflineByUserIdAndDeviceTypes(userId, deviceTypes, closeStatus)
-                : sessionService.setLocalUserOffline(userId, closeStatus);
+                ? sessionService.setLocalSessionOfflineByUserIdAndDeviceTypes(userId, deviceTypes, closeReason)
+                : sessionService.setLocalUserOffline(userId, closeReason);
     }
 
 }

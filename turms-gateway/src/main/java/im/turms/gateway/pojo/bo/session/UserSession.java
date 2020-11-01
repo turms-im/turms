@@ -18,26 +18,26 @@
 package im.turms.gateway.pojo.bo.session;
 
 import im.turms.common.constant.DeviceType;
-import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.util.RandomUtil;
-import im.turms.gateway.access.websocket.dto.CloseStatusFactory;
+import im.turms.gateway.pojo.bo.session.connection.NetConnection;
+import im.turms.server.common.dto.CloseReason;
 import io.netty.buffer.ByteBuf;
 import io.netty.util.Timeout;
 import lombok.Data;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.geo.Point;
-import org.springframework.web.reactive.socket.CloseStatus;
-import org.springframework.web.reactive.socket.WebSocketSession;
 import reactor.core.publisher.Sinks;
 import reactor.util.concurrent.Queues;
 
 import javax.validation.constraints.NotNull;
-import java.net.InetSocketAddress;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author James Chen
  */
 @Data
+@Log4j2
 public final class UserSession {
 
     private final int id = RandomUtil.nextPositiveInt();
@@ -46,13 +46,6 @@ public final class UserSession {
     private final DeviceType deviceType;
     private final Date loginDate;
     private Point loginLocation;
-
-    /**
-     * We don't use something like "Object attachment" to separate the business logic
-     * and technical implementation for better performance and code clarity
-     */
-    private WebSocketSession webSocketSession;
-    private InetSocketAddress address;
 
     /**
      * 1. Use Sinks.Many<ByteBuf> instead of Sinks.Many<TurmsNotification>
@@ -71,8 +64,12 @@ public final class UserSession {
     private volatile long lastHeartbeatTimestampMillis;
     private volatile long lastRequestTimestampMillis;
 
-    private volatile boolean isConnectionRecovering;
-    private SessionStatus status = SessionStatus.CLOSED;
+    /**
+     * Note that it's acceptable that the session is still open even if the connection is closed
+     * because the client can send heartbeats over UDP to keep the session open
+     */
+    private AtomicBoolean isSessionOpen = new AtomicBoolean(true);
+    private NetConnection connection;
 
     public UserSession(Long userId,
                        DeviceType loggingInDeviceType,
@@ -87,65 +84,22 @@ public final class UserSession {
         this.lastHeartbeatTimestampMillis = now.getTime();
     }
 
-    public void setConnectionRecovering(boolean connectionRecovering) {
-        isConnectionRecovering = connectionRecovering;
-        updateStatus();
-    }
-
-    public void setWebSocketSession(WebSocketSession webSocketSession) {
-        this.webSocketSession = webSocketSession;
-        updateStatus();
-    }
-
-    public void close(@NotNull CloseStatus closeStatus) {
-        status = SessionStatus.CLOSED;
-        notificationSink.tryEmitComplete();
-        if (heartbeatTimeout != null) {
-            heartbeatTimeout.cancel();
+    public void close(@NotNull CloseReason closeReason) {
+        if (isSessionOpen.compareAndSet(true, false)) {
+            notificationSink.tryEmitComplete();
+            if (heartbeatTimeout != null) {
+                heartbeatTimeout.cancel();
+            }
         }
-        WebSocketSession session = webSocketSession;
-        if (session != null) {
-            session.close(closeStatus).subscribe();
-            webSocketSession = null;
+        if (connection != null) {
+            connection.close(closeReason);
+        } else {
+            log.warn("The connection is missing");
         }
-    }
-
-    public void disconnect() {
-        WebSocketSession session = webSocketSession;
-        if (session != null) {
-            CloseStatus closeStatus = CloseStatusFactory.get(SessionCloseStatus.SWITCH);
-            session.close(closeStatus).subscribe();
-            webSocketSession = null;
-        }
-        updateStatus();
     }
 
     public boolean isOpen() {
-        return status != SessionStatus.CLOSED;
-    }
-
-    public boolean isConnected() {
-        return status != SessionStatus.CONNECTED;
-    }
-
-    public boolean isDisconnected() {
-        return status != SessionStatus.DISCONNECTED;
-    }
-
-    public boolean isRecovering() {
-        return status != SessionStatus.RECOVERING;
-    }
-
-    private void updateStatus() {
-        if (webSocketSession == null) {
-            if (isConnectionRecovering) {
-                status = SessionStatus.RECOVERING;
-            } else {
-                status = SessionStatus.DISCONNECTED;
-            }
-        } else {
-            status = SessionStatus.CONNECTED;
-        }
+        return isSessionOpen.get();
     }
 
 }

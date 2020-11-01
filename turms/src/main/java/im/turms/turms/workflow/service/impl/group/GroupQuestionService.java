@@ -174,7 +174,7 @@ public class GroupQuestionService {
                                 .map(joined -> GroupJoinQuestionsAnswerResult
                                         .newBuilder()
                                         .setJoined(joined)
-                                        .addAllQuestionsIds(idsAndScore.getKey())
+                                        .addAllQuestionIds(idsAndScore.getKey())
                                         .setScore(idsAndScore.getRight())
                                         .build())));
     }

@@ -19,18 +19,16 @@ package unit.im.turms.gateway.manager;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.UserStatus;
+import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.gateway.manager.UserSessionsManager;
+import im.turms.gateway.pojo.bo.session.connection.NetConnection;
+import im.turms.server.common.dto.CloseReason;
 import org.junit.jupiter.api.Test;
-import org.springframework.web.reactive.socket.CloseStatus;
-import org.springframework.web.reactive.socket.WebSocketSession;
-import reactor.core.publisher.Mono;
 
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * @author James Chen
@@ -60,12 +58,11 @@ class UserSessionsManagerTests {
     @Test
     void setDeviceOffline_shouldSucceed() {
         UserSessionsManager manager = new UserSessionsManager(userId, userStatus, deviceType, null, 0, 0, null);
-        WebSocketSession session = mock(WebSocketSession.class);
-        when(session.close(any())).thenReturn(Mono.empty());
-        manager.getSession(deviceType).setWebSocketSession(session);
+        NetConnection connection = mock(NetConnection.class);
+        manager.getSession(deviceType).setConnection(connection);
 
         assertEquals(1, manager.getSessionMap().size());
-        manager.setDeviceOffline(deviceType, CloseStatus.NORMAL);
+        manager.setDeviceOffline(deviceType, CloseReason.get(SessionCloseStatus.SERVER_CLOSED));
         assertEquals(0, manager.getSessionMap().size());
     }
 

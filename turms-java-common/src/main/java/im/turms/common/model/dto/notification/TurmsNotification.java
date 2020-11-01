@@ -143,6 +143,19 @@ private static final long serialVersionUID = 0L;
 
             break;
           }
+          case 58: {
+            com.google.protobuf.Int32Value.Builder subBuilder = null;
+            if (closeStatus_ != null) {
+              subBuilder = closeStatus_.toBuilder();
+            }
+            closeStatus_ = input.readMessage(com.google.protobuf.Int32Value.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(closeStatus_);
+              closeStatus_ = subBuilder.buildPartial();
+            }
+
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -5433,6 +5446,32 @@ private static final long serialVersionUID = 0L;
     return getRequesterId();
   }
 
+  public static final int CLOSE_STATUS_FIELD_NUMBER = 7;
+  private com.google.protobuf.Int32Value closeStatus_;
+  /**
+   * <code>.google.protobuf.Int32Value close_status = 7;</code>
+   * @return Whether the closeStatus field is set.
+   */
+  @java.lang.Override
+  public boolean hasCloseStatus() {
+    return closeStatus_ != null;
+  }
+  /**
+   * <code>.google.protobuf.Int32Value close_status = 7;</code>
+   * @return The closeStatus.
+   */
+  @java.lang.Override
+  public com.google.protobuf.Int32Value getCloseStatus() {
+    return closeStatus_ == null ? com.google.protobuf.Int32Value.getDefaultInstance() : closeStatus_;
+  }
+  /**
+   * <code>.google.protobuf.Int32Value close_status = 7;</code>
+   */
+  @java.lang.Override
+  public com.google.protobuf.Int32ValueOrBuilder getCloseStatusOrBuilder() {
+    return getCloseStatus();
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -5464,6 +5503,9 @@ private static final long serialVersionUID = 0L;
     }
     if (requesterId_ != null) {
       output.writeMessage(6, getRequesterId());
+    }
+    if (closeStatus_ != null) {
+      output.writeMessage(7, getCloseStatus());
     }
     unknownFields.writeTo(output);
   }
@@ -5497,6 +5539,10 @@ private static final long serialVersionUID = 0L;
     if (requesterId_ != null) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(6, getRequesterId());
+    }
+    if (closeStatus_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(7, getCloseStatus());
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -5543,6 +5589,11 @@ private static final long serialVersionUID = 0L;
       if (!getRequesterId()
           .equals(other.getRequesterId())) return false;
     }
+    if (hasCloseStatus() != other.hasCloseStatus()) return false;
+    if (hasCloseStatus()) {
+      if (!getCloseStatus()
+          .equals(other.getCloseStatus())) return false;
+    }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -5577,6 +5628,10 @@ private static final long serialVersionUID = 0L;
     if (hasRequesterId()) {
       hash = (37 * hash) + REQUESTER_ID_FIELD_NUMBER;
       hash = (53 * hash) + getRequesterId().hashCode();
+    }
+    if (hasCloseStatus()) {
+      hash = (37 * hash) + CLOSE_STATUS_FIELD_NUMBER;
+      hash = (53 * hash) + getCloseStatus().hashCode();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -5747,6 +5802,12 @@ private static final long serialVersionUID = 0L;
         requesterId_ = null;
         requesterIdBuilder_ = null;
       }
+      if (closeStatusBuilder_ == null) {
+        closeStatus_ = null;
+      } else {
+        closeStatus_ = null;
+        closeStatusBuilder_ = null;
+      }
       return this;
     }
 
@@ -5802,6 +5863,11 @@ private static final long serialVersionUID = 0L;
         result.requesterId_ = requesterId_;
       } else {
         result.requesterId_ = requesterIdBuilder_.build();
+      }
+      if (closeStatusBuilder_ == null) {
+        result.closeStatus_ = closeStatus_;
+      } else {
+        result.closeStatus_ = closeStatusBuilder_.build();
       }
       onBuilt();
       return result;
@@ -5868,6 +5934,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.hasRequesterId()) {
         mergeRequesterId(other.getRequesterId());
+      }
+      if (other.hasCloseStatus()) {
+        mergeCloseStatus(other.getCloseStatus());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -6709,6 +6778,125 @@ private static final long serialVersionUID = 0L;
         requesterId_ = null;
       }
       return requesterIdBuilder_;
+    }
+
+    private com.google.protobuf.Int32Value closeStatus_;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder> closeStatusBuilder_;
+    /**
+     * <code>.google.protobuf.Int32Value close_status = 7;</code>
+     * @return Whether the closeStatus field is set.
+     */
+    public boolean hasCloseStatus() {
+      return closeStatusBuilder_ != null || closeStatus_ != null;
+    }
+    /**
+     * <code>.google.protobuf.Int32Value close_status = 7;</code>
+     * @return The closeStatus.
+     */
+    public com.google.protobuf.Int32Value getCloseStatus() {
+      if (closeStatusBuilder_ == null) {
+        return closeStatus_ == null ? com.google.protobuf.Int32Value.getDefaultInstance() : closeStatus_;
+      } else {
+        return closeStatusBuilder_.getMessage();
+      }
+    }
+    /**
+     * <code>.google.protobuf.Int32Value close_status = 7;</code>
+     */
+    public Builder setCloseStatus(com.google.protobuf.Int32Value value) {
+      if (closeStatusBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        closeStatus_ = value;
+        onChanged();
+      } else {
+        closeStatusBuilder_.setMessage(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.google.protobuf.Int32Value close_status = 7;</code>
+     */
+    public Builder setCloseStatus(
+        com.google.protobuf.Int32Value.Builder builderForValue) {
+      if (closeStatusBuilder_ == null) {
+        closeStatus_ = builderForValue.build();
+        onChanged();
+      } else {
+        closeStatusBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <code>.google.protobuf.Int32Value close_status = 7;</code>
+     */
+    public Builder mergeCloseStatus(com.google.protobuf.Int32Value value) {
+      if (closeStatusBuilder_ == null) {
+        if (closeStatus_ != null) {
+          closeStatus_ =
+            com.google.protobuf.Int32Value.newBuilder(closeStatus_).mergeFrom(value).buildPartial();
+        } else {
+          closeStatus_ = value;
+        }
+        onChanged();
+      } else {
+        closeStatusBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.google.protobuf.Int32Value close_status = 7;</code>
+     */
+    public Builder clearCloseStatus() {
+      if (closeStatusBuilder_ == null) {
+        closeStatus_ = null;
+        onChanged();
+      } else {
+        closeStatus_ = null;
+        closeStatusBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <code>.google.protobuf.Int32Value close_status = 7;</code>
+     */
+    public com.google.protobuf.Int32Value.Builder getCloseStatusBuilder() {
+
+      onChanged();
+      return getCloseStatusFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.google.protobuf.Int32Value close_status = 7;</code>
+     */
+    public com.google.protobuf.Int32ValueOrBuilder getCloseStatusOrBuilder() {
+      if (closeStatusBuilder_ != null) {
+        return closeStatusBuilder_.getMessageOrBuilder();
+      } else {
+        return closeStatus_ == null ?
+            com.google.protobuf.Int32Value.getDefaultInstance() : closeStatus_;
+      }
+    }
+    /**
+     * <code>.google.protobuf.Int32Value close_status = 7;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder>
+        getCloseStatusFieldBuilder() {
+      if (closeStatusBuilder_ == null) {
+        closeStatusBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder>(
+                getCloseStatus(),
+                getParentForChildren(),
+                isClean());
+        closeStatus_ = null;
+      }
+      return closeStatusBuilder_;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

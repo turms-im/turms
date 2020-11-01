@@ -20,10 +20,10 @@ package im.turms.server.common.rpc.serializer.request;
 import im.turms.common.constant.DeviceType;
 import im.turms.server.common.cluster.service.serialization.serializer.Serializer;
 import im.turms.server.common.cluster.service.serialization.serializer.SerializerId;
+import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.rpc.request.SetUserOfflineRequest;
 import im.turms.server.common.util.DeviceTypeUtil;
 import io.netty.buffer.ByteBuf;
-import org.springframework.web.reactive.socket.CloseStatus;
 
 import java.util.Set;
 
@@ -35,7 +35,9 @@ public class SetUserOfflineRequestSerializer implements Serializer<SetUserOfflin
     @Override
     public void write(ByteBuf output, SetUserOfflineRequest data) {
         output.writeLong(data.getUserId());
-        output.writeShort(data.getCloseStatus().getCode());
+        CloseReason closeReason = data.getCloseReason();
+        int code = closeReason.getCode();
+        output.writeShort(closeReason.isTurmsStatusCode() ? -code : code);
         Set<DeviceType> deviceTypes = data.getDeviceTypes();
         if (!deviceTypes.isEmpty()) {
             byte deviceTypesByte = DeviceTypeUtil.deviceTypesToByte(deviceTypes);
@@ -46,13 +48,18 @@ public class SetUserOfflineRequestSerializer implements Serializer<SetUserOfflin
     @Override
     public SetUserOfflineRequest read(ByteBuf input) {
         long userId = input.readLong();
-        CloseStatus closeStatus = new CloseStatus(input.readShort());
+        int code = input.readShort();
+        boolean isTurmsStatusCode = code < 0;
+        if (isTurmsStatusCode) {
+            code = -code;
+        }
+        CloseReason closeReason = CloseReason.get(code, null, isTurmsStatusCode);
         Set<DeviceType> deviceTypes = null;
         if (input.readableBytes() > 0) {
             byte deviceTypesMask = input.readByte();
             deviceTypes = DeviceTypeUtil.byte2DeviceTypes(deviceTypesMask);
         }
-        return new SetUserOfflineRequest(userId, deviceTypes, closeStatus);
+        return new SetUserOfflineRequest(userId, deviceTypes, closeReason);
     }
 
     @Override

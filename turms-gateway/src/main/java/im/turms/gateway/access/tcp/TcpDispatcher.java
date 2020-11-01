@@ -33,25 +33,20 @@ import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.pojo.dto.SimpleTurmsRequest;
 import im.turms.gateway.service.mediator.WorkflowMediator;
 import im.turms.gateway.util.TurmsRequestUtil;
+import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.dto.ServiceRequest;
-import im.turms.server.common.pojo.CloseReason;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.util.CloseReasonUtil;
 import im.turms.server.common.util.ProtoUtil;
 import io.netty.buffer.ByteBuf;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.core.publisher.MonoSink;
-import reactor.core.publisher.Sinks;
 import reactor.netty.Connection;
 import reactor.netty.DisposableServer;
-import reactor.util.concurrent.Queues;
 
 import javax.annotation.PreDestroy;
 import java.net.InetSocketAddress;
-import java.util.function.BiConsumer;
 
 /**
  * @author James Chen
@@ -66,47 +61,36 @@ public class TcpDispatcher {
     private final WorkflowMediator workflowMediator;
     private final SessionController sessionController;
 
-    private final BiConsumer<Connection, MonoSink<Void>> connectionHandler = (connection, completeSink) -> {
-        InetSocketAddress address = (InetSocketAddress) connection.address();
-        String ip = address.getHostString();
-        Sinks.Many<ByteBuf> outputSink = Sinks.many()
-                .unicast()
-                .onBackpressureBuffer(Queues.<ByteBuf>unbounded(64).get());
-        UserSessionWrapper sessionWrapper = new UserSessionWrapper(connection, outputSink, completeSink, true);
-
-        connection.inbound()
-                .receive()
-                .doOnNext(data -> {
-                    if (sessionWrapper.isAvailable()) {
-                        handleRequestData(sessionWrapper, data, ip)
-                                .doOnError(throwable -> handleExceptionForOutput(sessionWrapper, throwable))
-                                .doOnNext(outputSink::tryEmitNext)
-                                .subscribe();
-                    }
-                });
-
-        Flux<ByteBuf> outputFlux = outputSink.asFlux()
-                .doOnError(throwable -> handleExceptionForOutput(sessionWrapper, throwable))
-                .doOnComplete(sessionWrapper::close);
-        connection.outbound()
-                .send(outputFlux, byteBuf -> true)
-                .then()
-                .subscribe();
-    };
-
     public TcpDispatcher(WorkflowMediator workflowMediator,
                          TurmsPropertiesManager propertiesManager,
                          SessionController sessionController) {
         this.workflowMediator = workflowMediator;
         this.sessionController = sessionController;
-        server = TcpServerFactory.create(propertiesManager, (inbound, outbound) ->
-                Mono.create(completeSink -> inbound.withConnection(connection -> connectionHandler.accept(connection, completeSink))));
+        server = TcpServerFactory.create(propertiesManager, (inbound, outbound) -> {
+            Connection connection = (Connection) inbound;
+            InetSocketAddress address = (InetSocketAddress) connection.address();
+            String ip = address.getHostString();
+            UserSessionWrapper sessionWrapper = new UserSessionWrapper(connection);
+            connection.inbound()
+                    .receive()
+                    .doOnNext(data -> {
+                        if (sessionWrapper.isAvailable()) {
+                            Mono<ByteBuf> response = handleRequestData(sessionWrapper, data, ip)
+                                    .doOnError(throwable -> handleExceptionForResponse(sessionWrapper, throwable));
+                            connection.outbound()
+                                    .send(response, byteBuf -> true)
+                                    .then()
+                                    .subscribe();
+                        }
+                    });
+            return connection.onDispose();
+        });
     }
 
     @PreDestroy
     public void preDestroy() {
         if (server != null) {
-            server.disposeNow();
+            server.dispose();
         }
     }
 
@@ -121,7 +105,7 @@ public class TcpDispatcher {
                             .map(result -> getNotificationFromHandlerResult(result, request.getRequestId()));
                     break;
                 case DELETE_SESSION_REQUEST:
-                    notificationMono = sessionController.handleDeleteSessionRequest(sessionWrapper, request.getRequestId());
+                    notificationMono = sessionController.handleDeleteSessionRequest(sessionWrapper);
                     break;
                 default:
                     notificationMono = handleServiceRequest(sessionWrapper, request, data);
@@ -156,38 +140,32 @@ public class TcpDispatcher {
         return workflowMediator.processServiceRequest(serviceRequest);
     }
 
+    /**
+     * Close the connection even if it's just a client error
+     */
+    private void handleExceptionForResponse(UserSessionWrapper sessionWrapper, Throwable throwable) {
+        CloseReason closeReason = CloseReasonUtil.parse(throwable);
+        int code = closeReason.getCode();
+        if (TurmsStatusCode.isServerError(code)) {
+            log.error("Failed to send handle request", throwable);
+        }
+        UserSession userSession = sessionWrapper.getUserSession();
+        if (userSession != null) {
+            workflowMediator.setLocalUserDeviceOffline(userSession.getUserId(), userSession.getDeviceType(), closeReason);
+        } else {
+            sessionWrapper.getConnection().dispose();
+        }
+    }
+
     private TurmsNotification getNotificationFromHandlerResult(RequestHandlerResult result, long requestId) {
         TurmsNotification.Builder builder = TurmsNotification.newBuilder()
                 .setRequestId(Int64Value.newBuilder().setValue(requestId).build())
                 .setCode(Int32Value.newBuilder().setValue(result.getCode().getBusinessCode()).build());
         String reason = result.getReason();
         if (reason != null) {
-            builder.setReason(StringValue.newBuilder().setValue(result.getReason()).build());
-        }
-        return builder.build();
-    }
-
-    private void handleExceptionForOutput(UserSessionWrapper sessionWrapper, Throwable throwable) {
-        CloseReason closeReason = CloseReasonUtil.parse(throwable);
-        TurmsStatusCode code = closeReason.getCode();
-        String reason = closeReason.getReason();
-        if (code.isServerError()) {
-            log.error("Failed to send outbound notification", throwable);
-        }
-        TurmsNotification.Builder builder = TurmsNotification
-                .newBuilder()
-                .setCode(Int32Value.newBuilder().setValue(code.getBusinessCode()).build());
-        if (reason != null) {
             builder.setReason(StringValue.newBuilder().setValue(reason).build());
         }
-        // Note: don't recover even if it's just a client error
-        TurmsNotification closeNotification = builder.build();
-        sessionWrapper.setOpen(false);
-        sessionWrapper.getConnection()
-                .outbound()
-                .sendObject(closeNotification)
-                .then()
-                .subscribe(unused -> sessionWrapper.close());
+        return builder.build();
     }
 
 }

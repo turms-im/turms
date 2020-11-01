@@ -49,7 +49,7 @@ class OutboundMessageServiceTests {
 
     @Test
     void constructor_shouldReturnInstance() {
-        OutboundMessageService outboundMessageService = new OutboundMessageService(null, null, null, null);
+        OutboundMessageService outboundMessageService = new OutboundMessageService(null, null, null);
         assertNotNull(outboundMessageService);
     }
 
@@ -96,7 +96,7 @@ class OutboundMessageServiceTests {
         SessionService sessionService = mock(SessionService.class);
         when(sessionService.getUserSessionsManager(any()))
                 .thenReturn(userSessionsManager);
-        return new OutboundMessageService(node, sessionService, null, pluginManager);
+        return new OutboundMessageService(node, sessionService, pluginManager);
     }
 
 }

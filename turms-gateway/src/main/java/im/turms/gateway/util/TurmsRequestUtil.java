@@ -45,6 +45,7 @@ public class TurmsRequestUtil {
      */
     private static final int TURMS_REQUEST_REQUEST_ID_TAG = 10;
     private static final ExtensionRegistry REGISTRY = ExtensionRegistry.getEmptyRegistry();
+    private static final long UNDEFINED_REQUEST_ID = Long.MIN_VALUE;
 
     private TurmsRequestUtil() {
     }
@@ -55,7 +56,7 @@ public class TurmsRequestUtil {
         // see com.google.protobuf.CodedInputStream.newInstance(java.nio.ByteBuffer, boolean)
         CodedInputStream stream = CodedInputStream.newInstance(turmsRequestBuffer);
         try {
-            long requestId = Long.MIN_VALUE;
+            long requestId = UNDEFINED_REQUEST_ID;
             TurmsRequest.KindCase type;
             while (true) {
                 int tag = stream.readTag();
@@ -76,7 +77,7 @@ public class TurmsRequestUtil {
                     break;
                 }
             }
-            if (requestId != Long.MIN_VALUE) {
+            if (requestId != UNDEFINED_REQUEST_ID) {
                 CreateSessionRequest createSessionRequest = null;
                 if (type == CREATE_SESSION_REQUEST) {
                     createSessionRequest = stream.readMessage(CreateSessionRequest.parser(), REGISTRY);

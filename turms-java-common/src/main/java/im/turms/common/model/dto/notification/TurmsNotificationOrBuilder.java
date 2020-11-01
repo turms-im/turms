@@ -146,4 +146,19 @@ public interface TurmsNotificationOrBuilder extends
    * <code>.google.protobuf.Int64Value requester_id = 6;</code>
    */
   com.google.protobuf.Int64ValueOrBuilder getRequesterIdOrBuilder();
+
+  /**
+   * <code>.google.protobuf.Int32Value close_status = 7;</code>
+   * @return Whether the closeStatus field is set.
+   */
+  boolean hasCloseStatus();
+  /**
+   * <code>.google.protobuf.Int32Value close_status = 7;</code>
+   * @return The closeStatus.
+   */
+  com.google.protobuf.Int32Value getCloseStatus();
+  /**
+   * <code>.google.protobuf.Int32Value close_status = 7;</code>
+   */
+  com.google.protobuf.Int32ValueOrBuilder getCloseStatusOrBuilder();
 }
