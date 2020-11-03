@@ -26,6 +26,7 @@ import im.turms.server.common.dao.converter.EnumToIntegerConverter;
 import im.turms.server.common.dao.converter.IntegerToEnumConverter;
 import im.turms.server.common.dao.converter.IntegerToEnumConverterFactory;
 import im.turms.server.common.dao.domain.User;
+import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.service.env.DatabaseProperties;
 import im.turms.turms.workflow.dao.domain.*;
@@ -60,15 +61,54 @@ import java.util.stream.Collectors;
 @Configuration
 public class MongoConfig {
 
-    private final TurmsPropertiesManager turmsPropertiesManager;
     private static final int SERVICE_TYPES_NUMBER = 4;
     // hash code of MongoProperties -> ReactiveMongoTemplate
     // because MongoProperties doesn't have a custom hashcode implementation but a native implementation
     private static final Map<Integer, ReactiveMongoTemplate> TEMPLATE_MAP = Maps.newHashMapWithExpectedSize(SERVICE_TYPES_NUMBER);
     private static final int DEFAULT_MONGO_PROPERTIES_HASHCODE = getPropertiesHashCode(new MongoProperties());
+    private final TurmsPropertiesManager turmsPropertiesManager;
+    private final Map<Class<?>, WriteConcern> writeConcernMap = new IdentityHashMap<>();
 
     public MongoConfig(TurmsPropertiesManager turmsPropertiesManager) {
         this.turmsPropertiesManager = turmsPropertiesManager;
+        initWriteConcernMap(turmsPropertiesManager.getLocalProperties());
+    }
+
+    private static int getPropertiesHashCode(MongoProperties properties) {
+        int result = Objects.hash(properties.getHost(), properties.getPort(), properties.getUri(),
+                properties.getDatabase(), properties.getAuthenticationDatabase(),
+                properties.getGridFsDatabase(), properties.getUsername(),
+                properties.getReplicaSetName(), properties.getFieldNamingStrategy(),
+                properties.getUuidRepresentation(), properties.isAutoIndexCreation());
+        result = 31 * result + Arrays.hashCode(properties.getPassword());
+        return result;
+    }
+
+    private void initWriteConcernMap(TurmsProperties turmsProperties) {
+        DatabaseProperties.WriteConcern writeConcern = turmsProperties.getService().getDatabase().getWriteConcern();
+        writeConcernMap.put(Admin.class, writeConcern.getAdmin());
+        writeConcernMap.put(AdminRole.class, writeConcern.getAdminRole());
+
+        writeConcernMap.put(Group.class, writeConcern.getGroup());
+        writeConcernMap.put(GroupBlacklistedUser.class, writeConcern.getGroupBlacklistedUser());
+        writeConcernMap.put(GroupInvitation.class, writeConcern.getGroupInvitation());
+        writeConcernMap.put(GroupJoinQuestion.class, writeConcern.getGroupJoinQuestion());
+        writeConcernMap.put(GroupJoinRequest.class, writeConcern.getGroupJoinRequest());
+        writeConcernMap.put(GroupMember.class, writeConcern.getGroupMember());
+        writeConcernMap.put(GroupType.class, writeConcern.getGroupType());
+        writeConcernMap.put(GroupVersion.class, writeConcern.getGroupVersion());
+
+        writeConcernMap.put(Message.class, writeConcern.getMessage());
+        writeConcernMap.put(MessageStatus.class, writeConcern.getMessageStatus());
+
+        writeConcernMap.put(User.class, writeConcern.getUser());
+        writeConcernMap.put(UserFriendRequest.class, writeConcern.getUserFriendRequest());
+        writeConcernMap.put(UserLocationLog.class, writeConcern.getUserLocation());
+        writeConcernMap.put(UserPermissionGroup.class, writeConcern.getUserPermissionGroup());
+        writeConcernMap.put(UserRelationship.class, writeConcern.getUserRelationship());
+        writeConcernMap.put(UserRelationshipGroup.class, writeConcern.getUserRelationshipGroup());
+        writeConcernMap.put(UserRelationshipGroupMember.class, writeConcern.getUserRelationshipGroupMember());
+        writeConcernMap.put(UserVersion.class, writeConcern.getUserVersion());
     }
 
     @Bean
@@ -78,69 +118,13 @@ public class MongoConfig {
             if (entityType == null) {
                 return WriteConcern.ACKNOWLEDGED;
             }
-            DatabaseProperties.WriteConcern writeConcern = turmsPropertiesManager.getLocalProperties().getService().getDatabase().getWriteConcern();
-            if (entityType == Admin.class) {
-                return writeConcern.getAdmin();
+            WriteConcern writeConcern = writeConcernMap.get(entityType);
+            if (writeConcern == null) {
+                log.warn("An unknown entity type {} attempts to store documents", entityType.getName());
+                return action.getDefaultWriteConcern();
+            } else {
+                return writeConcern;
             }
-            if (entityType == AdminRole.class) {
-                return writeConcern.getAdminRole();
-            }
-            if (entityType == Group.class) {
-                return writeConcern.getGroup();
-            }
-            if (entityType == GroupBlacklistedUser.class) {
-                return writeConcern.getGroupBlacklistedUser();
-            }
-            if (entityType == GroupInvitation.class) {
-                return writeConcern.getGroupInvitation();
-            }
-            if (entityType == GroupJoinQuestion.class) {
-                return writeConcern.getGroupJoinQuestion();
-            }
-            if (entityType == GroupJoinRequest.class) {
-                return writeConcern.getGroupJoinRequest();
-            }
-            if (entityType == GroupMember.class) {
-                return writeConcern.getGroupMember();
-            }
-            if (entityType == GroupType.class) {
-                return writeConcern.getGroupType();
-            }
-            if (entityType == GroupVersion.class) {
-                return writeConcern.getGroupVersion();
-            }
-            if (entityType == Message.class) {
-                return writeConcern.getMessage();
-            }
-            if (entityType == MessageStatus.class) {
-                return writeConcern.getMessageStatus();
-            }
-            if (entityType == User.class) {
-                return writeConcern.getUser();
-            }
-            if (entityType == UserFriendRequest.class) {
-                return writeConcern.getUserFriendRequest();
-            }
-            if (entityType == UserLocationLog.class) {
-                return writeConcern.getUserLocation();
-            }
-            if (entityType == UserPermissionGroup.class) {
-                return writeConcern.getUserPermissionGroup();
-            }
-            if (entityType == UserRelationship.class) {
-                return writeConcern.getUserRelationship();
-            }
-            if (entityType == UserRelationshipGroup.class) {
-                return writeConcern.getUserRelationshipGroup();
-            }
-            if (entityType == UserRelationshipGroupMember.class) {
-                return writeConcern.getUserRelationshipGroupMember();
-            }
-            if (entityType == UserVersion.class) {
-                return writeConcern.getUserVersion();
-            }
-            log.warn("An unknown entity type {} attempts to store documents", entityType.getName());
-            return action.getDefaultWriteConcern();
         };
     }
 
@@ -231,16 +215,6 @@ public class MongoConfig {
 
             return mongoTemplate;
         });
-    }
-
-    private static int getPropertiesHashCode(MongoProperties properties) {
-        int result = Objects.hash(properties.getHost(), properties.getPort(), properties.getUri(),
-                properties.getDatabase(), properties.getAuthenticationDatabase(),
-                properties.getGridFsDatabase(), properties.getUsername(),
-                properties.getReplicaSetName(), properties.getFieldNamingStrategy(),
-                properties.getUuidRepresentation(), properties.isAutoIndexCreation());
-        result = 31 * result + Arrays.hashCode(properties.getPassword());
-        return result;
     }
 
 }

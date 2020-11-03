@@ -42,9 +42,9 @@ import io.rsocket.transport.netty.server.TcpServerTransport;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.web.server.Ssl;
 import org.springframework.context.ApplicationContext;
-import org.springframework.util.StringUtils;
 import reactor.netty.ChannelBindException;
 import reactor.netty.tcp.TcpServer;
 
@@ -115,7 +115,7 @@ public class Node {
         InetSocketAddress address = serverChannel.address();
         String clusterId = clusterProperties.getId();
         String nodeId = nodeProperties.getId();
-        nodeId = StringUtils.isEmpty(nodeId) ? RandomStringUtils.randomAlphanumeric(8) : nodeId;
+        nodeId = StringUtils.isBlank(nodeId) ? RandomStringUtils.randomAlphanumeric(8) : nodeId;
 
         // Init services
         // we pass the properties one by one rather than passing the node instance
