@@ -74,7 +74,8 @@ public class SessionProperties {
 
     @JsonView(MutablePropertiesView.class)
     @Description("Whether to authenticate users when logging in." +
-            "Note that user ID is always needed even if enableAuthentication is false")
+            "Note that user ID is always needed even if enableAuthentication is false; " +
+            "If false, turms-gateway won't connect to the MongoDB server for user records")
     private boolean enableAuthentication = true;
 
     @Description("The life duration of each reason record for session disconnection")

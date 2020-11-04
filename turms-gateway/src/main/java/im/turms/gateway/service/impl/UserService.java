@@ -22,6 +22,7 @@ import im.turms.gateway.constant.DomainFieldName;
 import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.manager.PasswordManager;
 import im.turms.server.common.util.AssertUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -41,8 +42,11 @@ public class UserService {
     private final ReactiveMongoTemplate mongoTemplate;
     private final PasswordManager passwordManager;
 
+    /**
+     * @param mongoTemplate can be null if SessionProperties#enableAuthentication is false
+     */
     public UserService(
-            @Qualifier("userMongoTemplate") ReactiveMongoTemplate mongoTemplate,
+            @Autowired(required = false) @Qualifier("userMongoTemplate") ReactiveMongoTemplate mongoTemplate,
             PasswordManager passwordManager) {
         this.mongoTemplate = mongoTemplate;
         this.passwordManager = passwordManager;

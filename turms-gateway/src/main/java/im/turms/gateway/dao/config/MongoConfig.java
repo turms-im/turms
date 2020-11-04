@@ -24,6 +24,7 @@ import im.turms.server.common.dao.converter.IntegerToEnumConverter;
 import im.turms.server.common.dao.converter.IntegerToEnumConverterFactory;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.boot.autoconfigure.mongo.ReactiveMongoClientFactory;
 import org.springframework.context.annotation.Bean;
@@ -51,6 +52,7 @@ import java.util.List;
 public class MongoConfig {
 
     @Bean
+    @ConditionalOnProperty("turms.gateway.session.enable-authentication")
     public ReactiveMongoTemplate userMongoTemplate(TurmsPropertiesManager turmsPropertiesManager) {
         MongoProperties properties = turmsPropertiesManager.getLocalProperties().getGateway().getDatabase().getMongoProperties().getUser();
         // ReactiveMongoClientFactory
