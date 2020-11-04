@@ -22,6 +22,7 @@ import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.TcpProperties;
 import im.turms.server.common.util.SslUtil;
 import org.reactivestreams.Publisher;
+import org.springframework.boot.web.server.Ssl;
 import reactor.netty.DisposableServer;
 import reactor.netty.NettyInbound;
 import reactor.netty.NettyOutbound;
@@ -48,7 +49,7 @@ public class TcpServerFactory {
             return null;
         }
         TcpHandlerConfig handlerConfig = new TcpHandlerConfig();
-        return TcpServer.create()
+        TcpServer server = TcpServer.create()
                 // Don't set SO_SNDBUF and SO_RCVBUF because of
                 // the reasons mentioned in https://developer.aliyun.com/article/724580
                 .option(SO_REUSEADDR, true)
@@ -60,9 +61,13 @@ public class TcpServerFactory {
                 .childOption(TCP_NODELAY, false)
                 .host(tcpProperties.getHost())
                 .port(tcpProperties.getPort())
-                .secure(spec -> SslUtil.configureSslContextSpec(spec, tcpProperties.getSsl(), true))
-                .doOnConnection(handlerConfig::configure)
                 .handle(handler)
+                .doOnConnection(handlerConfig::configure);
+        Ssl ssl = tcpProperties.getSsl();
+        if (ssl.isEnabled()) {
+            server.secure(spec -> SslUtil.configureSslContextSpec(spec, ssl, true));
+        }
+        return server
                 .bind()
                 .block();
     }

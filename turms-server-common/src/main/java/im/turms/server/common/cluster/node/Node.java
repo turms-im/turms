@@ -204,8 +204,10 @@ public class Node {
                 InetSocketAddress inetSocketAddress = new InetSocketAddress(host, currentPort);
                 TcpServer tcpServer = TcpServer.create()
                         .runOn(eventLoopGroup)
-                        .bindAddress(() -> inetSocketAddress)
-                        .secure(spec -> SslUtil.configureSslContextSpec(spec, serverSsl, true));
+                        .bindAddress(() -> inetSocketAddress);
+                if (serverSsl.isEnabled()) {
+                    tcpServer.secure(spec -> SslUtil.configureSslContextSpec(spec, serverSsl, true));
+                }
                 TcpServerTransport transport = TcpServerTransport.create(tcpServer);
                 CloseableChannel channel = RSocketServer
                         .create(SocketAcceptor.with(RpcService.getRpcAcceptor()))

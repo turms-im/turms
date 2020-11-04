@@ -67,11 +67,11 @@ public class MongoConfig {
     private static final Map<Integer, ReactiveMongoTemplate> TEMPLATE_MAP = Maps.newHashMapWithExpectedSize(SERVICE_TYPES_NUMBER);
     private static final int DEFAULT_MONGO_PROPERTIES_HASHCODE = getPropertiesHashCode(new MongoProperties());
     private final TurmsPropertiesManager turmsPropertiesManager;
-    private final Map<Class<?>, WriteConcern> writeConcernMap = new IdentityHashMap<>();
+    private final Map<Class<?>, WriteConcern> writeConcernMap;
 
     public MongoConfig(TurmsPropertiesManager turmsPropertiesManager) {
         this.turmsPropertiesManager = turmsPropertiesManager;
-        initWriteConcernMap(turmsPropertiesManager.getLocalProperties());
+        writeConcernMap = initWriteConcernMap(turmsPropertiesManager.getLocalProperties());
     }
 
     private static int getPropertiesHashCode(MongoProperties properties) {
@@ -84,31 +84,35 @@ public class MongoConfig {
         return result;
     }
 
-    private void initWriteConcernMap(TurmsProperties turmsProperties) {
+    private Map<Class<?>, WriteConcern> initWriteConcernMap(TurmsProperties turmsProperties) {
         DatabaseProperties.WriteConcern writeConcern = turmsProperties.getService().getDatabase().getWriteConcern();
-        writeConcernMap.put(Admin.class, writeConcern.getAdmin());
-        writeConcernMap.put(AdminRole.class, writeConcern.getAdminRole());
+        Map<Class<?>, WriteConcern> map = new IdentityHashMap<>();
 
-        writeConcernMap.put(Group.class, writeConcern.getGroup());
-        writeConcernMap.put(GroupBlacklistedUser.class, writeConcern.getGroupBlacklistedUser());
-        writeConcernMap.put(GroupInvitation.class, writeConcern.getGroupInvitation());
-        writeConcernMap.put(GroupJoinQuestion.class, writeConcern.getGroupJoinQuestion());
-        writeConcernMap.put(GroupJoinRequest.class, writeConcern.getGroupJoinRequest());
-        writeConcernMap.put(GroupMember.class, writeConcern.getGroupMember());
-        writeConcernMap.put(GroupType.class, writeConcern.getGroupType());
-        writeConcernMap.put(GroupVersion.class, writeConcern.getGroupVersion());
+        map.put(Admin.class, writeConcern.getAdmin());
+        map.put(AdminRole.class, writeConcern.getAdminRole());
 
-        writeConcernMap.put(Message.class, writeConcern.getMessage());
-        writeConcernMap.put(MessageStatus.class, writeConcern.getMessageStatus());
+        map.put(Group.class, writeConcern.getGroup());
+        map.put(GroupBlacklistedUser.class, writeConcern.getGroupBlacklistedUser());
+        map.put(GroupInvitation.class, writeConcern.getGroupInvitation());
+        map.put(GroupJoinQuestion.class, writeConcern.getGroupJoinQuestion());
+        map.put(GroupJoinRequest.class, writeConcern.getGroupJoinRequest());
+        map.put(GroupMember.class, writeConcern.getGroupMember());
+        map.put(GroupType.class, writeConcern.getGroupType());
+        map.put(GroupVersion.class, writeConcern.getGroupVersion());
 
-        writeConcernMap.put(User.class, writeConcern.getUser());
-        writeConcernMap.put(UserFriendRequest.class, writeConcern.getUserFriendRequest());
-        writeConcernMap.put(UserLocationLog.class, writeConcern.getUserLocation());
-        writeConcernMap.put(UserPermissionGroup.class, writeConcern.getUserPermissionGroup());
-        writeConcernMap.put(UserRelationship.class, writeConcern.getUserRelationship());
-        writeConcernMap.put(UserRelationshipGroup.class, writeConcern.getUserRelationshipGroup());
-        writeConcernMap.put(UserRelationshipGroupMember.class, writeConcern.getUserRelationshipGroupMember());
-        writeConcernMap.put(UserVersion.class, writeConcern.getUserVersion());
+        map.put(Message.class, writeConcern.getMessage());
+        map.put(MessageStatus.class, writeConcern.getMessageStatus());
+
+        map.put(User.class, writeConcern.getUser());
+        map.put(UserFriendRequest.class, writeConcern.getUserFriendRequest());
+        map.put(UserLocationLog.class, writeConcern.getUserLocation());
+        map.put(UserPermissionGroup.class, writeConcern.getUserPermissionGroup());
+        map.put(UserRelationship.class, writeConcern.getUserRelationship());
+        map.put(UserRelationshipGroup.class, writeConcern.getUserRelationshipGroup());
+        map.put(UserRelationshipGroupMember.class, writeConcern.getUserRelationshipGroupMember());
+        map.put(UserVersion.class, writeConcern.getUserVersion());
+
+        return map;
     }
 
     @Bean

@@ -37,7 +37,7 @@ import static springfox.documentation.schema.AlternateTypeRules.newRule;
 
 /**
  * @author James Chen
- * @apiNote https://springfox.github.io/springfox/docs/current/
+ * @see <a href="https://springfox.github.io/springfox/docs/current">Springfox Reference Documentation</a>
  * @see springfox.boot.starter.autoconfigure.OpenApiAutoConfiguration
  */
 @Configuration
