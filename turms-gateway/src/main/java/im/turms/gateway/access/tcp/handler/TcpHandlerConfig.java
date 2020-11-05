@@ -18,7 +18,6 @@
 package im.turms.gateway.access.tcp.handler;
 
 import im.turms.gateway.access.tcp.codec.TurmsProtobufEncoder;
-import im.turms.gateway.access.tcp.codec.TurmsProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import reactor.netty.Connection;
@@ -28,15 +27,13 @@ import reactor.netty.Connection;
  */
 public class TcpHandlerConfig {
 
-    private final ProtobufVarint32FrameDecoder protobufVarint32FrameDecoder = new TurmsProtobufVarint32FrameDecoder();
-    private final ProtobufVarint32LengthFieldPrepender protobufVarint32LengthFieldPrepender = new ProtobufVarint32LengthFieldPrepender();
-    private final TurmsProtobufEncoder turmsProtobufEncoder = new TurmsProtobufEncoder();
+    TurmsProtobufEncoder protobufEncoder = new TurmsProtobufEncoder();
 
     public void configure(Connection connection) {
-        connection.addHandlerLast("protobufFrameDecoder", protobufVarint32FrameDecoder);
+        connection.addHandlerLast("protobufFrameDecoder", new ProtobufVarint32FrameDecoder());
 
-        connection.addHandlerLast("protobufFrameEncoder", protobufVarint32LengthFieldPrepender);
-        connection.addHandlerLast("protobufEncoder", turmsProtobufEncoder);
+        connection.addHandlerLast("protobufFrameEncoder", new ProtobufVarint32LengthFieldPrepender());
+        connection.addHandlerLast("protobufEncoder", protobufEncoder);
     }
 
 }

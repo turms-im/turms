@@ -23,7 +23,6 @@ import com.google.protobuf.StringValue;
 import im.turms.common.constant.statuscode.TurmsStatusCode;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
-import im.turms.gateway.access.tcp.codec.TurmsProtobufVarint32FrameDecoder;
 import im.turms.gateway.access.tcp.controller.SessionController;
 import im.turms.gateway.access.tcp.dto.RequestHandlerResult;
 import im.turms.gateway.access.tcp.factory.TcpServerFactory;
@@ -39,6 +38,8 @@ import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.util.CloseReasonUtil;
 import im.turms.server.common.util.ProtoUtil;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.EmptyByteBuf;
+import io.netty.buffer.UnpooledByteBufAllocator;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -55,7 +56,7 @@ import java.net.InetSocketAddress;
 @Component
 public class TcpDispatcher {
 
-    private static final ByteBuf HEARTBEAT_RESPONSE = TurmsProtobufVarint32FrameDecoder.HEARTBEAT_DATA;
+    private static final ByteBuf HEARTBEAT_RESPONSE = new EmptyByteBuf(UnpooledByteBufAllocator.DEFAULT);
 
     private final DisposableServer server;
     private final WorkflowMediator workflowMediator;
@@ -74,7 +75,7 @@ public class TcpDispatcher {
             connection.inbound()
                     .receive()
                     .doOnNext(data -> {
-                        if (sessionWrapper.isAvailable()) {
+                        if (!connection.isDisposed()) {
                             Mono<ByteBuf> response = handleRequestData(sessionWrapper, data, ip)
                                     .doOnError(throwable -> handleExceptionForResponse(sessionWrapper, throwable));
                             connection.outbound()
@@ -82,7 +83,8 @@ public class TcpDispatcher {
                                     .then()
                                     .subscribe();
                         }
-                    });
+                    })
+                    .subscribe();
             return connection.onDispose();
         });
     }

@@ -20,6 +20,7 @@ package im.turms.gateway.access.tcp.codec;
 import com.google.protobuf.MessageLite;
 import com.google.protobuf.MessageLiteOrBuilder;
 import im.turms.server.common.util.ProtoUtil;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageEncoder;
 
@@ -31,6 +32,7 @@ import java.util.List;
  * @author James Chen
  * @see io.netty.handler.codec.protobuf.ProtobufEncoder
  */
+@ChannelHandler.Sharable
 public class TurmsProtobufEncoder extends MessageToMessageEncoder<MessageLiteOrBuilder> {
 
     @Override

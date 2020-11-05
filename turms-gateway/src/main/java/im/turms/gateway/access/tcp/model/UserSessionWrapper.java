@@ -46,8 +46,4 @@ public class UserSessionWrapper {
         return userSession != null;
     }
 
-    public boolean isAvailable() {
-        return !connection.isDisposed() && userSession != null && userSession.isOpen();
-    }
-
 }
