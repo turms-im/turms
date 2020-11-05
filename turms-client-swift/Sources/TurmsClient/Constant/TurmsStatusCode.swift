@@ -14,7 +14,7 @@ public enum TurmsStatusCode: Int {
     case expiredResource
     case duplicateKey
     case illegalArguments
-    case illegalDateFormat
+    case invalidData
     case notActive
     case ownedResourceLimitReached
     case requestedRecordsTooMany
@@ -68,7 +68,7 @@ extension TurmsStatusCode {
             case .expiredResource: return "The target resource has expired"
             case .duplicateKey: return "The record being added contains a duplicate key"
             case .illegalArguments: return "Illegal arguments"
-            case .illegalDateFormat: return "Illegal date format"
+            case .invalidData: return "Invalid data"
             case .notActive: return "Not active"
             case .ownedResourceLimitReached: return "The resource limit is reached"
             case .requestedRecordsTooMany: return "Too many records are requested"
@@ -105,7 +105,7 @@ extension TurmsStatusCode {
             case .forbiddenDeviceType: return "The device type is forbidden for the request"
         }
     }
-    
+
     public static func isSuccessCode(_ code: Int32) -> Bool {
         return 2000 <= code && code < 3000
     }

@@ -136,7 +136,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         try {
             request = TurmsRequest.parseFrom(serviceRequest.getTurmsRequestBuffer().nioBuffer());
         } catch (InvalidProtocolBufferException e) {
-            return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.ILLEGAL_DATE_FORMAT));
+            return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.INVALID_DATA));
         }
 
         // 2. Transform and handle the request

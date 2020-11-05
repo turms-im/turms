@@ -135,7 +135,7 @@ public class UdpDispatcher {
                     throw new IllegalStateException("Unexpected value: " + signalRequest.getType());
             }
         } else {
-            return Mono.just(TurmsStatusCode.ILLEGAL_DATE_FORMAT);
+            return Mono.just(TurmsStatusCode.INVALID_DATA);
         }
     }
 

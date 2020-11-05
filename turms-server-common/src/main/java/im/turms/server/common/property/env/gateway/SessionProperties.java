@@ -45,7 +45,7 @@ public class SessionProperties {
 
     @JsonView(MutablePropertiesView.class)
     @Description("If the turms server only receives heartbeat requests from the client during switchProtocolAfterSeconds, " +
-            "the websocket connection will be closed with the close status \"SWITCH\" to indicate the client " +
+            "the TCP/WebSocket connection will be closed with the close status \"SWITCH\" to indicate the client " +
             "should keep sending heartbeat requests over UDP if they want to keep online. " +
             "Note: 1. The property only works if UDP is enabled; 2. For browser clients, UDP isn't supported")
     @Min(0)
@@ -72,7 +72,6 @@ public class SessionProperties {
     @Description("Whether to notify clients of the session information after connected with the server")
     private boolean notifyClientsOfSessionInfoAfterConnected = true;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to authenticate users when logging in." +
             "Note that user ID is always needed even if enableAuthentication is false; " +
             "If false, turms-gateway won't connect to the MongoDB server for user records")
