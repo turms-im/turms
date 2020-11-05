@@ -17,12 +17,9 @@
 
 package im.turms.gateway.pojo.bo.session.connection;
 
-import com.google.protobuf.Int32Value;
-import com.google.protobuf.StringValue;
-import im.turms.common.constant.statuscode.SessionCloseStatus;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.server.common.dto.CloseReason;
+import im.turms.server.common.util.CloseReasonUtil;
 import lombok.extern.log4j.Log4j2;
 import reactor.netty.Connection;
 
@@ -43,31 +40,8 @@ public class TcpConnection extends NetConnection {
 
     @Override
     public void close(@NotNull CloseReason closeReason) {
-        TurmsStatusCode statusCode = null;
-        SessionCloseStatus closeStatus = null;
-        if (closeReason.isTurmsStatusCode()) {
-            statusCode = TurmsStatusCode.from(closeReason.getCode());
-        } else {
-            closeStatus = SessionCloseStatus.get(closeReason.getCode());
-        }
-        if (statusCode == null && closeStatus == null) {
-            throw new UnsupportedOperationException();
-        }
+        TurmsNotification closeNotification = CloseReasonUtil.toNotification(closeReason);
         super.close(closeReason);
-
-        String reason = closeReason.getReason();
-        TurmsNotification.Builder builder = TurmsNotification
-                .newBuilder()
-                .setCode(Int32Value.newBuilder().setValue(closeReason.getCode()).build());
-        if (reason != null) {
-            builder.setReason(StringValue.newBuilder().setValue(reason).build());
-        }
-
-        if (closeStatus != null) {
-            builder.setCloseStatus(Int32Value.newBuilder().setValue(closeStatus.getCode()).build());
-        }
-
-        TurmsNotification closeNotification = builder.build();
         connection
                 .outbound()
                 .sendObject(closeNotification)

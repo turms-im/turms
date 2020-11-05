@@ -149,13 +149,18 @@ public class TcpDispatcher {
         CloseReason closeReason = CloseReasonUtil.parse(throwable);
         int code = closeReason.getCode();
         if (TurmsStatusCode.isServerError(code)) {
-            log.error("Failed to send handle request", throwable);
+            log.error("Failed to handle request", throwable);
         }
         UserSession userSession = sessionWrapper.getUserSession();
         if (userSession != null) {
             workflowMediator.setLocalUserDeviceOffline(userSession.getUserId(), userSession.getDeviceType(), closeReason);
         } else {
-            sessionWrapper.getConnection().dispose();
+            Connection connection = sessionWrapper.getConnection();
+            TurmsNotification notification = CloseReasonUtil.toNotification(closeReason);
+            connection.outbound().sendObject(notification)
+                    .then(s -> connection.dispose())
+                    .then()
+                    .subscribe();
         }
     }
 

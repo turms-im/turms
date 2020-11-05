@@ -22,6 +22,7 @@ import im.turms.common.constant.statuscode.TurmsStatusCode;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.web.reactive.socket.CloseStatus;
 
 import javax.annotation.Nullable;
@@ -31,6 +32,7 @@ import javax.annotation.Nullable;
  */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
+@ToString
 public class CloseReason {
     /**
      * Cases:
