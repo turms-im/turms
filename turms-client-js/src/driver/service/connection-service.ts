@@ -50,12 +50,10 @@ export interface ConnectionDisconnectInfo {
 export default class ConnectionService {
 
     private static readonly DEFAULT_WEBSOCKET_URL = 'ws://localhost:9510';
-    private static readonly DEFAULT_HTTP_URL = 'http://localhost:9510';
     private static readonly DEFAULT_CONNECT_TIMEOUT = 30 * 1000;
 
     private _stateStore: StateStore;
     private readonly _initialWsUrl: string;
-    private readonly _initialHttpUrl: string;
     private readonly _initialConnectTimeout: number;
     private readonly _storePassword: boolean;
 
@@ -67,10 +65,9 @@ export default class ConnectionService {
     private _onDisconnectedListeners: ((info: ConnectionDisconnectInfo) => Promise<void>)[] = [];
     private _onMessageListeners: ((message: any) => void)[] = [];
 
-    constructor(stateStore: StateStore, wsUrl?: string, httpUrl?: string, connectTimeout?: number, storePassword = true) {
+    constructor(stateStore: StateStore, wsUrl?: string, connectTimeout?: number, storePassword = true) {
         this._stateStore = stateStore;
         this._initialWsUrl = wsUrl || ConnectionService.DEFAULT_WEBSOCKET_URL;
-        this._initialHttpUrl = httpUrl || ConnectionService.DEFAULT_HTTP_URL;
         if (!connectTimeout && connectTimeout !== 0) {
             this._initialConnectTimeout = ConnectionService.DEFAULT_CONNECT_TIMEOUT;
         } else {
@@ -155,15 +152,16 @@ export default class ConnectionService {
                     delete this._connectOptions["password"];
                 }
 
-                const ws = new WebSocket(options.wsUrl);
+                const ws = new WebSocket(options.wsUrl || this._initialWsUrl);
                 ws.binaryType = "arraybuffer";
                 this._stateStore.websocket = ws;
 
+                const connectTimeout = options.connectTimeout || this._initialConnectTimeout;
                 let connectTimeoutId;
-                if (options.connectTimeout && options.connectTimeout > 0) {
+                if (connectTimeout && connectTimeout > 0) {
                     connectTimeoutId = setTimeout(() => {
                         reject(new Error('Connection Timeout'));
-                    }, options.connectTimeout);
+                    }, connectTimeout);
                 }
 
                 // onClose will always be triggered with a CloseEvent instance when
