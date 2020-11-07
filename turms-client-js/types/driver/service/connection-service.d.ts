@@ -19,11 +19,9 @@ export interface ConnectionDisconnectInfo {
 }
 export default class ConnectionService {
     private static readonly DEFAULT_WEBSOCKET_URL;
-    private static readonly DEFAULT_HTTP_URL;
     private static readonly DEFAULT_CONNECT_TIMEOUT;
     private _stateStore;
     private readonly _initialWsUrl;
-    private readonly _initialHttpUrl;
     private readonly _initialConnectTimeout;
     private readonly _storePassword;
     private _isClosedByClient;
@@ -32,7 +30,7 @@ export default class ConnectionService {
     private _onConnectedListeners;
     private _onDisconnectedListeners;
     private _onMessageListeners;
-    constructor(stateStore: StateStore, wsUrl?: string, httpUrl?: string, connectTimeout?: number, storePassword?: boolean);
+    constructor(stateStore: StateStore, wsUrl?: string, connectTimeout?: number, storePassword?: boolean);
     private _resetStates;
     addOnConnectedListener(listener: () => void): void;
     addOnDisconnectedListener(listener: (info: ConnectionDisconnectInfo) => Promise<void>): void;

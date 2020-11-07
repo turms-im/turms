@@ -99,14 +99,14 @@ export default class ConnectionService {
 
     private _notifyOnConnectedListener(): void {
         for (const listener of this._onConnectedListeners) {
-            listener();
+            listener.call(this);
         }
     }
 
     private _notifyOnDisconnectedListeners(info: ConnectionDisconnectInfo): Promise<void> {
         let promise;
         for (const listener of this._onDisconnectedListeners) {
-            const result = listener(info);
+            const result = listener.call(this, info);
             if (!promise) {
                 promise = result;
             }
@@ -120,7 +120,7 @@ export default class ConnectionService {
 
     private _notifyOnMessageListeners(message: any): void {
         for (const listener of this._onMessageListeners) {
-            listener(message);
+            listener.call(this, message);
         }
     }
 

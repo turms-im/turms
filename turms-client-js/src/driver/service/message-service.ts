@@ -63,7 +63,7 @@ export default class MessageService {
     private _notifyOnNotificationListeners(parsedNotification: ParsedNotification): void {
         for (const listener of this._onNotificationListeners) {
             try {
-                listener(parsedNotification);
+                listener.call(this, parsedNotification);
             } catch (e) {
                 console.error(e);
             }

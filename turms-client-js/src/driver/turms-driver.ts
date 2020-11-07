@@ -73,25 +73,25 @@ export default class TurmsDriver {
     // Initializers
     initConnectionService(wsUrl?: string, connectTimeout?: number, storePassword?: boolean): ConnectionService {
         const connectionService = new ConnectionService(this._stateStore, wsUrl, connectTimeout, storePassword);
-        connectionService.addOnConnectedListener(this._onConnectionConnected);
-        connectionService.addOnDisconnectedListener(this._onConnectionDisconnected);
-        connectionService.addOnMessageListener(this._onMessage)
+        connectionService.addOnConnectedListener(() => this._onConnectionConnected());
+        connectionService.addOnDisconnectedListener(info => this._onConnectionDisconnected(info));
+        connectionService.addOnMessageListener(message => this._onMessage(message))
         return connectionService;
     }
 
     initSessionService(): SessionService {
         const sessionService = new SessionService(this._stateStore);
-        sessionService.addOnSessionConnectedListeners(() => {
+        sessionService.addOnSessionConnectedListener(() => {
             if (this._onSessionConnected) {
                 this._onSessionConnected();
             }
         });
-        sessionService.addOnSessionDisconnectedListeners(disconnectInfo => {
+        sessionService.addOnSessionDisconnectedListener(disconnectInfo => {
             if (this._onSessionDisconnected) {
                 this._onSessionDisconnected(disconnectInfo);
             }
         });
-        sessionService.addOnSessionClosedListeners(disconnectInfo => {
+        sessionService.addOnSessionClosedListener(disconnectInfo => {
             if (this._onSessionClosed) {
                 this._onSessionClosed(disconnectInfo);
             }

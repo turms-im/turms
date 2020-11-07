@@ -16,9 +16,9 @@ export default class SessionService {
     getStatus(): SessionStatus;
     isConnected(): boolean;
     isClosed(): boolean;
-    addOnSessionConnectedListeners(listener: () => void): void;
-    addOnSessionDisconnectedListeners(listener: (disconnectInfo: SessionDisconnectInfo) => void): void;
-    addOnSessionClosedListeners(listener: (disconnectInfo: SessionDisconnectInfo) => void): void;
+    addOnSessionConnectedListener(listener: () => void): void;
+    addOnSessionDisconnectedListener(listener: (disconnectInfo: SessionDisconnectInfo) => void): void;
+    addOnSessionClosedListener(listener: (disconnectInfo: SessionDisconnectInfo) => void): void;
     notifyOnSessionConnectedListeners(): void;
     notifyOnSessionDisconnectedListeners(event: CloseEvent, info: SessionDisconnectInfo): void;
     notifyOnSessionClosedListeners(event: CloseEvent, info: SessionDisconnectInfo): void;
