@@ -55,7 +55,6 @@ public class RpcAcceptor implements RSocket {
         ByteBuf buffer = payload.sliceData();
         try {
             RpcCallable<?> rpcRequest = parseRpcRequest(buffer);
-            rpcRequest.setApplicationContext(context);
             return runRpcRequest(rpcRequest)
                     .map(this::serializeReturnValue)
                     .onErrorMap(e -> e instanceof RpcException
@@ -92,6 +91,7 @@ public class RpcAcceptor implements RSocket {
 
     public <T> Mono<T> runRpcRequest(RpcCallable<T> rpcRequest) {
         try {
+            rpcRequest.setApplicationContext(context);
             return rpcRequest.isAsync()
                     ? rpcRequest.callAsync()
                     : Mono.just(rpcRequest.call());
