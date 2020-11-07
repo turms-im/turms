@@ -21,6 +21,7 @@ package im.turms.server.common.property.env.gateway;
 import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.property.metadata.annotation.Description;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
+import im.turms.server.common.util.CloseReasonUtil;
 import lombok.Data;
 
 import javax.validation.constraints.Min;
@@ -39,5 +40,15 @@ public class ClientApiProperties {
     @Description("The minimum allowed interval between client requests")
     @Min(0)
     private int minClientRequestIntervalMillis = 0;
+
+    @Description("Whether to return the reason for the server error to the client. " +
+            "Note: 1. It may reveal sensitive data like the IP of internal servers if true; " +
+            "2. turms-gateway never return the information of stack traces no matter it is true or false.")
+    private boolean returnReasonForServerError = false;
+
+    public void setReturnReasonForServerError(boolean returnReasonForServerError) {
+        this.returnReasonForServerError = returnReasonForServerError;
+        CloseReasonUtil.setReturnReasonForServerError(returnReasonForServerError);
+    }
 
 }

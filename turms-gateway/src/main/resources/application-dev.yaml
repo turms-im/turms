@@ -1,0 +1,4 @@
+turms:
+  gateway:
+    client-api:
+      return-reason-for-server-error: true
