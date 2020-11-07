@@ -23,6 +23,7 @@ import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.util.CloseReasonUtil;
 import org.springframework.web.reactive.socket.CloseStatus;
 import org.springframework.web.reactive.socket.WebSocketSession;
+import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotNull;
 
@@ -38,18 +39,25 @@ public class WebSocketConnection extends NetConnection {
         this.connection = connection;
     }
 
+    /**
+     * It's acceptable that the method isn't thread-safe
+     */
     @Override
     public void close(@NotNull CloseReason closeReason) {
-        super.close(closeReason);
-        CloseStatus closeStatus;
-        if (closeReason.isTurmsStatusCode()) {
-            TurmsStatusCode code = TurmsStatusCode.from(closeReason.getCode());
-            SessionCloseStatus sessionCloseStatus = CloseReasonUtil.statusCodeToCloseStatus(code);
-            closeStatus = new CloseStatus(sessionCloseStatus.getCode(), closeReason.getReason());
-        } else {
-            closeStatus = new CloseStatus(closeReason.getCode(), closeReason.getReason());
+        if (isConnected()) {
+            super.close(closeReason);
+            CloseStatus closeStatus;
+            if (closeReason.isTurmsStatusCode()) {
+                TurmsStatusCode code = TurmsStatusCode.from(closeReason.getCode());
+                SessionCloseStatus sessionCloseStatus = CloseReasonUtil.statusCodeToCloseStatus(code);
+                closeStatus = new CloseStatus(sessionCloseStatus.getCode(), closeReason.getReason());
+            } else {
+                closeStatus = new CloseStatus(closeReason.getCode(), closeReason.getReason());
+            }
+            connection.close(closeStatus)
+                    .onErrorResume(throwable -> Mono.empty())
+                    .subscribe();
         }
-        connection.close(closeStatus).subscribe();
     }
 
 }

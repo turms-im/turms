@@ -126,7 +126,7 @@ public final class UserSessionsManager {
                     .setData(TurmsNotification.Data.newBuilder().setSession(session))
                     .build();
             ByteBuf byteBuffer = ProtoUtil.getDirectByteBuffer(notification);
-            userSession.getNotificationSink().tryEmitNext(byteBuffer);
+            userSession.tryEmitNextNotification(byteBuffer);
             return true;
         } else {
             return false;

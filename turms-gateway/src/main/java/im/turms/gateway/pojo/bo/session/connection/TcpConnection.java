@@ -21,6 +21,7 @@ import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.util.CloseReasonUtil;
 import lombok.extern.log4j.Log4j2;
+import reactor.core.publisher.Mono;
 import reactor.netty.Connection;
 
 import javax.validation.constraints.NotNull;
@@ -38,16 +39,21 @@ public class TcpConnection extends NetConnection {
         this.connection = connection;
     }
 
+    /**
+     * It's acceptable that the method isn't thread-safe
+     */
     @Override
     public void close(@NotNull CloseReason closeReason) {
-        TurmsNotification closeNotification = CloseReasonUtil.toNotification(closeReason);
-        super.close(closeReason);
-        connection
-                .outbound()
-                .sendObject(closeNotification)
-                .then()
-                .subscribe(unused -> connection.dispose(),
-                        throwable -> log.error("Failed to send the close frame", throwable));
+        if (isConnected() && !connection.isDisposed()) {
+            super.close(closeReason);
+            TurmsNotification closeNotification = CloseReasonUtil.toNotification(closeReason);
+            connection
+                    .outbound()
+                    .sendObject(closeNotification)
+                    .then()
+                    .onErrorResume(throwable -> Mono.empty())
+                    .subscribe(unused -> connection.dispose());
+        }
     }
 
 }

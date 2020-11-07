@@ -23,15 +23,17 @@ import im.turms.gateway.pojo.bo.session.connection.NetConnection;
 import im.turms.server.common.dto.CloseReason;
 import io.netty.buffer.ByteBuf;
 import io.netty.util.Timeout;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.geo.Point;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
 import reactor.util.concurrent.Queues;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author James Chen
@@ -46,7 +48,6 @@ public final class UserSession {
     private final DeviceType deviceType;
     private final Date loginDate;
     private Point loginLocation;
-
     /**
      * 1. Use Sinks.Many<ByteBuf> instead of Sinks.Many<TurmsNotification>
      * so that turms-gateway can transfer data through zero copy (if SSL is disabled)
@@ -57,6 +58,7 @@ public final class UserSession {
      * so it's acceptable.
      * Note that the ByteBuf (TurmsNotification) comes from turms servers in most scenarios.
      */
+    @Getter(AccessLevel.PRIVATE)
     private final Sinks.Many<ByteBuf> notificationSink = Sinks.many().unicast()
             .onBackpressureBuffer(Queues.<ByteBuf>unbounded(64).get());
     private Timeout heartbeatTimeout;
@@ -67,8 +69,10 @@ public final class UserSession {
     /**
      * Note that it's acceptable that the session is still open even if the connection is closed
      * because the client can send heartbeats over UDP to keep the session open
+     * <p>
+     * Note: For better performance, it's acceptable for our scenarios to not update isSessionOpen atomically.
      */
-    private AtomicBoolean isSessionOpen = new AtomicBoolean(true);
+    private volatile boolean isSessionOpen = true;
     private NetConnection connection;
 
     public UserSession(Long userId,
@@ -85,21 +89,33 @@ public final class UserSession {
     }
 
     public void close(@NotNull CloseReason closeReason) {
-        if (isSessionOpen.compareAndSet(true, false)) {
+        if (isSessionOpen) {
+            isSessionOpen = false;
+            // Note that it acceptable to complete/close
+            // on the following objects multiple times
+            // so that it's unnecessary to update isSessionOpen atomically
             notificationSink.tryEmitComplete();
             if (heartbeatTimeout != null) {
                 heartbeatTimeout.cancel();
             }
-        }
-        if (connection != null) {
-            connection.close(closeReason);
-        } else {
-            log.warn("The connection is missing");
+            if (connection != null) {
+                connection.close(closeReason);
+            } else {
+                log.warn("The connection is missing");
+            }
         }
     }
 
     public boolean isOpen() {
-        return isSessionOpen.get();
+        return isSessionOpen;
+    }
+
+    public Flux<ByteBuf> getNotificationFlux() {
+        return notificationSink.asFlux();
+    }
+
+    public void tryEmitNextNotification(ByteBuf byteBuf) {
+        notificationSink.tryEmitNext(byteBuf);
     }
 
 }

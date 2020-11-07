@@ -37,7 +37,7 @@ public class UserSessionWrapper {
     public void setUserSession(UserSession userSession) {
         this.userSession = userSession;
         connection.outbound()
-                .send(userSession.getNotificationSink().asFlux(), byteBuf -> true)
+                .send(userSession.getNotificationFlux(), byteBuf -> true)
                 .then()
                 .subscribe();
     }
