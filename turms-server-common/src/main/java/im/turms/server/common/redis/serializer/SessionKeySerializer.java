@@ -18,7 +18,6 @@
 package im.turms.server.common.redis.serializer;
 
 import im.turms.server.common.redis.RedisEntryId;
-import io.netty.buffer.PooledByteBufAllocator;
 import org.springframework.data.redis.serializer.RedisElementReader;
 import org.springframework.data.redis.serializer.RedisElementWriter;
 
@@ -31,10 +30,9 @@ public class SessionKeySerializer implements RedisElementWriter<Long>, RedisElem
 
     @Override
     public ByteBuffer write(Long element) {
-        return PooledByteBufAllocator.DEFAULT.directBuffer(Byte.BYTES + Long.BYTES)
-                .writeByte(RedisEntryId.SESSIONS_STATUS)
-                .writeLong(element)
-                .nioBuffer();
+        return ByteBuffer.allocateDirect(Byte.BYTES + Long.BYTES)
+                .put(RedisEntryId.SESSIONS_STATUS)
+                .putLong(element);
     }
 
     @Override

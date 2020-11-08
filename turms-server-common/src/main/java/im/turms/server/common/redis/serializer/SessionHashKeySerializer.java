@@ -19,7 +19,6 @@ package im.turms.server.common.redis.serializer;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.server.common.redis.RedisEntryId;
-import io.netty.buffer.PooledByteBufAllocator;
 import org.springframework.data.redis.serializer.RedisElementReader;
 import org.springframework.data.redis.serializer.RedisElementWriter;
 
@@ -31,22 +30,21 @@ import java.nio.ByteBuffer;
 public class SessionHashKeySerializer implements RedisElementWriter<Object>, RedisElementReader<Object> {
 
     @Override
-    public Object read(ByteBuffer buffer) {
-        byte data = buffer.get();
-        return data == RedisEntryId.SESSIONS_STATUS
-                ? data
-                : DeviceType.forNumber(data);
-    }
-
-    @Override
     public ByteBuffer write(Object element) {
         byte data = element instanceof DeviceType
                 ? (byte) ((DeviceType) element).getNumber()
                 // im.turms.server.common.service.session.UserStatusService.STATUS_KEY_STATUS
                 : (byte) element;
-        return PooledByteBufAllocator.DEFAULT.directBuffer(Byte.BYTES)
-                .writeByte(data)
-                .nioBuffer();
+        return ByteBuffer.allocateDirect(Byte.BYTES)
+                .put(data);
+    }
+
+    @Override
+    public Object read(ByteBuffer buffer) {
+        byte data = buffer.get();
+        return data == RedisEntryId.SESSIONS_STATUS
+                ? data
+                : DeviceType.forNumber(data);
     }
 
 }

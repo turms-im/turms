@@ -18,7 +18,6 @@
 package im.turms.server.common.redis.serializer;
 
 import im.turms.common.constant.UserStatus;
-import io.netty.buffer.PooledByteBufAllocator;
 import org.springframework.data.redis.serializer.RedisElementReader;
 import org.springframework.data.redis.serializer.RedisElementWriter;
 
@@ -31,6 +30,27 @@ import java.nio.charset.StandardCharsets;
 public class SessionHashValueSerializer implements RedisElementWriter<Object>, RedisElementReader<Object> {
 
     @Override
+    public ByteBuffer write(Object element) {
+        if (element instanceof UserStatus) {
+            // Note that we use the negative number for user status so that we can know
+            // the type of the value from the first byte when deserializing
+            int userStatus = -((UserStatus) element).getNumber();
+            return ByteBuffer.allocateDirect(Byte.BYTES)
+                    .put((byte) userStatus);
+        } else if (element instanceof String) {
+            byte[] bytes = ((String) element).getBytes(StandardCharsets.UTF_8);
+            if (bytes.length == 0 || bytes.length > Byte.MAX_VALUE) {
+                throw new IllegalArgumentException("The length of the nodeId must be greater than 0 and less than 128");
+            }
+            return ByteBuffer.allocateDirect(Byte.BYTES + bytes.length)
+                    .put((byte) bytes.length)
+                    .put(bytes);
+        } else {
+            throw new IllegalArgumentException("The data must be an instance of UserStatus or String");
+        }
+    }
+
+    @Override
     public Object read(ByteBuffer buffer) {
         byte data = buffer.get();
         if (data <= 0) {
@@ -39,29 +59,6 @@ public class SessionHashValueSerializer implements RedisElementWriter<Object>, R
             byte[] bytes = new byte[data];
             buffer.get(bytes);
             return new String(bytes, StandardCharsets.UTF_8);
-        }
-    }
-
-    @Override
-    public ByteBuffer write(Object element) {
-        if (element instanceof UserStatus) {
-            // Note that we use the negative number for user status so that we can know
-            // the type of the value from the first byte when deserializing
-            int userStatus = -((UserStatus) element).getNumber();
-            return PooledByteBufAllocator.DEFAULT.directBuffer(Byte.BYTES)
-                    .writeByte(userStatus)
-                    .nioBuffer();
-        } else if (element instanceof String) {
-            byte[] bytes = ((String) element).getBytes(StandardCharsets.UTF_8);
-            if (bytes.length == 0 || bytes.length > Byte.MAX_VALUE) {
-                throw new IllegalArgumentException("The length of the nodeId must be greater than 0 and less than 128");
-            }
-            return PooledByteBufAllocator.DEFAULT.directBuffer(Byte.BYTES + bytes.length)
-                    .writeByte(bytes.length)
-                    .writeBytes(bytes)
-                    .nioBuffer();
-        } else {
-            throw new IllegalArgumentException("The data must be an instance of UserStatus or String");
         }
     }
 

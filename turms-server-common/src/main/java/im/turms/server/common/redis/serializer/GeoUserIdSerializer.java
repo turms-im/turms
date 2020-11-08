@@ -17,7 +17,6 @@
 
 package im.turms.server.common.redis.serializer;
 
-import io.netty.buffer.PooledByteBufAllocator;
 import org.springframework.data.redis.serializer.RedisElementReader;
 import org.springframework.data.redis.serializer.RedisElementWriter;
 
@@ -30,9 +29,8 @@ public class GeoUserIdSerializer implements RedisElementWriter<Long>, RedisEleme
 
     @Override
     public ByteBuffer write(Long element) {
-        return PooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES)
-                .writeLong(element)
-                .nioBuffer();
+        return ByteBuffer.allocateDirect(Long.BYTES)
+                .putLong(element);
     }
 
     @Override

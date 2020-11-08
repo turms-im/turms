@@ -19,7 +19,6 @@ package im.turms.server.common.redis.serializer;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.server.common.bo.session.UserSessionId;
-import io.netty.buffer.PooledByteBufAllocator;
 import org.springframework.data.redis.serializer.RedisElementReader;
 import org.springframework.data.redis.serializer.RedisElementWriter;
 
@@ -32,10 +31,9 @@ public class GeoUserSessionIdSerializer implements RedisElementWriter<UserSessio
 
     @Override
     public ByteBuffer write(UserSessionId element) {
-        return PooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES + Byte.BYTES)
-                .writeLong(element.getUserId())
-                .writeByte(element.getDeviceType().getNumber())
-                .nioBuffer();
+        return ByteBuffer.allocateDirect(Long.BYTES + Byte.BYTES)
+                .putLong(element.getUserId())
+                .put((byte) element.getDeviceType().getNumber());
     }
 
     @Override
