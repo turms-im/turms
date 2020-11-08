@@ -33,7 +33,7 @@ import io.netty.buffer.ByteBuf;
 import io.rsocket.Payload;
 import io.rsocket.RSocket;
 import io.rsocket.exceptions.ApplicationErrorException;
-import io.rsocket.util.DefaultPayload;
+import io.rsocket.util.ByteBufPayload;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationContext;
@@ -41,7 +41,6 @@ import org.springframework.data.util.Pair;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -50,6 +49,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Note that RpcService itself doesn't need to manage the life of the payload because
+ * the implementation classes of Mono like RequestResponseRequesterMono in the package {@code io.rsocket.core}
+ * will handle it.
+ *
  * @author James Chen
  */
 @Log4j2
@@ -98,19 +101,15 @@ public class RpcService implements ClusterService {
                 return rpcAcceptor.runRpcRequest(request);
             }
             RSocket socket = discoveryService.getConnectionManager().getMemberConnection(memberNodeId);
-            if (socket != null) {
-                ByteBuf buffer = serializationService.serialize(request);
-                Payload requestPayload = DefaultPayload.create(buffer);
-                return (Mono<T>) socket.requestResponse(requestPayload)
-                        .flatMap(this::parsePayload)
-                        .onErrorMap(throwable -> {
-                            requestPayload.release();
-                            return tryLogAndTranslateThrowable((Throwable) throwable, memberNodeId, null);
-                        })
-                        .timeout(timeout);
-            } else {
+            if (socket == null) {
                 return Mono.error(new SocketInstanceNotFoundException("The RSocket instance is missing for the member ID: " + memberNodeId));
             }
+            ByteBuf buffer = serializationService.serialize(request);
+            Payload requestPayload = ByteBufPayload.create(buffer);
+            return (Mono<T>) socket.requestResponse(requestPayload)
+                    .flatMap(this::parsePayload)
+                    .onErrorMap(throwable -> tryLogAndTranslateThrowable((Throwable) throwable, memberNodeId))
+                    .timeout(timeout);
         } catch (Exception e) {
             return Mono.error(e);
         }
@@ -127,7 +126,7 @@ public class RpcService implements ClusterService {
                 return Flux.error(new ConnectionNotFoundException("Not all connections are established"));
             }
             ByteBuf buffer = serializationService.serialize(request);
-            Payload requestPayload = DefaultPayload.create(buffer);
+            Payload requestPayload = ByteBufPayload.create(buffer);
             Collection<RSocket> sockets = discoveryService.getConnectionManager().getConnectionMap().values();
             List<Mono<Payload>> results = new ArrayList<>(sockets.size());
             for (RSocket socket : sockets) {
@@ -135,10 +134,7 @@ public class RpcService implements ClusterService {
             }
             return (Flux<T>) Flux.merge(results)
                     .flatMap(this::parsePayload)
-                    .onErrorMap(throwable -> {
-                        requestPayload.release();
-                        return tryLogAndTranslateThrowable((Throwable) throwable, null, otherActiveConnectedServiceMembers);
-                    })
+                    .onErrorMap(throwable -> tryLogAndTranslateThrowable((Throwable) throwable, otherActiveConnectedServiceMembers))
                     .timeout(timeout);
         } else {
             return Flux.empty();
@@ -159,7 +155,7 @@ public class RpcService implements ClusterService {
                 return Mono.error(new ConnectionNotFoundException("Not all connections are established"));
             }
             ByteBuf buffer = serializationService.serialize(request);
-            Payload requestPayload = DefaultPayload.create(buffer);
+            Payload requestPayload = ByteBufPayload.create(buffer);
             Collection<RSocket> sockets = discoveryService.getConnectionManager().getConnectionMap().values();
             List<Mono<Pair<String, Payload>>> results = new ArrayList<>(sockets.size());
             for (Map.Entry<String, RSocket> entry : discoveryService.getConnectionManager().getConnectionMap().entrySet()) {
@@ -172,13 +168,9 @@ public class RpcService implements ClusterService {
                     .collectMap(Pair::getFirst, pair -> {
                         Payload payload = pair.getSecond();
                         Object data = getReturnValueFromRpc(payload.sliceData());
-                        payload.release();
                         return (T) data;
                     })
-                    .onErrorMap(throwable -> {
-                        requestPayload.release();
-                        return tryLogAndTranslateThrowable(throwable, null, otherActiveConnectedServiceMembers);
-                    })
+                    .onErrorMap(throwable -> tryLogAndTranslateThrowable(throwable, otherActiveConnectedServiceMembers))
                     .timeout(timeout);
         } else {
             return Mono.empty();
@@ -188,7 +180,6 @@ public class RpcService implements ClusterService {
     private Mono parsePayload(Payload payload) {
         if (payload.data().isReadable()) {
             Object data = getReturnValueFromRpc(payload.sliceData());
-            payload.release();
             return Mono.just(data);
         } else {
             return Mono.empty();
@@ -205,7 +196,23 @@ public class RpcService implements ClusterService {
         }
     }
 
-    private Throwable tryLogAndTranslateThrowable(Throwable throwable, @Nullable String memberNodeId, @Nullable Collection<Member> members) {
+    private Throwable tryLogAndTranslateThrowable(Throwable throwable, @NotNull String memberNodeId) {
+        Throwable translatedThrowable = translateThrowable(throwable);
+        if (isServerError(translatedThrowable)) {
+            log.error("Failed to request response from member: " + memberNodeId, throwable);
+        }
+        return translatedThrowable;
+    }
+
+    private Throwable tryLogAndTranslateThrowable(Throwable throwable, @NotNull Collection<Member> members) {
+        Throwable translatedThrowable = translateThrowable(throwable);
+        if (isServerError(translatedThrowable)) {
+            log.error("Failed to request response from members: " + members, throwable);
+        }
+        return translatedThrowable;
+    }
+
+    private Throwable translateThrowable(Throwable throwable) {
         if (throwable instanceof ApplicationErrorException) {
             RpcException e = null;
             try {
@@ -214,20 +221,19 @@ public class RpcService implements ClusterService {
                 log.error(exception);
             }
             if (e != null) {
-                if (e.isServerError()) {
-                    if (memberNodeId != null) {
-                        log.error("Failed to request response from member: " + memberNodeId, throwable);
-                    } else {
-                        log.error("Failed to request response from members: " + members, throwable);
-                    }
-                }
                 return e;
             }
-        } else {
-            // e.g. ClosedChannelException
-            log.error("Failed to request response from members: " + members, throwable);
         }
         return throwable;
+    }
+
+    private boolean isServerError(Throwable throwable) {
+        if (throwable instanceof RpcException) {
+            return ((RpcException) throwable).isServerError();
+        } else {
+            // e.g. ClosedChannelException
+            return true;
+        }
     }
 
 }

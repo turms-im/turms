@@ -26,7 +26,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.rsocket.Payload;
 import io.rsocket.RSocket;
-import io.rsocket.util.DefaultPayload;
+import io.rsocket.util.ByteBufPayload;
 import io.rsocket.util.EmptyPayload;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationContext;
@@ -121,7 +121,7 @@ public class RpcAcceptor implements RSocket {
                 outputBuffer = PooledByteBufAllocator.DEFAULT.compositeDirectBuffer(2)
                         .addComponents(true, outputBuffer, byteBufToComposite);
             }
-            return DefaultPayload.create(outputBuffer);
+            return ByteBufPayload.create(outputBuffer);
         } else {
             // Pass an empty payload instead of TurmsStatusCode.NO_CONTENT for better performance
             return EmptyPayload.INSTANCE;
