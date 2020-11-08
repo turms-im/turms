@@ -29,8 +29,8 @@ import org.springframework.data.util.Pair;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static im.turms.common.constant.statuscode.TurmsStatusCode.STATUS_CODE_LENGTH;
 import static im.turms.server.common.cluster.service.rpc.RpcErrorCode.ERROR_CODE_LENGTH;
@@ -48,7 +48,7 @@ public class RpcException extends NoStackTraceException {
 
     static {
         int initialCapacity = (RpcErrorCode.values().length * TurmsStatusCode.values().length) / 2;
-        EXCEPTION_POOL = new HashMap<>(initialCapacity);
+        EXCEPTION_POOL = new ConcurrentHashMap<>(initialCapacity);
     }
 
     @NotNull
