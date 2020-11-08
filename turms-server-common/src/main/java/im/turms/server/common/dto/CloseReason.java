@@ -53,6 +53,10 @@ public class CloseReason {
         return new CloseReason(closeStatus.getCode(), null, false);
     }
 
+    public static CloseReason get(TurmsStatusCode statusCode) {
+        return new CloseReason(statusCode.getBusinessCode(), null, true);
+    }
+
     public static CloseReason get(TurmsStatusCode statusCode, String reason) {
         return new CloseReason(statusCode.getBusinessCode(), reason, true);
     }

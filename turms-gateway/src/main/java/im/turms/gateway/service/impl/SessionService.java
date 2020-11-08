@@ -218,7 +218,7 @@ public class SessionService implements ISessionService {
                     for (DeviceType deviceType : deviceTypes) {
                         UserSession session = manager.getSession(deviceType);
                         if (session != null) {
-                            boolean cacheDisconnectionReason = reasonCacheService.shouldCacheDisconnectionReason(userId, deviceType);
+                            boolean cacheDisconnectionReason = reasonCacheService.shouldCacheDisconnectionReason(userId, deviceType, closeReason);
                             if (sessionLocationService.isLocationEnabled()) {
                                 if (cacheDisconnectionReason) {
                                     int sessionId = session.getId();
