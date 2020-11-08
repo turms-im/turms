@@ -171,19 +171,17 @@ export default class TurmsDriver {
     // Message Service
 
     send(message: im.turms.proto.ITurmsRequest): Promise<TurmsNotification> {
-        return new Promise((resolve, reject) => {
-            if (this._stateStore.isConnected) {
-                try {
-                    const notification = this._messageService.sendRequest(message);
-                    this.resetHeartbeat();
-                    return notification;
-                } catch (e) {
-                    reject(e);
-                }
-            } else {
-                reject(TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED));
+        if (this._stateStore.isConnected) {
+            try {
+                const notification = this._messageService.sendRequest(message);
+                this.resetHeartbeat();
+                return notification;
+            } catch (e) {
+                return Promise.reject(e);
             }
-        });
+        } else {
+            return Promise.reject(TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED));
+        }
     }
 
     addOnNotificationListener(listener: ((notification: ParsedNotification) => void)): void {
