@@ -40,7 +40,9 @@ spring:
   codec:
     max-in-memory-size: 64KB
   autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
+    exclude:
+    - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
+    - org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration
 management:
 #  metrics:
 #    enable:

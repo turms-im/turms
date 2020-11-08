@@ -31,9 +31,8 @@ import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.service.env.DatabaseProperties;
 import im.turms.turms.workflow.dao.domain.*;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.boot.autoconfigure.mongo.MongoClientSettingsBuilderCustomizer;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
+import org.springframework.boot.autoconfigure.mongo.MongoPropertiesClientSettingsBuilderCustomizer;
 import org.springframework.boot.autoconfigure.mongo.ReactiveMongoClientFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,7 +50,6 @@ import org.springframework.data.mongodb.core.convert.NoOpDbRefResolver;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author James Chen
@@ -135,37 +133,29 @@ public class MongoConfig {
     @Bean
     public ReactiveMongoTemplate adminMongoTemplate(
             TurmsPropertiesManager turmsPropertiesManager,
-            ObjectProvider<MongoClientSettingsBuilderCustomizer> builderCustomizers,
-            ObjectProvider<MongoClientSettings> settings,
             WriteConcernResolver writeConcernResolver) {
-        return getMongoTemplate(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getAdmin(), builderCustomizers, settings, writeConcernResolver);
+        return getMongoTemplate(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getAdmin(), writeConcernResolver);
     }
 
     @Bean
     public ReactiveMongoTemplate groupMongoTemplate(
             TurmsPropertiesManager turmsPropertiesManager,
-            ObjectProvider<MongoClientSettingsBuilderCustomizer> builderCustomizers,
-            ObjectProvider<MongoClientSettings> settings,
             WriteConcernResolver writeConcernResolver) {
-        return getMongoTemplate(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getGroup(), builderCustomizers, settings, writeConcernResolver);
+        return getMongoTemplate(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getGroup(), writeConcernResolver);
     }
 
     @Bean
     public ReactiveMongoTemplate messageMongoTemplate(
             TurmsPropertiesManager turmsPropertiesManager,
-            ObjectProvider<MongoClientSettingsBuilderCustomizer> builderCustomizers,
-            ObjectProvider<MongoClientSettings> settings,
             WriteConcernResolver writeConcernResolver) {
-        return getMongoTemplate(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getMessage(), builderCustomizers, settings, writeConcernResolver);
+        return getMongoTemplate(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getMessage(), writeConcernResolver);
     }
 
     @Bean
     public ReactiveMongoTemplate userMongoTemplate(
             TurmsPropertiesManager turmsPropertiesManager,
-            ObjectProvider<MongoClientSettingsBuilderCustomizer> builderCustomizers,
-            ObjectProvider<MongoClientSettings> settings,
             WriteConcernResolver writeConcernResolver) {
-        return getMongoTemplate(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getUser(), builderCustomizers, settings, writeConcernResolver);
+        return getMongoTemplate(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getUser(), writeConcernResolver);
     }
 
     public MappingMongoConverter newMongoConverter(MongoMappingContext mongoMappingContext) {
@@ -189,16 +179,15 @@ public class MongoConfig {
 
     private ReactiveMongoTemplate getMongoTemplate(
             MongoProperties properties,
-            ObjectProvider<MongoClientSettingsBuilderCustomizer> builderCustomizers,
-            ObjectProvider<MongoClientSettings> settings,
             WriteConcernResolver writeConcernResolver) {
         return TEMPLATE_MAP.computeIfAbsent(getPropertiesHashCode(properties), key -> {
             MongoProperties currentProperties = key == DEFAULT_MONGO_PROPERTIES_HASHCODE
                     ? turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getDefaultProperties()
                     : properties;
-            // ReactiveMongoClientFactory
-            ReactiveMongoClientFactory factory = new ReactiveMongoClientFactory(builderCustomizers.orderedStream().collect(Collectors.toList()));
-            MongoClient mongoClient = factory.createMongoClient(settings.getIfAvailable());
+            // SimpleReactiveMongoDatabaseFactory
+            MongoPropertiesClientSettingsBuilderCustomizer customizer = new MongoPropertiesClientSettingsBuilderCustomizer(currentProperties, null);
+            ReactiveMongoClientFactory clientFactory = new ReactiveMongoClientFactory(List.of(customizer));
+            MongoClient mongoClient = clientFactory.createMongoClient(MongoClientSettings.builder().build());
             SimpleReactiveMongoDatabaseFactory databaseFactory = new SimpleReactiveMongoDatabaseFactory(mongoClient, currentProperties.getMongoClientDatabase());
 
             // MongoMappingContext

@@ -2,3 +2,7 @@ turms:
   gateway:
     client-api:
       return-reason-for-server-error: true
+    database:
+      mongo-properties:
+        user:
+          uri: mongodb://localhost:29510/turms-dev

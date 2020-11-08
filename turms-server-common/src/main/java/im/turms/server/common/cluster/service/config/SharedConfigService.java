@@ -26,6 +26,7 @@ import im.turms.server.common.cluster.service.ClusterService;
 import im.turms.server.common.cluster.service.config.converter.DurationToLongConverter;
 import im.turms.server.common.cluster.service.config.converter.LongToDurationConverter;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
+import org.springframework.boot.autoconfigure.mongo.MongoPropertiesClientSettingsBuilderCustomizer;
 import org.springframework.boot.autoconfigure.mongo.ReactiveMongoClientFactory;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.convert.CustomConversions;
@@ -67,9 +68,9 @@ public class SharedConfigService implements ClusterService {
         properties.setUri(uri);
         // Note that "properties.setAutoIndexCreation(true)" itself won't work
         // because it won't be passed to the MongoMappingContext instance
-        ReactiveMongoClientFactory factory = new ReactiveMongoClientFactory(null);
-        MongoClientSettings clientSettings = MongoClientSettings.builder().build();
-        MongoClient mongoClient = factory.createMongoClient(clientSettings);
+        MongoPropertiesClientSettingsBuilderCustomizer customizer = new MongoPropertiesClientSettingsBuilderCustomizer(properties, null);
+        ReactiveMongoClientFactory clientFactory = new ReactiveMongoClientFactory(List.of(customizer));
+        MongoClient mongoClient = clientFactory.createMongoClient(MongoClientSettings.builder().build());
         SimpleReactiveMongoDatabaseFactory databaseFactory = new SimpleReactiveMongoDatabaseFactory(mongoClient, properties.getMongoClientDatabase());
 
         MongoMappingContext context = new MongoMappingContext();

@@ -26,6 +26,7 @@ import im.turms.server.common.property.TurmsPropertiesManager;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
+import org.springframework.boot.autoconfigure.mongo.MongoPropertiesClientSettingsBuilderCustomizer;
 import org.springframework.boot.autoconfigure.mongo.ReactiveMongoClientFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -55,9 +56,10 @@ public class MongoConfig {
     @ConditionalOnProperty("turms.gateway.session.enable-authentication")
     public ReactiveMongoTemplate userMongoTemplate(TurmsPropertiesManager turmsPropertiesManager) {
         MongoProperties properties = turmsPropertiesManager.getLocalProperties().getGateway().getDatabase().getMongoProperties().getUser();
-        // ReactiveMongoClientFactory
-        ReactiveMongoClientFactory factory = new ReactiveMongoClientFactory(null);
-        MongoClient mongoClient = factory.createMongoClient(MongoClientSettings.builder().build());
+        // SimpleReactiveMongoDatabaseFactory
+        MongoPropertiesClientSettingsBuilderCustomizer customizer = new MongoPropertiesClientSettingsBuilderCustomizer(properties, null);
+        ReactiveMongoClientFactory clientFactory = new ReactiveMongoClientFactory(List.of(customizer));
+        MongoClient mongoClient = clientFactory.createMongoClient(MongoClientSettings.builder().build());
         SimpleReactiveMongoDatabaseFactory databaseFactory = new SimpleReactiveMongoDatabaseFactory(mongoClient, properties.getMongoClientDatabase());
 
         // MongoMappingContext
