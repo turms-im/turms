@@ -51,13 +51,13 @@ public class AssertUtil {
     }
 
     public static void min(Integer num, String name, int min) {
-        if (num != null && num >= min) {
+        if (num != null && num < min) {
             throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, name + " must be greater than or equal to " + min);
         }
     }
 
     public static void max(Integer num, String name, int max) {
-        if (num != null && num <= max) {
+        if (num != null && num > max) {
             throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, name + " must be less than or equal to " + max);
         }
     }
