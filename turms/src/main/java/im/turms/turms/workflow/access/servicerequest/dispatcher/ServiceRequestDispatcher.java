@@ -53,7 +53,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.KIND_NOT_SET;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.*;
 import static im.turms.turms.constant.MetricsConstant.CLIENT_REQUEST_NAME;
 import static im.turms.turms.constant.MetricsConstant.CLIENT_REQUEST_TAG_TYPE;
 
@@ -84,7 +84,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         router = getMappings((ConfigurableApplicationContext) context);
         this.activityLogService = activityLogService;
         for (TurmsRequest.KindCase kindCase : TurmsRequest.KindCase.values()) {
-            if (!router.containsKey(kindCase) && kindCase != KIND_NOT_SET) {
+            if (!router.containsKey(kindCase) && kindCase != KIND_NOT_SET && !isRequestForGateway(kindCase)) {
                 throw new IllegalStateException("No client request handler for the request type: " + kindCase.name());
             }
         }
@@ -109,6 +109,10 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             }
         }
         return mappingMap;
+    }
+
+    private boolean isRequestForGateway(TurmsRequest.KindCase type) {
+        return type == CREATE_SESSION_REQUEST || type == DELETE_SESSION_REQUEST;
     }
 
     /**
