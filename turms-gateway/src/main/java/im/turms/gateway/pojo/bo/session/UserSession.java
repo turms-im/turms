@@ -101,7 +101,7 @@ public final class UserSession {
             if (connection != null) {
                 connection.close(closeReason);
             } else {
-                log.warn("The connection is missing");
+                log.warn("The connection is missing for the user session: {}", this);
             }
         }
     }
@@ -116,6 +116,19 @@ public final class UserSession {
 
     public void tryEmitNextNotification(ByteBuf byteBuf) {
         notificationSink.tryEmitNext(byteBuf);
+    }
+
+    @Override
+    public String toString() {
+        return "UserSession{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", deviceType=" + deviceType +
+                ", loginDate=" + loginDate +
+                ", loginLocation=" + loginLocation +
+                ", logId=" + logId +
+                ", isSessionOpen=" + isSessionOpen +
+                '}';
     }
 
 }

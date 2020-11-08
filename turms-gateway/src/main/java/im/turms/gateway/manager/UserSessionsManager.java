@@ -61,26 +61,11 @@ public final class UserSessionsManager {
 
     public UserSessionsManager(
             @NotNull Long userId,
-            @NotNull UserStatus userStatus,
-            @NotNull DeviceType loggingInDeviceType,
-            @Nullable Point position,
-            int closeIdleSessionAfterMillis,
-            int switchProtocolAfterMillis,
-            @Nullable Long logId) {
+            @NotNull UserStatus userStatus) {
         Assert.notNull(userId, "userId must not be null");
         Assert.notNull(userStatus, "userStatus must not be null");
-        Assert.notNull(loggingInDeviceType, "loggingInDeviceType must not be null");
-        UserSession session = new UserSession(
-                userId,
-                loggingInDeviceType,
-                position,
-                logId);
-        if (closeIdleSessionAfterMillis > 0) {
-            updateSessionHeartbeatTimeout(loggingInDeviceType, session, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
-        }
         this.userId = userId;
         this.userStatus = userStatus;
-        sessionMap.put(loggingInDeviceType, session);
     }
 
     @Nullable

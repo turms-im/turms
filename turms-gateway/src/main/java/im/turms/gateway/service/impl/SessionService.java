@@ -454,7 +454,7 @@ public class SessionService implements ISessionService {
                     }
                     UserStatus finalUserStatus = userStatus != null ? userStatus : UserStatus.AVAILABLE;
                     UserSessionsManager manager = sessionsManagerByUserId.computeIfAbsent(userId, key ->
-                            new UserSessionsManager(userId, finalUserStatus, deviceType, position, closeIdleSessionAfterMillis, switchProtocolAfterMillis, null));
+                            new UserSessionsManager(key, finalUserStatus));
                     UserSession session = manager.addSessionIfAbsent(deviceType, position, null, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
                     // This should never happen
                     if (session == null) {
