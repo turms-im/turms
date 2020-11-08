@@ -270,7 +270,11 @@ public class DiscoveryService implements ClusterService {
     private synchronized void updateOtherActiveConnectedServiceMemberList(boolean isAdd, Member member) {
         boolean isLocalNode = member.getNodeId().equals(localNodeStatusManager.getLocalMember().getNodeId());
         if (!isLocalNode) {
-            List<Member> tempOtherActiveConnectedServiceMemberList = Arrays.asList(otherActiveConnectedServiceMemberList.toArray(new Member[0]));
+            int size = isAdd
+                    ? otherActiveConnectedServiceMemberList.size() + 1
+                    : otherActiveConnectedServiceMemberList.size();
+            List<Member> tempOtherActiveConnectedServiceMemberList = new ArrayList<>(size);
+            tempOtherActiveConnectedServiceMemberList.addAll(otherActiveConnectedServiceMemberList);
             if (isAdd) {
                 tempOtherActiveConnectedServiceMemberList.add(member);
             } else {
