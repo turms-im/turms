@@ -1,6 +1,5 @@
 package im.turms.gateway.redis.config;
 
-import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.constant.statuscode.TurmsStatusCode;
 import im.turms.gateway.pojo.bo.login.LoginFailureReasonKey;
 import im.turms.gateway.pojo.bo.session.SessionDisconnectionReasonKey;
@@ -57,7 +56,7 @@ public class RedisConfig {
     }
 
     @Bean
-    public ReactiveRedisTemplate<SessionDisconnectionReasonKey, SessionCloseStatus> sessionDisconnectionRedisTemplate() {
+    public ReactiveRedisTemplate<SessionDisconnectionReasonKey, Integer> sessionDisconnectionRedisTemplate() {
         RedisProperties properties = turmsPropertiesManager.getLocalProperties().getGateway().getRedis().getSessionDisconnectionReason();
         LettuceConnectionFactory connectionFactory = RedisTemplateFactory.getRedisConnectionFactory(properties);
         return new ReactiveRedisTemplate<>(connectionFactory, RedisSerializationContextPool.SESSION_DISCONNECTION_REASON_SERIALIZATION_CONTEXT);
