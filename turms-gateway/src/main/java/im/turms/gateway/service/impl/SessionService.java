@@ -239,7 +239,10 @@ public class SessionService implements ISessionService {
                     return Flux.merge(disconnectMonos)
                             .doOnNext(session -> {
                                 // Log and disconnect
-                                userLoginActionService.tryLogLogoutActionAndTriggerHandlers(session.getLogId(), userId, disconnectionDate);
+                                Long logId = session.getLogId();
+                                if (logId != null) {
+                                    userLoginActionService.tryLogLogoutActionAndTriggerHandlers(logId, userId, disconnectionDate);
+                                }
                                 manager.setDeviceOffline(session.getDeviceType(), closeReason);
                                 removeSessionsManagerIfEmpty(closeReason, manager, userId);
                             })
