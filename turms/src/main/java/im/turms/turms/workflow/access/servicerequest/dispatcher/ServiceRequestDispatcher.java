@@ -29,6 +29,7 @@ import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.rpc.service.IServiceRequestDispatcher;
+import im.turms.server.common.util.CloseReasonUtil;
 import im.turms.server.common.util.ProtoUtil;
 import im.turms.turms.plugin.manager.TurmsPluginManager;
 import im.turms.turms.workflow.access.servicerequest.dto.ClientRequest;
@@ -207,10 +208,16 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                 .onErrorResume(throwable -> {
                     if (throwable instanceof TurmsBusinessException) {
                         TurmsBusinessException exception = (TurmsBusinessException) throwable;
+                        String reason = null;
                         if (exception.getCode().isServerError()) {
                             log.error("Failed to handle the client request", throwable);
+                            if (CloseReasonUtil.isReturnReasonForServerError()) {
+                                reason = exception.getReason();
+                            }
+                        } else {
+                            reason = exception.getReason();
                         }
-                        return Mono.just(RequestHandlerResultFactory.get(exception.getCode()));
+                        return Mono.just(RequestHandlerResultFactory.get(exception.getCode(), reason));
                     } else {
                         log.error("Failed to handle the client request", throwable);
                         return Mono.just(RequestHandlerResultFactory.get(TurmsStatusCode.FAILED, throwable.getMessage()));
