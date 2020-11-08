@@ -57,7 +57,6 @@ private static final long serialVersionUID = 0L;
     if (extensionRegistry == null) {
       throw new java.lang.NullPointerException();
     }
-    int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
         com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
@@ -99,16 +98,16 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 42: {
-            if (!((mutable_bitField0_ & 0x00000001) != 0)) {
-              deviceDetails_ = com.google.protobuf.MapField.newMapField(
-                  DeviceDetailsDefaultEntryHolder.defaultEntry);
-              mutable_bitField0_ |= 0x00000001;
+            com.google.protobuf.StringValue.Builder subBuilder = null;
+            if (deviceDetails_ != null) {
+              subBuilder = deviceDetails_.toBuilder();
             }
-            com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
-            deviceDetails__ = input.readMessage(
-                DeviceDetailsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-            deviceDetails_.getMutableMap().put(
-                deviceDetails__.getKey(), deviceDetails__.getValue());
+            deviceDetails_ = input.readMessage(com.google.protobuf.StringValue.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(deviceDetails_);
+              deviceDetails_ = subBuilder.buildPartial();
+            }
+
             break;
           }
           case 50: {
@@ -148,18 +147,6 @@ private static final long serialVersionUID = 0L;
     return im.turms.common.model.dto.request.user.CreateSessionRequestOuterClass.internal_static_im_turms_proto_CreateSessionRequest_descriptor;
   }
 
-  @SuppressWarnings({"rawtypes"})
-  @java.lang.Override
-  protected com.google.protobuf.MapField internalGetMapField(
-      int number) {
-    switch (number) {
-      case 5:
-        return internalGetDeviceDetails();
-      default:
-        throw new RuntimeException(
-            "Invalid map field number: " + number);
-    }
-  }
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
@@ -244,84 +231,29 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int DEVICE_DETAILS_FIELD_NUMBER = 5;
-  private static final class DeviceDetailsDefaultEntryHolder {
-    static final com.google.protobuf.MapEntry<
-        java.lang.String, java.lang.String> defaultEntry =
-            com.google.protobuf.MapEntry
-            .<java.lang.String, java.lang.String>newDefaultInstance(
-                im.turms.common.model.dto.request.user.CreateSessionRequestOuterClass.internal_static_im_turms_proto_CreateSessionRequest_DeviceDetailsEntry_descriptor,
-                com.google.protobuf.WireFormat.FieldType.STRING,
-                "",
-                com.google.protobuf.WireFormat.FieldType.STRING,
-                "");
-  }
-  private com.google.protobuf.MapField<
-      java.lang.String, java.lang.String> deviceDetails_;
-  private com.google.protobuf.MapField<java.lang.String, java.lang.String>
-  internalGetDeviceDetails() {
-    if (deviceDetails_ == null) {
-      return com.google.protobuf.MapField.emptyMapField(
-          DeviceDetailsDefaultEntryHolder.defaultEntry);
-    }
-    return deviceDetails_;
-  }
-
-  public int getDeviceDetailsCount() {
-    return internalGetDeviceDetails().getMap().size();
-  }
+  private com.google.protobuf.StringValue deviceDetails_;
   /**
-   * <code>map&lt;string, string&gt; device_details = 5;</code>
-   */
-
-  @java.lang.Override
-  public boolean containsDeviceDetails(
-      java.lang.String key) {
-    if (key == null) { throw new java.lang.NullPointerException(); }
-    return internalGetDeviceDetails().getMap().containsKey(key);
-  }
-  /**
-   * Use {@link #getDeviceDetailsMap()} instead.
+   * <code>.google.protobuf.StringValue device_details = 5;</code>
+   * @return Whether the deviceDetails field is set.
    */
   @java.lang.Override
-  @java.lang.Deprecated
-  public java.util.Map<java.lang.String, java.lang.String> getDeviceDetails() {
-    return getDeviceDetailsMap();
+  public boolean hasDeviceDetails() {
+    return deviceDetails_ != null;
   }
   /**
-   * <code>map&lt;string, string&gt; device_details = 5;</code>
+   * <code>.google.protobuf.StringValue device_details = 5;</code>
+   * @return The deviceDetails.
    */
   @java.lang.Override
-
-  public java.util.Map<java.lang.String, java.lang.String> getDeviceDetailsMap() {
-    return internalGetDeviceDetails().getMap();
+  public com.google.protobuf.StringValue getDeviceDetails() {
+    return deviceDetails_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : deviceDetails_;
   }
   /**
-   * <code>map&lt;string, string&gt; device_details = 5;</code>
+   * <code>.google.protobuf.StringValue device_details = 5;</code>
    */
   @java.lang.Override
-
-  public java.lang.String getDeviceDetailsOrDefault(
-      java.lang.String key,
-      java.lang.String defaultValue) {
-    if (key == null) { throw new java.lang.NullPointerException(); }
-    java.util.Map<java.lang.String, java.lang.String> map =
-        internalGetDeviceDetails().getMap();
-    return map.containsKey(key) ? map.get(key) : defaultValue;
-  }
-  /**
-   * <code>map&lt;string, string&gt; device_details = 5;</code>
-   */
-  @java.lang.Override
-
-  public java.lang.String getDeviceDetailsOrThrow(
-      java.lang.String key) {
-    if (key == null) { throw new java.lang.NullPointerException(); }
-    java.util.Map<java.lang.String, java.lang.String> map =
-        internalGetDeviceDetails().getMap();
-    if (!map.containsKey(key)) {
-      throw new java.lang.IllegalArgumentException();
-    }
-    return map.get(key);
+  public com.google.protobuf.StringValueOrBuilder getDeviceDetailsOrBuilder() {
+    return getDeviceDetails();
   }
 
   public static final int LOCATION_FIELD_NUMBER = 6;
@@ -376,12 +308,9 @@ private static final long serialVersionUID = 0L;
     if (deviceType_ != im.turms.common.constant.DeviceType.DESKTOP.getNumber()) {
       output.writeEnum(4, deviceType_);
     }
-    com.google.protobuf.GeneratedMessageV3
-      .serializeStringMapTo(
-        output,
-        internalGetDeviceDetails(),
-        DeviceDetailsDefaultEntryHolder.defaultEntry,
-        5);
+    if (deviceDetails_ != null) {
+      output.writeMessage(5, getDeviceDetails());
+    }
     if (location_ != null) {
       output.writeMessage(6, getLocation());
     }
@@ -410,15 +339,9 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(4, deviceType_);
     }
-    for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
-         : internalGetDeviceDetails().getMap().entrySet()) {
-      com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
-      deviceDetails__ = DeviceDetailsDefaultEntryHolder.defaultEntry.newBuilderForType()
-          .setKey(entry.getKey())
-          .setValue(entry.getValue())
-          .build();
+    if (deviceDetails_ != null) {
       size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(5, deviceDetails__);
+        .computeMessageSize(5, getDeviceDetails());
     }
     if (location_ != null) {
       size += com.google.protobuf.CodedOutputStream
@@ -448,8 +371,11 @@ private static final long serialVersionUID = 0L;
     }
     if (userStatus_ != other.userStatus_) return false;
     if (deviceType_ != other.deviceType_) return false;
-    if (!internalGetDeviceDetails().equals(
-        other.internalGetDeviceDetails())) return false;
+    if (hasDeviceDetails() != other.hasDeviceDetails()) return false;
+    if (hasDeviceDetails()) {
+      if (!getDeviceDetails()
+          .equals(other.getDeviceDetails())) return false;
+    }
     if (hasLocation() != other.hasLocation()) return false;
     if (hasLocation()) {
       if (!getLocation()
@@ -477,9 +403,9 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + userStatus_;
     hash = (37 * hash) + DEVICE_TYPE_FIELD_NUMBER;
     hash = (53 * hash) + deviceType_;
-    if (!internalGetDeviceDetails().getMap().isEmpty()) {
+    if (hasDeviceDetails()) {
       hash = (37 * hash) + DEVICE_DETAILS_FIELD_NUMBER;
-      hash = (53 * hash) + internalGetDeviceDetails().hashCode();
+      hash = (53 * hash) + getDeviceDetails().hashCode();
     }
     if (hasLocation()) {
       hash = (37 * hash) + LOCATION_FIELD_NUMBER;
@@ -592,28 +518,6 @@ private static final long serialVersionUID = 0L;
       return im.turms.common.model.dto.request.user.CreateSessionRequestOuterClass.internal_static_im_turms_proto_CreateSessionRequest_descriptor;
     }
 
-    @SuppressWarnings({"rawtypes"})
-    protected com.google.protobuf.MapField internalGetMapField(
-        int number) {
-      switch (number) {
-        case 5:
-          return internalGetDeviceDetails();
-        default:
-          throw new RuntimeException(
-              "Invalid map field number: " + number);
-      }
-    }
-    @SuppressWarnings({"rawtypes"})
-    protected com.google.protobuf.MapField internalGetMutableMapField(
-        int number) {
-      switch (number) {
-        case 5:
-          return internalGetMutableDeviceDetails();
-        default:
-          throw new RuntimeException(
-              "Invalid map field number: " + number);
-      }
-    }
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
@@ -652,7 +556,12 @@ private static final long serialVersionUID = 0L;
 
       deviceType_ = 0;
 
-      internalGetMutableDeviceDetails().clear();
+      if (deviceDetailsBuilder_ == null) {
+        deviceDetails_ = null;
+      } else {
+        deviceDetails_ = null;
+        deviceDetailsBuilder_ = null;
+      }
       if (locationBuilder_ == null) {
         location_ = null;
       } else {
@@ -685,7 +594,6 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public im.turms.common.model.dto.request.user.CreateSessionRequest buildPartial() {
       im.turms.common.model.dto.request.user.CreateSessionRequest result = new im.turms.common.model.dto.request.user.CreateSessionRequest(this);
-      int from_bitField0_ = bitField0_;
       result.userId_ = userId_;
       if (passwordBuilder_ == null) {
         result.password_ = password_;
@@ -694,8 +602,11 @@ private static final long serialVersionUID = 0L;
       }
       result.userStatus_ = userStatus_;
       result.deviceType_ = deviceType_;
-      result.deviceDetails_ = internalGetDeviceDetails();
-      result.deviceDetails_.makeImmutable();
+      if (deviceDetailsBuilder_ == null) {
+        result.deviceDetails_ = deviceDetails_;
+      } else {
+        result.deviceDetails_ = deviceDetailsBuilder_.build();
+      }
       if (locationBuilder_ == null) {
         result.location_ = location_;
       } else {
@@ -761,8 +672,9 @@ private static final long serialVersionUID = 0L;
       if (other.deviceType_ != 0) {
         setDeviceTypeValue(other.getDeviceTypeValue());
       }
-      internalGetMutableDeviceDetails().mergeFrom(
-          other.internalGetDeviceDetails());
+      if (other.hasDeviceDetails()) {
+        mergeDeviceDetails(other.getDeviceDetails());
+      }
       if (other.hasLocation()) {
         mergeLocation(other.getLocation());
       }
@@ -794,7 +706,6 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
-    private int bitField0_;
 
     private long userId_ ;
     /**
@@ -1054,132 +965,123 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private com.google.protobuf.MapField<
-        java.lang.String, java.lang.String> deviceDetails_;
-    private com.google.protobuf.MapField<java.lang.String, java.lang.String>
-    internalGetDeviceDetails() {
-      if (deviceDetails_ == null) {
-        return com.google.protobuf.MapField.emptyMapField(
-            DeviceDetailsDefaultEntryHolder.defaultEntry);
+    private com.google.protobuf.StringValue deviceDetails_;
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> deviceDetailsBuilder_;
+    /**
+     * <code>.google.protobuf.StringValue device_details = 5;</code>
+     * @return Whether the deviceDetails field is set.
+     */
+    public boolean hasDeviceDetails() {
+      return deviceDetailsBuilder_ != null || deviceDetails_ != null;
+    }
+    /**
+     * <code>.google.protobuf.StringValue device_details = 5;</code>
+     * @return The deviceDetails.
+     */
+    public com.google.protobuf.StringValue getDeviceDetails() {
+      if (deviceDetailsBuilder_ == null) {
+        return deviceDetails_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : deviceDetails_;
+      } else {
+        return deviceDetailsBuilder_.getMessage();
       }
-      return deviceDetails_;
     }
-    private com.google.protobuf.MapField<java.lang.String, java.lang.String>
-    internalGetMutableDeviceDetails() {
-      onChanged();;
-      if (deviceDetails_ == null) {
-        deviceDetails_ = com.google.protobuf.MapField.newMapField(
-            DeviceDetailsDefaultEntryHolder.defaultEntry);
+    /**
+     * <code>.google.protobuf.StringValue device_details = 5;</code>
+     */
+    public Builder setDeviceDetails(com.google.protobuf.StringValue value) {
+      if (deviceDetailsBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        deviceDetails_ = value;
+        onChanged();
+      } else {
+        deviceDetailsBuilder_.setMessage(value);
       }
-      if (!deviceDetails_.isMutable()) {
-        deviceDetails_ = deviceDetails_.copy();
+
+      return this;
+    }
+    /**
+     * <code>.google.protobuf.StringValue device_details = 5;</code>
+     */
+    public Builder setDeviceDetails(
+        com.google.protobuf.StringValue.Builder builderForValue) {
+      if (deviceDetailsBuilder_ == null) {
+        deviceDetails_ = builderForValue.build();
+        onChanged();
+      } else {
+        deviceDetailsBuilder_.setMessage(builderForValue.build());
       }
-      return deviceDetails_;
-    }
 
-    public int getDeviceDetailsCount() {
-      return internalGetDeviceDetails().getMap().size();
+      return this;
     }
     /**
-     * <code>map&lt;string, string&gt; device_details = 5;</code>
+     * <code>.google.protobuf.StringValue device_details = 5;</code>
      */
-
-    @java.lang.Override
-    public boolean containsDeviceDetails(
-        java.lang.String key) {
-      if (key == null) { throw new java.lang.NullPointerException(); }
-      return internalGetDeviceDetails().getMap().containsKey(key);
-    }
-    /**
-     * Use {@link #getDeviceDetailsMap()} instead.
-     */
-    @java.lang.Override
-    @java.lang.Deprecated
-    public java.util.Map<java.lang.String, java.lang.String> getDeviceDetails() {
-      return getDeviceDetailsMap();
-    }
-    /**
-     * <code>map&lt;string, string&gt; device_details = 5;</code>
-     */
-    @java.lang.Override
-
-    public java.util.Map<java.lang.String, java.lang.String> getDeviceDetailsMap() {
-      return internalGetDeviceDetails().getMap();
-    }
-    /**
-     * <code>map&lt;string, string&gt; device_details = 5;</code>
-     */
-    @java.lang.Override
-
-    public java.lang.String getDeviceDetailsOrDefault(
-        java.lang.String key,
-        java.lang.String defaultValue) {
-      if (key == null) { throw new java.lang.NullPointerException(); }
-      java.util.Map<java.lang.String, java.lang.String> map =
-          internalGetDeviceDetails().getMap();
-      return map.containsKey(key) ? map.get(key) : defaultValue;
-    }
-    /**
-     * <code>map&lt;string, string&gt; device_details = 5;</code>
-     */
-    @java.lang.Override
-
-    public java.lang.String getDeviceDetailsOrThrow(
-        java.lang.String key) {
-      if (key == null) { throw new java.lang.NullPointerException(); }
-      java.util.Map<java.lang.String, java.lang.String> map =
-          internalGetDeviceDetails().getMap();
-      if (!map.containsKey(key)) {
-        throw new java.lang.IllegalArgumentException();
+    public Builder mergeDeviceDetails(com.google.protobuf.StringValue value) {
+      if (deviceDetailsBuilder_ == null) {
+        if (deviceDetails_ != null) {
+          deviceDetails_ =
+            com.google.protobuf.StringValue.newBuilder(deviceDetails_).mergeFrom(value).buildPartial();
+        } else {
+          deviceDetails_ = value;
+        }
+        onChanged();
+      } else {
+        deviceDetailsBuilder_.mergeFrom(value);
       }
-      return map.get(key);
-    }
 
+      return this;
+    }
+    /**
+     * <code>.google.protobuf.StringValue device_details = 5;</code>
+     */
     public Builder clearDeviceDetails() {
-      internalGetMutableDeviceDetails().getMutableMap()
-          .clear();
-      return this;
-    }
-    /**
-     * <code>map&lt;string, string&gt; device_details = 5;</code>
-     */
+      if (deviceDetailsBuilder_ == null) {
+        deviceDetails_ = null;
+        onChanged();
+      } else {
+        deviceDetails_ = null;
+        deviceDetailsBuilder_ = null;
+      }
 
-    public Builder removeDeviceDetails(
-        java.lang.String key) {
-      if (key == null) { throw new java.lang.NullPointerException(); }
-      internalGetMutableDeviceDetails().getMutableMap()
-          .remove(key);
       return this;
     }
     /**
-     * Use alternate mutation accessors instead.
+     * <code>.google.protobuf.StringValue device_details = 5;</code>
      */
-    @java.lang.Deprecated
-    public java.util.Map<java.lang.String, java.lang.String>
-    getMutableDeviceDetails() {
-      return internalGetMutableDeviceDetails().getMutableMap();
-    }
-    /**
-     * <code>map&lt;string, string&gt; device_details = 5;</code>
-     */
-    public Builder putDeviceDetails(
-        java.lang.String key,
-        java.lang.String value) {
-      if (key == null) { throw new java.lang.NullPointerException(); }
-      if (value == null) { throw new java.lang.NullPointerException(); }
-      internalGetMutableDeviceDetails().getMutableMap()
-          .put(key, value);
-      return this;
-    }
-    /**
-     * <code>map&lt;string, string&gt; device_details = 5;</code>
-     */
+    public com.google.protobuf.StringValue.Builder getDeviceDetailsBuilder() {
 
-    public Builder putAllDeviceDetails(
-        java.util.Map<java.lang.String, java.lang.String> values) {
-      internalGetMutableDeviceDetails().getMutableMap()
-          .putAll(values);
-      return this;
+      onChanged();
+      return getDeviceDetailsFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.google.protobuf.StringValue device_details = 5;</code>
+     */
+    public com.google.protobuf.StringValueOrBuilder getDeviceDetailsOrBuilder() {
+      if (deviceDetailsBuilder_ != null) {
+        return deviceDetailsBuilder_.getMessageOrBuilder();
+      } else {
+        return deviceDetails_ == null ?
+            com.google.protobuf.StringValue.getDefaultInstance() : deviceDetails_;
+      }
+    }
+    /**
+     * <code>.google.protobuf.StringValue device_details = 5;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<
+        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>
+        getDeviceDetailsFieldBuilder() {
+      if (deviceDetailsBuilder_ == null) {
+        deviceDetailsBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>(
+                getDeviceDetails(),
+                getParentForChildren(),
+                isClean());
+        deviceDetails_ = null;
+      }
+      return deviceDetailsBuilder_;
     }
 
     private im.turms.common.model.bo.user.UserLocation location_;

@@ -43,7 +43,6 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A mediator between the underlying technical implementation (i.e. the TCP/UDP/WebSocket access layer)
@@ -89,7 +88,7 @@ public class WorkflowMediator {
             @Nullable UserStatus userStatus,
             @Nullable Point position,
             @Nullable String ip,
-            @Nullable Map<String, String> deviceDetails) {
+            @Nullable String deviceDetails) {
         if (userSimultaneousLoginService.isForbiddenDeviceType(deviceType)) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.FORBIDDEN_DEVICE_TYPE));
         }
@@ -192,7 +191,7 @@ public class WorkflowMediator {
             @Nullable UserStatus userStatus,
             @Nullable Point position,
             @Nullable String ip,
-            @Nullable Map<String, String> deviceDetails) {
+            @Nullable String deviceDetails) {
         boolean enableAuthentication = node.getSharedProperties().getGateway().getSession().isEnableAuthentication();
         if (!enableAuthentication) {
             return Mono.just(TurmsStatusCode.OK);

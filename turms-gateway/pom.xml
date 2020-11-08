@@ -34,7 +34,6 @@
 
     <properties>
         <disruptor.version>3.4.2</disruptor.version>
-        <yauaa.version>5.19</yauaa.version>
         <jmh.version>1.26</jmh.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     </properties>
@@ -79,11 +78,6 @@
             <groupId>com.lmax</groupId>
             <artifactId>disruptor</artifactId>
             <version>${disruptor.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>nl.basjes.parse.useragent</groupId>
-            <artifactId>yauaa</artifactId>
-            <version>${yauaa.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>

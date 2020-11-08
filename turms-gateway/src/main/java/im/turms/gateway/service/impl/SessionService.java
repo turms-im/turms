@@ -338,7 +338,7 @@ public class SessionService implements ISessionService {
             @Nullable UserStatus userStatus,
             @Nullable Point position,
             @Nullable String ip,
-            @Nullable Map<String, String> deviceDetails) {
+            @Nullable String deviceDetails) {
         try {
             AssertUtil.notNull(deviceType, "deviceType");
             DeviceTypeUtil.validDeviceType(deviceType);
@@ -441,7 +441,7 @@ public class SessionService implements ISessionService {
             @Nullable UserStatus userStatus,
             @Nullable Point position,
             @Nullable String ip,
-            @Nullable Map<String, String> deviceDetails,
+            @Nullable String deviceDetails,
             @NotNull UserSessionsStatus sessionsStatus) {
         // Try to update the global user status
         return userStatusService.addOnlineDeviceIfAbsent(userId, deviceType, userStatus, closeIdleSessionAfterDuration, sessionsStatus)

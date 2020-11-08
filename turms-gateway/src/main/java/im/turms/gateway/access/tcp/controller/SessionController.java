@@ -36,8 +36,6 @@ import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Mono;
 import reactor.netty.Connection;
 
-import java.util.Map;
-
 /**
  * @author James Chen
  */
@@ -75,7 +73,9 @@ public class SessionController {
         if (deviceType == DeviceType.UNRECOGNIZED) {
             deviceType = DeviceType.UNKNOWN;
         }
-        Map<String, String> deviceDetails = createSessionRequest.getDeviceDetailsMap();
+        String deviceDetails = createSessionRequest.hasDeviceDetails()
+                ? createSessionRequest.getDeviceDetails().getValue()
+                : null;
         Point position = null;
         if (createSessionRequest.hasLocation()) {
             UserLocation location = createSessionRequest.getLocation();

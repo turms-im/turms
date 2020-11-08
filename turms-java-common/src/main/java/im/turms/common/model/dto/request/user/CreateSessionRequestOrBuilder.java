@@ -68,38 +68,19 @@ public interface CreateSessionRequestOrBuilder extends
   im.turms.common.constant.DeviceType getDeviceType();
 
   /**
-   * <code>map&lt;string, string&gt; device_details = 5;</code>
+   * <code>.google.protobuf.StringValue device_details = 5;</code>
+   * @return Whether the deviceDetails field is set.
    */
-  int getDeviceDetailsCount();
+  boolean hasDeviceDetails();
   /**
-   * <code>map&lt;string, string&gt; device_details = 5;</code>
+   * <code>.google.protobuf.StringValue device_details = 5;</code>
+   * @return The deviceDetails.
    */
-  boolean containsDeviceDetails(
-      java.lang.String key);
+  com.google.protobuf.StringValue getDeviceDetails();
   /**
-   * Use {@link #getDeviceDetailsMap()} instead.
+   * <code>.google.protobuf.StringValue device_details = 5;</code>
    */
-  @java.lang.Deprecated
-  java.util.Map<java.lang.String, java.lang.String>
-  getDeviceDetails();
-  /**
-   * <code>map&lt;string, string&gt; device_details = 5;</code>
-   */
-  java.util.Map<java.lang.String, java.lang.String>
-  getDeviceDetailsMap();
-  /**
-   * <code>map&lt;string, string&gt; device_details = 5;</code>
-   */
-
-  java.lang.String getDeviceDetailsOrDefault(
-      java.lang.String key,
-      java.lang.String defaultValue);
-  /**
-   * <code>map&lt;string, string&gt; device_details = 5;</code>
-   */
-
-  java.lang.String getDeviceDetailsOrThrow(
-      java.lang.String key);
+  com.google.protobuf.StringValueOrBuilder getDeviceDetailsOrBuilder();
 
   /**
    * <code>.im.turms.proto.UserLocation location = 6;</code>

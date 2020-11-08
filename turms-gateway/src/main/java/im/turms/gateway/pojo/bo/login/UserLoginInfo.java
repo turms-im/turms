@@ -23,8 +23,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.data.geo.Point;
 
-import java.util.Map;
-
 /**
  * @author James Chen
  */
@@ -37,5 +35,5 @@ public final class UserLoginInfo {
     private final UserStatus userStatus;
     private final Point location;
     private final String ip;
-    private final Map<String, String> deviceDetails;
+    private final String deviceDetails;
 }

@@ -25,8 +25,6 @@ import lombok.Getter;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.geo.Point;
 
-import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -43,7 +41,7 @@ class UserLoginInfoTests {
     private final UserStatus userStatus = UserStatus.BUSY;
     private final Point location = new Point(1L, 1L);
     private final String ip = "1.1.1.1";
-    private final Map<String, String> deviceDetails = Map.of("Hi", "Turms");
+    private final String deviceDetails = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36";
 
     @Test
     void constructor_shouldReturnInstance() {

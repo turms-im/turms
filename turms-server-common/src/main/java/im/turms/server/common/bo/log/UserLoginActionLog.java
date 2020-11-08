@@ -45,7 +45,7 @@ public final class UserLoginActionLog {
 
     private final DeviceType deviceType;
 
-    private final Map<String, String> deviceDetails;
+    private final String deviceDetails;
 
     @Override
     public String toString() {

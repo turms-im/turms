@@ -34,9 +34,6 @@ import static im.turms.server.common.util.DeviceTypeUtil.BROWSER_SET;
 @Data
 public class SessionProperties {
 
-    @Description("Whether to use the operating system class as the device type instead of the agent class")
-    private boolean useOperatingSystemClassAsDefaultDeviceType = false;
-
     @JsonView(MutablePropertiesView.class)
     @Description("A session will be closed if turms server doesn't receive any request (including heartbeat request) from the client during closeIdleSessionAfterSeconds." +
             "References: https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=207243549&idx=1&sn=4ebe4beb8123f1b5ab58810ac8bc5994&scene=0#rd")

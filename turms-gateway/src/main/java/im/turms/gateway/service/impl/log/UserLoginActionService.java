@@ -34,7 +34,6 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author James Chen
@@ -60,7 +59,7 @@ public class UserLoginActionService {
             @NotNull DeviceType loggingInDeviceType,
             @Nullable Point position,
             @NotNull String ip,
-            @Nullable Map<String, String> deviceDetails,
+            @Nullable String deviceDetails,
             @NotNull Date loginDate) {
         boolean logUserLoginAction = node.getSharedProperties().getGateway().getLog().isLogUserLoginAction();
         boolean triggerHandlers = turmsPluginManager.isEnabled() && !turmsPluginManager.getUserLoginActionLogHandlerList().isEmpty();
