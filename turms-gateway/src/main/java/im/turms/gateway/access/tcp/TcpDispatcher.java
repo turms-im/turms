@@ -20,7 +20,6 @@ package im.turms.gateway.access.tcp;
 import com.google.protobuf.Int32Value;
 import com.google.protobuf.Int64Value;
 import com.google.protobuf.StringValue;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.gateway.access.tcp.controller.SessionController;
@@ -32,10 +31,9 @@ import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.pojo.dto.SimpleTurmsRequest;
 import im.turms.gateway.service.mediator.WorkflowMediator;
 import im.turms.gateway.util.TurmsRequestUtil;
-import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.dto.ServiceRequest;
+import im.turms.server.common.pojo.ThrowableInfo;
 import im.turms.server.common.property.TurmsPropertiesManager;
-import im.turms.server.common.util.CloseReasonUtil;
 import im.turms.server.common.util.ProtoUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.EmptyByteBuf;
@@ -76,8 +74,8 @@ public class TcpDispatcher {
                     .receive()
                     .doOnNext(data -> {
                         if (!connection.isDisposed()) {
-                            Mono<ByteBuf> response = handleRequestData(sessionWrapper, data, ip)
-                                    .doOnError(throwable -> handleExceptionForResponse(sessionWrapper, throwable));
+                            // Note that handleRequestData should never return MonoError
+                            Mono<ByteBuf> response = handleRequestData(sessionWrapper, data, ip);
                             connection.outbound()
                                     .send(response, byteBuf -> true)
                                     .then()
@@ -96,6 +94,11 @@ public class TcpDispatcher {
         }
     }
 
+    /**
+     * @implNote If a throwable instance is thrown for failing to handle the client request,
+     * the method should recover it to TurmsNotification.
+     * So the method should never return MonoError and it should be considered as a bug if it occurs.
+     */
     private Mono<ByteBuf> handleRequestData(UserSessionWrapper sessionWrapper, ByteBuf data, String ip) {
         if (data.isReadable()) {
             SimpleTurmsRequest request = TurmsRequestUtil.parseSimpleRequest(data.nioBuffer());
@@ -113,10 +116,20 @@ public class TcpDispatcher {
                     notificationMono = handleServiceRequest(sessionWrapper, request, data);
                     break;
             }
-            return notificationMono.map(ProtoUtil::getDirectByteBuffer);
+            return notificationMono
+                    .map(ProtoUtil::getDirectByteBuffer)
+                    .onErrorResume(throwable -> {
+                        ThrowableInfo info = ThrowableInfo.get(throwable);
+                        if (info.getCode().isServerError()) {
+                            log.error("Failed to handle the client request", throwable);
+                        }
+                        TurmsNotification notification = info.toNotification(request.getRequestId());
+                        return Mono.just(ProtoUtil.getDirectByteBuffer(notification));
+                    });
         } else {
             return handleHeartbeatRequest(sessionWrapper)
-                    .flatMap(updated -> updated ? Mono.just(HEARTBEAT_RESPONSE) : Mono.empty());
+                    .flatMap(updated -> updated ? Mono.just(HEARTBEAT_RESPONSE) : Mono.empty())
+                    .onErrorResume(throwable -> Mono.empty());
         }
     }
 
@@ -140,28 +153,6 @@ public class TcpDispatcher {
                 request.getType(),
                 data);
         return workflowMediator.processServiceRequest(serviceRequest);
-    }
-
-    /**
-     * Close the connection even if it's just a client error
-     */
-    private void handleExceptionForResponse(UserSessionWrapper sessionWrapper, Throwable throwable) {
-        CloseReason closeReason = CloseReasonUtil.parse(throwable);
-        int code = closeReason.getCode();
-        if (TurmsStatusCode.isServerError(code)) {
-            log.error("Failed to handle request", throwable);
-        }
-        UserSession userSession = sessionWrapper.getUserSession();
-        if (userSession != null) {
-            workflowMediator.setLocalUserDeviceOffline(userSession.getUserId(), userSession.getDeviceType(), closeReason);
-        } else {
-            Connection connection = sessionWrapper.getConnection();
-            TurmsNotification notification = CloseReasonUtil.toNotification(closeReason);
-            connection.outbound().sendObject(notification)
-                    .then(s -> connection.dispose())
-                    .then()
-                    .subscribe();
-        }
     }
 
     private TurmsNotification getNotificationFromHandlerResult(RequestHandlerResult result, long requestId) {

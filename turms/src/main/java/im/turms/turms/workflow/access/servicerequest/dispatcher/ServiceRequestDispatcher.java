@@ -27,9 +27,9 @@ import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
+import im.turms.server.common.pojo.ThrowableInfo;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.rpc.service.IServiceRequestDispatcher;
-import im.turms.server.common.util.CloseReasonUtil;
 import im.turms.server.common.util.ProtoUtil;
 import im.turms.turms.plugin.manager.TurmsPluginManager;
 import im.turms.turms.workflow.access.servicerequest.dto.ClientRequest;
@@ -117,9 +117,13 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
     }
 
     /**
+     * @implNote 1. Flow Control:
      * turms-gateway is responsible for the flow control of client requests
      * and RSocket is responsible for the backpressure between turms and turms-gateway
-     * so we don't check the request rate here
+     * so we don't check the request rate here.
+     * <p>
+     * 2. The method should never return MonoError and it should be considered as a bug if it occurs
+     * because the method itself should wrap all kinds of Throwable as a ServiceResponse instance.
      */
     @Override
     public Mono<ServiceResponse> dispatch(ServiceRequest serviceRequest) {
@@ -206,22 +210,11 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                     }
                 })
                 .onErrorResume(throwable -> {
-                    if (throwable instanceof TurmsBusinessException) {
-                        TurmsBusinessException exception = (TurmsBusinessException) throwable;
-                        String reason = null;
-                        if (exception.getCode().isServerError()) {
-                            log.error("Failed to handle the client request", throwable);
-                            if (CloseReasonUtil.isReturnReasonForServerError()) {
-                                reason = exception.getReason();
-                            }
-                        } else {
-                            reason = exception.getReason();
-                        }
-                        return Mono.just(RequestHandlerResultFactory.get(exception.getCode(), reason));
-                    } else {
+                    ThrowableInfo info = ThrowableInfo.get(throwable);
+                    if (info.getCode().isServerError()) {
                         log.error("Failed to handle the client request", throwable);
-                        return Mono.just(RequestHandlerResultFactory.get(TurmsStatusCode.FAILED, throwable.getMessage()));
                     }
+                    return Mono.just(RequestHandlerResultFactory.get(info.getCode(), info.getReason()));
                 })
                 .map(requestHandlerResult -> ServiceResponseFactory.get(
                         requestHandlerResult.getDataForRequester(),
