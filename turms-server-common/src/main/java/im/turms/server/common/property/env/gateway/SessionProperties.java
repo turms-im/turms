@@ -22,6 +22,7 @@ import im.turms.common.constant.DeviceType;
 import im.turms.server.common.property.metadata.annotation.Description;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
 import lombok.Data;
+import org.springframework.web.reactive.socket.CloseStatus;
 
 import javax.validation.constraints.Min;
 import java.util.Set;
@@ -58,6 +59,15 @@ public class SessionProperties {
 
     @Description("Whether to enable to query the disconnection reason")
     private boolean enableQueryDisconnectionReason = true;
+
+    @Description("The close status codes to ignore. " +
+            "The code can be either the close status code of WebSocket " +
+            "or the code of SessionCloseStatus")
+    private Set<Integer> closeStatusCodesToIgnore = Set.of(
+            CloseStatus.NORMAL.getCode(),
+            CloseStatus.GOING_AWAY.getCode(),
+            CloseStatus.NO_STATUS_CODE.getCode(),
+            CloseStatus.NO_CLOSE_FRAME.getCode());
 
     @Description("The degraded device types that need to query the reason for session disconnection")
     private Set<DeviceType> degradedDeviceTypesForDisconnectionReason = BROWSER_SET;
