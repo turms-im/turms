@@ -81,10 +81,9 @@ public class FlakeIdGenerator {
     public long getFlakeId() {
         // prepare each part of ID
         int sequenceId = sequenceNumber.incrementAndGet() & SEQUENCE_NUMBER_MASK;
-        long currentTimeMillis = System.currentTimeMillis();
         long timestamp = this.lastTimestamp.updateAndGet(lastTimestamp -> {
             // Don't let timestamp go backwards at least while this JVM is running.
-            long nonBackwardsTimestamp = Math.max(lastTimestamp, currentTimeMillis);
+            long nonBackwardsTimestamp = Math.max(lastTimestamp, System.currentTimeMillis());
             if (sequenceId == 0) {
                 // Always force the clock to increment whenever sequence number is 0, in case we have a long
                 // time-slip backwards
