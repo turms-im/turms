@@ -23,7 +23,6 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.UserStatus;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
 import im.turms.common.exception.TurmsBusinessException;
 import im.turms.server.common.bo.session.UserSessionsStatus;
 import im.turms.server.common.cluster.node.Node;
@@ -152,6 +151,8 @@ public class UserStatusService {
         try {
             AssertUtil.notEmpty(userIds, "userIds");
             AssertUtil.notNull(userStatus, "userStatus");
+            AssertUtil.state(userStatus != UserStatus.UNRECOGNIZED, "The user status must not be UNRECOGNIZED");
+            AssertUtil.state(userStatus != UserStatus.OFFLINE, "The user status must not be OFFLINE");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
@@ -174,12 +175,8 @@ public class UserStatusService {
         try {
             AssertUtil.notNull(userId, "userId");
             AssertUtil.notNull(userStatus, "userStatus");
-            if (userStatus == UserStatus.UNRECOGNIZED) {
-                throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The user status must not be UNRECOGNIZED");
-            }
-            if (userStatus == UserStatus.OFFLINE) {
-                throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The online user status must not be OFFLINE");
-            }
+            AssertUtil.state(userStatus != UserStatus.UNRECOGNIZED, "The user status must not be UNRECOGNIZED");
+            AssertUtil.state(userStatus != UserStatus.OFFLINE, "The user status must not be OFFLINE");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
@@ -223,7 +220,7 @@ public class UserStatusService {
                 .timeout(operationTimeout)
                 .collectList()
                 .map(entries -> {
-                    UserStatus userStatus = UserStatus.OFFLINE;
+                    UserStatus userStatus = null;
                     Map<DeviceType, String> onlineDeviceTypeAndNodeIdMap = null;
                     for (Map.Entry<Object, Object> entry : entries) {
                         if (STATUS_KEY_STATUS.equals(entry.getKey())) {
@@ -239,9 +236,9 @@ public class UserStatusService {
                     }
                     if (onlineDeviceTypeAndNodeIdMap == null) {
                         userStatus = UserStatus.OFFLINE;
-                    }
-                    if (userStatus == UserStatus.OFFLINE) {
                         onlineDeviceTypeAndNodeIdMap = Collections.emptyMap();
+                    } else if (userStatus == null || userStatus == UserStatus.OFFLINE) {
+                        userStatus = UserStatus.AVAILABLE;
                     }
                     UserSessionsStatus userSessionsStatus = new UserSessionsStatus(userStatus, onlineDeviceTypeAndNodeIdMap);
                     if (cacheUserSessionsStatus) {
@@ -282,19 +279,31 @@ public class UserStatusService {
             AssertUtil.notNull(userId, "userId");
             AssertUtil.notNull(deviceType, "deviceType");
             DeviceTypeUtil.validDeviceType(deviceType);
+            AssertUtil.state(userStatus != UserStatus.UNRECOGNIZED, "The user status must not be UNRECOGNIZED");
+            AssertUtil.state(userStatus != UserStatus.OFFLINE, "The user status must not be OFFLINE");
             AssertUtil.notNull(heartbeatTimeout, "heartbeatTimeout");
             AssertUtil.notNull(sessionsStatus, "sessionsStatus");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
         String nodeId = node.getNodeId();
-        Mono<Boolean> updateMono;
-        if (userStatus != null) {
-            updateMono = sessionOperations.putAll(userId, Map.of(STATUS_KEY_STATUS, userStatus, deviceType, nodeId));
-        } else if (sessionsStatus.getUserStatus() == UserStatus.OFFLINE) {
-            updateMono = sessionOperations.putAll(userId, Map.of(STATUS_KEY_STATUS, UserStatus.AVAILABLE, deviceType, nodeId));
-        } else {
-            updateMono = sessionOperations.put(userId, deviceType, nodeId);
+        // Do NOT use putAll() to put all values (the user status and the Node ID) in one command.
+        // Because putAll() may overwrite the registered session info and make trouble
+        // if a user with the same device type sends multiple login requests in a short time
+        // (This can also happen in different servers).
+        // Use putIfAbsent to make the code robust.
+        Mono<Boolean> updateMono = sessionOperations.putIfAbsent(userId, deviceType, nodeId);
+        if (userStatus != null && userStatus != UserStatus.AVAILABLE) {
+            updateMono = updateMono
+                    .flatMap(wasSuccessful -> {
+                        if (wasSuccessful) {
+                            return sessionOperations.put(userId, STATUS_KEY_STATUS, userStatus)
+                                    .onErrorReturn(true)
+                                    .thenReturn(true);
+                        } else {
+                            return Mono.just(false);
+                        }
+                    });
         }
         return updateMono
                 .timeout(operationTimeout)
