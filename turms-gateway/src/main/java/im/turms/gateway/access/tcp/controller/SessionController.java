@@ -21,7 +21,6 @@ import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.UserStatus;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.constant.statuscode.TurmsStatusCode;
-import im.turms.common.exception.TurmsBusinessException;
 import im.turms.common.model.bo.user.UserLocation;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.user.CreateSessionRequest;
@@ -30,7 +29,6 @@ import im.turms.gateway.access.tcp.model.UserSessionWrapper;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.pojo.bo.session.connection.TcpConnection;
 import im.turms.gateway.service.mediator.WorkflowMediator;
-import im.turms.server.common.util.ExceptionUtil;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Mono;
@@ -93,10 +91,6 @@ public class SessionController {
                     session.setConnection(new TcpConnection(connection, !connection.isDisposed()));
                     sessionWrapper.setUserSession(session);
                     return new RequestHandlerResult(TurmsStatusCode.OK);
-                })
-                .onErrorResume(ExceptionUtil::isClientError, throwable -> {
-                    TurmsBusinessException e = (TurmsBusinessException) throwable;
-                    return Mono.just(new RequestHandlerResult(e.getCode()));
                 });
     }
 

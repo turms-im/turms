@@ -345,6 +345,8 @@ public class SessionService implements ISessionService {
         try {
             AssertUtil.notNull(deviceType, "deviceType");
             DeviceTypeUtil.validDeviceType(deviceType);
+            AssertUtil.state(userStatus != UserStatus.UNRECOGNIZED, "The user status must not be UNRECOGNIZED");
+            AssertUtil.state(userStatus != UserStatus.OFFLINE, "The user status must not be OFFLINE");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
@@ -362,8 +364,18 @@ public class SessionService implements ISessionService {
                             if (isSessionOnLocal) {
                                 // Note that the downstream should replace the disconnected connection
                                 // with the connected TCP/WebSocket connection
-                                // TODO: update session info in Redis
-                                return Mono.just(session);
+                                Mono<Void> updateSessionInfoMono = userStatus == null || sessionsStatus.getUserStatus() == userStatus
+                                        ? Mono.empty()
+                                        : userStatusService.updateOnlineUserStatus(userId, userStatus)
+                                        .then()
+                                        .onErrorResume(throwable -> Mono.empty());
+                                if (position != null) {
+                                    updateSessionInfoMono = updateSessionInfoMono
+                                            .flatMap(unused -> sessionLocationService.upsertUserLocation(userId, deviceType, position, new Date())
+                                                    .then()
+                                                    .onErrorResume(throwable -> Mono.empty()));
+                                }
+                                return updateSessionInfoMono.thenReturn(session);
                             } else if (userSimultaneousLoginService.shouldDisconnectLoggingInDeviceIfConflicts()) {
                                 return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE));
                             }
