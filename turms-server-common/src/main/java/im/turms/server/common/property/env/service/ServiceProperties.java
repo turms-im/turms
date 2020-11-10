@@ -20,8 +20,8 @@ package im.turms.server.common.property.env.service;
 import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.property.env.service.business.GroupProperties;
 import im.turms.server.common.property.env.service.business.NotificationProperties;
-import im.turms.server.common.property.env.service.business.activity.ActivityLoggingProperties;
 import im.turms.server.common.property.env.service.business.StorageProperties;
+import im.turms.server.common.property.env.service.business.activity.ActivityLoggingProperties;
 import im.turms.server.common.property.env.service.business.message.MessageProperties;
 import im.turms.server.common.property.env.service.business.user.UserProperties;
 import im.turms.server.common.property.env.service.env.*;
@@ -40,6 +40,10 @@ public class ServiceProperties {
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private AdminApiProperties adminApi = new AdminApiProperties();
+
+    @JsonView(MutablePropertiesView.class)
+    @NestedConfigurationProperty
+    private ClientApiProperties clientApi = new ClientApiProperties();
 
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty

@@ -82,7 +82,8 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                                     UserActionLogService userActionLogService,
                                     ActivityLogService activityLogService) {
         this.outboundMessageService = outboundMessageService;
-        router = getMappings((ConfigurableApplicationContext) context);
+        Set<TurmsRequest.KindCase> disabledEndpoints = turmsPropertiesManager.getLocalProperties().getService().getClientApi().getDisabledEndpoints();
+        router = getMappings((ConfigurableApplicationContext) context, disabledEndpoints);
         this.activityLogService = activityLogService;
         for (TurmsRequest.KindCase kindCase : TurmsRequest.KindCase.values()) {
             if (!router.containsKey(kindCase) && kindCase != KIND_NOT_SET && !isRequestForGateway(kindCase)) {
@@ -95,7 +96,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         pluginEnabled = turmsPropertiesManager.getLocalProperties().getPlugin().isEnabled();
     }
 
-    private Map<TurmsRequest.KindCase, ClientRequestHandler> getMappings(ConfigurableApplicationContext context) {
+    private Map<TurmsRequest.KindCase, ClientRequestHandler> getMappings(ConfigurableApplicationContext context, Set<TurmsRequest.KindCase> disabledEndpoints) {
         Map<TurmsRequest.KindCase, ClientRequestHandler> mappingMap = new EnumMap<>(TurmsRequest.KindCase.class);
         ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
         String[] definitionNames = beanFactory.getBeanDefinitionNames();
@@ -105,7 +106,10 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                 ServiceRequestMapping requestMapping = beanFactory.findAnnotationOnBean(beanName, ServiceRequestMapping.class);
                 if (requestMapping != null) {
                     Object beanInstance = beanFactory.getBean(beanName);
-                    mappingMap.put(requestMapping.value(), (ClientRequestHandler) beanInstance);
+                    TurmsRequest.KindCase endpointType = requestMapping.value();
+                    if (!disabledEndpoints.contains(endpointType)) {
+                        mappingMap.put(endpointType, (ClientRequestHandler) beanInstance);
+                    }
                 }
             }
         }
@@ -166,15 +170,17 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         Mono<RequestHandlerResult> resultMono = clientRequestMono.flatMap(lastClientRequest -> {
             TurmsRequest lastRequest = lastClientRequest.getTurmsRequest();
             if (lastRequest == null) {
-                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS));
+                String message = "The TurmsRequest instance is null in the client request: " + lastClientRequest;
+                log.error(message);
+                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_INTERNAL_ERROR, message));
             }
             TurmsRequest.KindCase kindCase = lastRequest.getKindCase();
             if (kindCase == KIND_NOT_SET) {
-                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS));
+                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The request type cannot be KIND_NOT_SET"));
             }
             ClientRequestHandler handler = router.get(kindCase);
             if (handler == null) {
-                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS));
+                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The request type is unsupported"));
             }
             userActionLogService.tryLogAndTriggerLogHandlers(userId, deviceType, lastRequest);
             activityLogService.tryLogClientRequest(lastClientRequest);
