@@ -20,6 +20,7 @@ package im.turms.gateway.access.tcp;
 import com.google.protobuf.Int32Value;
 import com.google.protobuf.Int64Value;
 import com.google.protobuf.StringValue;
+import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.gateway.access.tcp.controller.SessionController;
@@ -31,13 +32,17 @@ import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.pojo.dto.SimpleTurmsRequest;
 import im.turms.gateway.service.mediator.WorkflowMediator;
 import im.turms.gateway.util.TurmsRequestUtil;
+import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.pojo.ThrowableInfo;
 import im.turms.server.common.property.TurmsPropertiesManager;
+import im.turms.server.common.util.CloseReasonUtil;
 import im.turms.server.common.util.ProtoUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.EmptyByteBuf;
 import io.netty.buffer.UnpooledByteBufAllocator;
+import io.netty.util.HashedWheelTimer;
+import io.netty.util.Timeout;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -46,6 +51,7 @@ import reactor.netty.DisposableServer;
 
 import javax.annotation.PreDestroy;
 import java.net.InetSocketAddress;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author James Chen
@@ -59,23 +65,32 @@ public class TcpDispatcher {
     private final DisposableServer server;
     private final WorkflowMediator workflowMediator;
     private final SessionController sessionController;
+    private final HashedWheelTimer idleConnectionTimeoutTimer;
+    private final int closeIdleConnectionAfter;
 
-    public TcpDispatcher(WorkflowMediator workflowMediator,
-                         TurmsPropertiesManager propertiesManager,
+    public TcpDispatcher(TurmsPropertiesManager propertiesManager,
+                         WorkflowMediator workflowMediator,
                          SessionController sessionController) {
         this.workflowMediator = workflowMediator;
         this.sessionController = sessionController;
+        closeIdleConnectionAfter = propertiesManager.getLocalProperties().getGateway().getTcp().getCloseIdleConnectionAfterSeconds();
+        this.idleConnectionTimeoutTimer = closeIdleConnectionAfter > 0
+                ? new HashedWheelTimer()
+                : null;
         server = TcpServerFactory.create(propertiesManager, (inbound, outbound) -> {
             Connection connection = (Connection) inbound;
             InetSocketAddress address = (InetSocketAddress) connection.address();
             String ip = address.getHostString();
             UserSessionWrapper sessionWrapper = new UserSessionWrapper(connection);
+            Timeout idleConnectionTimeout = idleConnectionTimeoutTimer == null
+                    ? null
+                    : addIdleConnectionTimeoutTask(connection);
             connection.inbound()
                     .receive()
                     .doOnNext(data -> {
                         if (!connection.isDisposed()) {
                             // Note that handleRequestData should never return MonoError
-                            Mono<ByteBuf> response = handleRequestData(sessionWrapper, data, ip);
+                            Mono<ByteBuf> response = handleRequestData(sessionWrapper, data, ip, idleConnectionTimeout);
                             connection.outbound()
                                     .send(response, byteBuf -> true)
                                     .then()
@@ -85,6 +100,18 @@ public class TcpDispatcher {
                     .subscribe();
             return connection.onDispose();
         });
+    }
+
+    private Timeout addIdleConnectionTimeoutTask(Connection connection) {
+        return idleConnectionTimeoutTimer.newTimeout(timeout -> {
+            // TODO: Use a new close status
+            CloseReason closeReason = CloseReason.get(SessionCloseStatus.HEARTBEAT_TIMEOUT);
+            TurmsNotification notification = CloseReasonUtil.toNotification(closeReason);
+            connection.outbound().sendObject(notification)
+                    .then(unused -> connection.dispose())
+                    .then()
+                    .subscribe();
+        }, closeIdleConnectionAfter, TimeUnit.SECONDS);
     }
 
     @PreDestroy
@@ -99,14 +126,14 @@ public class TcpDispatcher {
      * the method should recover it to TurmsNotification.
      * So the method should never return MonoError and it should be considered as a bug if it occurs.
      */
-    private Mono<ByteBuf> handleRequestData(UserSessionWrapper sessionWrapper, ByteBuf data, String ip) {
+    private Mono<ByteBuf> handleRequestData(UserSessionWrapper sessionWrapper, ByteBuf data, String ip, Timeout idleConnectionTimeout) {
         if (data.isReadable()) {
             SimpleTurmsRequest request = TurmsRequestUtil.parseSimpleRequest(data.nioBuffer());
             TurmsRequest.KindCase requestType = request.getType();
             Mono<TurmsNotification> notificationMono;
             switch (requestType) {
                 case CREATE_SESSION_REQUEST:
-                    notificationMono = sessionController.handleCreateSessionRequest(sessionWrapper, request.getCreateSessionRequest(), ip)
+                    notificationMono = sessionController.handleCreateSessionRequest(sessionWrapper, request.getCreateSessionRequest(), ip, idleConnectionTimeout)
                             .map(result -> getNotificationFromHandlerResult(result, request.getRequestId()));
                     break;
                 case DELETE_SESSION_REQUEST:

@@ -29,6 +29,7 @@ import im.turms.gateway.access.tcp.model.UserSessionWrapper;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.pojo.bo.session.connection.TcpConnection;
 import im.turms.gateway.service.mediator.WorkflowMediator;
+import io.netty.util.Timeout;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Mono;
@@ -55,7 +56,10 @@ public class SessionController {
         return Mono.empty();
     }
 
-    public Mono<RequestHandlerResult> handleCreateSessionRequest(UserSessionWrapper sessionWrapper, CreateSessionRequest createSessionRequest, String ip) {
+    public Mono<RequestHandlerResult> handleCreateSessionRequest(UserSessionWrapper sessionWrapper,
+                                                                 CreateSessionRequest createSessionRequest,
+                                                                 String ip,
+                                                                 Timeout idleConnectionTimeout) {
         if (sessionWrapper.hasUserSession()) {
             return Mono.just(new RequestHandlerResult(TurmsStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED));
         }
@@ -79,19 +83,37 @@ public class SessionController {
             UserLocation location = createSessionRequest.getLocation();
             position = new Point(location.getLatitude(), location.getLongitude());
         }
-        return workflowMediator.processLoginRequest(userId,
+        Mono<UserSession> processLoginRequestMono = workflowMediator.processLoginRequest(userId,
                 password,
                 deviceType,
                 userStatus,
                 position,
                 ip,
-                deviceDetails)
-                .map(session -> {
-                    Connection connection = sessionWrapper.getConnection();
-                    session.setConnection(new TcpConnection(connection, !connection.isDisposed()));
-                    sessionWrapper.setUserSession(session);
-                    return new RequestHandlerResult(TurmsStatusCode.OK);
-                });
+                deviceDetails);
+        if (idleConnectionTimeout == null) {
+            return processLoginRequestMono
+                    .map(session -> {
+                        bindUserSession(sessionWrapper, session);
+                        return new RequestHandlerResult(TurmsStatusCode.OK);
+                    });
+        } else {
+            DeviceType finalDeviceType = deviceType;
+            return processLoginRequestMono.flatMap(session -> {
+                if (idleConnectionTimeout.cancel()) {
+                    bindUserSession(sessionWrapper, session);
+                    return Mono.just(new RequestHandlerResult(TurmsStatusCode.OK));
+                } else {
+                    return workflowMediator.setLocalUserDeviceOffline(userId, finalDeviceType, SessionCloseStatus.HEARTBEAT_TIMEOUT)
+                            .then(Mono.empty());
+                }
+            });
+        }
+    }
+
+    private void bindUserSession(UserSessionWrapper sessionWrapper, UserSession session) {
+        Connection connection = sessionWrapper.getConnection();
+        session.setConnection(new TcpConnection(connection, !connection.isDisposed()));
+        sessionWrapper.setUserSession(session);
     }
 
 }

@@ -18,6 +18,7 @@
 package im.turms.server.common.property.env.gateway;
 
 
+import im.turms.server.common.property.metadata.annotation.Description;
 import lombok.Data;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.boot.web.server.Ssl;
@@ -34,6 +35,10 @@ public class TcpProperties {
     private boolean enabled = false;
     private String host = "0.0.0.0";
     private int port = 11510;
+
+    @Description("A TCP connection will be closed on the server side if a client hasn't established a user session in a specified time. " +
+            "Note that the developers on the client side should take the responsibility to close the TCP connection according to their business requirements")
+    private int closeIdleConnectionAfterSeconds = 60 * 5;
 
     @NestedConfigurationProperty
     Ssl ssl = new Ssl();
