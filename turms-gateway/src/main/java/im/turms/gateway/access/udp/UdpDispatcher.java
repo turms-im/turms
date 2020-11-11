@@ -24,6 +24,7 @@ import im.turms.common.exception.TurmsBusinessException;
 import im.turms.common.model.dto.udpsignal.UdpNotificationType;
 import im.turms.common.model.dto.udpsignal.UdpRequestType;
 import im.turms.common.model.dto.udpsignal.UdpSignalRequest;
+import im.turms.gateway.access.udp.dto.UdpNotification;
 import im.turms.gateway.access.udp.dto.UdpSignalResponseBufferPool;
 import im.turms.gateway.access.websocket.dto.CloseStatusFactory;
 import im.turms.gateway.service.mediator.WorkflowMediator;
@@ -34,7 +35,6 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.socket.DatagramPacket;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.socket.CloseStatus;
 import reactor.core.publisher.Flux;
@@ -59,7 +59,7 @@ public class UdpDispatcher {
     private static boolean isEnabled;
 
     private final WorkflowMediator workflowMediator;
-    private final Sinks.Many<Pair<InetSocketAddress, UdpNotificationType>> notificationSink;
+    private final Sinks.Many<UdpNotification> notificationSink;
     private final Connection connection;
 
     public UdpDispatcher(WorkflowMediator workflowMediator, TurmsPropertiesManager propertiesManager) {
@@ -80,7 +80,7 @@ public class UdpDispatcher {
                                         .onErrorContinue((throwable, o) -> handleExceptionForIncomingPacket(throwable))
                                         .map(code -> new DatagramPacket(UdpSignalResponseBufferPool.get(code), packet.sender())));
                         Flux<DatagramPacket> notificationFlux = notificationSink.asFlux()
-                                .map(notification -> new DatagramPacket(UdpSignalResponseBufferPool.get(notification.getSecond()), notification.getFirst()));
+                                .map(notification -> new DatagramPacket(UdpSignalResponseBufferPool.get(notification.getType()), notification.getRecipientAddress()));
                         Flux<DatagramPacket> outputFlux = responseFlux.mergeWith(notificationFlux);
                         outbound.sendObject(outputFlux, o -> true)
                                 .then()
@@ -104,7 +104,7 @@ public class UdpDispatcher {
 
     public void sendSignal(InetSocketAddress address, UdpNotificationType signal) {
         if (notificationSink != null) {
-            notificationSink.tryEmitNext(Pair.of(address, signal));
+            notificationSink.tryEmitNext(new UdpNotification(address, signal));
         }
     }
 
