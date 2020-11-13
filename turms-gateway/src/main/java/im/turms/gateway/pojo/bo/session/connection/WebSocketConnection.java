@@ -44,7 +44,7 @@ public class WebSocketConnection extends NetConnection {
      */
     @Override
     public void close(@NotNull CloseReason closeReason) {
-        if (isConnected()) {
+        if (isConnected() && connection.isOpen()) {
             super.close(closeReason);
             CloseStatus closeStatus;
             if (closeReason.isTurmsStatusCode()) {
