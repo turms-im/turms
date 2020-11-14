@@ -17,7 +17,6 @@
 
 package im.turms.turms.workflow.access.http.dto.request.message;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.List;
@@ -26,7 +25,6 @@ import java.util.List;
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 public final class CreateMessageDTO {
     private final Long id;
     private final Boolean isGroupMessage;

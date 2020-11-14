@@ -17,7 +17,6 @@
 
 package im.turms.turms.workflow.access.http.dto.request.group;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.Set;
@@ -26,7 +25,6 @@ import java.util.Set;
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 public final class AddGroupJoinQuestionDTO {
     private final Long groupId;
     private final String question;

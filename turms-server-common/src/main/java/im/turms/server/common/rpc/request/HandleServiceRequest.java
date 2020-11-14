@@ -21,14 +21,14 @@ import im.turms.server.common.cluster.service.rpc.RpcCallable;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.rpc.service.IServiceRequestDispatcher;
-import lombok.Getter;
+import lombok.Data;
 import org.springframework.context.ApplicationContext;
 import reactor.core.publisher.Mono;
 
 /**
  * @author James Chen
  */
-@Getter
+@Data
 public class HandleServiceRequest extends RpcCallable<ServiceResponse> {
 
     private static IServiceRequestDispatcher dispatcher;

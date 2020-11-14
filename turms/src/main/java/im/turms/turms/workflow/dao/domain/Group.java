@@ -20,7 +20,6 @@ package im.turms.turms.workflow.dao.domain;
 import im.turms.turms.workflow.dao.index.documentation.OptionalIndexedForAdvancedFeature;
 import im.turms.turms.workflow.dao.index.documentation.OptionalIndexedForCustomFeature;
 import im.turms.turms.workflow.dao.index.documentation.OptionalIndexedForDifferentAmount;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -34,7 +33,6 @@ import java.util.Date;
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 @Document
 @Sharded(immutableKey = true, shardingStrategy = ShardingStrategy.HASH)
 public final class Group {

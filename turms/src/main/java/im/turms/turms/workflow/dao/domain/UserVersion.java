@@ -17,7 +17,6 @@
 
 package im.turms.turms.workflow.dao.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -32,7 +31,6 @@ import java.util.Date;
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 @Sharded(shardingStrategy = ShardingStrategy.HASH, immutableKey = true)
 public final class UserVersion {
 

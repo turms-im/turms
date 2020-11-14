@@ -63,7 +63,6 @@ public final class UserRelationshipGroupMember {
     }
 
     @Data
-    @AllArgsConstructor
     public static final class Key {
 
         @Field(Fields.OWNER_ID)

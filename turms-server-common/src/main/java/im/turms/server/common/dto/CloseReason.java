@@ -21,8 +21,7 @@ import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.constant.statuscode.TurmsStatusCode;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.Data;
 import org.springframework.web.reactive.socket.CloseStatus;
 
 import javax.annotation.Nullable;
@@ -31,8 +30,7 @@ import javax.annotation.Nullable;
  * @author James Chen
  */
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Getter
-@ToString
+@Data
 public class CloseReason {
     /**
      * Cases:

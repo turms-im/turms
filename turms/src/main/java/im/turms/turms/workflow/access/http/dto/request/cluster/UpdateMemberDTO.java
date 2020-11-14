@@ -17,14 +17,12 @@
 
 package im.turms.turms.workflow.access.http.dto.request.cluster;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 public class UpdateMemberDTO {
     private final Boolean isSeed;
     private final Boolean isActive;

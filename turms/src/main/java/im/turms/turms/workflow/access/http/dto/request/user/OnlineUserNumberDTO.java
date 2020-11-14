@@ -17,7 +17,6 @@
 
 package im.turms.turms.workflow.access.http.dto.request.user;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.Map;
@@ -26,7 +25,6 @@ import java.util.Map;
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 public final class OnlineUserNumberDTO {
     private final Integer total;
     private final Map<String, Integer> numberById;

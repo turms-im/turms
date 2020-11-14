@@ -17,16 +17,12 @@
 
 package im.turms.turms.bo;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 
 /**
  * @author James Chen
  */
-@AllArgsConstructor
-@Getter
-@EqualsAndHashCode
+@Data
 public class PendingMessageKey {
     private final boolean isGroupMessage;
     private final boolean isSystemMessage;

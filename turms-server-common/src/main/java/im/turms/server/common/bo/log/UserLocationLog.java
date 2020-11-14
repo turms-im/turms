@@ -18,7 +18,6 @@
 package im.turms.server.common.bo.log;
 
 import im.turms.common.constant.DeviceType;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.geo.Point;
 
@@ -28,7 +27,6 @@ import java.util.Date;
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 public final class UserLocationLog {
 
     private final Long userId;
@@ -38,15 +36,5 @@ public final class UserLocationLog {
     private final Point coordinates;
 
     private final Date timestamp;
-
-    @Override
-    public String toString() {
-        return "UserLocation{" +
-                "userId=" + userId +
-                ", deviceType=" + deviceType +
-                ", coordinates=" + coordinates +
-                ", timestamp=" + timestamp +
-                '}';
-    }
 
 }

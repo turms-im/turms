@@ -18,7 +18,6 @@
 package im.turms.turms.workflow.access.http.dto.request.user;
 
 import im.turms.turms.workflow.dao.domain.UserRelationship;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.annotation.Nullable;
@@ -58,7 +57,6 @@ public final class UserRelationshipDTO {
     }
 
     @Data
-    @AllArgsConstructor
     public static final class Key {
         private final Long ownerId;
         private final Long relatedUserId;

@@ -18,7 +18,6 @@
 package im.turms.turms.bo;
 
 import im.turms.common.constant.DeviceType;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.Date;
@@ -27,7 +26,6 @@ import java.util.Date;
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 public final class UserActionLog {
 
     private final Long userId;
@@ -39,16 +37,5 @@ public final class UserActionLog {
     private final String action;
 
     private final String details;
-
-    @Override
-    public String toString() {
-        return "UserActionLog{" +
-                "userId=" + userId +
-                ", deviceType=" + deviceType +
-                ", logDate=" + logDate +
-                ", action='" + action + '\'' +
-                ", details='" + details + '\'' +
-                '}';
-    }
 
 }

@@ -19,7 +19,8 @@ package im.turms.server.common.cluster.service.config.domain.discovery;
 
 import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.cluster.node.NodeVersion;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldNameConstants;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
@@ -36,7 +37,6 @@ import java.util.Date;
 @Data
 @FieldNameConstants
 @EqualsAndHashCode(of = "key")
-@ToString
 public final class Member {
 
     public static final String ID_CLUSTER_ID = "_id.clusterId";
@@ -64,7 +64,6 @@ public final class Member {
      * Note that the TTL index isn't the heartbeat timeout and is used to make sure
      * that the record can be removed automatically even if turms servers crash
      */
-    @Setter
     private volatile Date lastHeartbeatDate;
 
     private String memberHost;
@@ -163,7 +162,6 @@ public final class Member {
         }
     }
 
-    @AllArgsConstructor
     @Data
     @FieldNameConstants
     public static class Key {

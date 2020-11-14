@@ -19,13 +19,13 @@ package im.turms.server.common.rpc.request;
 
 import im.turms.server.common.cluster.service.rpc.RpcCallable;
 import im.turms.server.common.rpc.service.IStatisticsService;
-import lombok.Getter;
+import lombok.Data;
 import org.springframework.context.ApplicationContext;
 
 /**
  * @author James Chen
  */
-@Getter
+@Data
 public class CountOnlineUsersRequest extends RpcCallable<Integer> {
 
     private static IStatisticsService statisticsService;

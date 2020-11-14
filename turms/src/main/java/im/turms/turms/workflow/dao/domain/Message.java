@@ -19,7 +19,6 @@ package im.turms.turms.workflow.dao.domain;
 
 import im.turms.turms.workflow.dao.index.documentation.OptionalIndexedForAdvancedFeature;
 import im.turms.turms.workflow.dao.index.documentation.OptionalIndexedForCustomFeature;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
@@ -34,7 +33,6 @@ import java.util.List;
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 @Document
 @CompoundIndex(
         name = Message.Fields.TARGET_ID + "_" + Message.Fields.DELIVERY_DATE + "_idx",

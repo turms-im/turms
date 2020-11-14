@@ -21,7 +21,7 @@ import im.turms.common.constant.DeviceType;
 import im.turms.server.common.cluster.service.rpc.RpcCallable;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.rpc.service.ISessionService;
-import lombok.Getter;
+import lombok.Data;
 import org.springframework.context.ApplicationContext;
 import reactor.core.publisher.Mono;
 
@@ -32,7 +32,7 @@ import java.util.Set;
 /**
  * @author James Chen
  */
-@Getter
+@Data
 public class SetUserOfflineRequest extends RpcCallable<Boolean> {
 
     private static ISessionService sessionService;

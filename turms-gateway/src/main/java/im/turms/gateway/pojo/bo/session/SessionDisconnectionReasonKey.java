@@ -18,15 +18,11 @@
 package im.turms.gateway.pojo.bo.session;
 
 import im.turms.common.constant.DeviceType;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * @author James Chen
  */
-@AllArgsConstructor
-@EqualsAndHashCode
 @Data
 public class SessionDisconnectionReasonKey {
 

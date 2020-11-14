@@ -20,14 +20,12 @@ package im.turms.turms.workflow.access.http.dto.request.group;
 import im.turms.common.constant.GroupInvitationStrategy;
 import im.turms.common.constant.GroupJoinStrategy;
 import im.turms.common.constant.GroupUpdateStrategy;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 public final class AddGroupTypeDTO {
     private final String name;
 

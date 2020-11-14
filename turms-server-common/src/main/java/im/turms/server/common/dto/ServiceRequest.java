@@ -20,14 +20,12 @@ package im.turms.server.common.dto;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.request.TurmsRequest;
 import io.netty.buffer.ByteBuf;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 public final class ServiceRequest {
 
     private final Long userId;
@@ -40,15 +38,5 @@ public final class ServiceRequest {
      * and turms services should validate it by themselves
      */
     private final ByteBuf turmsRequestBuffer;
-
-    @Override
-    public String toString() {
-        return "ServiceRequest{" +
-                "userId=" + userId +
-                ", deviceType=" + deviceType +
-                ", requestId=" + requestId +
-                ", type=" + type +
-                '}';
-    }
 
 }

@@ -17,7 +17,6 @@
 
 package im.turms.turms.workflow.access.http.dto.request.group;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.Date;
@@ -26,7 +25,6 @@ import java.util.Date;
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 public final class UpdateGroupBlacklistedUserDTO {
     private final Date blockDate;
     private final Long requesterId;

@@ -19,7 +19,7 @@ package im.turms.server.common.access.http.config;
 
 import im.turms.common.constant.statuscode.TurmsStatusCode;
 import im.turms.common.exception.TurmsBusinessException;
-import lombok.Getter;
+import lombok.Data;
 import org.springframework.core.io.buffer.DataBufferLimitException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -31,7 +31,7 @@ import java.util.Date;
 /**
  * @author James Chen
  */
-@Getter
+@Data
 public class ErrorAttributes {
 
     private final int status;

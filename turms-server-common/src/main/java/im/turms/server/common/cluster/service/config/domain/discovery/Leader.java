@@ -17,8 +17,7 @@
 
 package im.turms.server.common.cluster.service.config.domain.discovery;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.experimental.FieldNameConstants;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -31,8 +30,7 @@ import java.util.Date;
  */
 @Document
 @FieldNameConstants
-@AllArgsConstructor
-@Getter
+@Data
 public final class Leader {
 
     private static final int LEADER_MAX_TTL = 60;

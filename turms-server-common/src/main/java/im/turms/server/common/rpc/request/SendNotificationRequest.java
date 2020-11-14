@@ -20,7 +20,7 @@ package im.turms.server.common.rpc.request;
 import im.turms.server.common.cluster.service.rpc.RpcCallable;
 import im.turms.server.common.rpc.service.IOutboundMessageService;
 import io.netty.buffer.ByteBuf;
-import lombok.Getter;
+import lombok.Data;
 import org.springframework.context.ApplicationContext;
 
 import javax.validation.constraints.NotEmpty;
@@ -30,7 +30,7 @@ import java.util.Set;
 /**
  * @author James Chen
  */
-@Getter
+@Data
 public class SendNotificationRequest extends RpcCallable<Boolean> {
 
     private static IOutboundMessageService outboundMessageService;

@@ -19,7 +19,6 @@ package im.turms.turms.workflow.dao.domain;
 
 import im.turms.turms.workflow.access.http.permission.AdminPermission;
 import im.turms.turms.workflow.dao.index.documentation.OptionalIndexedForDifferentAmount;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -38,7 +37,6 @@ import java.util.Set;
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 @Document
 public final class AdminRole {
 

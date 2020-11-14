@@ -18,7 +18,6 @@
 package im.turms.server.common.dao.domain;
 
 import im.turms.common.constant.ProfileAccessStrategy;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -32,7 +31,6 @@ import java.util.Date;
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 @Document
 @Sharded(immutableKey = true)
 public final class User {

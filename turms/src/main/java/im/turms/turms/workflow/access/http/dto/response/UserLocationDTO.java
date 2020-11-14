@@ -18,7 +18,6 @@
 package im.turms.turms.workflow.access.http.dto.response;
 
 import im.turms.common.constant.DeviceType;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.geo.Point;
 
@@ -26,7 +25,6 @@ import org.springframework.data.geo.Point;
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 public class UserLocationDTO {
     private final Long userId;
     private final DeviceType deviceType;

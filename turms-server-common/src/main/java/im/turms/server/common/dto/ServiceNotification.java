@@ -19,7 +19,6 @@ package im.turms.server.common.dto;
 
 import im.turms.common.constant.statuscode.TurmsStatusCode;
 import im.turms.common.model.dto.request.TurmsRequest;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.Set;
@@ -28,7 +27,6 @@ import java.util.Set;
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 public final class ServiceNotification {
     private final Set<Long> recipients;
     private final TurmsRequest dataForRecipients;

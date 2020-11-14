@@ -21,8 +21,7 @@ import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.model.dto.udpsignal.UdpNotificationType;
 import im.turms.gateway.access.udp.UdpDispatcher;
 import im.turms.server.common.dto.CloseReason;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import java.net.InetSocketAddress;
@@ -30,17 +29,14 @@ import java.net.InetSocketAddress;
 /**
  * @author James Chen
  */
+@Data
 public abstract class NetConnection {
 
-    @Setter
     private InetSocketAddress address;
-    @Getter
     private volatile boolean isConnected;
-
     /**
      * true if it is switching UDP to TCP/WebSocket
      */
-    @Getter
     private volatile boolean isConnectionRecovering;
 
     public NetConnection(boolean isConnected) {

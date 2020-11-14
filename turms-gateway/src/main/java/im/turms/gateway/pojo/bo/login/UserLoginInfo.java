@@ -19,15 +19,13 @@ package im.turms.gateway.pojo.bo.login;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.UserStatus;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import org.springframework.data.geo.Point;
 
 /**
  * @author James Chen
  */
-@Getter
-@AllArgsConstructor
+@Data
 public final class UserLoginInfo {
     private final Long userId;
     private final String password;

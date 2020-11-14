@@ -18,7 +18,6 @@
 package im.turms.turms.workflow.access.http.dto.request.cluster;
 
 import im.turms.server.common.cluster.node.NodeType;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.Date;
@@ -27,7 +26,6 @@ import java.util.Date;
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 public class AddMemberDTO {
     private final String nodeId;
     private final NodeType nodeType;

@@ -19,7 +19,6 @@ package im.turms.turms.workflow.dao.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
@@ -73,7 +72,6 @@ public final class UserRelationshipGroup {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor // Make sure spring can initiate the key and use setters
-    @EqualsAndHashCode
     public static final class Key {
 
         @Field(Fields.OWNER_ID)

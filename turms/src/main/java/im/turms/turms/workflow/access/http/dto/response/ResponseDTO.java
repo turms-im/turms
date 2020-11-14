@@ -19,7 +19,6 @@ package im.turms.turms.workflow.access.http.dto.response;
 
 
 import im.turms.common.constant.statuscode.TurmsStatusCode;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
 
@@ -29,7 +28,6 @@ import java.util.Date;
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 @FieldNameConstants
 public final class ResponseDTO<T> {
 

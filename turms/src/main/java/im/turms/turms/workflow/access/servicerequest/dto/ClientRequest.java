@@ -21,6 +21,7 @@ import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.request.TurmsRequest;
 import io.netty.buffer.ByteBuf;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -28,24 +29,11 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
+@Builder(toBuilder = true)
 public class ClientRequest {
     private final Long userId;
     private final DeviceType deviceType;
     private final Long requestId;
-    private TurmsRequest turmsRequest;
-    private ByteBuf turmsRequestBuffer;
-
-    /**
-     * Note: turmsRequestBuffer won't be converted to string here
-     */
-    @Override
-    public String toString() {
-        return "ClientRequest{" +
-                "userId=" + userId +
-                ", deviceType=" + deviceType +
-                ", requestId=" + requestId +
-                ", turmsRequest=" + turmsRequest +
-                '}';
-    }
-
+    private final TurmsRequest turmsRequest;
+    private final ByteBuf turmsRequestBuffer;
 }

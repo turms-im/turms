@@ -18,14 +18,12 @@
 package im.turms.turms.bo;
 
 import im.turms.common.constant.GroupInvitationStrategy;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 public final class InvitableAndInvitationStrategy {
     private final boolean invitable;
     private final GroupInvitationStrategy groupInvitationStrategy;

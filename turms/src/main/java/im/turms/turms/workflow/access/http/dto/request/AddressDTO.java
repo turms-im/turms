@@ -17,14 +17,12 @@
 
 package im.turms.turms.workflow.access.http.dto.request;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 public final class AddressDTO {
     private final String address;
 }

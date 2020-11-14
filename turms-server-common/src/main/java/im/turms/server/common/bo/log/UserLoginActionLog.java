@@ -23,7 +23,6 @@ import lombok.Data;
 import org.springframework.data.geo.Point;
 
 import java.util.Date;
-import java.util.Map;
 
 /**
  * @author James Chen
@@ -46,19 +45,5 @@ public final class UserLoginActionLog {
     private final DeviceType deviceType;
 
     private final String deviceDetails;
-
-    @Override
-    public String toString() {
-        return "UserLoginActionLog{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", loginDate=" + loginDate +
-                ", location=" + location +
-                ", ip='" + ip + '\'' +
-                ", userStatus=" + userStatus +
-                ", deviceType=" + deviceType +
-                ", deviceDetails=" + deviceDetails +
-                '}';
-    }
 
 }

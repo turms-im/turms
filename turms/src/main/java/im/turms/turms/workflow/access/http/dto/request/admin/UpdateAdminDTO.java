@@ -18,14 +18,12 @@
 package im.turms.turms.workflow.access.http.dto.request.admin;
 
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 public final class UpdateAdminDTO {
     private final String password;
     private final String name;

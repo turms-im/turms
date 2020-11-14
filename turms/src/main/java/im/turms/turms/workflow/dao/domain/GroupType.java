@@ -20,7 +20,6 @@ package im.turms.turms.workflow.dao.domain;
 import im.turms.common.constant.GroupInvitationStrategy;
 import im.turms.common.constant.GroupJoinStrategy;
 import im.turms.common.constant.GroupUpdateStrategy;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -37,7 +36,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 @Document
 public final class GroupType {
 

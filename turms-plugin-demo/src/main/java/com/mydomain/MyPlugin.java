@@ -36,10 +36,13 @@ public class MyPlugin extends TurmsPlugin {
                 turmsRequest = turmsRequest.toBuilder()
                         .setCreateMessageRequest(builder)
                         .build();
-                clientRequest.setTurmsRequest(turmsRequest);
             }
             logger.info("Hi Turms, I have handled the request");
-            return Mono.just(clientRequest);
+            ClientRequest newRequest = clientRequest
+                    .toBuilder()
+                    .turmsRequest(turmsRequest)
+                    .build();
+            return Mono.just(newRequest);
         }
 
         @Override

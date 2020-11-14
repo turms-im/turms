@@ -17,14 +17,12 @@
 
 package im.turms.turms.workflow.access.http.dto.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 public final class AcknowledgedDTO {
     private final boolean acknowledged;
 }

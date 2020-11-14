@@ -19,13 +19,13 @@ package im.turms.gateway.access.tcp.dto;
 
 import im.turms.common.constant.statuscode.TurmsStatusCode;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 
 /**
  * @author James Chen
  */
 @AllArgsConstructor
-@Getter
+@Data
 public class RequestHandlerResult {
 
     private final TurmsStatusCode code;

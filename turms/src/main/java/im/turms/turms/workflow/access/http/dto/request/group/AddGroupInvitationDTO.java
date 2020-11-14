@@ -18,7 +18,6 @@
 package im.turms.turms.workflow.access.http.dto.request.group;
 
 import im.turms.common.constant.RequestStatus;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.Date;
@@ -27,7 +26,6 @@ import java.util.Date;
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 public final class AddGroupInvitationDTO {
     private final Long id;
     private final String content;

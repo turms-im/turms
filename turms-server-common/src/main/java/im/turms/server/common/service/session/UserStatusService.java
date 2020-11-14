@@ -291,7 +291,7 @@ public class UserStatusService {
         // Because putAll() may overwrite the registered session info and make trouble
         // if a user with the same device type sends multiple login requests in a short time
         // (This can also happen in different servers).
-        // Use putIfAbsent to make the code robust.
+        // So use putIfAbsent to make the code robust.
         Mono<Boolean> updateMono = sessionOperations.putIfAbsent(userId, deviceType, nodeId);
         if (userStatus != null && userStatus != UserStatus.AVAILABLE) {
             updateMono = updateMono

@@ -17,7 +17,6 @@
 
 package im.turms.turms.workflow.access.http.dto.request.user;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.Map;
@@ -27,7 +26,6 @@ import java.util.Set;
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 public final class UpdateUserPermissionGroupDTO {
     private final Set<Long> creatableGroupTypeIds;
     private final Integer ownedGroupLimit;

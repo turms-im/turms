@@ -18,16 +18,12 @@
 package im.turms.server.common.bo.session;
 
 import im.turms.common.constant.DeviceType;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 /**
  * @author James Chen
  */
-@AllArgsConstructor
 @Data
-@EqualsAndHashCode
 public final class UserSessionId {
     private final Long userId;
     private final DeviceType deviceType;

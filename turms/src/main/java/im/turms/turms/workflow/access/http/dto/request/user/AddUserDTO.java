@@ -18,7 +18,6 @@
 package im.turms.turms.workflow.access.http.dto.request.user;
 
 import im.turms.common.constant.ProfileAccessStrategy;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.Date;
@@ -27,7 +26,6 @@ import java.util.Date;
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 public final class AddUserDTO {
     private final Long id;
 

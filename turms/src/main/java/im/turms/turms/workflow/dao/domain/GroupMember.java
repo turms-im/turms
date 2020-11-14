@@ -21,7 +21,6 @@ import im.turms.common.constant.GroupMemberRole;
 import im.turms.turms.workflow.dao.index.documentation.OptionalIndexedForCustomFeature;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
@@ -83,7 +82,6 @@ public final class GroupMember {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor // Make sure spring can initiate the key and use setters
-    @EqualsAndHashCode
     public static final class Key {
 
         @Field(Fields.GROUP_ID)

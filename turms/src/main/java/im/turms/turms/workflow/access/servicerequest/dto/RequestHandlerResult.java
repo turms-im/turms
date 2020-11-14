@@ -20,7 +20,6 @@ package im.turms.turms.workflow.access.servicerequest.dto;
 import im.turms.common.constant.statuscode.TurmsStatusCode;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.Set;
@@ -29,7 +28,6 @@ import java.util.Set;
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 public class RequestHandlerResult {
 
     private final TurmsNotification.Data dataForRequester;
@@ -38,17 +36,5 @@ public class RequestHandlerResult {
     private final TurmsRequest dataForRecipients;
     private final TurmsStatusCode code;
     private final String reason;
-
-    @Override
-    public String toString() {
-        return "RequestHandlerResult{" +
-                "dataForRequester=" + dataForRequester +
-                ", forwardDataForRecipientsToOtherSenderOnlineDevices=" + forwardDataForRecipientsToOtherSenderOnlineDevices +
-                ", recipients=" + recipients +
-                ", dataForRecipients=" + dataForRecipients +
-                ", code=" + code +
-                ", reason='" + reason + '\'' +
-                '}';
-    }
 
 }

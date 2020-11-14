@@ -33,13 +33,4 @@ public final class UserLogoutActionLog {
 
     private final Date logoutDate;
 
-    @Override
-    public String toString() {
-        return "UserLogoutActionLog{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", logoutDate=" + logoutDate +
-                '}';
-    }
-
 }

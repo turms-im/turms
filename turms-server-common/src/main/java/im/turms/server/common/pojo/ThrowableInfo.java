@@ -7,9 +7,9 @@ import im.turms.common.constant.statuscode.TurmsStatusCode;
 import im.turms.common.exception.TurmsBusinessException;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.server.common.util.CloseReasonUtil;
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 public class ThrowableInfo {
 
     private final TurmsStatusCode code;

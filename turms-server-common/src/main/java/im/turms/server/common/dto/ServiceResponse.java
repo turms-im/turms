@@ -19,14 +19,12 @@ package im.turms.server.common.dto;
 
 import im.turms.common.constant.statuscode.TurmsStatusCode;
 import im.turms.common.model.dto.notification.TurmsNotification;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 public final class ServiceResponse {
     private final TurmsNotification.Data dataForRequester;
     private final TurmsStatusCode code;

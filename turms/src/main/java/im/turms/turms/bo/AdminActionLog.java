@@ -18,7 +18,6 @@
 package im.turms.turms.bo;
 
 import com.mongodb.DBObject;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.Date;
@@ -27,7 +26,6 @@ import java.util.Date;
  * @author James Chen
  */
 @Data
-@AllArgsConstructor
 public final class AdminActionLog {
 
     private final String account;
@@ -41,17 +39,5 @@ public final class AdminActionLog {
     private final DBObject params;
 
     private final DBObject body;
-
-    @Override
-    public String toString() {
-        return "AdminActionLog{" +
-                "account='" + account + '\'' +
-                ", logDate=" + logDate +
-                ", ip='" + ip + '\'' +
-                ", action='" + action + '\'' +
-                ", params=" + params +
-                ", body=" + body +
-                '}';
-    }
 
 }
