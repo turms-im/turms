@@ -32,6 +32,7 @@ public class HandleServiceRequestSerializer implements Serializer<HandleServiceR
     @Override
     public void write(ByteBuf output, HandleServiceRequest data) {
         ServiceRequest request = data.getServiceRequest();
+        output.writeLong(request.getTraceId());
         output.writeLong(request.getUserId());
         output.writeByte(request.getDeviceType().getNumber());
     }
@@ -40,10 +41,11 @@ public class HandleServiceRequestSerializer implements Serializer<HandleServiceR
     public HandleServiceRequest read(ByteBuf input) {
         int length = initialCapacity(null);
         ByteBuf firstByteBuf = input.readSlice(length);
+        long traceId = firstByteBuf.readLong();
         long userId = firstByteBuf.readLong();
         DeviceType deviceType = DeviceType.forNumber(firstByteBuf.readByte());
         ByteBuf turmsRequestBuffer = input.slice();
-        ServiceRequest serviceRequest = new ServiceRequest(userId, deviceType, null, null, turmsRequestBuffer);
+        ServiceRequest serviceRequest = new ServiceRequest(traceId, userId, deviceType, null, null, turmsRequestBuffer);
         return new HandleServiceRequest(serviceRequest);
     }
 

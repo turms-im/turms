@@ -23,11 +23,13 @@ import com.google.protobuf.StringValue;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
+import im.turms.common.util.RandomUtil;
 import im.turms.gateway.access.tcp.controller.SessionController;
 import im.turms.gateway.access.tcp.dto.RequestHandlerResult;
 import im.turms.gateway.access.tcp.factory.TcpServerFactory;
 import im.turms.gateway.access.tcp.model.UserSessionWrapper;
 import im.turms.gateway.access.tcp.util.TurmsNotificationUtil;
+import im.turms.gateway.constant.ErrorMessage;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.pojo.dto.SimpleTurmsRequest;
 import im.turms.gateway.service.mediator.WorkflowMediator;
@@ -90,7 +92,7 @@ public class TcpDispatcher {
                     .doOnNext(data -> {
                         if (!connection.isDisposed()) {
                             // Note that handleRequestData should never return MonoError
-                            Mono<ByteBuf> response = handleRequestData(sessionWrapper, data, ip, idleConnectionTimeout);
+                            Mono<ByteBuf> response = handleRequest(sessionWrapper, data, ip, idleConnectionTimeout);
                             connection.outbound()
                                     .send(response, byteBuf -> true)
                                     .then()
@@ -126,7 +128,7 @@ public class TcpDispatcher {
      * the method should recover it to TurmsNotification.
      * So the method should never return MonoError and it should be considered as a bug if it occurs.
      */
-    private Mono<ByteBuf> handleRequestData(UserSessionWrapper sessionWrapper, ByteBuf data, String ip, Timeout idleConnectionTimeout) {
+    private Mono<ByteBuf> handleRequest(UserSessionWrapper sessionWrapper, ByteBuf data, String ip, Timeout idleConnectionTimeout) {
         if (data.isReadable()) {
             SimpleTurmsRequest request = TurmsRequestUtil.parseSimpleRequest(data.nioBuffer());
             TurmsRequest.KindCase requestType = request.getType();
@@ -144,19 +146,17 @@ public class TcpDispatcher {
                     break;
             }
             return notificationMono
-                    .map(ProtoUtil::getDirectByteBuffer)
                     .onErrorResume(throwable -> {
                         ThrowableInfo info = ThrowableInfo.get(throwable);
                         if (info.getCode().isServerError()) {
-                            log.error("Failed to handle the client request", throwable);
+                            log.error(ErrorMessage.FAILED_TO_HANDLE_SERVICE_REQUEST_WITH_REQUEST, request, throwable);
                         }
-                        TurmsNotification notification = info.toNotification(request.getRequestId());
-                        return Mono.just(ProtoUtil.getDirectByteBuffer(notification));
-                    });
+                        return Mono.just(info.toNotification(request.getRequestId()));
+                    })
+                    .map(ProtoUtil::getDirectByteBuffer);
         } else {
             return handleHeartbeatRequest(sessionWrapper)
-                    .flatMap(updated -> updated ? Mono.just(HEARTBEAT_RESPONSE) : Mono.empty())
-                    .onErrorResume(throwable -> Mono.empty());
+                    .flatMap(updated -> updated ? Mono.just(HEARTBEAT_RESPONSE) : Mono.empty());
         }
     }
 
@@ -174,7 +174,8 @@ public class TcpDispatcher {
         if (session == null) {
             return Mono.just(TurmsNotificationUtil.sessionClosed(request.getRequestId()));
         }
-        ServiceRequest serviceRequest = new ServiceRequest(session.getUserId(),
+        ServiceRequest serviceRequest = new ServiceRequest(RandomUtil.nextPositiveLong(),
+                session.getUserId(),
                 session.getDeviceType(),
                 request.getRequestId(),
                 request.getType(),

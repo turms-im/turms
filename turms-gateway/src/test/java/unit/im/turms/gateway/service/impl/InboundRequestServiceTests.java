@@ -48,7 +48,7 @@ class InboundRequestServiceTests {
     void processServiceRequest_shouldThrow_ifNodeIsInactive() {
         InboundRequestService inboundRequestService = newInboundRequestService(false, null, false, true, true);
         ByteBuf buffer = PooledByteBufAllocator.DEFAULT.buffer();
-        ServiceRequest request = new ServiceRequest(1L, DeviceType.ANDROID, 1L, TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, buffer);
+        ServiceRequest request = new ServiceRequest(1L, 1L, DeviceType.ANDROID, 1L, TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, buffer);
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(request);
 
         StepVerifier.create(result)
@@ -61,7 +61,7 @@ class InboundRequestServiceTests {
     void processServiceRequest_shouldThrow_ifUserIsOffline() {
         InboundRequestService inboundRequestService = newInboundRequestService(true, null, false, true, true);
         ByteBuf buffer = PooledByteBufAllocator.DEFAULT.buffer();
-        ServiceRequest request = new ServiceRequest(1L, DeviceType.ANDROID, 1L, TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, buffer);
+        ServiceRequest request = new ServiceRequest(1L, 1L, DeviceType.ANDROID, 1L, TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, buffer);
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(request);
 
         StepVerifier.create(result)
@@ -78,7 +78,7 @@ class InboundRequestServiceTests {
 
         InboundRequestService inboundRequestService = newInboundRequestService(true, session, true, true, true);
         ByteBuf buffer = PooledByteBufAllocator.DEFAULT.buffer();
-        ServiceRequest request = new ServiceRequest(1L, DeviceType.ANDROID, 1L, TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, buffer);
+        ServiceRequest request = new ServiceRequest(1L, 1L, DeviceType.ANDROID, 1L, TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, buffer);
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(request);
 
         StepVerifier.create(result)
@@ -94,7 +94,7 @@ class InboundRequestServiceTests {
 
         InboundRequestService inboundRequestService = newInboundRequestService(true, session, false, false, true);
         ByteBuf buffer = PooledByteBufAllocator.DEFAULT.buffer();
-        ServiceRequest request = new ServiceRequest(1L, DeviceType.ANDROID, 1L, TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, buffer);
+        ServiceRequest request = new ServiceRequest(1L, 1L, DeviceType.ANDROID, 1L, TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, buffer);
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(request);
 
         StepVerifier.create(result)
@@ -110,7 +110,7 @@ class InboundRequestServiceTests {
 
         InboundRequestService inboundRequestService = newInboundRequestService(true, session, false, false, false);
         ByteBuf buffer = PooledByteBufAllocator.DEFAULT.buffer();
-        ServiceRequest request = new ServiceRequest(1L, DeviceType.ANDROID, 1L, TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, buffer);
+        ServiceRequest request = new ServiceRequest(1L, 1L, DeviceType.ANDROID, 1L, TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, buffer);
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(request);
 
         StepVerifier.create(result)
@@ -126,7 +126,7 @@ class InboundRequestServiceTests {
 
         InboundRequestService inboundRequestService = newInboundRequestService(true, session, false, true, true);
         ByteBuf buffer = PooledByteBufAllocator.DEFAULT.buffer();
-        ServiceRequest request = new ServiceRequest(1L, DeviceType.ANDROID, 1L, TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, buffer);
+        ServiceRequest request = new ServiceRequest(1L, 1L, DeviceType.ANDROID, 1L, TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, buffer);
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(request);
 
         StepVerifier.create(result)

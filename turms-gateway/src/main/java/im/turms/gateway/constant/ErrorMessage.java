@@ -15,29 +15,19 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.dto;
-
-import im.turms.common.constant.DeviceType;
-import im.turms.common.model.dto.request.TurmsRequest;
-import io.netty.buffer.ByteBuf;
-import lombok.Data;
+package im.turms.gateway.constant;
 
 /**
+ * Common error messages that used by multiple classes
+ *
  * @author James Chen
  */
-@Data
-public final class ServiceRequest {
+public class ErrorMessage {
 
-    private final Long traceId;
-    private final Long userId;
-    private final DeviceType deviceType;
-    private final Long requestId;
-    private final TurmsRequest.KindCase type;
+    private ErrorMessage() {
+    }
 
-    /**
-     * Note that turms-gateway doesn't parse and validate the request for better performance (zero copy)
-     * and turms services should validate it by themselves
-     */
-    private final ByteBuf turmsRequestBuffer;
+    public static final String FAILED_TO_HANDLE_SERVICE_REQUEST_WITH_REQUEST = "Failed to handle the service request: {}";
+    public static final String FAILED_TO_HANDLE_HEARTBEAT_REQUEST = "Failed to handle the heartbeat request";
 
 }

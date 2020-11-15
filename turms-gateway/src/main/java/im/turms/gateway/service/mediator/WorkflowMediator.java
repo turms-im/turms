@@ -148,7 +148,7 @@ public class WorkflowMediator {
     }
 
     public Mono<Boolean> processHeartbeatRequest(long userId, DeviceType deviceType) {
-        return sessionService.updateHeartbeatTimestamp(userId, deviceType);
+        return inboundRequestService.processHeartbeatRequest(userId, deviceType);
     }
 
     public Mono<UserSession> authAndProcessHeartbeatRequest(long userId, DeviceType deviceType, int sessionId) {

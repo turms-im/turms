@@ -31,4 +31,8 @@ public class RandomUtil {
         return ThreadLocalRandom.current().nextInt() >>> 1;
     }
 
+    public static long nextPositiveLong() {
+        return ThreadLocalRandom.current().nextLong() >>> 1;
+    }
+
 }

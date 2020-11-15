@@ -30,6 +30,7 @@ import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.pojo.ThrowableInfo;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.rpc.service.IServiceRequestDispatcher;
+import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.ProtoUtil;
 import im.turms.turms.plugin.manager.TurmsPluginManager;
 import im.turms.turms.workflow.access.servicerequest.dto.ClientRequest;
@@ -132,8 +133,13 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
     @Override
     public Mono<ServiceResponse> dispatch(ServiceRequest serviceRequest) {
         // 1. Validate
+        Long traceId = serviceRequest.getTraceId();
         Long userId = serviceRequest.getUserId();
         DeviceType deviceType = serviceRequest.getDeviceType();
+        if (traceId == null) {
+            String message = "The trace ID is missing for the request: " + serviceRequest;
+            return Mono.just(new ServiceResponse(null, TurmsStatusCode.SERVER_INTERNAL_ERROR, message));
+        }
         if (userId == null) {
             String message = "The user ID is missing for the request: " + serviceRequest;
             return Mono.just(new ServiceResponse(null, TurmsStatusCode.SERVER_INTERNAL_ERROR, message));
@@ -151,6 +157,9 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         } catch (InvalidProtocolBufferException e) {
             return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.INVALID_DATA));
         }
+
+        TracingContext tracingContext = new TracingContext(traceId);
+        tracingContext.updateMdc();
 
         // 2. Transform and handle the request
         ClientRequest clientRequest = new ClientRequest(
@@ -200,7 +209,8 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                     .tag(CLIENT_REQUEST_TAG_TYPE, kindCase.name())
                     .metrics();
         });
-        return handleResult(resultMono, userId, deviceType);
+        return handleResult(resultMono, userId, deviceType)
+                .doFinally(signalType -> tracingContext.clearMdc());
     }
 
     private Mono<ServiceResponse> handleResult(
