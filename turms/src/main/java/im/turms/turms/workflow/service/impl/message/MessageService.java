@@ -394,7 +394,7 @@ public class MessageService {
                 memberIdsMono = Mono.just(auxiliaryMemberIds);
             } else {
                 memberIdsMono = groupMemberService
-                        .queryGroupMembersIds(targetId)
+                        .queryGroupMemberIds(targetId)
                         .collect(Collectors.toSet());
             }
             return memberIdsMono
@@ -940,7 +940,7 @@ public class MessageService {
                     }
                     Mono<Set<Long>> recipientIdsMono;
                     if (isGroupMessage) {
-                        recipientIdsMono = groupMemberService.getMembersIdsByGroupId(targetId)
+                        recipientIdsMono = groupMemberService.getMemberIdsByGroupId(targetId)
                                 .collect(Collectors.toSet());
                     } else {
                         recipientIdsMono = Mono.just(Collections.singleton(targetId));

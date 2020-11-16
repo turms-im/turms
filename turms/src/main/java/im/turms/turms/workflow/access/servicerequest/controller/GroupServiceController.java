@@ -116,7 +116,7 @@ public class GroupServiceController {
                             return Mono.just(RequestHandlerResultFactory.get(TurmsStatusCode.UNAUTHORIZED));
                         }
                         if (node.getSharedProperties().getService().getNotification().isNotifyMembersAfterGroupDeleted()) {
-                            return groupService.queryGroupMembersIds(request.getGroupId())
+                            return groupService.queryGroupMemberIds(request.getGroupId())
                                     .collect(Collectors.toSet())
                                     .flatMap(memberIds -> groupService.deleteGroupsAndGroupMembers(Set.of(request.getGroupId()), null)
                                             .map(deleted -> {
@@ -217,7 +217,7 @@ public class GroupServiceController {
                             return Mono.just(RequestHandlerResultFactory.fail());
                         }
                         if (node.getSharedProperties().getService().getNotification().isNotifyMembersAfterGroupUpdated()) {
-                            return groupMemberService.queryGroupMembersIds(request.getGroupId())
+                            return groupMemberService.queryGroupMemberIds(request.getGroupId())
                                     .collect(Collectors.toSet())
                                     .map(memberIds -> memberIds.isEmpty()
                                             ? RequestHandlerResultFactory.ok()
@@ -599,11 +599,11 @@ public class GroupServiceController {
                         if (updated != null && updated) {
                             if (node.getSharedProperties().getService().getNotification()
                                     .isNotifyMembersAfterOtherMemberInfoUpdated()) {
-                                return groupMemberService.queryGroupMembersIds(request.getGroupId())
+                                return groupMemberService.queryGroupMemberIds(request.getGroupId())
                                         .collect(Collectors.toSet())
-                                        .map(groupMembersIds -> groupMembersIds.isEmpty()
+                                        .map(groupMemberIds -> groupMemberIds.isEmpty()
                                                 ? RequestHandlerResultFactory.ok()
-                                                : RequestHandlerResultFactory.get(groupMembersIds, clientRequest.getTurmsRequest()));
+                                                : RequestHandlerResultFactory.get(groupMemberIds, clientRequest.getTurmsRequest()));
                             } else if (!clientRequest.getUserId().equals(request.getMemberId())
                                     && node.getSharedProperties().getService().getNotification().isNotifyMemberAfterInfoUpdatedByOthers()) {
                                 return Mono.just(RequestHandlerResultFactory.get(

@@ -267,14 +267,14 @@ public class UserServiceController {
             if (!notifyMembers && !notifyRelatedUser) {
                 return updateMono.map(RequestHandlerResultFactory::okIfTrue);
             } else {
-                Mono<Set<Long>> queryMembersIds = notifyMembers
-                        ? groupMemberService.queryUsersJoinedGroupsMembersIds(Set.of(clientRequest.getUserId()))
+                Mono<Set<Long>> queryMemberIds = notifyMembers
+                        ? groupMemberService.queryMemberIdsInUsersJoinedGroups(Set.of(clientRequest.getUserId()))
                         : Mono.just(Collections.emptySet());
                 Mono<Set<Long>> queryRelatedUserIds = notifyRelatedUser
                         ? userRelationshipService.queryRelatedUserIds(Set.of(clientRequest.getUserId()), false)
                         .collect(Collectors.toSet())
                         : Mono.just(Collections.emptySet());
-                return queryMembersIds.zipWith(queryRelatedUserIds)
+                return queryMemberIds.zipWith(queryRelatedUserIds)
                         .map(results -> {
                             results.getT1().addAll(results.getT2());
                             return results.getT1().isEmpty()

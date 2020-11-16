@@ -886,7 +886,7 @@ public class GroupService {
         return mongoTemplate.count(new Query(), Group.class, Group.COLLECTION_NAME);
     }
 
-    public Flux<Long> queryGroupMembersIds(@NotNull Long groupId) {
+    public Flux<Long> queryGroupMemberIds(@NotNull Long groupId) {
         try {
             AssertUtil.notNull(groupId, "groupId");
         } catch (TurmsBusinessException e) {

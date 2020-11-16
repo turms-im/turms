@@ -304,7 +304,7 @@ public class GroupMemberService {
                 updateGroupMembersVersion)));
     }
 
-    public Flux<Long> getMembersIdsByGroupId(@NotNull Long groupId) {
+    public Flux<Long> getMemberIdsByGroupId(@NotNull Long groupId) {
         try {
             AssertUtil.notNull(groupId, "groupId");
         } catch (TurmsBusinessException e) {
@@ -540,7 +540,7 @@ public class GroupMemberService {
                 .map(groupMember -> groupMember.getKey().getGroupId());
     }
 
-    public Mono<Set<Long>> queryUsersJoinedGroupsMembersIds(@NotEmpty Set<Long> userIds) {
+    public Mono<Set<Long>> queryMemberIdsInUsersJoinedGroups(@NotEmpty Set<Long> userIds) {
         try {
             AssertUtil.notEmpty(userIds, "userIds");
         } catch (TurmsBusinessException e) {
@@ -550,7 +550,7 @@ public class GroupMemberService {
                 .collect(Collectors.toSet())
                 .flatMap(groupsIds -> groupsIds.isEmpty()
                         ? Mono.empty()
-                        : queryGroupMembersIds(groupsIds).collect(Collectors.toSet()));
+                        : queryGroupMemberIds(groupsIds).collect(Collectors.toSet()));
     }
 
     public Mono<Boolean> isAllowedToCreateJoinQuestion(
@@ -559,7 +559,7 @@ public class GroupMemberService {
         return isOwnerOrManager(userId, groupId);
     }
 
-    public Flux<Long> queryGroupMembersIds(@NotNull Long groupId) {
+    public Flux<Long> queryGroupMemberIds(@NotNull Long groupId) {
         try {
             AssertUtil.notNull(groupId, "groupId");
         } catch (TurmsBusinessException e) {
@@ -571,7 +571,7 @@ public class GroupMemberService {
                 .map(member -> member.getKey().getUserId());
     }
 
-    public Flux<Long> queryGroupMembersIds(@NotEmpty Set<Long> groupIds) {
+    public Flux<Long> queryGroupMemberIds(@NotEmpty Set<Long> groupIds) {
         try {
             AssertUtil.notEmpty(groupIds, "groupIds");
         } catch (TurmsBusinessException e) {
