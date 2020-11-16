@@ -93,7 +93,7 @@ public class AdminRoleService {
                             resetRoles();
                             break;
                         default:
-                            throw new IllegalStateException("Unexpected value: " + event.getOperationType());
+                            log.error("Detect an illegal operation on AdminRole collection: " + event);
                     }
                 })
                 .onErrorContinue((throwable, o) -> log.error("Error while processing the change stream event of AdminRole: {}", o, throwable))

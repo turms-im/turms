@@ -101,7 +101,7 @@ public class UserPermissionGroupService {
                             userPermissionGroupMap.clear();
                             break;
                         default:
-                            throw new IllegalStateException("Unexpected value: " + operationType);
+                            log.error("Detect an illegal operation on UserPermissionGroup collection: " + event);
                     }
                 })
                 .onErrorContinue((throwable, o) -> log.error("Error while processing the change stream event of UserPermissionGroup: {}", o, throwable))

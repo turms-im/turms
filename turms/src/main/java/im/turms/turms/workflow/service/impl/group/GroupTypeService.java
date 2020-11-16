@@ -109,7 +109,7 @@ public class GroupTypeService {
                             groupTypeMap.clear();
                             break;
                         default:
-                            throw new IllegalStateException("Unexpected value: " + operationType);
+                            log.error("Detect an illegal operation on GroupType collection: " + event);
                     }
                 })
                 .onErrorContinue((throwable, o) -> log.error("Error while processing the change stream event of GroupType: {}", o, throwable))
