@@ -36,7 +36,8 @@ public class SessionHashValueSerializer implements RedisElementWriter<Object>, R
             // the type of the value from the first byte when deserializing
             int userStatus = -((UserStatus) element).getNumber();
             return ByteBuffer.allocateDirect(Byte.BYTES)
-                    .put((byte) userStatus);
+                    .put((byte) userStatus)
+                    .flip();
         } else if (element instanceof String) {
             byte[] bytes = ((String) element).getBytes(StandardCharsets.UTF_8);
             if (bytes.length == 0 || bytes.length > Byte.MAX_VALUE) {
@@ -44,7 +45,8 @@ public class SessionHashValueSerializer implements RedisElementWriter<Object>, R
             }
             return ByteBuffer.allocateDirect(Byte.BYTES + bytes.length)
                     .put((byte) bytes.length)
-                    .put(bytes);
+                    .put(bytes)
+                    .flip();
         } else {
             throw new IllegalArgumentException("The data must be an instance of UserStatus or String");
         }

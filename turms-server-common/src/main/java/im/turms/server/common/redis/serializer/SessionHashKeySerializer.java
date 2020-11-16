@@ -36,7 +36,8 @@ public class SessionHashKeySerializer implements RedisElementWriter<Object>, Red
                 // im.turms.server.common.service.session.UserStatusService.STATUS_KEY_STATUS
                 : (byte) element;
         return ByteBuffer.allocateDirect(Byte.BYTES)
-                .put(data);
+                .put(data)
+                .flip();
     }
 
     @Override

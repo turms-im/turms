@@ -32,7 +32,8 @@ public class SessionKeySerializer implements RedisElementWriter<Long>, RedisElem
     public ByteBuffer write(Long element) {
         return ByteBuffer.allocateDirect(Byte.BYTES + Long.BYTES)
                 .put(RedisEntryId.SESSIONS_STATUS)
-                .putLong(element);
+                .putLong(element)
+                .flip();
     }
 
     @Override

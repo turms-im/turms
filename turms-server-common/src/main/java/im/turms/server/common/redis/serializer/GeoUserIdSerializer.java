@@ -30,7 +30,8 @@ public class GeoUserIdSerializer implements RedisElementWriter<Long>, RedisEleme
     @Override
     public ByteBuffer write(Long element) {
         return ByteBuffer.allocateDirect(Long.BYTES)
-                .putLong(element);
+                .putLong(element)
+                .flip();
     }
 
     @Override

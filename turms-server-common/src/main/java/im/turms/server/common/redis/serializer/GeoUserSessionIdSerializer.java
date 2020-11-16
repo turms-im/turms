@@ -33,7 +33,8 @@ public class GeoUserSessionIdSerializer implements RedisElementWriter<UserSessio
     public ByteBuffer write(UserSessionId element) {
         return ByteBuffer.allocateDirect(Long.BYTES + Byte.BYTES)
                 .putLong(element.getUserId())
-                .put((byte) element.getDeviceType().getNumber());
+                .put((byte) element.getDeviceType().getNumber())
+                .flip();
     }
 
     @Override
