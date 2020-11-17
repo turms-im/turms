@@ -24,7 +24,9 @@ import im.turms.gateway.plugin.manager.TurmsPluginManager;
 import im.turms.server.common.bo.log.UserLoginActionLog;
 import im.turms.server.common.bo.log.UserLogoutActionLog;
 import im.turms.server.common.cluster.node.Node;
+import im.turms.server.common.constant.LogContextConstant;
 import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.ThreadContext;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -66,7 +68,9 @@ public class UserLoginActionService {
         if (logUserLoginAction || triggerHandlers) {
             UserLoginActionLog loginAction = new UserLoginActionLog(logId, userId, loginDate, position, ip, userStatus, loggingInDeviceType, deviceDetails);
             if (logUserLoginAction) {
+                ThreadContext.put(LogContextConstant.LOG_TYPE, LogContextConstant.Type.USER_ACTIVITY);
                 log.info(loginAction);
+                ThreadContext.remove(LogContextConstant.LOG_TYPE);
             }
             if (triggerHandlers) {
                 triggerLoginHandlers(loginAction).subscribe();
@@ -83,7 +87,9 @@ public class UserLoginActionService {
         if (logUserLogoutAction || triggerHandlers) {
             UserLogoutActionLog logoutActionLog = new UserLogoutActionLog(logId, userId, logoutDate);
             if (logUserLogoutAction) {
+                ThreadContext.put(LogContextConstant.LOG_TYPE, LogContextConstant.Type.USER_ACTIVITY);
                 log.info(logoutActionLog);
+                ThreadContext.remove(LogContextConstant.LOG_TYPE);
             }
             if (triggerHandlers) {
                 triggerLogoutHandlers(logoutActionLog).subscribe();

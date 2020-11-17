@@ -167,13 +167,14 @@ public class SessionService {
         if (deviceTypes == null || deviceTypes.isEmpty()) {
             return disconnect(userIds, closeStatus);
         } else {
-            switch (userIds.size()) {
+            int size = userIds.size();
+            switch (size) {
                 case 0:
                     return Mono.just(true);
                 case 1:
                     return disconnect(userIds.iterator().next(), deviceTypes, closeStatus);
                 default:
-                    List<Mono<Boolean>> monos = new LinkedList<>();
+                    List<Mono<Boolean>> monos = new ArrayList<>(size);
                     for (Long userId : userIds) {
                         monos.add(disconnect(userId, deviceTypes, closeStatus));
                     }

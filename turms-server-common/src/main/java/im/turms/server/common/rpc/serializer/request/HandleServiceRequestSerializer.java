@@ -51,7 +51,7 @@ public class HandleServiceRequestSerializer implements Serializer<HandleServiceR
 
     @Override
     public int initialCapacity(HandleServiceRequest data) {
-        return Long.BYTES + Byte.BYTES;
+        return Long.BYTES * 2 + Byte.BYTES;
     }
 
     @Override
