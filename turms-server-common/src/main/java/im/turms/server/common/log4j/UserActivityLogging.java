@@ -17,21 +17,19 @@
 
 package im.turms.server.common.log4j;
 
+import lombok.extern.log4j.Log4j2;
+
 /**
  * @author James Chen
  */
-public class LogContextConstant {
-    private LogContextConstant() {
+@Log4j2
+public class UserActivityLogging {
+
+    private UserActivityLogging() {
     }
 
-    public static final String LOG_TYPE = "TYPE";
-
-    public static final class Type {
-        private Type() {
-        }
-
-        public static final String ADMIN_ACTIVITY = "ADMIN_ACTIVITY";
-        public static final String USER_ACTIVITY = "USER_ACTIVITY";
+    public static void log(Object info) {
+        log.info(info);
     }
 
 }
