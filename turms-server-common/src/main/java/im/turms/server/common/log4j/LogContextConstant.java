@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.constant;
+package im.turms.server.common.log4j;
 
 /**
  * @author James Chen

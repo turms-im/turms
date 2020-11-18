@@ -24,8 +24,8 @@ import im.turms.common.exception.TurmsBusinessException;
 import im.turms.server.common.bo.log.UserLocationLog;
 import im.turms.server.common.bo.session.UserSessionId;
 import im.turms.server.common.cluster.node.Node;
-import im.turms.server.common.constant.LogContextConstant;
 import im.turms.server.common.constraint.ValidDeviceType;
+import im.turms.server.common.log4j.UserActivityLogging;
 import im.turms.server.common.plugin.base.ITurmsPluginManager;
 import im.turms.server.common.plugin.extension.UserLocationLogHandler;
 import im.turms.server.common.property.TurmsPropertiesManager;
@@ -35,8 +35,6 @@ import im.turms.server.common.redis.RedisSerializationContextPool;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.DeviceTypeUtil;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.ThreadContext;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Point;
@@ -57,7 +55,6 @@ import java.util.List;
  * @author James Chen
  */
 @Service
-@Log4j2
 public class SessionLocationService {
 
     private final Node node;
@@ -253,9 +250,7 @@ public class SessionLocationService {
         if (logUserLocation || triggerHandlers) {
             UserLocationLog userLocationLog = new UserLocationLog(userId, deviceType, coordinates, timestamp);
             if (logUserLocation) {
-                ThreadContext.put(LogContextConstant.LOG_TYPE, LogContextConstant.Type.USER_ACTIVITY);
-                log.info(userLocationLog);
-                ThreadContext.remove(LogContextConstant.LOG_TYPE);
+                UserActivityLogging.log(userLocationLog);
             }
             if (triggerHandlers) {
                 List<Mono<Void>> monos = new ArrayList<>(handlerList.size());

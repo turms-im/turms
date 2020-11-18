@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN"
+               packages="im.turms.server.common.log4j.plugin"
                strict="true"
                xmlns="http://logging.apache.org/log4j/2.0/config"
                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -20,8 +21,8 @@
                            charset="UTF-8"/>
         </Console>
         <Routing name="Routing">
-            <Routes pattern="$${ctx:TYPE}">
-                <Route key="$${ctx:TYPE}">
+            <Routes pattern="$${myctx:TYPE}">
+                <Route key="$${myctx:TYPE}">
                     <RollingFile name="File"
                                  fileName="../logs/turms-gateway.log"
                                  filePattern="../logs/$${date:yyyy-MM}/turms-gateway-%d{yyyy-MM-dd-HH}-%i.log.gz">
