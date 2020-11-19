@@ -69,8 +69,8 @@ public final class UserSession {
     /**
      * Note that it's acceptable that the session is still open even if the connection is closed
      * because the client can send heartbeats over UDP to keep the session open
-     * <p>
-     * Note: For better performance, it's acceptable for our scenarios to not update isSessionOpen atomically.
+     *
+     * @implNote For better performance, it's acceptable for our scenarios to not update isSessionOpen atomically.
      */
     private volatile boolean isSessionOpen = true;
     private NetConnection connection;
@@ -88,11 +88,13 @@ public final class UserSession {
         this.lastHeartbeatTimestampMillis = now.getTime();
     }
 
+    /**
+     * A session cannot reopen once closed, unlike the connection which is allowed to close and reconnect.
+     */
     public void close(@NotNull CloseReason closeReason) {
         if (isSessionOpen) {
             isSessionOpen = false;
-            // Note that it acceptable to complete/close
-            // on the following objects multiple times
+            // Note that it acceptable to complete/close the following objects multiple times
             // so that it's unnecessary to update isSessionOpen atomically
             notificationSink.tryEmitComplete();
             if (heartbeatTimeout != null) {
@@ -115,7 +117,10 @@ public final class UserSession {
     }
 
     public void tryEmitNextNotification(ByteBuf byteBuf) {
-        notificationSink.tryEmitNext(byteBuf);
+        Sinks.EmitResult result = notificationSink.tryEmitNext(byteBuf);
+        if (result != Sinks.EmitResult.OK && isSessionOpen) {
+            log.warn("Failed to send notifications due to " + result.name());
+        }
     }
 
     @Override
