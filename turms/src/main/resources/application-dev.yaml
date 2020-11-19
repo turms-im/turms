@@ -19,6 +19,10 @@ logging:
 
 turms:
   service:
+    activity-logging:
+      included-categories:
+        -
+          name: ALL
     admin-api:
       enable-swagger: true
     database:

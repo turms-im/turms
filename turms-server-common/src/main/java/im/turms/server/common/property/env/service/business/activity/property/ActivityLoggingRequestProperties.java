@@ -15,12 +15,13 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.bo.property;
+package im.turms.server.common.property.env.service.business.activity.property;
 
-import im.turms.server.common.property.constant.ActivityLoggingCategoryName;
+import im.turms.common.model.dto.request.TurmsRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * @author James Chen
@@ -28,11 +29,12 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @AllArgsConstructor
-public class ActivityLoggingCategory {
+@NoArgsConstructor
+public class ActivityLoggingRequestProperties {
 
     @EqualsAndHashCode.Include
-    private ActivityLoggingCategoryName name;
+    private TurmsRequest.KindCase name;
 
-    private float sampleRate;
+    private float sampleRate = 1.0f;
 
 }

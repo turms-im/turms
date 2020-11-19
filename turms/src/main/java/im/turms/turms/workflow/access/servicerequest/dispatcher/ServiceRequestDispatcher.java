@@ -37,7 +37,6 @@ import im.turms.turms.workflow.access.servicerequest.dto.ClientRequest;
 import im.turms.turms.workflow.access.servicerequest.dto.RequestHandlerResult;
 import im.turms.turms.workflow.access.servicerequest.dto.RequestHandlerResultFactory;
 import im.turms.turms.workflow.access.servicerequest.dto.ServiceResponseFactory;
-import im.turms.turms.workflow.service.impl.log.ActivityLogService;
 import im.turms.turms.workflow.service.impl.log.UserActionLogService;
 import im.turms.turms.workflow.service.impl.message.OutboundMessageService;
 import io.netty.buffer.ByteBuf;
@@ -69,7 +68,6 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
     private final Node node;
     private final OutboundMessageService outboundMessageService;
     private final UserActionLogService userActionLogService;
-    private final ActivityLogService activityLogService;
     private final TurmsPluginManager turmsPluginManager;
 
     private final Map<TurmsRequest.KindCase, ClientRequestHandler> router;
@@ -80,12 +78,10 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                                     OutboundMessageService outboundMessageService,
                                     TurmsPropertiesManager turmsPropertiesManager,
                                     TurmsPluginManager turmsPluginManager,
-                                    UserActionLogService userActionLogService,
-                                    ActivityLogService activityLogService) {
+                                    UserActionLogService userActionLogService) {
         this.outboundMessageService = outboundMessageService;
         Set<TurmsRequest.KindCase> disabledEndpoints = turmsPropertiesManager.getLocalProperties().getService().getClientApi().getDisabledEndpoints();
         router = getMappings((ConfigurableApplicationContext) context, disabledEndpoints);
-        this.activityLogService = activityLogService;
         for (TurmsRequest.KindCase kindCase : TurmsRequest.KindCase.values()) {
             if (!router.containsKey(kindCase) && kindCase != KIND_NOT_SET && !isRequestForGateway(kindCase)) {
                 throw new IllegalStateException("No client request handler for the request type: " + kindCase.name());
@@ -192,7 +188,6 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                 return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The request type is unsupported"));
             }
             userActionLogService.tryLogAndTriggerLogHandlers(userId, deviceType, lastRequest);
-            activityLogService.tryLogClientRequest(lastClientRequest);
             Mono<RequestHandlerResult> result;
             if (pluginEnabled && !clientClientRequestHandlerList.isEmpty()) {
                 Mono<RequestHandlerResult> requestResultMono = Mono.empty();

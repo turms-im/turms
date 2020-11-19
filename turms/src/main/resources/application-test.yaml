@@ -13,6 +13,11 @@ spring:
 ############################### Turms ###############################
 
 turms:
+  service:
+    activity-logging:
+      included-categories:
+        -
+          name: ALL
   database:
     mongo-properties:
       default-properties:
