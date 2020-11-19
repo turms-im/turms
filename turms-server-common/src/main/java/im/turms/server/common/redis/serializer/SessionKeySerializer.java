@@ -38,7 +38,7 @@ public class SessionKeySerializer implements RedisElementWriter<Long>, RedisElem
 
     @Override
     public Long read(ByteBuffer buffer) {
-        buffer.get();
+        buffer.position(buffer.position() + Byte.BYTES);
         return buffer.getLong();
     }
 
