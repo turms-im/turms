@@ -34,9 +34,6 @@ turms:
     mock:
       enabled: true
       clear-all-collections-before-mocking: true
-  gateway:
-    session:
-      enable-authentication: false
 turms-plugin:
   minio:
     retry:

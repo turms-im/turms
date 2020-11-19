@@ -133,7 +133,7 @@ public class Node {
                 serviceAddressManager,
                 sharedConfigService);
 
-        sharedPropertyService = new SharedPropertyService(clusterId, turmsProperties, sharedConfigService);
+        sharedPropertyService = new SharedPropertyService(clusterId, nodeType, turmsPropertiesManager, sharedConfigService);
         serializationService = new SerializationService();
         rpcService = new RpcService(clusterProperties.getRpc(), serializationService, discoveryService);
         flakeIdService = new FlakeIdService(discoveryService);
@@ -214,7 +214,7 @@ public class Node {
                         .bindNow(transport);
                 log.info("The local server {}:{} has been set up", host, currentPort);
                 return channel;
-            } catch (Exception e) { // port in use
+            } catch (Exception e) { // e.g. port in use
                 if (e instanceof ChannelBindException && autoIncrement && currentPort <= port + portCount) {
                     log.error("Failed to bind on the port {}. Trying to bind on the next port {}", currentPort++, currentPort);
                 } else {

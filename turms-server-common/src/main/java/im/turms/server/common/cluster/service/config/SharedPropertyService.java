@@ -17,11 +17,16 @@
 
 package im.turms.server.common.cluster.service.config;
 
+import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.cluster.service.ClusterService;
-import im.turms.server.common.cluster.service.config.domain.property.SharedProperties;
+import im.turms.server.common.cluster.service.config.domain.property.CommonProperties;
+import im.turms.server.common.cluster.service.config.domain.property.SharedClusterProperties;
 import im.turms.server.common.property.TurmsProperties;
-import lombok.Getter;
+import im.turms.server.common.property.TurmsPropertiesManager;
+import im.turms.server.common.property.env.gateway.GatewayProperties;
+import im.turms.server.common.property.env.service.ServiceProperties;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -40,24 +45,29 @@ public class SharedPropertyService implements ClusterService {
 
     private final SharedConfigService sharedConfigService;
     private final String clusterId;
+    private final NodeType nodeType;
 
-    private final TurmsProperties localProperties;
-    @Getter
-    private TurmsProperties sharedProperties;
+    private final TurmsPropertiesManager turmsPropertiesManager;
+    private SharedClusterProperties sharedClusterProperties;
 
     private final List<Consumer<TurmsProperties>> propertiesChangeListeners = new LinkedList<>();
 
-    public SharedPropertyService(String clusterId, TurmsProperties localProperties, SharedConfigService sharedConfigService) {
+    public SharedPropertyService(String clusterId, NodeType nodeType, TurmsPropertiesManager turmsPropertiesManager, SharedConfigService sharedConfigService) {
         this.clusterId = clusterId;
-        this.localProperties = localProperties;
+        this.nodeType = nodeType;
+        this.turmsPropertiesManager = turmsPropertiesManager;
         this.sharedConfigService = sharedConfigService;
+    }
+
+    public TurmsProperties getSharedProperties() {
+        return sharedClusterProperties.getTurmsProperties();
     }
 
     @Override
     public void start() {
-        sharedConfigService.subscribe(SharedProperties.class, true)
+        sharedConfigService.subscribe(SharedClusterProperties.class, true)
                 .doOnNext(event -> {
-                    SharedProperties changedProperties = event.getBody();
+                    SharedClusterProperties changedProperties = event.getBody();
                     String changeClusterId = changedProperties != null
                             ? changedProperties.getClusterId()
                             : ChangeStreamUtil.getIdAsString(event);
@@ -66,12 +76,12 @@ public class SharedPropertyService implements ClusterService {
                             case INSERT:
                             case REPLACE:
                             case UPDATE:
-                                sharedProperties = changedProperties.getTurmsProperties();
-                                notifyListeners(sharedProperties);
+                                sharedClusterProperties = changedProperties;
+                                notifyListeners(sharedClusterProperties.getTurmsProperties());
                                 break;
                             case INVALIDATE:
                                 log.warn("The shared properties has been removed from database unexpectedly");
-                                insertOrGetSharedProperties().subscribe();
+                                initializeSharedProperties().subscribe();
                                 break;
                             default:
                                 break;
@@ -80,28 +90,35 @@ public class SharedPropertyService implements ClusterService {
                 })
                 .onErrorContinue((throwable, o) -> log.error("Error while processing the change stream event of SharedProperties: {}", o, throwable))
                 .subscribe();
-        sharedProperties = insertOrGetSharedProperties()
-                .block()
-                .getTurmsProperties();
-    }
-
-    public Mono<SharedProperties> insertOrGetSharedProperties() {
-        log.info("Trying to get shared properties");
-        return sharedConfigService.insertOrGet(new SharedProperties(clusterId, localProperties, new Date()))
-                .doOnSuccess(ignored -> log.info("Shared properties were retrieved successfully"));
+        initializeSharedProperties().block();
     }
 
     public Mono<Void> updateSharedProperties(TurmsProperties turmsProperties) {
         log.info("Share new turms properties to all members");
         Date now = new Date();
+        CommonProperties commonProperties = SharedClusterProperties.getCommonProperties(turmsProperties);
+        GatewayProperties gatewayProperties = turmsProperties.getGateway();
+        ServiceProperties serviceProperties = turmsProperties.getService();
         Query query = new Query()
                 .addCriteria(Criteria.where("_id").is(clusterId))
-                .addCriteria(Criteria.where(SharedProperties.Fields.lastUpdatedTime).lt(now));
-        Update update = Update.update(SharedProperties.Fields.turmsProperties, turmsProperties);
-        return sharedConfigService.upsert(query, update, turmsProperties, SharedProperties.class)
+                .addCriteria(Criteria.where(SharedClusterProperties.Fields.lastUpdatedTime).lt(now));
+        Update update = new Update()
+                .set(SharedClusterProperties.Fields.commonProperties, commonProperties);
+        if (gatewayProperties != null) {
+            update.set(SharedClusterProperties.Fields.gatewayProperties, gatewayProperties);
+        }
+        if (serviceProperties != null) {
+            update.set(SharedClusterProperties.Fields.serviceProperties, serviceProperties);
+        }
+        SharedClusterProperties clusterProperties = sharedClusterProperties.toBuilder()
+                .commonProperties(commonProperties)
+                .gatewayProperties(gatewayProperties)
+                .serviceProperties(serviceProperties)
+                .build();
+        return sharedConfigService.upsert(query, update, clusterProperties, SharedClusterProperties.class)
                 .doOnError(e -> log.error("Failed to share new turms properties", e))
-                .doOnSuccess(updated -> {
-                    this.sharedProperties = turmsProperties;
+                .doOnSuccess(unused -> {
+                    sharedClusterProperties = clusterProperties;
                     log.info("Turms properties have been shared");
                 });
     }
@@ -118,6 +135,61 @@ public class SharedPropertyService implements ClusterService {
                 log.error("The properties listener {} failed to handle the new properties", listener.getClass().getName(), e);
             }
         }
+    }
+
+    private Mono<SharedClusterProperties> initializeSharedProperties() {
+        log.info("Trying to get shared properties");
+        TurmsProperties localProperties = turmsPropertiesManager.getLocalProperties();
+        SharedClusterProperties clusterProperties = new SharedClusterProperties(clusterId, localProperties, new Date());
+        if (nodeType == NodeType.GATEWAY) {
+            clusterProperties.setServiceProperties(null);
+        } else {
+            clusterProperties.setGatewayProperties(null);
+        }
+        return findAndUpdatePropertiesByNodeType(clusterProperties)
+                .switchIfEmpty(sharedConfigService.insert(clusterProperties))
+                .onErrorResume(DuplicateKeyException.class, e -> findAndUpdatePropertiesByNodeType(clusterProperties))
+                .doOnSuccess(properties -> {
+                    sharedClusterProperties = properties;
+                    log.info("Shared properties were retrieved successfully");
+                });
+    }
+
+    private Mono<SharedClusterProperties> findAndUpdatePropertiesByNodeType(SharedClusterProperties clusterProperties) {
+        Query query = new Query().addCriteria(Criteria.where("_id").is(clusterId));
+        return sharedConfigService.findOne(query, SharedClusterProperties.class)
+                .flatMap(properties -> {
+                    if (nodeType == NodeType.GATEWAY) {
+                        if (properties.getGatewayProperties() == null) {
+                            query.addCriteria(Criteria.where(SharedClusterProperties.Fields.gatewayProperties).is(null));
+                            Update update = Update.update(SharedClusterProperties.Fields.gatewayProperties, clusterProperties.getGatewayProperties());
+                            return sharedConfigService.updateFirst(query, update, SharedClusterProperties.class)
+                                    .map(wasAcknowledged -> {
+                                        if (wasAcknowledged) {
+                                            properties.setGatewayProperties(clusterProperties.getGatewayProperties());
+                                            return properties;
+                                        } else {
+                                            throw new IllegalStateException("Failed to update the cluster properties");
+                                        }
+                                    });
+                        }
+                    } else {
+                        if (properties.getServiceProperties() == null) {
+                            query.addCriteria(Criteria.where(SharedClusterProperties.Fields.serviceProperties).is(null));
+                            Update update = Update.update(SharedClusterProperties.Fields.serviceProperties, clusterProperties.getServiceProperties());
+                            return sharedConfigService.updateFirst(query, update, SharedClusterProperties.class)
+                                    .map(wasAcknowledged -> {
+                                        if (wasAcknowledged) {
+                                            properties.setServiceProperties(clusterProperties.getServiceProperties());
+                                            return properties;
+                                        } else {
+                                            throw new IllegalStateException("Failed to update the cluster properties");
+                                        }
+                                    });
+                        }
+                    }
+                    return Mono.just(properties);
+                });
     }
 
 }

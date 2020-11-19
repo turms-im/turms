@@ -17,29 +17,26 @@
 
 package im.turms.server.common.cluster.service.config.domain.property;
 
-import im.turms.server.common.property.TurmsProperties;
-import lombok.AllArgsConstructor;
+import im.turms.server.common.property.env.common.*;
+import im.turms.server.common.property.env.common.cluster.ClusterProperties;
 import lombok.Data;
-import lombok.experimental.FieldNameConstants;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.Date;
 
 /**
  * @author James Chen
  */
-@Document
-@FieldNameConstants
 @Data
-@AllArgsConstructor
-public class SharedProperties {
+public class CommonProperties {
 
-    @Id
-    private String clusterId;
+    private final ClusterProperties cluster;
 
-    private TurmsProperties turmsProperties;
+    private final IpProperties ip;
 
-    private Date lastUpdatedTime;
+    private final SecurityProperties security;
+
+    private final PluginProperties plugin;
+
+    private final LocationProperties location;
+
+    private final UserStatusProperties userStatus;
 
 }

@@ -108,6 +108,10 @@ public class SharedConfigService implements ClusterService {
         return mongoTemplate.find(query, entityClass);
     }
 
+    public <T> Mono<T> findOne(Query query, Class<T> clazz) {
+        return mongoTemplate.findOne(query, clazz);
+    }
+
     public <T> Mono<T> findOne(Class<T> clazz) {
         return mongoTemplate.findOne(new Query(), clazz);
     }
@@ -123,6 +127,11 @@ public class SharedConfigService implements ClusterService {
                         .switchIfEmpty((Mono) insertOrGet(record)));
     }
 
+    public Mono<Boolean> updateFirst(Query query, Update update, Class<?> entityClass) {
+        return mongoTemplate.updateFirst(query, update, entityClass)
+                .map(UpdateResult::wasAcknowledged);
+    }
+
     public Mono<Boolean> updateMulti(Query query, Update update, Class<?> entityClass) {
         return mongoTemplate.updateMulti(query, update, entityClass)
                 .map(UpdateResult::wasAcknowledged);
@@ -132,7 +141,9 @@ public class SharedConfigService implements ClusterService {
         return mongoTemplate.updateFirst(query, update, entityClass)
                 .flatMap(updateResult -> updateResult.getModifiedCount() > 0
                         ? Mono.empty()
-                        : mongoTemplate.insert(entity).then());
+                        : mongoTemplate.insert(entity)
+                        .onErrorResume(DuplicateKeyException.class, e -> this.upsert(query, update, entity, entityClass))
+                        .then());
     }
 
     public Mono<Boolean> remove(Query query, Class<?> clazz) {

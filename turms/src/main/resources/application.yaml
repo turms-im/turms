@@ -84,9 +84,6 @@ turms:
           uri: mongodb://localhost:29510/turms
     message:
       check-if-target-active-and-not-deleted: false
-  gateway:
-    session:
-      enable-authentication: false
 #turms-plugin:
 #  mock:
 #    enabled: true

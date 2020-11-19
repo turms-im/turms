@@ -41,7 +41,6 @@ public class UserProperties {
     @Description("Whether to delete the two-sided relationships when a user requests to delete a relationship")
     private boolean deleteTwoSidedRelationships = false;
 
-    //TODO
     @JsonView(MutablePropertiesView.class)
     @Description("Whether to delete a user logically")
     private boolean deleteUserLogically = true;

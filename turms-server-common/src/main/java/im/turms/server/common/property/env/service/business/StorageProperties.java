@@ -17,7 +17,6 @@
 
 package im.turms.server.common.property.env.service.business;
 
-import im.turms.server.common.property.metadata.annotation.Description;
 import lombok.Data;
 import org.springframework.util.MimeTypeUtils;
 
@@ -31,9 +30,6 @@ import java.time.Duration;
  */
 @Data
 public class StorageProperties {
-
-    @Description("Whether to enable the storage function")
-    private boolean enabled = true;
 
     @Min(0)
     private int profileExpiration = 30;
