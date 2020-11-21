@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.property.env.service.business.activity.property;
+package im.turms.server.common.property.env.service.env.clientapi.property;
 
-import im.turms.server.common.property.constant.ActivityLoggingCategoryName;
+import im.turms.server.common.property.constant.LoggingRequestCategory;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -30,10 +30,10 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class ActivityLoggingCategoryProperties {
+public class LoggingCategoryProperties {
 
     @EqualsAndHashCode.Include
-    private ActivityLoggingCategoryName name;
+    private LoggingRequestCategory category;
 
     private float sampleRate = 1.0f;
 

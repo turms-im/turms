@@ -11,7 +11,6 @@
         <Property name="LOG_DATEFORMAT_PATTERN">yyyy-MM-dd HH:mm:ss.SSS</Property>
         <Property name="CONSOLE_LOG_PATTERN">%clr{%d{${sys:LOG_DATEFORMAT_PATTERN}}{GMT+0}}{faint} %clr{${sys:LOG_LEVEL_PATTERN}} %clr{%pid}{magenta} %clr{---}{faint} %clr{[%15.15t]}{faint} %clr{[%X{traceId}]}{yellow} %clr{%-40.40c{1.}}{cyan} %clr{:}{faint} %m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}</Property>
         <Property name="FILE_LOG_PATTERN">%d{${sys:LOG_DATEFORMAT_PATTERN}}{GMT+0} ${sys:LOG_LEVEL_PATTERN} %pid --- [%t] [%X{traceId}] %-40.40c{1.} : %m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}</Property>
-        <Property name="FILE_LOG_PATTERN_USER_ACTIVITY">%d{${sys:LOG_DATEFORMAT_PATTERN}}{GMT+0} ${sys:LOG_LEVEL_PATTERN} %pid --- [%t] %-40.40c{1.} : %m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}</Property>
     </Properties>
     <Appenders>
         <Console name="Console"
@@ -33,11 +32,11 @@
                         </Policies>
                     </RollingFile>
                 </Route>
-                <Route key="USER_ACTIVITY">
+                <Route key="CLIENT_API">
                     <RollingFile name="File"
-                                 fileName="../logs/turms-gateway-user-activity.log"
-                                 filePattern="../logs/$${date:yyyy-MM}/turms-gateway-user-activity-%d{yyyy-MM-dd-HH}-%i.log.gz">
-                        <PatternLayout pattern="${sys:FILE_LOG_PATTERN_USER_ACTIVITY}"
+                                 fileName="../logs/turms-gateway-client-api.log"
+                                 filePattern="../logs/$${date:yyyy-MM}/turms-gateway-client-api-%d{yyyy-MM-dd-HH}-%i.log.gz">
+                        <PatternLayout pattern="${sys:FILE_LOG_PATTERN}"
                                        charset="UTF-8"/>
                         <Policies>
                             <SizeBasedTriggeringPolicy size="10 MB"/>

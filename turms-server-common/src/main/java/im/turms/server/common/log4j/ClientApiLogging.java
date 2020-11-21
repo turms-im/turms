@@ -15,26 +15,23 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.property.constant;
+package im.turms.server.common.log4j;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author James Chen
  */
-public enum ActivityLoggingCategoryName {
-    ALL,
-    NONE,
+public class ClientApiLogging {
 
-    CREATE,
-    DELETE,
-    UPDATE,
-    QUERY,
+    public static final Logger logger = LogManager.getLogger(ClientApiLogging.class);
 
-    STORAGE,
-    MESSAGE,
-    USER,
-    USER_RELATIONSHIP,
-    GROUP,
-    GROUP_BLACKLIST,
-    GROUP_ENROLLMENT,
-    GROUP_MEMBER
+    private ClientApiLogging() {
+    }
+
+    public static void log(Object info) {
+        logger.info(info);
+    }
+
 }

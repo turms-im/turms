@@ -15,19 +15,23 @@
  * limitations under the License.
  */
 
-package im.turms.turms.plugin.extension.handler;
+package im.turms.server.common.log4j;
 
-import im.turms.server.common.plugin.base.TurmsExtension;
-import im.turms.turms.bo.UserActionLog;
-import reactor.core.publisher.Mono;
-
-import javax.validation.constraints.NotNull;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author James Chen
  */
-public abstract class UserActionLogHandler extends TurmsExtension {
+public class AdminApiLogging {
 
-    public abstract Mono<Void> handleUserActionLog(@NotNull UserActionLog userActionLog);
+    public static final Logger logger = LogManager.getLogger(AdminApiLogging.class);
+
+    private AdminApiLogging() {
+    }
+
+    public static void log(Object info) {
+        logger.info(info);
+    }
 
 }

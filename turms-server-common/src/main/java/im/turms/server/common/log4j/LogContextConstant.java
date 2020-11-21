@@ -30,7 +30,8 @@ public class LogContextConstant {
         private Type() {
         }
 
-        public static final String ADMIN_ACTIVITY = "ADMIN_ACTIVITY";
+        public static final String ADMIN_API = "ADMIN_API";
+        public static final String CLIENT_API = "USER_API";
         public static final String USER_ACTIVITY = "USER_ACTIVITY";
     }
 

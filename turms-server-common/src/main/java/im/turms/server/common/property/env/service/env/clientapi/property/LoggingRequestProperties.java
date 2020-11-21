@@ -15,23 +15,26 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.log4j;
+package im.turms.server.common.property.env.service.env.clientapi.property;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import im.turms.common.model.dto.request.TurmsRequest;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * @author James Chen
  */
-public class UserActivityLogging {
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@AllArgsConstructor
+@NoArgsConstructor
+public class LoggingRequestProperties {
 
-    public static final Logger logger = LogManager.getLogger(UserActivityLogging.class);
+    @EqualsAndHashCode.Include
+    private TurmsRequest.KindCase type;
 
-    private UserActivityLogging() {
-    }
-
-    public static void log(Object info) {
-        logger.info(info);
-    }
+    private float sampleRate = 1.0f;
 
 }

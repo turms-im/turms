@@ -45,15 +45,6 @@ public class LogProperties {
     // User
 
     @JsonView(MutablePropertiesView.class)
-    @Description("Whether to log user action")
-    private boolean logUserAction = true;
-
-    @JsonView(MutablePropertiesView.class)
-    @Description("Whether to log the details of users' actions." +
-            " The property only works when both logUserAction and logUserActionDetails are true")
-    private boolean logUserActionDetails = false;
-
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to log user location")
     private boolean logUserLocation = true;
 

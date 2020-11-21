@@ -15,22 +15,19 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.property.env.service.env;
+package im.turms.turms.plugin.extension.handler;
 
-import im.turms.common.model.dto.request.TurmsRequest;
-import im.turms.server.common.property.metadata.annotation.Description;
-import lombok.Data;
+import im.turms.server.common.plugin.base.TurmsExtension;
+import im.turms.turms.bo.AdminAction;
+import reactor.core.publisher.Mono;
 
-import java.util.Collections;
-import java.util.Set;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author James Chen
  */
-@Data
-public class ClientApiProperties {
+public abstract class AdminActionHandler extends TurmsExtension {
 
-    @Description("The disabled endpoints for client requests. Return ILLEGAL_ARGUMENTS if a client tries to access them")
-    private Set<TurmsRequest.KindCase> disabledEndpoints = Collections.emptySet();
+    public abstract Mono<Void> handleAdminAction(@NotNull AdminAction adminAction);
 
 }

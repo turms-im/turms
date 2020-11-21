@@ -1,6 +1,9 @@
 turms:
   gateway:
     client-api:
+      logging:
+        included-request-categories:
+          - category: all
       return-reason-for-server-error: true
     database:
       mongo-properties:

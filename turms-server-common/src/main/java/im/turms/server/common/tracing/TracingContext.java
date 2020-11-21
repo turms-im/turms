@@ -30,6 +30,7 @@ import reactor.core.scheduler.Schedulers;
 public class TracingContext {
 
     public static final String SCHEDULE_HOOK_NAME = "TRACING";
+    public static final String CTX_KEY_NAME = "TRACING";
 
     static {
         Schedulers.onScheduleHook(SCHEDULE_HOOK_NAME, task -> {

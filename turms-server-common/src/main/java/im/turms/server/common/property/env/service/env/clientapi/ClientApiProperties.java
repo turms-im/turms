@@ -15,26 +15,27 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.property.env.service.business.activity.property;
+package im.turms.server.common.property.env.service.env.clientapi;
 
 import im.turms.common.model.dto.request.TurmsRequest;
-import lombok.AllArgsConstructor;
+import im.turms.server.common.property.env.common.ClientApiLoggingProperties;
+import im.turms.server.common.property.metadata.annotation.Description;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
+
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * @author James Chen
  */
 @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@AllArgsConstructor
-@NoArgsConstructor
-public class ActivityLoggingRequestProperties {
+public class ClientApiProperties {
 
-    @EqualsAndHashCode.Include
-    private TurmsRequest.KindCase name;
+    @Description("The disabled endpoints for client requests. Return ILLEGAL_ARGUMENTS if a client tries to access them")
+    private Set<TurmsRequest.KindCase> disabledEndpoints = Collections.emptySet();
 
-    private float sampleRate = 1.0f;
+    @NestedConfigurationProperty
+    private ClientApiLoggingProperties logging = new ClientApiLoggingProperties();
 
 }

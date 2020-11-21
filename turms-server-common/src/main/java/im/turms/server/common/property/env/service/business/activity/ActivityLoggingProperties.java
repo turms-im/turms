@@ -17,43 +17,16 @@
 
 package im.turms.server.common.property.env.service.business.activity;
 
-import im.turms.common.model.dto.request.TurmsRequest;
-import im.turms.server.common.property.constant.ActivityLoggingCategoryName;
-import im.turms.server.common.property.env.service.business.activity.property.ActivityLoggingCategoryProperties;
-import im.turms.server.common.property.env.service.business.activity.property.ActivityLoggingRequestProperties;
-import im.turms.server.common.property.metadata.annotation.Description;
 import lombok.Data;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 /**
  * @author James Chen
+ * @implNote To make it clearer for developers to configure the logging behaviors of client requests and the responses
+ * we put the properties together in ClientApiProperties instead of ActivityLoggingProperties
  */
 @Data
 public class ActivityLoggingProperties {
-
-    private static final String DESC_STRATEGY_TO_GET_INCLUDED_REQUESTS = "Turms will get the requests to log from the union of " +
-            "\"includedCategories\" and \"includedRequests\" " +
-            "except the requests included in \"excludedCategoryNames\" and \"excludedRequestNames\"";
-
-    /**
-     * @implNote Use LinkedHashSet so that the properties (e.g. sample rate) of the previous categories
-     * can be replaced by the ones of the following categories for common requests.
-     */
-    @Description(DESC_STRATEGY_TO_GET_INCLUDED_REQUESTS)
-    private LinkedHashSet<ActivityLoggingCategoryProperties> includedCategories = new LinkedHashSet<>();
-
-    @Description(DESC_STRATEGY_TO_GET_INCLUDED_REQUESTS)
-    private LinkedHashSet<ActivityLoggingRequestProperties> includedRequests = new LinkedHashSet<>();
-
-    @Description(DESC_STRATEGY_TO_GET_INCLUDED_REQUESTS)
-    private Set<ActivityLoggingCategoryName> excludedCategoryNames = Collections.emptySet();
-
-    @Description(DESC_STRATEGY_TO_GET_INCLUDED_REQUESTS)
-    private Set<TurmsRequest.KindCase> excludedRequestNames = Collections.emptySet();
 
     @NestedConfigurationProperty
     private StatisticsProperties statistics = new StatisticsProperties();

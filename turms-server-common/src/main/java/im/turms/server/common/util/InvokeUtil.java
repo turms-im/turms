@@ -15,27 +15,28 @@
  * limitations under the License.
  */
 
-package im.turms.turms.bo;
+package im.turms.server.common.util;
 
-import im.turms.common.constant.DeviceType;
-import lombok.Data;
-
-import java.util.Date;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Field;
 
 /**
  * @author James Chen
  */
-@Data
-public final class UserActionLog {
+public class InvokeUtil {
 
-    private final Long userId;
+    private InvokeUtil() {
+    }
 
-    private final DeviceType deviceType;
-
-    private final Date logDate;
-
-    private final String action;
-
-    private final String details;
+    public static MethodHandle getField(Class<?> clazz, String fieldName) {
+        try {
+            Field field = clazz.getDeclaredField(fieldName);
+            field.setAccessible(true);
+            return MethodHandles.lookup().unreflectGetter(field);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
 
 }

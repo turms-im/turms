@@ -26,7 +26,7 @@ import java.util.Date;
  * @author James Chen
  */
 @Data
-public final class AdminActionLog {
+public final class AdminAction {
 
     private final String account;
 

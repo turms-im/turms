@@ -13,6 +13,7 @@ import im.turms.server.common.cluster.service.rpc.RpcService;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.property.TurmsProperties;
+import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.ClientApiProperties;
 import im.turms.server.common.property.env.gateway.GatewayProperties;
 import im.turms.server.common.rpc.request.HandleServiceRequest;
@@ -39,7 +40,7 @@ class InboundRequestServiceTests {
 
     @Test
     void constructor_shouldReturnInstance() {
-        InboundRequestService inboundRequestService = new InboundRequestService(null, null);
+        InboundRequestService inboundRequestService = new InboundRequestService(null, mockTurmsPropertiesManager(), null);
 
         assertNotNull(inboundRequestService);
     }
@@ -167,13 +168,22 @@ class InboundRequestServiceTests {
         when(node.getSharedProperties())
                 .thenReturn(turmsProperties);
 
+
         SessionService sessionService = mock(SessionService.class);
         when(sessionService.getLocalUserSession(any(), any()))
                 .thenReturn(session);
         when(sessionService.updateHeartbeatTimestamp(any(), any(UserSession.class)))
                 .thenReturn(Mono.just(updateHeartbeatSuccessfully));
 
-        return new InboundRequestService(node, sessionService);
+        return new InboundRequestService(node, mockTurmsPropertiesManager(), sessionService);
+    }
+
+    private TurmsPropertiesManager mockTurmsPropertiesManager() {
+        TurmsPropertiesManager propertiesManager = mock(TurmsPropertiesManager.class);
+        TurmsProperties properties = new TurmsProperties();
+        when(propertiesManager.getLocalProperties())
+                .thenReturn(properties);
+        return propertiesManager;
     }
 
 }

@@ -21,8 +21,9 @@ import com.mongodb.DBObject;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constraint.NoWhitespace;
 import im.turms.server.common.constraint.ValidIpAddress;
-import im.turms.turms.bo.AdminActionLog;
-import im.turms.turms.plugin.extension.handler.AdminActionLogHandler;
+import im.turms.server.common.log4j.AdminApiLogging;
+import im.turms.turms.bo.AdminAction;
+import im.turms.turms.plugin.extension.handler.AdminActionHandler;
 import im.turms.turms.plugin.manager.TurmsPluginManager;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -59,7 +60,7 @@ public class AdminActionLogService {
         boolean logAdminAction = node.getSharedProperties().getService().getLog().isLogAdminAction();
         boolean triggerHandlers = turmsPluginManager.isEnabled() && !turmsPluginManager.getAdminActionHandlerList().isEmpty();
         if (logAdminAction || triggerHandlers) {
-            AdminActionLog adminActionLog = new AdminActionLog(
+            AdminAction adminAction = new AdminAction(
                     account,
                     timestamp,
                     ip,
@@ -67,11 +68,11 @@ public class AdminActionLogService {
                     params,
                     body);
             if (logAdminAction) {
-                log.info(adminActionLog);
+                AdminApiLogging.log(adminAction);
             }
             if (triggerHandlers) {
-                for (AdminActionLogHandler handler : turmsPluginManager.getAdminActionHandlerList()) {
-                    handler.handleAdminActionLog(adminActionLog);
+                for (AdminActionHandler handler : turmsPluginManager.getAdminActionHandlerList()) {
+                    handler.handleAdminAction(adminAction);
                 }
             }
         }

@@ -21,23 +21,25 @@ import com.google.protobuf.Int64Value;
 import com.google.protobuf.InvalidProtocolBufferException;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.statuscode.TurmsStatusCode;
-import im.turms.common.exception.TurmsBusinessException;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
+import im.turms.server.common.log4j.ClientApiLogging;
 import im.turms.server.common.pojo.ThrowableInfo;
 import im.turms.server.common.property.TurmsPropertiesManager;
+import im.turms.server.common.property.env.common.ClientApiLoggingProperties;
+import im.turms.server.common.property.env.service.env.clientapi.property.LoggingRequestProperties;
 import im.turms.server.common.rpc.service.IServiceRequestDispatcher;
 import im.turms.server.common.tracing.TracingContext;
+import im.turms.server.common.util.LoggingRequestUtil;
 import im.turms.server.common.util.ProtoUtil;
 import im.turms.turms.plugin.manager.TurmsPluginManager;
 import im.turms.turms.workflow.access.servicerequest.dto.ClientRequest;
 import im.turms.turms.workflow.access.servicerequest.dto.RequestHandlerResult;
 import im.turms.turms.workflow.access.servicerequest.dto.RequestHandlerResultFactory;
 import im.turms.turms.workflow.access.servicerequest.dto.ServiceResponseFactory;
-import im.turms.turms.workflow.service.impl.log.UserActionLogService;
 import im.turms.turms.workflow.service.impl.message.OutboundMessageService;
 import io.netty.buffer.ByteBuf;
 import lombok.extern.log4j.Log4j2;
@@ -67,18 +69,18 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
 
     private final Node node;
     private final OutboundMessageService outboundMessageService;
-    private final UserActionLogService userActionLogService;
     private final TurmsPluginManager turmsPluginManager;
 
     private final Map<TurmsRequest.KindCase, ClientRequestHandler> router;
     private final boolean pluginEnabled;
+    private final Map<TurmsRequest.KindCase, LoggingRequestProperties> supportedLoggingRequestProperties;
+    private final Map<TurmsRequest.KindCase, LoggingRequestProperties> supportedLoggingResponseProperties;
 
     public ServiceRequestDispatcher(ApplicationContext context,
                                     Node node,
                                     OutboundMessageService outboundMessageService,
                                     TurmsPropertiesManager turmsPropertiesManager,
-                                    TurmsPluginManager turmsPluginManager,
-                                    UserActionLogService userActionLogService) {
+                                    TurmsPluginManager turmsPluginManager) {
         this.outboundMessageService = outboundMessageService;
         Set<TurmsRequest.KindCase> disabledEndpoints = turmsPropertiesManager.getLocalProperties().getService().getClientApi().getDisabledEndpoints();
         router = getMappings((ConfigurableApplicationContext) context, disabledEndpoints);
@@ -89,8 +91,18 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         }
         this.node = node;
         this.turmsPluginManager = turmsPluginManager;
-        this.userActionLogService = userActionLogService;
         pluginEnabled = turmsPropertiesManager.getLocalProperties().getPlugin().isEnabled();
+        ClientApiLoggingProperties loggingProperties = node.getSharedProperties().getService().getClientApi().getLogging();
+        supportedLoggingRequestProperties = LoggingRequestUtil.getSupportedLoggingRequestProperties(
+                loggingProperties.getIncludedRequestCategories(),
+                loggingProperties.getIncludedRequests(),
+                loggingProperties.getExcludedRequestCategories(),
+                loggingProperties.getExcludedRequestTypes());
+        supportedLoggingResponseProperties = LoggingRequestUtil.getSupportedLoggingRequestProperties(
+                loggingProperties.getIncludedResponseCategories(),
+                loggingProperties.getIncludedResponses(),
+                loggingProperties.getExcludedResponseCategories(),
+                loggingProperties.getExcludedResponseTypes());
     }
 
     private Map<TurmsRequest.KindCase, ClientRequestHandler> getMappings(ConfigurableApplicationContext context, Set<TurmsRequest.KindCase> disabledEndpoints) {
@@ -128,7 +140,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
      */
     @Override
     public Mono<ServiceResponse> dispatch(ServiceRequest serviceRequest) {
-        // 1. Validate
+        // 1. Validate ServiceResponse
         Long traceId = serviceRequest.getTraceId();
         Long userId = serviceRequest.getUserId();
         DeviceType deviceType = serviceRequest.getDeviceType();
@@ -171,23 +183,27 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                 clientRequestMono = clientRequestMono.flatMap(clientRequestHandler::transform);
             }
         }
-        // 3. Handle the result of the request
-        Mono<RequestHandlerResult> resultMono = clientRequestMono.flatMap(lastClientRequest -> {
+        return clientRequestMono.flatMap(lastClientRequest -> {
+            // 3. Validate ClientRequest
             TurmsRequest lastRequest = lastClientRequest.getTurmsRequest();
             if (lastRequest == null) {
                 String message = "The TurmsRequest instance is null in the client request: " + lastClientRequest;
                 log.error(message);
-                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_INTERNAL_ERROR, message));
+                return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.SERVER_INTERNAL_ERROR, message));
             }
-            TurmsRequest.KindCase kindCase = lastRequest.getKindCase();
-            if (kindCase == KIND_NOT_SET) {
-                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The request type cannot be KIND_NOT_SET"));
+            TurmsRequest.KindCase requestType = lastRequest.getKindCase();
+            if (requestType == KIND_NOT_SET) {
+                return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The request type cannot be KIND_NOT_SET"));
             }
-            ClientRequestHandler handler = router.get(kindCase);
+            ClientRequestHandler handler = router.get(requestType);
             if (handler == null) {
-                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The request type is unsupported"));
+                return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The request type is unsupported"));
             }
-            userActionLogService.tryLogAndTriggerLogHandlers(userId, deviceType, lastRequest);
+            // 4. Log
+            if (LoggingRequestUtil.shouldLog(requestType, supportedLoggingRequestProperties)) {
+                ClientApiLogging.log(lastClientRequest);
+            }
+            // 5. Pass the request to the controller and get a response
             Mono<RequestHandlerResult> result;
             if (pluginEnabled && !clientClientRequestHandlerList.isEmpty()) {
                 Mono<RequestHandlerResult> requestResultMono = Mono.empty();
@@ -199,38 +215,37 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             } else {
                 result = handler.handle(lastClientRequest);
             }
+            // 6. Metrics and transform to ServiceResponse
             return result
                     .name(CLIENT_REQUEST_NAME)
-                    .tag(CLIENT_REQUEST_TAG_TYPE, kindCase.name())
-                    .metrics();
+                    .tag(CLIENT_REQUEST_TAG_TYPE, requestType.name())
+                    .metrics()
+                    .defaultIfEmpty(RequestHandlerResultFactory.NO_CONTENT)
+                    .doOnSuccess(requestResult -> {
+                        if (requestResult.getCode() == TurmsStatusCode.OK) {
+                            notifyRelatedUsersOfAction(requestResult, userId, deviceType)
+                                    .subscribe();
+                        }
+                    })
+                    .onErrorResume(throwable -> {
+                        ThrowableInfo info = ThrowableInfo.get(throwable);
+                        if (info.getCode().isServerError()) {
+                            log.error("Failed to handle the client request", throwable);
+                        }
+                        return Mono.just(RequestHandlerResultFactory.get(info.getCode(), info.getReason()));
+                    })
+                    .map(handlerResult -> {
+                        ServiceResponse response = ServiceResponseFactory.get(
+                                handlerResult.getDataForRequester(),
+                                handlerResult.getCode(),
+                                handlerResult.getReason());
+                        if (LoggingRequestUtil.shouldLog(requestType, supportedLoggingResponseProperties)) {
+                            ClientApiLogging.log(response);
+                        }
+                        tracingContext.clearMdc();
+                        return response;
+                    });
         });
-        return handleResult(resultMono, userId, deviceType)
-                .doFinally(signalType -> tracingContext.clearMdc());
-    }
-
-    private Mono<ServiceResponse> handleResult(
-            @NotNull Mono<RequestHandlerResult> result,
-            @NotNull Long requesterId,
-            @NotNull DeviceType requesterDevice) {
-        return result
-                .defaultIfEmpty(RequestHandlerResultFactory.NO_CONTENT)
-                .doOnSuccess(requestResult -> {
-                    if (requestResult.getCode() == TurmsStatusCode.OK) {
-                        notifyRelatedUsersOfAction(requestResult, requesterId, requesterDevice)
-                                .subscribe();
-                    }
-                })
-                .onErrorResume(throwable -> {
-                    ThrowableInfo info = ThrowableInfo.get(throwable);
-                    if (info.getCode().isServerError()) {
-                        log.error("Failed to handle the client request", throwable);
-                    }
-                    return Mono.just(RequestHandlerResultFactory.get(info.getCode(), info.getReason()));
-                })
-                .map(requestHandlerResult -> ServiceResponseFactory.get(
-                        requestHandlerResult.getDataForRequester(),
-                        requestHandlerResult.getCode(),
-                        requestHandlerResult.getReason()));
     }
 
     private Mono<Void> notifyRelatedUsersOfAction(

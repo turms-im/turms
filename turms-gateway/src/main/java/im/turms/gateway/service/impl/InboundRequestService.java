@@ -32,15 +32,23 @@ import im.turms.server.common.cluster.exception.RpcException;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
+import im.turms.server.common.log4j.ClientApiLogging;
+import im.turms.server.common.property.TurmsPropertiesManager;
+import im.turms.server.common.property.env.common.ClientApiLoggingProperties;
+import im.turms.server.common.property.env.service.env.clientapi.property.LoggingRequestProperties;
 import im.turms.server.common.rpc.request.HandleServiceRequest;
 import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.ExceptionUtil;
+import im.turms.server.common.util.LogUtil;
+import im.turms.server.common.util.LoggingRequestUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+import reactor.util.context.Context;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
+import java.util.Map;
 
 /**
  * @author James Chen
@@ -51,10 +59,23 @@ public class InboundRequestService {
 
     private final Node node;
     private final SessionService sessionService;
+    private final Map<TurmsRequest.KindCase, LoggingRequestProperties> supportedLoggingRequestProperties;
+    private final Map<TurmsRequest.KindCase, LoggingRequestProperties> supportedLoggingResponseProperties;
 
-    public InboundRequestService(Node node, SessionService sessionService) {
+    public InboundRequestService(Node node, TurmsPropertiesManager propertiesManager, SessionService sessionService) {
         this.node = node;
         this.sessionService = sessionService;
+        ClientApiLoggingProperties loggingProperties = propertiesManager.getLocalProperties().getGateway().getClientApi().getLogging();
+        supportedLoggingRequestProperties = LoggingRequestUtil.getSupportedLoggingRequestProperties(
+                loggingProperties.getIncludedRequestCategories(),
+                loggingProperties.getIncludedRequests(),
+                loggingProperties.getExcludedRequestCategories(),
+                loggingProperties.getExcludedRequestTypes());
+        supportedLoggingResponseProperties = LoggingRequestUtil.getSupportedLoggingRequestProperties(
+                loggingProperties.getIncludedResponseCategories(),
+                loggingProperties.getIncludedResponses(),
+                loggingProperties.getExcludedResponseCategories(),
+                loggingProperties.getExcludedResponseTypes());
     }
 
     /**
@@ -98,21 +119,25 @@ public class InboundRequestService {
         }
 
         // Update heartbeat and forward request
+        TracingContext tracingContext = new TracingContext(serviceRequest.getTraceId());
+        Context context = Context.of(TracingContext.CTX_KEY_NAME, tracingContext);
         return sessionService.updateHeartbeatTimestamp(userId, session)
                 .flatMap(wasSuccessful -> {
                     if (!wasSuccessful) {
-                        log.error("Failed to refresh the heartbeat of the user session: " + session);
+                        LogUtil.error(log, context, "Failed to refresh the heartbeat of the user session: " + session);
                         return Mono.just(getNotificationFromStatusCode(TurmsStatusCode.SERVER_INTERNAL_ERROR, requestId));
                     }
-                    TracingContext tracingContext = new TracingContext(serviceRequest.getTraceId());
                     tracingContext.updateMdc();
-                    return sendServiceRequest(serviceRequest)
+                    if (LoggingRequestUtil.shouldLog(serviceRequest.getType(), supportedLoggingRequestProperties)) {
+                        ClientApiLogging.log(serviceRequest);
+                    }
+                    Mono<TurmsNotification> notificationMono = sendServiceRequest(serviceRequest)
                             .onErrorResume(throwable -> {
                                 ServiceResponse serviceResponse;
                                 if (throwable instanceof RpcException) {
                                     RpcException rpcException = (RpcException) throwable;
                                     if (rpcException.isServerError()) {
-                                        log.error(ErrorMessage.FAILED_TO_HANDLE_SERVICE_REQUEST_WITH_REQUEST, serviceRequest, throwable);
+                                        LogUtil.error(log, context, ErrorMessage.FAILED_TO_HANDLE_SERVICE_REQUEST_WITH_REQUEST, serviceRequest, throwable);
                                     }
                                     serviceResponse = new ServiceResponse(null, rpcException.getStatusCode(), throwable.getMessage());
                                 } else {
@@ -124,11 +149,14 @@ public class InboundRequestService {
                             .map(serviceResponse -> getNotificationFromResponse(serviceResponse, requestId))
                             .defaultIfEmpty(getNotificationFromStatusCode(TurmsStatusCode.NO_CONTENT, requestId))
                             .doFinally(signalType -> tracingContext.clearMdc());
-                })
-                .onErrorResume(throwable -> {
-                    log.error("Failed to refresh the heartbeat of the user session: " + session, throwable);
+                    if (LoggingRequestUtil.shouldLog(serviceRequest.getType(), supportedLoggingResponseProperties)) {
+                        notificationMono = notificationMono.doOnSuccess(ClientApiLogging::log);
+                    }
+                    return notificationMono;
+                }).onErrorResume(throwable -> {
+                    LogUtil.error(log, context, "Failed to refresh the heartbeat of the user session: " + session, throwable);
                     return Mono.just(getNotificationFromStatusCode(TurmsStatusCode.SERVER_INTERNAL_ERROR, requestId));
-                });
+                }).contextWrite(context);
     }
 
     private Mono<ServiceResponse> sendServiceRequest(ServiceRequest serviceRequest) {

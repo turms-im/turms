@@ -18,11 +18,19 @@
 package im.turms.server.common.log4j.plugin;
 
 
+import im.turms.server.common.log4j.AdminApiLogging;
+import im.turms.server.common.log4j.ClientApiLogging;
 import im.turms.server.common.log4j.LogContextConstant;
 import im.turms.server.common.log4j.UserActivityLogging;
+import im.turms.server.common.util.InvokeUtil;
+import lombok.SneakyThrows;
 import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.async.AsyncLogger;
+import org.apache.logging.log4j.core.async.RingBufferLogEvent;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.lookup.StrLookup;
+
+import java.lang.invoke.MethodHandle;
 
 /**
  * @author James Chen
@@ -30,21 +38,32 @@ import org.apache.logging.log4j.core.lookup.StrLookup;
 @Plugin(name = "myctx", category = StrLookup.CATEGORY)
 public class TurmsContextLookup implements StrLookup {
 
-    private static final String ADMIN_ACTIVITY_LOGGING_CLASS_NAME = "im.turms.turms.workflow.service.impl.log.AdminActionLogService";
-    private static final String USER_ACTIVITY_LOGGING_CLASS_NAME = UserActivityLogging.class.getName();
+    private static final MethodHandle GET_LOGGER;
+
+    static {
+        GET_LOGGER = InvokeUtil.getField(RingBufferLogEvent.class, "asyncLogger");
+    }
 
     @Override
     public String lookup(String key) {
         return null;
     }
 
+    /**
+     * @implNote event should always be RingBufferLogEvent
+     */
+    @SneakyThrows
     @Override
     public String lookup(LogEvent event, String key) {
-        if (LogContextConstant.LOG_TYPE.equals(key)) {
-            if (USER_ACTIVITY_LOGGING_CLASS_NAME.equals(event.getLoggerName())) {
+        if (LogContextConstant.LOG_TYPE.equals(key) && event instanceof RingBufferLogEvent) {
+            RingBufferLogEvent logEvent = (RingBufferLogEvent) event;
+            AsyncLogger logger = (AsyncLogger) GET_LOGGER.invokeExact(logEvent);
+            if (logger == ClientApiLogging.logger) {
+                return LogContextConstant.Type.CLIENT_API;
+            } else if (logger == UserActivityLogging.logger) {
                 return LogContextConstant.Type.USER_ACTIVITY;
-            } else if (ADMIN_ACTIVITY_LOGGING_CLASS_NAME.equals(event.getLoggerName())) {
-                return LogContextConstant.Type.ADMIN_ACTIVITY;
+            } else if (logger == AdminApiLogging.logger) {
+                return LogContextConstant.Type.ADMIN_API;
             }
         }
         return null;
