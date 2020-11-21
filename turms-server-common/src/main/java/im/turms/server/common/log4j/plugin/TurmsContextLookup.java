@@ -50,7 +50,7 @@ public class TurmsContextLookup implements StrLookup {
     }
 
     /**
-     * @implNote event should always be RingBufferLogEvent
+     * @param event should always be RingBufferLogEvent
      */
     @SneakyThrows
     @Override

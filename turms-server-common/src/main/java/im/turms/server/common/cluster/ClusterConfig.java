@@ -24,12 +24,15 @@ import im.turms.server.common.property.TurmsPropertiesManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 
 import javax.annotation.PreDestroy;
 
 /**
  * @author James Chen
  */
+@Order(Ordered.HIGHEST_PRECEDENCE)
 @Configuration
 public class ClusterConfig {
 
@@ -41,9 +44,8 @@ public class ClusterConfig {
             NodeType nodeType,
             TurmsPropertiesManager turmsPropertiesManager,
             IServiceAddressManager serviceAddressManager) {
-        Node node = new Node(context, nodeType, turmsPropertiesManager, serviceAddressManager);
+        this.node = new Node(context, nodeType, turmsPropertiesManager, serviceAddressManager);
         node.start();
-        this.node = node;
         return node;
     }
 

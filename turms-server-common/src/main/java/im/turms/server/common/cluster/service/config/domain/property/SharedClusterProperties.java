@@ -25,6 +25,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
+import org.springframework.data.annotation.AccessType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -89,16 +90,19 @@ public class SharedClusterProperties {
         }
     }
 
+    @AccessType(AccessType.Type.PROPERTY)
     public void setCommonProperties(CommonProperties commonProperties) {
         this.commonProperties = commonProperties;
         tryInitTurmsProperties();
     }
 
+    @AccessType(AccessType.Type.PROPERTY)
     public void setServiceProperties(ServiceProperties serviceProperties) {
         this.serviceProperties = serviceProperties;
         tryInitTurmsProperties();
     }
 
+    @AccessType(AccessType.Type.PROPERTY)
     public void setGatewayProperties(GatewayProperties gatewayProperties) {
         this.gatewayProperties = gatewayProperties;
         tryInitTurmsProperties();
