@@ -56,7 +56,7 @@ public class OutboundMessageService implements IOutboundMessageService {
 
     /**
      * @param notificationData should be a data serialized from TurmsNotification
-     * @return true if the notification has forwarded to all recipients
+     * @return true if the notification has forwarded to one recipient at least
      */
     @Override
     public boolean sendNotificationToLocalClients(
@@ -65,7 +65,7 @@ public class OutboundMessageService implements IOutboundMessageService {
         AssertUtil.notNull(notificationData, "notificationData");
         AssertUtil.notEmpty(recipientIds, "recipientIds");
         // Prepare data
-        boolean hasForwardedMessageToAllRecipients = true;
+        boolean hasForwardedMessageToOneRecipient = false;
         boolean triggerHandlers = node.getSharedProperties().getPlugin().isEnabled()
                 && !turmsPluginManager.getNotificationHandlerList().isEmpty();
         Set<Long> offlineRecipientIds = triggerHandlers
@@ -79,11 +79,13 @@ public class OutboundMessageService implements IOutboundMessageService {
                 for (UserSession userSession : userSessionsManager.getSessionMap().values()) {
                     notificationData.retain();
                     // This will decrease the reference count of the message
-                    userSession.tryEmitNextNotification(notificationData);
+                    boolean sent = userSession.tryEmitNextNotification(notificationData);
+                    if (sent) {
+                        hasForwardedMessageToOneRecipient = true;
+                    }
                     userSession.getConnection().tryNotifyClientToRecover();
                 }
             } else {
-                hasForwardedMessageToAllRecipients = false;
                 if (triggerHandlers) {
                     offlineRecipientIds.add(recipientId);
                 }
@@ -104,7 +106,7 @@ public class OutboundMessageService implements IOutboundMessageService {
             }
         }
 
-        return hasForwardedMessageToAllRecipients;
+        return hasForwardedMessageToOneRecipient;
     }
 
     private void triggerPlugins(@NotNull ByteBuf notificationData,

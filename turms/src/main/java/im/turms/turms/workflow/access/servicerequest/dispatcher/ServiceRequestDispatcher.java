@@ -257,19 +257,20 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         if (dataForRecipients == null || recipients.isEmpty()) {
             return Mono.empty();
         }
-        ByteBuf notificationForRecipients = ProtoUtil.getDirectByteBuffer(TurmsNotification
+        TurmsNotification notificationForRecipients = TurmsNotification
                 .newBuilder()
                 .setRelayedRequest(dataForRecipients)
                 .setRequesterId(Int64Value.newBuilder().setValue(requesterId).build())
-                .build());
+                .build();
+        ByteBuf notificationByteBuf = ProtoUtil.getDirectByteBuffer(notificationForRecipients);
         if (result.isForwardDataForRecipientsToOtherSenderOnlineDevices()) {
-            notificationForRecipients.retain();
-            Mono<Boolean> notifyRequesterMono = outboundMessageService.forwardNotification(notificationForRecipients, requesterId, requesterDevice);
-            Mono<Boolean> notifyRecipientsMono = outboundMessageService.forwardNotification(notificationForRecipients, recipients);
+            notificationByteBuf.retain();
+            Mono<Boolean> notifyRequesterMono = outboundMessageService.forwardNotification(notificationForRecipients, notificationByteBuf, requesterId, requesterDevice);
+            Mono<Boolean> notifyRecipientsMono = outboundMessageService.forwardNotification(notificationForRecipients, notificationByteBuf, recipients);
             return Mono.when(notifyRequesterMono, notifyRecipientsMono)
-                    .doOnTerminate(notificationForRecipients::release);
+                    .doOnTerminate(notificationByteBuf::release);
         } else {
-            return outboundMessageService.forwardNotification(notificationForRecipients, recipients)
+            return outboundMessageService.forwardNotification(notificationForRecipients, notificationByteBuf, recipients)
                     .then();
         }
     }

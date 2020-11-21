@@ -60,7 +60,7 @@ public class SendNotificationRequest extends RpcCallable<Boolean> {
     }
 
     /**
-     * @return true if the notification has forwarded to all recipients
+     * @return true if the notification has forwarded to one recipient at least
      */
     @Override
     public Boolean call() {

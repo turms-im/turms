@@ -42,6 +42,14 @@ public class ClientApiLoggingProperties {
             "\"includedResponseCategories\" and \"includedResponses\" " +
             "except the responses included in \"excludedResponseCategories\" and \"excludedResponseTypes\"";
 
+    private static final String DESC_STRATEGY_TO_GET_INCLUDED_NOTIFICATIONS = "Turms will get the notifications to log from the union of " +
+            "\"includedNotificationCategories\" and \"includedNotifications\" " +
+            "except the notifications included in \"excludedNotificationCategories\" and \"excludedNotificationTypes\". " +
+            "Note that only turms supports to log notifications and turms-gateway doesn't because turms-gateway won't " +
+            "parse the raw data of the notification passed from turms";
+
+    // Request
+
     /**
      * @implNote Use LinkedHashSet so that the properties (e.g. sample rate) of the previous categories
      * can be replaced by the ones of the following categories for common requests.
@@ -58,6 +66,8 @@ public class ClientApiLoggingProperties {
     @Description(DESC_STRATEGY_TO_GET_INCLUDED_REQUESTS)
     private Set<TurmsRequest.KindCase> excludedRequestTypes = Collections.emptySet();
 
+    // Response
+
     @Description(DESC_STRATEGY_TO_GET_INCLUDED_RESPONSES)
     private LinkedHashSet<LoggingCategoryProperties> includedResponseCategories = new LinkedHashSet<>();
 
@@ -69,5 +79,19 @@ public class ClientApiLoggingProperties {
 
     @Description(DESC_STRATEGY_TO_GET_INCLUDED_RESPONSES)
     private Set<TurmsRequest.KindCase> excludedResponseTypes = Collections.emptySet();
+
+    // Notification
+
+    @Description(DESC_STRATEGY_TO_GET_INCLUDED_NOTIFICATIONS)
+    private LinkedHashSet<LoggingCategoryProperties> includedNotificationCategories = new LinkedHashSet<>();
+
+    @Description(DESC_STRATEGY_TO_GET_INCLUDED_NOTIFICATIONS)
+    private LinkedHashSet<LoggingRequestProperties> includedNotifications = new LinkedHashSet<>();
+
+    @Description(DESC_STRATEGY_TO_GET_INCLUDED_NOTIFICATIONS)
+    private Set<LoggingRequestCategory> excludedNotificationCategories = Collections.emptySet();
+
+    @Description(DESC_STRATEGY_TO_GET_INCLUDED_NOTIFICATIONS)
+    private Set<TurmsRequest.KindCase> excludedNotificationTypes = Collections.emptySet();
 
 }

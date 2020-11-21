@@ -995,6 +995,9 @@ public class MessageService {
                         referenceId));
     }
 
+    /**
+     * @return true if no recipient, or at least one recipient has received the notification
+     */
     public Mono<Boolean> sendMessage(
             boolean send,
             @Nullable Long messageId,

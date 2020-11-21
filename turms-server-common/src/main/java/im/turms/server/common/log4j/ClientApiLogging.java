@@ -30,8 +30,8 @@ public class ClientApiLogging {
     private ClientApiLogging() {
     }
 
-    public static void log(Object info) {
-        logger.info(info);
+    public static void log(Object message) {
+        logger.info(message);
     }
 
 }

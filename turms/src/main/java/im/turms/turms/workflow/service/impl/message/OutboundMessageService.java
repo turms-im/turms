@@ -18,17 +18,24 @@
 package im.turms.turms.workflow.service.impl.message;
 
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multiset;
 import com.google.common.collect.SetMultimap;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.notification.TurmsNotification;
+import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.server.common.cluster.node.Node;
+import im.turms.server.common.log4j.ClientApiLogging;
+import im.turms.server.common.property.TurmsPropertiesManager;
+import im.turms.server.common.property.env.common.ClientApiLoggingProperties;
+import im.turms.server.common.property.env.service.env.clientapi.property.LoggingRequestProperties;
 import im.turms.server.common.rpc.request.SendNotificationRequest;
 import im.turms.server.common.service.session.UserStatusService;
+import im.turms.server.common.util.LoggingRequestUtil;
 import im.turms.server.common.util.ProtoUtil;
 import im.turms.server.common.util.ReactorUtil;
 import io.netty.buffer.ByteBuf;
+import lombok.Data;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -45,31 +52,84 @@ public class OutboundMessageService {
 
     private final Node node;
     private final UserStatusService userStatusService;
+    private final Map<TurmsRequest.KindCase, LoggingRequestProperties> supportedLoggingNotificationProperties;
 
-    public OutboundMessageService(Node node, UserStatusService userStatusService) {
+    public OutboundMessageService(Node node, TurmsPropertiesManager propertiesManager, UserStatusService userStatusService) {
         this.node = node;
         this.userStatusService = userStatusService;
+        ClientApiLoggingProperties loggingProperties = propertiesManager.getLocalProperties().getGateway().getClientApi().getLogging();
+        supportedLoggingNotificationProperties = LoggingRequestUtil.getSupportedLoggingRequestProperties(
+                loggingProperties.getIncludedNotificationCategories(),
+                loggingProperties.getIncludedNotifications(),
+                loggingProperties.getExcludedNotificationCategories(),
+                loggingProperties.getExcludedNotificationTypes());
     }
 
+    /**
+     * @return true if recipientIds is empty, or at least one recipient has received the notification
+     */
     public Mono<Boolean> forwardNotification(
             @NotNull TurmsNotification notification,
             @NotNull Set<Long> recipientIds) {
-        ByteBuf notificationData = ProtoUtil.getDirectByteBuffer(notification);
-        return forwardNotification(notificationData, recipientIds);
+        return forwardNotification(notification, ProtoUtil.getDirectByteBuffer(notification), recipientIds);
     }
 
+    /**
+     * @return true if recipientIds is empty, or at least one recipient has received the notification
+     */
     public Mono<Boolean> forwardNotification(
+            @NotNull TurmsNotification notificationForLogging,
             @NotNull ByteBuf notificationData,
             @NotNull Set<Long> recipientIds) {
         if (recipientIds.isEmpty()) {
             return Mono.just(true);
-        } else if (recipientIds.size() == 1) {
-            return forwardClientMessageByRecipientId(notificationData, recipientIds.iterator().next());
         } else {
-            return forwardClientMessageByRecipientIds(notificationData, recipientIds);
+            Mono<Boolean> mono = recipientIds.size() == 1
+                    ? forwardClientMessageByRecipientId(notificationData, recipientIds.iterator().next())
+                    : forwardClientMessageByRecipientIds(notificationData, recipientIds);
+            return tryLogNotification(mono, notificationForLogging);
         }
     }
 
+    /**
+     * @return true if recipientIds is empty, or at least one recipient has received the notification
+     */
+    public Mono<Boolean> forwardNotification(
+            @NotNull TurmsNotification notificationForLogging,
+            @NotNull ByteBuf notificationData,
+            @NotNull Long recipientId,
+            @NotNull DeviceType excludedDeviceType) {
+        return userStatusService.getDeviceAndNodeIdMapByUserId(recipientId)
+                .flatMap(deviceTypeAndNodeIdMap -> {
+                    List<String> nodeIds = new ArrayList<>(deviceTypeAndNodeIdMap.size());
+                    for (Map.Entry<DeviceType, String> entry : deviceTypeAndNodeIdMap.entrySet()) {
+                        DeviceType deviceType = entry.getKey();
+                        if (deviceType != excludedDeviceType) {
+                            nodeIds.add(entry.getValue());
+                        }
+                    }
+                    if (nodeIds.isEmpty()) {
+                        return Mono.just(false);
+                    }
+                    int size = nodeIds.size();
+                    Mono<Boolean> mono;
+                    if (size == 1) {
+                        mono = forwardClientMessageToNode(notificationData, nodeIds.iterator().next(), recipientId);
+                    } else {
+                        List<Mono<Boolean>> monos = new ArrayList<>(size);
+                        for (String nodeId : nodeIds) {
+                            monos.add(forwardClientMessageToNode(notificationData, nodeId, recipientId));
+                        }
+                        mono = ReactorUtil.atLeastOneTrue(monos);
+                    }
+                    return tryLogNotification(mono, notificationForLogging);
+                })
+                .defaultIfEmpty(false);
+    }
+
+    /**
+     * @return true if recipientIds is empty, or at least one recipient has received the notification
+     */
     private Mono<Boolean> forwardClientMessageByRecipientIds(
             @NotNull ByteBuf messageData,
             @NotNull Set<Long> recipientIds) {
@@ -83,20 +143,21 @@ public class OutboundMessageService {
             int expectedMembersCount = Math.min(node.getDiscoveryService().getAllKnownMembers().size(), recipientIdsSize);
             int expectedRecipientCountPerMember = Math.min(1, recipientIdsSize / expectedMembersCount);
             SetMultimap<String, Long> userIdsByNodeId = HashMultimap.create(expectedMembersCount, expectedRecipientCountPerMember);
-            List<Mono<Pair<Long, Collection<String>>>> monos = new ArrayList<>(recipientIdsSize);
+            List<Mono<RecipientAndNodeIds>> monos = new ArrayList<>(recipientIdsSize);
             for (Long recipientId : recipientIds) {
                 monos.add(userStatusService.getDeviceAndNodeIdMapByUserId(recipientId)
-                        .map(map -> Pair.of(recipientId, map.values())));
+                        .map(map -> new RecipientAndNodeIds(recipientId, map.values())));
             }
             return Flux.merge(monos)
                     .doOnNext(pair -> {
-                        for (String nodeId : pair.getSecond()) {
-                            userIdsByNodeId.put(nodeId, pair.getFirst());
+                        for (String nodeId : pair.getNodeIds()) {
+                            userIdsByNodeId.put(nodeId, pair.getRecipientId());
                         }
                     })
                     .then(Mono.defer(() -> {
-                        List<Mono<Boolean>> monoList = new LinkedList<>();
-                        for (String nodeId : userIdsByNodeId.keys()) {
+                        Multiset<String> nodeIds = userIdsByNodeId.keys();
+                        List<Mono<Boolean>> monoList = new ArrayList<>(nodeIds.size());
+                        for (String nodeId : nodeIds) {
                             monoList.add(forwardClientMessageByRecipientIds(messageData, userIdsByNodeId.get(nodeId)));
                         }
                         return ReactorUtil.atLeastOneTrue(monoList);
@@ -104,6 +165,9 @@ public class OutboundMessageService {
         }
     }
 
+    /**
+     * @return true if at least one recipient has received the notification
+     */
     private Mono<Boolean> forwardClientMessageByRecipientId(
             @NotNull ByteBuf notificationData,
             @NotNull Long recipientId) {
@@ -138,30 +202,22 @@ public class OutboundMessageService {
                 .requestResponse(nodeId, request);
     }
 
-    public Mono<Boolean> forwardNotification(
-            @NotNull ByteBuf notificationData,
-            @NotNull Long recipientId,
-            @NotNull DeviceType excludedDeviceType) {
-        return userStatusService.getDeviceAndNodeIdMapByUserId(recipientId)
-                .flatMap(deviceTypeAndNodeIdMap -> {
-                    Map<DeviceType, String> map = new EnumMap<>(deviceTypeAndNodeIdMap);
-                    map.remove(excludedDeviceType);
-                    Collection<String> nodeIds = map.values();
-                    if (nodeIds.isEmpty()) {
-                        return Mono.just(false);
-                    }
-                    int size = nodeIds.size();
-                    if (size == 1) {
-                        return forwardClientMessageToNode(notificationData, nodeIds.iterator().next(), recipientId);
-                    } else {
-                        List<Mono<Boolean>> monos = new ArrayList<>(size);
-                        for (String nodeId : nodeIds) {
-                            monos.add(forwardClientMessageToNode(notificationData, nodeId, recipientId));
-                        }
-                        return ReactorUtil.atLeastOneTrue(monos);
-                    }
-                })
-                .defaultIfEmpty(false);
+    private Mono<Boolean> tryLogNotification(Mono<Boolean> mono, TurmsNotification notification) {
+        if (LoggingRequestUtil.shouldLog(notification.getRelayedRequest().getKindCase(), supportedLoggingNotificationProperties)) {
+            return mono
+                    .doOnSuccess(sent -> {
+                        String message = sent ? "Sent: " : "Unsent: ";
+                        ClientApiLogging.log(message + notification);
+                    });
+        } else {
+            return mono;
+        }
+    }
+
+    @Data
+    private static class RecipientAndNodeIds {
+        private final Long recipientId;
+        private final Collection<String> nodeIds;
     }
 
 }

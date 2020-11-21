@@ -23,6 +23,10 @@ turms:
       logging:
         included-request-categories:
           - category: all
+        included-response-categories:
+          - category: all
+        included-notification-categories:
+          - category: all
     admin-api:
       enable-swagger: true
     database:

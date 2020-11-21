@@ -116,11 +116,13 @@ public final class UserSession {
         return notificationSink.asFlux();
     }
 
-    public void tryEmitNextNotification(ByteBuf byteBuf) {
+    public boolean tryEmitNextNotification(ByteBuf byteBuf) {
         Sinks.EmitResult result = notificationSink.tryEmitNext(byteBuf);
-        if (result != Sinks.EmitResult.OK && isSessionOpen) {
+        boolean isEmitted = result == Sinks.EmitResult.OK;
+        if (!isEmitted && isSessionOpen) {
             log.warn("Failed to send notifications due to " + result.name());
         }
+        return isEmitted;
     }
 
     @Override
