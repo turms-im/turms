@@ -26,6 +26,7 @@ import im.turms.server.common.cluster.service.serialization.SerializationService
 import im.turms.server.common.cluster.service.serialization.serializer.Serializer;
 import im.turms.server.common.cluster.service.serialization.serializer.SerializerPool;
 import im.turms.server.common.property.env.common.cluster.RpcProperties;
+import io.micrometer.core.instrument.Tag;
 import io.netty.buffer.ByteBuf;
 import io.rsocket.Payload;
 import io.rsocket.RSocket;
@@ -54,6 +55,9 @@ import java.util.Map;
  */
 @Log4j2
 public class RpcService implements ClusterService {
+
+    private static final String METRICS_NAME_RPC_REQUEST = "rpc.request";
+    private static final String METRICS_TAG_REQUEST_NAME = "name";
 
     @Getter
     private static RpcAcceptor rpcAcceptor;
@@ -115,12 +119,7 @@ public class RpcService implements ClusterService {
             if (connection == null) {
                 return Mono.error(RpcException.get(RpcErrorCode.CONNECTION_NOT_FOUND, TurmsStatusCode.UNAVAILABLE, "The RSocket instance is missing for the member ID: " + memberNodeId));
             }
-            ByteBuf buffer = serializationService.serialize(request);
-            Payload requestPayload = ByteBufPayload.create(buffer);
-            return (Mono<T>) connection.requestResponse(requestPayload)
-                    .timeout(timeout)
-                    .flatMap(this::parsePayload)
-                    .onErrorMap(throwable -> tryLogAndTranslateThrowable(throwable, memberNodeId));
+            return requestResponse0(memberNodeId, connection, request, timeout);
         } catch (Exception e) {
             return Mono.error(e);
         }
@@ -133,12 +132,7 @@ public class RpcService implements ClusterService {
      */
     public <T> Mono<T> requestResponse(String memberNodeId, RSocket connection, RpcCallable<T> request, Duration timeout) {
         try {
-            ByteBuf buffer = serializationService.serialize(request);
-            Payload requestPayload = ByteBufPayload.create(buffer);
-            return (Mono<T>) connection.requestResponse(requestPayload)
-                    .timeout(timeout)
-                    .flatMap(this::parsePayload)
-                    .onErrorMap(throwable -> tryLogAndTranslateThrowable(throwable, memberNodeId));
+            return requestResponse0(memberNodeId, connection, request, timeout);
         } catch (Exception e) {
             return Mono.error(e);
         }
@@ -172,8 +166,16 @@ public class RpcService implements ClusterService {
         for (MemberInfoWithConnection info : otherActiveConnectedServiceMembers) {
             results.add(info.getConnection().requestResponse(requestPayload));
         }
-        return (Flux<T>) Flux.merge(results)
+        Flux<Payload> flux = Flux.merge(results)
                 .timeout(timeout)
+                .name(METRICS_NAME_RPC_REQUEST)
+                .tag(METRICS_TAG_REQUEST_NAME, request.name());
+        Tag tag = request.tag();
+        if (tag != null) {
+            flux = flux.tag(tag.getKey(), tag.getValue());
+        }
+        return (Flux<T>) flux
+                .metrics()
                 .flatMap(this::parsePayload)
                 .onErrorMap(throwable -> tryLogAndTranslateThrowable(throwable, otherActiveConnectedServiceMembers));
     }
@@ -211,8 +213,16 @@ public class RpcService implements ClusterService {
             results.add(connection.requestResponse(requestPayload)
                     .map(payload -> Pair.of(memberId, payload)));
         }
-        return Flux.merge(results)
+        Flux<Pair<String, Payload>> flux = Flux.merge(results)
                 .timeout(timeout)
+                .name(METRICS_NAME_RPC_REQUEST)
+                .tag(METRICS_TAG_REQUEST_NAME, request.name());
+        Tag tag = request.tag();
+        if (tag != null) {
+            flux = flux.tag(tag.getKey(), tag.getValue());
+        }
+        return flux
+                .metrics()
                 .collectMap(Pair::getFirst, pair -> {
                     Payload payload = pair.getSecond();
                     Object data = getReturnValueFromRpc(payload.sliceData());
@@ -222,6 +232,23 @@ public class RpcService implements ClusterService {
     }
 
     // Internal implementations
+
+    private <T> Mono<T> requestResponse0(String memberNodeId, RSocket connection, RpcCallable<T> request, Duration timeout) {
+        ByteBuf buffer = serializationService.serialize(request);
+        Payload requestPayload = ByteBufPayload.create(buffer);
+        Tag tag = request.tag();
+        Mono<Payload> mono = connection.requestResponse(requestPayload)
+                .timeout(timeout)
+                .name(METRICS_NAME_RPC_REQUEST)
+                .tag(METRICS_TAG_REQUEST_NAME, request.name());
+        if (tag != null) {
+            mono = mono.tag(tag.getKey(), tag.getValue());
+        }
+        return (Mono<T>) mono
+                .metrics()
+                .flatMap(this::parsePayload)
+                .onErrorMap(throwable -> tryLogAndTranslateThrowable(throwable, memberNodeId));
+    }
 
     private <T> Mono<T> parsePayload(Payload payload) {
         if (payload.data().isReadable()) {

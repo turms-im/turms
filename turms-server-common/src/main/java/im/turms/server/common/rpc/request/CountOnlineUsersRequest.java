@@ -28,7 +28,13 @@ import org.springframework.context.ApplicationContext;
 @Data
 public class CountOnlineUsersRequest extends RpcCallable<Integer> {
 
+    private static final String NAME = "countOnlineUsers";
     private static IStatisticsService statisticsService;
+
+    @Override
+    public String name() {
+        return NAME;
+    }
 
     @Override
     public boolean isAsync() {

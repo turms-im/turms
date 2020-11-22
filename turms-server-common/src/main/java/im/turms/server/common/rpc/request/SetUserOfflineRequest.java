@@ -35,6 +35,7 @@ import java.util.Set;
 @Data
 public class SetUserOfflineRequest extends RpcCallable<Boolean> {
 
+    private static final String NAME = "setUserOffline";
     private static ISessionService sessionService;
 
     private final Long userId;
@@ -48,6 +49,11 @@ public class SetUserOfflineRequest extends RpcCallable<Boolean> {
         this.userId = userId;
         this.deviceTypes = deviceTypes;
         this.closeReason = closeReason;
+    }
+
+    @Override
+    public String name() {
+        return NAME;
     }
 
     @Override

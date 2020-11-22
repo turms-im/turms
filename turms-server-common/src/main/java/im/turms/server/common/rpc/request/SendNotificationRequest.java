@@ -33,6 +33,7 @@ import java.util.Set;
 @Data
 public class SendNotificationRequest extends RpcCallable<Boolean> {
 
+    private static final String NAME = "sendNotification";
     private static IOutboundMessageService outboundMessageService;
 
     private final ByteBuf notificationBuffer;
@@ -44,6 +45,11 @@ public class SendNotificationRequest extends RpcCallable<Boolean> {
     public SendNotificationRequest(@NotNull ByteBuf notificationBuffer, @NotEmpty Set<Long> recipientIds) {
         this.notificationBuffer = notificationBuffer;
         this.recipientIds = recipientIds;
+    }
+
+    @Override
+    public String name() {
+        return NAME;
     }
 
     @Override

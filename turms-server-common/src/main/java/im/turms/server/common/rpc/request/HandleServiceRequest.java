@@ -21,6 +21,7 @@ import im.turms.server.common.cluster.service.rpc.RpcCallable;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.rpc.service.IServiceRequestDispatcher;
+import io.micrometer.core.instrument.Tag;
 import lombok.Data;
 import org.springframework.context.ApplicationContext;
 import reactor.core.publisher.Mono;
@@ -31,12 +32,24 @@ import reactor.core.publisher.Mono;
 @Data
 public class HandleServiceRequest extends RpcCallable<ServiceResponse> {
 
+    private static final String NAME = "handleServiceRequest";
+    private static final String METRICS_TAG_CLIENT_REQUEST_TYPE = "type";
     private static IServiceRequestDispatcher dispatcher;
 
     private final ServiceRequest serviceRequest;
 
     public HandleServiceRequest(ServiceRequest serviceRequest) {
         this.serviceRequest = serviceRequest;
+    }
+
+    @Override
+    public String name() {
+        return NAME;
+    }
+
+    @Override
+    public Tag tag() {
+        return Tag.of(METRICS_TAG_CLIENT_REQUEST_TYPE, serviceRequest.getType().name());
     }
 
     @Override

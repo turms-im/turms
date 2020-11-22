@@ -17,6 +17,7 @@
 
 package im.turms.server.common.cluster.service.rpc;
 
+import io.micrometer.core.instrument.Tag;
 import lombok.Getter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -35,6 +36,11 @@ public abstract class RpcCallable<T> implements ApplicationContextAware {
         this.context = applicationContext;
     }
 
+    public abstract String name();
+
+    public Tag tag() {
+        return null;
+    }
 
     /**
      * Use a method instead of a field to avoid serializing/deserializing
