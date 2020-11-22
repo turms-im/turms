@@ -18,13 +18,14 @@
 package im.turms.server.common.cluster.service.discovery;
 
 import im.turms.server.common.cluster.service.config.domain.discovery.Member;
+import io.rsocket.RSocket;
 
 /**
  * @author James Chen
  */
 public interface MemberConnectionChangeListener {
 
-    void onMemberConnectionAdded(Member member);
+    void onMemberConnectionAdded(Member member, RSocket connection);
 
     void onMemberConnectionRemoved(Member member);
 

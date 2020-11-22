@@ -92,7 +92,7 @@ public class UserOnlineInfoController {
             return ResponseFactory.okIfTruthy(statisticsService.countOnlineUsersByNodes()
                     .map(nodeIdAndNumberMap -> {
                         int sum = 0;
-                        for (Integer onlineUserNumber : nodeIdAndNumberMap.values()) {
+                        for (int onlineUserNumber : nodeIdAndNumberMap.values()) {
                             sum += onlineUserNumber;
                         }
                         return new OnlineUserNumberDTO(sum, nodeIdAndNumberMap);

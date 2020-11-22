@@ -37,6 +37,7 @@ import reactor.core.publisher.Mono;
 import reactor.netty.Metrics;
 import reactor.netty.tcp.TcpClient;
 
+import javax.annotation.Nullable;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -48,7 +49,7 @@ import java.util.concurrent.TimeUnit;
 @Log4j2
 public class ConnectionManager {
 
-    private final Ssl ssl;
+    private final Ssl clientSsl;
     private final Duration keepaliveInterval;
     private final Duration keepaliveTimeout;
     private final Duration reconnectInterval;
@@ -58,7 +59,7 @@ public class ConnectionManager {
      * Note that it is acceptable if a socket is connected to non-member turms servers
      */
     @Getter
-    private final Map<String, RSocket> connectionMap = new HashMap<>();
+    private final Map<String, RSocket> connectionMap = new ConcurrentHashMap<>();
     private final Set<Member> connectingMembers = ConcurrentHashMap.newKeySet();
     /**
      * Address -> Retry times.
@@ -74,7 +75,7 @@ public class ConnectionManager {
 
     public ConnectionManager(DiscoveryService discoveryService, DiscoveryProperties discoveryProperties, int outputThreadNumber) {
         this.discoveryService = discoveryService;
-        this.ssl = discoveryProperties.getClientSsl();
+        this.clientSsl = discoveryProperties.getClientSsl();
         keepaliveInterval = Duration.ofSeconds(discoveryProperties.getHeartbeatIntervalInSeconds());
         keepaliveTimeout = Duration.ofSeconds(discoveryProperties.getHeartbeatTimeoutInSeconds());
         reconnectInterval = Duration.ofSeconds(discoveryProperties.getReconnectIntervalInSeconds());
@@ -88,6 +89,7 @@ public class ConnectionManager {
         connectionMap.clear();
     }
 
+    @Nullable
     public RSocket getMemberConnection(String memberId) {
         return connectionMap.get(memberId);
     }
@@ -142,17 +144,17 @@ public class ConnectionManager {
                         }, Math.min(retryTimes * 10, 60), TimeUnit.SECONDS);
                     }
                 })
-                .doOnSuccess(socket -> {
+                .doOnSuccess(connection -> {
                     log.info("Connected to member: {}[{}:{}]", nodeId, member.getMemberHost(), member.getMemberPort());
-                    connectionMap.put(nodeId, socket);
+                    connectionMap.put(nodeId, connection);
                     failedConnectionMemberMap.remove(member);
                     connectingMembers.remove(member);
                     updateHasConnectedToAllMembers(discoveryService.getAllKnownMembers().keySet());
                     for (MemberConnectionChangeListener listener : memberConnectionChangeListeners) {
-                        listener.onMemberConnectionAdded(member);
+                        listener.onMemberConnectionAdded(member, connection);
                     }
                     // See io.rsocket.core.RSocketRequester.terminate
-                    socket.onClose()
+                    connection.onClose()
                             // e.g. ConnectionErrorException for keepalive timeout.
                             // See io.rsocket.core.RSocketRequester.tryTerminateOnKeepAlive
                             .doOnError(throwable -> onConnectClosed(member, throwable))
@@ -167,8 +169,8 @@ public class ConnectionManager {
                 .host(host)
                 .port(port)
                 .runOn(eventLoopGroup);
-        if (ssl.isEnabled()) {
-            client.secure(sslContextSpec -> SslUtil.configureSslContextSpec(sslContextSpec, ssl, false));
+        if (clientSsl.isEnabled()) {
+            client.secure(sslContextSpec -> SslUtil.configureSslContextSpec(sslContextSpec, clientSsl, false));
         }
         TcpClientTransport transport = TcpClientTransport.create(client);
         return RSocketConnector.create()

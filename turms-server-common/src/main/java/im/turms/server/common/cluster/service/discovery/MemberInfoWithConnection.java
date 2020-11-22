@@ -15,15 +15,19 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.cluster.exception;
+package im.turms.server.common.cluster.service.discovery;
+
+import im.turms.server.common.cluster.service.config.domain.discovery.Member;
+import io.rsocket.RSocket;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author James Chen
  */
-public class ConnectionNotFoundException extends RuntimeException {
-
-    public ConnectionNotFoundException(String message) {
-        super(message);
-    }
-
+@Data
+@EqualsAndHashCode(of = "member")
+public class MemberInfoWithConnection {
+    private final Member member;
+    private final RSocket connection;
 }

@@ -18,6 +18,8 @@
 package im.turms.server.common.tracing;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.FieldNameConstants;
 import org.apache.logging.log4j.ThreadContext;
 import reactor.core.scheduler.Schedulers;
@@ -56,6 +58,9 @@ public class TracingContext {
     }
 
     private final long traceId;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private final String traceIdStr;
 
     public TracingContext(Long traceId) {

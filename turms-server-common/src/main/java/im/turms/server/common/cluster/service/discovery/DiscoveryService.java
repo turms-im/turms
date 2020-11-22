@@ -29,6 +29,7 @@ import im.turms.server.common.cluster.service.config.domain.discovery.Member;
 import im.turms.server.common.manager.address.IServiceAddressManager;
 import im.turms.server.common.property.env.common.cluster.DiscoveryProperties;
 import io.netty.util.concurrent.DefaultThreadFactory;
+import io.rsocket.RSocket;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -81,8 +82,12 @@ public class DiscoveryService implements ClusterService {
 
     @Getter
     private List<Member> activeServiceMemberList = new ArrayList<>();
+
+    /**
+     * Used for RpcService so that it doesn't need to find a socket from a map by a member ID every time
+     */
     @Getter
-    private List<Member> otherActiveConnectedServiceMemberList = Collections.emptyList();
+    private List<MemberInfoWithConnection> otherActiveConnectedServiceMemberList = Collections.emptyList();
 
     private final List<Consumer<Leader>> leadershipChangeListeners = new LinkedList<>();
     private final List<MembersChangeListener> membersChangeListeners = new LinkedList<>();
@@ -124,15 +129,15 @@ public class DiscoveryService implements ClusterService {
         this.connectionManager = new ConnectionManager(this, discoveryProperties, outputThreadCount);
         connectionManager.addMemberConnectionChangeListener(new MemberConnectionChangeListener() {
             @Override
-            public void onMemberConnectionAdded(Member member) {
+            public void onMemberConnectionAdded(Member member, RSocket connection) {
                 if (member.isActive() && member.getNodeType() == NodeType.SERVICE) {
-                    updateOtherActiveConnectedServiceMemberList(true, member);
+                    updateOtherActiveConnectedServiceMemberList(true, member, connection);
                 }
             }
 
             @Override
             public void onMemberConnectionRemoved(Member member) {
-                updateOtherActiveConnectedServiceMemberList(false, member);
+                updateOtherActiveConnectedServiceMemberList(false, member, null);
             }
         });
     }
@@ -223,7 +228,7 @@ public class DiscoveryService implements ClusterService {
                             case DELETE:
                                 String nodeId = ChangeStreamUtil.getStringFromId(event, Member.Key.Fields.nodeId);
                                 Member deletedMember = allKnownMembers.remove(nodeId);
-                                updateOtherActiveConnectedServiceMemberList(false, deletedMember);
+                                updateOtherActiveConnectedServiceMemberList(false, deletedMember, null);
                                 if (nodeId.equals(getLocalMember().getNodeId()) && !isClosing) {
                                     registerMember(getLocalMember()).subscribe();
                                 }
@@ -244,10 +249,11 @@ public class DiscoveryService implements ClusterService {
             if (nodeId.equals(localNodeStatusManager.getLocalMember().getNodeId())) {
                 localNodeStatusManager.updateInfo(member);
             }
+            RSocket connection = connectionManager.getMemberConnection(member.getNodeId());
             if (member.isActive()
                     && member.getNodeType() == NodeType.SERVICE
-                    && connectionManager.isMemberConnected(member.getNodeId())) {
-                updateOtherActiveConnectedServiceMemberList(true, member);
+                    && connection != null) {
+                updateOtherActiveConnectedServiceMemberList(true, member, connection);
                 if (notifyMembersChangeFuture != null) {
                     notifyMembersChangeFuture.cancel(false);
                 }
@@ -267,20 +273,22 @@ public class DiscoveryService implements ClusterService {
                 .collect(Collectors.toList());
     }
 
-    private synchronized void updateOtherActiveConnectedServiceMemberList(boolean isAdd, Member member) {
+    private synchronized void updateOtherActiveConnectedServiceMemberList(boolean isAdd, Member member, RSocket connection) {
         boolean isLocalNode = member.getNodeId().equals(localNodeStatusManager.getLocalMember().getNodeId());
         if (!isLocalNode) {
             int size = isAdd
                     ? otherActiveConnectedServiceMemberList.size() + 1
                     : otherActiveConnectedServiceMemberList.size();
-            List<Member> tempOtherActiveConnectedServiceMemberList = new ArrayList<>(size);
+            List<MemberInfoWithConnection> tempOtherActiveConnectedServiceMemberList = new ArrayList<>(size);
             tempOtherActiveConnectedServiceMemberList.addAll(otherActiveConnectedServiceMemberList);
             if (isAdd) {
-                tempOtherActiveConnectedServiceMemberList.add(member);
+                tempOtherActiveConnectedServiceMemberList.add(new MemberInfoWithConnection(member, connection));
             } else {
-                tempOtherActiveConnectedServiceMemberList.remove(member);
+                tempOtherActiveConnectedServiceMemberList.remove(new MemberInfoWithConnection(member, null));
             }
-            tempOtherActiveConnectedServiceMemberList.sort((m1, m2) -> {
+            tempOtherActiveConnectedServiceMemberList.sort((i1, i2) -> {
+                Member m1 = i1.getMember();
+                Member m2 = i2.getMember();
                 int m1Priority = m1.getPriority();
                 int m2Priority = m2.getPriority();
                 if (m1Priority == m2Priority) {

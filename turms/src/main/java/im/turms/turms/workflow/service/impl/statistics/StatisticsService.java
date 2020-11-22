@@ -17,7 +17,9 @@
 
 package im.turms.turms.workflow.service.impl.statistics;
 
+import im.turms.server.common.cluster.exception.RpcException;
 import im.turms.server.common.cluster.node.Node;
+import im.turms.server.common.cluster.service.rpc.RpcErrorCode;
 import im.turms.server.common.manager.TrivialTaskManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.rpc.request.CountOnlineUsersRequest;
@@ -27,6 +29,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.math.MathFlux;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -62,12 +65,16 @@ public class StatisticsService {
         // Note that the count requests are sent by turms but the all responses come from turms-gateway
         // so that we don't need to count the local online users like ".map(count -> count + countLocalOnlineUsers())"
         CountOnlineUsersRequest request = new CountOnlineUsersRequest();
-        return node.getRpcService().requestResponsesAsMapFromOtherServices(request, false);
+        return node.getRpcService().requestResponsesAsMapFromOtherServices(request, false)
+                .onErrorResume(throwable -> RpcException.isErrorCode(throwable, RpcErrorCode.SERVICE_NOT_FOUND),
+                        throwable -> Mono.just(Collections.emptyMap()));
     }
 
     public Mono<Integer> countOnlineUsers() {
         CountOnlineUsersRequest request = new CountOnlineUsersRequest();
-        Flux<Integer> responses = node.getRpcService().requestResponsesFromOtherServices(request, true);
+        Flux<Integer> responses = node.getRpcService().requestResponsesFromOtherServices(request, true)
+                .onErrorResume(throwable -> RpcException.isErrorCode(throwable, RpcErrorCode.SERVICE_NOT_FOUND),
+                        throwable -> Mono.just(0));
         return MathFlux.sumInt(responses);
     }
 

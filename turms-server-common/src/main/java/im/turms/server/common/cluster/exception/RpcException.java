@@ -78,10 +78,6 @@ public class RpcException extends NoStackTraceException {
         this.description = description;
     }
 
-    public boolean isServerError() {
-        return errorCode != RpcErrorCode.FAILED_TO_RUN_RPC || statusCode.isServerError();
-    }
-
     public static RpcException get(RpcErrorCode errorCode, TurmsStatusCode statusCode) {
         return EXCEPTION_POOL.computeIfAbsent(Pair.of(errorCode, statusCode), key -> new RpcException(errorCode, statusCode));
     }
@@ -131,6 +127,17 @@ public class RpcException extends NoStackTraceException {
             throw new IllegalArgumentException("Failed to parse status code for message: " + exceptionMessage);
         }
         return turmsStatusCode;
+    }
+
+    public boolean isServerError() {
+        return errorCode != RpcErrorCode.FAILED_TO_RUN_RPC || statusCode.isServerError();
+    }
+
+    public static boolean isErrorCode(Throwable throwable, RpcErrorCode code) {
+        if (throwable instanceof RpcException) {
+            return ((RpcException) throwable).getErrorCode().equals(code);
+        }
+        return false;
     }
 
 }
