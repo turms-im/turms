@@ -30,8 +30,8 @@ public class UserActivityLogging {
     private UserActivityLogging() {
     }
 
-    public static void log(Object info) {
-        logger.info(info);
+    public static void log(Object message) {
+        logger.info(message);
     }
 
 }

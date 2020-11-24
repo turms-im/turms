@@ -71,7 +71,7 @@ public class ControllerFilter implements WebFilter {
     private final boolean pluginEnabled;
     private final boolean enableAdminApi;
     @Value("${springfox.documentation.enabled}")
-    private boolean isOpenApiEnabled = false;
+    private boolean isOpenApiEnabled;
 
     public ControllerFilter(
             Node node,
@@ -91,7 +91,10 @@ public class ControllerFilter implements WebFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         return requestMappingHandlerMapping.getHandler(exchange)
-                .share()
+                // For the access to the OpenAPI page "/swagger-ui/index.html"
+                .switchIfEmpty(Mono.defer(() -> isOpenApiEnabledAndOpenApiRequest(exchange)
+                        ? chain.filter(exchange)
+                        : Mono.empty()))
                 .flatMap(handlerMethodObject -> {
                     if (isOpenApiEnabledAndOpenApiRequest(exchange)) {
                         return chain.filter(exchange);
