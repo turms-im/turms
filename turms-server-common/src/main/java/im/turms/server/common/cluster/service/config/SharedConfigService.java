@@ -25,6 +25,7 @@ import com.mongodb.reactivestreams.client.MongoClient;
 import im.turms.server.common.cluster.service.ClusterService;
 import im.turms.server.common.cluster.service.config.converter.DurationToLongConverter;
 import im.turms.server.common.cluster.service.config.converter.LongToDurationConverter;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.boot.autoconfigure.mongo.MongoPropertiesClientSettingsBuilderCustomizer;
 import org.springframework.boot.autoconfigure.mongo.ReactiveMongoClientFactory;
@@ -51,6 +52,7 @@ import java.util.List;
 /**
  * @author James Chen
  */
+@Log4j2
 public class SharedConfigService implements ClusterService {
 
     // Note that 60s is the minimum TTL supported by the TTL index of MongoDB
@@ -137,13 +139,21 @@ public class SharedConfigService implements ClusterService {
                 .map(UpdateResult::wasAcknowledged);
     }
 
-    public Mono<Void> upsert(Query query, UpdateDefinition update, Object entity, Class<?> entityClass) {
+    public Mono<Boolean> upsert(Query query, UpdateDefinition update, Object entity, Class<?> entityClass) {
         return mongoTemplate.updateFirst(query, update, entityClass)
-                .flatMap(updateResult -> updateResult.getModifiedCount() > 0
-                        ? Mono.empty()
-                        : mongoTemplate.insert(entity)
-                        .onErrorResume(DuplicateKeyException.class, e -> this.upsert(query, update, entity, entityClass))
-                        .then());
+                .flatMap(updateResult -> {
+                    if (updateResult.getModifiedCount() > 0) {
+                        return Mono.just(true);
+                    } else if (updateResult.getMatchedCount() > 0) {
+                        // e.g. "Invalid $addFields :: caused by :: an empty object is not a valid value."
+                        log.warn("The update definition for the class {} may be wrong: {}", entityClass, update);
+                        return Mono.just(false);
+                    } else {
+                        return mongoTemplate.insert(entity)
+                                .thenReturn(true)
+                                .onErrorResume(DuplicateKeyException.class, e -> this.upsert(query, update, entity, entityClass));
+                    }
+                });
     }
 
     public Mono<Boolean> remove(Query query, Class<?> clazz) {

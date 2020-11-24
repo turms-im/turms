@@ -342,7 +342,7 @@ public class DiscoveryService implements ClusterService {
         return sharedConfigService.remove(query, Member.class);
     }
 
-    public Mono<Void> updateMemberInfo(@NotNull String id, @Nullable Boolean isSeed, @Nullable Boolean isActive) {
+    public Mono<Boolean> updateMemberInfo(@NotNull String id, @Nullable Boolean isSeed, @Nullable Boolean isActive) {
         Member member = allKnownMembers.get(id);
         if (member == null) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NO_CONTENT));

@@ -71,7 +71,7 @@ public class LocalNodeStatusManager {
         this.heartbeatIntervalInMillis = heartbeatInterval.toMillis();
     }
 
-    public Mono<Void> updateLocalNodeInfo(Update update) {
+    public Mono<Boolean> updateLocalNodeInfo(Update update) {
         String nodeId = localMember.getNodeId();
         Query memberQuery = new Query()
                 .addCriteria(Criteria.where(Member.ID_CLUSTER_ID).is(localMember.getClusterId()))
@@ -161,7 +161,7 @@ public class LocalNodeStatusManager {
                 member.getServiceAddress());
     }
 
-    private Mono<Void> updateLocalLeaderHeartbeat(Date lastHeartbeatDate) {
+    private Mono<Boolean> updateLocalLeaderHeartbeat(Date lastHeartbeatDate) {
         Update update = new Update().set(Leader.Fields.lastHeartbeatDate, lastHeartbeatDate);
         Query leaderQuery = new Query()
                 .addCriteria(Criteria.where("_id").is(localMember.getClusterId()))

@@ -488,7 +488,7 @@ public class GroupInvitationService {
 
     private void validInvitationContentLength(@Nullable String content) {
         if (content != null) {
-            int contentLimit = node.getSharedProperties().getService().getGroup().getGroupJoinRequestContentLimit();
+            int contentLimit = node.getSharedProperties().getService().getGroup().getGroupInvitationContentLimit();
             if (contentLimit > 0) {
                 AssertUtil.max(content.length(), "content", contentLimit);
             }

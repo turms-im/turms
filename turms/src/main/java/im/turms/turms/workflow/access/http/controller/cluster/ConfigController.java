@@ -90,16 +90,17 @@ public class ConfigController {
         }
         // To keep the implementation simple, we don't pick out and remove the immutable properties
         Mono<Boolean> updatePropertiesMono = node.getSharedPropertyService().updateSharedProperties(newProperties)
-                .doOnSuccess(ignored -> {
-                    try {
-                        turmsPropertiesManager.updateLocalProperties(newProperties);
-                        turmsPropertiesManager.persist(newPropertiesStr);
-                    } catch (IOException e) {
-                        log.error("Failed to persist new turms properties", e);
+                .doOnNext(wasSuccessful -> {
+                    if (wasSuccessful) {
+                        try {
+                            turmsPropertiesManager.updateLocalProperties(newProperties);
+                            turmsPropertiesManager.persist(newPropertiesStr);
+                        } catch (IOException e) {
+                            log.error("Failed to persist new turms properties", e);
+                        }
+                        turmsPropertiesManager.notifyListeners(newProperties);
                     }
-                    turmsPropertiesManager.notifyListeners(newProperties);
                 })
-                .thenReturn(true)
                 .onErrorReturn(false);
         return ResponseFactory.acknowledged(updatePropertiesMono);
     }

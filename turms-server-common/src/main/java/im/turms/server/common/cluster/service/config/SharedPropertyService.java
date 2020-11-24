@@ -93,7 +93,7 @@ public class SharedPropertyService implements ClusterService {
         initializeSharedProperties().block();
     }
 
-    public Mono<Void> updateSharedProperties(TurmsProperties turmsProperties) {
+    public Mono<Boolean> updateSharedProperties(TurmsProperties turmsProperties) {
         log.info("Share new turms properties to all members");
         Date now = new Date();
         CommonProperties commonProperties = SharedClusterProperties.getCommonProperties(turmsProperties);
@@ -117,9 +117,13 @@ public class SharedPropertyService implements ClusterService {
                 .build();
         return sharedConfigService.upsert(query, update, clusterProperties, SharedClusterProperties.class)
                 .doOnError(e -> log.error("Failed to share new turms properties", e))
-                .doOnSuccess(unused -> {
-                    sharedClusterProperties = clusterProperties;
-                    log.info("Turms properties have been shared");
+                .doOnNext(wasSuccessful -> {
+                    if (wasSuccessful) {
+                        sharedClusterProperties = clusterProperties;
+                        log.info("Turms properties have been shared");
+                    } else {
+                        log.error("Failed to share new turms properties");
+                    }
                 });
     }
 
