@@ -119,10 +119,7 @@ public class LocalNodeStatusManager {
     }
 
     public boolean isLocalNodeMaster() {
-        return isLocalNodeMaster(discoveryService.getLeader());
-    }
-
-    public boolean isLocalNodeMaster(Leader leader) {
+        Leader leader = discoveryService.getLeader();
         return leader != null
                 && leader.getNodeId().equals(localMember.getNodeId())
                 && leader.getClusterId().equals(localMember.getClusterId());
@@ -176,7 +173,7 @@ public class LocalNodeStatusManager {
             return Mono.empty();
         }
         int knownMembersSize = knownMembers.size();
-        boolean hasOnlyLocalNode = knownMembersSize == 1 && knownMembers.iterator().next().getNodeId().equals(localMember.getNodeId());
+        boolean hasOnlyLocalNode = knownMembersSize == 1 && knownMembers.iterator().next().isSameNode(localMember);
         if (hasOnlyLocalNode) {
             return Mono.empty();
         }

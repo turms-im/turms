@@ -158,7 +158,12 @@ public class DiscoveryService implements ClusterService {
         List<Member> memberList = queryMembers()
                 .collectList()
                 .block(CRUD_TIMEOUT_DURATION);
+        Member localMember = getLocalMember();
         for (Member member : memberList) {
+            if (localMember.isSameNode(member)) {
+                String message = "Failed to bootstrap the local node because the local node has been registered: " + member;
+                throw new IllegalStateException(message);
+            }
             this.onAddOrUpdateMember(member);
         }
 
@@ -274,7 +279,7 @@ public class DiscoveryService implements ClusterService {
     }
 
     private synchronized void updateOtherActiveConnectedServiceMemberList(boolean isAdd, Member member, RSocket connection) {
-        boolean isLocalNode = member.getNodeId().equals(localNodeStatusManager.getLocalMember().getNodeId());
+        boolean isLocalNode = member.isSameNode(localNodeStatusManager.getLocalMember());
         if (!isLocalNode) {
             int size = isAdd
                     ? otherActiveConnectedServiceMemberList.size() + 1

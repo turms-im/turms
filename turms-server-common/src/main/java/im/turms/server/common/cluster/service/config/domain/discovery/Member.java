@@ -24,7 +24,6 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldNameConstants;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
-import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -68,10 +67,6 @@ public final class Member {
 
     private String memberHost;
     private final int memberPort;
-
-
-    @Transient
-    private String memberAddress;
 
     private String serviceAddress;
 
@@ -177,6 +172,21 @@ public final class Member {
 
     public String getNodeId() {
         return getKey().getNodeId();
+    }
+
+    /**
+     * Note that it is also considered as the same note if their addresses are same.
+     */
+    public boolean isSameNode(Member member) {
+        return isSameId(member) || isSameAddress(member);
+    }
+
+    public boolean isSameId(Member member) {
+        return key.equals(member.getKey());
+    }
+
+    public boolean isSameAddress(Member member) {
+        return memberHost.equals(member.getMemberHost()) && memberPort == member.getMemberPort();
     }
 
 }

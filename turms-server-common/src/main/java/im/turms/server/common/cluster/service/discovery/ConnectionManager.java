@@ -106,7 +106,7 @@ public class ConnectionManager {
     }
 
     public void connectMemberUntilSucceedOrRemoved(Member member) {
-        if (!member.getNodeId().equals(discoveryService.getLocalMember().getNodeId())
+        if (!member.isSameNode(discoveryService.getLocalMember())
                 && !connectionMap.containsKey(member.getNodeId())
                 && connectingMembers.add(member)) {
             connectMemberUntilSucceedOrRemoved0(member);
