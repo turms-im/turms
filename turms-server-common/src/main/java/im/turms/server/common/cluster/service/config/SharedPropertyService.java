@@ -37,11 +37,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import static im.turms.server.common.cluster.service.config.domain.property.SharedClusterProperties.getCommonProperties;
+
 /**
  * @author James Chen
  */
 @Log4j2
 public class SharedPropertyService implements ClusterService {
+
+    public static final TurmsProperties DEFAULT_PROPERTIES = new TurmsProperties();
 
     private final SharedConfigService sharedConfigService;
     private final String clusterId;
@@ -93,28 +97,25 @@ public class SharedPropertyService implements ClusterService {
         initializeSharedProperties().block();
     }
 
+    /**
+     * @implNote We don't support the partial update by Map<String, Object> because
+     * there is not an efficient way to update nested objects of a document in MongoDB.
+     */
     public Mono<Boolean> updateSharedProperties(TurmsProperties turmsProperties) {
         log.info("Share new turms properties to all members");
+        SharedClusterProperties clusterProperties = getClusterProperties(sharedClusterProperties, turmsProperties);
         Date now = new Date();
-        CommonProperties commonProperties = SharedClusterProperties.getCommonProperties(turmsProperties);
-        GatewayProperties gatewayProperties = turmsProperties.getGateway();
-        ServiceProperties serviceProperties = turmsProperties.getService();
         Query query = new Query()
                 .addCriteria(Criteria.where("_id").is(clusterId))
                 .addCriteria(Criteria.where(SharedClusterProperties.Fields.lastUpdatedTime).lt(now));
         Update update = new Update()
-                .set(SharedClusterProperties.Fields.commonProperties, commonProperties);
-        if (gatewayProperties != null) {
-            update.set(SharedClusterProperties.Fields.gatewayProperties, gatewayProperties);
+                .set(SharedClusterProperties.Fields.commonProperties, clusterProperties.getCommonProperties());
+        if (clusterProperties.getGatewayProperties() != null) {
+            update.set(SharedClusterProperties.Fields.gatewayProperties, clusterProperties.getGatewayProperties());
         }
-        if (serviceProperties != null) {
-            update.set(SharedClusterProperties.Fields.serviceProperties, serviceProperties);
+        if (clusterProperties.getServiceProperties() != null) {
+            update.set(SharedClusterProperties.Fields.serviceProperties, clusterProperties.getServiceProperties());
         }
-        SharedClusterProperties clusterProperties = sharedClusterProperties.toBuilder()
-                .commonProperties(commonProperties)
-                .gatewayProperties(gatewayProperties)
-                .serviceProperties(serviceProperties)
-                .build();
         return sharedConfigService.upsert(query, update, clusterProperties, SharedClusterProperties.class)
                 .doOnError(e -> log.error("Failed to share new turms properties", e))
                 .doOnNext(wasSuccessful -> {
@@ -196,4 +197,14 @@ public class SharedPropertyService implements ClusterService {
                 });
     }
 
+    public static SharedClusterProperties getClusterProperties(SharedClusterProperties clusterPropertiesSource, TurmsProperties turmsProperties) {
+        CommonProperties commonProperties = getCommonProperties(turmsProperties);
+        GatewayProperties gatewayProperties = turmsProperties.getGateway();
+        ServiceProperties serviceProperties = turmsProperties.getService();
+        return clusterPropertiesSource.toBuilder()
+                .commonProperties(commonProperties)
+                .gatewayProperties(gatewayProperties)
+                .serviceProperties(serviceProperties)
+                .build();
+    }
 }

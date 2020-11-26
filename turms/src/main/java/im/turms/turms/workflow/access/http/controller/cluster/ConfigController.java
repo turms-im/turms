@@ -22,10 +22,13 @@ import im.turms.common.exception.TurmsBusinessException;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
+import im.turms.server.common.util.PropertiesUtil;
 import im.turms.turms.workflow.access.http.dto.response.AcknowledgedDTO;
 import im.turms.turms.workflow.access.http.dto.response.ResponseDTO;
 import im.turms.turms.workflow.access.http.dto.response.ResponseFactory;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -59,50 +62,32 @@ public class ConfigController {
     @RequiredPermission(CLUSTER_INFO_QUERY)
     public ResponseEntity<ResponseDTO<Map<String, Object>>> queryClusterConfig(@RequestParam(defaultValue = "false") Boolean onlyMutable) {
         try {
-            return ResponseFactory.okIfTruthy(turmsPropertiesManager.getPropertyValueMap(node.getSharedProperties(), onlyMutable));
+            return ResponseFactory.okIfTruthy(PropertiesUtil.getPropertyValueMap(node.getSharedProperties(), onlyMutable));
         } catch (IOException e) {
             throw TurmsBusinessException.get(TurmsStatusCode.SERVER_INTERNAL_ERROR);
         }
     }
 
+    /**
+     * @implNote Do NOT declare turmsProperties as TurmsProperties because TurmsProperties has default values
+     */
     @PutMapping
     @RequiredPermission(CLUSTER_CONFIG_UPDATE)
     @ApiOperation(value = "", notes = "Do not call this method frequently because it costs a lot of resources")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "turmsProperties", dataTypeClass = TurmsProperties.class, paramType = "body")
+    })
     public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> updateClusterConfig(
             @RequestParam(defaultValue = "false") Boolean reset,
-            @RequestBody(required = false) TurmsProperties turmsProperties) throws IOException {
-        TurmsProperties newProperties;
-        String newPropertiesStr;
-        if (reset) {
-            newProperties = new TurmsProperties();
-            // Convert the properties to String instead of byte[] because the properties will be saved
-            // as a text file in the local file system later
-            newPropertiesStr = turmsPropertiesManager.getMutablePropertiesString(newProperties);
+            @RequestParam(defaultValue = "false") Boolean updateGlobalProperties,
+            @RequestBody(required = false) Map<String, Object> turmsProperties) throws IOException {
+        if (updateGlobalProperties) {
+            Mono<Boolean> updatePropertiesMono = turmsPropertiesManager.updateGlobalConfig(reset, turmsProperties);
+            return ResponseFactory.acknowledged(updatePropertiesMono);
         } else {
-            if (turmsProperties != null) {
-                newPropertiesStr = turmsPropertiesManager.getMutablePropertiesString(turmsProperties);
-                newProperties = turmsPropertiesManager.merge(
-                        node.getSharedProperties(),
-                        newPropertiesStr);
-            } else {
-                throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The new properties must not be null if reset is false");
-            }
+            turmsPropertiesManager.updateLocalConfig(reset, turmsProperties);
+            return ResponseFactory.acknowledged(Mono.just(true));
         }
-        // To keep the implementation simple, we don't pick out and remove the immutable properties
-        Mono<Boolean> updatePropertiesMono = node.getSharedPropertyService().updateSharedProperties(newProperties)
-                .doOnNext(wasSuccessful -> {
-                    if (wasSuccessful) {
-                        try {
-                            turmsPropertiesManager.updateLocalProperties(newProperties);
-                            turmsPropertiesManager.persist(newPropertiesStr);
-                        } catch (IOException e) {
-                            log.error("Failed to persist new turms properties", e);
-                        }
-                        turmsPropertiesManager.notifyListeners(newProperties);
-                    }
-                })
-                .onErrorReturn(false);
-        return ResponseFactory.acknowledged(updatePropertiesMono);
     }
 
     @GetMapping("/metadata")
@@ -110,15 +95,15 @@ public class ConfigController {
     public ResponseEntity<ResponseDTO<Map<String, Object>>> queryClusterConfigMetadata(
             @RequestParam(defaultValue = "false") Boolean onlyMutable,
             @RequestParam(defaultValue = "false") Boolean withValue) {
-        Map<String, Object> metadata = onlyMutable ? TurmsPropertiesManager.ONLY_MUTABLE_METADATA : TurmsPropertiesManager.METADATA;
+        Map<String, Object> metadata = onlyMutable ? PropertiesUtil.ONLY_MUTABLE_METADATA : PropertiesUtil.METADATA;
         if (withValue) {
             try {
-                Map<String, Object> propertyValueMap = turmsPropertiesManager.getPropertyValueMap(node.getSharedProperties(), onlyMutable)
+                Map<String, Object> propertyValueMap = PropertiesUtil.getPropertyValueMap(node.getSharedProperties(), onlyMutable)
                         .entrySet()
                         .stream()
                         .filter(entry -> metadata.containsKey(entry.getKey()))
                         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-                Map<String, Object> propertiesWithMetadata = turmsPropertiesManager.mergePropertiesWithMetadata(propertyValueMap, metadata);
+                Map<String, Object> propertiesWithMetadata = PropertiesUtil.mergePropertiesWithMetadata(propertyValueMap, metadata);
                 return ResponseFactory.okIfTruthy(propertiesWithMetadata);
             } catch (IOException e) {
                 throw TurmsBusinessException.get(TurmsStatusCode.SERVER_INTERNAL_ERROR, e);

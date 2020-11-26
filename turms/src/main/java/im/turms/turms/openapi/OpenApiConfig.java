@@ -18,6 +18,7 @@
 package im.turms.turms.openapi;
 
 import com.fasterxml.classmate.TypeResolver;
+import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -62,6 +63,7 @@ public class OpenApiConfig {
                         .title(PROJECT_NAME)
                         .version(turmsPropertiesManager.getLocalProperties().getCluster().getNode().getVersion())
                         .build())
+                .additionalModels(typeResolver.resolve(TurmsProperties.class))
                 .alternateTypeRules(newRule(typeResolver.resolve(Mono.class,
                         typeResolver.resolve(ResponseEntity.class, WildcardType.class)),
                         typeResolver.resolve(WildcardType.class)))
