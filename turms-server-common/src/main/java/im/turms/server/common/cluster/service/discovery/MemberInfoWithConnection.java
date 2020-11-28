@@ -26,8 +26,9 @@ import lombok.EqualsAndHashCode;
  * @author James Chen
  */
 @Data
-@EqualsAndHashCode(of = "member")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class MemberInfoWithConnection {
+    @EqualsAndHashCode.Include
     private final Member member;
     private final RSocket connection;
 }

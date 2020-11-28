@@ -17,6 +17,7 @@
 
 package im.turms.server.common.cluster.service.config.domain.discovery;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.cluster.node.NodeVersion;
 import lombok.Data;
@@ -166,10 +167,12 @@ public final class Member {
         private final String nodeId;
     }
 
+    @JsonIgnore
     public String getClusterId() {
         return getKey().getClusterId();
     }
 
+    @JsonIgnore
     public String getNodeId() {
         return getKey().getNodeId();
     }

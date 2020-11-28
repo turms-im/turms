@@ -80,7 +80,9 @@ public class MemberController {
                 addMemberDTO.getServiceAddress(),
                 false,
                 addMemberDTO.isActive());
-        Mono<Boolean> addMemberMono = node.getDiscoveryService().registerMember(member);
+        Mono<Boolean> addMemberMono = node.getDiscoveryService()
+                .registerMember(member)
+                .thenReturn(true);
         return ResponseFactory.acknowledged(addMemberMono);
     }
 
