@@ -72,8 +72,6 @@ public class DiscoveryService implements ClusterService {
     @Getter
     private Leader leader;
 
-    private volatile boolean isClosing;
-
     /**
      * Use independent collections to speed up query operations
      */
@@ -236,7 +234,7 @@ public class DiscoveryService implements ClusterService {
                                 updateOtherActiveConnectedServiceMemberList(false, deletedMember, null);
                                 if (nodeId.equals(getLocalMember().getNodeId())) {
                                     localNodeStatusManager.setLocalNodeRegistered(false);
-                                    if (!isClosing) {
+                                    if (!localNodeStatusManager.isClosing()) {
                                         registerMember(getLocalMember()).subscribe();
                                     }
                                 }
@@ -326,7 +324,7 @@ public class DiscoveryService implements ClusterService {
 
     @Override
     public void stop() {
-        isClosing = true;
+        localNodeStatusManager.setClosing(true);
         scheduler.shutdownNow();
         connectionManager.stop();
         if (localNodeStatusManager.isLocalNodeRegistered()) {

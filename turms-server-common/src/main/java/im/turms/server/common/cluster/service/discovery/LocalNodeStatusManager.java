@@ -50,6 +50,9 @@ public class LocalNodeStatusManager {
     @Getter
     @Setter
     private volatile boolean isLocalNodeRegistered;
+    @Getter
+    @Setter
+    private volatile boolean isClosing;
     private final Duration heartbeatInterval;
     private final long heartbeatIntervalInMillis;
     private ScheduledFuture<?> heartbeatFuture;
@@ -128,6 +131,9 @@ public class LocalNodeStatusManager {
     public void startHeartbeat() {
         if (heartbeatFuture == null || heartbeatFuture.isDone()) {
             heartbeatFuture = scheduler.scheduleWithFixedDelay(() -> {
+                if (isClosing) {
+                    return;
+                }
                 try {
                     Date now = new Date();
                     Update update = new Update().set(Member.Fields.lastHeartbeatDate, now);
