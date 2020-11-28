@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "vuepress": "^1.7.1",
-    "vuepress-plugin-mermaidjs": "^1.8.0"
+    "vuepress-plugin-mermaidjs": "^1.8.1"
   },
   "repository": {
     "type": "git",

@@ -12,6 +12,17 @@ Turms客户端目前支持JavaScript、Java与Swift这三种语言，对外暴�
 2. 在您的项目中，引入对应的客户端文件
 3. 编写业务逻辑
 
+## 版本要求
+
+Turms客户端对版本的最低要求，主要是根据：平台全球市场占有率、平台TLSv1.2最低支持版本与代码实现的优雅程度，三个因素来考量。另外，Turms不提供对TLSv1与TLSv1.1等被时代淘汰协议的官方支持。
+
+* Android平台：支持16+。turms-client-java采用SSLContext实现TLS，其在Android API 16+提供了对TLSv1.2的支持（参考资料[SSLContext](https://developer.android.com/reference/javax/net/ssl/SSLContext)）
+* iOS设备：支持12.0+。考虑到[iOS 12.0+在全球的市场占有率](https://developer.apple.com/support/app-store/)以及苹果产品用户的习惯，turms-client-swift采用NWConnection实现TCP协议，因此设备版本的要求等同于支持NWConnection设备的版本要求。另外，turms-client-swift不会考虑用古老的CFStreamCreatePairWithSocketToHost来实现TCP协议。
+* 浏览器环境：[支持WebSocket协议的浏览器](https://caniuse.com/?search=websocket)均支持。另外，对于IE系列浏览器，turms-client-js仅对IE 11提供官方支持。
+* 桌面端：如果您采用turms-client-java实现，则要求JDK版本为8(+)，因为JDK 8+默认提供对TLSv1.2的支持。如果您采用turms-client-js实现，则Turms提供对Node.js 8+的官方支持。另外，Turms之后还会提供C++实现的turms-client-cpp客户端。
+
+TODO：Turms客户端为快速迭代，目前均采用WebSocket协议。但近期会将turms-client-java/swift的WebSocket协议替换成纯TCP协议实现。此变动不会影响上述的版本要求。
+
 ## 客户端的对外逻辑结构
 
 - TurmsClient：Turms客户端唯一直接对外暴露的类，一个TurmsClient实例代表着一个客户端与服务端之间的会话连接。以下变量是TurmsClient对外的成员变量。

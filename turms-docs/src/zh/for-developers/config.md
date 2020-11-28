@@ -12,13 +12,13 @@
 
 ## 配置分类
 
-Turms属性分为三大类：Service类、Gateway类，以及Common类。Service类的属性对应了turms服务端独有的配置，Gateway类的属性对应了turms-gateway服务端独有的配置，而Common类的属性表示turms和turms-gateway服务端可以共用该类的属性。
+Turms属性分为三大类配置：Turms Service配置、Turms Gateway配置，以及Common通用配置。Turms Service配置对应turms服务端独有的配置，Turms Gateway配置对应turms-gateway服务端独有的配置，而Common通用配置可以被turms和turms-gateway服务端共用。
 
 每个类别中的属性都能通过application.yaml配置（提醒：因为Turms采用了Spring提供的ConfigurationMetadataAnnotationProcessor，因此如果您曾在本地compile Turms项目的话，当您在本地IDEA IDE输入Turms相关配置的时，IDE会提供配置提示与补全功能），并且对于标有MutablePropertiesView注释的属性，您都能通过供管理员专用的API接口在Turms集群运行时进行零停机实时更新。
 
-由于所有的配置项高达上百个，直接看代码比看文档更加直观，因此推荐您直接查阅im.turms.server.common.property目录下各配置类，下文仅对大的分类做介绍。
+由于所有的配置项高达上百个，直接看代码比看文档更加直观，因此推荐您直接查阅im.turms.server.common.property目录下各配置类，下文仅对大的分类做简要介绍。
 
-### Service类
+### Tumrs Service配置
 
 #### 非业务相关类
 
@@ -42,7 +42,7 @@ Turms属性分为三大类：Service类、Gateway类，以及Common类。Service
 | NotificationProperties | notification | 通知相关配置     |
 | StatisticsProperties   | statistics   | 统计相关配置     |
 
-#### Gateway类
+#### Turms Gateway配置
 
 | 类                          | 字段名            | 描述                                                         |
 | --------------------------- | ----------------- | ------------------------------------------------------------ |
@@ -55,7 +55,7 @@ Turms属性分为三大类：Service类、Gateway类，以及Common类。Service
 | SessionProperties           | session           | 会话相关配置                                                 |
 | TurmsRedisProperties        | redis             | Redis数据库相关配置                                          |
 
-#### Common类
+#### Common通用配置
 
 | 类                   | 字段名     | 描述                                                         |
 | -------------------- | ---------- | ------------------------------------------------------------ |

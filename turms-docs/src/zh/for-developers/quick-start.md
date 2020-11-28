@@ -6,7 +6,7 @@
 
 1. MongoDB集群搭建（用于业务数据存储、服务发现、配置管理）
 
-   - 下载并安装[MongoDB v4.4.0](https://www.mongodb.com/download-center/community)。以RHEL/CentOS为例（具体可参考：https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat）：
+   - 下载并安装[MongoDB](https://www.mongodb.com/download-center/community)（要求最低版本为：4.0。推荐版本为最新稳定版）。以RHEL/CentOS为例（具体可参考：https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat）：
 
      ```bash
      cat <<EOF > /etc/yum.repos.d/mongodb-org-4.4.repo
@@ -49,7 +49,7 @@
    
    - （推荐使用Ansible）在所有需要运行Turms服务端的系统上，运行bin/turms脚本（默认以Thin包形式执行，若需以Fat包形式执行，请在执行脚本时加上“-f”参数，如：“sh turms.sh -f”。之后再运行turms-gateway服务端。turms与turms-gateway服务端会通过MongoDB（作为服务注册中心）来自动寻找其他服务端节点，由此Turms集群开始运作。
    
-   方案二：克隆Turms仓库源码，直接通过IDE运行turms与turms-gateway服务端。
+   方案二：克隆Turms仓库源码，直接通过IDE运行turms与turms-gateway服务端。（参考命令：git clone --depth 1 https://github.com/turms-im/turms.git）
 
 **提醒**
 

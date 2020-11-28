@@ -2,12 +2,11 @@
 
 ## 登陆设备识别策略
 
-1. 如果您在调用客户端的turmsClient.userService.login()接口时，手动配置了具体的登录设备类型，则Turms服务端识别到的最终设备类型以您的配置为准。因此您甚至可以对于iOS设备，指定以Android的身份进行登录，这种操作是被允许的。
-2. 如果您未手动配置具体登录设备类型，则在默认情况下，各Turms客户端会自动识别当前运行环境，并指定当前登录设备类型。
+1. 手动配置。开发者在调用客户端的turmsClient.userService.login()接口时，可以手动配置具体的登录设备类型。如给实际为iOS的设备，指定以Android的身份进行登录（这种操作是被允许的）。另外，您也能手动配置登录设备类型为UNKNOWN。
+2. 默认配置。如果您未手动配置具体登录设备类型，则在默认情况下，各Turms客户端会自动识别当前运行环境，并指定当前登录设备类型。
    * turms-client-js 会判断当前运行环境是浏览器还是Node.js，如果是浏览器，则以Browser身份登录，否则以Desktop身份登录
    * turms-client-java 会判断当前的运行环境是Android还是桌面系统，分别以Android、Desktop的身份登录
    * turms-client-swift 则默认以iOS身份进行登录
-4. 如果您在调用客户端turmsClient.userService.login()接口时，指定登录类型为UNKNOWN，则最终登录设备类型将由turms-gateway服务端自行根据WebSocket在握手阶段的HTTP请求头“User-Agent”来判断当前登陆用户的设备类型。如果turms-gateway无法判断登录设备类型，则保持登陆类型为UNKNOWN。
 
 相关配置类：im.turms.server.common.property.env.gateway.SessionProperties
 
