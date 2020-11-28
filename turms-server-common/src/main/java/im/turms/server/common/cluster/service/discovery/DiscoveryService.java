@@ -234,8 +234,11 @@ public class DiscoveryService implements ClusterService {
                                 String nodeId = ChangeStreamUtil.getStringFromId(event, Member.Key.Fields.nodeId);
                                 Member deletedMember = allKnownMembers.remove(nodeId);
                                 updateOtherActiveConnectedServiceMemberList(false, deletedMember, null);
-                                if (nodeId.equals(getLocalMember().getNodeId()) && !isClosing) {
-                                    registerMember(getLocalMember()).subscribe();
+                                if (nodeId.equals(getLocalMember().getNodeId())) {
+                                    localNodeStatusManager.setLocalNodeRegistered(false);
+                                    if (!isClosing) {
+                                        registerMember(getLocalMember()).subscribe();
+                                    }
                                 }
                                 break;
                         }
@@ -326,18 +329,19 @@ public class DiscoveryService implements ClusterService {
         isClosing = true;
         scheduler.shutdownNow();
         connectionManager.stop();
-        localNodeStatusManager.unregisterLocalMember().block(CRUD_TIMEOUT_DURATION);
+        if (localNodeStatusManager.isLocalNodeRegistered()) {
+            localNodeStatusManager.unregisterLocalMember().block(CRUD_TIMEOUT_DURATION);
+        }
     }
 
     // Registration
 
-    public Mono<Boolean> registerMember(Member member) {
+    public Mono<Void> registerMember(Member member) {
         if (member.getClusterId() == null
                 || member.getNodeId() == null) {
             throw new IllegalArgumentException("Failed to register member because required fields are missing");
         }
-        return sharedConfigService.insert(member)
-                .thenReturn(true);
+        return sharedConfigService.insert(member).then();
     }
 
     public Mono<Boolean> unregisterMembers(Set<String> nodeIds) {

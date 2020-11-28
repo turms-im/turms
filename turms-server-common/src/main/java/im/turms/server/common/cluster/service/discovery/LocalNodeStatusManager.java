@@ -22,11 +22,9 @@ import im.turms.server.common.cluster.service.config.SharedConfigService;
 import im.turms.server.common.cluster.service.config.domain.discovery.Leader;
 import im.turms.server.common.cluster.service.config.domain.discovery.Member;
 import io.netty.util.concurrent.DefaultThreadFactory;
-import jdk.internal.vm.annotation.Contended;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -49,15 +47,13 @@ public class LocalNodeStatusManager {
     private final SharedConfigService sharedConfigService;
     @Getter
     private final Member localMember;
+    @Getter
+    @Setter
+    private volatile boolean isLocalNodeRegistered;
     private final Duration heartbeatInterval;
     private final long heartbeatIntervalInMillis;
     private ScheduledFuture<?> heartbeatFuture;
     private final ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1, new DefaultThreadFactory("discovery-heartbeat"));
-
-    @Getter
-    @Setter
-    @Contended
-    private boolean isHeartbeatTimeout;
 
     public LocalNodeStatusManager(
             DiscoveryService discoveryService,
@@ -79,13 +75,14 @@ public class LocalNodeStatusManager {
         return sharedConfigService.upsert(memberQuery, update, localMember, Member.class);
     }
 
-    public Mono<Boolean> registerLocalMember() {
+    public Mono<Void> registerLocalMember() {
         log.info("Registering the local member");
         return discoveryService.registerMember(localMember)
-                .onErrorResume(DuplicateKeyException.class, throwable -> unregisterLocalMember()
-                        .then(discoveryService.registerMember(localMember)))
                 .doOnError(e -> log.error("Failed to register the local member", e))
-                .doOnSuccess(ignored -> log.info("Registered the local member successfully"));
+                .doOnSuccess(ignored -> {
+                    isLocalNodeRegistered = true;
+                    log.info("Registered the local member successfully");
+                });
     }
 
     public Mono<Boolean> unregisterLocalMember() {
@@ -93,7 +90,10 @@ public class LocalNodeStatusManager {
         return discoveryService.unregisterMembers(Set.of(localMember.getNodeId()))
                 .then(unregisterLocalMemberLeadership())
                 .doOnError(e -> log.error("Failed to unregister the local member", e))
-                .doOnSuccess(ignored -> log.info("Unregistered the local member successfully"));
+                .doOnSuccess(ignored -> {
+                    isLocalNodeRegistered = false;
+                    log.info("Unregistered the local member successfully");
+                });
     }
 
     public Mono<Leader> tryBecomeLeader() {
