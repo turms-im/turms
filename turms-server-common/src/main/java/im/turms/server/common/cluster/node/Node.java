@@ -61,10 +61,17 @@ import java.util.function.Consumer;
 @Log4j2
 public class Node {
 
+    /**
+     * For best performance for im.turms.server.common.log4j.plugin.TurmsContextLookup
+     * to access, we use static.
+     */
+    @Getter
+    private static NodeType nodeType;
+    @Getter
+    private static String nodeId;
+
     @Getter
     private final ApplicationContext context;
-
-    private final NodeType nodeType;
 
     // Transport
 
@@ -79,6 +86,9 @@ public class Node {
     private final RpcService rpcService;
     private final FlakeIdService flakeIdService;
 
+    /**
+     * @param turmsPropertiesManager is used to get local properties and listen to their changes
+     */
     public Node(
             ApplicationContext context,
             NodeType nodeType,
@@ -86,7 +96,7 @@ public class Node {
             IServiceAddressManager serviceAddressManager) {
         // Prepare node information
         this.context = context;
-        this.nodeType = nodeType;
+        Node.nodeType = nodeType;
         TurmsProperties turmsProperties = turmsPropertiesManager.getLocalProperties();
         ClusterProperties clusterProperties = turmsProperties.getCluster();
         NodeProperties nodeProperties = clusterProperties.getNode();
@@ -114,8 +124,12 @@ public class Node {
                 discoveryProperties.getServerSsl());
         InetSocketAddress address = serverChannel.address();
         String clusterId = clusterProperties.getId();
-        String nodeId = nodeProperties.getId();
-        nodeId = StringUtils.isBlank(nodeId) ? RandomStringUtils.randomAlphanumeric(8) : nodeId;
+        String tempNodeId = nodeProperties.getId();
+        if (StringUtils.isBlank(nodeId)) {
+            tempNodeId = RandomStringUtils.randomAlphanumeric(8).toLowerCase();
+            log.warn("A random node ID {} has been used. You should better set a node ID manually in the production environment", tempNodeId);
+        }
+        nodeId = tempNodeId;
 
         // Init services
         // we pass the properties one by one rather than passing the node instance
@@ -158,10 +172,6 @@ public class Node {
     }
 
     // Frequently used methods for external classes
-
-    public String getNodeId() {
-        return discoveryService.getLocalMember().getNodeId();
-    }
 
     public TurmsProperties getSharedProperties() {
         return sharedPropertyService.getSharedProperties();

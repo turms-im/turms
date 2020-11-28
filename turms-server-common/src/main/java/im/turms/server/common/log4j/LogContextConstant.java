@@ -25,14 +25,24 @@ public class LogContextConstant {
     }
 
     public static final String LOG_TYPE = "TYPE";
+    public static final String NODE_TYPE = "NODE_TYPE";
+    public static final String NODE_ID = "NODE_ID";
 
-    public static final class Type {
-        private Type() {
+    public static final class LogType {
+        private LogType() {
         }
 
         public static final String ADMIN_API = "ADMIN_API";
         public static final String CLIENT_API = "USER_API";
         public static final String USER_ACTIVITY = "USER_ACTIVITY";
+    }
+
+    public static final class NodeType {
+        private NodeType() {
+        }
+
+        public static final String SERVICE = "S";
+        public static final String GATEWAY = "G";
     }
 
 }

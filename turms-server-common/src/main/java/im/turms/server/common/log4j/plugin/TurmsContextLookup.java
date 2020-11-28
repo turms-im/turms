@@ -18,6 +18,8 @@
 package im.turms.server.common.log4j.plugin;
 
 
+import im.turms.server.common.cluster.node.Node;
+import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.log4j.AdminApiLogging;
 import im.turms.server.common.log4j.ClientApiLogging;
 import im.turms.server.common.log4j.LogContextConstant;
@@ -55,18 +57,41 @@ public class TurmsContextLookup implements StrLookup {
     @SneakyThrows
     @Override
     public String lookup(LogEvent event, String key) {
-        if (LogContextConstant.LOG_TYPE.equals(key) && event instanceof RingBufferLogEvent) {
-            RingBufferLogEvent logEvent = (RingBufferLogEvent) event;
-            AsyncLogger logger = (AsyncLogger) GET_LOGGER.invokeExact(logEvent);
-            if (logger == ClientApiLogging.logger) {
-                return LogContextConstant.Type.CLIENT_API;
-            } else if (logger == UserActivityLogging.logger) {
-                return LogContextConstant.Type.USER_ACTIVITY;
-            } else if (logger == AdminApiLogging.logger) {
-                return LogContextConstant.Type.ADMIN_API;
-            }
+        if (!(event instanceof RingBufferLogEvent)) {
+            return null;
         }
-        return null;
+        RingBufferLogEvent logEvent = (RingBufferLogEvent) event;
+        switch (key) {
+            case LogContextConstant.LOG_TYPE:
+                AsyncLogger logger = (AsyncLogger) GET_LOGGER.invokeExact(logEvent);
+                if (logger == ClientApiLogging.logger) {
+                    return LogContextConstant.LogType.CLIENT_API;
+                } else if (logger == UserActivityLogging.logger) {
+                    return LogContextConstant.LogType.USER_ACTIVITY;
+                } else if (logger == AdminApiLogging.logger) {
+                    return LogContextConstant.LogType.ADMIN_API;
+                } else {
+                    return null;
+                }
+            case LogContextConstant.NODE_TYPE:
+                NodeType nodeType = Node.getNodeType();
+                if (nodeType == null) {
+                    return "";
+                }
+                switch (nodeType) {
+                    case SERVICE:
+                        return LogContextConstant.NodeType.SERVICE;
+                    case GATEWAY:
+                        return LogContextConstant.NodeType.GATEWAY;
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + Node.getNodeType());
+                }
+            case LogContextConstant.NODE_ID:
+                String nodeId = Node.getNodeId();
+                return nodeId == null ? "" : nodeId;
+            default:
+                return null;
+        }
     }
 
 }
