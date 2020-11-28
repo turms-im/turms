@@ -91,18 +91,18 @@ public class ControllerFilter implements WebFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         return requestMappingHandlerMapping.getHandler(exchange)
-                // For the access to the OpenAPI page "/swagger-ui/index.html"
                 .switchIfEmpty(Mono.defer(() -> isOpenApiEnabledAndOpenApiRequest(exchange)
+                        // For the access to the OpenAPI page "/swagger-ui/index.html"
                         ? chain.filter(exchange)
-                        : Mono.empty()))
+                        // For the access to metrics
+                        : filterUnhandledRequest(exchange, chain)))
                 .flatMap(handlerMethodObject -> {
-                    if (isOpenApiEnabledAndOpenApiRequest(exchange)) {
-                        return chain.filter(exchange);
-                    }
                     if (handlerMethodObject instanceof HandlerMethod) {
                         HandlerMethod handlerMethod = (HandlerMethod) handlerMethodObject;
                         return filterHandlerMethod(handlerMethod, exchange, chain);
-                    } else {
+                    } else if (isOpenApiEnabledAndOpenApiRequest(exchange)) {
+                        return chain.filter(exchange);
+                    }else {
                         return filterUnhandledRequest(exchange, chain);
                     }
                 });
