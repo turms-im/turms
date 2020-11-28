@@ -197,7 +197,7 @@ public class SharedPropertyService implements ClusterService {
                 });
     }
 
-    public static SharedClusterProperties getClusterProperties(SharedClusterProperties clusterPropertiesSource, TurmsProperties turmsProperties) {
+    private static SharedClusterProperties getClusterProperties(SharedClusterProperties clusterPropertiesSource, TurmsProperties turmsProperties) {
         CommonProperties commonProperties = getCommonProperties(turmsProperties);
         GatewayProperties gatewayProperties = turmsProperties.getGateway();
         ServiceProperties serviceProperties = turmsProperties.getService();

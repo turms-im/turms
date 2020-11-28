@@ -21,7 +21,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.context.ApplicationContext;
 import im.turms.server.common.util.PropertiesUtil;
-import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Lazy;
@@ -46,17 +45,17 @@ public class TurmsPropertiesManager {
 
     public final List<Consumer<TurmsProperties>> propertiesChangeListeners = new LinkedList<>();
 
+    private static final TurmsProperties DEFAULT_PROPERTIES = new TurmsProperties();
+    private static final String DEFAULT_PROPERTIES_STR = PropertiesUtil.toMutablePropertiesString(DEFAULT_PROPERTIES);
+
     private final Path latestConfigFilePath;
-    @Getter
-    private final String defaultProperties;
     @Setter
     private Node node;
-    private TurmsProperties turmsProperties;
+    private TurmsProperties localTurmsProperties;
 
-    public TurmsPropertiesManager(@Lazy Node node, TurmsProperties turmsProperties, ApplicationContext context) throws JsonProcessingException {
+    public TurmsPropertiesManager(@Lazy Node node, TurmsProperties localTurmsProperties, ApplicationContext context) throws JsonProcessingException {
         this.node = node;
-        this.turmsProperties = turmsProperties;
-        defaultProperties = PropertiesUtil.toMutablePropertiesString(turmsProperties);
+        this.localTurmsProperties = localTurmsProperties;
         // Get latestConfigFilePath according to the active profiles
         String activeProfile = context.getActiveProfile();
         // The property should be passed from turms.cmd or turms.sh
@@ -76,13 +75,7 @@ public class TurmsPropertiesManager {
      * so that we can update the global TurmsProperties instance easily by replacing its reference
      */
     public TurmsProperties getLocalProperties() {
-        return turmsProperties;
-    }
-
-    // Persist
-
-    public void persist(String propertiesJson) throws IOException {
-        PropertiesUtil.persist(latestConfigFilePath, propertiesJson);
+        return localTurmsProperties;
     }
 
     // Update
@@ -95,14 +88,14 @@ public class TurmsPropertiesManager {
         // as a yaml file in the local file system later
         String newPropertiesStr;
         if (reset) {
-            newLocalProperties = new TurmsProperties();
-            newPropertiesStr = PropertiesUtil.toMutablePropertiesString(newLocalProperties);
+            newLocalProperties = DEFAULT_PROPERTIES;
+            newPropertiesStr = DEFAULT_PROPERTIES_STR;
         } else {
             if (propertiesForUpdating == null || propertiesForUpdating.isEmpty()) {
                 return;
             }
             newPropertiesStr = PropertiesUtil.toMutablePropertiesString(propertiesForUpdating);
-            if (newPropertiesStr.equals("{}")) {
+            if ("{}".equals(newPropertiesStr)) {
                 return;
             }
             newLocalProperties = PropertiesUtil.mergeAsProperties(
@@ -110,8 +103,8 @@ public class TurmsPropertiesManager {
                     newPropertiesStr);
         }
         try {
-            turmsProperties = newLocalProperties;
-            persist(newPropertiesStr);
+            localTurmsProperties = newLocalProperties;
+            PropertiesUtil.persist(latestConfigFilePath, newPropertiesStr);
         } catch (IOException e) {
             log.error("Failed to persist new turms properties", e);
         }
