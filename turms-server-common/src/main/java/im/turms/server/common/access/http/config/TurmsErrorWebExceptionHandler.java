@@ -21,6 +21,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.NestedExceptionUtils;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.log.LogMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -46,10 +48,12 @@ import java.util.Set;
  * @author James Chen
  * @see org.springframework.boot.autoconfigure.web.reactive.error.ErrorWebFluxAutoConfiguration
  * @see org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler
+ * @see org.springframework.web.reactive.config.WebFluxConfigurationSupport#responseStatusExceptionHandler
  * @see org.springframework.web.server.handler.ResponseStatusExceptionHandler
  */
 @Configuration
 @Log4j2
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class TurmsErrorWebExceptionHandler implements ErrorWebExceptionHandler {
 
     private static final Set<String> DISCONNECTED_CLIENT_EXCEPTIONS = Set.of(
