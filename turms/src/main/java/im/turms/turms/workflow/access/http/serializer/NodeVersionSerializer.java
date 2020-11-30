@@ -33,7 +33,7 @@ import java.io.IOException;
 @Log4j2
 public class NodeVersionSerializer {
 
-    public static class Serialize extends JsonSerializer<NodeVersion> {
+    public static class Serializer extends JsonSerializer<NodeVersion> {
         @Override
         public void serialize(NodeVersion value, JsonGenerator gen, SerializerProvider provider) {
             try {

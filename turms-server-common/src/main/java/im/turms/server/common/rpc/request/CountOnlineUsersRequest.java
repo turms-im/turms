@@ -23,6 +23,9 @@ import lombok.Data;
 import org.springframework.context.ApplicationContext;
 
 /**
+ * The server type to request: Turms Service
+ * The server type to respond: Turms Gateway
+ *
  * @author James Chen
  */
 @Data
@@ -45,7 +48,7 @@ public class CountOnlineUsersRequest extends RpcCallable<Integer> {
     public void setApplicationContext(ApplicationContext applicationContext) {
         super.setApplicationContext(applicationContext);
         if (statisticsService == null) {
-            statisticsService = getContext().getBean(IStatisticsService.class);
+            statisticsService = getBean(IStatisticsService.class);
         }
     }
 

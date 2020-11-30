@@ -86,6 +86,8 @@ public class DiscoveryService implements ClusterService {
      */
     @Getter
     private List<MemberInfoWithConnection> otherActiveConnectedServiceMemberList = Collections.emptyList();
+    @Getter
+    private List<MemberInfoWithConnection> otherActiveConnectedGatewayMemberList = Collections.emptyList();
 
     private final List<Consumer<Leader>> leadershipChangeListeners = new LinkedList<>();
     private final List<MembersChangeListener> membersChangeListeners = new LinkedList<>();
@@ -128,14 +130,12 @@ public class DiscoveryService implements ClusterService {
         connectionManager.addMemberConnectionChangeListener(new MemberConnectionChangeListener() {
             @Override
             public void onMemberConnectionAdded(Member member, RSocket connection) {
-                if (member.isActive() && member.getNodeType() == NodeType.SERVICE) {
-                    updateOtherActiveConnectedServiceMemberList(true, member, connection);
-                }
+                updateOtherActiveConnectedMemberList(true, member, connection);
             }
 
             @Override
             public void onMemberConnectionRemoved(Member member) {
-                updateOtherActiveConnectedServiceMemberList(false, member, null);
+                updateOtherActiveConnectedMemberList(false, member, null);
             }
         });
     }
@@ -231,7 +231,7 @@ public class DiscoveryService implements ClusterService {
                             case DELETE:
                                 String nodeId = ChangeStreamUtil.getStringFromId(event, Member.Key.Fields.nodeId);
                                 Member deletedMember = allKnownMembers.remove(nodeId);
-                                updateOtherActiveConnectedServiceMemberList(false, deletedMember, null);
+                                updateOtherActiveConnectedMemberList(false, deletedMember, null);
                                 if (nodeId.equals(getLocalMember().getNodeId())) {
                                     localNodeStatusManager.setLocalNodeRegistered(false);
                                     if (!localNodeStatusManager.isClosing()) {
@@ -259,7 +259,7 @@ public class DiscoveryService implements ClusterService {
             if (member.isActive()
                     && member.getNodeType() == NodeType.SERVICE
                     && connection != null) {
-                updateOtherActiveConnectedServiceMemberList(true, member, connection);
+                updateOtherActiveConnectedMemberList(true, member, connection);
                 if (notifyMembersChangeFuture != null) {
                     notifyMembersChangeFuture.cancel(false);
                 }
@@ -279,33 +279,42 @@ public class DiscoveryService implements ClusterService {
                 .collect(Collectors.toList());
     }
 
-    private synchronized void updateOtherActiveConnectedServiceMemberList(boolean isAdd, Member member, RSocket connection) {
+    private synchronized void updateOtherActiveConnectedMemberList(boolean isAdd, Member member, RSocket connection) {
         boolean isLocalNode = member.isSameNode(localNodeStatusManager.getLocalMember());
-        if (!isLocalNode) {
-            int size = isAdd
-                    ? otherActiveConnectedServiceMemberList.size() + 1
-                    : otherActiveConnectedServiceMemberList.size();
-            List<MemberInfoWithConnection> tempOtherActiveConnectedServiceMemberList = new ArrayList<>(size);
-            tempOtherActiveConnectedServiceMemberList.addAll(otherActiveConnectedServiceMemberList);
-            if (isAdd) {
-                tempOtherActiveConnectedServiceMemberList.add(new MemberInfoWithConnection(member, connection));
+        if (isLocalNode) {
+            return;
+        }
+        boolean isServiceMember = member.getNodeType() == NodeType.SERVICE;
+        List<MemberInfoWithConnection> memberList = isServiceMember
+                ? otherActiveConnectedServiceMemberList
+                : otherActiveConnectedGatewayMemberList;
+        int size = isAdd
+                ? memberList.size() + 1
+                : memberList.size();
+        List<MemberInfoWithConnection> tempOtherActiveConnectedMemberList = new ArrayList<>(size);
+        tempOtherActiveConnectedMemberList.addAll(memberList);
+        if (isAdd) {
+            tempOtherActiveConnectedMemberList.add(new MemberInfoWithConnection(member, connection));
+        } else {
+            tempOtherActiveConnectedMemberList.remove(new MemberInfoWithConnection(member, null));
+        }
+        tempOtherActiveConnectedMemberList.sort((i1, i2) -> {
+            Member m1 = i1.getMember();
+            Member m2 = i2.getMember();
+            int m1Priority = m1.getPriority();
+            int m2Priority = m2.getPriority();
+            if (m1Priority == m2Priority) {
+                // Don't use 0 to make sure that the order is consistent in every nodes
+                // and it should never happen
+                return m1.getNodeId().hashCode() < m2.getNodeId().hashCode() ? -1 : 1;
             } else {
-                tempOtherActiveConnectedServiceMemberList.remove(new MemberInfoWithConnection(member, null));
+                return m1Priority < m2Priority ? -1 : 1;
             }
-            tempOtherActiveConnectedServiceMemberList.sort((i1, i2) -> {
-                Member m1 = i1.getMember();
-                Member m2 = i2.getMember();
-                int m1Priority = m1.getPriority();
-                int m2Priority = m2.getPriority();
-                if (m1Priority == m2Priority) {
-                    // Don't use 0 to make sure that the order is consistent in every nodes
-                    // and it should never happen
-                    return m1.getNodeId().hashCode() < m2.getNodeId().hashCode() ? -1 : 1;
-                } else {
-                    return m1Priority < m2Priority ? -1 : 1;
-                }
-            });
-            otherActiveConnectedServiceMemberList = tempOtherActiveConnectedServiceMemberList;
+        });
+        if (isServiceMember) {
+            otherActiveConnectedServiceMemberList = tempOtherActiveConnectedMemberList;
+        } else {
+            otherActiveConnectedGatewayMemberList = tempOtherActiveConnectedMemberList;
         }
     }
 

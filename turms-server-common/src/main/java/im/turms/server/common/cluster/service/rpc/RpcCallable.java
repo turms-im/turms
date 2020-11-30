@@ -17,8 +17,11 @@
 
 package im.turms.server.common.cluster.service.rpc;
 
+import im.turms.server.common.cluster.node.NodeType;
+import im.turms.server.common.util.ExceptionUtil;
 import io.micrometer.core.instrument.Tag;
 import lombok.Getter;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import reactor.core.publisher.Mono;
@@ -34,6 +37,19 @@ public abstract class RpcCallable<T> implements ApplicationContextAware {
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
         this.context = applicationContext;
+    }
+
+    public <Bean> Bean getBean(Class<Bean> clazz) {
+        if (context == null) {
+            throw new IllegalStateException("Failed to get the bean because the context is null");
+        }
+        try {
+            return context.getBean(clazz);
+        } catch (NoSuchBeanDefinitionException e) {
+            NodeType nodeType = ExceptionUtil.suppress(() -> context.getBean(NodeType.class));
+            String message = String.format("Failed to get the bean. The request type %s may be sent to the wrong server %s", name(), nodeType);
+            throw new IllegalStateException(message, e);
+        }
     }
 
     public abstract String name();

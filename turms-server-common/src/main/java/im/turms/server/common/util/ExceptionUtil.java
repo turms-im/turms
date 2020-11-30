@@ -20,12 +20,22 @@ package im.turms.server.common.util;
 import im.turms.common.constant.statuscode.TurmsStatusCode;
 import im.turms.common.exception.TurmsBusinessException;
 
+import java.util.function.Supplier;
+
 /**
  * @author James Chen
  */
 public class ExceptionUtil {
 
     private ExceptionUtil() {
+    }
+
+    public static <T> T suppress(Supplier<T> supplier) {
+        try {
+            return supplier.get();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public static boolean isClientError(Throwable throwable) {

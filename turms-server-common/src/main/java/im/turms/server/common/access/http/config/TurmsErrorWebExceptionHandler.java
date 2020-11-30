@@ -46,6 +46,7 @@ import java.util.Set;
  * @author James Chen
  * @see org.springframework.boot.autoconfigure.web.reactive.error.ErrorWebFluxAutoConfiguration
  * @see org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler
+ * @see org.springframework.web.server.handler.ResponseStatusExceptionHandler
  */
 @Configuration
 @Log4j2

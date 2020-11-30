@@ -30,6 +30,9 @@ import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 /**
+ * The server type to request: Turms Service + Turms Gateway
+ * The server type to respond: Turms Gateway
+ *
  * @author James Chen
  */
 @Data
@@ -60,7 +63,7 @@ public class SetUserOfflineRequest extends RpcCallable<Boolean> {
     public void setApplicationContext(ApplicationContext applicationContext) {
         super.setApplicationContext(applicationContext);
         if (sessionService == null) {
-            sessionService = getContext().getBean(ISessionService.class);
+            sessionService = getBean(ISessionService.class);
         }
     }
 

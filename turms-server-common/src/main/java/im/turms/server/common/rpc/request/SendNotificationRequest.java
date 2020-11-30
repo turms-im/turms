@@ -28,6 +28,9 @@ import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 /**
+ * The server type to request: Turms Service
+ * The server type to respond: Turms Gateway
+ *
  * @author James Chen
  */
 @Data
@@ -61,7 +64,7 @@ public class SendNotificationRequest extends RpcCallable<Boolean> {
     public void setApplicationContext(ApplicationContext applicationContext) {
         super.setApplicationContext(applicationContext);
         if (outboundMessageService == null) {
-            outboundMessageService = getContext().getBean(IOutboundMessageService.class);
+            outboundMessageService = getBean(IOutboundMessageService.class);
         }
     }
 

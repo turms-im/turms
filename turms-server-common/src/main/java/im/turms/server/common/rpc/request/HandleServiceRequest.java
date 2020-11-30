@@ -27,6 +27,9 @@ import org.springframework.context.ApplicationContext;
 import reactor.core.publisher.Mono;
 
 /**
+ * The server type to request: Turms Gateway
+ * The server type to respond: Turms Service
+ *
  * @author James Chen
  */
 @Data
@@ -61,7 +64,7 @@ public class HandleServiceRequest extends RpcCallable<ServiceResponse> {
     public void setApplicationContext(ApplicationContext applicationContext) {
         super.setApplicationContext(applicationContext);
         if (dispatcher == null) {
-            dispatcher = getContext().getBean(IServiceRequestDispatcher.class);
+            dispatcher = getBean(IServiceRequestDispatcher.class);
         }
     }
 

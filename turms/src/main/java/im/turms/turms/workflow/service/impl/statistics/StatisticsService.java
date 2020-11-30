@@ -61,18 +61,20 @@ public class StatisticsService {
                 });
     }
 
+    /**
+     * @implNote Note that the count requests are sent by turms but all responses should come from turms-gateway
+     * so that we don't need to count the local online users like ".map(count -> count + countLocalOnlineUsers())"
+     */
     public Mono<Map<String, Integer>> countOnlineUsersByNodes() {
-        // Note that the count requests are sent by turms but the all responses come from turms-gateway
-        // so that we don't need to count the local online users like ".map(count -> count + countLocalOnlineUsers())"
         CountOnlineUsersRequest request = new CountOnlineUsersRequest();
-        return node.getRpcService().requestResponsesAsMapFromOtherServices(request, false)
+        return node.getRpcService().requestResponsesAsMapFromOtherGateways(request, false)
                 .onErrorResume(throwable -> RpcException.isErrorCode(throwable, RpcErrorCode.SERVICE_NOT_FOUND),
                         throwable -> Mono.just(Collections.emptyMap()));
     }
 
     public Mono<Integer> countOnlineUsers() {
         CountOnlineUsersRequest request = new CountOnlineUsersRequest();
-        Flux<Integer> responses = node.getRpcService().requestResponsesFromOtherServices(request, true)
+        Flux<Integer> responses = node.getRpcService().requestResponsesFromOtherGateways(request, true)
                 .onErrorResume(throwable -> RpcException.isErrorCode(throwable, RpcErrorCode.SERVICE_NOT_FOUND),
                         throwable -> Mono.just(0));
         return MathFlux.sumInt(responses);
