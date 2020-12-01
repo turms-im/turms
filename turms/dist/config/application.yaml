@@ -43,6 +43,7 @@ spring:
     include: latest
   autoconfigure:
     exclude:
+      - org.springframework.boot.actuate.autoconfigure.metrics.MetricsEndpointAutoConfiguration
       - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
       - org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration
 management:

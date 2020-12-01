@@ -256,9 +256,7 @@ public class DiscoveryService implements ClusterService {
                 localNodeStatusManager.updateInfo(member);
             }
             RSocket connection = connectionManager.getMemberConnection(member.getNodeId());
-            if (member.isActive()
-                    && member.getNodeType() == NodeType.SERVICE
-                    && connection != null) {
+            if (member.isActive() && connection != null) {
                 updateOtherActiveConnectedMemberList(true, member, connection);
                 if (notifyMembersChangeFuture != null) {
                     notifyMembersChangeFuture.cancel(false);
