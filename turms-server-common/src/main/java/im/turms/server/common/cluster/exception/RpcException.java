@@ -44,6 +44,7 @@ import static im.turms.server.common.cluster.service.rpc.RpcErrorCode.ERROR_CODE
 @EqualsAndHashCode(callSuper = false)
 public class RpcException extends NoStackTraceException {
 
+    private static final int CODE_STRING_LENGTH = ERROR_CODE_LENGTH + STATUS_CODE_LENGTH + 1;
     private static final Map<Pair<RpcErrorCode, TurmsStatusCode>, RpcException> EXCEPTION_POOL;
 
     static {
@@ -61,7 +62,7 @@ public class RpcException extends NoStackTraceException {
     private final String description;
 
     private RpcException(RpcErrorCode errorCode, TurmsStatusCode statusCode) {
-        super(errorCode.getErrorCode() + "" + statusCode.getBusinessCode());
+        super(errorCode.getErrorCode() + ":" + statusCode.getBusinessCode());
         this.errorCode = errorCode;
         this.statusCode = statusCode;
         description = null;
@@ -72,7 +73,7 @@ public class RpcException extends NoStackTraceException {
         //  (RSocket uses getMessage() of Throwable to serialize the throwable instance, see io.rsocket.frame.ErrorFrameCodec.encode(io.netty.buffer.ByteBufAllocator, int, java.lang.Throwable))
         //  but getMessage() is also used to log throwable instances.
         //  So we should use a custom encoder once the issue https://github.com/rsocket/rsocket-java/issues/741 has been fixed.
-        super(errorCode.getErrorCode() + "" + statusCode.getBusinessCode() + description);
+        super(errorCode.getErrorCode() + ":" + statusCode.getBusinessCode() + description);
         this.errorCode = errorCode;
         this.statusCode = statusCode;
         this.description = description;
@@ -95,8 +96,8 @@ public class RpcException extends NoStackTraceException {
         }
         RpcErrorCode errorCode = parseErrorCode(exceptionMessage);
         TurmsStatusCode statusCode = parseStatusCode(exceptionMessage);
-        String message = exceptionMessage.length() > ERROR_CODE_LENGTH + STATUS_CODE_LENGTH
-                ? exceptionMessage.substring(ERROR_CODE_LENGTH + STATUS_CODE_LENGTH)
+        String message = exceptionMessage.length() > CODE_STRING_LENGTH
+                ? exceptionMessage.substring(CODE_STRING_LENGTH)
                 : null;
         return new RpcException(errorCode, statusCode, message);
     }
@@ -118,7 +119,7 @@ public class RpcException extends NoStackTraceException {
     private static TurmsStatusCode parseStatusCode(String exceptionMessage) {
         TurmsStatusCode turmsStatusCode;
         try {
-            int statusCode = Integer.parseInt(exceptionMessage.substring(ERROR_CODE_LENGTH, ERROR_CODE_LENGTH + STATUS_CODE_LENGTH));
+            int statusCode = Integer.parseInt(exceptionMessage.substring(ERROR_CODE_LENGTH + 1, CODE_STRING_LENGTH));
             turmsStatusCode = TurmsStatusCode.from(statusCode);
         } catch (Exception e) {
             turmsStatusCode = null;
