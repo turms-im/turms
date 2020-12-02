@@ -41,6 +41,7 @@ import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.ExceptionUtil;
 import im.turms.server.common.util.LogUtil;
 import im.turms.server.common.util.LoggingRequestUtil;
+import im.turms.server.common.util.ProtoUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -150,7 +151,8 @@ public class InboundRequestService {
                             .defaultIfEmpty(getNotificationFromStatusCode(TurmsStatusCode.NO_CONTENT, requestId))
                             .doFinally(signalType -> tracingContext.clearMdc());
                     if (LoggingRequestUtil.shouldLog(serviceRequest.getType(), supportedLoggingResponseProperties)) {
-                        notificationMono = notificationMono.doOnSuccess(ClientApiLogging::log);
+                        notificationMono = notificationMono
+                                .doOnSuccess(notification -> ClientApiLogging.log(ProtoUtil.toLogString(notification)));
                     }
                     return notificationMono;
                 }).onErrorResume(throwable -> {

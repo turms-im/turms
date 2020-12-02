@@ -19,6 +19,7 @@ package im.turms.server.common.dto;
 
 import im.turms.common.constant.statuscode.TurmsStatusCode;
 import im.turms.common.model.dto.request.TurmsRequest;
+import im.turms.server.common.util.ProtoUtil;
 import lombok.Data;
 
 import java.util.Set;
@@ -32,4 +33,14 @@ public final class ServiceNotification {
     private final TurmsRequest dataForRecipients;
     private final TurmsStatusCode code;
     private final String reason;
+
+    @Override
+    public String toString() {
+        return "ServiceNotification{" +
+                "recipients=" + recipients +
+                ", dataForRecipients=" + ProtoUtil.toLogString(dataForRecipients) +
+                ", code=" + code +
+                ", reason='" + reason + '\'' +
+                '}';
+    }
 }

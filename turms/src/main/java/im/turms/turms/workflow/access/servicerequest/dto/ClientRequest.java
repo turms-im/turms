@@ -19,6 +19,7 @@ package im.turms.turms.workflow.access.servicerequest.dto;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.request.TurmsRequest;
+import im.turms.server.common.util.ProtoUtil;
 import io.netty.buffer.ByteBuf;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,4 +37,15 @@ public class ClientRequest {
     private final Long requestId;
     private final TurmsRequest turmsRequest;
     private final ByteBuf turmsRequestBuffer;
+
+    @Override
+    public String toString() {
+        return "ClientRequest{" +
+                "userId=" + userId +
+                ", deviceType=" + deviceType +
+                ", requestId=" + requestId +
+                ", turmsRequest=" + ProtoUtil.toLogString(turmsRequest) +
+                ", turmsRequestBuffer=" + turmsRequestBuffer +
+                '}';
+    }
 }

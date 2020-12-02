@@ -78,7 +78,7 @@ public class OutboundMessageService implements IOutboundMessageService {
             if (userSessionsManager != null) {
                 for (UserSession userSession : userSessionsManager.getSessionMap().values()) {
                     notificationData.retain();
-                    // This will decrease the reference count of the message
+                    // This will decrease the reference count of the message by 1 if the message is sent
                     boolean sent = userSession.tryEmitNextNotification(notificationData);
                     if (sent) {
                         hasForwardedMessageToOneRecipient = true;
@@ -100,8 +100,7 @@ public class OutboundMessageService implements IOutboundMessageService {
         // Release
         boolean isReleased = notificationData.release();
         if (!isReleased) {
-            int count = notificationData.nioBufferCount();
-            log.warn("The notificationData hasn't been released. The reference count is " + count);
+            // This may happen if any notification failed to emit to the client.
             while (!notificationData.release()) {
             }
         }

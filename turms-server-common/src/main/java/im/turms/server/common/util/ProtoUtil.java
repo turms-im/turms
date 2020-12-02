@@ -17,8 +17,10 @@
 
 package im.turms.server.common.util;
 
+import com.google.protobuf.AbstractMessage;
 import com.google.protobuf.CodedOutputStream;
 import com.google.protobuf.MessageLite;
+import com.google.protobuf.TextFormat;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import lombok.extern.log4j.Log4j2;
@@ -46,6 +48,13 @@ public class ProtoUtil {
             throw new RuntimeException(e);
         }
         return output;
+    }
+
+    public static String toLogString(AbstractMessage message) {
+        if (message == null) {
+            return null;
+        }
+        return TextFormat.shortDebugString(message);
     }
 
 }
