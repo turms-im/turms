@@ -24,7 +24,7 @@ import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.plugin.manager.TurmsPluginManager;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.service.impl.*;
-import im.turms.gateway.service.mediator.WorkflowMediator;
+import im.turms.gateway.service.mediator.ServiceMediator;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.property.TurmsProperties;
@@ -45,14 +45,14 @@ import static org.mockito.Mockito.*;
 /**
  * @author James Chen
  */
-class WorkflowMediatorTests {
+class ServiceMediatorTests {
 
     private final Long userId = 1L;
     private final DeviceType deviceType = DeviceType.ANDROID;
 
     @Test
     void constructor_shouldSucceed() {
-        WorkflowMediator mediator = new WorkflowMediator(null, null, null, null, null, null, null);
+        ServiceMediator mediator = new ServiceMediator(null, null, null, null, null, null, null);
 
         assertNotNull(mediator);
     }
@@ -61,7 +61,7 @@ class WorkflowMediatorTests {
 
     @Test
     void processLoginRequest_shouldReturnForbiddenDeviceType_ifIsForbiddenDeviceType() {
-        WorkflowMediator mediator = newWorkflowMediator(true, true, true, true);
+        ServiceMediator mediator = newWorkflowMediator(true, true, true, true);
         Mono<UserSession> result = mediator.processLoginRequest(userId, null, deviceType, null, null, null, null);
 
         StepVerifier.create(result)
@@ -71,7 +71,7 @@ class WorkflowMediatorTests {
 
     @Test
     void processLoginRequest_shouldReturnUnauthorized_ifIsUnauthorized() {
-        WorkflowMediator mediator = newWorkflowMediator(true, true, false, false);
+        ServiceMediator mediator = newWorkflowMediator(true, true, false, false);
         Mono<UserSession> result = mediator.processLoginRequest(userId, null, deviceType, null, null, null, null);
 
         StepVerifier.create(result)
@@ -81,7 +81,7 @@ class WorkflowMediatorTests {
 
     @Test
     void processLoginRequest_shouldReturnNotActive_ifUserIsNotActive() {
-        WorkflowMediator mediator = newWorkflowMediator(true, false, false, false);
+        ServiceMediator mediator = newWorkflowMediator(true, false, false, false);
         Mono<UserSession> result = mediator.processLoginRequest(userId, null, deviceType, null, null, null, null);
 
         StepVerifier.create(result)
@@ -91,7 +91,7 @@ class WorkflowMediatorTests {
 
     @Test
     void processLoginRequest_shouldReturnNotActive_ifUserIsActiveAndAuthenticated() {
-        WorkflowMediator mediator = newWorkflowMediator(true, true, true, false);
+        ServiceMediator mediator = newWorkflowMediator(true, true, true, false);
         Mono<UserSession> result = mediator.processLoginRequest(userId, null, deviceType, null, null, null, null);
 
         StepVerifier.create(result)
@@ -101,7 +101,7 @@ class WorkflowMediatorTests {
 
     @Test
     void rejectLoginRequest_shouldSucceed() {
-        WorkflowMediator mediator = newWorkflowMediator();
+        ServiceMediator mediator = newWorkflowMediator();
         Mono<Boolean> result = mediator.rejectLoginRequest(TurmsStatusCode.SERVER_INTERNAL_ERROR, null, null, null);
 
         StepVerifier.create(result)
@@ -111,7 +111,7 @@ class WorkflowMediatorTests {
 
     @Test
     void setLocalUserDeviceOffline_shouldSucceed() {
-        WorkflowMediator mediator = newWorkflowMediator();
+        ServiceMediator mediator = newWorkflowMediator();
         Mono<Boolean> result = mediator.setLocalUserDeviceOffline(userId, deviceType, CloseStatus.NORMAL);
 
         StepVerifier.create(result)
@@ -121,7 +121,7 @@ class WorkflowMediatorTests {
 
     @Test
     void onSessionEstablished_shouldSendSessionNotification_ifIsNotifyClientsOfSessionInfoAfterConnected() {
-        WorkflowMediator mediator = newWorkflowMediator();
+        ServiceMediator mediator = newWorkflowMediator();
         UserSessionsManager manager = mock(UserSessionsManager.class);
         when(manager.pushSessionNotification(any()))
                 .thenReturn(true);
@@ -133,7 +133,7 @@ class WorkflowMediatorTests {
 
     @Test
     void processServiceRequest_shouldSucceed() {
-        WorkflowMediator mediator = newWorkflowMediator();
+        ServiceMediator mediator = newWorkflowMediator();
         ServiceRequest request = mock(ServiceRequest.class);
         Mono<TurmsNotification> result = mediator.processServiceRequest(request);
 
@@ -143,7 +143,7 @@ class WorkflowMediatorTests {
 
     @Test
     void processHeartbeatRequest_shouldSucceed() {
-        WorkflowMediator mediator = newWorkflowMediator();
+        ServiceMediator mediator = newWorkflowMediator();
         Mono<Boolean> result = mediator.processHeartbeatRequest(userId, deviceType);
 
         StepVerifier.create(result)
@@ -153,7 +153,7 @@ class WorkflowMediatorTests {
 
     @Test
     void triggerGoOnlinePlugins_shouldSucceed() {
-        WorkflowMediator mediator = newWorkflowMediator();
+        ServiceMediator mediator = newWorkflowMediator();
         UserSessionsManager manager = mock(UserSessionsManager.class);
         UserSession session = mock(UserSession.class);
         Mono<Void> result = mediator.triggerGoOnlinePlugins(manager, session);
@@ -162,11 +162,11 @@ class WorkflowMediatorTests {
                 .verifyComplete();
     }
 
-    private WorkflowMediator newWorkflowMediator() {
+    private ServiceMediator newWorkflowMediator() {
         return newWorkflowMediator(true, true, true, false);
     }
 
-    private WorkflowMediator newWorkflowMediator(
+    private ServiceMediator newWorkflowMediator(
             boolean enableAuthentication,
             boolean isActiveAndNotDeleted,
             boolean isAuthenticated,
@@ -213,7 +213,7 @@ class WorkflowMediatorTests {
         InboundRequestService inboundRequestService = mock(InboundRequestService.class);
         when(inboundRequestService.processServiceRequest(any()))
                 .thenReturn(Mono.empty());
-        return new WorkflowMediator(node, pluginManager, userService, reasonCacheService, sessionService, userSimultaneousLoginService, inboundRequestService);
+        return new ServiceMediator(node, pluginManager, userService, reasonCacheService, sessionService, userSimultaneousLoginService, inboundRequestService);
     }
 
 }

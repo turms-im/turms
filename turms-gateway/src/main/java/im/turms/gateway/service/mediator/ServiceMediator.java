@@ -52,7 +52,7 @@ import java.util.List;
  */
 @Component
 @Log4j2
-public class WorkflowMediator {
+public class ServiceMediator {
 
     private final Node node;
     private final TurmsPluginManager turmsPluginManager;
@@ -62,7 +62,7 @@ public class WorkflowMediator {
     private final UserSimultaneousLoginService userSimultaneousLoginService;
     private final InboundRequestService inboundRequestService;
 
-    public WorkflowMediator(
+    public ServiceMediator(
             Node node,
             TurmsPluginManager turmsPluginManager,
             UserService userService,

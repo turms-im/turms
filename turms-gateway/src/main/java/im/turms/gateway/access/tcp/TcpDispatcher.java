@@ -32,7 +32,7 @@ import im.turms.gateway.access.tcp.util.TurmsNotificationUtil;
 import im.turms.gateway.constant.ErrorMessage;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.pojo.dto.SimpleTurmsRequest;
-import im.turms.gateway.service.mediator.WorkflowMediator;
+import im.turms.gateway.service.mediator.ServiceMediator;
 import im.turms.gateway.util.TurmsRequestUtil;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.dto.ServiceRequest;
@@ -65,15 +65,15 @@ public class TcpDispatcher {
     private static final ByteBuf HEARTBEAT_RESPONSE = new EmptyByteBuf(UnpooledByteBufAllocator.DEFAULT);
 
     private final DisposableServer server;
-    private final WorkflowMediator workflowMediator;
+    private final ServiceMediator serviceMediator;
     private final SessionController sessionController;
     private final HashedWheelTimer idleConnectionTimeoutTimer;
     private final int closeIdleConnectionAfter;
 
     public TcpDispatcher(TurmsPropertiesManager propertiesManager,
-                         WorkflowMediator workflowMediator,
+                         ServiceMediator serviceMediator,
                          SessionController sessionController) {
-        this.workflowMediator = workflowMediator;
+        this.serviceMediator = serviceMediator;
         this.sessionController = sessionController;
         closeIdleConnectionAfter = propertiesManager.getLocalProperties().getGateway().getTcp().getCloseIdleConnectionAfterSeconds();
         this.idleConnectionTimeoutTimer = closeIdleConnectionAfter > 0
@@ -163,7 +163,7 @@ public class TcpDispatcher {
     private Mono<Boolean> handleHeartbeatRequest(UserSessionWrapper sessionWrapper) {
         UserSession session = sessionWrapper.getUserSession();
         if (session != null) {
-            return workflowMediator.processHeartbeatRequest(session.getUserId(), session.getDeviceType());
+            return serviceMediator.processHeartbeatRequest(session.getUserId(), session.getDeviceType());
         } else {
             return Mono.just(false);
         }
@@ -180,7 +180,7 @@ public class TcpDispatcher {
                 request.getRequestId(),
                 request.getType(),
                 data);
-        return workflowMediator.processServiceRequest(serviceRequest);
+        return serviceMediator.processServiceRequest(serviceRequest);
     }
 
     private TurmsNotification getNotificationFromHandlerResult(RequestHandlerResult result, long requestId) {

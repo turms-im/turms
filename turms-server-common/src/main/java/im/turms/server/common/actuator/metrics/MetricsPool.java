@@ -53,12 +53,12 @@ public class MetricsPool {
 
     Map<String, Double> getSamples(Collection<Meter> meters) {
         Map<String, Double> samples = new LinkedHashMap<>();
-        meters.forEach(meter -> {
+        for (Meter meter : meters) {
             for (Measurement measurement : meter.measure()) {
                 String tag = measurement.getStatistic().getTagValueRepresentation();
                 samples.merge(tag, measurement.getValue(), mergeFunction(measurement.getStatistic()));
             }
-        });
+        }
         return samples;
     }
 

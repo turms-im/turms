@@ -27,7 +27,7 @@ import im.turms.common.model.dto.udpsignal.UdpSignalRequest;
 import im.turms.gateway.access.udp.dto.UdpNotification;
 import im.turms.gateway.access.udp.dto.UdpSignalResponseBufferPool;
 import im.turms.gateway.access.websocket.dto.CloseStatusFactory;
-import im.turms.gateway.service.mediator.WorkflowMediator;
+import im.turms.gateway.service.mediator.ServiceMediator;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.UdpProperties;
 import io.netty.buffer.ByteBuf;
@@ -58,14 +58,14 @@ public class UdpDispatcher {
     @Getter
     private static boolean isEnabled;
 
-    private final WorkflowMediator workflowMediator;
+    private final ServiceMediator serviceMediator;
     private final Sinks.Many<UdpNotification> notificationSink;
     private final Connection connection;
 
-    public UdpDispatcher(WorkflowMediator workflowMediator, TurmsPropertiesManager propertiesManager) {
+    public UdpDispatcher(ServiceMediator serviceMediator, TurmsPropertiesManager propertiesManager) {
         instance = this;
         UdpProperties udpProperties = propertiesManager.getLocalProperties().getGateway().getUdp();
-        this.workflowMediator = workflowMediator;
+        this.serviceMediator = serviceMediator;
         isEnabled = udpProperties.isEnabled();
         if (udpProperties.isEnabled()) {
             notificationSink = Sinks.many().unicast().onBackpressureBuffer();
@@ -119,7 +119,7 @@ public class UdpDispatcher {
             int sessionId = signalRequest.getSessionId();
             switch (signalRequest.getType()) {
                 case HEARTBEAT:
-                    return workflowMediator.authAndProcessHeartbeatRequest(userId, deviceType, sessionId)
+                    return serviceMediator.authAndProcessHeartbeatRequest(userId, deviceType, sessionId)
                             .map(session -> {
                                 // Update the address because it may has changed
                                 session.getConnection().setAddress(senderAddress);
@@ -129,7 +129,7 @@ public class UdpDispatcher {
                             .defaultIfEmpty(TurmsStatusCode.FAILED);
                 case GO_OFFLINE:
                     CloseStatus status = CloseStatusFactory.get(SessionCloseStatus.DISCONNECTED_BY_CLIENT);
-                    return workflowMediator.authAndSetLocalUserDeviceOffline(userId, deviceType, status, sessionId)
+                    return serviceMediator.authAndSetLocalUserDeviceOffline(userId, deviceType, status, sessionId)
                             .thenReturn(TurmsStatusCode.OK);
                 default:
                     throw new IllegalStateException("Unexpected value: " + signalRequest.getType());

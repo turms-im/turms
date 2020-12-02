@@ -147,7 +147,7 @@ public class SessionService {
             case 1:
                 return disconnect(userIds.iterator().next(), closeStatus);
             default:
-                List<Mono<Boolean>> monos = new LinkedList<>();
+                List<Mono<Boolean>> monos = new ArrayList<>(userIds.size());
                 for (Long userId : userIds) {
                     monos.add(disconnect(userId, closeStatus));
                 }

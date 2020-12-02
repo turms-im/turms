@@ -28,7 +28,7 @@ import im.turms.gateway.access.tcp.dto.RequestHandlerResult;
 import im.turms.gateway.access.tcp.model.UserSessionWrapper;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.pojo.bo.session.connection.TcpConnection;
-import im.turms.gateway.service.mediator.WorkflowMediator;
+import im.turms.gateway.service.mediator.ServiceMediator;
 import io.netty.util.Timeout;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Controller;
@@ -41,16 +41,16 @@ import reactor.netty.Connection;
 @Controller
 public class SessionController {
 
-    private final WorkflowMediator workflowMediator;
+    private final ServiceMediator serviceMediator;
 
-    public SessionController(WorkflowMediator workflowMediator) {
-        this.workflowMediator = workflowMediator;
+    public SessionController(ServiceMediator serviceMediator) {
+        this.serviceMediator = serviceMediator;
     }
 
     public Mono<TurmsNotification> handleDeleteSessionRequest(UserSessionWrapper sessionWrapper) {
         UserSession session = sessionWrapper.getUserSession();
         if (session != null) {
-            workflowMediator.setLocalUserDeviceOffline(session.getUserId(), session.getDeviceType(), SessionCloseStatus.DISCONNECTED_BY_CLIENT)
+            serviceMediator.setLocalUserDeviceOffline(session.getUserId(), session.getDeviceType(), SessionCloseStatus.DISCONNECTED_BY_CLIENT)
                     .subscribe();
         }
         return Mono.empty();
@@ -83,7 +83,7 @@ public class SessionController {
             UserLocation location = createSessionRequest.getLocation();
             position = new Point(location.getLatitude(), location.getLongitude());
         }
-        Mono<UserSession> processLoginRequestMono = workflowMediator.processLoginRequest(userId,
+        Mono<UserSession> processLoginRequestMono = serviceMediator.processLoginRequest(userId,
                 password,
                 deviceType,
                 userStatus,
@@ -103,7 +103,7 @@ public class SessionController {
                     bindUserSession(sessionWrapper, session);
                     return Mono.just(new RequestHandlerResult(TurmsStatusCode.OK));
                 } else {
-                    return workflowMediator.setLocalUserDeviceOffline(userId, finalDeviceType, SessionCloseStatus.HEARTBEAT_TIMEOUT)
+                    return serviceMediator.setLocalUserDeviceOffline(userId, finalDeviceType, SessionCloseStatus.HEARTBEAT_TIMEOUT)
                             .then(Mono.empty());
                 }
             });
