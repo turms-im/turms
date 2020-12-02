@@ -15,13 +15,16 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.property.env.gateway;
+package im.turms.server.common.property.env.gateway.redis;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import im.turms.server.common.property.env.gateway.redis.sharding.RedisShardingProperties;
 import lombok.Data;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.data.annotation.Transient;
+
+import java.util.List;
 
 /**
  * @author James Chen
@@ -29,24 +32,26 @@ import org.springframework.data.annotation.Transient;
 @Data
 public class TurmsRedisProperties {
 
-    @JsonIgnore
-    @Transient
+    private static final List<RedisProperties> REDIS_PROPERTIES_LIST = List.of(new RedisProperties());
+
     @NestedConfigurationProperty
-    private RedisProperties session = new RedisProperties();
+    @Transient
+    private RedisShardingProperties shardingProperties = new RedisShardingProperties();
 
     @JsonIgnore
     @Transient
-    @NestedConfigurationProperty
-    private RedisProperties location = new RedisProperties();
+    private List<RedisProperties> session = REDIS_PROPERTIES_LIST;
 
     @JsonIgnore
     @Transient
-    @NestedConfigurationProperty
-    private RedisProperties loginFailureReason = new RedisProperties();
+    private List<RedisProperties> location = REDIS_PROPERTIES_LIST;
 
     @JsonIgnore
     @Transient
-    @NestedConfigurationProperty
-    private RedisProperties sessionDisconnectionReason = new RedisProperties();
+    private List<RedisProperties> loginFailureReason = REDIS_PROPERTIES_LIST;
+
+    @JsonIgnore
+    @Transient
+    private List<RedisProperties> sessionDisconnectionReason = REDIS_PROPERTIES_LIST;
 
 }

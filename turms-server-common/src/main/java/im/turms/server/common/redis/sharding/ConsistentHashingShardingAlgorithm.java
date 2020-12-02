@@ -15,28 +15,21 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.property.env.service.env;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
-import org.springframework.data.annotation.Transient;
+package im.turms.server.common.redis.sharding;
 
 /**
  * @author James Chen
  */
-@Data
-public class TurmsRedisProperties {
+public class ConsistentHashingShardingAlgorithm extends ShardingAlgorithm {
 
-    @JsonIgnore
-    @Transient
-    @NestedConfigurationProperty
-    private RedisProperties session = new RedisProperties();
+    private static final int SLOT_COUNT = 1 << 16;
+    private static final long SLOT_MASK = SLOT_COUNT - 1;
 
-    @JsonIgnore
-    @Transient
-    @NestedConfigurationProperty
-    private RedisProperties location = new RedisProperties();
+    @Override
+    public int doSharding(long userId, int serverCount) {
+        int slot = (int) (userId & SLOT_MASK);
+        int span = SLOT_COUNT / serverCount;
+        return slot / span;
+    }
 
 }

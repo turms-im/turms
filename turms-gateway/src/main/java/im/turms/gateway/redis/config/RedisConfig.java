@@ -3,18 +3,24 @@ package im.turms.gateway.redis.config;
 import im.turms.common.constant.statuscode.TurmsStatusCode;
 import im.turms.gateway.pojo.bo.login.LoginFailureReasonKey;
 import im.turms.gateway.pojo.bo.session.SessionDisconnectionReasonKey;
-import im.turms.gateway.redis.RedisSerializationContextPool;
 import im.turms.server.common.bo.session.UserSessionId;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.redis.RedisTemplateFactory;
+import im.turms.server.common.redis.sharding.ShardingAlgorithm;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.core.RedisHash;
 
 import javax.annotation.PreDestroy;
+import java.util.List;
+
+import static im.turms.gateway.redis.RedisSerializationContextPool.LOGIN_FAILURE_REASON_SERIALIZATION_CONTEXT;
+import static im.turms.gateway.redis.RedisSerializationContextPool.SESSION_DISCONNECTION_REASON_SERIALIZATION_CONTEXT;
+import static im.turms.server.common.redis.RedisSerializationContextPool.GEO_USER_SESSION_ID_SERIALIZATION_CONTEXT;
+import static im.turms.server.common.redis.RedisSerializationContextPool.USER_SESSIONS_STATUS_SERIALIZATION_CONTEXT;
+import static im.turms.server.common.redis.RedisTemplateFactory.getTemplates;
 
 /**
  * @author James Chen
@@ -34,32 +40,52 @@ public class RedisConfig {
         RedisTemplateFactory.destroy();
     }
 
+    // Sharding Algorithm
+
     @Bean
-    public ReactiveRedisTemplate<Long, String> sessionRedisTemplate() {
-        RedisProperties properties = turmsPropertiesManager.getLocalProperties().getGateway().getRedis().getSession();
-        LettuceConnectionFactory connectionFactory = RedisTemplateFactory.getRedisConnectionFactory(properties);
-        return new ReactiveRedisTemplate<>(connectionFactory, im.turms.server.common.redis.RedisSerializationContextPool.USER_SESSIONS_STATUS_SERIALIZATION_CONTEXT);
+    public ShardingAlgorithm shardingAlgorithmForSession() {
+        return turmsPropertiesManager.getLocalProperties().getGateway().getRedis().getShardingProperties().getAlgorithmForSession();
     }
 
     @Bean
-    public ReactiveRedisTemplate<String, UserSessionId> locationRedisTemplate() {
-        RedisProperties properties = turmsPropertiesManager.getLocalProperties().getGateway().getRedis().getLocation();
-        LettuceConnectionFactory connectionFactory = RedisTemplateFactory.getRedisConnectionFactory(properties);
-        return new ReactiveRedisTemplate<>(connectionFactory, im.turms.server.common.redis.RedisSerializationContextPool.GEO_USER_SESSION_ID_SERIALIZATION_CONTEXT);
+    public ShardingAlgorithm shardingAlgorithmForLocation() {
+        return turmsPropertiesManager.getLocalProperties().getGateway().getRedis().getShardingProperties().getAlgorithmForLocation();
     }
 
     @Bean
-    public ReactiveRedisTemplate<LoginFailureReasonKey, TurmsStatusCode> loginFailureRedisTemplate() {
-        RedisProperties properties = turmsPropertiesManager.getLocalProperties().getGateway().getRedis().getLoginFailureReason();
-        LettuceConnectionFactory connectionFactory = RedisTemplateFactory.getRedisConnectionFactory(properties);
-        return new ReactiveRedisTemplate<>(connectionFactory, RedisSerializationContextPool.LOGIN_FAILURE_REASON_SERIALIZATION_CONTEXT);
+    public ShardingAlgorithm shardingAlgorithmForLoginFailure() {
+        return turmsPropertiesManager.getLocalProperties().getGateway().getRedis().getShardingProperties().getAlgorithmForLoginFailureReason();
     }
 
     @Bean
-    public ReactiveRedisTemplate<SessionDisconnectionReasonKey, Integer> sessionDisconnectionRedisTemplate() {
-        RedisProperties properties = turmsPropertiesManager.getLocalProperties().getGateway().getRedis().getSessionDisconnectionReason();
-        LettuceConnectionFactory connectionFactory = RedisTemplateFactory.getRedisConnectionFactory(properties);
-        return new ReactiveRedisTemplate<>(connectionFactory, RedisSerializationContextPool.SESSION_DISCONNECTION_REASON_SERIALIZATION_CONTEXT);
+    public ShardingAlgorithm shardingAlgorithmForSessionDisconnection() {
+        return turmsPropertiesManager.getLocalProperties().getGateway().getRedis().getShardingProperties().getAlgorithmForSessionDisconnectionReason();
+    }
+
+    // Template
+
+    @Bean
+    public List<ReactiveRedisTemplate<Long, String>> sessionRedisTemplates() {
+        List<RedisProperties> propertiesList = turmsPropertiesManager.getLocalProperties().getGateway().getRedis().getSession();
+        return getTemplates(propertiesList, USER_SESSIONS_STATUS_SERIALIZATION_CONTEXT);
+    }
+
+    @Bean
+    public List<ReactiveRedisTemplate<String, UserSessionId>> locationRedisTemplates() {
+        List<RedisProperties> propertiesList = turmsPropertiesManager.getLocalProperties().getGateway().getRedis().getLocation();
+        return getTemplates(propertiesList, GEO_USER_SESSION_ID_SERIALIZATION_CONTEXT);
+    }
+
+    @Bean
+    public List<ReactiveRedisTemplate<LoginFailureReasonKey, TurmsStatusCode>> loginFailureRedisTemplates() {
+        List<RedisProperties> propertiesList = turmsPropertiesManager.getLocalProperties().getGateway().getRedis().getLoginFailureReason();
+        return getTemplates(propertiesList, LOGIN_FAILURE_REASON_SERIALIZATION_CONTEXT);
+    }
+
+    @Bean
+    public List<ReactiveRedisTemplate<SessionDisconnectionReasonKey, Integer>> sessionDisconnectionRedisTemplates() {
+        List<RedisProperties> propertiesList = turmsPropertiesManager.getLocalProperties().getGateway().getRedis().getSessionDisconnectionReason();
+        return getTemplates(propertiesList, SESSION_DISCONNECTION_REASON_SERIALIZATION_CONTEXT);
     }
 
 }

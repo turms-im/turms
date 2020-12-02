@@ -28,7 +28,7 @@ import im.turms.server.common.dao.converter.IntegerToEnumConverterFactory;
 import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
-import im.turms.server.common.property.env.service.env.DatabaseProperties;
+import im.turms.server.common.property.env.service.env.database.DatabaseProperties;
 import im.turms.turms.workflow.dao.domain.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;

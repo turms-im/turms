@@ -26,6 +26,8 @@ import im.turms.server.common.property.env.service.business.message.MessagePrope
 import im.turms.server.common.property.env.service.business.user.UserProperties;
 import im.turms.server.common.property.env.service.env.*;
 import im.turms.server.common.property.env.service.env.clientapi.ClientApiProperties;
+import im.turms.server.common.property.env.service.env.database.DatabaseProperties;
+import im.turms.server.common.property.env.service.env.redis.TurmsRedisProperties;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
 import lombok.Data;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;

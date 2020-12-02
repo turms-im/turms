@@ -3,14 +3,19 @@ package im.turms.turms.redis.config;
 import im.turms.server.common.bo.session.UserSessionId;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.redis.RedisTemplateFactory;
+import im.turms.server.common.redis.sharding.ShardingAlgorithm;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.data.redis.core.RedisHash;
 
 import javax.annotation.PreDestroy;
+import java.util.List;
+
+import static im.turms.server.common.redis.RedisSerializationContextPool.GEO_USER_SESSION_ID_SERIALIZATION_CONTEXT;
+import static im.turms.server.common.redis.RedisSerializationContextPool.USER_SESSIONS_STATUS_SERIALIZATION_CONTEXT;
+import static im.turms.server.common.redis.RedisTemplateFactory.getTemplates;
 
 /**
  * @author James Chen
@@ -35,17 +40,25 @@ public class RedisConfig {
     }
 
     @Bean
-    public ReactiveRedisTemplate<Long, String> sessionRedisTemplate() {
-        RedisProperties properties = turmsPropertiesManager.getLocalProperties().getService().getRedis().getSession();
-        LettuceConnectionFactory connectionFactory = RedisTemplateFactory.getRedisConnectionFactory(properties);
-        return new ReactiveRedisTemplate<>(connectionFactory, im.turms.server.common.redis.RedisSerializationContextPool.USER_SESSIONS_STATUS_SERIALIZATION_CONTEXT);
+    public ShardingAlgorithm shardingAlgorithmForSession() {
+        return turmsPropertiesManager.getLocalProperties().getService().getRedis().getShardingProperties().getAlgorithmForSession();
     }
 
     @Bean
-    public ReactiveRedisTemplate<String, UserSessionId> locationRedisTemplate() {
-        RedisProperties properties = turmsPropertiesManager.getLocalProperties().getService().getRedis().getLocation();
-        LettuceConnectionFactory connectionFactory = RedisTemplateFactory.getRedisConnectionFactory(properties);
-        return new ReactiveRedisTemplate<>(connectionFactory, im.turms.server.common.redis.RedisSerializationContextPool.GEO_USER_SESSION_ID_SERIALIZATION_CONTEXT);
+    public ShardingAlgorithm shardingAlgorithmForLocation() {
+        return turmsPropertiesManager.getLocalProperties().getService().getRedis().getShardingProperties().getAlgorithmForLocation();
+    }
+
+    @Bean
+    public List<ReactiveRedisTemplate<Long, String>> sessionRedisTemplates() {
+        List<RedisProperties> propertiesList = turmsPropertiesManager.getLocalProperties().getService().getRedis().getSession();
+        return getTemplates(propertiesList, USER_SESSIONS_STATUS_SERIALIZATION_CONTEXT);
+    }
+
+    @Bean
+    public List<ReactiveRedisTemplate<String, UserSessionId>> locationRedisTemplates() {
+        List<RedisProperties> propertiesList = turmsPropertiesManager.getLocalProperties().getService().getRedis().getLocation();
+        return getTemplates(propertiesList, GEO_USER_SESSION_ID_SERIALIZATION_CONTEXT);
     }
 
 }

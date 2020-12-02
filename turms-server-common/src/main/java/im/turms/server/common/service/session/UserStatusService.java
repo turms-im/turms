@@ -29,6 +29,7 @@ import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constraint.ValidDeviceType;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
+import im.turms.server.common.redis.sharding.ShardingAlgorithm;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.DeviceTypeUtil;
 import org.springframework.data.redis.core.ReactiveHashOperations;
@@ -42,6 +43,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author James Chen
@@ -52,7 +54,8 @@ public class UserStatusService {
     private static final Byte STATUS_KEY_STATUS = 's';
 
     private final Node node;
-    private final ReactiveRedisTemplate<Long, String> redisTemplate;
+    private final ShardingAlgorithm shardingAlgorithmForSession;
+    private final List<ReactiveRedisTemplate<Long, String>> sessionRedisTemplates;
     /**
      * fixed hash key for status field "s" + user ID -> fixed user status field "s" -> user status.
      * fixed hash key for status field "s" + user ID -> device type -> node ID.
@@ -61,7 +64,7 @@ public class UserStatusService {
      * The representation of the enum value is number instead of string,
      * and we save them as string instead of number so that the key and value can be saved in one byte.
      */
-    private final ReactiveHashOperations<Long, Object, Object> sessionOperations;
+    private final List<ReactiveHashOperations<Long, Object, Object>> sessionOperationsList;
 
     /**
      * Note that both online and offline information will be cached
@@ -74,13 +77,18 @@ public class UserStatusService {
     public UserStatusService(
             Node node,
             TurmsPropertiesManager turmsPropertiesManager,
-            ReactiveRedisTemplate<Long, String> sessionRedisTemplate) {
+            ShardingAlgorithm shardingAlgorithmForSession,
+            List<ReactiveRedisTemplate<Long, String>> sessionRedisTemplates) {
         this.node = node;
         TurmsProperties turmsProperties = turmsPropertiesManager.getLocalProperties();
         cacheUserSessionsStatus = turmsProperties.getUserStatus().isCacheUserSessionsStatus();
         operationTimeout = Duration.ofSeconds(10);
-        redisTemplate = sessionRedisTemplate;
-        sessionOperations = sessionRedisTemplate.opsForHash();
+        this.shardingAlgorithmForSession = shardingAlgorithmForSession;
+        this.sessionRedisTemplates = sessionRedisTemplates;
+        sessionOperationsList = sessionRedisTemplates
+                .stream()
+                .map(ReactiveRedisTemplate::opsForHash)
+                .collect(Collectors.toList());
         if (cacheUserSessionsStatus) {
             Caffeine<Object, Object> builder = Caffeine.newBuilder();
             int maxSize = turmsProperties.getUserStatus().getUserSessionsStatusCacheMaxSize();
@@ -180,7 +188,7 @@ public class UserStatusService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        return sessionOperations
+        return getSessionOperations(userId)
                 .put(userId, STATUS_KEY_STATUS, userStatus)
                 .timeout(operationTimeout);
     }
@@ -192,7 +200,7 @@ public class UserStatusService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        return redisTemplate.expire(userId, timeout).timeout(operationTimeout);
+        return getSessionRedisTemplate(userId).expire(userId, timeout).timeout(operationTimeout);
     }
 
     public Mono<UserSessionsStatus> getUserSessionsStatus(@NotNull Long userId) {
@@ -216,7 +224,7 @@ public class UserStatusService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        return sessionOperations.entries(userId)
+        return getSessionOperations(userId).entries(userId)
                 .timeout(operationTimeout)
                 .collectList()
                 .map(entries -> {
@@ -265,7 +273,7 @@ public class UserStatusService {
             return Mono.error(e);
         }
         DeviceType[] deviceTypesArray = deviceTypes.toArray(new DeviceType[0]);
-        return sessionOperations.remove(userId, (Object[]) deviceTypesArray)
+        return getSessionOperations(userId).remove(userId, (Object[]) deviceTypesArray)
                 .timeout(operationTimeout)
                 .map(number -> number > 0);
     }
@@ -292,12 +300,12 @@ public class UserStatusService {
         // if a user with the same device type sends multiple login requests in a short time
         // (This can also happen in different servers).
         // So use putIfAbsent to make the code robust.
-        Mono<Boolean> updateMono = sessionOperations.putIfAbsent(userId, deviceType, nodeId);
+        Mono<Boolean> updateMono = getSessionOperations(userId).putIfAbsent(userId, deviceType, nodeId);
         if (userStatus != null && userStatus != UserStatus.AVAILABLE) {
             updateMono = updateMono
                     .flatMap(wasSuccessful -> {
                         if (wasSuccessful) {
-                            return sessionOperations.put(userId, STATUS_KEY_STATUS, userStatus)
+                            return getSessionOperations(userId).put(userId, STATUS_KEY_STATUS, userStatus)
                                     .onErrorReturn(true)
                                     .thenReturn(true);
                         } else {
@@ -308,8 +316,16 @@ public class UserStatusService {
         return updateMono
                 .timeout(operationTimeout)
                 .flatMap(wasSuccessful -> wasSuccessful
-                        ? redisTemplate.expire(userId, heartbeatTimeout)
+                        ? getSessionRedisTemplate(userId).expire(userId, heartbeatTimeout)
                         : Mono.just(false));
+    }
+
+    private ReactiveRedisTemplate<Long, String> getSessionRedisTemplate(long userId) {
+        return sessionRedisTemplates.get(shardingAlgorithmForSession.doSharding(userId, sessionRedisTemplates.size()));
+    }
+
+    private ReactiveHashOperations<Long, Object, Object> getSessionOperations(long userId) {
+        return sessionOperationsList.get(shardingAlgorithmForSession.doSharding(userId, sessionRedisTemplates.size()));
     }
 
 }

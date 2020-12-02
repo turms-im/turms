@@ -10,6 +10,8 @@ import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.data.redis.connection.*;
 import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -35,7 +37,16 @@ public class RedisTemplateFactory {
     private RedisTemplateFactory() {
     }
 
-    public static LettuceConnectionFactory getRedisConnectionFactory(RedisProperties redisProperties) {
+    public static <K, V> List<ReactiveRedisTemplate<K, V>> getTemplates(List<RedisProperties> propertiesList, RedisSerializationContext<K, V> serializationContext) {
+        List<ReactiveRedisTemplate<K, V>> templates = new ArrayList<>(propertiesList.size());
+        for (RedisProperties properties : propertiesList) {
+            LettuceConnectionFactory connectionFactory = RedisTemplateFactory.getRedisConnectionFactory(properties);
+            templates.add(new ReactiveRedisTemplate<>(connectionFactory, serializationContext));
+        }
+        return templates;
+    }
+
+    private static LettuceConnectionFactory getRedisConnectionFactory(RedisProperties redisProperties) {
         ClientResources clientResources = DefaultClientResources.create();
         POOL.add(clientResources);
         LettuceClientConfiguration clientConfig = getLettuceClientConfiguration(clientResources, redisProperties);
