@@ -50,7 +50,7 @@ export default class UserService {
      * FYI: https://stackoverflow.com/questions/37835805/http-sites-does-not-detect-the-location-in-chrome-issue
      * https://caniuse.com/#search=Geolocation
      */
-    static getUserLocationFromBrowser(): Promise<Position> {
+    static getUserLocationFromBrowser(): Promise<GeolocationPosition> {
         return new Promise((resolve, reject) => {
             navigator.geolocation.getCurrentPosition(position => {
                 resolve(position);
@@ -70,7 +70,7 @@ export default class UserService {
         password: string,
         deviceType?: string | DeviceType,
         userOnlineStatus = UserStatus.AVAILABLE,
-        location?: Position | UserLocation): Promise<void> {
+        location?: GeolocationPosition | UserLocation): Promise<void> {
         if (RequestUtil.isFalsy(userId)) {
             return TurmsBusinessError.notFalsy('userId');
         }
@@ -97,7 +97,7 @@ export default class UserService {
         this._userOnlineStatus = userOnlineStatus;
         const isPosition = location && location['coords'];
         if (isPosition) {
-            const position = location as Position;
+            const position = location as GeolocationPosition;
             this._location = new UserLocation(position.coords.longitude, position.coords.latitude);
         }
         return this._turmsClient.driver.connect(this._userId, this._password,

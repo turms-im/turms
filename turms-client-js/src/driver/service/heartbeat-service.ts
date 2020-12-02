@@ -34,6 +34,7 @@ export default class HeartbeatService {
     private _heartbeatPromises: PromiseSeal[] = [];
 
     constructor(stateStore: StateStore, minRequestInterval: number, heartbeatInterval?: number) {
+        this._stateStore = stateStore;
         this._minRequestInterval = minRequestInterval;
         this._heartbeatInterval = heartbeatInterval || HeartbeatService.DEFAULT_HEARTBEAT_INTERVAL;
     }

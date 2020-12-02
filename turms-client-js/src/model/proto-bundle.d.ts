@@ -2331,6 +2331,9 @@ export namespace im {
 
                 /** TurmsNotification requesterId */
                 requesterId?: (google.protobuf.IInt64Value|null);
+
+                /** TurmsNotification closeStatus */
+                closeStatus?: (google.protobuf.IInt32Value|null);
             }
 
             /** Represents a TurmsNotification. */
@@ -2359,6 +2362,9 @@ export namespace im {
 
                 /** TurmsNotification requesterId. */
                 public requesterId?: (google.protobuf.IInt64Value|null);
+
+                /** TurmsNotification closeStatus. */
+                public closeStatus?: (google.protobuf.IInt32Value|null);
 
                 /**
                  * Encodes the specified TurmsNotification message. Does not implicitly {@link im.turms.proto.TurmsNotification.verify|verify} messages.
@@ -4341,6 +4347,12 @@ export namespace im {
                 /** TurmsRequest updateTypingStatusRequest */
                 updateTypingStatusRequest?: (im.turms.proto.IUpdateTypingStatusRequest|null);
 
+                /** TurmsRequest createSessionRequest */
+                createSessionRequest?: (im.turms.proto.ICreateSessionRequest|null);
+
+                /** TurmsRequest deleteSessionRequest */
+                deleteSessionRequest?: (im.turms.proto.IDeleteSessionRequest|null);
+
                 /** TurmsRequest queryUserProfileRequest */
                 queryUserProfileRequest?: (im.turms.proto.IQueryUserProfileRequest|null);
 
@@ -4516,6 +4528,12 @@ export namespace im {
                 /** TurmsRequest updateTypingStatusRequest. */
                 public updateTypingStatusRequest?: (im.turms.proto.IUpdateTypingStatusRequest|null);
 
+                /** TurmsRequest createSessionRequest. */
+                public createSessionRequest?: (im.turms.proto.ICreateSessionRequest|null);
+
+                /** TurmsRequest deleteSessionRequest. */
+                public deleteSessionRequest?: (im.turms.proto.IDeleteSessionRequest|null);
+
                 /** TurmsRequest queryUserProfileRequest. */
                 public queryUserProfileRequest?: (im.turms.proto.IQueryUserProfileRequest|null);
 
@@ -4649,7 +4667,7 @@ export namespace im {
                 public updateGroupMemberRequest?: (im.turms.proto.IUpdateGroupMemberRequest|null);
 
                 /** TurmsRequest kind. */
-                public kind?: ("ackRequest"|"deleteResourceRequest"|"querySignedGetUrlRequest"|"querySignedPutUrlRequest"|"createMessageRequest"|"queryMessageStatusesRequest"|"queryMessagesRequest"|"queryPendingMessagesWithTotalRequest"|"updateMessageRequest"|"updateTypingStatusRequest"|"queryUserProfileRequest"|"queryUserIdsNearbyRequest"|"queryUserInfosNearbyRequest"|"queryUserOnlineStatusesRequest"|"updateUserLocationRequest"|"updateUserOnlineStatusRequest"|"updateUserRequest"|"createFriendRequestRequest"|"createRelationshipGroupRequest"|"createRelationshipRequest"|"deleteRelationshipGroupRequest"|"deleteRelationshipRequest"|"queryFriendRequestsRequest"|"queryRelatedUserIdsRequest"|"queryRelationshipGroupsRequest"|"queryRelationshipsRequest"|"updateFriendRequestRequest"|"updateRelationshipGroupRequest"|"updateRelationshipRequest"|"createGroupRequest"|"deleteGroupRequest"|"queryGroupRequest"|"queryJoinedGroupIdsRequest"|"queryJoinedGroupInfosRequest"|"updateGroupRequest"|"createGroupBlacklistedUserRequest"|"deleteGroupBlacklistedUserRequest"|"queryGroupBlacklistedUserIdsRequest"|"queryGroupBlacklistedUserInfosRequest"|"checkGroupJoinQuestionsAnswersRequest"|"createGroupInvitationRequest"|"createGroupJoinRequestRequest"|"createGroupJoinQuestionRequest"|"deleteGroupInvitationRequest"|"deleteGroupJoinRequestRequest"|"deleteGroupJoinQuestionRequest"|"queryGroupInvitationsRequest"|"queryGroupJoinRequestsRequest"|"queryGroupJoinQuestionsRequest"|"updateGroupJoinQuestionRequest"|"createGroupMemberRequest"|"deleteGroupMemberRequest"|"queryGroupMembersRequest"|"updateGroupMemberRequest");
+                public kind?: ("ackRequest"|"deleteResourceRequest"|"querySignedGetUrlRequest"|"querySignedPutUrlRequest"|"createMessageRequest"|"queryMessageStatusesRequest"|"queryMessagesRequest"|"queryPendingMessagesWithTotalRequest"|"updateMessageRequest"|"updateTypingStatusRequest"|"createSessionRequest"|"deleteSessionRequest"|"queryUserProfileRequest"|"queryUserIdsNearbyRequest"|"queryUserInfosNearbyRequest"|"queryUserOnlineStatusesRequest"|"updateUserLocationRequest"|"updateUserOnlineStatusRequest"|"updateUserRequest"|"createFriendRequestRequest"|"createRelationshipGroupRequest"|"createRelationshipRequest"|"deleteRelationshipGroupRequest"|"deleteRelationshipRequest"|"queryFriendRequestsRequest"|"queryRelatedUserIdsRequest"|"queryRelationshipGroupsRequest"|"queryRelationshipsRequest"|"updateFriendRequestRequest"|"updateRelationshipGroupRequest"|"updateRelationshipRequest"|"createGroupRequest"|"deleteGroupRequest"|"queryGroupRequest"|"queryJoinedGroupIdsRequest"|"queryJoinedGroupInfosRequest"|"updateGroupRequest"|"createGroupBlacklistedUserRequest"|"deleteGroupBlacklistedUserRequest"|"queryGroupBlacklistedUserIdsRequest"|"queryGroupBlacklistedUserInfosRequest"|"checkGroupJoinQuestionsAnswersRequest"|"createGroupInvitationRequest"|"createGroupJoinRequestRequest"|"createGroupJoinQuestionRequest"|"deleteGroupInvitationRequest"|"deleteGroupJoinRequestRequest"|"deleteGroupJoinQuestionRequest"|"queryGroupInvitationsRequest"|"queryGroupJoinRequestsRequest"|"queryGroupJoinQuestionsRequest"|"updateGroupJoinQuestionRequest"|"createGroupMemberRequest"|"deleteGroupMemberRequest"|"queryGroupMembersRequest"|"updateGroupMemberRequest");
 
                 /**
                  * Encodes the specified TurmsRequest message. Does not implicitly {@link im.turms.proto.TurmsRequest.verify|verify} messages.
@@ -4668,6 +4686,106 @@ export namespace im {
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
                 public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.TurmsRequest;
+            }
+
+            /** Properties of a CreateSessionRequest. */
+            interface ICreateSessionRequest {
+
+                /** CreateSessionRequest userId */
+                userId?: (string|null);
+
+                /** CreateSessionRequest password */
+                password?: (google.protobuf.IStringValue|null);
+
+                /** CreateSessionRequest userStatus */
+                userStatus?: (im.turms.proto.UserStatus|null);
+
+                /** CreateSessionRequest deviceType */
+                deviceType?: (im.turms.proto.DeviceType|null);
+
+                /** CreateSessionRequest deviceDetails */
+                deviceDetails?: (google.protobuf.IStringValue|null);
+
+                /** CreateSessionRequest location */
+                location?: (im.turms.proto.IUserLocation|null);
+            }
+
+            /** Represents a CreateSessionRequest. */
+            class CreateSessionRequest implements ICreateSessionRequest {
+
+                /**
+                 * Constructs a new CreateSessionRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: im.turms.proto.ICreateSessionRequest);
+
+                /** CreateSessionRequest userId. */
+                public userId: string;
+
+                /** CreateSessionRequest password. */
+                public password?: (google.protobuf.IStringValue|null);
+
+                /** CreateSessionRequest userStatus. */
+                public userStatus: im.turms.proto.UserStatus;
+
+                /** CreateSessionRequest deviceType. */
+                public deviceType: im.turms.proto.DeviceType;
+
+                /** CreateSessionRequest deviceDetails. */
+                public deviceDetails?: (google.protobuf.IStringValue|null);
+
+                /** CreateSessionRequest location. */
+                public location?: (im.turms.proto.IUserLocation|null);
+
+                /**
+                 * Encodes the specified CreateSessionRequest message. Does not implicitly {@link im.turms.proto.CreateSessionRequest.verify|verify} messages.
+                 * @param message CreateSessionRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: im.turms.proto.ICreateSessionRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a CreateSessionRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns CreateSessionRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.CreateSessionRequest;
+            }
+
+            /** Properties of a DeleteSessionRequest. */
+            interface IDeleteSessionRequest {
+            }
+
+            /** Represents a DeleteSessionRequest. */
+            class DeleteSessionRequest implements IDeleteSessionRequest {
+
+                /**
+                 * Constructs a new DeleteSessionRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: im.turms.proto.IDeleteSessionRequest);
+
+                /**
+                 * Encodes the specified DeleteSessionRequest message. Does not implicitly {@link im.turms.proto.DeleteSessionRequest.verify|verify} messages.
+                 * @param message DeleteSessionRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: im.turms.proto.IDeleteSessionRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a DeleteSessionRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns DeleteSessionRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.DeleteSessionRequest;
             }
 
             /** Properties of a QueryUserIdsNearbyRequest. */

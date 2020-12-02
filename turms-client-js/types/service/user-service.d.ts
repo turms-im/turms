@@ -20,8 +20,8 @@ export default class UserService {
     get location(): UserLocation;
     get userOnlineStatus(): UserStatus;
     get deviceType(): DeviceType;
-    static getUserLocationFromBrowser(): Promise<Position>;
-    login(userId: string, password: string, deviceType?: string | DeviceType, userOnlineStatus?: UserStatus, location?: Position | UserLocation): Promise<void>;
+    static getUserLocationFromBrowser(): Promise<GeolocationPosition>;
+    login(userId: string, password: string, deviceType?: string | DeviceType, userOnlineStatus?: UserStatus, location?: GeolocationPosition | UserLocation): Promise<void>;
     relogin(): Promise<void>;
     logout(): Promise<void>;
     updateUserOnlineStatus(onlineStatus: string | UserStatus): Promise<void>;
