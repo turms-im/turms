@@ -128,7 +128,8 @@ export default class MessageService {
                 }
             }
         }
-        const parsedNotification = NotificationUtil.transform(notification);
+        const notificationCopy = JSON.parse(JSON.stringify(notification));
+        const parsedNotification = NotificationUtil.transform(notificationCopy);
         this._notifyOnNotificationListeners(parsedNotification as ParsedNotification);
     }
 

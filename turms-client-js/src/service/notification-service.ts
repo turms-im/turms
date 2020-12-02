@@ -18,7 +18,7 @@ export default class NotificationService {
         this._turmsClient.driver
             .addOnNotificationListener(notification => {
                 if (this._onNotification != null && notification.relayedRequest && !notification.relayedRequest.createMessageRequest) {
-                    this._onNotification(NotificationUtil.transform(notification.relayedRequest));
+                    this._onNotification(notification.relayedRequest);
                 }
                 return null;
             });
