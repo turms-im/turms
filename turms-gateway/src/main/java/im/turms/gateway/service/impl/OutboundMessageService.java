@@ -26,6 +26,7 @@ import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.rpc.service.IOutboundMessageService;
 import im.turms.server.common.util.AssertUtil;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.RefCntAwareByteBuf;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -72,17 +73,24 @@ public class OutboundMessageService implements IOutboundMessageService {
                 ? new HashSet<>(Math.max(1, recipientIds.size() / 2))
                 : Collections.emptySet();
 
+        int initialRefCnt = notificationData.refCnt();
+        RefCntAwareByteBuf wrappedNotificationData = new RefCntAwareByteBuf(notificationData, refCnt -> {
+            if (refCnt == initialRefCnt) {
+                notificationData.release();
+            }
+        });
+
         // Send notification
         for (Long recipientId : recipientIds) {
             UserSessionsManager userSessionsManager = sessionService.getUserSessionsManager(recipientId);
             if (userSessionsManager != null) {
                 for (UserSession userSession : userSessionsManager.getSessionMap().values()) {
-                    notificationData.retain();
-                    // This will decrease the reference count of the message by 1 if the message is sent
-                    boolean sent = userSession.tryEmitNextNotification(notificationData);
-                    if (sent) {
-                        hasForwardedMessageToOneRecipient = true;
-                    }
+                    wrappedNotificationData.retain();
+                    // It's the responsibility for the downstream to decrease the reference count of the notification by 1
+                    // no matter the notification is queued successfully or not
+                    userSession.tryEmitNextNotification(wrappedNotificationData);
+                    // Keep the logic easy and we don't care about whether the notification is really flushed
+                    hasForwardedMessageToOneRecipient = true;
                     userSession.getConnection().tryNotifyClientToRecover();
                 }
             } else {
@@ -94,15 +102,12 @@ public class OutboundMessageService implements IOutboundMessageService {
 
         // Trigger plugins
         if (triggerHandlers) {
-            triggerPlugins(notificationData, recipientIds, offlineRecipientIds);
+            triggerPlugins(wrappedNotificationData, recipientIds, offlineRecipientIds);
         }
 
         // Release
-        boolean isReleased = notificationData.release();
-        if (!isReleased) {
-            // This may happen if any notification failed to emit to the client.
-            while (!notificationData.release()) {
-            }
+        if (!hasForwardedMessageToOneRecipient) {
+            notificationData.release();
         }
 
         return hasForwardedMessageToOneRecipient;
