@@ -57,12 +57,26 @@ public class UserStatusService {
     private final ShardingAlgorithm shardingAlgorithmForSession;
     private final List<ReactiveRedisTemplate<Long, String>> sessionRedisTemplates;
     /**
-     * fixed hash key for status field "s" + user ID -> fixed user status field "s" -> user status.
-     * fixed hash key for status field "s" + user ID -> device type -> node ID.
-     * e.g. "s1000" -> "s" -> "1"
-     * e.g. "s1000" -> "1" -> "turms-east-0001"
-     * The representation of the enum value is number instead of string,
-     * and we save them as string instead of number so that the key and value can be saved in one byte.
+     * <pre>
+     * +-------------+-------------------------+-------------------------+
+     * |   User ID   |          Field          |          Value          |
+     * +-------------+-------------------------+-------------------------+
+     * |             | s (Key for User Status) |     1 (User Status)     |
+     * |             +-------------------------+-------------------------+
+     * |             |     1 (Device Type)     |   turms0001 (Node ID)   |
+     * |             +-------------------------+-------------------------+
+     * |  123456789  |     2 (Device Type)     |   turms0001 (Node ID)   |
+     * |             +-------------------------+-------------------------+
+     * |             |     3 (Device Type)     |   turms0002 (Node ID)   |
+     * |             +-------------------------+-------------------------+
+     * |             |           ...           |           ...           |
+     * +-------------+-------------------------+-------------------------+
+     * </pre>
+     * "s" is the fixed hash key of the user status value,
+     * and its value is the user status value.
+     * <p>
+     * The number (e.g. 1,2,3) represents the online device type,
+     * and its value is the node ID that the client connects to.
      */
     private final List<ReactiveHashOperations<Long, Object, Object>> sessionOperationsList;
 
