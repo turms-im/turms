@@ -25,6 +25,7 @@ import com.mongodb.reactivestreams.client.MongoClient;
 import im.turms.server.common.cluster.service.ClusterService;
 import im.turms.server.common.cluster.service.config.converter.DurationToLongConverter;
 import im.turms.server.common.cluster.service.config.converter.LongToDurationConverter;
+import im.turms.server.common.dao.context.TurmsMongoMappingContext;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.boot.autoconfigure.mongo.MongoPropertiesClientSettingsBuilderCustomizer;
@@ -39,7 +40,6 @@ import org.springframework.data.mongodb.core.convert.NoOpDbRefResolver;
 import org.springframework.data.mongodb.core.index.Index;
 import org.springframework.data.mongodb.core.index.PartialIndexFilter;
 import org.springframework.data.mongodb.core.index.ReactiveIndexOperations;
-import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 import org.springframework.data.mongodb.core.query.CriteriaDefinition;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -75,7 +75,7 @@ public class SharedConfigService implements ClusterService {
         MongoClient mongoClient = clientFactory.createMongoClient(MongoClientSettings.builder().build());
         SimpleReactiveMongoDatabaseFactory databaseFactory = new SimpleReactiveMongoDatabaseFactory(mongoClient, properties.getMongoClientDatabase());
 
-        MongoMappingContext context = new MongoMappingContext();
+        TurmsMongoMappingContext context = new TurmsMongoMappingContext();
         context.setAutoIndexCreation(true);
 
         CustomConversions customConversions = new CustomConversions(

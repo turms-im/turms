@@ -22,6 +22,7 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.WriteConcern;
 import com.mongodb.reactivestreams.client.MongoClient;
 import im.turms.server.common.bo.log.UserLocationLog;
+import im.turms.server.common.dao.context.TurmsMongoMappingContext;
 import im.turms.server.common.dao.converter.EnumToIntegerConverter;
 import im.turms.server.common.dao.converter.IntegerToEnumConverter;
 import im.turms.server.common.dao.converter.IntegerToEnumConverterFactory;
@@ -195,7 +196,7 @@ public class MongoConfig {
                     ? currentProperties.isAutoIndexCreation()
                     : true;
             // Note that we don't use the field naming strategy specified by developer
-            MongoMappingContext context = new MongoMappingContext();
+            TurmsMongoMappingContext context = new TurmsMongoMappingContext();
             context.setAutoIndexCreation(autoIndexCreation);
 
             // MappingMongoConverter

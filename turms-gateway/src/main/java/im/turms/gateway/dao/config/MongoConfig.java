@@ -19,6 +19,7 @@ package im.turms.gateway.dao.config;
 
 import com.mongodb.MongoClientSettings;
 import com.mongodb.reactivestreams.client.MongoClient;
+import im.turms.server.common.dao.context.TurmsMongoMappingContext;
 import im.turms.server.common.dao.converter.EnumToIntegerConverter;
 import im.turms.server.common.dao.converter.IntegerToEnumConverter;
 import im.turms.server.common.dao.converter.IntegerToEnumConverterFactory;
@@ -63,7 +64,7 @@ public class MongoConfig {
         SimpleReactiveMongoDatabaseFactory databaseFactory = new SimpleReactiveMongoDatabaseFactory(mongoClient, properties.getMongoClientDatabase());
 
         // MongoMappingContext
-        MongoMappingContext context = new MongoMappingContext();
+        TurmsMongoMappingContext context = new TurmsMongoMappingContext();
         context.setAutoIndexCreation(true);
 
         // MappingMongoConverter
