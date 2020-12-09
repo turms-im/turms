@@ -23,27 +23,27 @@ import im.turms.server.common.cluster.service.discovery.DiscoveryService;
 /**
  * @author James Chen
  */
-public class FlakeIdService implements ClusterService {
+public class IdService implements ClusterService {
 
     private static final int FLAKE_ID_GENERATORS_LENGTH = ServiceType.values().length;
 
     /**
-     * Use an array to mitigate the unnecessary thread contention.
+     * Use an array to mitigate unnecessary thread contention.
      */
-    private final FlakeIdGenerator[] flakeIdGenerators = new FlakeIdGenerator[FLAKE_ID_GENERATORS_LENGTH];
+    private final SnowflakeIdGenerator[] idGenerators = new SnowflakeIdGenerator[FLAKE_ID_GENERATORS_LENGTH];
     private int previousLocalMemberIndex;
 
-    public FlakeIdService(DiscoveryService discoveryService) {
+    public IdService(DiscoveryService discoveryService) {
         for (int i = 0; i < FLAKE_ID_GENERATORS_LENGTH; i++) {
             // Reserve the dataCenterId value for future use.
-            flakeIdGenerators[i] = new FlakeIdGenerator(0, 0);
+            idGenerators[i] = new SnowflakeIdGenerator(0, 0);
         }
         // Listen to the member changes to get the local member index
         // as the memberId of the snowflake algorithm
         discoveryService.addListenerOnMembersChange(() -> {
             Integer localMemberIndex = discoveryService.getLocalServiceMemberIndex();
             if (localMemberIndex != null && localMemberIndex != previousLocalMemberIndex) {
-                for (FlakeIdGenerator idGenerator : flakeIdGenerators) {
+                for (SnowflakeIdGenerator idGenerator : idGenerators) {
                     idGenerator.updateNodeInfo(0, localMemberIndex);
                 }
                 previousLocalMemberIndex = localMemberIndex;
@@ -55,7 +55,7 @@ public class FlakeIdService implements ClusterService {
      * Note: It's unnecessary to check if the ID is 0L because it should never happen due to its mechanism
      */
     public long nextId(ServiceType serviceType) {
-        return flakeIdGenerators[serviceType.ordinal()].getFlakeId();
+        return idGenerators[serviceType.ordinal()].getFlakeId();
     }
 
 }

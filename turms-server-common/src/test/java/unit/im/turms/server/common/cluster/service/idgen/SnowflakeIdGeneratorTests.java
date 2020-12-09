@@ -1,6 +1,6 @@
 package unit.im.turms.server.common.cluster.service.idgen;
 
-import im.turms.server.common.cluster.service.idgen.FlakeIdGenerator;
+import im.turms.server.common.cluster.service.idgen.SnowflakeIdGenerator;
 import im.turms.server.common.util.MapUtil;
 import org.junit.jupiter.api.Test;
 
@@ -11,11 +11,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class FlakeIdGeneratorTests {
+class SnowflakeIdGeneratorTests {
 
     @Test
     void getFlakeId_shouldGenerateUniqueAndIncrementingId() {
-        FlakeIdGenerator generator = new FlakeIdGenerator(0, 0);
+        SnowflakeIdGenerator generator = new SnowflakeIdGenerator(0, 0);
         int number = 10_000;
         Set<Long> ids = new HashSet<>(MapUtil.getCapability(number));
         long previousId = -1;

@@ -20,7 +20,7 @@ package im.turms.server.common.cluster.node;
 import im.turms.server.common.cluster.service.config.SharedConfigService;
 import im.turms.server.common.cluster.service.config.SharedPropertyService;
 import im.turms.server.common.cluster.service.discovery.DiscoveryService;
-import im.turms.server.common.cluster.service.idgen.FlakeIdService;
+import im.turms.server.common.cluster.service.idgen.IdService;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.cluster.service.rpc.RpcService;
 import im.turms.server.common.cluster.service.serialization.SerializationService;
@@ -84,7 +84,7 @@ public class Node {
     private final DiscoveryService discoveryService;
     private final SerializationService serializationService;
     private final RpcService rpcService;
-    private final FlakeIdService flakeIdService;
+    private final IdService idService;
 
     /**
      * @param turmsPropertiesManager is used to get local properties and listen to their changes
@@ -150,7 +150,7 @@ public class Node {
         sharedPropertyService = new SharedPropertyService(clusterId, nodeType, turmsPropertiesManager, sharedConfigService);
         serializationService = new SerializationService();
         rpcService = new RpcService(clusterProperties.getRpc(), serializationService, discoveryService);
-        flakeIdService = new FlakeIdService(discoveryService);
+        idService = new IdService(discoveryService);
     }
 
     public void start() {
@@ -159,7 +159,7 @@ public class Node {
         discoveryService.start();
         serializationService.start();
         rpcService.start();
-        flakeIdService.start();
+        idService.start();
     }
 
     public void stop() {
@@ -168,7 +168,7 @@ public class Node {
         discoveryService.stop();
         serializationService.stop();
         rpcService.stop();
-        flakeIdService.stop();
+        idService.stop();
     }
 
     // Frequently used methods for external classes
@@ -186,7 +186,7 @@ public class Node {
     }
 
     public long nextId(ServiceType serviceType) {
-        return flakeIdService.nextId(serviceType);
+        return idService.nextId(serviceType);
     }
 
     public boolean isLocalNodeMaster() {

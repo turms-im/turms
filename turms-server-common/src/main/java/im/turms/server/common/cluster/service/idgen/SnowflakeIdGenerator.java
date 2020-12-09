@@ -44,17 +44,22 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author James Chen
  */
 @Log4j2
-public class FlakeIdGenerator {
+public class SnowflakeIdGenerator {
+
+    /**
+     * 2020-10-13 00:00:00 in UTC
+     */
+    private static final long EPOCH = 1602547200000L;
 
     private static final int DATA_CENTER_ID_BITS = 3;
     private static final int MEMBER_ID_BITS = 8;
     private static final int SEQUENCE_NUMBER_BITS = 11;
 
     private static final long TIMESTAMP_LEFT_SHIFT = SEQUENCE_NUMBER_BITS + MEMBER_ID_BITS + DATA_CENTER_ID_BITS;
-    private static final int DATA_CENTER_ID_SHIFT = SEQUENCE_NUMBER_BITS + MEMBER_ID_BITS;
-    private static final int MEMBER_ID_SHIFT = SEQUENCE_NUMBER_BITS;
+    private static final long DATA_CENTER_ID_SHIFT = SEQUENCE_NUMBER_BITS + MEMBER_ID_BITS;
+    private static final long MEMBER_ID_SHIFT = SEQUENCE_NUMBER_BITS;
 
-    private static final int SEQUENCE_NUMBER_MASK = (1 << SEQUENCE_NUMBER_BITS) - 1;
+    private static final long SEQUENCE_NUMBER_MASK = (1 << SEQUENCE_NUMBER_BITS) - 1;
 
     // Used to ensure clock moves forward.
     private final AtomicLong lastTimestamp = new AtomicLong();
@@ -64,12 +69,12 @@ public class FlakeIdGenerator {
     private final AtomicInteger sequenceNumber = new AtomicInteger(RandomUtil.nextPositiveInt());
 
     @Contended("nodeInfo")
-    private int dataCenterId;
+    private long dataCenterId;
 
     @Contended("nodeInfo")
-    private int memberId;
+    private long memberId;
 
-    public FlakeIdGenerator(int dataCenterId, int memberId) {
+    public SnowflakeIdGenerator(int dataCenterId, int memberId) {
         updateNodeInfo(dataCenterId, memberId);
     }
 
@@ -80,7 +85,7 @@ public class FlakeIdGenerator {
 
     public long getFlakeId() {
         // prepare each part of ID
-        int sequenceId = sequenceNumber.incrementAndGet() & SEQUENCE_NUMBER_MASK;
+        long sequenceId = sequenceNumber.incrementAndGet() & SEQUENCE_NUMBER_MASK;
         long timestamp = this.lastTimestamp.updateAndGet(lastTimestamp -> {
             // Don't let timestamp go backwards at least while this JVM is running.
             long nonBackwardsTimestamp = Math.max(lastTimestamp, System.currentTimeMillis());
@@ -89,7 +94,7 @@ public class FlakeIdGenerator {
                 // time-slip backwards
                 nonBackwardsTimestamp++;
             }
-            return nonBackwardsTimestamp;
+            return nonBackwardsTimestamp - EPOCH;
         });
 
         // Get ID
