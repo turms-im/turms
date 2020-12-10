@@ -477,7 +477,7 @@ public class SessionService implements ISessionService {
                         }
                     }
 
-                    long logId = node.getFlakeIdService().nextId(ServiceType.LOG);
+                    long logId = node.getIdService().nextId(ServiceType.LOG);
                     Date now = new Date();
                     if (position != null && sessionLocationService.isLocationEnabled()) {
                         return sessionLocationService.upsertUserLocation(userId, deviceType, position, now)

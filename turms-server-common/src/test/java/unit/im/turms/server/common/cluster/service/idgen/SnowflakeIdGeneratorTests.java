@@ -14,13 +14,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class SnowflakeIdGeneratorTests {
 
     @Test
-    void getFlakeId_shouldGenerateUniqueAndIncrementingId() {
+    void nextId_shouldGenerateUniqueAndIncrementingId() {
         SnowflakeIdGenerator generator = new SnowflakeIdGenerator(0, 0);
         int number = 10_000;
         Set<Long> ids = new HashSet<>(MapUtil.getCapability(number));
         long previousId = -1;
         for (int i = 0; i < number; i++) {
-            long newId = generator.getFlakeId();
+            long newId = generator.nextId();
             assertThat("ID should increment", newId, greaterThan(previousId));
             boolean added = ids.add(newId);
             assertTrue(added, "ID is duplicate");

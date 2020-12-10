@@ -83,7 +83,7 @@ public class SnowflakeIdGenerator {
         this.memberId = memberId;
     }
 
-    public long getFlakeId() {
+    public long nextId() {
         // prepare each part of ID
         long sequenceId = sequenceNumber.incrementAndGet() & SEQUENCE_NUMBER_MASK;
         long timestamp = this.lastTimestamp.updateAndGet(lastTimestamp -> {
