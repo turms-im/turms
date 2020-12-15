@@ -25,7 +25,11 @@ import com.mongodb.reactivestreams.client.MongoClient;
 import im.turms.server.common.cluster.service.ClusterService;
 import im.turms.server.common.cluster.service.config.converter.DurationToLongConverter;
 import im.turms.server.common.cluster.service.config.converter.LongToDurationConverter;
+import im.turms.server.common.cluster.service.config.domain.discovery.Leader;
+import im.turms.server.common.cluster.service.config.domain.discovery.Member;
+import im.turms.server.common.cluster.service.config.domain.property.SharedClusterProperties;
 import im.turms.server.common.dao.context.TurmsMongoMappingContext;
+import im.turms.server.common.dao.util.MongoUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.boot.autoconfigure.mongo.MongoPropertiesClientSettingsBuilderCustomizer;
@@ -48,6 +52,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author James Chen
@@ -63,6 +68,9 @@ public class SharedConfigService implements ClusterService {
 
     public SharedConfigService(String url) {
         mongoTemplate = getMongoTemplate(url);
+        MongoUtil.createIndexes(mongoTemplate, Set.of(SharedClusterProperties.class,
+                Leader.class,
+                Member.class));
     }
 
     private ReactiveMongoTemplate getMongoTemplate(String uri) {
@@ -76,7 +84,8 @@ public class SharedConfigService implements ClusterService {
         SimpleReactiveMongoDatabaseFactory databaseFactory = new SimpleReactiveMongoDatabaseFactory(mongoClient, properties.getMongoClientDatabase());
 
         TurmsMongoMappingContext context = new TurmsMongoMappingContext();
-        context.setAutoIndexCreation(true);
+        // We check and create indexes ourselves
+        context.setAutoIndexCreation(false);
 
         CustomConversions customConversions = new CustomConversions(
                 CustomConversions.StoreConversions.NONE,

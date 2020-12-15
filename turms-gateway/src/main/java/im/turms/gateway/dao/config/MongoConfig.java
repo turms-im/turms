@@ -65,7 +65,8 @@ public class MongoConfig {
 
         // MongoMappingContext
         TurmsMongoMappingContext context = new TurmsMongoMappingContext();
-        context.setAutoIndexCreation(true);
+        // Not turms-gateway but turms is responsible for index creation
+        context.setAutoIndexCreation(false);
 
         // MappingMongoConverter
         MappingMongoConverter converter = newMongoConverter(context);

@@ -27,6 +27,7 @@ import im.turms.server.common.dao.converter.EnumToIntegerConverter;
 import im.turms.server.common.dao.converter.IntegerToEnumConverter;
 import im.turms.server.common.dao.converter.IntegerToEnumConverterFactory;
 import im.turms.server.common.dao.domain.User;
+import im.turms.server.common.dao.util.MongoUtil;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.service.env.database.DatabaseProperties;
@@ -135,28 +136,50 @@ public class MongoConfig {
     public ReactiveMongoTemplate adminMongoTemplate(
             TurmsPropertiesManager turmsPropertiesManager,
             WriteConcernResolver writeConcernResolver) {
-        return getMongoTemplate(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getAdmin(), writeConcernResolver);
+        ReactiveMongoTemplate template = getMongoTemplate(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getAdmin(), writeConcernResolver);
+        MongoUtil.createIndexes(template, Set.of(Admin.class, AdminRole.class));
+        return template;
     }
 
     @Bean
     public ReactiveMongoTemplate groupMongoTemplate(
             TurmsPropertiesManager turmsPropertiesManager,
             WriteConcernResolver writeConcernResolver) {
-        return getMongoTemplate(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getGroup(), writeConcernResolver);
+        ReactiveMongoTemplate template = getMongoTemplate(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getGroup(), writeConcernResolver);
+        MongoUtil.createIndexes(template, Set.of(Group.class,
+                GroupBlacklistedUser.class,
+                GroupInvitation.class,
+                GroupJoinQuestion.class,
+                GroupJoinRequest.class,
+                GroupMember.class,
+                GroupType.class,
+                GroupVersion.class));
+        return template;
     }
 
     @Bean
     public ReactiveMongoTemplate messageMongoTemplate(
             TurmsPropertiesManager turmsPropertiesManager,
             WriteConcernResolver writeConcernResolver) {
-        return getMongoTemplate(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getMessage(), writeConcernResolver);
+        ReactiveMongoTemplate template = getMongoTemplate(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getMessage(), writeConcernResolver);
+        MongoUtil.createIndexes(template, Set.of(Message.class, MessageStatus.class));
+        return template;
     }
 
     @Bean
     public ReactiveMongoTemplate userMongoTemplate(
             TurmsPropertiesManager turmsPropertiesManager,
             WriteConcernResolver writeConcernResolver) {
-        return getMongoTemplate(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getUser(), writeConcernResolver);
+        ReactiveMongoTemplate template = getMongoTemplate(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getUser(), writeConcernResolver);
+        MongoUtil.createIndexes(template, Set.of(User.class,
+                UserFriendRequest.class,
+                UserLocationLog.class,
+                UserPermissionGroup.class,
+                UserRelationship.class,
+                UserRelationshipGroup.class,
+                UserRelationshipGroupMember.class,
+                UserVersion.class));
+        return template;
     }
 
     public MappingMongoConverter newMongoConverter(MongoMappingContext mongoMappingContext) {
@@ -192,12 +215,10 @@ public class MongoConfig {
             SimpleReactiveMongoDatabaseFactory databaseFactory = new SimpleReactiveMongoDatabaseFactory(mongoClient, currentProperties.getMongoClientDatabase());
 
             // MongoMappingContext
-            boolean autoIndexCreation = currentProperties.isAutoIndexCreation() != null
-                    ? currentProperties.isAutoIndexCreation()
-                    : true;
             // Note that we don't use the field naming strategy specified by developer
             TurmsMongoMappingContext context = new TurmsMongoMappingContext();
-            context.setAutoIndexCreation(autoIndexCreation);
+            // We check and create indexes ourselves
+            context.setAutoIndexCreation(false);
 
             // MappingMongoConverter
             MappingMongoConverter converter = newMongoConverter(context);
