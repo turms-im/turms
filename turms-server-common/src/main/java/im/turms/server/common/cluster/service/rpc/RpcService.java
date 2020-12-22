@@ -61,6 +61,7 @@ public class RpcService implements ClusterService {
 
     private static final String METRICS_NAME_RPC_REQUEST = "rpc.request";
     private static final String METRICS_TAG_REQUEST_NAME = "name";
+    private static final String METRICS_TAG_REQUEST_TARGET_NODE_ID = "node";
 
     @Getter
     private static RpcAcceptor rpcAcceptor;
@@ -238,11 +239,12 @@ public class RpcService implements ClusterService {
     private <T> Mono<T> requestResponse0(String memberNodeId, RSocket connection, RpcCallable<T> request, Duration timeout) {
         ByteBuf buffer = serializationService.serialize(request);
         Payload requestPayload = ByteBufPayload.create(buffer);
-        Tag tag = request.tag();
         Mono<Payload> mono = connection.requestResponse(requestPayload)
                 .timeout(timeout)
                 .name(METRICS_NAME_RPC_REQUEST)
-                .tag(METRICS_TAG_REQUEST_NAME, request.name());
+                .tag(METRICS_TAG_REQUEST_NAME, request.name())
+                .tag(METRICS_TAG_REQUEST_TARGET_NODE_ID, memberNodeId);
+        Tag tag = request.tag();
         if (tag != null) {
             mono = mono.tag(tag.getKey(), tag.getValue());
         }
@@ -263,18 +265,20 @@ public class RpcService implements ClusterService {
         Payload requestPayload = ByteBufPayload.create(buffer);
         List<Mono<Payload>> results = new ArrayList<>(members.size());
         for (MemberInfoWithConnection info : members) {
-            results.add(info.getConnection().requestResponse(requestPayload));
+            Mono<Payload> mono = info.getConnection().requestResponse(requestPayload)
+                    .name(METRICS_NAME_RPC_REQUEST)
+                    .tag(METRICS_TAG_REQUEST_NAME, request.name())
+                    .tag(METRICS_TAG_REQUEST_TARGET_NODE_ID, info.getMember().getNodeId())
+                    .metrics();
+            results.add(mono);
         }
-        Flux<Payload> flux = Flux.merge(results)
-                .timeout(timeout)
-                .name(METRICS_NAME_RPC_REQUEST)
-                .tag(METRICS_TAG_REQUEST_NAME, request.name());
+        Flux<Payload> flux = Flux.merge(results);
         Tag tag = request.tag();
         if (tag != null) {
             flux = flux.tag(tag.getKey(), tag.getValue());
         }
         return (Flux<T>) flux
-                .metrics()
+                .timeout(timeout)
                 .flatMap(this::parsePayload)
                 .onErrorMap(throwable -> tryLogAndTranslateThrowable(throwable, members));
     }
@@ -295,19 +299,21 @@ public class RpcService implements ClusterService {
         for (MemberInfoWithConnection info : members) {
             String memberId = info.getMember().getNodeId();
             RSocket connection = info.getConnection();
-            results.add(connection.requestResponse(requestPayload)
-                    .map(payload -> Pair.of(memberId, payload)));
+            Mono<Pair<String, Payload>> mono = connection.requestResponse(requestPayload)
+                    .name(METRICS_NAME_RPC_REQUEST)
+                    .tag(METRICS_TAG_REQUEST_NAME, request.name())
+                    .tag(METRICS_TAG_REQUEST_TARGET_NODE_ID, memberId)
+                    .metrics()
+                    .map(payload -> Pair.of(memberId, payload));
+            results.add(mono);
         }
-        Flux<Pair<String, Payload>> flux = Flux.merge(results)
-                .timeout(timeout)
-                .name(METRICS_NAME_RPC_REQUEST)
-                .tag(METRICS_TAG_REQUEST_NAME, request.name());
+        Flux<Pair<String, Payload>> flux = Flux.merge(results);
         Tag tag = request.tag();
         if (tag != null) {
             flux = flux.tag(tag.getKey(), tag.getValue());
         }
         return flux
-                .metrics()
+                .timeout(timeout)
                 .collectMap(Pair::getFirst, pair -> {
                     Payload payload = pair.getSecond();
                     Object data = getReturnValueFromRpc(payload.sliceData());
