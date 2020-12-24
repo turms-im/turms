@@ -94,8 +94,8 @@ public class SnowflakeIdGenerator {
                 // time-slip backwards
                 nonBackwardsTimestamp++;
             }
-            return nonBackwardsTimestamp - EPOCH;
-        });
+            return nonBackwardsTimestamp;
+        }) - EPOCH;
 
         // Get ID
         return sequenceId

@@ -383,7 +383,7 @@ export default class GroupService {
             if (result) {
                 return result;
             } else {
-                throw TurmsBusinessError.fromCode(TurmsStatusCode.MISSING_DATA);
+                throw TurmsBusinessError.fromCode(TurmsStatusCode.INVALID_RESPONSE);
             }
         });
     }

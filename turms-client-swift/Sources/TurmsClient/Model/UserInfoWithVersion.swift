@@ -19,14 +19,13 @@ public struct UserInfoWithVersion {
         self._lastUpdatedDate = lastUpdatedDate
     }
 
-    public static func from(_ notification: TurmsNotification) throws -> UserInfoWithVersion {
+    public static func from(_ notification: TurmsNotification) throws -> UserInfoWithVersion? {
         if notification.data.usersInfosWithVersion.userInfos.count > 0 {
             return UserInfoWithVersion(
                 userInfo: notification.data.usersInfosWithVersion.userInfos[0],
                 lastUpdatedDate: notification.data.usersInfosWithVersion.lastUpdatedDate.value
             )
-        } else {
-            throw TurmsBusinessError(.missingData)
         }
+        return nil
     }
 }

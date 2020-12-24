@@ -93,7 +93,7 @@ export default class MessageService {
                 if (this._requestTimeout > 0) {
                     timeoutId = setTimeout(() => {
                         delete this._requestMap[requestId];
-                        reject(TurmsBusinessError.fromCode(TurmsStatusCode.TIMEOUT));
+                        reject(TurmsBusinessError.fromCode(TurmsStatusCode.REQUEST_TIMEOUT));
                     }, this._requestTimeout);
                 }
                 this._requestMap[requestId] = {
@@ -123,7 +123,7 @@ export default class MessageService {
                             cb.reject(TurmsBusinessError.fromNotification(notification));
                         }
                     } else {
-                        cb.reject(TurmsBusinessError.fromMessage('Invalid notification: the code is missing'))
+                        cb.reject(TurmsBusinessError.from(TurmsStatusCode.INVALID_NOTIFICATION, "The code is missing"))
                     }
                 }
             }

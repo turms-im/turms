@@ -428,11 +428,11 @@ public class MongoDataGenerator {
         for (int i = targetUserToBeFriendRelationshipStart; i <= targetUserToBeFriendRelationshipEnd; i++) {
             UserRelationship userRelationship1 = new UserRelationship(
                     new UserRelationship.Key(1L, (long) i),
-                    false,
+                    null,
                     now);
             UserRelationship userRelationship2 = new UserRelationship(
                     new UserRelationship.Key((long) i, 1L),
-                    false,
+                    null,
                     now);
             UserRelationshipGroupMember relationshipGroupMember1 = new UserRelationshipGroupMember(
                     1L, 0, (long) i, now);

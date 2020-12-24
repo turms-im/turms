@@ -20,10 +20,7 @@ package im.turms.turms.workflow.access.http.controller.group;
 import im.turms.turms.bo.DateRange;
 import im.turms.turms.workflow.access.http.dto.request.group.AddGroupBlacklistedUserDTO;
 import im.turms.turms.workflow.access.http.dto.request.group.UpdateGroupBlacklistedUserDTO;
-import im.turms.turms.workflow.access.http.dto.response.AcknowledgedDTO;
-import im.turms.turms.workflow.access.http.dto.response.PaginationDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseFactory;
+import im.turms.turms.workflow.access.http.dto.response.*;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.access.http.util.PageUtil;
 import im.turms.turms.workflow.dao.domain.GroupBlacklistedUser;
@@ -113,22 +110,25 @@ public class GroupBlacklistController {
 
     @PutMapping
     @RequiredPermission(GROUP_BLACKLIST_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> updateGroupBlacklistedUsers(
+    public Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateGroupBlacklistedUsers(
             GroupBlacklistedUser.KeyList keys,
             @RequestBody UpdateGroupBlacklistedUserDTO updateGroupBlacklistedUserDTO) {
-        Mono<Boolean> updateMono = groupBlacklistService.updateBlacklistedUsers(
+        Mono<UpdateResultDTO> updateMono = groupBlacklistService.updateBlacklistedUsers(
                 new HashSet<>(keys.getKeys()),
                 updateGroupBlacklistedUserDTO.getBlockDate(),
-                updateGroupBlacklistedUserDTO.getRequesterId());
-        return ResponseFactory.acknowledged(updateMono);
+                updateGroupBlacklistedUserDTO.getRequesterId())
+                .map(UpdateResultDTO::get);
+        return ResponseFactory.okIfTruthy(updateMono);
     }
 
     @DeleteMapping
     @RequiredPermission(GROUP_BLACKLIST_DELETE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> deleteGroupBlacklistedUsers(
+    public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteGroupBlacklistedUsers(
             GroupBlacklistedUser.KeyList keys) {
-        Mono<Boolean> deleteMono = groupBlacklistService.deleteBlacklistedUsers(new HashSet<>(keys.getKeys()));
-        return ResponseFactory.acknowledged(deleteMono);
+        Mono<DeleteResultDTO> deleteMono = groupBlacklistService
+                .deleteBlacklistedUsers(new HashSet<>(keys.getKeys()))
+                .map(DeleteResultDTO::get);
+        return ResponseFactory.okIfTruthy(deleteMono);
     }
 
 }

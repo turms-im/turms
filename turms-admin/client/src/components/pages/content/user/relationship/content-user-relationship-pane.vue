@@ -48,23 +48,9 @@ export default {
                     placeholder: this.$t('relationshipGroupIndex')
                 },
                 {
-                    type: 'SELECT',
-                    model: 'ALL',
-                    name: 'isBlocked',
-                    options: {
-                        base: [{
-                            id: 'ALL',
-                            label: this.$t('friendAndBlacklistedUser')
-                        },
-                        {
-                            id: false,
-                            label: this.$t('friend')
-                        },
-                        {
-                            id: true,
-                            label: this.$t('blacklistedUser')
-                        }]
-                    }
+                    type: 'DATE-RANGE',
+                    model: [],
+                    name: 'blockDate'
                 },
                 {
                     type: 'DATE-RANGE',
@@ -87,8 +73,8 @@ export default {
                             decorator: this.$validator.create('relatedUserId', {required: true, onlyNumber: true})
                         },
                         {
-                            type: 'SWITCH',
-                            decorator: this.$validator.create('isBlocked')
+                            type: 'DATE',
+                            decorator: this.$validator.create('blockDate')
                         },
                         {
                             type: 'DATE',
@@ -102,20 +88,8 @@ export default {
                     size: 'L',
                     fields: [
                         {
-                            type: 'SELECT',
-                            decorator: this.$validator.create('isBlocked'),
-                            options: {
-                                values: [
-                                    {
-                                        label: this.$t('yes'),
-                                        id: true
-                                    },
-                                    {
-                                        label: this.$t('no'),
-                                        id: false
-                                    }
-                                ]
-                            }
+                            type: 'DATE',
+                            decorator: this.$validator.create('blockDate')
                         },
                         {
                             type: 'DATE',
@@ -135,12 +109,12 @@ export default {
                         width: '20%'
                     },
                     {
-                        key: 'isBlocked',
-                        width: '20%'
+                        key: 'blockDate',
+                        width: '17.5%'
                     },
                     {
                         key: 'establishmentDate',
-                        width: '15%'
+                        width: '17.5%'
                     },
                     {
                         title: this.$t('relationshipGroupIndex'),

@@ -19,7 +19,7 @@ package im.turms.gateway.access.tcp.util;
 
 import com.google.protobuf.Int32Value;
 import com.google.protobuf.Int64Value;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
+import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.common.model.dto.notification.TurmsNotification;
 
 /**
@@ -34,7 +34,7 @@ public class TurmsNotificationUtil {
         return TurmsNotification
                 .newBuilder()
                 .setRequestId(Int64Value.newBuilder().setValue(requestId).build())
-                .setCode(Int32Value.newBuilder().setValue(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED.getBusinessCode()).build())
+                .setCode(Int32Value.newBuilder().setValue(TurmsStatusCode.SERVER_INTERNAL_ERROR.getBusinessCode()).build())
                 .build();
     }
 

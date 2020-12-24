@@ -38,9 +38,9 @@ public class GroupProperties {
     private int groupInvitationContentLimit = 200;
 
     @JsonView(MutablePropertiesView.class)
-    @Description("A group invitation will become expired after the TTL has elapsed. 0 means infinite")
-    @Min(0)
-    private int groupInvitationTimeToLiveHours = 0;
+    @Description("A group invitation will become expired after the TTL has elapsed. Cannot be infinite for performance reason")
+    @Min(1)
+    private int groupInvitationTimeToLiveHours = 30 * 24;
 
     @JsonView(MutablePropertiesView.class)
     @Description("The maximum allowed length for the text of a group join request")
@@ -48,9 +48,9 @@ public class GroupProperties {
     private int groupJoinRequestContentLimit = 200;
 
     @JsonView(MutablePropertiesView.class)
-    @Description("A group join request will become expired after the TTL has elapsed. 0 means infinite")
-    @Min(0)
-    private int groupJoinRequestTimeToLiveHours = 0;
+    @Description("A group join request will become expired after the TTL has elapsed. Cannot be infinite for performance reason")
+    @Min(1)
+    private int groupJoinRequestTimeToLiveHours = 30 * 24;
 
     @JsonView(MutablePropertiesView.class)
     @Description("Whether to allow users to recall the join requests sent by themselves")

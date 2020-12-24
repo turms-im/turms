@@ -83,7 +83,7 @@ class GroupServiceTests: XCTestCase {
             XCTAssertEqual(groupMemberId, $0!.groupMembers[0].userID.value)
         })
         TestUtil.assertCompleted("answerGroupQuestions_shouldReturnAnswerResult", turmsClient.groupService.answerGroupQuestions([groupQuestionId!: "answer"]).recover { error -> Promise<GroupJoinQuestionsAnswerResult> in
-            if let businessError = error as? TurmsBusinessError, businessError.code == .alreadyGroupMember {
+            if let businessError = error as? TurmsBusinessError, businessError.code == TurmsStatusCode.memberCannotAnswerGroupQuestion.rawValue {
                 return Promise.value(GroupJoinQuestionsAnswerResult())
             } else {
                 throw error
@@ -96,14 +96,14 @@ class GroupServiceTests: XCTestCase {
         TestUtil.assertCompleted("deleteGroupJoinQuestion_shouldSucceed", turmsClient.groupService.deleteGroupJoinQuestion(groupQuestionId!))
         TestUtil.assertCompleted("unblacklistUser_shouldSucceed", turmsClient.groupService.unblacklistUser(groupId: groupId!, userId: groupBlacklistedUserId))
         TestUtil.assertCompleted("deleteInvitation_shouldSucceedOrThrowDisabledFunction", turmsClient.groupService.deleteInvitation(groupInvitationId!).recover { error -> Promise<Void> in
-            if let businessError = error as? TurmsBusinessError, businessError.code == .disabledFunction {
+            if let businessError = error as? TurmsBusinessError, businessError.code == TurmsStatusCode.recallingGroupInvitationIsDisabled.rawValue {
                 return Promise.value(())
             } else {
                 throw error
             }
         })
         TestUtil.assertCompleted("deleteJoinRequest_shouldSucceedOrThrowDisabledFunction", turmsClient.groupService.deleteJoinRequest(groupJoinRequestId!).recover { error -> Promise<Void> in
-            if let businessError = error as? TurmsBusinessError, businessError.code == .disabledFunction {
+            if let businessError = error as? TurmsBusinessError, businessError.code == TurmsStatusCode.recallingGroupJoinRequestIsDisabled.rawValue {
                 return Promise.value(())
             } else {
                 throw error

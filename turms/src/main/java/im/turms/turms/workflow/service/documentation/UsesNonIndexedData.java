@@ -15,19 +15,16 @@
  * limitations under the License.
  */
 
-package im.turms.turms.workflow.dao.index.documentation;
+package im.turms.turms.workflow.service.documentation;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Not indexed by default because if your application really has some features that
- * needs to be implemented by these queries that uses the fields marked as OptionalIndexedForCustomFeature
- * (in most cases these queries should be able to eliminate and should be eliminated
- * especially in the sharded collections), you may need to index these fields.
- * <p>
- * By the way, to use the targeted queries in sharded collections, you may need to create a new auxiliary collection.
+ * If developers really need these features with efficient implementations,
+ * they should implement the features according to their requirements and the solutions mentioned
+ * in <a href="https://turms-im.github.io/docs/for-developers/schema.html">Schema Design</a>
  */
 @Retention(RetentionPolicy.SOURCE)
-public @interface OptionalIndexedForCustomFeature {
+public @interface UsesNonIndexedData {
 }

@@ -70,7 +70,7 @@ public class LocalNodeStatusManager {
         this.heartbeatIntervalInMillis = heartbeatInterval.toMillis();
     }
 
-    public Mono<Boolean> updateLocalNodeInfo(Update update) {
+    public Mono<Void> upsertLocalNodeInfo(Update update) {
         String nodeId = localMember.getNodeId();
         Query memberQuery = new Query()
                 .addCriteria(Criteria.where(Member.ID_CLUSTER_ID).is(localMember.getClusterId()))
@@ -88,7 +88,7 @@ public class LocalNodeStatusManager {
                 });
     }
 
-    public Mono<Boolean> unregisterLocalMember() {
+    public Mono<Void> unregisterLocalMember() {
         log.info("Unregistering the local member");
         return discoveryService.unregisterMembers(Set.of(localMember.getNodeId()))
                 .then(unregisterLocalMemberLeadership())
@@ -109,16 +109,17 @@ public class LocalNodeStatusManager {
         }
     }
 
-    private Mono<Boolean> unregisterLocalMemberLeadership() {
+    private Mono<Void> unregisterLocalMemberLeadership() {
         Member.Key key = new Member.Key(localMember.getClusterId(), localMember.getNodeId());
         Query query = new Query()
                 .addCriteria(Criteria.where("_id").is(key));
         return sharedConfigService.remove(query, Leader.class)
-                .doOnSuccess(removed -> {
-                    if (removed != null && removed) {
+                .doOnSuccess(result -> {
+                    if (result.getDeletedCount() > 0) {
                         discoveryService.notifyLeadershipChangeListeners(null);
                     }
-                });
+                })
+                .then();
     }
 
     public boolean isLocalNodeMaster() {
@@ -138,7 +139,7 @@ public class LocalNodeStatusManager {
                     Date now = new Date();
                     Update update = new Update().set(Member.Fields.lastHeartbeatDate, now);
                     List<Mono<?>> monos = new LinkedList<>();
-                    monos.add(updateLocalNodeInfo(update));
+                    monos.add(upsertLocalNodeInfo(update));
                     if (isLocalNodeMaster()) {
                         monos.add(updateLocalLeaderHeartbeat(now));
                         monos.add(updateFollowersStatus(now));
@@ -164,7 +165,7 @@ public class LocalNodeStatusManager {
                 member.getServiceAddress());
     }
 
-    private Mono<Boolean> updateLocalLeaderHeartbeat(Date lastHeartbeatDate) {
+    private Mono<Void> updateLocalLeaderHeartbeat(Date lastHeartbeatDate) {
         Update update = new Update().set(Leader.Fields.lastHeartbeatDate, lastHeartbeatDate);
         Query leaderQuery = new Query()
                 .addCriteria(Criteria.where("_id").is(localMember.getClusterId()))

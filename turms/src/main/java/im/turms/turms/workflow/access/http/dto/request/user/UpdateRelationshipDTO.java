@@ -26,6 +26,6 @@ import java.util.Date;
  */
 @Data
 public final class UpdateRelationshipDTO {
-    private final Boolean isBlocked;
+    private final Date blockDate;
     private final Date establishmentDate;
 }

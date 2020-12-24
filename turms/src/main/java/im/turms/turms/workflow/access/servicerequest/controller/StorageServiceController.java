@@ -19,8 +19,8 @@ package im.turms.turms.workflow.access.servicerequest.controller;
 
 import com.google.protobuf.StringValue;
 import im.turms.common.constant.ContentType;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
-import im.turms.common.exception.TurmsBusinessException;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.storage.DeleteResourceRequest;
 import im.turms.common.model.dto.request.storage.QuerySignedGetUrlRequest;
@@ -59,7 +59,7 @@ public class StorageServiceController {
                                 .setUrl(StringValue.newBuilder().setValue(url).build())
                                 .build()));
             } else {
-                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The content type must not be UNRECOGNIZED"));
+                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The content type must not be UNRECOGNIZED"));
             }
         };
     }
@@ -78,7 +78,7 @@ public class StorageServiceController {
                                 .setUrl(StringValue.newBuilder().setValue(url).build())
                                 .build()));
             } else {
-                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The content type must not be UNRECOGNIZED"));
+                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The content type must not be UNRECOGNIZED"));
             }
         };
     }
@@ -92,9 +92,9 @@ public class StorageServiceController {
                 String keyStr = deleteResourceRequest.hasKeyStr() ? deleteResourceRequest.getKeyStr().getValue() : null;
                 Long keyNum = deleteResourceRequest.hasKeyNum() ? deleteResourceRequest.getKeyNum().getValue() : null;
                 return storageService.deleteResource(clientRequest.getUserId(), contentType, keyStr, keyNum)
-                        .thenReturn(RequestHandlerResultFactory.ok());
+                        .thenReturn(RequestHandlerResultFactory.OK);
             } else {
-                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The content type must not be UNRECOGNIZED"));
+                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The content type must not be UNRECOGNIZED"));
             }
         };
     }

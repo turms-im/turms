@@ -18,7 +18,7 @@
 package im.turms.turms.workflow.dao.domain;
 
 import im.turms.common.constant.RequestStatus;
-import im.turms.turms.workflow.dao.index.documentation.OptionalIndexedForCustomFeature;
+import im.turms.turms.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,20 +28,33 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Sharded;
+import org.springframework.data.mongodb.core.mapping.ShardingStrategy;
 
 import java.util.Date;
 
 /**
+ * TODO: check whether hashed shard key can work with compound range index
+ *
  * @author James Chen
+ * @implNote In the compound index,
+ * the first field is used to query requests according to the recipient ID,
+ * the second field is used to limit the date range of data to avoid the linear growth of the amount of target data,
+ * the third field is used to check if there already a request when creating a request.
  */
 @Data
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Document
 @CompoundIndex(
-        name = UserFriendRequest.Fields.CREATION_DATE + "_" + UserFriendRequest.Fields.RECIPIENT_ID + "_idx",
-        def = "{'" + UserFriendRequest.Fields.CREATION_DATE + "': 1, '" + UserFriendRequest.Fields.RECIPIENT_ID + "': 1}")
-@Sharded(shardKey = {UserFriendRequest.Fields.CREATION_DATE, UserFriendRequest.Fields.RECIPIENT_ID}, immutableKey = true)
+        name = UserFriendRequest.Fields.RECIPIENT_ID + "_"
+                + UserFriendRequest.Fields.CREATION_DATE + "_"
+                + UserFriendRequest.Fields.REQUESTER_ID,
+        def = "{" +
+                "'" + UserFriendRequest.Fields.RECIPIENT_ID + "': 1," +
+                "'" + UserFriendRequest.Fields.CREATION_DATE + "': 1," +
+                "'" + UserFriendRequest.Fields.REQUESTER_ID + "': 1" +
+                "}")
+@Sharded(shardKey = UserFriendRequest.Fields.RECIPIENT_ID, shardingStrategy = ShardingStrategy.HASH, immutableKey = true)
 public final class UserFriendRequest {
 
     public static final String COLLECTION_NAME = "userFriendRequest";
@@ -74,15 +87,18 @@ public final class UserFriendRequest {
     private final Date expirationDate;
 
     @Field(Fields.RESPONSE_DATE)
-    @OptionalIndexedForCustomFeature
+    @OptionalIndexedForExtendedFeature
     private final Date responseDate;
 
+    /**
+     * Used by queryFriendRequestsByRequesterId
+     */
     @Field(Fields.REQUESTER_ID)
-    @OptionalIndexedForCustomFeature
+    @OptionalIndexedForExtendedFeature
     private final Long requesterId;
 
     @Field(Fields.RECIPIENT_ID)
-    @OptionalIndexedForCustomFeature
+    @OptionalIndexedForExtendedFeature
     private final Long recipientId;
 
     public static class Fields {

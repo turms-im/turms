@@ -17,12 +17,11 @@
 
 package im.turms.turms.workflow.access.http.controller.admin;
 
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
 import im.turms.turms.workflow.access.http.dto.request.admin.AddAdminDTO;
 import im.turms.turms.workflow.access.http.dto.request.admin.UpdateAdminDTO;
-import im.turms.turms.workflow.access.http.dto.response.AcknowledgedDTO;
-import im.turms.turms.workflow.access.http.dto.response.PaginationDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseFactory;
+import im.turms.turms.workflow.access.http.dto.response.*;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.access.http.util.PageUtil;
 import im.turms.turms.workflow.dao.domain.Admin;
@@ -126,26 +125,26 @@ public class AdminController {
 
     @PutMapping
     @RequiredPermission(ADMIN_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> updateAdmins(
+    public Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateAdmins(
             @RequestHeader("account") String requesterAccount,
             @RequestParam Set<String> accounts,
             @RequestBody UpdateAdminDTO updateAdminDTO) {
-        Mono<Boolean> updateMono = adminService.authAndUpdateAdmins(
+        Mono<UpdateResult> updateMono = adminService.authAndUpdateAdmins(
                 requesterAccount,
                 accounts,
                 updateAdminDTO.getPassword(),
                 updateAdminDTO.getName(),
                 updateAdminDTO.getRoleId());
-        return ResponseFactory.acknowledged(updateMono);
+        return ResponseFactory.updateResult(updateMono);
     }
 
     @DeleteMapping
     @RequiredPermission(ADMIN_DELETE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> deleteAdmins(
+    public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteAdmins(
             @RequestHeader("account") String requesterAccount,
             @RequestParam Set<String> accounts) {
-        Mono<Boolean> deleteMono = adminService.authAndDeleteAdmins(requesterAccount, accounts);
-        return ResponseFactory.acknowledged(deleteMono);
+        Mono<DeleteResult> deleteMono = adminService.authAndDeleteAdmins(requesterAccount, accounts);
+        return ResponseFactory.deleteResult(deleteMono);
     }
 
 }

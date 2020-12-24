@@ -3,6 +3,7 @@ import TurmsClient from '../../src/turms-client';
 import TurmsStatusCode from '../../src/model/turms-status-code'
 import {im} from '../../src/model/proto-bundle';
 import GroupMemberRole = im.turms.proto.GroupMemberRole;
+import TurmsBusinessError from "../../types/model/turms-business-error";
 
 const GROUP_MEMBER_ID = '3';
 const GROUP_INVITATION_INVITEE = '4';
@@ -46,11 +47,11 @@ describe('Create', () => {
     });
     it('addGroupMember_shouldSucceed', async () => {
         const result = await turmsClient.groupService.addGroupMember(groupId, GROUP_MEMBER_ID, "name", GroupMemberRole.MEMBER);
-        expect(result).toBeUndefined();
+        expect(result).toBeFalsy();
     });
     it('blacklistUser_shouldSucceed', async () => {
         const result = await turmsClient.groupService.blacklistUser(groupId, GROUP_BLACKLISTED_USER_ID);
-        expect(result).toBeUndefined();
+        expect(result).toBeFalsy();
     });
     it('createInvitation_shouldReturnInvitationId', async () => {
         groupInvitationId = await turmsClient.groupService.createInvitation(groupId, GROUP_INVITATION_INVITEE, "content");
@@ -61,31 +62,31 @@ describe('Create', () => {
 describe('Update', () => {
     it('updateGroup_shouldSucceed', async () => {
         const result = await turmsClient.groupService.updateGroup(groupId, "name", "intro", "announcement", 10);
-        expect(result).toBeUndefined();
+        expect(result).toBeFalsy();
     });
     it('muteGroup_shouldSucceed', async () => {
         const result = await turmsClient.groupService.muteGroup(groupId, new Date());
-        expect(result).toBeUndefined();
+        expect(result).toBeFalsy();
     });
     it('unmuteGroup_shouldSucceed', async () => {
         const result = await turmsClient.groupService.unmuteGroup(groupId);
-        expect(result).toBeUndefined();
+        expect(result).toBeFalsy();
     });
     it('updateGroupJoinQuestion_shouldSucceed', async () => {
         const result = await turmsClient.groupService.updateGroupJoinQuestion(groupId, "new-question", ["answer"]);
-        expect(result).toBeUndefined();
+        expect(result).toBeFalsy();
     });
     it('updateGroupMemberInfo_shouldSucceed', async () => {
         const result = await turmsClient.groupService.updateGroupMemberInfo(groupId, GROUP_MEMBER_ID, "myname");
-        expect(result).toBeUndefined();
+        expect(result).toBeFalsy();
     });
     it('muteGroupMember_shouldSucceed', async () => {
         const result = await turmsClient.groupService.muteGroupMember(groupId, GROUP_MEMBER_ID, new Date(new Date().getTime() + 100000));
-        expect(result).toBeUndefined();
+        expect(result).toBeFalsy();
     });
     it('unmuteGroupMember_shouldSucceed', async () => {
         const result = await turmsClient.groupService.unmuteGroupMember(groupId, GROUP_MEMBER_ID);
-        expect(result).toBeUndefined();
+        expect(result).toBeFalsy();
     });
 });
 
@@ -136,10 +137,10 @@ describe('Query', () => {
         idsAndAnswer[groupJoinQuestionId] = "answer";
         try {
             const answerResult = await turmsClient.groupService.answerGroupQuestions(idsAndAnswer);
-            const isCorrect = answerResult.questionsIds.indexOf(groupJoinQuestionId) >= 0;
+            const isCorrect = answerResult.questionIds.indexOf(groupJoinQuestionId) >= 0;
             expect(isCorrect).toEqual(true);
         } catch (e) {
-            expect(e.code).toEqual(TurmsStatusCode.ALREADY_GROUP_MEMBER);
+            expect(e.code).toEqual(TurmsStatusCode.MEMBER_CANNOT_ANSWER_GROUP_QUESTION);
         }
     });
 });
@@ -147,40 +148,40 @@ describe('Query', () => {
 describe('Delete', () => {
     it('removeGroupMember_shouldSucceed', async () => {
         const result = await turmsClient.groupService.removeGroupMember(groupId, GROUP_MEMBER_ID);
-        expect(result).toBeUndefined();
+        expect(result).toBeFalsy();
     });
     it('unblacklistUser_shouldSucceed', async () => {
         const result = await turmsClient.groupService.unblacklistUser(groupId, GROUP_BLACKLISTED_USER_ID);
-        expect(result).toBeUndefined();
+        expect(result).toBeFalsy();
     });
     it('deleteInvitation_shouldSucceedOrThrowDisabledFunction', async () => {
         try {
             expect(await turmsClient.groupService.deleteInvitation(groupInvitationId)).toBeTruthy();
         } catch (e) {
-            expect(e.code).toEqual(TurmsStatusCode.DISABLED_FUNCTION);
+            expect(e.code).toEqual(TurmsStatusCode.RECALL_NOT_PENDING_GROUP_INVITATION);
         }
     });
     it('deleteInvitation_shouldSucceedOrThrowDisabledFunction', async () => {
         try {
             expect(await turmsClient.groupService.deleteJoinRequest(groupJoinRequestId)).toBeTruthy();
         } catch (e) {
-            expect(e.code).toEqual(TurmsStatusCode.DISABLED_FUNCTION);
+            expect(e.code).toEqual(TurmsStatusCode.RECALL_NOT_PENDING_GROUP_INVITATION);
         }
     });
     it('quitGroup_shouldSucceed', async () => {
         const result = await turmsClient.groupService.quitGroup(groupId, null, false);
-        expect(result).toBeUndefined();
+        expect(result).toBeFalsy();
     });
     it('deleteGroup_shouldSucceed', async () => {
         const readyToDeleteGroupId = await turmsClient.groupService.createGroup('readyToDelete');
         const result = await turmsClient.groupService.deleteGroup(readyToDeleteGroupId)
-        expect(result).toBeUndefined();
+        expect(result).toBeFalsy();
     });
 });
 
 describe('Update - Last', () => {
     it('transferOwnership_shouldSucceed', async () => {
         const result = await turmsClient.groupService.transferOwnership(groupId, GROUP_SUCCESSOR, true);
-        expect(result).toBeUndefined();
+        expect(result).toBeFalsy();
     });
 });

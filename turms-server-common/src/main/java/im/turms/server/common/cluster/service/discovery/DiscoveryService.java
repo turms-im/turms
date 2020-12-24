@@ -17,8 +17,8 @@
 
 package im.turms.server.common.cluster.service.discovery;
 
-import im.turms.common.constant.statuscode.TurmsStatusCode;
-import im.turms.common.exception.TurmsBusinessException;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.cluster.node.NodeVersion;
 import im.turms.server.common.cluster.service.ClusterService;
@@ -125,7 +125,7 @@ public class DiscoveryService implements ClusterService {
                 localMember,
                 discoveryProperties.getHeartbeatIntervalInSeconds());
         serviceAddressManager.addListener(serviceAddress ->
-                localNodeStatusManager.updateLocalNodeInfo(new Update().set(Member.Fields.serviceAddress, serviceAddress)));
+                localNodeStatusManager.upsertLocalNodeInfo(new Update().set(Member.Fields.serviceAddress, serviceAddress)));
         this.connectionManager = new ConnectionManager(this, discoveryProperties, outputThreadCount);
         connectionManager.addMemberConnectionChangeListener(new MemberConnectionChangeListener() {
             @Override
@@ -349,14 +349,14 @@ public class DiscoveryService implements ClusterService {
         return sharedConfigService.insert(member).then();
     }
 
-    public Mono<Boolean> unregisterMembers(Set<String> nodeIds) {
+    public Mono<Void> unregisterMembers(Set<String> nodeIds) {
         Query query = new Query()
                 .addCriteria(Criteria.where(Member.ID_CLUSTER_ID).is(getLocalMember().getClusterId()))
                 .addCriteria(Criteria.where(Member.ID_NODE_ID).in(nodeIds));
-        return sharedConfigService.remove(query, Member.class);
+        return sharedConfigService.remove(query, Member.class).then();
     }
 
-    public Mono<Boolean> updateMemberInfo(@NotNull String id, @Nullable Boolean isSeed, @Nullable Boolean isActive) {
+    public Mono<Void> updateMemberInfo(@NotNull String id, @Nullable Boolean isSeed, @Nullable Boolean isActive) {
         Member member = allKnownMembers.get(id);
         if (member == null) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NO_CONTENT));

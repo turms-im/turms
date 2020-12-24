@@ -22,6 +22,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
+import java.util.Date;
 
 /**
  * @author James Chen
@@ -45,6 +46,17 @@ public class UpdateBuilder {
                 }
             } else {
                 update.set(key, value);
+            }
+        }
+        return this;
+    }
+
+    public UpdateBuilder setOrUnsetDate(String key, Date date) {
+        if (date != null) {
+            if (date.getTime() > 0) {
+                update.set(key, date);
+            } else {
+                update.unset(key);
             }
         }
         return this;

@@ -19,7 +19,7 @@ package im.turms.turms.workflow.service.impl.user.onlineuser;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
-import im.turms.common.exception.TurmsBusinessException;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constraint.ValidDeviceType;
 import im.turms.server.common.dto.CloseReason;

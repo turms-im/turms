@@ -1,112 +1,209 @@
 public enum TurmsStatusCode: Int {
-    // For general use
-    case ok = 2000
-    case notResponsible = 3000
-    case failed = 4000
-    case serverInternalError = 5000
 
-    case noContent = 2001
+    //**********************************************************
+    //* Defined on the client side
+    //**********************************************************
+
+    //**********************************************************
+    //* For application error
+    //**********************************************************
+
+    // Client - Request
+    case invalidRequest = 100
+    case clientRequestsTooFrequent
+    case requestTimeout
+    case illegalArgument
+
+    // Server - Notification
+    case invalidNotification = 200
+    case invalidResponse
+
+    //**********************************************************
+    //* For business error
+    //**********************************************************
+
+    // User
+    case clientSessionAlreadyEstablished = 300
+    case clientSessionHasBeenClosed
+    case reloginShouldBeCalledAfterLogin
+
+    // Message
+    case messageIsRejected = 400
+
+    // Storage
+    case queryProfileUrlToUpdateBeforeLogin = 500
+
+    //**********************************************************
+    //* Defined on the server side
+    //**********************************************************
+
+    // Successful responses
+    case ok = 1000
+    case noContent
     case alreadyUpToDate
-    case recipientsOffline
 
-    case disabledFunction = 4001
-    case expiryDateBeforeNow
-    case expiredResource
-    case duplicateKey
-    case illegalArguments
-    case invalidData
-    case notActive
-    case ownedResourceLimitReached
+    //**********************************************************
+    //* For application error
+    //**********************************************************
+
+    // Client
+    case invalidRequestFromServer = 1100
+    case clientRequestsTooFrequentFromServer
+    case illegalArgumentFromServer
+    case recordContainsDuplicateKey
     case requestedRecordsTooMany
-    case resourcesHaveBeenHandled
-    case resourcesHaveChanged
-    case sessionSimultaneousConflictsDecline
+    case sendRequestFromNonExistingSession
+
+    // Server
+    case serverInternalError = 1200
+    case serverUnavailable
+    case disabledFunction
+
+    //**********************************************************
+    //* For business error
+    //**********************************************************
+
+    // User
+
+    // User - Login
+    case loginUserIdNotNumber = 2000
+    case loginAuthenticationFailed
+    case loggingInUserNotActive
+    case loginFromForbiddenDeviceType
+    case forbiddenDeviceTypeForLoginFailureReason
+    case loginFailureReasonCacheIsDisabled
+
+    // User - Session
+    case sessionSimultaneousConflictsDecline = 2100
     case sessionSimultaneousConflictsNotify
     case sessionSimultaneousConflictsOffline
+    case createExistingSession
+    case forbiddenDeviceTypeForSessionDisconnectionReason
+    case sessionDisconnectionReasonCacheIsDisabled
+
+    // User - Location
+    case userLocationRelatedFeaturesAreDisabled = 2200
+    case queryingNearestUsersBySessionIdIsDisabled
+
+    // User - Info
+    case updateInfoOfNonExistingUser = 2300
+    case userProfileNotFound
+    case profileRequesterNotInContactsOrBlocked
+    case profileRequesterHasBeenBlocked
+
+    // User - Permission
+    case queryPermissionOfNonExistingUser = 2400
+
+    // User - Relationship
+    case addNotRelatedUserToGroup = 2500
+    case createExistingRelationship
+
+    // User - Friend Request
+    case requesterNotFriendRequestRecipient = 2600
+    case createExistingFriendRequest
+    case friendRequestSenderHasBeenBlocked
+
+    // Group
+
+    // Group - Info
+    case updateInfoOfNonExistingGroup = 3000
+    case notOwnerToUpdateGroupInfo
+    case notOwnerOrManagerToUpdateGroupInfo
+    case notMemberToUpdateGroupInfo
+
+    // Group - Type
+    case noPermissionToCreateGroupWithGroupType = 3100
+    case createGroupWithNonExistingGroupType
+
+    // Group - Ownership
+    case notActiveUserToCreateGroup = 3200
+    case notOwnerToTransferGroup
+    case notOwnerToDeleteGroup
     case successorNotGroupMember
-    case targetUsersUnauthorized
-    case targetUsersNotExist
-    case typeNotExists
-    case unauthorized
-    case redundantRequest
-    case alreadyGroupMember
-    case friendRequestHasExisted
-    case relationshipHasEstablished
-    case userNotGroupMember
-    case userHasBeenBlacklisted
-    case groupHasBeenMuted
-    case memberHasBeenMuted
+    case ownerQuitsWithoutSpecifyingSuccessor
+    case maxOwnedGroupsReached
+    case transferNonExistingGroup
+
+    // Group - Question
+    case notOwnerOrManagerToCreateGroupQuestion = 3300
+    case notOwnerOrManagerToDeleteGroupQuestion
+    case notOwnerOrManagerToUpdateGroupQuestion
+    case notOwnerOrManagerToAccessGroupQuestionAnswer
+    case groupQuestionAnswererHasBeenBlocked
+    case memberCannotAnswerGroupQuestion
+    case answerQuestionOfInactiveGroup
+
+    // Group - Member
+    case notOwnerOrManagerToRemoveGroupMember = 3400
+    case notOwnerToUpdateGroupMemberInfo
+    case notOwnerOrManagerToUpdateGroupMemberInfo
+    case notMemberToQueryMemberInfo
+    case addBlockedUserToGroup
+    case addBlockedUserToInactiveGroup
+    case addUserToInactiveGroup
+    case addNewMemberWithRoleHigherThanRequester
+
+    // Group - Blocklist
+    case notOwnerOrManagerToAddBlockedUser = 3500
+    case notOwnerOrManagerToRemoveBlockedUser
+
+    // Group - Join Request
+    case groupJoinRequestSenderHasBeenBlocked = 3600
+    case notJoinRequestSenderToRecallRequest
+    case notOwnerOrManagerToAccessGroupRequest
+    case recallNotPendingGroupJoinRequest
+    case sendJoinRequestToInactiveGroup
+    case recallingGroupJoinRequestIsDisabled
+
+    // Group - Invitation
+    case groupInviterNotMember = 3700
+    case groupInviteeAlreadyGroupMember
+    case notOwnerOrManagerToRecallInvitation
+    case notOwnerOrManagerToAccessInvitation
+    case notOwnerToSendInvitation
+    case notOwnerOrManagerToSendInvitation
+    case notMemberToSendInvitation
+    case inviteeHasBeenBlocked
+    case recallingGroupInvitationIsDisabled
+    case redundantGroupInvitation
+    case recallNotPendingGroupInvitation
+
+    // Conversation
+    case updatingTypingStatusIsDisabled = 4000
+
+    // Message
+
+    // Message - Send
+    case messageRecipientNotActive = 5000
+    case messageSenderNotInContactsOrBlocked
+    case privateMessageSenderHasBeenBlocked
+    case groupMessageSenderHasBeenBlocked
+    case sendMessageToInactiveGroup
+    case sendMessageToMutedGroup
+    case sendingMessagesToOneselfIsDisabled
+    case mutedMemberSendMessage
     case guestsHaveBeenMuted
+
+    // Message - Update
+    case updatingMessageBySenderIsDisabled = 5100
+    case notSenderToUpdateMessage
+    case notMessageRecipientToUpdateMessageReadDate
+
+    // Message - Recall
+    case recallNonExistingMessage = 5200
+    case recallingMessageIsDisabled
+    case messageRecallTimeout
+
+    // Storage
+    case storageNotImplemented = 6000
     case fileTooLarge
-    case requestTooLarge
-    case forbiddenDeviceType
 
-    case loggedInDevicesCannotOffline = 5001
-    case notImplemented
-    case unavailable
-
-    case clientUserIdAndPasswordMustNotNull = 6000
-    case clientSessionHasBeenClosed
-    case clientSessionAlreadyEstablished
-    case clientRequestsTooFrequent
-    case missingData
-    case timeout
+    // Storage - Extension
+    case redundantRequestForPresignedProfileUrl = 6900
 }
 
 extension TurmsStatusCode {
-    public var reason: String {
-        switch self {
-            case .ok: return "ok"
-            case .notResponsible: return "The server isn't responsible for the user"
-            case .failed: return "failed"
-            case .serverInternalError: return "Internal server error"
-            case .noContent: return "No content"
-            case .alreadyUpToDate: return "Already up-to-date"
-            case .recipientsOffline: return "The recipients are offline"
-            case .disabledFunction: return "The function has been disabled in servers"
-            case .expiryDateBeforeNow: return "Expiration date must be greater than now"
-            case .expiredResource: return "The target resource has expired"
-            case .duplicateKey: return "The record being added contains a duplicate key"
-            case .illegalArguments: return "Illegal arguments"
-            case .invalidData: return "Invalid data"
-            case .notActive: return "Not active"
-            case .ownedResourceLimitReached: return "The resource limit is reached"
-            case .requestedRecordsTooMany: return "Too many records are requested"
-            case .resourcesHaveBeenHandled: return "The resources have been handled"
-            case .resourcesHaveChanged: return "The resources have been changed"
-            case .sessionSimultaneousConflictsDecline: return "A different device has logged into your account"
-            case .sessionSimultaneousConflictsNotify: return "Someone attempted to log into your account"
-            case .sessionSimultaneousConflictsOffline: return "A different device has logged into your account"
-            case .successorNotGroupMember: return "The successor is not a member of the group"
-            case .targetUsersUnauthorized: return "The target users are unauthorized"
-            case .targetUsersNotExist: return "The target users do not exist"
-            case .typeNotExists: return "The resource type does not exist"
-            case .unauthorized: return "Unauthorized"
-            case .redundantRequest: return "The request is redundant"
-            case .alreadyGroupMember: return "The user is already a member of the group"
-            case .friendRequestHasExisted: return "A friend request has already existed"
-            case .relationshipHasEstablished: return "The relationship has already established"
-            case .loggedInDevicesCannotOffline: return "Cannot set logged in devices offline"
-            case .notImplemented: return "Not Implemented"
-            case .unavailable: return "The service is unavailable"
-            case .clientUserIdAndPasswordMustNotNull: return "The user ID and password must not be null"
-            case .clientSessionHasBeenClosed: return "The session has been closed"
-            case .clientSessionAlreadyEstablished: return "The session has been established"
-            case .clientRequestsTooFrequent: return "Client requests are too frequent"
-            case .missingData: return "The data is missing"
-            case .timeout: return "The request has timed out"
-            case .userNotGroupMember: return "The user is not a member of the group"
-            case .userHasBeenBlacklisted: return "The user has been blacklisted"
-            case .groupHasBeenMuted: return "The group has been muted"
-            case .memberHasBeenMuted: return "The group member has been muted"
-            case .guestsHaveBeenMuted: return "The guests of the group have been muted"
-            case .fileTooLarge: return "The file is too large to upload"
-            case .requestTooLarge: return "The request is too large"
-            case .forbiddenDeviceType: return "The device type is forbidden for the request"
-        }
-    }
-
-    public static func isSuccessCode(_ code: Int32) -> Bool {
-        return 2000 <= code && code < 3000
+    public static func isSuccessCode(_ code: Int) -> Bool {
+        return 1000 <= code && code < 1100
     }
 }

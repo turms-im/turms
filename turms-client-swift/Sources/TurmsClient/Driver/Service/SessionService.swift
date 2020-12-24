@@ -36,15 +36,15 @@ class SessionService {
 
     // Listeners
 
-    func addOnSessionConnectedListeners(_ listener: @escaping () -> ()) {
+    func addOnSessionConnectedListener(_ listener: @escaping () -> ()) {
         onSessionConnectedListeners.append(listener)
     }
 
-    func addOnSessionDisconnectedListeners(_ listener: @escaping (SessionDisconnectInfo) -> ()) {
+    func addOnSessionDisconnectedListener(_ listener: @escaping (SessionDisconnectInfo) -> ()) {
         onSessionDisconnectedListeners.append(listener)
     }
 
-    func addOnSessionClosedListeners(_ listener: @escaping (SessionDisconnectInfo) -> ()) {
+    func addOnSessionClosedListener(_ listener: @escaping (SessionDisconnectInfo) -> ()) {
         onSessionClosedListeners.append(listener)
     }
 

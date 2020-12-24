@@ -18,7 +18,7 @@
 package im.turms.turms.workflow.dao.domain;
 
 import im.turms.turms.workflow.access.http.permission.AdminPermission;
-import im.turms.turms.workflow.dao.index.documentation.OptionalIndexedForDifferentAmount;
+import im.turms.turms.workflow.dao.index.OptionalIndexedForDifferentAmount;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -27,12 +27,15 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.util.Set;
 
 /**
- * Note that there is always a built-in root role {
- * id: 0,
- * name: "ROOT",
- * permissions: AdminPermission.ALL,
- * rank: Integer.MAX_VALUE
+ * <pre>
+ * Note that there is always a built-in immutable root role:
+ * {
+ *     id: 0,
+ *     name: "ROOT",
+ *     permissions: AdminPermission.ALL,
+ *     rank: Integer.MAX_VALUE
  * }
+ * </pre>
  *
  * @author James Chen
  */

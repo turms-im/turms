@@ -21,10 +21,7 @@ import im.turms.common.constant.RequestStatus;
 import im.turms.turms.bo.DateRange;
 import im.turms.turms.workflow.access.http.dto.request.group.AddGroupJoinRequestDTO;
 import im.turms.turms.workflow.access.http.dto.request.group.UpdateGroupJoinRequestDTO;
-import im.turms.turms.workflow.access.http.dto.response.AcknowledgedDTO;
-import im.turms.turms.workflow.access.http.dto.response.PaginationDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseFactory;
+import im.turms.turms.workflow.access.http.dto.response.*;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.access.http.util.PageUtil;
 import im.turms.turms.workflow.dao.domain.GroupJoinRequest;
@@ -143,10 +140,10 @@ public class GroupJoinRequestController {
 
     @PutMapping
     @RequiredPermission(GROUP_JOIN_REQUEST_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> updateGroupJoinRequests(
+    public Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateGroupJoinRequests(
             @RequestParam Set<Long> ids,
             @RequestBody UpdateGroupJoinRequestDTO updateGroupJoinRequestDTO) {
-        Mono<Boolean> updateMono = groupJoinRequestService.updateJoinRequests(
+        Mono<UpdateResultDTO> updateMono = groupJoinRequestService.updateJoinRequests(
                 ids,
                 updateGroupJoinRequestDTO.getRequesterId(),
                 updateGroupJoinRequestDTO.getResponderId(),
@@ -154,16 +151,19 @@ public class GroupJoinRequestController {
                 updateGroupJoinRequestDTO.getStatus(),
                 updateGroupJoinRequestDTO.getCreationDate(),
                 updateGroupJoinRequestDTO.getResponseDate(),
-                updateGroupJoinRequestDTO.getExpirationDate());
-        return ResponseFactory.acknowledged(updateMono);
+                updateGroupJoinRequestDTO.getExpirationDate())
+                .map(UpdateResultDTO::get);
+        return ResponseFactory.okIfTruthy(updateMono);
     }
 
     @DeleteMapping
     @RequiredPermission(GROUP_JOIN_REQUEST_DELETE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> deleteGroupJoinRequests(
+    public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteGroupJoinRequests(
             @RequestParam(required = false) Set<Long> ids) {
-        Mono<Boolean> deleteMono = groupJoinRequestService.deleteJoinRequests(ids);
-        return ResponseFactory.acknowledged(deleteMono);
+        Mono<DeleteResultDTO> deleteMono = groupJoinRequestService
+                .deleteJoinRequests(ids)
+                .map(DeleteResultDTO::get);
+        return ResponseFactory.okIfTruthy(deleteMono);
     }
 
 }

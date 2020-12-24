@@ -21,14 +21,14 @@ package im.turms.server.common.constant;
  * Place all cron expressions here so we know what happens at the specific times clearly
  *
  * @author James Chen
- * @see org.springframework.scheduling.support.CronSequenceGenerator
+ * @see org.springframework.scheduling.support.CronExpression
  */
 public class CronConstant {
 
     private CronConstant() {
     }
 
-    public static final String DEFAULT_ONLINE_USERS_NUMBER_LOGGING_CRON = "0/5 * * * * *";
+    public static final String DEFAULT_ONLINE_USERS_NUMBER_LOGGING_CRON = "0/15 * * * * *";
 
     public static final String DEFAULT_EXPIRED_USER_FRIEND_REQUESTS_CHECKER_CRON = "0 0 2 * * *";
     public static final String DEFAULT_EXPIRED_GROUP_INVITATIONS_CHECKER_CRON = "0 15 2 * * *";

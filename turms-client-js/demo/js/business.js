@@ -43,7 +43,7 @@ function setupClient(container, client, userId, password, targetId) {
                         appendContainer(container, 'No offline message');
                     }
                 });
-            const intervalOne = setInterval(() => {
+            const intervalId = setInterval(() => {
                 if (client.driver.isConnected()) {
                     client.messageService.sendMessage(
                         false,
@@ -55,7 +55,7 @@ function setupClient(container, client, userId, password, targetId) {
                         .then(id => appendContainer(container, `message ${id} has been sent`))
                         .catch(error => appendContainer(container, `failed to send message: ${beautify(error)}`, true));
                 } else {
-                    clearInterval(intervalOne);
+                    clearInterval(intervalId);
                 }
             }, 2000);
             client.groupService.createGroup(

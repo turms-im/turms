@@ -45,7 +45,7 @@ export default class StorageService {
         if (userId) {
             return this._getSignedPutUrl(ContentType.PROFILE, pictureSize, null, userId);
         } else {
-            return Promise.reject(TurmsBusinessError.fromCode(TurmsStatusCode.UNAUTHORIZED.valueOf()));
+            return Promise.reject(TurmsBusinessError.fromCode(TurmsStatusCode.QUERY_PROFILE_URL_TO_UPDATE_BEFORE_LOGIN));
         }
     }
 

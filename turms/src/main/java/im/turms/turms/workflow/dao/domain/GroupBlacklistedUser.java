@@ -17,7 +17,7 @@
 
 package im.turms.turms.workflow.dao.domain;
 
-import im.turms.turms.workflow.dao.index.documentation.OptionalIndexedForCustomFeature;
+import im.turms.turms.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +27,7 @@ import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Sharded;
+import org.springframework.data.mongodb.core.mapping.ShardingStrategy;
 
 import java.util.Date;
 import java.util.List;
@@ -38,9 +39,9 @@ import java.util.List;
 @AllArgsConstructor(onConstructor = @__(@PersistenceConstructor))
 @Document
 @CompoundIndex(
-        name = GroupBlacklistedUser.Key.Fields.GROUP_ID + "_" + GroupBlacklistedUser.Key.Fields.USER_ID + "_idx",
+        name = GroupBlacklistedUser.Key.Fields.GROUP_ID + "_" + GroupBlacklistedUser.Key.Fields.USER_ID,
         def = "{'" + GroupBlacklistedUser.Fields.ID_GROUP_ID + "': 1, '" + GroupBlacklistedUser.Fields.ID_USER_ID + "': 1}")
-@Sharded(shardKey = {GroupBlacklistedUser.Fields.ID_GROUP_ID, GroupBlacklistedUser.Fields.ID_USER_ID}, immutableKey = true)
+@Sharded(shardKey = GroupBlacklistedUser.Fields.ID_GROUP_ID, shardingStrategy = ShardingStrategy.HASH, immutableKey = true)
 public final class GroupBlacklistedUser {
 
     public static final String COLLECTION_NAME = "groupBlacklistedUser";
@@ -49,11 +50,11 @@ public final class GroupBlacklistedUser {
     private final Key key;
 
     @Field(Fields.BLOCK_DATE)
-    @OptionalIndexedForCustomFeature
+    @OptionalIndexedForExtendedFeature
     private final Date blockDate;
 
     @Field(Fields.REQUESTER_ID)
-    @OptionalIndexedForCustomFeature
+    @OptionalIndexedForExtendedFeature
     private final Long requesterId;
 
     public GroupBlacklistedUser(Long groupId, Long userId, Date blockDate, Long requesterId) {

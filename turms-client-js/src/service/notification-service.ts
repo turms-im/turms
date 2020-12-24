@@ -1,5 +1,4 @@
 import TurmsClient from "../turms-client";
-import NotificationUtil from "../util/notification-util";
 
 export default class NotificationService {
     private _turmsClient: TurmsClient;

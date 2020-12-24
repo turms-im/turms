@@ -23,10 +23,7 @@ import im.turms.turms.bo.DateRange;
 import im.turms.turms.workflow.access.http.dto.request.user.AddUserDTO;
 import im.turms.turms.workflow.access.http.dto.request.user.UpdateUserDTO;
 import im.turms.turms.workflow.access.http.dto.request.user.UserStatisticsDTO;
-import im.turms.turms.workflow.access.http.dto.response.AcknowledgedDTO;
-import im.turms.turms.workflow.access.http.dto.response.PaginationDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseFactory;
+import im.turms.turms.workflow.access.http.dto.response.*;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.access.http.util.DateTimeUtil;
 import im.turms.turms.workflow.access.http.util.PageUtil;
@@ -188,10 +185,10 @@ public class UserController {
 
     @PutMapping
     @RequiredPermission(USER_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> updateUser(
+    public Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateUser(
             @RequestParam Set<Long> ids,
             @RequestBody UpdateUserDTO updateUserDTO) {
-        Mono<Boolean> updateMono = userService.updateUsers(
+        Mono<UpdateResultDTO> updateMono = userService.updateUsers(
                 ids,
                 updateUserDTO.getPassword(),
                 updateUserDTO.getName(),
@@ -199,17 +196,20 @@ public class UserController {
                 updateUserDTO.getProfileAccess(),
                 updateUserDTO.getPermissionGroupId(),
                 updateUserDTO.getRegistrationDate(),
-                updateUserDTO.getIsActive());
-        return ResponseFactory.acknowledged(updateMono);
+                updateUserDTO.getIsActive())
+                .map(UpdateResultDTO::get);
+        return ResponseFactory.okIfTruthy(updateMono);
     }
 
     @DeleteMapping
     @RequiredPermission(USER_DELETE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> deleteUsers(
+    public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteUsers(
             @RequestParam Set<Long> ids,
             @RequestParam(required = false) Boolean deleteLogically) {
-        Mono<Boolean> deleteMono = userService.deleteUsers(ids, deleteLogically);
-        return ResponseFactory.acknowledged(deleteMono);
+        Mono<DeleteResultDTO> deleteMono = userService
+                .deleteUsers(ids, deleteLogically)
+                .map(DeleteResultDTO::get);
+        return ResponseFactory.okIfTruthy(deleteMono);
     }
 
 }

@@ -7,17 +7,17 @@ import im.turms.server.common.plugin.base.TurmsPlugin;
 import im.turms.turms.plugin.extension.handler.ClientRequestHandler;
 import im.turms.turms.workflow.access.servicerequest.dto.ClientRequest;
 import im.turms.turms.workflow.access.servicerequest.dto.RequestHandlerResult;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.pf4j.Extension;
 import org.pf4j.PluginWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotNull;
 
 public class MyPlugin extends TurmsPlugin {
 
-    private static final Logger logger = LoggerFactory.getLogger(MyPlugin.class);
+    private static final Logger logger = LogManager.getLogger(MyPlugin.class);
 
     public MyPlugin(PluginWrapper wrapper) {
         super(wrapper);

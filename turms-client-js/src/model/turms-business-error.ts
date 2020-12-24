@@ -6,7 +6,7 @@ export default class TurmsBusinessError extends Error {
     private readonly _code: number;
     private readonly _reason: string;
 
-    constructor(code: number, reason: string) {
+    private constructor(code: number, reason: string) {
         super(`${code}:${reason}`);
         this._code = code;
         this._reason = reason;
@@ -28,24 +28,20 @@ export default class TurmsBusinessError extends Error {
         if (notification.reason && notification.reason.value) {
             return new TurmsBusinessError(notification.code.value, notification.reason.value);
         } else {
-            return new TurmsBusinessError(notification.code.value, TurmsStatusCode.getReason(notification.code.value));
+            return new TurmsBusinessError(notification.code.value, null);
         }
     }
 
-    static fromMessage(message?: string): TurmsBusinessError {
-        if (message) {
-            return new TurmsBusinessError(TurmsStatusCode.FAILED, message);
-        } else {
-            return TurmsBusinessError.fromCode(TurmsStatusCode.FAILED);
-        }
+    static from(code: number, reason?: string): TurmsBusinessError {
+        return new TurmsBusinessError(code, reason);
     }
 
     static fromCode(code: number): TurmsBusinessError {
-        return new TurmsBusinessError(code, TurmsStatusCode.getReason(code));
+        return new TurmsBusinessError(code, null);
     }
 
     static illegalParam<T = never>(reason: string): Promise<T> {
-        const exception = new TurmsBusinessError(TurmsStatusCode.ILLEGAL_ARGUMENTS, reason);
+        const exception = new TurmsBusinessError(TurmsStatusCode.ILLEGAL_ARGUMENT, reason);
         return Promise.reject(exception);
     }
 

@@ -22,8 +22,8 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import im.turms.common.constant.RequestStatus;
 import im.turms.common.constant.ResponseAction;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
-import im.turms.common.exception.TurmsBusinessException;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.common.model.bo.user.UserFriendRequestsWithVersion;
 import im.turms.common.util.Validator;
 import im.turms.server.common.cluster.node.Node;
@@ -33,12 +33,14 @@ import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.bo.DateRange;
 import im.turms.turms.constant.DaoConstant;
+import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.constraint.ValidRequestStatus;
 import im.turms.turms.constraint.ValidResponseAction;
 import im.turms.turms.util.ProtoUtil;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
 import im.turms.turms.workflow.dao.builder.UpdateBuilder;
 import im.turms.turms.workflow.dao.domain.UserFriendRequest;
+import im.turms.turms.workflow.service.documentation.UsesNonIndexedData;
 import im.turms.turms.workflow.service.impl.user.UserVersionService;
 import im.turms.turms.workflow.service.util.DomainConstraintUtil;
 import im.turms.turms.workflow.service.util.RequestStatusUtil;
@@ -51,13 +53,13 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.util.function.Tuple2;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
-import java.util.Calendar;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Set;
 
@@ -100,12 +102,11 @@ public class UserFriendRequestService {
                 });
     }
 
-    public Mono<Boolean> removeAllExpiredFriendRequests() {
+    public Mono<Void> removeAllExpiredFriendRequests() {
         Date now = new Date();
         Query query = new Query()
                 .addCriteria(Criteria.where(UserFriendRequest.Fields.EXPIRATION_DATE).lt(now));
-        return mongoTemplate.remove(query, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME)
-                .map(DeleteResult::wasAcknowledged);
+        return mongoTemplate.remove(query, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME).then();
     }
 
     /**
@@ -113,22 +114,28 @@ public class UserFriendRequestService {
      * Because of the excessive resource consumption, the request status of requests
      * won't be expired immediately when reaching the expiration date.
      */
-    public Mono<Boolean> updateExpiredRequestsStatus() {
+    @UsesNonIndexedData
+    public Mono<UpdateResult> updateExpiredRequestsStatus() {
         Date now = new Date();
         Query query = new Query()
                 .addCriteria(Criteria.where(UserFriendRequest.Fields.EXPIRATION_DATE).lt(now))
                 .addCriteria(Criteria.where(UserFriendRequest.Fields.STATUS).is(RequestStatus.PENDING));
         Update update = new Update().set(UserFriendRequest.Fields.STATUS, RequestStatus.EXPIRED);
-        return mongoTemplate.updateMulti(query, update, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME)
-                .map(UpdateResult::wasAcknowledged);
+        return mongoTemplate.updateMulti(query, update, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME);
     }
 
+    /**
+     * @param creationDateAfter used to limit the amount of data for querying to improve performance
+     */
     public Mono<Boolean> hasPendingFriendRequest(
             @NotNull Long requesterId,
-            @NotNull Long recipientId) {
+            @NotNull Long recipientId,
+            @NotNull @PastOrPresent Date creationDateAfter) {
         try {
             AssertUtil.notNull(requesterId, "requesterId");
             AssertUtil.notNull(recipientId, "recipientId");
+            AssertUtil.notNull(creationDateAfter, "creationDateAfter");
+            AssertUtil.pastOrPresent(creationDateAfter, "creationDateAfter");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
@@ -137,7 +144,33 @@ public class UserFriendRequestService {
                 .addCriteria(Criteria.where(UserFriendRequest.Fields.REQUESTER_ID).is(requesterId))
                 .addCriteria(Criteria.where(UserFriendRequest.Fields.RECIPIENT_ID).is(recipientId))
                 .addCriteria(Criteria.where(UserFriendRequest.Fields.STATUS).is(RequestStatus.PENDING))
+                .addCriteria(Criteria.where(UserFriendRequest.Fields.CREATION_DATE).gt(creationDateAfter))
                 .addCriteria(Criteria.where(UserFriendRequest.Fields.EXPIRATION_DATE).gt(now));
+        return mongoTemplate.exists(query, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME);
+    }
+
+    /**
+     * @param creationDateAfter used to limit the amount of data for querying to improve performance
+     */
+    private Mono<Boolean> hasPendingOrDeclinedOrIgnoredOrExpiredRequest(
+            @NotNull Long requesterId,
+            @NotNull Long recipientId,
+            @NotNull Date creationDateAfter) {
+        try {
+            AssertUtil.notNull(requesterId, "requesterId");
+            AssertUtil.notNull(recipientId, "recipientId");
+            AssertUtil.notNull(creationDateAfter, "creationDateAfter");
+            AssertUtil.pastOrPresent(creationDateAfter, "creationDateAfter");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
+        // Do not need to check expirationDate because both PENDING status or EXPIRED status has been used
+        Query query = new Query()
+                .addCriteria(Criteria.where(UserFriendRequest.Fields.REQUESTER_ID).is(requesterId))
+                .addCriteria(Criteria.where(UserFriendRequest.Fields.RECIPIENT_ID).is(recipientId))
+                .addCriteria(Criteria.where(UserFriendRequest.Fields.CREATION_DATE).gt(creationDateAfter))
+                .addCriteria(Criteria.where(UserFriendRequest.Fields.STATUS)
+                        .in(RequestStatus.PENDING, RequestStatus.DECLINED, RequestStatus.IGNORED, RequestStatus.EXPIRED));
         return mongoTemplate.exists(query, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME);
     }
 
@@ -177,15 +210,7 @@ public class UserFriendRequestService {
                     .getUser()
                     .getFriendRequest()
                     .getFriendRequestTimeToLiveHours();
-            if (timeToLiveHours != 0) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.add(Calendar.HOUR, node.getSharedProperties()
-                        .getService()
-                        .getUser()
-                        .getFriendRequest()
-                        .getFriendRequestTimeToLiveHours());
-                expirationDate = calendar.getTime();
-            }
+            expirationDate = Date.from(Instant.now().plus(timeToLiveHours, ChronoUnit.HOURS));
         }
         if (status == null) {
             status = RequestStatus.PENDING;
@@ -193,8 +218,8 @@ public class UserFriendRequestService {
         UserFriendRequest userFriendRequest = new UserFriendRequest(id, content, status, reason, creationDate,
                 expirationDate, responseDate, requesterId, recipientId);
         return mongoTemplate.insert(userFriendRequest, UserFriendRequest.COLLECTION_NAME)
-                .flatMap(request -> userVersionService.updateReceivedFriendRequestsVersion(recipientId)
-                        .then(userVersionService.updateSentFriendRequestsVersion(requesterId))
+                .flatMap(request -> userVersionService.updateReceivedFriendRequestsVersion(recipientId).onErrorResume(t -> Mono.empty())
+                        .then(userVersionService.updateSentFriendRequestsVersion(requesterId).onErrorResume(t -> Mono.empty()))
                         .thenReturn(request));
     }
 
@@ -214,50 +239,33 @@ public class UserFriendRequestService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        // if requester is stranger for recipient, requester isn't blocked and already a friend.
-        return userRelationshipService.isStranger(recipientId, requesterId)
-                .flatMap(isStranger -> {
-                    if (isStranger != null && !isStranger) {
-                        Mono<Boolean> requestExistsMono;
-                        // Allow to create a friend request even there is already an accepted request
-                        // because the relationships can be deleted and rebuilt
-                        if (node.getSharedProperties().getService().getUser()
-                                .getFriendRequest().isAllowResendingRequestAfterDeclinedOrIgnoredOrExpired()) {
-                            requestExistsMono = hasPendingFriendRequest(requesterId, recipientId);
-                        } else {
-                            requestExistsMono = hasPendingOrDeclinedOrIgnoredOrExpiredRequest(requesterId, recipientId);
-                        }
-                        return requestExistsMono.flatMap(requestExists -> {
-                            String finalContent = content != null ? content : "";
-                            return requestExists != null && !requestExists
-                                    ? createFriendRequest(null, requesterId, recipientId, finalContent, RequestStatus.PENDING, creationDate, null, null, null)
-                                    : Mono.error(TurmsBusinessException.get(TurmsStatusCode.FRIEND_REQUEST_HAS_EXISTED));
-                        });
-                    } else {
-                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED));
+        return userRelationshipService.hasNoRelationshipOrNotBlocked(recipientId, requesterId)
+                .flatMap(isNotBlocked -> {
+                    if (!isNotBlocked) {
+                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.FRIEND_REQUEST_SENDER_HAS_BEEN_BLOCKED));
                     }
+                    // Allow to create a friend request even there is already an accepted request
+                    // because the relationships can be deleted and rebuilt
+                    int timeToLiveHours = node.getSharedProperties()
+                            .getService()
+                            .getUser()
+                            .getFriendRequest()
+                            .getFriendRequestTimeToLiveHours();
+                    Date creationDateAfter = Date.from(Instant.now().minus(timeToLiveHours, ChronoUnit.HOURS));
+                    Mono<Boolean> requestExistsMono = node.getSharedProperties().getService().getUser().getFriendRequest()
+                            .isAllowResendingRequestAfterDeclinedOrIgnoredOrExpired()
+                            ? hasPendingFriendRequest(requesterId, recipientId, creationDateAfter)
+                            : hasPendingOrDeclinedOrIgnoredOrExpiredRequest(requesterId, recipientId, creationDateAfter);
+                    return requestExistsMono.flatMap(requestExists -> {
+                        String finalContent = content != null ? content : "";
+                        return requestExists
+                                ? Mono.error(TurmsBusinessException.get(TurmsStatusCode.CREATE_EXISTING_FRIEND_REQUEST))
+                                : createFriendRequest(null, requesterId, recipientId, finalContent, RequestStatus.PENDING, creationDate, null, null, null);
+                    });
                 });
     }
 
-    private Mono<Boolean> hasPendingOrDeclinedOrIgnoredOrExpiredRequest(
-            @NotNull Long requesterId,
-            @NotNull Long recipientId) {
-        try {
-            AssertUtil.notNull(requesterId, "requesterId");
-            AssertUtil.notNull(recipientId, "recipientId");
-        } catch (TurmsBusinessException e) {
-            return Mono.error(e);
-        }
-        // Do not need to check expirationDate because both PENDING status or EXPIRED status has been used
-        Query query = new Query()
-                .addCriteria(Criteria.where(UserFriendRequest.Fields.REQUESTER_ID).is(requesterId))
-                .addCriteria(Criteria.where(UserFriendRequest.Fields.RECIPIENT_ID).is(recipientId))
-                .addCriteria(Criteria.where(UserFriendRequest.Fields.STATUS)
-                        .in(RequestStatus.PENDING, RequestStatus.DECLINED, RequestStatus.IGNORED, RequestStatus.EXPIRED));
-        return mongoTemplate.exists(query, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME);
-    }
-
-    public Mono<Boolean> updatePendingFriendRequestStatus(
+    public Mono<UpdateResult> updatePendingFriendRequestStatus(
             @NotNull Long requestId,
             @NotNull @ValidRequestStatus RequestStatus requestStatus,
             @Nullable String reason,
@@ -280,15 +288,16 @@ public class UserFriendRequestService {
             update.set(UserFriendRequest.Fields.REASON, reason);
         }
         ReactiveMongoOperations mongoOperations = operations != null ? operations : mongoTemplate;
-        return mongoOperations.findAndModify(query, update, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME)
-                .thenReturn(true)
-                .defaultIfEmpty(false)
-                .zipWith(queryRecipientId(requestId)
-                        .map(userVersionService::updateSentFriendRequestsVersion))
-                .map(Tuple2::getT1);
+        return mongoOperations.updateFirst(query, update, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME)
+                .flatMap(result -> result.getModifiedCount() > 0
+                        ? queryRecipientId(requestId)
+                        .flatMap(recipientId -> userVersionService.updateSentFriendRequestsVersion(recipientId)
+                                .onErrorResume(t -> Mono.empty())
+                                .thenReturn(result))
+                        : Mono.just(result));
     }
 
-    public Mono<Boolean> updateFriendRequests(
+    public Mono<UpdateResult> updateFriendRequests(
             @NotEmpty Set<Long> requestIds,
             @Nullable Long requesterId,
             @Nullable Long recipientId,
@@ -309,7 +318,7 @@ public class UserFriendRequestService {
             return Mono.error(e);
         }
         if (Validator.areAllNull(requesterId, recipientId, content, status, reason, creationDate, responseDate, expirationDate)) {
-            return Mono.just(true);
+            return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
         Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(requestIds));
         Update update = UpdateBuilder
@@ -322,8 +331,7 @@ public class UserFriendRequestService {
                 .setIfNotNull(UserFriendRequest.Fields.EXPIRATION_DATE, expirationDate)
                 .build();
         RequestStatusUtil.updateResponseDateBasedOnStatus(update, status, new Date());
-        return mongoTemplate.updateMulti(query, update, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME)
-                .map(UpdateResult::wasAcknowledged);
+        return mongoTemplate.updateMulti(query, update, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME);
     }
 
     public Mono<Long> queryRecipientId(@NotNull Long requestId) {
@@ -351,7 +359,7 @@ public class UserFriendRequestService {
         return mongoTemplate.findOne(query, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME);
     }
 
-    public Mono<Boolean> handleFriendRequest(
+    public Mono<Void> handleFriendRequest(
             @NotNull Long friendRequestId,
             @NotNull Long requesterId,
             @NotNull @ValidResponseAction ResponseAction action,
@@ -367,22 +375,24 @@ public class UserFriendRequestService {
         return queryRequesterAndRecipient(friendRequestId)
                 .flatMap(request -> {
                     if (!request.getRecipientId().equals(requesterId)) {
-                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED));
+                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.REQUESTER_NOT_FRIEND_REQUEST_RECIPIENT));
                     }
                     switch (action) {
                         case ACCEPT:
                             return mongoTemplate.inTransaction()
                                     .execute(operations -> updatePendingFriendRequestStatus(friendRequestId, RequestStatus.ACCEPTED, reason, operations)
                                             .then(userRelationshipService.friendTwoUsers(request.getRequesterId(), requesterId, operations))
-                                            .thenReturn(true))
+                                            .then())
                                     .retryWhen(DaoConstant.TRANSACTION_RETRY)
                                     .singleOrEmpty();
                         case IGNORE:
-                            return updatePendingFriendRequestStatus(friendRequestId, RequestStatus.IGNORED, reason, null);
+                            return updatePendingFriendRequestStatus(friendRequestId, RequestStatus.IGNORED, reason, null)
+                                    .then();
                         case DECLINE:
-                            return updatePendingFriendRequestStatus(friendRequestId, RequestStatus.DECLINED, reason, null);
+                            return updatePendingFriendRequestStatus(friendRequestId, RequestStatus.DECLINED, reason, null)
+                                    .then();
                         default:
-                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The response action must not be UNRECOGNIZED"));
+                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The response action must not be UNRECOGNIZED"));
                     }
                 });
     }
@@ -432,6 +442,7 @@ public class UserFriendRequestService {
         return queryExpirableData(query);
     }
 
+    @UsesNonIndexedData
     public Flux<UserFriendRequest> queryFriendRequestsByRequesterId(@NotNull Long requesterId) {
         try {
             AssertUtil.notNull(requesterId, "requesterId");
@@ -447,21 +458,21 @@ public class UserFriendRequestService {
         return mongoTemplate.find(query, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME)
                 .map(friendRequest -> {
                     Date expirationDate = friendRequest.getExpirationDate();
-                    return expirationDate != null
+                    boolean isExpired = expirationDate != null
                             && friendRequest.getStatus() == RequestStatus.PENDING
-                            && expirationDate.getTime() < System.currentTimeMillis()
+                            && expirationDate.getTime() < System.currentTimeMillis();
+                    return isExpired
                             ? friendRequest.toBuilder().status(RequestStatus.EXPIRED).build()
                             : friendRequest;
                 });
     }
 
-    public Mono<Boolean> deleteFriendRequests(@Nullable Set<Long> ids) {
+    public Mono<DeleteResult> deleteFriendRequests(@Nullable Set<Long> ids) {
         Query query = QueryBuilder
                 .newBuilder()
                 .addInIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
                 .buildQuery();
-        return mongoTemplate.remove(query, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME)
-                .map(DeleteResult::wasAcknowledged);
+        return mongoTemplate.remove(query, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME);
     }
 
     public Flux<UserFriendRequest> queryFriendRequests(
@@ -515,9 +526,7 @@ public class UserFriendRequestService {
                     .getUser()
                     .getFriendRequest()
                     .getContentLimit();
-            if (contentLimit > -1) {
-                AssertUtil.max(content.length(), "content", contentLimit);
-            }
+            AssertUtil.max(content.length(), "content", contentLimit);
         }
     }
 

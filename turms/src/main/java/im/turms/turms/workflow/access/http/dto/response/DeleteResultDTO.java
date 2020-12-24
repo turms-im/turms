@@ -15,18 +15,19 @@
  * limitations under the License.
  */
 
-package im.turms.turms.workflow.dao.index.documentation;
+package im.turms.turms.workflow.access.http.dto.response;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import com.mongodb.client.result.DeleteResult;
+import lombok.Data;
 
 /**
- * Not indexed by default because the domain marked as OptionalIndexedForDifferentAmount
- * usually has only a few (or some) documents and has a low index selectivity.
- * <p>
- * No need to add an index unless your application really has a lot of records
- * and you are sure that it has a medium or high index selectivity.
+ * @author James Chen
  */
-@Retention(RetentionPolicy.SOURCE)
-public @interface OptionalIndexedForDifferentAmount {
+@Data
+public class DeleteResultDTO {
+    private final Long deletedCount;
+
+    public static DeleteResultDTO get(DeleteResult result) {
+        return new DeleteResultDTO(result.getDeletedCount());
+    }
 }

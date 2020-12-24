@@ -17,14 +17,16 @@
 
 package im.turms.turms.workflow.service.impl.admin;
 
+import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
-import im.turms.common.exception.TurmsBusinessException;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.common.util.Validator;
 import im.turms.server.common.cluster.service.config.ChangeStreamUtil;
 import im.turms.server.common.constraint.NoWhitespace;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.constant.DaoConstant;
+import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.workflow.access.http.permission.AdminPermission;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
 import im.turms.turms.workflow.dao.builder.UpdateBuilder;
@@ -46,9 +48,9 @@ import reactor.core.publisher.Mono;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -61,7 +63,10 @@ public class AdminRoleService {
     private static final int MIN_ROLE_NAME_LIMIT = 1;
     private static final int MAX_ROLE_NAME_LIMIT = 32;
 
-    private final Map<Long, AdminRole> roles = new HashMap<>();
+    private static final String ERROR_UPDATE_ROLE_WITH_HIGHER_RANK = "Only a role with a lower rank compared to the one of the account can be created, updated, or deleted";
+    private static final String ERROR_NO_PERMISSION = "The account doesn't have the permissions";
+
+    private final Map<Long, AdminRole> roles = new ConcurrentHashMap<>(16);
     private final ReactiveMongoTemplate mongoTemplate;
     private final AdminService adminService;
 
@@ -93,7 +98,7 @@ public class AdminRoleService {
                             resetRoles();
                             break;
                         default:
-                            log.error("Detect an illegal operation on AdminRole collection: " + event);
+                            log.fatal("Detect an illegal operation on AdminRole collection: " + event);
                     }
                 })
                 .onErrorContinue((throwable, o) -> log.error("Error while processing the change stream event of AdminRole: {}", o, throwable))
@@ -127,9 +132,9 @@ public class AdminRoleService {
                         return adminHasPermissions(requesterAccount, permissions)
                                 .flatMap(hasPermissions -> hasPermissions
                                         ? addAdminRole(roleId, name, permissions, rank)
-                                        : Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED)));
+                                        : Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED, ERROR_NO_PERMISSION)));
                     } else {
-                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED));
+                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED, ERROR_UPDATE_ROLE_WITH_HIGHER_RANK));
                     }
                 });
     }
@@ -151,13 +156,13 @@ public class AdminRoleService {
         }
         AdminRole adminRole = new AdminRole(roleId, name, permissions, rank);
         if (adminRole.getId().equals(DaoConstant.ADMIN_ROLE_ROOT_ID)) {
-            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED));
+            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED, "The new role ID cannot be the root role ID"));
         }
         return mongoTemplate.insert(adminRole, AdminRole.COLLECTION_NAME)
                 .doOnNext(role -> roles.put(adminRole.getId(), role));
     }
 
-    public Mono<Boolean> authAndDeleteAdminRoles(
+    public Mono<DeleteResult> authAndDeleteAdminRoles(
             @NotNull String requesterAccount,
             @NotEmpty Set<Long> roleIds) {
         try {
@@ -174,10 +179,10 @@ public class AdminRoleService {
         return isAdminHigherThanRole(requesterAccount, highestRoleId)
                 .flatMap(isHigher -> isHigher
                         ? deleteAdminRoles(roleIds)
-                        : Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED)));
+                        : Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED, ERROR_UPDATE_ROLE_WITH_HIGHER_RANK)));
     }
 
-    public Mono<Boolean> deleteAdminRoles(@NotEmpty Set<Long> roleIds) {
+    public Mono<DeleteResult> deleteAdminRoles(@NotEmpty Set<Long> roleIds) {
         try {
             AssertUtil.notEmpty(roleIds, "roleIds");
             AssertUtil.state(!roleIds.contains(DaoConstant.ADMIN_ROLE_ROOT_ID), "The root admin is reserved and cannot be deleted");
@@ -187,18 +192,14 @@ public class AdminRoleService {
         Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(roleIds));
         return mongoTemplate.remove(query, AdminRole.class, AdminRole.COLLECTION_NAME)
                 .map(result -> {
-                    if (result.wasAcknowledged()) {
-                        for (Long id : roleIds) {
-                            roles.remove(id);
-                        }
-                        return true;
-                    } else {
-                        return false;
+                    for (Long id : roleIds) {
+                        roles.remove(id);
                     }
+                    return result;
                 });
     }
 
-    public Mono<Boolean> authAndUpdateAdminRole(
+    public Mono<UpdateResult> authAndUpdateAdminRole(
             @NotNull String requesterAccount,
             @NotEmpty Set<Long> roleIds,
             @Nullable @NoWhitespace @Length(min = MIN_ROLE_NAME_LIMIT, max = MAX_ROLE_NAME_LIMIT) String newName,
@@ -224,17 +225,17 @@ public class AdminRoleService {
                             return adminHasPermissions(requesterAccount, permissions)
                                     .flatMap(hasPermissions -> hasPermissions
                                             ? updateAdminRole(roleIds, newName, permissions, rank)
-                                            : Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED)));
+                                            : Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED, ERROR_NO_PERMISSION)));
                         } else {
                             return updateAdminRole(roleIds, newName, null, rank);
                         }
                     } else {
-                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED));
+                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED, ERROR_UPDATE_ROLE_WITH_HIGHER_RANK));
                     }
                 });
     }
 
-    public Mono<Boolean> updateAdminRole(
+    public Mono<UpdateResult> updateAdminRole(
             @NotEmpty Set<Long> roleIds,
             @Nullable @NoWhitespace @Length(min = MIN_ROLE_NAME_LIMIT, max = MAX_ROLE_NAME_LIMIT) String newName,
             @Nullable Set<AdminPermission> permissions,
@@ -248,7 +249,7 @@ public class AdminRoleService {
             return Mono.error(e);
         }
         if (Validator.areAllFalsy(newName, permissions, rank)) {
-            return Mono.just(true);
+            return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
         Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(roleIds));
         Update update = UpdateBuilder.newBuilder()
@@ -256,8 +257,7 @@ public class AdminRoleService {
                 .setIfNotNull(AdminRole.Fields.PERMISSIONS, permissions)
                 .setIfNotNull(AdminRole.Fields.RANK, rank)
                 .build();
-        return mongoTemplate.updateMulti(query, update, AdminRole.class, AdminRole.COLLECTION_NAME)
-                .map(UpdateResult::wasAcknowledged);
+        return mongoTemplate.updateMulti(query, update, AdminRole.class, AdminRole.COLLECTION_NAME);
     }
 
     public AdminRole getRootRole() {
@@ -278,8 +278,12 @@ public class AdminRoleService {
                 .addInIfNotNull(AdminRole.Fields.PERMISSIONS, includedPermissions)
                 .addInIfNotNull(AdminRole.Fields.RANK, ranks)
                 .paginateIfNotNull(page, size);
-        return Flux.from(mongoTemplate.find(query, AdminRole.class, AdminRole.COLLECTION_NAME)
-                .concatWithValues(getRootRole()));
+        Flux<AdminRole> roleFlux = Flux.from(mongoTemplate.find(query, AdminRole.class, AdminRole.COLLECTION_NAME));
+        if (isRootRoleQualified(ids, names, includedPermissions, ranks)) {
+            // TODO: respect the page and the size
+            return roleFlux.concatWithValues(getRootRole());
+        }
+        return roleFlux;
     }
 
     public Mono<Long> countAdminRoles(
@@ -295,6 +299,7 @@ public class AdminRoleService {
                 .addInIfNotNull(AdminRole.Fields.RANK, ranks)
                 .buildQuery();
         return mongoTemplate.count(query, AdminRole.class, AdminRole.COLLECTION_NAME)
+                // Add 1 because of the nested root role
                 .map(number -> number + 1);
     }
 
@@ -399,6 +404,7 @@ public class AdminRoleService {
             @NotNull String account,
             @NotEmpty Set<String> accounts) {
         try {
+            AssertUtil.notNull(account, "account");
             AssertUtil.notEmpty(accounts, "accounts");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
@@ -429,6 +435,11 @@ public class AdminRoleService {
     }
 
     public Mono<Set<AdminPermission>> queryPermissions(@NotNull String account) {
+        try {
+            AssertUtil.notNull(account, "account");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return adminService.queryRoleId(account)
                 .flatMap(this::queryPermissions);
     }
@@ -448,6 +459,7 @@ public class AdminRoleService {
 
     public Mono<Boolean> hasPermission(@NotNull Long roleId, @NotNull AdminPermission permission) {
         try {
+            AssertUtil.notNull(roleId, "roleId");
             AssertUtil.notNull(permission, "permission");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
@@ -458,14 +470,28 @@ public class AdminRoleService {
     }
 
     private void resetRoles() {
-        roles.clear();
-        roles.putIfAbsent(
-                DaoConstant.ADMIN_ROLE_ROOT_ID,
-                new AdminRole(
-                        DaoConstant.ADMIN_ROLE_ROOT_ID,
-                        DaoConstant.ADMIN_ROLE_ROOT_NAME,
-                        AdminPermission.ALL,
-                        Integer.MAX_VALUE));
+        roles.keySet().removeIf(id -> !id.equals(DaoConstant.ADMIN_ROLE_ROOT_ID));
+    }
+
+    private boolean isRootRoleQualified(
+            @Nullable Set<Long> ids,
+            @Nullable Set<String> names,
+            @Nullable Set<AdminPermission> includedPermissions,
+            @Nullable Set<Integer> ranks) {
+        AdminRole rootRole = getRootRole();
+        if (ids != null && !ids.contains(rootRole.getId())) {
+            return false;
+        }
+        if (names != null && !names.contains(rootRole.getName())) {
+            return false;
+        }
+        if (includedPermissions != null && !includedPermissions.containsAll(rootRole.getPermissions())) {
+            return false;
+        }
+        if (ranks != null && !ranks.contains(rootRole.getRank())) {
+            return false;
+        }
+        return true;
     }
 
 }

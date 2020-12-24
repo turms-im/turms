@@ -6,6 +6,6 @@ export default class ReasonService {
     private _stateStore;
     private _url;
     constructor(stateStore: StateStore, url?: string);
-    queryLoginFailureReason(): Promise<LoginFailureReason>;
-    queryDisconnectionReason(): Promise<SessionDisconnectionReason>;
+    queryLoginFailureReason(): Promise<LoginFailureReason | null>;
+    queryDisconnectionReason(): Promise<SessionDisconnectionReason | null>;
 }

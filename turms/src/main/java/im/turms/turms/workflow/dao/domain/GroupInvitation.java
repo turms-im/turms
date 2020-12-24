@@ -18,13 +18,14 @@
 package im.turms.turms.workflow.dao.domain;
 
 import im.turms.common.constant.RequestStatus;
-import im.turms.turms.workflow.dao.index.documentation.OptionalIndexedForAdvancedFeature;
-import im.turms.turms.workflow.dao.index.documentation.OptionalIndexedForCustomFeature;
+import im.turms.turms.workflow.dao.index.OptionalIndexedForColdData;
+import im.turms.turms.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Sharded;
@@ -34,15 +35,16 @@ import java.util.Date;
 
 /**
  * @author James Chen
+ * @implNote shard by inviteeId and createDate because it's common for users to q
  */
 @Data
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Document
 @CompoundIndex(
-        name = GroupInvitation.Fields.INVITEE_ID + "_" + GroupInvitation.Fields.CREATION_DATE + "_idx",
+        name = GroupInvitation.Fields.INVITEE_ID + "_" + GroupInvitation.Fields.CREATION_DATE,
         def = "{'" + GroupInvitation.Fields.INVITEE_ID + "': 1, '" + GroupInvitation.Fields.CREATION_DATE + "': 1}")
-@Sharded(shardKey = {GroupInvitation.Fields.INVITEE_ID, GroupInvitation.Fields.CREATION_DATE}, shardingStrategy = ShardingStrategy.HASH, immutableKey = true)
+@Sharded(shardKey = GroupInvitation.Fields.INVITEE_ID, shardingStrategy = ShardingStrategy.HASH, immutableKey = true)
 public final class GroupInvitation {
 
     public static final String COLLECTION_NAME = "groupInvitation";
@@ -50,12 +52,19 @@ public final class GroupInvitation {
     @Id
     private final Long id;
 
+    /**
+     * Used by queryGroupInvitationsByGroupId
+     */
     @Field(Fields.GROUP_ID)
-    @OptionalIndexedForCustomFeature
+    @OptionalIndexedForExtendedFeature
+    @Indexed
     private final Long groupId;
 
+    /**
+     * Used by queryGroupInvitationsByInviterId
+     */
     @Field(Fields.INVITER_ID)
-    @OptionalIndexedForCustomFeature
+    @OptionalIndexedForExtendedFeature
     private final Long inviterId;
 
     @Field(Fields.INVITEE_ID)
@@ -74,17 +83,18 @@ public final class GroupInvitation {
     private final Date creationDate;
 
     @Field(Fields.RESPONSE_DATE)
-    @OptionalIndexedForCustomFeature
+    @OptionalIndexedForExtendedFeature
     private final Date responseDate;
 
     @Field(Fields.EXPIRATION_DATE)
-    @OptionalIndexedForAdvancedFeature
+    @OptionalIndexedForColdData
+    @Indexed
     private final Date expirationDate;
 
     public static final class Fields {
         public static final String GROUP_ID = "gid";
-        public static final String INVITER_ID = "irId";
-        public static final String INVITEE_ID = "ieId";
+        public static final String INVITER_ID = "irid";
+        public static final String INVITEE_ID = "ieid";
         public static final String CONTENT = "cnt";
         public static final String STATUS = "stat";
         public static final String CREATION_DATE = "cd";

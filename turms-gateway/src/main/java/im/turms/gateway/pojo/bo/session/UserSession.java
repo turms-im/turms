@@ -32,6 +32,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
 import reactor.util.concurrent.Queues;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -47,6 +48,7 @@ public final class UserSession {
     private final Long userId;
     private final DeviceType deviceType;
     private final Date loginDate;
+    @Nullable
     private Point loginLocation;
     /**
      * 1. Use Sinks.Many<ByteBuf> instead of Sinks.Many<TurmsNotification>
@@ -62,6 +64,7 @@ public final class UserSession {
     private final Sinks.Many<ByteBuf> notificationSink = Sinks.many().unicast()
             .onBackpressureBuffer(Queues.<ByteBuf>unbounded(64).get());
     private Timeout heartbeatTimeout;
+    @Nullable
     private Long logId;
     private volatile long lastHeartbeatTimestampMillis;
     private volatile long lastRequestTimestampMillis;
@@ -73,12 +76,13 @@ public final class UserSession {
      * @implNote For better performance, it's acceptable for our scenarios to not update isSessionOpen atomically.
      */
     private volatile boolean isSessionOpen = true;
+    @Nullable
     private NetConnection connection;
 
     public UserSession(Long userId,
                        DeviceType loggingInDeviceType,
-                       Point loginLocation,
-                       Long logId) {
+                       @Nullable Point loginLocation,
+                       @Nullable Long logId) {
         Date now = new Date();
         this.userId = userId;
         this.deviceType = loggingInDeviceType;

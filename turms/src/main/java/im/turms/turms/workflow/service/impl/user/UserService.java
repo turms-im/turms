@@ -17,11 +17,12 @@
 
 package im.turms.turms.workflow.service.impl.user;
 
+import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import im.turms.common.constant.ProfileAccessStrategy;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
-import im.turms.common.exception.TurmsBusinessException;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.common.util.Validator;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
@@ -29,11 +30,14 @@ import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.manager.PasswordManager;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.bo.DateRange;
+import im.turms.turms.bo.ServicePermission;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.constant.MetricsConstant;
+import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.constraint.ValidProfileAccess;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
 import im.turms.turms.workflow.dao.builder.UpdateBuilder;
+import im.turms.server.common.dao.util.OperationResultUtil;
 import im.turms.turms.workflow.service.impl.group.GroupMemberService;
 import im.turms.turms.workflow.service.impl.statistics.MetricsService;
 import im.turms.turms.workflow.service.impl.user.onlineuser.SessionService;
@@ -55,7 +59,10 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Set;
 
 /**
  * @author James Chen
@@ -98,7 +105,10 @@ public class UserService {
         deletedUsersCounter = metricsService.getRegistry().counter(MetricsConstant.DELETED_USERS_COUNTER_NAME);
     }
 
-    public Mono<Boolean> isAllowedToSendMessageToTarget(
+    /**
+     * @return
+     */
+    public Mono<ServicePermission> isAllowedToSendMessageToTarget(
             @NotNull Boolean isGroupMessage,
             @NotNull Boolean isSystemMessage,
             @NotNull Long requesterId,
@@ -112,24 +122,39 @@ public class UserService {
             return Mono.error(e);
         }
         if (isSystemMessage) {
-            return Mono.just(true);
+            return Mono.just(ServicePermission.OK);
         }
         if (isGroupMessage) {
-            return groupMemberService.isAllowedToSendMessage(targetId, requesterId);
+            return groupMemberService.isAllowedToSendMessage(targetId, requesterId)
+                    .map(ServicePermission::get);
         } else {
             if (requesterId.equals(targetId)) {
                 return node.getSharedProperties().getService().getMessage().isAllowSendingMessagesToOneself()
-                        ? Mono.just(true)
-                        : Mono.error(TurmsBusinessException.get(TurmsStatusCode.DISABLED_FUNCTION));
+                        ? Mono.just(ServicePermission.OK)
+                        : Mono.just(ServicePermission.get(TurmsStatusCode.SENDING_MESSAGES_TO_ONESELF_IS_DISABLED));
             } else {
                 if (node.getSharedProperties().getService().getMessage().isAllowSendingMessagesToStranger()) {
-                    return node.getSharedProperties().getService().getMessage().isCheckIfTargetActiveAndNotDeleted()
-                            ? isActiveAndNotDeleted(targetId)
-                            .zipWith(userRelationshipService.isNotBlocked(targetId, requesterId))
-                            .map(results -> results.getT1() && results.getT2())
-                            : userRelationshipService.isNotBlocked(targetId, requesterId);
+                    if (node.getSharedProperties().getService().getMessage().isCheckIfTargetActiveAndNotDeleted()) {
+                        return isActiveAndNotDeleted(targetId)
+                                .flatMap(isActiveAndNotDeleted -> {
+                                    if (!isActiveAndNotDeleted) {
+                                        return Mono.just(ServicePermission.get(TurmsStatusCode.MESSAGE_RECIPIENT_NOT_ACTIVE));
+                                    }
+                                    return userRelationshipService.hasNoRelationshipOrNotBlocked(targetId, requesterId)
+                                            .map(isNotBlocked -> isNotBlocked
+                                                    ? ServicePermission.OK
+                                                    : ServicePermission.get(TurmsStatusCode.PRIVATE_MESSAGE_SENDER_HAS_BEEN_BLOCKED));
+                                });
+                    }
+                    return userRelationshipService.hasNoRelationshipOrNotBlocked(targetId, requesterId)
+                            .map(isNotBlocked -> isNotBlocked
+                                    ? ServicePermission.OK
+                                    : ServicePermission.get(TurmsStatusCode.PRIVATE_MESSAGE_SENDER_HAS_BEEN_BLOCKED));
                 } else {
-                    return userRelationshipService.isRelatedAndAllowed(targetId, requesterId);
+                    return userRelationshipService.hasRelationshipAndNotBlocked(targetId, requesterId)
+                            .map(isRelatedAndNotBlocked -> isRelatedAndNotBlocked
+                                    ? ServicePermission.OK
+                                    : ServicePermission.get(TurmsStatusCode.MESSAGE_SENDER_NOT_IN_CONTACTS_OR_BLOCKED));
                 }
             }
         }
@@ -184,14 +209,14 @@ public class UserService {
         return mongoTemplate.inTransaction()
                 .execute(operations -> operations.save(user, User.COLLECTION_NAME)
                         .then(userRelationshipGroupService.createRelationshipGroup(finalId, 0, "", now, operations))
-                        .then(userVersionService.upsertEmptyUserVersion(user.getId(), date, operations))
+                        .then(userVersionService.upsertEmptyUserVersion(user.getId(), date, operations).onErrorResume(t -> Mono.empty()))
                         .thenReturn(user))
                 .retryWhen(DaoConstant.TRANSACTION_RETRY)
                 .singleOrEmpty()
                 .doOnSuccess(ignored -> registeredUsersCounter.increment());
     }
 
-    public Mono<Boolean> isAllowToQueryUserProfile(
+    public Mono<ServicePermission> isAllowToQueryUserProfile(
             @NotNull Long requesterId,
             @NotNull Long targetUserId) {
         try {
@@ -200,22 +225,31 @@ public class UserService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(targetUserId));
+        Query query = new Query()
+                .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(targetUserId))
+                .addCriteria(Criteria.where(User.Fields.DELETION_DATE).is(null));
         query.fields().include(User.Fields.PROFILE_ACCESS);
         return mongoTemplate.findOne(query, User.class, User.COLLECTION_NAME)
                 .flatMap(user -> {
                     switch (user.getProfileAccess()) {
                         case ALL:
-                            return Mono.just(true);
+                            return Mono.just(ServicePermission.OK);
                         case FRIENDS:
-                            return userRelationshipService.isRelatedAndAllowed(targetUserId, requesterId);
+                            return userRelationshipService.hasRelationshipAndNotBlocked(targetUserId, requesterId)
+                                    .map(isRelatedAndAllowed -> isRelatedAndAllowed
+                                            ? ServicePermission.OK
+                                            : ServicePermission.get(TurmsStatusCode.PROFILE_REQUESTER_NOT_IN_CONTACTS_OR_BLOCKED));
                         case ALL_EXCEPT_BLACKLISTED_USERS:
-                            return userRelationshipService.isNotBlocked(targetUserId, requesterId);
+                            return userRelationshipService.hasNoRelationshipOrNotBlocked(targetUserId, requesterId)
+                                    .map(isNotBlocked -> isNotBlocked
+                                            ? ServicePermission.OK
+                                            : ServicePermission.get(TurmsStatusCode.PROFILE_REQUESTER_HAS_BEEN_BLOCKED));
                         case UNRECOGNIZED:
                         default:
-                            return Mono.just(false);
+                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_INTERNAL_ERROR, "Unexpected value " + user.getProfileAccess()));
                     }
-                });
+                })
+                .defaultIfEmpty(ServicePermission.get(TurmsStatusCode.USER_PROFILE_NOT_FOUND));
     }
 
     public Mono<User> authAndQueryUserProfile(
@@ -223,36 +257,18 @@ public class UserService {
             @NotNull Long userId,
             boolean queryDeletedRecords) {
         try {
+            AssertUtil.notNull(requesterId, "requesterId");
             AssertUtil.notNull(userId, "userId");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        return authAndQueryUsersProfiles(requesterId, Set.of(userId), queryDeletedRecords).singleOrEmpty();
-    }
-
-    public Flux<User> authAndQueryUsersProfiles(
-            @NotNull Long requesterId,
-            @NotEmpty Set<Long> userIds,
-            boolean queryDeletedRecords) {
-        try {
-            AssertUtil.notNull(requesterId, "requesterId");
-            AssertUtil.notEmpty(userIds, "userIds");
-        } catch (TurmsBusinessException e) {
-            return Flux.error(e);
-        }
-        List<Mono<Boolean>> monos = new ArrayList<>(userIds.size());
-        for (Long userId : userIds) {
-            monos.add(isAllowToQueryUserProfile(requesterId, userId)
-                    .switchIfEmpty(Mono.error(TurmsBusinessException.get(TurmsStatusCode.TARGET_USERS_NOT_EXIST))));
-        }
-        return Mono.zip(monos, objects -> objects)
-                .flatMapMany(results -> {
-                    for (Object result : results) {
-                        if (!(boolean) result) {
-                            throw TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED);
-                        }
+        return isAllowToQueryUserProfile(requesterId, userId)
+                .flatMap(permission -> {
+                    TurmsStatusCode code = permission.getCode();
+                    if (code != TurmsStatusCode.OK) {
+                        return Mono.error(TurmsBusinessException.get(code, permission.getReason()));
                     }
-                    return queryUsersProfiles(userIds, queryDeletedRecords);
+                    return queryUsersProfiles(Set.of(userId), queryDeletedRecords).singleOrEmpty();
                 });
     }
 
@@ -290,7 +306,7 @@ public class UserService {
                 .map(User::getPermissionGroupId);
     }
 
-    public Mono<Boolean> deleteUsers(
+    public Mono<DeleteResult> deleteUsers(
             @NotEmpty Set<Long> userIds,
             @Nullable Boolean deleteLogically) {
         try {
@@ -299,7 +315,7 @@ public class UserService {
             return Mono.error(e);
         }
         Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(userIds));
-        Mono<Boolean> deleteOrUpdateMono;
+        Mono<DeleteResult> deleteOrUpdateMono;
         if (deleteLogically == null) {
             deleteLogically = node.getSharedProperties().getService().getUser().isDeleteUserLogically();
         }
@@ -309,30 +325,25 @@ public class UserService {
                     .set(User.Fields.DELETION_DATE, now)
                     .set(User.Fields.LAST_UPDATED_DATE, now);
             deleteOrUpdateMono = mongoTemplate.updateMulti(query, update, User.class, User.COLLECTION_NAME)
-                    .map(UpdateResult::wasAcknowledged);
+                    .map(OperationResultUtil::update2delete);
         } else {
             deleteOrUpdateMono = mongoTemplate.inTransaction()
                     .execute(operations -> operations.remove(query, User.class, User.COLLECTION_NAME)
-                            .map(result -> {
+                            .flatMap(result -> {
                                 long count = result.getDeletedCount();
                                 if (count > 0) {
                                     deletedUsersCounter.increment(count);
                                 }
-                                return result.wasAcknowledged();
-                            })
-                            .flatMap(acknowledged -> acknowledged != null && acknowledged
-                                    ? userRelationshipService.deleteAllRelationships(userIds, operations, false)
-                                    .then(userRelationshipGroupService.deleteAllRelationshipGroups(userIds, operations, false))
-                                    .then(userVersionService.delete(userIds, operations))
-                                    .thenReturn(true)
-                                    : Mono.just(false)))
+                                return userRelationshipService.deleteAllRelationships(userIds, operations, false)
+                                        .then(userRelationshipGroupService.deleteAllRelationshipGroups(userIds, operations, false))
+                                        .then(userVersionService.delete(userIds, operations).onErrorResume(t -> Mono.empty()))
+                                        .thenReturn(result);
+                            }))
                     .retryWhen(DaoConstant.TRANSACTION_RETRY)
                     .singleOrEmpty();
         }
-        return deleteOrUpdateMono.flatMap(success -> success
-                ? sessionService.disconnect(userIds, SessionCloseStatus.USER_IS_DELETED_OR_INACTIVATED)
-                .then(Mono.just(true))
-                : Mono.just(false));
+        return deleteOrUpdateMono
+                .doOnNext(ignored -> sessionService.disconnect(userIds, SessionCloseStatus.USER_IS_DELETED_OR_INACTIVATED).subscribe());
     }
 
     public Mono<Boolean> userExists(@NotNull Long userId, boolean queryDeletedRecords) {
@@ -349,7 +360,7 @@ public class UserService {
         return mongoTemplate.exists(query, User.class, User.COLLECTION_NAME);
     }
 
-    public Mono<Boolean> updateUser(
+    public Mono<Void> updateUser(
             @NotNull Long userId,
             @Nullable String rawPassword,
             @Nullable String name,
@@ -370,7 +381,10 @@ public class UserService {
                 profileAccessStrategy,
                 permissionGroupId,
                 registrationDate,
-                isActive);
+                isActive)
+                .flatMap(result -> result.getMatchedCount() > 0
+                        ? Mono.empty()
+                        : Mono.error(TurmsBusinessException.get(TurmsStatusCode.UPDATE_INFO_OF_NON_EXISTING_USER)));
     }
 
     public Flux<User> queryUsers(
@@ -430,7 +444,7 @@ public class UserService {
         return mongoTemplate.count(query, User.class, User.COLLECTION_NAME);
     }
 
-    public Mono<Boolean> updateUsers(
+    public Mono<UpdateResult> updateUsers(
             @NotEmpty Set<Long> userIds,
             @Nullable String rawPassword,
             @Nullable String name,
@@ -452,7 +466,7 @@ public class UserService {
                 profileAccessStrategy,
                 registrationDate,
                 isActive)) {
-            return Mono.just(true);
+            return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
         String password = null;
         if (rawPassword != null && !rawPassword.isEmpty()) {
@@ -470,16 +484,10 @@ public class UserService {
                 .setIfNotNull(User.Fields.LAST_UPDATED_DATE, new Date())
                 .build();
         return mongoTemplate.updateMulti(query, update, User.class, User.COLLECTION_NAME)
-                .flatMap(result -> {
-                    if (result.wasAcknowledged()) {
-                        return isActive != null && !isActive
-                                ? Mono.just(sessionService.disconnect(userIds, SessionCloseStatus.USER_IS_DELETED_OR_INACTIVATED))
-                                .thenReturn(true)
-                                : Mono.just(true);
-                    } else {
-                        return Mono.just(false);
-                    }
-                });
+                .flatMap(result -> result.getModifiedCount() > 0
+                        ? Mono.just(sessionService.disconnect(userIds, SessionCloseStatus.USER_IS_DELETED_OR_INACTIVATED))
+                        .onErrorResume(t -> Mono.empty()).thenReturn(result)
+                        : Mono.just(result));
     }
 
     private Mono<Boolean> isActiveAndNotDeleted(@NotNull Long userId) {

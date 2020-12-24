@@ -18,8 +18,8 @@
 package im.turms.turms.workflow.service.impl.storage;
 
 import im.turms.common.constant.ContentType;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
-import im.turms.common.exception.TurmsBusinessException;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.plugin.extension.service.StorageServiceProvider;
 import im.turms.turms.plugin.manager.TurmsPluginManager;
@@ -52,10 +52,10 @@ public class StorageService {
             if (provider.isServing()) {
                 return provider.queryPresignedGetUrl(requesterId, contentType, keyStr, keyNum);
             } else {
-                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAVAILABLE));
+                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_UNAVAILABLE));
             }
         } else {
-            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_IMPLEMENTED));
+            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.STORAGE_NOT_IMPLEMENTED));
         }
     }
 
@@ -70,10 +70,10 @@ public class StorageService {
             if (provider.isServing()) {
                 return provider.queryPresignedPutUrl(requesterId, contentType, keyStr, keyNum, contentLength);
             } else {
-                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAVAILABLE));
+                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_UNAVAILABLE));
             }
         } else {
-            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_IMPLEMENTED));
+            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.STORAGE_NOT_IMPLEMENTED));
         }
     }
 
@@ -88,10 +88,10 @@ public class StorageService {
             if (provider.isServing()) {
                 return provider.deleteResource(requesterId, contentType, keyStr, keyNum);
             } else {
-                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAVAILABLE));
+                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_UNAVAILABLE));
             }
         } else {
-            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_IMPLEMENTED));
+            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.STORAGE_NOT_IMPLEMENTED));
         }
     }
 

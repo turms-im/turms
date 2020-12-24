@@ -19,8 +19,8 @@ package im.turms.server.common.service.session;
 
 
 import im.turms.common.constant.DeviceType;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
-import im.turms.common.exception.TurmsBusinessException;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.bo.log.UserLocationLog;
 import im.turms.server.common.bo.session.UserSessionId;
 import im.turms.server.common.cluster.node.Node;
@@ -99,10 +99,10 @@ public class SessionLocationService {
     /**
      * Usually used when a user just go online.
      */
-    public Mono<Boolean> upsertUserLocation(@NotNull Long userId,
-                                            @NotNull @ValidDeviceType DeviceType deviceType,
-                                            @NotNull Point position,
-                                            @NotNull Date timestamp) {
+    public Mono<Void> upsertUserLocation(@NotNull Long userId,
+                                         @NotNull @ValidDeviceType DeviceType deviceType,
+                                         @NotNull Point position,
+                                         @NotNull Date timestamp) {
         try {
             AssertUtil.notNull(userId, "userId");
             AssertUtil.notNull(deviceType, "deviceType");
@@ -113,30 +113,18 @@ public class SessionLocationService {
             return Mono.error(e);
         }
         if (!locationEnabled) {
-            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.DISABLED_FUNCTION));
+            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.USER_LOCATION_RELATED_FEATURES_ARE_DISABLED));
         }
+        Mono<Long> upsertMono;
         if (treatUserIdAndDeviceTypeAsUniqueUser) {
             UserSessionId userSessionId = new UserSessionId(userId, deviceType);
-            return getGeoByUserSessionIdOperations(userId).add(RedisEntryId.LOCATION, position, userSessionId)
-                    .flatMap(o -> o > 0
-                            ? Mono.just(true)
-                            // Redis doesn't support atomic upsert operation for GeoHash
-                            // so we do it in this way as a workaround
-                            : getGeoByUserSessionIdOperations(userId).remove(RedisEntryId.LOCATION, userSessionId)
-                            .then(getGeoByUserSessionIdOperations(userId).add(RedisEntryId.LOCATION, position, userSessionId))
-                            .map(number -> number > 0))
-                    .doOnSuccess(o -> tryLogLocation(userId, deviceType, position, timestamp));
+            upsertMono = getGeoByUserSessionIdOperations(userId).add(RedisEntryId.LOCATION, position, userSessionId);
         } else {
-            return getGeoByUserIdOperations(userId).add(RedisEntryId.LOCATION, position, userId)
-                    .flatMap(o -> o > 0
-                            ? Mono.just(true)
-                            // Redis doesn't support atomic upsert operation for GeoHash
-                            // so we do it in this way as a workaround
-                            : getGeoByUserIdOperations(userId).remove(RedisEntryId.LOCATION, userId)
-                            .then(getGeoByUserIdOperations(userId).add(RedisEntryId.LOCATION, position, userId))
-                            .map(number -> number > 0))
-                    .doOnSuccess(o -> tryLogLocation(userId, deviceType, position, timestamp));
+            upsertMono = getGeoByUserIdOperations(userId).add(RedisEntryId.LOCATION, position, userId);
         }
+        return upsertMono
+                .doOnSuccess(o -> tryLogLocation(userId, deviceType, position, timestamp))
+                .then();
     }
 
     public Mono<Void> removeUserLocation(@NotNull Long userId, @NotNull @ValidDeviceType DeviceType deviceType) {
@@ -148,7 +136,7 @@ public class SessionLocationService {
             return Mono.error(e);
         }
         if (!locationEnabled) {
-            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.DISABLED_FUNCTION));
+            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.USER_LOCATION_RELATED_FEATURES_ARE_DISABLED));
         }
         Mono<Long> mono = treatUserIdAndDeviceTypeAsUniqueUser
                 ? getGeoByUserSessionIdOperations(userId).remove(RedisEntryId.LOCATION, new UserSessionId(userId, deviceType))
@@ -167,13 +155,13 @@ public class SessionLocationService {
             return Flux.error(e);
         }
         if (!locationEnabled) {
-            return Flux.error(TurmsBusinessException.get(TurmsStatusCode.DISABLED_FUNCTION));
+            return Flux.error(TurmsBusinessException.get(TurmsStatusCode.USER_LOCATION_RELATED_FEATURES_ARE_DISABLED));
         }
         if (treatUserIdAndDeviceTypeAsUniqueUser) {
             return deviceType != null
                     ? queryNearestUserSessionIds(userId, deviceType, maxPeopleNumber, maxDistance)
                     .map(UserSessionId::getUserId)
-                    : Flux.error(TurmsBusinessException.get(TurmsStatusCode.DISABLED_FUNCTION));
+                    : Flux.error(TurmsBusinessException.get(TurmsStatusCode.USER_LOCATION_RELATED_FEATURES_ARE_DISABLED));
         } else {
             LocationProperties location = node.getSharedProperties().getLocation();
             if (maxPeopleNumber == null) {
@@ -211,8 +199,11 @@ public class SessionLocationService {
         } catch (TurmsBusinessException e) {
             return Flux.error(e);
         }
-        if (!locationEnabled || geoByUserSessionIdOperationsList == null) {
-            return Flux.error(TurmsBusinessException.get(TurmsStatusCode.DISABLED_FUNCTION));
+        if (!locationEnabled) {
+            return Flux.error(TurmsBusinessException.get(TurmsStatusCode.USER_LOCATION_RELATED_FEATURES_ARE_DISABLED));
+        }
+        if (geoByUserSessionIdOperationsList == null) {
+            return Flux.error(TurmsBusinessException.get(TurmsStatusCode.QUERYING_NEAREST_USERS_BY_SESSION_ID_IS_DISABLED));
         }
         LocationProperties location = node.getSharedProperties().getLocation();
         if (maxPeopleNumber == null) {
@@ -250,7 +241,7 @@ public class SessionLocationService {
                     ? getGeoByUserSessionIdOperations(userId).position(RedisEntryId.LOCATION, new UserSessionId(userId, deviceType))
                     : getGeoByUserIdOperations(userId).position(RedisEntryId.LOCATION, userId);
         } else {
-            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.DISABLED_FUNCTION));
+            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.USER_LOCATION_RELATED_FEATURES_ARE_DISABLED));
         }
     }
 

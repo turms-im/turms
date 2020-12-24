@@ -68,9 +68,9 @@ public class MessageProperties {
     private boolean messageStatusPersistent = true;
 
     @JsonView(MutablePropertiesView.class)
-    @Description("A message will become expired after the TTL has elapsed. 0 means infinite")
-    @Min(0)
-    private int messageTimeToLiveHours = 0;
+    @Description("A message will become expired after the TTL has elapsed. Cannot be infinite for performance reason")
+    @Min(1)
+    private int messageTimeToLiveHours = 30 * 24;
 
     @Description("Clean the expired messages when the cron expression is triggered")
     @ValidCron

@@ -19,10 +19,7 @@ package im.turms.turms.workflow.access.http.controller.group;
 
 import im.turms.turms.workflow.access.http.dto.request.group.AddGroupJoinQuestionDTO;
 import im.turms.turms.workflow.access.http.dto.request.group.UpdateGroupJoinQuestionDTO;
-import im.turms.turms.workflow.access.http.dto.response.AcknowledgedDTO;
-import im.turms.turms.workflow.access.http.dto.response.PaginationDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseFactory;
+import im.turms.turms.workflow.access.http.dto.response.*;
 import im.turms.turms.workflow.access.http.permission.AdminPermission;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.access.http.util.PageUtil;
@@ -90,24 +87,27 @@ public class GroupQuestionController {
 
     @PutMapping
     @RequiredPermission(AdminPermission.GROUP_QUESTION_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> updateGroupJoinQuestions(
+    public Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateGroupJoinQuestions(
             @RequestParam Set<Long> ids,
             @RequestBody UpdateGroupJoinQuestionDTO updateGroupJoinQuestionDTO) {
-        Mono<Boolean> updateMono = groupQuestionService.updateGroupJoinQuestions(
+        Mono<UpdateResultDTO> updateMono = groupQuestionService.updateGroupJoinQuestions(
                 ids,
                 updateGroupJoinQuestionDTO.getGroupId(),
                 updateGroupJoinQuestionDTO.getQuestion(),
                 updateGroupJoinQuestionDTO.getAnswers(),
-                updateGroupJoinQuestionDTO.getScore());
-        return ResponseFactory.acknowledged(updateMono);
+                updateGroupJoinQuestionDTO.getScore())
+                .map(UpdateResultDTO::get);
+        return ResponseFactory.okIfTruthy(updateMono);
     }
 
     @DeleteMapping
     @RequiredPermission(AdminPermission.GROUP_QUESTION_DELETE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> deleteGroupJoinQuestions(
+    public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteGroupJoinQuestions(
             @RequestParam(required = false) Set<Long> ids) {
-        Mono<Boolean> deleteMono = groupQuestionService.deleteGroupJoinQuestions(ids);
-        return ResponseFactory.acknowledged(deleteMono);
+        Mono<DeleteResultDTO> deleteMono = groupQuestionService
+                .deleteGroupJoinQuestions(ids)
+                .map(DeleteResultDTO::get);
+        return ResponseFactory.okIfTruthy(deleteMono);
     }
 
 }

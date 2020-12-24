@@ -19,8 +19,8 @@ package im.turms.gateway.access.udp;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
-import im.turms.common.exception.TurmsBusinessException;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.common.model.dto.udpsignal.UdpNotificationType;
 import im.turms.common.model.dto.udpsignal.UdpRequestType;
 import im.turms.common.model.dto.udpsignal.UdpSignalRequest;
@@ -125,8 +125,8 @@ public class UdpDispatcher {
                                 session.getConnection().setAddress(senderAddress);
                                 return TurmsStatusCode.OK;
                             })
-                            .onErrorReturn(TurmsStatusCode.FAILED)
-                            .defaultIfEmpty(TurmsStatusCode.FAILED);
+                            .onErrorReturn(TurmsStatusCode.ILLEGAL_ARGUMENT)
+                            .defaultIfEmpty(TurmsStatusCode.SEND_REQUEST_FROM_NON_EXISTING_SESSION);
                 case GO_OFFLINE:
                     CloseStatus status = CloseStatusFactory.get(SessionCloseStatus.DISCONNECTED_BY_CLIENT);
                     return serviceMediator.authAndSetLocalUserDeviceOffline(userId, deviceType, status, sessionId)
@@ -135,7 +135,7 @@ public class UdpDispatcher {
                     throw new IllegalStateException("Unexpected value: " + signalRequest.getType());
             }
         } else {
-            return Mono.just(TurmsStatusCode.INVALID_DATA);
+            return Mono.just(TurmsStatusCode.INVALID_REQUEST);
         }
     }
 

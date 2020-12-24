@@ -17,8 +17,8 @@
 
 package im.turms.turms.bo;
 
-import im.turms.common.constant.statuscode.TurmsStatusCode;
-import im.turms.common.exception.TurmsBusinessException;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import lombok.Data;
 
 import java.util.Date;
@@ -34,7 +34,7 @@ public final class DateRange {
 
     private DateRange(Date start, Date end) {
         if (start != null && end != null && end.before(start)) {
-            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The end date must not be before the start date");
+            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The end date must not be before the start date");
         }
         this.start = start;
         this.end = end;

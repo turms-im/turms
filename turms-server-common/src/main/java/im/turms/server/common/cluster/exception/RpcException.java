@@ -17,7 +17,7 @@
 
 package im.turms.server.common.cluster.exception;
 
-import im.turms.common.constant.statuscode.TurmsStatusCode;
+import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.common.exception.NoStackTraceException;
 import im.turms.server.common.cluster.service.rpc.RpcErrorCode;
 import io.rsocket.exceptions.ApplicationErrorException;
@@ -32,7 +32,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static im.turms.common.constant.statuscode.TurmsStatusCode.STATUS_CODE_LENGTH;
+import static im.turms.server.common.constant.TurmsStatusCode.STATUS_CODE_LENGTH;
 import static im.turms.server.common.cluster.service.rpc.RpcErrorCode.ERROR_CODE_LENGTH;
 
 /**

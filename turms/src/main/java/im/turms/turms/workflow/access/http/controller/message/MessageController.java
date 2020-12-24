@@ -23,10 +23,7 @@ import im.turms.turms.bo.DateRange;
 import im.turms.turms.workflow.access.http.dto.request.message.CreateMessageDTO;
 import im.turms.turms.workflow.access.http.dto.request.message.MessageStatisticsDTO;
 import im.turms.turms.workflow.access.http.dto.request.message.UpdateMessageDTO;
-import im.turms.turms.workflow.access.http.dto.response.AcknowledgedDTO;
-import im.turms.turms.workflow.access.http.dto.response.PaginationDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseFactory;
+import im.turms.turms.workflow.access.http.dto.response.*;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.access.http.util.DateTimeUtil;
 import im.turms.turms.workflow.access.http.util.PageUtil;
@@ -60,7 +57,7 @@ public class MessageController {
 
     @PostMapping
     @RequiredPermission(MESSAGE_CREATE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> createMessages(
+    public Mono<ResponseEntity<ResponseDTO<Void>>> createMessages(
             @RequestParam(defaultValue = "true") Boolean send,
             @RequestBody CreateMessageDTO createMessageDTO) {
         Mono<Boolean> sendMono = messageService.sendMessage(
@@ -74,7 +71,7 @@ public class MessageController {
                 createMessageDTO.getTargetId(),
                 createMessageDTO.getBurnAfter(),
                 createMessageDTO.getReferenceId());
-        return ResponseFactory.acknowledged(sendMono);
+        return sendMono.thenReturn(ResponseFactory.OK);
     }
 
     @GetMapping
@@ -236,28 +233,30 @@ public class MessageController {
 
     @PutMapping
     @RequiredPermission(MESSAGE_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> updateMessages(
+    public Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateMessages(
             @RequestParam Set<Long> ids,
             @RequestBody UpdateMessageDTO updateMessageDTO) {
-        Mono<Boolean> updateMono = messageService.updateMessage(
+        Mono<UpdateResultDTO> updateMono = messageService.updateMessage(
                 ids,
                 updateMessageDTO.getIsSystemMessage(),
                 updateMessageDTO.getText(),
                 updateMessageDTO.getRecords(),
                 updateMessageDTO.getBurnAfter(),
-                null);
-        return ResponseFactory.acknowledged(updateMono);
+                null)
+                .map(UpdateResultDTO::get);
+        return ResponseFactory.okIfTruthy(updateMono);
     }
 
     @DeleteMapping
     @RequiredPermission(MESSAGE_DELETE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> deleteMessages(
+    public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteMessages(
             @RequestParam Set<Long> ids,
             @RequestParam(defaultValue = "false") Boolean deleteMessagesStatuses,
             @RequestParam(required = false) Boolean deleteLogically) {
-        Mono<Boolean> deleteMono = messageService
-                .deleteMessages(ids, deleteMessagesStatuses, deleteLogically);
-        return ResponseFactory.acknowledged(deleteMono);
+        Mono<DeleteResultDTO> deleteMono = messageService
+                .deleteMessages(ids, deleteMessagesStatuses, deleteLogically)
+                .map(DeleteResultDTO::get);
+        return ResponseFactory.okIfTruthy(deleteMono);
     }
 
 }

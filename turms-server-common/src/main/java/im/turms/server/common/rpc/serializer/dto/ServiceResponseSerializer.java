@@ -18,7 +18,7 @@
 package im.turms.server.common.rpc.serializer.dto;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
+import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.server.common.cluster.service.serialization.serializer.Serializer;
 import im.turms.server.common.cluster.service.serialization.serializer.SerializerId;

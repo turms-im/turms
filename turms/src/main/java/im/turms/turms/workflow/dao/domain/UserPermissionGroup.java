@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * No need to shard because there are only a few (or some) user permission groups.
+ * No need to shard because there should be only a few user permission groups.
  *
  * @author James Chen
  */

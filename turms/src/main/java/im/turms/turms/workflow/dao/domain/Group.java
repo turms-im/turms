@@ -17,11 +17,12 @@
 
 package im.turms.turms.workflow.dao.domain;
 
-import im.turms.turms.workflow.dao.index.documentation.OptionalIndexedForAdvancedFeature;
-import im.turms.turms.workflow.dao.index.documentation.OptionalIndexedForCustomFeature;
-import im.turms.turms.workflow.dao.index.documentation.OptionalIndexedForDifferentAmount;
+import im.turms.turms.workflow.dao.index.OptionalIndexedForColdData;
+import im.turms.turms.workflow.dao.index.OptionalIndexedForExtendedFeature;
+import im.turms.turms.workflow.dao.index.OptionalIndexedForDifferentAmount;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Sharded;
@@ -34,7 +35,7 @@ import java.util.Date;
  */
 @Data
 @Document
-@Sharded(immutableKey = true, shardingStrategy = ShardingStrategy.HASH)
+@Sharded(shardingStrategy = ShardingStrategy.HASH, immutableKey = true)
 public final class Group {
 
     public static final String COLLECTION_NAME = "group";
@@ -47,11 +48,15 @@ public final class Group {
     private final Long typeId;
 
     @Field(Fields.CREATOR_ID)
-    @OptionalIndexedForCustomFeature
+    @OptionalIndexedForExtendedFeature
     private final Long creatorId;
 
+    /**
+     * Used by countOwnedGroups to limit the maximum number of groups that a user can have
+     */
     @Field(Fields.OWNER_ID)
-    @OptionalIndexedForCustomFeature
+    @OptionalIndexedForExtendedFeature
+    @Indexed
     private final Long ownerId;
 
     @Field(Fields.NAME)
@@ -67,15 +72,16 @@ public final class Group {
     private final Integer minimumScore;
 
     @Field(Fields.CREATION_DATE)
-    @OptionalIndexedForCustomFeature
+    @OptionalIndexedForExtendedFeature
     private final Date creationDate;
 
     @Field(Fields.DELETION_DATE)
-    @OptionalIndexedForAdvancedFeature
+    @OptionalIndexedForColdData
+    @Indexed
     private final Date deletionDate;
 
     @Field(Fields.MUTE_END_DATE)
-    @OptionalIndexedForCustomFeature
+    @OptionalIndexedForExtendedFeature
     private final Date muteEndDate;
 
     @Field(Fields.IS_ACTIVE)

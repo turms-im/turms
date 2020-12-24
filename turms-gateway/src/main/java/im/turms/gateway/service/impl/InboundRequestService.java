@@ -21,8 +21,8 @@ import com.google.protobuf.Int32Value;
 import com.google.protobuf.Int64Value;
 import com.google.protobuf.StringValue;
 import im.turms.common.constant.DeviceType;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
-import im.turms.common.exception.TurmsBusinessException;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.gateway.constant.ErrorMessage;
@@ -82,9 +82,9 @@ public class InboundRequestService {
     /**
      * If the method returns MonoError, the session should be closed by downstream.
      */
-    public Mono<Boolean> processHeartbeatRequest(long userId, DeviceType deviceType) {
+    public Mono<Boolean> processHeartbeatRequest(Long userId, DeviceType deviceType) {
         if (!node.isActive()) {
-            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAVAILABLE));
+            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_UNAVAILABLE));
         }
         return sessionService.updateHeartbeatTimestamp(userId, deviceType)
                 .onErrorResume(throwable -> {
@@ -102,13 +102,13 @@ public class InboundRequestService {
     public Mono<TurmsNotification> processServiceRequest(ServiceRequest serviceRequest) {
         // Validate
         if (!node.isActive()) {
-            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAVAILABLE));
+            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_UNAVAILABLE));
         }
         Long userId = serviceRequest.getUserId();
         DeviceType deviceType = serviceRequest.getDeviceType();
         UserSession session = sessionService.getLocalUserSession(userId, deviceType);
         if (session == null) {
-            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED));
+            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SEND_REQUEST_FROM_NON_EXISTING_SESSION));
         }
 
         // Flow control

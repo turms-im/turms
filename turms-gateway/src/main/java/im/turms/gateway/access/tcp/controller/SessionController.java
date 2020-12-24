@@ -20,7 +20,7 @@ package im.turms.gateway.access.tcp.controller;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.UserStatus;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
+import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.common.model.bo.user.UserLocation;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.user.CreateSessionRequest;
@@ -61,7 +61,7 @@ public class SessionController {
                                                                  String ip,
                                                                  Timeout idleConnectionTimeout) {
         if (sessionWrapper.hasUserSession()) {
-            return Mono.just(new RequestHandlerResult(TurmsStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED));
+            return Mono.just(new RequestHandlerResult(TurmsStatusCode.CREATE_EXISTING_SESSION));
         }
         long userId = createSessionRequest.getUserId();
         String password = createSessionRequest.hasPassword()

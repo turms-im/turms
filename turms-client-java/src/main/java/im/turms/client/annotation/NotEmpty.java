@@ -15,23 +15,22 @@
  * limitations under the License.
  */
 
-package im.turms.turms.workflow.dao.index.documentation;
+package im.turms.client.annotation;
 
-import org.springframework.data.mongodb.core.index.Indexed;
-
+import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 /**
- * Indexed by default because the index is used to support the widely used and advanced features of turms.
- * e.g.
- * 1. physically delete the data with a "deleted" flag,
- * <p>
- * 2. expiration date.
- * <p>
- * Remove the index if you don't need these features.
+ * Should only be used in turms-client-java.
+ * Don't use jakarta.validation-api because it uses
+ * ElementType.TYPE_USE that was added in API level 26 -->
  */
-@Indexed
-@Retention(RetentionPolicy.RUNTIME)
-public @interface OptionalIndexedForAdvancedFeature {
+@Documented
+@Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER})
+@Retention(SOURCE)
+public @interface NotEmpty {
 }

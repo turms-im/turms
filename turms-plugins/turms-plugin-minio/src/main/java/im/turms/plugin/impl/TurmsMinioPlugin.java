@@ -18,18 +18,18 @@
 package im.turms.plugin.impl;
 
 import im.turms.common.constant.ContentType;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
-import im.turms.common.exception.TurmsBusinessException;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.plugin.base.TurmsPlugin;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.env.service.business.StorageProperties;
 import im.turms.turms.plugin.extension.service.StorageServiceProvider;
 import im.turms.turms.workflow.service.impl.group.GroupMemberService;
 import im.turms.turms.workflow.service.impl.message.MessageService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.pf4j.Extension;
 import org.pf4j.PluginWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.MimeTypeUtils;
 import reactor.core.publisher.Mono;
@@ -65,7 +65,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
     @Extension
     public static class MinioStorageServiceProvider extends StorageServiceProvider {
 
-        private static final Logger log = LoggerFactory.getLogger(MinioStorageServiceProvider.class);
+        private static final Logger log = LogManager.getLogger(MinioStorageServiceProvider.class);
 
         private static final int TIMEOUT_SECONDS = 10;
 
@@ -98,11 +98,11 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                                 if (keyNum != null) {
                                     key = keyNum.toString();
                                 } else {
-                                    return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The group ID must not be null"));
+                                    return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The group ID must not be null"));
                                 }
                                 break;
                             case ATTACHMENT:
-                                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The attachments cannot be deleted"));
+                                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The attachments cannot be deleted"));
                             default:
                                 return Mono.error(new IllegalStateException("Unexpected value: " + contentType));
                         }
@@ -122,7 +122,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                             switch (contentType) {
                                 case PROFILE:
                                 case GROUP_PROFILE:
-                                    return Mono.error(TurmsBusinessException.get(TurmsStatusCode.REDUNDANT_REQUEST));
+                                    return Mono.error(TurmsBusinessException.get(TurmsStatusCode.REDUNDANT_REQUEST_FOR_PRESIGNED_PROFILE_URL));
                                 case ATTACHMENT:
                                     if (keyNum != null) {
                                         String key;
@@ -134,7 +134,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                                         String url = presignedUrlForGet(getBucketName(contentType), key);
                                         return Mono.just(url);
                                     } else {
-                                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The message ID must not be null"));
+                                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The message ID must not be null"));
                                     }
                                 default:
                                     return Mono.error(new IllegalStateException("Unexpected value: " + contentType));
@@ -181,7 +181,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                                 if (keyNum != null) {
                                     objectKey = keyNum.toString();
                                 } else {
-                                    return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The group ID must not be null"));
+                                    return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The group ID must not be null"));
                                 }
                                 break;
                             case ATTACHMENT:
@@ -193,7 +193,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                                         objectKey = keyNum.toString();
                                     }
                                 } else {
-                                    return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The message ID must not be null"));
+                                    return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The message ID must not be null"));
                                 }
                                 break;
                             default:
@@ -415,9 +415,9 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                     return Mono.just(true);
                 case ATTACHMENT:
                     if (keyNum != null) {
-                        return messageService.isMessageSentToUserOrByUser(keyNum, requesterId);
+                        return messageService.isMessageRecipientOrSender(keyNum, requesterId);
                     } else {
-                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The message ID must not be null");
+                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The message ID must not be null");
                     }
                 default:
                     throw new IllegalStateException("Unexpected value: " + contentType);
@@ -432,13 +432,13 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                     if (keyNum != null) {
                         return groupMemberService.isOwnerOrManager(requesterId, keyNum);
                     } else {
-                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The group ID must not be null");
+                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The group ID must not be null");
                     }
                 case ATTACHMENT:
                     if (keyNum != null) {
-                        return messageService.isMessageSentToUserOrByUser(keyNum, requesterId);
+                        return messageService.isMessageRecipientOrSender(keyNum, requesterId);
                     } else {
-                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The message ID must not be null");
+                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The message ID must not be null");
                     }
                 default:
                     throw new IllegalStateException("Unexpected value: " + contentType);
@@ -453,7 +453,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                     if (keyNum != null) {
                         return groupMemberService.isOwnerOrManager(requesterId, keyNum);
                     } else {
-                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The group ID must not be null");
+                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The group ID must not be null");
                     }
                 case ATTACHMENT:
                     return Mono.just(false);

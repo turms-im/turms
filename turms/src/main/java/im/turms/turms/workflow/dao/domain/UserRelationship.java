@@ -17,16 +17,17 @@
 
 package im.turms.turms.workflow.dao.domain;
 
-import im.turms.turms.workflow.dao.index.documentation.OptionalIndexedForCustomFeature;
+import im.turms.turms.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
-import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Sharded;
+import org.springframework.data.mongodb.core.mapping.ShardingStrategy;
 
 import java.util.Date;
 import java.util.List;
@@ -43,10 +44,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor(onConstructor = @__(@PersistenceConstructor))
 @Document
-@CompoundIndex(
-        name = UserRelationship.Key.Fields.OWNER_ID + "_" + UserRelationship.Key.Fields.RELATED_USER_ID + "_idx",
-        def = "{'" + UserRelationship.Fields.ID_OWNER_ID + "': 1, '" + UserRelationship.Fields.ID_RELATED_USER_ID + "': 1}")
-@Sharded(shardKey = {UserRelationship.Fields.ID_OWNER_ID, UserRelationship.Fields.ID_RELATED_USER_ID}, immutableKey = true)
+@Sharded(shardKey = UserRelationship.Fields.ID_OWNER_ID, shardingStrategy = ShardingStrategy.HASH, immutableKey = true)
 public final class UserRelationship {
 
     public static final String COLLECTION_NAME = "userRelationship";
@@ -54,16 +52,16 @@ public final class UserRelationship {
     @Id
     private final Key key;
 
-    @Field(Fields.IS_BLOCKED)
-    private final Boolean isBlocked;
+    @Field(Fields.BLOCK_DATE)
+    private final Date blockDate;
 
     @Field(Fields.ESTABLISHMENT_DATE)
-    @OptionalIndexedForCustomFeature
+    @OptionalIndexedForExtendedFeature
     private final Date establishmentDate;
 
-    public UserRelationship(Long ownerId, Long relatedUserId, Boolean isBlocked, Date establishmentDate) {
+    public UserRelationship(Long ownerId, Long relatedUserId, Date blockDate, Date establishmentDate) {
         this.key = new Key(ownerId, relatedUserId);
-        this.isBlocked = isBlocked;
+        this.blockDate = blockDate;
         this.establishmentDate = establishmentDate;
     }
 
@@ -73,9 +71,12 @@ public final class UserRelationship {
     public static final class Key {
 
         @Field(Fields.OWNER_ID)
+        @Indexed
         private Long ownerId;
 
+        // The index is used by deleteAllRelationships
         @Field(Fields.RELATED_USER_ID)
+        @Indexed
         private Long relatedUserId;
 
         public static class Fields {
@@ -90,7 +91,7 @@ public final class UserRelationship {
     public static class Fields {
         public static final String ID_OWNER_ID = "_id." + Key.Fields.OWNER_ID;
         public static final String ID_RELATED_USER_ID = "_id." + Key.Fields.RELATED_USER_ID;
-        public static final String IS_BLOCKED = "bld";
+        public static final String BLOCK_DATE = "bd";
         public static final String ESTABLISHMENT_DATE = "ed";
 
         private Fields() {

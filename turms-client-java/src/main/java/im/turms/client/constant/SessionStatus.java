@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.client.model;
+package im.turms.client.constant;
 
 /**
  * @author James Chen

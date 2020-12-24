@@ -23,8 +23,8 @@ import com.mongodb.client.result.UpdateResult;
 import im.turms.common.constant.GroupInvitationStrategy;
 import im.turms.common.constant.GroupJoinStrategy;
 import im.turms.common.constant.GroupUpdateStrategy;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
-import im.turms.common.exception.TurmsBusinessException;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.common.util.Validator;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.config.ChangeStreamUtil;
@@ -32,6 +32,7 @@ import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.constraint.NoWhitespace;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.constant.DaoConstant;
+import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
 import im.turms.turms.workflow.dao.builder.UpdateBuilder;
 import im.turms.turms.workflow.dao.domain.GroupType;
@@ -50,9 +51,9 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author James Chen
@@ -62,7 +63,7 @@ import java.util.Set;
 public class GroupTypeService {
 
     private final Node node;
-    private final Map<Long, GroupType> groupTypeMap = new HashMap<>();
+    private final Map<Long, GroupType> groupTypeMap = new ConcurrentHashMap<>(16);
     private final ReactiveMongoTemplate mongoTemplate;
 
     public GroupTypeService(
@@ -106,10 +107,10 @@ public class GroupTypeService {
                             groupTypeMap.remove(groupTypeId);
                             break;
                         case INVALIDATE:
-                            groupTypeMap.clear();
+                            groupTypeMap.keySet().removeIf(id -> !id.equals(DaoConstant.DEFAULT_GROUP_TYPE_ID));
                             break;
                         default:
-                            log.error("Detect an illegal operation on GroupType collection: " + event);
+                            log.fatal("Detect an illegal operation on GroupType collection: " + event);
                     }
                 })
                 .onErrorContinue((throwable, o) -> log.error("Error while processing the change stream event of GroupType: {}", o, throwable))
@@ -130,6 +131,7 @@ public class GroupTypeService {
                 .newBuilder()
                 .paginateIfNotNull(page, size);
         return mongoTemplate.find(query, GroupType.class, GroupType.COLLECTION_NAME)
+                // TODO: respect page and size
                 .concatWithValues(getDefaultGroupType());
     }
 
@@ -177,7 +179,7 @@ public class GroupTypeService {
         return mongoTemplate.insert(groupType, GroupType.COLLECTION_NAME);
     }
 
-    public Mono<Boolean> updateGroupTypes(
+    public Mono<UpdateResult> updateGroupTypes(
             @NotEmpty Set<Long> ids,
             @Nullable @NoWhitespace String name,
             @Nullable @Min(1) Integer groupSizeLimit,
@@ -206,7 +208,7 @@ public class GroupTypeService {
                 selfInfoUpdatable,
                 enableReadReceipt,
                 messageEditable)) {
-            return Mono.just(true);
+            return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
         Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(ids));
         Update update = UpdateBuilder.newBuilder()
@@ -221,31 +223,27 @@ public class GroupTypeService {
                 .setIfNotNull(GroupType.Fields.ENABLE_READ_RECEIPT, enableReadReceipt)
                 .setIfNotNull(GroupType.Fields.MESSAGE_EDITABLE, messageEditable)
                 .build();
-        return mongoTemplate.updateMulti(query, update, GroupType.class, GroupType.COLLECTION_NAME)
-                .map(UpdateResult::wasAcknowledged);
+        return mongoTemplate.updateMulti(query, update, GroupType.class, GroupType.COLLECTION_NAME);
     }
 
-    public Mono<Boolean> deleteGroupTypes(@Nullable Set<Long> groupTypeIds) {
-        if (groupTypeIds != null) {
-            if (groupTypeIds.contains(DaoConstant.DEFAULT_GROUP_TYPE_ID)) {
-                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The default group type cannot be deleted"));
-            }
-            for (Long id : groupTypeIds) {
-                groupTypeMap.remove(id);
-            }
-        } else {
-            for (Long key : groupTypeMap.keySet()) {
-                if (!key.equals(DaoConstant.DEFAULT_GROUP_TYPE_ID)) {
-                    groupTypeMap.remove(key);
-                }
-            }
+    public Mono<DeleteResult> deleteGroupTypes(@Nullable Set<Long> groupTypeIds) {
+        if (groupTypeIds != null && groupTypeIds.contains(DaoConstant.DEFAULT_GROUP_TYPE_ID)) {
+            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The default group type cannot be deleted"));
         }
         Query query = QueryBuilder
                 .newBuilder()
                 .addInIfNotNull(DaoConstant.ID_FIELD_NAME, groupTypeIds)
                 .buildQuery();
         return mongoTemplate.remove(query, GroupType.class, GroupType.COLLECTION_NAME)
-                .map(DeleteResult::wasAcknowledged);
+                .doOnNext(result -> {
+                    if (groupTypeIds != null) {
+                        for (Long id : groupTypeIds) {
+                            groupTypeMap.remove(id);
+                        }
+                    } else {
+                        groupTypeMap.keySet().removeIf(id -> !id.equals(DaoConstant.DEFAULT_GROUP_TYPE_ID));
+                    }
+                });
     }
 
     public Mono<GroupType> queryGroupType(@NotNull Long groupTypeId) {
@@ -264,23 +262,9 @@ public class GroupTypeService {
     }
 
     public Mono<Boolean> groupTypeExists(@NotNull Long groupTypeId) {
-        try {
-            AssertUtil.notNull(groupTypeId, "groupTypeId");
-        } catch (TurmsBusinessException e) {
-            return Mono.error(e);
-        }
-        GroupType groupType = groupTypeMap.get(groupTypeId);
-        if (groupType != null) {
-            return Mono.just(true);
-        } else {
-            Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(groupTypeId));
-            return mongoTemplate.findOne(query, GroupType.class, GroupType.COLLECTION_NAME)
-                    .map(type -> {
-                        groupTypeMap.put(groupTypeId, type);
-                        return true;
-                    })
-                    .defaultIfEmpty(false);
-        }
+        return queryGroupType(groupTypeId)
+                .map(type -> true)
+                .defaultIfEmpty(false);
     }
 
     public Mono<Long> countGroupTypes() {

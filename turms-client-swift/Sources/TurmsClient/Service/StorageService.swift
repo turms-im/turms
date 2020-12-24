@@ -18,7 +18,7 @@ public class StorageService {
             let url = "\(serverUrl!)/\(name)/\(userId)"
             return Promise.value(url)
         } catch {
-            return Promise(error: TurmsBusinessError(.illegalArguments))
+            return Promise(error: error)
         }
     }
 
@@ -31,7 +31,7 @@ public class StorageService {
         if let userId = turmsClient.userService.userId {
             return getSignedPutUrl(contentType: .profile, size: Int64(pictureSize), keyNum: userId)
         } else {
-            return Promise(error: TurmsBusinessError(.unauthorized))
+            return Promise(error: TurmsBusinessError(TurmsStatusCode.queryProfileUrlToUpdateBeforeLogin))
         }
     }
 
@@ -52,7 +52,7 @@ public class StorageService {
             let url = "\(serverUrl!)/\(name)/\(groupId)"
             return Promise.value(url)
         } catch {
-            return Promise(error: TurmsBusinessError(.illegalArguments))
+            return Promise(error: error)
         }
     }
 
@@ -183,7 +183,8 @@ public class StorageService {
             case .attachment:
                 return "attachment"
             default:
-                throw TurmsBusinessError(.failed)
+                let reason = "Unknown content type \(contentType)"
+                throw TurmsBusinessError(TurmsStatusCode.illegalArgument, reason)
         }
     }
 }

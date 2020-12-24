@@ -22,6 +22,7 @@ import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.plugin.extension.NotificationHandler;
 import im.turms.gateway.plugin.manager.TurmsPluginManager;
 import im.turms.gateway.pojo.bo.session.UserSession;
+import im.turms.gateway.pojo.bo.session.connection.TcpConnection;
 import im.turms.gateway.service.impl.OutboundMessageService;
 import im.turms.gateway.service.impl.SessionService;
 import im.turms.server.common.cluster.node.Node;
@@ -56,7 +57,9 @@ class OutboundMessageServiceTests {
     @Test
     void sendNotificationToLocalClients_shouldReturnTrue_ifRecipientsAreOnline() {
         UserSessionsManager sessionsManager = mock(UserSessionsManager.class);
+        TcpConnection connection = mock(TcpConnection.class);
         UserSession session = new UserSession(1L, DeviceType.ANDROID, new Point(1F, 1F), null);
+        session.setConnection(connection);
         when(sessionsManager.getSessionMap())
                 .thenReturn(Map.of(DeviceType.ANDROID, session));
         OutboundMessageService outboundMessageService = newOutboundMessageService(sessionsManager);

@@ -101,7 +101,7 @@ public class SharedPropertyService implements ClusterService {
      * @implNote We don't support the partial update by Map<String, Object> because
      * there is not an efficient way to update nested objects of a document in MongoDB.
      */
-    public Mono<Boolean> updateSharedProperties(TurmsProperties turmsProperties) {
+    public Mono<Void> updateSharedProperties(TurmsProperties turmsProperties) {
         log.info("Share new turms properties to all members");
         SharedClusterProperties clusterProperties = getClusterProperties(sharedClusterProperties, turmsProperties);
         Date now = new Date();
@@ -118,14 +118,11 @@ public class SharedPropertyService implements ClusterService {
         }
         return sharedConfigService.upsert(query, update, clusterProperties, SharedClusterProperties.class)
                 .doOnError(e -> log.error("Failed to share new turms properties", e))
-                .doOnNext(wasSuccessful -> {
-                    if (wasSuccessful) {
-                        sharedClusterProperties = clusterProperties;
-                        log.info("Turms properties have been shared");
-                    } else {
-                        log.error("Failed to share new turms properties");
-                    }
-                });
+                .then(Mono.defer(() -> {
+                    sharedClusterProperties = clusterProperties;
+                    log.info("Turms properties have been shared");
+                    return Mono.empty();
+                }));
     }
 
     public void addListeners(Consumer<TurmsProperties> listener) {
@@ -169,8 +166,8 @@ public class SharedPropertyService implements ClusterService {
                             query.addCriteria(Criteria.where(SharedClusterProperties.Fields.gatewayProperties).is(null));
                             Update update = Update.update(SharedClusterProperties.Fields.gatewayProperties, clusterProperties.getGatewayProperties());
                             return sharedConfigService.updateFirst(query, update, SharedClusterProperties.class)
-                                    .map(wasAcknowledged -> {
-                                        if (wasAcknowledged) {
+                                    .map(result -> {
+                                        if (result.getModifiedCount() > 0) {
                                             properties.setGatewayProperties(clusterProperties.getGatewayProperties());
                                             return properties;
                                         } else {
@@ -183,8 +180,8 @@ public class SharedPropertyService implements ClusterService {
                             query.addCriteria(Criteria.where(SharedClusterProperties.Fields.serviceProperties).is(null));
                             Update update = Update.update(SharedClusterProperties.Fields.serviceProperties, clusterProperties.getServiceProperties());
                             return sharedConfigService.updateFirst(query, update, SharedClusterProperties.class)
-                                    .map(wasAcknowledged -> {
-                                        if (wasAcknowledged) {
+                                    .map(result -> {
+                                        if (result.getModifiedCount() > 0) {
                                             properties.setServiceProperties(clusterProperties.getServiceProperties());
                                             return properties;
                                         } else {

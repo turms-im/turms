@@ -21,8 +21,8 @@ import com.google.protobuf.Int64Value;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import im.turms.common.constant.GroupMemberRole;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
-import im.turms.common.exception.TurmsBusinessException;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult;
 import im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion;
 import im.turms.common.util.Validator;
@@ -31,6 +31,7 @@ import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.bo.GroupQuestionIdAndAnswer;
 import im.turms.turms.constant.DaoConstant;
+import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.constraint.ValidGroupQuestionIdAndAnswer;
 import im.turms.turms.util.ProtoUtil;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
@@ -46,7 +47,6 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.util.function.Tuple2;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.Min;
@@ -99,6 +99,7 @@ public class GroupQuestionService {
         if (groupId != null) {
             query.addCriteria(Criteria.where(GroupJoinQuestion.Fields.GROUP_ID).is(groupId));
         }
+        query.fields().include(GroupJoinQuestion.Fields.SCORE);
         return mongoTemplate.findOne(query, GroupJoinQuestion.class, GroupJoinQuestion.COLLECTION_NAME)
                 .map(GroupJoinQuestion::getScore);
     }
@@ -125,13 +126,13 @@ public class GroupQuestionService {
         return Flux.merge(checks)
                 .collectList()
                 .map(pairs -> {
-                    List<Long> questionsIds = new ArrayList<>(pairs.size());
+                    List<Long> questionIds = new ArrayList<>(pairs.size());
                     int score = 0;
                     for (Pair<Long, Integer> pair : pairs) {
-                        questionsIds.add(pair.getLeft());
+                        questionIds.add(pair.getLeft());
                         score += pair.getRight();
                     }
-                    return Pair.of(questionsIds, score);
+                    return Pair.of(questionIds, score);
                 });
     }
 
@@ -150,15 +151,15 @@ public class GroupQuestionService {
         Long firstQuestionId = questionIdAndAnswers.iterator().next().getId();
         return queryGroupId(firstQuestionId)
                 .flatMap(groupId -> groupMemberService.isBlacklisted(groupId, requesterId)
-                        .flatMap(isBlacklisted -> isBlacklisted != null && isBlacklisted
-                                ? Mono.error(TurmsBusinessException.get(TurmsStatusCode.USER_HAS_BEEN_BLACKLISTED))
-                                : groupMemberService.exists(groupId, requesterId))
-                        .flatMap(isGroupMember -> isGroupMember != null && isGroupMember
-                                ? Mono.error(TurmsBusinessException.get(TurmsStatusCode.ALREADY_GROUP_MEMBER))
+                        .flatMap(isBlacklisted -> isBlacklisted
+                                ? Mono.error(TurmsBusinessException.get(TurmsStatusCode.GROUP_QUESTION_ANSWERER_HAS_BEEN_BLOCKED))
+                                : groupMemberService.isGroupMember(groupId, requesterId))
+                        .flatMap(isGroupMember -> isGroupMember
+                                ? Mono.error(TurmsBusinessException.get(TurmsStatusCode.MEMBER_CANNOT_ANSWER_GROUP_QUESTION))
                                 : groupService.isGroupActiveAndNotDeleted(groupId))
-                        .flatMap(isActive -> isActive != null && isActive
+                        .flatMap(isActive -> isActive
                                 ? checkGroupQuestionAnswersAndCountScore(questionIdAndAnswers, groupId)
-                                : Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_ACTIVE)))
+                                : Mono.error(TurmsBusinessException.get(TurmsStatusCode.ANSWER_QUESTION_OF_INACTIVE_GROUP)))
                         .flatMap(idsAndScore -> groupService.queryGroupMinimumScore(groupId)
                                 .flatMap(minimumScore -> idsAndScore.getRight() >= minimumScore
                                         ? groupMemberService.addGroupMember(
@@ -170,7 +171,7 @@ public class GroupQuestionService {
                                         null,
                                         null)
                                         .thenReturn(true)
-                                        : Mono.error(TurmsBusinessException.get(TurmsStatusCode.GUESTS_HAVE_BEEN_MUTED)))
+                                        : Mono.just(false))
                                 .map(joined -> GroupJoinQuestionsAnswerResult
                                         .newBuilder()
                                         .setJoined(joined)
@@ -193,10 +194,10 @@ public class GroupQuestionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        return groupMemberService.isAllowedToCreateJoinQuestion(requesterId, groupId)
-                .flatMap(allowed -> allowed != null && allowed
+        return groupMemberService.isOwnerOrManager(requesterId, groupId)
+                .flatMap(authenticated -> authenticated
                         ? createGroupJoinQuestion(groupId, question, answers, score)
-                        : Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED)));
+                        : Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_CREATE_GROUP_QUESTION)));
     }
 
     public Mono<GroupJoinQuestion> createGroupJoinQuestion(
@@ -220,8 +221,9 @@ public class GroupQuestionService {
                 answers,
                 score);
         return mongoTemplate.insert(groupJoinQuestion, GroupJoinQuestion.COLLECTION_NAME)
-                .zipWith(groupVersionService.updateJoinQuestionsVersion(groupId))
-                .map(Tuple2::getT1);
+                .flatMap(joinQuestion -> groupVersionService.updateJoinQuestionsVersion(groupId)
+                        .onErrorResume(t -> Mono.empty())
+                        .thenReturn(joinQuestion));
     }
 
     public Mono<Long> queryGroupId(@NotNull Long questionId) {
@@ -236,7 +238,7 @@ public class GroupQuestionService {
                 .map(GroupJoinQuestion::getGroupId);
     }
 
-    public Mono<Boolean> authAndDeleteGroupJoinQuestion(
+    public Mono<Void> authAndDeleteGroupJoinQuestion(
             @NotNull Long requesterId,
             @NotNull Long questionId) {
         try {
@@ -250,12 +252,11 @@ public class GroupQuestionService {
                             if (authenticated != null && authenticated) {
                                 Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(questionId));
                                 return mongoTemplate.remove(query, GroupJoinQuestion.class, GroupJoinQuestion.COLLECTION_NAME)
-                                        .flatMap(result -> result.wasAcknowledged()
-                                                ? groupVersionService.updateJoinQuestionsVersion(groupId)
-                                                .thenReturn(true)
-                                                : Mono.just(false));
+                                        .flatMap(result -> groupVersionService.updateJoinQuestionsVersion(groupId)
+                                                .onErrorResume(t -> Mono.empty())
+                                                .then());
                             } else {
-                                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED));
+                                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_DELETE_GROUP_QUESTION));
                             }
                         }));
     }
@@ -286,13 +287,12 @@ public class GroupQuestionService {
         return mongoTemplate.count(query, GroupJoinQuestion.class, GroupJoinQuestion.COLLECTION_NAME);
     }
 
-    public Mono<Boolean> deleteGroupJoinQuestions(@Nullable Set<Long> ids) {
+    public Mono<DeleteResult> deleteGroupJoinQuestions(@Nullable Set<Long> ids) {
         Query query = QueryBuilder
                 .newBuilder()
                 .addInIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
                 .buildQuery();
-        return mongoTemplate.remove(query, GroupJoinQuestion.class, GroupJoinQuestion.COLLECTION_NAME)
-                .map(DeleteResult::wasAcknowledged);
+        return mongoTemplate.remove(query, GroupJoinQuestion.class, GroupJoinQuestion.COLLECTION_NAME);
     }
 
     public Mono<GroupJoinQuestionsWithVersion> queryGroupJoinQuestionsWithVersion(
@@ -311,7 +311,7 @@ public class GroupQuestionService {
         return authenticated
                 .flatMap(isAuthenticated -> isAuthenticated != null && isAuthenticated
                         ? groupVersionService.queryGroupJoinQuestionsVersion(groupId)
-                        : Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED)))
+                        : Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_ACCESS_GROUP_QUESTION_ANSWER)))
                 .flatMap(version -> {
                     if (lastUpdatedDate == null || lastUpdatedDate.before(version)) {
                         return queryGroupJoinQuestions(null, Set.of(groupId), null, null, false)
@@ -335,7 +335,7 @@ public class GroupQuestionService {
                 .switchIfEmpty(Mono.error(TurmsBusinessException.get(TurmsStatusCode.ALREADY_UP_TO_DATE)));
     }
 
-    public Mono<Boolean> authAndUpdateGroupJoinQuestion(
+    public Mono<UpdateResult> authAndUpdateGroupJoinQuestion(
             @NotNull Long requesterId,
             @NotNull Long questionId,
             @Nullable String question,
@@ -349,7 +349,7 @@ public class GroupQuestionService {
             return Mono.error(e);
         }
         if (Validator.areAllNull(question, answers, score)) {
-            return Mono.just(true);
+            return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
         return queryGroupId(questionId)
                 .flatMap(groupId -> groupMemberService.isOwnerOrManager(requesterId, groupId)
@@ -362,17 +362,16 @@ public class GroupQuestionService {
                                         .setIfNotNull(GroupJoinQuestion.Fields.SCORE, score)
                                         .build();
                                 return mongoTemplate.updateFirst(query, update, GroupJoinQuestion.class, GroupJoinQuestion.COLLECTION_NAME)
-                                        .flatMap(result -> result.wasAcknowledged()
-                                                ? groupVersionService.updateJoinQuestionsVersion(groupId)
-                                                .thenReturn(true)
-                                                : Mono.just(false));
+                                        .flatMap(result -> groupVersionService.updateJoinQuestionsVersion(groupId)
+                                                .onErrorResume(t -> Mono.empty())
+                                                .thenReturn(result));
                             } else {
-                                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED));
+                                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_UPDATE_GROUP_QUESTION));
                             }
                         }));
     }
 
-    public Mono<Boolean> updateGroupJoinQuestions(
+    public Mono<UpdateResult> updateGroupJoinQuestions(
             @NotEmpty Set<Long> ids,
             @Nullable Long groupId,
             @Nullable String question,
@@ -385,7 +384,7 @@ public class GroupQuestionService {
             return Mono.error(e);
         }
         if (Validator.areAllFalsy(groupId, question, answers, score)) {
-            return Mono.just(true);
+            return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
         Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(ids));
         Update update = UpdateBuilder.newBuilder()
@@ -394,8 +393,7 @@ public class GroupQuestionService {
                 .setIfNotNull(GroupJoinQuestion.Fields.ANSWERS, answers)
                 .setIfNotNull(GroupJoinQuestion.Fields.SCORE, score)
                 .build();
-        return mongoTemplate.updateMulti(query, update, GroupJoinQuestion.class, GroupJoinQuestion.COLLECTION_NAME)
-                .map(UpdateResult::wasAcknowledged);
+        return mongoTemplate.updateMulti(query, update, GroupJoinQuestion.class, GroupJoinQuestion.COLLECTION_NAME);
     }
 
 }

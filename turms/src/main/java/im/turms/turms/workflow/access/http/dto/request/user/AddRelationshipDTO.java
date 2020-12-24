@@ -28,6 +28,6 @@ import java.util.Date;
 public final class AddRelationshipDTO {
     private final Long ownerId;
     private final Long relatedUserId;
-    private final Boolean isBlocked;
+    private final Date blockDate;
     private final Date establishmentDate;
 }

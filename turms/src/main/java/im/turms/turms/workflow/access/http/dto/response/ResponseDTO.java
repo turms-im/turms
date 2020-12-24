@@ -18,10 +18,11 @@
 package im.turms.turms.workflow.access.http.dto.response;
 
 
-import im.turms.common.constant.statuscode.TurmsStatusCode;
+import im.turms.server.common.constant.TurmsStatusCode;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
 
+import javax.annotation.Nullable;
 import java.util.Date;
 
 /**
@@ -29,14 +30,15 @@ import java.util.Date;
  */
 @Data
 @FieldNameConstants
-public final class ResponseDTO<T> {
+public class ResponseDTO<T> {
 
     private final Integer code;
     private final String reason;
     private final Date timestamp;
+    @Nullable
     private final T data;
 
-    public ResponseDTO(TurmsStatusCode turmsStatusCode, T data) {
+    public ResponseDTO(TurmsStatusCode turmsStatusCode, @Nullable T data) {
         this.code = turmsStatusCode.getBusinessCode();
         this.reason = turmsStatusCode.getReason();
         this.timestamp = new Date();

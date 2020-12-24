@@ -17,7 +17,7 @@
 
 package im.turms.gateway.access.tcp.dto;
 
-import im.turms.common.constant.statuscode.TurmsStatusCode;
+import im.turms.server.common.constant.TurmsStatusCode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

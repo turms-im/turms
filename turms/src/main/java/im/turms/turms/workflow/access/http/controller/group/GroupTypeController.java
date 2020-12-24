@@ -19,10 +19,7 @@ package im.turms.turms.workflow.access.http.controller.group;
 
 import im.turms.turms.workflow.access.http.dto.request.group.AddGroupTypeDTO;
 import im.turms.turms.workflow.access.http.dto.request.group.UpdateGroupTypeDTO;
-import im.turms.turms.workflow.access.http.dto.response.AcknowledgedDTO;
-import im.turms.turms.workflow.access.http.dto.response.PaginationDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseFactory;
+import im.turms.turms.workflow.access.http.dto.response.*;
 import im.turms.turms.workflow.access.http.permission.AdminPermission;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.access.http.util.PageUtil;
@@ -90,10 +87,10 @@ public class GroupTypeController {
 
     @PutMapping
     @RequiredPermission(AdminPermission.GROUP_TYPE_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> updateGroupType(
+    public Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateGroupType(
             @RequestParam Set<Long> ids,
             @RequestBody UpdateGroupTypeDTO updateGroupTypeDTO) {
-        Mono<Boolean> updateMono = groupTypeService.updateGroupTypes(
+        Mono<UpdateResultDTO> updateMono = groupTypeService.updateGroupTypes(
                 ids,
                 updateGroupTypeDTO.getName(),
                 updateGroupTypeDTO.getGroupSizeLimit(),
@@ -104,15 +101,18 @@ public class GroupTypeController {
                 updateGroupTypeDTO.getGuestSpeakable(),
                 updateGroupTypeDTO.getSelfInfoUpdatable(),
                 updateGroupTypeDTO.getEnableReadReceipt(),
-                updateGroupTypeDTO.getMessageEditable());
-        return ResponseFactory.acknowledged(updateMono);
+                updateGroupTypeDTO.getMessageEditable())
+                .map(UpdateResultDTO::get);
+        return ResponseFactory.okIfTruthy(updateMono);
     }
 
     @DeleteMapping
     @RequiredPermission(AdminPermission.GROUP_TYPE_DELETE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> deleteGroupType(@RequestParam Set<Long> ids) {
-        Mono<Boolean> deleteMono = groupTypeService.deleteGroupTypes(ids);
-        return ResponseFactory.acknowledged(deleteMono);
+    public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteGroupType(@RequestParam Set<Long> ids) {
+        Mono<DeleteResultDTO> deleteMono = groupTypeService
+                .deleteGroupTypes(ids)
+                .map(DeleteResultDTO::get);
+        return ResponseFactory.okIfTruthy(deleteMono);
     }
 
 }

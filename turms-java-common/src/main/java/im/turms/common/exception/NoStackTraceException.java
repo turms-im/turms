@@ -39,7 +39,8 @@ public class NoStackTraceException extends RuntimeException {
     }
 
     /**
-     * Don't call the following parent constructor to avoid filling in stack trace because android sdk 21 doesn't have it
+     * Don't call the following parent constructor to avoid filling in stack trace
+     * because android sdk 21 doesn't have the constructor.
      *
      * @see java.lang.RuntimeException#RuntimeException(java.lang.String, java.lang.Throwable, boolean, boolean)
      */

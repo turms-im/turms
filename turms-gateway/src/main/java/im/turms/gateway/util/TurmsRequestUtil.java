@@ -20,8 +20,8 @@ package im.turms.gateway.util;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.ExtensionRegistry;
 import com.google.protobuf.Int64Value;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
-import im.turms.common.exception.TurmsBusinessException;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.common.model.dto.request.user.CreateSessionRequest;
 import im.turms.gateway.pojo.dto.SimpleTurmsRequest;
@@ -65,14 +65,14 @@ public class TurmsRequestUtil {
                     if (value != null && !value.equals(value.getDefaultInstanceForType())) {
                         requestId = value.getValue();
                     } else {
-                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The requestId of TurmsRequest is null");
+                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The requestId of TurmsRequest is null");
                     }
                 } else {
                     // key = (field_number << 3) | wire_type
                     int kindFieldNumber = tag >>> 3;
                     type = TurmsRequest.KindCase.forNumber(kindFieldNumber);
                     if (type == null || type == KIND_NOT_SET) {
-                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "Not a valid TurmsRequest");
+                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "Not a valid TurmsRequest");
                     }
                     break;
                 }
@@ -84,10 +84,10 @@ public class TurmsRequestUtil {
                 }
                 return new SimpleTurmsRequest(requestId, type, createSessionRequest);
             } else {
-                throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "Not a valid TurmsRequest");
+                throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "Not a valid TurmsRequest");
             }
         } catch (IOException e) {
-            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "Not a valid TurmsRequest");
+            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "Not a valid TurmsRequest");
         }
     }
 

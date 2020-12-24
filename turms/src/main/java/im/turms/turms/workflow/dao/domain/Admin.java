@@ -17,7 +17,7 @@
 
 package im.turms.turms.workflow.dao.domain;
 
-import im.turms.turms.workflow.dao.index.documentation.OptionalIndexedForDifferentAmount;
+import im.turms.turms.workflow.dao.index.OptionalIndexedForDifferentAmount;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,9 +28,8 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.util.Date;
 
 /**
- * No need to shard because there are only a few (or some) admins for most groups.
- *
  * @author James Chen
+ * @implNote No need to shard because there should be only a few admins for most groups.
  */
 @Data
 @AllArgsConstructor

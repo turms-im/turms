@@ -34,7 +34,7 @@ public class UserService {
 
     public func relogin() -> Promise<Void> {
         if userId == nil || password == nil {
-            return Promise(error: TurmsBusinessError(.clientUserIdAndPasswordMustNotNull))
+            return Promise(error: TurmsBusinessError(TurmsStatusCode.reloginShouldBeCalledAfterLogin))
         } else {
             return login(
                 userId: userId!,
@@ -51,7 +51,7 @@ public class UserService {
 
     public func updateUserOnlineStatus(_ onlineStatus: UserStatus) -> Promise<Void> {
         if onlineStatus == .offline {
-            return Promise(error: TurmsBusinessError(.illegalArguments))
+            return Promise(error: TurmsBusinessError(TurmsStatusCode.illegalArgument, "The online status must not be OFFLINE"))
         }
         return turmsClient.driver
             .send { $0

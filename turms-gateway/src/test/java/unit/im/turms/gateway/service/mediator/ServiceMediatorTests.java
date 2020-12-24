@@ -18,7 +18,6 @@
 package unit.im.turms.gateway.service.mediator;
 
 import im.turms.common.constant.DeviceType;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.plugin.manager.TurmsPluginManager;
@@ -26,11 +25,13 @@ import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.service.impl.*;
 import im.turms.gateway.service.mediator.ServiceMediator;
 import im.turms.server.common.cluster.node.Node;
+import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.env.gateway.GatewayProperties;
 import im.turms.server.common.property.env.gateway.SessionProperties;
 import im.turms.server.common.util.ExceptionUtil;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.socket.CloseStatus;
 import reactor.core.publisher.Mono;
@@ -39,6 +40,7 @@ import reactor.test.StepVerifier;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -61,37 +63,37 @@ class ServiceMediatorTests {
 
     @Test
     void processLoginRequest_shouldReturnForbiddenDeviceType_ifIsForbiddenDeviceType() {
-        ServiceMediator mediator = newWorkflowMediator(true, true, true, true);
+        ServiceMediator mediator = newServiceMediator(true, true, true, true);
         Mono<UserSession> result = mediator.processLoginRequest(userId, null, deviceType, null, null, null, null);
 
         StepVerifier.create(result)
-                .expectErrorMatches(throwable -> ExceptionUtil.isStatusCode(throwable, TurmsStatusCode.FORBIDDEN_DEVICE_TYPE))
+                .expectErrorMatches(throwable -> ExceptionUtil.isStatusCode(throwable, TurmsStatusCode.LOGIN_FROM_FORBIDDEN_DEVICE_TYPE))
                 .verify();
     }
 
     @Test
     void processLoginRequest_shouldReturnUnauthorized_ifIsUnauthorized() {
-        ServiceMediator mediator = newWorkflowMediator(true, true, false, false);
+        ServiceMediator mediator = newServiceMediator(true, true, false, false);
         Mono<UserSession> result = mediator.processLoginRequest(userId, null, deviceType, null, null, null, null);
 
         StepVerifier.create(result)
-                .expectErrorMatches(throwable -> ExceptionUtil.isStatusCode(throwable, TurmsStatusCode.UNAUTHORIZED))
+                .expectErrorMatches(throwable -> ExceptionUtil.isStatusCode(throwable, TurmsStatusCode.LOGIN_AUTHENTICATION_FAILED))
                 .verify();
     }
 
     @Test
     void processLoginRequest_shouldReturnNotActive_ifUserIsNotActive() {
-        ServiceMediator mediator = newWorkflowMediator(true, false, false, false);
+        ServiceMediator mediator = newServiceMediator(true, false, false, false);
         Mono<UserSession> result = mediator.processLoginRequest(userId, null, deviceType, null, null, null, null);
 
         StepVerifier.create(result)
-                .expectErrorMatches(throwable -> ExceptionUtil.isStatusCode(throwable, TurmsStatusCode.NOT_ACTIVE))
+                .expectErrorMatches(throwable -> ExceptionUtil.isStatusCode(throwable, TurmsStatusCode.LOGGING_IN_USER_NOT_ACTIVE))
                 .verify();
     }
 
     @Test
     void processLoginRequest_shouldReturnNotActive_ifUserIsActiveAndAuthenticated() {
-        ServiceMediator mediator = newWorkflowMediator(true, true, true, false);
+        ServiceMediator mediator = newServiceMediator(true, true, true, false);
         Mono<UserSession> result = mediator.processLoginRequest(userId, null, deviceType, null, null, null, null);
 
         StepVerifier.create(result)
@@ -101,7 +103,7 @@ class ServiceMediatorTests {
 
     @Test
     void rejectLoginRequest_shouldSucceed() {
-        ServiceMediator mediator = newWorkflowMediator();
+        ServiceMediator mediator = newServiceMediator();
         Mono<Boolean> result = mediator.rejectLoginRequest(TurmsStatusCode.SERVER_INTERNAL_ERROR, null, null, null);
 
         StepVerifier.create(result)
@@ -111,7 +113,7 @@ class ServiceMediatorTests {
 
     @Test
     void setLocalUserDeviceOffline_shouldSucceed() {
-        ServiceMediator mediator = newWorkflowMediator();
+        ServiceMediator mediator = newServiceMediator();
         Mono<Boolean> result = mediator.setLocalUserDeviceOffline(userId, deviceType, CloseStatus.NORMAL);
 
         StepVerifier.create(result)
@@ -119,21 +121,26 @@ class ServiceMediatorTests {
                 .verifyComplete();
     }
 
+    /**
+     * FIXME: The test should belong to SessionService
+     */
+    @Disabled
     @Test
     void onSessionEstablished_shouldSendSessionNotification_ifIsNotifyClientsOfSessionInfoAfterConnected() {
-        ServiceMediator mediator = newWorkflowMediator();
+        ServiceMediator mediator = newServiceMediator();
         UserSessionsManager manager = mock(UserSessionsManager.class);
         when(manager.pushSessionNotification(any()))
                 .thenReturn(true);
         mediator.onSessionEstablished(manager, deviceType);
 
-        verify(manager, times(1))
+        boolean sessionExists = verify(manager, times(1))
                 .pushSessionNotification(deviceType);
+        assertTrue(sessionExists);
     }
 
     @Test
     void processServiceRequest_shouldSucceed() {
-        ServiceMediator mediator = newWorkflowMediator();
+        ServiceMediator mediator = newServiceMediator();
         ServiceRequest request = mock(ServiceRequest.class);
         Mono<TurmsNotification> result = mediator.processServiceRequest(request);
 
@@ -143,7 +150,7 @@ class ServiceMediatorTests {
 
     @Test
     void processHeartbeatRequest_shouldSucceed() {
-        ServiceMediator mediator = newWorkflowMediator();
+        ServiceMediator mediator = newServiceMediator();
         Mono<Boolean> result = mediator.processHeartbeatRequest(userId, deviceType);
 
         StepVerifier.create(result)
@@ -153,7 +160,7 @@ class ServiceMediatorTests {
 
     @Test
     void triggerGoOnlinePlugins_shouldSucceed() {
-        ServiceMediator mediator = newWorkflowMediator();
+        ServiceMediator mediator = newServiceMediator();
         UserSessionsManager manager = mock(UserSessionsManager.class);
         UserSession session = mock(UserSession.class);
         Mono<Void> result = mediator.triggerGoOnlinePlugins(manager, session);
@@ -162,11 +169,11 @@ class ServiceMediatorTests {
                 .verifyComplete();
     }
 
-    private ServiceMediator newWorkflowMediator() {
-        return newWorkflowMediator(true, true, true, false);
+    private ServiceMediator newServiceMediator() {
+        return newServiceMediator(true, true, true, false);
     }
 
-    private ServiceMediator newWorkflowMediator(
+    private ServiceMediator newServiceMediator(
             boolean enableAuthentication,
             boolean isActiveAndNotDeleted,
             boolean isAuthenticated,
@@ -203,8 +210,6 @@ class ServiceMediatorTests {
                 .thenReturn(Mono.just(userSession));
         when(sessionService.setLocalSessionOfflineByUserIdAndDeviceType(any(), any(), any()))
                 .thenReturn(Mono.just(true));
-        when(sessionService.updateHeartbeatTimestamp(any(), any(DeviceType.class)))
-                .thenReturn(Mono.just(true));
 
         UserSimultaneousLoginService userSimultaneousLoginService = mock(UserSimultaneousLoginService.class);
         when(userSimultaneousLoginService.isForbiddenDeviceType(any()))
@@ -213,6 +218,8 @@ class ServiceMediatorTests {
         InboundRequestService inboundRequestService = mock(InboundRequestService.class);
         when(inboundRequestService.processServiceRequest(any()))
                 .thenReturn(Mono.empty());
+        when(inboundRequestService.processHeartbeatRequest(any(), any(DeviceType.class)))
+                .thenReturn(Mono.just(true));
         return new ServiceMediator(node, pluginManager, userService, reasonCacheService, sessionService, userSimultaneousLoginService, inboundRequestService);
     }
 

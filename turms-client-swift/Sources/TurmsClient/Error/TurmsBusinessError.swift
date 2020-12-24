@@ -1,24 +1,24 @@
 public struct TurmsBusinessError: Error {
-    public let code: TurmsStatusCode
-    public let reason: String
+    public let code: Int
+    public let reason: String?
 
     init(_ code: TurmsStatusCode) {
-        self.code = code
-        self.reason = code.reason
+        self.code = code.rawValue
+        self.reason = nil
     }
 
     init(_ code: TurmsStatusCode, _ reason: String) {
+        self.code = code.rawValue
+        self.reason = reason
+    }
+
+    init(_ code: Int, _ reason: String) {
         self.code = code
         self.reason = reason
     }
 
-    init(_ code: Int32) {
-        self.code = TurmsStatusCode(rawValue: Int(code))!
-        self.reason = self.code.reason
-    }
-
-    init(_ code: Int32, _ reason: String) {
-        self.code = TurmsStatusCode(rawValue: Int(code))!
-        self.reason = reason
+    init(_ code: Int) {
+        self.code = code
+        self.reason = nil
     }
 }

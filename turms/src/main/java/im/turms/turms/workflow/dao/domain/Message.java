@@ -17,11 +17,12 @@
 
 package im.turms.turms.workflow.dao.domain;
 
-import im.turms.turms.workflow.dao.index.documentation.OptionalIndexedForAdvancedFeature;
-import im.turms.turms.workflow.dao.index.documentation.OptionalIndexedForCustomFeature;
+import im.turms.turms.workflow.dao.index.OptionalIndexedForColdData;
+import im.turms.turms.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Sharded;
@@ -35,7 +36,7 @@ import java.util.List;
 @Data
 @Document
 @CompoundIndex(
-        name = Message.Fields.TARGET_ID + "_" + Message.Fields.DELIVERY_DATE + "_idx",
+        name = Message.Fields.TARGET_ID + "_" + Message.Fields.DELIVERY_DATE,
         def = "{'" + Message.Fields.TARGET_ID + "': 1, '" + Message.Fields.DELIVERY_DATE + "': 1}")
 @Sharded(shardKey = {Message.Fields.TARGET_ID, Message.Fields.DELIVERY_DATE}, immutableKey = true)
 public final class Message {
@@ -67,14 +68,15 @@ public final class Message {
     private final Date deliveryDate;
 
     @Field(Fields.DELETION_DATE)
-    @OptionalIndexedForAdvancedFeature
+    @OptionalIndexedForColdData
+    @Indexed
     private final Date deletionDate;
 
     @Field(Fields.TEXT)
     private final String text;
 
     @Field(Fields.SENDER_ID)
-    @OptionalIndexedForCustomFeature
+    @OptionalIndexedForExtendedFeature
     private final Long senderId;
 
     /**
@@ -93,7 +95,7 @@ public final class Message {
     private final Integer burnAfter;
 
     @Field(Fields.REFERENCE_ID)
-    @OptionalIndexedForCustomFeature
+    @OptionalIndexedForExtendedFeature
     private final Long referenceId;
 
     public Long groupId() {

@@ -17,14 +17,12 @@
 
 package im.turms.turms.workflow.access.http.controller.group;
 
+import com.mongodb.client.result.DeleteResult;
 import im.turms.common.constant.GroupMemberRole;
 import im.turms.turms.bo.DateRange;
 import im.turms.turms.workflow.access.http.dto.request.group.AddGroupMemberDTO;
 import im.turms.turms.workflow.access.http.dto.request.group.UpdateGroupMemberDTO;
-import im.turms.turms.workflow.access.http.dto.response.AcknowledgedDTO;
-import im.turms.turms.workflow.access.http.dto.response.PaginationDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseFactory;
+import im.turms.turms.workflow.access.http.dto.response.*;
 import im.turms.turms.workflow.access.http.permission.AdminPermission;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.access.http.util.PageUtil;
@@ -124,28 +122,30 @@ public class GroupMemberController {
 
     @PutMapping
     @RequiredPermission(AdminPermission.GROUP_MEMBER_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> updateGroupMembers(
+    public Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateGroupMembers(
             GroupMember.KeyList keys,
             @RequestBody UpdateGroupMemberDTO updateGroupMemberDTO) {
-        Mono<Boolean> updateMono = groupMemberService.updateGroupMembers(
+        Mono<UpdateResultDTO> updateMono = groupMemberService.updateGroupMembers(
                 new HashSet<>(keys.getKeys()),
                 updateGroupMemberDTO.getName(),
                 updateGroupMemberDTO.getRole(),
                 updateGroupMemberDTO.getJoinDate(),
                 updateGroupMemberDTO.getMuteEndDate(),
                 null,
-                true);
-        return ResponseFactory.acknowledged(updateMono);
+                true)
+                .map(UpdateResultDTO::get);
+        return ResponseFactory.okIfTruthy(updateMono);
     }
 
     @DeleteMapping
     @RequiredPermission(AdminPermission.GROUP_MEMBER_DELETE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> deleteGroupMembers(
+    public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteGroupMembers(
             GroupMember.KeyList keys) {
-        Mono<Boolean> deleteMono = keys != null && !keys.getKeys().isEmpty()
-                ? groupMemberService.deleteGroupsMembers(new HashSet<>(keys.getKeys()), true)
+        Mono<DeleteResult> deleteMono = keys != null && !keys.getKeys().isEmpty()
+                ? groupMemberService.deleteGroupMembers(new HashSet<>(keys.getKeys()), null,true)
                 : groupMemberService.deleteGroupMembers(true);
-        return ResponseFactory.acknowledged(deleteMono);
+        Mono<DeleteResultDTO> mono = deleteMono.map(DeleteResultDTO::get);
+        return ResponseFactory.okIfTruthy(mono);
     }
 
 }

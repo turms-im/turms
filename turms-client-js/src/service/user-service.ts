@@ -11,6 +11,7 @@ import ProfileAccessStrategy = im.turms.proto.ProfileAccessStrategy;
 import ResponseAction = im.turms.proto.ResponseAction;
 import DeviceType = im.turms.proto.DeviceType;
 import UserSessionId = im.turms.proto.UserSessionId;
+import TurmsStatusCode from "../model/turms-status-code";
 
 export default class UserService {
     private _turmsClient: TurmsClient;
@@ -105,7 +106,11 @@ export default class UserService {
     }
 
     relogin(): Promise<void> {
-        return this._turmsClient.driver.reconnect();
+        if (this._userId) {
+            return this._turmsClient.driver.reconnect();
+        } else {
+            return Promise.reject(TurmsBusinessError.fromCode(TurmsStatusCode.RELOGIN_SHOULD_BE_CALLED_AFTER_LOGIN));
+        }
     }
 
     logout(): Promise<void> {

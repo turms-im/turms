@@ -111,14 +111,14 @@ public class TurmsPropertiesManager {
         notifyListeners(newLocalProperties);
     }
 
-    public Mono<Boolean> updateGlobalConfig(
+    public Mono<Void> updateGlobalConfig(
             boolean reset,
             Map<String, Object> turmsPropertiesForUpdating) throws IOException {
         if (reset) {
             return node.getSharedPropertyService().updateSharedProperties(new TurmsProperties());
         }
         if (turmsPropertiesForUpdating == null || turmsPropertiesForUpdating.isEmpty()) {
-            return Mono.just(true);
+            return Mono.empty();
         }
         TurmsProperties properties = PropertiesUtil.mergeAsProperties(node.getSharedProperties(), turmsPropertiesForUpdating);
         return node.getSharedPropertyService().updateSharedProperties(properties);

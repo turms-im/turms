@@ -17,39 +17,14 @@
 
 package im.turms.common.util;
 
-import im.turms.common.constant.statuscode.TurmsStatusCode;
-import im.turms.common.exception.TurmsBusinessException;
-
-import javax.validation.constraints.NotEmpty;
 import java.util.Collection;
 
 /**
  * @author James Chen
  */
 public class Validator {
+
     private Validator() {
-    }
-
-    public static void throwIfAnyFalsy(@NotEmpty Object... array) {
-        for (Object o : array) {
-            if (o == null) {
-                throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The required values must not be null");
-            } else {
-                if (o instanceof String) {
-                    if (((String) o).isEmpty()) {
-                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The string value must not be blank");
-                    }
-                } else if (o instanceof Collection && ((Collection<?>) o).isEmpty()) {
-                    throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The collection value must not be empty");
-                }
-            }
-        }
-    }
-
-    public static void throwIfAllFalsy(String message, @NotEmpty Object... array) {
-        if (areAllFalsy(array)) {
-            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, message);
-        }
     }
 
     public static boolean areAllFalsy(Object... array) {

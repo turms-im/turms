@@ -1,8 +1,8 @@
 package unit.im.turms.gateway.service.impl;
 
 import im.turms.common.constant.DeviceType;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
-import im.turms.common.exception.TurmsBusinessException;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.gateway.pojo.bo.session.UserSession;
@@ -54,7 +54,7 @@ class InboundRequestServiceTests {
 
         StepVerifier.create(result)
                 .expectErrorMatches(throwable ->
-                        throwable instanceof TurmsBusinessException && ((TurmsBusinessException) throwable).getCode().equals(TurmsStatusCode.UNAVAILABLE))
+                        throwable instanceof TurmsBusinessException && ((TurmsBusinessException) throwable).getCode().equals(TurmsStatusCode.SERVER_UNAVAILABLE))
                 .verify();
     }
 
@@ -67,7 +67,7 @@ class InboundRequestServiceTests {
 
         StepVerifier.create(result)
                 .expectErrorMatches(throwable ->
-                        throwable instanceof TurmsBusinessException && ((TurmsBusinessException) throwable).getCode().equals(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED))
+                        throwable instanceof TurmsBusinessException && ((TurmsBusinessException) throwable).getCode().equals(TurmsStatusCode.SEND_REQUEST_FROM_NON_EXISTING_SESSION))
                 .verify();
     }
 

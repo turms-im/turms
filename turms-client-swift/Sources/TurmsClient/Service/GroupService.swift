@@ -320,7 +320,7 @@ public class GroupService {
                 if let value = result {
                     return value
                 } else {
-                    throw TurmsBusinessError(.missingData)
+                    throw TurmsBusinessError(TurmsStatusCode.invalidResponse)
                 }
             }
     }

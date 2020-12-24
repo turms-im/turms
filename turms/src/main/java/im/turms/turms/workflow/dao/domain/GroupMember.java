@@ -18,16 +18,17 @@
 package im.turms.turms.workflow.dao.domain;
 
 import im.turms.common.constant.GroupMemberRole;
-import im.turms.turms.workflow.dao.index.documentation.OptionalIndexedForCustomFeature;
+import im.turms.turms.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
-import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Sharded;
+import org.springframework.data.mongodb.core.mapping.ShardingStrategy;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -40,10 +41,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor(onConstructor = @__(@PersistenceConstructor))
 @Document
-@CompoundIndex(
-        name = GroupMember.Key.Fields.GROUP_ID + "_" + GroupMember.Key.Fields.USER_ID + "_idx",
-        def = "{'" + GroupMember.Fields.ID_GROUP_ID + "': 1, '" + GroupMember.Fields.ID_USER_ID + "': 1}")
-@Sharded(shardKey = {GroupMember.Fields.ID_GROUP_ID, GroupMember.Fields.ID_USER_ID}, immutableKey = true)
+@Sharded(shardKey = GroupMember.Fields.ID_GROUP_ID, shardingStrategy = ShardingStrategy.HASH, immutableKey = true)
 public final class GroupMember {
 
     public static final String COLLECTION_NAME = "groupMember";
@@ -58,11 +56,11 @@ public final class GroupMember {
     private final GroupMemberRole role;
 
     @Field(Fields.JOIN_DATE)
-    @OptionalIndexedForCustomFeature
+    @OptionalIndexedForExtendedFeature
     private final Date joinDate;
 
     @Field(Fields.MUTE_END_DATE)
-    @OptionalIndexedForCustomFeature
+    @OptionalIndexedForExtendedFeature
     private final Date muteEndDate;
 
     public GroupMember(
@@ -85,6 +83,7 @@ public final class GroupMember {
     public static final class Key {
 
         @Field(Fields.GROUP_ID)
+        @Indexed
         private Long groupId;
 
         @Field(Fields.USER_ID)

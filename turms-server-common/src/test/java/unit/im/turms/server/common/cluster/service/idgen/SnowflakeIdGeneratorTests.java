@@ -16,7 +16,7 @@ class SnowflakeIdGeneratorTests {
     @Test
     void nextId_shouldGenerateUniqueAndIncrementingId() {
         SnowflakeIdGenerator generator = new SnowflakeIdGenerator(0, 0);
-        int number = 10_000;
+        int number = 100_000;
         Set<Long> ids = new HashSet<>(MapUtil.getCapability(number));
         long previousId = -1;
         for (int i = 0; i < number; i++) {

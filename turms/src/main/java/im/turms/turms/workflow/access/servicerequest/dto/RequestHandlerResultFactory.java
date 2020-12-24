@@ -17,7 +17,7 @@
 
 package im.turms.turms.workflow.access.servicerequest.dto;
 
-import im.turms.common.constant.statuscode.TurmsStatusCode;
+import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.common.model.bo.common.Int64Values;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
@@ -40,6 +40,8 @@ public class RequestHandlerResultFactory {
     private RequestHandlerResultFactory() {
     }
 
+    public static final RequestHandlerResult OK = get(TurmsStatusCode.OK);
+
     public static final RequestHandlerResult NO_CONTENT = new RequestHandlerResult(
             null,
             false,
@@ -47,18 +49,6 @@ public class RequestHandlerResultFactory {
             null,
             TurmsStatusCode.NO_CONTENT,
             null);
-
-    public static RequestHandlerResult ok() {
-        return get(TurmsStatusCode.OK);
-    }
-
-    public static RequestHandlerResult fail() {
-        return get(TurmsStatusCode.FAILED);
-    }
-
-    public static RequestHandlerResult okIfTrue(@Nullable Boolean acknowledged) {
-        return acknowledged != null && acknowledged ? ok() : fail();
-    }
 
     public static RequestHandlerResult get(@NotNull TurmsStatusCode code) {
         return POOL.computeIfAbsent(code, statusCode -> new RequestHandlerResult(null, false, Collections.emptySet(), null, statusCode, null));

@@ -1,132 +1,221 @@
 enum Code {
-    OK = 2000,
+
+    //**********************************************************
+    //* Defined on the client side
+    //**********************************************************
+
+    //**********************************************************
+    //* For application error
+    //**********************************************************
+
+    // Client - Request
+    INVALID_REQUEST = 100,
+    CLIENT_REQUESTS_TOO_FREQUENT,
+    REQUEST_TIMEOUT,
+    ILLEGAL_ARGUMENT,
+
+    // Server - Notification
+    INVALID_NOTIFICATION = 200,
+    INVALID_RESPONSE,
+
+    //**********************************************************
+    //* For business error
+    //**********************************************************
+
+    // User
+    CLIENT_SESSION_ALREADY_ESTABLISHED = 300,
+    CLIENT_SESSION_HAS_BEEN_CLOSED,
+    RELOGIN_SHOULD_BE_CALLED_AFTER_LOGIN,
+
+    // Message
+    MESSAGE_IS_REJECTED = 400,
+
+    // Storage
+    QUERY_PROFILE_URL_TO_UPDATE_BEFORE_LOGIN = 500,
+
+    //**********************************************************
+    //* Defined on the server side
+    //**********************************************************
+
+    // Successful responses
+    OK = 1000,
     NO_CONTENT,
     ALREADY_UP_TO_DATE,
-    RECIPIENTS_OFFLINE,
 
-    NOT_RESPONSIBLE = 3000,
+    //**********************************************************
+    //* For application error
+    //**********************************************************
 
-    FAILED = 4000,
-    DISABLED_FUNCTION,
-    EXPIRY_DATE_BEFORE_NOW,
-    EXPIRY_RESOURCE,
-    ID_DUPLICATED,
-    ILLEGAL_ARGUMENTS,
-    INVALID_DATA,
-    NOT_ACTIVE,
-    OWNED_RESOURCE_LIMIT_REACHED,
+    // Client
+    INVALID_REQUEST_FROM_SERVER = 1100,
+    CLIENT_REQUESTS_TOO_FREQUENT_FROM_SERVER,
+    ILLEGAL_ARGUMENT_FROM_SERVER,
+    RECORD_CONTAINS_DUPLICATE_KEY,
     REQUESTED_RECORDS_TOO_MANY,
-    RESOURCES_HAVE_BEEN_HANDLED,
-    RESOURCES_HAVE_CHANGED,
-    SESSION_SIMULTANEOUS_CONFLICTS_DECLINE,
+    SEND_REQUEST_FROM_NON_EXISTING_SESSION,
+
+    // Server
+    SERVER_INTERNAL_ERROR = 1200,
+    SERVER_UNAVAILABLE,
+    DISABLED_FUNCTION,
+
+    //**********************************************************
+    //* For business error
+    //**********************************************************
+
+    // User
+
+    // User - Login
+    LOGIN_USER_ID_NOT_NUMBER = 2000,
+    LOGIN_AUTHENTICATION_FAILED,
+    LOGGING_IN_USER_NOT_ACTIVE,
+    LOGIN_FROM_FORBIDDEN_DEVICE_TYPE,
+    FORBIDDEN_DEVICE_TYPE_FOR_LOGIN_FAILURE_REASON,
+    LOGIN_FAILURE_REASON_CACHE_IS_DISABLED,
+
+    // User - Session
+    SESSION_SIMULTANEOUS_CONFLICTS_DECLINE = 2100,
     SESSION_SIMULTANEOUS_CONFLICTS_NOTIFY,
     SESSION_SIMULTANEOUS_CONFLICTS_OFFLINE,
+    CREATE_EXISTING_SESSION,
+    FORBIDDEN_DEVICE_TYPE_FOR_SESSION_DISCONNECTION_REASON,
+    SESSION_DISCONNECTION_REASON_CACHE_IS_DISABLED,
+
+    // User - Location
+    USER_LOCATION_RELATED_FEATURES_ARE_DISABLED = 2200,
+    QUERYING_NEAREST_USERS_BY_SESSION_ID_IS_DISABLED,
+
+    // User - Info
+    UPDATE_INFO_OF_NON_EXISTING_USER = 2300,
+    USER_PROFILE_NOT_FOUND,
+    PROFILE_REQUESTER_NOT_IN_CONTACTS_OR_BLOCKED,
+    PROFILE_REQUESTER_HAS_BEEN_BLOCKED,
+
+    // User - Permission
+    QUERY_PERMISSION_OF_NON_EXISTING_USER = 2400,
+
+    // User - Relationship
+    ADD_NOT_RELATED_USER_TO_GROUP = 2500,
+    CREATE_EXISTING_RELATIONSHIP,
+
+    // User - Friend Request
+    REQUESTER_NOT_FRIEND_REQUEST_RECIPIENT = 2600,
+    CREATE_EXISTING_FRIEND_REQUEST,
+    FRIEND_REQUEST_SENDER_HAS_BEEN_BLOCKED,
+
+    // Group
+
+    // Group - Info
+    UPDATE_INFO_OF_NON_EXISTING_GROUP = 3000,
+    NOT_OWNER_TO_UPDATE_GROUP_INFO,
+    NOT_OWNER_OR_MANAGER_TO_UPDATE_GROUP_INFO,
+    NOT_MEMBER_TO_UPDATE_GROUP_INFO,
+
+    // Group - Type
+    NO_PERMISSION_TO_CREATE_GROUP_WITH_GROUP_TYPE = 3100,
+    CREATE_GROUP_WITH_NON_EXISTING_GROUP_TYPE,
+
+    // Group - Ownership
+    NOT_ACTIVE_USER_TO_CREATE_GROUP = 3200,
+    NOT_OWNER_TO_TRANSFER_GROUP,
+    NOT_OWNER_TO_DELETE_GROUP,
     SUCCESSOR_NOT_GROUP_MEMBER,
-    TARGET_USERS_UNAUTHORIZED,
-    TARGET_USERS_NOT_EXIST,
-    TYPE_NOT_EXISTS,
-    UNAUTHORIZED,
-    REDUNDANT_REQUEST,
-    ALREADY_GROUP_MEMBER,
-    FRIEND_REQUEST_HAS_EXISTED,
-    RELATIONSHIP_HAS_ESTABLISHED,
-    USER_NOT_GROUP_MEMBER,
-    USER_HAS_BEEN_BLACKLISTED,
-    GROUP_HAS_BEEN_MUTED,
-    MEMBER_HAS_BEEN_MUTED,
+    OWNER_QUITS_WITHOUT_SPECIFYING_SUCCESSOR,
+    MAX_OWNED_GROUPS_REACHED,
+    TRANSFER_NON_EXISTING_GROUP,
+
+    // Group - Question
+    NOT_OWNER_OR_MANAGER_TO_CREATE_GROUP_QUESTION = 3300,
+    NOT_OWNER_OR_MANAGER_TO_DELETE_GROUP_QUESTION,
+    NOT_OWNER_OR_MANAGER_TO_UPDATE_GROUP_QUESTION,
+    NOT_OWNER_OR_MANAGER_TO_ACCESS_GROUP_QUESTION_ANSWER,
+    GROUP_QUESTION_ANSWERER_HAS_BEEN_BLOCKED,
+    MEMBER_CANNOT_ANSWER_GROUP_QUESTION,
+    ANSWER_QUESTION_OF_INACTIVE_GROUP,
+
+    // Group - Member
+    NOT_OWNER_OR_MANAGER_TO_REMOVE_GROUP_MEMBER = 3400,
+    NOT_OWNER_TO_UPDATE_GROUP_MEMBER_INFO,
+    NOT_OWNER_OR_MANAGER_TO_UPDATE_GROUP_MEMBER_INFO,
+    NOT_MEMBER_TO_QUERY_MEMBER_INFO,
+    ADD_BLOCKED_USER_TO_GROUP,
+    ADD_BLOCKED_USER_TO_INACTIVE_GROUP,
+    ADD_USER_TO_INACTIVE_GROUP,
+    ADD_NEW_MEMBER_WITH_ROLE_HIGHER_THAN_REQUESTER,
+
+    // Group - Blocklist
+    NOT_OWNER_OR_MANAGER_TO_ADD_BLOCKED_USER = 3500,
+    NOT_OWNER_OR_MANAGER_TO_REMOVE_BLOCKED_USER,
+
+    // Group - Join Request
+    GROUP_JOIN_REQUEST_SENDER_HAS_BEEN_BLOCKED = 3600,
+    NOT_JOIN_REQUEST_SENDER_TO_RECALL_REQUEST,
+    NOT_OWNER_OR_MANAGER_TO_ACCESS_GROUP_REQUEST,
+    RECALL_NOT_PENDING_GROUP_JOIN_REQUEST,
+    SEND_JOIN_REQUEST_TO_INACTIVE_GROUP,
+    RECALLING_GROUP_JOIN_REQUEST_IS_DISABLED,
+
+    // Group - Invitation
+    GROUP_INVITER_NOT_MEMBER = 3700,
+    GROUP_INVITEE_ALREADY_GROUP_MEMBER,
+    NOT_OWNER_OR_MANAGER_TO_RECALL_INVITATION,
+    NOT_OWNER_OR_MANAGER_TO_ACCESS_INVITATION,
+    NOT_OWNER_TO_SEND_INVITATION,
+    NOT_OWNER_OR_MANAGER_TO_SEND_INVITATION,
+    NOT_MEMBER_TO_SEND_INVITATION,
+    INVITEE_HAS_BEEN_BLOCKED,
+    RECALLING_GROUP_INVITATION_IS_DISABLED,
+    REDUNDANT_GROUP_INVITATION,
+    RECALL_NOT_PENDING_GROUP_INVITATION,
+
+    // Conversation
+    UPDATING_TYPING_STATUS_IS_DISABLED = 4000,
+
+    // Message
+
+    // Message - Send
+    MESSAGE_RECIPIENT_NOT_ACTIVE = 5000,
+    MESSAGE_SENDER_NOT_IN_CONTACTS_OR_BLOCKED,
+    PRIVATE_MESSAGE_SENDER_HAS_BEEN_BLOCKED,
+    GROUP_MESSAGE_SENDER_HAS_BEEN_BLOCKED,
+    SEND_MESSAGE_TO_INACTIVE_GROUP,
+    SEND_MESSAGE_TO_MUTED_GROUP,
+    SENDING_MESSAGES_TO_ONESELF_IS_DISABLED,
+    MUTED_MEMBER_SEND_MESSAGE,
     GUESTS_HAVE_BEEN_MUTED,
+
+    // Message - Update
+    UPDATING_MESSAGE_BY_SENDER_IS_DISABLED = 5100,
+    NOT_SENDER_TO_UPDATE_MESSAGE,
+    NOT_MESSAGE_RECIPIENT_TO_UPDATE_MESSAGE_READ_DATE,
+
+    // Message - Recall
+    RECALL_NON_EXISTING_MESSAGE = 5200,
+    RECALLING_MESSAGE_IS_DISABLED,
+    MESSAGE_RECALL_TIMEOUT,
+
+    // Storage
+    STORAGE_NOT_IMPLEMENTED = 6000,
     FILE_TOO_LARGE,
-    REQUEST_TOO_LARGE,
-    FORBIDDEN_DEVICE_TYPE,
 
-    SERVER_INTERNAL_ERROR = 5000,
-    LOGGED_DEVICES_CANNOT_OFFLINE,
-    NOT_IMPLEMENTED,
-    UNAVAILABLE,
-
-    CLIENT_USER_ID_AND_PASSWORD_MUST_NOT_NULL = 6000,
-    CLIENT_SESSION_HAS_BEEN_CLOSED,
-    CLIENT_SESSION_ALREADY_ESTABLISHED,
-    CLIENT_REQUESTS_TOO_FREQUENT,
-    MISSING_DATA,
-    TIMEOUT
+    // Storage - Extension
+    REDUNDANT_REQUEST_FOR_PRESIGNED_PROFILE_URL = 6900
 
 }
 
 class TurmsStatusCode {
-    private static _code2ReasonMap = {
-        [Code.OK]: "ok",
-        [Code.NOT_RESPONSIBLE]: "The server isn't responsible for the user",
-        [Code.FAILED]: "failed",
-        [Code.SERVER_INTERNAL_ERROR]: "Internal server error",
-
-        [Code.NO_CONTENT]: "No content",
-        [Code.ALREADY_UP_TO_DATE]: "Already up-to-date",
-        [Code.RECIPIENTS_OFFLINE]: "The recipients are offline",
-
-        [Code.DISABLED_FUNCTION]: "The function has been disabled in servers",
-        [Code.EXPIRY_DATE_BEFORE_NOW]: "Expiration date must be greater than now",
-        [Code.EXPIRY_RESOURCE]: "The target resource has expired",
-        [Code.ID_DUPLICATED]: "ID must be unique",
-        [Code.ILLEGAL_ARGUMENTS]: "Illegal arguments",
-        [Code.INVALID_DATA]: "Invalid data",
-        [Code.NOT_ACTIVE]: "Not active",
-        [Code.OWNED_RESOURCE_LIMIT_REACHED]: "The resource limit is reached",
-        [Code.REQUESTED_RECORDS_TOO_MANY]: "Too many records are requested",
-        [Code.RESOURCES_HAVE_BEEN_HANDLED]: "The resources have been handled",
-        [Code.RESOURCES_HAVE_CHANGED]: "The resources have been changed",
-        [Code.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE]: "A different device has logged into your account",
-        [Code.SESSION_SIMULTANEOUS_CONFLICTS_NOTIFY]: "Someone attempted to log into your account",
-        [Code.SESSION_SIMULTANEOUS_CONFLICTS_OFFLINE]: "A different device has logged into your account",
-        [Code.SUCCESSOR_NOT_GROUP_MEMBER]: "The successor is not a member of the group",
-        [Code.TARGET_USERS_UNAUTHORIZED]: "The target users are unauthorized",
-        [Code.TARGET_USERS_NOT_EXIST]: "The target users do not exist",
-        [Code.TYPE_NOT_EXISTS]: "The resource type does not exist",
-        [Code.UNAUTHORIZED]: "Unauthorized",
-        [Code.REDUNDANT_REQUEST]: "The request is redundant",
-        [Code.ALREADY_GROUP_MEMBER]: "The user is already a member of the group",
-        [Code.FRIEND_REQUEST_HAS_EXISTED]: "A friend request has already existed",
-        [Code.RELATIONSHIP_HAS_ESTABLISHED]: "The relationship has already established",
-        [Code.USER_NOT_GROUP_MEMBER]: "The user is not a member of the group",
-        [Code.USER_HAS_BEEN_BLACKLISTED]: "The user has been blacklisted",
-        [Code.GROUP_HAS_BEEN_MUTED]: "The group has been muted",
-        [Code.MEMBER_HAS_BEEN_MUTED]: "The group member has been muted",
-        [Code.GUESTS_HAVE_BEEN_MUTED]: "The guests of the group have been muted",
-        [Code.FILE_TOO_LARGE]: "The file is too large to upload",
-        [Code.REQUEST_TOO_LARGE]: "The request is too large",
-        [Code.FORBIDDEN_DEVICE_TYPE]: "The device type is forbidden for the request",
-        [Code.LOGGED_DEVICES_CANNOT_OFFLINE]: "Cannot set logged in devices offline",
-        [Code.NOT_IMPLEMENTED]: "Not Implemented",
-        [Code.UNAVAILABLE]: "The service is unavailable",
-        [Code.CLIENT_USER_ID_AND_PASSWORD_MUST_NOT_NULL]: "The user ID and password must not be null",
-        [Code.CLIENT_SESSION_HAS_BEEN_CLOSED]: "The session has been closed",
-        [Code.CLIENT_SESSION_ALREADY_ESTABLISHED]: "The session has been established",
-        [Code.CLIENT_REQUESTS_TOO_FREQUENT]: "Client requests are too frequent",
-        [Code.MISSING_DATA]: "The data is missing",
-        [Code.TIMEOUT]: "The request has timed out"
-    };
-    private code: number;
-    private reason: string;
-
-    constructor(code: number) {
-        this.code = code;
-        this.reason = TurmsStatusCode.getReason(code);
-    }
 
     static isSuccessCode(code: number | string | Code): boolean {
         if (typeof code === 'string') {
             code = parseInt(code);
         }
-        return 2000 <= code && code < 3000;
+        return 1000 <= code && code < 1100;
     }
 
     static isErrorCode(code: number | string): boolean {
         return !this.isSuccessCode(code);
     }
 
-    static getReason(code: number): string {
-        return this._code2ReasonMap[code];
-    }
 }
 
 export default Object.assign(TurmsStatusCode, Code);

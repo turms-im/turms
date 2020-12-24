@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.turms.workflow.dao.index.documentation;
+package im.turms.turms.workflow.dao.index;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

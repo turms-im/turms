@@ -21,8 +21,8 @@ import com.google.protobuf.Int64Value;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import im.turms.common.constant.RequestStatus;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
-import im.turms.common.exception.TurmsBusinessException;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.common.model.bo.group.GroupJoinRequestsWithVersion;
 import im.turms.common.util.Validator;
 import im.turms.server.common.cluster.node.Node;
@@ -32,6 +32,7 @@ import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.bo.DateRange;
 import im.turms.turms.constant.DaoConstant;
+import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.constraint.ValidRequestStatus;
 import im.turms.turms.util.ProtoUtil;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
@@ -48,7 +49,6 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.util.function.Tuple2;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotEmpty;
@@ -106,27 +106,25 @@ public class GroupJoinRequestService {
                 });
     }
 
-    public Mono<Boolean> removeAllExpiredGroupJoinRequests() {
+    public Mono<Void> removeAllExpiredGroupJoinRequests() {
         Date now = new Date();
         Query query = new Query()
                 .addCriteria(Criteria.where(GroupJoinRequest.Fields.EXPIRATION_DATE).lt(now));
-        return mongoTemplate.remove(query, GroupJoinRequest.class, GroupJoinRequest.COLLECTION_NAME)
-                .map(DeleteResult::wasAcknowledged);
+        return mongoTemplate.remove(query, GroupJoinRequest.class, GroupJoinRequest.COLLECTION_NAME).then();
     }
 
     /**
-     * Warning: Only use expirationDate to check whether a request is expired.
+     * @implNote Only use expirationDate to check whether a request is expired.
      * Because of the excessive resource consumption, the request status of requests
      * won't be expiry immediately when reaching the expiration date.
      */
-    public Mono<Boolean> updateExpiredRequestsStatus() {
+    public Mono<Void> updateExpiredRequestsStatus() {
         Date now = new Date();
         Query query = new Query()
                 .addCriteria(Criteria.where(GroupJoinRequest.Fields.EXPIRATION_DATE).lt(now))
                 .addCriteria(Criteria.where(GroupJoinRequest.Fields.STATUS).is(RequestStatus.PENDING));
         Update update = new Update().set(GroupJoinRequest.Fields.STATUS, RequestStatus.EXPIRED);
-        return mongoTemplate.updateMulti(query, update, GroupJoinRequest.class, GroupJoinRequest.COLLECTION_NAME)
-                .map(UpdateResult::wasAcknowledged);
+        return mongoTemplate.updateMulti(query, update, GroupJoinRequest.class, GroupJoinRequest.COLLECTION_NAME).then();
     }
 
     public Mono<GroupJoinRequest> authAndCreateGroupJoinRequest(
@@ -134,28 +132,23 @@ public class GroupJoinRequestService {
             @NotNull Long groupId,
             @Nullable String content) {
         try {
+            AssertUtil.notNull(requesterId, "requesterId");
+            AssertUtil.notNull(groupId, "groupId");
             validJoinRequestContentLength(content);
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
         return groupMemberService.isBlacklisted(groupId, requesterId)
-                .flatMap(isBlacklisted -> {
-                    if (isBlacklisted != null && isBlacklisted) {
-                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED));
-                    } else {
-                        return groupService.isGroupActiveAndNotDeleted(groupId);
-                    }
-                })
+                .flatMap(isBlacklisted -> isBlacklisted
+                        ? Mono.error(TurmsBusinessException.get(TurmsStatusCode.GROUP_JOIN_REQUEST_SENDER_HAS_BEEN_BLOCKED))
+                        : groupService.isGroupActiveAndNotDeleted(groupId))
                 .flatMap(isActive -> {
-                    if (isActive == null || !isActive) {
-                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_ACTIVE));
+                    if (!isActive) {
+                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SEND_JOIN_REQUEST_TO_INACTIVE_GROUP));
                     }
-                    Date expirationDate = null;
                     int hours = node.getSharedProperties().getService().getGroup()
                             .getGroupJoinRequestTimeToLiveHours();
-                    if (hours != 0) {
-                        expirationDate = Date.from(Instant.now().plus(hours, ChronoUnit.HOURS));
-                    }
+                    Date expirationDate = Date.from(Instant.now().plus(hours, ChronoUnit.HOURS));
                     long id = node.nextId(ServiceType.GROUP_JOIN_REQUEST);
                     String finalContent = content != null ? content : "";
                     GroupJoinRequest groupJoinRequest = new GroupJoinRequest(
@@ -169,8 +162,8 @@ public class GroupJoinRequestService {
                             requesterId,
                             null);
                     return mongoTemplate.insert(groupJoinRequest, GroupJoinRequest.COLLECTION_NAME)
-                            .flatMap(request -> groupVersionService.updateJoinRequestsVersion(groupId)
-                                    .then(userVersionService.updateSentGroupJoinRequestsVersion(requesterId))
+                            .flatMap(request -> groupVersionService.updateJoinRequestsVersion(groupId).onErrorResume(t -> Mono.empty())
+                                    .then(userVersionService.updateSentGroupJoinRequestsVersion(requesterId).onErrorResume(t -> Mono.empty()))
                                     .thenReturn(request));
                 });
     }
@@ -189,84 +182,88 @@ public class GroupJoinRequestService {
         return mongoTemplate.findOne(query, GroupJoinRequest.class, GroupJoinRequest.COLLECTION_NAME)
                 .map(groupJoinRequest -> {
                     Date expirationDate = groupJoinRequest.getExpirationDate();
-                    return expirationDate != null
+                    boolean isExpired = expirationDate != null
                             && groupJoinRequest.getStatus() == RequestStatus.PENDING
-                            && expirationDate.getTime() < System.currentTimeMillis()
+                            && expirationDate.getTime() < System.currentTimeMillis();
+                    return isExpired
                             ? groupJoinRequest.toBuilder().status(RequestStatus.EXPIRED).build()
                             : groupJoinRequest;
                 });
     }
 
-    public Mono<Boolean> recallPendingGroupJoinRequest(@NotNull Long requesterId, @NotNull Long requestId) {
+    /**
+     * @return return a empty publisher even if the request doesn't exist
+     */
+    public Mono<Void> recallPendingGroupJoinRequest(@NotNull Long requesterId, @NotNull Long requestId) {
         try {
             AssertUtil.notNull(requesterId, "requesterId");
+            AssertUtil.notNull(requestId, "requestId");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
         if (!node.getSharedProperties().getService().getGroup().isAllowRecallingJoinRequestSentByOneself()) {
-            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.DISABLED_FUNCTION));
+            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.RECALLING_GROUP_JOIN_REQUEST_IS_DISABLED));
         }
         return queryRequesterIdAndStatusAndGroupId(requestId)
                 .flatMap(request -> {
-                    if (request.getStatus() != RequestStatus.PENDING) {
-                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.RESOURCES_HAVE_BEEN_HANDLED));
+                    RequestStatus status = request.getStatus();
+                    if (status != RequestStatus.PENDING) {
+                        String reason = "The request is under the status " + status;
+                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.RECALL_NOT_PENDING_GROUP_JOIN_REQUEST, reason));
                     }
                     if (!request.getRequesterId().equals(requesterId)) {
-                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED));
+                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_JOIN_REQUEST_SENDER_TO_RECALL_REQUEST));
                     }
                     Query query = new Query().addCriteria(where(DaoConstant.ID_FIELD_NAME).is(requestId));
                     Update update = new Update()
                             .set(GroupJoinRequest.Fields.STATUS, RequestStatus.CANCELED)
                             .set(GroupJoinRequest.Fields.RESPONDER_ID, requesterId);
                     return mongoTemplate.updateFirst(query, update, GroupJoinRequest.class, GroupJoinRequest.COLLECTION_NAME)
-                            .flatMap(result -> {
-                                if (result.wasAcknowledged()) {
-                                    return groupVersionService.updateJoinRequestsVersion(request.getGroupId())
-                                            .zipWith(userVersionService.updateSentGroupJoinRequestsVersion(requesterId))
-                                            .thenReturn(true);
-                                } else {
-                                    return Mono.just(false);
-                                }
-                            });
+                            .flatMap(result -> result.getModifiedCount() > 0
+                                    ? Mono.when(groupVersionService.updateJoinRequestsVersion(request.getGroupId()).onErrorResume(t -> Mono.empty()),
+                                    userVersionService.updateSentGroupJoinRequestsVersion(requesterId).onErrorResume(t -> Mono.empty()))
+                                    : Mono.empty());
                 });
     }
 
     public Mono<GroupJoinRequestsWithVersion> queryGroupJoinRequestsWithVersion(
-            @NotNull Long userId,
+            @NotNull Long requesterId,
             @Nullable Long groupId,
             @Nullable Date lastUpdatedDate) {
         try {
-            AssertUtil.notNull(userId, "userId");
+            AssertUtil.notNull(requesterId, "requesterId");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
         boolean searchRequestsByGroupId = groupId != null;
         Mono<Date> versionMono = searchRequestsByGroupId ?
-                groupMemberService.isOwnerOrManager(userId, groupId)
-                        .flatMap(authenticated -> authenticated != null && authenticated
-                                ? groupVersionService.queryGroupJoinRequestsVersion(groupId)
-                                : Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED)))
-                : userVersionService.queryGroupJoinRequestsVersion(userId);
+                groupMemberService.isOwnerOrManager(requesterId, groupId)
+                        .flatMap(authenticated -> {
+                            if (authenticated != null && authenticated) {
+                                return groupVersionService.queryGroupJoinRequestsVersion(groupId);
+                            }
+                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_ACCESS_GROUP_REQUEST));
+                        })
+                : userVersionService.queryGroupJoinRequestsVersion(requesterId);
         return versionMono
                 .flatMap(version -> {
                     if (lastUpdatedDate == null || lastUpdatedDate.before(version)) {
                         Flux<GroupJoinRequest> requestFlux = searchRequestsByGroupId
                                 ? queryGroupJoinRequestsByGroupId(groupId)
-                                : queryGroupJoinRequestsByRequesterId(userId);
+                                : queryGroupJoinRequestsByRequesterId(requesterId);
                         return requestFlux
                                 .collectList()
                                 .map(groupJoinRequests -> {
-                                    if (!groupJoinRequests.isEmpty()) {
-                                        GroupJoinRequestsWithVersion.Builder builder = GroupJoinRequestsWithVersion.newBuilder();
-                                        for (GroupJoinRequest groupJoinRequest : groupJoinRequests) {
-                                            builder.addGroupJoinRequests(ProtoUtil.groupJoinRequest2proto(groupJoinRequest).build());
-                                        }
-                                        return builder
-                                                .setLastUpdatedDate(Int64Value.newBuilder().setValue(version.getTime()).build())
-                                                .build();
-                                    } else {
+                                    if (groupJoinRequests.isEmpty()) {
                                         throw TurmsBusinessException.get(TurmsStatusCode.NO_CONTENT);
                                     }
+                                    GroupJoinRequestsWithVersion.Builder builder = GroupJoinRequestsWithVersion.newBuilder();
+                                    for (GroupJoinRequest groupJoinRequest : groupJoinRequests) {
+                                        builder.addGroupJoinRequests(ProtoUtil.groupJoinRequest2proto(groupJoinRequest).build());
+                                    }
+                                    return builder
+                                            .setLastUpdatedDate(Int64Value.newBuilder().setValue(version.getTime()).build())
+                                            .build();
                                 });
                     } else {
                         return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ALREADY_UP_TO_DATE));
@@ -355,16 +352,15 @@ public class GroupJoinRequestService {
         return mongoTemplate.count(query, GroupJoinRequest.class, GroupJoinRequest.COLLECTION_NAME);
     }
 
-    public Mono<Boolean> deleteJoinRequests(@Nullable Set<Long> ids) {
+    public Mono<DeleteResult> deleteJoinRequests(@Nullable Set<Long> ids) {
         Query query = QueryBuilder
                 .newBuilder()
                 .addInIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
                 .buildQuery();
-        return mongoTemplate.remove(query, GroupJoinRequest.class, GroupJoinRequest.COLLECTION_NAME)
-                .map(DeleteResult::wasAcknowledged);
+        return mongoTemplate.remove(query, GroupJoinRequest.class, GroupJoinRequest.COLLECTION_NAME);
     }
 
-    public Mono<Boolean> updateJoinRequests(
+    public Mono<UpdateResult> updateJoinRequests(
             @NotEmpty Set<Long> requestIds,
             @Nullable Long requesterId,
             @Nullable Long responderId,
@@ -383,7 +379,7 @@ public class GroupJoinRequestService {
             return Mono.error(e);
         }
         if (Validator.areAllNull(requesterId, responderId, content, status, creationDate, expirationDate)) {
-            return Mono.just(true);
+            return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
         Query query = new Query().addCriteria(where(DaoConstant.ID_FIELD_NAME).in(requestIds));
         Update update = UpdateBuilder
@@ -396,8 +392,7 @@ public class GroupJoinRequestService {
                 .setIfNotNull(GroupJoinRequest.Fields.EXPIRATION_DATE, expirationDate)
                 .build();
         RequestStatusUtil.updateResponseDateBasedOnStatus(update, status, responseDate);
-        return mongoTemplate.updateMulti(query, update, GroupJoinRequest.class, GroupJoinRequest.COLLECTION_NAME)
-                .map(UpdateResult::wasAcknowledged);
+        return mongoTemplate.updateMulti(query, update, GroupJoinRequest.class, GroupJoinRequest.COLLECTION_NAME);
     }
 
     public Mono<GroupJoinRequest> createGroupJoinRequest(
@@ -432,9 +427,7 @@ public class GroupJoinRequestService {
         if (expirationDate == null) {
             int timeToLiveHours = node.getSharedProperties().getService().getGroup()
                     .getGroupJoinRequestTimeToLiveHours();
-            if (timeToLiveHours == 0) {
-                expirationDate = Date.from(Instant.now().plus(timeToLiveHours, ChronoUnit.HOURS));
-            }
+            expirationDate = Date.from(Instant.now().plus(timeToLiveHours, ChronoUnit.HOURS));
         }
         if (status == null) {
             status = RequestStatus.PENDING;
@@ -442,19 +435,20 @@ public class GroupJoinRequestService {
         responseDate = RequestStatusUtil.getResponseDateBasedOnStatus(status, responseDate, now);
         GroupJoinRequest groupJoinRequest = new GroupJoinRequest(id, content, status, creationDate, responseDate,
                 expirationDate, groupId, requesterId, responderId);
-        return Mono.zip(mongoTemplate.insert(groupJoinRequest, GroupJoinRequest.COLLECTION_NAME),
-                groupVersionService.updateJoinRequestsVersion(groupId),
-                userVersionService.updateSentGroupJoinRequestsVersion(responderId))
-                .map(Tuple2::getT1);
+        return mongoTemplate.insert(groupJoinRequest, GroupJoinRequest.COLLECTION_NAME)
+                .flatMap(request -> groupVersionService.updateJoinRequestsVersion(groupId).onErrorResume(t -> Mono.empty())
+                        .then(userVersionService.updateSentGroupJoinRequestsVersion(responderId).onErrorResume(t -> Mono.empty()))
+                        .thenReturn(request));
     }
 
     private Flux<GroupJoinRequest> queryExpirableData(Query query) {
         return mongoTemplate.find(query, GroupJoinRequest.class, GroupJoinRequest.COLLECTION_NAME)
                 .map(groupJoinRequest -> {
                     Date expirationDate = groupJoinRequest.getExpirationDate();
-                    return expirationDate != null
+                    boolean isExpired = expirationDate != null
                             && groupJoinRequest.getStatus() == RequestStatus.PENDING
-                            && expirationDate.getTime() < System.currentTimeMillis()
+                            && expirationDate.getTime() < System.currentTimeMillis();
+                    return isExpired
                             ? groupJoinRequest.toBuilder().status(RequestStatus.EXPIRED).build()
                             : groupJoinRequest;
                 });

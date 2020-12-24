@@ -20,8 +20,8 @@ package im.turms.gateway.service.mediator;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.UserStatus;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
-import im.turms.common.exception.TurmsBusinessException;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.plugin.extension.UserAuthenticator;
@@ -90,7 +90,7 @@ public class ServiceMediator {
             @Nullable String ip,
             @Nullable String deviceDetails) {
         if (userSimultaneousLoginService.isForbiddenDeviceType(deviceType)) {
-            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.FORBIDDEN_DEVICE_TYPE));
+            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.LOGIN_FROM_FORBIDDEN_DEVICE_TYPE));
         }
         return authenticate(userId, password, deviceType, userStatus, position, ip, deviceDetails)
                 .flatMap(statusCode -> statusCode == TurmsStatusCode.OK
@@ -147,7 +147,7 @@ public class ServiceMediator {
         return inboundRequestService.processServiceRequest(serviceRequest);
     }
 
-    public Mono<Boolean> processHeartbeatRequest(long userId, DeviceType deviceType) {
+    public Mono<Boolean> processHeartbeatRequest(Long userId, DeviceType deviceType) {
         return inboundRequestService.processHeartbeatRequest(userId, deviceType);
     }
 
@@ -182,7 +182,7 @@ public class ServiceMediator {
     // Internal implementation
 
     /**
-     * @return OK, UNAUTHORIZED, NOT_ACTIVE
+     * @return OK, AUTHENTICATION_FAILED, LOGGING_IN_USER_NOT_ACTIVE
      */
     private Mono<TurmsStatusCode> authenticate(
             @NotNull Long userId,
@@ -213,7 +213,7 @@ public class ServiceMediator {
                     authenticate = authenticate.switchIfEmpty(authenticateMono);
                 }
                 return authenticate
-                        .map(authenticated -> authenticated ? TurmsStatusCode.OK : TurmsStatusCode.UNAUTHORIZED)
+                        .map(authenticated -> authenticated ? TurmsStatusCode.OK : TurmsStatusCode.LOGIN_AUTHENTICATION_FAILED)
                         .switchIfEmpty(authenticate0(userId, password));
             }
         }
@@ -221,16 +221,16 @@ public class ServiceMediator {
     }
 
     /**
-     * @return OK, UNAUTHORIZED, NOT_ACTIVE
+     * @return OK, AUTHENTICATION_FAILED, LOGGING_IN_USER_NOT_ACTIVE
      */
     private Mono<TurmsStatusCode> authenticate0(
             @NotNull Long userId,
             @Nullable String password) {
         return userService.isActiveAndNotDeleted(userId)
-                .flatMap(isActiveAndNotDeleted -> isActiveAndNotDeleted != null && isActiveAndNotDeleted
+                .flatMap(isActiveAndNotDeleted -> isActiveAndNotDeleted
                         ? userService.authenticate(userId, password)
-                        .map(authenticated -> authenticated ? TurmsStatusCode.OK : TurmsStatusCode.UNAUTHORIZED)
-                        : Mono.just(TurmsStatusCode.NOT_ACTIVE));
+                        .map(authenticated -> authenticated ? TurmsStatusCode.OK : TurmsStatusCode.LOGIN_AUTHENTICATION_FAILED)
+                        : Mono.just(TurmsStatusCode.LOGGING_IN_USER_NOT_ACTIVE));
     }
 
 }

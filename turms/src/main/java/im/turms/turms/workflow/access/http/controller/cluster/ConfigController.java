@@ -17,13 +17,12 @@
 
 package im.turms.turms.workflow.access.http.controller.cluster;
 
-import im.turms.common.constant.statuscode.TurmsStatusCode;
-import im.turms.common.exception.TurmsBusinessException;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.util.PropertiesUtil;
-import im.turms.turms.workflow.access.http.dto.response.AcknowledgedDTO;
 import im.turms.turms.workflow.access.http.dto.response.ResponseDTO;
 import im.turms.turms.workflow.access.http.dto.response.ResponseFactory;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
@@ -77,16 +76,16 @@ public class ConfigController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "turmsProperties", dataTypeClass = TurmsProperties.class, paramType = "body")
     })
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> updateClusterConfig(
+    public Mono<ResponseEntity<ResponseDTO<Void>>> updateClusterConfig(
             @RequestParam(defaultValue = "false") Boolean reset,
             @RequestParam(defaultValue = "false") Boolean updateGlobalProperties,
             @RequestBody(required = false) Map<String, Object> turmsProperties) throws IOException {
         if (updateGlobalProperties) {
-            Mono<Boolean> updatePropertiesMono = turmsPropertiesManager.updateGlobalConfig(reset, turmsProperties);
-            return ResponseFactory.acknowledged(updatePropertiesMono);
+            Mono<Void> updatePropertiesMono = turmsPropertiesManager.updateGlobalConfig(reset, turmsProperties);
+            return updatePropertiesMono.thenReturn(ResponseFactory.OK);
         } else {
             turmsPropertiesManager.updateLocalConfig(reset, turmsProperties);
-            return ResponseFactory.acknowledged(Mono.just(true));
+            return Mono.just(ResponseFactory.OK);
         }
     }
 

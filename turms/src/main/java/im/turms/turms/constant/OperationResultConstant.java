@@ -15,16 +15,21 @@
  * limitations under the License.
  */
 
-package im.turms.turms.bo;
+package im.turms.turms.constant;
 
-import im.turms.common.constant.GroupInvitationStrategy;
-import lombok.Data;
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
 
 /**
  * @author James Chen
  */
-@Data
-public final class InvitableAndInvitationStrategy {
-    private final boolean invitable;
-    private final GroupInvitationStrategy groupInvitationStrategy;
+public class OperationResultConstant {
+
+    private OperationResultConstant() {
+    }
+
+    public static final UpdateResult ACKNOWLEDGED_UPDATE_RESULT = UpdateResult.acknowledged(0L, 0L, null);
+
+    public static final DeleteResult ACKNOWLEDGED_DELETE_RESULT = DeleteResult.acknowledged(0L);
+
 }

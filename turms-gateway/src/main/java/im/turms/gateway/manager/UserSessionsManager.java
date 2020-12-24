@@ -101,6 +101,9 @@ public final class UserSessionsManager {
         });
     }
 
+    /**
+     * @return true if the session exists
+     */
     public boolean pushSessionNotification(DeviceType deviceType) {
         UserSession userSession = sessionMap.get(deviceType);
         if (userSession != null) {

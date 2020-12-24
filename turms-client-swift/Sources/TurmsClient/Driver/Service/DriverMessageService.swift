@@ -51,7 +51,7 @@ class DriverMessageService {
                 } else {
                     if requestTimeout > 0 {
                         after(.seconds(Int(requestTimeout))).done {
-                            seal.reject(TurmsBusinessError(.timeout))
+                            seal.reject(TurmsBusinessError(TurmsStatusCode.requestTimeout))
                         }
                     }
                     let data = try! request.serializedData()
@@ -71,7 +71,7 @@ class DriverMessageService {
             let requestId = notification.requestID.value
             let handler = requestMap[requestId]
             if notification.hasCode {
-                let code = notification.code.value
+                let code = Int(notification.code.value)
                 if TurmsStatusCode.isSuccessCode(code) {
                     handler?.fulfill(notification)
                 } else {
@@ -82,7 +82,7 @@ class DriverMessageService {
                     }
                 }
             } else {
-                handler?.reject(TurmsBusinessError(.failed, "Invalid notification: the code is missing"))
+                handler?.reject(TurmsBusinessError(TurmsStatusCode.invalidNotification, "The code is missing"))
             }
         }
         notifyOnNotificationListener(notification)

@@ -17,12 +17,11 @@
 
 package im.turms.turms.workflow.access.http.controller.admin;
 
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
 import im.turms.turms.workflow.access.http.dto.request.admin.AddAdminRoleDTO;
 import im.turms.turms.workflow.access.http.dto.request.admin.UpdateAdminRoleDTO;
-import im.turms.turms.workflow.access.http.dto.response.AcknowledgedDTO;
-import im.turms.turms.workflow.access.http.dto.response.PaginationDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseFactory;
+import im.turms.turms.workflow.access.http.dto.response.*;
 import im.turms.turms.workflow.access.http.permission.AdminPermission;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.access.http.util.PageUtil;
@@ -111,26 +110,26 @@ public class AdminRoleController {
 
     @PutMapping
     @RequiredPermission(AdminPermission.ADMIN_ROLE_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> updateAdminRole(
+    public Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateAdminRole(
             @RequestHeader("account") String requesterAccount,
             @RequestParam Set<Long> ids,
             @RequestBody UpdateAdminRoleDTO updateAdminRoleDTO) {
-        Mono<Boolean> updateMono = adminRoleService.authAndUpdateAdminRole(
+        Mono<UpdateResult> updateMono = adminRoleService.authAndUpdateAdminRole(
                 requesterAccount,
                 ids,
                 updateAdminRoleDTO.getName(),
                 updateAdminRoleDTO.getPermissions(),
                 updateAdminRoleDTO.getRank());
-        return ResponseFactory.acknowledged(updateMono);
+        return ResponseFactory.updateResult(updateMono);
     }
 
     @DeleteMapping
     @RequiredPermission(AdminPermission.ADMIN_ROLE_DELETE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> deleteAdminRoles(
+    public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteAdminRoles(
             @RequestHeader("account") String requesterAccount,
             @RequestParam Set<Long> ids) {
-        Mono<Boolean> deleteMono = adminRoleService.authAndDeleteAdminRoles(requesterAccount, ids);
-        return ResponseFactory.acknowledged(deleteMono);
+        Mono<DeleteResult> deleteMono = adminRoleService.authAndDeleteAdminRoles(requesterAccount, ids);
+        return ResponseFactory.deleteResult(deleteMono);
     }
 
 }

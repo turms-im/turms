@@ -59,13 +59,13 @@ public class TurmsDriver {
     }
 
     private func initSessionService() {
-        sessionService.addOnSessionConnectedListeners { [weak self] in
+        sessionService.addOnSessionConnectedListener { [weak self] in
             self?.onSessionConnected?()
         }
-        sessionService.addOnSessionDisconnectedListeners { [weak self] in
+        sessionService.addOnSessionDisconnectedListener { [weak self] in
             self?.onSessionDisconnected?($0)
         }
-        sessionService.addOnSessionClosedListeners { [weak self] in
+        sessionService.addOnSessionClosedListener { [weak self] in
             self?.onSessionClosed?($0)
         }
     }

@@ -22,8 +22,8 @@ import com.google.common.collect.SetMultimap;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.UserStatus;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
-import im.turms.common.exception.TurmsBusinessException;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.plugin.extension.UserOnlineStatusChangeHandler;
 import im.turms.gateway.plugin.manager.TurmsPluginManager;
@@ -372,7 +372,6 @@ public class SessionService implements ISessionService {
                                 if (position != null) {
                                     updateSessionInfoMono = updateSessionInfoMono
                                             .flatMap(unused -> sessionLocationService.upsertUserLocation(userId, deviceType, position, new Date())
-                                                    .then()
                                                     .onErrorResume(throwable -> Mono.empty()));
                                 }
                                 return updateSessionInfoMono.thenReturn(session);
@@ -481,12 +480,8 @@ public class SessionService implements ISessionService {
                     Date now = new Date();
                     if (position != null && sessionLocationService.isLocationEnabled()) {
                         return sessionLocationService.upsertUserLocation(userId, deviceType, position, now)
-                                .doOnSuccess(hasUpsertedLocation -> {
-                                    if (hasUpsertedLocation != null && hasUpsertedLocation) {
-                                        userLoginActionService
-                                                .tryLogLoginActionAndTriggerHandlers(logId, userId, finalUserStatus, deviceType, position, ip, deviceDetails, now);
-                                    }
-                                })
+                                .doOnSuccess(ignored -> userLoginActionService
+                                        .tryLogLoginActionAndTriggerHandlers(logId, userId, finalUserStatus, deviceType, position, ip, deviceDetails, now))
                                 .thenReturn(session);
                     } else {
                         userLoginActionService

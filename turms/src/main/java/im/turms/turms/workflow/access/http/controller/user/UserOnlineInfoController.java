@@ -27,7 +27,6 @@ import im.turms.server.common.service.session.SessionLocationService;
 import im.turms.server.common.service.session.UserStatusService;
 import im.turms.turms.workflow.access.http.dto.request.user.OnlineUserNumberDTO;
 import im.turms.turms.workflow.access.http.dto.request.user.UpdateOnlineStatusDTO;
-import im.turms.turms.workflow.access.http.dto.response.AcknowledgedDTO;
 import im.turms.turms.workflow.access.http.dto.response.ResponseDTO;
 import im.turms.turms.workflow.access.http.dto.response.ResponseFactory;
 import im.turms.turms.workflow.access.http.dto.response.UserLocationDTO;
@@ -159,7 +158,7 @@ public class UserOnlineInfoController {
 
     @PutMapping("/statuses")
     @RequiredPermission(AdminPermission.USER_ONLINE_INFO_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> updateUserOnlineStatus(
+    public Mono<ResponseEntity<ResponseDTO<Void>>> updateUserOnlineStatus(
             @RequestParam Set<Long> ids,
             @RequestParam(required = false) Set<DeviceType> deviceTypes,
             @RequestBody UpdateOnlineStatusDTO updateOnlineStatusDTO) {
@@ -172,7 +171,7 @@ public class UserOnlineInfoController {
         } else {
             updateMono = userStatusService.updateOnlineUsersStatus(ids, onlineStatus);
         }
-        return ResponseFactory.acknowledged(updateMono.thenReturn(true));
+        return Mono.just(ResponseFactory.OK);
     }
 
 }

@@ -21,10 +21,7 @@ import im.turms.common.constant.RequestStatus;
 import im.turms.turms.bo.DateRange;
 import im.turms.turms.workflow.access.http.dto.request.user.AddFriendRequestDTO;
 import im.turms.turms.workflow.access.http.dto.request.user.UpdateFriendRequestDTO;
-import im.turms.turms.workflow.access.http.dto.response.AcknowledgedDTO;
-import im.turms.turms.workflow.access.http.dto.response.PaginationDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseFactory;
+import im.turms.turms.workflow.access.http.dto.response.*;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.access.http.util.PageUtil;
 import im.turms.turms.workflow.dao.domain.UserFriendRequest;
@@ -138,10 +135,10 @@ public class UserFriendRequestController {
 
     @PutMapping
     @RequiredPermission(USER_FRIEND_REQUEST_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> updateFriendRequests(
+    public Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateFriendRequests(
             @RequestParam Set<Long> ids,
             @RequestBody UpdateFriendRequestDTO updateFriendRequestDTO) {
-        Mono<Boolean> updateMono = userFriendRequestService.updateFriendRequests(
+        Mono<UpdateResultDTO> updateMono = userFriendRequestService.updateFriendRequests(
                 ids,
                 updateFriendRequestDTO.getRequesterId(),
                 updateFriendRequestDTO.getRecipientId(),
@@ -150,15 +147,18 @@ public class UserFriendRequestController {
                 updateFriendRequestDTO.getReason(),
                 updateFriendRequestDTO.getCreationDate(),
                 updateFriendRequestDTO.getResponseDate(),
-                updateFriendRequestDTO.getExpirationDate());
-        return ResponseFactory.acknowledged(updateMono);
+                updateFriendRequestDTO.getExpirationDate())
+                .map(UpdateResultDTO::get);
+        return ResponseFactory.okIfTruthy(updateMono);
     }
 
     @DeleteMapping
     @RequiredPermission(USER_FRIEND_REQUEST_DELETE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> deleteFriendRequests(@RequestParam(required = false) Set<Long> ids) {
-        Mono<Boolean> deleteMono = userFriendRequestService.deleteFriendRequests(ids);
-        return ResponseFactory.acknowledged(deleteMono);
+    public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteFriendRequests(@RequestParam(required = false) Set<Long> ids) {
+        Mono<DeleteResultDTO> deleteMono = userFriendRequestService
+                .deleteFriendRequests(ids)
+                .map(DeleteResultDTO::get);
+        return ResponseFactory.okIfTruthy(deleteMono);
     }
 
 }

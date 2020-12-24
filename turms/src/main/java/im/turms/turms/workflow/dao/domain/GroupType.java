@@ -28,10 +28,13 @@ import org.springframework.data.mongodb.core.mapping.Field;
 /**
  * No need to shard because there are only a few (or some) group types.
  * <p>
- * Note that a built-in group type {
- * id: 0,
- * name: "DEFAULT"
- * } always exists in Turms
+ * Note that there is a built-in immutable group type:
+ * <pre>
+ * {
+ *     id: 0,
+ *     name: "DEFAULT"
+ * }
+ * </pre>
  *
  * @author James Chen
  */

@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.4.0</version>
+        <version>2.4.1</version>
         <relativePath/>
     </parent>
 
@@ -34,7 +34,7 @@
 
     <properties>
         <disruptor.version>3.4.2</disruptor.version>
-        <jmh.version>1.26</jmh.version>
+        <jmh.version>1.27</jmh.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
     </properties>
 

@@ -22,7 +22,6 @@ import im.turms.server.common.cluster.node.NodeVersion;
 import im.turms.server.common.cluster.service.config.domain.discovery.Member;
 import im.turms.turms.workflow.access.http.dto.request.cluster.AddMemberDTO;
 import im.turms.turms.workflow.access.http.dto.request.cluster.UpdateMemberDTO;
-import im.turms.turms.workflow.access.http.dto.response.AcknowledgedDTO;
 import im.turms.turms.workflow.access.http.dto.response.ResponseDTO;
 import im.turms.turms.workflow.access.http.dto.response.ResponseFactory;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
@@ -58,14 +57,14 @@ public class MemberController {
 
     @DeleteMapping
     @RequiredPermission(CLUSTER_MEMBERS_DELETE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> removeMembers(@RequestParam List<String> ids) {
-        Mono<Boolean> removeMembersMono = node.getDiscoveryService().unregisterMembers(new HashSet<>(ids));
-        return ResponseFactory.acknowledged(removeMembersMono);
+    public Mono<ResponseEntity<ResponseDTO<Void>>> removeMembers(@RequestParam List<String> ids) {
+        Mono<Void> unregisterMembers = node.getDiscoveryService().unregisterMembers(new HashSet<>(ids));
+        return unregisterMembers.thenReturn(ResponseFactory.OK);
     }
 
     @PostMapping
     @RequiredPermission(CLUSTER_MEMBERS_CREATE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> addMember(@RequestBody AddMemberDTO addMemberDTO) {
+    public Mono<ResponseEntity<ResponseDTO<Void>>> addMember(@RequestBody AddMemberDTO addMemberDTO) {
         String clusterId = node.getDiscoveryService().getLocalMember().getClusterId();
         Member member = new Member(
                 clusterId,
@@ -80,23 +79,21 @@ public class MemberController {
                 addMemberDTO.getServiceAddress(),
                 false,
                 addMemberDTO.isActive());
-        Mono<Boolean> addMemberMono = node.getDiscoveryService()
+        return node.getDiscoveryService()
                 .registerMember(member)
-                .thenReturn(true);
-        return ResponseFactory.acknowledged(addMemberMono);
+                .thenReturn(ResponseFactory.OK);
     }
 
     @PutMapping
     @RequiredPermission(CLUSTER_MEMBERS_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> updateMember(
+    public Mono<ResponseEntity<ResponseDTO<Void>>> updateMember(
             @RequestParam String id,
             @RequestBody UpdateMemberDTO updateMemberDTO) {
-        Mono<Boolean> addMemberMono = node.getDiscoveryService().updateMemberInfo(
+        Mono<Void> addMemberMono = node.getDiscoveryService().updateMemberInfo(
                 id,
                 updateMemberDTO.getIsSeed(),
-                updateMemberDTO.getIsActive())
-                .thenReturn(true);
-        return ResponseFactory.acknowledged(addMemberMono);
+                updateMemberDTO.getIsActive());
+        return addMemberMono.thenReturn(ResponseFactory.OK);
     }
 
     @GetMapping("/master")

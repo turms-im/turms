@@ -106,7 +106,9 @@ public class ConnectionService {
                 let connectRequestId = Int64.random(in: 1..<Int64.max)
                 request.addValue(String(connectRequestId), forHTTPHeaderField: ConnectionService.REQUEST_ID_FIELD)
                 request.addValue(String(userId), forHTTPHeaderField: ConnectionService.USER_ID_FIELD)
-                request.addValue(password, forHTTPHeaderField: ConnectionService.PASSWORD_FIELD)
+                if let pwd = password {
+                    request.addValue(pwd, forHTTPHeaderField: ConnectionService.PASSWORD_FIELD)
+                }
                 if let type = deviceType {
                     request.addValue(type.toString(), forHTTPHeaderField: ConnectionService.DEVICE_TYPE_FIELD)
                 }
@@ -217,7 +219,7 @@ public class ConnectionService {
         } else {
             let closeInfo = SessionDisconnectInfo(wasConnected: wasConnected, isClosedByClient: isClosedByClient, isReconnecting: false, closeStatus: status, webSocketStatusCode: statusCode, webSocketReason: reason, error: error)
             notifyOnClosedListeners(closeInfo)
-            return Promise(error: TurmsBusinessError(.failed))
+            return Promise(error: TurmsBusinessError(-1))
         }
     }
 }

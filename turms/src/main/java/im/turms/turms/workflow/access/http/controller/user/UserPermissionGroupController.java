@@ -19,10 +19,7 @@ package im.turms.turms.workflow.access.http.controller.user;
 
 import im.turms.turms.workflow.access.http.dto.request.user.AddUserPermissionGroupDTO;
 import im.turms.turms.workflow.access.http.dto.request.user.UpdateUserPermissionGroupDTO;
-import im.turms.turms.workflow.access.http.dto.response.AcknowledgedDTO;
-import im.turms.turms.workflow.access.http.dto.response.PaginationDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseFactory;
+import im.turms.turms.workflow.access.http.dto.response.*;
 import im.turms.turms.workflow.access.http.permission.AdminPermission;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.access.http.util.PageUtil;
@@ -91,23 +88,26 @@ public class UserPermissionGroupController {
 
     @PutMapping
     @RequiredPermission(AdminPermission.USER_PERMISSION_GROUP_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> updateUserPermissionGroup(
+    public Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateUserPermissionGroup(
             @RequestParam Set<Long> ids,
             @RequestBody UpdateUserPermissionGroupDTO updateUserPermissionGroupDTO) {
-        Mono<Boolean> updateMono = userPermissionGroupService.updateUserPermissionGroups(
+        Mono<UpdateResultDTO> updateMono = userPermissionGroupService.updateUserPermissionGroups(
                 ids,
                 updateUserPermissionGroupDTO.getCreatableGroupTypeIds(),
                 updateUserPermissionGroupDTO.getOwnedGroupLimit(),
                 updateUserPermissionGroupDTO.getOwnedGroupLimitForEachGroupType(),
-                updateUserPermissionGroupDTO.getGroupTypeLimits());
-        return ResponseFactory.acknowledged(updateMono);
+                updateUserPermissionGroupDTO.getGroupTypeLimits())
+                .map(UpdateResultDTO::get);
+        return ResponseFactory.okIfTruthy(updateMono);
     }
 
     @DeleteMapping
     @RequiredPermission(AdminPermission.USER_PERMISSION_GROUP_DELETE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> deleteUserPermissionGroup(@RequestParam Set<Long> ids) {
-        Mono<Boolean> deleteMono = userPermissionGroupService.deleteUserPermissionGroups(ids);
-        return ResponseFactory.acknowledged(deleteMono);
+    public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteUserPermissionGroup(@RequestParam Set<Long> ids) {
+        Mono<DeleteResultDTO> deleteMono = userPermissionGroupService
+                .deleteUserPermissionGroups(ids)
+                .map(DeleteResultDTO::get);
+        return ResponseFactory.okIfTruthy(deleteMono);
     }
 
 }

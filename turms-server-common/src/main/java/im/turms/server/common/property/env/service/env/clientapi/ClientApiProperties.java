@@ -32,7 +32,7 @@ import java.util.Set;
 @Data
 public class ClientApiProperties {
 
-    @Description("The disabled endpoints for client requests. Return ILLEGAL_ARGUMENTS if a client tries to access them")
+    @Description("The disabled endpoints for client requests. Return ILLEGAL_ARGUMENT if a client tries to access them")
     private Set<TurmsRequest.KindCase> disabledEndpoints = Collections.emptySet();
 
     @NestedConfigurationProperty

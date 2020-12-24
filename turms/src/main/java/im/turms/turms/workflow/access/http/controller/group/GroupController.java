@@ -17,15 +17,13 @@
 
 package im.turms.turms.workflow.access.http.controller.group;
 
+import com.mongodb.client.result.UpdateResult;
 import im.turms.common.constant.DivideBy;
 import im.turms.turms.bo.DateRange;
 import im.turms.turms.workflow.access.http.dto.request.group.AddGroupDTO;
 import im.turms.turms.workflow.access.http.dto.request.group.GroupStatisticsDTO;
 import im.turms.turms.workflow.access.http.dto.request.group.UpdateGroupDTO;
-import im.turms.turms.workflow.access.http.dto.response.AcknowledgedDTO;
-import im.turms.turms.workflow.access.http.dto.response.PaginationDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseFactory;
+import im.turms.turms.workflow.access.http.dto.response.*;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.access.http.util.DateTimeUtil;
 import im.turms.turms.workflow.access.http.util.PageUtil;
@@ -212,11 +210,13 @@ public class GroupController {
 
     @PutMapping
     @RequiredPermission(GROUP_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> updateGroups(
+    public Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateGroups(
             @RequestParam Set<Long> ids,
             @RequestBody UpdateGroupDTO updateGroupDTO) {
-        Mono<Boolean> updated = groupService.updateGroups(
-                ids,
+        Long successorId = updateGroupDTO.getSuccessorId();
+        Mono<UpdateResult> updateMono = successorId != null
+                ? groupService.checkAndTransferGroupOwnership(ids, successorId, updateGroupDTO.getQuitAfterTransfer(), null)
+                : groupService.updateGroupsInformation(ids,
                 updateGroupDTO.getTypeId(),
                 updateGroupDTO.getCreatorId(),
                 updateGroupDTO.getOwnerId(),
@@ -228,20 +228,20 @@ public class GroupController {
                 updateGroupDTO.getCreationDate(),
                 updateGroupDTO.getDeletionDate(),
                 updateGroupDTO.getMuteEndDate(),
-                updateGroupDTO.getSuccessorId(),
-                updateGroupDTO.getQuitAfterTransfer());
-        return ResponseFactory.acknowledged(updated);
+                null);
+        return ResponseFactory.updateResult(updateMono);
     }
 
     @DeleteMapping
     @RequiredPermission(GROUP_DELETE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> deleteGroups(
+    public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteGroups(
             @RequestParam(required = false) Set<Long> ids,
             @RequestParam(required = false) Boolean deleteLogically) {
-        Mono<Boolean> deleted = groupService.deleteGroupsAndGroupMembers(
+        Mono<DeleteResultDTO> deleted = groupService.deleteGroupsAndGroupMembers(
                 ids,
-                deleteLogically);
-        return ResponseFactory.acknowledged(deleted);
+                deleteLogically)
+                .map(DeleteResultDTO::get);
+        return ResponseFactory.okIfTruthy(deleted);
     }
 
 }

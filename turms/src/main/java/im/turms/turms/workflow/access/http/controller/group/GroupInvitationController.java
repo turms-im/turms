@@ -21,10 +21,7 @@ import im.turms.common.constant.RequestStatus;
 import im.turms.turms.bo.DateRange;
 import im.turms.turms.workflow.access.http.dto.request.group.AddGroupInvitationDTO;
 import im.turms.turms.workflow.access.http.dto.request.group.UpdateGroupInvitationDTO;
-import im.turms.turms.workflow.access.http.dto.response.AcknowledgedDTO;
-import im.turms.turms.workflow.access.http.dto.response.PaginationDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseFactory;
+import im.turms.turms.workflow.access.http.dto.response.*;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.access.http.util.PageUtil;
 import im.turms.turms.workflow.dao.domain.GroupInvitation;
@@ -143,10 +140,10 @@ public class GroupInvitationController {
 
     @PutMapping
     @RequiredPermission(GROUP_INVITATION_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> updateGroupInvitations(
+    public Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateGroupInvitations(
             @RequestParam Set<Long> ids,
             @RequestBody UpdateGroupInvitationDTO updateGroupInvitationDTO) {
-        Mono<Boolean> updateMono = groupInvitationService.updateInvitations(
+        Mono<UpdateResultDTO> updateMono = groupInvitationService.updateInvitations(
                 ids,
                 updateGroupInvitationDTO.getInviterId(),
                 updateGroupInvitationDTO.getInviteeId(),
@@ -154,16 +151,18 @@ public class GroupInvitationController {
                 updateGroupInvitationDTO.getStatus(),
                 updateGroupInvitationDTO.getCreationDate(),
                 updateGroupInvitationDTO.getResponseDate(),
-                updateGroupInvitationDTO.getExpirationDate());
-        return ResponseFactory.acknowledged(updateMono);
+                updateGroupInvitationDTO.getExpirationDate())
+                .map(UpdateResultDTO::get);
+        return ResponseFactory.okIfTruthy(updateMono);
     }
 
     @DeleteMapping
     @RequiredPermission(GROUP_INVITATION_DELETE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> deleteGroupInvitations(
+    public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteGroupInvitations(
             @RequestParam(required = false) Set<Long> ids) {
-        Mono<Boolean> deleteMono = groupInvitationService.deleteInvitations(ids);
-        return ResponseFactory.acknowledged(deleteMono);
+        Mono<DeleteResultDTO> deleteMono = groupInvitationService.deleteInvitations(ids)
+                .map(DeleteResultDTO::get);
+        return ResponseFactory.okIfTruthy(deleteMono);
     }
 
 }

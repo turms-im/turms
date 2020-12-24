@@ -17,13 +17,11 @@
 
 package im.turms.turms.workflow.access.http.controller.user.relationship;
 
+import com.mongodb.client.result.DeleteResult;
 import im.turms.turms.bo.DateRange;
 import im.turms.turms.workflow.access.http.dto.request.user.AddRelationshipGroupDTO;
 import im.turms.turms.workflow.access.http.dto.request.user.UpdateRelationshipGroupDTO;
-import im.turms.turms.workflow.access.http.dto.response.AcknowledgedDTO;
-import im.turms.turms.workflow.access.http.dto.response.PaginationDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseFactory;
+import im.turms.turms.workflow.access.http.dto.response.*;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.access.http.util.PageUtil;
 import im.turms.turms.workflow.dao.domain.UserRelationshipGroup;
@@ -68,24 +66,25 @@ public class UserRelationshipGroupController {
 
     @DeleteMapping
     @RequiredPermission(USER_RELATIONSHIP_GROUP_DELETE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> deleteRelationshipGroups(
+    public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteRelationshipGroups(
             UserRelationshipGroup.KeyList keys) {
-        Mono<Boolean> deleteMono = keys != null && !keys.getKeys().isEmpty()
+        Mono<DeleteResult> deleteMono = keys != null && !keys.getKeys().isEmpty()
                 ? userRelationshipGroupService.deleteRelationshipGroups(new HashSet<>(keys.getKeys()))
                 : userRelationshipGroupService.deleteRelationshipGroups();
-        return ResponseFactory.acknowledged(deleteMono);
+        return ResponseFactory.okIfTruthy(deleteMono.map(DeleteResultDTO::get));
     }
 
     @PutMapping
     @RequiredPermission(USER_RELATIONSHIP_GROUP_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> updateRelationshipGroups(
+    public Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateRelationshipGroups(
             UserRelationshipGroup.KeyList keys,
             @RequestBody UpdateRelationshipGroupDTO updateRelationshipGroupDTO) {
-        Mono<Boolean> updateMono = userRelationshipGroupService.updateRelationshipGroups(
+        Mono<UpdateResultDTO> updateMono = userRelationshipGroupService.updateRelationshipGroups(
                 new HashSet<>(keys.getKeys()),
                 updateRelationshipGroupDTO.getName(),
-                updateRelationshipGroupDTO.getCreationDate());
-        return ResponseFactory.acknowledged(updateMono);
+                updateRelationshipGroupDTO.getCreationDate())
+                .map(UpdateResultDTO::get);
+        return ResponseFactory.okIfTruthy(updateMono);
     }
 
     @GetMapping

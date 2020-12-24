@@ -20,8 +20,8 @@ package im.turms.turms.workflow.service.impl.group;
 import com.google.protobuf.Int64Value;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
-import im.turms.common.exception.TurmsBusinessException;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.common.model.bo.common.Int64ValuesWithVersion;
 import im.turms.common.model.bo.user.UserInfo;
 import im.turms.common.model.bo.user.UsersInfosWithVersion;
@@ -30,8 +30,8 @@ import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.bo.DateRange;
 import im.turms.turms.constant.DaoConstant;
+import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.constraint.ValidGroupBlacklistedUserKey;
-import im.turms.turms.util.MapUtil;
 import im.turms.turms.util.ProtoUtil;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
 import im.turms.turms.workflow.dao.builder.UpdateBuilder;
@@ -78,24 +78,30 @@ public class GroupBlacklistService {
         this.userService = userService;
     }
 
-    public Mono<Boolean> blacklistUser(
+    /**
+     * @return an empty publish if the user was blacklisted successfully, or an error for other cases.
+     * Note that the method will throw if the user has been blacklisted
+     */
+    public Mono<Void> blacklistUser(
             @NotNull Long requesterId,
             @NotNull Long groupId,
             @NotNull Long blacklistedUserId,
             @Nullable ReactiveMongoOperations operations) {
         try {
+            AssertUtil.notNull(requesterId, "requesterId");
+            AssertUtil.notNull(groupId, "groupId");
             AssertUtil.notNull(blacklistedUserId, "blacklistedUserId");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
         return groupMemberService.isOwnerOrManager(requesterId, groupId)
-                .flatMap(authenticated -> authenticated != null && authenticated
+                .flatMap(authenticated -> authenticated
                         ? groupMemberService.isGroupMember(groupId, blacklistedUserId)
-                        : Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED)))
+                        : Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_ADD_BLOCKED_USER)))
                 .flatMap(isGroupMember -> {
                     GroupBlacklistedUser blacklistedUser = new GroupBlacklistedUser(
                             groupId, blacklistedUserId, new Date(), requesterId);
-                    if (isGroupMember != null && isGroupMember) {
+                    if (isGroupMember) {
                         Mono<Boolean> updateVersion = groupVersionService.updateVersion(
                                 groupId,
                                 false,
@@ -104,17 +110,15 @@ public class GroupBlacklistService {
                                 false,
                                 false);
                         if (operations != null) {
-                            return groupMemberService.deleteGroupMembers(groupId, Set.of(blacklistedUserId), operations, false)
+                            return groupMemberService.deleteGroupMembers(groupId, blacklistedUserId, operations, false)
                                     .then(operations.insert(blacklistedUser, GroupBlacklistedUser.COLLECTION_NAME))
-                                    .then(updateVersion)
-                                    .thenReturn(true);
+                                    .then(updateVersion.then().onErrorResume(throwable -> Mono.empty()));
                         } else {
                             return mongoTemplate
                                     .inTransaction()
-                                    .execute(newOperations -> groupMemberService.deleteGroupMembers(groupId, Set.of(blacklistedUserId), newOperations, false)
+                                    .execute(newOperations -> groupMemberService.deleteGroupMembers(groupId, blacklistedUserId, newOperations, false)
                                             .then(newOperations.insert(blacklistedUser, GroupBlacklistedUser.COLLECTION_NAME))
-                                            .then(updateVersion)
-                                            .thenReturn(true))
+                                            .then(updateVersion.then().onErrorResume(throwable -> Mono.empty())))
                                     .retryWhen(DaoConstant.TRANSACTION_RETRY)
                                     .singleOrEmpty();
                         }
@@ -122,19 +126,20 @@ public class GroupBlacklistService {
                         Mono<Boolean> updateVersion = groupVersionService.updateBlacklistVersion(groupId);
                         ReactiveMongoOperations mongoOperations = operations != null ? operations : mongoTemplate;
                         return mongoOperations.insert(blacklistedUser, GroupBlacklistedUser.COLLECTION_NAME)
-                                .then(updateVersion)
-                                .thenReturn(true);
+                                .then(updateVersion.then().onErrorResume(throwable -> Mono.empty()));
                     }
                 });
     }
 
-    public Mono<Boolean> unblacklistUser(
+    public Mono<Void> unblacklistUser(
             @NotNull Long requesterId,
             @NotNull Long groupId,
             @NotNull Long unblacklistedUserId,
             @Nullable ReactiveMongoOperations operations,
             boolean updateBlacklistVersion) {
         try {
+            AssertUtil.notNull(requesterId, "requesterId");
+            AssertUtil.notNull(groupId, "groupId");
             AssertUtil.notNull(unblacklistedUserId, "unblacklistedUserId");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
@@ -142,23 +147,19 @@ public class GroupBlacklistService {
         return groupMemberService
                 .isOwnerOrManager(requesterId, groupId)
                 .flatMap(authenticated -> {
-                    if (authenticated != null && authenticated) {
+                    if (authenticated) {
                         ReactiveMongoOperations mongoOperations = operations != null ? operations : mongoTemplate;
                         Query query = new Query()
-                                .addCriteria(Criteria.where(GroupBlacklistedUser.Fields.ID_GROUP_ID).is(groupId))
-                                .addCriteria(Criteria.where(GroupBlacklistedUser.Fields.ID_USER_ID).is(unblacklistedUserId));
-                        return mongoOperations.remove(query, GroupBlacklistedUser.class, GroupBlacklistedUser.COLLECTION_NAME)
-                                .flatMap(result -> {
-                                    if (result.wasAcknowledged()) {
-                                        return updateBlacklistVersion
-                                                ? groupVersionService.updateBlacklistVersion(groupId).thenReturn(true)
-                                                : Mono.just(true);
-                                    } else {
-                                        return Mono.just(false);
-                                    }
-                                });
+                                .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(new GroupBlacklistedUser.Key(groupId, unblacklistedUserId)));
+                        Mono<DeleteResult> removeMono = mongoOperations.remove(query, GroupBlacklistedUser.class, GroupBlacklistedUser.COLLECTION_NAME);
+                        if (updateBlacklistVersion) {
+                            return removeMono.flatMap(result -> groupVersionService.updateBlacklistVersion(groupId)
+                                    .onErrorResume(throwable -> Mono.empty())
+                                    .then());
+                        }
+                        return removeMono.then();
                     } else {
-                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED));
+                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_REMOVE_BLOCKED_USER));
                     }
                 });
     }
@@ -242,6 +243,11 @@ public class GroupBlacklistService {
     public Mono<UsersInfosWithVersion> queryGroupBlacklistedUserInfosWithVersion(
             @NotNull Long groupId,
             @Nullable Date lastUpdatedDate) {
+        try {
+            AssertUtil.notNull(groupId, "groupId");
+        } catch (TurmsBusinessException e) {
+            return Mono.error(e);
+        }
         return groupVersionService
                 .queryBlacklistVersion(groupId)
                 .flatMap(version -> {
@@ -295,34 +301,7 @@ public class GroupBlacklistService {
         return mongoTemplate.insert(user, GroupBlacklistedUser.COLLECTION_NAME);
     }
 
-    public Mono<Boolean> updateBlacklistedUsers(
-            @NotNull Long groupId,
-            @NotEmpty Set<Long> userIds,
-            @Nullable @PastOrPresent Date blockDate,
-            @Nullable Long requesterId) {
-        try {
-            AssertUtil.notNull(groupId, "groupId");
-            AssertUtil.notEmpty(userIds, "userIds");
-            AssertUtil.pastOrPresent(blockDate, "blockDate");
-        } catch (TurmsBusinessException e) {
-            return Mono.error(e);
-        }
-        if (Validator.areAllNull(blockDate, requesterId)) {
-            return Mono.just(true);
-        }
-        Query query = new Query()
-                .addCriteria(Criteria.where(GroupBlacklistedUser.Fields.ID_GROUP_ID).is(groupId))
-                .addCriteria(Criteria.where(GroupBlacklistedUser.Fields.ID_USER_ID).in(userIds));
-        Update update = UpdateBuilder
-                .newBuilder()
-                .setIfNotNull(GroupBlacklistedUser.Fields.BLOCK_DATE, blockDate)
-                .setIfNotNull(GroupBlacklistedUser.Fields.REQUESTER_ID, requesterId)
-                .build();
-        return mongoTemplate.updateMulti(query, update, GroupBlacklistedUser.class, GroupBlacklistedUser.COLLECTION_NAME)
-                .map(UpdateResult::wasAcknowledged);
-    }
-
-    public Mono<Boolean> updateBlacklistedUsers(
+    public Mono<UpdateResult> updateBlacklistedUsers(
             @NotEmpty Set<GroupBlacklistedUser.@ValidGroupBlacklistedUserKey Key> keys,
             @Nullable @PastOrPresent Date blockDate,
             @Nullable Long requesterId) {
@@ -336,20 +315,19 @@ public class GroupBlacklistService {
             return Mono.error(e);
         }
         if (Validator.areAllNull(blockDate, requesterId)) {
-            return Mono.just(true);
+            return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
-        return MapUtil.fluxMerge(multimap -> {
-            for (GroupBlacklistedUser.Key key : keys) {
-                multimap.put(key.getGroupId(), key.getUserId());
-            }
-        }, (monos, key, values) -> monos.add(updateBlacklistedUsers(
-                key,
-                values,
-                blockDate,
-                requesterId)));
+        Query query = new Query()
+                .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(keys));
+        Update update = UpdateBuilder
+                .newBuilder()
+                .setIfNotNull(GroupBlacklistedUser.Fields.BLOCK_DATE, blockDate)
+                .setIfNotNull(GroupBlacklistedUser.Fields.REQUESTER_ID, requesterId)
+                .build();
+        return mongoTemplate.updateMulti(query, update, GroupBlacklistedUser.class, GroupBlacklistedUser.COLLECTION_NAME);
     }
 
-    public Mono<Boolean> deleteBlacklistedUsers(@NotEmpty Set<GroupBlacklistedUser.@ValidGroupBlacklistedUserKey Key> keys) {
+    public Mono<DeleteResult> deleteBlacklistedUsers(@NotEmpty Set<GroupBlacklistedUser.@ValidGroupBlacklistedUserKey Key> keys) {
         try {
             AssertUtil.notEmpty(keys, "keys");
             for (GroupBlacklistedUser.Key key : keys) {
@@ -358,25 +336,9 @@ public class GroupBlacklistService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        return MapUtil.fluxMerge(multimap -> {
-            for (GroupBlacklistedUser.Key key : keys) {
-                multimap.put(key.getGroupId(), key.getUserId());
-            }
-        }, (monos, key, values) -> monos.add(deleteBlacklistedUsers(key, values)));
-    }
-
-    public Mono<Boolean> deleteBlacklistedUsers(@NotNull Long groupId, @NotEmpty Set<Long> userIds) {
-        try {
-            AssertUtil.notNull(groupId, "groupId");
-            AssertUtil.notEmpty(userIds, "userIds");
-        } catch (TurmsBusinessException e) {
-            return Mono.error(e);
-        }
         Query query = new Query()
-                .addCriteria(Criteria.where(GroupBlacklistedUser.Fields.ID_GROUP_ID).is(groupId))
-                .addCriteria(Criteria.where(GroupBlacklistedUser.Fields.ID_USER_ID).in(userIds));
-        return mongoTemplate.remove(query, GroupBlacklistedUser.class, GroupBlacklistedUser.COLLECTION_NAME)
-                .map(DeleteResult::wasAcknowledged);
+                .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(keys));
+        return mongoTemplate.remove(query, GroupBlacklistedUser.class, GroupBlacklistedUser.COLLECTION_NAME);
     }
 
 }

@@ -23,8 +23,8 @@ import com.google.common.collect.Sets;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Int64Value;
 import im.turms.common.constant.MessageDeliveryStatus;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
-import im.turms.common.exception.TurmsBusinessException;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.common.model.bo.message.MessageStatuses;
 import im.turms.common.model.bo.message.Messages;
 import im.turms.common.model.bo.message.MessagesWithTotal;
@@ -82,12 +82,12 @@ public class MessageServiceController {
         return clientRequest -> {
             CreateMessageRequest request = clientRequest.getTurmsRequest().getCreateMessageRequest();
             if (request.hasIsSystemMessage() && request.getIsSystemMessage().getValue()) {
-                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "Users cannot send the system message"));
+                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "Users cannot send the system message"));
             }
             Mono<Pair<Message, Set<Long>>> messageAndRelatedUserIdsMono;
             boolean isGroupMessage = request.hasGroupId();
             if (!isGroupMessage && !request.hasRecipientId()) {
-                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The recipientId must not be null for private messages"));
+                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The recipientId must not be null for private messages"));
             }
             long targetId = isGroupMessage ? request.getGroupId().getValue() : request.getRecipientId().getValue();
             if (request.hasMessageId()) {
@@ -306,7 +306,7 @@ public class MessageServiceController {
         return clientRequest -> {
             UpdateMessageRequest request = clientRequest.getTurmsRequest().getUpdateMessageRequest();
             if (request.hasIsSystemMessage() && request.getIsSystemMessage().getValue()) {
-                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "Users cannot create system messages"));
+                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "Users cannot create system messages"));
             }
             long messageId = request.getMessageId();
             if (request.hasReadDate()) {
@@ -316,19 +316,13 @@ public class MessageServiceController {
                         clientRequest.getUserId(),
                         messageId,
                         readDate)
-                        .flatMap(updatedOrDeleted -> {
-                            if (updatedOrDeleted == null || !updatedOrDeleted) {
-                                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.RESOURCES_HAVE_CHANGED));
-                            } else {
-                                return node.getSharedProperties().getService().getNotification().isNotifySenderAfterReadStatusUpdatedByRecipients()
-                                        ? messageService.queryMessageSenderId(messageId)
-                                        .flatMap(senderId -> Mono.just(RequestHandlerResultFactory.get(
-                                                senderId,
-                                                clientRequest.getTurmsRequest(),
-                                                TurmsStatusCode.OK)))
-                                        : Mono.just(RequestHandlerResultFactory.ok());
-                            }
-                        });
+                        .then(Mono.defer(() -> node.getSharedProperties().getService().getNotification().isNotifySenderAfterReadStatusUpdatedByRecipients()
+                                ? messageService.queryMessageSenderId(messageId)
+                                .flatMap(senderId -> Mono.just(RequestHandlerResultFactory.get(
+                                        senderId,
+                                        clientRequest.getTurmsRequest(),
+                                        TurmsStatusCode.OK)))
+                                : Mono.just(RequestHandlerResultFactory.OK)));
             } else {
                 String text = request.hasText() ? request.getText().getValue() : null;
                 List<byte[]> records = null;
@@ -347,23 +341,24 @@ public class MessageServiceController {
                         records,
                         recallDate,
                         null)
-                        .flatMap(wasSuccessful -> {
+                        .then(Mono.defer(() -> {
                             if (node.getSharedProperties().getService().getNotification().isNotifyRecipientsAfterMessageUpdatedBySender()) {
                                 return messageService.queryMessageRecipients(messageId)
                                         .collect(Collectors.toSet())
                                         .map(recipientsIds -> recipientsIds.isEmpty()
-                                                ? RequestHandlerResultFactory.ok()
+                                                ? RequestHandlerResultFactory.OK
                                                 : RequestHandlerResultFactory.get(recipientsIds, clientRequest.getTurmsRequest()));
                             } else {
-                                return Mono.just(RequestHandlerResultFactory.ok());
+                                return Mono.just(RequestHandlerResultFactory.OK);
                             }
-                        });
+                        }));
             }
         };
     }
 
     /**
-     * To save a lot of resources, allow sending typing status to recipients without checking their relationships.
+     * Allow sending typing status to recipients without checking their relationships for better performance.
+     * The application itself should check their relationships on the client side.
      */
     @ServiceRequestMapping(UPDATE_TYPING_STATUS_REQUEST)
     public ClientRequestHandler handleUpdateTypingStatusRequest() {
@@ -376,19 +371,19 @@ public class MessageServiceController {
                         clientRequest.getTurmsRequest(),
                         TurmsStatusCode.OK));
             } else {
-                return Mono.just(RequestHandlerResultFactory.get(TurmsStatusCode.DISABLED_FUNCTION));
+                return Mono.just(RequestHandlerResultFactory.get(TurmsStatusCode.UPDATING_TYPING_STATUS_IS_DISABLED));
             }
         };
     }
 
-    private Mono<Boolean> authAndUpdateMessageReadDate(
+    private Mono<Void> authAndUpdateMessageReadDate(
             @NotNull Long userId,
             @NotNull Long messageId,
             @Nullable Date readDate) {
-        return messageService.isMessageSentToUser(messageId, userId)
-                .flatMap(authenticated -> {
-                    if (authenticated == null || !authenticated) {
-                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED));
+        return messageService.isMessageRecipient(messageId, userId)
+                .flatMap(isMessageRecipient -> {
+                    if (!isMessageRecipient) {
+                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_MESSAGE_RECIPIENT_TO_UPDATE_MESSAGE_READ_DATE));
                     }
                     Date date = null;
                     if (readDate != null) {
@@ -399,7 +394,8 @@ public class MessageServiceController {
                     } // else unset the read date
                     return messageStatusService.updateMessagesReadDate(
                             messageId,
-                            date);
+                            date)
+                            .then();
                 });
     }
 

@@ -17,7 +17,7 @@
 
 package im.turms.turms.workflow.dao.domain;
 
-import im.turms.turms.workflow.dao.index.documentation.OptionalIndexedForCustomFeature;
+import im.turms.turms.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -32,11 +32,10 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
- * Only use the field _id.ownerId instead of ID
- * to be able to query all related users according to the owner ID in a shard to acquire a better performance.
- * And the chunk size is acceptable.
- *
  * @author James Chen
+ * @implNote Shard by "_id.ownerId" instead of ID so that we can query all
+ * related users according to the owner ID in the same shard efficiently.
+ * And the chunk size is acceptable.
  */
 @Data
 @AllArgsConstructor(onConstructor = @__(@PersistenceConstructor))
@@ -50,7 +49,7 @@ public final class UserRelationshipGroupMember {
     private final Key key;
 
     @Field(Fields.JOIN_DATE)
-    @OptionalIndexedForCustomFeature
+    @OptionalIndexedForExtendedFeature
     private final Date joinDate;
 
     public UserRelationshipGroupMember(
@@ -69,12 +68,15 @@ public final class UserRelationshipGroupMember {
         @Indexed
         private final Long ownerId;
 
+        /**
+         * Not need to index because its low selectivity
+         */
         @Field(Fields.GROUP_INDEX)
-        @OptionalIndexedForCustomFeature
+        @OptionalIndexedForExtendedFeature
         private final Integer groupIndex;
 
         @Field(Fields.RELATED_USER_ID)
-        @OptionalIndexedForCustomFeature
+        @OptionalIndexedForExtendedFeature
         private final Long relatedUserId;
 
         public static class Fields {

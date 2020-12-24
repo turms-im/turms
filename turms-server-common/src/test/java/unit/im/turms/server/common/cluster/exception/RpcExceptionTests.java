@@ -17,7 +17,7 @@
 
 package unit.im.turms.server.common.cluster.exception;
 
-import im.turms.common.constant.statuscode.TurmsStatusCode;
+import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.cluster.exception.RpcException;
 import im.turms.server.common.cluster.service.rpc.RpcErrorCode;
 import io.rsocket.exceptions.ApplicationErrorException;
@@ -33,7 +33,7 @@ class RpcExceptionTests {
     @Test
     void get_shouldEqual_ifParamsAreSame() {
         RpcErrorCode errorCode = RpcErrorCode.UNKNOWN_ERROR;
-        TurmsStatusCode statusCode = TurmsStatusCode.ALREADY_GROUP_MEMBER;
+        TurmsStatusCode statusCode = TurmsStatusCode.SERVER_INTERNAL_ERROR;
         String message = "My error message";
         RpcException exception = RpcException.get(errorCode, statusCode, message);
 
@@ -45,7 +45,7 @@ class RpcExceptionTests {
     @Test
     void parse_shouldEqual_ifParamsAreSame() {
         RpcErrorCode errorCode = RpcErrorCode.UNKNOWN_ERROR;
-        TurmsStatusCode statusCode = TurmsStatusCode.ALREADY_GROUP_MEMBER;
+        TurmsStatusCode statusCode = TurmsStatusCode.SERVER_INTERNAL_ERROR;
         String description = "My error message";
         RpcException exception = RpcException.get(errorCode, statusCode, description);
 

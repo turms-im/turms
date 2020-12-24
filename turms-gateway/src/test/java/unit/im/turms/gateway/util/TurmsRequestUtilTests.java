@@ -18,7 +18,7 @@
 package unit.im.turms.gateway.util;
 
 import com.google.protobuf.Int64Value;
-import im.turms.common.exception.TurmsBusinessException;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.common.model.dto.request.message.CreateMessageRequest;
 import im.turms.common.model.dto.request.signal.AckRequest;

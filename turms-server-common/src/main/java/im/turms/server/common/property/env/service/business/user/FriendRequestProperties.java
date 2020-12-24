@@ -33,8 +33,8 @@ import javax.validation.constraints.Min;
 public class FriendRequestProperties {
 
     @JsonView(MutablePropertiesView.class)
-    @Description("The maximum allowed length for the text of a friend request. 0 indicates no length limit")
-    @Min(0)
+    @Description("The maximum allowed length for the text of a friend request.")
+    @Min(1)
     private int contentLimit = 200;
 
     @JsonView(MutablePropertiesView.class)
@@ -42,8 +42,8 @@ public class FriendRequestProperties {
     private boolean allowResendingRequestAfterDeclinedOrIgnoredOrExpired = false;
 
     @JsonView(MutablePropertiesView.class)
-    @Description("A friend request will become expired after the TTL has elapsed. 0 means infinite")
-    @Min(0)
+    @Description("A friend request will become expired after the TTL has elapsed. Cannot be infinite for performance reason")
+    @Min(1)
     private int friendRequestTimeToLiveHours = 30 * 24;
 
     @Description("Clean or update the expired friend requests when the cron expression is triggered." +

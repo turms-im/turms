@@ -25,6 +25,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.metadata.annotation.Description;
@@ -64,8 +65,8 @@ public class PropertiesUtil {
             .setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
     public static final TypeReference<HashMap<String, Object>> TYPE_REF_MAP = new TypeReference<>() {
     };
-    public static final Map<String, Object> METADATA = getMetadata(new HashMap<>(32), TurmsProperties.class, false);
-    public static final Map<String, Object> ONLY_MUTABLE_METADATA = getMetadata(new HashMap<>(32), TurmsProperties.class, true);
+    public static final Map<String, Object> METADATA = ImmutableMap.copyOf(getMetadata(new HashMap<>(32), TurmsProperties.class, false));
+    public static final Map<String, Object> ONLY_MUTABLE_METADATA = ImmutableMap.copyOf(getMetadata(new HashMap<>(32), TurmsProperties.class, true));
 
     PropertiesUtil() {}
 

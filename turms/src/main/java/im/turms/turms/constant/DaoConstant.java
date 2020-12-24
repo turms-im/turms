@@ -17,7 +17,7 @@
 
 package im.turms.turms.constant;
 
-import im.turms.common.exception.TurmsBusinessException;
+import im.turms.server.common.exception.TurmsBusinessException;
 import org.springframework.dao.DuplicateKeyException;
 import reactor.util.retry.Retry;
 
@@ -36,7 +36,6 @@ public class DaoConstant {
     public static final Long RESERVED_ID = 0L;
     public static final Long ADMIN_ROLE_ROOT_ID = RESERVED_ID;
     public static final Long ADMIN_REQUESTER_ID = RESERVED_ID;
-    public static final String ADMIN_ROLE_ROOT_NAME = "ROOT";
     public static final Long DEFAULT_USER_PERMISSION_GROUP_ID = RESERVED_ID;
     public static final Long DEFAULT_GROUP_TYPE_ID = RESERVED_ID;
     public static final String DEFAULT_GROUP_TYPE_NAME = "DEFAULT";

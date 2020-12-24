@@ -32,13 +32,13 @@ import java.util.Set;
 public final class UserRelationshipDTO {
 
     private final Key key;
-    private final Boolean isBlocked;
+    private final Date blockDate;
     private final Date establishmentDate;
     private final Set<Integer> groupIndexes;
 
-    public UserRelationshipDTO(Long ownerId, Long relatedUserId, Boolean isBlocked, Date establishmentDate, Set<Integer> groupIndexes) {
+    public UserRelationshipDTO(Long ownerId, Long relatedUserId, Date blockDate, Date establishmentDate, Set<Integer> groupIndexes) {
         this.key = new Key(ownerId, relatedUserId);
-        this.isBlocked = isBlocked;
+        this.blockDate = blockDate;
         this.establishmentDate = establishmentDate;
         this.groupIndexes = groupIndexes;
     }
@@ -51,7 +51,7 @@ public final class UserRelationshipDTO {
         return new UserRelationshipDTO(
                 relationship.getKey().getOwnerId(),
                 relationship.getKey().getRelatedUserId(),
-                relationship.getIsBlocked(),
+                relationship.getBlockDate(),
                 relationship.getEstablishmentDate(),
                 groupIndexes);
     }

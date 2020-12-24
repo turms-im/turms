@@ -24,28 +24,28 @@ class UserServiceTests: XCTestCase {
 
         // Create
         TestUtil.assertCompleted("createRelationship_shouldSucceed", turmsClient.userService.createRelationship(userId: 10, isBlocked: true).recover { error -> Promise<Void> in
-            if let businessError = error as? TurmsBusinessError, businessError.code == .relationshipHasEstablished {
+            if let businessError = error as? TurmsBusinessError, businessError.code == TurmsStatusCode.createExistingRelationship.rawValue {
                 return Promise.value(())
             } else {
                 throw error
             }
         })
         TestUtil.assertCompleted("createFriendRelationship_shouldSucceed", turmsClient.userService.createFriendRelationship(userId: 10).recover { error -> Promise<Void> in
-            if let businessError = error as? TurmsBusinessError, businessError.code == .relationshipHasEstablished {
+            if let businessError = error as? TurmsBusinessError, businessError.code == TurmsStatusCode.createExistingRelationship.rawValue {
                 return Promise.value(())
             } else {
                 throw error
             }
         })
         TestUtil.assertCompleted("createBlacklistedUserRelationship_shouldSucceed", turmsClient.userService.createBlacklistedUserRelationship(userId: 10).recover { error -> Promise<Void> in
-            if let businessError = error as? TurmsBusinessError, businessError.code == .relationshipHasEstablished {
+            if let businessError = error as? TurmsBusinessError, businessError.code == TurmsStatusCode.createExistingRelationship.rawValue {
                 return Promise.value(())
             } else {
                 throw error
             }
         })
         TestUtil.assertCompleted("sendFriendRequest_shouldReturnFriendRequestId", turmsClient.userService.sendFriendRequest(recipientId: 11, content: "content").recover { error -> Promise<Int64> in
-            if let businessError = error as? TurmsBusinessError, businessError.code == .friendRequestHasExisted {
+            if let businessError = error as? TurmsBusinessError, businessError.code == TurmsStatusCode.createExistingFriendRequest.rawValue {
                 return Promise.value(0)
             } else {
                 throw error

@@ -15,14 +15,31 @@
  * limitations under the License.
  */
 
-package im.turms.turms.workflow.access.http.dto.response;
+package im.turms.turms.bo;
 
+import im.turms.server.common.constant.TurmsStatusCode;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
  * @author James Chen
  */
 @Data
-public final class AcknowledgedDTO {
-    private final boolean acknowledged;
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class ServicePermission {
+
+    public static final ServicePermission OK = new ServicePermission(TurmsStatusCode.OK, null);
+
+    private final TurmsStatusCode code;
+    private final String reason;
+
+    public static ServicePermission get(TurmsStatusCode code) {
+        return new ServicePermission(code, null);
+    }
+
+    public static ServicePermission get(TurmsStatusCode code, String reason) {
+        return new ServicePermission(code, reason);
+    }
+
 }

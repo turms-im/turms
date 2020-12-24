@@ -17,7 +17,7 @@
 
 package im.turms.server.common.cluster.service.rpc;
 
-import im.turms.common.constant.statuscode.TurmsStatusCode;
+import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.cluster.exception.RpcException;
 import im.turms.server.common.cluster.service.ClusterService;
 import im.turms.server.common.cluster.service.discovery.DiscoveryService;
@@ -92,7 +92,7 @@ public class RpcService implements ClusterService {
         List<MemberInfoWithConnection> serviceMembers = discoveryService.getOtherActiveConnectedServiceMemberList();
         int size = serviceMembers.size();
         if (size == 0) {
-            return Mono.error(RpcException.get(RpcErrorCode.SERVICE_NOT_FOUND, TurmsStatusCode.UNAVAILABLE));
+            return Mono.error(RpcException.get(RpcErrorCode.SERVICE_NOT_FOUND, TurmsStatusCode.SERVER_UNAVAILABLE));
         }
         // use System.currentTimeMillis() instead of "RandomUtil.nextPositiveInt()" for better performance
         int index = (int) (System.currentTimeMillis() % size);
@@ -133,7 +133,7 @@ public class RpcService implements ClusterService {
             }
             RSocket connection = discoveryService.getConnectionManager().getMemberConnection(memberNodeId);
             if (connection == null) {
-                return Mono.error(RpcException.get(RpcErrorCode.CONNECTION_NOT_FOUND, TurmsStatusCode.UNAVAILABLE, "The RSocket instance is missing for the member ID: " + memberNodeId));
+                return Mono.error(RpcException.get(RpcErrorCode.CONNECTION_NOT_FOUND, TurmsStatusCode.SERVER_UNAVAILABLE, "The RSocket instance is missing for the member ID: " + memberNodeId));
             }
             return requestResponse0(memberNodeId, connection, request, timeout);
         } catch (Exception e) {
@@ -256,10 +256,10 @@ public class RpcService implements ClusterService {
 
     public <T> Flux<T> requestResponsesFromOtherMembers(List<MemberInfoWithConnection> members, @NotNull RpcCallable<T> request, @NotNull Duration timeout, boolean rejectIfMissingAnyConnection) {
         if (members.isEmpty()) {
-            return Flux.error(RpcException.get(RpcErrorCode.SERVICE_NOT_FOUND, TurmsStatusCode.UNAVAILABLE));
+            return Flux.error(RpcException.get(RpcErrorCode.SERVICE_NOT_FOUND, TurmsStatusCode.SERVER_UNAVAILABLE));
         }
         if (rejectIfMissingAnyConnection && !discoveryService.getConnectionManager().isHasConnectedToAllMembers()) {
-            return Flux.error(RpcException.get(RpcErrorCode.CONNECTION_NOT_FOUND, TurmsStatusCode.UNAVAILABLE, "Not all connections are established"));
+            return Flux.error(RpcException.get(RpcErrorCode.CONNECTION_NOT_FOUND, TurmsStatusCode.SERVER_UNAVAILABLE, "Not all connections are established"));
         }
         ByteBuf buffer = serializationService.serialize(request);
         Payload requestPayload = ByteBufPayload.create(buffer);
@@ -288,10 +288,10 @@ public class RpcService implements ClusterService {
                                                            @NotNull Duration timeout,
                                                            boolean rejectIfMissingAnyConnection) {
         if (members.isEmpty()) {
-            return Mono.error(RpcException.get(RpcErrorCode.SERVICE_NOT_FOUND, TurmsStatusCode.UNAVAILABLE));
+            return Mono.error(RpcException.get(RpcErrorCode.SERVICE_NOT_FOUND, TurmsStatusCode.SERVER_UNAVAILABLE));
         }
         if (rejectIfMissingAnyConnection && !discoveryService.getLocalNodeStatusManager().getLocalMember().isActive()) {
-            return Mono.error(RpcException.get(RpcErrorCode.CONNECTION_NOT_FOUND, TurmsStatusCode.UNAVAILABLE, "Not all connections are established"));
+            return Mono.error(RpcException.get(RpcErrorCode.CONNECTION_NOT_FOUND, TurmsStatusCode.SERVER_UNAVAILABLE, "Not all connections are established"));
         }
         ByteBuf buffer = serializationService.serialize(request);
         Payload requestPayload = ByteBufPayload.create(buffer);

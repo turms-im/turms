@@ -22,10 +22,7 @@ import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.workflow.access.http.dto.request.user.AddRelationshipDTO;
 import im.turms.turms.workflow.access.http.dto.request.user.UpdateRelationshipDTO;
 import im.turms.turms.workflow.access.http.dto.request.user.UserRelationshipDTO;
-import im.turms.turms.workflow.access.http.dto.response.AcknowledgedDTO;
-import im.turms.turms.workflow.access.http.dto.response.PaginationDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseDTO;
-import im.turms.turms.workflow.access.http.dto.response.ResponseFactory;
+import im.turms.turms.workflow.access.http.dto.response.*;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.access.http.util.PageUtil;
 import im.turms.turms.workflow.dao.domain.UserRelationship;
@@ -63,17 +60,17 @@ public class UserRelationshipController {
 
     @PostMapping
     @RequiredPermission(USER_RELATIONSHIP_CREATE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> addRelationship(@RequestBody AddRelationshipDTO addRelationshipDTO) {
-        Mono<Boolean> upsertMono = userRelationshipService.upsertOneSidedRelationship(
+    public Mono<ResponseEntity<ResponseDTO<Void>>> addRelationship(@RequestBody AddRelationshipDTO addRelationshipDTO) {
+        Mono<Void> upsertMono = userRelationshipService.upsertOneSidedRelationship(
                 addRelationshipDTO.getOwnerId(),
                 addRelationshipDTO.getRelatedUserId(),
-                addRelationshipDTO.getIsBlocked(),
+                addRelationshipDTO.getBlockDate(),
                 DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX,
                 null,
                 addRelationshipDTO.getEstablishmentDate(),
                 false,
                 null);
-        return ResponseFactory.acknowledged(upsertMono);
+        return upsertMono.thenReturn(ResponseFactory.OK);
     }
 
     @GetMapping
@@ -117,22 +114,25 @@ public class UserRelationshipController {
 
     @PutMapping
     @RequiredPermission(USER_RELATIONSHIP_UPDATE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> updateRelationships(
+    public Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateRelationships(
             UserRelationship.KeyList keys,
             @RequestBody UpdateRelationshipDTO updateRelationshipDTO) {
-        Mono<Boolean> updated = userRelationshipService.updateUserOneSidedRelationships(
+        Mono<UpdateResultDTO> updateMono = userRelationshipService.updateUserOneSidedRelationships(
                 new HashSet<>(keys.getKeys()),
-                updateRelationshipDTO.getIsBlocked(),
-                updateRelationshipDTO.getEstablishmentDate());
-        return ResponseFactory.acknowledged(updated);
+                updateRelationshipDTO.getBlockDate(),
+                updateRelationshipDTO.getEstablishmentDate())
+                .map(UpdateResultDTO::get);
+        return ResponseFactory.okIfTruthy(updateMono);
     }
 
     @DeleteMapping
     @RequiredPermission(USER_RELATIONSHIP_DELETE)
-    public Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> deleteRelationships(
+    public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteRelationships(
             UserRelationship.KeyList keys) {
-        Mono<Boolean> deleteMono = userRelationshipService.deleteOneSidedRelationships(new HashSet<>(keys.getKeys()));
-        return ResponseFactory.acknowledged(deleteMono);
+        Mono<DeleteResultDTO> deleteMono = userRelationshipService
+                .deleteOneSidedRelationships(new HashSet<>(keys.getKeys()))
+                .map(DeleteResultDTO::get);
+        return ResponseFactory.okIfTruthy(deleteMono);
     }
 
     private Flux<UserRelationshipDTO> relationship2dto(Boolean withGroupIndexes, Flux<UserRelationship> relationshipsFlux) {

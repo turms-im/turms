@@ -18,8 +18,10 @@
 package im.turms.turms.workflow.service.impl.admin;
 
 import com.google.common.collect.Sets;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
-import im.turms.common.exception.TurmsBusinessException;
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.common.util.Validator;
 import im.turms.server.common.cluster.service.config.ChangeStreamUtil;
 import im.turms.server.common.constraint.NoWhitespace;
@@ -27,6 +29,7 @@ import im.turms.server.common.manager.PasswordManager;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.bo.AdminInfo;
 import im.turms.turms.constant.DaoConstant;
+import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.workflow.access.http.permission.AdminPermission;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
 import im.turms.turms.workflow.dao.builder.UpdateBuilder;
@@ -51,6 +54,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -62,6 +66,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class AdminService {
 
+    private static final String ERROR_UPDATE_ADMIN_WITH_HIGHER_RANK = "Only a admin with a lower rank compared to the account can be created, updated, or deleted";
     /**
      * Use the hard-coded account because it's immutable.
      */
@@ -80,7 +85,7 @@ public class AdminService {
     /**
      * Account -> AdminInfo
      */
-    private static final Map<String, AdminInfo> adminMap = new ConcurrentHashMap<>();
+    private final Map<String, AdminInfo> adminMap = new ConcurrentHashMap<>();
 
     public AdminService(
             PasswordManager passwordManager,
@@ -115,7 +120,7 @@ public class AdminService {
                             adminMap.clear();
                             break;
                         default:
-                            log.error("Detect an illegal operation on Admin collection: " + event);
+                            log.fatal("Detect an illegal operation on Admin collection: " + event);
                     }
                 })
                 .onErrorContinue((throwable, o) -> log.error("Error while processing the change stream event of Admin: {}", o, throwable))
@@ -157,6 +162,7 @@ public class AdminService {
             @Nullable @PastOrPresent Date registrationDate,
             boolean upsert) {
         try {
+            AssertUtil.notNull(requesterAccount, "requesterAccount");
             AssertUtil.noWhitespace(account, "account");
             AssertUtil.length(account, "account", MIN_ACCOUNT_LIMIT, MAX_ACCOUNT_LIMIT);
             AssertUtil.noWhitespace(rawPassword, "rawPassword");
@@ -171,8 +177,7 @@ public class AdminService {
         return adminRoleService.isAdminHigherThanRole(requesterAccount, roleId)
                 .flatMap(isHigher -> isHigher
                         ? addAdmin(account, rawPassword, roleId, name, registrationDate, upsert)
-                        : Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED)))
-                .switchIfEmpty(Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED)));
+                        : Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED, ERROR_UPDATE_ADMIN_WITH_HIGHER_RANK)));
     }
 
     public Mono<Admin> addAdmin(
@@ -241,6 +246,7 @@ public class AdminService {
             @NotNull String account,
             @NotNull AdminPermission permission) {
         try {
+            AssertUtil.notNull(account, "account");
             AssertUtil.notNull(permission, "permission");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
@@ -261,15 +267,15 @@ public class AdminService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-
-        boolean isQueryingOneOwnInfo;
+        boolean isQueryingSelfInfo;
+        // Even if the account doesn't have the permission ADMIN_QUERY, it can still query its own information
         if (permission == AdminPermission.ADMIN_QUERY) {
-            String accounts = exchange.getRequest().getQueryParams().getFirst("accounts");
-            isQueryingOneOwnInfo = accounts != null && accounts.equals(account);
+            List<String> accounts = exchange.getRequest().getQueryParams().get("accounts");
+            isQueryingSelfInfo = accounts != null && accounts.size() == 1 && accounts.get(0).equals(account);
         } else {
-            isQueryingOneOwnInfo = false;
+            isQueryingSelfInfo = false;
         }
-        return isQueryingOneOwnInfo
+        return isQueryingSelfInfo
                 ? Mono.just(true)
                 : isAdminAuthorized(account, permission);
     }
@@ -291,11 +297,14 @@ public class AdminService {
         } else {
             return queryAdmin(account)
                     .map(admin -> {
-                        boolean valid = passwordManager.matchesAdminPassword(rawPassword, admin.getPassword());
-                        if (valid) {
-                            adminMap.get(admin.getAccount()).setRawPassword(rawPassword);
+                        boolean isValidPassword = passwordManager.matchesAdminPassword(rawPassword, admin.getPassword());
+                        if (isValidPassword) {
+                            AdminInfo info = adminMap.get(admin.getAccount());
+                            if (info != null) {
+                                info.setRawPassword(rawPassword);
+                            }
                         }
-                        return valid;
+                        return isValidPassword;
                     })
                     .defaultIfEmpty(false);
         }
@@ -328,11 +337,11 @@ public class AdminService {
         return mongoTemplate.find(query, Admin.class, Admin.COLLECTION_NAME);
     }
 
-
-    public Mono<Boolean> authAndDeleteAdmins(
+    public Mono<DeleteResult> authAndDeleteAdmins(
             @NotNull String requesterAccount,
             @NotEmpty Set<String> accounts) {
         try {
+            AssertUtil.notNull(requesterAccount, "requesterAccount");
             AssertUtil.notEmpty(accounts, "accounts");
             AssertUtil.state(!accounts.contains(ROOT_ADMIN_ACCOUNT), "The root admin is reserved and cannot be deleted");
         } catch (TurmsBusinessException e) {
@@ -341,11 +350,10 @@ public class AdminService {
         return adminRoleService.isAdminHigherThanAdmins(requesterAccount, accounts)
                 .flatMap(triple -> triple.getLeft()
                         ? deleteAdmins(accounts)
-                        : Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED)))
-                .switchIfEmpty(Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED)));
+                        : Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED, ERROR_UPDATE_ADMIN_WITH_HIGHER_RANK)));
     }
 
-    private Mono<Boolean> deleteAdmins(@NotEmpty Set<String> accounts) {
+    private Mono<DeleteResult> deleteAdmins(@NotEmpty Set<String> accounts) {
         try {
             AssertUtil.notEmpty(accounts, "accounts");
         } catch (TurmsBusinessException e) {
@@ -355,16 +363,14 @@ public class AdminService {
                 .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(accounts));
         return mongoTemplate.remove(query, Admin.class, Admin.COLLECTION_NAME)
                 .map(result -> {
-                    if (result.wasAcknowledged()) {
-                        for (String account : accounts) {
-                            adminMap.remove(account);
-                        }
+                    for (String account : accounts) {
+                        adminMap.remove(account);
                     }
-                    return result.wasAcknowledged();
+                    return result;
                 });
     }
 
-    public Mono<Boolean> authAndUpdateAdmins(
+    public Mono<UpdateResult> authAndUpdateAdmins(
             @NotNull String requesterAccount,
             @NotEmpty Set<String> targetAccounts,
             @Nullable @NoWhitespace @Length(min = MIN_PASSWORD_LIMIT, max = MAX_PASSWORD_LIMIT) String rawPassword,
@@ -381,10 +387,10 @@ public class AdminService {
             return Mono.error(e);
         }
         if (Validator.areAllNull(rawPassword, name, roleId)) {
-            return Mono.just(true);
+            return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
-        boolean onlyUpdateRequester = targetAccounts.size() == 1 && targetAccounts.iterator().next().equals(requesterAccount);
-        if (onlyUpdateRequester) {
+        boolean onlyUpdateRequesterInfo = targetAccounts.size() == 1 && targetAccounts.iterator().next().equals(requesterAccount);
+        if (onlyUpdateRequesterInfo) {
             if (roleId == null) {
                 return updateAdmins(targetAccounts, rawPassword, name, null);
             } else {
@@ -398,19 +404,18 @@ public class AdminService {
                                 return adminRoleService.queryRankByRole(roleId)
                                         .flatMap(targetRoleRank -> triple.getMiddle() > targetRoleRank
                                                 ? updateAdmins(targetAccounts, rawPassword, name, roleId)
-                                                : Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED)));
+                                                : Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED, ERROR_UPDATE_ADMIN_WITH_HIGHER_RANK)));
                             } else {
                                 return updateAdmins(targetAccounts, rawPassword, name, null);
                             }
                         } else {
-                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED));
+                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED, ERROR_UPDATE_ADMIN_WITH_HIGHER_RANK));
                         }
-                    })
-                    .switchIfEmpty(Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED)));
+                    });
         }
     }
 
-    public Mono<Boolean> updateAdmins(
+    public Mono<UpdateResult> updateAdmins(
             @NotEmpty Set<String> targetAccounts,
             @Nullable @NoWhitespace @Length(min = MIN_PASSWORD_LIMIT, max = MAX_PASSWORD_LIMIT) String rawPassword,
             @Nullable @NoWhitespace @Length(min = MIN_NAME_LIMIT, max = MAX_NAME_LIMIT) String name,
@@ -425,7 +430,7 @@ public class AdminService {
             return Mono.error(e);
         }
         if (Validator.areAllNull(rawPassword, name, roleId)) {
-            return Mono.just(true);
+            return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
         Query query = new Query();
         query.addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(targetAccounts));
@@ -440,8 +445,7 @@ public class AdminService {
                 .build();
         return mongoTemplate.updateMulti(query, update, Admin.class)
                 .map(result -> {
-                    boolean wasAcknowledged = result.wasAcknowledged();
-                    if (wasAcknowledged && rawPassword != null) {
+                    if (rawPassword != null) {
                         for (String account : targetAccounts) {
                             AdminInfo adminInfo = adminMap.get(account);
                             if (adminInfo != null) {
@@ -449,7 +453,7 @@ public class AdminService {
                             }
                         }
                     }
-                    return wasAcknowledged;
+                    return result;
                 });
     }
 

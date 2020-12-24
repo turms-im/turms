@@ -17,8 +17,8 @@
 
 package im.turms.server.common.access.http.config;
 
-import im.turms.common.constant.statuscode.TurmsStatusCode;
-import im.turms.common.exception.TurmsBusinessException;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import lombok.Data;
 import org.springframework.core.io.buffer.DataBufferLimitException;
 import org.springframework.dao.DuplicateKeyException;
@@ -35,39 +35,78 @@ import java.util.Date;
 public class ErrorAttributes {
 
     private final int status;
-    private final String message;
+    private final int code;
+    private final String reason;
     private final Date timestamp;
-    private final String error;
     private final String exception;
 
     public ErrorAttributes(Throwable throwable) {
-        HttpStatus errorStatus;
+        SimpleErrorAttributes attributes;
         if (throwable instanceof ResponseStatusException) {
-            ResponseStatusException exception = (ResponseStatusException) throwable;
-            errorStatus = exception.getStatus();
-            message = exception.getReason();
+            attributes = SimpleErrorAttributes.fromResponseStatusException((ResponseStatusException) throwable);
         } else if (throwable instanceof TurmsBusinessException) {
-            TurmsStatusCode code = ((TurmsBusinessException) throwable).getCode();
-            errorStatus = HttpStatus.valueOf(code.getHttpStatusCode());
-            message = code.getReason();
+            attributes = SimpleErrorAttributes.fromTurmsBusinessException((TurmsBusinessException) throwable);
         } else {
-            if (throwable instanceof ConstraintViolationException) {
-                errorStatus = HttpStatus.valueOf(TurmsStatusCode.ILLEGAL_ARGUMENTS.getHttpStatusCode());
-            } else if (throwable instanceof DuplicateKeyException) {
-                errorStatus = HttpStatus.valueOf(TurmsStatusCode.DUPLICATE_KEY.getHttpStatusCode());
-            } else if (throwable instanceof DataBufferLimitException) {
-                errorStatus = HttpStatus.valueOf(TurmsStatusCode.FILE_TOO_LARGE.getHttpStatusCode());
-            } else {
-                errorStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-            }
-            message = throwable.getMessage() != null
-                    ? throwable.getMessage()
-                    : "";
+            attributes = SimpleErrorAttributes.fromTrivialException(throwable);
         }
-        this.status = errorStatus.value();
-        this.timestamp = new Date();
-        this.error = errorStatus.getReasonPhrase();
-        this.exception = throwable.getClass().getName();
+        status = attributes.httpStatus;
+        code = attributes.statusCode.getBusinessCode();
+        reason = attributes.reason;
+        timestamp = new Date();
+        exception = throwable.getClass().getName();
+    }
+
+    @Data
+    private static class SimpleErrorAttributes {
+
+        private final int httpStatus;
+        private final TurmsStatusCode statusCode;
+        private final String reason;
+
+        private static SimpleErrorAttributes fromTurmsBusinessException(TurmsBusinessException exception) {
+            TurmsStatusCode statusCode = exception.getCode();
+            HttpStatus httpStatus = HttpStatus.valueOf(statusCode.getHttpStatusCode());
+            String reason = statusCode.getReason();
+            return new SimpleErrorAttributes(httpStatus.value(), statusCode, reason);
+        }
+
+        private static SimpleErrorAttributes fromResponseStatusException(ResponseStatusException exception) {
+            HttpStatus httpStatus = exception.getStatus();
+            String reason = exception.getReason();
+            TurmsStatusCode statusCode;
+            switch (httpStatus.series()) {
+                case INFORMATIONAL:
+                case SUCCESSFUL:
+                case REDIRECTION:
+                    statusCode = TurmsStatusCode.OK;
+                    break;
+                case CLIENT_ERROR:
+                    //TODO
+                    statusCode = TurmsStatusCode.SERVER_INTERNAL_ERROR;
+                    break;
+                case SERVER_ERROR:
+                    statusCode = TurmsStatusCode.OK;
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + httpStatus.series());
+            }
+            return new SimpleErrorAttributes(httpStatus.value(), statusCode, reason);
+        }
+
+        private static SimpleErrorAttributes fromTrivialException(Throwable throwable) {
+            TurmsStatusCode statusCode;
+            if (throwable instanceof ConstraintViolationException) {
+                statusCode = TurmsStatusCode.ILLEGAL_ARGUMENT;
+            } else if (throwable instanceof DuplicateKeyException) {
+                statusCode = TurmsStatusCode.RECORD_CONTAINS_DUPLICATE_KEY;
+            } else if (throwable instanceof DataBufferLimitException) {
+                statusCode = TurmsStatusCode.FILE_TOO_LARGE;
+            } else {
+                statusCode = TurmsStatusCode.SERVER_INTERNAL_ERROR;
+            }
+            String reason = throwable.getMessage();
+            return new SimpleErrorAttributes(statusCode.getHttpStatusCode(), statusCode, reason);
+        }
     }
 
 }

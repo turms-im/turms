@@ -1,6 +1,6 @@
 package im.turms.gateway.redis.config;
 
-import im.turms.common.constant.statuscode.TurmsStatusCode;
+import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.gateway.pojo.bo.login.LoginFailureReasonKey;
 import im.turms.gateway.pojo.bo.session.SessionDisconnectionReasonKey;
 import im.turms.server.common.bo.session.UserSessionId;

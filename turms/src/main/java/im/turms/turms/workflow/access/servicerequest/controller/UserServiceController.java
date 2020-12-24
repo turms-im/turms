@@ -22,7 +22,7 @@ import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.ProfileAccessStrategy;
 import im.turms.common.constant.UserStatus;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
+import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.common.model.bo.common.Int64Values;
 import im.turms.common.model.bo.user.UserSessionId;
 import im.turms.common.model.bo.user.UserSessionIds;
@@ -115,13 +115,13 @@ public class UserServiceController {
             QueryUserIdsNearbyRequest request = clientRequest.getTurmsRequest().getQueryUserIdsNearbyRequest();
             Double distance = request.hasDistance() ? (double) request.getDistance().getValue() : null;
             Short maxNumber = request.hasMaxNumber() ? (short) request.getMaxNumber().getValue() : null;
-            Mono<Boolean> updateMono = sessionLocationService.upsertUserLocation(
+            Mono<Void> upsertMono = sessionLocationService.upsertUserLocation(
                     clientRequest.getUserId(),
                     clientRequest.getDeviceType(),
                     new Point(request.getLongitude(), request.getLatitude()),
                     new Date());
             if (sessionLocationService.isTreatUserIdAndDeviceTypeAsUniqueUser()) {
-                return updateMono.then(sessionLocationService.queryNearestUserSessionIds(
+                return upsertMono.then(sessionLocationService.queryNearestUserSessionIds(
                         clientRequest.getUserId(),
                         clientRequest.getDeviceType(),
                         maxNumber,
@@ -145,7 +145,7 @@ public class UserServiceController {
                                     .build());
                         }));
             } else {
-                return updateMono.then(sessionLocationService.queryNearestUserIds(
+                return upsertMono.then(sessionLocationService.queryNearestUserIds(
                         clientRequest.getUserId(),
                         clientRequest.getDeviceType(),
                         maxNumber,
@@ -167,12 +167,12 @@ public class UserServiceController {
             QueryUserInfosNearbyRequest request = clientRequest.getTurmsRequest().getQueryUserInfosNearbyRequest();
             Double distance = request.hasDistance() ? (double) request.getDistance().getValue() : null;
             Short maxNumber = request.hasMaxNumber() ? (short) request.getMaxNumber().getValue() : null;
-            Mono<Boolean> updateMono = sessionLocationService.upsertUserLocation(
+            Mono<Void> upsertMono = sessionLocationService.upsertUserLocation(
                     clientRequest.getUserId(),
                     clientRequest.getDeviceType(),
                     new Point(request.getLongitude(), request.getLatitude()),
                     new Date());
-            return updateMono.then(usersNearbyService.queryUsersProfilesNearby(
+            return upsertMono.then(usersNearbyService.queryUsersProfilesNearby(
                     clientRequest.getUserId(),
                     clientRequest.getDeviceType(),
                     maxNumber,
@@ -231,12 +231,12 @@ public class UserServiceController {
     public ClientRequestHandler handleUpdateUserLocationRequest() {
         return clientRequest -> {
             UpdateUserLocationRequest request = clientRequest.getTurmsRequest().getUpdateUserLocationRequest();
-            Mono<Boolean> updateMono = sessionLocationService.upsertUserLocation(
+            Mono<Void> updateMono = sessionLocationService.upsertUserLocation(
                     clientRequest.getUserId(),
                     clientRequest.getDeviceType(),
                     new Point(request.getLatitude(), request.getLongitude()),
                     new Date());
-            return updateMono.map(RequestHandlerResultFactory::okIfTrue);
+            return updateMono.thenReturn(RequestHandlerResultFactory.OK);
         };
     }
 
@@ -251,7 +251,7 @@ public class UserServiceController {
             UpdateUserOnlineStatusRequest request = clientRequest.getTurmsRequest().getUpdateUserOnlineStatusRequest();
             UserStatus userStatus = request.getUserStatus();
             if (userStatus == UserStatus.UNRECOGNIZED) {
-                return Mono.just(RequestHandlerResultFactory.get(TurmsStatusCode.ILLEGAL_ARGUMENTS, "The user status must not be UNRECOGNIZED"));
+                return Mono.just(RequestHandlerResultFactory.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The user status must not be UNRECOGNIZED"));
             }
             Set<DeviceType> deviceTypes = request.getDeviceTypesCount() > 0 ? Sets.newHashSet(request.getDeviceTypesList()) : null;
             Mono<Boolean> updateMono;
@@ -265,7 +265,7 @@ public class UserServiceController {
             boolean notifyMembers = node.getSharedProperties().getService().getNotification().isNotifyMembersAfterOtherMemberOnlineStatusUpdated();
             boolean notifyRelatedUser = node.getSharedProperties().getService().getNotification().isNotifyRelatedUsersAfterOtherRelatedUserOnlineStatusUpdated();
             if (!notifyMembers && !notifyRelatedUser) {
-                return updateMono.map(RequestHandlerResultFactory::okIfTrue);
+                return updateMono.thenReturn(RequestHandlerResultFactory.OK);
             } else {
                 Mono<Set<Long>> queryMemberIds = notifyMembers
                         ? groupMemberService.queryMemberIdsInUsersJoinedGroups(Set.of(clientRequest.getUserId()))
@@ -278,7 +278,7 @@ public class UserServiceController {
                         .map(results -> {
                             results.getT1().addAll(results.getT2());
                             return results.getT1().isEmpty()
-                                    ? RequestHandlerResultFactory.ok()
+                                    ? RequestHandlerResultFactory.OK
                                     : RequestHandlerResultFactory.get(results.getT1(), clientRequest.getTurmsRequest());
                         });
             }
@@ -302,18 +302,17 @@ public class UserServiceController {
                     null,
                     null,
                     null)
-                    .flatMap(updated -> {
-                        if (updated != null && updated
-                                && node.getSharedProperties().getService().getNotification().isNotifyRelatedUsersAfterOtherRelatedUserInfoUpdated()) {
+                    .then(Mono.defer(() -> {
+                        if (node.getSharedProperties().getService().getNotification().isNotifyRelatedUsersAfterOtherRelatedUserInfoUpdated()) {
                             return userRelationshipService.queryRelatedUserIds(Set.of(clientRequest.getUserId()), false)
                                     .collect(Collectors.toSet())
                                     .map(relatedUserIds -> relatedUserIds.isEmpty()
-                                            ? RequestHandlerResultFactory.ok()
+                                            ? RequestHandlerResultFactory.OK
                                             : RequestHandlerResultFactory.get(relatedUserIds, clientRequest.getTurmsRequest()));
                         } else {
-                            return Mono.just(RequestHandlerResultFactory.okIfTrue(updated));
+                            return Mono.just(RequestHandlerResultFactory.OK);
                         }
-                    });
+                    }));
         };
     }
 

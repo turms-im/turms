@@ -18,7 +18,7 @@
 package im.turms.gateway.pojo.bo.session.connection;
 
 import im.turms.common.constant.statuscode.SessionCloseStatus;
-import im.turms.common.constant.statuscode.TurmsStatusCode;
+import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.util.CloseReasonUtil;
 import org.springframework.web.reactive.socket.CloseStatus;

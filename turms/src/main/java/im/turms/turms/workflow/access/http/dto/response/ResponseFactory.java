@@ -17,8 +17,10 @@
 
 package im.turms.turms.workflow.access.http.dto.response;
 
-import im.turms.common.constant.statuscode.TurmsStatusCode;
-import im.turms.common.exception.TurmsBusinessException;
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import lombok.Data;
 import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Flux;
@@ -32,10 +34,12 @@ import java.util.Collection;
 @Data
 public class ResponseFactory {
 
-    private static final Object ERROR_OBJECT = new Object();
-
     private ResponseFactory() {
     }
+
+    public static final ResponseEntity<ResponseDTO<Void>> OK = ResponseEntity
+            .ok()
+            .body(new ResponseDTO<>(TurmsStatusCode.OK, null));
 
     public static <T> Mono<ResponseEntity<ResponseDTO<PaginationDTO<T>>>> page(Mono<Long> totalMono, Flux<T> data) {
         Mono<PaginationDTO<T>> mono = Mono
@@ -50,8 +54,12 @@ public class ResponseFactory {
         return okIfTruthy(mono);
     }
 
-    public static Mono<ResponseEntity<ResponseDTO<AcknowledgedDTO>>> acknowledged(Mono<Boolean> data) {
-        return okIfTruthy(data.map(AcknowledgedDTO::new));
+    public static Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateResult(Mono<UpdateResult> data) {
+        return okIfTruthy(data.map(UpdateResultDTO::get));
+    }
+
+    public static Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteResult(Mono<DeleteResult> data) {
+        return okIfTruthy(data.map(DeleteResultDTO::get));
     }
 
     // Base methods
@@ -91,17 +99,9 @@ public class ResponseFactory {
                 return ResponseEntity.ok(new ResponseDTO<>(TurmsStatusCode.OK, data));
             }
         } else {
-            return ResponseEntity.status(TurmsStatusCode.FAILED.getHttpStatusCode())
-                    .body(new ResponseDTO<>(TurmsStatusCode.FAILED, null));
+            return ResponseEntity.status(TurmsStatusCode.NO_CONTENT.getHttpStatusCode())
+                    .body(new ResponseDTO<>(TurmsStatusCode.NO_CONTENT, null));
         }
     }
 
-    public static ResponseEntity<ResponseDTO<AcknowledgedDTO>> acknowledged(Boolean data) {
-        if (data != null) {
-            return ResponseEntity.ok(new ResponseDTO<>(TurmsStatusCode.OK, new AcknowledgedDTO(data)));
-        } else {
-            return ResponseEntity.status(TurmsStatusCode.FAILED.getHttpStatusCode())
-                    .body(new ResponseDTO<>(TurmsStatusCode.FAILED, null));
-        }
-    }
 }

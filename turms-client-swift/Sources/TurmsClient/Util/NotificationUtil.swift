@@ -8,7 +8,7 @@ public class NotificationUtil {
         if ids.values.count > 0 {
             return ids.values[0]
         } else {
-            throw TurmsBusinessError(TurmsStatusCode.missingData)
+            throw TurmsBusinessError(TurmsStatusCode.invalidResponse)
         }
     }
 }

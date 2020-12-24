@@ -63,23 +63,23 @@ describe('Create', () => {
 describe('Update', () => {
     it('recallMessage_shouldSucceed', async () => {
         const result = await senderClient.messageService.recallMessage(groupMessageId);
-        expect(result).toBeUndefined();
+        expect(result).toBeFalsy();
     });
     it('recallMessage_shouldSucceed', async () => {
         const result = await senderClient.messageService.updateSentMessage(privateMessageId, "I have modified the message");
-        expect(result).toBeUndefined();
+        expect(result).toBeFalsy();
     });
     it('readMessage_shouldSucceed', async () => {
         const result = await recipientClient.messageService.readMessage(privateMessageId, new Date());
-        expect(result).toBeUndefined();
+        expect(result).toBeFalsy();
     });
     it('markMessageUnread_shouldSucceed', async () => {
         const result = await recipientClient.messageService.markMessageUnread(privateMessageId);
-        expect(result).toBeUndefined();
+        expect(result).toBeFalsy();
     });
     it('updateTypingStatus_shouldSucceed', async () => {
         const result = await senderClient.messageService.updateTypingStatusRequest(false, privateMessageId);
-        expect(result).toBeUndefined();
+        expect(result).toBeFalsy();
     });
 });
 

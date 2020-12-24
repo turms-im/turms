@@ -34,7 +34,7 @@ export default class NotificationUtil {
         path += '.values.0';
         const value = this._get(notification, path, undefined);
         if (value === undefined && throwIfUndefined) {
-            throw TurmsBusinessError.fromCode(TurmsStatusCode.MISSING_DATA)
+            throw TurmsBusinessError.fromCode(TurmsStatusCode.INVALID_RESPONSE)
         }
         return value;
     }

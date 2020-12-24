@@ -15,28 +15,32 @@
  * limitations under the License.
  */
 
-package im.turms.common.exception;
+package im.turms.server.common.exception;
 
-import im.turms.common.constant.statuscode.TurmsStatusCode;
+import im.turms.common.exception.NoStackTraceException;
 import im.turms.common.model.dto.notification.TurmsNotification;
+import im.turms.server.common.constant.TurmsStatusCode;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * @author James Chen
  */
+@EqualsAndHashCode(callSuper = false)
+@Data
 public class TurmsBusinessException extends NoStackTraceException {
 
-    private static final Map<TurmsStatusCode, TurmsBusinessException> exceptionPool = new EnumMap<>(TurmsStatusCode.class);
+    private static final Map<TurmsStatusCode, TurmsBusinessException> EXCEPTION_POOL = new EnumMap<>(TurmsStatusCode.class);
 
     static {
         for (TurmsStatusCode code : TurmsStatusCode.values()) {
             TurmsBusinessException exception = new TurmsBusinessException(code, code.getReason());
-            exceptionPool.put(code, exception);
+            EXCEPTION_POOL.put(code, exception);
         }
     }
 
@@ -56,7 +60,7 @@ public class TurmsBusinessException extends NoStackTraceException {
     }
 
     public static TurmsBusinessException get(@NotNull TurmsStatusCode code) {
-        return exceptionPool.get(code);
+        return EXCEPTION_POOL.get(code);
     }
 
     public static TurmsBusinessException get(int statusCode) {
@@ -102,32 +106,6 @@ public class TurmsBusinessException extends NoStackTraceException {
         } else {
             return "code: " + code.getBusinessCode();
         }
-    }
-
-    public TurmsStatusCode getCode() {
-        return code;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        TurmsBusinessException that = (TurmsBusinessException) o;
-        return code == that.code
-                && Objects.equals(reason, that.reason);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(code, reason);
     }
 
 }
