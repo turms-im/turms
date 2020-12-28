@@ -96,15 +96,6 @@ public struct Group {
   /// Clears the value of `creationDate`. Subsequent reads from it will return its default value.
   public mutating func clearCreationDate() {_uniqueStorage()._creationDate = nil}
 
-  public var deletionDate: SwiftProtobuf.Google_Protobuf_Int64Value {
-    get {return _storage._deletionDate ?? SwiftProtobuf.Google_Protobuf_Int64Value()}
-    set {_uniqueStorage()._deletionDate = newValue}
-  }
-  /// Returns true if `deletionDate` has been explicitly set.
-  public var hasDeletionDate: Bool {return _storage._deletionDate != nil}
-  /// Clears the value of `deletionDate`. Subsequent reads from it will return its default value.
-  public mutating func clearDeletionDate() {_uniqueStorage()._deletionDate = nil}
-
   public var muteEndDate: SwiftProtobuf.Google_Protobuf_Int64Value {
     get {return _storage._muteEndDate ?? SwiftProtobuf.Google_Protobuf_Int64Value()}
     set {_uniqueStorage()._muteEndDate = newValue}
@@ -145,9 +136,8 @@ extension Group: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
     6: .same(proto: "intro"),
     7: .same(proto: "announcement"),
     8: .standard(proto: "creation_date"),
-    9: .standard(proto: "deletion_date"),
-    10: .standard(proto: "mute_end_date"),
-    11: .same(proto: "active"),
+    9: .standard(proto: "mute_end_date"),
+    10: .same(proto: "active"),
   ]
 
   fileprivate class _StorageClass {
@@ -159,7 +149,6 @@ extension Group: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
     var _intro: SwiftProtobuf.Google_Protobuf_StringValue? = nil
     var _announcement: SwiftProtobuf.Google_Protobuf_StringValue? = nil
     var _creationDate: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
-    var _deletionDate: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
     var _muteEndDate: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
     var _active: SwiftProtobuf.Google_Protobuf_BoolValue? = nil
 
@@ -176,7 +165,6 @@ extension Group: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
       _intro = source._intro
       _announcement = source._announcement
       _creationDate = source._creationDate
-      _deletionDate = source._deletionDate
       _muteEndDate = source._muteEndDate
       _active = source._active
     }
@@ -202,9 +190,8 @@ extension Group: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
         case 6: try decoder.decodeSingularMessageField(value: &_storage._intro)
         case 7: try decoder.decodeSingularMessageField(value: &_storage._announcement)
         case 8: try decoder.decodeSingularMessageField(value: &_storage._creationDate)
-        case 9: try decoder.decodeSingularMessageField(value: &_storage._deletionDate)
-        case 10: try decoder.decodeSingularMessageField(value: &_storage._muteEndDate)
-        case 11: try decoder.decodeSingularMessageField(value: &_storage._active)
+        case 9: try decoder.decodeSingularMessageField(value: &_storage._muteEndDate)
+        case 10: try decoder.decodeSingularMessageField(value: &_storage._active)
         default: break
         }
       }
@@ -237,14 +224,11 @@ extension Group: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
       if let v = _storage._creationDate {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 8)
       }
-      if let v = _storage._deletionDate {
+      if let v = _storage._muteEndDate {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 9)
       }
-      if let v = _storage._muteEndDate {
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
-      }
       if let v = _storage._active {
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 11)
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
       }
     }
     try unknownFields.traverse(visitor: &visitor)
@@ -263,7 +247,6 @@ extension Group: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase
         if _storage._intro != rhs_storage._intro {return false}
         if _storage._announcement != rhs_storage._announcement {return false}
         if _storage._creationDate != rhs_storage._creationDate {return false}
-        if _storage._deletionDate != rhs_storage._deletionDate {return false}
         if _storage._muteEndDate != rhs_storage._muteEndDate {return false}
         if _storage._active != rhs_storage._active {return false}
         return true

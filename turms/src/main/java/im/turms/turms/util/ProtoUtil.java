@@ -17,21 +17,27 @@
 
 package im.turms.turms.util;
 
+import com.google.common.collect.Maps;
 import com.google.protobuf.*;
-import im.turms.common.constant.*;
+import im.turms.common.constant.GroupMemberRole;
+import im.turms.common.constant.ProfileAccessStrategy;
+import im.turms.common.constant.RequestStatus;
+import im.turms.common.constant.UserStatus;
+import im.turms.common.model.bo.conversation.GroupConversation;
+import im.turms.common.model.bo.conversation.PrivateConversation;
 import im.turms.common.model.bo.group.*;
-import im.turms.common.model.bo.message.MessageStatus;
 import im.turms.common.model.bo.user.*;
 import im.turms.common.model.dto.request.message.CreateMessageRequest;
 import im.turms.server.common.bo.session.UserSessionsStatus;
 import im.turms.server.common.dao.domain.User;
-import im.turms.turms.workflow.dao.domain.Message;
+import im.turms.turms.workflow.dao.domain.message.Message;
 import lombok.extern.log4j.Log4j2;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author James Chen
@@ -49,7 +55,7 @@ public class ProtoUtil {
         Long messageId = message.getId();
         Boolean isSystemMessage = message.getIsSystemMessage();
         Date deliveryDate = message.getDeliveryDate();
-        Date deletionDate = message.getDeletionDate();
+        Date modificationDate = message.getModificationDate();
         String text = message.getText();
         List<byte[]> records = message.getRecords();
         Long senderId = message.getSenderId();
@@ -64,8 +70,8 @@ public class ProtoUtil {
         if (deliveryDate != null) {
             builder.setDeliveryDate(Int64Value.newBuilder().setValue(deliveryDate.getTime()).build());
         }
-        if (deletionDate != null) {
-            builder.setDeletionDate(Int64Value.newBuilder().setValue(deletionDate.getTime()).build());
+        if (modificationDate != null) {
+            builder.setModificationDate(Int64Value.newBuilder().setValue(modificationDate.getTime()).build());
         }
         if (text != null) {
             builder.setText(StringValue.newBuilder().setValue(text).build());
@@ -116,7 +122,7 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static UserFriendRequest.Builder friendRequest2proto(@NotNull im.turms.turms.workflow.dao.domain.UserFriendRequest userFriendRequest) {
+    public static UserFriendRequest.Builder friendRequest2proto(@NotNull im.turms.turms.workflow.dao.domain.user.UserFriendRequest userFriendRequest) {
         UserFriendRequest.Builder builder = UserFriendRequest.newBuilder();
         Long requestId = userFriendRequest.getId();
         Date creationDate = userFriendRequest.getCreationDate();
@@ -153,9 +159,9 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static UserRelationship.Builder relationship2proto(@NotNull im.turms.turms.workflow.dao.domain.UserRelationship relationship) {
+    public static UserRelationship.Builder relationship2proto(@NotNull im.turms.turms.workflow.dao.domain.user.UserRelationship relationship) {
         UserRelationship.Builder builder = UserRelationship.newBuilder();
-        im.turms.turms.workflow.dao.domain.UserRelationship.Key key = relationship.getKey();
+        im.turms.turms.workflow.dao.domain.user.UserRelationship.Key key = relationship.getKey();
         Date blockDate = relationship.getBlockDate();
         Date establishmentDate = relationship.getEstablishmentDate();
         if (key != null) {
@@ -176,9 +182,9 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static UserRelationshipGroup.Builder relationshipGroup2proto(@NotNull im.turms.turms.workflow.dao.domain.UserRelationshipGroup relationshipGroup) {
+    public static UserRelationshipGroup.Builder relationshipGroup2proto(@NotNull im.turms.turms.workflow.dao.domain.user.UserRelationshipGroup relationshipGroup) {
         UserRelationshipGroup.Builder builder = UserRelationshipGroup.newBuilder();
-        im.turms.turms.workflow.dao.domain.UserRelationshipGroup.Key key = relationshipGroup.getKey();
+        im.turms.turms.workflow.dao.domain.user.UserRelationshipGroup.Key key = relationshipGroup.getKey();
         if (key != null) {
             Integer index = key.getGroupIndex();
             if (index != null) {
@@ -192,7 +198,7 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static Group.Builder group2proto(@NotNull im.turms.turms.workflow.dao.domain.Group group) {
+    public static Group.Builder group2proto(@NotNull im.turms.turms.workflow.dao.domain.group.Group group) {
         Group.Builder builder = Group.newBuilder();
         Long groupId = group.getId();
         Long typeId = group.getTypeId();
@@ -202,7 +208,6 @@ public class ProtoUtil {
         String intro = group.getIntro();
         String announcement = group.getAnnouncement();
         Date creationDate = group.getCreationDate();
-        Date deletionDate = group.getDeletionDate();
         Date muteEndDate = group.getMuteEndDate();
         Boolean active = group.getIsActive();
         if (groupId != null) {
@@ -229,9 +234,6 @@ public class ProtoUtil {
         if (creationDate != null) {
             builder.setCreationDate(Int64Value.newBuilder().setValue(creationDate.getTime()).build());
         }
-        if (deletionDate != null) {
-            builder.setDeletionDate(Int64Value.newBuilder().setValue(deletionDate.getTime()).build());
-        }
         if (muteEndDate != null) {
             builder.setMuteEndDate(Int64Value.newBuilder().setValue(muteEndDate.getTime()).build());
         }
@@ -241,7 +243,7 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static GroupInvitation.Builder groupInvitation2proto(@NotNull im.turms.turms.workflow.dao.domain.GroupInvitation invitation) {
+    public static GroupInvitation.Builder groupInvitation2proto(@NotNull im.turms.turms.workflow.dao.domain.group.GroupInvitation invitation) {
         GroupInvitation.Builder builder = GroupInvitation.newBuilder();
         Long invitationId = invitation.getId();
         Date creationDate = invitation.getCreationDate();
@@ -278,7 +280,7 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static GroupJoinRequest.Builder groupJoinRequest2proto(@NotNull im.turms.turms.workflow.dao.domain.GroupJoinRequest groupJoinRequest) {
+    public static GroupJoinRequest.Builder groupJoinRequest2proto(@NotNull im.turms.turms.workflow.dao.domain.group.GroupJoinRequest groupJoinRequest) {
         GroupJoinRequest.Builder builder = GroupJoinRequest.newBuilder();
         Long requestId = groupJoinRequest.getId();
         Date creationDate = groupJoinRequest.getCreationDate();
@@ -315,7 +317,7 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static GroupJoinQuestion.Builder groupJoinQuestion2proto(@NotNull im.turms.turms.workflow.dao.domain.GroupJoinQuestion question) {
+    public static GroupJoinQuestion.Builder groupJoinQuestion2proto(@NotNull im.turms.turms.workflow.dao.domain.group.GroupJoinQuestion question) {
         GroupJoinQuestion.Builder builder = GroupJoinQuestion.newBuilder();
         Long questionId = question.getId();
         Long groupId = question.getGroupId();
@@ -335,9 +337,9 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static GroupMember.Builder groupMember2proto(@NotNull im.turms.turms.workflow.dao.domain.GroupMember groupMember) {
+    public static GroupMember.Builder groupMember2proto(@NotNull im.turms.turms.workflow.dao.domain.group.GroupMember groupMember) {
         GroupMember.Builder builder = GroupMember.newBuilder();
-        im.turms.turms.workflow.dao.domain.GroupMember.Key key = groupMember.getKey();
+        im.turms.turms.workflow.dao.domain.group.GroupMember.Key key = groupMember.getKey();
         if (key != null) {
             Long groupId = key.getGroupId();
             Long userId = key.getUserId();
@@ -367,34 +369,38 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static MessageStatus.Builder messageStatus2proto(im.turms.turms.workflow.dao.domain.MessageStatus messageStatus) {
-        MessageStatus.Builder builder = MessageStatus.newBuilder();
-        im.turms.turms.workflow.dao.domain.MessageStatus.Key key = messageStatus.getKey();
+    // Conversation
+
+    public static PrivateConversation.Builder privateConversation2proto(im.turms.turms.workflow.dao.domain.conversation.PrivateConversation privateConversation) {
+        PrivateConversation.Builder builder = PrivateConversation.newBuilder();
+        im.turms.turms.workflow.dao.domain.conversation.PrivateConversation.Key key = privateConversation.getKey();
         if (key != null) {
-            Long messageId = key.getMessageId();
-            Long recipientId = key.getRecipientId();
-            if (messageId != null) {
-                builder.setMessageId(Int64Value.newBuilder().setValue(messageId).build());
+            Long ownerId = key.getOwnerId();
+            Long targetId = key.getTargetId();
+            if (ownerId != null) {
+                builder.setOwnerId(ownerId);
             }
-            if (recipientId != null) {
-                builder.setToUserId(Int64Value.newBuilder().setValue(recipientId).build());
+            if (targetId != null) {
+                builder.setTargetId(targetId);
             }
         }
-        MessageDeliveryStatus deliveryStatus = messageStatus.getDeliveryStatus();
-        Date receptionDate = messageStatus.getReceptionDate();
-        Date readDate = messageStatus.getReadDate();
-        Date recallDate = messageStatus.getRecallDate();
-        if (deliveryStatus != null) {
-            builder.setDeliveryStatus(deliveryStatus);
-        }
-        if (receptionDate != null) {
-            builder.setReceptionDate(Int64Value.newBuilder().setValue(receptionDate.getTime()).build());
-        }
+        Date readDate = privateConversation.getReadDate();
         if (readDate != null) {
-            builder.setReadDate(Int64Value.newBuilder().setValue(readDate.getTime()).build());
+            builder.setReadDate(readDate.getTime());
         }
-        if (recallDate != null) {
-            builder.setRecallDate(Int64Value.newBuilder().setValue(recallDate.getTime()).build());
+        return builder;
+    }
+
+    public static GroupConversation.Builder groupConversations2proto(im.turms.turms.workflow.dao.domain.conversation.GroupConversation groupConversation) {
+        GroupConversation.Builder builder = GroupConversation.newBuilder();
+        Long groupId = groupConversation.getGroupId();
+        if (groupId != null) {
+            builder.setGroupId(groupId);
+        }
+        Map<Long, Date> memberIdAndReadDate = groupConversation.getMemberIdAndReadDate();
+        if (memberIdAndReadDate != null) {
+            Map<Long, Long> map = Maps.transformValues(memberIdAndReadDate, Date::getTime);
+            builder.putAllMemberIdAndReadDate(map);
         }
         return builder;
     }

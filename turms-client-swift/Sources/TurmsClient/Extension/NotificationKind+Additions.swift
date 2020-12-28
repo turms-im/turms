@@ -10,15 +10,16 @@ extension TurmsNotification.DataMessage.OneOf_Kind {
             message = v
         case .url(let v):
             message = v
-        case .acknowledge(let v):
+            
+        case .conversations(let v):
             message = v
-        case .session(let v):
-            message = v
+            
         case .messages(let v):
             message = v
-        case .messageStatuses(let v):
-            message = v
         case .messagesWithTotalList(let v):
+            message = v
+            
+        case .userSession(let v):
             message = v
         case .usersInfosWithVersion(let v):
             message = v
@@ -32,6 +33,7 @@ extension TurmsNotification.DataMessage.OneOf_Kind {
             message = v
         case .userSessionIds(let v):
             message = v
+            
         case .groupInvitationsWithVersion(let v):
             message = v
         case .groupJoinQuestionAnswerResult(let v):

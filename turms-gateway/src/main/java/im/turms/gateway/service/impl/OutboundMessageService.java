@@ -73,6 +73,7 @@ public class OutboundMessageService implements IOutboundMessageService {
                 ? new HashSet<>(Math.max(1, recipientIds.size() / 2))
                 : Collections.emptySet();
 
+        notificationData.retain(); // To avoid being released by the caller
         int initialRefCnt = notificationData.refCnt();
         RefCntAwareByteBuf wrappedNotificationData = new RefCntAwareByteBuf(notificationData, refCnt -> {
             if (refCnt == initialRefCnt) {
@@ -87,7 +88,8 @@ public class OutboundMessageService implements IOutboundMessageService {
                 for (UserSession userSession : userSessionsManager.getSessionMap().values()) {
                     wrappedNotificationData.retain();
                     // It's the responsibility for the downstream to decrease the reference count of the notification by 1
-                    // no matter the notification is queued successfully or not
+                    // no matter the notification is queued successfully or not.
+                    // Otherwise, there is a potential memory leak
                     userSession.tryEmitNextNotification(wrappedNotificationData);
                     // Keep the logic easy and we don't care about whether the notification is really flushed
                     hasForwardedMessageToOneRecipient = true;

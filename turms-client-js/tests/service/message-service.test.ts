@@ -65,37 +65,20 @@ describe('Update', () => {
         const result = await senderClient.messageService.recallMessage(groupMessageId);
         expect(result).toBeFalsy();
     });
-    it('recallMessage_shouldSucceed', async () => {
+    it('updateSentMessage_shouldSucceed', async () => {
         const result = await senderClient.messageService.updateSentMessage(privateMessageId, "I have modified the message");
-        expect(result).toBeFalsy();
-    });
-    it('readMessage_shouldSucceed', async () => {
-        const result = await recipientClient.messageService.readMessage(privateMessageId, new Date());
-        expect(result).toBeFalsy();
-    });
-    it('markMessageUnread_shouldSucceed', async () => {
-        const result = await recipientClient.messageService.markMessageUnread(privateMessageId);
-        expect(result).toBeFalsy();
-    });
-    it('updateTypingStatus_shouldSucceed', async () => {
-        const result = await senderClient.messageService.updateTypingStatusRequest(false, privateMessageId);
         expect(result).toBeFalsy();
     });
 });
 
 describe('Query', () => {
     it('queryMessages_shouldReturnNotEmptyMessages', async () => {
-        const messages = await recipientClient.messageService.queryMessages(null, false, null, SENDER_ID, null, null, null, 10);
+        const messages = await recipientClient.messageService.queryMessages(null, false, null, SENDER_ID, null, null, 10);
         expect(messages.length).toBeGreaterThan(0);
     });
-    it('queryPendingMessagesWithTotal_shouldReturnNotEmptyPendingMessagesWithTotal', async () => {
-        const messagesWithTotals = await senderClient.messageService.queryPendingMessagesWithTotal(10);
+    it('queryMessagesWithTotal_shouldReturnNotEmptyMessagesWithTotal', async () => {
+        const messagesWithTotals = await recipientClient.messageService.queryMessages(null, false, null, SENDER_ID, null, null, 1);
         expect(messagesWithTotals.length).toBeGreaterThan(0);
-    });
-    it('queryMessageStatus_shouldReturnNotEmptyMessageStatus', async () => {
-        const messageStatusesOfMember1 = await senderClient.messageService.queryMessageStatus(groupMessageId);
-        const messageStatusesOfMember2 = await groupMemberClient.messageService.queryMessageStatus(groupMessageId);
-        expect(messageStatusesOfMember1[0].messageId === messageStatusesOfMember2[0].messageId);
     });
 });
 

@@ -33,7 +33,7 @@ public struct CreateMessageRequest {
   /// Clears the value of `messageID`. Subsequent reads from it will return its default value.
   public mutating func clearMessageID() {_uniqueStorage()._messageID = nil}
 
-  /// Client can never set this to true
+  /// is_system_message can only be true if the user is an administrator, or turms server will return an error
   public var isSystemMessage: SwiftProtobuf.Google_Protobuf_BoolValue {
     get {return _storage._isSystemMessage ?? SwiftProtobuf.Google_Protobuf_BoolValue()}
     set {_uniqueStorage()._isSystemMessage = newValue}

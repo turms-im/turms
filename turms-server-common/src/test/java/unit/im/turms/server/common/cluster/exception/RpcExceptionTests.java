@@ -17,9 +17,9 @@
 
 package unit.im.turms.server.common.cluster.exception;
 
-import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.cluster.exception.RpcException;
 import im.turms.server.common.cluster.service.rpc.RpcErrorCode;
+import im.turms.server.common.constant.TurmsStatusCode;
 import io.rsocket.exceptions.ApplicationErrorException;
 import org.junit.jupiter.api.Test;
 

@@ -17,9 +17,9 @@
 
 package im.turms.server.common.cluster.exception;
 
-import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.common.exception.NoStackTraceException;
 import im.turms.server.common.cluster.service.rpc.RpcErrorCode;
+import im.turms.server.common.constant.TurmsStatusCode;
 import io.rsocket.exceptions.ApplicationErrorException;
 import io.rsocket.exceptions.Exceptions;
 import io.rsocket.frame.ErrorFrameCodec;
@@ -32,8 +32,8 @@ import javax.validation.constraints.NotNull;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static im.turms.server.common.constant.TurmsStatusCode.STATUS_CODE_LENGTH;
 import static im.turms.server.common.cluster.service.rpc.RpcErrorCode.ERROR_CODE_LENGTH;
+import static im.turms.server.common.constant.TurmsStatusCode.STATUS_CODE_LENGTH;
 
 /**
  * @author James Chen

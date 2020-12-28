@@ -23,7 +23,7 @@ import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
-import im.turms.turms.workflow.dao.domain.GroupVersion;
+import im.turms.turms.workflow.dao.domain.group.GroupVersion;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;

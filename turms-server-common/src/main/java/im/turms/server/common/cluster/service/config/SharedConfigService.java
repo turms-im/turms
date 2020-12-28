@@ -36,15 +36,10 @@ import org.springframework.boot.autoconfigure.mongo.MongoPropertiesClientSetting
 import org.springframework.boot.autoconfigure.mongo.ReactiveMongoClientFactory;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.convert.CustomConversions;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.*;
 import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.convert.NoOpDbRefResolver;
-import org.springframework.data.mongodb.core.index.Index;
-import org.springframework.data.mongodb.core.index.PartialIndexFilter;
-import org.springframework.data.mongodb.core.index.ReactiveIndexOperations;
-import org.springframework.data.mongodb.core.query.CriteriaDefinition;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.mongodb.core.query.UpdateDefinition;
@@ -161,20 +156,6 @@ public class SharedConfigService implements ClusterService {
 
     public Mono<DeleteResult> remove(Query query, Class<?> clazz) {
         return mongoTemplate.remove(query, clazz);
-    }
-
-    /**
-     * Expose the ensureIndex operations because Spring Data MongoDB doesn't support to create partial indexes
-     * automatically, so we need to index them manually.
-     */
-    public Mono<String> ensureTtlIndex(CriteriaDefinition criteria, String fieldName, Class<?> entityClass) {
-        Index lastHeartbeatDateIndex = new Index()
-                .named(fieldName)
-                .on(fieldName, Sort.Direction.ASC)
-                .expire(EXPIRABLE_RECORD_TTL)
-                .partial(PartialIndexFilter.of(criteria));
-        ReactiveIndexOperations indexOps = mongoTemplate.indexOps(entityClass);
-        return indexOps.ensureIndex(lastHeartbeatDateIndex);
     }
 
 }

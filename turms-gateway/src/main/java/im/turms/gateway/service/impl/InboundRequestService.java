@@ -21,17 +21,16 @@ import com.google.protobuf.Int32Value;
 import com.google.protobuf.Int64Value;
 import com.google.protobuf.StringValue;
 import im.turms.common.constant.DeviceType;
-import im.turms.server.common.constant.TurmsStatusCode;
-import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.gateway.constant.ErrorMessage;
 import im.turms.gateway.pojo.bo.session.UserSession;
-import im.turms.gateway.util.TurmsRequestUtil;
 import im.turms.server.common.cluster.exception.RpcException;
 import im.turms.server.common.cluster.node.Node;
+import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.log4j.ClientApiLogging;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.ClientApiLoggingProperties;
@@ -113,8 +112,7 @@ public class InboundRequestService {
 
         // Flow control
         Long requestId = serviceRequest.getRequestId();
-        TurmsRequest.KindCase requestType = serviceRequest.getType();
-        if (!TurmsRequestUtil.isSignalRequest(requestType) && areRequestsTooFrequent(session)) {
+        if (areRequestsTooFrequent(session)) {
             TurmsNotification notification = getNotificationFromStatusCode(TurmsStatusCode.CLIENT_REQUESTS_TOO_FREQUENT, requestId);
             return Mono.just(notification);
         }

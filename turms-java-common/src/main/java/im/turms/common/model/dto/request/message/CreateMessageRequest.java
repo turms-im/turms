@@ -223,7 +223,7 @@ private static final long serialVersionUID = 0L;
   private com.google.protobuf.BoolValue isSystemMessage_;
   /**
    * <pre>
-   * Client can never set this to true
+   * is_system_message can only be true if the user is an administrator, or turms server will return an error
    * </pre>
    *
    * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
@@ -235,7 +235,7 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   * Client can never set this to true
+   * is_system_message can only be true if the user is an administrator, or turms server will return an error
    * </pre>
    *
    * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
@@ -247,7 +247,7 @@ private static final long serialVersionUID = 0L;
   }
   /**
    * <pre>
-   * Client can never set this to true
+   * is_system_message can only be true if the user is an administrator, or turms server will return an error
    * </pre>
    *
    * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
@@ -1043,7 +1043,7 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder> isSystemMessageBuilder_;
     /**
      * <pre>
-     * Client can never set this to true
+     * is_system_message can only be true if the user is an administrator, or turms server will return an error
      * </pre>
      *
      * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
@@ -1054,7 +1054,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Client can never set this to true
+     * is_system_message can only be true if the user is an administrator, or turms server will return an error
      * </pre>
      *
      * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
@@ -1069,7 +1069,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Client can never set this to true
+     * is_system_message can only be true if the user is an administrator, or turms server will return an error
      * </pre>
      *
      * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
@@ -1089,7 +1089,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Client can never set this to true
+     * is_system_message can only be true if the user is an administrator, or turms server will return an error
      * </pre>
      *
      * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
@@ -1107,7 +1107,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Client can never set this to true
+     * is_system_message can only be true if the user is an administrator, or turms server will return an error
      * </pre>
      *
      * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
@@ -1129,7 +1129,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Client can never set this to true
+     * is_system_message can only be true if the user is an administrator, or turms server will return an error
      * </pre>
      *
      * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
@@ -1147,7 +1147,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Client can never set this to true
+     * is_system_message can only be true if the user is an administrator, or turms server will return an error
      * </pre>
      *
      * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
@@ -1159,7 +1159,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Client can never set this to true
+     * is_system_message can only be true if the user is an administrator, or turms server will return an error
      * </pre>
      *
      * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
@@ -1174,7 +1174,7 @@ private static final long serialVersionUID = 0L;
     }
     /**
      * <pre>
-     * Client can never set this to true
+     * is_system_message can only be true if the user is an administrator, or turms server will return an error
      * </pre>
      *
      * <code>.google.protobuf.BoolValue is_system_message = 2;</code>

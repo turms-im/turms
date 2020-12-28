@@ -17,9 +17,9 @@
 
 package im.turms.turms.workflow.access.http.util;
 
-import im.turms.common.constant.DivideBy;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.turms.bo.DateRange;
+import im.turms.turms.constant.DivideBy;
 import im.turms.turms.workflow.access.http.dto.response.StatisticsRecordDTO;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.http.HttpStatus;

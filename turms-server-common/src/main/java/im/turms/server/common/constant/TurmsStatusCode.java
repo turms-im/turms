@@ -169,6 +169,7 @@ public enum TurmsStatusCode {
 
     // Conversation
     UPDATING_TYPING_STATUS_IS_DISABLED(4000, "The feature to update typing status is disabled", 510),
+    UPDATING_READ_DATE_IS_DISABLED(4001, "The feature to update read data is disabled", 510),
 
     // Message
 
@@ -186,6 +187,7 @@ public enum TurmsStatusCode {
     // Message - Update
     UPDATING_MESSAGE_BY_SENDER_IS_DISABLED(5100, "The feature to update messages sent by the sender is disabled", 510),
     NOT_SENDER_TO_UPDATE_MESSAGE(5101, "Only the message sender can update the message", 403),
+    // TODO: remove?
     NOT_MESSAGE_RECIPIENT_TO_UPDATE_MESSAGE_READ_DATE(5102, "Only the message recipient can update the read date", 403),
 
     // Message - Recall

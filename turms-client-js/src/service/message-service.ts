@@ -3,14 +3,18 @@ import {im} from "../model/proto-bundle";
 import RequestUtil from "../util/request-util";
 import {ParsedModel} from "../model/parsed-model";
 import NotificationUtil from "../util/notification-util";
-import MessageAddition from "../model/message-addition";
+// @ts-ignore
+import MessageAddition from "../model/message/message-addition";
 import TurmsBusinessError from "../model/turms-business-error";
+// @ts-ignore
+import BuiltinSystemMessageType from "../model/message/builtin-system-message-type";
+// @ts-ignore
+import {util as ProtoUtil} from "protobufjs/minimal";
 import File = im.turms.proto.File;
 import AudioFile = im.turms.proto.AudioFile;
 import VideoFile = im.turms.proto.VideoFile;
 import ImageFile = im.turms.proto.ImageFile;
 import Location = im.turms.proto.UserLocation;
-import MessageDeliveryStatus = im.turms.proto.MessageDeliveryStatus;
 
 export default class MessageService {
     /**
@@ -31,8 +35,6 @@ export default class MessageService {
     };
 
     private _turmsClient: TurmsClient;
-    private _ackMessageTimerId?: number;
-    private _unacknowledgedMessageIds: string[] = [];
     private _mentionedUserIdsParser?: (message: ParsedModel.Message) => string[];
     private _onMessage?: (message: ParsedModel.Message, messageAddition: MessageAddition) => void;
 
@@ -44,11 +46,8 @@ export default class MessageService {
         this._onMessage = value;
     }
 
-    constructor(turmsClient: TurmsClient, ackMessageInterval?: number) {
+    constructor(turmsClient: TurmsClient) {
         this._turmsClient = turmsClient;
-        if (typeof ackMessageInterval === 'number' && ackMessageInterval > 0) {
-            this._ackMessageTimerId = this._startAckMessagesTimer(ackMessageInterval);
-        }
         this._turmsClient.driver
             .addOnNotificationListener(notification => {
                 if (this._onMessage != null && notification.relayedRequest) {
@@ -89,17 +88,6 @@ export default class MessageService {
                 burnAfter: RequestUtil.wrapValueIfNotNull(burnAfter)
             }
         }).then(n => NotificationUtil.getFirstVal(n, 'ids', true));
-    }
-
-    ackMessages(messageIds: string[]): Promise<void> {
-        if (RequestUtil.isFalsy(messageIds)) {
-            return TurmsBusinessError.notFalsy('messageIds', true);
-        }
-        return this._turmsClient.driver.send({
-            ackRequest: {
-                messageIds
-            }
-        }).then(() => null)
     }
 
     forwardMessage(
@@ -147,14 +135,7 @@ export default class MessageService {
         fromId?: string,
         deliveryDateAfter?: Date,
         deliveryDateBefore?: Date,
-        deliveryStatus?: string | MessageDeliveryStatus,
         size = 50): Promise<ParsedModel.Message[]> {
-        if (typeof deliveryStatus === 'string') {
-            deliveryStatus = MessageDeliveryStatus[deliveryStatus] as MessageDeliveryStatus;
-            if (RequestUtil.isFalsy(deliveryStatus)) {
-                return TurmsBusinessError.notFalsy("deliveryStatus");
-            }
-        }
         return this._turmsClient.driver.send({
             queryMessagesRequest: {
                 ids: RequestUtil.wrapValueIfNotNull(ids),
@@ -164,28 +145,31 @@ export default class MessageService {
                 deliveryDateAfter: RequestUtil.wrapTimeIfNotNull(deliveryDateAfter),
                 deliveryDateBefore: RequestUtil.wrapTimeIfNotNull(deliveryDateBefore),
                 size: RequestUtil.wrapValueIfNotNull(size),
-                deliveryStatus: deliveryStatus
+                withTotal: false
             }
         }).then(n => NotificationUtil.getArrAndTransform(n, 'messages.messages'));
     }
 
-    queryPendingMessagesWithTotal(size = 1): Promise<ParsedModel.MessagesWithTotal[]> {
+    queryMessagesWithTotal(
+        ids?: string[],
+        areGroupMessages?: boolean,
+        areSystemMessages?: boolean,
+        fromId?: string,
+        deliveryDateAfter?: Date,
+        deliveryDateBefore?: Date,
+        size = 1): Promise<ParsedModel.MessagesWithTotal[]> {
         return this._turmsClient.driver.send({
-            queryPendingMessagesWithTotalRequest: {
-                size: RequestUtil.wrapValueIfNotNull(size)
+            queryMessagesRequest: {
+                ids: RequestUtil.wrapValueIfNotNull(ids),
+                areGroupMessages: RequestUtil.wrapValueIfNotNull(areGroupMessages),
+                areSystemMessages: RequestUtil.wrapValueIfNotNull(areSystemMessages),
+                fromId: RequestUtil.wrapValueIfNotNull(fromId),
+                deliveryDateAfter: RequestUtil.wrapTimeIfNotNull(deliveryDateAfter),
+                deliveryDateBefore: RequestUtil.wrapTimeIfNotNull(deliveryDateBefore),
+                size: RequestUtil.wrapValueIfNotNull(size),
+                withTotal: true
             }
         }).then(n => NotificationUtil.getArrAndTransform(n, 'messagesWithTotalList.messagesWithTotalList'));
-    }
-
-    queryMessageStatus(messageId: string): Promise<ParsedModel.MessageStatus[]> {
-        if (RequestUtil.isFalsy(messageId)) {
-            return TurmsBusinessError.notFalsy('messageId');
-        }
-        return this._turmsClient.driver.send({
-            queryMessageStatusesRequest: {
-                messageId
-            }
-        }).then(n => NotificationUtil.getArrAndTransform(n, 'messageStatuses.messageStatuses'));
     }
 
     recallMessage(messageId: string, recallDate = new Date()): Promise<void> {
@@ -196,34 +180,6 @@ export default class MessageService {
             updateMessageRequest: {
                 messageId,
                 recallDate: RequestUtil.wrapTimeIfNotNull(recallDate)
-            }
-        }).then(() => null);
-    }
-
-    readMessage(messageId: string, readDate = new Date()): Promise<void> {
-        if (RequestUtil.isFalsy(messageId)) {
-            return TurmsBusinessError.notFalsy('messageId');
-        }
-        return this._turmsClient.driver.send({
-            updateMessageRequest: {
-                messageId,
-                readDate: RequestUtil.wrapTimeIfNotNull(readDate)
-            }
-        }).then(() => null);
-    }
-
-    markMessageUnread(messageId: string): Promise<void> {
-        return this.readMessage(messageId, new Date(0));
-    }
-
-    updateTypingStatusRequest(isGroupMessage: boolean, targetId: string): Promise<void> {
-        if (RequestUtil.isFalsy(targetId)) {
-            return TurmsBusinessError.notFalsy('targetId');
-        }
-        return this._turmsClient.driver.send({
-            updateTypingStatusRequest: {
-                isGroupMessage,
-                toId: targetId
             }
         }).then(() => null);
     }
@@ -251,7 +207,7 @@ export default class MessageService {
             latitude,
             longitude,
             address: RequestUtil.wrapValueIfNotNull(address),
-            name: RequestUtil.wrapValueIfNotNull(name)
+            name: RequestUtil.wrapValueIfNotNull(locationName)
         }).finish();
     }
 
@@ -338,35 +294,30 @@ export default class MessageService {
         }).finish();
     }
 
-    private _startAckMessagesTimer(ackMessageInterval: number): number {
-        return window.setInterval(() => {
-            if (!this._unacknowledgedMessageIds.length) {
-                const unacknowledgedMessageIds = JSON.parse(JSON.stringify(this._unacknowledgedMessageIds));
-                this.ackMessages(unacknowledgedMessageIds)
-                    .then(() => {
-                        this._unacknowledgedMessageIds = this._unacknowledgedMessageIds.filter(id => !unacknowledgedMessageIds.includes(id))
-                    });
-            }
-        }, ackMessageInterval);
-    }
-
     private _parseMessageAddition(message: ParsedModel.Message): MessageAddition {
-        let mentionedUserIds;
-        if (this._mentionedUserIdsParser) {
-            mentionedUserIds = this._mentionedUserIdsParser(message);
-        } else {
-            mentionedUserIds = [];
-        }
+        const mentionedUserIds = this._mentionedUserIdsParser
+            ? this._mentionedUserIdsParser(message)
+            : [];
         const isMentioned = mentionedUserIds.includes(this._turmsClient.userService.userId);
-        return new MessageAddition(isMentioned, mentionedUserIds);
+        const systemMessageType = message.isSystemMessage && message.records[0]?.[0];
+        const recalledMessageIds = [];
+        if (systemMessageType === BuiltinSystemMessageType.RECALL_MESSAGE) {
+            const size = message.records.length;
+            for (let i = 1; i < size; i++) {
+                const id = ProtoUtil.Long.fromBytes(message.records[i]);
+                recalledMessageIds.push(id);
+            }
+        }
+        return new MessageAddition(isMentioned, mentionedUserIds, recalledMessageIds);
     }
 
     /**
-     * @param request should be a parsed CreateMessageRequest
+     * @param request should be a parsed im.turms.proto.ICreateMessageRequest
      */
     private static _createMessageRequest2Message(requesterId: string, request: any): ParsedModel.Message {
         return {
             id: request.messageId,
+            isSystemMessage: request.isSystemMessage,
             deliveryDate: request.deliveryDate,
             text: request.text,
             records: request.records,

@@ -19,6 +19,8 @@ module.exports = {
         'prefer-const': ['error'],
         'no-var': ['error'],
         'array-element-newline': ['error', 'consistent'],
+        'vue/custom-event-name-casing': 0,
+        'vue/component-definition-name-casing': ['error', 'kebab-case'],
         'vue/html-indent': ['error', 4, {
             'attribute': 1,
             'baseIndent': 1,
@@ -35,6 +37,8 @@ module.exports = {
         }],
         'vue/name-property-casing': ['error', 'kebab-case'],
         'vue/html-closing-bracket-spacing': ['error'],
-        'vue/no-static-inline-styles': ['error']
+        'vue/no-static-inline-styles': ['error'],
+        'vue/no-v-model-argument': 0,
+        'vue/no-mutating-props': 0
     }
 };

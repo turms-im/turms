@@ -56,94 +56,109 @@ public interface TurmsRequestOrBuilder extends
 
   /**
    * <pre>
-   * Signal
+   * User - Session
    * </pre>
    *
-   * <code>.im.turms.proto.AckRequest ack_request = 2;</code>
-   * @return Whether the ackRequest field is set.
+   * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
+   * @return Whether the createSessionRequest field is set.
    */
-  boolean hasAckRequest();
+  boolean hasCreateSessionRequest();
   /**
    * <pre>
-   * Signal
+   * User - Session
    * </pre>
    *
-   * <code>.im.turms.proto.AckRequest ack_request = 2;</code>
-   * @return The ackRequest.
+   * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
+   * @return The createSessionRequest.
    */
-  im.turms.common.model.dto.request.signal.AckRequest getAckRequest();
+  im.turms.common.model.dto.request.user.CreateSessionRequest getCreateSessionRequest();
   /**
    * <pre>
-   * Signal
+   * User - Session
    * </pre>
    *
-   * <code>.im.turms.proto.AckRequest ack_request = 2;</code>
+   * <code>.im.turms.proto.CreateSessionRequest create_session_request = 3;</code>
    */
-  im.turms.common.model.dto.request.signal.AckRequestOrBuilder getAckRequestOrBuilder();
+  im.turms.common.model.dto.request.user.CreateSessionRequestOrBuilder getCreateSessionRequestOrBuilder();
+
+  /**
+   * <code>.im.turms.proto.DeleteSessionRequest delete_session_request = 4;</code>
+   * @return Whether the deleteSessionRequest field is set.
+   */
+  boolean hasDeleteSessionRequest();
+  /**
+   * <code>.im.turms.proto.DeleteSessionRequest delete_session_request = 4;</code>
+   * @return The deleteSessionRequest.
+   */
+  im.turms.common.model.dto.request.user.DeleteSessionRequest getDeleteSessionRequest();
+  /**
+   * <code>.im.turms.proto.DeleteSessionRequest delete_session_request = 4;</code>
+   */
+  im.turms.common.model.dto.request.user.DeleteSessionRequestOrBuilder getDeleteSessionRequestOrBuilder();
 
   /**
    * <pre>
-   * Storage
+   * Conversation
    * </pre>
    *
-   * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 3;</code>
-   * @return Whether the deleteResourceRequest field is set.
+   * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
+   * @return Whether the queryConversationsRequest field is set.
    */
-  boolean hasDeleteResourceRequest();
+  boolean hasQueryConversationsRequest();
   /**
    * <pre>
-   * Storage
+   * Conversation
    * </pre>
    *
-   * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 3;</code>
-   * @return The deleteResourceRequest.
+   * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
+   * @return The queryConversationsRequest.
    */
-  im.turms.common.model.dto.request.storage.DeleteResourceRequest getDeleteResourceRequest();
+  im.turms.common.model.dto.request.conversation.QueryConversationsRequest getQueryConversationsRequest();
   /**
    * <pre>
-   * Storage
+   * Conversation
    * </pre>
    *
-   * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 3;</code>
+   * <code>.im.turms.proto.QueryConversationsRequest query_conversations_request = 5;</code>
    */
-  im.turms.common.model.dto.request.storage.DeleteResourceRequestOrBuilder getDeleteResourceRequestOrBuilder();
+  im.turms.common.model.dto.request.conversation.QueryConversationsRequestOrBuilder getQueryConversationsRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.QuerySignedGetUrlRequest query_signed_get_url_request = 4;</code>
-   * @return Whether the querySignedGetUrlRequest field is set.
+   * <code>.im.turms.proto.UpdateConversationRequest update_conversation_request = 6;</code>
+   * @return Whether the updateConversationRequest field is set.
    */
-  boolean hasQuerySignedGetUrlRequest();
+  boolean hasUpdateConversationRequest();
   /**
-   * <code>.im.turms.proto.QuerySignedGetUrlRequest query_signed_get_url_request = 4;</code>
-   * @return The querySignedGetUrlRequest.
+   * <code>.im.turms.proto.UpdateConversationRequest update_conversation_request = 6;</code>
+   * @return The updateConversationRequest.
    */
-  im.turms.common.model.dto.request.storage.QuerySignedGetUrlRequest getQuerySignedGetUrlRequest();
+  im.turms.common.model.dto.request.conversation.UpdateConversationRequest getUpdateConversationRequest();
   /**
-   * <code>.im.turms.proto.QuerySignedGetUrlRequest query_signed_get_url_request = 4;</code>
+   * <code>.im.turms.proto.UpdateConversationRequest update_conversation_request = 6;</code>
    */
-  im.turms.common.model.dto.request.storage.QuerySignedGetUrlRequestOrBuilder getQuerySignedGetUrlRequestOrBuilder();
+  im.turms.common.model.dto.request.conversation.UpdateConversationRequestOrBuilder getUpdateConversationRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.QuerySignedPutUrlRequest query_signed_put_url_request = 5;</code>
-   * @return Whether the querySignedPutUrlRequest field is set.
+   * <code>.im.turms.proto.UpdateTypingStatusRequest update_typing_status_request = 7;</code>
+   * @return Whether the updateTypingStatusRequest field is set.
    */
-  boolean hasQuerySignedPutUrlRequest();
+  boolean hasUpdateTypingStatusRequest();
   /**
-   * <code>.im.turms.proto.QuerySignedPutUrlRequest query_signed_put_url_request = 5;</code>
-   * @return The querySignedPutUrlRequest.
+   * <code>.im.turms.proto.UpdateTypingStatusRequest update_typing_status_request = 7;</code>
+   * @return The updateTypingStatusRequest.
    */
-  im.turms.common.model.dto.request.storage.QuerySignedPutUrlRequest getQuerySignedPutUrlRequest();
+  im.turms.common.model.dto.request.conversation.UpdateTypingStatusRequest getUpdateTypingStatusRequest();
   /**
-   * <code>.im.turms.proto.QuerySignedPutUrlRequest query_signed_put_url_request = 5;</code>
+   * <code>.im.turms.proto.UpdateTypingStatusRequest update_typing_status_request = 7;</code>
    */
-  im.turms.common.model.dto.request.storage.QuerySignedPutUrlRequestOrBuilder getQuerySignedPutUrlRequestOrBuilder();
+  im.turms.common.model.dto.request.conversation.UpdateTypingStatusRequestOrBuilder getUpdateTypingStatusRequestOrBuilder();
 
   /**
    * <pre>
    * Message
    * </pre>
    *
-   * <code>.im.turms.proto.CreateMessageRequest create_message_request = 6;</code>
+   * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
    * @return Whether the createMessageRequest field is set.
    */
   boolean hasCreateMessageRequest();
@@ -152,7 +167,7 @@ public interface TurmsRequestOrBuilder extends
    * Message
    * </pre>
    *
-   * <code>.im.turms.proto.CreateMessageRequest create_message_request = 6;</code>
+   * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
    * @return The createMessageRequest.
    */
   im.turms.common.model.dto.request.message.CreateMessageRequest getCreateMessageRequest();
@@ -161,54 +176,24 @@ public interface TurmsRequestOrBuilder extends
    * Message
    * </pre>
    *
-   * <code>.im.turms.proto.CreateMessageRequest create_message_request = 6;</code>
+   * <code>.im.turms.proto.CreateMessageRequest create_message_request = 8;</code>
    */
   im.turms.common.model.dto.request.message.CreateMessageRequestOrBuilder getCreateMessageRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.QueryMessageStatusesRequest query_message_statuses_request = 7;</code>
-   * @return Whether the queryMessageStatusesRequest field is set.
-   */
-  boolean hasQueryMessageStatusesRequest();
-  /**
-   * <code>.im.turms.proto.QueryMessageStatusesRequest query_message_statuses_request = 7;</code>
-   * @return The queryMessageStatusesRequest.
-   */
-  im.turms.common.model.dto.request.message.QueryMessageStatusesRequest getQueryMessageStatusesRequest();
-  /**
-   * <code>.im.turms.proto.QueryMessageStatusesRequest query_message_statuses_request = 7;</code>
-   */
-  im.turms.common.model.dto.request.message.QueryMessageStatusesRequestOrBuilder getQueryMessageStatusesRequestOrBuilder();
-
-  /**
-   * <code>.im.turms.proto.QueryMessagesRequest query_messages_request = 8;</code>
+   * <code>.im.turms.proto.QueryMessagesRequest query_messages_request = 9;</code>
    * @return Whether the queryMessagesRequest field is set.
    */
   boolean hasQueryMessagesRequest();
   /**
-   * <code>.im.turms.proto.QueryMessagesRequest query_messages_request = 8;</code>
+   * <code>.im.turms.proto.QueryMessagesRequest query_messages_request = 9;</code>
    * @return The queryMessagesRequest.
    */
   im.turms.common.model.dto.request.message.QueryMessagesRequest getQueryMessagesRequest();
   /**
-   * <code>.im.turms.proto.QueryMessagesRequest query_messages_request = 8;</code>
+   * <code>.im.turms.proto.QueryMessagesRequest query_messages_request = 9;</code>
    */
   im.turms.common.model.dto.request.message.QueryMessagesRequestOrBuilder getQueryMessagesRequestOrBuilder();
-
-  /**
-   * <code>.im.turms.proto.QueryPendingMessagesWithTotalRequest query_pending_messages_with_total_request = 9;</code>
-   * @return Whether the queryPendingMessagesWithTotalRequest field is set.
-   */
-  boolean hasQueryPendingMessagesWithTotalRequest();
-  /**
-   * <code>.im.turms.proto.QueryPendingMessagesWithTotalRequest query_pending_messages_with_total_request = 9;</code>
-   * @return The queryPendingMessagesWithTotalRequest.
-   */
-  im.turms.common.model.dto.request.message.QueryPendingMessagesWithTotalRequest getQueryPendingMessagesWithTotalRequest();
-  /**
-   * <code>.im.turms.proto.QueryPendingMessagesWithTotalRequest query_pending_messages_with_total_request = 9;</code>
-   */
-  im.turms.common.model.dto.request.message.QueryPendingMessagesWithTotalRequestOrBuilder getQueryPendingMessagesWithTotalRequestOrBuilder();
 
   /**
    * <code>.im.turms.proto.UpdateMessageRequest update_message_request = 10;</code>
@@ -226,164 +211,191 @@ public interface TurmsRequestOrBuilder extends
   im.turms.common.model.dto.request.message.UpdateMessageRequestOrBuilder getUpdateMessageRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.UpdateTypingStatusRequest update_typing_status_request = 11;</code>
-   * @return Whether the updateTypingStatusRequest field is set.
+   * <pre>
+   * Group Member
+   * </pre>
+   *
+   * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
+   * @return Whether the createGroupMemberRequest field is set.
    */
-  boolean hasUpdateTypingStatusRequest();
+  boolean hasCreateGroupMemberRequest();
   /**
-   * <code>.im.turms.proto.UpdateTypingStatusRequest update_typing_status_request = 11;</code>
-   * @return The updateTypingStatusRequest.
+   * <pre>
+   * Group Member
+   * </pre>
+   *
+   * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
+   * @return The createGroupMemberRequest.
    */
-  im.turms.common.model.dto.request.message.UpdateTypingStatusRequest getUpdateTypingStatusRequest();
+  im.turms.common.model.dto.request.group.member.CreateGroupMemberRequest getCreateGroupMemberRequest();
   /**
-   * <code>.im.turms.proto.UpdateTypingStatusRequest update_typing_status_request = 11;</code>
+   * <pre>
+   * Group Member
+   * </pre>
+   *
+   * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 11;</code>
    */
-  im.turms.common.model.dto.request.message.UpdateTypingStatusRequestOrBuilder getUpdateTypingStatusRequestOrBuilder();
+  im.turms.common.model.dto.request.group.member.CreateGroupMemberRequestOrBuilder getCreateGroupMemberRequestOrBuilder();
+
+  /**
+   * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
+   * @return Whether the deleteGroupMemberRequest field is set.
+   */
+  boolean hasDeleteGroupMemberRequest();
+  /**
+   * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
+   * @return The deleteGroupMemberRequest.
+   */
+  im.turms.common.model.dto.request.group.member.DeleteGroupMemberRequest getDeleteGroupMemberRequest();
+  /**
+   * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 12;</code>
+   */
+  im.turms.common.model.dto.request.group.member.DeleteGroupMemberRequestOrBuilder getDeleteGroupMemberRequestOrBuilder();
+
+  /**
+   * <code>.im.turms.proto.QueryGroupMembersRequest query_group_members_request = 13;</code>
+   * @return Whether the queryGroupMembersRequest field is set.
+   */
+  boolean hasQueryGroupMembersRequest();
+  /**
+   * <code>.im.turms.proto.QueryGroupMembersRequest query_group_members_request = 13;</code>
+   * @return The queryGroupMembersRequest.
+   */
+  im.turms.common.model.dto.request.group.member.QueryGroupMembersRequest getQueryGroupMembersRequest();
+  /**
+   * <code>.im.turms.proto.QueryGroupMembersRequest query_group_members_request = 13;</code>
+   */
+  im.turms.common.model.dto.request.group.member.QueryGroupMembersRequestOrBuilder getQueryGroupMembersRequestOrBuilder();
+
+  /**
+   * <code>.im.turms.proto.UpdateGroupMemberRequest update_group_member_request = 14;</code>
+   * @return Whether the updateGroupMemberRequest field is set.
+   */
+  boolean hasUpdateGroupMemberRequest();
+  /**
+   * <code>.im.turms.proto.UpdateGroupMemberRequest update_group_member_request = 14;</code>
+   * @return The updateGroupMemberRequest.
+   */
+  im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest getUpdateGroupMemberRequest();
+  /**
+   * <code>.im.turms.proto.UpdateGroupMemberRequest update_group_member_request = 14;</code>
+   */
+  im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequestOrBuilder getUpdateGroupMemberRequestOrBuilder();
 
   /**
    * <pre>
    * User
    * </pre>
    *
-   * <code>.im.turms.proto.CreateSessionRequest create_session_request = 100;</code>
-   * @return Whether the createSessionRequest field is set.
-   */
-  boolean hasCreateSessionRequest();
-  /**
-   * <pre>
-   * User
-   * </pre>
-   *
-   * <code>.im.turms.proto.CreateSessionRequest create_session_request = 100;</code>
-   * @return The createSessionRequest.
-   */
-  im.turms.common.model.dto.request.user.CreateSessionRequest getCreateSessionRequest();
-  /**
-   * <pre>
-   * User
-   * </pre>
-   *
-   * <code>.im.turms.proto.CreateSessionRequest create_session_request = 100;</code>
-   */
-  im.turms.common.model.dto.request.user.CreateSessionRequestOrBuilder getCreateSessionRequestOrBuilder();
-
-  /**
-   * <code>.im.turms.proto.DeleteSessionRequest delete_session_request = 101;</code>
-   * @return Whether the deleteSessionRequest field is set.
-   */
-  boolean hasDeleteSessionRequest();
-  /**
-   * <code>.im.turms.proto.DeleteSessionRequest delete_session_request = 101;</code>
-   * @return The deleteSessionRequest.
-   */
-  im.turms.common.model.dto.request.user.DeleteSessionRequest getDeleteSessionRequest();
-  /**
-   * <code>.im.turms.proto.DeleteSessionRequest delete_session_request = 101;</code>
-   */
-  im.turms.common.model.dto.request.user.DeleteSessionRequestOrBuilder getDeleteSessionRequestOrBuilder();
-
-  /**
-   * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 102;</code>
+   * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
    * @return Whether the queryUserProfileRequest field is set.
    */
   boolean hasQueryUserProfileRequest();
   /**
-   * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 102;</code>
+   * <pre>
+   * User
+   * </pre>
+   *
+   * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
    * @return The queryUserProfileRequest.
    */
   im.turms.common.model.dto.request.user.QueryUserProfileRequest getQueryUserProfileRequest();
   /**
-   * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 102;</code>
+   * <pre>
+   * User
+   * </pre>
+   *
+   * <code>.im.turms.proto.QueryUserProfileRequest query_user_profile_request = 100;</code>
    */
   im.turms.common.model.dto.request.user.QueryUserProfileRequestOrBuilder getQueryUserProfileRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.QueryUserIdsNearbyRequest query_user_ids_nearby_request = 103;</code>
+   * <code>.im.turms.proto.QueryUserIdsNearbyRequest query_user_ids_nearby_request = 101;</code>
    * @return Whether the queryUserIdsNearbyRequest field is set.
    */
   boolean hasQueryUserIdsNearbyRequest();
   /**
-   * <code>.im.turms.proto.QueryUserIdsNearbyRequest query_user_ids_nearby_request = 103;</code>
+   * <code>.im.turms.proto.QueryUserIdsNearbyRequest query_user_ids_nearby_request = 101;</code>
    * @return The queryUserIdsNearbyRequest.
    */
   im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest getQueryUserIdsNearbyRequest();
   /**
-   * <code>.im.turms.proto.QueryUserIdsNearbyRequest query_user_ids_nearby_request = 103;</code>
+   * <code>.im.turms.proto.QueryUserIdsNearbyRequest query_user_ids_nearby_request = 101;</code>
    */
   im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequestOrBuilder getQueryUserIdsNearbyRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.QueryUserInfosNearbyRequest query_user_infos_nearby_request = 104;</code>
+   * <code>.im.turms.proto.QueryUserInfosNearbyRequest query_user_infos_nearby_request = 102;</code>
    * @return Whether the queryUserInfosNearbyRequest field is set.
    */
   boolean hasQueryUserInfosNearbyRequest();
   /**
-   * <code>.im.turms.proto.QueryUserInfosNearbyRequest query_user_infos_nearby_request = 104;</code>
+   * <code>.im.turms.proto.QueryUserInfosNearbyRequest query_user_infos_nearby_request = 102;</code>
    * @return The queryUserInfosNearbyRequest.
    */
   im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest getQueryUserInfosNearbyRequest();
   /**
-   * <code>.im.turms.proto.QueryUserInfosNearbyRequest query_user_infos_nearby_request = 104;</code>
+   * <code>.im.turms.proto.QueryUserInfosNearbyRequest query_user_infos_nearby_request = 102;</code>
    */
   im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequestOrBuilder getQueryUserInfosNearbyRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 105;</code>
+   * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 103;</code>
    * @return Whether the queryUserOnlineStatusesRequest field is set.
    */
   boolean hasQueryUserOnlineStatusesRequest();
   /**
-   * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 105;</code>
+   * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 103;</code>
    * @return The queryUserOnlineStatusesRequest.
    */
   im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest getQueryUserOnlineStatusesRequest();
   /**
-   * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 105;</code>
+   * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 103;</code>
    */
   im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequestOrBuilder getQueryUserOnlineStatusesRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 106;</code>
+   * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 104;</code>
    * @return Whether the updateUserLocationRequest field is set.
    */
   boolean hasUpdateUserLocationRequest();
   /**
-   * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 106;</code>
+   * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 104;</code>
    * @return The updateUserLocationRequest.
    */
   im.turms.common.model.dto.request.user.UpdateUserLocationRequest getUpdateUserLocationRequest();
   /**
-   * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 106;</code>
+   * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 104;</code>
    */
   im.turms.common.model.dto.request.user.UpdateUserLocationRequestOrBuilder getUpdateUserLocationRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 107;</code>
+   * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 105;</code>
    * @return Whether the updateUserOnlineStatusRequest field is set.
    */
   boolean hasUpdateUserOnlineStatusRequest();
   /**
-   * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 107;</code>
+   * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 105;</code>
    * @return The updateUserOnlineStatusRequest.
    */
   im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest getUpdateUserOnlineStatusRequest();
   /**
-   * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 107;</code>
+   * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 105;</code>
    */
   im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequestOrBuilder getUpdateUserOnlineStatusRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.UpdateUserRequest update_user_request = 108;</code>
+   * <code>.im.turms.proto.UpdateUserRequest update_user_request = 106;</code>
    * @return Whether the updateUserRequest field is set.
    */
   boolean hasUpdateUserRequest();
   /**
-   * <code>.im.turms.proto.UpdateUserRequest update_user_request = 108;</code>
+   * <code>.im.turms.proto.UpdateUserRequest update_user_request = 106;</code>
    * @return The updateUserRequest.
    */
   im.turms.common.model.dto.request.user.UpdateUserRequest getUpdateUserRequest();
   /**
-   * <code>.im.turms.proto.UpdateUserRequest update_user_request = 108;</code>
+   * <code>.im.turms.proto.UpdateUserRequest update_user_request = 106;</code>
    */
   im.turms.common.model.dto.request.user.UpdateUserRequestOrBuilder getUpdateUserRequestOrBuilder();
 
@@ -932,75 +944,60 @@ public interface TurmsRequestOrBuilder extends
 
   /**
    * <pre>
-   * Group Member
+   * Storage
    * </pre>
    *
-   * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 600;</code>
-   * @return Whether the createGroupMemberRequest field is set.
+   * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
+   * @return Whether the deleteResourceRequest field is set.
    */
-  boolean hasCreateGroupMemberRequest();
+  boolean hasDeleteResourceRequest();
   /**
    * <pre>
-   * Group Member
+   * Storage
    * </pre>
    *
-   * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 600;</code>
-   * @return The createGroupMemberRequest.
+   * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
+   * @return The deleteResourceRequest.
    */
-  im.turms.common.model.dto.request.group.member.CreateGroupMemberRequest getCreateGroupMemberRequest();
+  im.turms.common.model.dto.request.storage.DeleteResourceRequest getDeleteResourceRequest();
   /**
    * <pre>
-   * Group Member
+   * Storage
    * </pre>
    *
-   * <code>.im.turms.proto.CreateGroupMemberRequest create_group_member_request = 600;</code>
+   * <code>.im.turms.proto.DeleteResourceRequest delete_resource_request = 1000;</code>
    */
-  im.turms.common.model.dto.request.group.member.CreateGroupMemberRequestOrBuilder getCreateGroupMemberRequestOrBuilder();
+  im.turms.common.model.dto.request.storage.DeleteResourceRequestOrBuilder getDeleteResourceRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 601;</code>
-   * @return Whether the deleteGroupMemberRequest field is set.
+   * <code>.im.turms.proto.QuerySignedGetUrlRequest query_signed_get_url_request = 1001;</code>
+   * @return Whether the querySignedGetUrlRequest field is set.
    */
-  boolean hasDeleteGroupMemberRequest();
+  boolean hasQuerySignedGetUrlRequest();
   /**
-   * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 601;</code>
-   * @return The deleteGroupMemberRequest.
+   * <code>.im.turms.proto.QuerySignedGetUrlRequest query_signed_get_url_request = 1001;</code>
+   * @return The querySignedGetUrlRequest.
    */
-  im.turms.common.model.dto.request.group.member.DeleteGroupMemberRequest getDeleteGroupMemberRequest();
+  im.turms.common.model.dto.request.storage.QuerySignedGetUrlRequest getQuerySignedGetUrlRequest();
   /**
-   * <code>.im.turms.proto.DeleteGroupMemberRequest delete_group_member_request = 601;</code>
+   * <code>.im.turms.proto.QuerySignedGetUrlRequest query_signed_get_url_request = 1001;</code>
    */
-  im.turms.common.model.dto.request.group.member.DeleteGroupMemberRequestOrBuilder getDeleteGroupMemberRequestOrBuilder();
+  im.turms.common.model.dto.request.storage.QuerySignedGetUrlRequestOrBuilder getQuerySignedGetUrlRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.QueryGroupMembersRequest query_group_members_request = 602;</code>
-   * @return Whether the queryGroupMembersRequest field is set.
+   * <code>.im.turms.proto.QuerySignedPutUrlRequest query_signed_put_url_request = 1002;</code>
+   * @return Whether the querySignedPutUrlRequest field is set.
    */
-  boolean hasQueryGroupMembersRequest();
+  boolean hasQuerySignedPutUrlRequest();
   /**
-   * <code>.im.turms.proto.QueryGroupMembersRequest query_group_members_request = 602;</code>
-   * @return The queryGroupMembersRequest.
+   * <code>.im.turms.proto.QuerySignedPutUrlRequest query_signed_put_url_request = 1002;</code>
+   * @return The querySignedPutUrlRequest.
    */
-  im.turms.common.model.dto.request.group.member.QueryGroupMembersRequest getQueryGroupMembersRequest();
+  im.turms.common.model.dto.request.storage.QuerySignedPutUrlRequest getQuerySignedPutUrlRequest();
   /**
-   * <code>.im.turms.proto.QueryGroupMembersRequest query_group_members_request = 602;</code>
+   * <code>.im.turms.proto.QuerySignedPutUrlRequest query_signed_put_url_request = 1002;</code>
    */
-  im.turms.common.model.dto.request.group.member.QueryGroupMembersRequestOrBuilder getQueryGroupMembersRequestOrBuilder();
-
-  /**
-   * <code>.im.turms.proto.UpdateGroupMemberRequest update_group_member_request = 603;</code>
-   * @return Whether the updateGroupMemberRequest field is set.
-   */
-  boolean hasUpdateGroupMemberRequest();
-  /**
-   * <code>.im.turms.proto.UpdateGroupMemberRequest update_group_member_request = 603;</code>
-   * @return The updateGroupMemberRequest.
-   */
-  im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest getUpdateGroupMemberRequest();
-  /**
-   * <code>.im.turms.proto.UpdateGroupMemberRequest update_group_member_request = 603;</code>
-   */
-  im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequestOrBuilder getUpdateGroupMemberRequestOrBuilder();
+  im.turms.common.model.dto.request.storage.QuerySignedPutUrlRequestOrBuilder getQuerySignedPutUrlRequestOrBuilder();
 
   public im.turms.common.model.dto.request.TurmsRequest.KindCase getKindCase();
 }

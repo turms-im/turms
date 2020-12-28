@@ -21,10 +21,10 @@ import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.UserStatus;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.server.common.bo.session.UserSessionsStatus;
-import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.service.session.SessionLocationService;
 import im.turms.server.common.service.session.UserStatusService;
+import im.turms.server.common.util.CollectorUtil;
 import im.turms.turms.workflow.access.http.dto.request.user.OnlineUserNumberDTO;
 import im.turms.turms.workflow.access.http.dto.request.user.UpdateOnlineStatusDTO;
 import im.turms.turms.workflow.access.http.dto.response.ResponseDTO;
@@ -32,7 +32,6 @@ import im.turms.turms.workflow.access.http.dto.response.ResponseFactory;
 import im.turms.turms.workflow.access.http.dto.response.UserLocationDTO;
 import im.turms.turms.workflow.access.http.permission.AdminPermission;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
-import im.turms.turms.workflow.access.http.util.PageUtil;
 import im.turms.turms.workflow.service.impl.statistics.StatisticsService;
 import im.turms.turms.workflow.service.impl.user.UserService;
 import im.turms.turms.workflow.service.impl.user.onlineuser.SessionService;
@@ -56,32 +55,26 @@ import java.util.Set;
 @RequestMapping("/users/online-infos")
 public class UserOnlineInfoController {
 
-    private final Node node;
     private final UserService userService;
     private final StatisticsService statisticsService;
     private final SessionLocationService sessionLocationService;
     private final UserStatusService userStatusService;
     private final UsersNearbyService usersNearbyService;
     private final SessionService sessionService;
-    private final PageUtil pageUtil;
 
     public UserOnlineInfoController(
-            Node node,
             UserService userService,
             StatisticsService statisticsService,
             SessionLocationService sessionLocationService,
             UserStatusService userStatusService,
             UsersNearbyService usersNearbyService,
-            SessionService sessionService,
-            PageUtil pageUtil) {
+            SessionService sessionService) {
         this.userService = userService;
         this.statisticsService = statisticsService;
         this.sessionLocationService = sessionLocationService;
-        this.node = node;
         this.userStatusService = userStatusService;
         this.usersNearbyService = usersNearbyService;
         this.sessionService = sessionService;
-        this.pageUtil = pageUtil;
     }
 
     @GetMapping("/count")
@@ -145,7 +138,7 @@ public class UserOnlineInfoController {
                     .map(point -> Pair.of(userId, point)));
         }
         Mono<List<UserLocationDTO>> resultMono = Flux.merge(monos)
-                .collectList()
+                .collect(CollectorUtil.toList(monos.size()))
                 .map(pairs -> {
                     List<UserLocationDTO> userLocations = new ArrayList<>(pairs.size());
                     for (Pair<Long, Point> pair : pairs) {

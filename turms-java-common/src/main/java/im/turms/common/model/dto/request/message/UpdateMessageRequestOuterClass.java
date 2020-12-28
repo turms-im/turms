@@ -47,15 +47,12 @@ public final class UpdateMessageRequestOuterClass {
     java.lang.String[] descriptorData = {
       "\n,request/message/update_message_request" +
       ".proto\022\016im.turms.proto\032\036google/protobuf/" +
-      "wrappers.proto\"\200\002\n\024UpdateMessageRequest\022" +
-      "\022\n\nmessage_id\030\001 \001(\003\0225\n\021is_system_message" +
-      "\030\002 \001(\0132\032.google.protobuf.BoolValue\022*\n\004te" +
-      "xt\030\003 \001(\0132\034.google.protobuf.StringValue\022\017" +
-      "\n\007records\030\004 \003(\014\0220\n\013recall_date\030\005 \001(\0132\033.g" +
-      "oogle.protobuf.Int64Value\022.\n\tread_date\030\006" +
-      " \001(\0132\033.google.protobuf.Int64ValueB0\n)im." +
-      "turms.common.model.dto.request.messageP\001" +
-      "\272\002\000b\006proto3"
+      "wrappers.proto\"\231\001\n\024UpdateMessageRequest\022" +
+      "\022\n\nmessage_id\030\001 \001(\003\022*\n\004text\030\002 \001(\0132\034.goog" +
+      "le.protobuf.StringValue\022\017\n\007records\030\003 \003(\014" +
+      "\0220\n\013recall_date\030\004 \001(\0132\033.google.protobuf." +
+      "Int64ValueB0\n)im.turms.common.model.dto." +
+      "request.messageP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -67,7 +64,7 @@ public final class UpdateMessageRequestOuterClass {
     internal_static_im_turms_proto_UpdateMessageRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_UpdateMessageRequest_descriptor,
-        new java.lang.String[] { "MessageId", "IsSystemMessage", "Text", "Records", "RecallDate", "ReadDate", });
+        new java.lang.String[] { "MessageId", "Text", "Records", "RecallDate", });
     com.google.protobuf.WrappersProto.getDescriptor();
   }
 

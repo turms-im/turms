@@ -19,21 +19,23 @@ package im.turms.turms.workflow.service.impl.message;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.google.common.primitives.Longs;
 import com.google.protobuf.Int64Value;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
-import im.turms.common.constant.MessageDeliveryStatus;
-import im.turms.server.common.constant.TurmsStatusCode;
-import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.common.util.Validator;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.dao.util.OperationResultUtil;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.manager.TrivialTaskManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.constant.TimeType;
 import im.turms.server.common.util.AssertUtil;
+import im.turms.server.common.util.CollectorUtil;
 import im.turms.turms.bo.DateRange;
 import im.turms.turms.bo.ServicePermission;
 import im.turms.turms.constant.DaoConstant;
@@ -43,10 +45,9 @@ import im.turms.turms.plugin.manager.TurmsPluginManager;
 import im.turms.turms.util.ProtoUtil;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
 import im.turms.turms.workflow.dao.builder.UpdateBuilder;
-import im.turms.turms.workflow.dao.domain.Message;
-import im.turms.turms.workflow.dao.domain.MessageStatus;
+import im.turms.turms.workflow.dao.domain.message.Message;
 import im.turms.turms.workflow.dao.util.AggregationUtil;
-import im.turms.server.common.dao.util.OperationResultUtil;
+import im.turms.turms.workflow.service.impl.conversation.ConversationService;
 import im.turms.turms.workflow.service.impl.group.GroupMemberService;
 import im.turms.turms.workflow.service.impl.statistics.MetricsService;
 import im.turms.turms.workflow.service.impl.user.UserService;
@@ -65,7 +66,6 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.util.function.Tuple2;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.Min;
@@ -90,7 +90,7 @@ public class MessageService {
 
     private final ReactiveMongoTemplate mongoTemplate;
     private final Node node;
-    private final MessageStatusService messageStatusService;
+    private final ConversationService conversationService;
     private final OutboundMessageService outboundMessageService;
     private final GroupMemberService groupMemberService;
     private final UserService userService;
@@ -107,7 +107,7 @@ public class MessageService {
             @Qualifier("messageMongoTemplate") ReactiveMongoTemplate mongoTemplate,
             Node node,
             TurmsPropertiesManager turmsPropertiesManager,
-            MessageStatusService messageStatusService,
+            ConversationService conversationService,
             GroupMemberService groupMemberService,
             UserService userService,
             OutboundMessageService outboundMessageService,
@@ -116,7 +116,7 @@ public class MessageService {
             MetricsService metricsService) {
         this.mongoTemplate = mongoTemplate;
         this.node = node;
-        this.messageStatusService = messageStatusService;
+        this.conversationService = conversationService;
         this.groupMemberService = groupMemberService;
         this.userService = userService;
         this.outboundMessageService = outboundMessageService;
@@ -182,9 +182,11 @@ public class MessageService {
                 return Mono.just(message.getTargetId().equals(recipientId));
             }
         }
-        MessageStatus.Key key = new MessageStatus.Key(messageId, recipientId);
-        Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(key));
-        return mongoTemplate.exists(query, MessageStatus.class, MessageStatus.COLLECTION_NAME);
+        Query query = new Query()
+                .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(messageId))
+                .addCriteria(Criteria.where(Message.Fields.TARGET_ID).is(recipientId))
+                .addCriteria(Criteria.where(Message.Fields.IS_GROUP_MESSAGE).is(false));
+        return mongoTemplate.exists(query, Message.class, Message.COLLECTION_NAME);
     }
 
     public Mono<Boolean> isMessageRecipientOrSender(@NotNull Long messageId, @NotNull Long userId) {
@@ -236,12 +238,8 @@ public class MessageService {
             @Nullable Long targetId,
             @Nullable DateRange deliveryDateRange,
             @Nullable DateRange deletionDateRange,
-            @Nullable MessageDeliveryStatus deliveryStatus,
             @Nullable Integer page,
             @Nullable Integer size) {
-        if (deliveryStatus != MessageDeliveryStatus.READY && deliveryStatus != MessageDeliveryStatus.RECEIVED) {
-            return Flux.error(TurmsBusinessException.get(ILLEGAL_ARGUMENT, "deliveryStatus must be READY or RECEIVED"));
-        }
         return queryMessages(
                 closeToDate,
                 messageIds,
@@ -251,7 +249,6 @@ public class MessageService {
                 targetId != null ? Set.of(targetId) : null,
                 deliveryDateRange,
                 deletionDateRange,
-                Set.of(deliveryStatus),
                 page,
                 size);
     }
@@ -275,7 +272,6 @@ public class MessageService {
             @Nullable Set<Long> targetIds,
             @Nullable DateRange deliveryDateRange,
             @Nullable DateRange deletionDateRange,
-            @Nullable Set<MessageDeliveryStatus> deliveryStatuses,
             @Nullable Integer page,
             @Nullable Integer size) {
         QueryBuilder builder = QueryBuilder.newBuilder()
@@ -287,38 +283,17 @@ public class MessageService {
                 .addBetweenIfNotNull(Message.Fields.DELETION_DATE, deletionDateRange);
         Sort.Direction direction = null;
         if (closeToDate) {
-            direction = (deliveryDateRange != null && deliveryDateRange.getStart() != null) ? Sort.Direction.ASC : Sort.Direction.DESC;
+            boolean isAsc = deliveryDateRange != null && deliveryDateRange.getStart() != null;
+            direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         }
-        if (deliveryStatuses != null) {
-            Sort.Direction finalDirection = direction;
-            return messageStatusService.queryMessagesIdsByDeliveryStatusesAndTargetIds(deliveryStatuses, areGroupMessages, targetIds)
-                    .collect(Collectors.toSet())
-                    .flatMapMany(ids -> {
-                        if (ids.isEmpty()) {
-                            return Flux.empty();
-                        }
-                        if (messageIds != null) {
-                            ids.retainAll(messageIds);
-                        }
-                        builder.add(Criteria.where(DaoConstant.ID_FIELD_NAME).in(ids));
-                        Query query;
-                        if (finalDirection != null) {
-                            query = builder.paginateIfNotNull(page, size, finalDirection, Message.Fields.DELIVERY_DATE);
-                        } else {
-                            query = builder.paginateIfNotNull(page, size);
-                        }
-                        return mongoTemplate.find(query, Message.class, Message.COLLECTION_NAME);
-                    });
+        builder.addInIfNotNull(DaoConstant.ID_FIELD_NAME, messageIds);
+        Query query;
+        if (direction != null) {
+            query = builder.paginateIfNotNull(page, size, direction, Message.Fields.DELIVERY_DATE);
         } else {
-            builder.addInIfNotNull(DaoConstant.ID_FIELD_NAME, messageIds);
-            Query query;
-            if (direction != null) {
-                query = builder.paginateIfNotNull(page, size, direction, Message.Fields.DELIVERY_DATE);
-            } else {
-                query = builder.paginateIfNotNull(page, size);
-            }
-            return mongoTemplate.find(query, Message.class, Message.COLLECTION_NAME);
+            query = builder.paginateIfNotNull(page, size);
         }
+        return mongoTemplate.find(query, Message.class, Message.COLLECTION_NAME);
     }
 
     public Mono<Message> saveMessage(
@@ -331,8 +306,8 @@ public class MessageService {
             @Nullable List<byte[]> records,
             @Nullable @Min(0) Integer burnAfter,
             @Nullable @PastOrPresent Date deliveryDate,
-            @Nullable Long referenceId,
-            @Nullable ReactiveMongoOperations operations) {
+            @Nullable @PastOrPresent Date recallDate,
+            @Nullable Long referenceId) {
         try {
             AssertUtil.notNull(senderId, "senderId");
             AssertUtil.notNull(targetId, "targetId");
@@ -342,17 +317,19 @@ public class MessageService {
             validRecordsLength(records);
             AssertUtil.min(burnAfter, "burnAfter", 0);
             AssertUtil.pastOrPresent(deliveryDate, "deliveryDate");
+            AssertUtil.pastOrPresent(recallDate, "recallDate");
+            AssertUtil.before(deliveryDate, recallDate, "deliveryDate", "recallDate");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
         if (timeType == TimeType.LOCAL_SERVER_TIME || deliveryDate == null) {
             deliveryDate = new Date();
         }
-        if (!node.getSharedProperties().getService().getMessage().isRecordsPersistent()) {
-            records = null;
-        }
         if (messageId == null) {
             messageId = node.nextId(ServiceType.MESSAGE);
+        }
+        if (!node.getSharedProperties().getService().getMessage().isRecordsPersistent()) {
+            records = null;
         }
         Message message = new Message(
                 messageId,
@@ -360,140 +337,27 @@ public class MessageService {
                 isSystemMessage,
                 deliveryDate,
                 null,
+                null,
+                null,
                 text,
                 senderId,
                 targetId,
                 records,
                 burnAfter,
                 referenceId);
-        ReactiveMongoOperations mongoOperations = operations != null ? operations : mongoTemplate;
-        return mongoOperations.insert(message, Message.COLLECTION_NAME);
-    }
-
-    public Mono<Boolean> saveMessageStatuses(
-            @NotNull Long messageId,
-            @NotNull Boolean isGroupMessage,
-            @NotNull Boolean isSystemMessage,
-            @NotNull Long senderId,
-            @NotNull Long targetId,
-            @Nullable Set<Long> auxiliaryMemberIds,
-            @Nullable ReactiveMongoOperations operations) {
-        try {
-            AssertUtil.notNull(messageId, "messageId");
-            AssertUtil.notNull(isGroupMessage, "isGroupMessage");
-            AssertUtil.notNull(isSystemMessage, "isSystemMessage");
-            AssertUtil.notNull(senderId, "senderId");
-            AssertUtil.notNull(targetId, "targetId");
-        } catch (TurmsBusinessException e) {
-            return Mono.error(e);
-        }
-        ReactiveMongoOperations mongoOperations = operations != null ? operations : mongoTemplate;
-        if (isGroupMessage) {
-            Mono<Set<Long>> memberIdsMono;
-            if (auxiliaryMemberIds != null) {
-                memberIdsMono = Mono.just(auxiliaryMemberIds);
-            } else {
-                memberIdsMono = groupMemberService
-                        .queryGroupMemberIds(targetId)
-                        .collect(Collectors.toSet());
-            }
-            return memberIdsMono
-                    .flatMap(memberIds -> {
-                        if (memberIds.isEmpty()) {
-                            return Mono.just(true);
-                        } else {
-                            List<MessageStatus> messageStatuses = new ArrayList<>(memberIds.size());
-                            for (Long memberId : memberIds) {
-                                messageStatuses.add(new MessageStatus(
-                                        messageId,
-                                        targetId,
-                                        isSystemMessage,
-                                        senderId,
-                                        memberId,
-                                        MessageDeliveryStatus.READY,
-                                        null,
-                                        null,
-                                        null));
-                            }
-                            return mongoOperations.insertAll(Mono.just(messageStatuses), MessageStatus.COLLECTION_NAME)
-                                    .then(Mono.just(true));
-                        }
-                    });
+        Mono<Message> saveMessage = mongoTemplate.insert(message, Message.COLLECTION_NAME);
+        if (node.getSharedProperties().getService().getConversation().getReadReceipt().isUpdateReadDateAfterMessageSent()) {
+            Mono<Void> upsertConversation = isGroupMessage
+                    ? conversationService.upsertGroupConversationReadDate(targetId, senderId, deliveryDate)
+                    : conversationService.upsertPrivateConversationReadDate(senderId, targetId, deliveryDate);
+            return saveMessage
+                    .doOnNext(ignored -> upsertConversation.subscribe());
         } else {
-            MessageStatus messageStatus = new MessageStatus(
-                    messageId,
-                    null,
-                    isSystemMessage,
-                    senderId,
-                    targetId,
-                    MessageDeliveryStatus.READY,
-                    null,
-                    null,
-                    null);
-            return mongoOperations.insert(messageStatus, MessageStatus.COLLECTION_NAME)
-                    .thenReturn(true);
+            return saveMessage;
         }
     }
 
-    public Mono<Message> saveMessageAndMessagesStatus(
-            @Nullable Long messageId,
-            @NotNull Long senderId,
-            @NotNull Long targetId,
-            @NotNull Boolean isGroupMessage,
-            @NotNull Boolean isSystemMessage,
-            @Nullable String text,
-            @Nullable List<byte[]> records,
-            @Nullable @Min(0) Integer burnAfter,
-            @Nullable @PastOrPresent Date deliveryDate,
-            @Nullable Long referenceId,
-            @Nullable Set<Long> auxiliaryMemberIds) {
-        try {
-            AssertUtil.notNull(senderId, "senderId");
-            AssertUtil.notNull(targetId, "targetId");
-            AssertUtil.notNull(isGroupMessage, "isGroupMessage");
-            AssertUtil.notNull(isSystemMessage, "isSystemMessage");
-            AssertUtil.maxLength(text, "text", node.getSharedProperties().getService().getMessage().getMaxTextLimit());
-            validRecordsLength(records);
-            AssertUtil.min(burnAfter, "burnAfter", 0);
-            AssertUtil.pastOrPresent(deliveryDate, "deliveryDate");
-        } catch (TurmsBusinessException e) {
-            return Mono.error(e);
-        }
-        if (timeType == TimeType.LOCAL_SERVER_TIME || deliveryDate == null) {
-            deliveryDate = new Date();
-        }
-        if (messageId == null) {
-            messageId = node.nextId(ServiceType.MESSAGE);
-        }
-        Date finalDeliveryDate = deliveryDate;
-        Long finalMessageId = messageId;
-        return mongoTemplate.inTransaction()
-                .execute(operations -> saveMessage(
-                        finalMessageId,
-                        senderId,
-                        targetId,
-                        isGroupMessage,
-                        isSystemMessage,
-                        text,
-                        records,
-                        burnAfter,
-                        finalDeliveryDate,
-                        referenceId,
-                        operations)
-                        .zipWith(saveMessageStatuses(
-                                finalMessageId,
-                                isSystemMessage,
-                                isGroupMessage,
-                                senderId,
-                                targetId,
-                                auxiliaryMemberIds,
-                                operations))
-                        .map(Tuple2::getT1))
-                .retryWhen(DaoConstant.TRANSACTION_RETRY)
-                .singleOrEmpty();
-    }
-
-    public Flux<Long> queryExpiredMessagesIds(@NotNull Integer timeToLiveHours) {
+    public Flux<Long> queryExpiredMessageIds(@NotNull Integer timeToLiveHours) {
         try {
             AssertUtil.notNull(timeToLiveHours, "timeToLiveHours");
         } catch (TurmsBusinessException e) {
@@ -508,7 +372,7 @@ public class MessageService {
     }
 
     public Mono<Void> deleteExpiredMessagesAndStatuses(@NotNull Integer timeToLiveHours) {
-        return queryExpiredMessagesIds(timeToLiveHours)
+        return queryExpiredMessageIds(timeToLiveHours)
                 .collectList()
                 .flatMap(expiredMessageIds -> {
                     if (expiredMessageIds.isEmpty()) {
@@ -536,31 +400,20 @@ public class MessageService {
                                     });
                         }
                         return messageIdsToDeleteMono
-                                .flatMap(messageIds -> mongoTemplate.inTransaction()
-                                        .execute(operations -> {
-                                            Query messagesQuery = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(messageIds));
-                                            Query messageStatusesQuery = new Query().addCriteria(Criteria.where(MessageStatus.Fields.ID_MESSAGE_ID).in(messageIds));
-                                            return operations.remove(messagesQuery, Message.class, Message.COLLECTION_NAME)
-                                                    .flatMap(deleteResult -> operations.remove(messageStatusesQuery, MessageStatus.class, MessageStatus.COLLECTION_NAME))
-                                                    .then();
-                                        })
-                                        .retryWhen(DaoConstant.TRANSACTION_RETRY)
-                                        .singleOrEmpty());
+                                .flatMap(messageIds -> {
+                                    Query messagesQuery = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(messageIds));
+                                    return mongoTemplate.remove(messagesQuery, Message.class, Message.COLLECTION_NAME).then();
+                                });
                     }
                 });
     }
 
     public Mono<DeleteResult> deleteMessages(
             @Nullable Set<Long> messageIds,
-            boolean deleteMessageStatus,
             @Nullable Boolean deleteLogically) {
         Query queryMessage = QueryBuilder
                 .newBuilder()
                 .addInIfNotNull(DaoConstant.ID_FIELD_NAME, messageIds)
-                .buildQuery();
-        Query queryMessageStatus = QueryBuilder
-                .newBuilder()
-                .addInIfNotNull(MessageStatus.Fields.ID_MESSAGE_ID, messageIds)
                 .buildQuery();
         if (deleteLogically == null) {
             deleteLogically = node.getSharedProperties()
@@ -569,59 +422,68 @@ public class MessageService {
         }
         if (deleteLogically) {
             Update update = new Update().set(Message.Fields.DELETION_DATE, new Date());
-            if (deleteMessageStatus) {
-                return mongoTemplate.inTransaction()
-                        .execute(operations -> operations.updateMulti(queryMessage, update, Message.class, Message.COLLECTION_NAME)
-                                .flatMap(result -> {
-                                    DeleteResult deleteResult = OperationResultUtil.update2delete(result);
-                                    return result.getModifiedCount() > 0
-                                            ? operations.remove(queryMessageStatus, MessageStatus.class, MessageStatus.COLLECTION_NAME).thenReturn(deleteResult)
-                                            : Mono.just(deleteResult);
-                                }))
-                        .retryWhen(DaoConstant.TRANSACTION_RETRY)
-                        .singleOrEmpty();
-            } else {
-                return mongoTemplate.updateMulti(queryMessage, update, Message.class, Message.COLLECTION_NAME)
-                        .map(OperationResultUtil::update2delete);
-            }
+            return mongoTemplate.updateMulti(queryMessage, update, Message.class, Message.COLLECTION_NAME)
+                    .map(OperationResultUtil::update2delete);
         } else {
-            if (deleteMessageStatus) {
-                return mongoTemplate.inTransaction()
-                        .execute(operations -> operations.remove(queryMessage, Message.class, Message.COLLECTION_NAME)
-                                .flatMap(result -> result.getDeletedCount() > 0
-                                        ? operations.remove(queryMessageStatus, MessageStatus.class, MessageStatus.COLLECTION_NAME).thenReturn(result)
-                                        : Mono.just(result)))
-                        .retryWhen(DaoConstant.TRANSACTION_RETRY)
-                        .singleOrEmpty();
-            }
             return mongoTemplate.remove(queryMessage, Message.class, Message.COLLECTION_NAME);
         }
     }
 
-    public Mono<UpdateResult> updateMessage(
+    public Mono<UpdateResult> updateMessages(
             @NotEmpty Set<Long> messageIds,
             @Nullable Boolean isSystemMessage,
             @Nullable String text,
             @Nullable List<byte[]> records,
             @Nullable @Min(0) Integer burnAfter,
+            @Nullable @PastOrPresent Date recallDate,
             @Nullable ReactiveMongoOperations operations) {
         try {
             AssertUtil.notEmpty(messageIds, "messageIds");
             AssertUtil.maxLength(text, "text", node.getSharedProperties().getService().getMessage().getMaxTextLimit());
+            AssertUtil.min(burnAfter, "burnAfter", 0);
+            AssertUtil.pastOrPresent(recallDate, "recallDate");
             validRecordsLength(records);
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        if (Validator.areAllNull(isSystemMessage, text, records, burnAfter)) {
+        if (Validator.areAllNull(isSystemMessage, text, records, burnAfter, recallDate)) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
         Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(messageIds));
         Update update = UpdateBuilder.newBuilder()
+                .setIfNotNull(Message.Fields.MODIFICATION_DATE, new Date())
                 .setIfNotNull(Message.Fields.TEXT, text)
                 .setIfNotNull(Message.Fields.RECORDS, records)
+                .setIfNotNull(Message.Fields.IS_SYSTEM_MESSAGE, isSystemMessage)
+                .setIfNotNull(Message.Fields.BURN_AFTER, burnAfter)
+                .setIfNotNull(Message.Fields.RECALL_DATE, recallDate)
                 .build();
         ReactiveMongoOperations mongoOperations = operations != null ? operations : mongoTemplate;
-        return mongoOperations.updateMulti(query, update, Message.class, Message.COLLECTION_NAME);
+        if (recallDate == null) {
+            return mongoOperations.updateMulti(query, update, Message.class, Message.COLLECTION_NAME);
+        } else {
+            return mongoOperations.find(query, Message.class, Message.COLLECTION_NAME)
+                    .map(message -> {
+                        byte[] messageType = {BuiltinSystemMessageType.RECALL_MESSAGE};
+                        byte[] messageId = Longs.toByteArray(message.getId());
+                        return authAndSaveAndSendMessage(true,
+                                null,
+                                message.getIsGroupMessage(),
+                                true,
+                                null,
+                                List.of(messageType, messageId),
+                                null,
+                                message.getTargetId(),
+                                null,
+                                null);
+                    })
+                    .collect(CollectorUtil.toList(messageIds.size()))
+                    .flatMap(messageMonos -> {
+                        int size = messageMonos.size();
+                        return Mono.when(messageMonos)
+                                .thenReturn(UpdateResult.acknowledged(size, (long) size, null));
+                    });
+        }
     }
 
     public Mono<UpdateResult> updateMessage(
@@ -630,14 +492,14 @@ public class MessageService {
             @Nullable String text,
             @Nullable List<byte[]> records,
             @Nullable @Min(0) Integer burnAfter,
+            @Nullable @PastOrPresent Date recallDate,
             @Nullable ReactiveMongoOperations operations) {
         try {
             AssertUtil.notNull(messageId, "messageId");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        return updateMessage(Collections.singleton(messageId), isSystemMessage, text,
-                records, burnAfter, operations);
+        return updateMessages(Set.of(messageId), isSystemMessage, text, records, burnAfter, recallDate, operations);
     }
 
     public Mono<Long> countMessages(
@@ -647,8 +509,7 @@ public class MessageService {
             @Nullable Set<Long> senderIds,
             @Nullable Set<Long> targetIds,
             @Nullable DateRange deliveryDateRange,
-            @Nullable DateRange deletionDateRange,
-            @Nullable Set<MessageDeliveryStatus> deliveryStatuses) {
+            @Nullable DateRange deletionDateRange) {
         QueryBuilder builder = QueryBuilder.newBuilder()
                 .addIsIfNotNull(Message.Fields.IS_GROUP_MESSAGE, areGroupMessages)
                 .addIsIfNotNull(Message.Fields.IS_SYSTEM_MESSAGE, areSystemMessages)
@@ -656,23 +517,8 @@ public class MessageService {
                 .addIsIfNotNull(Message.Fields.TARGET_ID, targetIds)
                 .addBetweenIfNotNull(Message.Fields.DELIVERY_DATE, deliveryDateRange)
                 .addBetweenIfNotNull(Message.Fields.DELETION_DATE, deletionDateRange);
-        if (deliveryStatuses != null && !deliveryStatuses.isEmpty()) {
-            return messageStatusService.queryMessagesIdsByDeliveryStatusesAndTargetIds(deliveryStatuses, areGroupMessages, targetIds)
-                    .collect(Collectors.toSet())
-                    .flatMap(ids -> {
-                        if (ids.isEmpty()) {
-                            return Mono.just(0L);
-                        }
-                        if (messageIds != null) {
-                            ids.retainAll(messageIds);
-                        }
-                        Query query = builder.add(Criteria.where(DaoConstant.ID_FIELD_NAME).in(ids)).buildQuery();
-                        return mongoTemplate.count(query, Message.class, Message.COLLECTION_NAME);
-                    });
-        } else {
-            Query query = builder.addInIfNotNull(DaoConstant.ID_FIELD_NAME, messageIds).buildQuery();
-            return mongoTemplate.count(query, Message.class, Message.COLLECTION_NAME);
-        }
+        Query query = builder.addInIfNotNull(DaoConstant.ID_FIELD_NAME, messageIds).buildQuery();
+        return mongoTemplate.count(query, Message.class, Message.COLLECTION_NAME);
     }
 
     public Mono<Long> countUsersWhoSentMessage(
@@ -703,26 +549,25 @@ public class MessageService {
                 Message.class);
     }
 
-    public Mono<Long> countUsersWhoAcknowledgedMessage(
-            @Nullable DateRange dateRange,
-            @Nullable Boolean areGroupMessage) {
-        Criteria criteria = QueryBuilder.newBuilder()
-                .addBetweenIfNotNull(MessageStatus.Fields.RECEPTION_DATE, dateRange)
-                .buildCriteria();
-        if (areGroupMessage != null) {
-            if (areGroupMessage) {
-                criteria.and(MessageStatus.Fields.GROUP_ID).ne(null);
-            } else {
-                criteria.and(MessageStatus.Fields.GROUP_ID).is(null);
-            }
-        }
-
-        return AggregationUtil.countDistinct(
-                mongoTemplate,
-                criteria,
-                MessageStatus.Fields.ID_RECIPIENT_ID,
-                MessageStatus.class);
-    }
+//    public Mono<Long> countUsersWhoAcknowledgedMessage(
+//            @Nullable DateRange dateRange,
+//            @Nullable Boolean areGroupMessage) {
+//        Criteria criteria = QueryBuilder.newBuilder()
+//                .addBetweenIfNotNull(MessageStatus.Fields.RECEPTION_DATE, dateRange)
+//                .buildCriteria();
+//        if (areGroupMessage != null) {
+//            if (areGroupMessage) {
+//                criteria.and(MessageStatus.Fields.GROUP_ID).ne(null);
+//            } else {
+//                criteria.and(MessageStatus.Fields.GROUP_ID).is(null);
+//            }
+//        }
+//        return AggregationUtil.countDistinct(
+//                mongoTemplate,
+//                criteria,
+//                MessageStatus.Fields.ID_RECIPIENT_ID,
+//                MessageStatus.class);
+//    }
 
     public Mono<Long> countSentMessages(
             @Nullable DateRange dateRange,
@@ -757,52 +602,49 @@ public class MessageService {
                 });
     }
 
-    public Mono<Long> countAcknowledgedMessages(
-            @Nullable DateRange dateRange,
-            @Nullable Boolean areGroupMessages,
-            @Nullable Boolean areSystemMessages) {
-        Query query = QueryBuilder.newBuilder()
-                .addBetweenIfNotNull(MessageStatus.Fields.RECEPTION_DATE, dateRange)
-                .addIsIfNotNull(MessageStatus.Fields.IS_SYSTEM_MESSAGE, areSystemMessages)
-                .buildQuery();
-        if (areGroupMessages != null) {
-            if (areGroupMessages) {
-                query.addCriteria(Criteria.where(MessageStatus.Fields.GROUP_ID).ne(null));
-            } else {
-                query.addCriteria(Criteria.where(MessageStatus.Fields.GROUP_ID).is(null));
-            }
-        }
+//    public Mono<Long> countAcknowledgedMessages(
+//            @Nullable DateRange dateRange,
+//            @Nullable Boolean areGroupMessages,
+//            @Nullable Boolean areSystemMessages) {
+//        Query query = QueryBuilder.newBuilder()
+//                .addBetweenIfNotNull(MessageStatus.Fields.RECEPTION_DATE, dateRange)
+//                .addIsIfNotNull(MessageStatus.Fields.IS_SYSTEM_MESSAGE, areSystemMessages)
+//                .buildQuery();
+//        if (areGroupMessages != null) {
+//            if (areGroupMessages) {
+//                query.addCriteria(Criteria.where(MessageStatus.Fields.GROUP_ID).ne(null));
+//            } else {
+//                query.addCriteria(Criteria.where(MessageStatus.Fields.GROUP_ID).is(null));
+//            }
+//        }
+//        return mongoTemplate.count(query, MessageStatus.class, MessageStatus.COLLECTION_NAME);
+//    }
 
-        return mongoTemplate.count(query, MessageStatus.class, MessageStatus.COLLECTION_NAME);
-    }
+//    public Mono<Long> countAcknowledgedMessagesOnAverage(
+//            @Nullable DateRange dateRange,
+//            @Nullable Boolean areGroupMessages,
+//            @Nullable Boolean areSystemMessages) {
+//        return countAcknowledgedMessages(dateRange, areGroupMessages, areSystemMessages)
+//                .flatMap(totalAcknowledgedMessages -> {
+//                    if (totalAcknowledgedMessages == 0) {
+//                        return Mono.just(0L);
+//                    } else {
+//                        return countUsersWhoAcknowledgedMessage(dateRange, areGroupMessages)
+//                                .map(totalUsers -> totalUsers == 0
+//                                        ? Long.MAX_VALUE
+//                                        : totalAcknowledgedMessages / totalUsers);
+//                    }
+//                });
+//    }
 
-    public Mono<Long> countAcknowledgedMessagesOnAverage(
-            @Nullable DateRange dateRange,
-            @Nullable Boolean areGroupMessages,
-            @Nullable Boolean areSystemMessages) {
-        return countAcknowledgedMessages(dateRange, areGroupMessages, areSystemMessages)
-                .flatMap(totalAcknowledgedMessages -> {
-                    if (totalAcknowledgedMessages == 0) {
-                        return Mono.just(0L);
-                    } else {
-                        return countUsersWhoAcknowledgedMessage(dateRange, areGroupMessages)
-                                .map(totalUsers -> totalUsers == 0
-                                        ? Long.MAX_VALUE
-                                        : totalAcknowledgedMessages / totalUsers);
-                    }
-                });
-    }
-
-    public Mono<Void> authAndUpdateMessageAndMessageStatus(
+    public Mono<UpdateResult> authAndUpdateMessage(
             @NotNull Long requesterId,
             @NotNull Long messageId,
-            @Nullable Long recipientId,
             @Nullable String text,
             @Nullable List<byte[]> records,
-            @Nullable @PastOrPresent Date recallDate,
-            @Nullable @PastOrPresent Date readDate) {
+            @Nullable @PastOrPresent Date recallDate) {
         boolean updateMessageContent = text != null || (records != null && !records.isEmpty());
-        if (!updateMessageContent && recallDate == null && readDate == null) {
+        if (!updateMessageContent && recallDate == null) {
             return Mono.empty();
         }
         if (recallDate != null && !node.getSharedProperties()
@@ -828,49 +670,12 @@ public class MessageService {
                                     if (code != OK) {
                                         return Mono.error(TurmsBusinessException.get(code, permission.getReason()));
                                     }
-                                    return updateMessageAndMessageStatus(messageId, recipientId, text, records, recallDate, readDate);
+                                    return updateMessage(messageId, null, text, records, null, recallDate, null);
                                 });
                     } else {
-                        return updateMessageAndMessageStatus(messageId, recipientId, text, records, null, readDate);
+                        return updateMessage(messageId, null, text, records, null, null, null);
                     }
                 });
-    }
-
-    public Mono<Void> updateMessageAndMessageStatus(
-            @NotNull Long messageId,
-            @Nullable Long recipientId,
-            @Nullable String text,
-            @Nullable List<byte[]> records,
-            @Nullable @PastOrPresent Date recallDate,
-            @Nullable @PastOrPresent Date readDate) {
-        try {
-            AssertUtil.notNull(messageId, "messageId");
-            AssertUtil.maxLength(text, "text", node.getSharedProperties().getService().getMessage().getMaxTextLimit());
-            validRecordsLength(records);
-            AssertUtil.pastOrPresent(recallDate, "recallDate");
-            AssertUtil.pastOrPresent(readDate, "readDate");
-        } catch (TurmsBusinessException e) {
-            return Mono.error(e);
-        }
-        boolean shouldUpdateMessage = text != null || (records != null && !records.isEmpty());
-        boolean shouldUpdateMessageStatus = recallDate != null || readDate != null;
-        if (shouldUpdateMessage && shouldUpdateMessageStatus) {
-            return mongoTemplate.inTransaction()
-                    .execute(operations -> {
-                        List<Mono<?>> updateMonos = List.of(
-                                updateMessage(messageId, null, text, records, null, operations),
-                                messageStatusService.updateMessageStatus(messageId, recipientId, recallDate, readDate, null, operations));
-                        return Mono.when(updateMonos);
-                    })
-                    .retryWhen(DaoConstant.TRANSACTION_RETRY)
-                    .singleOrEmpty();
-        } else if (shouldUpdateMessage) {
-            return updateMessage(messageId, null, text, records, null, null).then();
-        } else if (shouldUpdateMessageStatus) {
-            return messageStatusService.updateMessageStatus(messageId, recipientId, recallDate, readDate, null, null).then();
-        } else {
-            return Mono.empty();
-        }
     }
 
     public Flux<Long> queryMessageRecipients(@NotNull Long messageId) {
@@ -879,33 +684,18 @@ public class MessageService {
         } catch (TurmsBusinessException e) {
             return Flux.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(MessageStatus.Fields.ID_MESSAGE_ID).is(messageId));
-        query.fields().include(MessageStatus.Fields.ID_RECIPIENT_ID);
-        return mongoTemplate.find(query, MessageStatus.class, MessageStatus.COLLECTION_NAME)
-                .map(status -> status.getKey().getRecipientId());
-    }
-
-    public Mono<Long> queryMessageSenderId(@NotNull Long messageId) {
-        try {
-            AssertUtil.notNull(messageId, "messageId");
-        } catch (TurmsBusinessException e) {
-            return Mono.error(e);
-        }
         Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(messageId));
-        query.fields().include(Message.Fields.SENDER_ID);
+        query.fields()
+                .include(Message.Fields.TARGET_ID)
+                .include(Message.Fields.IS_GROUP_MESSAGE);
         return mongoTemplate.findOne(query, Message.class, Message.COLLECTION_NAME)
-                .map(Message::getSenderId);
-    }
-
-    public Flux<Message> queryMessagesIncludingIsGroupMessage(@NotEmpty Set<Long> messageIds) {
-        try {
-            AssertUtil.notEmpty(messageIds, "messageIds");
-        } catch (TurmsBusinessException e) {
-            return Flux.error(e);
-        }
-        Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(messageIds));
-        query.fields().include(Message.Fields.IS_GROUP_MESSAGE);
-        return mongoTemplate.find(query, Message.class, Message.COLLECTION_NAME);
+                .flatMapMany(message -> {
+                    if (message.getIsGroupMessage()) {
+                        return groupMemberService.queryGroupMemberIds(message.groupId());
+                    } else {
+                        return Mono.just(message.getTargetId());
+                    }
+                });
     }
 
     // message - recipientsIds
@@ -948,15 +738,8 @@ public class MessageService {
                                 return Mono.just(Pair.of(null, recipientsIds));
                             }
                         }
-                        Mono<Message> saveMono;
-                        if (node.getSharedProperties().getService().getMessage().isMessageStatusPersistent()) {
-                            saveMono = saveMessageAndMessagesStatus(messageId, senderId, targetId, isGroupMessage,
-                                    isSystemMessage, text, records, burnAfter, deliveryDate, referenceId, recipientsIds);
-                        } else {
-                            saveMono = saveMessage(null, senderId, targetId, isGroupMessage,
-                                    isSystemMessage, text, records, burnAfter, deliveryDate,
-                                    referenceId, null);
-                        }
+                        Mono<Message> saveMono = saveMessage(messageId, senderId, targetId, isGroupMessage,
+                                isSystemMessage, text, records, burnAfter, deliveryDate, null, referenceId);
                         return saveMono.map(message -> {
                             if (message.getId() != null && sentMessageCache != null) {
                                 cacheSentMessage(message);
@@ -993,7 +776,7 @@ public class MessageService {
     /**
      * @return true if no recipient, or at least one recipient has received the notification
      */
-    public Mono<Boolean> sendMessage(
+    public Mono<Boolean> authAndSaveAndSendMessage(
             boolean send,
             @Nullable Long messageId,
             @NotNull Boolean isGroupMessage,
@@ -1023,111 +806,40 @@ public class MessageService {
             }
         }
         Date deliveryDate = new Date();
-        Message message = new Message(messageId, isGroupMessage, isSystemMessage, deliveryDate, null,
-                text, senderId, targetId, records, burnAfter, referenceId);
-        if (send) {
-            return authAndSaveMessage(
-                    messageId,
-                    senderId,
-                    targetId,
-                    isGroupMessage,
-                    isSystemMessage,
-                    text,
-                    records,
-                    burnAfter,
-                    deliveryDate,
-                    null)
-                    .flatMap(pair -> {
-                        TurmsRequest request = TurmsRequest
-                                .newBuilder()
-                                .setCreateMessageRequest(ProtoUtil.message2createMessageRequest(message))
-                                .build();
-                        TurmsNotification notification = TurmsNotification
-                                .newBuilder()
-                                .setRelayedRequest(request)
-                                .setRequestId(Int64Value.newBuilder().setValue(0).build())
-                                .build();
-                        Set<Long> recipientIds = pair.getValue();
-                        if (node.getSharedProperties().getService().getMessage().isSendMessageToOtherSenderOnlineDevices()) {
-                            recipientIds.add(message.getId());
-                        }
-                        return outboundMessageService.forwardNotification(
-                                notification,
-                                recipientIds);
-                    });
-        } else {
-            Mono<Message> messageMono;
-            if (node.getSharedProperties().getService().getMessage().isMessageStatusPersistent()) {
-                messageMono = saveMessageAndMessagesStatus(messageId, senderId, targetId, isGroupMessage,
-                        isSystemMessage, text, records, burnAfter, deliveryDate, null, null);
-            } else {
-                messageMono = saveMessage(null, senderId, targetId, isGroupMessage,
-                        isSystemMessage, text, records, burnAfter, deliveryDate, referenceId, null);
-            }
-            return messageMono.doOnSuccess(msg -> {
-                sentMessageCounter.increment();
-                if (msg != null && msg.getId() != null && sentMessageCache != null) {
-                    cacheSentMessage(msg);
-                }
-            }).thenReturn(true);
-        }
+        Mono<Pair<Message, Set<Long>>> saveMono = referenceId != null
+                ? authAndCloneAndSaveMessage(senderId, referenceId, isGroupMessage, isSystemMessage, targetId)
+                : authAndSaveMessage(messageId, senderId, targetId, isGroupMessage, isSystemMessage, text, records, burnAfter, deliveryDate, null);
+        return saveMono
+                .flatMap(pair -> {
+                    Message message = pair.getLeft();
+                    sentMessageCounter.increment();
+                    if (message != null && message.getId() != null && sentMessageCache != null) {
+                        cacheSentMessage(message);
+                    }
+                    if (send) {
+                        return sendMessage(message, pair.getRight());
+                    } else {
+                        return Mono.just(true);
+                    }
+                });
     }
 
-    public Mono<Set<Long>> filterPrivateMessages(@NotNull Set<Long> messageIds) {
-        try {
-            AssertUtil.notNull(messageIds, "messageIds");
-        } catch (TurmsBusinessException e) {
-            return Mono.error(e);
+    private Mono<Boolean> sendMessage(@NotNull Message message, @NotNull Set<Long> recipientIds) {
+        TurmsRequest request = TurmsRequest
+                .newBuilder()
+                .setCreateMessageRequest(ProtoUtil.message2createMessageRequest(message))
+                .build();
+        TurmsNotification notification = TurmsNotification
+                .newBuilder()
+                .setRelayedRequest(request)
+                .setRequestId(Int64Value.newBuilder().setValue(DaoConstant.ADMIN_REQUEST_ID).build())
+                .build();
+        if (node.getSharedProperties().getService().getMessage().isSendMessageToOtherSenderOnlineDevices()) {
+            recipientIds.add(message.getSenderId());
         }
-        if (messageIds.isEmpty()) {
-            return Mono.just(Collections.emptySet());
-        } else {
-            Set<Long> privateMessageIds = null;
-            Set<Long> uncachedMessageIds = null;
-            int capacity = Math.max(1, messageIds.size() / 2);
-            for (Long messagesId : messageIds) {
-                Message message = sentMessageCache.getIfPresent(messagesId);
-                if (message != null) {
-                    if (!message.getIsGroupMessage()) {
-                        if (privateMessageIds == null) {
-                            privateMessageIds = new HashSet<>(capacity);
-                        }
-                        privateMessageIds.add(messagesId);
-                    }
-                } else {
-                    if (uncachedMessageIds == null) {
-                        uncachedMessageIds = new HashSet<>(capacity);
-                    }
-                    uncachedMessageIds.add(messagesId);
-                }
-            }
-            if (uncachedMessageIds == null) {
-                return Mono.just(privateMessageIds != null ? privateMessageIds : Collections.emptySet());
-            } else {
-                Set<Long> finalPrivateMessageIds = privateMessageIds;
-                return queryMessagesIncludingIsGroupMessage(uncachedMessageIds)
-                        .collectList()
-                        .map(messages -> {
-                            Set<Long> uncachedPrivateMessageIds = null;
-                            for (Message message : messages) {
-                                if (!message.getIsGroupMessage()) {
-                                    if (uncachedPrivateMessageIds == null) {
-                                        uncachedPrivateMessageIds = new HashSet<>(Math.max(1, messages.size() / 2));
-                                    }
-                                    uncachedPrivateMessageIds.add(message.getId());
-                                }
-                            }
-                            if (uncachedPrivateMessageIds == null) {
-                                return finalPrivateMessageIds == null ? Collections.emptySet() : finalPrivateMessageIds;
-                            } else {
-                                if (finalPrivateMessageIds != null) {
-                                    uncachedPrivateMessageIds.addAll(finalPrivateMessageIds);
-                                }
-                                return uncachedPrivateMessageIds;
-                            }
-                        });
-            }
-        }
+        return outboundMessageService.forwardNotification(
+                notification,
+                recipientIds);
     }
 
     private void cacheSentMessage(@NotNull Message message) {
@@ -1136,6 +848,8 @@ public class MessageService {
                 message.getIsGroupMessage(),
                 message.getIsSystemMessage(),
                 message.getDeliveryDate(),
+                null,
+                null,
                 null,
                 null,
                 message.getSenderId(),
@@ -1161,6 +875,16 @@ public class MessageService {
                 }
             }
         }
+    }
+
+    private static class BuiltinSystemMessageType {
+        /**
+         * NORMAL is only used as a placeholder and won't be set for normal messages
+         * because the client implementations consider a system message as a normal message
+         * if no message type specified
+         */
+        private static final int NORMAL = 0;
+        private static final int RECALL_MESSAGE = 1;
     }
 
 }

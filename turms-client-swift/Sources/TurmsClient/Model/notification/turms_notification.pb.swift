@@ -83,6 +83,15 @@ public struct TurmsNotification {
   /// Clears the value of `requesterID`. Subsequent reads from it will return its default value.
   public mutating func clearRequesterID() {_uniqueStorage()._requesterID = nil}
 
+  public var closeStatus: SwiftProtobuf.Google_Protobuf_Int32Value {
+    get {return _storage._closeStatus ?? SwiftProtobuf.Google_Protobuf_Int32Value()}
+    set {_uniqueStorage()._closeStatus = newValue}
+  }
+  /// Returns true if `closeStatus` has been explicitly set.
+  public var hasCloseStatus: Bool {return _storage._closeStatus != nil}
+  /// Clears the value of `closeStatus`. Subsequent reads from it will return its default value.
+  public mutating func clearCloseStatus() {_uniqueStorage()._closeStatus = nil}
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public struct DataMessage {
@@ -119,20 +128,12 @@ public struct TurmsNotification {
       set {_uniqueStorage()._kind = .url(newValue)}
     }
 
-    public var acknowledge: Acknowledge {
+    public var conversations: Conversations {
       get {
-        if case .acknowledge(let v)? = _storage._kind {return v}
-        return Acknowledge()
+        if case .conversations(let v)? = _storage._kind {return v}
+        return Conversations()
       }
-      set {_uniqueStorage()._kind = .acknowledge(newValue)}
-    }
-
-    public var session: Session {
-      get {
-        if case .session(let v)? = _storage._kind {return v}
-        return Session()
-      }
-      set {_uniqueStorage()._kind = .session(newValue)}
+      set {_uniqueStorage()._kind = .conversations(newValue)}
     }
 
     public var messages: Messages {
@@ -143,20 +144,20 @@ public struct TurmsNotification {
       set {_uniqueStorage()._kind = .messages(newValue)}
     }
 
-    public var messageStatuses: MessageStatuses {
-      get {
-        if case .messageStatuses(let v)? = _storage._kind {return v}
-        return MessageStatuses()
-      }
-      set {_uniqueStorage()._kind = .messageStatuses(newValue)}
-    }
-
     public var messagesWithTotalList: MessagesWithTotalList {
       get {
         if case .messagesWithTotalList(let v)? = _storage._kind {return v}
         return MessagesWithTotalList()
       }
       set {_uniqueStorage()._kind = .messagesWithTotalList(newValue)}
+    }
+
+    public var userSession: UserSession {
+      get {
+        if case .userSession(let v)? = _storage._kind {return v}
+        return UserSession()
+      }
+      set {_uniqueStorage()._kind = .userSession(newValue)}
     }
 
     public var usersInfosWithVersion: UsersInfosWithVersion {
@@ -261,11 +262,10 @@ public struct TurmsNotification {
       case ids(Int64Values)
       case idsWithVersion(Int64ValuesWithVersion)
       case url(SwiftProtobuf.Google_Protobuf_StringValue)
-      case acknowledge(Acknowledge)
-      case session(Session)
+      case conversations(Conversations)
       case messages(Messages)
-      case messageStatuses(MessageStatuses)
       case messagesWithTotalList(MessagesWithTotalList)
+      case userSession(UserSession)
       case usersInfosWithVersion(UsersInfosWithVersion)
       case usersOnlineStatuses(UsersOnlineStatuses)
       case userFriendRequestsWithVersion(UserFriendRequestsWithVersion)
@@ -285,11 +285,10 @@ public struct TurmsNotification {
         case (.ids(let l), .ids(let r)): return l == r
         case (.idsWithVersion(let l), .idsWithVersion(let r)): return l == r
         case (.url(let l), .url(let r)): return l == r
-        case (.acknowledge(let l), .acknowledge(let r)): return l == r
-        case (.session(let l), .session(let r)): return l == r
+        case (.conversations(let l), .conversations(let r)): return l == r
         case (.messages(let l), .messages(let r)): return l == r
-        case (.messageStatuses(let l), .messageStatuses(let r)): return l == r
         case (.messagesWithTotalList(let l), .messagesWithTotalList(let r)): return l == r
+        case (.userSession(let l), .userSession(let r)): return l == r
         case (.usersInfosWithVersion(let l), .usersInfosWithVersion(let r)): return l == r
         case (.usersOnlineStatuses(let l), .usersOnlineStatuses(let r)): return l == r
         case (.userFriendRequestsWithVersion(let l), .userFriendRequestsWithVersion(let r)): return l == r
@@ -331,6 +330,7 @@ extension TurmsNotification: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     4: .same(proto: "data"),
     5: .standard(proto: "relayed_request"),
     6: .standard(proto: "requester_id"),
+    7: .standard(proto: "close_status"),
   ]
 
   fileprivate class _StorageClass {
@@ -340,6 +340,7 @@ extension TurmsNotification: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
     var _data: TurmsNotification.DataMessage? = nil
     var _relayedRequest: TurmsRequest? = nil
     var _requesterID: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
+    var _closeStatus: SwiftProtobuf.Google_Protobuf_Int32Value? = nil
 
     static let defaultInstance = _StorageClass()
 
@@ -352,6 +353,7 @@ extension TurmsNotification: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
       _data = source._data
       _relayedRequest = source._relayedRequest
       _requesterID = source._requesterID
+      _closeStatus = source._closeStatus
     }
   }
 
@@ -373,6 +375,7 @@ extension TurmsNotification: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
         case 4: try decoder.decodeSingularMessageField(value: &_storage._data)
         case 5: try decoder.decodeSingularMessageField(value: &_storage._relayedRequest)
         case 6: try decoder.decodeSingularMessageField(value: &_storage._requesterID)
+        case 7: try decoder.decodeSingularMessageField(value: &_storage._closeStatus)
         default: break
         }
       }
@@ -399,6 +402,9 @@ extension TurmsNotification: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
       if let v = _storage._requesterID {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
       }
+      if let v = _storage._closeStatus {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
+      }
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -414,6 +420,7 @@ extension TurmsNotification: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
         if _storage._data != rhs_storage._data {return false}
         if _storage._relayedRequest != rhs_storage._relayedRequest {return false}
         if _storage._requesterID != rhs_storage._requesterID {return false}
+        if _storage._closeStatus != rhs_storage._closeStatus {return false}
         return true
       }
       if !storagesAreEqual {return false}
@@ -429,23 +436,22 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
     1: .same(proto: "ids"),
     2: .standard(proto: "ids_with_version"),
     3: .same(proto: "url"),
-    4: .same(proto: "acknowledge"),
-    5: .same(proto: "session"),
-    6: .same(proto: "messages"),
-    7: .standard(proto: "message_statuses"),
-    8: .standard(proto: "messages_with_total_list"),
-    9: .standard(proto: "users_infos_with_version"),
-    10: .standard(proto: "users_online_statuses"),
-    11: .standard(proto: "user_friend_requests_with_version"),
-    12: .standard(proto: "user_relationship_groups_with_version"),
-    13: .standard(proto: "user_relationships_with_version"),
-    14: .standard(proto: "user_session_ids"),
-    15: .standard(proto: "group_invitations_with_version"),
-    16: .standard(proto: "group_join_question_answer_result"),
-    17: .standard(proto: "group_join_requests_with_version"),
-    18: .standard(proto: "group_join_questions_with_version"),
-    19: .standard(proto: "group_members_with_version"),
-    20: .standard(proto: "groups_with_version"),
+    4: .same(proto: "conversations"),
+    5: .same(proto: "messages"),
+    6: .standard(proto: "messages_with_total_list"),
+    7: .standard(proto: "user_session"),
+    8: .standard(proto: "users_infos_with_version"),
+    9: .standard(proto: "users_online_statuses"),
+    10: .standard(proto: "user_friend_requests_with_version"),
+    11: .standard(proto: "user_relationship_groups_with_version"),
+    12: .standard(proto: "user_relationships_with_version"),
+    13: .standard(proto: "user_session_ids"),
+    14: .standard(proto: "group_invitations_with_version"),
+    15: .standard(proto: "group_join_question_answer_result"),
+    16: .standard(proto: "group_join_requests_with_version"),
+    17: .standard(proto: "group_join_questions_with_version"),
+    18: .standard(proto: "group_members_with_version"),
+    19: .standard(proto: "groups_with_version"),
   ]
 
   fileprivate class _StorageClass {
@@ -497,22 +503,14 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .url(v)}
         case 4:
-          var v: Acknowledge?
+          var v: Conversations?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
-            if case .acknowledge(let m) = current {v = m}
+            if case .conversations(let m) = current {v = m}
           }
           try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._kind = .acknowledge(v)}
+          if let v = v {_storage._kind = .conversations(v)}
         case 5:
-          var v: Session?
-          if let current = _storage._kind {
-            try decoder.handleConflictingOneOf()
-            if case .session(let m) = current {v = m}
-          }
-          try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._kind = .session(v)}
-        case 6:
           var v: Messages?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -520,15 +518,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
           }
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .messages(v)}
-        case 7:
-          var v: MessageStatuses?
-          if let current = _storage._kind {
-            try decoder.handleConflictingOneOf()
-            if case .messageStatuses(let m) = current {v = m}
-          }
-          try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._kind = .messageStatuses(v)}
-        case 8:
+        case 6:
           var v: MessagesWithTotalList?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -536,7 +526,15 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
           }
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .messagesWithTotalList(v)}
-        case 9:
+        case 7:
+          var v: UserSession?
+          if let current = _storage._kind {
+            try decoder.handleConflictingOneOf()
+            if case .userSession(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {_storage._kind = .userSession(v)}
+        case 8:
           var v: UsersInfosWithVersion?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -544,7 +542,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
           }
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .usersInfosWithVersion(v)}
-        case 10:
+        case 9:
           var v: UsersOnlineStatuses?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -552,7 +550,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
           }
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .usersOnlineStatuses(v)}
-        case 11:
+        case 10:
           var v: UserFriendRequestsWithVersion?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -560,7 +558,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
           }
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .userFriendRequestsWithVersion(v)}
-        case 12:
+        case 11:
           var v: UserRelationshipGroupsWithVersion?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -568,7 +566,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
           }
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .userRelationshipGroupsWithVersion(v)}
-        case 13:
+        case 12:
           var v: UserRelationshipsWithVersion?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -576,7 +574,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
           }
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .userRelationshipsWithVersion(v)}
-        case 14:
+        case 13:
           var v: UserSessionIds?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -584,7 +582,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
           }
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .userSessionIds(v)}
-        case 15:
+        case 14:
           var v: GroupInvitationsWithVersion?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -592,7 +590,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
           }
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .groupInvitationsWithVersion(v)}
-        case 16:
+        case 15:
           var v: GroupJoinQuestionsAnswerResult?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -600,7 +598,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
           }
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .groupJoinQuestionAnswerResult(v)}
-        case 17:
+        case 16:
           var v: GroupJoinRequestsWithVersion?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -608,7 +606,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
           }
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .groupJoinRequestsWithVersion(v)}
-        case 18:
+        case 17:
           var v: GroupJoinQuestionsWithVersion?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -616,7 +614,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
           }
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .groupJoinQuestionsWithVersion(v)}
-        case 19:
+        case 18:
           var v: GroupMembersWithVersion?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -624,7 +622,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
           }
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .groupMembersWithVersion(v)}
-        case 20:
+        case 19:
           var v: GroupsWithVersion?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -647,40 +645,38 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
         try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
       case .url(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-      case .acknowledge(let v)?:
+      case .conversations(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
-      case .session(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
       case .messages(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
-      case .messageStatuses(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
       case .messagesWithTotalList(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 8)
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
+      case .userSession(let v)?:
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
       case .usersInfosWithVersion(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 9)
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 8)
       case .usersOnlineStatuses(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 9)
       case .userFriendRequestsWithVersion(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 11)
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
       case .userRelationshipGroupsWithVersion(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 12)
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 11)
       case .userRelationshipsWithVersion(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 13)
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 12)
       case .userSessionIds(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 14)
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 13)
       case .groupInvitationsWithVersion(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 15)
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 14)
       case .groupJoinQuestionAnswerResult(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 16)
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 15)
       case .groupJoinRequestsWithVersion(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 17)
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 16)
       case .groupJoinQuestionsWithVersion(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 18)
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 17)
       case .groupMembersWithVersion(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 19)
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 18)
       case .groupsWithVersion(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 20)
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 19)
       case nil: break
       }
     }

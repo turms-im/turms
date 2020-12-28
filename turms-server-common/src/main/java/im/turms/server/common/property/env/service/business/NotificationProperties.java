@@ -29,6 +29,7 @@ import lombok.Data;
 public class NotificationProperties {
 
     // User
+
     @JsonView(MutablePropertiesView.class)
     @Description("Whether to notify related users after other related user's information has been updated")
     private boolean notifyRelatedUsersAfterOtherRelatedUserInfoUpdated = false;
@@ -62,6 +63,7 @@ public class NotificationProperties {
     private boolean notifyMemberAfterRemovedFromRelationshipGroupByOthers = false;
 
     // Group
+
     @JsonView(MutablePropertiesView.class)
     @Description("Whether to notify members after a group has been removed")
     private boolean notifyMembersAfterGroupDeleted = true;
@@ -114,10 +116,17 @@ public class NotificationProperties {
     @Description("Whether to notify members after its member information has been updated by others")
     private boolean notifyMemberAfterInfoUpdatedByOthers = true;
 
-    // Message
+    // Conversation
+
     @JsonView(MutablePropertiesView.class)
-    @Description("Whether to notify the sender after the read receipt of a message has been updated by recipients")
-    private boolean notifySenderAfterReadStatusUpdatedByRecipients = true;
+    @Description("Whether to notify the private conversation participant after the read receipt of a conversation has been updated by the recipient")
+    private boolean notifyPrivateConversationParticipantAfterReadDateUpdated = false;
+
+    @JsonView(MutablePropertiesView.class)
+    @Description("Whether to notify the group conversation participants after the read receipt of a conversation has been updated by recipients")
+    private boolean notifyGroupConversationParticipantsAfterReadDateUpdated = false;
+
+    // Message
 
     @JsonView(MutablePropertiesView.class)
     @Description("Whether to notify the recipients after a message has been updated by the sender")

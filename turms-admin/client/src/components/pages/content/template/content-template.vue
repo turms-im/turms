@@ -103,10 +103,12 @@
             </div>
             <div class="action-group">
                 <content-template-export
-                    :url="url + '/page'"
+                    :url="queryUrl"
                     :params="searchParams"
                     :disabled="records.length === 0"
                     :file-name="'turms-' + name"
+                    :record-key="recordKey"
+                    :transform="transform"
                     class="action-button"
                 />
             </div>
@@ -117,7 +119,7 @@
                 size="middle"
                 :columns="columnsData"
                 :data-source="tableData"
-                :pagination="pagination"
+                :pagination="pageable ? pagination : false"
                 :row-selection="selectable ? rowSelection : undefined"
                 :scroll="{ y: 400 }"
                 bordered
@@ -217,12 +219,16 @@ export default {
             type: Boolean,
             default: true
         },
+        pageable: {
+            type: Boolean,
+            default: true
+        },
         recordKey: {
             type: String,
             default: 'id'
         },
         queryKey: {
-            type: String,
+            type: [String, Object],
             default: 'ids'
         },
         fetchOnStatusChanged: {
@@ -238,25 +244,25 @@ export default {
         },
         deletion: {
             type: Object,
-            default: function() {
+            default: function () {
                 return {};
             }
         },
         filters: {
             type: Array,
-            default: function() {
+            default: function () {
                 return [];
             }
         },
         actionGroups: {
             type: Array,
-            default: function() {
+            default: function () {
                 return [];
             }
         },
         table: {
             type: Object,
-            default: function() {
+            default: function () {
                 return {};
             }
         },
@@ -289,6 +295,11 @@ export default {
         };
     },
     computed: {
+        queryUrl() {
+            return this.pageable
+                ? this.url + '/page'
+                : this.url;
+        },
         searchParams() {
             const params = {};
             this.filters.forEach(filter => {
@@ -310,10 +321,12 @@ export default {
                 // eslint-disable-next-line vue/no-side-effects-in-computed-properties
                 this.pagination.current = 1;
             }
-            Object.assign(params, {
+
+            const pageParams = this.pageable ? {
                 page: this.pagination.current - 1,
                 size: this.pagination.pageSize
-            }, this.params);
+            } : {};
+            Object.assign(params, pageParams, this.params);
             return params;
         },
         columnsData() {
@@ -427,12 +440,14 @@ export default {
             }
             return value;
         },
-        hanlePopconfirmVisibleChange (visible) {
+        hanlePopconfirmVisibleChange(visible) {
             this.popconfirmVisible = visible && this.hasSelectedRows;
         },
-        handleTableChange (pagination) {
-            this.pagination = { ...this.pagination, current: pagination.current };
-            this.search();
+        handleTableChange(pagination) {
+            this.pagination = {...this.pagination, current: pagination.current};
+            if (this.pageable) {
+                this.search();
+            }
         },
         init() {
             if (this.initialDataUrls.length) {
@@ -463,7 +478,7 @@ export default {
                 return object;
             }
         },
-        getTimeIfNotNull (object) {
+        getTimeIfNotNull(object) {
             if (object) {
                 return object.format();
             }
@@ -471,21 +486,21 @@ export default {
         search() {
             this.loading = true;
             this.selectedRowKeys.splice(0, this.selectedRowKeys.length);
-            this.$client.get(this.url + '/page', { params: this.searchParams })
+            this.$client.get(this.queryUrl, {params: this.searchParams})
                 .then(response => {
                     if (response.status === 204) {
                         this.records = [];
                         this.pagination = {...this.pagination, total: 0};
                     } else {
                         this.loaded = true;
-                        if (this.transform) {
-                            response.data.data = this.transform(response.data.data);
-                        }
-                        response.data.data.records.forEach(record => {
+                        const data = this.transform
+                            ? this.transform(response.data.data)
+                            : response.data.data;
+                        this.records = data.records.map(record => {
                             record.key = record[this.recordKey];
+                            return record;
                         });
-                        this.records = response.data.data.records;
-                        this.pagination = {...this.pagination, total: response.data.data.total};
+                        this.pagination = {...this.pagination, total: data.total};
                     }
                 })
                 .catch(error => {

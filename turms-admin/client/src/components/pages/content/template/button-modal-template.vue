@@ -17,7 +17,7 @@
             @cancel="handleCancel"
             @ok="handleSubmit"
         >
-            <div 
+            <div
                 v-if="showUpdateAllError"
                 class="button-modal-template__error"
             >
@@ -184,7 +184,7 @@ export default {
             }
         },
         queryKey: {
-            type: String,
+            type: [String, Object],
             default: () => {
                 return 'ids';
             }

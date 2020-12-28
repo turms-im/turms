@@ -97,8 +97,9 @@ public enum AdminPermission {
     MESSAGE_UPDATE,
     MESSAGE_QUERY,
 
-    MESSAGE_STATUS_QUERY,
-    MESSAGE_STATUS_UPDATE,
+    CONVERSATION_QUERY,
+    CONVERSATION_DELETE,
+    CONVERSATION_UPDATE,
 
     ADMIN_CREATE,
     ADMIN_DELETE,
@@ -178,13 +179,16 @@ public enum AdminPermission {
             GROUP_TYPE_UPDATE,
             GROUP_TYPE_QUERY);
 
+    public static final Set<AdminPermission> ALL_CONTENT_CONVERSATION = Set.of(
+            CONVERSATION_QUERY,
+            CONVERSATION_DELETE,
+            CONVERSATION_UPDATE);
+
     public static final Set<AdminPermission> ALL_CONTENT_MESSAGE = Set.of(
             MESSAGE_CREATE,
             MESSAGE_DELETE,
             MESSAGE_UPDATE,
-            MESSAGE_QUERY,
-            MESSAGE_STATUS_QUERY,
-            MESSAGE_STATUS_UPDATE);
+            MESSAGE_QUERY);
 
     public static final Set<AdminPermission> ALL_CONTENT_ADMIN = Set.of(
             ADMIN_CREATE,
@@ -239,8 +243,8 @@ public enum AdminPermission {
             GROUP_JOIN_REQUEST_QUERY,
             GROUP_MEMBER_QUERY,
             GROUP_TYPE_QUERY,
+            CONVERSATION_QUERY,
             MESSAGE_QUERY,
-            MESSAGE_STATUS_QUERY,
             ADMIN_QUERY,
             ADMIN_ROLE_QUERY,
             CLUSTER_MEMBERS_QUERY,

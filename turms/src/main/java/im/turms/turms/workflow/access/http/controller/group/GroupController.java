@@ -18,8 +18,8 @@
 package im.turms.turms.workflow.access.http.controller.group;
 
 import com.mongodb.client.result.UpdateResult;
-import im.turms.common.constant.DivideBy;
 import im.turms.turms.bo.DateRange;
+import im.turms.turms.constant.DivideBy;
 import im.turms.turms.workflow.access.http.dto.request.group.AddGroupDTO;
 import im.turms.turms.workflow.access.http.dto.request.group.GroupStatisticsDTO;
 import im.turms.turms.workflow.access.http.dto.request.group.UpdateGroupDTO;
@@ -27,7 +27,7 @@ import im.turms.turms.workflow.access.http.dto.response.*;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.access.http.util.DateTimeUtil;
 import im.turms.turms.workflow.access.http.util.PageUtil;
-import im.turms.turms.workflow.dao.domain.Group;
+import im.turms.turms.workflow.dao.domain.group.Group;
 import im.turms.turms.workflow.service.impl.group.GroupService;
 import im.turms.turms.workflow.service.impl.message.MessageService;
 import org.springframework.http.ResponseEntity;

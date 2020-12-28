@@ -81,11 +81,10 @@ public class ErrorAttributes {
                     statusCode = TurmsStatusCode.OK;
                     break;
                 case CLIENT_ERROR:
-                    //TODO
-                    statusCode = TurmsStatusCode.SERVER_INTERNAL_ERROR;
+                    statusCode = TurmsStatusCode.INVALID_REQUEST;
                     break;
                 case SERVER_ERROR:
-                    statusCode = TurmsStatusCode.OK;
+                    statusCode = TurmsStatusCode.SERVER_INTERNAL_ERROR;
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + httpStatus.series());

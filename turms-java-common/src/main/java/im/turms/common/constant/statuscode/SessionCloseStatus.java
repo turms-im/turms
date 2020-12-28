@@ -45,11 +45,11 @@ public enum SessionCloseStatus {
 
     UNKNOWN_ERROR(4900);
 
-    private static final Map<Integer, SessionCloseStatus> codeMap = new HashMap<>((int) (SessionCloseStatus.values().length / 0.5));
+    private static final Map<Integer, SessionCloseStatus> CODE_POOL = new HashMap<>((int) (SessionCloseStatus.values().length / 0.5));
 
     static {
         for (SessionCloseStatus status : SessionCloseStatus.values()) {
-            codeMap.put(status.code, status);
+            CODE_POOL.put(status.code, status);
         }
     }
 
@@ -60,7 +60,7 @@ public enum SessionCloseStatus {
     }
 
     public static SessionCloseStatus get(int code) {
-        return codeMap.get(code);
+        return CODE_POOL.get(code);
     }
 
     public int getCode() {

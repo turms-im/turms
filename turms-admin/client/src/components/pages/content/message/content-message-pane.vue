@@ -90,37 +90,6 @@ export default {
                             label: this.$t('systemMessage')
                         }]
                     }
-                },
-                {
-                    type: 'SELECT',
-                    model: 'ALL',
-                    name: 'deliveryStatuses',
-                    options: {
-                        base: [{
-                            id: 'ALL',
-                            label: this.$t('allDeliveryStatuses')
-                        },
-                        {
-                            id: 'READY',
-                            label: this.$t('ready')
-                        },
-                        {
-                            id: 'SENDING',
-                            label: this.$t('sending')
-                        },
-                        {
-                            id: 'RECEIVED',
-                            label: this.$t('received')
-                        },
-                        {
-                            id: 'RECALLING',
-                            label: this.$t('recalling')
-                        },
-                        {
-                            id: 'RECALLED',
-                            label: this.$t('recalled')
-                        }]
-                    }
                 }
             ],
             actionGroups: [
@@ -210,14 +179,18 @@ export default {
                     },
                     {
                         key: 'isGroupMessage',
-                        width: '10%'
+                        width: '5%'
                     },
                     {
                         key: 'isSystemMessage',
-                        width: '10%'
+                        width: '5%'
                     },
                     {
                         key: 'deliveryDate',
+                        width: '10%'
+                    },
+                    {
+                        key: 'modificationDate',
                         width: '10%'
                     },
                     {

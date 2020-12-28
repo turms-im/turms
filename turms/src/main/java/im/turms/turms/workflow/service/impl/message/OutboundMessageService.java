@@ -30,9 +30,7 @@ import im.turms.server.common.property.env.common.ClientApiLoggingProperties;
 import im.turms.server.common.property.env.service.env.clientapi.property.LoggingRequestProperties;
 import im.turms.server.common.rpc.request.SendNotificationRequest;
 import im.turms.server.common.service.session.UserStatusService;
-import im.turms.server.common.util.LoggingRequestUtil;
-import im.turms.server.common.util.ProtoUtil;
-import im.turms.server.common.util.ReactorUtil;
+import im.turms.server.common.util.*;
 import io.netty.buffer.ByteBuf;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
@@ -101,7 +99,7 @@ public class OutboundMessageService {
             @NotNull DeviceType excludedDeviceType) {
         return userStatusService.getDeviceAndNodeIdMapByUserId(recipientId)
                 .flatMap(deviceTypeAndNodeIdMap -> {
-                    List<String> nodeIds = new ArrayList<>(deviceTypeAndNodeIdMap.size());
+                    Set<String> nodeIds = new HashSet<>(MapUtil.getCapability(deviceTypeAndNodeIdMap.size()));
                     for (Map.Entry<DeviceType, String> entry : deviceTypeAndNodeIdMap.entrySet()) {
                         DeviceType deviceType = entry.getKey();
                         if (deviceType != excludedDeviceType) {
@@ -111,17 +109,7 @@ public class OutboundMessageService {
                     if (nodeIds.isEmpty()) {
                         return Mono.just(false);
                     }
-                    int size = nodeIds.size();
-                    Mono<Boolean> mono;
-                    if (size == 1) {
-                        mono = forwardClientMessageToNode(notificationData, nodeIds.iterator().next(), recipientId);
-                    } else {
-                        List<Mono<Boolean>> monos = new ArrayList<>(size);
-                        for (String nodeId : nodeIds) {
-                            monos.add(forwardClientMessageToNode(notificationData, nodeId, recipientId));
-                        }
-                        mono = ReactorUtil.atLeastOneTrue(monos);
-                    }
+                    Mono<Boolean> mono = forwardClientMessageToNodes(notificationData, nodeIds, recipientId);
                     return tryLogNotification(mono, notificationForLogging);
                 })
                 .defaultIfEmpty(false);
@@ -140,28 +128,24 @@ public class OutboundMessageService {
         if (recipientIdsSize == 1) {
             return forwardClientMessageByRecipientId(messageData, recipientIds.iterator().next());
         } else {
-            int expectedMembersCount = Math.min(node.getDiscoveryService().getAllKnownMembers().size(), recipientIdsSize);
-            int expectedRecipientCountPerMember = Math.min(1, recipientIdsSize / expectedMembersCount);
-            SetMultimap<String, Long> userIdsByNodeId = HashMultimap.create(expectedMembersCount, expectedRecipientCountPerMember);
             List<Mono<RecipientAndNodeIds>> monos = new ArrayList<>(recipientIdsSize);
             for (Long recipientId : recipientIds) {
                 monos.add(userStatusService.getDeviceAndNodeIdMapByUserId(recipientId)
                         .map(map -> new RecipientAndNodeIds(recipientId, map.values())));
             }
             return Flux.merge(monos)
-                    .doOnNext(pair -> {
-                        for (String nodeId : pair.getNodeIds()) {
-                            userIdsByNodeId.put(nodeId, pair.getRecipientId());
+                    .collect(CollectorUtil.toList(recipientIdsSize))
+                    .flatMap(pairs -> {
+                        int expectedMembersCount = Math.min(node.getDiscoveryService().getActiveSortedGatewayMemberList().size(), recipientIdsSize);
+                        int expectedRecipientCountPerMember = Math.min(1, recipientIdsSize / expectedMembersCount);
+                        SetMultimap<String, Long> userIdsByNodeId = HashMultimap.create(expectedMembersCount, expectedRecipientCountPerMember);
+                        for (RecipientAndNodeIds pair : pairs) {
+                            for (String nodeId : pair.getNodeIds()) {
+                                userIdsByNodeId.put(nodeId, pair.getRecipientId());
+                            }
                         }
-                    })
-                    .then(Mono.defer(() -> {
-                        Multiset<String> nodeIds = userIdsByNodeId.keys();
-                        List<Mono<Boolean>> monoList = new ArrayList<>(nodeIds.size());
-                        for (String nodeId : nodeIds) {
-                            monoList.add(forwardClientMessageByRecipientIds(messageData, userIdsByNodeId.get(nodeId)));
-                        }
-                        return ReactorUtil.atLeastOneTrue(monoList);
-                    }));
+                        return forwardClientMessageToNodes(messageData, userIdsByNodeId);
+                    });
         }
     }
 
@@ -173,34 +157,78 @@ public class OutboundMessageService {
             @NotNull Long recipientId) {
         return userStatusService.getDeviceAndNodeIdMapByUserId(recipientId)
                 .flatMap(deviceTypeAndNodeIdMap -> {
-                    Collection<String> nodeIds = deviceTypeAndNodeIdMap.values();
+                    Set<String> nodeIds = new HashSet<>(deviceTypeAndNodeIdMap.values());
                     if (nodeIds.isEmpty()) {
                         return Mono.just(false);
                     }
-                    int size = nodeIds.size();
-                    if (size == 1) {
-                        return forwardClientMessageToNode(notificationData, nodeIds.iterator().next(), recipientId);
-                    } else {
-                        List<Mono<Boolean>> monos = new ArrayList<>(size);
-                        for (String nodeId : nodeIds) {
-                            monos.add(forwardClientMessageToNode(notificationData, nodeId, recipientId));
-                        }
-                        return ReactorUtil.atLeastOneTrue(monos);
-                    }
+                    return forwardClientMessageToNodes(notificationData, nodeIds, recipientId);
                 })
                 .defaultIfEmpty(false);
+    }
+
+    // Network transmission methods
+
+    private Mono<? extends Boolean> forwardClientMessageToNodes(ByteBuf messageData, SetMultimap<String, Long> recipientIdsByNodeId) {
+        Multiset<String> nodeIds = recipientIdsByNodeId.keys();
+        int size = nodeIds.size();
+        if (size == 0) {
+            return Mono.just(false);
+        } else if (size == 1) {
+            String nodeId = nodeIds.iterator().next();
+            return forwardClientMessageToNode(messageData, nodeId, recipientIdsByNodeId.get(nodeId));
+        } else {
+            List<Mono<Boolean>> monos = new ArrayList<>(size);
+            messageData.retain(size);
+            for (String nodeId : nodeIds) {
+                Set<Long> recipientIds = recipientIdsByNodeId.get(nodeId);
+                monos.add(forwardClientMessageToNode(messageData, nodeId, recipientIds));
+            }
+            return ReactorUtil.atLeastOneTrue(monos)
+                    .doFinally(ignored -> messageData.release());
+        }
+    }
+
+    private Mono<Boolean> forwardClientMessageToNodes(
+            @NotNull ByteBuf messageData,
+            @NotNull Set<String> nodeIds,
+            @NotNull Long recipientId) {
+        int size = nodeIds.size();
+        if (size == 0) {
+            return Mono.just(false);
+        } else {
+            if (size == 1) {
+                return forwardClientMessageToNode(messageData, nodeIds.iterator().next(), Set.of(recipientId));
+            } else {
+                SendNotificationRequest request = new SendNotificationRequest(
+                        messageData,
+                        Set.of(recipientId));
+                messageData.retain(size);
+                List<Mono<Boolean>> monos = new ArrayList<>(size);
+                for (String nodeId : nodeIds) {
+                    monos.add(node.getRpcService().requestResponse(nodeId, request));
+                }
+                return ReactorUtil.atLeastOneTrue(monos)
+                        .doFinally(ignored -> messageData.release());
+            }
+        }
     }
 
     private Mono<Boolean> forwardClientMessageToNode(
             @NotNull ByteBuf messageData,
             @NotNull String nodeId,
-            @NotNull Long recipient) {
-        SendNotificationRequest request = new SendNotificationRequest(
-                messageData,
-                Set.of(recipient));
-        return node.getRpcService()
-                .requestResponse(nodeId, request);
+            @NotNull Set<Long> recipients) {
+        int size = recipients.size();
+        if (size == 0) {
+            return Mono.just(false);
+        } else {
+            SendNotificationRequest request = new SendNotificationRequest(
+                    messageData,
+                    recipients);
+            return node.getRpcService().requestResponse(nodeId, request);
+        }
     }
+
+    // Logging
 
     private Mono<Boolean> tryLogNotification(Mono<Boolean> mono, TurmsNotification notification) {
         if (LoggingRequestUtil.shouldLog(notification.getRelayedRequest().getKindCase(), supportedLoggingNotificationProperties)) {

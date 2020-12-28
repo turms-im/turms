@@ -41,38 +41,46 @@ public struct TurmsRequest {
     set {_uniqueStorage()._kind = newValue}
   }
 
-  /// Signal
-  public var ackRequest: AckRequest {
+  /// User - Session
+  public var createSessionRequest: CreateSessionRequest {
     get {
-      if case .ackRequest(let v)? = _storage._kind {return v}
-      return AckRequest()
+      if case .createSessionRequest(let v)? = _storage._kind {return v}
+      return CreateSessionRequest()
     }
-    set {_uniqueStorage()._kind = .ackRequest(newValue)}
+    set {_uniqueStorage()._kind = .createSessionRequest(newValue)}
   }
 
-  /// Storage
-  public var deleteResourceRequest: DeleteResourceRequest {
+  public var deleteSessionRequest: DeleteSessionRequest {
     get {
-      if case .deleteResourceRequest(let v)? = _storage._kind {return v}
-      return DeleteResourceRequest()
+      if case .deleteSessionRequest(let v)? = _storage._kind {return v}
+      return DeleteSessionRequest()
     }
-    set {_uniqueStorage()._kind = .deleteResourceRequest(newValue)}
+    set {_uniqueStorage()._kind = .deleteSessionRequest(newValue)}
   }
 
-  public var querySignedGetURLRequest: QuerySignedGetUrlRequest {
+  /// Conversation
+  public var queryConversationsRequest: QueryConversationsRequest {
     get {
-      if case .querySignedGetURLRequest(let v)? = _storage._kind {return v}
-      return QuerySignedGetUrlRequest()
+      if case .queryConversationsRequest(let v)? = _storage._kind {return v}
+      return QueryConversationsRequest()
     }
-    set {_uniqueStorage()._kind = .querySignedGetURLRequest(newValue)}
+    set {_uniqueStorage()._kind = .queryConversationsRequest(newValue)}
   }
 
-  public var querySignedPutURLRequest: QuerySignedPutUrlRequest {
+  public var updateConversationRequest: UpdateConversationRequest {
     get {
-      if case .querySignedPutURLRequest(let v)? = _storage._kind {return v}
-      return QuerySignedPutUrlRequest()
+      if case .updateConversationRequest(let v)? = _storage._kind {return v}
+      return UpdateConversationRequest()
     }
-    set {_uniqueStorage()._kind = .querySignedPutURLRequest(newValue)}
+    set {_uniqueStorage()._kind = .updateConversationRequest(newValue)}
+  }
+
+  public var updateTypingStatusRequest: UpdateTypingStatusRequest {
+    get {
+      if case .updateTypingStatusRequest(let v)? = _storage._kind {return v}
+      return UpdateTypingStatusRequest()
+    }
+    set {_uniqueStorage()._kind = .updateTypingStatusRequest(newValue)}
   }
 
   /// Message
@@ -84,28 +92,12 @@ public struct TurmsRequest {
     set {_uniqueStorage()._kind = .createMessageRequest(newValue)}
   }
 
-  public var queryMessageStatusesRequest: QueryMessageStatusesRequest {
-    get {
-      if case .queryMessageStatusesRequest(let v)? = _storage._kind {return v}
-      return QueryMessageStatusesRequest()
-    }
-    set {_uniqueStorage()._kind = .queryMessageStatusesRequest(newValue)}
-  }
-
   public var queryMessagesRequest: QueryMessagesRequest {
     get {
       if case .queryMessagesRequest(let v)? = _storage._kind {return v}
       return QueryMessagesRequest()
     }
     set {_uniqueStorage()._kind = .queryMessagesRequest(newValue)}
-  }
-
-  public var queryPendingMessagesWithTotalRequest: QueryPendingMessagesWithTotalRequest {
-    get {
-      if case .queryPendingMessagesWithTotalRequest(let v)? = _storage._kind {return v}
-      return QueryPendingMessagesWithTotalRequest()
-    }
-    set {_uniqueStorage()._kind = .queryPendingMessagesWithTotalRequest(newValue)}
   }
 
   public var updateMessageRequest: UpdateMessageRequest {
@@ -116,12 +108,37 @@ public struct TurmsRequest {
     set {_uniqueStorage()._kind = .updateMessageRequest(newValue)}
   }
 
-  public var updateTypingStatusRequest: UpdateTypingStatusRequest {
+  /// Group Member
+  public var createGroupMemberRequest: CreateGroupMemberRequest {
     get {
-      if case .updateTypingStatusRequest(let v)? = _storage._kind {return v}
-      return UpdateTypingStatusRequest()
+      if case .createGroupMemberRequest(let v)? = _storage._kind {return v}
+      return CreateGroupMemberRequest()
     }
-    set {_uniqueStorage()._kind = .updateTypingStatusRequest(newValue)}
+    set {_uniqueStorage()._kind = .createGroupMemberRequest(newValue)}
+  }
+
+  public var deleteGroupMemberRequest: DeleteGroupMemberRequest {
+    get {
+      if case .deleteGroupMemberRequest(let v)? = _storage._kind {return v}
+      return DeleteGroupMemberRequest()
+    }
+    set {_uniqueStorage()._kind = .deleteGroupMemberRequest(newValue)}
+  }
+
+  public var queryGroupMembersRequest: QueryGroupMembersRequest {
+    get {
+      if case .queryGroupMembersRequest(let v)? = _storage._kind {return v}
+      return QueryGroupMembersRequest()
+    }
+    set {_uniqueStorage()._kind = .queryGroupMembersRequest(newValue)}
+  }
+
+  public var updateGroupMemberRequest: UpdateGroupMemberRequest {
+    get {
+      if case .updateGroupMemberRequest(let v)? = _storage._kind {return v}
+      return UpdateGroupMemberRequest()
+    }
+    set {_uniqueStorage()._kind = .updateGroupMemberRequest(newValue)}
   }
 
   /// User
@@ -449,55 +466,50 @@ public struct TurmsRequest {
     set {_uniqueStorage()._kind = .updateGroupJoinQuestionRequest(newValue)}
   }
 
-  /// Group Member
-  public var createGroupMemberRequest: CreateGroupMemberRequest {
+  /// Storage
+  public var deleteResourceRequest: DeleteResourceRequest {
     get {
-      if case .createGroupMemberRequest(let v)? = _storage._kind {return v}
-      return CreateGroupMemberRequest()
+      if case .deleteResourceRequest(let v)? = _storage._kind {return v}
+      return DeleteResourceRequest()
     }
-    set {_uniqueStorage()._kind = .createGroupMemberRequest(newValue)}
+    set {_uniqueStorage()._kind = .deleteResourceRequest(newValue)}
   }
 
-  public var deleteGroupMemberRequest: DeleteGroupMemberRequest {
+  public var querySignedGetURLRequest: QuerySignedGetUrlRequest {
     get {
-      if case .deleteGroupMemberRequest(let v)? = _storage._kind {return v}
-      return DeleteGroupMemberRequest()
+      if case .querySignedGetURLRequest(let v)? = _storage._kind {return v}
+      return QuerySignedGetUrlRequest()
     }
-    set {_uniqueStorage()._kind = .deleteGroupMemberRequest(newValue)}
+    set {_uniqueStorage()._kind = .querySignedGetURLRequest(newValue)}
   }
 
-  public var queryGroupMembersRequest: QueryGroupMembersRequest {
+  public var querySignedPutURLRequest: QuerySignedPutUrlRequest {
     get {
-      if case .queryGroupMembersRequest(let v)? = _storage._kind {return v}
-      return QueryGroupMembersRequest()
+      if case .querySignedPutURLRequest(let v)? = _storage._kind {return v}
+      return QuerySignedPutUrlRequest()
     }
-    set {_uniqueStorage()._kind = .queryGroupMembersRequest(newValue)}
-  }
-
-  public var updateGroupMemberRequest: UpdateGroupMemberRequest {
-    get {
-      if case .updateGroupMemberRequest(let v)? = _storage._kind {return v}
-      return UpdateGroupMemberRequest()
-    }
-    set {_uniqueStorage()._kind = .updateGroupMemberRequest(newValue)}
+    set {_uniqueStorage()._kind = .querySignedPutURLRequest(newValue)}
   }
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public enum OneOf_Kind: Equatable {
-    /// Signal
-    case ackRequest(AckRequest)
-    /// Storage
-    case deleteResourceRequest(DeleteResourceRequest)
-    case querySignedGetURLRequest(QuerySignedGetUrlRequest)
-    case querySignedPutURLRequest(QuerySignedPutUrlRequest)
+    /// User - Session
+    case createSessionRequest(CreateSessionRequest)
+    case deleteSessionRequest(DeleteSessionRequest)
+    /// Conversation
+    case queryConversationsRequest(QueryConversationsRequest)
+    case updateConversationRequest(UpdateConversationRequest)
+    case updateTypingStatusRequest(UpdateTypingStatusRequest)
     /// Message
     case createMessageRequest(CreateMessageRequest)
-    case queryMessageStatusesRequest(QueryMessageStatusesRequest)
     case queryMessagesRequest(QueryMessagesRequest)
-    case queryPendingMessagesWithTotalRequest(QueryPendingMessagesWithTotalRequest)
     case updateMessageRequest(UpdateMessageRequest)
-    case updateTypingStatusRequest(UpdateTypingStatusRequest)
+    /// Group Member
+    case createGroupMemberRequest(CreateGroupMemberRequest)
+    case deleteGroupMemberRequest(DeleteGroupMemberRequest)
+    case queryGroupMembersRequest(QueryGroupMembersRequest)
+    case updateGroupMemberRequest(UpdateGroupMemberRequest)
     /// User
     case queryUserProfileRequest(QueryUserProfileRequest)
     case queryUserIdsNearbyRequest(QueryUserIdsNearbyRequest)
@@ -543,25 +555,26 @@ public struct TurmsRequest {
     case queryGroupJoinRequestsRequest(QueryGroupJoinRequestsRequest)
     case queryGroupJoinQuestionsRequest(QueryGroupJoinQuestionsRequest)
     case updateGroupJoinQuestionRequest(UpdateGroupJoinQuestionRequest)
-    /// Group Member
-    case createGroupMemberRequest(CreateGroupMemberRequest)
-    case deleteGroupMemberRequest(DeleteGroupMemberRequest)
-    case queryGroupMembersRequest(QueryGroupMembersRequest)
-    case updateGroupMemberRequest(UpdateGroupMemberRequest)
+    /// Storage
+    case deleteResourceRequest(DeleteResourceRequest)
+    case querySignedGetURLRequest(QuerySignedGetUrlRequest)
+    case querySignedPutURLRequest(QuerySignedPutUrlRequest)
 
   #if !swift(>=4.1)
     public static func ==(lhs: TurmsRequest.OneOf_Kind, rhs: TurmsRequest.OneOf_Kind) -> Bool {
       switch (lhs, rhs) {
-      case (.ackRequest(let l), .ackRequest(let r)): return l == r
-      case (.deleteResourceRequest(let l), .deleteResourceRequest(let r)): return l == r
-      case (.querySignedGetURLRequest(let l), .querySignedGetURLRequest(let r)): return l == r
-      case (.querySignedPutURLRequest(let l), .querySignedPutURLRequest(let r)): return l == r
-      case (.createMessageRequest(let l), .createMessageRequest(let r)): return l == r
-      case (.queryMessageStatusesRequest(let l), .queryMessageStatusesRequest(let r)): return l == r
-      case (.queryMessagesRequest(let l), .queryMessagesRequest(let r)): return l == r
-      case (.queryPendingMessagesWithTotalRequest(let l), .queryPendingMessagesWithTotalRequest(let r)): return l == r
-      case (.updateMessageRequest(let l), .updateMessageRequest(let r)): return l == r
+      case (.createSessionRequest(let l), .createSessionRequest(let r)): return l == r
+      case (.deleteSessionRequest(let l), .deleteSessionRequest(let r)): return l == r
+      case (.queryConversationsRequest(let l), .queryConversationsRequest(let r)): return l == r
+      case (.updateConversationRequest(let l), .updateConversationRequest(let r)): return l == r
       case (.updateTypingStatusRequest(let l), .updateTypingStatusRequest(let r)): return l == r
+      case (.createMessageRequest(let l), .createMessageRequest(let r)): return l == r
+      case (.queryMessagesRequest(let l), .queryMessagesRequest(let r)): return l == r
+      case (.updateMessageRequest(let l), .updateMessageRequest(let r)): return l == r
+      case (.createGroupMemberRequest(let l), .createGroupMemberRequest(let r)): return l == r
+      case (.deleteGroupMemberRequest(let l), .deleteGroupMemberRequest(let r)): return l == r
+      case (.queryGroupMembersRequest(let l), .queryGroupMembersRequest(let r)): return l == r
+      case (.updateGroupMemberRequest(let l), .updateGroupMemberRequest(let r)): return l == r
       case (.queryUserProfileRequest(let l), .queryUserProfileRequest(let r)): return l == r
       case (.queryUserIdsNearbyRequest(let l), .queryUserIdsNearbyRequest(let r)): return l == r
       case (.queryUserInfosNearbyRequest(let l), .queryUserInfosNearbyRequest(let r)): return l == r
@@ -602,10 +615,9 @@ public struct TurmsRequest {
       case (.queryGroupJoinRequestsRequest(let l), .queryGroupJoinRequestsRequest(let r)): return l == r
       case (.queryGroupJoinQuestionsRequest(let l), .queryGroupJoinQuestionsRequest(let r)): return l == r
       case (.updateGroupJoinQuestionRequest(let l), .updateGroupJoinQuestionRequest(let r)): return l == r
-      case (.createGroupMemberRequest(let l), .createGroupMemberRequest(let r)): return l == r
-      case (.deleteGroupMemberRequest(let l), .deleteGroupMemberRequest(let r)): return l == r
-      case (.queryGroupMembersRequest(let l), .queryGroupMembersRequest(let r)): return l == r
-      case (.updateGroupMemberRequest(let l), .updateGroupMemberRequest(let r)): return l == r
+      case (.deleteResourceRequest(let l), .deleteResourceRequest(let r)): return l == r
+      case (.querySignedGetURLRequest(let l), .querySignedGetURLRequest(let r)): return l == r
+      case (.querySignedPutURLRequest(let l), .querySignedPutURLRequest(let r)): return l == r
       default: return false
       }
     }
@@ -625,16 +637,18 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
   public static let protoMessageName: String = _protobuf_package + ".TurmsRequest"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "request_id"),
-    2: .standard(proto: "ack_request"),
-    3: .standard(proto: "delete_resource_request"),
-    4: .standard(proto: "query_signed_get_url_request"),
-    5: .standard(proto: "query_signed_put_url_request"),
-    6: .standard(proto: "create_message_request"),
-    7: .standard(proto: "query_message_statuses_request"),
-    8: .standard(proto: "query_messages_request"),
-    9: .standard(proto: "query_pending_messages_with_total_request"),
+    3: .standard(proto: "create_session_request"),
+    4: .standard(proto: "delete_session_request"),
+    5: .standard(proto: "query_conversations_request"),
+    6: .standard(proto: "update_conversation_request"),
+    7: .standard(proto: "update_typing_status_request"),
+    8: .standard(proto: "create_message_request"),
+    9: .standard(proto: "query_messages_request"),
     10: .standard(proto: "update_message_request"),
-    11: .standard(proto: "update_typing_status_request"),
+    11: .standard(proto: "create_group_member_request"),
+    12: .standard(proto: "delete_group_member_request"),
+    13: .standard(proto: "query_group_members_request"),
+    14: .standard(proto: "update_group_member_request"),
     100: .standard(proto: "query_user_profile_request"),
     101: .standard(proto: "query_user_ids_nearby_request"),
     102: .standard(proto: "query_user_infos_nearby_request"),
@@ -675,10 +689,9 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
     508: .standard(proto: "query_group_join_requests_request"),
     509: .standard(proto: "query_group_join_questions_request"),
     510: .standard(proto: "update_group_join_question_request"),
-    600: .standard(proto: "create_group_member_request"),
-    601: .standard(proto: "delete_group_member_request"),
-    602: .standard(proto: "query_group_members_request"),
-    603: .standard(proto: "update_group_member_request"),
+    1000: .standard(proto: "delete_resource_request"),
+    1001: .standard(proto: "query_signed_get_url_request"),
+    1002: .standard(proto: "query_signed_put_url_request"),
   ]
 
   fileprivate class _StorageClass {
@@ -708,39 +721,47 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
       while let fieldNumber = try decoder.nextFieldNumber() {
         switch fieldNumber {
         case 1: try decoder.decodeSingularMessageField(value: &_storage._requestID)
-        case 2:
-          var v: AckRequest?
-          if let current = _storage._kind {
-            try decoder.handleConflictingOneOf()
-            if case .ackRequest(let m) = current {v = m}
-          }
-          try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._kind = .ackRequest(v)}
         case 3:
-          var v: DeleteResourceRequest?
+          var v: CreateSessionRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
-            if case .deleteResourceRequest(let m) = current {v = m}
+            if case .createSessionRequest(let m) = current {v = m}
           }
           try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._kind = .deleteResourceRequest(v)}
+          if let v = v {_storage._kind = .createSessionRequest(v)}
         case 4:
-          var v: QuerySignedGetUrlRequest?
+          var v: DeleteSessionRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
-            if case .querySignedGetURLRequest(let m) = current {v = m}
+            if case .deleteSessionRequest(let m) = current {v = m}
           }
           try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._kind = .querySignedGetURLRequest(v)}
+          if let v = v {_storage._kind = .deleteSessionRequest(v)}
         case 5:
-          var v: QuerySignedPutUrlRequest?
+          var v: QueryConversationsRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
-            if case .querySignedPutURLRequest(let m) = current {v = m}
+            if case .queryConversationsRequest(let m) = current {v = m}
           }
           try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._kind = .querySignedPutURLRequest(v)}
+          if let v = v {_storage._kind = .queryConversationsRequest(v)}
         case 6:
+          var v: UpdateConversationRequest?
+          if let current = _storage._kind {
+            try decoder.handleConflictingOneOf()
+            if case .updateConversationRequest(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {_storage._kind = .updateConversationRequest(v)}
+        case 7:
+          var v: UpdateTypingStatusRequest?
+          if let current = _storage._kind {
+            try decoder.handleConflictingOneOf()
+            if case .updateTypingStatusRequest(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {_storage._kind = .updateTypingStatusRequest(v)}
+        case 8:
           var v: CreateMessageRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -748,15 +769,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
           }
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .createMessageRequest(v)}
-        case 7:
-          var v: QueryMessageStatusesRequest?
-          if let current = _storage._kind {
-            try decoder.handleConflictingOneOf()
-            if case .queryMessageStatusesRequest(let m) = current {v = m}
-          }
-          try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._kind = .queryMessageStatusesRequest(v)}
-        case 8:
+        case 9:
           var v: QueryMessagesRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
@@ -764,14 +777,6 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
           }
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .queryMessagesRequest(v)}
-        case 9:
-          var v: QueryPendingMessagesWithTotalRequest?
-          if let current = _storage._kind {
-            try decoder.handleConflictingOneOf()
-            if case .queryPendingMessagesWithTotalRequest(let m) = current {v = m}
-          }
-          try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._kind = .queryPendingMessagesWithTotalRequest(v)}
         case 10:
           var v: UpdateMessageRequest?
           if let current = _storage._kind {
@@ -781,13 +786,37 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .updateMessageRequest(v)}
         case 11:
-          var v: UpdateTypingStatusRequest?
+          var v: CreateGroupMemberRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
-            if case .updateTypingStatusRequest(let m) = current {v = m}
+            if case .createGroupMemberRequest(let m) = current {v = m}
           }
           try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._kind = .updateTypingStatusRequest(v)}
+          if let v = v {_storage._kind = .createGroupMemberRequest(v)}
+        case 12:
+          var v: DeleteGroupMemberRequest?
+          if let current = _storage._kind {
+            try decoder.handleConflictingOneOf()
+            if case .deleteGroupMemberRequest(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {_storage._kind = .deleteGroupMemberRequest(v)}
+        case 13:
+          var v: QueryGroupMembersRequest?
+          if let current = _storage._kind {
+            try decoder.handleConflictingOneOf()
+            if case .queryGroupMembersRequest(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {_storage._kind = .queryGroupMembersRequest(v)}
+        case 14:
+          var v: UpdateGroupMemberRequest?
+          if let current = _storage._kind {
+            try decoder.handleConflictingOneOf()
+            if case .updateGroupMemberRequest(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {_storage._kind = .updateGroupMemberRequest(v)}
         case 100:
           var v: QueryUserProfileRequest?
           if let current = _storage._kind {
@@ -1108,38 +1137,30 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
           }
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .updateGroupJoinQuestionRequest(v)}
-        case 600:
-          var v: CreateGroupMemberRequest?
+        case 1000:
+          var v: DeleteResourceRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
-            if case .createGroupMemberRequest(let m) = current {v = m}
+            if case .deleteResourceRequest(let m) = current {v = m}
           }
           try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._kind = .createGroupMemberRequest(v)}
-        case 601:
-          var v: DeleteGroupMemberRequest?
+          if let v = v {_storage._kind = .deleteResourceRequest(v)}
+        case 1001:
+          var v: QuerySignedGetUrlRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
-            if case .deleteGroupMemberRequest(let m) = current {v = m}
+            if case .querySignedGetURLRequest(let m) = current {v = m}
           }
           try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._kind = .deleteGroupMemberRequest(v)}
-        case 602:
-          var v: QueryGroupMembersRequest?
+          if let v = v {_storage._kind = .querySignedGetURLRequest(v)}
+        case 1002:
+          var v: QuerySignedPutUrlRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
-            if case .queryGroupMembersRequest(let m) = current {v = m}
+            if case .querySignedPutURLRequest(let m) = current {v = m}
           }
           try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._kind = .queryGroupMembersRequest(v)}
-        case 603:
-          var v: UpdateGroupMemberRequest?
-          if let current = _storage._kind {
-            try decoder.handleConflictingOneOf()
-            if case .updateGroupMemberRequest(let m) = current {v = m}
-          }
-          try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._kind = .updateGroupMemberRequest(v)}
+          if let v = v {_storage._kind = .querySignedPutURLRequest(v)}
         default: break
         }
       }
@@ -1152,26 +1173,30 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
         try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
       }
       switch _storage._kind {
-      case .ackRequest(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-      case .deleteResourceRequest(let v)?:
+      case .createSessionRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-      case .querySignedGetURLRequest(let v)?:
+      case .deleteSessionRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
-      case .querySignedPutURLRequest(let v)?:
+      case .queryConversationsRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
-      case .createMessageRequest(let v)?:
+      case .updateConversationRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
-      case .queryMessageStatusesRequest(let v)?:
+      case .updateTypingStatusRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
-      case .queryMessagesRequest(let v)?:
+      case .createMessageRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 8)
-      case .queryPendingMessagesWithTotalRequest(let v)?:
+      case .queryMessagesRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 9)
       case .updateMessageRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
-      case .updateTypingStatusRequest(let v)?:
+      case .createGroupMemberRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 11)
+      case .deleteGroupMemberRequest(let v)?:
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 12)
+      case .queryGroupMembersRequest(let v)?:
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 13)
+      case .updateGroupMemberRequest(let v)?:
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 14)
       case .queryUserProfileRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 100)
       case .queryUserIdsNearbyRequest(let v)?:
@@ -1252,14 +1277,12 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
         try visitor.visitSingularMessageField(value: v, fieldNumber: 509)
       case .updateGroupJoinQuestionRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 510)
-      case .createGroupMemberRequest(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 600)
-      case .deleteGroupMemberRequest(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 601)
-      case .queryGroupMembersRequest(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 602)
-      case .updateGroupMemberRequest(let v)?:
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 603)
+      case .deleteResourceRequest(let v)?:
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 1000)
+      case .querySignedGetURLRequest(let v)?:
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 1001)
+      case .querySignedPutURLRequest(let v)?:
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 1002)
       case nil: break
       }
     }

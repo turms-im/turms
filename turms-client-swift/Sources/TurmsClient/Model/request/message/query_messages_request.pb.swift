@@ -83,9 +83,9 @@ public struct QueryMessagesRequest {
   /// Clears the value of `deliveryDateBefore`. Subsequent reads from it will return its default value.
   public mutating func clearDeliveryDateBefore() {_uniqueStorage()._deliveryDateBefore = nil}
 
-  public var deliveryStatus: MessageDeliveryStatus {
-    get {return _storage._deliveryStatus}
-    set {_uniqueStorage()._deliveryStatus = newValue}
+  public var withTotal: Bool {
+    get {return _storage._withTotal}
+    set {_uniqueStorage()._withTotal = newValue}
   }
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
@@ -109,7 +109,7 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
     5: .standard(proto: "from_id"),
     6: .standard(proto: "delivery_date_after"),
     7: .standard(proto: "delivery_date_before"),
-    8: .standard(proto: "delivery_status"),
+    8: .standard(proto: "with_total"),
   ]
 
   fileprivate class _StorageClass {
@@ -120,7 +120,7 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
     var _fromID: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
     var _deliveryDateAfter: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
     var _deliveryDateBefore: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
-    var _deliveryStatus: MessageDeliveryStatus = .ready
+    var _withTotal: Bool = false
 
     static let defaultInstance = _StorageClass()
 
@@ -134,7 +134,7 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
       _fromID = source._fromID
       _deliveryDateAfter = source._deliveryDateAfter
       _deliveryDateBefore = source._deliveryDateBefore
-      _deliveryStatus = source._deliveryStatus
+      _withTotal = source._withTotal
     }
   }
 
@@ -157,7 +157,7 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
         case 5: try decoder.decodeSingularMessageField(value: &_storage._fromID)
         case 6: try decoder.decodeSingularMessageField(value: &_storage._deliveryDateAfter)
         case 7: try decoder.decodeSingularMessageField(value: &_storage._deliveryDateBefore)
-        case 8: try decoder.decodeSingularEnumField(value: &_storage._deliveryStatus)
+        case 8: try decoder.decodeSingularBoolField(value: &_storage._withTotal)
         default: break
         }
       }
@@ -187,8 +187,8 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
       if let v = _storage._deliveryDateBefore {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
       }
-      if _storage._deliveryStatus != .ready {
-        try visitor.visitSingularEnumField(value: _storage._deliveryStatus, fieldNumber: 8)
+      if _storage._withTotal != false {
+        try visitor.visitSingularBoolField(value: _storage._withTotal, fieldNumber: 8)
       }
     }
     try unknownFields.traverse(visitor: &visitor)
@@ -206,7 +206,7 @@ extension QueryMessagesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
         if _storage._fromID != rhs_storage._fromID {return false}
         if _storage._deliveryDateAfter != rhs_storage._deliveryDateAfter {return false}
         if _storage._deliveryDateBefore != rhs_storage._deliveryDateBefore {return false}
-        if _storage._deliveryStatus != rhs_storage._deliveryStatus {return false}
+        if _storage._withTotal != rhs_storage._withTotal {return false}
         return true
       }
       if !storagesAreEqual {return false}

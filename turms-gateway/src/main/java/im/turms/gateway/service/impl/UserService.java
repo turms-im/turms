@@ -17,9 +17,9 @@
 
 package im.turms.gateway.service.impl;
 
-import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.gateway.constant.DomainFieldName;
 import im.turms.server.common.dao.domain.User;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.manager.PasswordManager;
 import im.turms.server.common.util.AssertUtil;
 import org.springframework.beans.factory.annotation.Autowired;

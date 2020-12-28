@@ -72,7 +72,7 @@ public class ApplicationContext {
                 // Ignore the exception in production env because it should not have side effects
                 // and we cannot avoid the exception completely because of its root cause.
                 // Log the exception only in non-production env so we can try to optimize the code of
-                // client to close the connection with a 4-way handshake on the client sides
+                // client to close the connection with a 4-way handshake on the client side
                 if (!this.isProduction) {
                     log.warn(throwable);
                 }

@@ -34,15 +34,6 @@ export namespace im {
                 ANONYMOUS_GUEST = 4
             }
 
-            /** MessageDeliveryStatus enum. */
-            enum MessageDeliveryStatus {
-                READY = 0,
-                SENDING = 1,
-                RECEIVED = 2,
-                RECALLING = 3,
-                RECALLED = 4
-            }
-
             /** ProfileAccessStrategy enum. */
             enum ProfileAccessStrategy {
                 ALL = 0,
@@ -159,6 +150,144 @@ export namespace im {
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
                 public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.Int64Values;
+            }
+
+            /** Properties of a Conversations. */
+            interface IConversations {
+
+                /** Conversations privateConversations */
+                privateConversations?: (im.turms.proto.IPrivateConversation[]|null);
+
+                /** Conversations groupConversations */
+                groupConversations?: (im.turms.proto.IGroupConversation[]|null);
+            }
+
+            /** Represents a Conversations. */
+            class Conversations implements IConversations {
+
+                /**
+                 * Constructs a new Conversations.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: im.turms.proto.IConversations);
+
+                /** Conversations privateConversations. */
+                public privateConversations: im.turms.proto.IPrivateConversation[];
+
+                /** Conversations groupConversations. */
+                public groupConversations: im.turms.proto.IGroupConversation[];
+
+                /**
+                 * Encodes the specified Conversations message. Does not implicitly {@link im.turms.proto.Conversations.verify|verify} messages.
+                 * @param message Conversations message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: im.turms.proto.IConversations, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a Conversations message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns Conversations
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.Conversations;
+            }
+
+            /** Properties of a GroupConversation. */
+            interface IGroupConversation {
+
+                /** GroupConversation groupId */
+                groupId?: (string|null);
+
+                /** GroupConversation memberIdAndReadDate */
+                memberIdAndReadDate?: ({ [k: string]: string }|null);
+            }
+
+            /** Represents a GroupConversation. */
+            class GroupConversation implements IGroupConversation {
+
+                /**
+                 * Constructs a new GroupConversation.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: im.turms.proto.IGroupConversation);
+
+                /** GroupConversation groupId. */
+                public groupId: string;
+
+                /** GroupConversation memberIdAndReadDate. */
+                public memberIdAndReadDate: { [k: string]: string };
+
+                /**
+                 * Encodes the specified GroupConversation message. Does not implicitly {@link im.turms.proto.GroupConversation.verify|verify} messages.
+                 * @param message GroupConversation message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: im.turms.proto.IGroupConversation, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a GroupConversation message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns GroupConversation
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.GroupConversation;
+            }
+
+            /** Properties of a PrivateConversation. */
+            interface IPrivateConversation {
+
+                /** PrivateConversation ownerId */
+                ownerId?: (string|null);
+
+                /** PrivateConversation targetId */
+                targetId?: (string|null);
+
+                /** PrivateConversation readDate */
+                readDate?: (string|null);
+            }
+
+            /** Represents a PrivateConversation. */
+            class PrivateConversation implements IPrivateConversation {
+
+                /**
+                 * Constructs a new PrivateConversation.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: im.turms.proto.IPrivateConversation);
+
+                /** PrivateConversation ownerId. */
+                public ownerId: string;
+
+                /** PrivateConversation targetId. */
+                public targetId: string;
+
+                /** PrivateConversation readDate. */
+                public readDate: string;
+
+                /**
+                 * Encodes the specified PrivateConversation message. Does not implicitly {@link im.turms.proto.PrivateConversation.verify|verify} messages.
+                 * @param message PrivateConversation message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: im.turms.proto.IPrivateConversation, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a PrivateConversation message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns PrivateConversation
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.PrivateConversation;
             }
 
             /** Properties of an AudioFile. */
@@ -1122,9 +1251,6 @@ export namespace im {
                 /** Group creationDate */
                 creationDate?: (google.protobuf.IInt64Value|null);
 
-                /** Group deletionDate */
-                deletionDate?: (google.protobuf.IInt64Value|null);
-
                 /** Group muteEndDate */
                 muteEndDate?: (google.protobuf.IInt64Value|null);
 
@@ -1164,9 +1290,6 @@ export namespace im {
 
                 /** Group creationDate. */
                 public creationDate?: (google.protobuf.IInt64Value|null);
-
-                /** Group deletionDate. */
-                public deletionDate?: (google.protobuf.IInt64Value|null);
 
                 /** Group muteEndDate. */
                 public muteEndDate?: (google.protobuf.IInt64Value|null);
@@ -1237,112 +1360,6 @@ export namespace im {
                 public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.GroupsWithVersion;
             }
 
-            /** Properties of a MessageStatus. */
-            interface IMessageStatus {
-
-                /** MessageStatus messageId */
-                messageId?: (google.protobuf.IInt64Value|null);
-
-                /** MessageStatus toUserId */
-                toUserId?: (google.protobuf.IInt64Value|null);
-
-                /** MessageStatus deliveryStatus */
-                deliveryStatus?: (im.turms.proto.MessageDeliveryStatus|null);
-
-                /** MessageStatus receptionDate */
-                receptionDate?: (google.protobuf.IInt64Value|null);
-
-                /** MessageStatus readDate */
-                readDate?: (google.protobuf.IInt64Value|null);
-
-                /** MessageStatus recallDate */
-                recallDate?: (google.protobuf.IInt64Value|null);
-            }
-
-            /** Represents a MessageStatus. */
-            class MessageStatus implements IMessageStatus {
-
-                /**
-                 * Constructs a new MessageStatus.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: im.turms.proto.IMessageStatus);
-
-                /** MessageStatus messageId. */
-                public messageId?: (google.protobuf.IInt64Value|null);
-
-                /** MessageStatus toUserId. */
-                public toUserId?: (google.protobuf.IInt64Value|null);
-
-                /** MessageStatus deliveryStatus. */
-                public deliveryStatus: im.turms.proto.MessageDeliveryStatus;
-
-                /** MessageStatus receptionDate. */
-                public receptionDate?: (google.protobuf.IInt64Value|null);
-
-                /** MessageStatus readDate. */
-                public readDate?: (google.protobuf.IInt64Value|null);
-
-                /** MessageStatus recallDate. */
-                public recallDate?: (google.protobuf.IInt64Value|null);
-
-                /**
-                 * Encodes the specified MessageStatus message. Does not implicitly {@link im.turms.proto.MessageStatus.verify|verify} messages.
-                 * @param message MessageStatus message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: im.turms.proto.IMessageStatus, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes a MessageStatus message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns MessageStatus
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.MessageStatus;
-            }
-
-            /** Properties of a MessageStatuses. */
-            interface IMessageStatuses {
-
-                /** MessageStatuses messageStatuses */
-                messageStatuses?: (im.turms.proto.IMessageStatus[]|null);
-            }
-
-            /** Represents a MessageStatuses. */
-            class MessageStatuses implements IMessageStatuses {
-
-                /**
-                 * Constructs a new MessageStatuses.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: im.turms.proto.IMessageStatuses);
-
-                /** MessageStatuses messageStatuses. */
-                public messageStatuses: im.turms.proto.IMessageStatus[];
-
-                /**
-                 * Encodes the specified MessageStatuses message. Does not implicitly {@link im.turms.proto.MessageStatuses.verify|verify} messages.
-                 * @param message MessageStatuses message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: im.turms.proto.IMessageStatuses, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes a MessageStatuses message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns MessageStatuses
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.MessageStatuses;
-            }
-
             /** Properties of a Message. */
             interface IMessage {
 
@@ -1352,8 +1369,8 @@ export namespace im {
                 /** Message deliveryDate */
                 deliveryDate?: (google.protobuf.IInt64Value|null);
 
-                /** Message deletionDate */
-                deletionDate?: (google.protobuf.IInt64Value|null);
+                /** Message modificationDate */
+                modificationDate?: (google.protobuf.IInt64Value|null);
 
                 /** Message text */
                 text?: (google.protobuf.IStringValue|null);
@@ -1389,8 +1406,8 @@ export namespace im {
                 /** Message deliveryDate. */
                 public deliveryDate?: (google.protobuf.IInt64Value|null);
 
-                /** Message deletionDate. */
-                public deletionDate?: (google.protobuf.IInt64Value|null);
+                /** Message modificationDate. */
+                public modificationDate?: (google.protobuf.IInt64Value|null);
 
                 /** Message text. */
                 public text?: (google.protobuf.IStringValue|null);
@@ -1561,88 +1578,6 @@ export namespace im {
                 public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.Messages;
             }
 
-            /** Properties of an Acknowledge. */
-            interface IAcknowledge {
-
-                /** Acknowledge deliveryDate */
-                deliveryDate?: (string|null);
-
-                /** Acknowledge messageId */
-                messageId?: (google.protobuf.IInt64Value|null);
-            }
-
-            /** Represents an Acknowledge. */
-            class Acknowledge implements IAcknowledge {
-
-                /**
-                 * Constructs a new Acknowledge.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: im.turms.proto.IAcknowledge);
-
-                /** Acknowledge deliveryDate. */
-                public deliveryDate: string;
-
-                /** Acknowledge messageId. */
-                public messageId?: (google.protobuf.IInt64Value|null);
-
-                /**
-                 * Encodes the specified Acknowledge message. Does not implicitly {@link im.turms.proto.Acknowledge.verify|verify} messages.
-                 * @param message Acknowledge message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: im.turms.proto.IAcknowledge, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes an Acknowledge message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns Acknowledge
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.Acknowledge;
-            }
-
-            /** Properties of a Session. */
-            interface ISession {
-
-                /** Session sessionId */
-                sessionId?: (string|null);
-            }
-
-            /** Represents a Session. */
-            class Session implements ISession {
-
-                /**
-                 * Constructs a new Session.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: im.turms.proto.ISession);
-
-                /** Session sessionId. */
-                public sessionId: string;
-
-                /**
-                 * Encodes the specified Session message. Does not implicitly {@link im.turms.proto.Session.verify|verify} messages.
-                 * @param message Session message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: im.turms.proto.ISession, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes a Session message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns Session
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.Session;
-            }
-
             /** Properties of a UserFriendRequest. */
             interface IUserFriendRequest {
 
@@ -1782,9 +1717,6 @@ export namespace im {
                 /** UserInfo registrationDate */
                 registrationDate?: (google.protobuf.IInt64Value|null);
 
-                /** UserInfo deletionDate */
-                deletionDate?: (google.protobuf.IInt64Value|null);
-
                 /** UserInfo active */
                 active?: (google.protobuf.IBoolValue|null);
 
@@ -1812,9 +1744,6 @@ export namespace im {
 
                 /** UserInfo registrationDate. */
                 public registrationDate?: (google.protobuf.IInt64Value|null);
-
-                /** UserInfo deletionDate. */
-                public deletionDate?: (google.protobuf.IInt64Value|null);
 
                 /** UserInfo active. */
                 public active?: (google.protobuf.IBoolValue|null);
@@ -2179,6 +2108,44 @@ export namespace im {
                 public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.UserSessionIds;
             }
 
+            /** Properties of a UserSession. */
+            interface IUserSession {
+
+                /** UserSession sessionId */
+                sessionId?: (string|null);
+            }
+
+            /** Represents a UserSession. */
+            class UserSession implements IUserSession {
+
+                /**
+                 * Constructs a new UserSession.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: im.turms.proto.IUserSession);
+
+                /** UserSession sessionId. */
+                public sessionId: string;
+
+                /**
+                 * Encodes the specified UserSession message. Does not implicitly {@link im.turms.proto.UserSession.verify|verify} messages.
+                 * @param message UserSession message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: im.turms.proto.IUserSession, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a UserSession message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns UserSession
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.UserSession;
+            }
+
             /** Properties of a UserStatusDetail. */
             interface IUserStatusDetail {
 
@@ -2399,20 +2366,17 @@ export namespace im {
                     /** Data url */
                     url?: (google.protobuf.IStringValue|null);
 
-                    /** Data acknowledge */
-                    acknowledge?: (im.turms.proto.IAcknowledge|null);
-
-                    /** Data session */
-                    session?: (im.turms.proto.ISession|null);
+                    /** Data conversations */
+                    conversations?: (im.turms.proto.IConversations|null);
 
                     /** Data messages */
                     messages?: (im.turms.proto.IMessages|null);
 
-                    /** Data messageStatuses */
-                    messageStatuses?: (im.turms.proto.IMessageStatuses|null);
-
                     /** Data messagesWithTotalList */
                     messagesWithTotalList?: (im.turms.proto.IMessagesWithTotalList|null);
+
+                    /** Data userSession */
+                    userSession?: (im.turms.proto.IUserSession|null);
 
                     /** Data usersInfosWithVersion */
                     usersInfosWithVersion?: (im.turms.proto.IUsersInfosWithVersion|null);
@@ -2469,20 +2433,17 @@ export namespace im {
                     /** Data url. */
                     public url?: (google.protobuf.IStringValue|null);
 
-                    /** Data acknowledge. */
-                    public acknowledge?: (im.turms.proto.IAcknowledge|null);
-
-                    /** Data session. */
-                    public session?: (im.turms.proto.ISession|null);
+                    /** Data conversations. */
+                    public conversations?: (im.turms.proto.IConversations|null);
 
                     /** Data messages. */
                     public messages?: (im.turms.proto.IMessages|null);
 
-                    /** Data messageStatuses. */
-                    public messageStatuses?: (im.turms.proto.IMessageStatuses|null);
-
                     /** Data messagesWithTotalList. */
                     public messagesWithTotalList?: (im.turms.proto.IMessagesWithTotalList|null);
+
+                    /** Data userSession. */
+                    public userSession?: (im.turms.proto.IUserSession|null);
 
                     /** Data usersInfosWithVersion. */
                     public usersInfosWithVersion?: (im.turms.proto.IUsersInfosWithVersion|null);
@@ -2521,7 +2482,7 @@ export namespace im {
                     public groupsWithVersion?: (im.turms.proto.IGroupsWithVersion|null);
 
                     /** Data kind. */
-                    public kind?: ("ids"|"idsWithVersion"|"url"|"acknowledge"|"session"|"messages"|"messageStatuses"|"messagesWithTotalList"|"usersInfosWithVersion"|"usersOnlineStatuses"|"userFriendRequestsWithVersion"|"userRelationshipGroupsWithVersion"|"userRelationshipsWithVersion"|"userSessionIds"|"groupInvitationsWithVersion"|"groupJoinQuestionAnswerResult"|"groupJoinRequestsWithVersion"|"groupJoinQuestionsWithVersion"|"groupMembersWithVersion"|"groupsWithVersion");
+                    public kind?: ("ids"|"idsWithVersion"|"url"|"conversations"|"messages"|"messagesWithTotalList"|"userSession"|"usersInfosWithVersion"|"usersOnlineStatuses"|"userFriendRequestsWithVersion"|"userRelationshipGroupsWithVersion"|"userRelationshipsWithVersion"|"userSessionIds"|"groupInvitationsWithVersion"|"groupJoinQuestionAnswerResult"|"groupJoinRequestsWithVersion"|"groupJoinQuestionsWithVersion"|"groupMembersWithVersion"|"groupsWithVersion");
 
                     /**
                      * Encodes the specified Data message. Does not implicitly {@link im.turms.proto.TurmsNotification.Data.verify|verify} messages.
@@ -2541,6 +2502,144 @@ export namespace im {
                      */
                     public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.TurmsNotification.Data;
                 }
+            }
+
+            /** Properties of a QueryConversationsRequest. */
+            interface IQueryConversationsRequest {
+
+                /** QueryConversationsRequest targetIds */
+                targetIds?: (string[]|null);
+
+                /** QueryConversationsRequest groupIds */
+                groupIds?: (string[]|null);
+            }
+
+            /** Represents a QueryConversationsRequest. */
+            class QueryConversationsRequest implements IQueryConversationsRequest {
+
+                /**
+                 * Constructs a new QueryConversationsRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: im.turms.proto.IQueryConversationsRequest);
+
+                /** QueryConversationsRequest targetIds. */
+                public targetIds: string[];
+
+                /** QueryConversationsRequest groupIds. */
+                public groupIds: string[];
+
+                /**
+                 * Encodes the specified QueryConversationsRequest message. Does not implicitly {@link im.turms.proto.QueryConversationsRequest.verify|verify} messages.
+                 * @param message QueryConversationsRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: im.turms.proto.IQueryConversationsRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes a QueryConversationsRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns QueryConversationsRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QueryConversationsRequest;
+            }
+
+            /** Properties of an UpdateConversationRequest. */
+            interface IUpdateConversationRequest {
+
+                /** UpdateConversationRequest targetId */
+                targetId?: (google.protobuf.IInt64Value|null);
+
+                /** UpdateConversationRequest groupId */
+                groupId?: (google.protobuf.IInt64Value|null);
+
+                /** UpdateConversationRequest readDate */
+                readDate?: (string|null);
+            }
+
+            /** Represents an UpdateConversationRequest. */
+            class UpdateConversationRequest implements IUpdateConversationRequest {
+
+                /**
+                 * Constructs a new UpdateConversationRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: im.turms.proto.IUpdateConversationRequest);
+
+                /** UpdateConversationRequest targetId. */
+                public targetId?: (google.protobuf.IInt64Value|null);
+
+                /** UpdateConversationRequest groupId. */
+                public groupId?: (google.protobuf.IInt64Value|null);
+
+                /** UpdateConversationRequest readDate. */
+                public readDate: string;
+
+                /**
+                 * Encodes the specified UpdateConversationRequest message. Does not implicitly {@link im.turms.proto.UpdateConversationRequest.verify|verify} messages.
+                 * @param message UpdateConversationRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: im.turms.proto.IUpdateConversationRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an UpdateConversationRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns UpdateConversationRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.UpdateConversationRequest;
+            }
+
+            /** Properties of an UpdateTypingStatusRequest. */
+            interface IUpdateTypingStatusRequest {
+
+                /** UpdateTypingStatusRequest isGroupMessage */
+                isGroupMessage?: (boolean|null);
+
+                /** UpdateTypingStatusRequest toId */
+                toId?: (string|null);
+            }
+
+            /** Represents an UpdateTypingStatusRequest. */
+            class UpdateTypingStatusRequest implements IUpdateTypingStatusRequest {
+
+                /**
+                 * Constructs a new UpdateTypingStatusRequest.
+                 * @param [properties] Properties to set
+                 */
+                constructor(properties?: im.turms.proto.IUpdateTypingStatusRequest);
+
+                /** UpdateTypingStatusRequest isGroupMessage. */
+                public isGroupMessage: boolean;
+
+                /** UpdateTypingStatusRequest toId. */
+                public toId: string;
+
+                /**
+                 * Encodes the specified UpdateTypingStatusRequest message. Does not implicitly {@link im.turms.proto.UpdateTypingStatusRequest.verify|verify} messages.
+                 * @param message UpdateTypingStatusRequest message or plain object to encode
+                 * @param [writer] Writer to encode to
+                 * @returns Writer
+                 */
+                public static encode(message: im.turms.proto.IUpdateTypingStatusRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+
+                /**
+                 * Decodes an UpdateTypingStatusRequest message from the specified reader or buffer.
+                 * @param reader Reader or buffer to decode from
+                 * @param [length] Message length if known beforehand
+                 * @returns UpdateTypingStatusRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.UpdateTypingStatusRequest;
             }
 
             /** Properties of a CreateGroupBlacklistedUserRequest. */
@@ -3849,44 +3948,6 @@ export namespace im {
                 public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.CreateMessageRequest;
             }
 
-            /** Properties of a QueryMessageStatusesRequest. */
-            interface IQueryMessageStatusesRequest {
-
-                /** QueryMessageStatusesRequest messageId */
-                messageId?: (string|null);
-            }
-
-            /** Represents a QueryMessageStatusesRequest. */
-            class QueryMessageStatusesRequest implements IQueryMessageStatusesRequest {
-
-                /**
-                 * Constructs a new QueryMessageStatusesRequest.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: im.turms.proto.IQueryMessageStatusesRequest);
-
-                /** QueryMessageStatusesRequest messageId. */
-                public messageId: string;
-
-                /**
-                 * Encodes the specified QueryMessageStatusesRequest message. Does not implicitly {@link im.turms.proto.QueryMessageStatusesRequest.verify|verify} messages.
-                 * @param message QueryMessageStatusesRequest message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: im.turms.proto.IQueryMessageStatusesRequest, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes a QueryMessageStatusesRequest message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns QueryMessageStatusesRequest
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QueryMessageStatusesRequest;
-            }
-
             /** Properties of a QueryMessagesRequest. */
             interface IQueryMessagesRequest {
 
@@ -3911,8 +3972,8 @@ export namespace im {
                 /** QueryMessagesRequest deliveryDateBefore */
                 deliveryDateBefore?: (google.protobuf.IInt64Value|null);
 
-                /** QueryMessagesRequest deliveryStatus */
-                deliveryStatus?: (im.turms.proto.MessageDeliveryStatus|null);
+                /** QueryMessagesRequest withTotal */
+                withTotal?: (boolean|null);
             }
 
             /** Represents a QueryMessagesRequest. */
@@ -3945,8 +4006,8 @@ export namespace im {
                 /** QueryMessagesRequest deliveryDateBefore. */
                 public deliveryDateBefore?: (google.protobuf.IInt64Value|null);
 
-                /** QueryMessagesRequest deliveryStatus. */
-                public deliveryStatus: im.turms.proto.MessageDeliveryStatus;
+                /** QueryMessagesRequest withTotal. */
+                public withTotal: boolean;
 
                 /**
                  * Encodes the specified QueryMessagesRequest message. Does not implicitly {@link im.turms.proto.QueryMessagesRequest.verify|verify} messages.
@@ -3967,52 +4028,11 @@ export namespace im {
                 public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QueryMessagesRequest;
             }
 
-            /** Properties of a QueryPendingMessagesWithTotalRequest. */
-            interface IQueryPendingMessagesWithTotalRequest {
-
-                /** QueryPendingMessagesWithTotalRequest size */
-                size?: (google.protobuf.IInt32Value|null);
-            }
-
-            /** Represents a QueryPendingMessagesWithTotalRequest. */
-            class QueryPendingMessagesWithTotalRequest implements IQueryPendingMessagesWithTotalRequest {
-
-                /**
-                 * Constructs a new QueryPendingMessagesWithTotalRequest.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: im.turms.proto.IQueryPendingMessagesWithTotalRequest);
-
-                /** QueryPendingMessagesWithTotalRequest size. */
-                public size?: (google.protobuf.IInt32Value|null);
-
-                /**
-                 * Encodes the specified QueryPendingMessagesWithTotalRequest message. Does not implicitly {@link im.turms.proto.QueryPendingMessagesWithTotalRequest.verify|verify} messages.
-                 * @param message QueryPendingMessagesWithTotalRequest message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: im.turms.proto.IQueryPendingMessagesWithTotalRequest, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes a QueryPendingMessagesWithTotalRequest message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns QueryPendingMessagesWithTotalRequest
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QueryPendingMessagesWithTotalRequest;
-            }
-
             /** Properties of an UpdateMessageRequest. */
             interface IUpdateMessageRequest {
 
                 /** UpdateMessageRequest messageId */
                 messageId?: (string|null);
-
-                /** UpdateMessageRequest isSystemMessage */
-                isSystemMessage?: (google.protobuf.IBoolValue|null);
 
                 /** UpdateMessageRequest text */
                 text?: (google.protobuf.IStringValue|null);
@@ -4022,9 +4042,6 @@ export namespace im {
 
                 /** UpdateMessageRequest recallDate */
                 recallDate?: (google.protobuf.IInt64Value|null);
-
-                /** UpdateMessageRequest readDate */
-                readDate?: (google.protobuf.IInt64Value|null);
             }
 
             /** Represents an UpdateMessageRequest. */
@@ -4039,9 +4056,6 @@ export namespace im {
                 /** UpdateMessageRequest messageId. */
                 public messageId: string;
 
-                /** UpdateMessageRequest isSystemMessage. */
-                public isSystemMessage?: (google.protobuf.IBoolValue|null);
-
                 /** UpdateMessageRequest text. */
                 public text?: (google.protobuf.IStringValue|null);
 
@@ -4050,9 +4064,6 @@ export namespace im {
 
                 /** UpdateMessageRequest recallDate. */
                 public recallDate?: (google.protobuf.IInt64Value|null);
-
-                /** UpdateMessageRequest readDate. */
-                public readDate?: (google.protobuf.IInt64Value|null);
 
                 /**
                  * Encodes the specified UpdateMessageRequest message. Does not implicitly {@link im.turms.proto.UpdateMessageRequest.verify|verify} messages.
@@ -4071,88 +4082,6 @@ export namespace im {
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
                 public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.UpdateMessageRequest;
-            }
-
-            /** Properties of an UpdateTypingStatusRequest. */
-            interface IUpdateTypingStatusRequest {
-
-                /** UpdateTypingStatusRequest isGroupMessage */
-                isGroupMessage?: (boolean|null);
-
-                /** UpdateTypingStatusRequest toId */
-                toId?: (string|null);
-            }
-
-            /** Represents an UpdateTypingStatusRequest. */
-            class UpdateTypingStatusRequest implements IUpdateTypingStatusRequest {
-
-                /**
-                 * Constructs a new UpdateTypingStatusRequest.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: im.turms.proto.IUpdateTypingStatusRequest);
-
-                /** UpdateTypingStatusRequest isGroupMessage. */
-                public isGroupMessage: boolean;
-
-                /** UpdateTypingStatusRequest toId. */
-                public toId: string;
-
-                /**
-                 * Encodes the specified UpdateTypingStatusRequest message. Does not implicitly {@link im.turms.proto.UpdateTypingStatusRequest.verify|verify} messages.
-                 * @param message UpdateTypingStatusRequest message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: im.turms.proto.IUpdateTypingStatusRequest, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes an UpdateTypingStatusRequest message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns UpdateTypingStatusRequest
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.UpdateTypingStatusRequest;
-            }
-
-            /** Properties of an AckRequest. */
-            interface IAckRequest {
-
-                /** AckRequest messageIds */
-                messageIds?: (string[]|null);
-            }
-
-            /** Represents an AckRequest. */
-            class AckRequest implements IAckRequest {
-
-                /**
-                 * Constructs a new AckRequest.
-                 * @param [properties] Properties to set
-                 */
-                constructor(properties?: im.turms.proto.IAckRequest);
-
-                /** AckRequest messageIds. */
-                public messageIds: string[];
-
-                /**
-                 * Encodes the specified AckRequest message. Does not implicitly {@link im.turms.proto.AckRequest.verify|verify} messages.
-                 * @param message AckRequest message or plain object to encode
-                 * @param [writer] Writer to encode to
-                 * @returns Writer
-                 */
-                public static encode(message: im.turms.proto.IAckRequest, writer?: $protobuf.Writer): $protobuf.Writer;
-
-                /**
-                 * Decodes an AckRequest message from the specified reader or buffer.
-                 * @param reader Reader or buffer to decode from
-                 * @param [length] Message length if known beforehand
-                 * @returns AckRequest
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.AckRequest;
             }
 
             /** Properties of a DeleteResourceRequest. */
@@ -4317,41 +4246,41 @@ export namespace im {
                 /** TurmsRequest requestId */
                 requestId?: (google.protobuf.IInt64Value|null);
 
-                /** TurmsRequest ackRequest */
-                ackRequest?: (im.turms.proto.IAckRequest|null);
-
-                /** TurmsRequest deleteResourceRequest */
-                deleteResourceRequest?: (im.turms.proto.IDeleteResourceRequest|null);
-
-                /** TurmsRequest querySignedGetUrlRequest */
-                querySignedGetUrlRequest?: (im.turms.proto.IQuerySignedGetUrlRequest|null);
-
-                /** TurmsRequest querySignedPutUrlRequest */
-                querySignedPutUrlRequest?: (im.turms.proto.IQuerySignedPutUrlRequest|null);
-
-                /** TurmsRequest createMessageRequest */
-                createMessageRequest?: (im.turms.proto.ICreateMessageRequest|null);
-
-                /** TurmsRequest queryMessageStatusesRequest */
-                queryMessageStatusesRequest?: (im.turms.proto.IQueryMessageStatusesRequest|null);
-
-                /** TurmsRequest queryMessagesRequest */
-                queryMessagesRequest?: (im.turms.proto.IQueryMessagesRequest|null);
-
-                /** TurmsRequest queryPendingMessagesWithTotalRequest */
-                queryPendingMessagesWithTotalRequest?: (im.turms.proto.IQueryPendingMessagesWithTotalRequest|null);
-
-                /** TurmsRequest updateMessageRequest */
-                updateMessageRequest?: (im.turms.proto.IUpdateMessageRequest|null);
-
-                /** TurmsRequest updateTypingStatusRequest */
-                updateTypingStatusRequest?: (im.turms.proto.IUpdateTypingStatusRequest|null);
-
                 /** TurmsRequest createSessionRequest */
                 createSessionRequest?: (im.turms.proto.ICreateSessionRequest|null);
 
                 /** TurmsRequest deleteSessionRequest */
                 deleteSessionRequest?: (im.turms.proto.IDeleteSessionRequest|null);
+
+                /** TurmsRequest queryConversationsRequest */
+                queryConversationsRequest?: (im.turms.proto.IQueryConversationsRequest|null);
+
+                /** TurmsRequest updateConversationRequest */
+                updateConversationRequest?: (im.turms.proto.IUpdateConversationRequest|null);
+
+                /** TurmsRequest updateTypingStatusRequest */
+                updateTypingStatusRequest?: (im.turms.proto.IUpdateTypingStatusRequest|null);
+
+                /** TurmsRequest createMessageRequest */
+                createMessageRequest?: (im.turms.proto.ICreateMessageRequest|null);
+
+                /** TurmsRequest queryMessagesRequest */
+                queryMessagesRequest?: (im.turms.proto.IQueryMessagesRequest|null);
+
+                /** TurmsRequest updateMessageRequest */
+                updateMessageRequest?: (im.turms.proto.IUpdateMessageRequest|null);
+
+                /** TurmsRequest createGroupMemberRequest */
+                createGroupMemberRequest?: (im.turms.proto.ICreateGroupMemberRequest|null);
+
+                /** TurmsRequest deleteGroupMemberRequest */
+                deleteGroupMemberRequest?: (im.turms.proto.IDeleteGroupMemberRequest|null);
+
+                /** TurmsRequest queryGroupMembersRequest */
+                queryGroupMembersRequest?: (im.turms.proto.IQueryGroupMembersRequest|null);
+
+                /** TurmsRequest updateGroupMemberRequest */
+                updateGroupMemberRequest?: (im.turms.proto.IUpdateGroupMemberRequest|null);
 
                 /** TurmsRequest queryUserProfileRequest */
                 queryUserProfileRequest?: (im.turms.proto.IQueryUserProfileRequest|null);
@@ -4473,17 +4402,14 @@ export namespace im {
                 /** TurmsRequest updateGroupJoinQuestionRequest */
                 updateGroupJoinQuestionRequest?: (im.turms.proto.IUpdateGroupJoinQuestionRequest|null);
 
-                /** TurmsRequest createGroupMemberRequest */
-                createGroupMemberRequest?: (im.turms.proto.ICreateGroupMemberRequest|null);
+                /** TurmsRequest deleteResourceRequest */
+                deleteResourceRequest?: (im.turms.proto.IDeleteResourceRequest|null);
 
-                /** TurmsRequest deleteGroupMemberRequest */
-                deleteGroupMemberRequest?: (im.turms.proto.IDeleteGroupMemberRequest|null);
+                /** TurmsRequest querySignedGetUrlRequest */
+                querySignedGetUrlRequest?: (im.turms.proto.IQuerySignedGetUrlRequest|null);
 
-                /** TurmsRequest queryGroupMembersRequest */
-                queryGroupMembersRequest?: (im.turms.proto.IQueryGroupMembersRequest|null);
-
-                /** TurmsRequest updateGroupMemberRequest */
-                updateGroupMemberRequest?: (im.turms.proto.IUpdateGroupMemberRequest|null);
+                /** TurmsRequest querySignedPutUrlRequest */
+                querySignedPutUrlRequest?: (im.turms.proto.IQuerySignedPutUrlRequest|null);
             }
 
             /** Represents a TurmsRequest. */
@@ -4498,41 +4424,41 @@ export namespace im {
                 /** TurmsRequest requestId. */
                 public requestId?: (google.protobuf.IInt64Value|null);
 
-                /** TurmsRequest ackRequest. */
-                public ackRequest?: (im.turms.proto.IAckRequest|null);
-
-                /** TurmsRequest deleteResourceRequest. */
-                public deleteResourceRequest?: (im.turms.proto.IDeleteResourceRequest|null);
-
-                /** TurmsRequest querySignedGetUrlRequest. */
-                public querySignedGetUrlRequest?: (im.turms.proto.IQuerySignedGetUrlRequest|null);
-
-                /** TurmsRequest querySignedPutUrlRequest. */
-                public querySignedPutUrlRequest?: (im.turms.proto.IQuerySignedPutUrlRequest|null);
-
-                /** TurmsRequest createMessageRequest. */
-                public createMessageRequest?: (im.turms.proto.ICreateMessageRequest|null);
-
-                /** TurmsRequest queryMessageStatusesRequest. */
-                public queryMessageStatusesRequest?: (im.turms.proto.IQueryMessageStatusesRequest|null);
-
-                /** TurmsRequest queryMessagesRequest. */
-                public queryMessagesRequest?: (im.turms.proto.IQueryMessagesRequest|null);
-
-                /** TurmsRequest queryPendingMessagesWithTotalRequest. */
-                public queryPendingMessagesWithTotalRequest?: (im.turms.proto.IQueryPendingMessagesWithTotalRequest|null);
-
-                /** TurmsRequest updateMessageRequest. */
-                public updateMessageRequest?: (im.turms.proto.IUpdateMessageRequest|null);
-
-                /** TurmsRequest updateTypingStatusRequest. */
-                public updateTypingStatusRequest?: (im.turms.proto.IUpdateTypingStatusRequest|null);
-
                 /** TurmsRequest createSessionRequest. */
                 public createSessionRequest?: (im.turms.proto.ICreateSessionRequest|null);
 
                 /** TurmsRequest deleteSessionRequest. */
                 public deleteSessionRequest?: (im.turms.proto.IDeleteSessionRequest|null);
+
+                /** TurmsRequest queryConversationsRequest. */
+                public queryConversationsRequest?: (im.turms.proto.IQueryConversationsRequest|null);
+
+                /** TurmsRequest updateConversationRequest. */
+                public updateConversationRequest?: (im.turms.proto.IUpdateConversationRequest|null);
+
+                /** TurmsRequest updateTypingStatusRequest. */
+                public updateTypingStatusRequest?: (im.turms.proto.IUpdateTypingStatusRequest|null);
+
+                /** TurmsRequest createMessageRequest. */
+                public createMessageRequest?: (im.turms.proto.ICreateMessageRequest|null);
+
+                /** TurmsRequest queryMessagesRequest. */
+                public queryMessagesRequest?: (im.turms.proto.IQueryMessagesRequest|null);
+
+                /** TurmsRequest updateMessageRequest. */
+                public updateMessageRequest?: (im.turms.proto.IUpdateMessageRequest|null);
+
+                /** TurmsRequest createGroupMemberRequest. */
+                public createGroupMemberRequest?: (im.turms.proto.ICreateGroupMemberRequest|null);
+
+                /** TurmsRequest deleteGroupMemberRequest. */
+                public deleteGroupMemberRequest?: (im.turms.proto.IDeleteGroupMemberRequest|null);
+
+                /** TurmsRequest queryGroupMembersRequest. */
+                public queryGroupMembersRequest?: (im.turms.proto.IQueryGroupMembersRequest|null);
+
+                /** TurmsRequest updateGroupMemberRequest. */
+                public updateGroupMemberRequest?: (im.turms.proto.IUpdateGroupMemberRequest|null);
 
                 /** TurmsRequest queryUserProfileRequest. */
                 public queryUserProfileRequest?: (im.turms.proto.IQueryUserProfileRequest|null);
@@ -4654,20 +4580,17 @@ export namespace im {
                 /** TurmsRequest updateGroupJoinQuestionRequest. */
                 public updateGroupJoinQuestionRequest?: (im.turms.proto.IUpdateGroupJoinQuestionRequest|null);
 
-                /** TurmsRequest createGroupMemberRequest. */
-                public createGroupMemberRequest?: (im.turms.proto.ICreateGroupMemberRequest|null);
+                /** TurmsRequest deleteResourceRequest. */
+                public deleteResourceRequest?: (im.turms.proto.IDeleteResourceRequest|null);
 
-                /** TurmsRequest deleteGroupMemberRequest. */
-                public deleteGroupMemberRequest?: (im.turms.proto.IDeleteGroupMemberRequest|null);
+                /** TurmsRequest querySignedGetUrlRequest. */
+                public querySignedGetUrlRequest?: (im.turms.proto.IQuerySignedGetUrlRequest|null);
 
-                /** TurmsRequest queryGroupMembersRequest. */
-                public queryGroupMembersRequest?: (im.turms.proto.IQueryGroupMembersRequest|null);
-
-                /** TurmsRequest updateGroupMemberRequest. */
-                public updateGroupMemberRequest?: (im.turms.proto.IUpdateGroupMemberRequest|null);
+                /** TurmsRequest querySignedPutUrlRequest. */
+                public querySignedPutUrlRequest?: (im.turms.proto.IQuerySignedPutUrlRequest|null);
 
                 /** TurmsRequest kind. */
-                public kind?: ("ackRequest"|"deleteResourceRequest"|"querySignedGetUrlRequest"|"querySignedPutUrlRequest"|"createMessageRequest"|"queryMessageStatusesRequest"|"queryMessagesRequest"|"queryPendingMessagesWithTotalRequest"|"updateMessageRequest"|"updateTypingStatusRequest"|"createSessionRequest"|"deleteSessionRequest"|"queryUserProfileRequest"|"queryUserIdsNearbyRequest"|"queryUserInfosNearbyRequest"|"queryUserOnlineStatusesRequest"|"updateUserLocationRequest"|"updateUserOnlineStatusRequest"|"updateUserRequest"|"createFriendRequestRequest"|"createRelationshipGroupRequest"|"createRelationshipRequest"|"deleteRelationshipGroupRequest"|"deleteRelationshipRequest"|"queryFriendRequestsRequest"|"queryRelatedUserIdsRequest"|"queryRelationshipGroupsRequest"|"queryRelationshipsRequest"|"updateFriendRequestRequest"|"updateRelationshipGroupRequest"|"updateRelationshipRequest"|"createGroupRequest"|"deleteGroupRequest"|"queryGroupRequest"|"queryJoinedGroupIdsRequest"|"queryJoinedGroupInfosRequest"|"updateGroupRequest"|"createGroupBlacklistedUserRequest"|"deleteGroupBlacklistedUserRequest"|"queryGroupBlacklistedUserIdsRequest"|"queryGroupBlacklistedUserInfosRequest"|"checkGroupJoinQuestionsAnswersRequest"|"createGroupInvitationRequest"|"createGroupJoinRequestRequest"|"createGroupJoinQuestionRequest"|"deleteGroupInvitationRequest"|"deleteGroupJoinRequestRequest"|"deleteGroupJoinQuestionRequest"|"queryGroupInvitationsRequest"|"queryGroupJoinRequestsRequest"|"queryGroupJoinQuestionsRequest"|"updateGroupJoinQuestionRequest"|"createGroupMemberRequest"|"deleteGroupMemberRequest"|"queryGroupMembersRequest"|"updateGroupMemberRequest");
+                public kind?: ("createSessionRequest"|"deleteSessionRequest"|"queryConversationsRequest"|"updateConversationRequest"|"updateTypingStatusRequest"|"createMessageRequest"|"queryMessagesRequest"|"updateMessageRequest"|"createGroupMemberRequest"|"deleteGroupMemberRequest"|"queryGroupMembersRequest"|"updateGroupMemberRequest"|"queryUserProfileRequest"|"queryUserIdsNearbyRequest"|"queryUserInfosNearbyRequest"|"queryUserOnlineStatusesRequest"|"updateUserLocationRequest"|"updateUserOnlineStatusRequest"|"updateUserRequest"|"createFriendRequestRequest"|"createRelationshipGroupRequest"|"createRelationshipRequest"|"deleteRelationshipGroupRequest"|"deleteRelationshipRequest"|"queryFriendRequestsRequest"|"queryRelatedUserIdsRequest"|"queryRelationshipGroupsRequest"|"queryRelationshipsRequest"|"updateFriendRequestRequest"|"updateRelationshipGroupRequest"|"updateRelationshipRequest"|"createGroupRequest"|"deleteGroupRequest"|"queryGroupRequest"|"queryJoinedGroupIdsRequest"|"queryJoinedGroupInfosRequest"|"updateGroupRequest"|"createGroupBlacklistedUserRequest"|"deleteGroupBlacklistedUserRequest"|"queryGroupBlacklistedUserIdsRequest"|"queryGroupBlacklistedUserInfosRequest"|"checkGroupJoinQuestionsAnswersRequest"|"createGroupInvitationRequest"|"createGroupJoinRequestRequest"|"createGroupJoinQuestionRequest"|"deleteGroupInvitationRequest"|"deleteGroupJoinRequestRequest"|"deleteGroupJoinQuestionRequest"|"queryGroupInvitationsRequest"|"queryGroupJoinRequestsRequest"|"queryGroupJoinQuestionsRequest"|"updateGroupJoinQuestionRequest"|"deleteResourceRequest"|"querySignedGetUrlRequest"|"querySignedPutUrlRequest");
 
                 /**
                  * Encodes the specified TurmsRequest message. Does not implicitly {@link im.turms.proto.TurmsRequest.verify|verify} messages.

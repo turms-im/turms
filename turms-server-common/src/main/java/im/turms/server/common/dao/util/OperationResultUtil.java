@@ -45,20 +45,20 @@ public class OperationResultUtil {
         }
     }
 
-    //    public static void throwsForIllegalResult(UpdateResult result, Class<?> entityClass, UpdateDefinition update) {
-//        if (result.getModifiedCount() <= 0 && result.getMatchedCount() > 0) {
-//            // e.g. "Invalid $addFields :: caused by :: an empty object is not a valid value."
-//            String reason = String.format("The update definition for the class %s may be wrong: %s", entityClass, update);
-//            throw TurmsBusinessException.get(TurmsStatusCode.SERVER_INTERNAL_ERROR, reason);
-//        }
-//    }
-//
-//    public static void throwsForIllegalUpsertResult(UpdateResult result, Class<?> entityClass, UpdateDefinition update) {
-//        if (result.getModifiedCount() <= 0) {
-//            // e.g. "Invalid $addFields :: caused by :: an empty object is not a valid value."
-//            String reason = String.format("The update definition for the class %s may be wrong: %s", entityClass, update);
-//            throw TurmsBusinessException.get(TurmsStatusCode.SERVER_INTERNAL_ERROR, reason);
-//        }
-//    }
+    public static DeleteResult merge(DeleteResult r1, DeleteResult r2) {
+        boolean wasAcknowledged = false;
+        long count = 0;
+        if (r1.wasAcknowledged()) {
+            count += r1.getDeletedCount();
+            wasAcknowledged = true;
+        }
+        if (r2.wasAcknowledged()) {
+            count += r2.getDeletedCount();
+            wasAcknowledged = true;
+        }
+        return wasAcknowledged
+                ? DeleteResult.acknowledged(count)
+                : DeleteResult.unacknowledged();
+    }
 
 }

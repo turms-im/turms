@@ -19,12 +19,12 @@ package im.turms.server.common.service.session;
 
 
 import im.turms.common.constant.DeviceType;
-import im.turms.server.common.constant.TurmsStatusCode;
-import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.bo.log.UserLocationLog;
 import im.turms.server.common.bo.session.UserSessionId;
 import im.turms.server.common.cluster.node.Node;
+import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.constraint.ValidDeviceType;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.log4j.UserActivityLogging;
 import im.turms.server.common.plugin.base.ITurmsPluginManager;
 import im.turms.server.common.plugin.extension.UserLocationLogHandler;

@@ -36,7 +36,7 @@
     <properties>
         <java.version>11</java.version>
         <disruptor.version>3.4.2</disruptor.version>
-        <protobuf.version>3.13.0</protobuf.version>
+        <protobuf.version>3.14.0</protobuf.version>
         <guava.version>30.0-jre</guava.version>
         <spring-boot-admin-starter-client.version>2.3.1</spring-boot-admin-starter-client.version>
         <jmh.version>1.27</jmh.version>

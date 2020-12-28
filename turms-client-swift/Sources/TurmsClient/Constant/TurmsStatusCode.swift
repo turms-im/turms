@@ -170,6 +170,7 @@ public enum TurmsStatusCode: Int {
 
     // Conversation
     case updatingTypingStatusIsDisabled = 4000
+    case updatingReadDateIsDisabled
 
     // Message
 

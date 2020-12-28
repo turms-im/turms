@@ -34,7 +34,6 @@ private static final long serialVersionUID = 0L;
   }
   private QueryMessagesRequest() {
     ids_ = emptyLongList();
-    deliveryStatus_ = 0;
   }
 
   @java.lang.Override
@@ -168,9 +167,8 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 64: {
-            int rawValue = input.readEnum();
 
-            deliveryStatus_ = rawValue;
+            withTotal_ = input.readBool();
             break;
           }
           default: {
@@ -392,23 +390,15 @@ private static final long serialVersionUID = 0L;
     return getDeliveryDateBefore();
   }
 
-  public static final int DELIVERY_STATUS_FIELD_NUMBER = 8;
-  private int deliveryStatus_;
+  public static final int WITH_TOTAL_FIELD_NUMBER = 8;
+  private boolean withTotal_;
   /**
-   * <code>.im.turms.proto.MessageDeliveryStatus delivery_status = 8;</code>
-   * @return The enum numeric value on the wire for deliveryStatus.
+   * <code>bool with_total = 8;</code>
+   * @return The withTotal.
    */
-  @java.lang.Override public int getDeliveryStatusValue() {
-    return deliveryStatus_;
-  }
-  /**
-   * <code>.im.turms.proto.MessageDeliveryStatus delivery_status = 8;</code>
-   * @return The deliveryStatus.
-   */
-  @java.lang.Override public im.turms.common.constant.MessageDeliveryStatus getDeliveryStatus() {
-    @SuppressWarnings("deprecation")
-    im.turms.common.constant.MessageDeliveryStatus result = im.turms.common.constant.MessageDeliveryStatus.valueOf(deliveryStatus_);
-    return result == null ? im.turms.common.constant.MessageDeliveryStatus.UNRECOGNIZED : result;
+  @java.lang.Override
+  public boolean getWithTotal() {
+    return withTotal_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -451,8 +441,8 @@ private static final long serialVersionUID = 0L;
     if (deliveryDateBefore_ != null) {
       output.writeMessage(7, getDeliveryDateBefore());
     }
-    if (deliveryStatus_ != im.turms.common.constant.MessageDeliveryStatus.READY.getNumber()) {
-      output.writeEnum(8, deliveryStatus_);
+    if (withTotal_ != false) {
+      output.writeBool(8, withTotal_);
     }
     unknownFields.writeTo(output);
   }
@@ -501,9 +491,9 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(7, getDeliveryDateBefore());
     }
-    if (deliveryStatus_ != im.turms.common.constant.MessageDeliveryStatus.READY.getNumber()) {
+    if (withTotal_ != false) {
       size += com.google.protobuf.CodedOutputStream
-        .computeEnumSize(8, deliveryStatus_);
+        .computeBoolSize(8, withTotal_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -552,7 +542,8 @@ private static final long serialVersionUID = 0L;
       if (!getDeliveryDateBefore()
           .equals(other.getDeliveryDateBefore())) return false;
     }
-    if (deliveryStatus_ != other.deliveryStatus_) return false;
+    if (getWithTotal()
+        != other.getWithTotal()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -592,8 +583,9 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + DELIVERY_DATE_BEFORE_FIELD_NUMBER;
       hash = (53 * hash) + getDeliveryDateBefore().hashCode();
     }
-    hash = (37 * hash) + DELIVERY_STATUS_FIELD_NUMBER;
-    hash = (53 * hash) + deliveryStatus_;
+    hash = (37 * hash) + WITH_TOTAL_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+        getWithTotal());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -765,7 +757,7 @@ private static final long serialVersionUID = 0L;
         deliveryDateBefore_ = null;
         deliveryDateBeforeBuilder_ = null;
       }
-      deliveryStatus_ = 0;
+      withTotal_ = false;
 
       return this;
     }
@@ -829,7 +821,7 @@ private static final long serialVersionUID = 0L;
       } else {
         result.deliveryDateBefore_ = deliveryDateBeforeBuilder_.build();
       }
-      result.deliveryStatus_ = deliveryStatus_;
+      result.withTotal_ = withTotal_;
       onBuilt();
       return result;
     }
@@ -906,8 +898,8 @@ private static final long serialVersionUID = 0L;
       if (other.hasDeliveryDateBefore()) {
         mergeDeliveryDateBefore(other.getDeliveryDateBefore());
       }
-      if (other.deliveryStatus_ != 0) {
-        setDeliveryStatusValue(other.getDeliveryStatusValue());
+      if (other.getWithTotal() != false) {
+        setWithTotal(other.getWithTotal());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -1732,56 +1724,33 @@ private static final long serialVersionUID = 0L;
       return deliveryDateBeforeBuilder_;
     }
 
-    private int deliveryStatus_ = 0;
+    private boolean withTotal_ ;
     /**
-     * <code>.im.turms.proto.MessageDeliveryStatus delivery_status = 8;</code>
-     * @return The enum numeric value on the wire for deliveryStatus.
-     */
-    @java.lang.Override public int getDeliveryStatusValue() {
-      return deliveryStatus_;
-    }
-    /**
-     * <code>.im.turms.proto.MessageDeliveryStatus delivery_status = 8;</code>
-     * @param value The enum numeric value on the wire for deliveryStatus to set.
-     * @return This builder for chaining.
-     */
-    public Builder setDeliveryStatusValue(int value) {
-
-      deliveryStatus_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>.im.turms.proto.MessageDeliveryStatus delivery_status = 8;</code>
-     * @return The deliveryStatus.
+     * <code>bool with_total = 8;</code>
+     * @return The withTotal.
      */
     @java.lang.Override
-    public im.turms.common.constant.MessageDeliveryStatus getDeliveryStatus() {
-      @SuppressWarnings("deprecation")
-      im.turms.common.constant.MessageDeliveryStatus result = im.turms.common.constant.MessageDeliveryStatus.valueOf(deliveryStatus_);
-      return result == null ? im.turms.common.constant.MessageDeliveryStatus.UNRECOGNIZED : result;
+    public boolean getWithTotal() {
+      return withTotal_;
     }
     /**
-     * <code>.im.turms.proto.MessageDeliveryStatus delivery_status = 8;</code>
-     * @param value The deliveryStatus to set.
+     * <code>bool with_total = 8;</code>
+     * @param value The withTotal to set.
      * @return This builder for chaining.
      */
-    public Builder setDeliveryStatus(im.turms.common.constant.MessageDeliveryStatus value) {
-      if (value == null) {
-        throw new NullPointerException();
-      }
+    public Builder setWithTotal(boolean value) {
 
-      deliveryStatus_ = value.getNumber();
+      withTotal_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>.im.turms.proto.MessageDeliveryStatus delivery_status = 8;</code>
+     * <code>bool with_total = 8;</code>
      * @return This builder for chaining.
      */
-    public Builder clearDeliveryStatus() {
+    public Builder clearWithTotal() {
 
-      deliveryStatus_ = 0;
+      withTotal_ = false;
       onChanged();
       return this;
     }

@@ -17,8 +17,6 @@
 
 package im.turms.server.common.cluster.service.discovery;
 
-import im.turms.server.common.constant.TurmsStatusCode;
-import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.cluster.node.NodeVersion;
 import im.turms.server.common.cluster.service.ClusterService;
@@ -26,6 +24,8 @@ import im.turms.server.common.cluster.service.config.ChangeStreamUtil;
 import im.turms.server.common.cluster.service.config.SharedConfigService;
 import im.turms.server.common.cluster.service.config.domain.discovery.Leader;
 import im.turms.server.common.cluster.service.config.domain.discovery.Member;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.manager.address.IServiceAddressManager;
 import im.turms.server.common.property.env.common.cluster.DiscoveryProperties;
 import io.netty.util.concurrent.DefaultThreadFactory;
@@ -44,7 +44,6 @@ import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * @author James Chen
@@ -53,6 +52,17 @@ import java.util.stream.Collectors;
 public class DiscoveryService implements ClusterService {
 
     private static final Duration CRUD_TIMEOUT_DURATION = Duration.ofSeconds(10);
+    private static final Comparator<Member> MEMBER_PRIORITY_COMPARATOR = (m1, m2) -> {
+        int m1Priority = m1.getPriority();
+        int m2Priority = m2.getPriority();
+        if (m1Priority == m2Priority) {
+            // Don't use 0 to make sure that the order is consistent in every nodes
+            // and it should never happen
+            return m1.getNodeId().hashCode() < m2.getNodeId().hashCode() ? -1 : 1;
+        } else {
+            return m1Priority < m2Priority ? -1 : 1;
+        }
+    };
 
     @Getter
     private final ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1, new DefaultThreadFactory("turms-cluster-discovery"));
@@ -79,7 +89,10 @@ public class DiscoveryService implements ClusterService {
     private final Map<String, Member> allKnownMembers = new HashMap<>();
 
     @Getter
-    private List<Member> activeServiceMemberList = new ArrayList<>();
+    private List<Member> activeSortedServiceMemberList = new ArrayList<>();
+
+    @Getter
+    private List<Member> activeSortedGatewayMemberList = new ArrayList<>();
 
     /**
      * Used for RpcService so that it doesn't need to find a socket from a map by a member ID every time
@@ -147,22 +160,17 @@ public class DiscoveryService implements ClusterService {
         localNodeStatusManager.tryBecomeLeader().block();
 
         // Members
-        sharedConfigService.ensureTtlIndex(new Criteria().andOperator(
-                Criteria.where(Member.Fields.isSeed).is(false)),
-                Member.Fields.lastHeartbeatDate,
-                Member.class)
-                .block();
         listenMembersChangeEvent();
         List<Member> memberList = queryMembers()
                 .collectList()
                 .block(CRUD_TIMEOUT_DURATION);
-        Member localMember = getLocalMember();
+        Member localMember = localNodeStatusManager.getLocalMember();
         for (Member member : memberList) {
             if (localMember.isSameNode(member)) {
                 String message = "Failed to bootstrap the local node because the local node has been registered: " + member;
                 throw new IllegalStateException(message);
             }
-            this.onAddOrUpdateMember(member);
+            onAddOrUpdateMember(member);
         }
 
         localNodeStatusManager.registerLocalMember().block(CRUD_TIMEOUT_DURATION);
@@ -171,7 +179,7 @@ public class DiscoveryService implements ClusterService {
 
     private Flux<Member> queryMembers() {
         Criteria criteria = Criteria.where(Member.ID_CLUSTER_ID);
-        Query query = new Query().addCriteria(criteria.is(getLocalMember().getClusterId()));
+        Query query = new Query().addCriteria(criteria.is(localNodeStatusManager.getLocalMember().getClusterId()));
         return sharedConfigService.find(query, Member.class);
     }
 
@@ -182,7 +190,7 @@ public class DiscoveryService implements ClusterService {
                     String clusterId = changedLeader != null
                             ? changedLeader.getClusterId()
                             : ChangeStreamUtil.getIdAsString(event);
-                    if (clusterId.equals(getLocalMember().getClusterId())) {
+                    if (clusterId.equals(localNodeStatusManager.getLocalMember().getClusterId())) {
                         switch (event.getOperationType()) {
                             case INSERT:
                             case REPLACE:
@@ -213,7 +221,7 @@ public class DiscoveryService implements ClusterService {
                     String clusterId = changedMember != null
                             ? changedMember.getClusterId()
                             : ChangeStreamUtil.getStringFromId(event, Member.Key.Fields.clusterId);
-                    if (clusterId.equals(getLocalMember().getClusterId())) {
+                    if (clusterId.equals(localNodeStatusManager.getLocalMember().getClusterId())) {
                         switch (event.getOperationType()) {
                             case INSERT:
                             case REPLACE:
@@ -232,10 +240,10 @@ public class DiscoveryService implements ClusterService {
                                 String nodeId = ChangeStreamUtil.getStringFromId(event, Member.Key.Fields.nodeId);
                                 Member deletedMember = allKnownMembers.remove(nodeId);
                                 updateOtherActiveConnectedMemberList(false, deletedMember, null);
-                                if (nodeId.equals(getLocalMember().getNodeId())) {
+                                if (nodeId.equals(localNodeStatusManager.getLocalMember().getNodeId())) {
                                     localNodeStatusManager.setLocalNodeRegistered(false);
                                     if (!localNodeStatusManager.isClosing()) {
-                                        registerMember(getLocalMember()).subscribe();
+                                        registerMember(localNodeStatusManager.getLocalMember()).subscribe();
                                     }
                                 }
                                 break;
@@ -271,10 +279,22 @@ public class DiscoveryService implements ClusterService {
     }
 
     private synchronized void updateActiveMembers(Collection<Member> allKnownMembers) {
-        activeServiceMemberList = allKnownMembers
-                .stream()
-                .filter(Member::isActive)
-                .collect(Collectors.toList());
+        List<Member> list = new ArrayList<>(allKnownMembers);
+        list.sort(MEMBER_PRIORITY_COMPARATOR);
+        int size = list.size();
+        List<Member> tempActiveSortedServiceMemberList = new ArrayList<>(size);
+        List<Member> tempActiveSortedGatewayMemberList = new ArrayList<>(size);
+        for (Member member : list) {
+            if (member.isActive()) {
+                if (member.getNodeType() == NodeType.SERVICE) {
+                    tempActiveSortedServiceMemberList.add(member);
+                } else {
+                    tempActiveSortedGatewayMemberList.add(member);
+                }
+            }
+        }
+        activeSortedServiceMemberList = tempActiveSortedServiceMemberList;
+        activeSortedGatewayMemberList = tempActiveSortedGatewayMemberList;
     }
 
     private synchronized void updateOtherActiveConnectedMemberList(boolean isAdd, Member member, RSocket connection) {
@@ -296,19 +316,7 @@ public class DiscoveryService implements ClusterService {
         } else {
             tempOtherActiveConnectedMemberList.remove(new MemberInfoWithConnection(member, null));
         }
-        tempOtherActiveConnectedMemberList.sort((i1, i2) -> {
-            Member m1 = i1.getMember();
-            Member m2 = i2.getMember();
-            int m1Priority = m1.getPriority();
-            int m2Priority = m2.getPriority();
-            if (m1Priority == m2Priority) {
-                // Don't use 0 to make sure that the order is consistent in every nodes
-                // and it should never happen
-                return m1.getNodeId().hashCode() < m2.getNodeId().hashCode() ? -1 : 1;
-            } else {
-                return m1Priority < m2Priority ? -1 : 1;
-            }
-        });
+        tempOtherActiveConnectedMemberList.sort((m1, m2) -> MEMBER_PRIORITY_COMPARATOR.compare(m1.getMember(),m2.getMember()));
         if (isServiceMember) {
             otherActiveConnectedServiceMemberList = tempOtherActiveConnectedMemberList;
         } else {
@@ -321,7 +329,7 @@ public class DiscoveryService implements ClusterService {
      */
     @Nullable
     public Integer getLocalServiceMemberIndex() {
-        int index = activeServiceMemberList.indexOf(getLocalMember());
+        int index = activeSortedServiceMemberList.indexOf(getLocalMember());
         return index != -1 ? index : null;
     }
 

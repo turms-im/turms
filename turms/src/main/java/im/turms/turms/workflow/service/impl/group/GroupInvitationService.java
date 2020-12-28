@@ -22,12 +22,12 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import im.turms.common.constant.GroupInvitationStrategy;
 import im.turms.common.constant.RequestStatus;
-import im.turms.server.common.constant.TurmsStatusCode;
-import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.common.model.bo.group.GroupInvitationsWithVersion;
 import im.turms.common.util.Validator;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.manager.TrivialTaskManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.util.AssertUtil;
@@ -38,7 +38,7 @@ import im.turms.turms.constraint.ValidRequestStatus;
 import im.turms.turms.util.ProtoUtil;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
 import im.turms.turms.workflow.dao.builder.UpdateBuilder;
-import im.turms.turms.workflow.dao.domain.GroupInvitation;
+import im.turms.turms.workflow.dao.domain.group.GroupInvitation;
 import im.turms.turms.workflow.service.documentation.UsesNonIndexedData;
 import im.turms.turms.workflow.service.impl.user.UserVersionService;
 import im.turms.turms.workflow.service.util.DomainConstraintUtil;
@@ -220,8 +220,7 @@ public class GroupInvitationService {
         }
         Query query = new Query().addCriteria(where(ID_FIELD_NAME).is(invitationId));
         query.fields()
-                .include(GroupInvitation.Fields.GROUP_ID)
-                .include(GroupInvitation.Fields.STATUS);
+                .include(GroupInvitation.Fields.GROUP_ID, GroupInvitation.Fields.STATUS);
         return mongoTemplate.findOne(query, GroupInvitation.class, GroupInvitation.COLLECTION_NAME)
                 .map(groupInvitation -> {
                     Date expirationDate = groupInvitation.getExpirationDate();

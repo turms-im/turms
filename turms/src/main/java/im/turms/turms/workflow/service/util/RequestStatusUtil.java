@@ -18,7 +18,7 @@
 package im.turms.turms.workflow.service.util;
 
 import im.turms.common.constant.RequestStatus;
-import im.turms.turms.workflow.dao.domain.GroupInvitation;
+import im.turms.turms.workflow.dao.domain.group.GroupInvitation;
 import org.springframework.data.mongodb.core.query.Update;
 
 import javax.annotation.Nullable;

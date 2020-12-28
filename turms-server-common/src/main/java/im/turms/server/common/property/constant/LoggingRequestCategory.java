@@ -39,6 +39,7 @@ public enum LoggingRequestCategory {
     QUERY(Pool.QUERY),
 
     STORAGE(Pool.STORAGE),
+    CONVERSATION(Pool.CONVERSATION),
     MESSAGE(Pool.MESSAGE),
     USER(Pool.USER),
     USER_RELATIONSHIP(Pool.USER_RELATIONSHIP),
@@ -84,8 +85,8 @@ public enum LoggingRequestCategory {
                 DELETE_GROUP_MEMBER_REQUEST);
 
         private static final Set<TurmsRequest.KindCase> UPDATE = Set.of(
-                ACK_REQUEST,
                 UPDATE_MESSAGE_REQUEST,
+                UPDATE_CONVERSATION_REQUEST,
                 UPDATE_TYPING_STATUS_REQUEST,
                 UPDATE_USER_LOCATION_REQUEST,
                 UPDATE_USER_ONLINE_STATUS_REQUEST,
@@ -100,9 +101,8 @@ public enum LoggingRequestCategory {
         private static final Set<TurmsRequest.KindCase> QUERY = Set.of(
                 QUERY_SIGNED_GET_URL_REQUEST,
                 QUERY_SIGNED_PUT_URL_REQUEST,
-                QUERY_MESSAGE_STATUSES_REQUEST,
+                QUERY_CONVERSATIONS_REQUEST,
                 QUERY_MESSAGES_REQUEST,
-                QUERY_PENDING_MESSAGES_WITH_TOTAL_REQUEST,
                 QUERY_USER_PROFILE_REQUEST,
                 QUERY_USER_IDS_NEARBY_REQUEST,
                 QUERY_USER_INFOS_NEARBY_REQUEST,
@@ -125,12 +125,13 @@ public enum LoggingRequestCategory {
                 QUERY_SIGNED_GET_URL_REQUEST,
                 QUERY_SIGNED_PUT_URL_REQUEST);
 
-        private static final Set<TurmsRequest.KindCase> MESSAGE = Set.of(CREATE_MESSAGE_REQUEST,
-                QUERY_MESSAGE_STATUSES_REQUEST,
-                QUERY_MESSAGES_REQUEST,
-                QUERY_PENDING_MESSAGES_WITH_TOTAL_REQUEST,
-                UPDATE_MESSAGE_REQUEST,
+        private static final Set<TurmsRequest.KindCase> CONVERSATION = Set.of(QUERY_CONVERSATIONS_REQUEST,
+                UPDATE_CONVERSATION_REQUEST,
                 UPDATE_TYPING_STATUS_REQUEST);
+
+        private static final Set<TurmsRequest.KindCase> MESSAGE = Set.of(CREATE_MESSAGE_REQUEST,
+                QUERY_MESSAGES_REQUEST,
+                UPDATE_MESSAGE_REQUEST);
 
         private static final Set<TurmsRequest.KindCase> USER = Set.of(QUERY_USER_PROFILE_REQUEST,
                 QUERY_USER_IDS_NEARBY_REQUEST,

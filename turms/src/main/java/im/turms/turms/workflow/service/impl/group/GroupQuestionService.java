@@ -21,14 +21,15 @@ import com.google.protobuf.Int64Value;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import im.turms.common.constant.GroupMemberRole;
-import im.turms.server.common.constant.TurmsStatusCode;
-import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.common.model.bo.group.GroupJoinQuestionsAnswerResult;
 import im.turms.common.model.bo.group.GroupJoinQuestionsWithVersion;
 import im.turms.common.util.Validator;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.util.AssertUtil;
+import im.turms.server.common.util.CollectorUtil;
 import im.turms.turms.bo.GroupQuestionIdAndAnswer;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.constant.OperationResultConstant;
@@ -36,7 +37,7 @@ import im.turms.turms.constraint.ValidGroupQuestionIdAndAnswer;
 import im.turms.turms.util.ProtoUtil;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
 import im.turms.turms.workflow.dao.builder.UpdateBuilder;
-import im.turms.turms.workflow.dao.domain.GroupJoinQuestion;
+import im.turms.turms.workflow.dao.domain.group.GroupJoinQuestion;
 import im.turms.turms.workflow.service.util.DomainConstraintUtil;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -124,7 +125,7 @@ public class GroupQuestionService {
                     .map(score -> Pair.of(entry.getId(), score)));
         }
         return Flux.merge(checks)
-                .collectList()
+                .collect(CollectorUtil.toList(checks.size()))
                 .map(pairs -> {
                     List<Long> questionIds = new ArrayList<>(pairs.size());
                     int score = 0;

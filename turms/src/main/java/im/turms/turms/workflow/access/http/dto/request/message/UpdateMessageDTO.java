@@ -19,6 +19,7 @@ package im.turms.turms.workflow.access.http.dto.request.message;
 
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,4 +31,5 @@ public final class UpdateMessageDTO {
     private final String text;
     private final List<byte[]> records;
     private final Integer burnAfter;
+    private final Date recallDate;
 }

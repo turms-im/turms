@@ -1,8 +1,6 @@
 package unit.im.turms.gateway.service.impl;
 
 import im.turms.common.constant.DeviceType;
-import im.turms.server.common.constant.TurmsStatusCode;
-import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.gateway.pojo.bo.session.UserSession;
@@ -10,8 +8,10 @@ import im.turms.gateway.service.impl.InboundRequestService;
 import im.turms.gateway.service.impl.SessionService;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.rpc.RpcService;
+import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.ClientApiProperties;

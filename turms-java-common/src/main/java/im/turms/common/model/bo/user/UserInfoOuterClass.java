@@ -47,18 +47,16 @@ public final class UserInfoOuterClass {
     java.lang.String[] descriptorData = {
       "\n\032model/user/user_info.proto\022\016im.turms.p" +
       "roto\032\036google/protobuf/wrappers.proto\032&co" +
-      "nstant/profile_access_strategy.proto\"\354\002\n" +
+      "nstant/profile_access_strategy.proto\"\270\002\n" +
       "\010UserInfo\022\'\n\002id\030\001 \001(\0132\033.google.protobuf." +
       "Int64Value\022*\n\004name\030\002 \001(\0132\034.google.protob" +
       "uf.StringValue\022+\n\005intro\030\003 \001(\0132\034.google.p" +
       "rotobuf.StringValue\0226\n\021registration_date" +
-      "\030\004 \001(\0132\033.google.protobuf.Int64Value\0222\n\rd" +
-      "eletion_date\030\005 \001(\0132\033.google.protobuf.Int" +
-      "64Value\022*\n\006active\030\006 \001(\0132\032.google.protobu" +
-      "f.BoolValue\022F\n\027profile_access_strategy\030\007" +
-      " \001(\0162%.im.turms.proto.ProfileAccessStrat" +
-      "egyB$\n\035im.turms.common.model.bo.userP\001\272\002" +
-      "\000b\006proto3"
+      "\030\004 \001(\0132\033.google.protobuf.Int64Value\022*\n\006a" +
+      "ctive\030\005 \001(\0132\032.google.protobuf.BoolValue\022" +
+      "F\n\027profile_access_strategy\030\006 \001(\0162%.im.tu" +
+      "rms.proto.ProfileAccessStrategyB$\n\035im.tu" +
+      "rms.common.model.bo.userP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -71,7 +69,7 @@ public final class UserInfoOuterClass {
     internal_static_im_turms_proto_UserInfo_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_UserInfo_descriptor,
-        new java.lang.String[] { "Id", "Name", "Intro", "RegistrationDate", "DeletionDate", "Active", "ProfileAccessStrategy", });
+        new java.lang.String[] { "Id", "Name", "Intro", "RegistrationDate", "Active", "ProfileAccessStrategy", });
     com.google.protobuf.WrappersProto.getDescriptor();
     im.turms.common.constant.ProfileAccessStrategyOuterClass.getDescriptor();
   }

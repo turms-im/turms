@@ -20,11 +20,11 @@ package im.turms.gateway.util;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.ExtensionRegistry;
 import com.google.protobuf.Int64Value;
-import im.turms.server.common.constant.TurmsStatusCode;
-import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.common.model.dto.request.user.CreateSessionRequest;
 import im.turms.gateway.pojo.dto.SimpleTurmsRequest;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.util.Assert;
 
@@ -89,10 +89,6 @@ public class TurmsRequestUtil {
         } catch (IOException e) {
             throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "Not a valid TurmsRequest");
         }
-    }
-
-    public static boolean isSignalRequest(TurmsRequest.KindCase type) {
-        return type == TurmsRequest.KindCase.ACK_REQUEST;
     }
 
 }

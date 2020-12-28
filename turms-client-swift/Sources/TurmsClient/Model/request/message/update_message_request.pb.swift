@@ -29,15 +29,6 @@ public struct UpdateMessageRequest {
     set {_uniqueStorage()._messageID = newValue}
   }
 
-  public var isSystemMessage: SwiftProtobuf.Google_Protobuf_BoolValue {
-    get {return _storage._isSystemMessage ?? SwiftProtobuf.Google_Protobuf_BoolValue()}
-    set {_uniqueStorage()._isSystemMessage = newValue}
-  }
-  /// Returns true if `isSystemMessage` has been explicitly set.
-  public var hasIsSystemMessage: Bool {return _storage._isSystemMessage != nil}
-  /// Clears the value of `isSystemMessage`. Subsequent reads from it will return its default value.
-  public mutating func clearIsSystemMessage() {_uniqueStorage()._isSystemMessage = nil}
-
   public var text: SwiftProtobuf.Google_Protobuf_StringValue {
     get {return _storage._text ?? SwiftProtobuf.Google_Protobuf_StringValue()}
     set {_uniqueStorage()._text = newValue}
@@ -61,15 +52,6 @@ public struct UpdateMessageRequest {
   /// Clears the value of `recallDate`. Subsequent reads from it will return its default value.
   public mutating func clearRecallDate() {_uniqueStorage()._recallDate = nil}
 
-  public var readDate: SwiftProtobuf.Google_Protobuf_Int64Value {
-    get {return _storage._readDate ?? SwiftProtobuf.Google_Protobuf_Int64Value()}
-    set {_uniqueStorage()._readDate = newValue}
-  }
-  /// Returns true if `readDate` has been explicitly set.
-  public var hasReadDate: Bool {return _storage._readDate != nil}
-  /// Clears the value of `readDate`. Subsequent reads from it will return its default value.
-  public mutating func clearReadDate() {_uniqueStorage()._readDate = nil}
-
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -85,20 +67,16 @@ extension UpdateMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
   public static let protoMessageName: String = _protobuf_package + ".UpdateMessageRequest"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "message_id"),
-    2: .standard(proto: "is_system_message"),
-    3: .same(proto: "text"),
-    4: .same(proto: "records"),
-    5: .standard(proto: "recall_date"),
-    6: .standard(proto: "read_date"),
+    2: .same(proto: "text"),
+    3: .same(proto: "records"),
+    4: .standard(proto: "recall_date"),
   ]
 
   fileprivate class _StorageClass {
     var _messageID: Int64 = 0
-    var _isSystemMessage: SwiftProtobuf.Google_Protobuf_BoolValue? = nil
     var _text: SwiftProtobuf.Google_Protobuf_StringValue? = nil
     var _records: [Data] = []
     var _recallDate: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
-    var _readDate: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
 
     static let defaultInstance = _StorageClass()
 
@@ -106,11 +84,9 @@ extension UpdateMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
 
     init(copying source: _StorageClass) {
       _messageID = source._messageID
-      _isSystemMessage = source._isSystemMessage
       _text = source._text
       _records = source._records
       _recallDate = source._recallDate
-      _readDate = source._readDate
     }
   }
 
@@ -127,11 +103,9 @@ extension UpdateMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
       while let fieldNumber = try decoder.nextFieldNumber() {
         switch fieldNumber {
         case 1: try decoder.decodeSingularInt64Field(value: &_storage._messageID)
-        case 2: try decoder.decodeSingularMessageField(value: &_storage._isSystemMessage)
-        case 3: try decoder.decodeSingularMessageField(value: &_storage._text)
-        case 4: try decoder.decodeRepeatedBytesField(value: &_storage._records)
-        case 5: try decoder.decodeSingularMessageField(value: &_storage._recallDate)
-        case 6: try decoder.decodeSingularMessageField(value: &_storage._readDate)
+        case 2: try decoder.decodeSingularMessageField(value: &_storage._text)
+        case 3: try decoder.decodeRepeatedBytesField(value: &_storage._records)
+        case 4: try decoder.decodeSingularMessageField(value: &_storage._recallDate)
         default: break
         }
       }
@@ -143,20 +117,14 @@ extension UpdateMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
       if _storage._messageID != 0 {
         try visitor.visitSingularInt64Field(value: _storage._messageID, fieldNumber: 1)
       }
-      if let v = _storage._isSystemMessage {
+      if let v = _storage._text {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
       }
-      if let v = _storage._text {
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-      }
       if !_storage._records.isEmpty {
-        try visitor.visitRepeatedBytesField(value: _storage._records, fieldNumber: 4)
+        try visitor.visitRepeatedBytesField(value: _storage._records, fieldNumber: 3)
       }
       if let v = _storage._recallDate {
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
-      }
-      if let v = _storage._readDate {
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 6)
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
       }
     }
     try unknownFields.traverse(visitor: &visitor)
@@ -168,11 +136,9 @@ extension UpdateMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
         let _storage = _args.0
         let rhs_storage = _args.1
         if _storage._messageID != rhs_storage._messageID {return false}
-        if _storage._isSystemMessage != rhs_storage._isSystemMessage {return false}
         if _storage._text != rhs_storage._text {return false}
         if _storage._records != rhs_storage._records {return false}
         if _storage._recallDate != rhs_storage._recallDate {return false}
-        if _storage._readDate != rhs_storage._readDate {return false}
         return true
       }
       if !storagesAreEqual {return false}

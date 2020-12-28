@@ -95,13 +95,13 @@ private static final long serialVersionUID = 0L;
           }
           case 26: {
             com.google.protobuf.Int64Value.Builder subBuilder = null;
-            if (deletionDate_ != null) {
-              subBuilder = deletionDate_.toBuilder();
+            if (modificationDate_ != null) {
+              subBuilder = modificationDate_.toBuilder();
             }
-            deletionDate_ = input.readMessage(com.google.protobuf.Int64Value.parser(), extensionRegistry);
+            modificationDate_ = input.readMessage(com.google.protobuf.Int64Value.parser(), extensionRegistry);
             if (subBuilder != null) {
-              subBuilder.mergeFrom(deletionDate_);
-              deletionDate_ = subBuilder.buildPartial();
+              subBuilder.mergeFrom(modificationDate_);
+              modificationDate_ = subBuilder.buildPartial();
             }
 
             break;
@@ -266,30 +266,30 @@ private static final long serialVersionUID = 0L;
     return getDeliveryDate();
   }
 
-  public static final int DELETION_DATE_FIELD_NUMBER = 3;
-  private com.google.protobuf.Int64Value deletionDate_;
+  public static final int MODIFICATION_DATE_FIELD_NUMBER = 3;
+  private com.google.protobuf.Int64Value modificationDate_;
   /**
-   * <code>.google.protobuf.Int64Value deletion_date = 3;</code>
-   * @return Whether the deletionDate field is set.
+   * <code>.google.protobuf.Int64Value modification_date = 3;</code>
+   * @return Whether the modificationDate field is set.
    */
   @java.lang.Override
-  public boolean hasDeletionDate() {
-    return deletionDate_ != null;
+  public boolean hasModificationDate() {
+    return modificationDate_ != null;
   }
   /**
-   * <code>.google.protobuf.Int64Value deletion_date = 3;</code>
-   * @return The deletionDate.
+   * <code>.google.protobuf.Int64Value modification_date = 3;</code>
+   * @return The modificationDate.
    */
   @java.lang.Override
-  public com.google.protobuf.Int64Value getDeletionDate() {
-    return deletionDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : deletionDate_;
+  public com.google.protobuf.Int64Value getModificationDate() {
+    return modificationDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : modificationDate_;
   }
   /**
-   * <code>.google.protobuf.Int64Value deletion_date = 3;</code>
+   * <code>.google.protobuf.Int64Value modification_date = 3;</code>
    */
   @java.lang.Override
-  public com.google.protobuf.Int64ValueOrBuilder getDeletionDateOrBuilder() {
-    return getDeletionDate();
+  public com.google.protobuf.Int64ValueOrBuilder getModificationDateOrBuilder() {
+    return getModificationDate();
   }
 
   public static final int TEXT_FIELD_NUMBER = 4;
@@ -469,8 +469,8 @@ private static final long serialVersionUID = 0L;
     if (deliveryDate_ != null) {
       output.writeMessage(2, getDeliveryDate());
     }
-    if (deletionDate_ != null) {
-      output.writeMessage(3, getDeletionDate());
+    if (modificationDate_ != null) {
+      output.writeMessage(3, getModificationDate());
     }
     if (text_ != null) {
       output.writeMessage(4, getText());
@@ -507,9 +507,9 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(2, getDeliveryDate());
     }
-    if (deletionDate_ != null) {
+    if (modificationDate_ != null) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(3, getDeletionDate());
+        .computeMessageSize(3, getModificationDate());
     }
     if (text_ != null) {
       size += com.google.protobuf.CodedOutputStream
@@ -565,10 +565,10 @@ private static final long serialVersionUID = 0L;
       if (!getDeliveryDate()
           .equals(other.getDeliveryDate())) return false;
     }
-    if (hasDeletionDate() != other.hasDeletionDate()) return false;
-    if (hasDeletionDate()) {
-      if (!getDeletionDate()
-          .equals(other.getDeletionDate())) return false;
+    if (hasModificationDate() != other.hasModificationDate()) return false;
+    if (hasModificationDate()) {
+      if (!getModificationDate()
+          .equals(other.getModificationDate())) return false;
     }
     if (hasText() != other.hasText()) return false;
     if (hasText()) {
@@ -616,9 +616,9 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + DELIVERY_DATE_FIELD_NUMBER;
       hash = (53 * hash) + getDeliveryDate().hashCode();
     }
-    if (hasDeletionDate()) {
-      hash = (37 * hash) + DELETION_DATE_FIELD_NUMBER;
-      hash = (53 * hash) + getDeletionDate().hashCode();
+    if (hasModificationDate()) {
+      hash = (37 * hash) + MODIFICATION_DATE_FIELD_NUMBER;
+      hash = (53 * hash) + getModificationDate().hashCode();
     }
     if (hasText()) {
       hash = (37 * hash) + TEXT_FIELD_NUMBER;
@@ -789,11 +789,11 @@ private static final long serialVersionUID = 0L;
         deliveryDate_ = null;
         deliveryDateBuilder_ = null;
       }
-      if (deletionDateBuilder_ == null) {
-        deletionDate_ = null;
+      if (modificationDateBuilder_ == null) {
+        modificationDate_ = null;
       } else {
-        deletionDate_ = null;
-        deletionDateBuilder_ = null;
+        modificationDate_ = null;
+        modificationDateBuilder_ = null;
       }
       if (textBuilder_ == null) {
         text_ = null;
@@ -864,10 +864,10 @@ private static final long serialVersionUID = 0L;
       } else {
         result.deliveryDate_ = deliveryDateBuilder_.build();
       }
-      if (deletionDateBuilder_ == null) {
-        result.deletionDate_ = deletionDate_;
+      if (modificationDateBuilder_ == null) {
+        result.modificationDate_ = modificationDate_;
       } else {
-        result.deletionDate_ = deletionDateBuilder_.build();
+        result.modificationDate_ = modificationDateBuilder_.build();
       }
       if (textBuilder_ == null) {
         result.text_ = text_;
@@ -953,8 +953,8 @@ private static final long serialVersionUID = 0L;
       if (other.hasDeliveryDate()) {
         mergeDeliveryDate(other.getDeliveryDate());
       }
-      if (other.hasDeletionDate()) {
-        mergeDeletionDate(other.getDeletionDate());
+      if (other.hasModificationDate()) {
+        mergeModificationDate(other.getModificationDate());
       }
       if (other.hasText()) {
         mergeText(other.getText());
@@ -1249,123 +1249,123 @@ private static final long serialVersionUID = 0L;
       return deliveryDateBuilder_;
     }
 
-    private com.google.protobuf.Int64Value deletionDate_;
+    private com.google.protobuf.Int64Value modificationDate_;
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> deletionDateBuilder_;
+        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> modificationDateBuilder_;
     /**
-     * <code>.google.protobuf.Int64Value deletion_date = 3;</code>
-     * @return Whether the deletionDate field is set.
+     * <code>.google.protobuf.Int64Value modification_date = 3;</code>
+     * @return Whether the modificationDate field is set.
      */
-    public boolean hasDeletionDate() {
-      return deletionDateBuilder_ != null || deletionDate_ != null;
+    public boolean hasModificationDate() {
+      return modificationDateBuilder_ != null || modificationDate_ != null;
     }
     /**
-     * <code>.google.protobuf.Int64Value deletion_date = 3;</code>
-     * @return The deletionDate.
+     * <code>.google.protobuf.Int64Value modification_date = 3;</code>
+     * @return The modificationDate.
      */
-    public com.google.protobuf.Int64Value getDeletionDate() {
-      if (deletionDateBuilder_ == null) {
-        return deletionDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : deletionDate_;
+    public com.google.protobuf.Int64Value getModificationDate() {
+      if (modificationDateBuilder_ == null) {
+        return modificationDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : modificationDate_;
       } else {
-        return deletionDateBuilder_.getMessage();
+        return modificationDateBuilder_.getMessage();
       }
     }
     /**
-     * <code>.google.protobuf.Int64Value deletion_date = 3;</code>
+     * <code>.google.protobuf.Int64Value modification_date = 3;</code>
      */
-    public Builder setDeletionDate(com.google.protobuf.Int64Value value) {
-      if (deletionDateBuilder_ == null) {
+    public Builder setModificationDate(com.google.protobuf.Int64Value value) {
+      if (modificationDateBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
-        deletionDate_ = value;
+        modificationDate_ = value;
         onChanged();
       } else {
-        deletionDateBuilder_.setMessage(value);
+        modificationDateBuilder_.setMessage(value);
       }
 
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value deletion_date = 3;</code>
+     * <code>.google.protobuf.Int64Value modification_date = 3;</code>
      */
-    public Builder setDeletionDate(
+    public Builder setModificationDate(
         com.google.protobuf.Int64Value.Builder builderForValue) {
-      if (deletionDateBuilder_ == null) {
-        deletionDate_ = builderForValue.build();
+      if (modificationDateBuilder_ == null) {
+        modificationDate_ = builderForValue.build();
         onChanged();
       } else {
-        deletionDateBuilder_.setMessage(builderForValue.build());
+        modificationDateBuilder_.setMessage(builderForValue.build());
       }
 
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value deletion_date = 3;</code>
+     * <code>.google.protobuf.Int64Value modification_date = 3;</code>
      */
-    public Builder mergeDeletionDate(com.google.protobuf.Int64Value value) {
-      if (deletionDateBuilder_ == null) {
-        if (deletionDate_ != null) {
-          deletionDate_ =
-            com.google.protobuf.Int64Value.newBuilder(deletionDate_).mergeFrom(value).buildPartial();
+    public Builder mergeModificationDate(com.google.protobuf.Int64Value value) {
+      if (modificationDateBuilder_ == null) {
+        if (modificationDate_ != null) {
+          modificationDate_ =
+            com.google.protobuf.Int64Value.newBuilder(modificationDate_).mergeFrom(value).buildPartial();
         } else {
-          deletionDate_ = value;
+          modificationDate_ = value;
         }
         onChanged();
       } else {
-        deletionDateBuilder_.mergeFrom(value);
+        modificationDateBuilder_.mergeFrom(value);
       }
 
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value deletion_date = 3;</code>
+     * <code>.google.protobuf.Int64Value modification_date = 3;</code>
      */
-    public Builder clearDeletionDate() {
-      if (deletionDateBuilder_ == null) {
-        deletionDate_ = null;
+    public Builder clearModificationDate() {
+      if (modificationDateBuilder_ == null) {
+        modificationDate_ = null;
         onChanged();
       } else {
-        deletionDate_ = null;
-        deletionDateBuilder_ = null;
+        modificationDate_ = null;
+        modificationDateBuilder_ = null;
       }
 
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value deletion_date = 3;</code>
+     * <code>.google.protobuf.Int64Value modification_date = 3;</code>
      */
-    public com.google.protobuf.Int64Value.Builder getDeletionDateBuilder() {
+    public com.google.protobuf.Int64Value.Builder getModificationDateBuilder() {
 
       onChanged();
-      return getDeletionDateFieldBuilder().getBuilder();
+      return getModificationDateFieldBuilder().getBuilder();
     }
     /**
-     * <code>.google.protobuf.Int64Value deletion_date = 3;</code>
+     * <code>.google.protobuf.Int64Value modification_date = 3;</code>
      */
-    public com.google.protobuf.Int64ValueOrBuilder getDeletionDateOrBuilder() {
-      if (deletionDateBuilder_ != null) {
-        return deletionDateBuilder_.getMessageOrBuilder();
+    public com.google.protobuf.Int64ValueOrBuilder getModificationDateOrBuilder() {
+      if (modificationDateBuilder_ != null) {
+        return modificationDateBuilder_.getMessageOrBuilder();
       } else {
-        return deletionDate_ == null ?
-            com.google.protobuf.Int64Value.getDefaultInstance() : deletionDate_;
+        return modificationDate_ == null ?
+            com.google.protobuf.Int64Value.getDefaultInstance() : modificationDate_;
       }
     }
     /**
-     * <code>.google.protobuf.Int64Value deletion_date = 3;</code>
+     * <code>.google.protobuf.Int64Value modification_date = 3;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
-        getDeletionDateFieldBuilder() {
-      if (deletionDateBuilder_ == null) {
-        deletionDateBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+        getModificationDateFieldBuilder() {
+      if (modificationDateBuilder_ == null) {
+        modificationDateBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
             com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>(
-                getDeletionDate(),
+                getModificationDate(),
                 getParentForChildren(),
                 isClean());
-        deletionDate_ = null;
+        modificationDate_ = null;
       }
-      return deletionDateBuilder_;
+      return modificationDateBuilder_;
     }
 
     private com.google.protobuf.StringValue text_;

@@ -20,11 +20,11 @@ package im.turms.turms.workflow.service.impl.user.relationship;
 import com.google.protobuf.Int64Value;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
-import im.turms.server.common.constant.TurmsStatusCode;
-import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.common.model.bo.common.Int64ValuesWithVersion;
 import im.turms.common.model.bo.user.UserRelationshipsWithVersion;
 import im.turms.common.util.Validator;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.MapUtil;
 import im.turms.turms.bo.DateRange;
@@ -34,9 +34,9 @@ import im.turms.turms.constraint.ValidUserRelationshipKey;
 import im.turms.turms.util.ProtoUtil;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
 import im.turms.turms.workflow.dao.builder.UpdateBuilder;
-import im.turms.turms.workflow.dao.domain.UserRelationship;
-import im.turms.turms.workflow.dao.domain.UserRelationshipGroupMember;
-import im.turms.turms.workflow.dao.domain.UserVersion;
+import im.turms.turms.workflow.dao.domain.user.UserRelationship;
+import im.turms.turms.workflow.dao.domain.user.UserRelationshipGroupMember;
+import im.turms.turms.workflow.dao.domain.user.UserVersion;
 import im.turms.turms.workflow.service.impl.user.UserVersionService;
 import im.turms.turms.workflow.service.util.DomainConstraintUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -59,7 +59,7 @@ import java.util.stream.Collectors;
 
 import static im.turms.turms.constant.DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX;
 import static im.turms.turms.constant.DaoConstant.TRANSACTION_RETRY;
-import static im.turms.turms.workflow.dao.domain.UserRelationshipGroupMember.Fields.ID_GROUP_INDEX;
+import static im.turms.turms.workflow.dao.domain.user.UserRelationshipGroupMember.Fields.ID_GROUP_INDEX;
 
 /**
  * @author James Chen
@@ -512,7 +512,6 @@ public class UserRelationshipService {
                 .map(isBlocked -> !isBlocked);
     }
 
-    // TODO: upstream code
     public Mono<Boolean> hasRelationshipAndNotBlocked(@NotNull Long ownerId, @NotNull Long relatedUserId) {
         try {
             AssertUtil.notNull(ownerId, "ownerId");

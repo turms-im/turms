@@ -132,13 +132,8 @@ public interface QueryMessagesRequestOrBuilder extends
   com.google.protobuf.Int64ValueOrBuilder getDeliveryDateBeforeOrBuilder();
 
   /**
-   * <code>.im.turms.proto.MessageDeliveryStatus delivery_status = 8;</code>
-   * @return The enum numeric value on the wire for deliveryStatus.
+   * <code>bool with_total = 8;</code>
+   * @return The withTotal.
    */
-  int getDeliveryStatusValue();
-  /**
-   * <code>.im.turms.proto.MessageDeliveryStatus delivery_status = 8;</code>
-   * @return The deliveryStatus.
-   */
-  im.turms.common.constant.MessageDeliveryStatus getDeliveryStatus();
+  boolean getWithTotal();
 }

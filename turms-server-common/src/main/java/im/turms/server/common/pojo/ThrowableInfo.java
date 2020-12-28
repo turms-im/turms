@@ -3,9 +3,9 @@ package im.turms.server.common.pojo;
 import com.google.protobuf.Int32Value;
 import com.google.protobuf.Int64Value;
 import com.google.protobuf.StringValue;
+import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.server.common.util.CloseReasonUtil;
 import lombok.Data;
 

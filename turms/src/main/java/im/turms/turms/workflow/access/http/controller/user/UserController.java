@@ -17,9 +17,9 @@
 
 package im.turms.turms.workflow.access.http.controller.user;
 
-import im.turms.common.constant.DivideBy;
 import im.turms.server.common.dao.domain.User;
 import im.turms.turms.bo.DateRange;
+import im.turms.turms.constant.DivideBy;
 import im.turms.turms.workflow.access.http.dto.request.user.AddUserDTO;
 import im.turms.turms.workflow.access.http.dto.request.user.UpdateUserDTO;
 import im.turms.turms.workflow.access.http.dto.request.user.UserStatisticsDTO;

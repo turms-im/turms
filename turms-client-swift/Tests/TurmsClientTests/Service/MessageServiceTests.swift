@@ -37,21 +37,13 @@ class MessageServiceTests: XCTestCase {
         // Update
         TestUtil.assertCompleted("recallMessage_shouldSucceed", senderClient.messageService.recallMessage(messageId: groupMessageId!))
         TestUtil.assertCompleted("updateSentMessage_shouldSucceed", senderClient.messageService.updateSentMessage(messageId: privateMessageId!, text: "I have modified the message"))
-        TestUtil.assertCompleted("readMessage_shouldSucceed", recipientClient.messageService.readMessage(messageId: privateMessageId!))
-        TestUtil.assertCompleted("markMessageUnread_shouldSucceed", recipientClient.messageService.markMessageUnread(privateMessageId!))
-        TestUtil.assertCompleted("updateTypingStatus_shouldSucceed", senderClient.messageService.updateTypingStatusRequest(isGroupMessage: false, toId: privateMessageId!))
 
         // Query
         TestUtil.assertCompleted("queryMessages_shouldReturnNotEmptyMessages", recipientClient.messageService.queryMessages(areGroupMessages: false, fromId: MessageServiceTests.SENDER_ID, size: 10).done {
             XCTAssertFalse($0.isEmpty)
         })
-        TestUtil.assertCompleted("queryPendingMessagesWithTotal_shouldReturnNotEmptyPendingMessagesWithTotal", senderClient.messageService.queryPendingMessagesWithTotal().done {
+        TestUtil.assertCompleted("queryMessagesWithTotal_shouldReturnNotEmptyMessagesWithTotal", senderClient.messageService.queryMessagesWithTotal(areGroupMessages: false, fromId: MessageServiceTests.SENDER_ID, size: 1).done {
             XCTAssertFalse($0.isEmpty)
-        })
-        TestUtil.assertCompleted("queryMessageStatus_shouldReturnNotEmptyMessageStatus", senderClient.messageService.queryMessageStatus(groupMessageId!).then { statusesOfMember1 in
-            self.groupMemberClient.messageService.queryMessageStatus(groupMessageId!).done { statusesOfMember2 in
-                XCTAssertTrue(statusesOfMember1[0].messageID.value == statusesOfMember2[0].messageID.value)
-            }
         })
 
         // Tear down

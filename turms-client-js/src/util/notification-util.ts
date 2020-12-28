@@ -8,10 +8,12 @@ import IInt64Value = google.protobuf.IInt64Value;
 export default class NotificationUtil {
     static transform(data?: object | number | string, parentKey?: string): object | number | string | undefined {
         // Note that data can be 0 or ''
-        if (typeof data !== 'undefined' && data !== null) {
-            if (typeof parentKey === 'string' && (parentKey.endsWith('Date') || parentKey.endsWith('_date') || parentKey === 'date')
-                && typeof data === 'string') {
-                return new Date(parseInt(data));
+        if (data != null) {
+            const isDateType = typeof parentKey === 'string'
+                && (parentKey.endsWith('Date') || parentKey.endsWith('_date') || parentKey === 'date')
+                && typeof data === 'string';
+            if (isDateType) {
+                return new Date(parseInt(data as string));
             } else if (typeof data === 'object') {
                 if (data instanceof Array) {
                     data = data.map(item => this.transform(item));
@@ -79,6 +81,13 @@ export default class NotificationUtil {
 
     static transformDate(date?: IInt64Value): Date | undefined {
         return date ? new Date(parseInt(date.value)) : undefined;
+    }
+
+    static transformMapValToDate(map?: [any: number]): [any: Date] | undefined {
+        if (map) {
+            Object.keys(map).forEach(key => map[key] = new Date(parseInt(map[key])));
+        }
+        return map as any;
     }
 
     static getIdsWithVer(n: TurmsNotification): ParsedModel.IdsWithVersion | undefined {

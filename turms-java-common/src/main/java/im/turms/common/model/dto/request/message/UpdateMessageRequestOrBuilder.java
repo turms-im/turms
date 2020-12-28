@@ -31,79 +31,49 @@ public interface UpdateMessageRequestOrBuilder extends
   long getMessageId();
 
   /**
-   * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
-   * @return Whether the isSystemMessage field is set.
-   */
-  boolean hasIsSystemMessage();
-  /**
-   * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
-   * @return The isSystemMessage.
-   */
-  com.google.protobuf.BoolValue getIsSystemMessage();
-  /**
-   * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
-   */
-  com.google.protobuf.BoolValueOrBuilder getIsSystemMessageOrBuilder();
-
-  /**
-   * <code>.google.protobuf.StringValue text = 3;</code>
+   * <code>.google.protobuf.StringValue text = 2;</code>
    * @return Whether the text field is set.
    */
   boolean hasText();
   /**
-   * <code>.google.protobuf.StringValue text = 3;</code>
+   * <code>.google.protobuf.StringValue text = 2;</code>
    * @return The text.
    */
   com.google.protobuf.StringValue getText();
   /**
-   * <code>.google.protobuf.StringValue text = 3;</code>
+   * <code>.google.protobuf.StringValue text = 2;</code>
    */
   com.google.protobuf.StringValueOrBuilder getTextOrBuilder();
 
   /**
-   * <code>repeated bytes records = 4;</code>
+   * <code>repeated bytes records = 3;</code>
    * @return A list containing the records.
    */
   java.util.List<com.google.protobuf.ByteString> getRecordsList();
   /**
-   * <code>repeated bytes records = 4;</code>
+   * <code>repeated bytes records = 3;</code>
    * @return The count of records.
    */
   int getRecordsCount();
   /**
-   * <code>repeated bytes records = 4;</code>
+   * <code>repeated bytes records = 3;</code>
    * @param index The index of the element to return.
    * @return The records at the given index.
    */
   com.google.protobuf.ByteString getRecords(int index);
 
   /**
-   * <code>.google.protobuf.Int64Value recall_date = 5;</code>
+   * <code>.google.protobuf.Int64Value recall_date = 4;</code>
    * @return Whether the recallDate field is set.
    */
   boolean hasRecallDate();
   /**
-   * <code>.google.protobuf.Int64Value recall_date = 5;</code>
+   * <code>.google.protobuf.Int64Value recall_date = 4;</code>
    * @return The recallDate.
    */
   com.google.protobuf.Int64Value getRecallDate();
   /**
-   * <code>.google.protobuf.Int64Value recall_date = 5;</code>
+   * <code>.google.protobuf.Int64Value recall_date = 4;</code>
    */
   com.google.protobuf.Int64ValueOrBuilder getRecallDateOrBuilder();
-
-  /**
-   * <code>.google.protobuf.Int64Value read_date = 6;</code>
-   * @return Whether the readDate field is set.
-   */
-  boolean hasReadDate();
-  /**
-   * <code>.google.protobuf.Int64Value read_date = 6;</code>
-   * @return The readDate.
-   */
-  com.google.protobuf.Int64Value getReadDate();
-  /**
-   * <code>.google.protobuf.Int64Value read_date = 6;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getReadDateOrBuilder();
 }

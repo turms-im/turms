@@ -55,19 +55,19 @@ public interface MessageOrBuilder extends
   com.google.protobuf.Int64ValueOrBuilder getDeliveryDateOrBuilder();
 
   /**
-   * <code>.google.protobuf.Int64Value deletion_date = 3;</code>
-   * @return Whether the deletionDate field is set.
+   * <code>.google.protobuf.Int64Value modification_date = 3;</code>
+   * @return Whether the modificationDate field is set.
    */
-  boolean hasDeletionDate();
+  boolean hasModificationDate();
   /**
-   * <code>.google.protobuf.Int64Value deletion_date = 3;</code>
-   * @return The deletionDate.
+   * <code>.google.protobuf.Int64Value modification_date = 3;</code>
+   * @return The modificationDate.
    */
-  com.google.protobuf.Int64Value getDeletionDate();
+  com.google.protobuf.Int64Value getModificationDate();
   /**
-   * <code>.google.protobuf.Int64Value deletion_date = 3;</code>
+   * <code>.google.protobuf.Int64Value modification_date = 3;</code>
    */
-  com.google.protobuf.Int64ValueOrBuilder getDeletionDateOrBuilder();
+  com.google.protobuf.Int64ValueOrBuilder getModificationDateOrBuilder();
 
   /**
    * <code>.google.protobuf.StringValue text = 4;</code>

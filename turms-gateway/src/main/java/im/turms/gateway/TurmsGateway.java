@@ -25,7 +25,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * <p>
  * For users: 1. Authentication; 2. Session representation; 3. Push notifications; 4. Backpressure (TODO)
  * <p>
- * For monitoring: 1. Logging; 2. Request tracing (TODO)
+ * For monitoring: 1. Logging; 2. Request tracing
  * <p>
  * For services: 1. Service load balancing
  *

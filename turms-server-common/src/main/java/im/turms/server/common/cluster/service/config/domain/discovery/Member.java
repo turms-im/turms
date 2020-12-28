@@ -36,13 +36,14 @@ import java.util.Date;
 @Document
 @Data
 @FieldNameConstants
-@EqualsAndHashCode(of = "key")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public final class Member {
 
     public static final String ID_CLUSTER_ID = "_id.clusterId";
     public static final String ID_NODE_ID = "_id.nodeId";
 
     @Id
+    @EqualsAndHashCode.Include
     private final Key key;
 
     private final NodeVersion nodeVersion;
@@ -60,10 +61,10 @@ public final class Member {
     private final int priority;
 
     /**
-     * Don't set @Indexed here because we need to implement a custom partial TTL index,
-     * Note that the TTL index isn't the heartbeat timeout and is used to make sure
-     * that the record can be removed automatically even if turms servers crash
+     * Note that the TTL index isn't the heartbeat timeout but is only used to make sure
+     * the record can be removed automatically even if the turms server crashes
      */
+    @Indexed(partialFilter = "{" + Fields.isSeed + ":{$eq:false}}", expireAfterSeconds = 60)
     private volatile Date lastHeartbeatDate;
 
     private String memberHost;

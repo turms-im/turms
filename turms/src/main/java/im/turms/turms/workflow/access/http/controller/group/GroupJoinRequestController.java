@@ -24,7 +24,7 @@ import im.turms.turms.workflow.access.http.dto.request.group.UpdateGroupJoinRequ
 import im.turms.turms.workflow.access.http.dto.response.*;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.access.http.util.PageUtil;
-import im.turms.turms.workflow.dao.domain.GroupJoinRequest;
+import im.turms.turms.workflow.dao.domain.group.GroupJoinRequest;
 import im.turms.turms.workflow.service.impl.group.GroupJoinRequestService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

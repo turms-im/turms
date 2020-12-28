@@ -28,6 +28,9 @@ public class Validator {
     }
 
     public static boolean areAllFalsy(Object... array) {
+        if (array == null) {
+            return true;
+        }
         for (Object o : array) {
             if (o != null) {
                 if (o instanceof String) {

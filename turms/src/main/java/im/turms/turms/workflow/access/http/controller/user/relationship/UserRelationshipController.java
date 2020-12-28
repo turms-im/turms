@@ -25,7 +25,7 @@ import im.turms.turms.workflow.access.http.dto.request.user.UserRelationshipDTO;
 import im.turms.turms.workflow.access.http.dto.response.*;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.access.http.util.PageUtil;
-import im.turms.turms.workflow.dao.domain.UserRelationship;
+import im.turms.turms.workflow.dao.domain.user.UserRelationship;
 import im.turms.turms.workflow.service.impl.user.relationship.UserRelationshipGroupService;
 import im.turms.turms.workflow.service.impl.user.relationship.UserRelationshipService;
 import org.springframework.http.ResponseEntity;

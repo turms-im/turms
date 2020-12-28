@@ -20,7 +20,6 @@ package im.turms.gateway.manager;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.UserStatus;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
-import im.turms.common.model.bo.signal.Session;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.gateway.access.udp.UdpDispatcher;
 import im.turms.gateway.pojo.bo.session.UserSession;
@@ -107,11 +106,11 @@ public final class UserSessionsManager {
     public boolean pushSessionNotification(DeviceType deviceType) {
         UserSession userSession = sessionMap.get(deviceType);
         if (userSession != null) {
-            Session session = Session.newBuilder()
+            im.turms.common.model.bo.user.UserSession session = im.turms.common.model.bo.user.UserSession.newBuilder()
                     .setSessionId(Integer.toString(userSession.getId()))
                     .build();
             TurmsNotification notification = TurmsNotification.newBuilder()
-                    .setData(TurmsNotification.Data.newBuilder().setSession(session))
+                    .setData(TurmsNotification.Data.newBuilder().setUserSession(session))
                     .build();
             ByteBuf byteBuffer = ProtoUtil.getDirectByteBuffer(notification);
             userSession.tryEmitNextNotification(byteBuffer);

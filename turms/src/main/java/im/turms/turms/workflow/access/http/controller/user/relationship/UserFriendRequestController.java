@@ -24,7 +24,7 @@ import im.turms.turms.workflow.access.http.dto.request.user.UpdateFriendRequestD
 import im.turms.turms.workflow.access.http.dto.response.*;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.access.http.util.PageUtil;
-import im.turms.turms.workflow.dao.domain.UserFriendRequest;
+import im.turms.turms.workflow.dao.domain.user.UserFriendRequest;
 import im.turms.turms.workflow.service.impl.user.relationship.UserFriendRequestService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

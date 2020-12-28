@@ -21,7 +21,7 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.util.AssertUtil;
-import im.turms.turms.workflow.dao.domain.UserVersion;
+import im.turms.turms.workflow.dao.domain.user.UserVersion;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;

@@ -23,7 +23,7 @@ import im.turms.turms.workflow.access.http.dto.response.*;
 import im.turms.turms.workflow.access.http.permission.AdminPermission;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.access.http.util.PageUtil;
-import im.turms.turms.workflow.dao.domain.GroupJoinQuestion;
+import im.turms.turms.workflow.dao.domain.group.GroupJoinQuestion;
 import im.turms.turms.workflow.service.impl.group.GroupQuestionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -30,6 +30,14 @@ export default {
         fileName: {
             type: String,
             required: true
+        },
+        recordKey: {
+            type: String,
+            required: true
+        },
+        transform: {
+            type: Function,
+            required: false
         }
     },
     data() {
@@ -108,8 +116,14 @@ export default {
                         this.records = [];
                         this.total = 0;
                     } else {
-                        this.records = response.data.data.records;
-                        this.total = response.data.data.total;
+                        const data = this.transform
+                            ? this.transform(response.data.data)
+                            : response.data.data;
+                        this.records = data.records.map(record => {
+                            record.key = record[this.recordKey];
+                            return record;
+                        });
+                        this.total = data.total;
                     }
                 });
         },

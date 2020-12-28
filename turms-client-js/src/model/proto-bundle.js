@@ -95,26 +95,6 @@ $root.im = (function() {
             })();
 
             /**
-             * MessageDeliveryStatus enum.
-             * @name im.turms.proto.MessageDeliveryStatus
-             * @enum {number}
-             * @property {number} READY=0 READY value
-             * @property {number} SENDING=1 SENDING value
-             * @property {number} RECEIVED=2 RECEIVED value
-             * @property {number} RECALLING=3 RECALLING value
-             * @property {number} RECALLED=4 RECALLED value
-             */
-            proto.MessageDeliveryStatus = (function() {
-                var valuesById = {}, values = Object.create(valuesById);
-                values[valuesById[0] = "READY"] = 0;
-                values[valuesById[1] = "SENDING"] = 1;
-                values[valuesById[2] = "RECEIVED"] = 2;
-                values[valuesById[3] = "RECALLING"] = 3;
-                values[valuesById[4] = "RECALLED"] = 4;
-                return values;
-            })();
-
-            /**
              * ProfileAccessStrategy enum.
              * @name im.turms.proto.ProfileAccessStrategy
              * @enum {number}
@@ -392,6 +372,320 @@ $root.im = (function() {
                 };
 
                 return Int64Values;
+            })();
+
+            proto.Conversations = (function() {
+
+                /**
+                 * Properties of a Conversations.
+                 * @memberof im.turms.proto
+                 * @interface IConversations
+                 * @property {Array.<im.turms.proto.IPrivateConversation>|null} [privateConversations] Conversations privateConversations
+                 * @property {Array.<im.turms.proto.IGroupConversation>|null} [groupConversations] Conversations groupConversations
+                 */
+
+                /**
+                 * Constructs a new Conversations.
+                 * @memberof im.turms.proto
+                 * @classdesc Represents a Conversations.
+                 * @implements IConversations
+                 * @constructor
+                 * @param {im.turms.proto.IConversations=} [properties] Properties to set
+                 */
+                function Conversations(properties) {
+                    this.privateConversations = [];
+                    this.groupConversations = [];
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * Conversations privateConversations.
+                 * @member {Array.<im.turms.proto.IPrivateConversation>} privateConversations
+                 * @memberof im.turms.proto.Conversations
+                 * @instance
+                 */
+                Conversations.prototype.privateConversations = $util.emptyArray;
+
+                /**
+                 * Conversations groupConversations.
+                 * @member {Array.<im.turms.proto.IGroupConversation>} groupConversations
+                 * @memberof im.turms.proto.Conversations
+                 * @instance
+                 */
+                Conversations.prototype.groupConversations = $util.emptyArray;
+
+                /**
+                 * Encodes the specified Conversations message. Does not implicitly {@link im.turms.proto.Conversations.verify|verify} messages.
+                 * @function encode
+                 * @memberof im.turms.proto.Conversations
+                 * @static
+                 * @param {im.turms.proto.IConversations} message Conversations message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                Conversations.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.privateConversations != null && message.privateConversations.length)
+                        for (var i = 0; i < message.privateConversations.length; ++i)
+                            $root.im.turms.proto.PrivateConversation.encode(message.privateConversations[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                    if (message.groupConversations != null && message.groupConversations.length)
+                        for (var i = 0; i < message.groupConversations.length; ++i)
+                            $root.im.turms.proto.GroupConversation.encode(message.groupConversations[i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                    return writer;
+                };
+
+                /**
+                 * Decodes a Conversations message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof im.turms.proto.Conversations
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {im.turms.proto.Conversations} Conversations
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                Conversations.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.Conversations();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        case 1:
+                            if (!(message.privateConversations && message.privateConversations.length))
+                                message.privateConversations = [];
+                            message.privateConversations.push($root.im.turms.proto.PrivateConversation.decode(reader, reader.uint32()));
+                            break;
+                        case 2:
+                            if (!(message.groupConversations && message.groupConversations.length))
+                                message.groupConversations = [];
+                            message.groupConversations.push($root.im.turms.proto.GroupConversation.decode(reader, reader.uint32()));
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+
+                return Conversations;
+            })();
+
+            proto.GroupConversation = (function() {
+
+                /**
+                 * Properties of a GroupConversation.
+                 * @memberof im.turms.proto
+                 * @interface IGroupConversation
+                 * @property {string|null} [groupId] GroupConversation groupId
+                 * @property {Object.<string,string>|null} [memberIdAndReadDate] GroupConversation memberIdAndReadDate
+                 */
+
+                /**
+                 * Constructs a new GroupConversation.
+                 * @memberof im.turms.proto
+                 * @classdesc Represents a GroupConversation.
+                 * @implements IGroupConversation
+                 * @constructor
+                 * @param {im.turms.proto.IGroupConversation=} [properties] Properties to set
+                 */
+                function GroupConversation(properties) {
+                    this.memberIdAndReadDate = {};
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * GroupConversation groupId.
+                 * @member {string} groupId
+                 * @memberof im.turms.proto.GroupConversation
+                 * @instance
+                 */
+                GroupConversation.prototype.groupId = "0";
+
+                /**
+                 * GroupConversation memberIdAndReadDate.
+                 * @member {Object.<string,string>} memberIdAndReadDate
+                 * @memberof im.turms.proto.GroupConversation
+                 * @instance
+                 */
+                GroupConversation.prototype.memberIdAndReadDate = $util.emptyObject;
+
+                /**
+                 * Encodes the specified GroupConversation message. Does not implicitly {@link im.turms.proto.GroupConversation.verify|verify} messages.
+                 * @function encode
+                 * @memberof im.turms.proto.GroupConversation
+                 * @static
+                 * @param {im.turms.proto.IGroupConversation} message GroupConversation message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                GroupConversation.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
+                        writer.uint32(/* id 1, wireType 0 =*/8).int64(message.groupId);
+                    if (message.memberIdAndReadDate != null && Object.hasOwnProperty.call(message, "memberIdAndReadDate"))
+                        for (var keys = Object.keys(message.memberIdAndReadDate), i = 0; i < keys.length; ++i)
+                            writer.uint32(/* id 2, wireType 2 =*/18).fork().uint32(/* id 1, wireType 0 =*/8).int64(keys[i]).uint32(/* id 2, wireType 0 =*/16).int64(message.memberIdAndReadDate[keys[i]]).ldelim();
+                    return writer;
+                };
+
+                /**
+                 * Decodes a GroupConversation message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof im.turms.proto.GroupConversation
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {im.turms.proto.GroupConversation} GroupConversation
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                GroupConversation.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.GroupConversation(), key;
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        case 1:
+                            message.groupId = reader.int64().toString();
+                            break;
+                        case 2:
+                            reader.skip().pos++;
+                            if (message.memberIdAndReadDate === $util.emptyObject)
+                                message.memberIdAndReadDate = {};
+                            key = reader.int64().toString();
+                            reader.pos++;
+                            message.memberIdAndReadDate[typeof key === "object" ? $util.longToHash(key) : key] = reader.int64().toString();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+
+                return GroupConversation;
+            })();
+
+            proto.PrivateConversation = (function() {
+
+                /**
+                 * Properties of a PrivateConversation.
+                 * @memberof im.turms.proto
+                 * @interface IPrivateConversation
+                 * @property {string|null} [ownerId] PrivateConversation ownerId
+                 * @property {string|null} [targetId] PrivateConversation targetId
+                 * @property {string|null} [readDate] PrivateConversation readDate
+                 */
+
+                /**
+                 * Constructs a new PrivateConversation.
+                 * @memberof im.turms.proto
+                 * @classdesc Represents a PrivateConversation.
+                 * @implements IPrivateConversation
+                 * @constructor
+                 * @param {im.turms.proto.IPrivateConversation=} [properties] Properties to set
+                 */
+                function PrivateConversation(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * PrivateConversation ownerId.
+                 * @member {string} ownerId
+                 * @memberof im.turms.proto.PrivateConversation
+                 * @instance
+                 */
+                PrivateConversation.prototype.ownerId = "0";
+
+                /**
+                 * PrivateConversation targetId.
+                 * @member {string} targetId
+                 * @memberof im.turms.proto.PrivateConversation
+                 * @instance
+                 */
+                PrivateConversation.prototype.targetId = "0";
+
+                /**
+                 * PrivateConversation readDate.
+                 * @member {string} readDate
+                 * @memberof im.turms.proto.PrivateConversation
+                 * @instance
+                 */
+                PrivateConversation.prototype.readDate = "0";
+
+                /**
+                 * Encodes the specified PrivateConversation message. Does not implicitly {@link im.turms.proto.PrivateConversation.verify|verify} messages.
+                 * @function encode
+                 * @memberof im.turms.proto.PrivateConversation
+                 * @static
+                 * @param {im.turms.proto.IPrivateConversation} message PrivateConversation message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                PrivateConversation.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.ownerId != null && Object.hasOwnProperty.call(message, "ownerId"))
+                        writer.uint32(/* id 1, wireType 0 =*/8).int64(message.ownerId);
+                    if (message.targetId != null && Object.hasOwnProperty.call(message, "targetId"))
+                        writer.uint32(/* id 2, wireType 0 =*/16).int64(message.targetId);
+                    if (message.readDate != null && Object.hasOwnProperty.call(message, "readDate"))
+                        writer.uint32(/* id 3, wireType 0 =*/24).int64(message.readDate);
+                    return writer;
+                };
+
+                /**
+                 * Decodes a PrivateConversation message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof im.turms.proto.PrivateConversation
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {im.turms.proto.PrivateConversation} PrivateConversation
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                PrivateConversation.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.PrivateConversation();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        case 1:
+                            message.ownerId = reader.int64().toString();
+                            break;
+                        case 2:
+                            message.targetId = reader.int64().toString();
+                            break;
+                        case 3:
+                            message.readDate = reader.int64().toString();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+
+                return PrivateConversation;
             })();
 
             proto.AudioFile = (function() {
@@ -2473,7 +2767,6 @@ $root.im = (function() {
                  * @property {google.protobuf.IStringValue|null} [intro] Group intro
                  * @property {google.protobuf.IStringValue|null} [announcement] Group announcement
                  * @property {google.protobuf.IInt64Value|null} [creationDate] Group creationDate
-                 * @property {google.protobuf.IInt64Value|null} [deletionDate] Group deletionDate
                  * @property {google.protobuf.IInt64Value|null} [muteEndDate] Group muteEndDate
                  * @property {google.protobuf.IBoolValue|null} [active] Group active
                  */
@@ -2558,14 +2851,6 @@ $root.im = (function() {
                 Group.prototype.creationDate = null;
 
                 /**
-                 * Group deletionDate.
-                 * @member {google.protobuf.IInt64Value|null|undefined} deletionDate
-                 * @memberof im.turms.proto.Group
-                 * @instance
-                 */
-                Group.prototype.deletionDate = null;
-
-                /**
                  * Group muteEndDate.
                  * @member {google.protobuf.IInt64Value|null|undefined} muteEndDate
                  * @memberof im.turms.proto.Group
@@ -2609,12 +2894,10 @@ $root.im = (function() {
                         $root.google.protobuf.StringValue.encode(message.announcement, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
                     if (message.creationDate != null && Object.hasOwnProperty.call(message, "creationDate"))
                         $root.google.protobuf.Int64Value.encode(message.creationDate, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
-                    if (message.deletionDate != null && Object.hasOwnProperty.call(message, "deletionDate"))
-                        $root.google.protobuf.Int64Value.encode(message.deletionDate, writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
                     if (message.muteEndDate != null && Object.hasOwnProperty.call(message, "muteEndDate"))
-                        $root.google.protobuf.Int64Value.encode(message.muteEndDate, writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
+                        $root.google.protobuf.Int64Value.encode(message.muteEndDate, writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
                     if (message.active != null && Object.hasOwnProperty.call(message, "active"))
-                        $root.google.protobuf.BoolValue.encode(message.active, writer.uint32(/* id 11, wireType 2 =*/90).fork()).ldelim();
+                        $root.google.protobuf.BoolValue.encode(message.active, writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
                     return writer;
                 };
 
@@ -2661,12 +2944,9 @@ $root.im = (function() {
                             message.creationDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
                             break;
                         case 9:
-                            message.deletionDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
-                            break;
-                        case 10:
                             message.muteEndDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
                             break;
-                        case 11:
+                        case 10:
                             message.active = $root.google.protobuf.BoolValue.decode(reader, reader.uint32());
                             break;
                         default:
@@ -2779,242 +3059,6 @@ $root.im = (function() {
                 return GroupsWithVersion;
             })();
 
-            proto.MessageStatus = (function() {
-
-                /**
-                 * Properties of a MessageStatus.
-                 * @memberof im.turms.proto
-                 * @interface IMessageStatus
-                 * @property {google.protobuf.IInt64Value|null} [messageId] MessageStatus messageId
-                 * @property {google.protobuf.IInt64Value|null} [toUserId] MessageStatus toUserId
-                 * @property {im.turms.proto.MessageDeliveryStatus|null} [deliveryStatus] MessageStatus deliveryStatus
-                 * @property {google.protobuf.IInt64Value|null} [receptionDate] MessageStatus receptionDate
-                 * @property {google.protobuf.IInt64Value|null} [readDate] MessageStatus readDate
-                 * @property {google.protobuf.IInt64Value|null} [recallDate] MessageStatus recallDate
-                 */
-
-                /**
-                 * Constructs a new MessageStatus.
-                 * @memberof im.turms.proto
-                 * @classdesc Represents a MessageStatus.
-                 * @implements IMessageStatus
-                 * @constructor
-                 * @param {im.turms.proto.IMessageStatus=} [properties] Properties to set
-                 */
-                function MessageStatus(properties) {
-                    if (properties)
-                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                            if (properties[keys[i]] != null)
-                                this[keys[i]] = properties[keys[i]];
-                }
-
-                /**
-                 * MessageStatus messageId.
-                 * @member {google.protobuf.IInt64Value|null|undefined} messageId
-                 * @memberof im.turms.proto.MessageStatus
-                 * @instance
-                 */
-                MessageStatus.prototype.messageId = null;
-
-                /**
-                 * MessageStatus toUserId.
-                 * @member {google.protobuf.IInt64Value|null|undefined} toUserId
-                 * @memberof im.turms.proto.MessageStatus
-                 * @instance
-                 */
-                MessageStatus.prototype.toUserId = null;
-
-                /**
-                 * MessageStatus deliveryStatus.
-                 * @member {im.turms.proto.MessageDeliveryStatus} deliveryStatus
-                 * @memberof im.turms.proto.MessageStatus
-                 * @instance
-                 */
-                MessageStatus.prototype.deliveryStatus = 0;
-
-                /**
-                 * MessageStatus receptionDate.
-                 * @member {google.protobuf.IInt64Value|null|undefined} receptionDate
-                 * @memberof im.turms.proto.MessageStatus
-                 * @instance
-                 */
-                MessageStatus.prototype.receptionDate = null;
-
-                /**
-                 * MessageStatus readDate.
-                 * @member {google.protobuf.IInt64Value|null|undefined} readDate
-                 * @memberof im.turms.proto.MessageStatus
-                 * @instance
-                 */
-                MessageStatus.prototype.readDate = null;
-
-                /**
-                 * MessageStatus recallDate.
-                 * @member {google.protobuf.IInt64Value|null|undefined} recallDate
-                 * @memberof im.turms.proto.MessageStatus
-                 * @instance
-                 */
-                MessageStatus.prototype.recallDate = null;
-
-                /**
-                 * Encodes the specified MessageStatus message. Does not implicitly {@link im.turms.proto.MessageStatus.verify|verify} messages.
-                 * @function encode
-                 * @memberof im.turms.proto.MessageStatus
-                 * @static
-                 * @param {im.turms.proto.IMessageStatus} message MessageStatus message or plain object to encode
-                 * @param {$protobuf.Writer} [writer] Writer to encode to
-                 * @returns {$protobuf.Writer} Writer
-                 */
-                MessageStatus.encode = function encode(message, writer) {
-                    if (!writer)
-                        writer = $Writer.create();
-                    if (message.messageId != null && Object.hasOwnProperty.call(message, "messageId"))
-                        $root.google.protobuf.Int64Value.encode(message.messageId, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.toUserId != null && Object.hasOwnProperty.call(message, "toUserId"))
-                        $root.google.protobuf.Int64Value.encode(message.toUserId, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    if (message.deliveryStatus != null && Object.hasOwnProperty.call(message, "deliveryStatus"))
-                        writer.uint32(/* id 3, wireType 0 =*/24).int32(message.deliveryStatus);
-                    if (message.receptionDate != null && Object.hasOwnProperty.call(message, "receptionDate"))
-                        $root.google.protobuf.Int64Value.encode(message.receptionDate, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-                    if (message.readDate != null && Object.hasOwnProperty.call(message, "readDate"))
-                        $root.google.protobuf.Int64Value.encode(message.readDate, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
-                    if (message.recallDate != null && Object.hasOwnProperty.call(message, "recallDate"))
-                        $root.google.protobuf.Int64Value.encode(message.recallDate, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
-                    return writer;
-                };
-
-                /**
-                 * Decodes a MessageStatus message from the specified reader or buffer.
-                 * @function decode
-                 * @memberof im.turms.proto.MessageStatus
-                 * @static
-                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @param {number} [length] Message length if known beforehand
-                 * @returns {im.turms.proto.MessageStatus} MessageStatus
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                MessageStatus.decode = function decode(reader, length) {
-                    if (!(reader instanceof $Reader))
-                        reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.MessageStatus();
-                    while (reader.pos < end) {
-                        var tag = reader.uint32();
-                        switch (tag >>> 3) {
-                        case 1:
-                            message.messageId = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
-                            break;
-                        case 2:
-                            message.toUserId = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
-                            break;
-                        case 3:
-                            message.deliveryStatus = reader.int32();
-                            break;
-                        case 4:
-                            message.receptionDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
-                            break;
-                        case 5:
-                            message.readDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
-                            break;
-                        case 6:
-                            message.recallDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
-                        }
-                    }
-                    return message;
-                };
-
-                return MessageStatus;
-            })();
-
-            proto.MessageStatuses = (function() {
-
-                /**
-                 * Properties of a MessageStatuses.
-                 * @memberof im.turms.proto
-                 * @interface IMessageStatuses
-                 * @property {Array.<im.turms.proto.IMessageStatus>|null} [messageStatuses] MessageStatuses messageStatuses
-                 */
-
-                /**
-                 * Constructs a new MessageStatuses.
-                 * @memberof im.turms.proto
-                 * @classdesc Represents a MessageStatuses.
-                 * @implements IMessageStatuses
-                 * @constructor
-                 * @param {im.turms.proto.IMessageStatuses=} [properties] Properties to set
-                 */
-                function MessageStatuses(properties) {
-                    this.messageStatuses = [];
-                    if (properties)
-                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                            if (properties[keys[i]] != null)
-                                this[keys[i]] = properties[keys[i]];
-                }
-
-                /**
-                 * MessageStatuses messageStatuses.
-                 * @member {Array.<im.turms.proto.IMessageStatus>} messageStatuses
-                 * @memberof im.turms.proto.MessageStatuses
-                 * @instance
-                 */
-                MessageStatuses.prototype.messageStatuses = $util.emptyArray;
-
-                /**
-                 * Encodes the specified MessageStatuses message. Does not implicitly {@link im.turms.proto.MessageStatuses.verify|verify} messages.
-                 * @function encode
-                 * @memberof im.turms.proto.MessageStatuses
-                 * @static
-                 * @param {im.turms.proto.IMessageStatuses} message MessageStatuses message or plain object to encode
-                 * @param {$protobuf.Writer} [writer] Writer to encode to
-                 * @returns {$protobuf.Writer} Writer
-                 */
-                MessageStatuses.encode = function encode(message, writer) {
-                    if (!writer)
-                        writer = $Writer.create();
-                    if (message.messageStatuses != null && message.messageStatuses.length)
-                        for (var i = 0; i < message.messageStatuses.length; ++i)
-                            $root.im.turms.proto.MessageStatus.encode(message.messageStatuses[i], writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    return writer;
-                };
-
-                /**
-                 * Decodes a MessageStatuses message from the specified reader or buffer.
-                 * @function decode
-                 * @memberof im.turms.proto.MessageStatuses
-                 * @static
-                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @param {number} [length] Message length if known beforehand
-                 * @returns {im.turms.proto.MessageStatuses} MessageStatuses
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                MessageStatuses.decode = function decode(reader, length) {
-                    if (!(reader instanceof $Reader))
-                        reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.MessageStatuses();
-                    while (reader.pos < end) {
-                        var tag = reader.uint32();
-                        switch (tag >>> 3) {
-                        case 1:
-                            if (!(message.messageStatuses && message.messageStatuses.length))
-                                message.messageStatuses = [];
-                            message.messageStatuses.push($root.im.turms.proto.MessageStatus.decode(reader, reader.uint32()));
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
-                        }
-                    }
-                    return message;
-                };
-
-                return MessageStatuses;
-            })();
-
             proto.Message = (function() {
 
                 /**
@@ -3023,7 +3067,7 @@ $root.im = (function() {
                  * @interface IMessage
                  * @property {google.protobuf.IInt64Value|null} [id] Message id
                  * @property {google.protobuf.IInt64Value|null} [deliveryDate] Message deliveryDate
-                 * @property {google.protobuf.IInt64Value|null} [deletionDate] Message deletionDate
+                 * @property {google.protobuf.IInt64Value|null} [modificationDate] Message modificationDate
                  * @property {google.protobuf.IStringValue|null} [text] Message text
                  * @property {google.protobuf.IInt64Value|null} [senderId] Message senderId
                  * @property {google.protobuf.IInt64Value|null} [groupId] Message groupId
@@ -3065,12 +3109,12 @@ $root.im = (function() {
                 Message.prototype.deliveryDate = null;
 
                 /**
-                 * Message deletionDate.
-                 * @member {google.protobuf.IInt64Value|null|undefined} deletionDate
+                 * Message modificationDate.
+                 * @member {google.protobuf.IInt64Value|null|undefined} modificationDate
                  * @memberof im.turms.proto.Message
                  * @instance
                  */
-                Message.prototype.deletionDate = null;
+                Message.prototype.modificationDate = null;
 
                 /**
                  * Message text.
@@ -3136,8 +3180,8 @@ $root.im = (function() {
                         $root.google.protobuf.Int64Value.encode(message.id, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
                     if (message.deliveryDate != null && Object.hasOwnProperty.call(message, "deliveryDate"))
                         $root.google.protobuf.Int64Value.encode(message.deliveryDate, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    if (message.deletionDate != null && Object.hasOwnProperty.call(message, "deletionDate"))
-                        $root.google.protobuf.Int64Value.encode(message.deletionDate, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                    if (message.modificationDate != null && Object.hasOwnProperty.call(message, "modificationDate"))
+                        $root.google.protobuf.Int64Value.encode(message.modificationDate, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                     if (message.text != null && Object.hasOwnProperty.call(message, "text"))
                         $root.google.protobuf.StringValue.encode(message.text, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
                     if (message.senderId != null && Object.hasOwnProperty.call(message, "senderId"))
@@ -3179,7 +3223,7 @@ $root.im = (function() {
                             message.deliveryDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
                             break;
                         case 3:
-                            message.deletionDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
+                            message.modificationDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
                             break;
                         case 4:
                             message.text = $root.google.protobuf.StringValue.decode(reader, reader.uint32());
@@ -3509,182 +3553,6 @@ $root.im = (function() {
                 return Messages;
             })();
 
-            proto.Acknowledge = (function() {
-
-                /**
-                 * Properties of an Acknowledge.
-                 * @memberof im.turms.proto
-                 * @interface IAcknowledge
-                 * @property {string|null} [deliveryDate] Acknowledge deliveryDate
-                 * @property {google.protobuf.IInt64Value|null} [messageId] Acknowledge messageId
-                 */
-
-                /**
-                 * Constructs a new Acknowledge.
-                 * @memberof im.turms.proto
-                 * @classdesc Represents an Acknowledge.
-                 * @implements IAcknowledge
-                 * @constructor
-                 * @param {im.turms.proto.IAcknowledge=} [properties] Properties to set
-                 */
-                function Acknowledge(properties) {
-                    if (properties)
-                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                            if (properties[keys[i]] != null)
-                                this[keys[i]] = properties[keys[i]];
-                }
-
-                /**
-                 * Acknowledge deliveryDate.
-                 * @member {string} deliveryDate
-                 * @memberof im.turms.proto.Acknowledge
-                 * @instance
-                 */
-                Acknowledge.prototype.deliveryDate = "0";
-
-                /**
-                 * Acknowledge messageId.
-                 * @member {google.protobuf.IInt64Value|null|undefined} messageId
-                 * @memberof im.turms.proto.Acknowledge
-                 * @instance
-                 */
-                Acknowledge.prototype.messageId = null;
-
-                /**
-                 * Encodes the specified Acknowledge message. Does not implicitly {@link im.turms.proto.Acknowledge.verify|verify} messages.
-                 * @function encode
-                 * @memberof im.turms.proto.Acknowledge
-                 * @static
-                 * @param {im.turms.proto.IAcknowledge} message Acknowledge message or plain object to encode
-                 * @param {$protobuf.Writer} [writer] Writer to encode to
-                 * @returns {$protobuf.Writer} Writer
-                 */
-                Acknowledge.encode = function encode(message, writer) {
-                    if (!writer)
-                        writer = $Writer.create();
-                    if (message.deliveryDate != null && Object.hasOwnProperty.call(message, "deliveryDate"))
-                        writer.uint32(/* id 1, wireType 0 =*/8).int64(message.deliveryDate);
-                    if (message.messageId != null && Object.hasOwnProperty.call(message, "messageId"))
-                        $root.google.protobuf.Int64Value.encode(message.messageId, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    return writer;
-                };
-
-                /**
-                 * Decodes an Acknowledge message from the specified reader or buffer.
-                 * @function decode
-                 * @memberof im.turms.proto.Acknowledge
-                 * @static
-                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @param {number} [length] Message length if known beforehand
-                 * @returns {im.turms.proto.Acknowledge} Acknowledge
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                Acknowledge.decode = function decode(reader, length) {
-                    if (!(reader instanceof $Reader))
-                        reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.Acknowledge();
-                    while (reader.pos < end) {
-                        var tag = reader.uint32();
-                        switch (tag >>> 3) {
-                        case 1:
-                            message.deliveryDate = reader.int64().toString();
-                            break;
-                        case 2:
-                            message.messageId = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
-                        }
-                    }
-                    return message;
-                };
-
-                return Acknowledge;
-            })();
-
-            proto.Session = (function() {
-
-                /**
-                 * Properties of a Session.
-                 * @memberof im.turms.proto
-                 * @interface ISession
-                 * @property {string|null} [sessionId] Session sessionId
-                 */
-
-                /**
-                 * Constructs a new Session.
-                 * @memberof im.turms.proto
-                 * @classdesc Represents a Session.
-                 * @implements ISession
-                 * @constructor
-                 * @param {im.turms.proto.ISession=} [properties] Properties to set
-                 */
-                function Session(properties) {
-                    if (properties)
-                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                            if (properties[keys[i]] != null)
-                                this[keys[i]] = properties[keys[i]];
-                }
-
-                /**
-                 * Session sessionId.
-                 * @member {string} sessionId
-                 * @memberof im.turms.proto.Session
-                 * @instance
-                 */
-                Session.prototype.sessionId = "";
-
-                /**
-                 * Encodes the specified Session message. Does not implicitly {@link im.turms.proto.Session.verify|verify} messages.
-                 * @function encode
-                 * @memberof im.turms.proto.Session
-                 * @static
-                 * @param {im.turms.proto.ISession} message Session message or plain object to encode
-                 * @param {$protobuf.Writer} [writer] Writer to encode to
-                 * @returns {$protobuf.Writer} Writer
-                 */
-                Session.encode = function encode(message, writer) {
-                    if (!writer)
-                        writer = $Writer.create();
-                    if (message.sessionId != null && Object.hasOwnProperty.call(message, "sessionId"))
-                        writer.uint32(/* id 1, wireType 2 =*/10).string(message.sessionId);
-                    return writer;
-                };
-
-                /**
-                 * Decodes a Session message from the specified reader or buffer.
-                 * @function decode
-                 * @memberof im.turms.proto.Session
-                 * @static
-                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @param {number} [length] Message length if known beforehand
-                 * @returns {im.turms.proto.Session} Session
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                Session.decode = function decode(reader, length) {
-                    if (!(reader instanceof $Reader))
-                        reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.Session();
-                    while (reader.pos < end) {
-                        var tag = reader.uint32();
-                        switch (tag >>> 3) {
-                        case 1:
-                            message.sessionId = reader.string();
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
-                        }
-                    }
-                    return message;
-                };
-
-                return Session;
-            })();
-
             proto.UserFriendRequest = (function() {
 
                 /**
@@ -3973,7 +3841,6 @@ $root.im = (function() {
                  * @property {google.protobuf.IStringValue|null} [name] UserInfo name
                  * @property {google.protobuf.IStringValue|null} [intro] UserInfo intro
                  * @property {google.protobuf.IInt64Value|null} [registrationDate] UserInfo registrationDate
-                 * @property {google.protobuf.IInt64Value|null} [deletionDate] UserInfo deletionDate
                  * @property {google.protobuf.IBoolValue|null} [active] UserInfo active
                  * @property {im.turms.proto.ProfileAccessStrategy|null} [profileAccessStrategy] UserInfo profileAccessStrategy
                  */
@@ -4026,14 +3893,6 @@ $root.im = (function() {
                 UserInfo.prototype.registrationDate = null;
 
                 /**
-                 * UserInfo deletionDate.
-                 * @member {google.protobuf.IInt64Value|null|undefined} deletionDate
-                 * @memberof im.turms.proto.UserInfo
-                 * @instance
-                 */
-                UserInfo.prototype.deletionDate = null;
-
-                /**
                  * UserInfo active.
                  * @member {google.protobuf.IBoolValue|null|undefined} active
                  * @memberof im.turms.proto.UserInfo
@@ -4069,12 +3928,10 @@ $root.im = (function() {
                         $root.google.protobuf.StringValue.encode(message.intro, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                     if (message.registrationDate != null && Object.hasOwnProperty.call(message, "registrationDate"))
                         $root.google.protobuf.Int64Value.encode(message.registrationDate, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-                    if (message.deletionDate != null && Object.hasOwnProperty.call(message, "deletionDate"))
-                        $root.google.protobuf.Int64Value.encode(message.deletionDate, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
                     if (message.active != null && Object.hasOwnProperty.call(message, "active"))
-                        $root.google.protobuf.BoolValue.encode(message.active, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
+                        $root.google.protobuf.BoolValue.encode(message.active, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
                     if (message.profileAccessStrategy != null && Object.hasOwnProperty.call(message, "profileAccessStrategy"))
-                        writer.uint32(/* id 7, wireType 0 =*/56).int32(message.profileAccessStrategy);
+                        writer.uint32(/* id 6, wireType 0 =*/48).int32(message.profileAccessStrategy);
                     return writer;
                 };
 
@@ -4109,12 +3966,9 @@ $root.im = (function() {
                             message.registrationDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
                             break;
                         case 5:
-                            message.deletionDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
-                            break;
-                        case 6:
                             message.active = $root.google.protobuf.BoolValue.decode(reader, reader.uint32());
                             break;
-                        case 7:
+                        case 6:
                             message.profileAccessStrategy = reader.int32();
                             break;
                         default:
@@ -4875,6 +4729,87 @@ $root.im = (function() {
                 return UserSessionIds;
             })();
 
+            proto.UserSession = (function() {
+
+                /**
+                 * Properties of a UserSession.
+                 * @memberof im.turms.proto
+                 * @interface IUserSession
+                 * @property {string|null} [sessionId] UserSession sessionId
+                 */
+
+                /**
+                 * Constructs a new UserSession.
+                 * @memberof im.turms.proto
+                 * @classdesc Represents a UserSession.
+                 * @implements IUserSession
+                 * @constructor
+                 * @param {im.turms.proto.IUserSession=} [properties] Properties to set
+                 */
+                function UserSession(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * UserSession sessionId.
+                 * @member {string} sessionId
+                 * @memberof im.turms.proto.UserSession
+                 * @instance
+                 */
+                UserSession.prototype.sessionId = "";
+
+                /**
+                 * Encodes the specified UserSession message. Does not implicitly {@link im.turms.proto.UserSession.verify|verify} messages.
+                 * @function encode
+                 * @memberof im.turms.proto.UserSession
+                 * @static
+                 * @param {im.turms.proto.IUserSession} message UserSession message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                UserSession.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.sessionId != null && Object.hasOwnProperty.call(message, "sessionId"))
+                        writer.uint32(/* id 1, wireType 2 =*/10).string(message.sessionId);
+                    return writer;
+                };
+
+                /**
+                 * Decodes a UserSession message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof im.turms.proto.UserSession
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {im.turms.proto.UserSession} UserSession
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                UserSession.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.UserSession();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        case 1:
+                            message.sessionId = reader.string();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+
+                return UserSession;
+            })();
+
             proto.UserStatusDetail = (function() {
 
                 /**
@@ -5351,11 +5286,10 @@ $root.im = (function() {
                      * @property {im.turms.proto.IInt64Values|null} [ids] Data ids
                      * @property {im.turms.proto.IInt64ValuesWithVersion|null} [idsWithVersion] Data idsWithVersion
                      * @property {google.protobuf.IStringValue|null} [url] Data url
-                     * @property {im.turms.proto.IAcknowledge|null} [acknowledge] Data acknowledge
-                     * @property {im.turms.proto.ISession|null} [session] Data session
+                     * @property {im.turms.proto.IConversations|null} [conversations] Data conversations
                      * @property {im.turms.proto.IMessages|null} [messages] Data messages
-                     * @property {im.turms.proto.IMessageStatuses|null} [messageStatuses] Data messageStatuses
                      * @property {im.turms.proto.IMessagesWithTotalList|null} [messagesWithTotalList] Data messagesWithTotalList
+                     * @property {im.turms.proto.IUserSession|null} [userSession] Data userSession
                      * @property {im.turms.proto.IUsersInfosWithVersion|null} [usersInfosWithVersion] Data usersInfosWithVersion
                      * @property {im.turms.proto.IUsersOnlineStatuses|null} [usersOnlineStatuses] Data usersOnlineStatuses
                      * @property {im.turms.proto.IUserFriendRequestsWithVersion|null} [userFriendRequestsWithVersion] Data userFriendRequestsWithVersion
@@ -5410,20 +5344,12 @@ $root.im = (function() {
                     Data.prototype.url = null;
 
                     /**
-                     * Data acknowledge.
-                     * @member {im.turms.proto.IAcknowledge|null|undefined} acknowledge
+                     * Data conversations.
+                     * @member {im.turms.proto.IConversations|null|undefined} conversations
                      * @memberof im.turms.proto.TurmsNotification.Data
                      * @instance
                      */
-                    Data.prototype.acknowledge = null;
-
-                    /**
-                     * Data session.
-                     * @member {im.turms.proto.ISession|null|undefined} session
-                     * @memberof im.turms.proto.TurmsNotification.Data
-                     * @instance
-                     */
-                    Data.prototype.session = null;
+                    Data.prototype.conversations = null;
 
                     /**
                      * Data messages.
@@ -5434,20 +5360,20 @@ $root.im = (function() {
                     Data.prototype.messages = null;
 
                     /**
-                     * Data messageStatuses.
-                     * @member {im.turms.proto.IMessageStatuses|null|undefined} messageStatuses
-                     * @memberof im.turms.proto.TurmsNotification.Data
-                     * @instance
-                     */
-                    Data.prototype.messageStatuses = null;
-
-                    /**
                      * Data messagesWithTotalList.
                      * @member {im.turms.proto.IMessagesWithTotalList|null|undefined} messagesWithTotalList
                      * @memberof im.turms.proto.TurmsNotification.Data
                      * @instance
                      */
                     Data.prototype.messagesWithTotalList = null;
+
+                    /**
+                     * Data userSession.
+                     * @member {im.turms.proto.IUserSession|null|undefined} userSession
+                     * @memberof im.turms.proto.TurmsNotification.Data
+                     * @instance
+                     */
+                    Data.prototype.userSession = null;
 
                     /**
                      * Data usersInfosWithVersion.
@@ -5550,12 +5476,12 @@ $root.im = (function() {
 
                     /**
                      * Data kind.
-                     * @member {"ids"|"idsWithVersion"|"url"|"acknowledge"|"session"|"messages"|"messageStatuses"|"messagesWithTotalList"|"usersInfosWithVersion"|"usersOnlineStatuses"|"userFriendRequestsWithVersion"|"userRelationshipGroupsWithVersion"|"userRelationshipsWithVersion"|"userSessionIds"|"groupInvitationsWithVersion"|"groupJoinQuestionAnswerResult"|"groupJoinRequestsWithVersion"|"groupJoinQuestionsWithVersion"|"groupMembersWithVersion"|"groupsWithVersion"|undefined} kind
+                     * @member {"ids"|"idsWithVersion"|"url"|"conversations"|"messages"|"messagesWithTotalList"|"userSession"|"usersInfosWithVersion"|"usersOnlineStatuses"|"userFriendRequestsWithVersion"|"userRelationshipGroupsWithVersion"|"userRelationshipsWithVersion"|"userSessionIds"|"groupInvitationsWithVersion"|"groupJoinQuestionAnswerResult"|"groupJoinRequestsWithVersion"|"groupJoinQuestionsWithVersion"|"groupMembersWithVersion"|"groupsWithVersion"|undefined} kind
                      * @memberof im.turms.proto.TurmsNotification.Data
                      * @instance
                      */
                     Object.defineProperty(Data.prototype, "kind", {
-                        get: $util.oneOfGetter($oneOfFields = ["ids", "idsWithVersion", "url", "acknowledge", "session", "messages", "messageStatuses", "messagesWithTotalList", "usersInfosWithVersion", "usersOnlineStatuses", "userFriendRequestsWithVersion", "userRelationshipGroupsWithVersion", "userRelationshipsWithVersion", "userSessionIds", "groupInvitationsWithVersion", "groupJoinQuestionAnswerResult", "groupJoinRequestsWithVersion", "groupJoinQuestionsWithVersion", "groupMembersWithVersion", "groupsWithVersion"]),
+                        get: $util.oneOfGetter($oneOfFields = ["ids", "idsWithVersion", "url", "conversations", "messages", "messagesWithTotalList", "userSession", "usersInfosWithVersion", "usersOnlineStatuses", "userFriendRequestsWithVersion", "userRelationshipGroupsWithVersion", "userRelationshipsWithVersion", "userSessionIds", "groupInvitationsWithVersion", "groupJoinQuestionAnswerResult", "groupJoinRequestsWithVersion", "groupJoinQuestionsWithVersion", "groupMembersWithVersion", "groupsWithVersion"]),
                         set: $util.oneOfSetter($oneOfFields)
                     });
 
@@ -5577,40 +5503,38 @@ $root.im = (function() {
                             $root.im.turms.proto.Int64ValuesWithVersion.encode(message.idsWithVersion, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                         if (message.url != null && Object.hasOwnProperty.call(message, "url"))
                             $root.google.protobuf.StringValue.encode(message.url, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                        if (message.acknowledge != null && Object.hasOwnProperty.call(message, "acknowledge"))
-                            $root.im.turms.proto.Acknowledge.encode(message.acknowledge, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-                        if (message.session != null && Object.hasOwnProperty.call(message, "session"))
-                            $root.im.turms.proto.Session.encode(message.session, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+                        if (message.conversations != null && Object.hasOwnProperty.call(message, "conversations"))
+                            $root.im.turms.proto.Conversations.encode(message.conversations, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
                         if (message.messages != null && Object.hasOwnProperty.call(message, "messages"))
-                            $root.im.turms.proto.Messages.encode(message.messages, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
-                        if (message.messageStatuses != null && Object.hasOwnProperty.call(message, "messageStatuses"))
-                            $root.im.turms.proto.MessageStatuses.encode(message.messageStatuses, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
+                            $root.im.turms.proto.Messages.encode(message.messages, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
                         if (message.messagesWithTotalList != null && Object.hasOwnProperty.call(message, "messagesWithTotalList"))
-                            $root.im.turms.proto.MessagesWithTotalList.encode(message.messagesWithTotalList, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
+                            $root.im.turms.proto.MessagesWithTotalList.encode(message.messagesWithTotalList, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
+                        if (message.userSession != null && Object.hasOwnProperty.call(message, "userSession"))
+                            $root.im.turms.proto.UserSession.encode(message.userSession, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
                         if (message.usersInfosWithVersion != null && Object.hasOwnProperty.call(message, "usersInfosWithVersion"))
-                            $root.im.turms.proto.UsersInfosWithVersion.encode(message.usersInfosWithVersion, writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
+                            $root.im.turms.proto.UsersInfosWithVersion.encode(message.usersInfosWithVersion, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
                         if (message.usersOnlineStatuses != null && Object.hasOwnProperty.call(message, "usersOnlineStatuses"))
-                            $root.im.turms.proto.UsersOnlineStatuses.encode(message.usersOnlineStatuses, writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
+                            $root.im.turms.proto.UsersOnlineStatuses.encode(message.usersOnlineStatuses, writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
                         if (message.userFriendRequestsWithVersion != null && Object.hasOwnProperty.call(message, "userFriendRequestsWithVersion"))
-                            $root.im.turms.proto.UserFriendRequestsWithVersion.encode(message.userFriendRequestsWithVersion, writer.uint32(/* id 11, wireType 2 =*/90).fork()).ldelim();
+                            $root.im.turms.proto.UserFriendRequestsWithVersion.encode(message.userFriendRequestsWithVersion, writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
                         if (message.userRelationshipGroupsWithVersion != null && Object.hasOwnProperty.call(message, "userRelationshipGroupsWithVersion"))
-                            $root.im.turms.proto.UserRelationshipGroupsWithVersion.encode(message.userRelationshipGroupsWithVersion, writer.uint32(/* id 12, wireType 2 =*/98).fork()).ldelim();
+                            $root.im.turms.proto.UserRelationshipGroupsWithVersion.encode(message.userRelationshipGroupsWithVersion, writer.uint32(/* id 11, wireType 2 =*/90).fork()).ldelim();
                         if (message.userRelationshipsWithVersion != null && Object.hasOwnProperty.call(message, "userRelationshipsWithVersion"))
-                            $root.im.turms.proto.UserRelationshipsWithVersion.encode(message.userRelationshipsWithVersion, writer.uint32(/* id 13, wireType 2 =*/106).fork()).ldelim();
+                            $root.im.turms.proto.UserRelationshipsWithVersion.encode(message.userRelationshipsWithVersion, writer.uint32(/* id 12, wireType 2 =*/98).fork()).ldelim();
                         if (message.userSessionIds != null && Object.hasOwnProperty.call(message, "userSessionIds"))
-                            $root.im.turms.proto.UserSessionIds.encode(message.userSessionIds, writer.uint32(/* id 14, wireType 2 =*/114).fork()).ldelim();
+                            $root.im.turms.proto.UserSessionIds.encode(message.userSessionIds, writer.uint32(/* id 13, wireType 2 =*/106).fork()).ldelim();
                         if (message.groupInvitationsWithVersion != null && Object.hasOwnProperty.call(message, "groupInvitationsWithVersion"))
-                            $root.im.turms.proto.GroupInvitationsWithVersion.encode(message.groupInvitationsWithVersion, writer.uint32(/* id 15, wireType 2 =*/122).fork()).ldelim();
+                            $root.im.turms.proto.GroupInvitationsWithVersion.encode(message.groupInvitationsWithVersion, writer.uint32(/* id 14, wireType 2 =*/114).fork()).ldelim();
                         if (message.groupJoinQuestionAnswerResult != null && Object.hasOwnProperty.call(message, "groupJoinQuestionAnswerResult"))
-                            $root.im.turms.proto.GroupJoinQuestionsAnswerResult.encode(message.groupJoinQuestionAnswerResult, writer.uint32(/* id 16, wireType 2 =*/130).fork()).ldelim();
+                            $root.im.turms.proto.GroupJoinQuestionsAnswerResult.encode(message.groupJoinQuestionAnswerResult, writer.uint32(/* id 15, wireType 2 =*/122).fork()).ldelim();
                         if (message.groupJoinRequestsWithVersion != null && Object.hasOwnProperty.call(message, "groupJoinRequestsWithVersion"))
-                            $root.im.turms.proto.GroupJoinRequestsWithVersion.encode(message.groupJoinRequestsWithVersion, writer.uint32(/* id 17, wireType 2 =*/138).fork()).ldelim();
+                            $root.im.turms.proto.GroupJoinRequestsWithVersion.encode(message.groupJoinRequestsWithVersion, writer.uint32(/* id 16, wireType 2 =*/130).fork()).ldelim();
                         if (message.groupJoinQuestionsWithVersion != null && Object.hasOwnProperty.call(message, "groupJoinQuestionsWithVersion"))
-                            $root.im.turms.proto.GroupJoinQuestionsWithVersion.encode(message.groupJoinQuestionsWithVersion, writer.uint32(/* id 18, wireType 2 =*/146).fork()).ldelim();
+                            $root.im.turms.proto.GroupJoinQuestionsWithVersion.encode(message.groupJoinQuestionsWithVersion, writer.uint32(/* id 17, wireType 2 =*/138).fork()).ldelim();
                         if (message.groupMembersWithVersion != null && Object.hasOwnProperty.call(message, "groupMembersWithVersion"))
-                            $root.im.turms.proto.GroupMembersWithVersion.encode(message.groupMembersWithVersion, writer.uint32(/* id 19, wireType 2 =*/154).fork()).ldelim();
+                            $root.im.turms.proto.GroupMembersWithVersion.encode(message.groupMembersWithVersion, writer.uint32(/* id 18, wireType 2 =*/146).fork()).ldelim();
                         if (message.groupsWithVersion != null && Object.hasOwnProperty.call(message, "groupsWithVersion"))
-                            $root.im.turms.proto.GroupsWithVersion.encode(message.groupsWithVersion, writer.uint32(/* id 20, wireType 2 =*/162).fork()).ldelim();
+                            $root.im.turms.proto.GroupsWithVersion.encode(message.groupsWithVersion, writer.uint32(/* id 19, wireType 2 =*/154).fork()).ldelim();
                         return writer;
                     };
 
@@ -5642,54 +5566,51 @@ $root.im = (function() {
                                 message.url = $root.google.protobuf.StringValue.decode(reader, reader.uint32());
                                 break;
                             case 4:
-                                message.acknowledge = $root.im.turms.proto.Acknowledge.decode(reader, reader.uint32());
+                                message.conversations = $root.im.turms.proto.Conversations.decode(reader, reader.uint32());
                                 break;
                             case 5:
-                                message.session = $root.im.turms.proto.Session.decode(reader, reader.uint32());
-                                break;
-                            case 6:
                                 message.messages = $root.im.turms.proto.Messages.decode(reader, reader.uint32());
                                 break;
-                            case 7:
-                                message.messageStatuses = $root.im.turms.proto.MessageStatuses.decode(reader, reader.uint32());
-                                break;
-                            case 8:
+                            case 6:
                                 message.messagesWithTotalList = $root.im.turms.proto.MessagesWithTotalList.decode(reader, reader.uint32());
                                 break;
-                            case 9:
+                            case 7:
+                                message.userSession = $root.im.turms.proto.UserSession.decode(reader, reader.uint32());
+                                break;
+                            case 8:
                                 message.usersInfosWithVersion = $root.im.turms.proto.UsersInfosWithVersion.decode(reader, reader.uint32());
                                 break;
-                            case 10:
+                            case 9:
                                 message.usersOnlineStatuses = $root.im.turms.proto.UsersOnlineStatuses.decode(reader, reader.uint32());
                                 break;
-                            case 11:
+                            case 10:
                                 message.userFriendRequestsWithVersion = $root.im.turms.proto.UserFriendRequestsWithVersion.decode(reader, reader.uint32());
                                 break;
-                            case 12:
+                            case 11:
                                 message.userRelationshipGroupsWithVersion = $root.im.turms.proto.UserRelationshipGroupsWithVersion.decode(reader, reader.uint32());
                                 break;
-                            case 13:
+                            case 12:
                                 message.userRelationshipsWithVersion = $root.im.turms.proto.UserRelationshipsWithVersion.decode(reader, reader.uint32());
                                 break;
-                            case 14:
+                            case 13:
                                 message.userSessionIds = $root.im.turms.proto.UserSessionIds.decode(reader, reader.uint32());
                                 break;
-                            case 15:
+                            case 14:
                                 message.groupInvitationsWithVersion = $root.im.turms.proto.GroupInvitationsWithVersion.decode(reader, reader.uint32());
                                 break;
-                            case 16:
+                            case 15:
                                 message.groupJoinQuestionAnswerResult = $root.im.turms.proto.GroupJoinQuestionsAnswerResult.decode(reader, reader.uint32());
                                 break;
-                            case 17:
+                            case 16:
                                 message.groupJoinRequestsWithVersion = $root.im.turms.proto.GroupJoinRequestsWithVersion.decode(reader, reader.uint32());
                                 break;
-                            case 18:
+                            case 17:
                                 message.groupJoinQuestionsWithVersion = $root.im.turms.proto.GroupJoinQuestionsWithVersion.decode(reader, reader.uint32());
                                 break;
-                            case 19:
+                            case 18:
                                 message.groupMembersWithVersion = $root.im.turms.proto.GroupMembersWithVersion.decode(reader, reader.uint32());
                                 break;
-                            case 20:
+                            case 19:
                                 message.groupsWithVersion = $root.im.turms.proto.GroupsWithVersion.decode(reader, reader.uint32());
                                 break;
                             default:
@@ -5704,6 +5625,329 @@ $root.im = (function() {
                 })();
 
                 return TurmsNotification;
+            })();
+
+            proto.QueryConversationsRequest = (function() {
+
+                /**
+                 * Properties of a QueryConversationsRequest.
+                 * @memberof im.turms.proto
+                 * @interface IQueryConversationsRequest
+                 * @property {Array.<string>|null} [targetIds] QueryConversationsRequest targetIds
+                 * @property {Array.<string>|null} [groupIds] QueryConversationsRequest groupIds
+                 */
+
+                /**
+                 * Constructs a new QueryConversationsRequest.
+                 * @memberof im.turms.proto
+                 * @classdesc Represents a QueryConversationsRequest.
+                 * @implements IQueryConversationsRequest
+                 * @constructor
+                 * @param {im.turms.proto.IQueryConversationsRequest=} [properties] Properties to set
+                 */
+                function QueryConversationsRequest(properties) {
+                    this.targetIds = [];
+                    this.groupIds = [];
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * QueryConversationsRequest targetIds.
+                 * @member {Array.<string>} targetIds
+                 * @memberof im.turms.proto.QueryConversationsRequest
+                 * @instance
+                 */
+                QueryConversationsRequest.prototype.targetIds = $util.emptyArray;
+
+                /**
+                 * QueryConversationsRequest groupIds.
+                 * @member {Array.<string>} groupIds
+                 * @memberof im.turms.proto.QueryConversationsRequest
+                 * @instance
+                 */
+                QueryConversationsRequest.prototype.groupIds = $util.emptyArray;
+
+                /**
+                 * Encodes the specified QueryConversationsRequest message. Does not implicitly {@link im.turms.proto.QueryConversationsRequest.verify|verify} messages.
+                 * @function encode
+                 * @memberof im.turms.proto.QueryConversationsRequest
+                 * @static
+                 * @param {im.turms.proto.IQueryConversationsRequest} message QueryConversationsRequest message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                QueryConversationsRequest.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.targetIds != null && message.targetIds.length) {
+                        writer.uint32(/* id 1, wireType 2 =*/10).fork();
+                        for (var i = 0; i < message.targetIds.length; ++i)
+                            writer.int64(message.targetIds[i]);
+                        writer.ldelim();
+                    }
+                    if (message.groupIds != null && message.groupIds.length) {
+                        writer.uint32(/* id 2, wireType 2 =*/18).fork();
+                        for (var i = 0; i < message.groupIds.length; ++i)
+                            writer.int64(message.groupIds[i]);
+                        writer.ldelim();
+                    }
+                    return writer;
+                };
+
+                /**
+                 * Decodes a QueryConversationsRequest message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof im.turms.proto.QueryConversationsRequest
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {im.turms.proto.QueryConversationsRequest} QueryConversationsRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                QueryConversationsRequest.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.QueryConversationsRequest();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        case 1:
+                            if (!(message.targetIds && message.targetIds.length))
+                                message.targetIds = [];
+                            if ((tag & 7) === 2) {
+                                var end2 = reader.uint32() + reader.pos;
+                                while (reader.pos < end2)
+                                    message.targetIds.push(reader.int64().toString());
+                            } else
+                                message.targetIds.push(reader.int64().toString());
+                            break;
+                        case 2:
+                            if (!(message.groupIds && message.groupIds.length))
+                                message.groupIds = [];
+                            if ((tag & 7) === 2) {
+                                var end2 = reader.uint32() + reader.pos;
+                                while (reader.pos < end2)
+                                    message.groupIds.push(reader.int64().toString());
+                            } else
+                                message.groupIds.push(reader.int64().toString());
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+
+                return QueryConversationsRequest;
+            })();
+
+            proto.UpdateConversationRequest = (function() {
+
+                /**
+                 * Properties of an UpdateConversationRequest.
+                 * @memberof im.turms.proto
+                 * @interface IUpdateConversationRequest
+                 * @property {google.protobuf.IInt64Value|null} [targetId] UpdateConversationRequest targetId
+                 * @property {google.protobuf.IInt64Value|null} [groupId] UpdateConversationRequest groupId
+                 * @property {string|null} [readDate] UpdateConversationRequest readDate
+                 */
+
+                /**
+                 * Constructs a new UpdateConversationRequest.
+                 * @memberof im.turms.proto
+                 * @classdesc Represents an UpdateConversationRequest.
+                 * @implements IUpdateConversationRequest
+                 * @constructor
+                 * @param {im.turms.proto.IUpdateConversationRequest=} [properties] Properties to set
+                 */
+                function UpdateConversationRequest(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * UpdateConversationRequest targetId.
+                 * @member {google.protobuf.IInt64Value|null|undefined} targetId
+                 * @memberof im.turms.proto.UpdateConversationRequest
+                 * @instance
+                 */
+                UpdateConversationRequest.prototype.targetId = null;
+
+                /**
+                 * UpdateConversationRequest groupId.
+                 * @member {google.protobuf.IInt64Value|null|undefined} groupId
+                 * @memberof im.turms.proto.UpdateConversationRequest
+                 * @instance
+                 */
+                UpdateConversationRequest.prototype.groupId = null;
+
+                /**
+                 * UpdateConversationRequest readDate.
+                 * @member {string} readDate
+                 * @memberof im.turms.proto.UpdateConversationRequest
+                 * @instance
+                 */
+                UpdateConversationRequest.prototype.readDate = "0";
+
+                /**
+                 * Encodes the specified UpdateConversationRequest message. Does not implicitly {@link im.turms.proto.UpdateConversationRequest.verify|verify} messages.
+                 * @function encode
+                 * @memberof im.turms.proto.UpdateConversationRequest
+                 * @static
+                 * @param {im.turms.proto.IUpdateConversationRequest} message UpdateConversationRequest message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                UpdateConversationRequest.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.targetId != null && Object.hasOwnProperty.call(message, "targetId"))
+                        $root.google.protobuf.Int64Value.encode(message.targetId, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
+                    if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
+                        $root.google.protobuf.Int64Value.encode(message.groupId, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
+                    if (message.readDate != null && Object.hasOwnProperty.call(message, "readDate"))
+                        writer.uint32(/* id 3, wireType 0 =*/24).int64(message.readDate);
+                    return writer;
+                };
+
+                /**
+                 * Decodes an UpdateConversationRequest message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof im.turms.proto.UpdateConversationRequest
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {im.turms.proto.UpdateConversationRequest} UpdateConversationRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                UpdateConversationRequest.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.UpdateConversationRequest();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        case 1:
+                            message.targetId = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
+                            break;
+                        case 2:
+                            message.groupId = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
+                            break;
+                        case 3:
+                            message.readDate = reader.int64().toString();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+
+                return UpdateConversationRequest;
+            })();
+
+            proto.UpdateTypingStatusRequest = (function() {
+
+                /**
+                 * Properties of an UpdateTypingStatusRequest.
+                 * @memberof im.turms.proto
+                 * @interface IUpdateTypingStatusRequest
+                 * @property {boolean|null} [isGroupMessage] UpdateTypingStatusRequest isGroupMessage
+                 * @property {string|null} [toId] UpdateTypingStatusRequest toId
+                 */
+
+                /**
+                 * Constructs a new UpdateTypingStatusRequest.
+                 * @memberof im.turms.proto
+                 * @classdesc Represents an UpdateTypingStatusRequest.
+                 * @implements IUpdateTypingStatusRequest
+                 * @constructor
+                 * @param {im.turms.proto.IUpdateTypingStatusRequest=} [properties] Properties to set
+                 */
+                function UpdateTypingStatusRequest(properties) {
+                    if (properties)
+                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                            if (properties[keys[i]] != null)
+                                this[keys[i]] = properties[keys[i]];
+                }
+
+                /**
+                 * UpdateTypingStatusRequest isGroupMessage.
+                 * @member {boolean} isGroupMessage
+                 * @memberof im.turms.proto.UpdateTypingStatusRequest
+                 * @instance
+                 */
+                UpdateTypingStatusRequest.prototype.isGroupMessage = false;
+
+                /**
+                 * UpdateTypingStatusRequest toId.
+                 * @member {string} toId
+                 * @memberof im.turms.proto.UpdateTypingStatusRequest
+                 * @instance
+                 */
+                UpdateTypingStatusRequest.prototype.toId = "0";
+
+                /**
+                 * Encodes the specified UpdateTypingStatusRequest message. Does not implicitly {@link im.turms.proto.UpdateTypingStatusRequest.verify|verify} messages.
+                 * @function encode
+                 * @memberof im.turms.proto.UpdateTypingStatusRequest
+                 * @static
+                 * @param {im.turms.proto.IUpdateTypingStatusRequest} message UpdateTypingStatusRequest message or plain object to encode
+                 * @param {$protobuf.Writer} [writer] Writer to encode to
+                 * @returns {$protobuf.Writer} Writer
+                 */
+                UpdateTypingStatusRequest.encode = function encode(message, writer) {
+                    if (!writer)
+                        writer = $Writer.create();
+                    if (message.isGroupMessage != null && Object.hasOwnProperty.call(message, "isGroupMessage"))
+                        writer.uint32(/* id 1, wireType 0 =*/8).bool(message.isGroupMessage);
+                    if (message.toId != null && Object.hasOwnProperty.call(message, "toId"))
+                        writer.uint32(/* id 2, wireType 0 =*/16).int64(message.toId);
+                    return writer;
+                };
+
+                /**
+                 * Decodes an UpdateTypingStatusRequest message from the specified reader or buffer.
+                 * @function decode
+                 * @memberof im.turms.proto.UpdateTypingStatusRequest
+                 * @static
+                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+                 * @param {number} [length] Message length if known beforehand
+                 * @returns {im.turms.proto.UpdateTypingStatusRequest} UpdateTypingStatusRequest
+                 * @throws {Error} If the payload is not a reader or valid buffer
+                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
+                 */
+                UpdateTypingStatusRequest.decode = function decode(reader, length) {
+                    if (!(reader instanceof $Reader))
+                        reader = $Reader.create(reader);
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.UpdateTypingStatusRequest();
+                    while (reader.pos < end) {
+                        var tag = reader.uint32();
+                        switch (tag >>> 3) {
+                        case 1:
+                            message.isGroupMessage = reader.bool();
+                            break;
+                        case 2:
+                            message.toId = reader.int64().toString();
+                            break;
+                        default:
+                            reader.skipType(tag & 7);
+                            break;
+                        }
+                    }
+                    return message;
+                };
+
+                return UpdateTypingStatusRequest;
             })();
 
             proto.CreateGroupBlacklistedUserRequest = (function() {
@@ -6391,7 +6635,7 @@ $root.im = (function() {
                             reader.skip().pos++;
                             if (message.questionIdAndAnswer === $util.emptyObject)
                                 message.questionIdAndAnswer = {};
-                            key = reader.int64();
+                            key = reader.int64().toString();
                             reader.pos++;
                             message.questionIdAndAnswer[typeof key === "object" ? $util.longToHash(key) : key] = reader.string();
                             break;
@@ -8585,87 +8829,6 @@ $root.im = (function() {
                 return CreateMessageRequest;
             })();
 
-            proto.QueryMessageStatusesRequest = (function() {
-
-                /**
-                 * Properties of a QueryMessageStatusesRequest.
-                 * @memberof im.turms.proto
-                 * @interface IQueryMessageStatusesRequest
-                 * @property {string|null} [messageId] QueryMessageStatusesRequest messageId
-                 */
-
-                /**
-                 * Constructs a new QueryMessageStatusesRequest.
-                 * @memberof im.turms.proto
-                 * @classdesc Represents a QueryMessageStatusesRequest.
-                 * @implements IQueryMessageStatusesRequest
-                 * @constructor
-                 * @param {im.turms.proto.IQueryMessageStatusesRequest=} [properties] Properties to set
-                 */
-                function QueryMessageStatusesRequest(properties) {
-                    if (properties)
-                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                            if (properties[keys[i]] != null)
-                                this[keys[i]] = properties[keys[i]];
-                }
-
-                /**
-                 * QueryMessageStatusesRequest messageId.
-                 * @member {string} messageId
-                 * @memberof im.turms.proto.QueryMessageStatusesRequest
-                 * @instance
-                 */
-                QueryMessageStatusesRequest.prototype.messageId = "0";
-
-                /**
-                 * Encodes the specified QueryMessageStatusesRequest message. Does not implicitly {@link im.turms.proto.QueryMessageStatusesRequest.verify|verify} messages.
-                 * @function encode
-                 * @memberof im.turms.proto.QueryMessageStatusesRequest
-                 * @static
-                 * @param {im.turms.proto.IQueryMessageStatusesRequest} message QueryMessageStatusesRequest message or plain object to encode
-                 * @param {$protobuf.Writer} [writer] Writer to encode to
-                 * @returns {$protobuf.Writer} Writer
-                 */
-                QueryMessageStatusesRequest.encode = function encode(message, writer) {
-                    if (!writer)
-                        writer = $Writer.create();
-                    if (message.messageId != null && Object.hasOwnProperty.call(message, "messageId"))
-                        writer.uint32(/* id 1, wireType 0 =*/8).int64(message.messageId);
-                    return writer;
-                };
-
-                /**
-                 * Decodes a QueryMessageStatusesRequest message from the specified reader or buffer.
-                 * @function decode
-                 * @memberof im.turms.proto.QueryMessageStatusesRequest
-                 * @static
-                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @param {number} [length] Message length if known beforehand
-                 * @returns {im.turms.proto.QueryMessageStatusesRequest} QueryMessageStatusesRequest
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                QueryMessageStatusesRequest.decode = function decode(reader, length) {
-                    if (!(reader instanceof $Reader))
-                        reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.QueryMessageStatusesRequest();
-                    while (reader.pos < end) {
-                        var tag = reader.uint32();
-                        switch (tag >>> 3) {
-                        case 1:
-                            message.messageId = reader.int64().toString();
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
-                        }
-                    }
-                    return message;
-                };
-
-                return QueryMessageStatusesRequest;
-            })();
-
             proto.QueryMessagesRequest = (function() {
 
                 /**
@@ -8679,7 +8842,7 @@ $root.im = (function() {
                  * @property {google.protobuf.IInt64Value|null} [fromId] QueryMessagesRequest fromId
                  * @property {google.protobuf.IInt64Value|null} [deliveryDateAfter] QueryMessagesRequest deliveryDateAfter
                  * @property {google.protobuf.IInt64Value|null} [deliveryDateBefore] QueryMessagesRequest deliveryDateBefore
-                 * @property {im.turms.proto.MessageDeliveryStatus|null} [deliveryStatus] QueryMessagesRequest deliveryStatus
+                 * @property {boolean|null} [withTotal] QueryMessagesRequest withTotal
                  */
 
                 /**
@@ -8755,12 +8918,12 @@ $root.im = (function() {
                 QueryMessagesRequest.prototype.deliveryDateBefore = null;
 
                 /**
-                 * QueryMessagesRequest deliveryStatus.
-                 * @member {im.turms.proto.MessageDeliveryStatus} deliveryStatus
+                 * QueryMessagesRequest withTotal.
+                 * @member {boolean} withTotal
                  * @memberof im.turms.proto.QueryMessagesRequest
                  * @instance
                  */
-                QueryMessagesRequest.prototype.deliveryStatus = 0;
+                QueryMessagesRequest.prototype.withTotal = false;
 
                 /**
                  * Encodes the specified QueryMessagesRequest message. Does not implicitly {@link im.turms.proto.QueryMessagesRequest.verify|verify} messages.
@@ -8792,8 +8955,8 @@ $root.im = (function() {
                         $root.google.protobuf.Int64Value.encode(message.deliveryDateAfter, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
                     if (message.deliveryDateBefore != null && Object.hasOwnProperty.call(message, "deliveryDateBefore"))
                         $root.google.protobuf.Int64Value.encode(message.deliveryDateBefore, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
-                    if (message.deliveryStatus != null && Object.hasOwnProperty.call(message, "deliveryStatus"))
-                        writer.uint32(/* id 8, wireType 0 =*/64).int32(message.deliveryStatus);
+                    if (message.withTotal != null && Object.hasOwnProperty.call(message, "withTotal"))
+                        writer.uint32(/* id 8, wireType 0 =*/64).bool(message.withTotal);
                     return writer;
                 };
 
@@ -8844,7 +9007,7 @@ $root.im = (function() {
                             message.deliveryDateBefore = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
                             break;
                         case 8:
-                            message.deliveryStatus = reader.int32();
+                            message.withTotal = reader.bool();
                             break;
                         default:
                             reader.skipType(tag & 7);
@@ -8857,87 +9020,6 @@ $root.im = (function() {
                 return QueryMessagesRequest;
             })();
 
-            proto.QueryPendingMessagesWithTotalRequest = (function() {
-
-                /**
-                 * Properties of a QueryPendingMessagesWithTotalRequest.
-                 * @memberof im.turms.proto
-                 * @interface IQueryPendingMessagesWithTotalRequest
-                 * @property {google.protobuf.IInt32Value|null} [size] QueryPendingMessagesWithTotalRequest size
-                 */
-
-                /**
-                 * Constructs a new QueryPendingMessagesWithTotalRequest.
-                 * @memberof im.turms.proto
-                 * @classdesc Represents a QueryPendingMessagesWithTotalRequest.
-                 * @implements IQueryPendingMessagesWithTotalRequest
-                 * @constructor
-                 * @param {im.turms.proto.IQueryPendingMessagesWithTotalRequest=} [properties] Properties to set
-                 */
-                function QueryPendingMessagesWithTotalRequest(properties) {
-                    if (properties)
-                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                            if (properties[keys[i]] != null)
-                                this[keys[i]] = properties[keys[i]];
-                }
-
-                /**
-                 * QueryPendingMessagesWithTotalRequest size.
-                 * @member {google.protobuf.IInt32Value|null|undefined} size
-                 * @memberof im.turms.proto.QueryPendingMessagesWithTotalRequest
-                 * @instance
-                 */
-                QueryPendingMessagesWithTotalRequest.prototype.size = null;
-
-                /**
-                 * Encodes the specified QueryPendingMessagesWithTotalRequest message. Does not implicitly {@link im.turms.proto.QueryPendingMessagesWithTotalRequest.verify|verify} messages.
-                 * @function encode
-                 * @memberof im.turms.proto.QueryPendingMessagesWithTotalRequest
-                 * @static
-                 * @param {im.turms.proto.IQueryPendingMessagesWithTotalRequest} message QueryPendingMessagesWithTotalRequest message or plain object to encode
-                 * @param {$protobuf.Writer} [writer] Writer to encode to
-                 * @returns {$protobuf.Writer} Writer
-                 */
-                QueryPendingMessagesWithTotalRequest.encode = function encode(message, writer) {
-                    if (!writer)
-                        writer = $Writer.create();
-                    if (message.size != null && Object.hasOwnProperty.call(message, "size"))
-                        $root.google.protobuf.Int32Value.encode(message.size, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    return writer;
-                };
-
-                /**
-                 * Decodes a QueryPendingMessagesWithTotalRequest message from the specified reader or buffer.
-                 * @function decode
-                 * @memberof im.turms.proto.QueryPendingMessagesWithTotalRequest
-                 * @static
-                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @param {number} [length] Message length if known beforehand
-                 * @returns {im.turms.proto.QueryPendingMessagesWithTotalRequest} QueryPendingMessagesWithTotalRequest
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                QueryPendingMessagesWithTotalRequest.decode = function decode(reader, length) {
-                    if (!(reader instanceof $Reader))
-                        reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.QueryPendingMessagesWithTotalRequest();
-                    while (reader.pos < end) {
-                        var tag = reader.uint32();
-                        switch (tag >>> 3) {
-                        case 1:
-                            message.size = $root.google.protobuf.Int32Value.decode(reader, reader.uint32());
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
-                        }
-                    }
-                    return message;
-                };
-
-                return QueryPendingMessagesWithTotalRequest;
-            })();
-
             proto.UpdateMessageRequest = (function() {
 
                 /**
@@ -8945,11 +9027,9 @@ $root.im = (function() {
                  * @memberof im.turms.proto
                  * @interface IUpdateMessageRequest
                  * @property {string|null} [messageId] UpdateMessageRequest messageId
-                 * @property {google.protobuf.IBoolValue|null} [isSystemMessage] UpdateMessageRequest isSystemMessage
                  * @property {google.protobuf.IStringValue|null} [text] UpdateMessageRequest text
                  * @property {Array.<Uint8Array>|null} [records] UpdateMessageRequest records
                  * @property {google.protobuf.IInt64Value|null} [recallDate] UpdateMessageRequest recallDate
-                 * @property {google.protobuf.IInt64Value|null} [readDate] UpdateMessageRequest readDate
                  */
 
                 /**
@@ -8977,14 +9057,6 @@ $root.im = (function() {
                 UpdateMessageRequest.prototype.messageId = "0";
 
                 /**
-                 * UpdateMessageRequest isSystemMessage.
-                 * @member {google.protobuf.IBoolValue|null|undefined} isSystemMessage
-                 * @memberof im.turms.proto.UpdateMessageRequest
-                 * @instance
-                 */
-                UpdateMessageRequest.prototype.isSystemMessage = null;
-
-                /**
                  * UpdateMessageRequest text.
                  * @member {google.protobuf.IStringValue|null|undefined} text
                  * @memberof im.turms.proto.UpdateMessageRequest
@@ -9009,14 +9081,6 @@ $root.im = (function() {
                 UpdateMessageRequest.prototype.recallDate = null;
 
                 /**
-                 * UpdateMessageRequest readDate.
-                 * @member {google.protobuf.IInt64Value|null|undefined} readDate
-                 * @memberof im.turms.proto.UpdateMessageRequest
-                 * @instance
-                 */
-                UpdateMessageRequest.prototype.readDate = null;
-
-                /**
                  * Encodes the specified UpdateMessageRequest message. Does not implicitly {@link im.turms.proto.UpdateMessageRequest.verify|verify} messages.
                  * @function encode
                  * @memberof im.turms.proto.UpdateMessageRequest
@@ -9030,17 +9094,13 @@ $root.im = (function() {
                         writer = $Writer.create();
                     if (message.messageId != null && Object.hasOwnProperty.call(message, "messageId"))
                         writer.uint32(/* id 1, wireType 0 =*/8).int64(message.messageId);
-                    if (message.isSystemMessage != null && Object.hasOwnProperty.call(message, "isSystemMessage"))
-                        $root.google.protobuf.BoolValue.encode(message.isSystemMessage, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     if (message.text != null && Object.hasOwnProperty.call(message, "text"))
-                        $root.google.protobuf.StringValue.encode(message.text, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                        $root.google.protobuf.StringValue.encode(message.text, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
                     if (message.records != null && message.records.length)
                         for (var i = 0; i < message.records.length; ++i)
-                            writer.uint32(/* id 4, wireType 2 =*/34).bytes(message.records[i]);
+                            writer.uint32(/* id 3, wireType 2 =*/26).bytes(message.records[i]);
                     if (message.recallDate != null && Object.hasOwnProperty.call(message, "recallDate"))
-                        $root.google.protobuf.Int64Value.encode(message.recallDate, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
-                    if (message.readDate != null && Object.hasOwnProperty.call(message, "readDate"))
-                        $root.google.protobuf.Int64Value.encode(message.readDate, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
+                        $root.google.protobuf.Int64Value.encode(message.recallDate, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
                     return writer;
                 };
 
@@ -9066,21 +9126,15 @@ $root.im = (function() {
                             message.messageId = reader.int64().toString();
                             break;
                         case 2:
-                            message.isSystemMessage = $root.google.protobuf.BoolValue.decode(reader, reader.uint32());
-                            break;
-                        case 3:
                             message.text = $root.google.protobuf.StringValue.decode(reader, reader.uint32());
                             break;
-                        case 4:
+                        case 3:
                             if (!(message.records && message.records.length))
                                 message.records = [];
                             message.records.push(reader.bytes());
                             break;
-                        case 5:
+                        case 4:
                             message.recallDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
-                            break;
-                        case 6:
-                            message.readDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
                             break;
                         default:
                             reader.skipType(tag & 7);
@@ -9091,194 +9145,6 @@ $root.im = (function() {
                 };
 
                 return UpdateMessageRequest;
-            })();
-
-            proto.UpdateTypingStatusRequest = (function() {
-
-                /**
-                 * Properties of an UpdateTypingStatusRequest.
-                 * @memberof im.turms.proto
-                 * @interface IUpdateTypingStatusRequest
-                 * @property {boolean|null} [isGroupMessage] UpdateTypingStatusRequest isGroupMessage
-                 * @property {string|null} [toId] UpdateTypingStatusRequest toId
-                 */
-
-                /**
-                 * Constructs a new UpdateTypingStatusRequest.
-                 * @memberof im.turms.proto
-                 * @classdesc Represents an UpdateTypingStatusRequest.
-                 * @implements IUpdateTypingStatusRequest
-                 * @constructor
-                 * @param {im.turms.proto.IUpdateTypingStatusRequest=} [properties] Properties to set
-                 */
-                function UpdateTypingStatusRequest(properties) {
-                    if (properties)
-                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                            if (properties[keys[i]] != null)
-                                this[keys[i]] = properties[keys[i]];
-                }
-
-                /**
-                 * UpdateTypingStatusRequest isGroupMessage.
-                 * @member {boolean} isGroupMessage
-                 * @memberof im.turms.proto.UpdateTypingStatusRequest
-                 * @instance
-                 */
-                UpdateTypingStatusRequest.prototype.isGroupMessage = false;
-
-                /**
-                 * UpdateTypingStatusRequest toId.
-                 * @member {string} toId
-                 * @memberof im.turms.proto.UpdateTypingStatusRequest
-                 * @instance
-                 */
-                UpdateTypingStatusRequest.prototype.toId = "0";
-
-                /**
-                 * Encodes the specified UpdateTypingStatusRequest message. Does not implicitly {@link im.turms.proto.UpdateTypingStatusRequest.verify|verify} messages.
-                 * @function encode
-                 * @memberof im.turms.proto.UpdateTypingStatusRequest
-                 * @static
-                 * @param {im.turms.proto.IUpdateTypingStatusRequest} message UpdateTypingStatusRequest message or plain object to encode
-                 * @param {$protobuf.Writer} [writer] Writer to encode to
-                 * @returns {$protobuf.Writer} Writer
-                 */
-                UpdateTypingStatusRequest.encode = function encode(message, writer) {
-                    if (!writer)
-                        writer = $Writer.create();
-                    if (message.isGroupMessage != null && Object.hasOwnProperty.call(message, "isGroupMessage"))
-                        writer.uint32(/* id 1, wireType 0 =*/8).bool(message.isGroupMessage);
-                    if (message.toId != null && Object.hasOwnProperty.call(message, "toId"))
-                        writer.uint32(/* id 2, wireType 0 =*/16).int64(message.toId);
-                    return writer;
-                };
-
-                /**
-                 * Decodes an UpdateTypingStatusRequest message from the specified reader or buffer.
-                 * @function decode
-                 * @memberof im.turms.proto.UpdateTypingStatusRequest
-                 * @static
-                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @param {number} [length] Message length if known beforehand
-                 * @returns {im.turms.proto.UpdateTypingStatusRequest} UpdateTypingStatusRequest
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                UpdateTypingStatusRequest.decode = function decode(reader, length) {
-                    if (!(reader instanceof $Reader))
-                        reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.UpdateTypingStatusRequest();
-                    while (reader.pos < end) {
-                        var tag = reader.uint32();
-                        switch (tag >>> 3) {
-                        case 1:
-                            message.isGroupMessage = reader.bool();
-                            break;
-                        case 2:
-                            message.toId = reader.int64().toString();
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
-                        }
-                    }
-                    return message;
-                };
-
-                return UpdateTypingStatusRequest;
-            })();
-
-            proto.AckRequest = (function() {
-
-                /**
-                 * Properties of an AckRequest.
-                 * @memberof im.turms.proto
-                 * @interface IAckRequest
-                 * @property {Array.<string>|null} [messageIds] AckRequest messageIds
-                 */
-
-                /**
-                 * Constructs a new AckRequest.
-                 * @memberof im.turms.proto
-                 * @classdesc Represents an AckRequest.
-                 * @implements IAckRequest
-                 * @constructor
-                 * @param {im.turms.proto.IAckRequest=} [properties] Properties to set
-                 */
-                function AckRequest(properties) {
-                    this.messageIds = [];
-                    if (properties)
-                        for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
-                            if (properties[keys[i]] != null)
-                                this[keys[i]] = properties[keys[i]];
-                }
-
-                /**
-                 * AckRequest messageIds.
-                 * @member {Array.<string>} messageIds
-                 * @memberof im.turms.proto.AckRequest
-                 * @instance
-                 */
-                AckRequest.prototype.messageIds = $util.emptyArray;
-
-                /**
-                 * Encodes the specified AckRequest message. Does not implicitly {@link im.turms.proto.AckRequest.verify|verify} messages.
-                 * @function encode
-                 * @memberof im.turms.proto.AckRequest
-                 * @static
-                 * @param {im.turms.proto.IAckRequest} message AckRequest message or plain object to encode
-                 * @param {$protobuf.Writer} [writer] Writer to encode to
-                 * @returns {$protobuf.Writer} Writer
-                 */
-                AckRequest.encode = function encode(message, writer) {
-                    if (!writer)
-                        writer = $Writer.create();
-                    if (message.messageIds != null && message.messageIds.length) {
-                        writer.uint32(/* id 1, wireType 2 =*/10).fork();
-                        for (var i = 0; i < message.messageIds.length; ++i)
-                            writer.int64(message.messageIds[i]);
-                        writer.ldelim();
-                    }
-                    return writer;
-                };
-
-                /**
-                 * Decodes an AckRequest message from the specified reader or buffer.
-                 * @function decode
-                 * @memberof im.turms.proto.AckRequest
-                 * @static
-                 * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
-                 * @param {number} [length] Message length if known beforehand
-                 * @returns {im.turms.proto.AckRequest} AckRequest
-                 * @throws {Error} If the payload is not a reader or valid buffer
-                 * @throws {$protobuf.util.ProtocolError} If required fields are missing
-                 */
-                AckRequest.decode = function decode(reader, length) {
-                    if (!(reader instanceof $Reader))
-                        reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.AckRequest();
-                    while (reader.pos < end) {
-                        var tag = reader.uint32();
-                        switch (tag >>> 3) {
-                        case 1:
-                            if (!(message.messageIds && message.messageIds.length))
-                                message.messageIds = [];
-                            if ((tag & 7) === 2) {
-                                var end2 = reader.uint32() + reader.pos;
-                                while (reader.pos < end2)
-                                    message.messageIds.push(reader.int64().toString());
-                            } else
-                                message.messageIds.push(reader.int64().toString());
-                            break;
-                        default:
-                            reader.skipType(tag & 7);
-                            break;
-                        }
-                    }
-                    return message;
-                };
-
-                return AckRequest;
             })();
 
             proto.DeleteResourceRequest = (function() {
@@ -9629,18 +9495,18 @@ $root.im = (function() {
                  * @memberof im.turms.proto
                  * @interface ITurmsRequest
                  * @property {google.protobuf.IInt64Value|null} [requestId] TurmsRequest requestId
-                 * @property {im.turms.proto.IAckRequest|null} [ackRequest] TurmsRequest ackRequest
-                 * @property {im.turms.proto.IDeleteResourceRequest|null} [deleteResourceRequest] TurmsRequest deleteResourceRequest
-                 * @property {im.turms.proto.IQuerySignedGetUrlRequest|null} [querySignedGetUrlRequest] TurmsRequest querySignedGetUrlRequest
-                 * @property {im.turms.proto.IQuerySignedPutUrlRequest|null} [querySignedPutUrlRequest] TurmsRequest querySignedPutUrlRequest
-                 * @property {im.turms.proto.ICreateMessageRequest|null} [createMessageRequest] TurmsRequest createMessageRequest
-                 * @property {im.turms.proto.IQueryMessageStatusesRequest|null} [queryMessageStatusesRequest] TurmsRequest queryMessageStatusesRequest
-                 * @property {im.turms.proto.IQueryMessagesRequest|null} [queryMessagesRequest] TurmsRequest queryMessagesRequest
-                 * @property {im.turms.proto.IQueryPendingMessagesWithTotalRequest|null} [queryPendingMessagesWithTotalRequest] TurmsRequest queryPendingMessagesWithTotalRequest
-                 * @property {im.turms.proto.IUpdateMessageRequest|null} [updateMessageRequest] TurmsRequest updateMessageRequest
-                 * @property {im.turms.proto.IUpdateTypingStatusRequest|null} [updateTypingStatusRequest] TurmsRequest updateTypingStatusRequest
                  * @property {im.turms.proto.ICreateSessionRequest|null} [createSessionRequest] TurmsRequest createSessionRequest
                  * @property {im.turms.proto.IDeleteSessionRequest|null} [deleteSessionRequest] TurmsRequest deleteSessionRequest
+                 * @property {im.turms.proto.IQueryConversationsRequest|null} [queryConversationsRequest] TurmsRequest queryConversationsRequest
+                 * @property {im.turms.proto.IUpdateConversationRequest|null} [updateConversationRequest] TurmsRequest updateConversationRequest
+                 * @property {im.turms.proto.IUpdateTypingStatusRequest|null} [updateTypingStatusRequest] TurmsRequest updateTypingStatusRequest
+                 * @property {im.turms.proto.ICreateMessageRequest|null} [createMessageRequest] TurmsRequest createMessageRequest
+                 * @property {im.turms.proto.IQueryMessagesRequest|null} [queryMessagesRequest] TurmsRequest queryMessagesRequest
+                 * @property {im.turms.proto.IUpdateMessageRequest|null} [updateMessageRequest] TurmsRequest updateMessageRequest
+                 * @property {im.turms.proto.ICreateGroupMemberRequest|null} [createGroupMemberRequest] TurmsRequest createGroupMemberRequest
+                 * @property {im.turms.proto.IDeleteGroupMemberRequest|null} [deleteGroupMemberRequest] TurmsRequest deleteGroupMemberRequest
+                 * @property {im.turms.proto.IQueryGroupMembersRequest|null} [queryGroupMembersRequest] TurmsRequest queryGroupMembersRequest
+                 * @property {im.turms.proto.IUpdateGroupMemberRequest|null} [updateGroupMemberRequest] TurmsRequest updateGroupMemberRequest
                  * @property {im.turms.proto.IQueryUserProfileRequest|null} [queryUserProfileRequest] TurmsRequest queryUserProfileRequest
                  * @property {im.turms.proto.IQueryUserIdsNearbyRequest|null} [queryUserIdsNearbyRequest] TurmsRequest queryUserIdsNearbyRequest
                  * @property {im.turms.proto.IQueryUserInfosNearbyRequest|null} [queryUserInfosNearbyRequest] TurmsRequest queryUserInfosNearbyRequest
@@ -9681,10 +9547,9 @@ $root.im = (function() {
                  * @property {im.turms.proto.IQueryGroupJoinRequestsRequest|null} [queryGroupJoinRequestsRequest] TurmsRequest queryGroupJoinRequestsRequest
                  * @property {im.turms.proto.IQueryGroupJoinQuestionsRequest|null} [queryGroupJoinQuestionsRequest] TurmsRequest queryGroupJoinQuestionsRequest
                  * @property {im.turms.proto.IUpdateGroupJoinQuestionRequest|null} [updateGroupJoinQuestionRequest] TurmsRequest updateGroupJoinQuestionRequest
-                 * @property {im.turms.proto.ICreateGroupMemberRequest|null} [createGroupMemberRequest] TurmsRequest createGroupMemberRequest
-                 * @property {im.turms.proto.IDeleteGroupMemberRequest|null} [deleteGroupMemberRequest] TurmsRequest deleteGroupMemberRequest
-                 * @property {im.turms.proto.IQueryGroupMembersRequest|null} [queryGroupMembersRequest] TurmsRequest queryGroupMembersRequest
-                 * @property {im.turms.proto.IUpdateGroupMemberRequest|null} [updateGroupMemberRequest] TurmsRequest updateGroupMemberRequest
+                 * @property {im.turms.proto.IDeleteResourceRequest|null} [deleteResourceRequest] TurmsRequest deleteResourceRequest
+                 * @property {im.turms.proto.IQuerySignedGetUrlRequest|null} [querySignedGetUrlRequest] TurmsRequest querySignedGetUrlRequest
+                 * @property {im.turms.proto.IQuerySignedPutUrlRequest|null} [querySignedPutUrlRequest] TurmsRequest querySignedPutUrlRequest
                  */
 
                 /**
@@ -9711,86 +9576,6 @@ $root.im = (function() {
                 TurmsRequest.prototype.requestId = null;
 
                 /**
-                 * TurmsRequest ackRequest.
-                 * @member {im.turms.proto.IAckRequest|null|undefined} ackRequest
-                 * @memberof im.turms.proto.TurmsRequest
-                 * @instance
-                 */
-                TurmsRequest.prototype.ackRequest = null;
-
-                /**
-                 * TurmsRequest deleteResourceRequest.
-                 * @member {im.turms.proto.IDeleteResourceRequest|null|undefined} deleteResourceRequest
-                 * @memberof im.turms.proto.TurmsRequest
-                 * @instance
-                 */
-                TurmsRequest.prototype.deleteResourceRequest = null;
-
-                /**
-                 * TurmsRequest querySignedGetUrlRequest.
-                 * @member {im.turms.proto.IQuerySignedGetUrlRequest|null|undefined} querySignedGetUrlRequest
-                 * @memberof im.turms.proto.TurmsRequest
-                 * @instance
-                 */
-                TurmsRequest.prototype.querySignedGetUrlRequest = null;
-
-                /**
-                 * TurmsRequest querySignedPutUrlRequest.
-                 * @member {im.turms.proto.IQuerySignedPutUrlRequest|null|undefined} querySignedPutUrlRequest
-                 * @memberof im.turms.proto.TurmsRequest
-                 * @instance
-                 */
-                TurmsRequest.prototype.querySignedPutUrlRequest = null;
-
-                /**
-                 * TurmsRequest createMessageRequest.
-                 * @member {im.turms.proto.ICreateMessageRequest|null|undefined} createMessageRequest
-                 * @memberof im.turms.proto.TurmsRequest
-                 * @instance
-                 */
-                TurmsRequest.prototype.createMessageRequest = null;
-
-                /**
-                 * TurmsRequest queryMessageStatusesRequest.
-                 * @member {im.turms.proto.IQueryMessageStatusesRequest|null|undefined} queryMessageStatusesRequest
-                 * @memberof im.turms.proto.TurmsRequest
-                 * @instance
-                 */
-                TurmsRequest.prototype.queryMessageStatusesRequest = null;
-
-                /**
-                 * TurmsRequest queryMessagesRequest.
-                 * @member {im.turms.proto.IQueryMessagesRequest|null|undefined} queryMessagesRequest
-                 * @memberof im.turms.proto.TurmsRequest
-                 * @instance
-                 */
-                TurmsRequest.prototype.queryMessagesRequest = null;
-
-                /**
-                 * TurmsRequest queryPendingMessagesWithTotalRequest.
-                 * @member {im.turms.proto.IQueryPendingMessagesWithTotalRequest|null|undefined} queryPendingMessagesWithTotalRequest
-                 * @memberof im.turms.proto.TurmsRequest
-                 * @instance
-                 */
-                TurmsRequest.prototype.queryPendingMessagesWithTotalRequest = null;
-
-                /**
-                 * TurmsRequest updateMessageRequest.
-                 * @member {im.turms.proto.IUpdateMessageRequest|null|undefined} updateMessageRequest
-                 * @memberof im.turms.proto.TurmsRequest
-                 * @instance
-                 */
-                TurmsRequest.prototype.updateMessageRequest = null;
-
-                /**
-                 * TurmsRequest updateTypingStatusRequest.
-                 * @member {im.turms.proto.IUpdateTypingStatusRequest|null|undefined} updateTypingStatusRequest
-                 * @memberof im.turms.proto.TurmsRequest
-                 * @instance
-                 */
-                TurmsRequest.prototype.updateTypingStatusRequest = null;
-
-                /**
                  * TurmsRequest createSessionRequest.
                  * @member {im.turms.proto.ICreateSessionRequest|null|undefined} createSessionRequest
                  * @memberof im.turms.proto.TurmsRequest
@@ -9805,6 +9590,86 @@ $root.im = (function() {
                  * @instance
                  */
                 TurmsRequest.prototype.deleteSessionRequest = null;
+
+                /**
+                 * TurmsRequest queryConversationsRequest.
+                 * @member {im.turms.proto.IQueryConversationsRequest|null|undefined} queryConversationsRequest
+                 * @memberof im.turms.proto.TurmsRequest
+                 * @instance
+                 */
+                TurmsRequest.prototype.queryConversationsRequest = null;
+
+                /**
+                 * TurmsRequest updateConversationRequest.
+                 * @member {im.turms.proto.IUpdateConversationRequest|null|undefined} updateConversationRequest
+                 * @memberof im.turms.proto.TurmsRequest
+                 * @instance
+                 */
+                TurmsRequest.prototype.updateConversationRequest = null;
+
+                /**
+                 * TurmsRequest updateTypingStatusRequest.
+                 * @member {im.turms.proto.IUpdateTypingStatusRequest|null|undefined} updateTypingStatusRequest
+                 * @memberof im.turms.proto.TurmsRequest
+                 * @instance
+                 */
+                TurmsRequest.prototype.updateTypingStatusRequest = null;
+
+                /**
+                 * TurmsRequest createMessageRequest.
+                 * @member {im.turms.proto.ICreateMessageRequest|null|undefined} createMessageRequest
+                 * @memberof im.turms.proto.TurmsRequest
+                 * @instance
+                 */
+                TurmsRequest.prototype.createMessageRequest = null;
+
+                /**
+                 * TurmsRequest queryMessagesRequest.
+                 * @member {im.turms.proto.IQueryMessagesRequest|null|undefined} queryMessagesRequest
+                 * @memberof im.turms.proto.TurmsRequest
+                 * @instance
+                 */
+                TurmsRequest.prototype.queryMessagesRequest = null;
+
+                /**
+                 * TurmsRequest updateMessageRequest.
+                 * @member {im.turms.proto.IUpdateMessageRequest|null|undefined} updateMessageRequest
+                 * @memberof im.turms.proto.TurmsRequest
+                 * @instance
+                 */
+                TurmsRequest.prototype.updateMessageRequest = null;
+
+                /**
+                 * TurmsRequest createGroupMemberRequest.
+                 * @member {im.turms.proto.ICreateGroupMemberRequest|null|undefined} createGroupMemberRequest
+                 * @memberof im.turms.proto.TurmsRequest
+                 * @instance
+                 */
+                TurmsRequest.prototype.createGroupMemberRequest = null;
+
+                /**
+                 * TurmsRequest deleteGroupMemberRequest.
+                 * @member {im.turms.proto.IDeleteGroupMemberRequest|null|undefined} deleteGroupMemberRequest
+                 * @memberof im.turms.proto.TurmsRequest
+                 * @instance
+                 */
+                TurmsRequest.prototype.deleteGroupMemberRequest = null;
+
+                /**
+                 * TurmsRequest queryGroupMembersRequest.
+                 * @member {im.turms.proto.IQueryGroupMembersRequest|null|undefined} queryGroupMembersRequest
+                 * @memberof im.turms.proto.TurmsRequest
+                 * @instance
+                 */
+                TurmsRequest.prototype.queryGroupMembersRequest = null;
+
+                /**
+                 * TurmsRequest updateGroupMemberRequest.
+                 * @member {im.turms.proto.IUpdateGroupMemberRequest|null|undefined} updateGroupMemberRequest
+                 * @memberof im.turms.proto.TurmsRequest
+                 * @instance
+                 */
+                TurmsRequest.prototype.updateGroupMemberRequest = null;
 
                 /**
                  * TurmsRequest queryUserProfileRequest.
@@ -10127,48 +9992,40 @@ $root.im = (function() {
                 TurmsRequest.prototype.updateGroupJoinQuestionRequest = null;
 
                 /**
-                 * TurmsRequest createGroupMemberRequest.
-                 * @member {im.turms.proto.ICreateGroupMemberRequest|null|undefined} createGroupMemberRequest
+                 * TurmsRequest deleteResourceRequest.
+                 * @member {im.turms.proto.IDeleteResourceRequest|null|undefined} deleteResourceRequest
                  * @memberof im.turms.proto.TurmsRequest
                  * @instance
                  */
-                TurmsRequest.prototype.createGroupMemberRequest = null;
+                TurmsRequest.prototype.deleteResourceRequest = null;
 
                 /**
-                 * TurmsRequest deleteGroupMemberRequest.
-                 * @member {im.turms.proto.IDeleteGroupMemberRequest|null|undefined} deleteGroupMemberRequest
+                 * TurmsRequest querySignedGetUrlRequest.
+                 * @member {im.turms.proto.IQuerySignedGetUrlRequest|null|undefined} querySignedGetUrlRequest
                  * @memberof im.turms.proto.TurmsRequest
                  * @instance
                  */
-                TurmsRequest.prototype.deleteGroupMemberRequest = null;
+                TurmsRequest.prototype.querySignedGetUrlRequest = null;
 
                 /**
-                 * TurmsRequest queryGroupMembersRequest.
-                 * @member {im.turms.proto.IQueryGroupMembersRequest|null|undefined} queryGroupMembersRequest
+                 * TurmsRequest querySignedPutUrlRequest.
+                 * @member {im.turms.proto.IQuerySignedPutUrlRequest|null|undefined} querySignedPutUrlRequest
                  * @memberof im.turms.proto.TurmsRequest
                  * @instance
                  */
-                TurmsRequest.prototype.queryGroupMembersRequest = null;
-
-                /**
-                 * TurmsRequest updateGroupMemberRequest.
-                 * @member {im.turms.proto.IUpdateGroupMemberRequest|null|undefined} updateGroupMemberRequest
-                 * @memberof im.turms.proto.TurmsRequest
-                 * @instance
-                 */
-                TurmsRequest.prototype.updateGroupMemberRequest = null;
+                TurmsRequest.prototype.querySignedPutUrlRequest = null;
 
                 // OneOf field names bound to virtual getters and setters
                 var $oneOfFields;
 
                 /**
                  * TurmsRequest kind.
-                 * @member {"ackRequest"|"deleteResourceRequest"|"querySignedGetUrlRequest"|"querySignedPutUrlRequest"|"createMessageRequest"|"queryMessageStatusesRequest"|"queryMessagesRequest"|"queryPendingMessagesWithTotalRequest"|"updateMessageRequest"|"updateTypingStatusRequest"|"createSessionRequest"|"deleteSessionRequest"|"queryUserProfileRequest"|"queryUserIdsNearbyRequest"|"queryUserInfosNearbyRequest"|"queryUserOnlineStatusesRequest"|"updateUserLocationRequest"|"updateUserOnlineStatusRequest"|"updateUserRequest"|"createFriendRequestRequest"|"createRelationshipGroupRequest"|"createRelationshipRequest"|"deleteRelationshipGroupRequest"|"deleteRelationshipRequest"|"queryFriendRequestsRequest"|"queryRelatedUserIdsRequest"|"queryRelationshipGroupsRequest"|"queryRelationshipsRequest"|"updateFriendRequestRequest"|"updateRelationshipGroupRequest"|"updateRelationshipRequest"|"createGroupRequest"|"deleteGroupRequest"|"queryGroupRequest"|"queryJoinedGroupIdsRequest"|"queryJoinedGroupInfosRequest"|"updateGroupRequest"|"createGroupBlacklistedUserRequest"|"deleteGroupBlacklistedUserRequest"|"queryGroupBlacklistedUserIdsRequest"|"queryGroupBlacklistedUserInfosRequest"|"checkGroupJoinQuestionsAnswersRequest"|"createGroupInvitationRequest"|"createGroupJoinRequestRequest"|"createGroupJoinQuestionRequest"|"deleteGroupInvitationRequest"|"deleteGroupJoinRequestRequest"|"deleteGroupJoinQuestionRequest"|"queryGroupInvitationsRequest"|"queryGroupJoinRequestsRequest"|"queryGroupJoinQuestionsRequest"|"updateGroupJoinQuestionRequest"|"createGroupMemberRequest"|"deleteGroupMemberRequest"|"queryGroupMembersRequest"|"updateGroupMemberRequest"|undefined} kind
+                 * @member {"createSessionRequest"|"deleteSessionRequest"|"queryConversationsRequest"|"updateConversationRequest"|"updateTypingStatusRequest"|"createMessageRequest"|"queryMessagesRequest"|"updateMessageRequest"|"createGroupMemberRequest"|"deleteGroupMemberRequest"|"queryGroupMembersRequest"|"updateGroupMemberRequest"|"queryUserProfileRequest"|"queryUserIdsNearbyRequest"|"queryUserInfosNearbyRequest"|"queryUserOnlineStatusesRequest"|"updateUserLocationRequest"|"updateUserOnlineStatusRequest"|"updateUserRequest"|"createFriendRequestRequest"|"createRelationshipGroupRequest"|"createRelationshipRequest"|"deleteRelationshipGroupRequest"|"deleteRelationshipRequest"|"queryFriendRequestsRequest"|"queryRelatedUserIdsRequest"|"queryRelationshipGroupsRequest"|"queryRelationshipsRequest"|"updateFriendRequestRequest"|"updateRelationshipGroupRequest"|"updateRelationshipRequest"|"createGroupRequest"|"deleteGroupRequest"|"queryGroupRequest"|"queryJoinedGroupIdsRequest"|"queryJoinedGroupInfosRequest"|"updateGroupRequest"|"createGroupBlacklistedUserRequest"|"deleteGroupBlacklistedUserRequest"|"queryGroupBlacklistedUserIdsRequest"|"queryGroupBlacklistedUserInfosRequest"|"checkGroupJoinQuestionsAnswersRequest"|"createGroupInvitationRequest"|"createGroupJoinRequestRequest"|"createGroupJoinQuestionRequest"|"deleteGroupInvitationRequest"|"deleteGroupJoinRequestRequest"|"deleteGroupJoinQuestionRequest"|"queryGroupInvitationsRequest"|"queryGroupJoinRequestsRequest"|"queryGroupJoinQuestionsRequest"|"updateGroupJoinQuestionRequest"|"deleteResourceRequest"|"querySignedGetUrlRequest"|"querySignedPutUrlRequest"|undefined} kind
                  * @memberof im.turms.proto.TurmsRequest
                  * @instance
                  */
                 Object.defineProperty(TurmsRequest.prototype, "kind", {
-                    get: $util.oneOfGetter($oneOfFields = ["ackRequest", "deleteResourceRequest", "querySignedGetUrlRequest", "querySignedPutUrlRequest", "createMessageRequest", "queryMessageStatusesRequest", "queryMessagesRequest", "queryPendingMessagesWithTotalRequest", "updateMessageRequest", "updateTypingStatusRequest", "createSessionRequest", "deleteSessionRequest", "queryUserProfileRequest", "queryUserIdsNearbyRequest", "queryUserInfosNearbyRequest", "queryUserOnlineStatusesRequest", "updateUserLocationRequest", "updateUserOnlineStatusRequest", "updateUserRequest", "createFriendRequestRequest", "createRelationshipGroupRequest", "createRelationshipRequest", "deleteRelationshipGroupRequest", "deleteRelationshipRequest", "queryFriendRequestsRequest", "queryRelatedUserIdsRequest", "queryRelationshipGroupsRequest", "queryRelationshipsRequest", "updateFriendRequestRequest", "updateRelationshipGroupRequest", "updateRelationshipRequest", "createGroupRequest", "deleteGroupRequest", "queryGroupRequest", "queryJoinedGroupIdsRequest", "queryJoinedGroupInfosRequest", "updateGroupRequest", "createGroupBlacklistedUserRequest", "deleteGroupBlacklistedUserRequest", "queryGroupBlacklistedUserIdsRequest", "queryGroupBlacklistedUserInfosRequest", "checkGroupJoinQuestionsAnswersRequest", "createGroupInvitationRequest", "createGroupJoinRequestRequest", "createGroupJoinQuestionRequest", "deleteGroupInvitationRequest", "deleteGroupJoinRequestRequest", "deleteGroupJoinQuestionRequest", "queryGroupInvitationsRequest", "queryGroupJoinRequestsRequest", "queryGroupJoinQuestionsRequest", "updateGroupJoinQuestionRequest", "createGroupMemberRequest", "deleteGroupMemberRequest", "queryGroupMembersRequest", "updateGroupMemberRequest"]),
+                    get: $util.oneOfGetter($oneOfFields = ["createSessionRequest", "deleteSessionRequest", "queryConversationsRequest", "updateConversationRequest", "updateTypingStatusRequest", "createMessageRequest", "queryMessagesRequest", "updateMessageRequest", "createGroupMemberRequest", "deleteGroupMemberRequest", "queryGroupMembersRequest", "updateGroupMemberRequest", "queryUserProfileRequest", "queryUserIdsNearbyRequest", "queryUserInfosNearbyRequest", "queryUserOnlineStatusesRequest", "updateUserLocationRequest", "updateUserOnlineStatusRequest", "updateUserRequest", "createFriendRequestRequest", "createRelationshipGroupRequest", "createRelationshipRequest", "deleteRelationshipGroupRequest", "deleteRelationshipRequest", "queryFriendRequestsRequest", "queryRelatedUserIdsRequest", "queryRelationshipGroupsRequest", "queryRelationshipsRequest", "updateFriendRequestRequest", "updateRelationshipGroupRequest", "updateRelationshipRequest", "createGroupRequest", "deleteGroupRequest", "queryGroupRequest", "queryJoinedGroupIdsRequest", "queryJoinedGroupInfosRequest", "updateGroupRequest", "createGroupBlacklistedUserRequest", "deleteGroupBlacklistedUserRequest", "queryGroupBlacklistedUserIdsRequest", "queryGroupBlacklistedUserInfosRequest", "checkGroupJoinQuestionsAnswersRequest", "createGroupInvitationRequest", "createGroupJoinRequestRequest", "createGroupJoinQuestionRequest", "deleteGroupInvitationRequest", "deleteGroupJoinRequestRequest", "deleteGroupJoinQuestionRequest", "queryGroupInvitationsRequest", "queryGroupJoinRequestsRequest", "queryGroupJoinQuestionsRequest", "updateGroupJoinQuestionRequest", "deleteResourceRequest", "querySignedGetUrlRequest", "querySignedPutUrlRequest"]),
                     set: $util.oneOfSetter($oneOfFields)
                 });
 
@@ -10186,44 +10043,44 @@ $root.im = (function() {
                         writer = $Writer.create();
                     if (message.requestId != null && Object.hasOwnProperty.call(message, "requestId"))
                         $root.google.protobuf.Int64Value.encode(message.requestId, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
-                    if (message.ackRequest != null && Object.hasOwnProperty.call(message, "ackRequest"))
-                        $root.im.turms.proto.AckRequest.encode(message.ackRequest, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    if (message.deleteResourceRequest != null && Object.hasOwnProperty.call(message, "deleteResourceRequest"))
-                        $root.im.turms.proto.DeleteResourceRequest.encode(message.deleteResourceRequest, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
-                    if (message.querySignedGetUrlRequest != null && Object.hasOwnProperty.call(message, "querySignedGetUrlRequest"))
-                        $root.im.turms.proto.QuerySignedGetUrlRequest.encode(message.querySignedGetUrlRequest, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
-                    if (message.querySignedPutUrlRequest != null && Object.hasOwnProperty.call(message, "querySignedPutUrlRequest"))
-                        $root.im.turms.proto.QuerySignedPutUrlRequest.encode(message.querySignedPutUrlRequest, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+                    if (message.createSessionRequest != null && Object.hasOwnProperty.call(message, "createSessionRequest"))
+                        $root.im.turms.proto.CreateSessionRequest.encode(message.createSessionRequest, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                    if (message.deleteSessionRequest != null && Object.hasOwnProperty.call(message, "deleteSessionRequest"))
+                        $root.im.turms.proto.DeleteSessionRequest.encode(message.deleteSessionRequest, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
+                    if (message.queryConversationsRequest != null && Object.hasOwnProperty.call(message, "queryConversationsRequest"))
+                        $root.im.turms.proto.QueryConversationsRequest.encode(message.queryConversationsRequest, writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+                    if (message.updateConversationRequest != null && Object.hasOwnProperty.call(message, "updateConversationRequest"))
+                        $root.im.turms.proto.UpdateConversationRequest.encode(message.updateConversationRequest, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
+                    if (message.updateTypingStatusRequest != null && Object.hasOwnProperty.call(message, "updateTypingStatusRequest"))
+                        $root.im.turms.proto.UpdateTypingStatusRequest.encode(message.updateTypingStatusRequest, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
                     if (message.createMessageRequest != null && Object.hasOwnProperty.call(message, "createMessageRequest"))
-                        $root.im.turms.proto.CreateMessageRequest.encode(message.createMessageRequest, writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
-                    if (message.queryMessageStatusesRequest != null && Object.hasOwnProperty.call(message, "queryMessageStatusesRequest"))
-                        $root.im.turms.proto.QueryMessageStatusesRequest.encode(message.queryMessageStatusesRequest, writer.uint32(/* id 7, wireType 2 =*/58).fork()).ldelim();
+                        $root.im.turms.proto.CreateMessageRequest.encode(message.createMessageRequest, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
                     if (message.queryMessagesRequest != null && Object.hasOwnProperty.call(message, "queryMessagesRequest"))
-                        $root.im.turms.proto.QueryMessagesRequest.encode(message.queryMessagesRequest, writer.uint32(/* id 8, wireType 2 =*/66).fork()).ldelim();
-                    if (message.queryPendingMessagesWithTotalRequest != null && Object.hasOwnProperty.call(message, "queryPendingMessagesWithTotalRequest"))
-                        $root.im.turms.proto.QueryPendingMessagesWithTotalRequest.encode(message.queryPendingMessagesWithTotalRequest, writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
+                        $root.im.turms.proto.QueryMessagesRequest.encode(message.queryMessagesRequest, writer.uint32(/* id 9, wireType 2 =*/74).fork()).ldelim();
                     if (message.updateMessageRequest != null && Object.hasOwnProperty.call(message, "updateMessageRequest"))
                         $root.im.turms.proto.UpdateMessageRequest.encode(message.updateMessageRequest, writer.uint32(/* id 10, wireType 2 =*/82).fork()).ldelim();
-                    if (message.updateTypingStatusRequest != null && Object.hasOwnProperty.call(message, "updateTypingStatusRequest"))
-                        $root.im.turms.proto.UpdateTypingStatusRequest.encode(message.updateTypingStatusRequest, writer.uint32(/* id 11, wireType 2 =*/90).fork()).ldelim();
-                    if (message.createSessionRequest != null && Object.hasOwnProperty.call(message, "createSessionRequest"))
-                        $root.im.turms.proto.CreateSessionRequest.encode(message.createSessionRequest, writer.uint32(/* id 100, wireType 2 =*/802).fork()).ldelim();
-                    if (message.deleteSessionRequest != null && Object.hasOwnProperty.call(message, "deleteSessionRequest"))
-                        $root.im.turms.proto.DeleteSessionRequest.encode(message.deleteSessionRequest, writer.uint32(/* id 101, wireType 2 =*/810).fork()).ldelim();
+                    if (message.createGroupMemberRequest != null && Object.hasOwnProperty.call(message, "createGroupMemberRequest"))
+                        $root.im.turms.proto.CreateGroupMemberRequest.encode(message.createGroupMemberRequest, writer.uint32(/* id 11, wireType 2 =*/90).fork()).ldelim();
+                    if (message.deleteGroupMemberRequest != null && Object.hasOwnProperty.call(message, "deleteGroupMemberRequest"))
+                        $root.im.turms.proto.DeleteGroupMemberRequest.encode(message.deleteGroupMemberRequest, writer.uint32(/* id 12, wireType 2 =*/98).fork()).ldelim();
+                    if (message.queryGroupMembersRequest != null && Object.hasOwnProperty.call(message, "queryGroupMembersRequest"))
+                        $root.im.turms.proto.QueryGroupMembersRequest.encode(message.queryGroupMembersRequest, writer.uint32(/* id 13, wireType 2 =*/106).fork()).ldelim();
+                    if (message.updateGroupMemberRequest != null && Object.hasOwnProperty.call(message, "updateGroupMemberRequest"))
+                        $root.im.turms.proto.UpdateGroupMemberRequest.encode(message.updateGroupMemberRequest, writer.uint32(/* id 14, wireType 2 =*/114).fork()).ldelim();
                     if (message.queryUserProfileRequest != null && Object.hasOwnProperty.call(message, "queryUserProfileRequest"))
-                        $root.im.turms.proto.QueryUserProfileRequest.encode(message.queryUserProfileRequest, writer.uint32(/* id 102, wireType 2 =*/818).fork()).ldelim();
+                        $root.im.turms.proto.QueryUserProfileRequest.encode(message.queryUserProfileRequest, writer.uint32(/* id 100, wireType 2 =*/802).fork()).ldelim();
                     if (message.queryUserIdsNearbyRequest != null && Object.hasOwnProperty.call(message, "queryUserIdsNearbyRequest"))
-                        $root.im.turms.proto.QueryUserIdsNearbyRequest.encode(message.queryUserIdsNearbyRequest, writer.uint32(/* id 103, wireType 2 =*/826).fork()).ldelim();
+                        $root.im.turms.proto.QueryUserIdsNearbyRequest.encode(message.queryUserIdsNearbyRequest, writer.uint32(/* id 101, wireType 2 =*/810).fork()).ldelim();
                     if (message.queryUserInfosNearbyRequest != null && Object.hasOwnProperty.call(message, "queryUserInfosNearbyRequest"))
-                        $root.im.turms.proto.QueryUserInfosNearbyRequest.encode(message.queryUserInfosNearbyRequest, writer.uint32(/* id 104, wireType 2 =*/834).fork()).ldelim();
+                        $root.im.turms.proto.QueryUserInfosNearbyRequest.encode(message.queryUserInfosNearbyRequest, writer.uint32(/* id 102, wireType 2 =*/818).fork()).ldelim();
                     if (message.queryUserOnlineStatusesRequest != null && Object.hasOwnProperty.call(message, "queryUserOnlineStatusesRequest"))
-                        $root.im.turms.proto.QueryUserOnlineStatusesRequest.encode(message.queryUserOnlineStatusesRequest, writer.uint32(/* id 105, wireType 2 =*/842).fork()).ldelim();
+                        $root.im.turms.proto.QueryUserOnlineStatusesRequest.encode(message.queryUserOnlineStatusesRequest, writer.uint32(/* id 103, wireType 2 =*/826).fork()).ldelim();
                     if (message.updateUserLocationRequest != null && Object.hasOwnProperty.call(message, "updateUserLocationRequest"))
-                        $root.im.turms.proto.UpdateUserLocationRequest.encode(message.updateUserLocationRequest, writer.uint32(/* id 106, wireType 2 =*/850).fork()).ldelim();
+                        $root.im.turms.proto.UpdateUserLocationRequest.encode(message.updateUserLocationRequest, writer.uint32(/* id 104, wireType 2 =*/834).fork()).ldelim();
                     if (message.updateUserOnlineStatusRequest != null && Object.hasOwnProperty.call(message, "updateUserOnlineStatusRequest"))
-                        $root.im.turms.proto.UpdateUserOnlineStatusRequest.encode(message.updateUserOnlineStatusRequest, writer.uint32(/* id 107, wireType 2 =*/858).fork()).ldelim();
+                        $root.im.turms.proto.UpdateUserOnlineStatusRequest.encode(message.updateUserOnlineStatusRequest, writer.uint32(/* id 105, wireType 2 =*/842).fork()).ldelim();
                     if (message.updateUserRequest != null && Object.hasOwnProperty.call(message, "updateUserRequest"))
-                        $root.im.turms.proto.UpdateUserRequest.encode(message.updateUserRequest, writer.uint32(/* id 108, wireType 2 =*/866).fork()).ldelim();
+                        $root.im.turms.proto.UpdateUserRequest.encode(message.updateUserRequest, writer.uint32(/* id 106, wireType 2 =*/850).fork()).ldelim();
                     if (message.createFriendRequestRequest != null && Object.hasOwnProperty.call(message, "createFriendRequestRequest"))
                         $root.im.turms.proto.CreateFriendRequestRequest.encode(message.createFriendRequestRequest, writer.uint32(/* id 200, wireType 2 =*/1602).fork()).ldelim();
                     if (message.createRelationshipGroupRequest != null && Object.hasOwnProperty.call(message, "createRelationshipGroupRequest"))
@@ -10290,14 +10147,12 @@ $root.im = (function() {
                         $root.im.turms.proto.QueryGroupJoinQuestionsRequest.encode(message.queryGroupJoinQuestionsRequest, writer.uint32(/* id 509, wireType 2 =*/4074).fork()).ldelim();
                     if (message.updateGroupJoinQuestionRequest != null && Object.hasOwnProperty.call(message, "updateGroupJoinQuestionRequest"))
                         $root.im.turms.proto.UpdateGroupJoinQuestionRequest.encode(message.updateGroupJoinQuestionRequest, writer.uint32(/* id 510, wireType 2 =*/4082).fork()).ldelim();
-                    if (message.createGroupMemberRequest != null && Object.hasOwnProperty.call(message, "createGroupMemberRequest"))
-                        $root.im.turms.proto.CreateGroupMemberRequest.encode(message.createGroupMemberRequest, writer.uint32(/* id 600, wireType 2 =*/4802).fork()).ldelim();
-                    if (message.deleteGroupMemberRequest != null && Object.hasOwnProperty.call(message, "deleteGroupMemberRequest"))
-                        $root.im.turms.proto.DeleteGroupMemberRequest.encode(message.deleteGroupMemberRequest, writer.uint32(/* id 601, wireType 2 =*/4810).fork()).ldelim();
-                    if (message.queryGroupMembersRequest != null && Object.hasOwnProperty.call(message, "queryGroupMembersRequest"))
-                        $root.im.turms.proto.QueryGroupMembersRequest.encode(message.queryGroupMembersRequest, writer.uint32(/* id 602, wireType 2 =*/4818).fork()).ldelim();
-                    if (message.updateGroupMemberRequest != null && Object.hasOwnProperty.call(message, "updateGroupMemberRequest"))
-                        $root.im.turms.proto.UpdateGroupMemberRequest.encode(message.updateGroupMemberRequest, writer.uint32(/* id 603, wireType 2 =*/4826).fork()).ldelim();
+                    if (message.deleteResourceRequest != null && Object.hasOwnProperty.call(message, "deleteResourceRequest"))
+                        $root.im.turms.proto.DeleteResourceRequest.encode(message.deleteResourceRequest, writer.uint32(/* id 1000, wireType 2 =*/8002).fork()).ldelim();
+                    if (message.querySignedGetUrlRequest != null && Object.hasOwnProperty.call(message, "querySignedGetUrlRequest"))
+                        $root.im.turms.proto.QuerySignedGetUrlRequest.encode(message.querySignedGetUrlRequest, writer.uint32(/* id 1001, wireType 2 =*/8010).fork()).ldelim();
+                    if (message.querySignedPutUrlRequest != null && Object.hasOwnProperty.call(message, "querySignedPutUrlRequest"))
+                        $root.im.turms.proto.QuerySignedPutUrlRequest.encode(message.querySignedPutUrlRequest, writer.uint32(/* id 1002, wireType 2 =*/8018).fork()).ldelim();
                     return writer;
                 };
 
@@ -10322,61 +10177,61 @@ $root.im = (function() {
                         case 1:
                             message.requestId = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
                             break;
-                        case 2:
-                            message.ackRequest = $root.im.turms.proto.AckRequest.decode(reader, reader.uint32());
-                            break;
                         case 3:
-                            message.deleteResourceRequest = $root.im.turms.proto.DeleteResourceRequest.decode(reader, reader.uint32());
+                            message.createSessionRequest = $root.im.turms.proto.CreateSessionRequest.decode(reader, reader.uint32());
                             break;
                         case 4:
-                            message.querySignedGetUrlRequest = $root.im.turms.proto.QuerySignedGetUrlRequest.decode(reader, reader.uint32());
+                            message.deleteSessionRequest = $root.im.turms.proto.DeleteSessionRequest.decode(reader, reader.uint32());
                             break;
                         case 5:
-                            message.querySignedPutUrlRequest = $root.im.turms.proto.QuerySignedPutUrlRequest.decode(reader, reader.uint32());
+                            message.queryConversationsRequest = $root.im.turms.proto.QueryConversationsRequest.decode(reader, reader.uint32());
                             break;
                         case 6:
-                            message.createMessageRequest = $root.im.turms.proto.CreateMessageRequest.decode(reader, reader.uint32());
+                            message.updateConversationRequest = $root.im.turms.proto.UpdateConversationRequest.decode(reader, reader.uint32());
                             break;
                         case 7:
-                            message.queryMessageStatusesRequest = $root.im.turms.proto.QueryMessageStatusesRequest.decode(reader, reader.uint32());
+                            message.updateTypingStatusRequest = $root.im.turms.proto.UpdateTypingStatusRequest.decode(reader, reader.uint32());
                             break;
                         case 8:
-                            message.queryMessagesRequest = $root.im.turms.proto.QueryMessagesRequest.decode(reader, reader.uint32());
+                            message.createMessageRequest = $root.im.turms.proto.CreateMessageRequest.decode(reader, reader.uint32());
                             break;
                         case 9:
-                            message.queryPendingMessagesWithTotalRequest = $root.im.turms.proto.QueryPendingMessagesWithTotalRequest.decode(reader, reader.uint32());
+                            message.queryMessagesRequest = $root.im.turms.proto.QueryMessagesRequest.decode(reader, reader.uint32());
                             break;
                         case 10:
                             message.updateMessageRequest = $root.im.turms.proto.UpdateMessageRequest.decode(reader, reader.uint32());
                             break;
                         case 11:
-                            message.updateTypingStatusRequest = $root.im.turms.proto.UpdateTypingStatusRequest.decode(reader, reader.uint32());
+                            message.createGroupMemberRequest = $root.im.turms.proto.CreateGroupMemberRequest.decode(reader, reader.uint32());
+                            break;
+                        case 12:
+                            message.deleteGroupMemberRequest = $root.im.turms.proto.DeleteGroupMemberRequest.decode(reader, reader.uint32());
+                            break;
+                        case 13:
+                            message.queryGroupMembersRequest = $root.im.turms.proto.QueryGroupMembersRequest.decode(reader, reader.uint32());
+                            break;
+                        case 14:
+                            message.updateGroupMemberRequest = $root.im.turms.proto.UpdateGroupMemberRequest.decode(reader, reader.uint32());
                             break;
                         case 100:
-                            message.createSessionRequest = $root.im.turms.proto.CreateSessionRequest.decode(reader, reader.uint32());
-                            break;
-                        case 101:
-                            message.deleteSessionRequest = $root.im.turms.proto.DeleteSessionRequest.decode(reader, reader.uint32());
-                            break;
-                        case 102:
                             message.queryUserProfileRequest = $root.im.turms.proto.QueryUserProfileRequest.decode(reader, reader.uint32());
                             break;
-                        case 103:
+                        case 101:
                             message.queryUserIdsNearbyRequest = $root.im.turms.proto.QueryUserIdsNearbyRequest.decode(reader, reader.uint32());
                             break;
-                        case 104:
+                        case 102:
                             message.queryUserInfosNearbyRequest = $root.im.turms.proto.QueryUserInfosNearbyRequest.decode(reader, reader.uint32());
                             break;
-                        case 105:
+                        case 103:
                             message.queryUserOnlineStatusesRequest = $root.im.turms.proto.QueryUserOnlineStatusesRequest.decode(reader, reader.uint32());
                             break;
-                        case 106:
+                        case 104:
                             message.updateUserLocationRequest = $root.im.turms.proto.UpdateUserLocationRequest.decode(reader, reader.uint32());
                             break;
-                        case 107:
+                        case 105:
                             message.updateUserOnlineStatusRequest = $root.im.turms.proto.UpdateUserOnlineStatusRequest.decode(reader, reader.uint32());
                             break;
-                        case 108:
+                        case 106:
                             message.updateUserRequest = $root.im.turms.proto.UpdateUserRequest.decode(reader, reader.uint32());
                             break;
                         case 200:
@@ -10478,17 +10333,14 @@ $root.im = (function() {
                         case 510:
                             message.updateGroupJoinQuestionRequest = $root.im.turms.proto.UpdateGroupJoinQuestionRequest.decode(reader, reader.uint32());
                             break;
-                        case 600:
-                            message.createGroupMemberRequest = $root.im.turms.proto.CreateGroupMemberRequest.decode(reader, reader.uint32());
+                        case 1000:
+                            message.deleteResourceRequest = $root.im.turms.proto.DeleteResourceRequest.decode(reader, reader.uint32());
                             break;
-                        case 601:
-                            message.deleteGroupMemberRequest = $root.im.turms.proto.DeleteGroupMemberRequest.decode(reader, reader.uint32());
+                        case 1001:
+                            message.querySignedGetUrlRequest = $root.im.turms.proto.QuerySignedGetUrlRequest.decode(reader, reader.uint32());
                             break;
-                        case 602:
-                            message.queryGroupMembersRequest = $root.im.turms.proto.QueryGroupMembersRequest.decode(reader, reader.uint32());
-                            break;
-                        case 603:
-                            message.updateGroupMemberRequest = $root.im.turms.proto.UpdateGroupMemberRequest.decode(reader, reader.uint32());
+                        case 1002:
+                            message.querySignedPutUrlRequest = $root.im.turms.proto.QuerySignedPutUrlRequest.decode(reader, reader.uint32());
                             break;
                         default:
                             reader.skipType(tag & 7);

@@ -170,6 +170,7 @@ enum Code {
 
     // Conversation
     UPDATING_TYPING_STATUS_IS_DISABLED = 4000,
+    UPDATING_READ_DATE_IS_DISABLED,
 
     // Message
 

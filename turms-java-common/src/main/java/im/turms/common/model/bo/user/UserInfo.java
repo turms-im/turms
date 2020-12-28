@@ -119,19 +119,6 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 42: {
-            com.google.protobuf.Int64Value.Builder subBuilder = null;
-            if (deletionDate_ != null) {
-              subBuilder = deletionDate_.toBuilder();
-            }
-            deletionDate_ = input.readMessage(com.google.protobuf.Int64Value.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(deletionDate_);
-              deletionDate_ = subBuilder.buildPartial();
-            }
-
-            break;
-          }
-          case 50: {
             com.google.protobuf.BoolValue.Builder subBuilder = null;
             if (active_ != null) {
               subBuilder = active_.toBuilder();
@@ -144,7 +131,7 @@ private static final long serialVersionUID = 0L;
 
             break;
           }
-          case 56: {
+          case 48: {
             int rawValue = input.readEnum();
 
             profileAccessStrategy_ = rawValue;
@@ -286,36 +273,10 @@ private static final long serialVersionUID = 0L;
     return getRegistrationDate();
   }
 
-  public static final int DELETION_DATE_FIELD_NUMBER = 5;
-  private com.google.protobuf.Int64Value deletionDate_;
-  /**
-   * <code>.google.protobuf.Int64Value deletion_date = 5;</code>
-   * @return Whether the deletionDate field is set.
-   */
-  @java.lang.Override
-  public boolean hasDeletionDate() {
-    return deletionDate_ != null;
-  }
-  /**
-   * <code>.google.protobuf.Int64Value deletion_date = 5;</code>
-   * @return The deletionDate.
-   */
-  @java.lang.Override
-  public com.google.protobuf.Int64Value getDeletionDate() {
-    return deletionDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : deletionDate_;
-  }
-  /**
-   * <code>.google.protobuf.Int64Value deletion_date = 5;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.Int64ValueOrBuilder getDeletionDateOrBuilder() {
-    return getDeletionDate();
-  }
-
-  public static final int ACTIVE_FIELD_NUMBER = 6;
+  public static final int ACTIVE_FIELD_NUMBER = 5;
   private com.google.protobuf.BoolValue active_;
   /**
-   * <code>.google.protobuf.BoolValue active = 6;</code>
+   * <code>.google.protobuf.BoolValue active = 5;</code>
    * @return Whether the active field is set.
    */
   @java.lang.Override
@@ -323,7 +284,7 @@ private static final long serialVersionUID = 0L;
     return active_ != null;
   }
   /**
-   * <code>.google.protobuf.BoolValue active = 6;</code>
+   * <code>.google.protobuf.BoolValue active = 5;</code>
    * @return The active.
    */
   @java.lang.Override
@@ -331,24 +292,24 @@ private static final long serialVersionUID = 0L;
     return active_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : active_;
   }
   /**
-   * <code>.google.protobuf.BoolValue active = 6;</code>
+   * <code>.google.protobuf.BoolValue active = 5;</code>
    */
   @java.lang.Override
   public com.google.protobuf.BoolValueOrBuilder getActiveOrBuilder() {
     return getActive();
   }
 
-  public static final int PROFILE_ACCESS_STRATEGY_FIELD_NUMBER = 7;
+  public static final int PROFILE_ACCESS_STRATEGY_FIELD_NUMBER = 6;
   private int profileAccessStrategy_;
   /**
-   * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 7;</code>
+   * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
    * @return The enum numeric value on the wire for profileAccessStrategy.
    */
   @java.lang.Override public int getProfileAccessStrategyValue() {
     return profileAccessStrategy_;
   }
   /**
-   * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 7;</code>
+   * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
    * @return The profileAccessStrategy.
    */
   @java.lang.Override public im.turms.common.constant.ProfileAccessStrategy getProfileAccessStrategy() {
@@ -383,14 +344,11 @@ private static final long serialVersionUID = 0L;
     if (registrationDate_ != null) {
       output.writeMessage(4, getRegistrationDate());
     }
-    if (deletionDate_ != null) {
-      output.writeMessage(5, getDeletionDate());
-    }
     if (active_ != null) {
-      output.writeMessage(6, getActive());
+      output.writeMessage(5, getActive());
     }
     if (profileAccessStrategy_ != im.turms.common.constant.ProfileAccessStrategy.ALL.getNumber()) {
-      output.writeEnum(7, profileAccessStrategy_);
+      output.writeEnum(6, profileAccessStrategy_);
     }
     unknownFields.writeTo(output);
   }
@@ -417,17 +375,13 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(4, getRegistrationDate());
     }
-    if (deletionDate_ != null) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(5, getDeletionDate());
-    }
     if (active_ != null) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(6, getActive());
+        .computeMessageSize(5, getActive());
     }
     if (profileAccessStrategy_ != im.turms.common.constant.ProfileAccessStrategy.ALL.getNumber()) {
       size += com.google.protobuf.CodedOutputStream
-        .computeEnumSize(7, profileAccessStrategy_);
+        .computeEnumSize(6, profileAccessStrategy_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -464,11 +418,6 @@ private static final long serialVersionUID = 0L;
       if (!getRegistrationDate()
           .equals(other.getRegistrationDate())) return false;
     }
-    if (hasDeletionDate() != other.hasDeletionDate()) return false;
-    if (hasDeletionDate()) {
-      if (!getDeletionDate()
-          .equals(other.getDeletionDate())) return false;
-    }
     if (hasActive() != other.hasActive()) return false;
     if (hasActive()) {
       if (!getActive()
@@ -501,10 +450,6 @@ private static final long serialVersionUID = 0L;
     if (hasRegistrationDate()) {
       hash = (37 * hash) + REGISTRATION_DATE_FIELD_NUMBER;
       hash = (53 * hash) + getRegistrationDate().hashCode();
-    }
-    if (hasDeletionDate()) {
-      hash = (37 * hash) + DELETION_DATE_FIELD_NUMBER;
-      hash = (53 * hash) + getDeletionDate().hashCode();
     }
     if (hasActive()) {
       hash = (37 * hash) + ACTIVE_FIELD_NUMBER;
@@ -669,12 +614,6 @@ private static final long serialVersionUID = 0L;
         registrationDate_ = null;
         registrationDateBuilder_ = null;
       }
-      if (deletionDateBuilder_ == null) {
-        deletionDate_ = null;
-      } else {
-        deletionDate_ = null;
-        deletionDateBuilder_ = null;
-      }
       if (activeBuilder_ == null) {
         active_ = null;
       } else {
@@ -728,11 +667,6 @@ private static final long serialVersionUID = 0L;
         result.registrationDate_ = registrationDate_;
       } else {
         result.registrationDate_ = registrationDateBuilder_.build();
-      }
-      if (deletionDateBuilder_ == null) {
-        result.deletionDate_ = deletionDate_;
-      } else {
-        result.deletionDate_ = deletionDateBuilder_.build();
       }
       if (activeBuilder_ == null) {
         result.active_ = active_;
@@ -799,9 +733,6 @@ private static final long serialVersionUID = 0L;
       }
       if (other.hasRegistrationDate()) {
         mergeRegistrationDate(other.getRegistrationDate());
-      }
-      if (other.hasDeletionDate()) {
-        mergeDeletionDate(other.getDeletionDate());
       }
       if (other.hasActive()) {
         mergeActive(other.getActive());
@@ -1314,137 +1245,18 @@ private static final long serialVersionUID = 0L;
       return registrationDateBuilder_;
     }
 
-    private com.google.protobuf.Int64Value deletionDate_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> deletionDateBuilder_;
-    /**
-     * <code>.google.protobuf.Int64Value deletion_date = 5;</code>
-     * @return Whether the deletionDate field is set.
-     */
-    public boolean hasDeletionDate() {
-      return deletionDateBuilder_ != null || deletionDate_ != null;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value deletion_date = 5;</code>
-     * @return The deletionDate.
-     */
-    public com.google.protobuf.Int64Value getDeletionDate() {
-      if (deletionDateBuilder_ == null) {
-        return deletionDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : deletionDate_;
-      } else {
-        return deletionDateBuilder_.getMessage();
-      }
-    }
-    /**
-     * <code>.google.protobuf.Int64Value deletion_date = 5;</code>
-     */
-    public Builder setDeletionDate(com.google.protobuf.Int64Value value) {
-      if (deletionDateBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        deletionDate_ = value;
-        onChanged();
-      } else {
-        deletionDateBuilder_.setMessage(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value deletion_date = 5;</code>
-     */
-    public Builder setDeletionDate(
-        com.google.protobuf.Int64Value.Builder builderForValue) {
-      if (deletionDateBuilder_ == null) {
-        deletionDate_ = builderForValue.build();
-        onChanged();
-      } else {
-        deletionDateBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value deletion_date = 5;</code>
-     */
-    public Builder mergeDeletionDate(com.google.protobuf.Int64Value value) {
-      if (deletionDateBuilder_ == null) {
-        if (deletionDate_ != null) {
-          deletionDate_ =
-            com.google.protobuf.Int64Value.newBuilder(deletionDate_).mergeFrom(value).buildPartial();
-        } else {
-          deletionDate_ = value;
-        }
-        onChanged();
-      } else {
-        deletionDateBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value deletion_date = 5;</code>
-     */
-    public Builder clearDeletionDate() {
-      if (deletionDateBuilder_ == null) {
-        deletionDate_ = null;
-        onChanged();
-      } else {
-        deletionDate_ = null;
-        deletionDateBuilder_ = null;
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value deletion_date = 5;</code>
-     */
-    public com.google.protobuf.Int64Value.Builder getDeletionDateBuilder() {
-
-      onChanged();
-      return getDeletionDateFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.Int64Value deletion_date = 5;</code>
-     */
-    public com.google.protobuf.Int64ValueOrBuilder getDeletionDateOrBuilder() {
-      if (deletionDateBuilder_ != null) {
-        return deletionDateBuilder_.getMessageOrBuilder();
-      } else {
-        return deletionDate_ == null ?
-            com.google.protobuf.Int64Value.getDefaultInstance() : deletionDate_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.Int64Value deletion_date = 5;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
-        getDeletionDateFieldBuilder() {
-      if (deletionDateBuilder_ == null) {
-        deletionDateBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>(
-                getDeletionDate(),
-                getParentForChildren(),
-                isClean());
-        deletionDate_ = null;
-      }
-      return deletionDateBuilder_;
-    }
-
     private com.google.protobuf.BoolValue active_;
     private com.google.protobuf.SingleFieldBuilderV3<
         com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder> activeBuilder_;
     /**
-     * <code>.google.protobuf.BoolValue active = 6;</code>
+     * <code>.google.protobuf.BoolValue active = 5;</code>
      * @return Whether the active field is set.
      */
     public boolean hasActive() {
       return activeBuilder_ != null || active_ != null;
     }
     /**
-     * <code>.google.protobuf.BoolValue active = 6;</code>
+     * <code>.google.protobuf.BoolValue active = 5;</code>
      * @return The active.
      */
     public com.google.protobuf.BoolValue getActive() {
@@ -1455,7 +1267,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.google.protobuf.BoolValue active = 6;</code>
+     * <code>.google.protobuf.BoolValue active = 5;</code>
      */
     public Builder setActive(com.google.protobuf.BoolValue value) {
       if (activeBuilder_ == null) {
@@ -1471,7 +1283,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.google.protobuf.BoolValue active = 6;</code>
+     * <code>.google.protobuf.BoolValue active = 5;</code>
      */
     public Builder setActive(
         com.google.protobuf.BoolValue.Builder builderForValue) {
@@ -1485,7 +1297,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.google.protobuf.BoolValue active = 6;</code>
+     * <code>.google.protobuf.BoolValue active = 5;</code>
      */
     public Builder mergeActive(com.google.protobuf.BoolValue value) {
       if (activeBuilder_ == null) {
@@ -1503,7 +1315,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.google.protobuf.BoolValue active = 6;</code>
+     * <code>.google.protobuf.BoolValue active = 5;</code>
      */
     public Builder clearActive() {
       if (activeBuilder_ == null) {
@@ -1517,7 +1329,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.google.protobuf.BoolValue active = 6;</code>
+     * <code>.google.protobuf.BoolValue active = 5;</code>
      */
     public com.google.protobuf.BoolValue.Builder getActiveBuilder() {
 
@@ -1525,7 +1337,7 @@ private static final long serialVersionUID = 0L;
       return getActiveFieldBuilder().getBuilder();
     }
     /**
-     * <code>.google.protobuf.BoolValue active = 6;</code>
+     * <code>.google.protobuf.BoolValue active = 5;</code>
      */
     public com.google.protobuf.BoolValueOrBuilder getActiveOrBuilder() {
       if (activeBuilder_ != null) {
@@ -1536,7 +1348,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.google.protobuf.BoolValue active = 6;</code>
+     * <code>.google.protobuf.BoolValue active = 5;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder>
@@ -1554,14 +1366,14 @@ private static final long serialVersionUID = 0L;
 
     private int profileAccessStrategy_ = 0;
     /**
-     * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 7;</code>
+     * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
      * @return The enum numeric value on the wire for profileAccessStrategy.
      */
     @java.lang.Override public int getProfileAccessStrategyValue() {
       return profileAccessStrategy_;
     }
     /**
-     * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 7;</code>
+     * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
      * @param value The enum numeric value on the wire for profileAccessStrategy to set.
      * @return This builder for chaining.
      */
@@ -1572,7 +1384,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 7;</code>
+     * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
      * @return The profileAccessStrategy.
      */
     @java.lang.Override
@@ -1582,7 +1394,7 @@ private static final long serialVersionUID = 0L;
       return result == null ? im.turms.common.constant.ProfileAccessStrategy.UNRECOGNIZED : result;
     }
     /**
-     * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 7;</code>
+     * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
      * @param value The profileAccessStrategy to set.
      * @return This builder for chaining.
      */
@@ -1596,7 +1408,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 7;</code>
+     * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
      * @return This builder for chaining.
      */
     public Builder clearProfileAccessStrategy() {

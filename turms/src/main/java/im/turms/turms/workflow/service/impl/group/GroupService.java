@@ -38,10 +38,11 @@ import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.util.ProtoUtil;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
 import im.turms.turms.workflow.dao.builder.UpdateBuilder;
-import im.turms.turms.workflow.dao.domain.Group;
-import im.turms.turms.workflow.dao.domain.GroupMember;
-import im.turms.turms.workflow.dao.domain.GroupType;
-import im.turms.turms.workflow.dao.domain.UserPermissionGroup;
+import im.turms.turms.workflow.dao.domain.group.Group;
+import im.turms.turms.workflow.dao.domain.group.GroupMember;
+import im.turms.turms.workflow.dao.domain.group.GroupType;
+import im.turms.turms.workflow.dao.domain.user.UserPermissionGroup;
+import im.turms.turms.workflow.service.impl.conversation.ConversationService;
 import im.turms.turms.workflow.service.impl.statistics.MetricsService;
 import im.turms.turms.workflow.service.impl.user.UserPermissionGroupService;
 import im.turms.turms.workflow.service.impl.user.UserVersionService;
@@ -70,8 +71,8 @@ import java.util.stream.Collectors;
 import static im.turms.turms.constant.DaoConstant.*;
 import static im.turms.turms.constant.MetricsConstant.CREATED_GROUPS_COUNTER_NAME;
 import static im.turms.turms.constant.MetricsConstant.DELETED_GROUPS_COUNTER_NAME;
-import static im.turms.turms.workflow.dao.domain.GroupMember.Fields.ID_GROUP_ID;
-import static im.turms.turms.workflow.dao.domain.GroupMember.Fields.ID_USER_ID;
+import static im.turms.turms.workflow.dao.domain.group.GroupMember.Fields.ID_GROUP_ID;
+import static im.turms.turms.workflow.dao.domain.group.GroupMember.Fields.ID_USER_ID;
 
 /**
  * @author James Chen
@@ -83,9 +84,10 @@ public class GroupService {
     private final ReactiveMongoTemplate mongoTemplate;
     private final GroupTypeService groupTypeService;
     private final GroupMemberService groupMemberService;
-    private final UserVersionService userVersionService;
     private final GroupVersionService groupVersionService;
+    private final UserVersionService userVersionService;
     private final UserPermissionGroupService userPermissionGroupService;
+    private final ConversationService conversationService;
 
     private final Counter createdGroupsCounter;
     private final Counter deletedGroupsCounter;
@@ -98,14 +100,16 @@ public class GroupService {
             UserVersionService userVersionService,
             GroupVersionService groupVersionService,
             UserPermissionGroupService userPermissionGroupService,
+            ConversationService conversationService,
             MetricsService metricsService) {
         this.node = node;
-        this.groupMemberService = groupMemberService;
-        this.groupTypeService = groupTypeService;
         this.mongoTemplate = mongoTemplate;
-        this.userVersionService = userVersionService;
+        this.groupTypeService = groupTypeService;
+        this.groupMemberService = groupMemberService;
         this.groupVersionService = groupVersionService;
+        this.userVersionService = userVersionService;
         this.userPermissionGroupService = userPermissionGroupService;
+        this.conversationService = conversationService;
 
         createdGroupsCounter = metricsService.getRegistry().counter(CREATED_GROUPS_COUNTER_NAME);
         deletedGroupsCounter = metricsService.getRegistry().counter(DELETED_GROUPS_COUNTER_NAME);
@@ -260,6 +264,7 @@ public class GroupService {
                             deletedGroupsCounter.increment(count);
                         }
                         return groupMemberService.deleteAllGroupMembers(groupIds, operations, false)
+                                .then(conversationService.deleteGroupConversations(groupIds, operations))
                                 .then(groupVersionService.delete(groupIds, operations))
                                 .thenReturn(result);
                     });

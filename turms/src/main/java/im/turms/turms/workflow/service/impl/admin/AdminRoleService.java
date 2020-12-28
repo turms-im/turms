@@ -19,18 +19,18 @@ package im.turms.turms.workflow.service.impl.admin;
 
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
-import im.turms.server.common.constant.TurmsStatusCode;
-import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.common.util.Validator;
 import im.turms.server.common.cluster.service.config.ChangeStreamUtil;
+import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.constraint.NoWhitespace;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.workflow.access.http.permission.AdminPermission;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
 import im.turms.turms.workflow.dao.builder.UpdateBuilder;
-import im.turms.turms.workflow.dao.domain.AdminRole;
+import im.turms.turms.workflow.dao.domain.admin.AdminRole;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.tuple.Triple;
 import org.hibernate.validator.constraints.Length;
@@ -62,6 +62,7 @@ public class AdminRoleService {
 
     private static final int MIN_ROLE_NAME_LIMIT = 1;
     private static final int MAX_ROLE_NAME_LIMIT = 32;
+    private static final AdminRole ROOT_ROLE = new AdminRole(DaoConstant.ADMIN_ROLE_ROOT_ID, "ROOT", AdminPermission.ALL, Integer.MAX_VALUE);
 
     private static final String ERROR_UPDATE_ROLE_WITH_HIGHER_RANK = "Only a role with a lower rank compared to the one of the account can be created, updated, or deleted";
     private static final String ERROR_NO_PERMISSION = "The account doesn't have the permissions";
@@ -470,7 +471,9 @@ public class AdminRoleService {
     }
 
     private void resetRoles() {
-        roles.keySet().removeIf(id -> !id.equals(DaoConstant.ADMIN_ROLE_ROOT_ID));
+        Long rootId = DaoConstant.ADMIN_ROLE_ROOT_ID;
+        roles.keySet().removeIf(id -> !id.equals(rootId));
+        roles.put(rootId, ROOT_ROLE);
     }
 
     private boolean isRootRoleQualified(

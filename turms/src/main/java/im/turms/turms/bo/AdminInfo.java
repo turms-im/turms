@@ -17,7 +17,7 @@
 
 package im.turms.turms.bo;
 
-import im.turms.turms.workflow.dao.domain.Admin;
+import im.turms.turms.workflow.dao.domain.admin.Admin;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

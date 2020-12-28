@@ -4,7 +4,6 @@ export default interface ClientOptions {
     requestTimeout?: number;
     minRequestInterval?: number;
     heartbeatInterval?: number;
-    ackMessageInterval?: number;
     storageServerUrl?: string;
     httpUrl?: string;
     queryReasonWhenLoginFailed?: boolean;

@@ -1,6 +1,5 @@
 import { im } from "./proto-bundle";
 export declare namespace ParsedModel {
-    import MessageDeliveryStatus = im.turms.proto.MessageDeliveryStatus;
     import ProfileAccessStrategy = im.turms.proto.ProfileAccessStrategy;
     import RequestStatus = im.turms.proto.RequestStatus;
     import GroupMemberRole = im.turms.proto.GroupMemberRole;
@@ -39,8 +38,20 @@ export declare namespace ParsedModel {
         userInfos?: UserInfo[];
         lastUpdatedDate?: Date;
     }
+    interface PrivateConversation {
+        ownerId: string;
+        targetId: string;
+        readDate: Date;
+    }
+    interface GroupConversation {
+        groupId: string;
+        memberIdAndReadDate: {
+            [k: string]: Date;
+        };
+    }
     interface Message {
         id?: string;
+        isSystemMessage?: boolean;
         deliveryDate?: Date;
         deletionDate?: Date;
         text?: string;
@@ -48,14 +59,6 @@ export declare namespace ParsedModel {
         groupId?: string;
         recipientId?: string;
         records?: Uint8Array[];
-    }
-    interface MessageStatus {
-        messageId?: string;
-        toUserId?: string;
-        deliveryStatus?: MessageDeliveryStatus;
-        receptionDate?: Date;
-        readDate?: Date;
-        recallDate?: Date;
     }
     interface MessagesWithTotal {
         total?: number;

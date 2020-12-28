@@ -22,9 +22,13 @@ import im.turms.server.common.property.env.service.business.GroupProperties;
 import im.turms.server.common.property.env.service.business.NotificationProperties;
 import im.turms.server.common.property.env.service.business.StorageProperties;
 import im.turms.server.common.property.env.service.business.activity.ActivityLoggingProperties;
+import im.turms.server.common.property.env.service.business.conversation.ConversationProperties;
 import im.turms.server.common.property.env.service.business.message.MessageProperties;
 import im.turms.server.common.property.env.service.business.user.UserProperties;
-import im.turms.server.common.property.env.service.env.*;
+import im.turms.server.common.property.env.service.env.AdminApiProperties;
+import im.turms.server.common.property.env.service.env.DiscoveryProperties;
+import im.turms.server.common.property.env.service.env.LogProperties;
+import im.turms.server.common.property.env.service.env.MockProperties;
 import im.turms.server.common.property.env.service.env.clientapi.ClientApiProperties;
 import im.turms.server.common.property.env.service.env.database.DatabaseProperties;
 import im.turms.server.common.property.env.service.env.redis.TurmsRedisProperties;
@@ -69,6 +73,10 @@ public class ServiceProperties {
     private TurmsRedisProperties redis = new TurmsRedisProperties();
 
     // Business
+
+    @JsonView(MutablePropertiesView.class)
+    @NestedConfigurationProperty
+    private ConversationProperties conversation = new ConversationProperties();
 
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty

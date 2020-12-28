@@ -17,8 +17,8 @@
 
 package im.turms.server.common.dto;
 
-import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.common.model.dto.request.TurmsRequest;
+import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.util.ProtoUtil;
 import lombok.Data;
 

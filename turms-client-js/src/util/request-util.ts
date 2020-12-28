@@ -10,7 +10,7 @@ export default class RequestUtil {
     }
 
     public static isFalsy(value: any): boolean {
-        return typeof value === 'undefined' || value === null || value === [];
+        return typeof value == null || value === [];
     }
 
     public static isTruthy(value: any): boolean {

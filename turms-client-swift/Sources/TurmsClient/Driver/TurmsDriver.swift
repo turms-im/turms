@@ -153,8 +153,8 @@ public class TurmsDriver {
                 Logger.error("Failed to parse TurmsNotification: %@", String(describing: error))
                 return
             }
-            if notification.hasData, case .session = notification.data.kind! {
-                sessionService.sessionId = notification.data.session.sessionID
+            if notification.hasData, case .userSession = notification.data.kind! {
+                sessionService.sessionId = notification.data.userSession.sessionID
             }
             messageService.didReceiveNotification(notification)
         }

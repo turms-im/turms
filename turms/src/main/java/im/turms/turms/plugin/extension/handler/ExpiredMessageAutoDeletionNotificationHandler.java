@@ -18,7 +18,7 @@
 package im.turms.turms.plugin.extension.handler;
 
 import im.turms.server.common.plugin.base.TurmsExtension;
-import im.turms.turms.workflow.dao.domain.Message;
+import im.turms.turms.workflow.dao.domain.message.Message;
 import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotEmpty;

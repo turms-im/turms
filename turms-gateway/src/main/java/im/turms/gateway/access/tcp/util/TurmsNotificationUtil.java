@@ -19,8 +19,8 @@ package im.turms.gateway.access.tcp.util;
 
 import com.google.protobuf.Int32Value;
 import com.google.protobuf.Int64Value;
-import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.common.model.dto.notification.TurmsNotification;
+import im.turms.server.common.constant.TurmsStatusCode;
 
 /**
  * @author James Chen

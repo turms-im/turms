@@ -24,7 +24,7 @@ import im.turms.turms.workflow.access.http.dto.request.admin.UpdateAdminDTO;
 import im.turms.turms.workflow.access.http.dto.response.*;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.access.http.util.PageUtil;
-import im.turms.turms.workflow.dao.domain.Admin;
+import im.turms.turms.workflow.dao.domain.admin.Admin;
 import im.turms.turms.workflow.service.impl.admin.AdminService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -24,7 +24,6 @@ import im.turms.server.common.property.constant.TimeType;
 import im.turms.server.common.property.metadata.annotation.Description;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
 import lombok.Data;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import javax.validation.constraints.Min;
 
@@ -112,10 +111,6 @@ public class MessageProperties {
     private int defaultAvailableMessagesNumberWithTotal = 1;
 
     @JsonView(MutablePropertiesView.class)
-    @Description("Whether to update the read date when users querying messages")
-    private boolean updateReadDateWhenUserQueryingMessage = true;
-
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to send the message to the other sender's online devices when sending a message")
     private boolean sendMessageToOtherSenderOnlineDevices = true;
 
@@ -127,11 +122,5 @@ public class MessageProperties {
             "For a better performance, it is a good practice to keep the value greater than the allowed recall duration")
     @Min(1)
     private int sentMessageExpireAfter = 30;
-
-    @NestedConfigurationProperty
-    private ReadReceiptProperties readReceipt = new ReadReceiptProperties();
-
-    @NestedConfigurationProperty
-    private TypingStatusProperties typingStatus = new TypingStatusProperties();
 
 }

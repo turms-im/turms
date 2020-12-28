@@ -17,8 +17,8 @@
 
 package im.turms.turms.workflow.access.servicerequest.dto;
 
-import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.common.model.dto.notification.TurmsNotification;
+import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.ServiceResponse;
 
 import javax.annotation.Nullable;

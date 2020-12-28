@@ -1,6 +1,7 @@
 import TurmsDriver from "./driver/turms-driver";
 import UserService from "./service/user-service";
 import GroupService from "./service/group-service";
+import ConversationService from "./service/conversation-service";
 import MessageService from "./service/message-service";
 import NotificationService from "./service/notification-service";
 import InputFileReader from "./util/input-file-reader";
@@ -11,6 +12,7 @@ class TurmsClient {
     private readonly _driver: TurmsDriver;
     private readonly _userService: UserService;
     private readonly _groupService: GroupService;
+    private readonly _conversationService: ConversationService;
     private readonly _messageService: MessageService;
     private readonly _storageService: StorageService;
     private readonly _notificationService: NotificationService;
@@ -21,7 +23,6 @@ class TurmsClient {
         requestTimeout?: number,
         minRequestInterval?: number,
         heartbeatInterval?: number,
-        ackMessageInterval?: number,
         storageServerUrl?: string,
         httpUrl?: string,
         queryReasonWhenLoginFailed?: boolean,
@@ -34,7 +35,6 @@ class TurmsClient {
                 wsUrlOrOptions.requestTimeout,
                 wsUrlOrOptions.minRequestInterval,
                 wsUrlOrOptions.heartbeatInterval,
-                wsUrlOrOptions.ackMessageInterval,
                 wsUrlOrOptions.storageServerUrl,
                 wsUrlOrOptions.httpUrl,
                 wsUrlOrOptions.queryReasonWhenLoginFailed,
@@ -53,7 +53,8 @@ class TurmsClient {
                 storePassword);
             this._userService = new UserService(this);
             this._groupService = new GroupService(this);
-            this._messageService = new MessageService(this, ackMessageInterval);
+            this._conversationService = new ConversationService(this);
+            this._messageService = new MessageService(this);
             this._storageService = new StorageService(this, storageServerUrl);
             this._notificationService = new NotificationService(this);
         }
@@ -71,6 +72,10 @@ class TurmsClient {
 
     get groupService(): GroupService {
         return this._groupService;
+    }
+
+    get conversationService(): ConversationService {
+        return this._conversationService;
     }
 
     get messageService(): MessageService {

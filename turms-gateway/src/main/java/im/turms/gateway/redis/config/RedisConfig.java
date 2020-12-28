@@ -1,9 +1,9 @@
 package im.turms.gateway.redis.config;
 
-import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.gateway.pojo.bo.login.LoginFailureReasonKey;
 import im.turms.gateway.pojo.bo.session.SessionDisconnectionReasonKey;
 import im.turms.server.common.bo.session.UserSessionId;
+import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.redis.RedisTemplateFactory;
 import im.turms.server.common.redis.sharding.ShardingAlgorithm;

@@ -42,14 +42,14 @@ public struct Message {
   /// Clears the value of `deliveryDate`. Subsequent reads from it will return its default value.
   public mutating func clearDeliveryDate() {_uniqueStorage()._deliveryDate = nil}
 
-  public var deletionDate: SwiftProtobuf.Google_Protobuf_Int64Value {
-    get {return _storage._deletionDate ?? SwiftProtobuf.Google_Protobuf_Int64Value()}
-    set {_uniqueStorage()._deletionDate = newValue}
+  public var modificationDate: SwiftProtobuf.Google_Protobuf_Int64Value {
+    get {return _storage._modificationDate ?? SwiftProtobuf.Google_Protobuf_Int64Value()}
+    set {_uniqueStorage()._modificationDate = newValue}
   }
-  /// Returns true if `deletionDate` has been explicitly set.
-  public var hasDeletionDate: Bool {return _storage._deletionDate != nil}
-  /// Clears the value of `deletionDate`. Subsequent reads from it will return its default value.
-  public mutating func clearDeletionDate() {_uniqueStorage()._deletionDate = nil}
+  /// Returns true if `modificationDate` has been explicitly set.
+  public var hasModificationDate: Bool {return _storage._modificationDate != nil}
+  /// Clears the value of `modificationDate`. Subsequent reads from it will return its default value.
+  public mutating func clearModificationDate() {_uniqueStorage()._modificationDate = nil}
 
   public var text: SwiftProtobuf.Google_Protobuf_StringValue {
     get {return _storage._text ?? SwiftProtobuf.Google_Protobuf_StringValue()}
@@ -117,7 +117,7 @@ extension Message: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "id"),
     2: .standard(proto: "delivery_date"),
-    3: .standard(proto: "deletion_date"),
+    3: .standard(proto: "modification_date"),
     4: .same(proto: "text"),
     5: .standard(proto: "sender_id"),
     6: .standard(proto: "group_id"),
@@ -129,7 +129,7 @@ extension Message: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
   fileprivate class _StorageClass {
     var _id: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
     var _deliveryDate: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
-    var _deletionDate: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
+    var _modificationDate: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
     var _text: SwiftProtobuf.Google_Protobuf_StringValue? = nil
     var _senderID: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
     var _groupID: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
@@ -144,7 +144,7 @@ extension Message: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
     init(copying source: _StorageClass) {
       _id = source._id
       _deliveryDate = source._deliveryDate
-      _deletionDate = source._deletionDate
+      _modificationDate = source._modificationDate
       _text = source._text
       _senderID = source._senderID
       _groupID = source._groupID
@@ -168,7 +168,7 @@ extension Message: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
         switch fieldNumber {
         case 1: try decoder.decodeSingularMessageField(value: &_storage._id)
         case 2: try decoder.decodeSingularMessageField(value: &_storage._deliveryDate)
-        case 3: try decoder.decodeSingularMessageField(value: &_storage._deletionDate)
+        case 3: try decoder.decodeSingularMessageField(value: &_storage._modificationDate)
         case 4: try decoder.decodeSingularMessageField(value: &_storage._text)
         case 5: try decoder.decodeSingularMessageField(value: &_storage._senderID)
         case 6: try decoder.decodeSingularMessageField(value: &_storage._groupID)
@@ -189,7 +189,7 @@ extension Message: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
       if let v = _storage._deliveryDate {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
       }
-      if let v = _storage._deletionDate {
+      if let v = _storage._modificationDate {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
       }
       if let v = _storage._text {
@@ -221,7 +221,7 @@ extension Message: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBa
         let rhs_storage = _args.1
         if _storage._id != rhs_storage._id {return false}
         if _storage._deliveryDate != rhs_storage._deliveryDate {return false}
-        if _storage._deletionDate != rhs_storage._deletionDate {return false}
+        if _storage._modificationDate != rhs_storage._modificationDate {return false}
         if _storage._text != rhs_storage._text {return false}
         if _storage._senderID != rhs_storage._senderID {return false}
         if _storage._groupID != rhs_storage._groupID {return false}

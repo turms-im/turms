@@ -17,7 +17,7 @@
 
 package im.turms.turms.workflow.access.http.dto.request.user;
 
-import im.turms.turms.workflow.dao.domain.UserRelationship;
+import im.turms.turms.workflow.dao.domain.user.UserRelationship;
 import lombok.Data;
 
 import javax.annotation.Nullable;

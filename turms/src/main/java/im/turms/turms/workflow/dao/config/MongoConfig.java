@@ -31,7 +31,13 @@ import im.turms.server.common.dao.util.MongoUtil;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.service.env.database.DatabaseProperties;
-import im.turms.turms.workflow.dao.domain.*;
+import im.turms.turms.workflow.dao.domain.admin.Admin;
+import im.turms.turms.workflow.dao.domain.admin.AdminRole;
+import im.turms.turms.workflow.dao.domain.conversation.GroupConversation;
+import im.turms.turms.workflow.dao.domain.conversation.PrivateConversation;
+import im.turms.turms.workflow.dao.domain.group.*;
+import im.turms.turms.workflow.dao.domain.message.Message;
+import im.turms.turms.workflow.dao.domain.user.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.boot.autoconfigure.mongo.MongoPropertiesClientSettingsBuilderCustomizer;
@@ -61,7 +67,7 @@ import java.util.*;
 @Configuration
 public class MongoConfig {
 
-    private static final int SERVICE_TYPES_NUMBER = 4;
+    private static final int SERVICE_TYPES_NUMBER = 5;
     // hash code of MongoProperties -> ReactiveMongoTemplate
     // because MongoProperties doesn't have a custom hashcode implementation but a native implementation
     private static final Map<Integer, ReactiveMongoTemplate> TEMPLATE_MAP = Maps.newHashMapWithExpectedSize(SERVICE_TYPES_NUMBER);
@@ -91,6 +97,15 @@ public class MongoConfig {
         map.put(Admin.class, writeConcern.getAdmin());
         map.put(AdminRole.class, writeConcern.getAdminRole());
 
+        map.put(User.class, writeConcern.getUser());
+        map.put(UserFriendRequest.class, writeConcern.getUserFriendRequest());
+        map.put(UserLocationLog.class, writeConcern.getUserLocation());
+        map.put(UserPermissionGroup.class, writeConcern.getUserPermissionGroup());
+        map.put(UserRelationship.class, writeConcern.getUserRelationship());
+        map.put(UserRelationshipGroup.class, writeConcern.getUserRelationshipGroup());
+        map.put(UserRelationshipGroupMember.class, writeConcern.getUserRelationshipGroupMember());
+        map.put(UserVersion.class, writeConcern.getUserVersion());
+
         map.put(Group.class, writeConcern.getGroup());
         map.put(GroupBlacklistedUser.class, writeConcern.getGroupBlacklistedUser());
         map.put(GroupInvitation.class, writeConcern.getGroupInvitation());
@@ -100,17 +115,10 @@ public class MongoConfig {
         map.put(GroupType.class, writeConcern.getGroupType());
         map.put(GroupVersion.class, writeConcern.getGroupVersion());
 
-        map.put(Message.class, writeConcern.getMessage());
-        map.put(MessageStatus.class, writeConcern.getMessageStatus());
+        map.put(PrivateConversation.class, writeConcern.getConversation());
+        map.put(GroupConversation.class, writeConcern.getConversation());
 
-        map.put(User.class, writeConcern.getUser());
-        map.put(UserFriendRequest.class, writeConcern.getUserFriendRequest());
-        map.put(UserLocationLog.class, writeConcern.getUserLocation());
-        map.put(UserPermissionGroup.class, writeConcern.getUserPermissionGroup());
-        map.put(UserRelationship.class, writeConcern.getUserRelationship());
-        map.put(UserRelationshipGroup.class, writeConcern.getUserRelationshipGroup());
-        map.put(UserRelationshipGroupMember.class, writeConcern.getUserRelationshipGroupMember());
-        map.put(UserVersion.class, writeConcern.getUserVersion());
+        map.put(Message.class, writeConcern.getMessage());
 
         return map;
     }
@@ -142,6 +150,22 @@ public class MongoConfig {
     }
 
     @Bean
+    public ReactiveMongoTemplate userMongoTemplate(
+            TurmsPropertiesManager turmsPropertiesManager,
+            WriteConcernResolver writeConcernResolver) {
+        ReactiveMongoTemplate template = getMongoTemplate(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getUser(), writeConcernResolver);
+        MongoUtil.createIndexes(template, Set.of(User.class,
+                UserFriendRequest.class,
+                UserLocationLog.class,
+                UserPermissionGroup.class,
+                UserRelationship.class,
+                UserRelationshipGroup.class,
+                UserRelationshipGroupMember.class,
+                UserVersion.class));
+        return template;
+    }
+
+    @Bean
     public ReactiveMongoTemplate groupMongoTemplate(
             TurmsPropertiesManager turmsPropertiesManager,
             WriteConcernResolver writeConcernResolver) {
@@ -158,27 +182,20 @@ public class MongoConfig {
     }
 
     @Bean
-    public ReactiveMongoTemplate messageMongoTemplate(
+    public ReactiveMongoTemplate conversationMongoTemplate(
             TurmsPropertiesManager turmsPropertiesManager,
             WriteConcernResolver writeConcernResolver) {
-        ReactiveMongoTemplate template = getMongoTemplate(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getMessage(), writeConcernResolver);
-        MongoUtil.createIndexes(template, Set.of(Message.class, MessageStatus.class));
+        ReactiveMongoTemplate template = getMongoTemplate(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getConversation(), writeConcernResolver);
+        MongoUtil.createIndexes(template, Set.of(PrivateConversation.class, GroupConversation.class));
         return template;
     }
 
     @Bean
-    public ReactiveMongoTemplate userMongoTemplate(
+    public ReactiveMongoTemplate messageMongoTemplate(
             TurmsPropertiesManager turmsPropertiesManager,
             WriteConcernResolver writeConcernResolver) {
-        ReactiveMongoTemplate template = getMongoTemplate(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getUser(), writeConcernResolver);
-        MongoUtil.createIndexes(template, Set.of(User.class,
-                UserFriendRequest.class,
-                UserLocationLog.class,
-                UserPermissionGroup.class,
-                UserRelationship.class,
-                UserRelationshipGroup.class,
-                UserRelationshipGroupMember.class,
-                UserVersion.class));
+        ReactiveMongoTemplate template = getMongoTemplate(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getMessage(), writeConcernResolver);
+        MongoUtil.createIndexes(template, Set.of(Message.class));
         return template;
     }
 

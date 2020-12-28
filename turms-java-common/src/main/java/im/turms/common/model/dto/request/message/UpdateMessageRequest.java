@@ -73,19 +73,6 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 18: {
-            com.google.protobuf.BoolValue.Builder subBuilder = null;
-            if (isSystemMessage_ != null) {
-              subBuilder = isSystemMessage_.toBuilder();
-            }
-            isSystemMessage_ = input.readMessage(com.google.protobuf.BoolValue.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(isSystemMessage_);
-              isSystemMessage_ = subBuilder.buildPartial();
-            }
-
-            break;
-          }
-          case 26: {
             com.google.protobuf.StringValue.Builder subBuilder = null;
             if (text_ != null) {
               subBuilder = text_.toBuilder();
@@ -98,7 +85,7 @@ private static final long serialVersionUID = 0L;
 
             break;
           }
-          case 34: {
+          case 26: {
             if (!((mutable_bitField0_ & 0x00000001) != 0)) {
               records_ = new java.util.ArrayList<com.google.protobuf.ByteString>();
               mutable_bitField0_ |= 0x00000001;
@@ -106,7 +93,7 @@ private static final long serialVersionUID = 0L;
             records_.add(input.readBytes());
             break;
           }
-          case 42: {
+          case 34: {
             com.google.protobuf.Int64Value.Builder subBuilder = null;
             if (recallDate_ != null) {
               subBuilder = recallDate_.toBuilder();
@@ -115,19 +102,6 @@ private static final long serialVersionUID = 0L;
             if (subBuilder != null) {
               subBuilder.mergeFrom(recallDate_);
               recallDate_ = subBuilder.buildPartial();
-            }
-
-            break;
-          }
-          case 50: {
-            com.google.protobuf.Int64Value.Builder subBuilder = null;
-            if (readDate_ != null) {
-              subBuilder = readDate_.toBuilder();
-            }
-            readDate_ = input.readMessage(com.google.protobuf.Int64Value.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(readDate_);
-              readDate_ = subBuilder.buildPartial();
             }
 
             break;
@@ -178,36 +152,10 @@ private static final long serialVersionUID = 0L;
     return messageId_;
   }
 
-  public static final int IS_SYSTEM_MESSAGE_FIELD_NUMBER = 2;
-  private com.google.protobuf.BoolValue isSystemMessage_;
-  /**
-   * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
-   * @return Whether the isSystemMessage field is set.
-   */
-  @java.lang.Override
-  public boolean hasIsSystemMessage() {
-    return isSystemMessage_ != null;
-  }
-  /**
-   * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
-   * @return The isSystemMessage.
-   */
-  @java.lang.Override
-  public com.google.protobuf.BoolValue getIsSystemMessage() {
-    return isSystemMessage_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : isSystemMessage_;
-  }
-  /**
-   * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.BoolValueOrBuilder getIsSystemMessageOrBuilder() {
-    return getIsSystemMessage();
-  }
-
-  public static final int TEXT_FIELD_NUMBER = 3;
+  public static final int TEXT_FIELD_NUMBER = 2;
   private com.google.protobuf.StringValue text_;
   /**
-   * <code>.google.protobuf.StringValue text = 3;</code>
+   * <code>.google.protobuf.StringValue text = 2;</code>
    * @return Whether the text field is set.
    */
   @java.lang.Override
@@ -215,7 +163,7 @@ private static final long serialVersionUID = 0L;
     return text_ != null;
   }
   /**
-   * <code>.google.protobuf.StringValue text = 3;</code>
+   * <code>.google.protobuf.StringValue text = 2;</code>
    * @return The text.
    */
   @java.lang.Override
@@ -223,17 +171,17 @@ private static final long serialVersionUID = 0L;
     return text_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : text_;
   }
   /**
-   * <code>.google.protobuf.StringValue text = 3;</code>
+   * <code>.google.protobuf.StringValue text = 2;</code>
    */
   @java.lang.Override
   public com.google.protobuf.StringValueOrBuilder getTextOrBuilder() {
     return getText();
   }
 
-  public static final int RECORDS_FIELD_NUMBER = 4;
+  public static final int RECORDS_FIELD_NUMBER = 3;
   private java.util.List<com.google.protobuf.ByteString> records_;
   /**
-   * <code>repeated bytes records = 4;</code>
+   * <code>repeated bytes records = 3;</code>
    * @return A list containing the records.
    */
   @java.lang.Override
@@ -242,14 +190,14 @@ private static final long serialVersionUID = 0L;
     return records_;
   }
   /**
-   * <code>repeated bytes records = 4;</code>
+   * <code>repeated bytes records = 3;</code>
    * @return The count of records.
    */
   public int getRecordsCount() {
     return records_.size();
   }
   /**
-   * <code>repeated bytes records = 4;</code>
+   * <code>repeated bytes records = 3;</code>
    * @param index The index of the element to return.
    * @return The records at the given index.
    */
@@ -257,10 +205,10 @@ private static final long serialVersionUID = 0L;
     return records_.get(index);
   }
 
-  public static final int RECALL_DATE_FIELD_NUMBER = 5;
+  public static final int RECALL_DATE_FIELD_NUMBER = 4;
   private com.google.protobuf.Int64Value recallDate_;
   /**
-   * <code>.google.protobuf.Int64Value recall_date = 5;</code>
+   * <code>.google.protobuf.Int64Value recall_date = 4;</code>
    * @return Whether the recallDate field is set.
    */
   @java.lang.Override
@@ -268,7 +216,7 @@ private static final long serialVersionUID = 0L;
     return recallDate_ != null;
   }
   /**
-   * <code>.google.protobuf.Int64Value recall_date = 5;</code>
+   * <code>.google.protobuf.Int64Value recall_date = 4;</code>
    * @return The recallDate.
    */
   @java.lang.Override
@@ -276,37 +224,11 @@ private static final long serialVersionUID = 0L;
     return recallDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : recallDate_;
   }
   /**
-   * <code>.google.protobuf.Int64Value recall_date = 5;</code>
+   * <code>.google.protobuf.Int64Value recall_date = 4;</code>
    */
   @java.lang.Override
   public com.google.protobuf.Int64ValueOrBuilder getRecallDateOrBuilder() {
     return getRecallDate();
-  }
-
-  public static final int READ_DATE_FIELD_NUMBER = 6;
-  private com.google.protobuf.Int64Value readDate_;
-  /**
-   * <code>.google.protobuf.Int64Value read_date = 6;</code>
-   * @return Whether the readDate field is set.
-   */
-  @java.lang.Override
-  public boolean hasReadDate() {
-    return readDate_ != null;
-  }
-  /**
-   * <code>.google.protobuf.Int64Value read_date = 6;</code>
-   * @return The readDate.
-   */
-  @java.lang.Override
-  public com.google.protobuf.Int64Value getReadDate() {
-    return readDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : readDate_;
-  }
-  /**
-   * <code>.google.protobuf.Int64Value read_date = 6;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.Int64ValueOrBuilder getReadDateOrBuilder() {
-    return getReadDate();
   }
 
   private byte memoizedIsInitialized = -1;
@@ -326,20 +248,14 @@ private static final long serialVersionUID = 0L;
     if (messageId_ != 0L) {
       output.writeInt64(1, messageId_);
     }
-    if (isSystemMessage_ != null) {
-      output.writeMessage(2, getIsSystemMessage());
-    }
     if (text_ != null) {
-      output.writeMessage(3, getText());
+      output.writeMessage(2, getText());
     }
     for (int i = 0; i < records_.size(); i++) {
-      output.writeBytes(4, records_.get(i));
+      output.writeBytes(3, records_.get(i));
     }
     if (recallDate_ != null) {
-      output.writeMessage(5, getRecallDate());
-    }
-    if (readDate_ != null) {
-      output.writeMessage(6, getReadDate());
+      output.writeMessage(4, getRecallDate());
     }
     unknownFields.writeTo(output);
   }
@@ -354,13 +270,9 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt64Size(1, messageId_);
     }
-    if (isSystemMessage_ != null) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(2, getIsSystemMessage());
-    }
     if (text_ != null) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(3, getText());
+        .computeMessageSize(2, getText());
     }
     {
       int dataSize = 0;
@@ -373,11 +285,7 @@ private static final long serialVersionUID = 0L;
     }
     if (recallDate_ != null) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(5, getRecallDate());
-    }
-    if (readDate_ != null) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(6, getReadDate());
+        .computeMessageSize(4, getRecallDate());
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -396,11 +304,6 @@ private static final long serialVersionUID = 0L;
 
     if (getMessageId()
         != other.getMessageId()) return false;
-    if (hasIsSystemMessage() != other.hasIsSystemMessage()) return false;
-    if (hasIsSystemMessage()) {
-      if (!getIsSystemMessage()
-          .equals(other.getIsSystemMessage())) return false;
-    }
     if (hasText() != other.hasText()) return false;
     if (hasText()) {
       if (!getText()
@@ -412,11 +315,6 @@ private static final long serialVersionUID = 0L;
     if (hasRecallDate()) {
       if (!getRecallDate()
           .equals(other.getRecallDate())) return false;
-    }
-    if (hasReadDate() != other.hasReadDate()) return false;
-    if (hasReadDate()) {
-      if (!getReadDate()
-          .equals(other.getReadDate())) return false;
     }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
@@ -432,10 +330,6 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + MESSAGE_ID_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getMessageId());
-    if (hasIsSystemMessage()) {
-      hash = (37 * hash) + IS_SYSTEM_MESSAGE_FIELD_NUMBER;
-      hash = (53 * hash) + getIsSystemMessage().hashCode();
-    }
     if (hasText()) {
       hash = (37 * hash) + TEXT_FIELD_NUMBER;
       hash = (53 * hash) + getText().hashCode();
@@ -447,10 +341,6 @@ private static final long serialVersionUID = 0L;
     if (hasRecallDate()) {
       hash = (37 * hash) + RECALL_DATE_FIELD_NUMBER;
       hash = (53 * hash) + getRecallDate().hashCode();
-    }
-    if (hasReadDate()) {
-      hash = (37 * hash) + READ_DATE_FIELD_NUMBER;
-      hash = (53 * hash) + getReadDate().hashCode();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -587,12 +477,6 @@ private static final long serialVersionUID = 0L;
       super.clear();
       messageId_ = 0L;
 
-      if (isSystemMessageBuilder_ == null) {
-        isSystemMessage_ = null;
-      } else {
-        isSystemMessage_ = null;
-        isSystemMessageBuilder_ = null;
-      }
       if (textBuilder_ == null) {
         text_ = null;
       } else {
@@ -606,12 +490,6 @@ private static final long serialVersionUID = 0L;
       } else {
         recallDate_ = null;
         recallDateBuilder_ = null;
-      }
-      if (readDateBuilder_ == null) {
-        readDate_ = null;
-      } else {
-        readDate_ = null;
-        readDateBuilder_ = null;
       }
       return this;
     }
@@ -641,11 +519,6 @@ private static final long serialVersionUID = 0L;
       im.turms.common.model.dto.request.message.UpdateMessageRequest result = new im.turms.common.model.dto.request.message.UpdateMessageRequest(this);
       int from_bitField0_ = bitField0_;
       result.messageId_ = messageId_;
-      if (isSystemMessageBuilder_ == null) {
-        result.isSystemMessage_ = isSystemMessage_;
-      } else {
-        result.isSystemMessage_ = isSystemMessageBuilder_.build();
-      }
       if (textBuilder_ == null) {
         result.text_ = text_;
       } else {
@@ -660,11 +533,6 @@ private static final long serialVersionUID = 0L;
         result.recallDate_ = recallDate_;
       } else {
         result.recallDate_ = recallDateBuilder_.build();
-      }
-      if (readDateBuilder_ == null) {
-        result.readDate_ = readDate_;
-      } else {
-        result.readDate_ = readDateBuilder_.build();
       }
       onBuilt();
       return result;
@@ -717,9 +585,6 @@ private static final long serialVersionUID = 0L;
       if (other.getMessageId() != 0L) {
         setMessageId(other.getMessageId());
       }
-      if (other.hasIsSystemMessage()) {
-        mergeIsSystemMessage(other.getIsSystemMessage());
-      }
       if (other.hasText()) {
         mergeText(other.getText());
       }
@@ -735,9 +600,6 @@ private static final long serialVersionUID = 0L;
       }
       if (other.hasRecallDate()) {
         mergeRecallDate(other.getRecallDate());
-      }
-      if (other.hasReadDate()) {
-        mergeReadDate(other.getReadDate());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -800,137 +662,18 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private com.google.protobuf.BoolValue isSystemMessage_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder> isSystemMessageBuilder_;
-    /**
-     * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
-     * @return Whether the isSystemMessage field is set.
-     */
-    public boolean hasIsSystemMessage() {
-      return isSystemMessageBuilder_ != null || isSystemMessage_ != null;
-    }
-    /**
-     * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
-     * @return The isSystemMessage.
-     */
-    public com.google.protobuf.BoolValue getIsSystemMessage() {
-      if (isSystemMessageBuilder_ == null) {
-        return isSystemMessage_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : isSystemMessage_;
-      } else {
-        return isSystemMessageBuilder_.getMessage();
-      }
-    }
-    /**
-     * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
-     */
-    public Builder setIsSystemMessage(com.google.protobuf.BoolValue value) {
-      if (isSystemMessageBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        isSystemMessage_ = value;
-        onChanged();
-      } else {
-        isSystemMessageBuilder_.setMessage(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
-     */
-    public Builder setIsSystemMessage(
-        com.google.protobuf.BoolValue.Builder builderForValue) {
-      if (isSystemMessageBuilder_ == null) {
-        isSystemMessage_ = builderForValue.build();
-        onChanged();
-      } else {
-        isSystemMessageBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
-     */
-    public Builder mergeIsSystemMessage(com.google.protobuf.BoolValue value) {
-      if (isSystemMessageBuilder_ == null) {
-        if (isSystemMessage_ != null) {
-          isSystemMessage_ =
-            com.google.protobuf.BoolValue.newBuilder(isSystemMessage_).mergeFrom(value).buildPartial();
-        } else {
-          isSystemMessage_ = value;
-        }
-        onChanged();
-      } else {
-        isSystemMessageBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
-     */
-    public Builder clearIsSystemMessage() {
-      if (isSystemMessageBuilder_ == null) {
-        isSystemMessage_ = null;
-        onChanged();
-      } else {
-        isSystemMessage_ = null;
-        isSystemMessageBuilder_ = null;
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
-     */
-    public com.google.protobuf.BoolValue.Builder getIsSystemMessageBuilder() {
-
-      onChanged();
-      return getIsSystemMessageFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
-     */
-    public com.google.protobuf.BoolValueOrBuilder getIsSystemMessageOrBuilder() {
-      if (isSystemMessageBuilder_ != null) {
-        return isSystemMessageBuilder_.getMessageOrBuilder();
-      } else {
-        return isSystemMessage_ == null ?
-            com.google.protobuf.BoolValue.getDefaultInstance() : isSystemMessage_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder>
-        getIsSystemMessageFieldBuilder() {
-      if (isSystemMessageBuilder_ == null) {
-        isSystemMessageBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder>(
-                getIsSystemMessage(),
-                getParentForChildren(),
-                isClean());
-        isSystemMessage_ = null;
-      }
-      return isSystemMessageBuilder_;
-    }
-
     private com.google.protobuf.StringValue text_;
     private com.google.protobuf.SingleFieldBuilderV3<
         com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> textBuilder_;
     /**
-     * <code>.google.protobuf.StringValue text = 3;</code>
+     * <code>.google.protobuf.StringValue text = 2;</code>
      * @return Whether the text field is set.
      */
     public boolean hasText() {
       return textBuilder_ != null || text_ != null;
     }
     /**
-     * <code>.google.protobuf.StringValue text = 3;</code>
+     * <code>.google.protobuf.StringValue text = 2;</code>
      * @return The text.
      */
     public com.google.protobuf.StringValue getText() {
@@ -941,7 +684,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.google.protobuf.StringValue text = 3;</code>
+     * <code>.google.protobuf.StringValue text = 2;</code>
      */
     public Builder setText(com.google.protobuf.StringValue value) {
       if (textBuilder_ == null) {
@@ -957,7 +700,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.google.protobuf.StringValue text = 3;</code>
+     * <code>.google.protobuf.StringValue text = 2;</code>
      */
     public Builder setText(
         com.google.protobuf.StringValue.Builder builderForValue) {
@@ -971,7 +714,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.google.protobuf.StringValue text = 3;</code>
+     * <code>.google.protobuf.StringValue text = 2;</code>
      */
     public Builder mergeText(com.google.protobuf.StringValue value) {
       if (textBuilder_ == null) {
@@ -989,7 +732,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.google.protobuf.StringValue text = 3;</code>
+     * <code>.google.protobuf.StringValue text = 2;</code>
      */
     public Builder clearText() {
       if (textBuilder_ == null) {
@@ -1003,7 +746,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.google.protobuf.StringValue text = 3;</code>
+     * <code>.google.protobuf.StringValue text = 2;</code>
      */
     public com.google.protobuf.StringValue.Builder getTextBuilder() {
 
@@ -1011,7 +754,7 @@ private static final long serialVersionUID = 0L;
       return getTextFieldBuilder().getBuilder();
     }
     /**
-     * <code>.google.protobuf.StringValue text = 3;</code>
+     * <code>.google.protobuf.StringValue text = 2;</code>
      */
     public com.google.protobuf.StringValueOrBuilder getTextOrBuilder() {
       if (textBuilder_ != null) {
@@ -1022,7 +765,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.google.protobuf.StringValue text = 3;</code>
+     * <code>.google.protobuf.StringValue text = 2;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>
@@ -1046,7 +789,7 @@ private static final long serialVersionUID = 0L;
        }
     }
     /**
-     * <code>repeated bytes records = 4;</code>
+     * <code>repeated bytes records = 3;</code>
      * @return A list containing the records.
      */
     public java.util.List<com.google.protobuf.ByteString>
@@ -1055,14 +798,14 @@ private static final long serialVersionUID = 0L;
                java.util.Collections.unmodifiableList(records_) : records_;
     }
     /**
-     * <code>repeated bytes records = 4;</code>
+     * <code>repeated bytes records = 3;</code>
      * @return The count of records.
      */
     public int getRecordsCount() {
       return records_.size();
     }
     /**
-     * <code>repeated bytes records = 4;</code>
+     * <code>repeated bytes records = 3;</code>
      * @param index The index of the element to return.
      * @return The records at the given index.
      */
@@ -1070,7 +813,7 @@ private static final long serialVersionUID = 0L;
       return records_.get(index);
     }
     /**
-     * <code>repeated bytes records = 4;</code>
+     * <code>repeated bytes records = 3;</code>
      * @param index The index to set the value at.
      * @param value The records to set.
      * @return This builder for chaining.
@@ -1086,7 +829,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated bytes records = 4;</code>
+     * <code>repeated bytes records = 3;</code>
      * @param value The records to add.
      * @return This builder for chaining.
      */
@@ -1100,7 +843,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated bytes records = 4;</code>
+     * <code>repeated bytes records = 3;</code>
      * @param values The records to add.
      * @return This builder for chaining.
      */
@@ -1113,7 +856,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>repeated bytes records = 4;</code>
+     * <code>repeated bytes records = 3;</code>
      * @return This builder for chaining.
      */
     public Builder clearRecords() {
@@ -1127,14 +870,14 @@ private static final long serialVersionUID = 0L;
     private com.google.protobuf.SingleFieldBuilderV3<
         com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> recallDateBuilder_;
     /**
-     * <code>.google.protobuf.Int64Value recall_date = 5;</code>
+     * <code>.google.protobuf.Int64Value recall_date = 4;</code>
      * @return Whether the recallDate field is set.
      */
     public boolean hasRecallDate() {
       return recallDateBuilder_ != null || recallDate_ != null;
     }
     /**
-     * <code>.google.protobuf.Int64Value recall_date = 5;</code>
+     * <code>.google.protobuf.Int64Value recall_date = 4;</code>
      * @return The recallDate.
      */
     public com.google.protobuf.Int64Value getRecallDate() {
@@ -1145,7 +888,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.google.protobuf.Int64Value recall_date = 5;</code>
+     * <code>.google.protobuf.Int64Value recall_date = 4;</code>
      */
     public Builder setRecallDate(com.google.protobuf.Int64Value value) {
       if (recallDateBuilder_ == null) {
@@ -1161,7 +904,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value recall_date = 5;</code>
+     * <code>.google.protobuf.Int64Value recall_date = 4;</code>
      */
     public Builder setRecallDate(
         com.google.protobuf.Int64Value.Builder builderForValue) {
@@ -1175,7 +918,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value recall_date = 5;</code>
+     * <code>.google.protobuf.Int64Value recall_date = 4;</code>
      */
     public Builder mergeRecallDate(com.google.protobuf.Int64Value value) {
       if (recallDateBuilder_ == null) {
@@ -1193,7 +936,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value recall_date = 5;</code>
+     * <code>.google.protobuf.Int64Value recall_date = 4;</code>
      */
     public Builder clearRecallDate() {
       if (recallDateBuilder_ == null) {
@@ -1207,7 +950,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value recall_date = 5;</code>
+     * <code>.google.protobuf.Int64Value recall_date = 4;</code>
      */
     public com.google.protobuf.Int64Value.Builder getRecallDateBuilder() {
 
@@ -1215,7 +958,7 @@ private static final long serialVersionUID = 0L;
       return getRecallDateFieldBuilder().getBuilder();
     }
     /**
-     * <code>.google.protobuf.Int64Value recall_date = 5;</code>
+     * <code>.google.protobuf.Int64Value recall_date = 4;</code>
      */
     public com.google.protobuf.Int64ValueOrBuilder getRecallDateOrBuilder() {
       if (recallDateBuilder_ != null) {
@@ -1226,7 +969,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.google.protobuf.Int64Value recall_date = 5;</code>
+     * <code>.google.protobuf.Int64Value recall_date = 4;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
@@ -1240,125 +983,6 @@ private static final long serialVersionUID = 0L;
         recallDate_ = null;
       }
       return recallDateBuilder_;
-    }
-
-    private com.google.protobuf.Int64Value readDate_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> readDateBuilder_;
-    /**
-     * <code>.google.protobuf.Int64Value read_date = 6;</code>
-     * @return Whether the readDate field is set.
-     */
-    public boolean hasReadDate() {
-      return readDateBuilder_ != null || readDate_ != null;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value read_date = 6;</code>
-     * @return The readDate.
-     */
-    public com.google.protobuf.Int64Value getReadDate() {
-      if (readDateBuilder_ == null) {
-        return readDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : readDate_;
-      } else {
-        return readDateBuilder_.getMessage();
-      }
-    }
-    /**
-     * <code>.google.protobuf.Int64Value read_date = 6;</code>
-     */
-    public Builder setReadDate(com.google.protobuf.Int64Value value) {
-      if (readDateBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        readDate_ = value;
-        onChanged();
-      } else {
-        readDateBuilder_.setMessage(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value read_date = 6;</code>
-     */
-    public Builder setReadDate(
-        com.google.protobuf.Int64Value.Builder builderForValue) {
-      if (readDateBuilder_ == null) {
-        readDate_ = builderForValue.build();
-        onChanged();
-      } else {
-        readDateBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value read_date = 6;</code>
-     */
-    public Builder mergeReadDate(com.google.protobuf.Int64Value value) {
-      if (readDateBuilder_ == null) {
-        if (readDate_ != null) {
-          readDate_ =
-            com.google.protobuf.Int64Value.newBuilder(readDate_).mergeFrom(value).buildPartial();
-        } else {
-          readDate_ = value;
-        }
-        onChanged();
-      } else {
-        readDateBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value read_date = 6;</code>
-     */
-    public Builder clearReadDate() {
-      if (readDateBuilder_ == null) {
-        readDate_ = null;
-        onChanged();
-      } else {
-        readDate_ = null;
-        readDateBuilder_ = null;
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value read_date = 6;</code>
-     */
-    public com.google.protobuf.Int64Value.Builder getReadDateBuilder() {
-
-      onChanged();
-      return getReadDateFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.Int64Value read_date = 6;</code>
-     */
-    public com.google.protobuf.Int64ValueOrBuilder getReadDateOrBuilder() {
-      if (readDateBuilder_ != null) {
-        return readDateBuilder_.getMessageOrBuilder();
-      } else {
-        return readDate_ == null ?
-            com.google.protobuf.Int64Value.getDefaultInstance() : readDate_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.Int64Value read_date = 6;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
-        getReadDateFieldBuilder() {
-      if (readDateBuilder_ == null) {
-        readDateBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>(
-                getReadDate(),
-                getParentForChildren(),
-                isClean());
-        readDate_ = null;
-      }
-      return readDateBuilder_;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

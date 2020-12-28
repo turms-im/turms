@@ -25,7 +25,7 @@ import im.turms.turms.workflow.access.http.dto.response.*;
 import im.turms.turms.workflow.access.http.permission.AdminPermission;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.access.http.util.PageUtil;
-import im.turms.turms.workflow.dao.domain.AdminRole;
+import im.turms.turms.workflow.dao.domain.admin.AdminRole;
 import im.turms.turms.workflow.service.impl.admin.AdminRoleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

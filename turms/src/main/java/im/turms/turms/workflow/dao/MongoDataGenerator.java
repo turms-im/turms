@@ -17,9 +17,9 @@
 
 package im.turms.turms.workflow.dao;
 
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import im.turms.common.constant.GroupMemberRole;
-import im.turms.common.constant.MessageDeliveryStatus;
 import im.turms.common.constant.ProfileAccessStrategy;
 import im.turms.common.constant.RequestStatus;
 import im.turms.server.common.cluster.node.Node;
@@ -29,9 +29,16 @@ import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.manager.PasswordManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.service.env.MockProperties;
+import im.turms.server.common.util.MapUtil;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.workflow.access.http.permission.AdminPermission;
-import im.turms.turms.workflow.dao.domain.*;
+import im.turms.turms.workflow.dao.domain.admin.Admin;
+import im.turms.turms.workflow.dao.domain.admin.AdminRole;
+import im.turms.turms.workflow.dao.domain.conversation.GroupConversation;
+import im.turms.turms.workflow.dao.domain.conversation.PrivateConversation;
+import im.turms.turms.workflow.dao.domain.group.*;
+import im.turms.turms.workflow.dao.domain.message.Message;
+import im.turms.turms.workflow.dao.domain.user.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -71,9 +78,12 @@ public class MongoDataGenerator {
             GroupType.COLLECTION_NAME,
             GroupVersion.COLLECTION_NAME);
 
+    private static final List<String> CONVERSATION_COLLECTIONS = List.of(
+            PrivateConversation.COLLECTION_NAME,
+            GroupConversation.COLLECTION_NAME);
+
     private static final List<String> MESSAGE_COLLECTIONS = List.of(
-            Message.COLLECTION_NAME,
-            MessageStatus.COLLECTION_NAME);
+            Message.COLLECTION_NAME);
 
     private static final List<String> USER_COLLECTIONS = List.of(
             User.COLLECTION_NAME,
@@ -106,6 +116,7 @@ public class MongoDataGenerator {
     private final ReactiveMongoTemplate adminMongoTemplate;
     private final ReactiveMongoTemplate userMongoTemplate;
     private final ReactiveMongoTemplate groupMongoTemplate;
+    private final ReactiveMongoTemplate conversationMongoTemplate;
     private final ReactiveMongoTemplate messageMongoTemplate;
     private final PasswordManager passwordUtil;
     private final ApplicationContext context;
@@ -116,6 +127,7 @@ public class MongoDataGenerator {
             ReactiveMongoTemplate adminMongoTemplate,
             ReactiveMongoTemplate userMongoTemplate,
             ReactiveMongoTemplate groupMongoTemplate,
+            ReactiveMongoTemplate conversationMongoTemplate,
             ReactiveMongoTemplate messageMongoTemplate,
             PasswordManager passwordUtil,
             TurmsPropertiesManager turmsPropertiesManager,
@@ -124,6 +136,7 @@ public class MongoDataGenerator {
         this.adminMongoTemplate = adminMongoTemplate;
         this.userMongoTemplate = userMongoTemplate;
         this.groupMongoTemplate = groupMongoTemplate;
+        this.conversationMongoTemplate = conversationMongoTemplate;
         this.messageMongoTemplate = messageMongoTemplate;
         this.passwordUtil = passwordUtil;
         this.context = context;
@@ -160,6 +173,7 @@ public class MongoDataGenerator {
         Mono.when(
                 createCollectionIfNotExist(Admin.class, null),
                 createCollectionIfNotExist(AdminRole.class, null),
+
                 createCollectionIfNotExist(Group.class, null),
                 createCollectionIfNotExist(GroupBlacklistedUser.class, null),
                 createCollectionIfNotExist(GroupInvitation.class, null),
@@ -167,8 +181,14 @@ public class MongoDataGenerator {
                 createCollectionIfNotExist(GroupMember.class, null),
                 createCollectionIfNotExist(GroupType.class, null),
                 createCollectionIfNotExist(GroupVersion.class, null),
+                createCollectionIfNotExist(PrivateConversation.class, null),
+                createCollectionIfNotExist(GroupConversation.class, null),
+
+                createCollectionIfNotExist(PrivateConversation.class, null),
+                createCollectionIfNotExist(GroupConversation.class, null),
+
                 createCollectionIfNotExist(Message.class, null),
-                createCollectionIfNotExist(MessageStatus.class, null),
+
                 createCollectionIfNotExist(User.class, null),
                 createCollectionIfNotExist(UserFriendRequest.class, null),
                 createCollectionIfNotExist(UserPermissionGroup.class, null),
@@ -214,6 +234,10 @@ public class MongoDataGenerator {
                 .flatMap(name -> GROUP_COLLECTIONS.contains(name)
                         ? groupMongoTemplate.remove(queryAll, name)
                         : Mono.empty()));
+        fluxes.add(conversationMongoTemplate.getCollectionNames()
+                .flatMap(name -> CONVERSATION_COLLECTIONS.contains(name)
+                        ? conversationMongoTemplate.remove(queryAll, name)
+                        : Mono.empty()));
         fluxes.add(messageMongoTemplate.getCollectionNames()
                 .flatMap(name -> MESSAGE_COLLECTIONS.contains(name)
                         ? messageMongoTemplate.remove(queryAll, name)
@@ -232,6 +256,7 @@ public class MongoDataGenerator {
         List<Object> adminRelatedObjs = new LinkedList<>();
         List<Object> userRelatedObjs = new LinkedList<>();
         List<Object> groupRelatedObjs = new LinkedList<>();
+        List<Object> conversationRelatedObjs = new LinkedList<>();
         List<Object> messageRelatedObjs = new LinkedList<>();
 
         // Admin
@@ -265,6 +290,7 @@ public class MongoDataGenerator {
                 0);
         adminRelatedObjs.add(adminRole);
         adminRelatedObjs.add(guestRole);
+
         // Group
         Group group = new Group(
                 1L,
@@ -323,10 +349,13 @@ public class MongoDataGenerator {
                     null);
             groupRelatedObjs.add(groupJoinRequest);
         }
+        Set<Long> groupMemberIds = new HashSet<>(MapUtil.getCapability(targetUserToBeGroupMemberEnd - targetUserToBeGroupMemberStart));
         for (int i = targetUserToBeGroupMemberStart; i <= targetUserToBeGroupMemberEnd; i++) {
+            long groupMemberId = i;
+            groupMemberIds.add(groupMemberId);
             GroupMember groupMember = new GroupMember(
                     1L,
-                    (long) i,
+                    groupMemberId,
                     "test-name",
                     i == 1 ? GroupMemberRole.OWNER : GroupMemberRole.MEMBER,
                     now,
@@ -335,31 +364,26 @@ public class MongoDataGenerator {
         }
 
         // Message
+        long senderId = 1L;
+        Set<Long> targetIds = new HashSet<>();
         for (int i = 1; i <= 100; i++) {
             long id = node.nextId(ServiceType.MESSAGE);
+            long targetId = (long) 2 + (i % 9);
+            targetIds.add(targetId);
             Message privateMessage = new Message(
                     id,
                     false,
                     false,
                     DateUtils.addHours(now, -i),
                     null,
+                    null,
+                    null,
                     "private-message-text" + RandomStringUtils.randomAlphanumeric(16),
-                    1L,
-                    (long) 2 + (i % 9),
+                    senderId,
+                    targetId,
                     null,
                     30,
                     null);
-            MessageStatus privateMessageStatus = new MessageStatus(
-                    id,
-                    null,
-                    false,
-                    1L,
-                    (long) 2 + (i % 9),
-                    MessageDeliveryStatus.READY,
-                    null,
-                    null,
-                    null);
-            messageRelatedObjs.add(privateMessageStatus);
             id = node.nextId(ServiceType.MESSAGE);
             Message groupMessage = new Message(
                     id,
@@ -367,28 +391,27 @@ public class MongoDataGenerator {
                     false,
                     now,
                     null,
+                    null,
+                    null,
                     "group-message-text" + RandomStringUtils.randomAlphanumeric(16),
                     1L,
                     1L,
                     null,
                     30,
                     null);
-            for (long j = 2L; j <= step; j++) {
-                MessageStatus groupMessageStatus = new MessageStatus(
-                        id,
-                        1L,
-                        false,
-                        1L,
-                        j,
-                        MessageDeliveryStatus.READY,
-                        null,
-                        null,
-                        null);
-                messageRelatedObjs.add(groupMessageStatus);
-            }
             messageRelatedObjs.add(privateMessage);
             messageRelatedObjs.add(groupMessage);
         }
+
+        // Conversation
+        for (Long targetId : targetIds) {
+            PrivateConversation privateConversation = new PrivateConversation(
+                    new PrivateConversation.Key(senderId, targetId),
+                    now);
+            conversationRelatedObjs.add(privateConversation);
+        }
+        GroupConversation groupConversation = new GroupConversation(1L, Maps.asMap(groupMemberIds, id -> now));
+        conversationRelatedObjs.add(groupConversation);
 
         // User
         for (int i = 1; i <= userNumber; i++) {
@@ -455,6 +478,9 @@ public class MongoDataGenerator {
                 groupMongoTemplate.insertAll(groupRelatedObjs)
                         .doOnError(error -> log.error("Failed to mock group-related data", error))
                         .doOnComplete(() -> log.info("Group-related data has been mocked")),
+                conversationMongoTemplate.insertAll(conversationRelatedObjs)
+                        .doOnError(error -> log.error("Failed to mock conversation-related data", error))
+                        .doOnComplete(() -> log.info("Conversation-related data has been mocked")),
                 messageMongoTemplate.insertAll(messageRelatedObjs)
                         .doOnError(error -> log.error("Failed to mock message-related data", error))
                         .doOnComplete(() -> log.info("Message-related data has been mocked")))
@@ -475,7 +501,9 @@ public class MongoDataGenerator {
                 || clazz == GroupJoinQuestion.class || clazz == GroupJoinRequest.class || clazz == GroupMember.class
                 || clazz == GroupType.class || clazz == GroupVersion.class) {
             mongoTemplate = groupMongoTemplate;
-        } else if (clazz == Message.class || clazz == MessageStatus.class) {
+        } else if (clazz == PrivateConversation.class || clazz == GroupConversation.class) {
+            mongoTemplate = conversationMongoTemplate;
+        } else if (clazz == Message.class) {
             mongoTemplate = messageMongoTemplate;
         } else {
             return Mono.error(new IllegalArgumentException("Unknown collection=" + clazz.getName()));

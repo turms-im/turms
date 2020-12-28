@@ -21,7 +21,10 @@ import im.turms.common.constant.*;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.turms.bo.GroupQuestionIdAndAnswer;
-import im.turms.turms.workflow.dao.domain.*;
+import im.turms.turms.workflow.dao.domain.group.GroupBlacklistedUser;
+import im.turms.turms.workflow.dao.domain.group.GroupMember;
+import im.turms.turms.workflow.dao.domain.user.UserRelationship;
+import im.turms.turms.workflow.dao.domain.user.UserRelationshipGroup;
 
 /**
  * @author James Chen
@@ -88,18 +91,6 @@ public class DomainConstraintUtil {
     public static void validGroupBlacklistedUserKey(GroupBlacklistedUser.Key key) {
         if (key == null || key.getGroupId() == null || key.getUserId() == null) {
             throw new IllegalArgumentException("The group member key must not be null");
-        }
-    }
-
-    public static void validMessageDeliveryStatus(MessageDeliveryStatus value) {
-        if (value == MessageDeliveryStatus.UNRECOGNIZED) {
-            throw new IllegalArgumentException("The message delivery status must not be UNRECOGNIZED");
-        }
-    }
-
-    public static void validMessageStatusKey(MessageStatus.Key key) {
-        if (key == null || key.getMessageId() == null || key.getRecipientId() == null) {
-            throw new IllegalArgumentException("The message status key must not be null");
         }
     }
 

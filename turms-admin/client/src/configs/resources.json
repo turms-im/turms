@@ -141,22 +141,25 @@
   },
   "apis": {
     "admin": "/admins",
-    "message": "/messages",
-    "messageStatus": "/messages/statuses",
-    "adminActionLog": "/admins/action-logs",
-    "friendRequest": "/users/relationships/friend-requests",
     "adminRole": "/admins/roles",
+
+    "user": "/users",
+    "userStatus": "/users/online-infos/statuses",
+    "userPermissionGroup": "/users/permission-groups",
     "userRelationship": "/users/relationships",
     "userRelationshipGroup": "/users/relationships/groups",
+    "friendRequest": "/users/relationships/friend-requests",
+
+    "group": "/groups",
     "groupBlacklist": "/groups/blacklisted-users",
     "groupType": "/groups/types",
     "groupMember": "/groups/members",
     "groupQuestion": "/groups/questions",
     "groupInvitation": "/groups/invitations",
-    "group": "/groups",
     "joinRequest": "/groups/join-requests",
-    "user": "/users",
-    "userStatus": "/users/online-infos/statuses",
-    "userPermissionGroup": "/users/permission-groups"
+
+    "conversation": "/conversations",
+
+    "message": "/messages"
   }
 }

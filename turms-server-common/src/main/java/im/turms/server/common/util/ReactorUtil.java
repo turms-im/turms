@@ -36,7 +36,7 @@ public class ReactorUtil {
             return Mono.just(false);
         }
         return Flux.merge(monos)
-                .collectList()
+                .collect(CollectorUtil.toList(monos.size()))
                 .map(results -> {
                     for (boolean result : results) {
                         if (!result) {
@@ -52,7 +52,7 @@ public class ReactorUtil {
             return Mono.just(false);
         }
         return Flux.merge(monos)
-                .collectList()
+                .collect(CollectorUtil.toList(monos.size()))
                 .map(results -> {
                     for (boolean result : results) {
                         if (result) {

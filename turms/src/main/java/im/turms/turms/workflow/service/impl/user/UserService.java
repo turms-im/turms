@@ -21,12 +21,13 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import im.turms.common.constant.ProfileAccessStrategy;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
-import im.turms.server.common.constant.TurmsStatusCode;
-import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.common.util.Validator;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
+import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dao.domain.User;
+import im.turms.server.common.dao.util.OperationResultUtil;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.manager.PasswordManager;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.bo.DateRange;
@@ -37,7 +38,7 @@ import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.constraint.ValidProfileAccess;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
 import im.turms.turms.workflow.dao.builder.UpdateBuilder;
-import im.turms.server.common.dao.util.OperationResultUtil;
+import im.turms.turms.workflow.service.impl.conversation.ConversationService;
 import im.turms.turms.workflow.service.impl.group.GroupMemberService;
 import im.turms.turms.workflow.service.impl.statistics.MetricsService;
 import im.turms.turms.workflow.service.impl.user.onlineuser.SessionService;
@@ -75,6 +76,8 @@ public class UserService {
     private final UserRelationshipGroupService userRelationshipGroupService;
     private final UserVersionService userVersionService;
     private final SessionService sessionService;
+    private final ConversationService conversationService;
+
     private final Node node;
     private final PasswordManager passwordManager;
     private final ReactiveMongoTemplate mongoTemplate;
@@ -91,15 +94,18 @@ public class UserService {
             UserVersionService userVersionService,
             UserRelationshipGroupService userRelationshipGroupService,
             SessionService sessionService,
+            ConversationService conversationService,
             MetricsService metricsService) {
         this.node = node;
         this.mongoTemplate = mongoTemplate;
         this.passwordManager = passwordManager;
+
         this.userRelationshipService = userRelationshipService;
         this.groupMemberService = groupMemberService;
         this.userVersionService = userVersionService;
         this.userRelationshipGroupService = userRelationshipGroupService;
         this.sessionService = sessionService;
+        this.conversationService = conversationService;
 
         registeredUsersCounter = metricsService.getRegistry().counter(MetricsConstant.REGISTERED_USERS_COUNTER_NAME);
         deletedUsersCounter = metricsService.getRegistry().counter(MetricsConstant.DELETED_USERS_COUNTER_NAME);
@@ -336,6 +342,7 @@ public class UserService {
                                 }
                                 return userRelationshipService.deleteAllRelationships(userIds, operations, false)
                                         .then(userRelationshipGroupService.deleteAllRelationshipGroups(userIds, operations, false))
+                                        .then(conversationService.deletePrivateConversations(userIds, operations))
                                         .then(userVersionService.delete(userIds, operations).onErrorResume(t -> Mono.empty()))
                                         .thenReturn(result);
                             }))

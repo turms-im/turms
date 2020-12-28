@@ -18,12 +18,11 @@
 package unit.im.turms.gateway.util;
 
 import com.google.protobuf.Int64Value;
-import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.common.model.dto.request.message.CreateMessageRequest;
-import im.turms.common.model.dto.request.signal.AckRequest;
 import im.turms.gateway.pojo.dto.SimpleTurmsRequest;
 import im.turms.gateway.util.TurmsRequestUtil;
+import im.turms.server.common.exception.TurmsBusinessException;
 import org.junit.jupiter.api.Test;
 
 import java.nio.ByteBuffer;
@@ -54,7 +53,6 @@ class TurmsRequestUtilTests {
     @Test
     void parseSimpleRequest_shouldThrow_forPartialRequestWithoutRequestId() {
         ByteBuffer partialRequestWithoutRequestId = TurmsRequest.newBuilder()
-                .setAckRequest(AckRequest.newBuilder().build())
                 .build()
                 .toByteString()
                 .asReadOnlyByteBuffer();

@@ -92,6 +92,11 @@ export default {
                         title: this.$t('groupClass')
                     },
                     {
+                        key: '/content/conversation',
+                        iconType: 'message',
+                        title: this.$t('conversationClass')
+                    },
+                    {
                         key: '/content/message',
                         iconType: 'message',
                         title: this.$t('messageClass')

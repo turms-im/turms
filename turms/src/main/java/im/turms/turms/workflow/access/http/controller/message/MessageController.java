@@ -17,9 +17,8 @@
 
 package im.turms.turms.workflow.access.http.controller.message;
 
-import im.turms.common.constant.DivideBy;
-import im.turms.common.constant.MessageDeliveryStatus;
 import im.turms.turms.bo.DateRange;
+import im.turms.turms.constant.DivideBy;
 import im.turms.turms.workflow.access.http.dto.request.message.CreateMessageDTO;
 import im.turms.turms.workflow.access.http.dto.request.message.MessageStatisticsDTO;
 import im.turms.turms.workflow.access.http.dto.request.message.UpdateMessageDTO;
@@ -27,7 +26,7 @@ import im.turms.turms.workflow.access.http.dto.response.*;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.access.http.util.DateTimeUtil;
 import im.turms.turms.workflow.access.http.util.PageUtil;
-import im.turms.turms.workflow.dao.domain.Message;
+import im.turms.turms.workflow.dao.domain.message.Message;
 import im.turms.turms.workflow.service.impl.message.MessageService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -60,7 +59,7 @@ public class MessageController {
     public Mono<ResponseEntity<ResponseDTO<Void>>> createMessages(
             @RequestParam(defaultValue = "true") Boolean send,
             @RequestBody CreateMessageDTO createMessageDTO) {
-        Mono<Boolean> sendMono = messageService.sendMessage(
+        Mono<Boolean> sendMono = messageService.authAndSaveAndSendMessage(
                 send,
                 createMessageDTO.getId(),
                 createMessageDTO.getIsGroupMessage(),
@@ -86,7 +85,6 @@ public class MessageController {
             @RequestParam(required = false) Date deliveryDateEnd,
             @RequestParam(required = false) Date deletionDateStart,
             @RequestParam(required = false) Date deletionDateEnd,
-            @RequestParam(required = false) Set<MessageDeliveryStatus> deliveryStatuses,
             @RequestParam(required = false) Integer size) {
         Flux<Message> completeMessagesFlux = messageService.queryMessages(
                 false,
@@ -97,7 +95,6 @@ public class MessageController {
                 targetIds,
                 DateRange.of(deliveryDateStart, deliveryDateEnd),
                 DateRange.of(deletionDateStart, deletionDateEnd),
-                deliveryStatuses,
                 0,
                 pageUtil.getSize(size));
         return ResponseFactory.okIfTruthy(completeMessagesFlux);
@@ -115,7 +112,6 @@ public class MessageController {
             @RequestParam(required = false) Date deliveryDateEnd,
             @RequestParam(required = false) Date deletionDateStart,
             @RequestParam(required = false) Date deletionDateEnd,
-            @RequestParam(required = false) Set<MessageDeliveryStatus> deliveryStatuses,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(required = false) Integer size) {
         Mono<Long> count = messageService.countMessages(
@@ -125,8 +121,7 @@ public class MessageController {
                 senderIds,
                 targetIds,
                 DateRange.of(deliveryDateStart, deliveryDateEnd),
-                DateRange.of(deletionDateStart, deletionDateEnd),
-                deliveryStatuses);
+                DateRange.of(deletionDateStart, deletionDateEnd));
         Flux<Message> completeMessagesFlux = messageService.queryMessages(
                 false,
                 ids,
@@ -136,7 +131,6 @@ public class MessageController {
                 targetIds,
                 DateRange.of(deliveryDateStart, deliveryDateEnd),
                 DateRange.of(deletionDateStart, deletionDateEnd),
-                deliveryStatuses,
                 page,
                 pageUtil.getSize(size));
         return ResponseFactory.page(count, completeMessagesFlux);
@@ -166,20 +160,20 @@ public class MessageController {
                         areSystemMessages)
                         .doOnNext(statistics::setSentMessagesOnAverage));
             }
-            if (acknowledgedStartDate != null || acknowledgedEndDate != null) {
-                counts.add(messageService.countAcknowledgedMessages(
-                        DateRange.of(acknowledgedStartDate, acknowledgedEndDate),
-                        areGroupMessages,
-                        areSystemMessages)
-                        .doOnNext(statistics::setAcknowledgedMessages));
-            }
-            if (acknowledgedOnAverageStartDate != null || acknowledgedOnAverageEndDate != null) {
-                counts.add(messageService.countAcknowledgedMessagesOnAverage(
-                        DateRange.of(acknowledgedOnAverageStartDate, acknowledgedOnAverageEndDate),
-                        areGroupMessages,
-                        areSystemMessages)
-                        .doOnNext(statistics::setAcknowledgedMessagesOnAverage));
-            }
+//            if (acknowledgedStartDate != null || acknowledgedEndDate != null) {
+//                counts.add(messageService.countAcknowledgedMessages(
+//                        DateRange.of(acknowledgedStartDate, acknowledgedEndDate),
+//                        areGroupMessages,
+//                        areSystemMessages)
+//                        .doOnNext(statistics::setAcknowledgedMessages));
+//            }
+//            if (acknowledgedOnAverageStartDate != null || acknowledgedOnAverageEndDate != null) {
+//                counts.add(messageService.countAcknowledgedMessagesOnAverage(
+//                        DateRange.of(acknowledgedOnAverageStartDate, acknowledgedOnAverageEndDate),
+//                        areGroupMessages,
+//                        areSystemMessages)
+//                        .doOnNext(statistics::setAcknowledgedMessagesOnAverage));
+//            }
             if (counts.isEmpty() || sentStartDate != null || sentEndDate != null) {
                 counts.add(messageService.countSentMessages(
                         DateRange.of(sentStartDate, sentEndDate),
@@ -197,24 +191,24 @@ public class MessageController {
                         areSystemMessages)
                         .doOnNext(statistics::setSentMessagesOnAverageRecords));
             }
-            if (acknowledgedStartDate != null && acknowledgedEndDate != null) {
-                counts.add(dateTimeUtil.checkAndQueryBetweenDate(
-                        DateRange.of(acknowledgedStartDate, acknowledgedEndDate),
-                        divideBy,
-                        messageService::countAcknowledgedMessages,
-                        areGroupMessages,
-                        areSystemMessages)
-                        .doOnNext(statistics::setAcknowledgedMessagesRecords));
-            }
-            if (acknowledgedOnAverageStartDate != null && acknowledgedOnAverageEndDate != null) {
-                counts.add(dateTimeUtil.checkAndQueryBetweenDate(
-                        DateRange.of(acknowledgedOnAverageStartDate, acknowledgedOnAverageEndDate),
-                        divideBy,
-                        messageService::countAcknowledgedMessagesOnAverage,
-                        areGroupMessages,
-                        areSystemMessages)
-                        .doOnNext(statistics::setAcknowledgedMessagesOnAverageRecords));
-            }
+//            if (acknowledgedStartDate != null && acknowledgedEndDate != null) {
+//                counts.add(dateTimeUtil.checkAndQueryBetweenDate(
+//                        DateRange.of(acknowledgedStartDate, acknowledgedEndDate),
+//                        divideBy,
+//                        messageService::countAcknowledgedMessages,
+//                        areGroupMessages,
+//                        areSystemMessages)
+//                        .doOnNext(statistics::setAcknowledgedMessagesRecords));
+//            }
+//            if (acknowledgedOnAverageStartDate != null && acknowledgedOnAverageEndDate != null) {
+//                counts.add(dateTimeUtil.checkAndQueryBetweenDate(
+//                        DateRange.of(acknowledgedOnAverageStartDate, acknowledgedOnAverageEndDate),
+//                        divideBy,
+//                        messageService::countAcknowledgedMessagesOnAverage,
+//                        areGroupMessages,
+//                        areSystemMessages)
+//                        .doOnNext(statistics::setAcknowledgedMessagesOnAverageRecords));
+//            }
             if (sentStartDate != null && sentEndDate != null) {
                 counts.add(dateTimeUtil.checkAndQueryBetweenDate(
                         DateRange.of(sentStartDate, sentEndDate),
@@ -236,12 +230,13 @@ public class MessageController {
     public Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateMessages(
             @RequestParam Set<Long> ids,
             @RequestBody UpdateMessageDTO updateMessageDTO) {
-        Mono<UpdateResultDTO> updateMono = messageService.updateMessage(
+        Mono<UpdateResultDTO> updateMono = messageService.updateMessages(
                 ids,
                 updateMessageDTO.getIsSystemMessage(),
                 updateMessageDTO.getText(),
                 updateMessageDTO.getRecords(),
                 updateMessageDTO.getBurnAfter(),
+                updateMessageDTO.getRecallDate(),
                 null)
                 .map(UpdateResultDTO::get);
         return ResponseFactory.okIfTruthy(updateMono);
@@ -251,10 +246,9 @@ public class MessageController {
     @RequiredPermission(MESSAGE_DELETE)
     public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteMessages(
             @RequestParam Set<Long> ids,
-            @RequestParam(defaultValue = "false") Boolean deleteMessagesStatuses,
             @RequestParam(required = false) Boolean deleteLogically) {
         Mono<DeleteResultDTO> deleteMono = messageService
-                .deleteMessages(ids, deleteMessagesStatuses, deleteLogically)
+                .deleteMessages(ids, deleteLogically)
                 .map(DeleteResultDTO::get);
         return ResponseFactory.okIfTruthy(deleteMono);
     }

@@ -19,42 +19,21 @@ public class MessageService {
     }
 
     private weak var turmsClient: TurmsClient!
-    private var unacknowledgedMessageIds: [Int64] = []
     private var mentionedUserIdsParser: ((Message) -> [Int64])?
     public var onMessage: ((Message, MessageAddition) -> Void)?
 
-    init(_ turmsClient: TurmsClient, _ ackMessageInterval: TimeInterval?) {
+    init(_ turmsClient: TurmsClient) {
         self.turmsClient = turmsClient
-        if let interval = ackMessageInterval, interval > 0 {
-            startAckMessagesTimer(interval)
-        }
         self.turmsClient.driver
             .addOnNotificationListener {
                 if self.onMessage != nil, $0.hasRelayedRequest {
                     if case .createMessageRequest(let request) = $0.relayedRequest.kind {
-                        if let interval = ackMessageInterval {
-                            let messageId = request.messageID.value
-                            if interval > 0 {
-                                self.unacknowledgedMessageIds.append(messageId)
-                            } else {
-                                self.ackMessages([messageId])
-                            }
-                        }
                         let message = MessageService.createMessage2Message($0.requesterID.value, request)
                         let addition = self.parseMessageAddition(message)
                         self.onMessage!(message, addition)
                     }
                 }
             }
-    }
-
-    public func ackMessages(_ messageIds: [Int64]) -> Promise<Void> {
-        return turmsClient.driver
-            .send { $0
-                .request("ackRequest")
-                .field("messageIds", messageIds)
-            }
-            .asVoid()
     }
 
     public func sendMessage(
@@ -118,7 +97,6 @@ public class MessageService {
         fromId: Int64? = nil,
         deliveryDateAfter: Date? = nil,
         deliveryDateBefore: Date? = nil,
-        deliveryStatus: MessageDeliveryStatus? = nil,
         size: Int32 = 50) -> Promise<[Message]> {
         return turmsClient.driver
             .send { $0
@@ -130,27 +108,32 @@ public class MessageService {
                 .field("deliveryDateAfter", deliveryDateAfter)
                 .field("deliveryDateBefore", deliveryDateBefore)
                 .field("size", size)
-                .field("deliveryStatus", deliveryStatus)
+                .field("withTotal", false)
             }
             .map { $0.data.messages.messages }
     }
 
-    public func queryPendingMessagesWithTotal(_ size: Int32 = 1) -> Promise<[MessagesWithTotal]> {
+    public func queryMessagesWithTotal(
+        ids: [Int64]? = nil,
+        areGroupMessages: Bool? = nil,
+        areSystemMessages: Bool? = nil,
+        fromId: Int64? = nil,
+        deliveryDateAfter: Date? = nil,
+        deliveryDateBefore: Date? = nil,
+        size: Int32 = 1) -> Promise<[MessagesWithTotal]> {
         return turmsClient.driver
             .send { $0
-                .request("queryPendingMessagesWithTotalRequest")
+                .request("queryMessagesRequest")
+                .field("ids", ids)
+                .field("areGroupMessages", areGroupMessages)
+                .field("areSystemMessages", areSystemMessages)
+                .field("fromId", fromId)
+                .field("deliveryDateAfter", deliveryDateAfter)
+                .field("deliveryDateBefore", deliveryDateBefore)
                 .field("size", size)
+                .field("withTotal", true)
             }
             .map { $0.data.messagesWithTotalList.messagesWithTotalList }
-    }
-
-    public func queryMessageStatus(_ messageId: Int64) -> Promise<[MessageStatus]> {
-        return turmsClient.driver
-            .send { $0
-                .request("queryMessageStatusesRequest")
-                .field("messageId", messageId)
-            }
-            .map { $0.data.messageStatuses.messageStatuses }
     }
 
     public func recallMessage(messageId: Int64, recallDate: Date = Date()) -> Promise<Void> {
@@ -159,32 +142,6 @@ public class MessageService {
                 .request("updateMessageRequest")
                 .field("messageId", messageId)
                 .field("recallDate", recallDate)
-            }
-            .asVoid()
-    }
-
-    public func readMessage(messageId: Int64, readDate: Date = Date()) -> Promise<Void> {
-        return turmsClient.driver
-            .send { $0
-                .request("updateMessageRequest")
-                .field("messageId", messageId)
-                .field("readDate", readDate)
-            }
-            .asVoid()
-    }
-
-    public func markMessageUnread(_ messageId: Int64) -> Promise<Void> {
-        return readMessage(
-            messageId: messageId,
-            readDate: Date(timeIntervalSince1970: 0))
-    }
-
-    public func updateTypingStatusRequest(isGroupMessage: Bool, toId: Int64) -> Promise<Void> {
-        return turmsClient.driver
-            .send { $0
-                .request("updateTypingStatusRequest")
-                .field("isGroupMessage", isGroupMessage)
-                .field("toId", toId)
             }
             .asVoid()
     }
@@ -295,34 +252,28 @@ public class MessageService {
         }.serializedData()
     }
 
-    private func startAckMessagesTimer(_ ackMessageInterval: TimeInterval) {
-        Timer.scheduledTimer(timeInterval: ackMessageInterval, target: self, selector: #selector(fireAckMessagesTimer), userInfo: nil, repeats: true)
-    }
-
-    @objc func fireAckMessagesTimer() {
-        if !unacknowledgedMessageIds.isEmpty {
-            var unacknowledgedMessageIdList: [Int64] = []
-            repeat {
-                let messageId = unacknowledgedMessageIds.popLast()
-                if let id = messageId {
-                    unacknowledgedMessageIdList.append(id)
-                } else {
-                    break
-                }
-            } while true
-            if !unacknowledgedMessageIdList.isEmpty {
-                ackMessages(unacknowledgedMessageIdList)
-                    .catch { _ in
-                        self.unacknowledgedMessageIds.append(contentsOf: unacknowledgedMessageIdList)
-                    }
-            }
-        }
-    }
-
     private func parseMessageAddition(_ message: Message) -> MessageAddition {
         let mentionedUserIds = mentionedUserIdsParser?(message) ?? []
         let isMentioned = turmsClient.userService.userId != nil ? mentionedUserIds.contains(turmsClient.userService.userId!) : false
-        return MessageAddition(isMentioned: isMentioned, mentionedUserIds: mentionedUserIds)
+        let records = message.records
+        var systemMessageType: BuiltinSystemMessageType?
+        if message.isSystemMessage.value, !records.isEmpty {
+            let data = records[0]
+            if !data.isEmpty {
+                systemMessageType = BuiltinSystemMessageType(rawValue: Int(data[0]))
+            }
+        }
+        var recalledMessageIds: [Int64] = []
+        if systemMessageType == BuiltinSystemMessageType.recallMessage {
+            let size = records.count
+            for i in 1...(size - 1) {
+                let id = records[i].withUnsafeBytes {
+                    $0.load(as: Int64.self)
+                }
+                recalledMessageIds.append(id)
+            }
+        }
+        return MessageAddition(isMentioned: isMentioned, mentionedUserIds: mentionedUserIds, recalledMessageIds: recalledMessageIds)
     }
 
     private static func createMessage2Message(_ requesterId: Int64, _ request: CreateMessageRequest) -> Message {
@@ -330,6 +281,7 @@ public class MessageService {
             if request.hasMessageID {
                 $0.id = request.messageID
             }
+            $0.isSystemMessage = request.isSystemMessage
             $0.deliveryDate.value = request.deliveryDate
             if request.hasText {
                 $0.text = request.text

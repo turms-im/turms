@@ -41,7 +41,7 @@ public interface CreateMessageRequestOrBuilder extends
 
   /**
    * <pre>
-   * Client can never set this to true
+   * is_system_message can only be true if the user is an administrator, or turms server will return an error
    * </pre>
    *
    * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
@@ -50,7 +50,7 @@ public interface CreateMessageRequestOrBuilder extends
   boolean hasIsSystemMessage();
   /**
    * <pre>
-   * Client can never set this to true
+   * is_system_message can only be true if the user is an administrator, or turms server will return an error
    * </pre>
    *
    * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
@@ -59,7 +59,7 @@ public interface CreateMessageRequestOrBuilder extends
   com.google.protobuf.BoolValue getIsSystemMessage();
   /**
    * <pre>
-   * Client can never set this to true
+   * is_system_message can only be true if the user is an administrator, or turms server will return an error
    * </pre>
    *
    * <code>.google.protobuf.BoolValue is_system_message = 2;</code>

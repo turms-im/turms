@@ -85,42 +85,27 @@ public interface UserInfoOrBuilder extends
   com.google.protobuf.Int64ValueOrBuilder getRegistrationDateOrBuilder();
 
   /**
-   * <code>.google.protobuf.Int64Value deletion_date = 5;</code>
-   * @return Whether the deletionDate field is set.
-   */
-  boolean hasDeletionDate();
-  /**
-   * <code>.google.protobuf.Int64Value deletion_date = 5;</code>
-   * @return The deletionDate.
-   */
-  com.google.protobuf.Int64Value getDeletionDate();
-  /**
-   * <code>.google.protobuf.Int64Value deletion_date = 5;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getDeletionDateOrBuilder();
-
-  /**
-   * <code>.google.protobuf.BoolValue active = 6;</code>
+   * <code>.google.protobuf.BoolValue active = 5;</code>
    * @return Whether the active field is set.
    */
   boolean hasActive();
   /**
-   * <code>.google.protobuf.BoolValue active = 6;</code>
+   * <code>.google.protobuf.BoolValue active = 5;</code>
    * @return The active.
    */
   com.google.protobuf.BoolValue getActive();
   /**
-   * <code>.google.protobuf.BoolValue active = 6;</code>
+   * <code>.google.protobuf.BoolValue active = 5;</code>
    */
   com.google.protobuf.BoolValueOrBuilder getActiveOrBuilder();
 
   /**
-   * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 7;</code>
+   * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
    * @return The enum numeric value on the wire for profileAccessStrategy.
    */
   int getProfileAccessStrategyValue();
   /**
-   * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 7;</code>
+   * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
    * @return The profileAccessStrategy.
    */
   im.turms.common.constant.ProfileAccessStrategy getProfileAccessStrategy();
