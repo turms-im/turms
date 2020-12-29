@@ -30,9 +30,9 @@ public enum ProfileAccessStrategy
    */
   ALL(0),
   /**
-   * <code>ALL_EXCEPT_BLACKLISTED_USERS = 1;</code>
+   * <code>ALL_EXCEPT_BLOCKED_USERS = 1;</code>
    */
-  ALL_EXCEPT_BLACKLISTED_USERS(1),
+  ALL_EXCEPT_BLOCKED_USERS(1),
   /**
    * <code>FRIENDS = 2;</code>
    */
@@ -45,9 +45,9 @@ public enum ProfileAccessStrategy
    */
   public static final int ALL_VALUE = 0;
   /**
-   * <code>ALL_EXCEPT_BLACKLISTED_USERS = 1;</code>
+   * <code>ALL_EXCEPT_BLOCKED_USERS = 1;</code>
    */
-  public static final int ALL_EXCEPT_BLACKLISTED_USERS_VALUE = 1;
+  public static final int ALL_EXCEPT_BLOCKED_USERS_VALUE = 1;
   /**
    * <code>FRIENDS = 2;</code>
    */
@@ -79,7 +79,7 @@ public enum ProfileAccessStrategy
   public static ProfileAccessStrategy forNumber(int value) {
     switch (value) {
       case 0: return ALL;
-      case 1: return ALL_EXCEPT_BLACKLISTED_USERS;
+      case 1: return ALL_EXCEPT_BLOCKED_USERS;
       case 2: return FRIENDS;
       default: return null;
     }

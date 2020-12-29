@@ -161,45 +161,45 @@ public class GroupService {
             .asVoid()
     }
 
-    // Group Blacklist
-    public func blacklistUser(groupId: Int64, userId: Int64) -> Promise<Void> {
+    // Group Blocklist
+    public func blockUser(groupId: Int64, userId: Int64) -> Promise<Void> {
         return turmsClient.driver
             .send { $0
-                .request("createGroupBlacklistedUserRequest")
+                .request("createGroupBlockedUserRequest")
                 .field("userId", userId)
                 .field("groupId", groupId)
             }
             .asVoid()
     }
 
-    public func unblacklistUser(groupId: Int64, userId: Int64) -> Promise<Void> {
+    public func unblockUser(groupId: Int64, userId: Int64) -> Promise<Void> {
         return turmsClient.driver
             .send { $0
-                .request("deleteGroupBlacklistedUserRequest")
+                .request("deleteGroupBlockedUserRequest")
                 .field("groupId", groupId)
                 .field("userId", userId)
             }
             .asVoid()
     }
 
-    public func queryBlacklistedUserIds(
+    public func queryBlockedUserIds(
         groupId: Int64,
         lastUpdatedDate: Date? = nil) -> Promise<Int64ValuesWithVersion?> {
         return turmsClient.driver
             .send { $0
-                .request("queryGroupBlacklistedUserIdsRequest")
+                .request("queryGroupBlockedUserIdsRequest")
                 .field("groupId", groupId)
                 .field("lastUpdatedDate", lastUpdatedDate)
             }
             .map { try $0.data.kind?.getKindData(Int64ValuesWithVersion.self) }
     }
 
-    public func queryBlacklistedUserInfos(
+    public func queryBlockedUserInfos(
         groupId: Int64,
         lastUpdatedDate: Date? = nil) -> Promise<UsersInfosWithVersion?> {
         return turmsClient.driver
             .send { $0
-                .request("queryGroupBlacklistedUserInfosRequest")
+                .request("queryGroupBlockedUserInfosRequest")
                 .field("groupId", groupId)
                 .field("lastUpdatedDate", lastUpdatedDate)
             }

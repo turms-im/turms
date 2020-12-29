@@ -14,14 +14,14 @@
 import ContentTemplate from '../template/content-template';
 
 export default {
-    name: 'content-group-blacklist-pane',
+    name: 'content-group-blocklist-pane',
     components: {
         ContentTemplate
     },
     data() {
         return {
-            name: 'group-blacklist',
-            url: this.$rs.apis.groupBlacklist,
+            name: 'group-blocklist',
+            url: this.$rs.apis.groupBlocklist,
             recordKey: 'key',
             queryKey: 'keys',
             filters: [
@@ -51,7 +51,7 @@ export default {
             ],
             actionGroups: [
                 [{
-                    title: this.$t('addBlacklistedUser'),
+                    title: this.$t('addBlockedUser'),
                     type: 'CREATE',
                     size: 'L',
                     fields: [
@@ -74,7 +74,7 @@ export default {
                     ]
                 },
                 {
-                    title: this.$t('updateSelectedBlacklistedUsers'),
+                    title: this.$t('updateSelectedBlockedUsers'),
                     type: 'UPDATE',
                     size: 'L',
                     fields: [

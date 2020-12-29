@@ -54,9 +54,9 @@ describe('Create', () => {
             expect(e.code).toEqual(TurmsStatusCode.CREATE_EXISTING_RELATIONSHIP);
         }
     });
-    it('createBlacklistedUserRelationship_shouldSucceed', async () => {
+    it('createBlockedUserRelationship_shouldSucceed', async () => {
         try {
-            const result = await turmsClient.userService.createBlacklistedUserRelationship('10');
+            const result = await turmsClient.userService.createBlockedUserRelationship('10');
             expect(result).toBeFalsy();
         } catch (e) {
             expect(e.code).toEqual(TurmsStatusCode.CREATE_EXISTING_RELATIONSHIP);
@@ -147,8 +147,8 @@ describe('Query', () => {
         const result = await turmsClient.userService.queryFriends();
         expect(result).toBeTruthy();
     });
-    it('queryBlacklistedUsers_shouldReturnBlacklist', async () => {
-        const result = await turmsClient.userService.queryBlacklistedUsers();
+    it('queryBlockedUsers_shouldReturnRelationshipsWithBlockedUsers', async () => {
+        const result = await turmsClient.userService.queryBlockedUsers();
         expect(result).toBeTruthy();
     });
     // TODO: Extend the query friend request

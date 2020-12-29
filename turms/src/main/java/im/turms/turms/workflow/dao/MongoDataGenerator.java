@@ -70,7 +70,7 @@ public class MongoDataGenerator {
 
     private static final List<String> GROUP_COLLECTIONS = List.of(
             Group.COLLECTION_NAME,
-            GroupBlacklistedUser.COLLECTION_NAME,
+            GroupBlockedUser.COLLECTION_NAME,
             GroupInvitation.COLLECTION_NAME,
             GroupJoinQuestion.COLLECTION_NAME,
             GroupJoinRequest.COLLECTION_NAME,
@@ -104,8 +104,8 @@ public class MongoDataGenerator {
     public final int targetUserForGroupJoinRequestEnd;
     public final int targetUserForGroupInvitationStart;
     public final int targetUserForGroupInvitationEnd;
-    public final int targetUserToBlacklistInGroupStart;
-    public final int targetUserToBlacklistInGroupEnd;
+    public final int targetUserToBlockInGroupStart;
+    public final int targetUserToBlockInGroupEnd;
 
     public final int targetUserToRequestFriendRequestStart;
     public final int targetUserToRequestFriendRequestEnd;
@@ -153,8 +153,8 @@ public class MongoDataGenerator {
         targetUserForGroupJoinRequestEnd = step * 8;
         targetUserForGroupInvitationStart = 1 + step * 8;
         targetUserForGroupInvitationEnd = step * 9;
-        targetUserToBlacklistInGroupStart = 1 + step * 9;
-        targetUserToBlacklistInGroupEnd = step * 10;
+        targetUserToBlockInGroupStart = 1 + step * 9;
+        targetUserToBlockInGroupEnd = step * 10;
 
         targetUserToBeFriendRelationshipStart = 2;
         targetUserToBeFriendRelationshipEnd = step;
@@ -175,14 +175,12 @@ public class MongoDataGenerator {
                 createCollectionIfNotExist(AdminRole.class, null),
 
                 createCollectionIfNotExist(Group.class, null),
-                createCollectionIfNotExist(GroupBlacklistedUser.class, null),
+                createCollectionIfNotExist(GroupBlockedUser.class, null),
                 createCollectionIfNotExist(GroupInvitation.class, null),
                 createCollectionIfNotExist(GroupJoinQuestion.class, null),
                 createCollectionIfNotExist(GroupMember.class, null),
                 createCollectionIfNotExist(GroupType.class, null),
                 createCollectionIfNotExist(GroupVersion.class, null),
-                createCollectionIfNotExist(PrivateConversation.class, null),
-                createCollectionIfNotExist(GroupConversation.class, null),
 
                 createCollectionIfNotExist(PrivateConversation.class, null),
                 createCollectionIfNotExist(GroupConversation.class, null),
@@ -308,13 +306,13 @@ public class MongoDataGenerator {
         groupRelatedObjs.add(group);
         GroupVersion groupVersion = new GroupVersion(1L, now, now, now, now, now, now);
         groupRelatedObjs.add(groupVersion);
-        for (int i = targetUserToBlacklistInGroupStart; i <= targetUserToBlacklistInGroupEnd; i++) {
-            GroupBlacklistedUser groupBlacklistedUser = new GroupBlacklistedUser(
+        for (int i = targetUserToBlockInGroupStart; i <= targetUserToBlockInGroupEnd; i++) {
+            GroupBlockedUser groupBlockedUser = new GroupBlockedUser(
                     1L,
                     (long) i,
                     now,
                     1L);
-            groupRelatedObjs.add(groupBlacklistedUser);
+            groupRelatedObjs.add(groupBlockedUser);
         }
         for (int i = targetUserForGroupInvitationStart; i <= targetUserForGroupInvitationEnd; i++) {
             GroupInvitation groupInvitation = new GroupInvitation(
@@ -497,7 +495,7 @@ public class MongoDataGenerator {
                 || clazz == UserPermissionGroup.class || clazz == UserRelationship.class
                 || clazz == UserRelationshipGroup.class || clazz == UserRelationshipGroupMember.class || clazz == UserVersion.class) {
             mongoTemplate = userMongoTemplate;
-        } else if (clazz == Group.class || clazz == GroupBlacklistedUser.class || clazz == GroupInvitation.class
+        } else if (clazz == Group.class || clazz == GroupBlockedUser.class || clazz == GroupInvitation.class
                 || clazz == GroupJoinQuestion.class || clazz == GroupJoinRequest.class || clazz == GroupMember.class
                 || clazz == GroupType.class || clazz == GroupVersion.class) {
             mongoTemplate = groupMongoTemplate;

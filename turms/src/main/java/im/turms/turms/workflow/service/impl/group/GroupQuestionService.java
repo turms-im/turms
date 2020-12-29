@@ -151,8 +151,8 @@ public class GroupQuestionService {
         }
         Long firstQuestionId = questionIdAndAnswers.iterator().next().getId();
         return queryGroupId(firstQuestionId)
-                .flatMap(groupId -> groupMemberService.isBlacklisted(groupId, requesterId)
-                        .flatMap(isBlacklisted -> isBlacklisted
+                .flatMap(groupId -> groupMemberService.isBlocked(groupId, requesterId)
+                        .flatMap(isBlocked -> isBlocked
                                 ? Mono.error(TurmsBusinessException.get(TurmsStatusCode.GROUP_QUESTION_ANSWERER_HAS_BEEN_BLOCKED))
                                 : groupMemberService.isGroupMember(groupId, requesterId))
                         .flatMap(isGroupMember -> isGroupMember

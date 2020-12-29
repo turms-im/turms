@@ -100,8 +100,8 @@ export default {
                                         id: 'ALL'
                                     },
                                     {
-                                        label: 'ALL_EXCEPT_BLACKLISTED_USERS',
-                                        id: 'ALL_EXCEPT_BLACKLISTED_USERS'
+                                        label: 'ALL_EXCEPT_BLOCKED_USERS',
+                                        id: 'ALL_EXCEPT_BLOCKED_USERS'
                                     },
                                     {
                                         label: 'FRIENDS',
@@ -169,8 +169,8 @@ export default {
                                         id: 'ALL'
                                     },
                                     {
-                                        label: 'ALL_EXCEPT_BLACKLISTED_USERS',
-                                        id: 'ALL_EXCEPT_BLACKLISTED_USERS'
+                                        label: 'ALL_EXCEPT_BLOCKED_USERS',
+                                        id: 'ALL_EXCEPT_BLOCKED_USERS'
                                     },
                                     {
                                         label: 'FRIENDS',

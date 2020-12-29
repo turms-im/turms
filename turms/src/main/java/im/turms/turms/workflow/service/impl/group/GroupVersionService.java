@@ -72,15 +72,15 @@ public class GroupVersionService {
         return mongoTemplate.findOne(query, GroupVersion.class, GroupVersion.COLLECTION_NAME).map(GroupVersion::getMembers);
     }
 
-    public Mono<Date> queryBlacklistVersion(@NotNull Long groupId) {
+    public Mono<Date> queryBlocklistVersion(@NotNull Long groupId) {
         try {
             AssertUtil.notNull(groupId, "groupId");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
         Query query = new Query(Criteria.where(DaoConstant.ID_FIELD_NAME).is(groupId));
-        query.fields().include(GroupVersion.Fields.BLACKLIST);
-        return mongoTemplate.findOne(query, GroupVersion.class, GroupVersion.COLLECTION_NAME).map(GroupVersion::getBlacklist);
+        query.fields().include(GroupVersion.Fields.BLOCKLIST);
+        return mongoTemplate.findOne(query, GroupVersion.class, GroupVersion.COLLECTION_NAME).map(GroupVersion::getBlocklist);
     }
 
     public Mono<Date> queryGroupJoinRequestsVersion(@NotNull Long groupId) {
@@ -120,7 +120,7 @@ public class GroupVersionService {
             @NotNull Long groupId,
             boolean updateInfo,
             boolean updateMembers,
-            boolean updateBlacklist,
+            boolean updateBlocklist,
             boolean joinRequests,
             boolean joinQuestions) {
         try {
@@ -137,8 +137,8 @@ public class GroupVersionService {
         if (updateMembers) {
             update.set(GroupVersion.Fields.MEMBERS, now);
         }
-        if (updateBlacklist) {
-            update.set(GroupVersion.Fields.BLACKLIST, now);
+        if (updateBlocklist) {
+            update.set(GroupVersion.Fields.BLOCKLIST, now);
         }
         if (joinRequests) {
             update.set(GroupVersion.Fields.JOIN_REQUESTS, now);
@@ -166,8 +166,8 @@ public class GroupVersionService {
         return updateSpecificVersion(GroupVersion.Fields.MEMBERS);
     }
 
-    public Mono<Boolean> updateBlacklistVersion(@NotNull Long groupId) {
-        return updateSpecificVersion(groupId, GroupVersion.Fields.BLACKLIST);
+    public Mono<Boolean> updateBlocklistVersion(@NotNull Long groupId) {
+        return updateSpecificVersion(groupId, GroupVersion.Fields.BLOCKLIST);
     }
 
     public Mono<Boolean> updateJoinRequestsVersion(@NotNull Long groupId) {

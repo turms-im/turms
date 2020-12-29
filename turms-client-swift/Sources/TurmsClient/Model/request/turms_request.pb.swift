@@ -344,37 +344,37 @@ public struct TurmsRequest {
     set {_uniqueStorage()._kind = .updateGroupRequest(newValue)}
   }
 
-  /// Group Blacklist
-  public var createGroupBlacklistedUserRequest: CreateGroupBlacklistedUserRequest {
+  /// Group Blocklist
+  public var createGroupBlockedUserRequest: CreateGroupBlockedUserRequest {
     get {
-      if case .createGroupBlacklistedUserRequest(let v)? = _storage._kind {return v}
-      return CreateGroupBlacklistedUserRequest()
+      if case .createGroupBlockedUserRequest(let v)? = _storage._kind {return v}
+      return CreateGroupBlockedUserRequest()
     }
-    set {_uniqueStorage()._kind = .createGroupBlacklistedUserRequest(newValue)}
+    set {_uniqueStorage()._kind = .createGroupBlockedUserRequest(newValue)}
   }
 
-  public var deleteGroupBlacklistedUserRequest: DeleteGroupBlacklistedUserRequest {
+  public var deleteGroupBlockedUserRequest: DeleteGroupBlockedUserRequest {
     get {
-      if case .deleteGroupBlacklistedUserRequest(let v)? = _storage._kind {return v}
-      return DeleteGroupBlacklistedUserRequest()
+      if case .deleteGroupBlockedUserRequest(let v)? = _storage._kind {return v}
+      return DeleteGroupBlockedUserRequest()
     }
-    set {_uniqueStorage()._kind = .deleteGroupBlacklistedUserRequest(newValue)}
+    set {_uniqueStorage()._kind = .deleteGroupBlockedUserRequest(newValue)}
   }
 
-  public var queryGroupBlacklistedUserIdsRequest: QueryGroupBlacklistedUserIdsRequest {
+  public var queryGroupBlockedUserIdsRequest: QueryGroupBlockedUserIdsRequest {
     get {
-      if case .queryGroupBlacklistedUserIdsRequest(let v)? = _storage._kind {return v}
-      return QueryGroupBlacklistedUserIdsRequest()
+      if case .queryGroupBlockedUserIdsRequest(let v)? = _storage._kind {return v}
+      return QueryGroupBlockedUserIdsRequest()
     }
-    set {_uniqueStorage()._kind = .queryGroupBlacklistedUserIdsRequest(newValue)}
+    set {_uniqueStorage()._kind = .queryGroupBlockedUserIdsRequest(newValue)}
   }
 
-  public var queryGroupBlacklistedUserInfosRequest: QueryGroupBlacklistedUserInfosRequest {
+  public var queryGroupBlockedUserInfosRequest: QueryGroupBlockedUserInfosRequest {
     get {
-      if case .queryGroupBlacklistedUserInfosRequest(let v)? = _storage._kind {return v}
-      return QueryGroupBlacklistedUserInfosRequest()
+      if case .queryGroupBlockedUserInfosRequest(let v)? = _storage._kind {return v}
+      return QueryGroupBlockedUserInfosRequest()
     }
-    set {_uniqueStorage()._kind = .queryGroupBlacklistedUserInfosRequest(newValue)}
+    set {_uniqueStorage()._kind = .queryGroupBlockedUserInfosRequest(newValue)}
   }
 
   /// Group Enrollment
@@ -538,11 +538,11 @@ public struct TurmsRequest {
     case queryJoinedGroupIdsRequest(QueryJoinedGroupIdsRequest)
     case queryJoinedGroupInfosRequest(QueryJoinedGroupInfosRequest)
     case updateGroupRequest(UpdateGroupRequest)
-    /// Group Blacklist
-    case createGroupBlacklistedUserRequest(CreateGroupBlacklistedUserRequest)
-    case deleteGroupBlacklistedUserRequest(DeleteGroupBlacklistedUserRequest)
-    case queryGroupBlacklistedUserIdsRequest(QueryGroupBlacklistedUserIdsRequest)
-    case queryGroupBlacklistedUserInfosRequest(QueryGroupBlacklistedUserInfosRequest)
+    /// Group Blocklist
+    case createGroupBlockedUserRequest(CreateGroupBlockedUserRequest)
+    case deleteGroupBlockedUserRequest(DeleteGroupBlockedUserRequest)
+    case queryGroupBlockedUserIdsRequest(QueryGroupBlockedUserIdsRequest)
+    case queryGroupBlockedUserInfosRequest(QueryGroupBlockedUserInfosRequest)
     /// Group Enrollment
     case checkGroupJoinQuestionsAnswersRequest(CheckGroupJoinQuestionsAnswersRequest)
     case createGroupInvitationRequest(CreateGroupInvitationRequest)
@@ -600,10 +600,10 @@ public struct TurmsRequest {
       case (.queryJoinedGroupIdsRequest(let l), .queryJoinedGroupIdsRequest(let r)): return l == r
       case (.queryJoinedGroupInfosRequest(let l), .queryJoinedGroupInfosRequest(let r)): return l == r
       case (.updateGroupRequest(let l), .updateGroupRequest(let r)): return l == r
-      case (.createGroupBlacklistedUserRequest(let l), .createGroupBlacklistedUserRequest(let r)): return l == r
-      case (.deleteGroupBlacklistedUserRequest(let l), .deleteGroupBlacklistedUserRequest(let r)): return l == r
-      case (.queryGroupBlacklistedUserIdsRequest(let l), .queryGroupBlacklistedUserIdsRequest(let r)): return l == r
-      case (.queryGroupBlacklistedUserInfosRequest(let l), .queryGroupBlacklistedUserInfosRequest(let r)): return l == r
+      case (.createGroupBlockedUserRequest(let l), .createGroupBlockedUserRequest(let r)): return l == r
+      case (.deleteGroupBlockedUserRequest(let l), .deleteGroupBlockedUserRequest(let r)): return l == r
+      case (.queryGroupBlockedUserIdsRequest(let l), .queryGroupBlockedUserIdsRequest(let r)): return l == r
+      case (.queryGroupBlockedUserInfosRequest(let l), .queryGroupBlockedUserInfosRequest(let r)): return l == r
       case (.checkGroupJoinQuestionsAnswersRequest(let l), .checkGroupJoinQuestionsAnswersRequest(let r)): return l == r
       case (.createGroupInvitationRequest(let l), .createGroupInvitationRequest(let r)): return l == r
       case (.createGroupJoinRequestRequest(let l), .createGroupJoinRequestRequest(let r)): return l == r
@@ -674,10 +674,10 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
     303: .standard(proto: "query_joined_group_ids_request"),
     304: .standard(proto: "query_joined_group_infos_request"),
     305: .standard(proto: "update_group_request"),
-    400: .standard(proto: "create_group_blacklisted_user_request"),
-    401: .standard(proto: "delete_group_blacklisted_user_request"),
-    402: .standard(proto: "query_group_blacklisted_user_ids_request"),
-    403: .standard(proto: "query_group_blacklisted_user_infos_request"),
+    400: .standard(proto: "create_group_blocked_user_request"),
+    401: .standard(proto: "delete_group_blocked_user_request"),
+    402: .standard(proto: "query_group_blocked_user_ids_request"),
+    403: .standard(proto: "query_group_blocked_user_infos_request"),
     500: .standard(proto: "check_group_join_questions_answers_request"),
     501: .standard(proto: "create_group_invitation_request"),
     502: .standard(proto: "create_group_join_request_request"),
@@ -1018,37 +1018,37 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
           try decoder.decodeSingularMessageField(value: &v)
           if let v = v {_storage._kind = .updateGroupRequest(v)}
         case 400:
-          var v: CreateGroupBlacklistedUserRequest?
+          var v: CreateGroupBlockedUserRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
-            if case .createGroupBlacklistedUserRequest(let m) = current {v = m}
+            if case .createGroupBlockedUserRequest(let m) = current {v = m}
           }
           try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._kind = .createGroupBlacklistedUserRequest(v)}
+          if let v = v {_storage._kind = .createGroupBlockedUserRequest(v)}
         case 401:
-          var v: DeleteGroupBlacklistedUserRequest?
+          var v: DeleteGroupBlockedUserRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
-            if case .deleteGroupBlacklistedUserRequest(let m) = current {v = m}
+            if case .deleteGroupBlockedUserRequest(let m) = current {v = m}
           }
           try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._kind = .deleteGroupBlacklistedUserRequest(v)}
+          if let v = v {_storage._kind = .deleteGroupBlockedUserRequest(v)}
         case 402:
-          var v: QueryGroupBlacklistedUserIdsRequest?
+          var v: QueryGroupBlockedUserIdsRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
-            if case .queryGroupBlacklistedUserIdsRequest(let m) = current {v = m}
+            if case .queryGroupBlockedUserIdsRequest(let m) = current {v = m}
           }
           try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._kind = .queryGroupBlacklistedUserIdsRequest(v)}
+          if let v = v {_storage._kind = .queryGroupBlockedUserIdsRequest(v)}
         case 403:
-          var v: QueryGroupBlacklistedUserInfosRequest?
+          var v: QueryGroupBlockedUserInfosRequest?
           if let current = _storage._kind {
             try decoder.handleConflictingOneOf()
-            if case .queryGroupBlacklistedUserInfosRequest(let m) = current {v = m}
+            if case .queryGroupBlockedUserInfosRequest(let m) = current {v = m}
           }
           try decoder.decodeSingularMessageField(value: &v)
-          if let v = v {_storage._kind = .queryGroupBlacklistedUserInfosRequest(v)}
+          if let v = v {_storage._kind = .queryGroupBlockedUserInfosRequest(v)}
         case 500:
           var v: CheckGroupJoinQuestionsAnswersRequest?
           if let current = _storage._kind {
@@ -1247,13 +1247,13 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
         try visitor.visitSingularMessageField(value: v, fieldNumber: 304)
       case .updateGroupRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 305)
-      case .createGroupBlacklistedUserRequest(let v)?:
+      case .createGroupBlockedUserRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 400)
-      case .deleteGroupBlacklistedUserRequest(let v)?:
+      case .deleteGroupBlockedUserRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 401)
-      case .queryGroupBlacklistedUserIdsRequest(let v)?:
+      case .queryGroupBlockedUserIdsRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 402)
-      case .queryGroupBlacklistedUserInfosRequest(let v)?:
+      case .queryGroupBlockedUserInfosRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 403)
       case .checkGroupJoinQuestionsAnswersRequest(let v)?:
         try visitor.visitSingularMessageField(value: v, fieldNumber: 500)

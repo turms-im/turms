@@ -37,7 +37,7 @@ class UserServiceTests: XCTestCase {
                 throw error
             }
         })
-        TestUtil.assertCompleted("createBlacklistedUserRelationship_shouldSucceed", turmsClient.userService.createBlacklistedUserRelationship(userId: 10).recover { error -> Promise<Void> in
+        TestUtil.assertCompleted("createBlockedUserRelationship_shouldSucceed", turmsClient.userService.createBlockedUserRelationship(userId: 10).recover { error -> Promise<Void> in
             if let businessError = error as? TurmsBusinessError, businessError.code == TurmsStatusCode.createExistingRelationship.rawValue {
                 return Promise.value(())
             } else {
@@ -78,7 +78,7 @@ class UserServiceTests: XCTestCase {
         TestUtil.assertCompleted("queryRelationships_shouldReturnUserRelationshipsWithVersion", turmsClient.userService.queryRelationships(relatedUserIds: [2]))
         TestUtil.assertCompleted("queryRelatedUserIds_shouldReturnRelatedUserIds", turmsClient.userService.queryRelatedUserIds())
         TestUtil.assertCompleted("queryFriends_shouldReturnFriendRelationships", turmsClient.userService.queryFriends())
-        TestUtil.assertCompleted("queryBlacklistedUsers_shouldReturnBlacklist", turmsClient.userService.queryBlacklistedUsers())
+        TestUtil.assertCompleted("queryBlockedUsers_shouldReturnRelationshipsWithBlockedUsers", turmsClient.userService.queryBlockedUsers())
         TestUtil.assertCompleted("queryFriendRequests_shouldReturnFriendRequests", turmsClient.userService.queryFriendRequests(true))
         TestUtil.assertCompleted("queryRelationshipGroups_shouldReturnRelationshipGroups", turmsClient.userService.queryRelationshipGroups())
 

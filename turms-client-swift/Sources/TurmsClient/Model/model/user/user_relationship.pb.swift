@@ -42,14 +42,14 @@ public struct UserRelationship {
   /// Clears the value of `relatedUserID`. Subsequent reads from it will return its default value.
   public mutating func clearRelatedUserID() {_uniqueStorage()._relatedUserID = nil}
 
-  public var blocked: SwiftProtobuf.Google_Protobuf_BoolValue {
-    get {return _storage._blocked ?? SwiftProtobuf.Google_Protobuf_BoolValue()}
-    set {_uniqueStorage()._blocked = newValue}
+  public var blockDate: SwiftProtobuf.Google_Protobuf_Int64Value {
+    get {return _storage._blockDate ?? SwiftProtobuf.Google_Protobuf_Int64Value()}
+    set {_uniqueStorage()._blockDate = newValue}
   }
-  /// Returns true if `blocked` has been explicitly set.
-  public var hasBlocked: Bool {return _storage._blocked != nil}
-  /// Clears the value of `blocked`. Subsequent reads from it will return its default value.
-  public mutating func clearBlocked() {_uniqueStorage()._blocked = nil}
+  /// Returns true if `blockDate` has been explicitly set.
+  public var hasBlockDate: Bool {return _storage._blockDate != nil}
+  /// Clears the value of `blockDate`. Subsequent reads from it will return its default value.
+  public mutating func clearBlockDate() {_uniqueStorage()._blockDate = nil}
 
   public var groupIndex: SwiftProtobuf.Google_Protobuf_Int64Value {
     get {return _storage._groupIndex ?? SwiftProtobuf.Google_Protobuf_Int64Value()}
@@ -85,7 +85,7 @@ extension UserRelationship: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "owner_id"),
     2: .standard(proto: "related_user_id"),
-    3: .same(proto: "blocked"),
+    3: .standard(proto: "block_date"),
     4: .standard(proto: "group_index"),
     5: .standard(proto: "establishment_date"),
   ]
@@ -93,7 +93,7 @@ extension UserRelationship: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
   fileprivate class _StorageClass {
     var _ownerID: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
     var _relatedUserID: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
-    var _blocked: SwiftProtobuf.Google_Protobuf_BoolValue? = nil
+    var _blockDate: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
     var _groupIndex: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
     var _establishmentDate: SwiftProtobuf.Google_Protobuf_Int64Value? = nil
 
@@ -104,7 +104,7 @@ extension UserRelationship: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
     init(copying source: _StorageClass) {
       _ownerID = source._ownerID
       _relatedUserID = source._relatedUserID
-      _blocked = source._blocked
+      _blockDate = source._blockDate
       _groupIndex = source._groupIndex
       _establishmentDate = source._establishmentDate
     }
@@ -124,7 +124,7 @@ extension UserRelationship: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
         switch fieldNumber {
         case 1: try decoder.decodeSingularMessageField(value: &_storage._ownerID)
         case 2: try decoder.decodeSingularMessageField(value: &_storage._relatedUserID)
-        case 3: try decoder.decodeSingularMessageField(value: &_storage._blocked)
+        case 3: try decoder.decodeSingularMessageField(value: &_storage._blockDate)
         case 4: try decoder.decodeSingularMessageField(value: &_storage._groupIndex)
         case 5: try decoder.decodeSingularMessageField(value: &_storage._establishmentDate)
         default: break
@@ -141,7 +141,7 @@ extension UserRelationship: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
       if let v = _storage._relatedUserID {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
       }
-      if let v = _storage._blocked {
+      if let v = _storage._blockDate {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
       }
       if let v = _storage._groupIndex {
@@ -161,7 +161,7 @@ extension UserRelationship: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
         let rhs_storage = _args.1
         if _storage._ownerID != rhs_storage._ownerID {return false}
         if _storage._relatedUserID != rhs_storage._relatedUserID {return false}
-        if _storage._blocked != rhs_storage._blocked {return false}
+        if _storage._blockDate != rhs_storage._blockDate {return false}
         if _storage._groupIndex != rhs_storage._groupIndex {return false}
         if _storage._establishmentDate != rhs_storage._establishmentDate {return false}
         return true

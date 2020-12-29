@@ -18,10 +18,10 @@ export default class GroupService {
     addGroupJoinQuestion(groupId: string, question: string, answers: string[], score: number): Promise<string>;
     deleteGroupJoinQuestion(questionId: string): Promise<void>;
     updateGroupJoinQuestion(questionId: string, question?: string, answers?: string[], score?: number): Promise<void>;
-    blacklistUser(groupId: string, userId: string): Promise<void>;
-    unblacklistUser(groupId: string, userId: string): Promise<void>;
-    queryBlacklistedUserIds(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion | undefined>;
-    queryBlacklistedUserInfos(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.UsersInfosWithVersion | undefined>;
+    blockUser(groupId: string, userId: string): Promise<void>;
+    unblockUser(groupId: string, userId: string): Promise<void>;
+    queryBlockedUserIds(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion | undefined>;
+    queryBlockedUserInfos(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.UsersInfosWithVersion | undefined>;
     createInvitation(groupId: string, inviteeId: string, content: string): Promise<string>;
     deleteInvitation(invitationId: string): Promise<void>;
     queryInvitationsByGroupId(groupId: string, lastUpdatedDate?: Date): Promise<ParsedModel.GroupInvitationsWithVersion | undefined>;

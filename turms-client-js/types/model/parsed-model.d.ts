@@ -69,7 +69,7 @@ export declare namespace ParsedModel {
     interface UserRelationship {
         ownerId?: string;
         relatedUserId?: string;
-        isBlocked?: boolean;
+        blockDate?: Date;
         groupIndex?: number;
         establishmentDate?: Date;
     }

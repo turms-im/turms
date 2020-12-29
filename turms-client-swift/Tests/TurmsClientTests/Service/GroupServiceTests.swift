@@ -19,7 +19,7 @@ class GroupServiceTests: XCTestCase {
         let groupMemberId: Int64 = 3
         let groupInvitationInviteeId: Int64 = 4
         let groupSuccessorId: Int64 = 1
-        let groupBlacklistedUserId: Int64 = 5
+        let groupBlockedUserId: Int64 = 5
         var groupId: Int64?
         var groupQuestionId: Int64?
         var groupJoinRequestId: Int64?
@@ -36,7 +36,7 @@ class GroupServiceTests: XCTestCase {
             groupJoinRequestId = $0
         })
         TestUtil.assertCompleted("addGroupMember_shouldSucceed", turmsClient.groupService.addGroupMember(groupId: groupId!, userId: groupMemberId, name: "name", role: .member))
-        TestUtil.assertCompleted("blacklistUser_shouldSucceed", turmsClient.groupService.blacklistUser(groupId: groupId!, userId: groupBlacklistedUserId))
+        TestUtil.assertCompleted("blockUser_shouldSucceed", turmsClient.groupService.blockUser(groupId: groupId!, userId: groupBlockedUserId))
         TestUtil.assertCompleted("createInvitation_shouldReturnInvitationId", turmsClient.groupService.createInvitation(groupId: groupId!, inviteeId: groupInvitationInviteeId, content: "content").done {
             groupInvitationId = $0
         })
@@ -61,11 +61,11 @@ class GroupServiceTests: XCTestCase {
             let groupIds = $0!.groups.map { $0.id.value }
             XCTAssert(groupIds.contains(groupId!))
         })
-        TestUtil.assertCompleted("queryBlacklistedUserIds_shouldEqualBlacklistedUserId", turmsClient.groupService.queryBlacklistedUserIds(groupId: groupId!).done {
-            XCTAssertEqual(groupBlacklistedUserId, $0!.values[0])
+        TestUtil.assertCompleted("queryBlockedUserIds_shouldEqualBlockedUserId", turmsClient.groupService.queryBlockedUserIds(groupId: groupId!).done {
+            XCTAssertEqual(groupBlockedUserId, $0!.values[0])
         })
-        TestUtil.assertCompleted("queryBlacklistedUserInfos_shouldEqualBlacklistedUserId", turmsClient.groupService.queryBlacklistedUserInfos(groupId: groupId!).done {
-            XCTAssertEqual(groupBlacklistedUserId, $0!.userInfos[0].id.value)
+        TestUtil.assertCompleted("queryBlockedUserInfos_shouldEqualBlockedUserId", turmsClient.groupService.queryBlockedUserInfos(groupId: groupId!).done {
+            XCTAssertEqual(groupBlockedUserId, $0!.userInfos[0].id.value)
         })
         TestUtil.assertCompleted("queryInvitations_shouldEqualNewInvitationId", turmsClient.groupService.queryInvitations(groupId: groupId!).done {
             XCTAssertEqual(groupInvitationId, $0!.groupInvitations[0].id.value)
@@ -94,7 +94,7 @@ class GroupServiceTests: XCTestCase {
 
         TestUtil.assertCompleted("removeGroupMember_shouldSucceed", turmsClient.groupService.removeGroupMember(groupId: groupId!, memberId: groupMemberId))
         TestUtil.assertCompleted("deleteGroupJoinQuestion_shouldSucceed", turmsClient.groupService.deleteGroupJoinQuestion(groupQuestionId!))
-        TestUtil.assertCompleted("unblacklistUser_shouldSucceed", turmsClient.groupService.unblacklistUser(groupId: groupId!, userId: groupBlacklistedUserId))
+        TestUtil.assertCompleted("unblockUser_shouldSucceed", turmsClient.groupService.unblockUser(groupId: groupId!, userId: groupBlockedUserId))
         TestUtil.assertCompleted("deleteInvitation_shouldSucceedOrThrowDisabledFunction", turmsClient.groupService.deleteInvitation(groupInvitationId!).recover { error -> Promise<Void> in
             if let businessError = error as? TurmsBusinessError, businessError.code == TurmsStatusCode.recallingGroupInvitationIsDisabled.rawValue {
                 return Promise.value(())

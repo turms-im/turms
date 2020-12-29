@@ -37,7 +37,7 @@ export namespace im {
             /** ProfileAccessStrategy enum. */
             enum ProfileAccessStrategy {
                 ALL = 0,
-                ALL_EXCEPT_BLACKLISTED_USERS = 1,
+                ALL_EXCEPT_BLOCKED_USERS = 1,
                 FRIENDS = 2
             }
 
@@ -2642,180 +2642,180 @@ export namespace im {
                 public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.UpdateTypingStatusRequest;
             }
 
-            /** Properties of a CreateGroupBlacklistedUserRequest. */
-            interface ICreateGroupBlacklistedUserRequest {
+            /** Properties of a CreateGroupBlockedUserRequest. */
+            interface ICreateGroupBlockedUserRequest {
 
-                /** CreateGroupBlacklistedUserRequest groupId */
+                /** CreateGroupBlockedUserRequest groupId */
                 groupId?: (string|null);
 
-                /** CreateGroupBlacklistedUserRequest userId */
+                /** CreateGroupBlockedUserRequest userId */
                 userId?: (string|null);
             }
 
-            /** Represents a CreateGroupBlacklistedUserRequest. */
-            class CreateGroupBlacklistedUserRequest implements ICreateGroupBlacklistedUserRequest {
+            /** Represents a CreateGroupBlockedUserRequest. */
+            class CreateGroupBlockedUserRequest implements ICreateGroupBlockedUserRequest {
 
                 /**
-                 * Constructs a new CreateGroupBlacklistedUserRequest.
+                 * Constructs a new CreateGroupBlockedUserRequest.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: im.turms.proto.ICreateGroupBlacklistedUserRequest);
+                constructor(properties?: im.turms.proto.ICreateGroupBlockedUserRequest);
 
-                /** CreateGroupBlacklistedUserRequest groupId. */
+                /** CreateGroupBlockedUserRequest groupId. */
                 public groupId: string;
 
-                /** CreateGroupBlacklistedUserRequest userId. */
+                /** CreateGroupBlockedUserRequest userId. */
                 public userId: string;
 
                 /**
-                 * Encodes the specified CreateGroupBlacklistedUserRequest message. Does not implicitly {@link im.turms.proto.CreateGroupBlacklistedUserRequest.verify|verify} messages.
-                 * @param message CreateGroupBlacklistedUserRequest message or plain object to encode
+                 * Encodes the specified CreateGroupBlockedUserRequest message. Does not implicitly {@link im.turms.proto.CreateGroupBlockedUserRequest.verify|verify} messages.
+                 * @param message CreateGroupBlockedUserRequest message or plain object to encode
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                public static encode(message: im.turms.proto.ICreateGroupBlacklistedUserRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: im.turms.proto.ICreateGroupBlockedUserRequest, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
-                 * Decodes a CreateGroupBlacklistedUserRequest message from the specified reader or buffer.
+                 * Decodes a CreateGroupBlockedUserRequest message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns CreateGroupBlacklistedUserRequest
+                 * @returns CreateGroupBlockedUserRequest
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.CreateGroupBlacklistedUserRequest;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.CreateGroupBlockedUserRequest;
             }
 
-            /** Properties of a DeleteGroupBlacklistedUserRequest. */
-            interface IDeleteGroupBlacklistedUserRequest {
+            /** Properties of a DeleteGroupBlockedUserRequest. */
+            interface IDeleteGroupBlockedUserRequest {
 
-                /** DeleteGroupBlacklistedUserRequest groupId */
+                /** DeleteGroupBlockedUserRequest groupId */
                 groupId?: (string|null);
 
-                /** DeleteGroupBlacklistedUserRequest userId */
+                /** DeleteGroupBlockedUserRequest userId */
                 userId?: (string|null);
             }
 
-            /** Represents a DeleteGroupBlacklistedUserRequest. */
-            class DeleteGroupBlacklistedUserRequest implements IDeleteGroupBlacklistedUserRequest {
+            /** Represents a DeleteGroupBlockedUserRequest. */
+            class DeleteGroupBlockedUserRequest implements IDeleteGroupBlockedUserRequest {
 
                 /**
-                 * Constructs a new DeleteGroupBlacklistedUserRequest.
+                 * Constructs a new DeleteGroupBlockedUserRequest.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: im.turms.proto.IDeleteGroupBlacklistedUserRequest);
+                constructor(properties?: im.turms.proto.IDeleteGroupBlockedUserRequest);
 
-                /** DeleteGroupBlacklistedUserRequest groupId. */
+                /** DeleteGroupBlockedUserRequest groupId. */
                 public groupId: string;
 
-                /** DeleteGroupBlacklistedUserRequest userId. */
+                /** DeleteGroupBlockedUserRequest userId. */
                 public userId: string;
 
                 /**
-                 * Encodes the specified DeleteGroupBlacklistedUserRequest message. Does not implicitly {@link im.turms.proto.DeleteGroupBlacklistedUserRequest.verify|verify} messages.
-                 * @param message DeleteGroupBlacklistedUserRequest message or plain object to encode
+                 * Encodes the specified DeleteGroupBlockedUserRequest message. Does not implicitly {@link im.turms.proto.DeleteGroupBlockedUserRequest.verify|verify} messages.
+                 * @param message DeleteGroupBlockedUserRequest message or plain object to encode
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                public static encode(message: im.turms.proto.IDeleteGroupBlacklistedUserRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: im.turms.proto.IDeleteGroupBlockedUserRequest, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
-                 * Decodes a DeleteGroupBlacklistedUserRequest message from the specified reader or buffer.
+                 * Decodes a DeleteGroupBlockedUserRequest message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns DeleteGroupBlacklistedUserRequest
+                 * @returns DeleteGroupBlockedUserRequest
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.DeleteGroupBlacklistedUserRequest;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.DeleteGroupBlockedUserRequest;
             }
 
-            /** Properties of a QueryGroupBlacklistedUserIdsRequest. */
-            interface IQueryGroupBlacklistedUserIdsRequest {
+            /** Properties of a QueryGroupBlockedUserIdsRequest. */
+            interface IQueryGroupBlockedUserIdsRequest {
 
-                /** QueryGroupBlacklistedUserIdsRequest groupId */
+                /** QueryGroupBlockedUserIdsRequest groupId */
                 groupId?: (string|null);
 
-                /** QueryGroupBlacklistedUserIdsRequest lastUpdatedDate */
+                /** QueryGroupBlockedUserIdsRequest lastUpdatedDate */
                 lastUpdatedDate?: (google.protobuf.IInt64Value|null);
             }
 
-            /** Represents a QueryGroupBlacklistedUserIdsRequest. */
-            class QueryGroupBlacklistedUserIdsRequest implements IQueryGroupBlacklistedUserIdsRequest {
+            /** Represents a QueryGroupBlockedUserIdsRequest. */
+            class QueryGroupBlockedUserIdsRequest implements IQueryGroupBlockedUserIdsRequest {
 
                 /**
-                 * Constructs a new QueryGroupBlacklistedUserIdsRequest.
+                 * Constructs a new QueryGroupBlockedUserIdsRequest.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: im.turms.proto.IQueryGroupBlacklistedUserIdsRequest);
+                constructor(properties?: im.turms.proto.IQueryGroupBlockedUserIdsRequest);
 
-                /** QueryGroupBlacklistedUserIdsRequest groupId. */
+                /** QueryGroupBlockedUserIdsRequest groupId. */
                 public groupId: string;
 
-                /** QueryGroupBlacklistedUserIdsRequest lastUpdatedDate. */
+                /** QueryGroupBlockedUserIdsRequest lastUpdatedDate. */
                 public lastUpdatedDate?: (google.protobuf.IInt64Value|null);
 
                 /**
-                 * Encodes the specified QueryGroupBlacklistedUserIdsRequest message. Does not implicitly {@link im.turms.proto.QueryGroupBlacklistedUserIdsRequest.verify|verify} messages.
-                 * @param message QueryGroupBlacklistedUserIdsRequest message or plain object to encode
+                 * Encodes the specified QueryGroupBlockedUserIdsRequest message. Does not implicitly {@link im.turms.proto.QueryGroupBlockedUserIdsRequest.verify|verify} messages.
+                 * @param message QueryGroupBlockedUserIdsRequest message or plain object to encode
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                public static encode(message: im.turms.proto.IQueryGroupBlacklistedUserIdsRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: im.turms.proto.IQueryGroupBlockedUserIdsRequest, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
-                 * Decodes a QueryGroupBlacklistedUserIdsRequest message from the specified reader or buffer.
+                 * Decodes a QueryGroupBlockedUserIdsRequest message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns QueryGroupBlacklistedUserIdsRequest
+                 * @returns QueryGroupBlockedUserIdsRequest
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QueryGroupBlacklistedUserIdsRequest;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QueryGroupBlockedUserIdsRequest;
             }
 
-            /** Properties of a QueryGroupBlacklistedUserInfosRequest. */
-            interface IQueryGroupBlacklistedUserInfosRequest {
+            /** Properties of a QueryGroupBlockedUserInfosRequest. */
+            interface IQueryGroupBlockedUserInfosRequest {
 
-                /** QueryGroupBlacklistedUserInfosRequest groupId */
+                /** QueryGroupBlockedUserInfosRequest groupId */
                 groupId?: (string|null);
 
-                /** QueryGroupBlacklistedUserInfosRequest lastUpdatedDate */
+                /** QueryGroupBlockedUserInfosRequest lastUpdatedDate */
                 lastUpdatedDate?: (google.protobuf.IInt64Value|null);
             }
 
-            /** Represents a QueryGroupBlacklistedUserInfosRequest. */
-            class QueryGroupBlacklistedUserInfosRequest implements IQueryGroupBlacklistedUserInfosRequest {
+            /** Represents a QueryGroupBlockedUserInfosRequest. */
+            class QueryGroupBlockedUserInfosRequest implements IQueryGroupBlockedUserInfosRequest {
 
                 /**
-                 * Constructs a new QueryGroupBlacklistedUserInfosRequest.
+                 * Constructs a new QueryGroupBlockedUserInfosRequest.
                  * @param [properties] Properties to set
                  */
-                constructor(properties?: im.turms.proto.IQueryGroupBlacklistedUserInfosRequest);
+                constructor(properties?: im.turms.proto.IQueryGroupBlockedUserInfosRequest);
 
-                /** QueryGroupBlacklistedUserInfosRequest groupId. */
+                /** QueryGroupBlockedUserInfosRequest groupId. */
                 public groupId: string;
 
-                /** QueryGroupBlacklistedUserInfosRequest lastUpdatedDate. */
+                /** QueryGroupBlockedUserInfosRequest lastUpdatedDate. */
                 public lastUpdatedDate?: (google.protobuf.IInt64Value|null);
 
                 /**
-                 * Encodes the specified QueryGroupBlacklistedUserInfosRequest message. Does not implicitly {@link im.turms.proto.QueryGroupBlacklistedUserInfosRequest.verify|verify} messages.
-                 * @param message QueryGroupBlacklistedUserInfosRequest message or plain object to encode
+                 * Encodes the specified QueryGroupBlockedUserInfosRequest message. Does not implicitly {@link im.turms.proto.QueryGroupBlockedUserInfosRequest.verify|verify} messages.
+                 * @param message QueryGroupBlockedUserInfosRequest message or plain object to encode
                  * @param [writer] Writer to encode to
                  * @returns Writer
                  */
-                public static encode(message: im.turms.proto.IQueryGroupBlacklistedUserInfosRequest, writer?: $protobuf.Writer): $protobuf.Writer;
+                public static encode(message: im.turms.proto.IQueryGroupBlockedUserInfosRequest, writer?: $protobuf.Writer): $protobuf.Writer;
 
                 /**
-                 * Decodes a QueryGroupBlacklistedUserInfosRequest message from the specified reader or buffer.
+                 * Decodes a QueryGroupBlockedUserInfosRequest message from the specified reader or buffer.
                  * @param reader Reader or buffer to decode from
                  * @param [length] Message length if known beforehand
-                 * @returns QueryGroupBlacklistedUserInfosRequest
+                 * @returns QueryGroupBlockedUserInfosRequest
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QueryGroupBlacklistedUserInfosRequest;
+                public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): im.turms.proto.QueryGroupBlockedUserInfosRequest;
             }
 
             /** Properties of a CreateGroupRequest. */
@@ -4357,17 +4357,17 @@ export namespace im {
                 /** TurmsRequest updateGroupRequest */
                 updateGroupRequest?: (im.turms.proto.IUpdateGroupRequest|null);
 
-                /** TurmsRequest createGroupBlacklistedUserRequest */
-                createGroupBlacklistedUserRequest?: (im.turms.proto.ICreateGroupBlacklistedUserRequest|null);
+                /** TurmsRequest createGroupBlockedUserRequest */
+                createGroupBlockedUserRequest?: (im.turms.proto.ICreateGroupBlockedUserRequest|null);
 
-                /** TurmsRequest deleteGroupBlacklistedUserRequest */
-                deleteGroupBlacklistedUserRequest?: (im.turms.proto.IDeleteGroupBlacklistedUserRequest|null);
+                /** TurmsRequest deleteGroupBlockedUserRequest */
+                deleteGroupBlockedUserRequest?: (im.turms.proto.IDeleteGroupBlockedUserRequest|null);
 
-                /** TurmsRequest queryGroupBlacklistedUserIdsRequest */
-                queryGroupBlacklistedUserIdsRequest?: (im.turms.proto.IQueryGroupBlacklistedUserIdsRequest|null);
+                /** TurmsRequest queryGroupBlockedUserIdsRequest */
+                queryGroupBlockedUserIdsRequest?: (im.turms.proto.IQueryGroupBlockedUserIdsRequest|null);
 
-                /** TurmsRequest queryGroupBlacklistedUserInfosRequest */
-                queryGroupBlacklistedUserInfosRequest?: (im.turms.proto.IQueryGroupBlacklistedUserInfosRequest|null);
+                /** TurmsRequest queryGroupBlockedUserInfosRequest */
+                queryGroupBlockedUserInfosRequest?: (im.turms.proto.IQueryGroupBlockedUserInfosRequest|null);
 
                 /** TurmsRequest checkGroupJoinQuestionsAnswersRequest */
                 checkGroupJoinQuestionsAnswersRequest?: (im.turms.proto.ICheckGroupJoinQuestionsAnswersRequest|null);
@@ -4535,17 +4535,17 @@ export namespace im {
                 /** TurmsRequest updateGroupRequest. */
                 public updateGroupRequest?: (im.turms.proto.IUpdateGroupRequest|null);
 
-                /** TurmsRequest createGroupBlacklistedUserRequest. */
-                public createGroupBlacklistedUserRequest?: (im.turms.proto.ICreateGroupBlacklistedUserRequest|null);
+                /** TurmsRequest createGroupBlockedUserRequest. */
+                public createGroupBlockedUserRequest?: (im.turms.proto.ICreateGroupBlockedUserRequest|null);
 
-                /** TurmsRequest deleteGroupBlacklistedUserRequest. */
-                public deleteGroupBlacklistedUserRequest?: (im.turms.proto.IDeleteGroupBlacklistedUserRequest|null);
+                /** TurmsRequest deleteGroupBlockedUserRequest. */
+                public deleteGroupBlockedUserRequest?: (im.turms.proto.IDeleteGroupBlockedUserRequest|null);
 
-                /** TurmsRequest queryGroupBlacklistedUserIdsRequest. */
-                public queryGroupBlacklistedUserIdsRequest?: (im.turms.proto.IQueryGroupBlacklistedUserIdsRequest|null);
+                /** TurmsRequest queryGroupBlockedUserIdsRequest. */
+                public queryGroupBlockedUserIdsRequest?: (im.turms.proto.IQueryGroupBlockedUserIdsRequest|null);
 
-                /** TurmsRequest queryGroupBlacklistedUserInfosRequest. */
-                public queryGroupBlacklistedUserInfosRequest?: (im.turms.proto.IQueryGroupBlacklistedUserInfosRequest|null);
+                /** TurmsRequest queryGroupBlockedUserInfosRequest. */
+                public queryGroupBlockedUserInfosRequest?: (im.turms.proto.IQueryGroupBlockedUserInfosRequest|null);
 
                 /** TurmsRequest checkGroupJoinQuestionsAnswersRequest. */
                 public checkGroupJoinQuestionsAnswersRequest?: (im.turms.proto.ICheckGroupJoinQuestionsAnswersRequest|null);
@@ -4590,7 +4590,7 @@ export namespace im {
                 public querySignedPutUrlRequest?: (im.turms.proto.IQuerySignedPutUrlRequest|null);
 
                 /** TurmsRequest kind. */
-                public kind?: ("createSessionRequest"|"deleteSessionRequest"|"queryConversationsRequest"|"updateConversationRequest"|"updateTypingStatusRequest"|"createMessageRequest"|"queryMessagesRequest"|"updateMessageRequest"|"createGroupMemberRequest"|"deleteGroupMemberRequest"|"queryGroupMembersRequest"|"updateGroupMemberRequest"|"queryUserProfileRequest"|"queryUserIdsNearbyRequest"|"queryUserInfosNearbyRequest"|"queryUserOnlineStatusesRequest"|"updateUserLocationRequest"|"updateUserOnlineStatusRequest"|"updateUserRequest"|"createFriendRequestRequest"|"createRelationshipGroupRequest"|"createRelationshipRequest"|"deleteRelationshipGroupRequest"|"deleteRelationshipRequest"|"queryFriendRequestsRequest"|"queryRelatedUserIdsRequest"|"queryRelationshipGroupsRequest"|"queryRelationshipsRequest"|"updateFriendRequestRequest"|"updateRelationshipGroupRequest"|"updateRelationshipRequest"|"createGroupRequest"|"deleteGroupRequest"|"queryGroupRequest"|"queryJoinedGroupIdsRequest"|"queryJoinedGroupInfosRequest"|"updateGroupRequest"|"createGroupBlacklistedUserRequest"|"deleteGroupBlacklistedUserRequest"|"queryGroupBlacklistedUserIdsRequest"|"queryGroupBlacklistedUserInfosRequest"|"checkGroupJoinQuestionsAnswersRequest"|"createGroupInvitationRequest"|"createGroupJoinRequestRequest"|"createGroupJoinQuestionRequest"|"deleteGroupInvitationRequest"|"deleteGroupJoinRequestRequest"|"deleteGroupJoinQuestionRequest"|"queryGroupInvitationsRequest"|"queryGroupJoinRequestsRequest"|"queryGroupJoinQuestionsRequest"|"updateGroupJoinQuestionRequest"|"deleteResourceRequest"|"querySignedGetUrlRequest"|"querySignedPutUrlRequest");
+                public kind?: ("createSessionRequest"|"deleteSessionRequest"|"queryConversationsRequest"|"updateConversationRequest"|"updateTypingStatusRequest"|"createMessageRequest"|"queryMessagesRequest"|"updateMessageRequest"|"createGroupMemberRequest"|"deleteGroupMemberRequest"|"queryGroupMembersRequest"|"updateGroupMemberRequest"|"queryUserProfileRequest"|"queryUserIdsNearbyRequest"|"queryUserInfosNearbyRequest"|"queryUserOnlineStatusesRequest"|"updateUserLocationRequest"|"updateUserOnlineStatusRequest"|"updateUserRequest"|"createFriendRequestRequest"|"createRelationshipGroupRequest"|"createRelationshipRequest"|"deleteRelationshipGroupRequest"|"deleteRelationshipRequest"|"queryFriendRequestsRequest"|"queryRelatedUserIdsRequest"|"queryRelationshipGroupsRequest"|"queryRelationshipsRequest"|"updateFriendRequestRequest"|"updateRelationshipGroupRequest"|"updateRelationshipRequest"|"createGroupRequest"|"deleteGroupRequest"|"queryGroupRequest"|"queryJoinedGroupIdsRequest"|"queryJoinedGroupInfosRequest"|"updateGroupRequest"|"createGroupBlockedUserRequest"|"deleteGroupBlockedUserRequest"|"queryGroupBlockedUserIdsRequest"|"queryGroupBlockedUserInfosRequest"|"checkGroupJoinQuestionsAnswersRequest"|"createGroupInvitationRequest"|"createGroupJoinRequestRequest"|"createGroupJoinQuestionRequest"|"deleteGroupInvitationRequest"|"deleteGroupJoinRequestRequest"|"deleteGroupJoinQuestionRequest"|"queryGroupInvitationsRequest"|"queryGroupJoinRequestsRequest"|"queryGroupJoinQuestionsRequest"|"updateGroupJoinQuestionRequest"|"deleteResourceRequest"|"querySignedGetUrlRequest"|"querySignedPutUrlRequest");
 
                 /**
                  * Encodes the specified TurmsRequest message. Does not implicitly {@link im.turms.proto.TurmsRequest.verify|verify} messages.

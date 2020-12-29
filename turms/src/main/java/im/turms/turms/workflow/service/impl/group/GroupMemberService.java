@@ -39,7 +39,7 @@ import im.turms.turms.constraint.ValidGroupMemberRole;
 import im.turms.turms.util.ProtoUtil;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
 import im.turms.turms.workflow.dao.builder.UpdateBuilder;
-import im.turms.turms.workflow.dao.domain.group.GroupBlacklistedUser;
+import im.turms.turms.workflow.dao.domain.group.GroupBlockedUser;
 import im.turms.turms.workflow.dao.domain.group.GroupMember;
 import im.turms.turms.workflow.service.util.DomainConstraintUtil;
 import org.apache.commons.lang3.tuple.Pair;
@@ -141,9 +141,9 @@ public class GroupMemberService {
                     if (code != TurmsStatusCode.OK) {
                         return Mono.error(TurmsBusinessException.get(code, permission.getReason()));
                     }
-                    Mono<Boolean> isBlacklistedMono = isBlacklisted(groupId, userId);
+                    Mono<Boolean> isBlockedMono = isBlocked(groupId, userId);
                     Mono<Boolean> isGroupActiveMono = groupService.isGroupActiveAndNotDeleted(groupId);
-                    return Mono.zip(isBlacklistedMono, isGroupActiveMono)
+                    return Mono.zip(isBlockedMono, isGroupActiveMono)
                             .flatMap(results -> {
                                 boolean isUserBlocked = results.getT1();
                                 boolean isGroupActive = results.getT2();
@@ -340,7 +340,7 @@ public class GroupMemberService {
         return mongoTemplate.exists(query, GroupMember.class, GroupMember.COLLECTION_NAME);
     }
 
-    public Mono<Boolean> isBlacklisted(@NotNull Long groupId, @NotNull Long userId) {
+    public Mono<Boolean> isBlocked(@NotNull Long groupId, @NotNull Long userId) {
         try {
             AssertUtil.notNull(groupId, "groupId");
             AssertUtil.notNull(userId, "userId");
@@ -348,8 +348,8 @@ public class GroupMemberService {
             return Mono.error(e);
         }
         Query query = new Query()
-                .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(new GroupBlacklistedUser.Key(groupId, userId)));
-        return mongoTemplate.exists(query, GroupBlacklistedUser.class, GroupBlacklistedUser.COLLECTION_NAME);
+                .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(new GroupBlockedUser.Key(groupId, userId)));
+        return mongoTemplate.exists(query, GroupBlockedUser.class, GroupBlockedUser.COLLECTION_NAME);
     }
 
     public Mono<Pair<ServicePermission, GroupInvitationStrategy>> isAllowedToInviteOrAdd(
@@ -379,7 +379,7 @@ public class GroupMemberService {
     }
 
     /**
-     * @return Possible codes: OK, INVITEE_ALREADY_GROUP_MEMBER, INVITEE_HAS_BEEN_BLACKLISTED
+     * @return Possible codes: OK, INVITEE_ALREADY_GROUP_MEMBER, INVITEE_HAS_BEEN_BLOCKED
      */
     public Mono<TurmsStatusCode> isAllowedToBeInvited(@NotNull Long groupId, @NotNull Long inviteeId) {
         return isGroupMember(groupId, inviteeId)
@@ -387,8 +387,8 @@ public class GroupMemberService {
                     if (isGroupMember) {
                         return Mono.just(TurmsStatusCode.GROUP_INVITEE_ALREADY_GROUP_MEMBER);
                     } else {
-                        return isBlacklisted(groupId, inviteeId)
-                                .map(isBlacklisted -> isBlacklisted
+                        return isBlocked(groupId, inviteeId)
+                                .map(isBlocked -> isBlocked
                                         ? TurmsStatusCode.INVITEE_HAS_BEEN_BLOCKED
                                         : TurmsStatusCode.OK);
                     }
@@ -396,9 +396,7 @@ public class GroupMemberService {
     }
 
     /**
-     * Note that a blacklisted user is never a group member
-     *
-     * @return
+     * Note that a blocked user is never a group member
      */
     public Mono<TurmsStatusCode> isAllowedToSendMessage(@NotNull Long groupId, @NotNull Long senderId) {
         return isGroupMember(groupId, senderId)
@@ -442,8 +440,8 @@ public class GroupMemberService {
                                 return groupService.isGroupActiveAndNotDeleted(groupId)
                                         .flatMap(isGroupActiveAndNotDeleted -> {
                                             if (isGroupActiveAndNotDeleted) {
-                                                return isBlacklisted(groupId, senderId)
-                                                        .map(isBlacklisted -> isBlacklisted
+                                                return isBlocked(groupId, senderId)
+                                                        .map(isBlocked -> isBlocked
                                                                 ? TurmsStatusCode.GROUP_MESSAGE_SENDER_HAS_BEEN_BLOCKED
                                                                 : TurmsStatusCode.OK);
                                             } else {

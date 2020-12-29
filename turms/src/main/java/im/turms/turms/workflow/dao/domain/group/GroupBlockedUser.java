@@ -39,12 +39,12 @@ import java.util.List;
 @AllArgsConstructor(onConstructor = @__(@PersistenceConstructor))
 @Document
 @CompoundIndex(
-        name = GroupBlacklistedUser.Key.Fields.GROUP_ID + "_" + GroupBlacklistedUser.Key.Fields.USER_ID,
-        def = "{'" + GroupBlacklistedUser.Fields.ID_GROUP_ID + "': 1, '" + GroupBlacklistedUser.Fields.ID_USER_ID + "': 1}")
-@Sharded(shardKey = GroupBlacklistedUser.Fields.ID_GROUP_ID, shardingStrategy = ShardingStrategy.HASH, immutableKey = true)
-public final class GroupBlacklistedUser {
+        name = GroupBlockedUser.Key.Fields.GROUP_ID + "_" + GroupBlockedUser.Key.Fields.USER_ID,
+        def = "{'" + GroupBlockedUser.Fields.ID_GROUP_ID + "': 1, '" + GroupBlockedUser.Fields.ID_USER_ID + "': 1}")
+@Sharded(shardKey = GroupBlockedUser.Fields.ID_GROUP_ID, shardingStrategy = ShardingStrategy.HASH, immutableKey = true)
+public final class GroupBlockedUser {
 
-    public static final String COLLECTION_NAME = "groupBlacklistedUser";
+    public static final String COLLECTION_NAME = "groupBlockedUser";
 
     @Id
     private final Key key;
@@ -57,7 +57,7 @@ public final class GroupBlacklistedUser {
     @OptionalIndexedForExtendedFeature
     private final Long requesterId;
 
-    public GroupBlacklistedUser(Long groupId, Long userId, Date blockDate, Long requesterId) {
+    public GroupBlockedUser(Long groupId, Long userId, Date blockDate, Long requesterId) {
         this.key = new Key(groupId, userId);
         this.blockDate = blockDate;
         this.requesterId = requesterId;

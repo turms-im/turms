@@ -45,8 +45,8 @@ public final class GroupVersion {
     @Field(Fields.MEMBERS)
     private final Date members;
 
-    @Field(Fields.BLACKLIST)
-    private final Date blacklist;
+    @Field(Fields.BLOCKLIST)
+    private final Date blocklist;
 
     @Field(Fields.JOIN_REQUESTS)
     private final Date joinRequests;
@@ -60,7 +60,7 @@ public final class GroupVersion {
     public static class Fields {
         public static final String INFO = "inf";
         public static final String MEMBERS = "mbr";
-        public static final String BLACKLIST = "bl";
+        public static final String BLOCKLIST = "bl";
         public static final String JOIN_REQUESTS = "jr";
         public static final String JOIN_QUESTIONS = "jq";
         public static final String INVITATIONS = "invt";

@@ -81,12 +81,12 @@ public class NotificationProperties {
     private boolean notifyMembersAfterOtherMemberInfoUpdated = false;
 
     @JsonView(MutablePropertiesView.class)
-    @Description("Whether to notify the user after blacklisted by a group")
-    private boolean notifyUserAfterBlacklistedByGroup = false;
+    @Description("Whether to notify the user after blocked by a group")
+    private boolean notifyUserAfterBlockedByGroup = false;
 
     @JsonView(MutablePropertiesView.class)
-    @Description("Whether to notify the user after unblacklisted by a group")
-    private boolean notifyUserAfterUnblacklistedByGroup = false;
+    @Description("Whether to notify the user after unblocked by a group")
+    private boolean notifyUserAfterUnblockedByGroup = false;
 
     @JsonView(MutablePropertiesView.class)
     @Description("Whether to notify the user after invited by a group")

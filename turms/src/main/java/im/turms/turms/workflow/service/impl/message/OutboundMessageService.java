@@ -168,7 +168,7 @@ public class OutboundMessageService {
 
     // Network transmission methods
 
-    private Mono<? extends Boolean> forwardClientMessageToNodes(ByteBuf messageData, SetMultimap<String, Long> recipientIdsByNodeId) {
+    private Mono<Boolean> forwardClientMessageToNodes(ByteBuf messageData, SetMultimap<String, Long> recipientIdsByNodeId) {
         Multiset<String> nodeIds = recipientIdsByNodeId.keys();
         int size = nodeIds.size();
         if (size == 0) {

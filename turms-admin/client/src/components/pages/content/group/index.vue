@@ -14,9 +14,9 @@
         </a-tab-pane>
         <a-tab-pane
             key="3"
-            :tab="$t('groupBlacklist')"
+            :tab="$t('groupBlocklist')"
         >
-            <content-group-blacklist-pane />
+            <content-group-blocklist-pane />
         </a-tab-pane>
         <a-tab-pane
             key="4"
@@ -36,7 +36,7 @@
 <script>
 import ContentGroupInfoPane from './info/index';
 import ContentGroupMemberPane from './content-group-member-pane';
-import ContentGroupBlacklistPane from './content-group-blacklist-pane';
+import ContentGroupBlocklistPane from './content-group-blocklist-pane';
 import ContentGroupEnrollmentPane from './entrollment/index';
 import ContentGroupTypePane from './content-group-type-pane';
 
@@ -45,7 +45,7 @@ export default {
     components: {
         ContentGroupInfoPane,
         ContentGroupMemberPane,
-        ContentGroupBlacklistPane,
+        ContentGroupBlocklistPane,
         ContentGroupEnrollmentPane,
         ContentGroupTypePane
     }

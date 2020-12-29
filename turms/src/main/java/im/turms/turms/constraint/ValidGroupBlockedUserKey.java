@@ -15,19 +15,17 @@
  * limitations under the License.
  */
 
-package im.turms.turms.workflow.access.http.dto.request.group;
+package im.turms.turms.constraint;
 
-import lombok.Data;
-
-import java.util.Date;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author James Chen
  */
-@Data
-public final class AddGroupBlacklistedUserDTO {
-    private final Long groupId;
-    private final Long userId;
-    private final Date blockDate;
-    private final Long requesterId;
+@Target({ElementType.PARAMETER, ElementType.TYPE_USE})
+@Retention(RetentionPolicy.SOURCE)
+public @interface ValidGroupBlockedUserKey {
 }

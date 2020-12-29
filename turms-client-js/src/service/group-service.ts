@@ -191,8 +191,8 @@ export default class GroupService {
         }).then(() => null);
     }
 
-    // Group Blacklist
-    blacklistUser(groupId: string, userId: string): Promise<void> {
+    // Group Blocklist
+    blockUser(groupId: string, userId: string): Promise<void> {
         if (RequestUtil.isFalsy(groupId)) {
             return TurmsBusinessError.notFalsy('groupId');
         }
@@ -200,14 +200,14 @@ export default class GroupService {
             return TurmsBusinessError.notFalsy('userId');
         }
         return this._turmsClient.driver.send({
-            createGroupBlacklistedUserRequest: {
+            createGroupBlockedUserRequest: {
                 userId,
                 groupId
             }
         }).then(() => null);
     }
 
-    unblacklistUser(groupId: string, userId: string): Promise<void> {
+    unblockUser(groupId: string, userId: string): Promise<void> {
         if (RequestUtil.isFalsy(groupId)) {
             return TurmsBusinessError.notFalsy('groupId');
         }
@@ -215,35 +215,35 @@ export default class GroupService {
             return TurmsBusinessError.notFalsy('userId');
         }
         return this._turmsClient.driver.send({
-            deleteGroupBlacklistedUserRequest: {
+            deleteGroupBlockedUserRequest: {
                 groupId,
                 userId
             }
         }).then(() => null);
     }
 
-    queryBlacklistedUserIds(
+    queryBlockedUserIds(
         groupId: string,
         lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion | undefined> {
         if (RequestUtil.isFalsy(groupId)) {
             return TurmsBusinessError.notFalsy('groupId');
         }
         return this._turmsClient.driver.send({
-            queryGroupBlacklistedUserIdsRequest: {
+            queryGroupBlockedUserIdsRequest: {
                 groupId,
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }
         }).then(n => NotificationUtil.getIdsWithVer(n));
     }
 
-    queryBlacklistedUserInfos(
+    queryBlockedUserInfos(
         groupId: string,
         lastUpdatedDate?: Date): Promise<ParsedModel.UsersInfosWithVersion | undefined> {
         if (RequestUtil.isFalsy(groupId)) {
             return TurmsBusinessError.notFalsy('groupId');
         }
         return this._turmsClient.driver.send({
-            queryGroupBlacklistedUserInfosRequest: {
+            queryGroupBlockedUserInfosRequest: {
                 groupId,
                 lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
             }

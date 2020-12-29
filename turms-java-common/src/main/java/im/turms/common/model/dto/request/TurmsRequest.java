@@ -601,56 +601,56 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 3202: {
-            im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest.Builder subBuilder = null;
+            im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest.Builder subBuilder = null;
             if (kindCase_ == 400) {
-              subBuilder = ((im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest) kind_).toBuilder();
+              subBuilder = ((im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest) kind_).toBuilder();
             }
             kind_ =
-                input.readMessage(im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest.parser(), extensionRegistry);
+                input.readMessage(im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest.parser(), extensionRegistry);
             if (subBuilder != null) {
-              subBuilder.mergeFrom((im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest) kind_);
+              subBuilder.mergeFrom((im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest) kind_);
               kind_ = subBuilder.buildPartial();
             }
             kindCase_ = 400;
             break;
           }
           case 3210: {
-            im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest.Builder subBuilder = null;
+            im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest.Builder subBuilder = null;
             if (kindCase_ == 401) {
-              subBuilder = ((im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest) kind_).toBuilder();
+              subBuilder = ((im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest) kind_).toBuilder();
             }
             kind_ =
-                input.readMessage(im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest.parser(), extensionRegistry);
+                input.readMessage(im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest.parser(), extensionRegistry);
             if (subBuilder != null) {
-              subBuilder.mergeFrom((im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest) kind_);
+              subBuilder.mergeFrom((im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest) kind_);
               kind_ = subBuilder.buildPartial();
             }
             kindCase_ = 401;
             break;
           }
           case 3218: {
-            im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest.Builder subBuilder = null;
+            im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest.Builder subBuilder = null;
             if (kindCase_ == 402) {
-              subBuilder = ((im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest) kind_).toBuilder();
+              subBuilder = ((im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest) kind_).toBuilder();
             }
             kind_ =
-                input.readMessage(im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest.parser(), extensionRegistry);
+                input.readMessage(im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest.parser(), extensionRegistry);
             if (subBuilder != null) {
-              subBuilder.mergeFrom((im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest) kind_);
+              subBuilder.mergeFrom((im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest) kind_);
               kind_ = subBuilder.buildPartial();
             }
             kindCase_ = 402;
             break;
           }
           case 3226: {
-            im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest.Builder subBuilder = null;
+            im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest.Builder subBuilder = null;
             if (kindCase_ == 403) {
-              subBuilder = ((im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest) kind_).toBuilder();
+              subBuilder = ((im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest) kind_).toBuilder();
             }
             kind_ =
-                input.readMessage(im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest.parser(), extensionRegistry);
+                input.readMessage(im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest.parser(), extensionRegistry);
             if (subBuilder != null) {
-              subBuilder.mergeFrom((im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest) kind_);
+              subBuilder.mergeFrom((im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest) kind_);
               kind_ = subBuilder.buildPartial();
             }
             kindCase_ = 403;
@@ -926,10 +926,10 @@ private static final long serialVersionUID = 0L;
     QUERY_JOINED_GROUP_IDS_REQUEST(303),
     QUERY_JOINED_GROUP_INFOS_REQUEST(304),
     UPDATE_GROUP_REQUEST(305),
-    CREATE_GROUP_BLACKLISTED_USER_REQUEST(400),
-    DELETE_GROUP_BLACKLISTED_USER_REQUEST(401),
-    QUERY_GROUP_BLACKLISTED_USER_IDS_REQUEST(402),
-    QUERY_GROUP_BLACKLISTED_USER_INFOS_REQUEST(403),
+    CREATE_GROUP_BLOCKED_USER_REQUEST(400),
+    DELETE_GROUP_BLOCKED_USER_REQUEST(401),
+    QUERY_GROUP_BLOCKED_USER_IDS_REQUEST(402),
+    QUERY_GROUP_BLOCKED_USER_INFOS_REQUEST(403),
     CHECK_GROUP_JOIN_QUESTIONS_ANSWERS_REQUEST(500),
     CREATE_GROUP_INVITATION_REQUEST(501),
     CREATE_GROUP_JOIN_REQUEST_REQUEST(502),
@@ -998,10 +998,10 @@ private static final long serialVersionUID = 0L;
         case 303: return QUERY_JOINED_GROUP_IDS_REQUEST;
         case 304: return QUERY_JOINED_GROUP_INFOS_REQUEST;
         case 305: return UPDATE_GROUP_REQUEST;
-        case 400: return CREATE_GROUP_BLACKLISTED_USER_REQUEST;
-        case 401: return DELETE_GROUP_BLACKLISTED_USER_REQUEST;
-        case 402: return QUERY_GROUP_BLACKLISTED_USER_IDS_REQUEST;
-        case 403: return QUERY_GROUP_BLACKLISTED_USER_INFOS_REQUEST;
+        case 400: return CREATE_GROUP_BLOCKED_USER_REQUEST;
+        case 401: return DELETE_GROUP_BLOCKED_USER_REQUEST;
+        case 402: return QUERY_GROUP_BLOCKED_USER_IDS_REQUEST;
+        case 403: return QUERY_GROUP_BLOCKED_USER_INFOS_REQUEST;
         case 500: return CHECK_GROUP_JOIN_QUESTIONS_ANSWERS_REQUEST;
         case 501: return CREATE_GROUP_INVITATION_REQUEST;
         case 502: return CREATE_GROUP_JOIN_REQUEST_REQUEST;
@@ -2303,140 +2303,140 @@ private static final long serialVersionUID = 0L;
     return im.turms.common.model.dto.request.group.UpdateGroupRequest.getDefaultInstance();
   }
 
-  public static final int CREATE_GROUP_BLACKLISTED_USER_REQUEST_FIELD_NUMBER = 400;
+  public static final int CREATE_GROUP_BLOCKED_USER_REQUEST_FIELD_NUMBER = 400;
   /**
    * <pre>
-   * Group Blacklist
+   * Group Blocklist
    * </pre>
    *
-   * <code>.im.turms.proto.CreateGroupBlacklistedUserRequest create_group_blacklisted_user_request = 400;</code>
-   * @return Whether the createGroupBlacklistedUserRequest field is set.
+   * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
+   * @return Whether the createGroupBlockedUserRequest field is set.
    */
   @java.lang.Override
-  public boolean hasCreateGroupBlacklistedUserRequest() {
+  public boolean hasCreateGroupBlockedUserRequest() {
     return kindCase_ == 400;
   }
   /**
    * <pre>
-   * Group Blacklist
+   * Group Blocklist
    * </pre>
    *
-   * <code>.im.turms.proto.CreateGroupBlacklistedUserRequest create_group_blacklisted_user_request = 400;</code>
-   * @return The createGroupBlacklistedUserRequest.
+   * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
+   * @return The createGroupBlockedUserRequest.
    */
   @java.lang.Override
-  public im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest getCreateGroupBlacklistedUserRequest() {
+  public im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest getCreateGroupBlockedUserRequest() {
     if (kindCase_ == 400) {
-       return (im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest) kind_;
+       return (im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest) kind_;
     }
-    return im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest.getDefaultInstance();
+    return im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest.getDefaultInstance();
   }
   /**
    * <pre>
-   * Group Blacklist
+   * Group Blocklist
    * </pre>
    *
-   * <code>.im.turms.proto.CreateGroupBlacklistedUserRequest create_group_blacklisted_user_request = 400;</code>
+   * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
    */
   @java.lang.Override
-  public im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequestOrBuilder getCreateGroupBlacklistedUserRequestOrBuilder() {
+  public im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequestOrBuilder getCreateGroupBlockedUserRequestOrBuilder() {
     if (kindCase_ == 400) {
-       return (im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest) kind_;
+       return (im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest) kind_;
     }
-    return im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest.getDefaultInstance();
+    return im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest.getDefaultInstance();
   }
 
-  public static final int DELETE_GROUP_BLACKLISTED_USER_REQUEST_FIELD_NUMBER = 401;
+  public static final int DELETE_GROUP_BLOCKED_USER_REQUEST_FIELD_NUMBER = 401;
   /**
-   * <code>.im.turms.proto.DeleteGroupBlacklistedUserRequest delete_group_blacklisted_user_request = 401;</code>
-   * @return Whether the deleteGroupBlacklistedUserRequest field is set.
+   * <code>.im.turms.proto.DeleteGroupBlockedUserRequest delete_group_blocked_user_request = 401;</code>
+   * @return Whether the deleteGroupBlockedUserRequest field is set.
    */
   @java.lang.Override
-  public boolean hasDeleteGroupBlacklistedUserRequest() {
+  public boolean hasDeleteGroupBlockedUserRequest() {
     return kindCase_ == 401;
   }
   /**
-   * <code>.im.turms.proto.DeleteGroupBlacklistedUserRequest delete_group_blacklisted_user_request = 401;</code>
-   * @return The deleteGroupBlacklistedUserRequest.
+   * <code>.im.turms.proto.DeleteGroupBlockedUserRequest delete_group_blocked_user_request = 401;</code>
+   * @return The deleteGroupBlockedUserRequest.
    */
   @java.lang.Override
-  public im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest getDeleteGroupBlacklistedUserRequest() {
+  public im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest getDeleteGroupBlockedUserRequest() {
     if (kindCase_ == 401) {
-       return (im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest) kind_;
+       return (im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest) kind_;
     }
-    return im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest.getDefaultInstance();
+    return im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest.getDefaultInstance();
   }
   /**
-   * <code>.im.turms.proto.DeleteGroupBlacklistedUserRequest delete_group_blacklisted_user_request = 401;</code>
+   * <code>.im.turms.proto.DeleteGroupBlockedUserRequest delete_group_blocked_user_request = 401;</code>
    */
   @java.lang.Override
-  public im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequestOrBuilder getDeleteGroupBlacklistedUserRequestOrBuilder() {
+  public im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequestOrBuilder getDeleteGroupBlockedUserRequestOrBuilder() {
     if (kindCase_ == 401) {
-       return (im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest) kind_;
+       return (im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest) kind_;
     }
-    return im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest.getDefaultInstance();
+    return im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest.getDefaultInstance();
   }
 
-  public static final int QUERY_GROUP_BLACKLISTED_USER_IDS_REQUEST_FIELD_NUMBER = 402;
+  public static final int QUERY_GROUP_BLOCKED_USER_IDS_REQUEST_FIELD_NUMBER = 402;
   /**
-   * <code>.im.turms.proto.QueryGroupBlacklistedUserIdsRequest query_group_blacklisted_user_ids_request = 402;</code>
-   * @return Whether the queryGroupBlacklistedUserIdsRequest field is set.
+   * <code>.im.turms.proto.QueryGroupBlockedUserIdsRequest query_group_blocked_user_ids_request = 402;</code>
+   * @return Whether the queryGroupBlockedUserIdsRequest field is set.
    */
   @java.lang.Override
-  public boolean hasQueryGroupBlacklistedUserIdsRequest() {
+  public boolean hasQueryGroupBlockedUserIdsRequest() {
     return kindCase_ == 402;
   }
   /**
-   * <code>.im.turms.proto.QueryGroupBlacklistedUserIdsRequest query_group_blacklisted_user_ids_request = 402;</code>
-   * @return The queryGroupBlacklistedUserIdsRequest.
+   * <code>.im.turms.proto.QueryGroupBlockedUserIdsRequest query_group_blocked_user_ids_request = 402;</code>
+   * @return The queryGroupBlockedUserIdsRequest.
    */
   @java.lang.Override
-  public im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest getQueryGroupBlacklistedUserIdsRequest() {
+  public im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest getQueryGroupBlockedUserIdsRequest() {
     if (kindCase_ == 402) {
-       return (im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest) kind_;
+       return (im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest) kind_;
     }
-    return im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest.getDefaultInstance();
+    return im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest.getDefaultInstance();
   }
   /**
-   * <code>.im.turms.proto.QueryGroupBlacklistedUserIdsRequest query_group_blacklisted_user_ids_request = 402;</code>
+   * <code>.im.turms.proto.QueryGroupBlockedUserIdsRequest query_group_blocked_user_ids_request = 402;</code>
    */
   @java.lang.Override
-  public im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequestOrBuilder getQueryGroupBlacklistedUserIdsRequestOrBuilder() {
+  public im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequestOrBuilder getQueryGroupBlockedUserIdsRequestOrBuilder() {
     if (kindCase_ == 402) {
-       return (im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest) kind_;
+       return (im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest) kind_;
     }
-    return im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest.getDefaultInstance();
+    return im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest.getDefaultInstance();
   }
 
-  public static final int QUERY_GROUP_BLACKLISTED_USER_INFOS_REQUEST_FIELD_NUMBER = 403;
+  public static final int QUERY_GROUP_BLOCKED_USER_INFOS_REQUEST_FIELD_NUMBER = 403;
   /**
-   * <code>.im.turms.proto.QueryGroupBlacklistedUserInfosRequest query_group_blacklisted_user_infos_request = 403;</code>
-   * @return Whether the queryGroupBlacklistedUserInfosRequest field is set.
+   * <code>.im.turms.proto.QueryGroupBlockedUserInfosRequest query_group_blocked_user_infos_request = 403;</code>
+   * @return Whether the queryGroupBlockedUserInfosRequest field is set.
    */
   @java.lang.Override
-  public boolean hasQueryGroupBlacklistedUserInfosRequest() {
+  public boolean hasQueryGroupBlockedUserInfosRequest() {
     return kindCase_ == 403;
   }
   /**
-   * <code>.im.turms.proto.QueryGroupBlacklistedUserInfosRequest query_group_blacklisted_user_infos_request = 403;</code>
-   * @return The queryGroupBlacklistedUserInfosRequest.
+   * <code>.im.turms.proto.QueryGroupBlockedUserInfosRequest query_group_blocked_user_infos_request = 403;</code>
+   * @return The queryGroupBlockedUserInfosRequest.
    */
   @java.lang.Override
-  public im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest getQueryGroupBlacklistedUserInfosRequest() {
+  public im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest getQueryGroupBlockedUserInfosRequest() {
     if (kindCase_ == 403) {
-       return (im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest) kind_;
+       return (im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest) kind_;
     }
-    return im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest.getDefaultInstance();
+    return im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest.getDefaultInstance();
   }
   /**
-   * <code>.im.turms.proto.QueryGroupBlacklistedUserInfosRequest query_group_blacklisted_user_infos_request = 403;</code>
+   * <code>.im.turms.proto.QueryGroupBlockedUserInfosRequest query_group_blocked_user_infos_request = 403;</code>
    */
   @java.lang.Override
-  public im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequestOrBuilder getQueryGroupBlacklistedUserInfosRequestOrBuilder() {
+  public im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequestOrBuilder getQueryGroupBlockedUserInfosRequestOrBuilder() {
     if (kindCase_ == 403) {
-       return (im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest) kind_;
+       return (im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest) kind_;
     }
-    return im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest.getDefaultInstance();
+    return im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest.getDefaultInstance();
   }
 
   public static final int CHECK_GROUP_JOIN_QUESTIONS_ANSWERS_REQUEST_FIELD_NUMBER = 500;
@@ -3026,16 +3026,16 @@ private static final long serialVersionUID = 0L;
       output.writeMessage(305, (im.turms.common.model.dto.request.group.UpdateGroupRequest) kind_);
     }
     if (kindCase_ == 400) {
-      output.writeMessage(400, (im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest) kind_);
+      output.writeMessage(400, (im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest) kind_);
     }
     if (kindCase_ == 401) {
-      output.writeMessage(401, (im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest) kind_);
+      output.writeMessage(401, (im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest) kind_);
     }
     if (kindCase_ == 402) {
-      output.writeMessage(402, (im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest) kind_);
+      output.writeMessage(402, (im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest) kind_);
     }
     if (kindCase_ == 403) {
-      output.writeMessage(403, (im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest) kind_);
+      output.writeMessage(403, (im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest) kind_);
     }
     if (kindCase_ == 500) {
       output.writeMessage(500, (im.turms.common.model.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest) kind_);
@@ -3242,19 +3242,19 @@ private static final long serialVersionUID = 0L;
     }
     if (kindCase_ == 400) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(400, (im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest) kind_);
+        .computeMessageSize(400, (im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest) kind_);
     }
     if (kindCase_ == 401) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(401, (im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest) kind_);
+        .computeMessageSize(401, (im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest) kind_);
     }
     if (kindCase_ == 402) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(402, (im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest) kind_);
+        .computeMessageSize(402, (im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest) kind_);
     }
     if (kindCase_ == 403) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(403, (im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest) kind_);
+        .computeMessageSize(403, (im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest) kind_);
     }
     if (kindCase_ == 500) {
       size += com.google.protobuf.CodedOutputStream
@@ -3483,20 +3483,20 @@ private static final long serialVersionUID = 0L;
             .equals(other.getUpdateGroupRequest())) return false;
         break;
       case 400:
-        if (!getCreateGroupBlacklistedUserRequest()
-            .equals(other.getCreateGroupBlacklistedUserRequest())) return false;
+        if (!getCreateGroupBlockedUserRequest()
+            .equals(other.getCreateGroupBlockedUserRequest())) return false;
         break;
       case 401:
-        if (!getDeleteGroupBlacklistedUserRequest()
-            .equals(other.getDeleteGroupBlacklistedUserRequest())) return false;
+        if (!getDeleteGroupBlockedUserRequest()
+            .equals(other.getDeleteGroupBlockedUserRequest())) return false;
         break;
       case 402:
-        if (!getQueryGroupBlacklistedUserIdsRequest()
-            .equals(other.getQueryGroupBlacklistedUserIdsRequest())) return false;
+        if (!getQueryGroupBlockedUserIdsRequest()
+            .equals(other.getQueryGroupBlockedUserIdsRequest())) return false;
         break;
       case 403:
-        if (!getQueryGroupBlacklistedUserInfosRequest()
-            .equals(other.getQueryGroupBlacklistedUserInfosRequest())) return false;
+        if (!getQueryGroupBlockedUserInfosRequest()
+            .equals(other.getQueryGroupBlockedUserInfosRequest())) return false;
         break;
       case 500:
         if (!getCheckGroupJoinQuestionsAnswersRequest()
@@ -3722,20 +3722,20 @@ private static final long serialVersionUID = 0L;
         hash = (53 * hash) + getUpdateGroupRequest().hashCode();
         break;
       case 400:
-        hash = (37 * hash) + CREATE_GROUP_BLACKLISTED_USER_REQUEST_FIELD_NUMBER;
-        hash = (53 * hash) + getCreateGroupBlacklistedUserRequest().hashCode();
+        hash = (37 * hash) + CREATE_GROUP_BLOCKED_USER_REQUEST_FIELD_NUMBER;
+        hash = (53 * hash) + getCreateGroupBlockedUserRequest().hashCode();
         break;
       case 401:
-        hash = (37 * hash) + DELETE_GROUP_BLACKLISTED_USER_REQUEST_FIELD_NUMBER;
-        hash = (53 * hash) + getDeleteGroupBlacklistedUserRequest().hashCode();
+        hash = (37 * hash) + DELETE_GROUP_BLOCKED_USER_REQUEST_FIELD_NUMBER;
+        hash = (53 * hash) + getDeleteGroupBlockedUserRequest().hashCode();
         break;
       case 402:
-        hash = (37 * hash) + QUERY_GROUP_BLACKLISTED_USER_IDS_REQUEST_FIELD_NUMBER;
-        hash = (53 * hash) + getQueryGroupBlacklistedUserIdsRequest().hashCode();
+        hash = (37 * hash) + QUERY_GROUP_BLOCKED_USER_IDS_REQUEST_FIELD_NUMBER;
+        hash = (53 * hash) + getQueryGroupBlockedUserIdsRequest().hashCode();
         break;
       case 403:
-        hash = (37 * hash) + QUERY_GROUP_BLACKLISTED_USER_INFOS_REQUEST_FIELD_NUMBER;
-        hash = (53 * hash) + getQueryGroupBlacklistedUserInfosRequest().hashCode();
+        hash = (37 * hash) + QUERY_GROUP_BLOCKED_USER_INFOS_REQUEST_FIELD_NUMBER;
+        hash = (53 * hash) + getQueryGroupBlockedUserInfosRequest().hashCode();
         break;
       case 500:
         hash = (37 * hash) + CHECK_GROUP_JOIN_QUESTIONS_ANSWERS_REQUEST_FIELD_NUMBER;
@@ -4232,31 +4232,31 @@ private static final long serialVersionUID = 0L;
         }
       }
       if (kindCase_ == 400) {
-        if (createGroupBlacklistedUserRequestBuilder_ == null) {
+        if (createGroupBlockedUserRequestBuilder_ == null) {
           result.kind_ = kind_;
         } else {
-          result.kind_ = createGroupBlacklistedUserRequestBuilder_.build();
+          result.kind_ = createGroupBlockedUserRequestBuilder_.build();
         }
       }
       if (kindCase_ == 401) {
-        if (deleteGroupBlacklistedUserRequestBuilder_ == null) {
+        if (deleteGroupBlockedUserRequestBuilder_ == null) {
           result.kind_ = kind_;
         } else {
-          result.kind_ = deleteGroupBlacklistedUserRequestBuilder_.build();
+          result.kind_ = deleteGroupBlockedUserRequestBuilder_.build();
         }
       }
       if (kindCase_ == 402) {
-        if (queryGroupBlacklistedUserIdsRequestBuilder_ == null) {
+        if (queryGroupBlockedUserIdsRequestBuilder_ == null) {
           result.kind_ = kind_;
         } else {
-          result.kind_ = queryGroupBlacklistedUserIdsRequestBuilder_.build();
+          result.kind_ = queryGroupBlockedUserIdsRequestBuilder_.build();
         }
       }
       if (kindCase_ == 403) {
-        if (queryGroupBlacklistedUserInfosRequestBuilder_ == null) {
+        if (queryGroupBlockedUserInfosRequestBuilder_ == null) {
           result.kind_ = kind_;
         } else {
-          result.kind_ = queryGroupBlacklistedUserInfosRequestBuilder_.build();
+          result.kind_ = queryGroupBlockedUserInfosRequestBuilder_.build();
         }
       }
       if (kindCase_ == 500) {
@@ -4558,20 +4558,20 @@ private static final long serialVersionUID = 0L;
           mergeUpdateGroupRequest(other.getUpdateGroupRequest());
           break;
         }
-        case CREATE_GROUP_BLACKLISTED_USER_REQUEST: {
-          mergeCreateGroupBlacklistedUserRequest(other.getCreateGroupBlacklistedUserRequest());
+        case CREATE_GROUP_BLOCKED_USER_REQUEST: {
+          mergeCreateGroupBlockedUserRequest(other.getCreateGroupBlockedUserRequest());
           break;
         }
-        case DELETE_GROUP_BLACKLISTED_USER_REQUEST: {
-          mergeDeleteGroupBlacklistedUserRequest(other.getDeleteGroupBlacklistedUserRequest());
+        case DELETE_GROUP_BLOCKED_USER_REQUEST: {
+          mergeDeleteGroupBlockedUserRequest(other.getDeleteGroupBlockedUserRequest());
           break;
         }
-        case QUERY_GROUP_BLACKLISTED_USER_IDS_REQUEST: {
-          mergeQueryGroupBlacklistedUserIdsRequest(other.getQueryGroupBlacklistedUserIdsRequest());
+        case QUERY_GROUP_BLOCKED_USER_IDS_REQUEST: {
+          mergeQueryGroupBlockedUserIdsRequest(other.getQueryGroupBlockedUserIdsRequest());
           break;
         }
-        case QUERY_GROUP_BLACKLISTED_USER_INFOS_REQUEST: {
-          mergeQueryGroupBlacklistedUserInfosRequest(other.getQueryGroupBlacklistedUserInfosRequest());
+        case QUERY_GROUP_BLOCKED_USER_INFOS_REQUEST: {
+          mergeQueryGroupBlockedUserInfosRequest(other.getQueryGroupBlockedUserInfosRequest());
           break;
         }
         case CHECK_GROUP_JOIN_QUESTIONS_ANSWERS_REQUEST: {
@@ -10312,91 +10312,91 @@ private static final long serialVersionUID = 0L;
     }
 
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest, im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest.Builder, im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequestOrBuilder> createGroupBlacklistedUserRequestBuilder_;
+        im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest, im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest.Builder, im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequestOrBuilder> createGroupBlockedUserRequestBuilder_;
     /**
      * <pre>
-     * Group Blacklist
+     * Group Blocklist
      * </pre>
      *
-     * <code>.im.turms.proto.CreateGroupBlacklistedUserRequest create_group_blacklisted_user_request = 400;</code>
-     * @return Whether the createGroupBlacklistedUserRequest field is set.
+     * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
+     * @return Whether the createGroupBlockedUserRequest field is set.
      */
     @java.lang.Override
-    public boolean hasCreateGroupBlacklistedUserRequest() {
+    public boolean hasCreateGroupBlockedUserRequest() {
       return kindCase_ == 400;
     }
     /**
      * <pre>
-     * Group Blacklist
+     * Group Blocklist
      * </pre>
      *
-     * <code>.im.turms.proto.CreateGroupBlacklistedUserRequest create_group_blacklisted_user_request = 400;</code>
-     * @return The createGroupBlacklistedUserRequest.
+     * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
+     * @return The createGroupBlockedUserRequest.
      */
     @java.lang.Override
-    public im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest getCreateGroupBlacklistedUserRequest() {
-      if (createGroupBlacklistedUserRequestBuilder_ == null) {
+    public im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest getCreateGroupBlockedUserRequest() {
+      if (createGroupBlockedUserRequestBuilder_ == null) {
         if (kindCase_ == 400) {
-          return (im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest) kind_;
+          return (im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest) kind_;
         }
-        return im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest.getDefaultInstance();
+        return im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest.getDefaultInstance();
       } else {
         if (kindCase_ == 400) {
-          return createGroupBlacklistedUserRequestBuilder_.getMessage();
+          return createGroupBlockedUserRequestBuilder_.getMessage();
         }
-        return im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest.getDefaultInstance();
+        return im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest.getDefaultInstance();
       }
     }
     /**
      * <pre>
-     * Group Blacklist
+     * Group Blocklist
      * </pre>
      *
-     * <code>.im.turms.proto.CreateGroupBlacklistedUserRequest create_group_blacklisted_user_request = 400;</code>
+     * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
      */
-    public Builder setCreateGroupBlacklistedUserRequest(im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest value) {
-      if (createGroupBlacklistedUserRequestBuilder_ == null) {
+    public Builder setCreateGroupBlockedUserRequest(im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest value) {
+      if (createGroupBlockedUserRequestBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
         kind_ = value;
         onChanged();
       } else {
-        createGroupBlacklistedUserRequestBuilder_.setMessage(value);
+        createGroupBlockedUserRequestBuilder_.setMessage(value);
       }
       kindCase_ = 400;
       return this;
     }
     /**
      * <pre>
-     * Group Blacklist
+     * Group Blocklist
      * </pre>
      *
-     * <code>.im.turms.proto.CreateGroupBlacklistedUserRequest create_group_blacklisted_user_request = 400;</code>
+     * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
      */
-    public Builder setCreateGroupBlacklistedUserRequest(
-        im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest.Builder builderForValue) {
-      if (createGroupBlacklistedUserRequestBuilder_ == null) {
+    public Builder setCreateGroupBlockedUserRequest(
+        im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest.Builder builderForValue) {
+      if (createGroupBlockedUserRequestBuilder_ == null) {
         kind_ = builderForValue.build();
         onChanged();
       } else {
-        createGroupBlacklistedUserRequestBuilder_.setMessage(builderForValue.build());
+        createGroupBlockedUserRequestBuilder_.setMessage(builderForValue.build());
       }
       kindCase_ = 400;
       return this;
     }
     /**
      * <pre>
-     * Group Blacklist
+     * Group Blocklist
      * </pre>
      *
-     * <code>.im.turms.proto.CreateGroupBlacklistedUserRequest create_group_blacklisted_user_request = 400;</code>
+     * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
      */
-    public Builder mergeCreateGroupBlacklistedUserRequest(im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest value) {
-      if (createGroupBlacklistedUserRequestBuilder_ == null) {
+    public Builder mergeCreateGroupBlockedUserRequest(im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest value) {
+      if (createGroupBlockedUserRequestBuilder_ == null) {
         if (kindCase_ == 400 &&
-            kind_ != im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest.getDefaultInstance()) {
-          kind_ = im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest.newBuilder((im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest) kind_)
+            kind_ != im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest.getDefaultInstance()) {
+          kind_ = im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest.newBuilder((im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest) kind_)
               .mergeFrom(value).buildPartial();
         } else {
           kind_ = value;
@@ -10404,22 +10404,22 @@ private static final long serialVersionUID = 0L;
         onChanged();
       } else {
         if (kindCase_ == 400) {
-          createGroupBlacklistedUserRequestBuilder_.mergeFrom(value);
+          createGroupBlockedUserRequestBuilder_.mergeFrom(value);
         }
-        createGroupBlacklistedUserRequestBuilder_.setMessage(value);
+        createGroupBlockedUserRequestBuilder_.setMessage(value);
       }
       kindCase_ = 400;
       return this;
     }
     /**
      * <pre>
-     * Group Blacklist
+     * Group Blocklist
      * </pre>
      *
-     * <code>.im.turms.proto.CreateGroupBlacklistedUserRequest create_group_blacklisted_user_request = 400;</code>
+     * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
      */
-    public Builder clearCreateGroupBlacklistedUserRequest() {
-      if (createGroupBlacklistedUserRequestBuilder_ == null) {
+    public Builder clearCreateGroupBlockedUserRequest() {
+      if (createGroupBlockedUserRequestBuilder_ == null) {
         if (kindCase_ == 400) {
           kindCase_ = 0;
           kind_ = null;
@@ -10430,130 +10430,130 @@ private static final long serialVersionUID = 0L;
           kindCase_ = 0;
           kind_ = null;
         }
-        createGroupBlacklistedUserRequestBuilder_.clear();
+        createGroupBlockedUserRequestBuilder_.clear();
       }
       return this;
     }
     /**
      * <pre>
-     * Group Blacklist
+     * Group Blocklist
      * </pre>
      *
-     * <code>.im.turms.proto.CreateGroupBlacklistedUserRequest create_group_blacklisted_user_request = 400;</code>
+     * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
      */
-    public im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest.Builder getCreateGroupBlacklistedUserRequestBuilder() {
-      return getCreateGroupBlacklistedUserRequestFieldBuilder().getBuilder();
+    public im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest.Builder getCreateGroupBlockedUserRequestBuilder() {
+      return getCreateGroupBlockedUserRequestFieldBuilder().getBuilder();
     }
     /**
      * <pre>
-     * Group Blacklist
+     * Group Blocklist
      * </pre>
      *
-     * <code>.im.turms.proto.CreateGroupBlacklistedUserRequest create_group_blacklisted_user_request = 400;</code>
+     * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
      */
     @java.lang.Override
-    public im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequestOrBuilder getCreateGroupBlacklistedUserRequestOrBuilder() {
-      if ((kindCase_ == 400) && (createGroupBlacklistedUserRequestBuilder_ != null)) {
-        return createGroupBlacklistedUserRequestBuilder_.getMessageOrBuilder();
+    public im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequestOrBuilder getCreateGroupBlockedUserRequestOrBuilder() {
+      if ((kindCase_ == 400) && (createGroupBlockedUserRequestBuilder_ != null)) {
+        return createGroupBlockedUserRequestBuilder_.getMessageOrBuilder();
       } else {
         if (kindCase_ == 400) {
-          return (im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest) kind_;
+          return (im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest) kind_;
         }
-        return im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest.getDefaultInstance();
+        return im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest.getDefaultInstance();
       }
     }
     /**
      * <pre>
-     * Group Blacklist
+     * Group Blocklist
      * </pre>
      *
-     * <code>.im.turms.proto.CreateGroupBlacklistedUserRequest create_group_blacklisted_user_request = 400;</code>
+     * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest, im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest.Builder, im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequestOrBuilder>
-        getCreateGroupBlacklistedUserRequestFieldBuilder() {
-      if (createGroupBlacklistedUserRequestBuilder_ == null) {
+        im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest, im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest.Builder, im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequestOrBuilder>
+        getCreateGroupBlockedUserRequestFieldBuilder() {
+      if (createGroupBlockedUserRequestBuilder_ == null) {
         if (!(kindCase_ == 400)) {
-          kind_ = im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest.getDefaultInstance();
+          kind_ = im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest.getDefaultInstance();
         }
-        createGroupBlacklistedUserRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest, im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest.Builder, im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequestOrBuilder>(
-                (im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest) kind_,
+        createGroupBlockedUserRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest, im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest.Builder, im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequestOrBuilder>(
+                (im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest) kind_,
                 getParentForChildren(),
                 isClean());
         kind_ = null;
       }
       kindCase_ = 400;
       onChanged();;
-      return createGroupBlacklistedUserRequestBuilder_;
+      return createGroupBlockedUserRequestBuilder_;
     }
 
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest, im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest.Builder, im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequestOrBuilder> deleteGroupBlacklistedUserRequestBuilder_;
+        im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest, im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest.Builder, im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequestOrBuilder> deleteGroupBlockedUserRequestBuilder_;
     /**
-     * <code>.im.turms.proto.DeleteGroupBlacklistedUserRequest delete_group_blacklisted_user_request = 401;</code>
-     * @return Whether the deleteGroupBlacklistedUserRequest field is set.
+     * <code>.im.turms.proto.DeleteGroupBlockedUserRequest delete_group_blocked_user_request = 401;</code>
+     * @return Whether the deleteGroupBlockedUserRequest field is set.
      */
     @java.lang.Override
-    public boolean hasDeleteGroupBlacklistedUserRequest() {
+    public boolean hasDeleteGroupBlockedUserRequest() {
       return kindCase_ == 401;
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupBlacklistedUserRequest delete_group_blacklisted_user_request = 401;</code>
-     * @return The deleteGroupBlacklistedUserRequest.
+     * <code>.im.turms.proto.DeleteGroupBlockedUserRequest delete_group_blocked_user_request = 401;</code>
+     * @return The deleteGroupBlockedUserRequest.
      */
     @java.lang.Override
-    public im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest getDeleteGroupBlacklistedUserRequest() {
-      if (deleteGroupBlacklistedUserRequestBuilder_ == null) {
+    public im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest getDeleteGroupBlockedUserRequest() {
+      if (deleteGroupBlockedUserRequestBuilder_ == null) {
         if (kindCase_ == 401) {
-          return (im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest) kind_;
+          return (im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest) kind_;
         }
-        return im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest.getDefaultInstance();
+        return im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest.getDefaultInstance();
       } else {
         if (kindCase_ == 401) {
-          return deleteGroupBlacklistedUserRequestBuilder_.getMessage();
+          return deleteGroupBlockedUserRequestBuilder_.getMessage();
         }
-        return im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest.getDefaultInstance();
+        return im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest.getDefaultInstance();
       }
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupBlacklistedUserRequest delete_group_blacklisted_user_request = 401;</code>
+     * <code>.im.turms.proto.DeleteGroupBlockedUserRequest delete_group_blocked_user_request = 401;</code>
      */
-    public Builder setDeleteGroupBlacklistedUserRequest(im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest value) {
-      if (deleteGroupBlacklistedUserRequestBuilder_ == null) {
+    public Builder setDeleteGroupBlockedUserRequest(im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest value) {
+      if (deleteGroupBlockedUserRequestBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
         kind_ = value;
         onChanged();
       } else {
-        deleteGroupBlacklistedUserRequestBuilder_.setMessage(value);
+        deleteGroupBlockedUserRequestBuilder_.setMessage(value);
       }
       kindCase_ = 401;
       return this;
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupBlacklistedUserRequest delete_group_blacklisted_user_request = 401;</code>
+     * <code>.im.turms.proto.DeleteGroupBlockedUserRequest delete_group_blocked_user_request = 401;</code>
      */
-    public Builder setDeleteGroupBlacklistedUserRequest(
-        im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest.Builder builderForValue) {
-      if (deleteGroupBlacklistedUserRequestBuilder_ == null) {
+    public Builder setDeleteGroupBlockedUserRequest(
+        im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest.Builder builderForValue) {
+      if (deleteGroupBlockedUserRequestBuilder_ == null) {
         kind_ = builderForValue.build();
         onChanged();
       } else {
-        deleteGroupBlacklistedUserRequestBuilder_.setMessage(builderForValue.build());
+        deleteGroupBlockedUserRequestBuilder_.setMessage(builderForValue.build());
       }
       kindCase_ = 401;
       return this;
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupBlacklistedUserRequest delete_group_blacklisted_user_request = 401;</code>
+     * <code>.im.turms.proto.DeleteGroupBlockedUserRequest delete_group_blocked_user_request = 401;</code>
      */
-    public Builder mergeDeleteGroupBlacklistedUserRequest(im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest value) {
-      if (deleteGroupBlacklistedUserRequestBuilder_ == null) {
+    public Builder mergeDeleteGroupBlockedUserRequest(im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest value) {
+      if (deleteGroupBlockedUserRequestBuilder_ == null) {
         if (kindCase_ == 401 &&
-            kind_ != im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest.getDefaultInstance()) {
-          kind_ = im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest.newBuilder((im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest) kind_)
+            kind_ != im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest.getDefaultInstance()) {
+          kind_ = im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest.newBuilder((im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest) kind_)
               .mergeFrom(value).buildPartial();
         } else {
           kind_ = value;
@@ -10561,18 +10561,18 @@ private static final long serialVersionUID = 0L;
         onChanged();
       } else {
         if (kindCase_ == 401) {
-          deleteGroupBlacklistedUserRequestBuilder_.mergeFrom(value);
+          deleteGroupBlockedUserRequestBuilder_.mergeFrom(value);
         }
-        deleteGroupBlacklistedUserRequestBuilder_.setMessage(value);
+        deleteGroupBlockedUserRequestBuilder_.setMessage(value);
       }
       kindCase_ = 401;
       return this;
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupBlacklistedUserRequest delete_group_blacklisted_user_request = 401;</code>
+     * <code>.im.turms.proto.DeleteGroupBlockedUserRequest delete_group_blocked_user_request = 401;</code>
      */
-    public Builder clearDeleteGroupBlacklistedUserRequest() {
-      if (deleteGroupBlacklistedUserRequestBuilder_ == null) {
+    public Builder clearDeleteGroupBlockedUserRequest() {
+      if (deleteGroupBlockedUserRequestBuilder_ == null) {
         if (kindCase_ == 401) {
           kindCase_ = 0;
           kind_ = null;
@@ -10583,118 +10583,118 @@ private static final long serialVersionUID = 0L;
           kindCase_ = 0;
           kind_ = null;
         }
-        deleteGroupBlacklistedUserRequestBuilder_.clear();
+        deleteGroupBlockedUserRequestBuilder_.clear();
       }
       return this;
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupBlacklistedUserRequest delete_group_blacklisted_user_request = 401;</code>
+     * <code>.im.turms.proto.DeleteGroupBlockedUserRequest delete_group_blocked_user_request = 401;</code>
      */
-    public im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest.Builder getDeleteGroupBlacklistedUserRequestBuilder() {
-      return getDeleteGroupBlacklistedUserRequestFieldBuilder().getBuilder();
+    public im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest.Builder getDeleteGroupBlockedUserRequestBuilder() {
+      return getDeleteGroupBlockedUserRequestFieldBuilder().getBuilder();
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupBlacklistedUserRequest delete_group_blacklisted_user_request = 401;</code>
+     * <code>.im.turms.proto.DeleteGroupBlockedUserRequest delete_group_blocked_user_request = 401;</code>
      */
     @java.lang.Override
-    public im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequestOrBuilder getDeleteGroupBlacklistedUserRequestOrBuilder() {
-      if ((kindCase_ == 401) && (deleteGroupBlacklistedUserRequestBuilder_ != null)) {
-        return deleteGroupBlacklistedUserRequestBuilder_.getMessageOrBuilder();
+    public im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequestOrBuilder getDeleteGroupBlockedUserRequestOrBuilder() {
+      if ((kindCase_ == 401) && (deleteGroupBlockedUserRequestBuilder_ != null)) {
+        return deleteGroupBlockedUserRequestBuilder_.getMessageOrBuilder();
       } else {
         if (kindCase_ == 401) {
-          return (im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest) kind_;
+          return (im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest) kind_;
         }
-        return im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest.getDefaultInstance();
+        return im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest.getDefaultInstance();
       }
     }
     /**
-     * <code>.im.turms.proto.DeleteGroupBlacklistedUserRequest delete_group_blacklisted_user_request = 401;</code>
+     * <code>.im.turms.proto.DeleteGroupBlockedUserRequest delete_group_blocked_user_request = 401;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest, im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest.Builder, im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequestOrBuilder>
-        getDeleteGroupBlacklistedUserRequestFieldBuilder() {
-      if (deleteGroupBlacklistedUserRequestBuilder_ == null) {
+        im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest, im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest.Builder, im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequestOrBuilder>
+        getDeleteGroupBlockedUserRequestFieldBuilder() {
+      if (deleteGroupBlockedUserRequestBuilder_ == null) {
         if (!(kindCase_ == 401)) {
-          kind_ = im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest.getDefaultInstance();
+          kind_ = im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest.getDefaultInstance();
         }
-        deleteGroupBlacklistedUserRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest, im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest.Builder, im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequestOrBuilder>(
-                (im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest) kind_,
+        deleteGroupBlockedUserRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest, im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest.Builder, im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequestOrBuilder>(
+                (im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest) kind_,
                 getParentForChildren(),
                 isClean());
         kind_ = null;
       }
       kindCase_ = 401;
       onChanged();;
-      return deleteGroupBlacklistedUserRequestBuilder_;
+      return deleteGroupBlockedUserRequestBuilder_;
     }
 
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest, im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest.Builder, im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequestOrBuilder> queryGroupBlacklistedUserIdsRequestBuilder_;
+        im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest, im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest.Builder, im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequestOrBuilder> queryGroupBlockedUserIdsRequestBuilder_;
     /**
-     * <code>.im.turms.proto.QueryGroupBlacklistedUserIdsRequest query_group_blacklisted_user_ids_request = 402;</code>
-     * @return Whether the queryGroupBlacklistedUserIdsRequest field is set.
+     * <code>.im.turms.proto.QueryGroupBlockedUserIdsRequest query_group_blocked_user_ids_request = 402;</code>
+     * @return Whether the queryGroupBlockedUserIdsRequest field is set.
      */
     @java.lang.Override
-    public boolean hasQueryGroupBlacklistedUserIdsRequest() {
+    public boolean hasQueryGroupBlockedUserIdsRequest() {
       return kindCase_ == 402;
     }
     /**
-     * <code>.im.turms.proto.QueryGroupBlacklistedUserIdsRequest query_group_blacklisted_user_ids_request = 402;</code>
-     * @return The queryGroupBlacklistedUserIdsRequest.
+     * <code>.im.turms.proto.QueryGroupBlockedUserIdsRequest query_group_blocked_user_ids_request = 402;</code>
+     * @return The queryGroupBlockedUserIdsRequest.
      */
     @java.lang.Override
-    public im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest getQueryGroupBlacklistedUserIdsRequest() {
-      if (queryGroupBlacklistedUserIdsRequestBuilder_ == null) {
+    public im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest getQueryGroupBlockedUserIdsRequest() {
+      if (queryGroupBlockedUserIdsRequestBuilder_ == null) {
         if (kindCase_ == 402) {
-          return (im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest) kind_;
+          return (im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest) kind_;
         }
-        return im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest.getDefaultInstance();
+        return im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest.getDefaultInstance();
       } else {
         if (kindCase_ == 402) {
-          return queryGroupBlacklistedUserIdsRequestBuilder_.getMessage();
+          return queryGroupBlockedUserIdsRequestBuilder_.getMessage();
         }
-        return im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest.getDefaultInstance();
+        return im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest.getDefaultInstance();
       }
     }
     /**
-     * <code>.im.turms.proto.QueryGroupBlacklistedUserIdsRequest query_group_blacklisted_user_ids_request = 402;</code>
+     * <code>.im.turms.proto.QueryGroupBlockedUserIdsRequest query_group_blocked_user_ids_request = 402;</code>
      */
-    public Builder setQueryGroupBlacklistedUserIdsRequest(im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest value) {
-      if (queryGroupBlacklistedUserIdsRequestBuilder_ == null) {
+    public Builder setQueryGroupBlockedUserIdsRequest(im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest value) {
+      if (queryGroupBlockedUserIdsRequestBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
         kind_ = value;
         onChanged();
       } else {
-        queryGroupBlacklistedUserIdsRequestBuilder_.setMessage(value);
+        queryGroupBlockedUserIdsRequestBuilder_.setMessage(value);
       }
       kindCase_ = 402;
       return this;
     }
     /**
-     * <code>.im.turms.proto.QueryGroupBlacklistedUserIdsRequest query_group_blacklisted_user_ids_request = 402;</code>
+     * <code>.im.turms.proto.QueryGroupBlockedUserIdsRequest query_group_blocked_user_ids_request = 402;</code>
      */
-    public Builder setQueryGroupBlacklistedUserIdsRequest(
-        im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest.Builder builderForValue) {
-      if (queryGroupBlacklistedUserIdsRequestBuilder_ == null) {
+    public Builder setQueryGroupBlockedUserIdsRequest(
+        im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest.Builder builderForValue) {
+      if (queryGroupBlockedUserIdsRequestBuilder_ == null) {
         kind_ = builderForValue.build();
         onChanged();
       } else {
-        queryGroupBlacklistedUserIdsRequestBuilder_.setMessage(builderForValue.build());
+        queryGroupBlockedUserIdsRequestBuilder_.setMessage(builderForValue.build());
       }
       kindCase_ = 402;
       return this;
     }
     /**
-     * <code>.im.turms.proto.QueryGroupBlacklistedUserIdsRequest query_group_blacklisted_user_ids_request = 402;</code>
+     * <code>.im.turms.proto.QueryGroupBlockedUserIdsRequest query_group_blocked_user_ids_request = 402;</code>
      */
-    public Builder mergeQueryGroupBlacklistedUserIdsRequest(im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest value) {
-      if (queryGroupBlacklistedUserIdsRequestBuilder_ == null) {
+    public Builder mergeQueryGroupBlockedUserIdsRequest(im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest value) {
+      if (queryGroupBlockedUserIdsRequestBuilder_ == null) {
         if (kindCase_ == 402 &&
-            kind_ != im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest.getDefaultInstance()) {
-          kind_ = im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest.newBuilder((im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest) kind_)
+            kind_ != im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest.getDefaultInstance()) {
+          kind_ = im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest.newBuilder((im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest) kind_)
               .mergeFrom(value).buildPartial();
         } else {
           kind_ = value;
@@ -10702,18 +10702,18 @@ private static final long serialVersionUID = 0L;
         onChanged();
       } else {
         if (kindCase_ == 402) {
-          queryGroupBlacklistedUserIdsRequestBuilder_.mergeFrom(value);
+          queryGroupBlockedUserIdsRequestBuilder_.mergeFrom(value);
         }
-        queryGroupBlacklistedUserIdsRequestBuilder_.setMessage(value);
+        queryGroupBlockedUserIdsRequestBuilder_.setMessage(value);
       }
       kindCase_ = 402;
       return this;
     }
     /**
-     * <code>.im.turms.proto.QueryGroupBlacklistedUserIdsRequest query_group_blacklisted_user_ids_request = 402;</code>
+     * <code>.im.turms.proto.QueryGroupBlockedUserIdsRequest query_group_blocked_user_ids_request = 402;</code>
      */
-    public Builder clearQueryGroupBlacklistedUserIdsRequest() {
-      if (queryGroupBlacklistedUserIdsRequestBuilder_ == null) {
+    public Builder clearQueryGroupBlockedUserIdsRequest() {
+      if (queryGroupBlockedUserIdsRequestBuilder_ == null) {
         if (kindCase_ == 402) {
           kindCase_ = 0;
           kind_ = null;
@@ -10724,118 +10724,118 @@ private static final long serialVersionUID = 0L;
           kindCase_ = 0;
           kind_ = null;
         }
-        queryGroupBlacklistedUserIdsRequestBuilder_.clear();
+        queryGroupBlockedUserIdsRequestBuilder_.clear();
       }
       return this;
     }
     /**
-     * <code>.im.turms.proto.QueryGroupBlacklistedUserIdsRequest query_group_blacklisted_user_ids_request = 402;</code>
+     * <code>.im.turms.proto.QueryGroupBlockedUserIdsRequest query_group_blocked_user_ids_request = 402;</code>
      */
-    public im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest.Builder getQueryGroupBlacklistedUserIdsRequestBuilder() {
-      return getQueryGroupBlacklistedUserIdsRequestFieldBuilder().getBuilder();
+    public im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest.Builder getQueryGroupBlockedUserIdsRequestBuilder() {
+      return getQueryGroupBlockedUserIdsRequestFieldBuilder().getBuilder();
     }
     /**
-     * <code>.im.turms.proto.QueryGroupBlacklistedUserIdsRequest query_group_blacklisted_user_ids_request = 402;</code>
+     * <code>.im.turms.proto.QueryGroupBlockedUserIdsRequest query_group_blocked_user_ids_request = 402;</code>
      */
     @java.lang.Override
-    public im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequestOrBuilder getQueryGroupBlacklistedUserIdsRequestOrBuilder() {
-      if ((kindCase_ == 402) && (queryGroupBlacklistedUserIdsRequestBuilder_ != null)) {
-        return queryGroupBlacklistedUserIdsRequestBuilder_.getMessageOrBuilder();
+    public im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequestOrBuilder getQueryGroupBlockedUserIdsRequestOrBuilder() {
+      if ((kindCase_ == 402) && (queryGroupBlockedUserIdsRequestBuilder_ != null)) {
+        return queryGroupBlockedUserIdsRequestBuilder_.getMessageOrBuilder();
       } else {
         if (kindCase_ == 402) {
-          return (im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest) kind_;
+          return (im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest) kind_;
         }
-        return im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest.getDefaultInstance();
+        return im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest.getDefaultInstance();
       }
     }
     /**
-     * <code>.im.turms.proto.QueryGroupBlacklistedUserIdsRequest query_group_blacklisted_user_ids_request = 402;</code>
+     * <code>.im.turms.proto.QueryGroupBlockedUserIdsRequest query_group_blocked_user_ids_request = 402;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest, im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest.Builder, im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequestOrBuilder>
-        getQueryGroupBlacklistedUserIdsRequestFieldBuilder() {
-      if (queryGroupBlacklistedUserIdsRequestBuilder_ == null) {
+        im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest, im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest.Builder, im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequestOrBuilder>
+        getQueryGroupBlockedUserIdsRequestFieldBuilder() {
+      if (queryGroupBlockedUserIdsRequestBuilder_ == null) {
         if (!(kindCase_ == 402)) {
-          kind_ = im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest.getDefaultInstance();
+          kind_ = im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest.getDefaultInstance();
         }
-        queryGroupBlacklistedUserIdsRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest, im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest.Builder, im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequestOrBuilder>(
-                (im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest) kind_,
+        queryGroupBlockedUserIdsRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest, im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest.Builder, im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequestOrBuilder>(
+                (im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest) kind_,
                 getParentForChildren(),
                 isClean());
         kind_ = null;
       }
       kindCase_ = 402;
       onChanged();;
-      return queryGroupBlacklistedUserIdsRequestBuilder_;
+      return queryGroupBlockedUserIdsRequestBuilder_;
     }
 
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest, im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest.Builder, im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequestOrBuilder> queryGroupBlacklistedUserInfosRequestBuilder_;
+        im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest, im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest.Builder, im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequestOrBuilder> queryGroupBlockedUserInfosRequestBuilder_;
     /**
-     * <code>.im.turms.proto.QueryGroupBlacklistedUserInfosRequest query_group_blacklisted_user_infos_request = 403;</code>
-     * @return Whether the queryGroupBlacklistedUserInfosRequest field is set.
+     * <code>.im.turms.proto.QueryGroupBlockedUserInfosRequest query_group_blocked_user_infos_request = 403;</code>
+     * @return Whether the queryGroupBlockedUserInfosRequest field is set.
      */
     @java.lang.Override
-    public boolean hasQueryGroupBlacklistedUserInfosRequest() {
+    public boolean hasQueryGroupBlockedUserInfosRequest() {
       return kindCase_ == 403;
     }
     /**
-     * <code>.im.turms.proto.QueryGroupBlacklistedUserInfosRequest query_group_blacklisted_user_infos_request = 403;</code>
-     * @return The queryGroupBlacklistedUserInfosRequest.
+     * <code>.im.turms.proto.QueryGroupBlockedUserInfosRequest query_group_blocked_user_infos_request = 403;</code>
+     * @return The queryGroupBlockedUserInfosRequest.
      */
     @java.lang.Override
-    public im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest getQueryGroupBlacklistedUserInfosRequest() {
-      if (queryGroupBlacklistedUserInfosRequestBuilder_ == null) {
+    public im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest getQueryGroupBlockedUserInfosRequest() {
+      if (queryGroupBlockedUserInfosRequestBuilder_ == null) {
         if (kindCase_ == 403) {
-          return (im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest) kind_;
+          return (im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest) kind_;
         }
-        return im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest.getDefaultInstance();
+        return im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest.getDefaultInstance();
       } else {
         if (kindCase_ == 403) {
-          return queryGroupBlacklistedUserInfosRequestBuilder_.getMessage();
+          return queryGroupBlockedUserInfosRequestBuilder_.getMessage();
         }
-        return im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest.getDefaultInstance();
+        return im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest.getDefaultInstance();
       }
     }
     /**
-     * <code>.im.turms.proto.QueryGroupBlacklistedUserInfosRequest query_group_blacklisted_user_infos_request = 403;</code>
+     * <code>.im.turms.proto.QueryGroupBlockedUserInfosRequest query_group_blocked_user_infos_request = 403;</code>
      */
-    public Builder setQueryGroupBlacklistedUserInfosRequest(im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest value) {
-      if (queryGroupBlacklistedUserInfosRequestBuilder_ == null) {
+    public Builder setQueryGroupBlockedUserInfosRequest(im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest value) {
+      if (queryGroupBlockedUserInfosRequestBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
         kind_ = value;
         onChanged();
       } else {
-        queryGroupBlacklistedUserInfosRequestBuilder_.setMessage(value);
+        queryGroupBlockedUserInfosRequestBuilder_.setMessage(value);
       }
       kindCase_ = 403;
       return this;
     }
     /**
-     * <code>.im.turms.proto.QueryGroupBlacklistedUserInfosRequest query_group_blacklisted_user_infos_request = 403;</code>
+     * <code>.im.turms.proto.QueryGroupBlockedUserInfosRequest query_group_blocked_user_infos_request = 403;</code>
      */
-    public Builder setQueryGroupBlacklistedUserInfosRequest(
-        im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest.Builder builderForValue) {
-      if (queryGroupBlacklistedUserInfosRequestBuilder_ == null) {
+    public Builder setQueryGroupBlockedUserInfosRequest(
+        im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest.Builder builderForValue) {
+      if (queryGroupBlockedUserInfosRequestBuilder_ == null) {
         kind_ = builderForValue.build();
         onChanged();
       } else {
-        queryGroupBlacklistedUserInfosRequestBuilder_.setMessage(builderForValue.build());
+        queryGroupBlockedUserInfosRequestBuilder_.setMessage(builderForValue.build());
       }
       kindCase_ = 403;
       return this;
     }
     /**
-     * <code>.im.turms.proto.QueryGroupBlacklistedUserInfosRequest query_group_blacklisted_user_infos_request = 403;</code>
+     * <code>.im.turms.proto.QueryGroupBlockedUserInfosRequest query_group_blocked_user_infos_request = 403;</code>
      */
-    public Builder mergeQueryGroupBlacklistedUserInfosRequest(im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest value) {
-      if (queryGroupBlacklistedUserInfosRequestBuilder_ == null) {
+    public Builder mergeQueryGroupBlockedUserInfosRequest(im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest value) {
+      if (queryGroupBlockedUserInfosRequestBuilder_ == null) {
         if (kindCase_ == 403 &&
-            kind_ != im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest.getDefaultInstance()) {
-          kind_ = im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest.newBuilder((im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest) kind_)
+            kind_ != im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest.getDefaultInstance()) {
+          kind_ = im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest.newBuilder((im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest) kind_)
               .mergeFrom(value).buildPartial();
         } else {
           kind_ = value;
@@ -10843,18 +10843,18 @@ private static final long serialVersionUID = 0L;
         onChanged();
       } else {
         if (kindCase_ == 403) {
-          queryGroupBlacklistedUserInfosRequestBuilder_.mergeFrom(value);
+          queryGroupBlockedUserInfosRequestBuilder_.mergeFrom(value);
         }
-        queryGroupBlacklistedUserInfosRequestBuilder_.setMessage(value);
+        queryGroupBlockedUserInfosRequestBuilder_.setMessage(value);
       }
       kindCase_ = 403;
       return this;
     }
     /**
-     * <code>.im.turms.proto.QueryGroupBlacklistedUserInfosRequest query_group_blacklisted_user_infos_request = 403;</code>
+     * <code>.im.turms.proto.QueryGroupBlockedUserInfosRequest query_group_blocked_user_infos_request = 403;</code>
      */
-    public Builder clearQueryGroupBlacklistedUserInfosRequest() {
-      if (queryGroupBlacklistedUserInfosRequestBuilder_ == null) {
+    public Builder clearQueryGroupBlockedUserInfosRequest() {
+      if (queryGroupBlockedUserInfosRequestBuilder_ == null) {
         if (kindCase_ == 403) {
           kindCase_ = 0;
           kind_ = null;
@@ -10865,50 +10865,50 @@ private static final long serialVersionUID = 0L;
           kindCase_ = 0;
           kind_ = null;
         }
-        queryGroupBlacklistedUserInfosRequestBuilder_.clear();
+        queryGroupBlockedUserInfosRequestBuilder_.clear();
       }
       return this;
     }
     /**
-     * <code>.im.turms.proto.QueryGroupBlacklistedUserInfosRequest query_group_blacklisted_user_infos_request = 403;</code>
+     * <code>.im.turms.proto.QueryGroupBlockedUserInfosRequest query_group_blocked_user_infos_request = 403;</code>
      */
-    public im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest.Builder getQueryGroupBlacklistedUserInfosRequestBuilder() {
-      return getQueryGroupBlacklistedUserInfosRequestFieldBuilder().getBuilder();
+    public im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest.Builder getQueryGroupBlockedUserInfosRequestBuilder() {
+      return getQueryGroupBlockedUserInfosRequestFieldBuilder().getBuilder();
     }
     /**
-     * <code>.im.turms.proto.QueryGroupBlacklistedUserInfosRequest query_group_blacklisted_user_infos_request = 403;</code>
+     * <code>.im.turms.proto.QueryGroupBlockedUserInfosRequest query_group_blocked_user_infos_request = 403;</code>
      */
     @java.lang.Override
-    public im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequestOrBuilder getQueryGroupBlacklistedUserInfosRequestOrBuilder() {
-      if ((kindCase_ == 403) && (queryGroupBlacklistedUserInfosRequestBuilder_ != null)) {
-        return queryGroupBlacklistedUserInfosRequestBuilder_.getMessageOrBuilder();
+    public im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequestOrBuilder getQueryGroupBlockedUserInfosRequestOrBuilder() {
+      if ((kindCase_ == 403) && (queryGroupBlockedUserInfosRequestBuilder_ != null)) {
+        return queryGroupBlockedUserInfosRequestBuilder_.getMessageOrBuilder();
       } else {
         if (kindCase_ == 403) {
-          return (im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest) kind_;
+          return (im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest) kind_;
         }
-        return im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest.getDefaultInstance();
+        return im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest.getDefaultInstance();
       }
     }
     /**
-     * <code>.im.turms.proto.QueryGroupBlacklistedUserInfosRequest query_group_blacklisted_user_infos_request = 403;</code>
+     * <code>.im.turms.proto.QueryGroupBlockedUserInfosRequest query_group_blocked_user_infos_request = 403;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest, im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest.Builder, im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequestOrBuilder>
-        getQueryGroupBlacklistedUserInfosRequestFieldBuilder() {
-      if (queryGroupBlacklistedUserInfosRequestBuilder_ == null) {
+        im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest, im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest.Builder, im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequestOrBuilder>
+        getQueryGroupBlockedUserInfosRequestFieldBuilder() {
+      if (queryGroupBlockedUserInfosRequestBuilder_ == null) {
         if (!(kindCase_ == 403)) {
-          kind_ = im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest.getDefaultInstance();
+          kind_ = im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest.getDefaultInstance();
         }
-        queryGroupBlacklistedUserInfosRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest, im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest.Builder, im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequestOrBuilder>(
-                (im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest) kind_,
+        queryGroupBlockedUserInfosRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest, im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest.Builder, im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequestOrBuilder>(
+                (im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest) kind_,
                 getParentForChildren(),
                 isClean());
         kind_ = null;
       }
       kindCase_ = 403;
       onChanged();;
-      return queryGroupBlacklistedUserInfosRequestBuilder_;
+      return queryGroupBlockedUserInfosRequestBuilder_;
     }
 
     private com.google.protobuf.SingleFieldBuilderV3<

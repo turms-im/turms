@@ -188,7 +188,7 @@ public class UserService {
             lastUpdatedDate: lastUpdatedDate)
     }
 
-    public func queryBlacklistedUsers(groupIndex: Int32? = nil, lastUpdatedDate: Date? = nil) -> Promise<UserRelationshipsWithVersion?> {
+    public func queryBlockedUsers(groupIndex: Int32? = nil, lastUpdatedDate: Date? = nil) -> Promise<UserRelationshipsWithVersion?> {
         return queryRelationships(
             isBlocked: true,
             groupIndex: groupIndex,
@@ -213,7 +213,7 @@ public class UserService {
             groupIndex: groupIndex)
     }
 
-    public func createBlacklistedUserRelationship(userId: Int64, groupIndex: Int32? = nil) -> Promise<Void> {
+    public func createBlockedUserRelationship(userId: Int64, groupIndex: Int32? = nil) -> Promise<Void> {
         return createRelationship(
             userId: userId,
             isBlocked: true,

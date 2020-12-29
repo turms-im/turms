@@ -317,7 +317,7 @@ export default class UserService {
         return this.queryRelationships(undefined, false, groupIndex, lastUpdatedDate);
     }
 
-    queryBlacklistedUsers(groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion | undefined> {
+    queryBlockedUsers(groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion | undefined> {
         return this.queryRelationships(undefined, true, groupIndex, lastUpdatedDate);
     }
 
@@ -341,7 +341,7 @@ export default class UserService {
         return this.createRelationship(userId, false, groupIndex);
     }
 
-    createBlacklistedUserRelationship(userId: string, groupIndex?: number): Promise<void> {
+    createBlockedUserRelationship(userId: string, groupIndex?: number): Promise<void> {
         return this.createRelationship(userId, true, groupIndex);
     }
 

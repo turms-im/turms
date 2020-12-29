@@ -99,13 +99,13 @@ $root.im = (function() {
              * @name im.turms.proto.ProfileAccessStrategy
              * @enum {number}
              * @property {number} ALL=0 ALL value
-             * @property {number} ALL_EXCEPT_BLACKLISTED_USERS=1 ALL_EXCEPT_BLACKLISTED_USERS value
+             * @property {number} ALL_EXCEPT_BLOCKED_USERS=1 ALL_EXCEPT_BLOCKED_USERS value
              * @property {number} FRIENDS=2 FRIENDS value
              */
             proto.ProfileAccessStrategy = (function() {
                 var valuesById = {}, values = Object.create(valuesById);
                 values[valuesById[0] = "ALL"] = 0;
-                values[valuesById[1] = "ALL_EXCEPT_BLACKLISTED_USERS"] = 1;
+                values[valuesById[1] = "ALL_EXCEPT_BLOCKED_USERS"] = 1;
                 values[valuesById[2] = "FRIENDS"] = 2;
                 return values;
             })();
@@ -5950,25 +5950,25 @@ $root.im = (function() {
                 return UpdateTypingStatusRequest;
             })();
 
-            proto.CreateGroupBlacklistedUserRequest = (function() {
+            proto.CreateGroupBlockedUserRequest = (function() {
 
                 /**
-                 * Properties of a CreateGroupBlacklistedUserRequest.
+                 * Properties of a CreateGroupBlockedUserRequest.
                  * @memberof im.turms.proto
-                 * @interface ICreateGroupBlacklistedUserRequest
-                 * @property {string|null} [groupId] CreateGroupBlacklistedUserRequest groupId
-                 * @property {string|null} [userId] CreateGroupBlacklistedUserRequest userId
+                 * @interface ICreateGroupBlockedUserRequest
+                 * @property {string|null} [groupId] CreateGroupBlockedUserRequest groupId
+                 * @property {string|null} [userId] CreateGroupBlockedUserRequest userId
                  */
 
                 /**
-                 * Constructs a new CreateGroupBlacklistedUserRequest.
+                 * Constructs a new CreateGroupBlockedUserRequest.
                  * @memberof im.turms.proto
-                 * @classdesc Represents a CreateGroupBlacklistedUserRequest.
-                 * @implements ICreateGroupBlacklistedUserRequest
+                 * @classdesc Represents a CreateGroupBlockedUserRequest.
+                 * @implements ICreateGroupBlockedUserRequest
                  * @constructor
-                 * @param {im.turms.proto.ICreateGroupBlacklistedUserRequest=} [properties] Properties to set
+                 * @param {im.turms.proto.ICreateGroupBlockedUserRequest=} [properties] Properties to set
                  */
-                function CreateGroupBlacklistedUserRequest(properties) {
+                function CreateGroupBlockedUserRequest(properties) {
                     if (properties)
                         for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                             if (properties[keys[i]] != null)
@@ -5976,31 +5976,31 @@ $root.im = (function() {
                 }
 
                 /**
-                 * CreateGroupBlacklistedUserRequest groupId.
+                 * CreateGroupBlockedUserRequest groupId.
                  * @member {string} groupId
-                 * @memberof im.turms.proto.CreateGroupBlacklistedUserRequest
+                 * @memberof im.turms.proto.CreateGroupBlockedUserRequest
                  * @instance
                  */
-                CreateGroupBlacklistedUserRequest.prototype.groupId = "0";
+                CreateGroupBlockedUserRequest.prototype.groupId = "0";
 
                 /**
-                 * CreateGroupBlacklistedUserRequest userId.
+                 * CreateGroupBlockedUserRequest userId.
                  * @member {string} userId
-                 * @memberof im.turms.proto.CreateGroupBlacklistedUserRequest
+                 * @memberof im.turms.proto.CreateGroupBlockedUserRequest
                  * @instance
                  */
-                CreateGroupBlacklistedUserRequest.prototype.userId = "0";
+                CreateGroupBlockedUserRequest.prototype.userId = "0";
 
                 /**
-                 * Encodes the specified CreateGroupBlacklistedUserRequest message. Does not implicitly {@link im.turms.proto.CreateGroupBlacklistedUserRequest.verify|verify} messages.
+                 * Encodes the specified CreateGroupBlockedUserRequest message. Does not implicitly {@link im.turms.proto.CreateGroupBlockedUserRequest.verify|verify} messages.
                  * @function encode
-                 * @memberof im.turms.proto.CreateGroupBlacklistedUserRequest
+                 * @memberof im.turms.proto.CreateGroupBlockedUserRequest
                  * @static
-                 * @param {im.turms.proto.ICreateGroupBlacklistedUserRequest} message CreateGroupBlacklistedUserRequest message or plain object to encode
+                 * @param {im.turms.proto.ICreateGroupBlockedUserRequest} message CreateGroupBlockedUserRequest message or plain object to encode
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                CreateGroupBlacklistedUserRequest.encode = function encode(message, writer) {
+                CreateGroupBlockedUserRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
                     if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
@@ -6011,20 +6011,20 @@ $root.im = (function() {
                 };
 
                 /**
-                 * Decodes a CreateGroupBlacklistedUserRequest message from the specified reader or buffer.
+                 * Decodes a CreateGroupBlockedUserRequest message from the specified reader or buffer.
                  * @function decode
-                 * @memberof im.turms.proto.CreateGroupBlacklistedUserRequest
+                 * @memberof im.turms.proto.CreateGroupBlockedUserRequest
                  * @static
                  * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
                  * @param {number} [length] Message length if known beforehand
-                 * @returns {im.turms.proto.CreateGroupBlacklistedUserRequest} CreateGroupBlacklistedUserRequest
+                 * @returns {im.turms.proto.CreateGroupBlockedUserRequest} CreateGroupBlockedUserRequest
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                CreateGroupBlacklistedUserRequest.decode = function decode(reader, length) {
+                CreateGroupBlockedUserRequest.decode = function decode(reader, length) {
                     if (!(reader instanceof $Reader))
                         reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.CreateGroupBlacklistedUserRequest();
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.CreateGroupBlockedUserRequest();
                     while (reader.pos < end) {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
@@ -6042,28 +6042,28 @@ $root.im = (function() {
                     return message;
                 };
 
-                return CreateGroupBlacklistedUserRequest;
+                return CreateGroupBlockedUserRequest;
             })();
 
-            proto.DeleteGroupBlacklistedUserRequest = (function() {
+            proto.DeleteGroupBlockedUserRequest = (function() {
 
                 /**
-                 * Properties of a DeleteGroupBlacklistedUserRequest.
+                 * Properties of a DeleteGroupBlockedUserRequest.
                  * @memberof im.turms.proto
-                 * @interface IDeleteGroupBlacklistedUserRequest
-                 * @property {string|null} [groupId] DeleteGroupBlacklistedUserRequest groupId
-                 * @property {string|null} [userId] DeleteGroupBlacklistedUserRequest userId
+                 * @interface IDeleteGroupBlockedUserRequest
+                 * @property {string|null} [groupId] DeleteGroupBlockedUserRequest groupId
+                 * @property {string|null} [userId] DeleteGroupBlockedUserRequest userId
                  */
 
                 /**
-                 * Constructs a new DeleteGroupBlacklistedUserRequest.
+                 * Constructs a new DeleteGroupBlockedUserRequest.
                  * @memberof im.turms.proto
-                 * @classdesc Represents a DeleteGroupBlacklistedUserRequest.
-                 * @implements IDeleteGroupBlacklistedUserRequest
+                 * @classdesc Represents a DeleteGroupBlockedUserRequest.
+                 * @implements IDeleteGroupBlockedUserRequest
                  * @constructor
-                 * @param {im.turms.proto.IDeleteGroupBlacklistedUserRequest=} [properties] Properties to set
+                 * @param {im.turms.proto.IDeleteGroupBlockedUserRequest=} [properties] Properties to set
                  */
-                function DeleteGroupBlacklistedUserRequest(properties) {
+                function DeleteGroupBlockedUserRequest(properties) {
                     if (properties)
                         for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                             if (properties[keys[i]] != null)
@@ -6071,31 +6071,31 @@ $root.im = (function() {
                 }
 
                 /**
-                 * DeleteGroupBlacklistedUserRequest groupId.
+                 * DeleteGroupBlockedUserRequest groupId.
                  * @member {string} groupId
-                 * @memberof im.turms.proto.DeleteGroupBlacklistedUserRequest
+                 * @memberof im.turms.proto.DeleteGroupBlockedUserRequest
                  * @instance
                  */
-                DeleteGroupBlacklistedUserRequest.prototype.groupId = "0";
+                DeleteGroupBlockedUserRequest.prototype.groupId = "0";
 
                 /**
-                 * DeleteGroupBlacklistedUserRequest userId.
+                 * DeleteGroupBlockedUserRequest userId.
                  * @member {string} userId
-                 * @memberof im.turms.proto.DeleteGroupBlacklistedUserRequest
+                 * @memberof im.turms.proto.DeleteGroupBlockedUserRequest
                  * @instance
                  */
-                DeleteGroupBlacklistedUserRequest.prototype.userId = "0";
+                DeleteGroupBlockedUserRequest.prototype.userId = "0";
 
                 /**
-                 * Encodes the specified DeleteGroupBlacklistedUserRequest message. Does not implicitly {@link im.turms.proto.DeleteGroupBlacklistedUserRequest.verify|verify} messages.
+                 * Encodes the specified DeleteGroupBlockedUserRequest message. Does not implicitly {@link im.turms.proto.DeleteGroupBlockedUserRequest.verify|verify} messages.
                  * @function encode
-                 * @memberof im.turms.proto.DeleteGroupBlacklistedUserRequest
+                 * @memberof im.turms.proto.DeleteGroupBlockedUserRequest
                  * @static
-                 * @param {im.turms.proto.IDeleteGroupBlacklistedUserRequest} message DeleteGroupBlacklistedUserRequest message or plain object to encode
+                 * @param {im.turms.proto.IDeleteGroupBlockedUserRequest} message DeleteGroupBlockedUserRequest message or plain object to encode
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                DeleteGroupBlacklistedUserRequest.encode = function encode(message, writer) {
+                DeleteGroupBlockedUserRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
                     if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
@@ -6106,20 +6106,20 @@ $root.im = (function() {
                 };
 
                 /**
-                 * Decodes a DeleteGroupBlacklistedUserRequest message from the specified reader or buffer.
+                 * Decodes a DeleteGroupBlockedUserRequest message from the specified reader or buffer.
                  * @function decode
-                 * @memberof im.turms.proto.DeleteGroupBlacklistedUserRequest
+                 * @memberof im.turms.proto.DeleteGroupBlockedUserRequest
                  * @static
                  * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
                  * @param {number} [length] Message length if known beforehand
-                 * @returns {im.turms.proto.DeleteGroupBlacklistedUserRequest} DeleteGroupBlacklistedUserRequest
+                 * @returns {im.turms.proto.DeleteGroupBlockedUserRequest} DeleteGroupBlockedUserRequest
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                DeleteGroupBlacklistedUserRequest.decode = function decode(reader, length) {
+                DeleteGroupBlockedUserRequest.decode = function decode(reader, length) {
                     if (!(reader instanceof $Reader))
                         reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.DeleteGroupBlacklistedUserRequest();
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.DeleteGroupBlockedUserRequest();
                     while (reader.pos < end) {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
@@ -6137,28 +6137,28 @@ $root.im = (function() {
                     return message;
                 };
 
-                return DeleteGroupBlacklistedUserRequest;
+                return DeleteGroupBlockedUserRequest;
             })();
 
-            proto.QueryGroupBlacklistedUserIdsRequest = (function() {
+            proto.QueryGroupBlockedUserIdsRequest = (function() {
 
                 /**
-                 * Properties of a QueryGroupBlacklistedUserIdsRequest.
+                 * Properties of a QueryGroupBlockedUserIdsRequest.
                  * @memberof im.turms.proto
-                 * @interface IQueryGroupBlacklistedUserIdsRequest
-                 * @property {string|null} [groupId] QueryGroupBlacklistedUserIdsRequest groupId
-                 * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryGroupBlacklistedUserIdsRequest lastUpdatedDate
+                 * @interface IQueryGroupBlockedUserIdsRequest
+                 * @property {string|null} [groupId] QueryGroupBlockedUserIdsRequest groupId
+                 * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryGroupBlockedUserIdsRequest lastUpdatedDate
                  */
 
                 /**
-                 * Constructs a new QueryGroupBlacklistedUserIdsRequest.
+                 * Constructs a new QueryGroupBlockedUserIdsRequest.
                  * @memberof im.turms.proto
-                 * @classdesc Represents a QueryGroupBlacklistedUserIdsRequest.
-                 * @implements IQueryGroupBlacklistedUserIdsRequest
+                 * @classdesc Represents a QueryGroupBlockedUserIdsRequest.
+                 * @implements IQueryGroupBlockedUserIdsRequest
                  * @constructor
-                 * @param {im.turms.proto.IQueryGroupBlacklistedUserIdsRequest=} [properties] Properties to set
+                 * @param {im.turms.proto.IQueryGroupBlockedUserIdsRequest=} [properties] Properties to set
                  */
-                function QueryGroupBlacklistedUserIdsRequest(properties) {
+                function QueryGroupBlockedUserIdsRequest(properties) {
                     if (properties)
                         for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                             if (properties[keys[i]] != null)
@@ -6166,31 +6166,31 @@ $root.im = (function() {
                 }
 
                 /**
-                 * QueryGroupBlacklistedUserIdsRequest groupId.
+                 * QueryGroupBlockedUserIdsRequest groupId.
                  * @member {string} groupId
-                 * @memberof im.turms.proto.QueryGroupBlacklistedUserIdsRequest
+                 * @memberof im.turms.proto.QueryGroupBlockedUserIdsRequest
                  * @instance
                  */
-                QueryGroupBlacklistedUserIdsRequest.prototype.groupId = "0";
+                QueryGroupBlockedUserIdsRequest.prototype.groupId = "0";
 
                 /**
-                 * QueryGroupBlacklistedUserIdsRequest lastUpdatedDate.
+                 * QueryGroupBlockedUserIdsRequest lastUpdatedDate.
                  * @member {google.protobuf.IInt64Value|null|undefined} lastUpdatedDate
-                 * @memberof im.turms.proto.QueryGroupBlacklistedUserIdsRequest
+                 * @memberof im.turms.proto.QueryGroupBlockedUserIdsRequest
                  * @instance
                  */
-                QueryGroupBlacklistedUserIdsRequest.prototype.lastUpdatedDate = null;
+                QueryGroupBlockedUserIdsRequest.prototype.lastUpdatedDate = null;
 
                 /**
-                 * Encodes the specified QueryGroupBlacklistedUserIdsRequest message. Does not implicitly {@link im.turms.proto.QueryGroupBlacklistedUserIdsRequest.verify|verify} messages.
+                 * Encodes the specified QueryGroupBlockedUserIdsRequest message. Does not implicitly {@link im.turms.proto.QueryGroupBlockedUserIdsRequest.verify|verify} messages.
                  * @function encode
-                 * @memberof im.turms.proto.QueryGroupBlacklistedUserIdsRequest
+                 * @memberof im.turms.proto.QueryGroupBlockedUserIdsRequest
                  * @static
-                 * @param {im.turms.proto.IQueryGroupBlacklistedUserIdsRequest} message QueryGroupBlacklistedUserIdsRequest message or plain object to encode
+                 * @param {im.turms.proto.IQueryGroupBlockedUserIdsRequest} message QueryGroupBlockedUserIdsRequest message or plain object to encode
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                QueryGroupBlacklistedUserIdsRequest.encode = function encode(message, writer) {
+                QueryGroupBlockedUserIdsRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
                     if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
@@ -6201,20 +6201,20 @@ $root.im = (function() {
                 };
 
                 /**
-                 * Decodes a QueryGroupBlacklistedUserIdsRequest message from the specified reader or buffer.
+                 * Decodes a QueryGroupBlockedUserIdsRequest message from the specified reader or buffer.
                  * @function decode
-                 * @memberof im.turms.proto.QueryGroupBlacklistedUserIdsRequest
+                 * @memberof im.turms.proto.QueryGroupBlockedUserIdsRequest
                  * @static
                  * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
                  * @param {number} [length] Message length if known beforehand
-                 * @returns {im.turms.proto.QueryGroupBlacklistedUserIdsRequest} QueryGroupBlacklistedUserIdsRequest
+                 * @returns {im.turms.proto.QueryGroupBlockedUserIdsRequest} QueryGroupBlockedUserIdsRequest
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                QueryGroupBlacklistedUserIdsRequest.decode = function decode(reader, length) {
+                QueryGroupBlockedUserIdsRequest.decode = function decode(reader, length) {
                     if (!(reader instanceof $Reader))
                         reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.QueryGroupBlacklistedUserIdsRequest();
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.QueryGroupBlockedUserIdsRequest();
                     while (reader.pos < end) {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
@@ -6232,28 +6232,28 @@ $root.im = (function() {
                     return message;
                 };
 
-                return QueryGroupBlacklistedUserIdsRequest;
+                return QueryGroupBlockedUserIdsRequest;
             })();
 
-            proto.QueryGroupBlacklistedUserInfosRequest = (function() {
+            proto.QueryGroupBlockedUserInfosRequest = (function() {
 
                 /**
-                 * Properties of a QueryGroupBlacklistedUserInfosRequest.
+                 * Properties of a QueryGroupBlockedUserInfosRequest.
                  * @memberof im.turms.proto
-                 * @interface IQueryGroupBlacklistedUserInfosRequest
-                 * @property {string|null} [groupId] QueryGroupBlacklistedUserInfosRequest groupId
-                 * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryGroupBlacklistedUserInfosRequest lastUpdatedDate
+                 * @interface IQueryGroupBlockedUserInfosRequest
+                 * @property {string|null} [groupId] QueryGroupBlockedUserInfosRequest groupId
+                 * @property {google.protobuf.IInt64Value|null} [lastUpdatedDate] QueryGroupBlockedUserInfosRequest lastUpdatedDate
                  */
 
                 /**
-                 * Constructs a new QueryGroupBlacklistedUserInfosRequest.
+                 * Constructs a new QueryGroupBlockedUserInfosRequest.
                  * @memberof im.turms.proto
-                 * @classdesc Represents a QueryGroupBlacklistedUserInfosRequest.
-                 * @implements IQueryGroupBlacklistedUserInfosRequest
+                 * @classdesc Represents a QueryGroupBlockedUserInfosRequest.
+                 * @implements IQueryGroupBlockedUserInfosRequest
                  * @constructor
-                 * @param {im.turms.proto.IQueryGroupBlacklistedUserInfosRequest=} [properties] Properties to set
+                 * @param {im.turms.proto.IQueryGroupBlockedUserInfosRequest=} [properties] Properties to set
                  */
-                function QueryGroupBlacklistedUserInfosRequest(properties) {
+                function QueryGroupBlockedUserInfosRequest(properties) {
                     if (properties)
                         for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                             if (properties[keys[i]] != null)
@@ -6261,31 +6261,31 @@ $root.im = (function() {
                 }
 
                 /**
-                 * QueryGroupBlacklistedUserInfosRequest groupId.
+                 * QueryGroupBlockedUserInfosRequest groupId.
                  * @member {string} groupId
-                 * @memberof im.turms.proto.QueryGroupBlacklistedUserInfosRequest
+                 * @memberof im.turms.proto.QueryGroupBlockedUserInfosRequest
                  * @instance
                  */
-                QueryGroupBlacklistedUserInfosRequest.prototype.groupId = "0";
+                QueryGroupBlockedUserInfosRequest.prototype.groupId = "0";
 
                 /**
-                 * QueryGroupBlacklistedUserInfosRequest lastUpdatedDate.
+                 * QueryGroupBlockedUserInfosRequest lastUpdatedDate.
                  * @member {google.protobuf.IInt64Value|null|undefined} lastUpdatedDate
-                 * @memberof im.turms.proto.QueryGroupBlacklistedUserInfosRequest
+                 * @memberof im.turms.proto.QueryGroupBlockedUserInfosRequest
                  * @instance
                  */
-                QueryGroupBlacklistedUserInfosRequest.prototype.lastUpdatedDate = null;
+                QueryGroupBlockedUserInfosRequest.prototype.lastUpdatedDate = null;
 
                 /**
-                 * Encodes the specified QueryGroupBlacklistedUserInfosRequest message. Does not implicitly {@link im.turms.proto.QueryGroupBlacklistedUserInfosRequest.verify|verify} messages.
+                 * Encodes the specified QueryGroupBlockedUserInfosRequest message. Does not implicitly {@link im.turms.proto.QueryGroupBlockedUserInfosRequest.verify|verify} messages.
                  * @function encode
-                 * @memberof im.turms.proto.QueryGroupBlacklistedUserInfosRequest
+                 * @memberof im.turms.proto.QueryGroupBlockedUserInfosRequest
                  * @static
-                 * @param {im.turms.proto.IQueryGroupBlacklistedUserInfosRequest} message QueryGroupBlacklistedUserInfosRequest message or plain object to encode
+                 * @param {im.turms.proto.IQueryGroupBlockedUserInfosRequest} message QueryGroupBlockedUserInfosRequest message or plain object to encode
                  * @param {$protobuf.Writer} [writer] Writer to encode to
                  * @returns {$protobuf.Writer} Writer
                  */
-                QueryGroupBlacklistedUserInfosRequest.encode = function encode(message, writer) {
+                QueryGroupBlockedUserInfosRequest.encode = function encode(message, writer) {
                     if (!writer)
                         writer = $Writer.create();
                     if (message.groupId != null && Object.hasOwnProperty.call(message, "groupId"))
@@ -6296,20 +6296,20 @@ $root.im = (function() {
                 };
 
                 /**
-                 * Decodes a QueryGroupBlacklistedUserInfosRequest message from the specified reader or buffer.
+                 * Decodes a QueryGroupBlockedUserInfosRequest message from the specified reader or buffer.
                  * @function decode
-                 * @memberof im.turms.proto.QueryGroupBlacklistedUserInfosRequest
+                 * @memberof im.turms.proto.QueryGroupBlockedUserInfosRequest
                  * @static
                  * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
                  * @param {number} [length] Message length if known beforehand
-                 * @returns {im.turms.proto.QueryGroupBlacklistedUserInfosRequest} QueryGroupBlacklistedUserInfosRequest
+                 * @returns {im.turms.proto.QueryGroupBlockedUserInfosRequest} QueryGroupBlockedUserInfosRequest
                  * @throws {Error} If the payload is not a reader or valid buffer
                  * @throws {$protobuf.util.ProtocolError} If required fields are missing
                  */
-                QueryGroupBlacklistedUserInfosRequest.decode = function decode(reader, length) {
+                QueryGroupBlockedUserInfosRequest.decode = function decode(reader, length) {
                     if (!(reader instanceof $Reader))
                         reader = $Reader.create(reader);
-                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.QueryGroupBlacklistedUserInfosRequest();
+                    var end = length === undefined ? reader.len : reader.pos + length, message = new $root.im.turms.proto.QueryGroupBlockedUserInfosRequest();
                     while (reader.pos < end) {
                         var tag = reader.uint32();
                         switch (tag >>> 3) {
@@ -6327,7 +6327,7 @@ $root.im = (function() {
                     return message;
                 };
 
-                return QueryGroupBlacklistedUserInfosRequest;
+                return QueryGroupBlockedUserInfosRequest;
             })();
 
             proto.CreateGroupRequest = (function() {
@@ -9532,10 +9532,10 @@ $root.im = (function() {
                  * @property {im.turms.proto.IQueryJoinedGroupIdsRequest|null} [queryJoinedGroupIdsRequest] TurmsRequest queryJoinedGroupIdsRequest
                  * @property {im.turms.proto.IQueryJoinedGroupInfosRequest|null} [queryJoinedGroupInfosRequest] TurmsRequest queryJoinedGroupInfosRequest
                  * @property {im.turms.proto.IUpdateGroupRequest|null} [updateGroupRequest] TurmsRequest updateGroupRequest
-                 * @property {im.turms.proto.ICreateGroupBlacklistedUserRequest|null} [createGroupBlacklistedUserRequest] TurmsRequest createGroupBlacklistedUserRequest
-                 * @property {im.turms.proto.IDeleteGroupBlacklistedUserRequest|null} [deleteGroupBlacklistedUserRequest] TurmsRequest deleteGroupBlacklistedUserRequest
-                 * @property {im.turms.proto.IQueryGroupBlacklistedUserIdsRequest|null} [queryGroupBlacklistedUserIdsRequest] TurmsRequest queryGroupBlacklistedUserIdsRequest
-                 * @property {im.turms.proto.IQueryGroupBlacklistedUserInfosRequest|null} [queryGroupBlacklistedUserInfosRequest] TurmsRequest queryGroupBlacklistedUserInfosRequest
+                 * @property {im.turms.proto.ICreateGroupBlockedUserRequest|null} [createGroupBlockedUserRequest] TurmsRequest createGroupBlockedUserRequest
+                 * @property {im.turms.proto.IDeleteGroupBlockedUserRequest|null} [deleteGroupBlockedUserRequest] TurmsRequest deleteGroupBlockedUserRequest
+                 * @property {im.turms.proto.IQueryGroupBlockedUserIdsRequest|null} [queryGroupBlockedUserIdsRequest] TurmsRequest queryGroupBlockedUserIdsRequest
+                 * @property {im.turms.proto.IQueryGroupBlockedUserInfosRequest|null} [queryGroupBlockedUserInfosRequest] TurmsRequest queryGroupBlockedUserInfosRequest
                  * @property {im.turms.proto.ICheckGroupJoinQuestionsAnswersRequest|null} [checkGroupJoinQuestionsAnswersRequest] TurmsRequest checkGroupJoinQuestionsAnswersRequest
                  * @property {im.turms.proto.ICreateGroupInvitationRequest|null} [createGroupInvitationRequest] TurmsRequest createGroupInvitationRequest
                  * @property {im.turms.proto.ICreateGroupJoinRequestRequest|null} [createGroupJoinRequestRequest] TurmsRequest createGroupJoinRequestRequest
@@ -9872,36 +9872,36 @@ $root.im = (function() {
                 TurmsRequest.prototype.updateGroupRequest = null;
 
                 /**
-                 * TurmsRequest createGroupBlacklistedUserRequest.
-                 * @member {im.turms.proto.ICreateGroupBlacklistedUserRequest|null|undefined} createGroupBlacklistedUserRequest
+                 * TurmsRequest createGroupBlockedUserRequest.
+                 * @member {im.turms.proto.ICreateGroupBlockedUserRequest|null|undefined} createGroupBlockedUserRequest
                  * @memberof im.turms.proto.TurmsRequest
                  * @instance
                  */
-                TurmsRequest.prototype.createGroupBlacklistedUserRequest = null;
+                TurmsRequest.prototype.createGroupBlockedUserRequest = null;
 
                 /**
-                 * TurmsRequest deleteGroupBlacklistedUserRequest.
-                 * @member {im.turms.proto.IDeleteGroupBlacklistedUserRequest|null|undefined} deleteGroupBlacklistedUserRequest
+                 * TurmsRequest deleteGroupBlockedUserRequest.
+                 * @member {im.turms.proto.IDeleteGroupBlockedUserRequest|null|undefined} deleteGroupBlockedUserRequest
                  * @memberof im.turms.proto.TurmsRequest
                  * @instance
                  */
-                TurmsRequest.prototype.deleteGroupBlacklistedUserRequest = null;
+                TurmsRequest.prototype.deleteGroupBlockedUserRequest = null;
 
                 /**
-                 * TurmsRequest queryGroupBlacklistedUserIdsRequest.
-                 * @member {im.turms.proto.IQueryGroupBlacklistedUserIdsRequest|null|undefined} queryGroupBlacklistedUserIdsRequest
+                 * TurmsRequest queryGroupBlockedUserIdsRequest.
+                 * @member {im.turms.proto.IQueryGroupBlockedUserIdsRequest|null|undefined} queryGroupBlockedUserIdsRequest
                  * @memberof im.turms.proto.TurmsRequest
                  * @instance
                  */
-                TurmsRequest.prototype.queryGroupBlacklistedUserIdsRequest = null;
+                TurmsRequest.prototype.queryGroupBlockedUserIdsRequest = null;
 
                 /**
-                 * TurmsRequest queryGroupBlacklistedUserInfosRequest.
-                 * @member {im.turms.proto.IQueryGroupBlacklistedUserInfosRequest|null|undefined} queryGroupBlacklistedUserInfosRequest
+                 * TurmsRequest queryGroupBlockedUserInfosRequest.
+                 * @member {im.turms.proto.IQueryGroupBlockedUserInfosRequest|null|undefined} queryGroupBlockedUserInfosRequest
                  * @memberof im.turms.proto.TurmsRequest
                  * @instance
                  */
-                TurmsRequest.prototype.queryGroupBlacklistedUserInfosRequest = null;
+                TurmsRequest.prototype.queryGroupBlockedUserInfosRequest = null;
 
                 /**
                  * TurmsRequest checkGroupJoinQuestionsAnswersRequest.
@@ -10020,12 +10020,12 @@ $root.im = (function() {
 
                 /**
                  * TurmsRequest kind.
-                 * @member {"createSessionRequest"|"deleteSessionRequest"|"queryConversationsRequest"|"updateConversationRequest"|"updateTypingStatusRequest"|"createMessageRequest"|"queryMessagesRequest"|"updateMessageRequest"|"createGroupMemberRequest"|"deleteGroupMemberRequest"|"queryGroupMembersRequest"|"updateGroupMemberRequest"|"queryUserProfileRequest"|"queryUserIdsNearbyRequest"|"queryUserInfosNearbyRequest"|"queryUserOnlineStatusesRequest"|"updateUserLocationRequest"|"updateUserOnlineStatusRequest"|"updateUserRequest"|"createFriendRequestRequest"|"createRelationshipGroupRequest"|"createRelationshipRequest"|"deleteRelationshipGroupRequest"|"deleteRelationshipRequest"|"queryFriendRequestsRequest"|"queryRelatedUserIdsRequest"|"queryRelationshipGroupsRequest"|"queryRelationshipsRequest"|"updateFriendRequestRequest"|"updateRelationshipGroupRequest"|"updateRelationshipRequest"|"createGroupRequest"|"deleteGroupRequest"|"queryGroupRequest"|"queryJoinedGroupIdsRequest"|"queryJoinedGroupInfosRequest"|"updateGroupRequest"|"createGroupBlacklistedUserRequest"|"deleteGroupBlacklistedUserRequest"|"queryGroupBlacklistedUserIdsRequest"|"queryGroupBlacklistedUserInfosRequest"|"checkGroupJoinQuestionsAnswersRequest"|"createGroupInvitationRequest"|"createGroupJoinRequestRequest"|"createGroupJoinQuestionRequest"|"deleteGroupInvitationRequest"|"deleteGroupJoinRequestRequest"|"deleteGroupJoinQuestionRequest"|"queryGroupInvitationsRequest"|"queryGroupJoinRequestsRequest"|"queryGroupJoinQuestionsRequest"|"updateGroupJoinQuestionRequest"|"deleteResourceRequest"|"querySignedGetUrlRequest"|"querySignedPutUrlRequest"|undefined} kind
+                 * @member {"createSessionRequest"|"deleteSessionRequest"|"queryConversationsRequest"|"updateConversationRequest"|"updateTypingStatusRequest"|"createMessageRequest"|"queryMessagesRequest"|"updateMessageRequest"|"createGroupMemberRequest"|"deleteGroupMemberRequest"|"queryGroupMembersRequest"|"updateGroupMemberRequest"|"queryUserProfileRequest"|"queryUserIdsNearbyRequest"|"queryUserInfosNearbyRequest"|"queryUserOnlineStatusesRequest"|"updateUserLocationRequest"|"updateUserOnlineStatusRequest"|"updateUserRequest"|"createFriendRequestRequest"|"createRelationshipGroupRequest"|"createRelationshipRequest"|"deleteRelationshipGroupRequest"|"deleteRelationshipRequest"|"queryFriendRequestsRequest"|"queryRelatedUserIdsRequest"|"queryRelationshipGroupsRequest"|"queryRelationshipsRequest"|"updateFriendRequestRequest"|"updateRelationshipGroupRequest"|"updateRelationshipRequest"|"createGroupRequest"|"deleteGroupRequest"|"queryGroupRequest"|"queryJoinedGroupIdsRequest"|"queryJoinedGroupInfosRequest"|"updateGroupRequest"|"createGroupBlockedUserRequest"|"deleteGroupBlockedUserRequest"|"queryGroupBlockedUserIdsRequest"|"queryGroupBlockedUserInfosRequest"|"checkGroupJoinQuestionsAnswersRequest"|"createGroupInvitationRequest"|"createGroupJoinRequestRequest"|"createGroupJoinQuestionRequest"|"deleteGroupInvitationRequest"|"deleteGroupJoinRequestRequest"|"deleteGroupJoinQuestionRequest"|"queryGroupInvitationsRequest"|"queryGroupJoinRequestsRequest"|"queryGroupJoinQuestionsRequest"|"updateGroupJoinQuestionRequest"|"deleteResourceRequest"|"querySignedGetUrlRequest"|"querySignedPutUrlRequest"|undefined} kind
                  * @memberof im.turms.proto.TurmsRequest
                  * @instance
                  */
                 Object.defineProperty(TurmsRequest.prototype, "kind", {
-                    get: $util.oneOfGetter($oneOfFields = ["createSessionRequest", "deleteSessionRequest", "queryConversationsRequest", "updateConversationRequest", "updateTypingStatusRequest", "createMessageRequest", "queryMessagesRequest", "updateMessageRequest", "createGroupMemberRequest", "deleteGroupMemberRequest", "queryGroupMembersRequest", "updateGroupMemberRequest", "queryUserProfileRequest", "queryUserIdsNearbyRequest", "queryUserInfosNearbyRequest", "queryUserOnlineStatusesRequest", "updateUserLocationRequest", "updateUserOnlineStatusRequest", "updateUserRequest", "createFriendRequestRequest", "createRelationshipGroupRequest", "createRelationshipRequest", "deleteRelationshipGroupRequest", "deleteRelationshipRequest", "queryFriendRequestsRequest", "queryRelatedUserIdsRequest", "queryRelationshipGroupsRequest", "queryRelationshipsRequest", "updateFriendRequestRequest", "updateRelationshipGroupRequest", "updateRelationshipRequest", "createGroupRequest", "deleteGroupRequest", "queryGroupRequest", "queryJoinedGroupIdsRequest", "queryJoinedGroupInfosRequest", "updateGroupRequest", "createGroupBlacklistedUserRequest", "deleteGroupBlacklistedUserRequest", "queryGroupBlacklistedUserIdsRequest", "queryGroupBlacklistedUserInfosRequest", "checkGroupJoinQuestionsAnswersRequest", "createGroupInvitationRequest", "createGroupJoinRequestRequest", "createGroupJoinQuestionRequest", "deleteGroupInvitationRequest", "deleteGroupJoinRequestRequest", "deleteGroupJoinQuestionRequest", "queryGroupInvitationsRequest", "queryGroupJoinRequestsRequest", "queryGroupJoinQuestionsRequest", "updateGroupJoinQuestionRequest", "deleteResourceRequest", "querySignedGetUrlRequest", "querySignedPutUrlRequest"]),
+                    get: $util.oneOfGetter($oneOfFields = ["createSessionRequest", "deleteSessionRequest", "queryConversationsRequest", "updateConversationRequest", "updateTypingStatusRequest", "createMessageRequest", "queryMessagesRequest", "updateMessageRequest", "createGroupMemberRequest", "deleteGroupMemberRequest", "queryGroupMembersRequest", "updateGroupMemberRequest", "queryUserProfileRequest", "queryUserIdsNearbyRequest", "queryUserInfosNearbyRequest", "queryUserOnlineStatusesRequest", "updateUserLocationRequest", "updateUserOnlineStatusRequest", "updateUserRequest", "createFriendRequestRequest", "createRelationshipGroupRequest", "createRelationshipRequest", "deleteRelationshipGroupRequest", "deleteRelationshipRequest", "queryFriendRequestsRequest", "queryRelatedUserIdsRequest", "queryRelationshipGroupsRequest", "queryRelationshipsRequest", "updateFriendRequestRequest", "updateRelationshipGroupRequest", "updateRelationshipRequest", "createGroupRequest", "deleteGroupRequest", "queryGroupRequest", "queryJoinedGroupIdsRequest", "queryJoinedGroupInfosRequest", "updateGroupRequest", "createGroupBlockedUserRequest", "deleteGroupBlockedUserRequest", "queryGroupBlockedUserIdsRequest", "queryGroupBlockedUserInfosRequest", "checkGroupJoinQuestionsAnswersRequest", "createGroupInvitationRequest", "createGroupJoinRequestRequest", "createGroupJoinQuestionRequest", "deleteGroupInvitationRequest", "deleteGroupJoinRequestRequest", "deleteGroupJoinQuestionRequest", "queryGroupInvitationsRequest", "queryGroupJoinRequestsRequest", "queryGroupJoinQuestionsRequest", "updateGroupJoinQuestionRequest", "deleteResourceRequest", "querySignedGetUrlRequest", "querySignedPutUrlRequest"]),
                     set: $util.oneOfSetter($oneOfFields)
                 });
 
@@ -10117,14 +10117,14 @@ $root.im = (function() {
                         $root.im.turms.proto.QueryJoinedGroupInfosRequest.encode(message.queryJoinedGroupInfosRequest, writer.uint32(/* id 304, wireType 2 =*/2434).fork()).ldelim();
                     if (message.updateGroupRequest != null && Object.hasOwnProperty.call(message, "updateGroupRequest"))
                         $root.im.turms.proto.UpdateGroupRequest.encode(message.updateGroupRequest, writer.uint32(/* id 305, wireType 2 =*/2442).fork()).ldelim();
-                    if (message.createGroupBlacklistedUserRequest != null && Object.hasOwnProperty.call(message, "createGroupBlacklistedUserRequest"))
-                        $root.im.turms.proto.CreateGroupBlacklistedUserRequest.encode(message.createGroupBlacklistedUserRequest, writer.uint32(/* id 400, wireType 2 =*/3202).fork()).ldelim();
-                    if (message.deleteGroupBlacklistedUserRequest != null && Object.hasOwnProperty.call(message, "deleteGroupBlacklistedUserRequest"))
-                        $root.im.turms.proto.DeleteGroupBlacklistedUserRequest.encode(message.deleteGroupBlacklistedUserRequest, writer.uint32(/* id 401, wireType 2 =*/3210).fork()).ldelim();
-                    if (message.queryGroupBlacklistedUserIdsRequest != null && Object.hasOwnProperty.call(message, "queryGroupBlacklistedUserIdsRequest"))
-                        $root.im.turms.proto.QueryGroupBlacklistedUserIdsRequest.encode(message.queryGroupBlacklistedUserIdsRequest, writer.uint32(/* id 402, wireType 2 =*/3218).fork()).ldelim();
-                    if (message.queryGroupBlacklistedUserInfosRequest != null && Object.hasOwnProperty.call(message, "queryGroupBlacklistedUserInfosRequest"))
-                        $root.im.turms.proto.QueryGroupBlacklistedUserInfosRequest.encode(message.queryGroupBlacklistedUserInfosRequest, writer.uint32(/* id 403, wireType 2 =*/3226).fork()).ldelim();
+                    if (message.createGroupBlockedUserRequest != null && Object.hasOwnProperty.call(message, "createGroupBlockedUserRequest"))
+                        $root.im.turms.proto.CreateGroupBlockedUserRequest.encode(message.createGroupBlockedUserRequest, writer.uint32(/* id 400, wireType 2 =*/3202).fork()).ldelim();
+                    if (message.deleteGroupBlockedUserRequest != null && Object.hasOwnProperty.call(message, "deleteGroupBlockedUserRequest"))
+                        $root.im.turms.proto.DeleteGroupBlockedUserRequest.encode(message.deleteGroupBlockedUserRequest, writer.uint32(/* id 401, wireType 2 =*/3210).fork()).ldelim();
+                    if (message.queryGroupBlockedUserIdsRequest != null && Object.hasOwnProperty.call(message, "queryGroupBlockedUserIdsRequest"))
+                        $root.im.turms.proto.QueryGroupBlockedUserIdsRequest.encode(message.queryGroupBlockedUserIdsRequest, writer.uint32(/* id 402, wireType 2 =*/3218).fork()).ldelim();
+                    if (message.queryGroupBlockedUserInfosRequest != null && Object.hasOwnProperty.call(message, "queryGroupBlockedUserInfosRequest"))
+                        $root.im.turms.proto.QueryGroupBlockedUserInfosRequest.encode(message.queryGroupBlockedUserInfosRequest, writer.uint32(/* id 403, wireType 2 =*/3226).fork()).ldelim();
                     if (message.checkGroupJoinQuestionsAnswersRequest != null && Object.hasOwnProperty.call(message, "checkGroupJoinQuestionsAnswersRequest"))
                         $root.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest.encode(message.checkGroupJoinQuestionsAnswersRequest, writer.uint32(/* id 500, wireType 2 =*/4002).fork()).ldelim();
                     if (message.createGroupInvitationRequest != null && Object.hasOwnProperty.call(message, "createGroupInvitationRequest"))
@@ -10289,16 +10289,16 @@ $root.im = (function() {
                             message.updateGroupRequest = $root.im.turms.proto.UpdateGroupRequest.decode(reader, reader.uint32());
                             break;
                         case 400:
-                            message.createGroupBlacklistedUserRequest = $root.im.turms.proto.CreateGroupBlacklistedUserRequest.decode(reader, reader.uint32());
+                            message.createGroupBlockedUserRequest = $root.im.turms.proto.CreateGroupBlockedUserRequest.decode(reader, reader.uint32());
                             break;
                         case 401:
-                            message.deleteGroupBlacklistedUserRequest = $root.im.turms.proto.DeleteGroupBlacklistedUserRequest.decode(reader, reader.uint32());
+                            message.deleteGroupBlockedUserRequest = $root.im.turms.proto.DeleteGroupBlockedUserRequest.decode(reader, reader.uint32());
                             break;
                         case 402:
-                            message.queryGroupBlacklistedUserIdsRequest = $root.im.turms.proto.QueryGroupBlacklistedUserIdsRequest.decode(reader, reader.uint32());
+                            message.queryGroupBlockedUserIdsRequest = $root.im.turms.proto.QueryGroupBlockedUserIdsRequest.decode(reader, reader.uint32());
                             break;
                         case 403:
-                            message.queryGroupBlacklistedUserInfosRequest = $root.im.turms.proto.QueryGroupBlacklistedUserInfosRequest.decode(reader, reader.uint32());
+                            message.queryGroupBlockedUserInfosRequest = $root.im.turms.proto.QueryGroupBlockedUserInfosRequest.decode(reader, reader.uint32());
                             break;
                         case 500:
                             message.checkGroupJoinQuestionsAnswersRequest = $root.im.turms.proto.CheckGroupJoinQuestionsAnswersRequest.decode(reader, reader.uint32());

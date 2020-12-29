@@ -162,8 +162,8 @@ public class ProtoUtil {
     public static UserRelationship.Builder relationship2proto(@NotNull im.turms.turms.workflow.dao.domain.user.UserRelationship relationship) {
         UserRelationship.Builder builder = UserRelationship.newBuilder();
         im.turms.turms.workflow.dao.domain.user.UserRelationship.Key key = relationship.getKey();
-        Date blockDate = relationship.getBlockDate();
         Date establishmentDate = relationship.getEstablishmentDate();
+        Date blockDate = relationship.getBlockDate();
         if (key != null) {
             Long ownerId = key.getOwnerId();
             Long relatedUserId = key.getRelatedUserId();
@@ -174,8 +174,9 @@ public class ProtoUtil {
                 builder.setRelatedUserId(Int64Value.newBuilder().setValue(relatedUserId).build());
             }
         }
-        // TODO: change Boolean to Date
-        builder.setBlocked(BoolValue.newBuilder().setValue(blockDate != null).build());
+        if (blockDate != null) {
+            builder.setBlockDate(Int64Value.newBuilder().setValue(blockDate.getTime()).build());
+        }
         if (establishmentDate != null) {
             builder.setEstablishmentDate(Int64Value.newBuilder().setValue(establishmentDate.getTime()).build());
         }

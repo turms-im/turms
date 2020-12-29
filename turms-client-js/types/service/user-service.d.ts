@@ -36,10 +36,10 @@ export default class UserService {
     queryRelationships(relatedUserIds?: string[], isBlocked?: boolean, groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion | undefined>;
     queryRelatedUserIds(isBlocked?: boolean, groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion | undefined>;
     queryFriends(groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion | undefined>;
-    queryBlacklistedUsers(groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion | undefined>;
+    queryBlockedUsers(groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion | undefined>;
     createRelationship(userId: string, isBlocked: boolean, groupIndex?: number): Promise<void>;
     createFriendRelationship(userId: string, groupIndex?: number): Promise<void>;
-    createBlacklistedUserRelationship(userId: string, groupIndex?: number): Promise<void>;
+    createBlockedUserRelationship(userId: string, groupIndex?: number): Promise<void>;
     deleteRelationship(relatedUserId: string, deleteGroupIndex?: string, targetGroupIndex?: string): Promise<void>;
     updateRelationship(relatedUserId: string, isBlocked?: boolean, groupIndex?: number): Promise<void>;
     sendFriendRequest(recipientId: string, content: string): Promise<string>;

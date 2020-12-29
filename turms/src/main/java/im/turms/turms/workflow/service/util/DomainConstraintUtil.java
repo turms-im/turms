@@ -21,7 +21,7 @@ import im.turms.common.constant.*;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.turms.bo.GroupQuestionIdAndAnswer;
-import im.turms.turms.workflow.dao.domain.group.GroupBlacklistedUser;
+import im.turms.turms.workflow.dao.domain.group.GroupBlockedUser;
 import im.turms.turms.workflow.dao.domain.group.GroupMember;
 import im.turms.turms.workflow.dao.domain.user.UserRelationship;
 import im.turms.turms.workflow.dao.domain.user.UserRelationshipGroup;
@@ -88,7 +88,7 @@ public class DomainConstraintUtil {
         }
     }
 
-    public static void validGroupBlacklistedUserKey(GroupBlacklistedUser.Key key) {
+    public static void validGroupBlockedUserKey(GroupBlockedUser.Key key) {
         if (key == null || key.getGroupId() == null || key.getUserId() == null) {
             throw new IllegalArgumentException("The group member key must not be null");
         }

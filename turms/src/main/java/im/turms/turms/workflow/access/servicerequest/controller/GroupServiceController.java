@@ -20,10 +20,10 @@ package im.turms.turms.workflow.access.servicerequest.controller;
 import im.turms.common.constant.GroupMemberRole;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.group.*;
-import im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest;
-import im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest;
-import im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest;
-import im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest;
+import im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest;
+import im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest;
+import im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest;
+import im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest;
 import im.turms.common.model.dto.request.group.enrollment.*;
 import im.turms.common.model.dto.request.group.member.CreateGroupMemberRequest;
 import im.turms.common.model.dto.request.group.member.DeleteGroupMemberRequest;
@@ -56,7 +56,7 @@ public class GroupServiceController {
 
     private final Node node;
     private final GroupService groupService;
-    private final GroupBlacklistService groupBlacklistService;
+    private final GroupBlocklistService groupBlocklistService;
     private final GroupQuestionService groupQuestionService;
     private final GroupInvitationService groupInvitationService;
     private final GroupJoinRequestService groupJoinRequestService;
@@ -65,14 +65,14 @@ public class GroupServiceController {
     public GroupServiceController(
             Node node,
             GroupService groupService,
-            GroupBlacklistService groupBlacklistService,
+            GroupBlocklistService groupBlocklistService,
             GroupQuestionService groupQuestionService,
             GroupInvitationService groupInvitationService,
             GroupJoinRequestService groupJoinRequestService,
             GroupMemberService groupMemberService) {
         this.node = node;
         this.groupService = groupService;
-        this.groupBlacklistService = groupBlacklistService;
+        this.groupBlocklistService = groupBlocklistService;
         this.groupQuestionService = groupQuestionService;
         this.groupInvitationService = groupInvitationService;
         this.groupJoinRequestService = groupJoinRequestService;
@@ -216,47 +216,47 @@ public class GroupServiceController {
         };
     }
 
-    @ServiceRequestMapping(CREATE_GROUP_BLACKLISTED_USER_REQUEST)
-    public ClientRequestHandler handleCreateGroupBlacklistedUserRequest() {
+    @ServiceRequestMapping(CREATE_GROUP_BLOCKED_USER_REQUEST)
+    public ClientRequestHandler handleCreateGroupBlockedUserRequest() {
         return clientRequest -> {
-            CreateGroupBlacklistedUserRequest request = clientRequest.getTurmsRequest()
-                    .getCreateGroupBlacklistedUserRequest();
-            return groupBlacklistService.blacklistUser(
+            CreateGroupBlockedUserRequest request = clientRequest.getTurmsRequest()
+                    .getCreateGroupBlockedUserRequest();
+            return groupBlocklistService.blockUser(
                     clientRequest.getUserId(),
                     request.getGroupId(),
                     request.getUserId(),
                     null)
-                    .then(Mono.fromCallable(() -> node.getSharedProperties().getService().getNotification().isNotifyUserAfterBlacklistedByGroup()
+                    .then(Mono.fromCallable(() -> node.getSharedProperties().getService().getNotification().isNotifyUserAfterBlockedByGroup()
                             ? RequestHandlerResultFactory.get(request.getUserId(), clientRequest.getTurmsRequest())
                             : RequestHandlerResultFactory.OK));
         };
     }
 
-    @ServiceRequestMapping(DELETE_GROUP_BLACKLISTED_USER_REQUEST)
-    public ClientRequestHandler handleDeleteGroupBlacklistedUserRequest() {
+    @ServiceRequestMapping(DELETE_GROUP_BLOCKED_USER_REQUEST)
+    public ClientRequestHandler handleDeleteGroupBlockedUserRequest() {
         return clientRequest -> {
-            DeleteGroupBlacklistedUserRequest request = clientRequest.getTurmsRequest()
-                    .getDeleteGroupBlacklistedUserRequest();
-            return groupBlacklistService.unblacklistUser(
+            DeleteGroupBlockedUserRequest request = clientRequest.getTurmsRequest()
+                    .getDeleteGroupBlockedUserRequest();
+            return groupBlocklistService.unblockUser(
                     clientRequest.getUserId(),
                     request.getGroupId(),
                     request.getUserId(),
                     null,
                     true)
-                    .then(Mono.fromCallable(() -> node.getSharedProperties().getService().getNotification().isNotifyUserAfterUnblacklistedByGroup()
+                    .then(Mono.fromCallable(() -> node.getSharedProperties().getService().getNotification().isNotifyUserAfterUnblockedByGroup()
                             ? RequestHandlerResultFactory.get(request.getUserId(), clientRequest.getTurmsRequest())
                             : RequestHandlerResultFactory.OK));
         };
     }
 
-    @ServiceRequestMapping(QUERY_GROUP_BLACKLISTED_USER_IDS_REQUEST)
-    public ClientRequestHandler handleQueryGroupBlacklistedUserIdsRequest() {
+    @ServiceRequestMapping(QUERY_GROUP_BLOCKED_USER_IDS_REQUEST)
+    public ClientRequestHandler handleQueryGroupBlockedUserIdsRequest() {
         return clientRequest -> {
-            QueryGroupBlacklistedUserIdsRequest request = clientRequest.getTurmsRequest()
-                    .getQueryGroupBlacklistedUserIdsRequest();
+            QueryGroupBlockedUserIdsRequest request = clientRequest.getTurmsRequest()
+                    .getQueryGroupBlockedUserIdsRequest();
             Date lastUpdatedDate = request.hasLastUpdatedDate() ?
                     new Date(request.getLastUpdatedDate().getValue()) : null;
-            return groupBlacklistService.queryGroupBlacklistedUserIdsWithVersion(
+            return groupBlocklistService.queryGroupBlockedUserIdsWithVersion(
                     request.getGroupId(),
                     lastUpdatedDate)
                     .map(version -> RequestHandlerResultFactory.get(TurmsNotification.Data
@@ -266,13 +266,13 @@ public class GroupServiceController {
         };
     }
 
-    @ServiceRequestMapping(QUERY_GROUP_BLACKLISTED_USER_INFOS_REQUEST)
-    public ClientRequestHandler handleQueryGroupBlacklistedUsersInfosRequest() {
+    @ServiceRequestMapping(QUERY_GROUP_BLOCKED_USER_INFOS_REQUEST)
+    public ClientRequestHandler handleQueryGroupBlockedUsersInfosRequest() {
         return clientRequest -> {
-            QueryGroupBlacklistedUserInfosRequest request = clientRequest.getTurmsRequest()
-                    .getQueryGroupBlacklistedUserInfosRequest();
+            QueryGroupBlockedUserInfosRequest request = clientRequest.getTurmsRequest()
+                    .getQueryGroupBlockedUserInfosRequest();
             Date lastUpdatedDate = request.hasLastUpdatedDate() ? new Date(request.getLastUpdatedDate().getValue()) : null;
-            return groupBlacklistService.queryGroupBlacklistedUserInfosWithVersion(
+            return groupBlocklistService.queryGroupBlockedUserInfosWithVersion(
                     request.getGroupId(),
                     lastUpdatedDate)
                     .map(version -> RequestHandlerResultFactory.get(TurmsNotification.Data

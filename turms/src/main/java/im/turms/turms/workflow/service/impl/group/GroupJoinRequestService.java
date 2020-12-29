@@ -138,8 +138,8 @@ public class GroupJoinRequestService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        return groupMemberService.isBlacklisted(groupId, requesterId)
-                .flatMap(isBlacklisted -> isBlacklisted
+        return groupMemberService.isBlocked(groupId, requesterId)
+                .flatMap(isBlocked -> isBlocked
                         ? Mono.error(TurmsBusinessException.get(TurmsStatusCode.GROUP_JOIN_REQUEST_SENDER_HAS_BEEN_BLOCKED))
                         : groupService.isGroupActiveAndNotDeleted(groupId))
                 .flatMap(isActive -> {

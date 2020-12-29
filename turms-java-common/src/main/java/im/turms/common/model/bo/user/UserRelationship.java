@@ -92,14 +92,14 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 26: {
-            com.google.protobuf.BoolValue.Builder subBuilder = null;
-            if (blocked_ != null) {
-              subBuilder = blocked_.toBuilder();
+            com.google.protobuf.Int64Value.Builder subBuilder = null;
+            if (blockDate_ != null) {
+              subBuilder = blockDate_.toBuilder();
             }
-            blocked_ = input.readMessage(com.google.protobuf.BoolValue.parser(), extensionRegistry);
+            blockDate_ = input.readMessage(com.google.protobuf.Int64Value.parser(), extensionRegistry);
             if (subBuilder != null) {
-              subBuilder.mergeFrom(blocked_);
-              blocked_ = subBuilder.buildPartial();
+              subBuilder.mergeFrom(blockDate_);
+              blockDate_ = subBuilder.buildPartial();
             }
 
             break;
@@ -214,30 +214,30 @@ private static final long serialVersionUID = 0L;
     return getRelatedUserId();
   }
 
-  public static final int BLOCKED_FIELD_NUMBER = 3;
-  private com.google.protobuf.BoolValue blocked_;
+  public static final int BLOCK_DATE_FIELD_NUMBER = 3;
+  private com.google.protobuf.Int64Value blockDate_;
   /**
-   * <code>.google.protobuf.BoolValue blocked = 3;</code>
-   * @return Whether the blocked field is set.
+   * <code>.google.protobuf.Int64Value block_date = 3;</code>
+   * @return Whether the blockDate field is set.
    */
   @java.lang.Override
-  public boolean hasBlocked() {
-    return blocked_ != null;
+  public boolean hasBlockDate() {
+    return blockDate_ != null;
   }
   /**
-   * <code>.google.protobuf.BoolValue blocked = 3;</code>
-   * @return The blocked.
+   * <code>.google.protobuf.Int64Value block_date = 3;</code>
+   * @return The blockDate.
    */
   @java.lang.Override
-  public com.google.protobuf.BoolValue getBlocked() {
-    return blocked_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : blocked_;
+  public com.google.protobuf.Int64Value getBlockDate() {
+    return blockDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : blockDate_;
   }
   /**
-   * <code>.google.protobuf.BoolValue blocked = 3;</code>
+   * <code>.google.protobuf.Int64Value block_date = 3;</code>
    */
   @java.lang.Override
-  public com.google.protobuf.BoolValueOrBuilder getBlockedOrBuilder() {
-    return getBlocked();
+  public com.google.protobuf.Int64ValueOrBuilder getBlockDateOrBuilder() {
+    return getBlockDate();
   }
 
   public static final int GROUP_INDEX_FIELD_NUMBER = 4;
@@ -312,8 +312,8 @@ private static final long serialVersionUID = 0L;
     if (relatedUserId_ != null) {
       output.writeMessage(2, getRelatedUserId());
     }
-    if (blocked_ != null) {
-      output.writeMessage(3, getBlocked());
+    if (blockDate_ != null) {
+      output.writeMessage(3, getBlockDate());
     }
     if (groupIndex_ != null) {
       output.writeMessage(4, getGroupIndex());
@@ -338,9 +338,9 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(2, getRelatedUserId());
     }
-    if (blocked_ != null) {
+    if (blockDate_ != null) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(3, getBlocked());
+        .computeMessageSize(3, getBlockDate());
     }
     if (groupIndex_ != null) {
       size += com.google.protobuf.CodedOutputStream
@@ -375,10 +375,10 @@ private static final long serialVersionUID = 0L;
       if (!getRelatedUserId()
           .equals(other.getRelatedUserId())) return false;
     }
-    if (hasBlocked() != other.hasBlocked()) return false;
-    if (hasBlocked()) {
-      if (!getBlocked()
-          .equals(other.getBlocked())) return false;
+    if (hasBlockDate() != other.hasBlockDate()) return false;
+    if (hasBlockDate()) {
+      if (!getBlockDate()
+          .equals(other.getBlockDate())) return false;
     }
     if (hasGroupIndex() != other.hasGroupIndex()) return false;
     if (hasGroupIndex()) {
@@ -409,9 +409,9 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + RELATED_USER_ID_FIELD_NUMBER;
       hash = (53 * hash) + getRelatedUserId().hashCode();
     }
-    if (hasBlocked()) {
-      hash = (37 * hash) + BLOCKED_FIELD_NUMBER;
-      hash = (53 * hash) + getBlocked().hashCode();
+    if (hasBlockDate()) {
+      hash = (37 * hash) + BLOCK_DATE_FIELD_NUMBER;
+      hash = (53 * hash) + getBlockDate().hashCode();
     }
     if (hasGroupIndex()) {
       hash = (37 * hash) + GROUP_INDEX_FIELD_NUMBER;
@@ -566,11 +566,11 @@ private static final long serialVersionUID = 0L;
         relatedUserId_ = null;
         relatedUserIdBuilder_ = null;
       }
-      if (blockedBuilder_ == null) {
-        blocked_ = null;
+      if (blockDateBuilder_ == null) {
+        blockDate_ = null;
       } else {
-        blocked_ = null;
-        blockedBuilder_ = null;
+        blockDate_ = null;
+        blockDateBuilder_ = null;
       }
       if (groupIndexBuilder_ == null) {
         groupIndex_ = null;
@@ -620,10 +620,10 @@ private static final long serialVersionUID = 0L;
       } else {
         result.relatedUserId_ = relatedUserIdBuilder_.build();
       }
-      if (blockedBuilder_ == null) {
-        result.blocked_ = blocked_;
+      if (blockDateBuilder_ == null) {
+        result.blockDate_ = blockDate_;
       } else {
-        result.blocked_ = blockedBuilder_.build();
+        result.blockDate_ = blockDateBuilder_.build();
       }
       if (groupIndexBuilder_ == null) {
         result.groupIndex_ = groupIndex_;
@@ -689,8 +689,8 @@ private static final long serialVersionUID = 0L;
       if (other.hasRelatedUserId()) {
         mergeRelatedUserId(other.getRelatedUserId());
       }
-      if (other.hasBlocked()) {
-        mergeBlocked(other.getBlocked());
+      if (other.hasBlockDate()) {
+        mergeBlockDate(other.getBlockDate());
       }
       if (other.hasGroupIndex()) {
         mergeGroupIndex(other.getGroupIndex());
@@ -965,123 +965,123 @@ private static final long serialVersionUID = 0L;
       return relatedUserIdBuilder_;
     }
 
-    private com.google.protobuf.BoolValue blocked_;
+    private com.google.protobuf.Int64Value blockDate_;
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder> blockedBuilder_;
+        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> blockDateBuilder_;
     /**
-     * <code>.google.protobuf.BoolValue blocked = 3;</code>
-     * @return Whether the blocked field is set.
+     * <code>.google.protobuf.Int64Value block_date = 3;</code>
+     * @return Whether the blockDate field is set.
      */
-    public boolean hasBlocked() {
-      return blockedBuilder_ != null || blocked_ != null;
+    public boolean hasBlockDate() {
+      return blockDateBuilder_ != null || blockDate_ != null;
     }
     /**
-     * <code>.google.protobuf.BoolValue blocked = 3;</code>
-     * @return The blocked.
+     * <code>.google.protobuf.Int64Value block_date = 3;</code>
+     * @return The blockDate.
      */
-    public com.google.protobuf.BoolValue getBlocked() {
-      if (blockedBuilder_ == null) {
-        return blocked_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : blocked_;
+    public com.google.protobuf.Int64Value getBlockDate() {
+      if (blockDateBuilder_ == null) {
+        return blockDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : blockDate_;
       } else {
-        return blockedBuilder_.getMessage();
+        return blockDateBuilder_.getMessage();
       }
     }
     /**
-     * <code>.google.protobuf.BoolValue blocked = 3;</code>
+     * <code>.google.protobuf.Int64Value block_date = 3;</code>
      */
-    public Builder setBlocked(com.google.protobuf.BoolValue value) {
-      if (blockedBuilder_ == null) {
+    public Builder setBlockDate(com.google.protobuf.Int64Value value) {
+      if (blockDateBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
-        blocked_ = value;
+        blockDate_ = value;
         onChanged();
       } else {
-        blockedBuilder_.setMessage(value);
+        blockDateBuilder_.setMessage(value);
       }
 
       return this;
     }
     /**
-     * <code>.google.protobuf.BoolValue blocked = 3;</code>
+     * <code>.google.protobuf.Int64Value block_date = 3;</code>
      */
-    public Builder setBlocked(
-        com.google.protobuf.BoolValue.Builder builderForValue) {
-      if (blockedBuilder_ == null) {
-        blocked_ = builderForValue.build();
+    public Builder setBlockDate(
+        com.google.protobuf.Int64Value.Builder builderForValue) {
+      if (blockDateBuilder_ == null) {
+        blockDate_ = builderForValue.build();
         onChanged();
       } else {
-        blockedBuilder_.setMessage(builderForValue.build());
+        blockDateBuilder_.setMessage(builderForValue.build());
       }
 
       return this;
     }
     /**
-     * <code>.google.protobuf.BoolValue blocked = 3;</code>
+     * <code>.google.protobuf.Int64Value block_date = 3;</code>
      */
-    public Builder mergeBlocked(com.google.protobuf.BoolValue value) {
-      if (blockedBuilder_ == null) {
-        if (blocked_ != null) {
-          blocked_ =
-            com.google.protobuf.BoolValue.newBuilder(blocked_).mergeFrom(value).buildPartial();
+    public Builder mergeBlockDate(com.google.protobuf.Int64Value value) {
+      if (blockDateBuilder_ == null) {
+        if (blockDate_ != null) {
+          blockDate_ =
+            com.google.protobuf.Int64Value.newBuilder(blockDate_).mergeFrom(value).buildPartial();
         } else {
-          blocked_ = value;
+          blockDate_ = value;
         }
         onChanged();
       } else {
-        blockedBuilder_.mergeFrom(value);
+        blockDateBuilder_.mergeFrom(value);
       }
 
       return this;
     }
     /**
-     * <code>.google.protobuf.BoolValue blocked = 3;</code>
+     * <code>.google.protobuf.Int64Value block_date = 3;</code>
      */
-    public Builder clearBlocked() {
-      if (blockedBuilder_ == null) {
-        blocked_ = null;
+    public Builder clearBlockDate() {
+      if (blockDateBuilder_ == null) {
+        blockDate_ = null;
         onChanged();
       } else {
-        blocked_ = null;
-        blockedBuilder_ = null;
+        blockDate_ = null;
+        blockDateBuilder_ = null;
       }
 
       return this;
     }
     /**
-     * <code>.google.protobuf.BoolValue blocked = 3;</code>
+     * <code>.google.protobuf.Int64Value block_date = 3;</code>
      */
-    public com.google.protobuf.BoolValue.Builder getBlockedBuilder() {
+    public com.google.protobuf.Int64Value.Builder getBlockDateBuilder() {
 
       onChanged();
-      return getBlockedFieldBuilder().getBuilder();
+      return getBlockDateFieldBuilder().getBuilder();
     }
     /**
-     * <code>.google.protobuf.BoolValue blocked = 3;</code>
+     * <code>.google.protobuf.Int64Value block_date = 3;</code>
      */
-    public com.google.protobuf.BoolValueOrBuilder getBlockedOrBuilder() {
-      if (blockedBuilder_ != null) {
-        return blockedBuilder_.getMessageOrBuilder();
+    public com.google.protobuf.Int64ValueOrBuilder getBlockDateOrBuilder() {
+      if (blockDateBuilder_ != null) {
+        return blockDateBuilder_.getMessageOrBuilder();
       } else {
-        return blocked_ == null ?
-            com.google.protobuf.BoolValue.getDefaultInstance() : blocked_;
+        return blockDate_ == null ?
+            com.google.protobuf.Int64Value.getDefaultInstance() : blockDate_;
       }
     }
     /**
-     * <code>.google.protobuf.BoolValue blocked = 3;</code>
+     * <code>.google.protobuf.Int64Value block_date = 3;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder>
-        getBlockedFieldBuilder() {
-      if (blockedBuilder_ == null) {
-        blockedBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder>(
-                getBlocked(),
+        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
+        getBlockDateFieldBuilder() {
+      if (blockDateBuilder_ == null) {
+        blockDateBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>(
+                getBlockDate(),
                 getParentForChildren(),
                 isClean());
-        blocked_ = null;
+        blockDate_ = null;
       }
-      return blockedBuilder_;
+      return blockDateBuilder_;
     }
 
     private com.google.protobuf.Int64Value groupIndex_;

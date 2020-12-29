@@ -245,7 +245,7 @@ public class UserService {
                                     .map(isRelatedAndAllowed -> isRelatedAndAllowed
                                             ? ServicePermission.OK
                                             : ServicePermission.get(TurmsStatusCode.PROFILE_REQUESTER_NOT_IN_CONTACTS_OR_BLOCKED));
-                        case ALL_EXCEPT_BLACKLISTED_USERS:
+                        case ALL_EXCEPT_BLOCKED_USERS:
                             return userRelationshipService.hasNoRelationshipOrNotBlocked(targetUserId, requesterId)
                                     .map(isNotBlocked -> isNotBlocked
                                             ? ServicePermission.OK

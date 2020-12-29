@@ -695,75 +695,75 @@ public interface TurmsRequestOrBuilder extends
 
   /**
    * <pre>
-   * Group Blacklist
+   * Group Blocklist
    * </pre>
    *
-   * <code>.im.turms.proto.CreateGroupBlacklistedUserRequest create_group_blacklisted_user_request = 400;</code>
-   * @return Whether the createGroupBlacklistedUserRequest field is set.
+   * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
+   * @return Whether the createGroupBlockedUserRequest field is set.
    */
-  boolean hasCreateGroupBlacklistedUserRequest();
+  boolean hasCreateGroupBlockedUserRequest();
   /**
    * <pre>
-   * Group Blacklist
+   * Group Blocklist
    * </pre>
    *
-   * <code>.im.turms.proto.CreateGroupBlacklistedUserRequest create_group_blacklisted_user_request = 400;</code>
-   * @return The createGroupBlacklistedUserRequest.
+   * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
+   * @return The createGroupBlockedUserRequest.
    */
-  im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequest getCreateGroupBlacklistedUserRequest();
+  im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest getCreateGroupBlockedUserRequest();
   /**
    * <pre>
-   * Group Blacklist
+   * Group Blocklist
    * </pre>
    *
-   * <code>.im.turms.proto.CreateGroupBlacklistedUserRequest create_group_blacklisted_user_request = 400;</code>
+   * <code>.im.turms.proto.CreateGroupBlockedUserRequest create_group_blocked_user_request = 400;</code>
    */
-  im.turms.common.model.dto.request.group.blacklist.CreateGroupBlacklistedUserRequestOrBuilder getCreateGroupBlacklistedUserRequestOrBuilder();
+  im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequestOrBuilder getCreateGroupBlockedUserRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.DeleteGroupBlacklistedUserRequest delete_group_blacklisted_user_request = 401;</code>
-   * @return Whether the deleteGroupBlacklistedUserRequest field is set.
+   * <code>.im.turms.proto.DeleteGroupBlockedUserRequest delete_group_blocked_user_request = 401;</code>
+   * @return Whether the deleteGroupBlockedUserRequest field is set.
    */
-  boolean hasDeleteGroupBlacklistedUserRequest();
+  boolean hasDeleteGroupBlockedUserRequest();
   /**
-   * <code>.im.turms.proto.DeleteGroupBlacklistedUserRequest delete_group_blacklisted_user_request = 401;</code>
-   * @return The deleteGroupBlacklistedUserRequest.
+   * <code>.im.turms.proto.DeleteGroupBlockedUserRequest delete_group_blocked_user_request = 401;</code>
+   * @return The deleteGroupBlockedUserRequest.
    */
-  im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequest getDeleteGroupBlacklistedUserRequest();
+  im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest getDeleteGroupBlockedUserRequest();
   /**
-   * <code>.im.turms.proto.DeleteGroupBlacklistedUserRequest delete_group_blacklisted_user_request = 401;</code>
+   * <code>.im.turms.proto.DeleteGroupBlockedUserRequest delete_group_blocked_user_request = 401;</code>
    */
-  im.turms.common.model.dto.request.group.blacklist.DeleteGroupBlacklistedUserRequestOrBuilder getDeleteGroupBlacklistedUserRequestOrBuilder();
+  im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequestOrBuilder getDeleteGroupBlockedUserRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.QueryGroupBlacklistedUserIdsRequest query_group_blacklisted_user_ids_request = 402;</code>
-   * @return Whether the queryGroupBlacklistedUserIdsRequest field is set.
+   * <code>.im.turms.proto.QueryGroupBlockedUserIdsRequest query_group_blocked_user_ids_request = 402;</code>
+   * @return Whether the queryGroupBlockedUserIdsRequest field is set.
    */
-  boolean hasQueryGroupBlacklistedUserIdsRequest();
+  boolean hasQueryGroupBlockedUserIdsRequest();
   /**
-   * <code>.im.turms.proto.QueryGroupBlacklistedUserIdsRequest query_group_blacklisted_user_ids_request = 402;</code>
-   * @return The queryGroupBlacklistedUserIdsRequest.
+   * <code>.im.turms.proto.QueryGroupBlockedUserIdsRequest query_group_blocked_user_ids_request = 402;</code>
+   * @return The queryGroupBlockedUserIdsRequest.
    */
-  im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequest getQueryGroupBlacklistedUserIdsRequest();
+  im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest getQueryGroupBlockedUserIdsRequest();
   /**
-   * <code>.im.turms.proto.QueryGroupBlacklistedUserIdsRequest query_group_blacklisted_user_ids_request = 402;</code>
+   * <code>.im.turms.proto.QueryGroupBlockedUserIdsRequest query_group_blocked_user_ids_request = 402;</code>
    */
-  im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserIdsRequestOrBuilder getQueryGroupBlacklistedUserIdsRequestOrBuilder();
+  im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequestOrBuilder getQueryGroupBlockedUserIdsRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.QueryGroupBlacklistedUserInfosRequest query_group_blacklisted_user_infos_request = 403;</code>
-   * @return Whether the queryGroupBlacklistedUserInfosRequest field is set.
+   * <code>.im.turms.proto.QueryGroupBlockedUserInfosRequest query_group_blocked_user_infos_request = 403;</code>
+   * @return Whether the queryGroupBlockedUserInfosRequest field is set.
    */
-  boolean hasQueryGroupBlacklistedUserInfosRequest();
+  boolean hasQueryGroupBlockedUserInfosRequest();
   /**
-   * <code>.im.turms.proto.QueryGroupBlacklistedUserInfosRequest query_group_blacklisted_user_infos_request = 403;</code>
-   * @return The queryGroupBlacklistedUserInfosRequest.
+   * <code>.im.turms.proto.QueryGroupBlockedUserInfosRequest query_group_blocked_user_infos_request = 403;</code>
+   * @return The queryGroupBlockedUserInfosRequest.
    */
-  im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequest getQueryGroupBlacklistedUserInfosRequest();
+  im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest getQueryGroupBlockedUserInfosRequest();
   /**
-   * <code>.im.turms.proto.QueryGroupBlacklistedUserInfosRequest query_group_blacklisted_user_infos_request = 403;</code>
+   * <code>.im.turms.proto.QueryGroupBlockedUserInfosRequest query_group_blocked_user_infos_request = 403;</code>
    */
-  im.turms.common.model.dto.request.group.blacklist.QueryGroupBlacklistedUserInfosRequestOrBuilder getQueryGroupBlacklistedUserInfosRequestOrBuilder();
+  im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequestOrBuilder getQueryGroupBlockedUserInfosRequestOrBuilder();
 
   /**
    * <pre>

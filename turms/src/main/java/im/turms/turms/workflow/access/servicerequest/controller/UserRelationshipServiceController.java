@@ -95,7 +95,7 @@ public class UserRelationshipServiceController {
     public ClientRequestHandler handleCreateRelationshipRequest() {
         return clientRequest -> {
             CreateRelationshipRequest request = clientRequest.getTurmsRequest().getCreateRelationshipRequest();
-            // It is unnecessary to check whether requester is in the blacklist of the target user
+            // It is unnecessary to check whether requester is in the blocklist of the target user
             // because only a one-sided relationship will be created here
             int groupIndex = request.hasGroupIndex() ?
                     request.getGroupIndex().getValue() : DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX;

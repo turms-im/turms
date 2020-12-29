@@ -107,7 +107,7 @@ public class MongoConfig {
         map.put(UserVersion.class, writeConcern.getUserVersion());
 
         map.put(Group.class, writeConcern.getGroup());
-        map.put(GroupBlacklistedUser.class, writeConcern.getGroupBlacklistedUser());
+        map.put(GroupBlockedUser.class, writeConcern.getGroupBlockedUser());
         map.put(GroupInvitation.class, writeConcern.getGroupInvitation());
         map.put(GroupJoinQuestion.class, writeConcern.getGroupJoinQuestion());
         map.put(GroupJoinRequest.class, writeConcern.getGroupJoinRequest());
@@ -171,7 +171,7 @@ public class MongoConfig {
             WriteConcernResolver writeConcernResolver) {
         ReactiveMongoTemplate template = getMongoTemplate(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getGroup(), writeConcernResolver);
         MongoUtil.createIndexes(template, Set.of(Group.class,
-                GroupBlacklistedUser.class,
+                GroupBlockedUser.class,
                 GroupInvitation.class,
                 GroupJoinQuestion.class,
                 GroupJoinRequest.class,

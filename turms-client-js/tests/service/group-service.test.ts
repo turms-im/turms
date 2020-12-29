@@ -8,7 +8,7 @@ import TurmsBusinessError from "../../types/model/turms-business-error";
 const GROUP_MEMBER_ID = '3';
 const GROUP_INVITATION_INVITEE = '4';
 const GROUP_SUCCESSOR = '1';
-const GROUP_BLACKLISTED_USER_ID = '5';
+const GROUP_BLOCKED_USER_ID = '5';
 let turmsClient: TurmsClient;
 let groupId;
 let groupJoinQuestionId;
@@ -49,8 +49,8 @@ describe('Create', () => {
         const result = await turmsClient.groupService.addGroupMember(groupId, GROUP_MEMBER_ID, "name", GroupMemberRole.MEMBER);
         expect(result).toBeFalsy();
     });
-    it('blacklistUser_shouldSucceed', async () => {
-        const result = await turmsClient.groupService.blacklistUser(groupId, GROUP_BLACKLISTED_USER_ID);
+    it('blockUser_shouldSucceed', async () => {
+        const result = await turmsClient.groupService.blockUser(groupId, GROUP_BLOCKED_USER_ID);
         expect(result).toBeFalsy();
     });
     it('createInvitation_shouldReturnInvitationId', async () => {
@@ -104,13 +104,13 @@ describe('Query', () => {
         let groupIds = groupWithVersion.groups.map(group => group.id);
         expect(groupIds).toContain(groupId);
     });
-    it('queryBlacklistedUserIds_shouldEqualBlacklistedUserId', async () => {
-        const blacklistedUserIdsWithVersion = await turmsClient.groupService.queryBlacklistedUserIds(groupId);
-        expect(blacklistedUserIdsWithVersion.ids[0]).toEqual(GROUP_BLACKLISTED_USER_ID);
+    it('queryBlockedUserIds_shouldEqualBlockedUserId', async () => {
+        const blockedUserIdsWithVersion = await turmsClient.groupService.queryBlockedUserIds(groupId);
+        expect(blockedUserIdsWithVersion.ids[0]).toEqual(GROUP_BLOCKED_USER_ID);
     });
-    it('queryBlacklistedUserInfos_shouldEqualBlacklistedUserId', async () => {
-        const usersInfosWithVersion = await turmsClient.groupService.queryBlacklistedUserInfos(groupId);
-        expect(usersInfosWithVersion.userInfos[0].id).toEqual(GROUP_BLACKLISTED_USER_ID);
+    it('queryBlockedUserInfos_shouldEqualBlockedUserId', async () => {
+        const usersInfosWithVersion = await turmsClient.groupService.queryBlockedUserInfos(groupId);
+        expect(usersInfosWithVersion.userInfos[0].id).toEqual(GROUP_BLOCKED_USER_ID);
     });
     it('queryInvitationsByGroupId_shouldEqualNewInvitationId', async () => {
         const groupInvitationsWithVersion = await turmsClient.groupService.queryInvitationsByGroupId(groupId);
@@ -150,8 +150,8 @@ describe('Delete', () => {
         const result = await turmsClient.groupService.removeGroupMember(groupId, GROUP_MEMBER_ID);
         expect(result).toBeFalsy();
     });
-    it('unblacklistUser_shouldSucceed', async () => {
-        const result = await turmsClient.groupService.unblacklistUser(groupId, GROUP_BLACKLISTED_USER_ID);
+    it('unblockUser_shouldSucceed', async () => {
+        const result = await turmsClient.groupService.unblockUser(groupId, GROUP_BLOCKED_USER_ID);
         expect(result).toBeFalsy();
     });
     it('deleteInvitation_shouldSucceedOrThrowDisabledFunction', async () => {

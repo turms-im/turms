@@ -12,6 +12,7 @@ export default class NotificationUtil {
     static getArr(notification: TurmsNotification, path: string): any[];
     private static _get;
     static transformDate(date?: IInt64Value): Date | undefined;
+    static transformMapValToDate(map?: [any: number]): [any: Date] | undefined;
     static getIdsWithVer(n: TurmsNotification): ParsedModel.IdsWithVersion | undefined;
     static getVerDate(n: TurmsNotification, path: string): Date | undefined;
 }
