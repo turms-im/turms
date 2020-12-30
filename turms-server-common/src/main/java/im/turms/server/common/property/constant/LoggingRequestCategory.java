@@ -44,7 +44,7 @@ public enum LoggingRequestCategory {
     USER(Pool.USER),
     USER_RELATIONSHIP(Pool.USER_RELATIONSHIP),
     GROUP(Pool.GROUP),
-    GROUP_BLACKLIST(Pool.GROUP_BLACKLIST),
+    GROUP_BLOCKLIST(Pool.GROUP_BLOCKLIST),
     GROUP_ENROLLMENT(Pool.GROUP_ENROLLMENT),
     GROUP_MEMBER(Pool.GROUP_MEMBER);
 
@@ -161,7 +161,7 @@ public enum LoggingRequestCategory {
                 QUERY_JOINED_GROUP_INFOS_REQUEST,
                 UPDATE_GROUP_REQUEST);
 
-        private static final Set<TurmsRequest.KindCase> GROUP_BLACKLIST = Set.of(CREATE_GROUP_BLOCKED_USER_REQUEST,
+        private static final Set<TurmsRequest.KindCase> GROUP_BLOCKLIST = Set.of(CREATE_GROUP_BLOCKED_USER_REQUEST,
                 DELETE_GROUP_BLOCKED_USER_REQUEST,
                 QUERY_GROUP_BLOCKED_USER_IDS_REQUEST,
                 QUERY_GROUP_BLOCKED_USER_INFOS_REQUEST);
