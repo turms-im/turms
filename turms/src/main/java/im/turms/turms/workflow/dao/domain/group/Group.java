@@ -22,11 +22,11 @@ import im.turms.turms.workflow.dao.index.OptionalIndexedForDifferentAmount;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.HashIndexed;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Sharded;
-import org.springframework.data.mongodb.core.mapping.ShardingStrategy;
 
 import java.util.Date;
 
@@ -34,8 +34,8 @@ import java.util.Date;
  * @author James Chen
  */
 @Data
-@Document
-@Sharded(shardingStrategy = ShardingStrategy.HASH, immutableKey = true)
+@Document(Group.COLLECTION_NAME)
+@Sharded(immutableKey = true)
 public final class Group {
 
     public static final String COLLECTION_NAME = "group";
@@ -56,7 +56,7 @@ public final class Group {
      */
     @Field(Fields.OWNER_ID)
     @OptionalIndexedForExtendedFeature
-    @Indexed
+    @HashIndexed
     private final Long ownerId;
 
     @Field(Fields.NAME)

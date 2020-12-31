@@ -28,7 +28,6 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Sharded;
-import org.springframework.data.mongodb.core.mapping.ShardingStrategy;
 
 import java.util.Date;
 
@@ -44,7 +43,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @Builder(toBuilder = true)
-@Document
+@Document(UserFriendRequest.COLLECTION_NAME)
 @CompoundIndex(
         name = UserFriendRequest.Fields.RECIPIENT_ID + "_"
                 + UserFriendRequest.Fields.CREATION_DATE + "_"
@@ -54,7 +53,7 @@ import java.util.Date;
                 "'" + UserFriendRequest.Fields.CREATION_DATE + "': 1," +
                 "'" + UserFriendRequest.Fields.REQUESTER_ID + "': 1" +
                 "}")
-@Sharded(shardKey = UserFriendRequest.Fields.RECIPIENT_ID, shardingStrategy = ShardingStrategy.HASH, immutableKey = true)
+@Sharded(shardKey = UserFriendRequest.Fields.RECIPIENT_ID, immutableKey = true)
 public final class UserFriendRequest {
 
     public static final String COLLECTION_NAME = "userFriendRequest";

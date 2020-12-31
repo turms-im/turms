@@ -24,7 +24,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
-import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.index.HashIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Sharded;
@@ -40,7 +40,7 @@ import java.util.List;
  */
 @Data
 @AllArgsConstructor(onConstructor = @__(@PersistenceConstructor))
-@Document
+@Document(GroupMember.COLLECTION_NAME)
 @Sharded(shardKey = GroupMember.Fields.ID_GROUP_ID, shardingStrategy = ShardingStrategy.HASH, immutableKey = true)
 public final class GroupMember {
 
@@ -83,7 +83,7 @@ public final class GroupMember {
     public static final class Key {
 
         @Field(Fields.GROUP_ID)
-        @Indexed
+        @HashIndexed
         private Long groupId;
 
         @Field(Fields.USER_ID)

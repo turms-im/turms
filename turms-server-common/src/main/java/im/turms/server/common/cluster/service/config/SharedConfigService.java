@@ -63,7 +63,7 @@ public class SharedConfigService implements ClusterService {
 
     public SharedConfigService(String url) {
         mongoTemplate = getMongoTemplate(url);
-        MongoUtil.createIndexes(mongoTemplate, Set.of(SharedClusterProperties.class,
+        MongoUtil.createIndexesAndShard(mongoTemplate, null, Set.of(SharedClusterProperties.class,
                 Leader.class,
                 Member.class));
     }

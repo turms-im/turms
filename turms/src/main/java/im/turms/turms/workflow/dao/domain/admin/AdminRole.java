@@ -40,7 +40,7 @@ import java.util.Set;
  * @author James Chen
  */
 @Data
-@Document
+@Document(AdminRole.COLLECTION_NAME)
 public final class AdminRole {
 
     public static final String COLLECTION_NAME = "adminRole";

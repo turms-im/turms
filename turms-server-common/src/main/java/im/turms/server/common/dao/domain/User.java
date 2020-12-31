@@ -24,7 +24,6 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Sharded;
-import org.springframework.data.mongodb.core.mapping.ShardingStrategy;
 
 import java.util.Date;
 
@@ -32,8 +31,8 @@ import java.util.Date;
  * @author James Chen
  */
 @Data
-@Document
-@Sharded(shardingStrategy = ShardingStrategy.HASH, immutableKey = true)
+@Document(User.COLLECTION_NAME)
+@Sharded(immutableKey = true)
 public final class User {
 
     public static final String COLLECTION_NAME = "user";

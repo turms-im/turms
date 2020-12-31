@@ -19,9 +19,9 @@ package im.turms.turms.workflow.dao.domain.group;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Sharded;
-import org.springframework.data.mongodb.core.mapping.ShardingStrategy;
 
 import java.util.Date;
 
@@ -31,7 +31,8 @@ import java.util.Date;
  * @author James Chen
  */
 @Data
-@Sharded(shardingStrategy = ShardingStrategy.HASH, immutableKey = true)
+@Document(GroupVersion.COLLECTION_NAME)
+@Sharded(immutableKey = true)
 public final class GroupVersion {
 
     public static final String COLLECTION_NAME = "groupVersion";

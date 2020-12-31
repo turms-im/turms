@@ -21,7 +21,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.index.HashIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Sharded;
@@ -34,7 +34,7 @@ import java.util.List;
  * @author James Chen
  */
 @Data
-@Document
+@Document(PrivateConversation.COLLECTION_NAME)
 @Sharded(shardKey = PrivateConversation.Fields.ID_OWNER_ID, shardingStrategy = ShardingStrategy.HASH, immutableKey = true)
 public final class PrivateConversation {
 
@@ -55,7 +55,7 @@ public final class PrivateConversation {
          * The index is used by deleteAllPrivateConversations
          */
         @Field(Fields.OWNER_ID)
-        @Indexed
+        @HashIndexed
         private Long ownerId;
 
         @Field(Fields.TARGET_ID)

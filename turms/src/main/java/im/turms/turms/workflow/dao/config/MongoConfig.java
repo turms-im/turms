@@ -21,6 +21,7 @@ import com.google.common.collect.Maps;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.WriteConcern;
 import com.mongodb.reactivestreams.client.MongoClient;
+import com.mongodb.reactivestreams.client.MongoDatabase;
 import im.turms.server.common.bo.log.UserLocationLog;
 import im.turms.server.common.dao.context.TurmsMongoMappingContext;
 import im.turms.server.common.dao.converter.EnumToIntegerConverter;
@@ -56,6 +57,7 @@ import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.convert.NoOpDbRefResolver;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
+import org.springframework.data.util.Pair;
 
 import java.util.*;
 
@@ -70,7 +72,7 @@ public class MongoConfig {
     private static final int SERVICE_TYPES_NUMBER = 5;
     // hash code of MongoProperties -> ReactiveMongoTemplate
     // because MongoProperties doesn't have a custom hashcode implementation but a native implementation
-    private static final Map<Integer, ReactiveMongoTemplate> TEMPLATE_MAP = Maps.newHashMapWithExpectedSize(SERVICE_TYPES_NUMBER);
+    private static final Map<Integer, Pair<ReactiveMongoTemplate, MongoDatabase>> TEMPLATE_MAP = Maps.newHashMapWithExpectedSize(SERVICE_TYPES_NUMBER);
     private static final int DEFAULT_MONGO_PROPERTIES_HASHCODE = getPropertiesHashCode(new MongoProperties());
     private final TurmsPropertiesManager turmsPropertiesManager;
     private final Map<Class<?>, WriteConcern> writeConcernMap;
@@ -144,8 +146,9 @@ public class MongoConfig {
     public ReactiveMongoTemplate adminMongoTemplate(
             TurmsPropertiesManager turmsPropertiesManager,
             WriteConcernResolver writeConcernResolver) {
-        ReactiveMongoTemplate template = getMongoTemplate(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getAdmin(), writeConcernResolver);
-        MongoUtil.createIndexes(template, Set.of(Admin.class, AdminRole.class));
+        Pair<ReactiveMongoTemplate, MongoDatabase> pair = getMongoTemplateAndAdmin(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getAdmin(), writeConcernResolver);
+        ReactiveMongoTemplate template = pair.getFirst();
+        MongoUtil.createIndexesAndShard(template, pair.getSecond(), Set.of(Admin.class, AdminRole.class));
         return template;
     }
 
@@ -153,8 +156,9 @@ public class MongoConfig {
     public ReactiveMongoTemplate userMongoTemplate(
             TurmsPropertiesManager turmsPropertiesManager,
             WriteConcernResolver writeConcernResolver) {
-        ReactiveMongoTemplate template = getMongoTemplate(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getUser(), writeConcernResolver);
-        MongoUtil.createIndexes(template, Set.of(User.class,
+        Pair<ReactiveMongoTemplate, MongoDatabase> pair = getMongoTemplateAndAdmin(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getUser(), writeConcernResolver);
+        ReactiveMongoTemplate template = pair.getFirst();
+        MongoUtil.createIndexesAndShard(template, pair.getSecond(), Set.of(User.class,
                 UserFriendRequest.class,
                 UserLocationLog.class,
                 UserPermissionGroup.class,
@@ -169,8 +173,9 @@ public class MongoConfig {
     public ReactiveMongoTemplate groupMongoTemplate(
             TurmsPropertiesManager turmsPropertiesManager,
             WriteConcernResolver writeConcernResolver) {
-        ReactiveMongoTemplate template = getMongoTemplate(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getGroup(), writeConcernResolver);
-        MongoUtil.createIndexes(template, Set.of(Group.class,
+        Pair<ReactiveMongoTemplate, MongoDatabase> pair = getMongoTemplateAndAdmin(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getGroup(), writeConcernResolver);
+        ReactiveMongoTemplate template = pair.getFirst();
+        MongoUtil.createIndexesAndShard(template, pair.getSecond(), Set.of(Group.class,
                 GroupBlockedUser.class,
                 GroupInvitation.class,
                 GroupJoinQuestion.class,
@@ -185,8 +190,9 @@ public class MongoConfig {
     public ReactiveMongoTemplate conversationMongoTemplate(
             TurmsPropertiesManager turmsPropertiesManager,
             WriteConcernResolver writeConcernResolver) {
-        ReactiveMongoTemplate template = getMongoTemplate(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getConversation(), writeConcernResolver);
-        MongoUtil.createIndexes(template, Set.of(PrivateConversation.class, GroupConversation.class));
+        Pair<ReactiveMongoTemplate, MongoDatabase> pair = getMongoTemplateAndAdmin(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getConversation(), writeConcernResolver);
+        ReactiveMongoTemplate template = pair.getFirst();
+        MongoUtil.createIndexesAndShard(template, pair.getSecond(), Set.of(PrivateConversation.class, GroupConversation.class));
         return template;
     }
 
@@ -194,8 +200,9 @@ public class MongoConfig {
     public ReactiveMongoTemplate messageMongoTemplate(
             TurmsPropertiesManager turmsPropertiesManager,
             WriteConcernResolver writeConcernResolver) {
-        ReactiveMongoTemplate template = getMongoTemplate(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getMessage(), writeConcernResolver);
-        MongoUtil.createIndexes(template, Set.of(Message.class));
+        Pair<ReactiveMongoTemplate, MongoDatabase> pair = getMongoTemplateAndAdmin(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getMessage(), writeConcernResolver);
+        ReactiveMongoTemplate template = pair.getFirst();
+        MongoUtil.createIndexesAndShard(template, pair.getSecond(), Set.of(Message.class));
         return template;
     }
 
@@ -218,7 +225,7 @@ public class MongoConfig {
         return converter;
     }
 
-    private ReactiveMongoTemplate getMongoTemplate(
+    private Pair<ReactiveMongoTemplate, MongoDatabase> getMongoTemplateAndAdmin(
             MongoProperties properties,
             WriteConcernResolver writeConcernResolver) {
         return TEMPLATE_MAP.computeIfAbsent(getPropertiesHashCode(properties), key -> {
@@ -245,7 +252,7 @@ public class MongoConfig {
             mongoTemplate.setWriteConcernResolver(writeConcernResolver);
             mongoTemplate.setWriteResultChecking(WriteResultChecking.EXCEPTION);
 
-            return mongoTemplate;
+            return Pair.of(mongoTemplate, mongoClient.getDatabase("admin"));
         });
     }
 

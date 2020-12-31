@@ -31,7 +31,7 @@ import java.util.Set;
  * @author James Chen
  */
 @Data
-@Document
+@Document(UserPermissionGroup.COLLECTION_NAME)
 public final class UserPermissionGroup {
 
     public static final String COLLECTION_NAME = "userPermissionGroup";

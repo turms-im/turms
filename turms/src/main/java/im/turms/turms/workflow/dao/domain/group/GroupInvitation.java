@@ -25,11 +25,11 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.HashIndexed;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Sharded;
-import org.springframework.data.mongodb.core.mapping.ShardingStrategy;
 
 import java.util.Date;
 
@@ -40,11 +40,11 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @Builder(toBuilder = true)
-@Document
+@Document(GroupInvitation.COLLECTION_NAME)
 @CompoundIndex(
         name = GroupInvitation.Fields.INVITEE_ID + "_" + GroupInvitation.Fields.CREATION_DATE,
         def = "{'" + GroupInvitation.Fields.INVITEE_ID + "': 1, '" + GroupInvitation.Fields.CREATION_DATE + "': 1}")
-@Sharded(shardKey = GroupInvitation.Fields.INVITEE_ID, shardingStrategy = ShardingStrategy.HASH, immutableKey = true)
+@Sharded(shardKey = GroupInvitation.Fields.INVITEE_ID, immutableKey = true)
 public final class GroupInvitation {
 
     public static final String COLLECTION_NAME = "groupInvitation";
@@ -57,7 +57,7 @@ public final class GroupInvitation {
      */
     @Field(Fields.GROUP_ID)
     @OptionalIndexedForExtendedFeature
-    @Indexed
+    @HashIndexed
     private final Long groupId;
 
     /**

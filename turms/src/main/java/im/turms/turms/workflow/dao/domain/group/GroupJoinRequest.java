@@ -25,25 +25,27 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.HashIndexed;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Sharded;
-import org.springframework.data.mongodb.core.mapping.ShardingStrategy;
 
 import java.util.Date;
 
 /**
  * @author James Chen
+ * @implNote Don't use the "groupId" and "requesterId" as the key of the document because
+ * a requester can send multiple requests (not matter it's pending, handled or etc) to the same group.
  */
 @Data
 @AllArgsConstructor
 @Builder(toBuilder = true)
-@Document
+@Document(GroupJoinRequest.COLLECTION_NAME)
 @CompoundIndex(
         name = GroupJoinRequest.Fields.REQUESTER_ID + "_" + GroupJoinRequest.Fields.CREATION_DATE,
         def = "{'" + GroupJoinRequest.Fields.REQUESTER_ID + "': 1, '" + GroupJoinRequest.Fields.CREATION_DATE + "': 1}")
-@Sharded(shardKey = GroupJoinRequest.Fields.REQUESTER_ID, shardingStrategy = ShardingStrategy.HASH, immutableKey = true)
+@Sharded(shardKey = GroupJoinRequest.Fields.REQUESTER_ID, immutableKey = true)
 public final class GroupJoinRequest {
 
     public static final String COLLECTION_NAME = "groupJoinRequest";
@@ -75,7 +77,7 @@ public final class GroupJoinRequest {
      */
     @Field(Fields.GROUP_ID)
     @OptionalIndexedForExtendedFeature
-    @Indexed
+    @HashIndexed
     private final Long groupId;
 
     @Field(Fields.REQUESTER_ID)

@@ -34,7 +34,7 @@ import java.util.List;
  * @author James Chen
  */
 @Data
-@Document
+@Document(Message.COLLECTION_NAME)
 @CompoundIndex(
         name = Message.Fields.TARGET_ID + "_" + Message.Fields.DELIVERY_DATE,
         def = "{'" + Message.Fields.TARGET_ID + "': 1, '" + Message.Fields.DELIVERY_DATE + "': 1}")

@@ -22,7 +22,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
-import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.index.HashIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Sharded;
@@ -37,7 +37,7 @@ import java.util.List;
  */
 @Data
 @AllArgsConstructor(onConstructor = @__(@PersistenceConstructor))
-@Document
+@Document(UserRelationshipGroup.COLLECTION_NAME)
 @Sharded(shardKey = UserRelationshipGroup.Fields.ID_OWNER_ID, shardingStrategy = ShardingStrategy.HASH, immutableKey = true)
 public final class UserRelationshipGroup {
 
@@ -72,7 +72,7 @@ public final class UserRelationshipGroup {
     public static final class Key {
 
         @Field(Fields.OWNER_ID)
-        @Indexed
+        @HashIndexed
         private Long ownerId;
 
         /**

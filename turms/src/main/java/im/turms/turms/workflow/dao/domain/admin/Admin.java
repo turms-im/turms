@@ -33,7 +33,7 @@ import java.util.Date;
  */
 @Data
 @AllArgsConstructor
-@Document
+@Document(Admin.COLLECTION_NAME)
 @Builder(toBuilder = true)
 public final class Admin {
 

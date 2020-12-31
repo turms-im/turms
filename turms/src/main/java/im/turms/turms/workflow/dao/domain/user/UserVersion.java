@@ -19,9 +19,9 @@ package im.turms.turms.workflow.dao.domain.user;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Sharded;
-import org.springframework.data.mongodb.core.mapping.ShardingStrategy;
 
 import java.util.Date;
 
@@ -29,9 +29,11 @@ import java.util.Date;
  * Use the hash-based sharding because the userId increases monotonically.
  *
  * @author James Chen
+ * @implNote Use range index instead of the hashed index to avoid create two indexes on the key
  */
 @Data
-@Sharded(shardingStrategy = ShardingStrategy.HASH, immutableKey = true)
+@Document(UserVersion.COLLECTION_NAME)
+@Sharded(immutableKey = true)
 public final class UserVersion {
 
     public static final String COLLECTION_NAME = "userVersion";

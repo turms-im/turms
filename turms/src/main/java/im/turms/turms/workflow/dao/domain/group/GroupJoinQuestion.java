@@ -19,7 +19,7 @@ package im.turms.turms.workflow.dao.domain.group;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.index.HashIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Sharded;
@@ -31,7 +31,7 @@ import java.util.Set;
  * @author James Chen
  */
 @Data
-@Document
+@Document(GroupJoinQuestion.COLLECTION_NAME)
 @Sharded(shardKey = GroupJoinQuestion.Fields.GROUP_ID, shardingStrategy = ShardingStrategy.HASH, immutableKey = true)
 public final class GroupJoinQuestion {
 
@@ -41,7 +41,7 @@ public final class GroupJoinQuestion {
     private final Long id;
 
     @Field(Fields.GROUP_ID)
-    @Indexed
+    @HashIndexed
     private final Long groupId;
 
     @Field(Fields.QUESTION)

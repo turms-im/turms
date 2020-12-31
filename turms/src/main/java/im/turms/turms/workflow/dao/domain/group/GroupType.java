@@ -39,7 +39,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * @author James Chen
  */
 @Data
-@Document
+@Document(GroupType.COLLECTION_NAME)
 public final class GroupType {
 
     public static final String COLLECTION_NAME = "groupType";

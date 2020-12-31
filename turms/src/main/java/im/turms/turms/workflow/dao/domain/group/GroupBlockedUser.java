@@ -27,7 +27,6 @@ import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.Sharded;
-import org.springframework.data.mongodb.core.mapping.ShardingStrategy;
 
 import java.util.Date;
 import java.util.List;
@@ -37,11 +36,11 @@ import java.util.List;
  */
 @Data
 @AllArgsConstructor(onConstructor = @__(@PersistenceConstructor))
-@Document
+@Document(GroupBlockedUser.COLLECTION_NAME)
 @CompoundIndex(
         name = GroupBlockedUser.Key.Fields.GROUP_ID + "_" + GroupBlockedUser.Key.Fields.USER_ID,
         def = "{'" + GroupBlockedUser.Fields.ID_GROUP_ID + "': 1, '" + GroupBlockedUser.Fields.ID_USER_ID + "': 1}")
-@Sharded(shardKey = GroupBlockedUser.Fields.ID_GROUP_ID, shardingStrategy = ShardingStrategy.HASH, immutableKey = true)
+@Sharded(shardKey = GroupBlockedUser.Fields.ID_GROUP_ID, immutableKey = true)
 public final class GroupBlockedUser {
 
     public static final String COLLECTION_NAME = "groupBlockedUser";
