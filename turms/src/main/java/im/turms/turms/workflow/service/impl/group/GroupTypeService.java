@@ -162,7 +162,7 @@ public class GroupTypeService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Long id = node.nextId(ServiceType.GROUP_TYPE);
+        Long id = node.nextRandomId(ServiceType.GROUP_TYPE);
         GroupType groupType = new GroupType(
                 id,
                 name,

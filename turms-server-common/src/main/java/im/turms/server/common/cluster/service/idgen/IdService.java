@@ -54,8 +54,12 @@ public class IdService implements ClusterService {
     /**
      * Note: It's unnecessary to check if the ID is 0L because it should never happen due to its mechanism
      */
-    public long nextId(ServiceType serviceType) {
-        return idGenerators[serviceType.ordinal()].nextId();
+    public long nextIncreasingId(ServiceType serviceType) {
+        return idGenerators[serviceType.ordinal()].nextIncreasingId();
+    }
+
+    public long nextRandomId(ServiceType serviceType) {
+        return idGenerators[serviceType.ordinal()].nextRandomId();
     }
 
 }

@@ -149,7 +149,7 @@ public class GroupJoinRequestService {
                     int hours = node.getSharedProperties().getService().getGroup()
                             .getGroupJoinRequestTimeToLiveHours();
                     Date expirationDate = Date.from(Instant.now().plus(hours, ChronoUnit.HOURS));
-                    long id = node.nextId(ServiceType.GROUP_JOIN_REQUEST);
+                    long id = node.nextRandomId(ServiceType.GROUP_JOIN_REQUEST);
                     String finalContent = content != null ? content : "";
                     GroupJoinRequest groupJoinRequest = new GroupJoinRequest(
                             id,
@@ -417,7 +417,7 @@ public class GroupJoinRequestService {
             return Mono.error(e);
         }
         Date now = new Date();
-        id = id != null ? id : node.nextId(ServiceType.GROUP_JOIN_REQUEST);
+        id = id != null ? id : node.nextRandomId(ServiceType.GROUP_JOIN_REQUEST);
         if (content == null) {
             content = "";
         }

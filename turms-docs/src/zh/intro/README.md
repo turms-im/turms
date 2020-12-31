@@ -77,7 +77,7 @@ Turms基于读扩散消息模型进行架构设计，对业务模型感知同时
 
 Turms的架构设计脱胎于标准的大中型商用即时通讯架构。下图为Turms的参考架构图，虚线部分为可选服务，实线部分为必选服务（补充：额外的日志系统与数据分析系统不在v1.0.0计划的体系当中）。Turms的整个架构设计中还有许多创新之处，具体架构细节请查阅该[Turms架构设计](https://turms-im.github.io/docs/for-developers/architecture.html)。
 
-![](reference-architecture.png)
+![](https://raw.githubusercontent.com/turms-im/assets/master/turms/reference-architecture.png)
 
 ### 产品对比
 

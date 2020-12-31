@@ -316,7 +316,7 @@ public class MongoDataGenerator {
         }
         for (int i = targetUserForGroupInvitationStart; i <= targetUserForGroupInvitationEnd; i++) {
             GroupInvitation groupInvitation = new GroupInvitation(
-                    node.nextId(ServiceType.GROUP_INVITATION),
+                    node.nextRandomId(ServiceType.GROUP_INVITATION),
                     1L,
                     1L,
                     (long) i,
@@ -328,7 +328,7 @@ public class MongoDataGenerator {
             groupRelatedObjs.add(groupInvitation);
         }
         GroupJoinQuestion groupJoinQuestion = new GroupJoinQuestion(
-                node.nextId(ServiceType.GROUP_JOIN_QUESTION),
+                node.nextRandomId(ServiceType.GROUP_JOIN_QUESTION),
                 1L,
                 "test-question",
                 Set.of("a", "b", "c"),
@@ -336,7 +336,7 @@ public class MongoDataGenerator {
         groupRelatedObjs.add(groupJoinQuestion);
         for (int i = targetUserForGroupJoinRequestStart; i <= targetUserForGroupJoinRequestEnd; i++) {
             GroupJoinRequest groupJoinRequest = new GroupJoinRequest(
-                    node.nextId(ServiceType.GROUP_JOIN_REQUEST),
+                    node.nextRandomId(ServiceType.GROUP_JOIN_REQUEST),
                     "test-content",
                     RequestStatus.PENDING,
                     now,
@@ -365,7 +365,7 @@ public class MongoDataGenerator {
         long senderId = 1L;
         Set<Long> targetIds = new HashSet<>();
         for (int i = 1; i <= 100; i++) {
-            long id = node.nextId(ServiceType.MESSAGE);
+            long id = node.nextRandomId(ServiceType.MESSAGE);
             long targetId = (long) 2 + (i % 9);
             targetIds.add(targetId);
             Message privateMessage = new Message(
@@ -382,7 +382,7 @@ public class MongoDataGenerator {
                     null,
                     30,
                     null);
-            id = node.nextId(ServiceType.MESSAGE);
+            id = node.nextRandomId(ServiceType.MESSAGE);
             Message groupMessage = new Message(
                     id,
                     true,
@@ -435,7 +435,7 @@ public class MongoDataGenerator {
         }
         for (int i = targetUserToRequestFriendRequestStart; i <= targetUserToRequestFriendRequestEnd; i++) {
             UserFriendRequest userFriendRequest = new UserFriendRequest(
-                    node.nextId(ServiceType.USER_FRIEND_REQUEST),
+                    node.nextRandomId(ServiceType.USER_FRIEND_REQUEST),
                     "test-request",
                     RequestStatus.PENDING,
                     null,

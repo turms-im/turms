@@ -51,6 +51,7 @@ public class SnowflakeIdGenerator {
      */
     private static final long EPOCH = 1602547200000L;
 
+    private static final int TIMESTAMP_BITS = 41;
     private static final int DATA_CENTER_ID_BITS = 3;
     private static final int MEMBER_ID_BITS = 8;
     private static final int SEQUENCE_NUMBER_BITS = 11;
@@ -79,11 +80,19 @@ public class SnowflakeIdGenerator {
     }
 
     public void updateNodeInfo(int dataCenterId, int memberId) {
+        if (dataCenterId >= (1 << DATA_CENTER_ID_BITS)) {
+            String reason = String.format("Illegal dataCenterId %d. The dataCenterId must be in the range [0, %d)", dataCenterId, 1 << DATA_CENTER_ID_BITS);
+            throw new IllegalArgumentException(reason);
+        }
+        if (memberId >= (1 << MEMBER_ID_BITS)) {
+            String reason = String.format("Illegal memberId %d. The memberId must be in the range [0, %d)", memberId, 1 << MEMBER_ID_BITS);
+            throw new IllegalArgumentException(reason);
+        }
         this.dataCenterId = dataCenterId;
         this.memberId = memberId;
     }
 
-    public long nextId() {
+    public long nextIncreasingId() {
         // prepare each part of ID
         long sequenceId = sequenceNumber.incrementAndGet() & SEQUENCE_NUMBER_MASK;
         long timestamp = this.lastTimestamp.updateAndGet(lastTimestamp -> {
@@ -98,10 +107,31 @@ public class SnowflakeIdGenerator {
         }) - EPOCH;
 
         // Get ID
-        return sequenceId
-                | (memberId << MEMBER_ID_SHIFT)
+        return (timestamp << TIMESTAMP_LEFT_SHIFT)
                 | (dataCenterId << DATA_CENTER_ID_SHIFT)
-                | (timestamp << TIMESTAMP_LEFT_SHIFT);
+                | (memberId << MEMBER_ID_SHIFT)
+                | sequenceId;
+    }
+
+    public long nextRandomId() {
+        // prepare each part of ID
+        long sequenceId = sequenceNumber.incrementAndGet() & SEQUENCE_NUMBER_MASK;
+        long timestamp = this.lastTimestamp.updateAndGet(lastTimestamp -> {
+            // Don't let timestamp go backwards at least while this JVM is running.
+            long nonBackwardsTimestamp = Math.max(lastTimestamp, System.currentTimeMillis());
+            if (sequenceId == 0) {
+                // Always force the clock to increment whenever sequence number is 0, in case we have a long
+                // time-slip backwards
+                nonBackwardsTimestamp++;
+            }
+            return nonBackwardsTimestamp;
+        }) - EPOCH;
+
+        // Get ID
+        return (sequenceId << (TIMESTAMP_BITS + DATA_CENTER_ID_BITS + MEMBER_ID_BITS))
+                | (timestamp << (DATA_CENTER_ID_BITS + MEMBER_ID_BITS))
+                | (dataCenterId << MEMBER_ID_BITS)
+                | memberId;
     }
 
 }

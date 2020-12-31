@@ -182,7 +182,7 @@ public class UserService {
             return Mono.error(e);
         }
         Date now = new Date();
-        id = id != null ? id : node.nextId(ServiceType.USER);
+        id = id != null ? id : node.nextRandomId(ServiceType.USER);
         String password = rawPassword != null
                 ? passwordManager.encodeUserPassword(rawPassword)
                 : null;

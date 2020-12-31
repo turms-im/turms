@@ -97,7 +97,7 @@ public class UserRelationshipGroupService {
             return Mono.error(e);
         }
         if (groupIndex == null) {
-            groupIndex = (int) node.nextId(ServiceType.USER_RELATIONSHIP_GROUP);
+            groupIndex = (int) node.nextRandomId(ServiceType.USER_RELATIONSHIP_GROUP);
         }
         if (creationDate == null) {
             creationDate = new Date();

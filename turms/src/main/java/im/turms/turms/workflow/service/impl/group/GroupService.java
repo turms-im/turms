@@ -140,7 +140,7 @@ public class GroupService {
         isActive = isActive != null
                 ? isActive
                 : node.getSharedProperties().getService().getGroup().isActivateGroupWhenCreated();
-        Long groupId = node.nextId(ServiceType.GROUP);
+        Long groupId = node.nextRandomId(ServiceType.GROUP);
         Group group = new Group(groupId, groupTypeId, creatorId, ownerId, groupName, intro,
                 announcement, minimumScore, creationDate, deletionDate, muteEndDate, isActive);
         return mongoTemplate

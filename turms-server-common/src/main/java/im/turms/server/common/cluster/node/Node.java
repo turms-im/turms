@@ -185,8 +185,12 @@ public class Node {
         return discoveryService.getLocalNodeStatusManager().getLocalMember().isActive();
     }
 
-    public long nextId(ServiceType serviceType) {
-        return idService.nextId(serviceType);
+    public long nextIncreasingId(ServiceType serviceType) {
+        return idService.nextIncreasingId(serviceType);
+    }
+
+    public long nextRandomId(ServiceType serviceType) {
+        return idService.nextRandomId(serviceType);
     }
 
     public boolean isLocalNodeMaster() {

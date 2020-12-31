@@ -326,7 +326,7 @@ public class MessageService {
             deliveryDate = new Date();
         }
         if (messageId == null) {
-            messageId = node.nextId(ServiceType.MESSAGE);
+            messageId = node.nextRandomId(ServiceType.MESSAGE);
         }
         if (!node.getSharedProperties().getService().getMessage().isRecordsPersistent()) {
             records = null;
@@ -761,7 +761,7 @@ public class MessageService {
             @NotNull Long targetId) {
         return queryMessage(referenceId)
                 .flatMap(message -> authAndSaveMessage(
-                        node.nextId(ServiceType.MESSAGE),
+                        node.nextRandomId(ServiceType.MESSAGE),
                         requesterId,
                         targetId,
                         isGroupMessage,
