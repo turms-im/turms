@@ -25,6 +25,7 @@ import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -99,13 +100,15 @@ public class LocalNodeStatusManager {
                 });
     }
 
-    public Mono<Leader> tryBecomeLeader() {
-        if (localMember.getNodeType() == NodeType.SERVICE) {
+    public Mono<Void> tryBecomeLeader() {
+        if (localMember.getNodeType() == NodeType.SERVICE && localMember.isLeaderEligible()) {
             String clusterId = localMember.getClusterId();
             Leader localLeader = new Leader(clusterId, localMember.getNodeId(), new Date());
-            return sharedConfigService.insertOrGet(localLeader);
+            return sharedConfigService.insert(localLeader)
+                    .then()
+                    .onErrorResume(DuplicateKeyException.class, t -> Mono.empty());
         } else {
-            return sharedConfigService.findOne(Leader.class);
+            return Mono.empty();
         }
     }
 
@@ -157,12 +160,23 @@ public class LocalNodeStatusManager {
     }
 
     public void updateInfo(Member member) {
+        boolean isLeaderEligible = member.isLeaderEligible();
+        boolean wasLeaderEligible = localMember.isLeaderEligible();
+        boolean isLeaderEligibleChanged = isLeaderEligible != wasLeaderEligible;
         this.localMember.updateIfNotNull(
                 member.isSeed(),
+                member.isLeaderEligible(),
                 member.isActive(),
                 member.getLastHeartbeatDate(),
                 member.getMemberHost(),
                 member.getServiceAddress());
+        if (isLeaderEligibleChanged) {
+            if (isLeaderEligible) {
+                tryBecomeLeader().subscribe();
+            } else {
+                unregisterLocalMemberLeadership().subscribe();
+            }
+        }
     }
 
     private Mono<Void> updateLocalLeaderHeartbeat(Date lastHeartbeatDate) {

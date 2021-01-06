@@ -140,6 +140,7 @@ public class Node {
                 nodeType,
                 nodeVersion,
                 nodeProperties.isActiveByDefault(),
+                nodeProperties.isLeaderEligible(),
                 address.getHostString(),
                 address.getPort(),
                 clusterProperties.getRpc().getOutputThreadNumber(),

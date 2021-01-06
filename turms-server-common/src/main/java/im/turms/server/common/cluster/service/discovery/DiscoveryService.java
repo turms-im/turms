@@ -110,6 +110,7 @@ public class DiscoveryService implements ClusterService {
             String nodeId,
             NodeType nodeType,
             NodeVersion nodeVersion,
+            boolean isLeaderEligible,
             boolean isActive,
             String memberAddress,
             int memberPort,
@@ -123,6 +124,7 @@ public class DiscoveryService implements ClusterService {
                 nodeType,
                 nodeVersion,
                 false,
+                isLeaderEligible,
                 now,
                 (int) now.getTime(),
                 memberAddress,
@@ -231,6 +233,7 @@ public class DiscoveryService implements ClusterService {
                                 Member memberToUpdate = allKnownMembers.get(changedMember.getNodeId());
                                 memberToUpdate.updateIfNotNull(
                                         changedMember.isSeed(),
+                                        changedMember.isLeaderEligible(),
                                         changedMember.isActive(),
                                         changedMember.getLastHeartbeatDate(),
                                         changedMember.getMemberHost(),
@@ -260,7 +263,8 @@ public class DiscoveryService implements ClusterService {
         synchronized (this) {
             String nodeId = member.getNodeId();
             allKnownMembers.put(nodeId, member);
-            if (nodeId.equals(localNodeStatusManager.getLocalMember().getNodeId())) {
+            boolean isLocalNode = nodeId.equals(localNodeStatusManager.getLocalMember().getNodeId());
+            if (isLocalNode) {
                 localNodeStatusManager.updateInfo(member);
             }
             RSocket connection = connectionManager.getMemberConnection(member.getNodeId());
@@ -364,7 +368,10 @@ public class DiscoveryService implements ClusterService {
         return sharedConfigService.remove(query, Member.class).then();
     }
 
-    public Mono<Void> updateMemberInfo(@NotNull String id, @Nullable Boolean isSeed, @Nullable Boolean isActive) {
+    public Mono<Void> updateMemberInfo(@NotNull String id,
+                                       @Nullable Boolean isSeed,
+                                       @Nullable Boolean isLeaderEligible,
+                                       @Nullable Boolean isActive) {
         Member member = allKnownMembers.get(id);
         if (member == null) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NO_CONTENT));
@@ -375,6 +382,9 @@ public class DiscoveryService implements ClusterService {
         Update update = new Update();
         if (isSeed != null) {
             update.set(Member.Fields.isSeed, isSeed);
+        }
+        if (isLeaderEligible != null) {
+            update.set(Member.Fields.isLeaderEligible, isLeaderEligible);
         }
         if (isActive != null) {
             update.set(Member.Fields.isActive, isActive);

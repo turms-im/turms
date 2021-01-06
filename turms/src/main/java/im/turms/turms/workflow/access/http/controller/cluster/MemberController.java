@@ -72,6 +72,7 @@ public class MemberController {
                 addMemberDTO.getNodeType(),
                 NodeVersion.parse(addMemberDTO.getVersion()),
                 addMemberDTO.isSeed(),
+                addMemberDTO.isLeaderEligible(),
                 addMemberDTO.getRegistrationDate(),
                 addMemberDTO.getPriority(),
                 addMemberDTO.getMemberHost(),
@@ -92,6 +93,7 @@ public class MemberController {
         Mono<Void> addMemberMono = node.getDiscoveryService().updateMemberInfo(
                 id,
                 updateMemberDTO.getIsSeed(),
+                updateMemberDTO.getIsLeaderEligible(),
                 updateMemberDTO.getIsActive());
         return addMemberMono.thenReturn(ResponseFactory.OK);
     }

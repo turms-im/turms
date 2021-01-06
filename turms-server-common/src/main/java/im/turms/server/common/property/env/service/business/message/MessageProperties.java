@@ -61,12 +61,6 @@ public class MessageProperties {
     private boolean recordsPersistent = false;
 
     @JsonView(MutablePropertiesView.class)
-    @Description("Whether to persist the status of messages.\n" +
-            "If false, users will not receive the messages sent to them when they were offline.\n" +
-            "NOTE: This is a major factor that affects performance")
-    private boolean messageStatusPersistent = true;
-
-    @JsonView(MutablePropertiesView.class)
     @Description("A message will become expired after the TTL has elapsed. Cannot be infinite for performance reason")
     @Min(1)
     private int messageTimeToLiveHours = 30 * 24;

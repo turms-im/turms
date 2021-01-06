@@ -26,6 +26,7 @@ import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.access.http.util.PageUtil;
 import im.turms.turms.workflow.dao.domain.admin.Admin;
 import im.turms.turms.workflow.service.impl.admin.AdminService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -59,7 +60,7 @@ public class AdminController {
     public Mono<Void> checkAccountAndPassword(
             @RequestHeader String account,
             @RequestHeader String password) {
-        if (account.isBlank() || password.isBlank()) {
+        if (StringUtils.isBlank(account) || StringUtils.isBlank(password)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         return adminService.authenticate(account, password)

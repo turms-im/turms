@@ -31,6 +31,7 @@ public class AddMemberDTO {
     private final NodeType nodeType;
     private final String version;
     private final boolean isSeed;
+    private final boolean isLeaderEligible;
     private final Date registrationDate;
     private final int priority;
     private final String memberHost;

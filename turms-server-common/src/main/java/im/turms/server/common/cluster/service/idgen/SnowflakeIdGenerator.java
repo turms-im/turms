@@ -95,9 +95,9 @@ public class SnowflakeIdGenerator {
     public long nextIncreasingId() {
         // prepare each part of ID
         long sequenceId = sequenceNumber.incrementAndGet() & SEQUENCE_NUMBER_MASK;
-        long timestamp = this.lastTimestamp.updateAndGet(now -> {
+        long timestamp = this.lastTimestamp.updateAndGet(lastTs -> {
             // Don't let timestamp go backwards at least while this JVM is running.
-            long nonBackwardsTimestamp = Math.max(now, System.currentTimeMillis());
+            long nonBackwardsTimestamp = Math.max(lastTs, System.currentTimeMillis());
             if (sequenceId == 0) {
                 // Always force the clock to increment whenever sequence number is 0, in case we have a long
                 // time-slip backwards

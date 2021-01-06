@@ -56,6 +56,8 @@ public final class Member {
      */
     private boolean isSeed;
 
+    private boolean isLeaderEligible;
+
     private final Date registrationDate;
 
     private final int priority;
@@ -87,6 +89,7 @@ public final class Member {
             NodeType nodeType,
             NodeVersion nodeVersion,
             boolean isSeed,
+            boolean isLeaderEligible,
             Date registrationDate,
             int priority,
             Date lastHeartbeatDate,
@@ -99,6 +102,7 @@ public final class Member {
         this.nodeType = nodeType;
         this.nodeVersion = nodeVersion;
         this.isSeed = isSeed;
+        this.isLeaderEligible = isLeaderEligible;
         this.registrationDate = registrationDate;
         this.priority = priority;
         this.lastHeartbeatDate = lastHeartbeatDate;
@@ -115,6 +119,7 @@ public final class Member {
             NodeType nodeType,
             NodeVersion nodeVersion,
             boolean isSeed,
+            boolean isLeaderEligible,
             Date registrationDate,
             int priority,
             String memberHost,
@@ -126,6 +131,7 @@ public final class Member {
                 nodeType,
                 nodeVersion,
                 isSeed,
+                isLeaderEligible,
                 registrationDate,
                 priority,
                 registrationDate,
@@ -138,12 +144,16 @@ public final class Member {
 
     public void updateIfNotNull(
             Boolean isSeed,
+            Boolean isLeaderEligible,
             Boolean isActive,
             Date lastHeartbeatDate,
             String memberHost,
             String serviceAddress) {
         if (isSeed != null) {
             this.isSeed = isSeed;
+        }
+        if (isLeaderEligible != null) {
+            this.isLeaderEligible = isLeaderEligible;
         }
         if (isActive != null) {
             this.isActive = isActive;

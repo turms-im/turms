@@ -37,6 +37,9 @@ public class NodeProperties {
 
     private boolean activeByDefault = true;
 
+    @Description("Only works when it's a service node")
+    private boolean isLeaderEligible = true;
+
     @Data
     public static class NetworkProperties {
         private String host = "127.0.0.1";
