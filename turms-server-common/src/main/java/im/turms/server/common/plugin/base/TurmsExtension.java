@@ -17,31 +17,17 @@
 
 package im.turms.server.common.plugin.base;
 
+import lombok.Data;
 import org.pf4j.ExtensionPoint;
 import org.springframework.context.ApplicationContext;
 
 /**
  * @author James Chen
  */
+@Data
 public abstract class TurmsExtension implements ExtensionPoint {
 
     private ApplicationContext context;
     private boolean isServing;
-
-    public ApplicationContext getContext() {
-        return context;
-    }
-
-    public void setContext(ApplicationContext context) throws Exception {
-        this.context = context;
-    }
-
-    public boolean isServing() {
-        return isServing;
-    }
-
-    public void setServing(boolean serving) {
-        isServing = serving;
-    }
 
 }

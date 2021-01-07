@@ -77,7 +77,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
         private GroupMemberService groupMemberService;
 
         @Override
-        public void setContext(ApplicationContext context) throws Exception {
+        public void setContext(ApplicationContext context) {
             super.setContext(context);
             setUp();
         }

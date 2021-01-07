@@ -26,7 +26,7 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.constraint.ValidDeviceType;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.log4j.UserActivityLogging;
-import im.turms.server.common.plugin.base.ITurmsPluginManager;
+import im.turms.server.common.plugin.base.AbstractTurmsPluginManager;
 import im.turms.server.common.plugin.extension.UserLocationLogHandler;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.LocationProperties;
@@ -60,7 +60,7 @@ import java.util.stream.Collectors;
 public class SessionLocationService {
 
     private final Node node;
-    private final ITurmsPluginManager turmsPluginManager;
+    private final AbstractTurmsPluginManager turmsPluginManager;
     @Getter
     private final boolean locationEnabled;
     @Getter
@@ -71,7 +71,7 @@ public class SessionLocationService {
 
     public SessionLocationService(
             Node node,
-            ITurmsPluginManager turmsPluginManager,
+            AbstractTurmsPluginManager turmsPluginManager,
             TurmsPropertiesManager turmsPropertiesManager,
             ShardingAlgorithm shardingAlgorithmForLocation,
             @Qualifier("locationRedisTemplates") List<ReactiveRedisTemplate<String, UserSessionId>> locationRedisTemplates) {

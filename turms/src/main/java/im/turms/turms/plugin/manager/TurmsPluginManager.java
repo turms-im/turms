@@ -17,37 +17,27 @@
 
 package im.turms.turms.plugin.manager;
 
-import im.turms.server.common.plugin.base.ITurmsPluginManager;
-import im.turms.server.common.plugin.base.TurmsExtension;
+import im.turms.server.common.plugin.base.AbstractTurmsPluginManager;
 import im.turms.server.common.plugin.extension.UserLocationLogHandler;
-import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.turms.plugin.extension.handler.AdminActionHandler;
 import im.turms.turms.plugin.extension.handler.ClientRequestHandler;
 import im.turms.turms.plugin.extension.handler.ExpiredMessageAutoDeletionNotificationHandler;
 import im.turms.turms.plugin.extension.service.StorageServiceProvider;
-import lombok.Data;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import org.pf4j.DefaultPluginManager;
-import org.pf4j.PluginManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PreDestroy;
-import java.nio.file.Path;
 import java.util.List;
 
 /**
  * @author James Chen
  */
 @Component
-@Data
+@Getter
 @Log4j2
-public class TurmsPluginManager implements ITurmsPluginManager {
-
-    private final ApplicationContext context;
-    private final TurmsProperties turmsProperties;
-    private PluginManager pluginManager;
+public class TurmsPluginManager extends AbstractTurmsPluginManager {
 
     private List<AdminActionHandler> adminActionHandlerList;
     private List<UserLocationLogHandler> userLocationLogHandlerList;
@@ -55,58 +45,17 @@ public class TurmsPluginManager implements ITurmsPluginManager {
     private List<ExpiredMessageAutoDeletionNotificationHandler> expiredMessageAutoDeletionNotificationHandlerList;
     private StorageServiceProvider storageServiceProvider;
 
-    private final boolean enabled;
-
-    public TurmsPluginManager(ApplicationContext context, TurmsPropertiesManager turmsPropertiesManager) throws Exception {
-        this.context = context;
-        turmsProperties = turmsPropertiesManager.getLocalProperties();
-        enabled = turmsProperties.getPlugin().isEnabled();
-        if (enabled) {
-            initPlugins();
-        }
+    public TurmsPluginManager(ApplicationContext context, TurmsPropertiesManager turmsPropertiesManager) {
+        super(context, turmsPropertiesManager.getLocalProperties());
     }
 
-    public void initPlugins() throws Exception {
-        Path dir = Path.of(turmsProperties.getPlugin().getDir());
-        pluginManager = new DefaultPluginManager(dir);
-        pluginManager.loadPlugins();
-        pluginManager.startPlugins();
-
-        // According to the method org.pf4j.AbstractPluginManager.getExtensions(java.util.List<org.pf4j.ExtensionWrapper<T>>)
-        // getExtensions never return null
-        adminActionHandlerList = pluginManager.getExtensions(AdminActionHandler.class);
-        userLocationLogHandlerList = pluginManager.getExtensions(UserLocationLogHandler.class);
-        clientRequestHandlerList = pluginManager.getExtensions(ClientRequestHandler.class);
-        expiredMessageAutoDeletionNotificationHandlerList = pluginManager.getExtensions(ExpiredMessageAutoDeletionNotificationHandler.class);
-        List<StorageServiceProvider> storageServiceProviders = pluginManager.getExtensions(StorageServiceProvider.class);
-        if (!storageServiceProviders.isEmpty()) {
-            this.storageServiceProvider = storageServiceProviders.get(0);
-            initExtension(storageServiceProvider);
-        }
-        initExtensions(clientRequestHandlerList);
-        initExtensions(expiredMessageAutoDeletionNotificationHandlerList);
-    }
-
-    @PreDestroy
-    public void destroy() {
-        pluginManager.stopPlugins();
-    }
-
-    private void initExtension(TurmsExtension extension) throws Exception {
-        try {
-            extension.setContext(context);
-        } catch (Exception e) {
-            log.error("Extension {} failed to init", extension.getClass().getName(), e);
-            if (turmsProperties.getPlugin().isExitIfExceptionOccursAtStartup()) {
-                throw e;
-            }
-        }
-    }
-
-    private void initExtensions(List<? extends TurmsExtension> extensions) throws Exception {
-        for (TurmsExtension extension : extensions) {
-            initExtension(extension);
-        }
+    @Override
+    protected void initPlugins() {
+        adminActionHandlerList = getAndInitExtensions(AdminActionHandler.class);
+        userLocationLogHandlerList = getAndInitExtensions(UserLocationLogHandler.class);
+        clientRequestHandlerList = getAndInitExtensions(ClientRequestHandler.class);
+        expiredMessageAutoDeletionNotificationHandlerList = getAndInitExtensions(ExpiredMessageAutoDeletionNotificationHandler.class);
+        storageServiceProvider = getAndInitExtension(StorageServiceProvider.class);
     }
 
 }

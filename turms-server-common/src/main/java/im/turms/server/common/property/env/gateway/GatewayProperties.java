@@ -51,10 +51,6 @@ public class GatewayProperties {
 
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
-    private PluginProperties plugin = new PluginProperties();
-
-    @JsonView(MutablePropertiesView.class)
-    @NestedConfigurationProperty
     private SimultaneousLoginProperties simultaneousLogin = new SimultaneousLoginProperties();
 
     @JsonView(MutablePropertiesView.class)
