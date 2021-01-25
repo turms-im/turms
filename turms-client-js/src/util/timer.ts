@@ -1,5 +1,5 @@
 export default class Timer {
-    private _timerId?: number;
+    private _timerId?: number | NodeJS.Timeout;
     private _interval?: number;
     private _callback: (...args: any[]) => void;
     private _lightMode: boolean;
@@ -26,16 +26,16 @@ export default class Timer {
 
     stop(): Timer {
         if (this._timerId) {
-            clearInterval(this._timerId);
+            clearInterval(this._timerId as any);
         }
         this._isRunning = false;
-        this._timerId = undefined;
+        this._timerId = null;
         return this;
     }
 
     start(): Timer {
         if (!this._timerId) {
-            this._timerId = window.setInterval(this._callback, this._interval);
+            this._timerId = setInterval(this._callback, this._interval);
         }
         this._isRunning = true;
         return this;
