@@ -3,6 +3,7 @@ import TurmsStatusCode from "./turms-status-code";
 import TurmsNotification = im.turms.proto.TurmsNotification;
 
 export default class TurmsBusinessError extends Error {
+    private readonly _isTurmsBusinessError = true;
     private readonly _code: number;
     private readonly _reason: string;
 
@@ -10,6 +11,10 @@ export default class TurmsBusinessError extends Error {
         super(`${code}:${reason}`);
         this._code = code;
         this._reason = reason;
+    }
+
+    get isTurmsBusinessError(): boolean {
+        return this._isTurmsBusinessError;
     }
 
     get code(): number {
