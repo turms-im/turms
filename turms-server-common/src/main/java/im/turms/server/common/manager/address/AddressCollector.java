@@ -39,6 +39,8 @@ import java.util.concurrent.TimeoutException;
 @Log4j2
 public class AddressCollector {
 
+    private static final Duration IP_DETECTION_TIMEOUT = Duration.ofSeconds(15);
+
     private final AddressGroup addressGroup;
     private final String bindHost;
     private final String advertiseHost;
@@ -57,7 +59,7 @@ public class AddressCollector {
             boolean isSslEnabled,
             boolean attachPortToIp,
             @NotNull AdvertiseStrategy advertiseStrategy,
-            @NotNull PublicIpManager publicIpManager) throws UnknownHostException, InterruptedException, ExecutionException, TimeoutException {
+            @NotNull PublicIpManager publicIpManager) throws UnknownHostException {
         this.bindHost = bindHost;
         this.advertiseHost = advertiseHost;
         this.port = port;
@@ -72,7 +74,7 @@ public class AddressCollector {
         return String.format("%s:%d", ip, port);
     }
 
-    private String queryHost() throws UnknownHostException, InterruptedException, ExecutionException, TimeoutException {
+    private String queryHost() throws UnknownHostException {
         String host;
         switch (advertiseStrategy) {
             case ADVERTISE_ADDRESS:
@@ -85,7 +87,7 @@ public class AddressCollector {
                 host = InetAddress.getLocalHost().getHostAddress();
                 break;
             case PUBLIC_ADDRESS:
-                host = publicIpManager.getPublicIp();
+                host = publicIpManager.getPublicIp().block(IP_DETECTION_TIMEOUT);
                 break;
             default:
                 throw new IllegalArgumentException("Unexpected value: " + advertiseStrategy.name());
@@ -98,7 +100,7 @@ public class AddressCollector {
         }
     }
 
-    private AddressGroup queryAddressGroup() throws UnknownHostException, InterruptedException, ExecutionException, TimeoutException {
+    private AddressGroup queryAddressGroup() throws UnknownHostException {
         String host = queryHost();
         if (host != null) {
             String httpProtocol = isSslEnabled ? "https" : "http";
