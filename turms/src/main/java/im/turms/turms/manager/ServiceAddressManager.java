@@ -34,8 +34,6 @@ import org.springframework.stereotype.Component;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
 import java.util.function.Consumer;
 
 /**
@@ -59,10 +57,10 @@ public class ServiceAddressManager implements IServiceAddressManager {
     public ServiceAddressManager(
             TurmsPropertiesManager turmsPropertiesManager,
             ServerProperties serverProperties,
-            PublicIpManager publicIpManager) throws UnknownHostException, InterruptedException, ExecutionException, TimeoutException {
+            PublicIpManager publicIpManager) throws UnknownHostException {
         discoveryProperties = turmsPropertiesManager.getLocalProperties().getService().getDiscovery();
         port = serverProperties.getPort();
-        if (port == null || port == 0) {
+        if (port == null || port <= 0) {
             throw new UnknownHostException("Invalid service port");
         }
         bindHost = serverProperties.getAddress().getHostAddress();
@@ -92,7 +90,7 @@ public class ServiceAddressManager implements IServiceAddressManager {
         onAddressChangeListeners.add(listener);
     }
 
-    private AddressCollector getAddressCollector(TurmsProperties turmsProperties) throws InterruptedException, ExecutionException, TimeoutException, UnknownHostException {
+    private AddressCollector getAddressCollector(TurmsProperties turmsProperties) throws UnknownHostException {
         DiscoveryProperties discoveryProperties = turmsProperties.getService().getDiscovery();
         AdvertiseStrategy advertiseStrategy = discoveryProperties.getAdvertiseStrategy();
         String advertiseHost = discoveryProperties.getAdvertiseHost();

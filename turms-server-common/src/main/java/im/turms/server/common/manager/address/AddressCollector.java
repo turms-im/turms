@@ -17,7 +17,6 @@
 
 package im.turms.server.common.manager.address;
 
-import com.google.common.net.InetAddresses;
 import im.turms.server.common.manager.PublicIpManager;
 import im.turms.server.common.property.constant.AdvertiseStrategy;
 import lombok.AllArgsConstructor;
@@ -28,10 +27,11 @@ import lombok.extern.log4j.Log4j2;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
+import java.time.Duration;
 
 /**
  * @author James Chen
@@ -70,8 +70,8 @@ public class AddressCollector {
         addressGroup = queryAddressGroup();
     }
 
-    private String attachPortToIp(String ip) {
-        return String.format("%s:%d", ip, port);
+    private String attachPortToHost(String host) {
+        return String.format("%s:%d", host, port);
     }
 
     private String queryHost() throws UnknownHostException {
@@ -84,7 +84,12 @@ public class AddressCollector {
                 host = bindHost;
                 break;
             case LOCAL_ADDRESS:
-                host = InetAddress.getLocalHost().getHostAddress();
+                try (DatagramSocket socket = new DatagramSocket()) {
+                    socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
+                    host = socket.getLocalAddress().getHostAddress();
+                } catch (SocketException e) {
+                    throw new IllegalStateException(e);
+                }
                 break;
             case PUBLIC_ADDRESS:
                 host = publicIpManager.getPublicIp().block(IP_DETECTION_TIMEOUT);
@@ -92,22 +97,18 @@ public class AddressCollector {
             default:
                 throw new IllegalArgumentException("Unexpected value: " + advertiseStrategy.name());
         }
-        if (InetAddresses.isInetAddress(host)) {
-            return host;
-        } else {
-            String message = String.format("The host %s is an illegal host according to strategy %s", host, advertiseStrategy.name());
-            throw new UnknownHostException(message);
-        }
+        return host;
     }
 
     private AddressGroup queryAddressGroup() throws UnknownHostException {
         String host = queryHost();
         if (host != null) {
+            String address = attachPortToIp ? attachPortToHost(host) : host;
             String httpProtocol = isSslEnabled ? "https" : "http";
             String wsProtocol = isSslEnabled ? "wss" : "ws";
             return new AddressGroup(
                     host,
-                    attachPortToIp ? attachPortToIp(host) : host,
+                    address,
                     String.format("%s://%s", httpProtocol, host),
                     String.format("%s://%s", wsProtocol, host));
         } else {
