@@ -6,9 +6,6 @@ logging:
           mongodb:
             core:
               ReactiveMongoTemplate: debug
-spring:
-  profiles:
-    include: test-latest
 
 ############################### Turms ###############################
 

@@ -23,7 +23,17 @@ spring:
     mapper:
       propagate-transient-marker: true
   profiles:
-    include: dev
+    active: dev
+    group:
+      dev:
+        - dev
+        - dev-latest
+      test:
+        - test
+        - test-latest
+      prod:
+        - prod
+        - prod-latest
   hazelcast:
     config: classpath:hazelcast.yaml
   boot:

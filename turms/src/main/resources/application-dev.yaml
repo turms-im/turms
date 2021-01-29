@@ -3,9 +3,6 @@ management:
     web:
       exposure:
         include: "*"
-spring:
-  profiles:
-    include: dev-latest
 logging:
   level:
     org:

@@ -44,7 +44,7 @@ server:
     connection-timeout: 10s # To mitigate the Slowloris DoS attack by lowering the timeout for the TCP connection handshake
 spring:
   profiles:
-    include: dev
+    active: dev
   autoconfigure:
     exclude:
       - org.springframework.boot.actuate.autoconfigure.metrics.MetricsEndpointAutoConfiguration
