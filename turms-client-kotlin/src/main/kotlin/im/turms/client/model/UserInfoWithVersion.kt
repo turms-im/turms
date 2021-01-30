@@ -1,0 +1,50 @@
+/*
+ * Copyright (C) 2019 The Turms Project
+ * https://github.com/turms-im/turms
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package im.turms.client.model
+
+import im.turms.common.model.bo.user.UserInfo
+import im.turms.common.model.dto.notification.TurmsNotification
+
+/**
+ * @author James Chen
+ */
+class UserInfoWithVersion {
+    var userInfo: UserInfo? = null
+    var lastUpdatedDate: Long = 0
+
+    companion object {
+        @JvmStatic
+        fun from(notification: TurmsNotification?): UserInfoWithVersion? {
+            if (notification != null && notification.hasData()) {
+                val data = notification.data
+                if (data.hasUsersInfosWithVersion()) {
+                    val usersInfosWithVersion = data.usersInfosWithVersion
+                    val userInfoWithVersion = UserInfoWithVersion()
+                    if (usersInfosWithVersion.userInfosCount > 0) {
+                        userInfoWithVersion.userInfo = usersInfosWithVersion.getUserInfos(0)
+                    }
+                    val lastUpdatedDate = usersInfosWithVersion.lastUpdatedDate
+                    if (lastUpdatedDate != null) {
+                        userInfoWithVersion.lastUpdatedDate = lastUpdatedDate.value
+                    }
+                    return userInfoWithVersion
+                }
+            }
+            return null
+        }
+    }
+}
