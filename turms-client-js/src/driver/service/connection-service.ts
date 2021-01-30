@@ -29,6 +29,7 @@ const COOKIE_PASSWORD = 'pwd';
 const COOKIE_USER_ONLINE_STATUS = 'us';
 const COOKIE_DEVICE_TYPE = 'dt';
 const COOKIE_LOCATION = 'loc';
+import SystemUtil from '../../util/system-util';
 
 export interface ConnectOptions {
     wsUrl?: string,
@@ -72,6 +73,25 @@ export default class ConnectionService {
             this._initialConnectTimeout = ConnectionService.DEFAULT_CONNECT_TIMEOUT;
         } else {
             this._initialConnectTimeout = connectTimeout;
+        }
+        this._storePassword = storePassword;
+        this._resetStates();
+        this._closeConnectionBeforeUnload();
+    }
+
+    /**
+     * Try to close the connection gracefully manually
+     * because there is no guarantee that the browser will do this for us
+     */
+    private _closeConnectionBeforeUnload(): void {
+        if (SystemUtil.isBrowser()) {
+            window.addEventListener('beforeunload', () => {
+                const ws = this._stateStore.websocket;
+                const status = ws?.readyState;
+                if (status === WebSocket.OPEN || status === WebSocket.CONNECTING) {
+                    ws.close(ConnectionService.WS_STATUS_CODE_GOING_AWAY);
+                }
+            });
         }
         this._storePassword = storePassword;
         this._resetStates();
