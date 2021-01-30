@@ -1,12 +1,11 @@
 export default class Timer {
     private _timerId?: number | NodeJS.Timeout;
     private _interval?: number;
-    private _callback: (...args: any[]) => void;
-    private _lightMode: boolean;
+    private readonly _callback: (...args: any[]) => void;
     private _ignoreNextCall: boolean;
     private _isRunning: boolean;
 
-    constructor(callback: (...args: any[]) => void, interval: number, lightMode = true) {
+    constructor(callback: (...args: any[]) => void, interval: number) {
         this._callback = (): void => {
             if (!this._ignoreNextCall) {
                 callback();
@@ -15,7 +14,6 @@ export default class Timer {
             }
         };
         this._interval = interval;
-        this._lightMode = lightMode;
         this._ignoreNextCall = false;
         this._isRunning = false;
     }
@@ -41,13 +39,4 @@ export default class Timer {
         return this;
     }
 
-    reset(interval: number): Timer {
-        if (this._lightMode && this._interval === interval) {
-            this._ignoreNextCall = true;
-            return this;
-        } else {
-            this._interval = interval;
-            return this.stop().start();
-        }
-    }
 }

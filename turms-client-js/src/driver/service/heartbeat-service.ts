@@ -15,67 +15,64 @@
  * limitations under the License.
  */
 
-import Timer from "../../util/timer";
-import TurmsBusinessError from "../../model/turms-business-error";
-import TurmsStatusCode from "../../model/turms-status-code";
-import StateStore from "../state-store";
-import PromiseSeal from "../../model/promise-seal";
+import Timer from '../../util/timer';
+import TurmsBusinessError from '../../model/turms-business-error';
+import TurmsStatusCode from '../../model/turms-status-code';
+import StateStore from '../state-store';
+import PromiseSeal from '../../model/promise-seal';
+import BaseService from './base-service';
 
-export default class HeartbeatService {
+export default class HeartbeatService extends BaseService {
 
     private static readonly DEFAULT_HEARTBEAT_INTERVAL = 120 * 1000;
     private static readonly HEARTBEAT_REQUEST = new Uint8Array(0);
 
-    private _stateStore: StateStore;
-
-    private _heartbeatInterval: number;
-    private _minRequestInterval: number;
+    private readonly _heartbeatInterval: number;
+    private readonly _heartbeatTimerInterval: number;
+    private _lastHeartbeatRequestDate = 0;
     private _heartbeatTimer?: Timer;
     private _heartbeatPromises: PromiseSeal[] = [];
 
-    constructor(stateStore: StateStore, minRequestInterval: number, heartbeatInterval?: number) {
-        this._stateStore = stateStore;
-        this._minRequestInterval = minRequestInterval;
+    constructor(stateStore: StateStore, heartbeatInterval?: number) {
+        super(stateStore);
         this._heartbeatInterval = heartbeatInterval || HeartbeatService.DEFAULT_HEARTBEAT_INTERVAL;
+        this._heartbeatTimerInterval = Math.max(1, this._heartbeatInterval / 10);
+    }
+
+    get isRunning(): boolean {
+        return !!this._heartbeatTimer?.isRunning;
     }
 
     start(): void {
-        if (this._heartbeatTimer && this._heartbeatTimer.isRunning) {
-            this._heartbeatTimer.reset(this._heartbeatInterval);
-        } else {
+        if (!this.isRunning) {
             this._heartbeatTimer = new Timer((): void => {
-                const difference = new Date().getTime() - this._stateStore.lastRequestDate.getTime();
-                if (difference > this._minRequestInterval) {
+                const now = new Date().getTime();
+                const difference = Math.min(
+                    now - this._stateStore.lastRequestDate.getTime(),
+                    now - this._lastHeartbeatRequestDate);
+                if (difference > this._heartbeatInterval) {
                     this.send().then(() => null);
+                    this._lastHeartbeatRequestDate = now;
                 }
-            }, this._heartbeatInterval);
+            }, this._heartbeatTimerInterval);
             this._heartbeatTimer.start();
         }
     }
 
     stop(): void {
-        if (this._heartbeatTimer) {
-            this._heartbeatTimer.stop();
-        }
-    }
-
-    reset(): void {
-        if (this._heartbeatTimer) {
-            this._heartbeatTimer.reset(this._heartbeatInterval);
-        }
+        this._heartbeatTimer?.stop();
     }
 
     send(): Promise<void> {
         return new Promise((resolve, reject): void => {
-            if (this._stateStore.isConnected) {
-                this._stateStore.websocket.send(HeartbeatService.HEARTBEAT_REQUEST);
-                this._heartbeatPromises.push({
-                    resolve,
-                    reject
-                });
-            } else {
-                reject(TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED));
+            if (!this._stateStore.isConnected || !this._stateStore.isSessionOpen) {
+                return reject(TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED));
             }
+            this._stateStore.websocket.send(HeartbeatService.HEARTBEAT_REQUEST);
+            this._heartbeatPromises.push({
+                resolve,
+                reject
+            });
         });
     }
 
@@ -86,11 +83,24 @@ export default class HeartbeatService {
         this._heartbeatPromises = [];
     }
 
-    rejectHeartbeatPromises(error: any): void {
+    private _rejectHeartbeatPromises(error: TurmsBusinessError): void {
         for (const cb of this._heartbeatPromises) {
             cb.reject(error);
         }
         this._heartbeatPromises = [];
+    }
+
+    // Base methods
+
+    close(): Promise<void> {
+        this.onDisconnected();
+        return Promise.resolve();
+    }
+
+    onDisconnected(): void {
+        this.stop();
+        const error = TurmsBusinessError.from(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED);
+        this._rejectHeartbeatPromises(error);
     }
 
 }

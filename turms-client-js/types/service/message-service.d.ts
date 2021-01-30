@@ -1,13 +1,13 @@
-import TurmsClient from "../turms-client";
-import { ParsedModel } from "../model/parsed-model";
-import MessageAddition from "../model/message/message-addition";
+import TurmsClient from '../turms-client';
+import { ParsedModel } from '../model/parsed-model';
+import MessageAddition from '../model/message/message-addition';
 export default class MessageService {
     private static readonly DEFAULT_MENTIONED_USER_IDS_PARSER;
     private _turmsClient;
     private _mentionedUserIdsParser?;
-    private _onMessage?;
-    get onMessage(): (message: ParsedModel.Message, messageAddition: MessageAddition) => void;
-    set onMessage(value: (message: ParsedModel.Message, messageAddition: MessageAddition) => void);
+    private _messageListeners;
+    addMessageListener(listener: (message: ParsedModel.Message, messageAddition: MessageAddition) => void): void;
+    removeMessageListener(listener: (message: ParsedModel.Message, messageAddition: MessageAddition) => void): void;
     constructor(turmsClient: TurmsClient);
     sendMessage(isGroupMessage: boolean, targetId: string, deliveryDate?: Date, text?: string, records?: Uint8Array[], burnAfter?: number): Promise<string>;
     forwardMessage(messageId: string, isGroupMessage: boolean, targetId: string): Promise<string>;

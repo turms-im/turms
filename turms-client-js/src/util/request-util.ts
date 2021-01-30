@@ -1,5 +1,5 @@
 export default class RequestUtil {
-    static ERROR = new Error("Illegal parameters");
+    static ERROR = new Error('Illegal parameters');
 
     static wrapValueIfNotNull(value: any): any | undefined {
         return value ? {value} : undefined;

@@ -15,67 +15,42 @@
  * limitations under the License.
  */
 
-import UserLocation from "../../model/user-location";
-import TurmsBusinessError from "../../model/turms-business-error";
-import TurmsStatusCode from "../../model/turms-status-code";
-import {im} from "../../model/proto-bundle";
-import StateStore from "../state-store";
-import DeviceType = im.turms.proto.DeviceType;
-import UserStatus = im.turms.proto.UserStatus;
-
-const COOKIE_REQUEST_ID = 'rid';
-const COOKIE_USER_ID = 'uid';
-const COOKIE_PASSWORD = 'pwd';
-const COOKIE_USER_ONLINE_STATUS = 'us';
-const COOKIE_DEVICE_TYPE = 'dt';
-const COOKIE_LOCATION = 'loc';
+import StateStore from '../state-store';
 import SystemUtil from '../../util/system-util';
+import TurmsBusinessError from '../../model/turms-business-error';
+import TurmsStatusCode from '../../model/turms-status-code';
+import BaseService from './base-service';
 
 export interface ConnectOptions {
     wsUrl?: string,
-    connectTimeout?: number,
-
-    userId: string,
-    password: string,
-    deviceType?: DeviceType,
-    userOnlineStatus?: UserStatus,
-    location?: UserLocation
+    connectTimeout?: number
 }
 
 export interface ConnectionDisconnectInfo {
     wasConnected: boolean,
-    isClosedByClient: boolean,
-    event: CloseEvent
+    wsUrl: string,
+    code: number,
+    reason: string
 }
 
-export default class ConnectionService {
+export default class ConnectionService extends BaseService {
+    private static readonly WS_STATUS_CODE_GOING_AWAY = 1001;
 
-    private static readonly DEFAULT_WEBSOCKET_URL = 'ws://localhost:9510';
-    private static readonly DEFAULT_CONNECT_TIMEOUT = 30 * 1000;
-
-    private _stateStore: StateStore;
     private readonly _initialWsUrl: string;
     private readonly _initialConnectTimeout: number;
-    private readonly _storePassword: boolean;
 
-    private _isClosedByClient = false;
     private _disconnectPromises = [];
-    private _connectOptions = {} as ConnectOptions;
 
     private _onConnectedListeners: (() => void)[] = [];
-    private _onDisconnectedListeners: ((info: ConnectionDisconnectInfo) => Promise<void>)[] = [];
-    private _onMessageListeners: ((message: any) => void)[] = [];
+    private _onDisconnectedListeners: ((info: ConnectionDisconnectInfo) => void)[] = [];
+    private _messageListeners: ((message: ArrayBuffer) => void)[] = [];
 
-    constructor(stateStore: StateStore, wsUrl?: string, connectTimeout?: number, storePassword = true) {
-        this._stateStore = stateStore;
-        this._initialWsUrl = wsUrl || ConnectionService.DEFAULT_WEBSOCKET_URL;
-        if (!connectTimeout && connectTimeout !== 0) {
-            this._initialConnectTimeout = ConnectionService.DEFAULT_CONNECT_TIMEOUT;
-        } else {
-            this._initialConnectTimeout = connectTimeout;
-        }
-        this._storePassword = storePassword;
-        this._resetStates();
+    constructor(stateStore: StateStore, wsUrl?: string, connectTimeout?: number) {
+        super(stateStore);
+        this._initialWsUrl = wsUrl || 'ws://localhost:9510';
+        this._initialConnectTimeout = isNaN(connectTimeout) || connectTimeout <= 0
+            ? 60 * 1000
+            : connectTimeout;
         this._closeConnectionBeforeUnload();
     }
 
@@ -93,13 +68,9 @@ export default class ConnectionService {
                 }
             });
         }
-        this._storePassword = storePassword;
-        this._resetStates();
     }
 
     private _resetStates(): void {
-        this._stateStore.connectionRequestId = null;
-        this._isClosedByClient = false;
         this._resolveDisconnectPromises();
     }
 
@@ -109,174 +80,131 @@ export default class ConnectionService {
         this._onConnectedListeners.push(listener);
     }
 
-    addOnDisconnectedListener(listener: (info: ConnectionDisconnectInfo) => Promise<void>): void {
+    addOnDisconnectedListener(listener: (info: ConnectionDisconnectInfo) => void): void {
         this._onDisconnectedListeners.push(listener);
     }
 
-    addOnMessageListener(listener: (message: any) => void): void {
-        this._onMessageListeners.push(listener);
+    addMessageListener(listener: (message: ArrayBuffer) => void): void {
+        this._messageListeners.push(listener);
+    }
+
+    removeOnConnectedListener(listener: () => void): void {
+        this._onConnectedListeners = this._onConnectedListeners
+            .filter(cur => cur !== listener);
+    }
+
+    removeOnDisconnectedListener(listener: (info: ConnectionDisconnectInfo) => void): void {
+        this._onDisconnectedListeners = this._onDisconnectedListeners
+            .filter(cur => cur !== listener);
+    }
+
+    removeMessageListener(listener: (message: ArrayBuffer) => void): void {
+        this._messageListeners = this._messageListeners
+            .filter(cur => cur !== listener);
     }
 
     private _notifyOnConnectedListener(): void {
-        for (const listener of this._onConnectedListeners) {
-            listener.call(this);
-        }
+        this._onConnectedListeners.forEach(listener => listener.call(this));
     }
 
-    private _notifyOnDisconnectedListeners(info: ConnectionDisconnectInfo): Promise<void> {
-        let promise;
-        for (const listener of this._onDisconnectedListeners) {
-            const result = listener.call(this, info);
-            if (!promise) {
-                promise = result;
-            }
-        }
-        if (promise) {
-            return promise;
-        } else {
-            return Promise.reject();
-        }
+    private _notifyOnDisconnectedListeners(info: ConnectionDisconnectInfo): void {
+        this._onDisconnectedListeners.forEach(listener => listener.call(this, info));
     }
 
-    private _notifyOnMessageListeners(message: any): void {
-        for (const listener of this._onMessageListeners) {
-            listener.call(this, message);
-        }
+    private _notifyOnMessageListeners(message: ArrayBuffer): void {
+        this._messageListeners.forEach(listener => listener.call(this, message));
     }
 
     private _resolveDisconnectPromises(): void {
-        for (const cb of this._disconnectPromises) {
-            cb();
-        }
+        this._disconnectPromises.forEach(cb => cb());
         this._disconnectPromises = [];
     }
 
     // Connection
 
-    connect(options: ConnectOptions): Promise<void> {
+    connect({
+                wsUrl = this._initialWsUrl,
+                connectTimeout = this._initialConnectTimeout
+            }: ConnectOptions = {}): Promise<void> {
         return new Promise((resolve, reject) => {
             if (this._stateStore.isConnected) {
-                return TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED);
-            } else {
-                this._resetStates();
-                this._stateStore.connectionRequestId = Math.floor(Math.random() * 16383) + 1;
-                ConnectionService._fillLoginInfo(this._stateStore.connectionRequestId, options.userId, options.password, options.userOnlineStatus, options.deviceType, options.location);
-                this._stateStore.userInfo = {
-                    userId: options.userId,
-                    deviceType: options.deviceType,
-                    userOnlineStatus: options.userOnlineStatus,
-                    location: options.location
-                }
-                this._connectOptions = JSON.parse(JSON.stringify(options));
-                if (!this._storePassword) {
-                    delete this._connectOptions["password"];
-                }
-
-                const ws = new WebSocket(options.wsUrl || this._initialWsUrl);
-                ws.binaryType = "arraybuffer";
-                this._stateStore.websocket = ws;
-
-                const connectTimeout = options.connectTimeout || this._initialConnectTimeout;
-                let connectTimeoutId;
-                if (connectTimeout && connectTimeout > 0) {
-                    connectTimeoutId = setTimeout(() => {
-                        reject(new Error('Connection Timeout'));
-                    }, connectTimeout);
-                }
-
-                // onClose will always be triggered with a CloseEvent instance when
-                // 1. rejected by the HTTP upgrade error response
-                // 2. disconnected no matter by error (after onError) or else
-                this._stateStore.websocket.onclose = (event): void => {
-                    if (connectTimeoutId) {
-                        clearTimeout(connectTimeoutId);
-                    }
-                    this._onWebSocketClose(event)
-                        // for the case when redirecting successfully
-                        .then(() => resolve())
-                        .catch(e => reject(e));
-                };
-                this._stateStore.websocket.onopen = ((): void => {
-                    if (connectTimeoutId) {
-                        clearTimeout(connectTimeoutId);
-                    }
-                    this._onWebSocketOpen();
-                    resolve();
-                });
-                this._stateStore.websocket.onmessage = (event): void => this._notifyOnMessageListeners(event.data);
+                return wsUrl === this._stateStore.websocket.url
+                    ? resolve()
+                    : Promise.reject(TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED));
             }
+            this._resetStates();
+            const ws = new WebSocket(wsUrl);
+            ws.binaryType = 'arraybuffer';
+            this._stateStore.websocket = ws;
+
+            let connectTimeoutId;
+            if (connectTimeout > 0) {
+                connectTimeoutId = setTimeout(() => {
+                    reject(TurmsBusinessError.fromCode(TurmsStatusCode.CONNECT_TIMEOUT));
+                }, connectTimeout);
+            }
+
+            // onClose will always be triggered with a CloseEvent instance when
+            // 1. rejected by the HTTP upgrade error response
+            // 2. disconnected no matter by error (after onerror) or else
+            // so that we don't need to add a listener on onerror
+            ws.onclose = (event): void => {
+                if (connectTimeoutId) {
+                    clearTimeout(connectTimeoutId);
+                }
+                const info = this._onWebSocketClose(event);
+                reject(info);
+            };
+            ws.onopen = ((): void => {
+                if (connectTimeoutId) {
+                    clearTimeout(connectTimeoutId);
+                }
+                this._onWebSocketOpen();
+                resolve();
+            });
+            ws.onmessage = (event): void => this._notifyOnMessageListeners(event.data);
         });
     }
 
     disconnect(): Promise<void> {
-        if (this._stateStore.isConnected || this._stateStore.websocket.readyState === WebSocket.CONNECTING) {
-            this._isClosedByClient = true;
+        const ws = this._stateStore.websocket;
+        if (this._stateStore.isConnected || (ws?.readyState === WebSocket.CONNECTING)) {
             return new Promise(resolve => {
                 this._disconnectPromises.push(resolve);
-                this._stateStore.websocket.close();
+                ws.close(1000);
             });
         } else {
-            return Promise.reject();
+            return Promise.resolve();
         }
-    }
-
-    reconnect(host?: string): Promise<void> {
-        if (host) {
-            const isSecure = this._connectOptions.wsUrl && this._connectOptions.wsUrl.startsWith("wss://");
-            this._connectOptions.wsUrl = `${isSecure ? "wss://" : "ws://"}${host}`;
-        }
-        return this.connect(this._connectOptions);
-    }
-
-    private static _fillLoginInfo(
-        requestId: number,
-        userId: string,
-        password: string,
-        userOnlineStatus?: UserStatus,
-        deviceType?: DeviceType,
-        location?: UserLocation): void {
-        document.cookie = `${COOKIE_REQUEST_ID}=${requestId}; path=/`;
-        document.cookie = `${COOKIE_USER_ID}=${userId}; path=/`;
-        document.cookie = `${COOKIE_PASSWORD}=${escape(password)}; path=/`;
-        if (userOnlineStatus) {
-            document.cookie = `${COOKIE_USER_ONLINE_STATUS}=${UserStatus[userOnlineStatus]}; path=/`;
-        }
-        if (deviceType) {
-            document.cookie = `${COOKIE_DEVICE_TYPE}=${DeviceType[deviceType]}; path=/`;
-        }
-        if (location) {
-            document.cookie = `${COOKIE_LOCATION}=${location.toString()}; path=/`;
-        }
-    }
-
-    private static _clearLoginInfo(): void {
-        const now = new Date().toUTCString();
-        document.cookie = `${COOKIE_USER_ID}=;expires=${now}`;
-        document.cookie = `${COOKIE_PASSWORD}=;expires=${now}`;
-        document.cookie = `${COOKIE_USER_ONLINE_STATUS}=;expires=${now}`;
-        document.cookie = `${COOKIE_DEVICE_TYPE}=;expires=${now}`;
-        document.cookie = `${COOKIE_REQUEST_ID}=;expires=${now}`;
-        document.cookie = `${COOKIE_LOCATION}=;expires=${now}`;
     }
 
     // Lifecycle hooks
 
     private _onWebSocketOpen(): void {
-        ConnectionService._clearLoginInfo();
-        this._stateStore.isConnected = true;
         this._notifyOnConnectedListener();
     }
 
-    private _onWebSocketClose(event: CloseEvent): Promise<void> {
-        ConnectionService._clearLoginInfo();
+    private _onWebSocketClose(event: CloseEvent): ConnectionDisconnectInfo {
         const wasConnected = this._stateStore.isConnected;
-        this._stateStore.isConnected = false;
         this._resolveDisconnectPromises();
-        return this._notifyOnDisconnectedListeners({
+        const info = {
             wasConnected,
-            isClosedByClient: this._isClosedByClient,
-            event
-        });
+            wsUrl: (event.target as WebSocket).url,
+            code: event.code,
+            reason: event.reason
+        };
+        this._notifyOnDisconnectedListeners(info);
+        return info;
+    }
+
+    // Base methods
+
+    close(): Promise<void> {
+        return this.disconnect();
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    onDisconnected(): void {
     }
 
 }

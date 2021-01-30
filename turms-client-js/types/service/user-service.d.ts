@@ -1,30 +1,47 @@
-import TurmsClient from "../turms-client";
-import { im } from "../model/proto-bundle";
-import { ParsedModel } from "../model/parsed-model";
-import UserLocation from "../model/user-location";
+import TurmsClient from '../turms-client';
+import { im } from '../model/proto-bundle';
+import { ParsedModel } from '../model/parsed-model';
+import UserLocation from '../model/user-location';
+import { SessionCloseInfo } from '../model/session-close-info';
 import UserStatus = im.turms.proto.UserStatus;
 import ProfileAccessStrategy = im.turms.proto.ProfileAccessStrategy;
 import ResponseAction = im.turms.proto.ResponseAction;
 import DeviceType = im.turms.proto.DeviceType;
 import UserSessionId = im.turms.proto.UserSessionId;
+export interface UserInfo {
+    userId?: string;
+    password?: string;
+    deviceType?: DeviceType;
+    onlineStatus?: UserStatus;
+    location?: UserLocation;
+}
+export interface LoginOptions {
+    userId: string;
+    password?: string;
+    deviceType?: DeviceType;
+    onlineStatus?: UserStatus;
+    location?: UserLocation;
+    storePassword?: boolean;
+}
 export default class UserService {
     private _turmsClient;
-    private _userId;
-    private _password;
-    private _deviceType;
-    private _userOnlineStatus;
-    private _location?;
+    private _stateStore;
+    private _userInfo;
+    private _storePassword;
+    private _onOnlineListeners;
+    private _onOfflineListeners;
     constructor(turmsClient: TurmsClient);
-    get password(): string;
-    get userId(): string;
-    get location(): UserLocation;
-    get userOnlineStatus(): UserStatus;
-    get deviceType(): DeviceType;
+    get userInfo(): UserInfo;
+    get isLoggedIn(): boolean;
+    addOnOnlineListener(listener: () => void): void;
+    addOnOfflineListener(listener: (sessionCloseInfo?: SessionCloseInfo) => void): void;
+    removeOnOnlineListener(listener: () => void): void;
+    removeOnOfflineListener(listener: () => void): void;
     static getUserLocationFromBrowser(): Promise<GeolocationPosition>;
-    login(userId: string, password: string, deviceType?: string | DeviceType, userOnlineStatus?: UserStatus, location?: GeolocationPosition | UserLocation): Promise<void>;
-    relogin(): Promise<void>;
-    logout(): Promise<void>;
-    updateUserOnlineStatus(onlineStatus: string | UserStatus): Promise<void>;
+    login(userId: string, password?: string, deviceType?: string | DeviceType, onlineStatus?: string | UserStatus, location?: GeolocationPosition | UserLocation, storePassword?: boolean): Promise<void>;
+    login(options: LoginOptions): Promise<void>;
+    logout(disconnect?: boolean): Promise<void>;
+    updateOnlineStatus(onlineStatus: string | UserStatus): Promise<void>;
     disconnectOnlineDevices(deviceTypes: string[] | DeviceType[]): Promise<void>;
     updatePassword(password: string): Promise<void>;
     updateProfile(name?: string, intro?: string, profileAccessStrategy?: string | ProfileAccessStrategy): Promise<void>;
@@ -32,7 +49,7 @@ export default class UserService {
     queryUserIdsNearby(latitude: number, longitude: number, distance?: number, maxNumber?: number): Promise<string[]>;
     queryUserSessionIdsNearby(latitude: number, longitude: number, distance?: number, maxNumber?: number): Promise<UserSessionId[]>;
     queryUserInfosNearby(latitude: number, longitude: number, distance?: number, maxNumber?: number): Promise<ParsedModel.UserInfo[]>;
-    queryUserOnlineStatusesRequest(userIds: string[]): Promise<ParsedModel.UserStatusDetail[]>;
+    queryOnlineStatusesRequest(userIds: string[]): Promise<ParsedModel.UserStatusDetail[]>;
     queryRelationships(relatedUserIds?: string[], isBlocked?: boolean, groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion | undefined>;
     queryRelatedUserIds(isBlocked?: boolean, groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion | undefined>;
     queryFriends(groupIndex?: number, lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion | undefined>;
@@ -51,4 +68,8 @@ export default class UserService {
     queryRelationshipGroups(lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipGroupsWithVersion | undefined>;
     moveRelatedUserToGroup(relatedUserId: string, groupIndex: number): Promise<void>;
     updateLocation(latitude: number, longitude: number, name?: string, address?: string): Promise<void>;
+    private static _parseDeviceType;
+    private static _parseUserStatus;
+    private _changeToOnline;
+    private _changeToOffline;
 }

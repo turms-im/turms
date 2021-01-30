@@ -1,5 +1,5 @@
-import {im} from "./proto-bundle";
-import TurmsStatusCode from "./turms-status-code";
+import {im} from './proto-bundle';
+import TurmsStatusCode from './turms-status-code';
 import TurmsNotification = im.turms.proto.TurmsNotification;
 
 export default class TurmsBusinessError extends Error {
@@ -30,11 +30,7 @@ export default class TurmsBusinessError extends Error {
     }
 
     static fromNotification(notification: TurmsNotification): TurmsBusinessError {
-        if (notification.reason && notification.reason.value) {
-            return new TurmsBusinessError(notification.code.value, notification.reason.value);
-        } else {
-            return new TurmsBusinessError(notification.code.value, null);
-        }
+        return new TurmsBusinessError(notification.code.value, notification.reason?.value);
     }
 
     static from(code: number, reason?: string): TurmsBusinessError {
@@ -45,14 +41,22 @@ export default class TurmsBusinessError extends Error {
         return new TurmsBusinessError(code, null);
     }
 
-    static illegalParam<T = never>(reason: string): Promise<T> {
+    static illegalParam(reason: string): never {
+        throw new TurmsBusinessError(TurmsStatusCode.ILLEGAL_ARGUMENT, reason);
+    }
+
+    static notFalsy(name: string, notEmpty = false): never {
+        const emptyPlaceholder = notEmpty ? ' or empty' : '';
+        throw this.illegalParam(`${name} must not be null${emptyPlaceholder} or an invalid param`);
+    }
+
+    static illegalParamPromise<T = never>(reason: string): Promise<T> {
         const exception = new TurmsBusinessError(TurmsStatusCode.ILLEGAL_ARGUMENT, reason);
         return Promise.reject(exception);
     }
 
-    // The method is used to avoid the duplicate string declaration to reduce the file size
-    static notFalsy<T = never>(name: string, notEmpty = false): Promise<T> {
+    static notFalsyPromise<T = never>(name: string, notEmpty = false): Promise<T> {
         const emptyPlaceholder = notEmpty ? ' or empty' : '';
-        return this.illegalParam(`${name} must not be null${emptyPlaceholder} or an invalid param`);
+        return this.illegalParamPromise(`${name} must not be null${emptyPlaceholder} or an invalid param`);
     }
 }

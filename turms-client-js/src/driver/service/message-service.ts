@@ -15,53 +15,55 @@
  * limitations under the License.
  */
 
-import {im} from "../../model/proto-bundle";
-import RequestUtil from "../../util/request-util";
-import TurmsStatusCode from "../../model/turms-status-code";
-import TurmsBusinessError from "../../model/turms-business-error";
-import StateStore from "../state-store";
-import NotificationUtil from "../../util/notification-util";
-import {ParsedNotification} from "../../model/parsed-notification";
+import {im} from '../../model/proto-bundle';
+import RequestUtil from '../../util/request-util';
+import TurmsStatusCode from '../../model/turms-status-code';
+import TurmsBusinessError from '../../model/turms-business-error';
+import StateStore from '../state-store';
+import NotificationUtil from '../../util/notification-util';
+import {ParsedNotification} from '../../model/parsed-notification';
+import BaseService from './base-service';
 import TurmsNotification = im.turms.proto.TurmsNotification;
 import TurmsRequest = im.turms.proto.TurmsRequest;
 
 interface RequestPromiseSeal {
     timeoutId?: number,
     resolve: (value?: unknown) => void;
-    reject: (reason?: any) => void;
+    reject: (reason?: TurmsBusinessError) => void;
 }
 
 /**
  * Handle TurmsRequest and TurnsNotification
  */
-export default class MessageService {
+export default class MessageService extends BaseService {
     private static readonly DEFAULT_REQUEST_TIMEOUT = 60 * 1000;
 
-    private _stateStore: StateStore;
-
-    private _requestTimeout: number;
-    private _minRequestInterval?: number;
-    private _onNotificationListeners: ((notification: ParsedNotification) => void)[] = [];
+    private readonly _requestTimeout: number;
+    private readonly _minRequestInterval?: number;
+    private _notificationListeners: ((notification: ParsedNotification) => void)[] = [];
     private _requestMap: Record<number, RequestPromiseSeal> = {};
 
     constructor(stateStore: StateStore, requestTimeout?: number, minRequestInterval?: number) {
-        this._stateStore = stateStore;
-        if (!requestTimeout && requestTimeout !== 0) {
-            this._requestTimeout = MessageService.DEFAULT_REQUEST_TIMEOUT;
-        } else {
-            this._requestTimeout = requestTimeout;
-        }
+        super(stateStore);
+        this._requestTimeout = isNaN(requestTimeout) || requestTimeout <= 0
+            ? MessageService.DEFAULT_REQUEST_TIMEOUT
+            : requestTimeout;
         this._minRequestInterval = minRequestInterval;
     }
 
     // Listeners
 
-    addOnNotificationListener(listener: (notification: ParsedNotification) => void): void {
-        this._onNotificationListeners.push(listener);
+    addNotificationListener(listener: (notification: ParsedNotification) => void): void {
+        this._notificationListeners.push(listener);
     }
 
-    private _notifyOnNotificationListeners(parsedNotification: ParsedNotification): void {
-        for (const listener of this._onNotificationListeners) {
+    removeNotificationListener(listener: (notification: ParsedNotification) => void): void {
+        this._notificationListeners = this._notificationListeners
+            .filter(cur => cur !== listener);
+    }
+
+    private _notifyNotificationListeners(parsedNotification: ParsedNotification): void {
+        for (const listener of this._notificationListeners) {
             try {
                 listener.call(this, parsedNotification);
             } catch (e) {
@@ -75,33 +77,42 @@ export default class MessageService {
     sendRequest(
         message: im.turms.proto.ITurmsRequest): Promise<TurmsNotification> {
         return new Promise((resolve, reject) => {
+            if (message.createSessionRequest) {
+                if (this._stateStore.isSessionOpen) {
+                    return Promise.reject(TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_SESSION_ALREADY_ESTABLISHED));
+                }
+            } else if (!this._stateStore.isConnected || !this._stateStore.isSessionOpen) {
+                return reject(TurmsBusinessError.from(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED));
+            }
             const now = new Date();
-            const isFrequent = this._minRequestInterval > 0 && now.getTime() - this._stateStore.lastRequestDate.getTime() <= this._minRequestInterval;
+            const difference = now.getTime() - this._stateStore.lastRequestDate.getTime();
+            const isFrequent = this._minRequestInterval > 0 && difference <= this._minRequestInterval;
             if (isFrequent) {
-                reject(TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_REQUESTS_TOO_FREQUENT));
-            } else {
-                const requestId = RequestUtil.generateRandomId(this._requestMap);
-                message.requestId = {
-                    value: '' + requestId
-                };
+                return reject(TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_REQUESTS_TOO_FREQUENT));
+            }
+            const requestId = RequestUtil.generateRandomId(this._requestMap);
+            message.requestId = RequestUtil.wrapValueIfNotNull(requestId);
 
+            try {
                 const data = TurmsRequest.encode(message).finish();
                 this._stateStore.websocket.send(data);
-                this._stateStore.lastRequestDate = now;
-
-                let timeoutId;
-                if (this._requestTimeout > 0) {
-                    timeoutId = setTimeout(() => {
-                        delete this._requestMap[requestId];
-                        reject(TurmsBusinessError.fromCode(TurmsStatusCode.REQUEST_TIMEOUT));
-                    }, this._requestTimeout);
-                }
-                this._requestMap[requestId] = {
-                    timeoutId,
-                    resolve,
-                    reject
-                };
+            } catch (e) {
+                reject(e);
             }
+            this._stateStore.lastRequestDate = now;
+
+            let timeoutId;
+            if (this._requestTimeout > 0) {
+                timeoutId = setTimeout(() => {
+                    delete this._requestMap[requestId];
+                    reject(TurmsBusinessError.fromCode(TurmsStatusCode.REQUEST_TIMEOUT));
+                }, this._requestTimeout);
+            }
+            this._requestMap[requestId] = {
+                timeoutId,
+                resolve,
+                reject
+            };
         });
     }
 
@@ -123,14 +134,30 @@ export default class MessageService {
                             cb.reject(TurmsBusinessError.fromNotification(notification));
                         }
                     } else {
-                        cb.reject(TurmsBusinessError.from(TurmsStatusCode.INVALID_NOTIFICATION, "The code is missing"))
+                        cb.reject(TurmsBusinessError.from(TurmsStatusCode.INVALID_NOTIFICATION, 'The code is missing'))
                     }
                 }
             }
         }
-        const notificationCopy = JSON.parse(JSON.stringify(notification));
-        const parsedNotification = NotificationUtil.transform(notificationCopy);
-        this._notifyOnNotificationListeners(parsedNotification as ParsedNotification);
+        const clonedNotification = JSON.parse(JSON.stringify(notification));
+        const parsedNotification = NotificationUtil.transform(clonedNotification);
+        this._notifyNotificationListeners(parsedNotification as ParsedNotification);
     }
 
+    private _rejectRequestPromises(error: TurmsBusinessError): void {
+        Object.values(this._requestMap).forEach(request => request.reject(error));
+        this._requestMap = {};
+    }
+
+    // Base methods
+
+    close(): Promise<void> {
+        this.onDisconnected();
+        return Promise.resolve();
+    }
+
+    onDisconnected(): void {
+        const error = TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED);
+        this._rejectRequestPromises(error);
+    }
 }

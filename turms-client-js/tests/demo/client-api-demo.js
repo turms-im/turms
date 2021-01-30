@@ -5,19 +5,19 @@ const TurmsClient = require("../../dist/turms-client");
 const client = new TurmsClient(); // new TurmsClient('ws://any-turms-server.com');
 
 // Listen to the close event
-client.driver.onSessionDisconnected = disconnectInfo => {
-    console.info(`onSessionDisconnected: ${JSON.stringify(disconnectInfo)}`);
-};
+client.userService.addOnOfflineListener(sessionCloseInfo => {
+    console.info(`onOffline: ${JSON.stringify(sessionCloseInfo)}`);
+});
 
 // Listen to inbound notifications
-client.notificationService.onNotification = (notification) => {
-    console.info(`onNotification: Receive a notification from other users or server: ${JSON.stringify(notification)}`);
-};
+client.notificationService.addNotificationListener(notification => {
+    console.info(`Notification: Receive a notification from other users or server: ${JSON.stringify(notification)}`);
+});
 
 // Listen to inbound messages
-client.messageService.onMessage = (message) => {
-    console.info(`onMessage: Receive a message from other users or server: ${JSON.stringify(message)}`);
-};
+client.messageService.addMessageListener(message => {
+    console.info(`Message: Receive a message from other users or server: ${JSON.stringify(message)}`);
+});
 
 client.userService.login('1', '123')
     .then(() => {

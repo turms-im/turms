@@ -1,4 +1,4 @@
-import {im} from "./proto-bundle";
+import {im} from './proto-bundle';
 
 export declare namespace ParsedModel {
     import ProfileAccessStrategy = im.turms.proto.ProfileAccessStrategy;

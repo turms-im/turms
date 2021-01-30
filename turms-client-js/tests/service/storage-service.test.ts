@@ -19,9 +19,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-    if (turmsClient.driver.isConnected()) {
-        await turmsClient.driver.disconnect();
-    }
+    await turmsClient.userService.logout();
 });
 
 describe('Create', async () => {

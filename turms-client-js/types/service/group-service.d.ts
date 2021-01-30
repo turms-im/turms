@@ -1,6 +1,6 @@
-import TurmsClient from "../turms-client";
-import { im } from "../model/proto-bundle";
-import { ParsedModel } from "../model/parsed-model";
+import TurmsClient from '../turms-client';
+import { im } from '../model/proto-bundle';
+import { ParsedModel } from '../model/parsed-model';
 import GroupMemberRole = im.turms.proto.GroupMemberRole;
 import GroupJoinQuestionsAnswerResult = im.turms.proto.GroupJoinQuestionsAnswerResult;
 export default class GroupService {

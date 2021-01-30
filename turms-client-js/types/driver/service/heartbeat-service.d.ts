@@ -1,17 +1,20 @@
-import StateStore from "../state-store";
-export default class HeartbeatService {
+import StateStore from '../state-store';
+import BaseService from './base-service';
+export default class HeartbeatService extends BaseService {
     private static readonly DEFAULT_HEARTBEAT_INTERVAL;
     private static readonly HEARTBEAT_REQUEST;
-    private _stateStore;
-    private _heartbeatInterval;
-    private _minRequestInterval;
+    private readonly _heartbeatInterval;
+    private readonly _heartbeatTimerInterval;
+    private _lastHeartbeatRequestDate;
     private _heartbeatTimer?;
     private _heartbeatPromises;
-    constructor(stateStore: StateStore, minRequestInterval: number, heartbeatInterval?: number);
+    constructor(stateStore: StateStore, heartbeatInterval?: number);
+    get isRunning(): boolean;
     start(): void;
     stop(): void;
-    reset(): void;
     send(): Promise<void>;
     resolveHeartbeatPromises(): void;
-    rejectHeartbeatPromises(error: any): void;
+    private _rejectHeartbeatPromises;
+    close(): Promise<void>;
+    onDisconnected(): void;
 }

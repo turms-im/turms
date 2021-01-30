@@ -14,9 +14,7 @@ beforeAll(() => {
 });
 
 afterAll(async () => {
-    if (turmsClient.driver.isConnected()) {
-        await turmsClient.driver.disconnect();
-    }
+    await turmsClient.userService.logout();
 });
 
 describe('Constructor', () => {
@@ -30,11 +28,6 @@ describe('Login', () => {
         const result = await turmsClient.userService.login('1', '123');
         expect(result).toBeFalsy();
     });
-    it('relogin_shouldSucceed', async () => {
-        await turmsClient.userService.logout();
-        const result = await turmsClient.userService.relogin();
-        expect(result).toBeFalsy();
-    })
 });
 
 describe('Create', () => {
@@ -81,8 +74,8 @@ describe('Create', () => {
 });
 
 describe('Update', () => {
-    it('updateUserOnlineStatus_shouldSucceed', async () => {
-        const result = await turmsClient.userService.updateUserOnlineStatus(userStatus);
+    it('updateOnlineStatus_shouldSucceed', async () => {
+        const result = await turmsClient.userService.updateOnlineStatus(userStatus);
         expect(result).toBeFalsy();
     });
     it('updatePassword_shouldSucceed', async () => {
@@ -131,8 +124,8 @@ describe('Query', () => {
         const result = await turmsClient.userService.queryUserInfosNearby(1, 1);
         expect(result).toBeTruthy();
     });
-    it('queryUserOnlineStatusesRequest_shouldUsersOnlineStatus', async () => {
-        const result = await turmsClient.userService.queryUserOnlineStatusesRequest(['1']);
+    it('queryOnlineStatusesRequest_shouldUsersOnlineStatus', async () => {
+        const result = await turmsClient.userService.queryOnlineStatusesRequest(['1']);
         expect(result[0].userStatus).toEqual(userStatus);
     });
     it('queryRelationships_shouldReturnUserRelationshipsWithVersion', async () => {

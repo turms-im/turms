@@ -1,5 +1,6 @@
-import { SessionDisconnectInfo } from "../../model/session-disconnect-info";
+import {SessionDisconnectInfo} from "../../model/session-disconnect-info";
 import StateStore from "../state-store";
+
 export declare enum SessionStatus {
     CONNECTED = 0,
     DISCONNECTED = 1,

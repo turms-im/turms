@@ -3,6 +3,9 @@ export interface ParsedNotification {
     code?: number;
     reason?: string;
     data?: any;
-    relayedRequest?: any;
+    relayedRequest?: ParsedRelayedRequest;
     requesterId?: string;
+    closeStatus?: number;
+}
+export interface ParsedRelayedRequest {
 }

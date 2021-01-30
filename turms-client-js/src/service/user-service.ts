@@ -1,48 +1,84 @@
-import TurmsClient from "../turms-client";
-import {im} from "../model/proto-bundle";
-import RequestUtil from "../util/request-util";
-import {ParsedModel} from "../model/parsed-model";
-import NotificationUtil from "../util/notification-util";
-import SystemUtil from "../util/system-util";
-import UserLocation from "../model/user-location";
-import TurmsBusinessError from "../model/turms-business-error";
+import TurmsClient from '../turms-client';
+import {im} from '../model/proto-bundle';
+import RequestUtil from '../util/request-util';
+import {ParsedModel} from '../model/parsed-model';
+import NotificationUtil from '../util/notification-util';
+import SystemUtil from '../util/system-util';
+import UserLocation from '../model/user-location';
+import TurmsBusinessError from '../model/turms-business-error';
+import TurmsStatusCode from '../model/turms-status-code';
+import StateStore from '../driver/state-store';
+import {SessionCloseInfo} from '../model/session-close-info';
+import TurmsCloseStatus from '../model/turms-close-status';
 import UserStatus = im.turms.proto.UserStatus;
 import ProfileAccessStrategy = im.turms.proto.ProfileAccessStrategy;
 import ResponseAction = im.turms.proto.ResponseAction;
 import DeviceType = im.turms.proto.DeviceType;
 import UserSessionId = im.turms.proto.UserSessionId;
-import TurmsStatusCode from "../model/turms-status-code";
+
+export interface UserInfo {
+    userId?: string;
+    password?: string;
+    deviceType?: DeviceType;
+    onlineStatus?: UserStatus;
+    location?: UserLocation;
+}
+
+export interface LoginOptions {
+    userId: string;
+    password?: string;
+    deviceType?: DeviceType;
+    onlineStatus?: UserStatus;
+    location?: UserLocation;
+    storePassword?: boolean;
+}
 
 export default class UserService {
     private _turmsClient: TurmsClient;
-    private _userId: string;
-    private _password: string;
-    private _deviceType: DeviceType;
-    private _userOnlineStatus: UserStatus;
-    private _location?: UserLocation;
+    private _stateStore: StateStore;
+    private _userInfo: UserInfo = {};
+    private _storePassword = false;
+
+    private _onOnlineListeners: (() => void)[] = [];
+    private _onOfflineListeners: ((sessionCloseInfo?: SessionCloseInfo) => void)[] = [];
 
     constructor(turmsClient: TurmsClient) {
         this._turmsClient = turmsClient;
+        this._stateStore = turmsClient.driver.stateStore();
+        turmsClient.driver.addOnDisconnectedListener(() => this._changeToOffline());
+        turmsClient.driver.addNotificationListener(notification => {
+            if (notification.closeStatus) {
+                this._changeToOffline({
+                    closeStatus: notification.closeStatus,
+                    businessStatus: notification.code,
+                    reason: notification.reason
+                });
+            }
+        });
     }
 
-    get password(): string {
-        return this._password;
+    get userInfo(): UserInfo {
+        return JSON.parse(JSON.stringify(this._userInfo));
     }
 
-    get userId(): string {
-        return this._userId;
+    get isLoggedIn(): boolean {
+        return this._stateStore.isSessionOpen;
     }
 
-    get location(): UserLocation {
-        return this._location;
+    addOnOnlineListener(listener: () => void): void {
+        this._onOnlineListeners.push(listener);
     }
 
-    get userOnlineStatus(): UserStatus {
-        return this._userOnlineStatus;
+    addOnOfflineListener(listener: (sessionCloseInfo?: SessionCloseInfo) => void): void {
+        this._onOfflineListeners.push(listener);
     }
 
-    get deviceType(): DeviceType {
-        return this._deviceType;
+    removeOnOnlineListener(listener: () => void): void {
+        this._onOnlineListeners = this._onOnlineListeners.filter(cur => cur !== listener);
+    }
+
+    removeOnOfflineListener(listener: () => void): void {
+        this._onOfflineListeners = this._onOfflineListeners.filter(cur => cur !== listener);
     }
 
     /**
@@ -61,104 +97,120 @@ export default class UserService {
         });
     }
 
-    /**
-     * Note: Make sure to run turms-client in the http(s) protocol rather than the file protocol,
-     * or the browsers usually cannot pass the cookies which carry the userId and password to servers.
-     * @deviceType: When DeviceType.UNKNOWN, the turms server will try to detect the user's device automatically
-     */
     login(
         userId: string,
-        password: string,
+        password?: string,
         deviceType?: string | DeviceType,
-        userOnlineStatus = UserStatus.AVAILABLE,
-        location?: GeolocationPosition | UserLocation): Promise<void> {
+        onlineStatus?: string | UserStatus,
+        location?: GeolocationPosition | UserLocation,
+        storePassword?: boolean): Promise<void>
+
+    login(options: LoginOptions): Promise<void>
+
+    login(
+        userIdOrOptions: string | LoginOptions,
+        password?: string,
+        deviceType?: string | DeviceType,
+        onlineStatus?: string | UserStatus,
+        location?: GeolocationPosition | UserLocation,
+        storePassword = false): Promise<void> {
+        const userId = userIdOrOptions['userId'] || userIdOrOptions;
+        if (typeof userIdOrOptions === 'object') {
+            password = userIdOrOptions.password;
+            deviceType = userIdOrOptions.deviceType;
+            onlineStatus = userIdOrOptions.onlineStatus;
+            location = userIdOrOptions.location;
+            storePassword = userIdOrOptions.storePassword;
+        }
         if (RequestUtil.isFalsy(userId)) {
-            return TurmsBusinessError.notFalsy('userId');
+            return TurmsBusinessError.notFalsyPromise('userId');
         }
-        if (RequestUtil.isFalsy(password)) {
-            return TurmsBusinessError.notFalsy('password');
+        const userInfo: UserInfo = {};
+        userInfo.userId = userId;
+        userInfo.password = storePassword ? password : null;
+        try {
+            userInfo.deviceType = UserService._parseDeviceType(deviceType);
+        } catch (e) {
+            return Promise.reject(e);
         }
-        this._userId = userId;
-        this._password = password;
-        if (typeof deviceType === 'string') {
-            deviceType = DeviceType[deviceType] as DeviceType;
-            if (RequestUtil.isFalsy(deviceType)) {
-                return TurmsBusinessError.notFalsy("deviceType");
-            }
-            this._deviceType = deviceType;
-        } else if (typeof deviceType === 'number') {
-            if (deviceType >= 0 && deviceType <= DeviceType.UNKNOWN) {
-                this._deviceType = deviceType;
-            } else {
-                return TurmsBusinessError.illegalParam('illegal DeviceType');
-            }
-        } else {
-            this._deviceType = SystemUtil.getDeviceType();
+        try {
+            userInfo.onlineStatus = UserService._parseUserStatus(onlineStatus) || UserStatus.AVAILABLE;
+        } catch (e) {
+            return Promise.reject(e);
         }
-        this._userOnlineStatus = userOnlineStatus;
         const isPosition = location && location['coords'];
         if (isPosition) {
             const position = location as GeolocationPosition;
-            this._location = new UserLocation(position.coords.longitude, position.coords.latitude);
+            userInfo.location = new UserLocation(position.coords.longitude, position.coords.latitude);
         }
-        return this._turmsClient.driver.connect(this._userId, this._password,
-            this._deviceType, this._userOnlineStatus, this._location);
+        return new Promise((resolve, reject) => {
+            const connect = this._turmsClient.driver.isConnected
+                ? Promise.resolve()
+                : this._turmsClient.driver.connect();
+            return connect
+                .catch(e => reject(e))
+                .then(() => {
+                    return this._turmsClient.driver.send({
+                        createSessionRequest: {
+                            userId,
+                            password: RequestUtil.wrapValueIfNotNull(password),
+                            deviceType: userInfo.deviceType,
+                            userStatus: userInfo.onlineStatus,
+                            location: userInfo.location
+                        }
+                    }).catch(e => reject(e)).then(() => {
+                        this._changeToOnline();
+                        this._userInfo = userInfo;
+                        resolve();
+                    });
+                });
+        });
     }
 
-    relogin(): Promise<void> {
-        if (this._userId) {
-            return this._turmsClient.driver.reconnect();
+    logout(disconnect = true): Promise<void> {
+        let promise: Promise<any>;
+        if (disconnect) {
+            promise = this._turmsClient.driver.disconnect();
         } else {
-            return Promise.reject(TurmsBusinessError.fromCode(TurmsStatusCode.RELOGIN_SHOULD_BE_CALLED_AFTER_LOGIN));
+            promise = this._turmsClient.driver.send({
+                deleteSessionRequest: {}
+            });
         }
+        return promise.then(() => {
+            this._changeToOffline({
+                closeStatus: TurmsCloseStatus.DISCONNECTED_BY_CLIENT
+            });
+            return null;
+        });
     }
 
-    logout(): Promise<void> {
-        return this._turmsClient.driver.disconnect();
-    }
-
-    updateUserOnlineStatus(onlineStatus: string | UserStatus): Promise<void> {
+    updateOnlineStatus(onlineStatus: string | UserStatus): Promise<void> {
         if (RequestUtil.isFalsy(onlineStatus)) {
-            return TurmsBusinessError.notFalsy('onlineStatus');
+            return TurmsBusinessError.notFalsyPromise('onlineStatus');
         }
-        if (typeof onlineStatus === 'string') {
-            onlineStatus = UserStatus[onlineStatus] as UserStatus;
-            if (RequestUtil.isFalsy(onlineStatus)) {
-                return TurmsBusinessError.notFalsy("onlineStatus");
-            }
-        }
-        if (onlineStatus === UserStatus.OFFLINE) {
-            return Promise.reject('onlineStatus cannot be OFFLINE');
+        try {
+            onlineStatus = UserService._parseUserStatus(onlineStatus);
+        } catch (e) {
+            return Promise.reject(e);
         }
         return this._turmsClient.driver.send({
             updateUserOnlineStatusRequest: {
                 userStatus: onlineStatus
             }
-        }).then(() => null);
+        }).then(() => {
+            this._userInfo.onlineStatus = onlineStatus as UserStatus;
+        });
     }
 
     disconnectOnlineDevices(deviceTypes: string[] | DeviceType[]): Promise<void> {
         if (RequestUtil.isFalsy(deviceTypes)) {
-            return TurmsBusinessError.notFalsy('deviceTypes', true);
+            return TurmsBusinessError.notFalsyPromise('deviceTypes', true);
         }
         try {
             // @ts-ignore
-            deviceTypes = deviceTypes.map((type: string | DeviceType) => {
-                if (typeof type === 'string') {
-                    type = DeviceType[type] as DeviceType;
-                    if (RequestUtil.isFalsy(type)) {
-                        return TurmsBusinessError.notFalsy("deviceType");
-                    }
-                } else {
-                    if (type >= 0 && type <= DeviceType.UNKNOWN) {
-                        return type;
-                    } else {
-                        throw TurmsBusinessError.illegalParam('illegal DeviceType');
-                    }
-                }
-            });
+            deviceTypes = deviceTypes.map((type: string | DeviceType) => UserService._parseDeviceType(type));
         } catch (e) {
-            return e;
+            return Promise.reject(e);
         }
         return this._turmsClient.driver.send({
             updateUserOnlineStatusRequest: {
@@ -170,13 +222,17 @@ export default class UserService {
 
     updatePassword(password: string): Promise<void> {
         if (RequestUtil.isFalsy(password)) {
-            return TurmsBusinessError.notFalsy('password');
+            return TurmsBusinessError.notFalsyPromise('password');
         }
         return this._turmsClient.driver.send({
             updateUserRequest: {
                 password: RequestUtil.wrapValueIfNotNull(password)
             }
-        }).then(() => null);
+        }).then(() => {
+            if (this._storePassword) {
+                this._userInfo.password = password;
+            }
+        });
     }
 
     updateProfile(
@@ -189,7 +245,7 @@ export default class UserService {
         if (typeof profileAccessStrategy === 'string') {
             profileAccessStrategy = ProfileAccessStrategy[profileAccessStrategy] as ProfileAccessStrategy;
             if (RequestUtil.isFalsy(profileAccessStrategy)) {
-                return TurmsBusinessError.notFalsy("profileAccessStrategy");
+                return TurmsBusinessError.notFalsyPromise('profileAccessStrategy');
             }
         }
         return this._turmsClient.driver.send({
@@ -203,7 +259,7 @@ export default class UserService {
 
     queryUserProfile(userId: string, lastUpdatedDate?: Date): Promise<ParsedModel.UserInfoWithVersion | undefined> {
         if (RequestUtil.isFalsy(userId)) {
-            return TurmsBusinessError.notFalsy('userId');
+            return TurmsBusinessError.notFalsyPromise('userId');
         }
         return this._turmsClient.driver.send({
             queryUserProfileRequest: {
@@ -223,10 +279,10 @@ export default class UserService {
 
     queryUserIdsNearby(latitude: number, longitude: number, distance?: number, maxNumber?: number): Promise<string[]> {
         if (RequestUtil.isFalsy(latitude)) {
-            return TurmsBusinessError.notFalsy('latitude');
+            return TurmsBusinessError.notFalsyPromise('latitude');
         }
         if (RequestUtil.isFalsy(longitude)) {
-            return TurmsBusinessError.notFalsy('longitude');
+            return TurmsBusinessError.notFalsyPromise('longitude');
         }
         return this._turmsClient.driver.send({
             queryUserIdsNearbyRequest: {
@@ -240,10 +296,10 @@ export default class UserService {
 
     queryUserSessionIdsNearby(latitude: number, longitude: number, distance?: number, maxNumber?: number): Promise<UserSessionId[]> {
         if (RequestUtil.isFalsy(latitude)) {
-            return TurmsBusinessError.notFalsy('latitude');
+            return TurmsBusinessError.notFalsyPromise('latitude');
         }
         if (RequestUtil.isFalsy(longitude)) {
-            return TurmsBusinessError.notFalsy('longitude');
+            return TurmsBusinessError.notFalsyPromise('longitude');
         }
         return this._turmsClient.driver.send({
             queryUserIdsNearbyRequest: {
@@ -257,10 +313,10 @@ export default class UserService {
 
     queryUserInfosNearby(latitude: number, longitude: number, distance?: number, maxNumber?: number): Promise<ParsedModel.UserInfo[]> {
         if (RequestUtil.isFalsy(latitude)) {
-            return TurmsBusinessError.notFalsy('latitude');
+            return TurmsBusinessError.notFalsyPromise('latitude');
         }
         if (RequestUtil.isFalsy(longitude)) {
-            return TurmsBusinessError.notFalsy('longitude');
+            return TurmsBusinessError.notFalsyPromise('longitude');
         }
         return this._turmsClient.driver.send({
             queryUserInfosNearbyRequest: {
@@ -272,9 +328,9 @@ export default class UserService {
         }).then(n => NotificationUtil.getArrAndTransform(n, 'usersInfosWithVersion.userInfos'));
     }
 
-    queryUserOnlineStatusesRequest(userIds: string[]): Promise<ParsedModel.UserStatusDetail[]> {
+    queryOnlineStatusesRequest(userIds: string[]): Promise<ParsedModel.UserStatusDetail[]> {
         if (RequestUtil.isFalsy(userIds)) {
-            return TurmsBusinessError.notFalsy('userIds', true);
+            return TurmsBusinessError.notFalsyPromise('userIds', true);
         }
         return this._turmsClient.driver.send({
             queryUserOnlineStatusesRequest: {
@@ -323,10 +379,10 @@ export default class UserService {
 
     createRelationship(userId: string, isBlocked: boolean, groupIndex?: number): Promise<void> {
         if (RequestUtil.isFalsy(userId)) {
-            return TurmsBusinessError.notFalsy('userId');
+            return TurmsBusinessError.notFalsyPromise('userId');
         }
         if (RequestUtil.isFalsy(isBlocked)) {
-            return TurmsBusinessError.notFalsy('isBlocked');
+            return TurmsBusinessError.notFalsyPromise('isBlocked');
         }
         return this._turmsClient.driver.send({
             createRelationshipRequest: {
@@ -347,7 +403,7 @@ export default class UserService {
 
     deleteRelationship(relatedUserId: string, deleteGroupIndex?: string, targetGroupIndex?: string): Promise<void> {
         if (RequestUtil.isFalsy(relatedUserId)) {
-            return TurmsBusinessError.notFalsy('relatedUserId');
+            return TurmsBusinessError.notFalsyPromise('relatedUserId');
         }
         return this._turmsClient.driver.send({
             deleteRelationshipRequest: {
@@ -360,7 +416,7 @@ export default class UserService {
 
     updateRelationship(relatedUserId: string, isBlocked?: boolean, groupIndex?: number): Promise<void> {
         if (RequestUtil.isFalsy(relatedUserId)) {
-            return TurmsBusinessError.notFalsy('relatedUserId');
+            return TurmsBusinessError.notFalsyPromise('relatedUserId');
         }
         if (RequestUtil.areAllFalsy(isBlocked, groupIndex)) {
             return Promise.resolve();
@@ -376,10 +432,10 @@ export default class UserService {
 
     sendFriendRequest(recipientId: string, content: string): Promise<string> {
         if (RequestUtil.isFalsy(recipientId)) {
-            return TurmsBusinessError.notFalsy('recipientId');
+            return TurmsBusinessError.notFalsyPromise('recipientId');
         }
         if (RequestUtil.isFalsy(content)) {
-            return TurmsBusinessError.notFalsy('content');
+            return TurmsBusinessError.notFalsyPromise('content');
         }
         return this._turmsClient.driver.send({
             createFriendRequestRequest: {
@@ -391,15 +447,15 @@ export default class UserService {
 
     replyFriendRequest(requestId: string, responseAction: string | ResponseAction, reason?: string): Promise<void> {
         if (RequestUtil.isFalsy(requestId)) {
-            return TurmsBusinessError.notFalsy('requestId');
+            return TurmsBusinessError.notFalsyPromise('requestId');
         }
         if (RequestUtil.isFalsy(responseAction)) {
-            return TurmsBusinessError.notFalsy('responseAction');
+            return TurmsBusinessError.notFalsyPromise('responseAction');
         }
         if (typeof responseAction === 'string') {
             responseAction = ResponseAction[responseAction] as ResponseAction;
             if (RequestUtil.isFalsy(responseAction)) {
-                return TurmsBusinessError.notFalsy("reponseAction");
+                return TurmsBusinessError.notFalsyPromise('reponseAction');
             }
         }
         return this._turmsClient.driver.send({
@@ -422,7 +478,7 @@ export default class UserService {
 
     createRelationshipGroup(name: string): Promise<string> {
         if (RequestUtil.isFalsy(name)) {
-            return TurmsBusinessError.notFalsy('name');
+            return TurmsBusinessError.notFalsyPromise('name');
         }
         return this._turmsClient.driver.send({
             createRelationshipGroupRequest: {
@@ -433,7 +489,7 @@ export default class UserService {
 
     deleteRelationshipGroups(groupIndex: number, targetGroupIndex?: number): Promise<void> {
         if (RequestUtil.isFalsy(groupIndex)) {
-            return TurmsBusinessError.notFalsy('groupIndex');
+            return TurmsBusinessError.notFalsyPromise('groupIndex');
         }
         return this._turmsClient.driver.send({
             deleteRelationshipGroupRequest: {
@@ -445,10 +501,10 @@ export default class UserService {
 
     updateRelationshipGroup(groupIndex: number, newName: string): Promise<void> {
         if (RequestUtil.isFalsy(groupIndex)) {
-            return TurmsBusinessError.notFalsy('groupIndex');
+            return TurmsBusinessError.notFalsyPromise('groupIndex');
         }
         if (RequestUtil.isFalsy(newName)) {
-            return TurmsBusinessError.notFalsy('newName');
+            return TurmsBusinessError.notFalsyPromise('newName');
         }
         return this._turmsClient.driver.send({
             updateRelationshipGroupRequest: {
@@ -468,10 +524,10 @@ export default class UserService {
 
     moveRelatedUserToGroup(relatedUserId: string, groupIndex: number): Promise<void> {
         if (RequestUtil.isFalsy(relatedUserId)) {
-            return TurmsBusinessError.notFalsy('relatedUserId');
+            return TurmsBusinessError.notFalsyPromise('relatedUserId');
         }
         if (RequestUtil.isFalsy(groupIndex)) {
-            return TurmsBusinessError.notFalsy('groupIndex');
+            return TurmsBusinessError.notFalsyPromise('groupIndex');
         }
         return this._turmsClient.driver.send({
             updateRelationshipRequest: {
@@ -488,10 +544,10 @@ export default class UserService {
      */
     updateLocation(latitude: number, longitude: number, name?: string, address?: string): Promise<void> {
         if (RequestUtil.isFalsy(latitude)) {
-            return TurmsBusinessError.notFalsy('latitude');
+            return TurmsBusinessError.notFalsyPromise('latitude');
         }
         if (RequestUtil.isFalsy(longitude)) {
-            return TurmsBusinessError.notFalsy('longitude');
+            return TurmsBusinessError.notFalsyPromise('longitude');
         }
         RequestUtil.throwIfAnyFalsy(latitude, longitude);
         return this._turmsClient.driver.send({
@@ -502,5 +558,51 @@ export default class UserService {
                 address: RequestUtil.wrapValueIfNotNull(address)
             }
         }).then(() => null);
+    }
+
+    private static _parseDeviceType(deviceType: string | DeviceType): DeviceType {
+        if (typeof deviceType === 'string') {
+            deviceType = DeviceType[deviceType] as DeviceType
+            if (RequestUtil.isFalsy(deviceType)) {
+                throw TurmsBusinessError.from(TurmsStatusCode.ILLEGAL_ARGUMENT, 'illegal DeviceType');
+            }
+            return deviceType;
+        } else if (typeof deviceType === 'number') {
+            if (deviceType >= 0 && deviceType <= DeviceType.UNKNOWN) {
+                return deviceType;
+            } else {
+                throw TurmsBusinessError.from(TurmsStatusCode.ILLEGAL_ARGUMENT, 'illegal DeviceType');
+            }
+        } else {
+            return SystemUtil.getDeviceType();
+        }
+    }
+
+    private static _parseUserStatus(onlineStatus: string | UserStatus): UserStatus {
+        if (typeof onlineStatus === 'string') {
+            onlineStatus = UserStatus[onlineStatus] as UserStatus;
+            if (RequestUtil.isFalsy(onlineStatus)) {
+                TurmsBusinessError.notFalsy('onlineStatus');
+            }
+        }
+        if (onlineStatus === UserStatus.OFFLINE) {
+            throw TurmsBusinessError.illegalParam('onlineStatus cannot be OFFLINE');
+        }
+        return onlineStatus;
+    }
+
+    private _changeToOnline(): void {
+        if (!this.isLoggedIn) {
+            this._stateStore.isSessionOpen = true;
+            this._onOnlineListeners.forEach(listener => listener());
+        }
+    }
+
+    private _changeToOffline(sessionCloseInfo?: SessionCloseInfo): void {
+        if (this.isLoggedIn) {
+            this._userInfo.onlineStatus = UserStatus.OFFLINE;
+            this._stateStore.isSessionOpen = false;
+            this._onOfflineListeners.forEach(listener => listener(sessionCloseInfo));
+        }
     }
 }

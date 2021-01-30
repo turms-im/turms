@@ -24,27 +24,23 @@ function beautify(object) {
 }
 
 function setupClient(container, client, userId, password, targetId) {
-    client.driver.onSessionDisconnected = disconnectInfo => {
-        appendContainer(container, `onSessionDisconnected: ${beautify(disconnectInfo)}`);
-    };
-    client.notificationService.onNotification = notification => {
-        appendContainer(container, `onNotification: Receive a notification from other users or server: ${beautify(notification)}`);
-    };
-    client.messageService.onMessage = message => {
-        appendContainer(container, `onMessage: Receive a message from other users or server: ${beautify(message)}`);
-    };
+    client.userService.addOnOfflineListener(sessionCloseInfo => {
+        appendContainer(container, `onOffline: ${beautify(sessionCloseInfo)}`);
+    });
+    client.notificationService.addNotificationListener(notification => {
+        appendContainer(container, `Notification: Receive a notification from other users or server: ${beautify(notification)}`);
+    });
+    client.messageService.addMessageListener(message => {
+        appendContainer(container, `Message: Receive a message from other users or server: ${beautify(message)}`);
+    });
     client.userService.login(userId, password)
         .then(() => {
             appendContainer(container, 'login: User one has logged in');
-            client.messageService.queryPendingMessagesWithTotal(1)
+            client.messageService.queryMessagesWithTotal(1)
                 .then(messages => appendContainer(container, `Offline messages: ${beautify(messages)}`))
-                .catch(error => {
-                    if (error && error.code === 2001) {
-                        appendContainer(container, 'No offline message');
-                    }
-                });
+                .catch(error => appendContainer(container, `failed to query offline messages ${beautify(error)}`, true));
             const intervalId = setInterval(() => {
-                if (client.driver.isConnected()) {
+                if (client.driver.isConnected) {
                     client.messageService.sendMessage(
                         false,
                         targetId,

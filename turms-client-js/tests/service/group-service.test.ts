@@ -3,7 +3,6 @@ import TurmsClient from '../../src/turms-client';
 import TurmsStatusCode from '../../src/model/turms-status-code'
 import {im} from '../../src/model/proto-bundle';
 import GroupMemberRole = im.turms.proto.GroupMemberRole;
-import TurmsBusinessError from "../../types/model/turms-business-error";
 
 const GROUP_MEMBER_ID = '3';
 const GROUP_INVITATION_INVITEE = '4';
@@ -17,13 +16,11 @@ let groupInvitationId;
 
 beforeAll(async () => {
     turmsClient = new TurmsClient(Constants.WS_URL);
-    await turmsClient.driver.connect('1', "123", null);
+    await turmsClient.userService.login('1', '123');
 });
 
 afterAll(async () => {
-    if (turmsClient.driver.isConnected()) {
-        await turmsClient.driver.disconnect();
-    }
+    await turmsClient.userService.logout();
 });
 
 describe('Constructor', () => {

@@ -1,7 +1,7 @@
-import {google, im} from "../model/proto-bundle";
-import {ParsedModel} from "../model/parsed-model";
-import TurmsStatusCode from "../model/turms-status-code";
-import TurmsBusinessError from "../model/turms-business-error";
+import {google, im} from '../model/proto-bundle';
+import {ParsedModel} from '../model/parsed-model';
+import TurmsStatusCode from '../model/turms-status-code';
+import TurmsBusinessError from '../model/turms-business-error';
 import TurmsNotification = im.turms.proto.TurmsNotification;
 import IInt64Value = google.protobuf.IInt64Value;
 

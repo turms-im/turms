@@ -3,6 +3,11 @@ export interface ParsedNotification {
     code?: number;
     reason?: string;
     data?: any;
-    relayedRequest?: any; //TODO
+    relayedRequest?: ParsedRelayedRequest; //TODO
     requesterId?: string;
+    closeStatus?: number;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface ParsedRelayedRequest {
 }

@@ -1,15 +1,13 @@
-import TurmsClient from "../turms-client";
-import {im} from "../model/proto-bundle";
-import RequestUtil from "../util/request-util";
-import {ParsedModel} from "../model/parsed-model";
-import NotificationUtil from "../util/notification-util";
+import TurmsClient from '../turms-client';
+import {im} from '../model/proto-bundle';
+import RequestUtil from '../util/request-util';
+import {ParsedModel} from '../model/parsed-model';
+import NotificationUtil from '../util/notification-util';
+import MessageAddition from '../model/message/message-addition';
+import TurmsBusinessError from '../model/turms-business-error';
+import BuiltinSystemMessageType from '../model/message/builtin-system-message-type';
 // @ts-ignore
-import MessageAddition from "../model/message/message-addition";
-import TurmsBusinessError from "../model/turms-business-error";
-// @ts-ignore
-import BuiltinSystemMessageType from "../model/message/builtin-system-message-type";
-// @ts-ignore
-import {util as ProtoUtil} from "protobufjs/minimal";
+import {util as ProtoUtil} from 'protobufjs/minimal';
 import File = im.turms.proto.File;
 import AudioFile = im.turms.proto.AudioFile;
 import VideoFile = im.turms.proto.VideoFile;
@@ -36,26 +34,27 @@ export default class MessageService {
 
     private _turmsClient: TurmsClient;
     private _mentionedUserIdsParser?: (message: ParsedModel.Message) => string[];
-    private _onMessage?: (message: ParsedModel.Message, messageAddition: MessageAddition) => void;
+    private _messageListeners: ((message: ParsedModel.Message, messageAddition: MessageAddition) => void)[] = [];
 
-    get onMessage(): (message: ParsedModel.Message, messageAddition: MessageAddition) => void {
-        return this._onMessage;
+    addMessageListener(listener: (message: ParsedModel.Message, messageAddition: MessageAddition) => void): void {
+        this._messageListeners.push(listener);
     }
 
-    set onMessage(value: (message: ParsedModel.Message, messageAddition: MessageAddition) => void) {
-        this._onMessage = value;
+    removeMessageListener(listener: (message: ParsedModel.Message, messageAddition: MessageAddition) => void): void {
+        this._messageListeners = this._messageListeners.filter(cur => cur !== listener);
     }
 
     constructor(turmsClient: TurmsClient) {
         this._turmsClient = turmsClient;
         this._turmsClient.driver
-            .addOnNotificationListener(notification => {
-                if (this._onMessage != null && notification.relayedRequest) {
+            .addNotificationListener(notification => {
+                if (this._messageListeners.length && notification.relayedRequest) {
+                    // @ts-ignore
                     const request = notification.relayedRequest.createMessageRequest;
                     if (request) {
                         const message = MessageService._createMessageRequest2Message(notification.requesterId, request);
                         const addition = this._parseMessageAddition(message);
-                        this._onMessage(message, addition);
+                        this._messageListeners.forEach(listener => listener(message, addition));
                     }
                 }
                 return null;
@@ -70,10 +69,10 @@ export default class MessageService {
         records?: Uint8Array[],
         burnAfter?: number): Promise<string> {
         if (RequestUtil.isFalsy(targetId)) {
-            return TurmsBusinessError.notFalsy('targetId');
+            return TurmsBusinessError.notFalsyPromise('targetId');
         }
         if (RequestUtil.isFalsy(text) && RequestUtil.isFalsy(records)) {
-            return TurmsBusinessError.illegalParam('text and records must not all be null');
+            return TurmsBusinessError.illegalParamPromise('text and records must not all be null');
         }
         if (!deliveryDate) {
             deliveryDate = new Date();
@@ -95,10 +94,10 @@ export default class MessageService {
         isGroupMessage: boolean,
         targetId: string): Promise<string> {
         if (RequestUtil.isFalsy(messageId)) {
-            return TurmsBusinessError.notFalsy('messageId');
+            return TurmsBusinessError.notFalsyPromise('messageId');
         }
         if (RequestUtil.isFalsy(targetId)) {
-            return TurmsBusinessError.notFalsy('targetId');
+            return TurmsBusinessError.notFalsyPromise('targetId');
         }
         return this._turmsClient.driver.send({
             createMessageRequest: {
@@ -114,7 +113,7 @@ export default class MessageService {
         text?: string,
         records?: Uint8Array[]): Promise<void> {
         if (RequestUtil.isFalsy(messageId)) {
-            return TurmsBusinessError.notFalsy('messageId');
+            return TurmsBusinessError.notFalsyPromise('messageId');
         }
         if (RequestUtil.areAllFalsy(text, records)) {
             return Promise.resolve();
@@ -174,7 +173,7 @@ export default class MessageService {
 
     recallMessage(messageId: string, recallDate = new Date()): Promise<void> {
         if (RequestUtil.isFalsy(messageId)) {
-            return TurmsBusinessError.notFalsy('messageId');
+            return TurmsBusinessError.notFalsyPromise('messageId');
         }
         return this._turmsClient.driver.send({
             updateMessageRequest: {
@@ -298,7 +297,7 @@ export default class MessageService {
         const mentionedUserIds = this._mentionedUserIdsParser
             ? this._mentionedUserIdsParser(message)
             : [];
-        const isMentioned = mentionedUserIds.includes(this._turmsClient.userService.userId);
+        const isMentioned = mentionedUserIds.includes(this._turmsClient.userService.userInfo.userId);
         const systemMessageType = message.isSystemMessage && message.records[0]?.[0];
         const recalledMessageIds = [];
         if (systemMessageType === BuiltinSystemMessageType.RECALL_MESSAGE) {

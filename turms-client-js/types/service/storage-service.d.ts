@@ -1,4 +1,4 @@
-import TurmsClient from "../turms-client";
+import TurmsClient from '../turms-client';
 export default class StorageService {
     private _turmsClient;
     private _serverUrl;

@@ -1,10 +1,10 @@
-import TurmsClient from "../turms-client";
-import RequestUtil from "../util/request-util";
-import {ParsedModel} from "../model/parsed-model";
-import NotificationUtil from "../util/notification-util";
-import TurmsBusinessError from "../model/turms-business-error";
+import TurmsClient from '../turms-client';
+import RequestUtil from '../util/request-util';
+import {ParsedModel} from '../model/parsed-model';
+import NotificationUtil from '../util/notification-util';
+import TurmsBusinessError from '../model/turms-business-error';
 
-export default class MessageService {
+export default class ConversationService {
 
     private _turmsClient: TurmsClient;
 
@@ -42,7 +42,7 @@ export default class MessageService {
 
     updatePrivateConversationReadDate(targetId: string, readDate?: Date): Promise<void> {
         if (RequestUtil.isFalsy(targetId)) {
-            return TurmsBusinessError.notFalsy('targetId');
+            return TurmsBusinessError.notFalsyPromise('targetId');
         }
         readDate = readDate ?? new Date();
         return this._turmsClient.driver.send({
@@ -55,7 +55,7 @@ export default class MessageService {
 
     updateGroupConversationReadDate(groupId: string, readDate?: Date): Promise<void> {
         if (RequestUtil.isFalsy(groupId)) {
-            return TurmsBusinessError.notFalsy('groupId');
+            return TurmsBusinessError.notFalsyPromise('groupId');
         }
         readDate = readDate ?? new Date();
         return this._turmsClient.driver.send({
@@ -68,7 +68,7 @@ export default class MessageService {
 
     updatePrivateConversationTypingStatus(targetId: string): Promise<void> {
         if (RequestUtil.isFalsy(targetId)) {
-            return TurmsBusinessError.notFalsy('targetId');
+            return TurmsBusinessError.notFalsyPromise('targetId');
         }
         return this._turmsClient.driver.send({
             updateTypingStatusRequest: {
@@ -80,7 +80,7 @@ export default class MessageService {
 
     updateGroupConversationTypingStatus(groupId: string): Promise<void> {
         if (RequestUtil.isFalsy(groupId)) {
-            return TurmsBusinessError.notFalsy('groupId');
+            return TurmsBusinessError.notFalsyPromise('groupId');
         }
         return this._turmsClient.driver.send({
             updateTypingStatusRequest: {

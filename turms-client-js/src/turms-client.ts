@@ -1,12 +1,12 @@
-import TurmsDriver from "./driver/turms-driver";
-import UserService from "./service/user-service";
-import GroupService from "./service/group-service";
-import ConversationService from "./service/conversation-service";
-import MessageService from "./service/message-service";
-import NotificationService from "./service/notification-service";
-import InputFileReader from "./util/input-file-reader";
-import StorageService from "./service/storage-service";
-import ClientOptions from "./client-options";
+import TurmsDriver from './driver/turms-driver';
+import UserService from './service/user-service';
+import GroupService from './service/group-service';
+import ConversationService from './service/conversation-service';
+import MessageService from './service/message-service';
+import NotificationService from './service/notification-service';
+import InputFileReader from './util/input-file-reader';
+import StorageService from './service/storage-service';
+import ClientOptions from './client-options';
 
 class TurmsClient {
     private readonly _driver: TurmsDriver;
@@ -17,47 +17,43 @@ class TurmsClient {
     private readonly _storageService: StorageService;
     private readonly _notificationService: NotificationService;
 
+    constructor(options?: ClientOptions);
+
+    constructor(
+        wsUrl?: string,
+        connectionTimeout?: number,
+        requestTimeout?: number,
+        minRequestInterval?: number,
+        heartbeatInterval?: number,
+        storageServerUrl?: string);
+
     constructor(
         wsUrlOrOptions?: string | ClientOptions,
         connectionTimeout?: number,
         requestTimeout?: number,
         minRequestInterval?: number,
         heartbeatInterval?: number,
-        storageServerUrl?: string,
-        httpUrl?: string,
-        queryReasonWhenLoginFailed?: boolean,
-        queryReasonWhenDisconnected?: boolean,
-        storePassword?: boolean) {
+        storageServerUrl?: string) {
         if (typeof wsUrlOrOptions === 'object') {
-            return new TurmsClient(
-                wsUrlOrOptions.wsUrl,
-                wsUrlOrOptions.connectionTimeout,
-                wsUrlOrOptions.requestTimeout,
-                wsUrlOrOptions.minRequestInterval,
-                wsUrlOrOptions.heartbeatInterval,
-                wsUrlOrOptions.storageServerUrl,
-                wsUrlOrOptions.httpUrl,
-                wsUrlOrOptions.queryReasonWhenLoginFailed,
-                wsUrlOrOptions.queryReasonWhenDisconnected,
-                wsUrlOrOptions.storePassword);
-        } else {
-            this._driver = new TurmsDriver(
-                wsUrlOrOptions,
-                connectionTimeout,
-                requestTimeout,
-                minRequestInterval,
-                heartbeatInterval,
-                httpUrl,
-                queryReasonWhenLoginFailed,
-                queryReasonWhenDisconnected,
-                storePassword);
-            this._userService = new UserService(this);
-            this._groupService = new GroupService(this);
-            this._conversationService = new ConversationService(this);
-            this._messageService = new MessageService(this);
-            this._storageService = new StorageService(this, storageServerUrl);
-            this._notificationService = new NotificationService(this);
+            connectionTimeout = wsUrlOrOptions.connectionTimeout;
+            requestTimeout = wsUrlOrOptions.requestTimeout;
+            minRequestInterval = wsUrlOrOptions.minRequestInterval;
+            heartbeatInterval = wsUrlOrOptions.heartbeatInterval;
+            storageServerUrl = wsUrlOrOptions.storageServerUrl;
+            wsUrlOrOptions = wsUrlOrOptions.wsUrl;
         }
+        this._driver = new TurmsDriver(
+            wsUrlOrOptions,
+            connectionTimeout,
+            requestTimeout,
+            minRequestInterval,
+            heartbeatInterval);
+        this._userService = new UserService(this);
+        this._groupService = new GroupService(this);
+        this._conversationService = new ConversationService(this);
+        this._messageService = new MessageService(this);
+        this._storageService = new StorageService(this, storageServerUrl);
+        this._notificationService = new NotificationService(this);
     }
 
     // Driver
@@ -93,6 +89,10 @@ class TurmsClient {
     // Util
     static InputFileReader(): InputFileReader {
         return InputFileReader;
+    }
+
+    close(): Promise<void> {
+        return this.driver.close();
     }
 }
 

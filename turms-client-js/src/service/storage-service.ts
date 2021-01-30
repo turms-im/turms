@@ -1,17 +1,17 @@
-import TurmsClient from "../turms-client";
-import TurmsStatusCode from "../model/turms-status-code";
-import {im} from "../model/proto-bundle";
-import TurmsBusinessError from "../model/turms-business-error";
-import RequestUtil from "../util/request-util";
-import NotificationUtil from "../util/notification-util";
+import TurmsClient from '../turms-client';
+import TurmsStatusCode from '../model/turms-status-code';
+import {im} from '../model/proto-bundle';
+import TurmsBusinessError from '../model/turms-business-error';
+import RequestUtil from '../util/request-util';
+import NotificationUtil from '../util/notification-util';
 // @ts-ignore
-import fetch from 'unfetch';
+import unfetch from 'unfetch';
 import ContentType = im.turms.proto.ContentType;
 
 export default class StorageService {
 
     private _turmsClient: TurmsClient;
-    private _serverUrl = "http://localhost:9000";
+    private _serverUrl = 'http://localhost:9000';
 
     constructor(turmsClient: TurmsClient, storageServerUrl?: string) {
         this._turmsClient = turmsClient;
@@ -41,7 +41,7 @@ export default class StorageService {
     }
 
     public queryProfilePictureUrlForUpload(pictureSize): Promise<string> {
-        const userId = this._turmsClient.userService.userId;
+        const userId = this._turmsClient.userService.userInfo.userId;
         if (userId) {
             return this._getSignedPutUrl(ContentType.PROFILE, pictureSize, null, userId);
         } else {
@@ -138,7 +138,7 @@ export default class StorageService {
     private _getBytesFromGetUrl(url: string): Promise<Uint8Array> {
         return new Promise((resolve, reject) => {
             try {
-                fetch(url)
+                unfetch(url)
                     .then(res => {
                         if (res.status === 200) {
                             return res.blob();
@@ -162,7 +162,7 @@ export default class StorageService {
     private _upload(url: string, bytes: Uint8Array): Promise<string> {
         return new Promise((resolve, reject) => {
             try {
-                fetch(url, {method: 'PUT', body: bytes}).then(res => {
+                unfetch(url, {method: 'PUT', body: bytes}).then(res => {
                     if (res.status === 200) {
                         resolve(res.url)
                     } else {
@@ -176,6 +176,6 @@ export default class StorageService {
     }
 
     private static _getBucketName(contentType: ContentType): string {
-        return ContentType[contentType].toString().toLowerCase().replace("_", "-");
+        return ContentType[contentType].toString().toLowerCase().replace('_', '-');
     }
 }

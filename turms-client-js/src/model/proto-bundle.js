@@ -4321,7 +4321,7 @@ $root.im = (function() {
                  * @interface IUserRelationship
                  * @property {google.protobuf.IInt64Value|null} [ownerId] UserRelationship ownerId
                  * @property {google.protobuf.IInt64Value|null} [relatedUserId] UserRelationship relatedUserId
-                 * @property {google.protobuf.IBoolValue|null} [blocked] UserRelationship blocked
+                 * @property {google.protobuf.IInt64Value|null} [blockDate] UserRelationship blockDate
                  * @property {google.protobuf.IInt64Value|null} [groupIndex] UserRelationship groupIndex
                  * @property {google.protobuf.IInt64Value|null} [establishmentDate] UserRelationship establishmentDate
                  */
@@ -4358,12 +4358,12 @@ $root.im = (function() {
                 UserRelationship.prototype.relatedUserId = null;
 
                 /**
-                 * UserRelationship blocked.
-                 * @member {google.protobuf.IBoolValue|null|undefined} blocked
+                 * UserRelationship blockDate.
+                 * @member {google.protobuf.IInt64Value|null|undefined} blockDate
                  * @memberof im.turms.proto.UserRelationship
                  * @instance
                  */
-                UserRelationship.prototype.blocked = null;
+                UserRelationship.prototype.blockDate = null;
 
                 /**
                  * UserRelationship groupIndex.
@@ -4397,8 +4397,8 @@ $root.im = (function() {
                         $root.google.protobuf.Int64Value.encode(message.ownerId, writer.uint32(/* id 1, wireType 2 =*/10).fork()).ldelim();
                     if (message.relatedUserId != null && Object.hasOwnProperty.call(message, "relatedUserId"))
                         $root.google.protobuf.Int64Value.encode(message.relatedUserId, writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
-                    if (message.blocked != null && Object.hasOwnProperty.call(message, "blocked"))
-                        $root.google.protobuf.BoolValue.encode(message.blocked, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+                    if (message.blockDate != null && Object.hasOwnProperty.call(message, "blockDate"))
+                        $root.google.protobuf.Int64Value.encode(message.blockDate, writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
                     if (message.groupIndex != null && Object.hasOwnProperty.call(message, "groupIndex"))
                         $root.google.protobuf.Int64Value.encode(message.groupIndex, writer.uint32(/* id 4, wireType 2 =*/34).fork()).ldelim();
                     if (message.establishmentDate != null && Object.hasOwnProperty.call(message, "establishmentDate"))
@@ -4431,7 +4431,7 @@ $root.im = (function() {
                             message.relatedUserId = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
                             break;
                         case 3:
-                            message.blocked = $root.google.protobuf.BoolValue.decode(reader, reader.uint32());
+                            message.blockDate = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
                             break;
                         case 4:
                             message.groupIndex = $root.google.protobuf.Int64Value.decode(reader, reader.uint32());
@@ -4736,6 +4736,7 @@ $root.im = (function() {
                  * @memberof im.turms.proto
                  * @interface IUserSession
                  * @property {string|null} [sessionId] UserSession sessionId
+                 * @property {string|null} [serverId] UserSession serverId
                  */
 
                 /**
@@ -4762,6 +4763,14 @@ $root.im = (function() {
                 UserSession.prototype.sessionId = "";
 
                 /**
+                 * UserSession serverId.
+                 * @member {string} serverId
+                 * @memberof im.turms.proto.UserSession
+                 * @instance
+                 */
+                UserSession.prototype.serverId = "";
+
+                /**
                  * Encodes the specified UserSession message. Does not implicitly {@link im.turms.proto.UserSession.verify|verify} messages.
                  * @function encode
                  * @memberof im.turms.proto.UserSession
@@ -4775,6 +4784,8 @@ $root.im = (function() {
                         writer = $Writer.create();
                     if (message.sessionId != null && Object.hasOwnProperty.call(message, "sessionId"))
                         writer.uint32(/* id 1, wireType 2 =*/10).string(message.sessionId);
+                    if (message.serverId != null && Object.hasOwnProperty.call(message, "serverId"))
+                        writer.uint32(/* id 2, wireType 2 =*/18).string(message.serverId);
                     return writer;
                 };
 
@@ -4798,6 +4809,9 @@ $root.im = (function() {
                         switch (tag >>> 3) {
                         case 1:
                             message.sessionId = reader.string();
+                            break;
+                        case 2:
+                            message.serverId = reader.string();
                             break;
                         default:
                             reader.skipType(tag & 7);

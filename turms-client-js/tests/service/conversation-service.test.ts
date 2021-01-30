@@ -8,13 +8,11 @@ const GROUP_ID = '1';
 
 beforeAll(async () => {
     turmsClient = new TurmsClient(Constants.WS_URL);
-    await turmsClient.driver.connect(USER_ID, "123");
+    await turmsClient.userService.login(USER_ID, "123");
 });
 
 afterAll(async () => {
-    if (turmsClient.driver.isConnected()) {
-        await turmsClient.driver.disconnect();
-    }
+    await turmsClient.userService.logout();
 });
 
 describe('Constructor', () => {

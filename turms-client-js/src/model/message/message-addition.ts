@@ -1,7 +1,7 @@
 export default class MessageAddition {
-    public isMentioned: boolean;
-    public mentionedUserIds: string[];
-    public recalledMessageIds: string[];
+    public readonly isMentioned: boolean;
+    public readonly mentionedUserIds: string[];
+    public readonly recalledMessageIds: string[];
 
     constructor(isMentioned: boolean, mentionedUserIds: string[], recalledMessageIds: string[]) {
         this.isMentioned = isMentioned;

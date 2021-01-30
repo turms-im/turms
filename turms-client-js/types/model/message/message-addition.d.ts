@@ -1,6 +1,6 @@
 export default class MessageAddition {
-    isMentioned: boolean;
-    mentionedUserIds: string[];
-    recalledMessageIds: string[];
+    readonly isMentioned: boolean;
+    readonly mentionedUserIds: string[];
+    readonly recalledMessageIds: string[];
     constructor(isMentioned: boolean, mentionedUserIds: string[], recalledMessageIds: string[]);
 }

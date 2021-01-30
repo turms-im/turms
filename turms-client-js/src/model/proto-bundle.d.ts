@@ -1,4 +1,5 @@
-import * as $protobuf from "protobufjs";
+import * as $protobuf from 'protobufjs';
+
 /** Namespace im. */
 export namespace im {
 
@@ -1929,8 +1930,8 @@ export namespace im {
                 /** UserRelationship relatedUserId */
                 relatedUserId?: (google.protobuf.IInt64Value|null);
 
-                /** UserRelationship blocked */
-                blocked?: (google.protobuf.IBoolValue|null);
+                /** UserRelationship blockDate */
+                blockDate?: (google.protobuf.IInt64Value|null);
 
                 /** UserRelationship groupIndex */
                 groupIndex?: (google.protobuf.IInt64Value|null);
@@ -1954,8 +1955,8 @@ export namespace im {
                 /** UserRelationship relatedUserId. */
                 public relatedUserId?: (google.protobuf.IInt64Value|null);
 
-                /** UserRelationship blocked. */
-                public blocked?: (google.protobuf.IBoolValue|null);
+                /** UserRelationship blockDate. */
+                public blockDate?: (google.protobuf.IInt64Value|null);
 
                 /** UserRelationship groupIndex. */
                 public groupIndex?: (google.protobuf.IInt64Value|null);
@@ -2113,6 +2114,9 @@ export namespace im {
 
                 /** UserSession sessionId */
                 sessionId?: (string|null);
+
+                /** UserSession serverId */
+                serverId?: (string|null);
             }
 
             /** Represents a UserSession. */
@@ -2126,6 +2130,9 @@ export namespace im {
 
                 /** UserSession sessionId. */
                 public sessionId: string;
+
+                /** UserSession serverId. */
+                public serverId: string;
 
                 /**
                  * Encodes the specified UserSession message. Does not implicitly {@link im.turms.proto.UserSession.verify|verify} messages.
@@ -2482,7 +2489,7 @@ export namespace im {
                     public groupsWithVersion?: (im.turms.proto.IGroupsWithVersion|null);
 
                     /** Data kind. */
-                    public kind?: ("ids"|"idsWithVersion"|"url"|"conversations"|"messages"|"messagesWithTotalList"|"userSession"|"usersInfosWithVersion"|"usersOnlineStatuses"|"userFriendRequestsWithVersion"|"userRelationshipGroupsWithVersion"|"userRelationshipsWithVersion"|"userSessionIds"|"groupInvitationsWithVersion"|"groupJoinQuestionAnswerResult"|"groupJoinRequestsWithVersion"|"groupJoinQuestionsWithVersion"|"groupMembersWithVersion"|"groupsWithVersion");
+                    public kind?: ('ids'|'idsWithVersion'|'url'|'conversations'|'messages'|'messagesWithTotalList'|'userSession'|'usersInfosWithVersion'|'usersOnlineStatuses'|'userFriendRequestsWithVersion'|'userRelationshipGroupsWithVersion'|'userRelationshipsWithVersion'|'userSessionIds'|'groupInvitationsWithVersion'|'groupJoinQuestionAnswerResult'|'groupJoinRequestsWithVersion'|'groupJoinQuestionsWithVersion'|'groupMembersWithVersion'|'groupsWithVersion');
 
                     /**
                      * Encodes the specified Data message. Does not implicitly {@link im.turms.proto.TurmsNotification.Data.verify|verify} messages.
@@ -4590,7 +4597,7 @@ export namespace im {
                 public querySignedPutUrlRequest?: (im.turms.proto.IQuerySignedPutUrlRequest|null);
 
                 /** TurmsRequest kind. */
-                public kind?: ("createSessionRequest"|"deleteSessionRequest"|"queryConversationsRequest"|"updateConversationRequest"|"updateTypingStatusRequest"|"createMessageRequest"|"queryMessagesRequest"|"updateMessageRequest"|"createGroupMemberRequest"|"deleteGroupMemberRequest"|"queryGroupMembersRequest"|"updateGroupMemberRequest"|"queryUserProfileRequest"|"queryUserIdsNearbyRequest"|"queryUserInfosNearbyRequest"|"queryUserOnlineStatusesRequest"|"updateUserLocationRequest"|"updateUserOnlineStatusRequest"|"updateUserRequest"|"createFriendRequestRequest"|"createRelationshipGroupRequest"|"createRelationshipRequest"|"deleteRelationshipGroupRequest"|"deleteRelationshipRequest"|"queryFriendRequestsRequest"|"queryRelatedUserIdsRequest"|"queryRelationshipGroupsRequest"|"queryRelationshipsRequest"|"updateFriendRequestRequest"|"updateRelationshipGroupRequest"|"updateRelationshipRequest"|"createGroupRequest"|"deleteGroupRequest"|"queryGroupRequest"|"queryJoinedGroupIdsRequest"|"queryJoinedGroupInfosRequest"|"updateGroupRequest"|"createGroupBlockedUserRequest"|"deleteGroupBlockedUserRequest"|"queryGroupBlockedUserIdsRequest"|"queryGroupBlockedUserInfosRequest"|"checkGroupJoinQuestionsAnswersRequest"|"createGroupInvitationRequest"|"createGroupJoinRequestRequest"|"createGroupJoinQuestionRequest"|"deleteGroupInvitationRequest"|"deleteGroupJoinRequestRequest"|"deleteGroupJoinQuestionRequest"|"queryGroupInvitationsRequest"|"queryGroupJoinRequestsRequest"|"queryGroupJoinQuestionsRequest"|"updateGroupJoinQuestionRequest"|"deleteResourceRequest"|"querySignedGetUrlRequest"|"querySignedPutUrlRequest");
+                public kind?: ('createSessionRequest'|'deleteSessionRequest'|'queryConversationsRequest'|'updateConversationRequest'|'updateTypingStatusRequest'|'createMessageRequest'|'queryMessagesRequest'|'updateMessageRequest'|'createGroupMemberRequest'|'deleteGroupMemberRequest'|'queryGroupMembersRequest'|'updateGroupMemberRequest'|'queryUserProfileRequest'|'queryUserIdsNearbyRequest'|'queryUserInfosNearbyRequest'|'queryUserOnlineStatusesRequest'|'updateUserLocationRequest'|'updateUserOnlineStatusRequest'|'updateUserRequest'|'createFriendRequestRequest'|'createRelationshipGroupRequest'|'createRelationshipRequest'|'deleteRelationshipGroupRequest'|'deleteRelationshipRequest'|'queryFriendRequestsRequest'|'queryRelatedUserIdsRequest'|'queryRelationshipGroupsRequest'|'queryRelationshipsRequest'|'updateFriendRequestRequest'|'updateRelationshipGroupRequest'|'updateRelationshipRequest'|'createGroupRequest'|'deleteGroupRequest'|'queryGroupRequest'|'queryJoinedGroupIdsRequest'|'queryJoinedGroupInfosRequest'|'updateGroupRequest'|'createGroupBlockedUserRequest'|'deleteGroupBlockedUserRequest'|'queryGroupBlockedUserIdsRequest'|'queryGroupBlockedUserInfosRequest'|'checkGroupJoinQuestionsAnswersRequest'|'createGroupInvitationRequest'|'createGroupJoinRequestRequest'|'createGroupJoinQuestionRequest'|'deleteGroupInvitationRequest'|'deleteGroupJoinRequestRequest'|'deleteGroupJoinQuestionRequest'|'queryGroupInvitationsRequest'|'queryGroupJoinRequestsRequest'|'queryGroupJoinQuestionsRequest'|'updateGroupJoinQuestionRequest'|'deleteResourceRequest'|'querySignedGetUrlRequest'|'querySignedPutUrlRequest');
 
                 /**
                  * Encodes the specified TurmsRequest message. Does not implicitly {@link im.turms.proto.TurmsRequest.verify|verify} messages.

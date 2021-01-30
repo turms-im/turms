@@ -1,25 +1,29 @@
-import TurmsClient from "../turms-client";
+import TurmsClient from '../turms-client';
+import {ParsedRelayedRequest} from '../model/parsed-notification';
 
 export default class NotificationService {
     private _turmsClient: TurmsClient;
-    private _onNotification?: (notification: any) => void;
+    private _notificationListeners: ((notification: ParsedRelayedRequest) => void)[] = [];
 
-    get onNotification(): (notification: any) => void {
-        return this._onNotification;
+    addNotificationListener(listener: (notification: ParsedRelayedRequest) => void): void {
+        this._notificationListeners.push(listener);
     }
 
-    set onNotification(value: (notification: any) => void) {
-        this._onNotification = value;
+    removeNotificationListener(listener: (notification: ParsedRelayedRequest) => void): void {
+        this._notificationListeners = this._notificationListeners
+            .filter(cur => cur !== listener);
     }
 
     constructor(turmsClient: TurmsClient) {
         this._turmsClient = turmsClient;
         this._turmsClient.driver
-            .addOnNotificationListener(notification => {
-                if (this._onNotification != null && notification.relayedRequest && !notification.relayedRequest.createMessageRequest) {
-                    this._onNotification(notification.relayedRequest);
+            .addNotificationListener(notification => {
+                const isBusinessNotification = notification.relayedRequest
+                    && !notification.relayedRequest['createMessageRequest']
+                    && !notification.closeStatus;
+                if (isBusinessNotification) {
+                    this._notificationListeners.forEach(listener => listener(notification.relayedRequest));
                 }
-                return null;
             });
     }
 }

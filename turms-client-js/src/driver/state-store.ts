@@ -15,26 +15,18 @@
  * limitations under the License.
  */
 
-import UserLocation from "../model/user-location";
-import {im} from "../model/proto-bundle";
-import UserStatus = im.turms.proto.UserStatus;
-import DeviceType = im.turms.proto.DeviceType;
-
-export interface UserInfo {
-    userId?: string,
-    userOnlineStatus?: UserStatus,
-    deviceType?: DeviceType,
-    location?: UserLocation
-}
-
 export default class StateStore {
 
+    /** Connection **/
     private _websocket?: WebSocket;
-    private _isConnected: boolean;
-    private _connectionRequestId?: number;
+
+    /** Session **/
+    private _isSessionOpen = false;
     private _sessionId?: string;
+    private _serverId?: string;
+
+    /** Request **/
     private _lastRequestDate = new Date(0);
-    private _userInfo: UserInfo = {};
 
     get websocket(): WebSocket {
         return this._websocket;
@@ -45,19 +37,16 @@ export default class StateStore {
     }
 
     get isConnected(): boolean {
-        return this._isConnected;
+        const ws = this._websocket;
+        return ws && ws.readyState === WebSocket.OPEN;
     }
 
-    set isConnected(value: boolean) {
-        this._isConnected = value;
+    get isSessionOpen(): boolean {
+        return this._isSessionOpen;
     }
 
-    get connectionRequestId(): number {
-        return this._connectionRequestId;
-    }
-
-    set connectionRequestId(value: number) {
-        this._connectionRequestId = value;
+    set isSessionOpen(value: boolean) {
+        this._isSessionOpen = value;
     }
 
     get sessionId(): string {
@@ -68,6 +57,14 @@ export default class StateStore {
         this._sessionId = value;
     }
 
+    get serverId(): string {
+        return this._serverId;
+    }
+
+    set serverId(value: string) {
+        this._serverId = value;
+    }
+
     get lastRequestDate(): Date {
         return this._lastRequestDate;
     }
@@ -76,12 +73,11 @@ export default class StateStore {
         this._lastRequestDate = value;
     }
 
-    get userInfo(): UserInfo {
-        return this._userInfo;
+    reset(): void {
+        this._websocket = null;
+        this._isSessionOpen = false;
+        this._sessionId = null;
+        this._serverId = null;
+        this._lastRequestDate = new Date(0);
     }
-
-    set userInfo(value: UserInfo) {
-        this._userInfo = value;
-    }
-
 }

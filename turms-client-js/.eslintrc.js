@@ -21,6 +21,8 @@ module.exports = {
         "@typescript-eslint/ban-ts-ignore": "off",
         "@typescript-eslint/no-namespace": "off",
         "@typescript-eslint/explicit-function-return-type": "error",
-        "no-trailing-spaces": "error"
-    }
+        "no-trailing-spaces": "error",
+        "quotes": ["error", "single"]
+    },
+    ignorePatterns: [".eslintrc.js"]
 };

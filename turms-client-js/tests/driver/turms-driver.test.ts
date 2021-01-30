@@ -1,40 +1,45 @@
 import TurmsDriver from "../../src/driver/turms-driver";
 import TurmsClient from "../../src/turms-client";
+import TurmsStatusCode from "../../src/model/turms-status-code";
 
-let turmsDriver: TurmsDriver;
+let client: TurmsClient;
+let driver: TurmsDriver;
 
 beforeAll(() => {
-    turmsDriver = new TurmsClient().driver;
+    client = new TurmsClient();
+    driver = client.driver;
 });
 
 afterAll(async () => {
-    if (turmsDriver.isConnected()) {
-        await turmsDriver.disconnect();
-    }
+    await driver.disconnect();
 });
 
 describe('TurmsDriver Class', () => {
     it('constructor_shouldReturnNotNullDriverInstance', () => {
-        expect(turmsDriver).toBeTruthy();
+        expect(driver).toBeTruthy();
     });
     it('connect_shouldSucceed', async () => {
-        const result = await turmsDriver.connect('1', '123');
-        expect(result).toBeUndefined();
+        await driver.connect();
+        expect(driver.isConnected).toBeTruthy();
+    });
+    it('login_shouldSucceed', async () => {
+        await client.userService.login('1', '123');
+        expect(client.userService.isLoggedIn).toBeTruthy();
     });
     it('sendHeartbeat_shouldSucceed', async () => {
-        const result = await turmsDriver.sendHeartbeat();
+        const result = await driver.sendHeartbeat();
         expect(result).toBeUndefined();
     });
     it('sendTurmsRequest_shouldSucceed', async () => {
-        const result = await turmsDriver.send({
+        const result = await driver.send({
             queryUserProfileRequest: {
                 userId: '1'
             }
         });
-        expect(result).toBeTruthy();
+        expect(TurmsStatusCode.isSuccessCode(result.code?.value)).toBeTruthy();
     });
     it('disconnect_shouldSucceed', async () => {
-        const result = await turmsDriver.disconnect();
-        expect(result).toBeUndefined();
+        await driver.disconnect();
+        expect(driver.isConnected).toBeFalsy();
     });
 });

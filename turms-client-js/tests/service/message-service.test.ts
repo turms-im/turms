@@ -16,21 +16,15 @@ beforeAll(async () => {
     senderClient = new TurmsClient(Constants.WS_URL);
     recipientClient = new TurmsClient(Constants.WS_URL);
     groupMemberClient = new TurmsClient(Constants.WS_URL);
-    await senderClient.driver.connect(SENDER_ID, "123");
-    await recipientClient.driver.connect(RECIPIENT_ID, "123");
-    await groupMemberClient.driver.connect(GROUP_MEMBER_ID, "123");
+    await senderClient.userService.login(SENDER_ID, "123");
+    await recipientClient.userService.login(RECIPIENT_ID, "123");
+    await groupMemberClient.userService.login(GROUP_MEMBER_ID, "123");
 });
 
 afterAll(async () => {
-    if (senderClient.driver.isConnected()) {
-        await senderClient.driver.disconnect();
-    }
-    if (recipientClient.driver.isConnected()) {
-        await recipientClient.driver.disconnect();
-    }
-    if (groupMemberClient.driver.isConnected()) {
-        await groupMemberClient.driver.disconnect();
-    }
+    await senderClient.userService.logout();
+    await recipientClient.userService.logout();
+    await groupMemberClient.userService.logout();
 });
 
 describe('Constructor', () => {

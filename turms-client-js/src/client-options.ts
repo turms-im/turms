@@ -4,9 +4,5 @@ export default interface ClientOptions {
     requestTimeout?: number,
     minRequestInterval?: number,
     heartbeatInterval?: number,
-    storageServerUrl?: string,
-    httpUrl?: string,
-    queryReasonWhenLoginFailed?: boolean,
-    queryReasonWhenDisconnected?: boolean,
-    storePassword?: boolean
+    storageServerUrl?: string
 }

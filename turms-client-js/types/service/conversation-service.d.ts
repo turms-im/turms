@@ -1,6 +1,6 @@
-import TurmsClient from "../turms-client";
-import { ParsedModel } from "../model/parsed-model";
-export default class MessageService {
+import TurmsClient from '../turms-client';
+import { ParsedModel } from '../model/parsed-model';
+export default class ConversationService {
     private _turmsClient;
     constructor(turmsClient: TurmsClient);
     queryPrivateConversations(targetIds: string[]): Promise<ParsedModel.PrivateConversation[]>;

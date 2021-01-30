@@ -1,5 +1,5 @@
-import { google, im } from "../model/proto-bundle";
-import { ParsedModel } from "../model/parsed-model";
+import { google, im } from '../model/proto-bundle';
+import { ParsedModel } from '../model/parsed-model';
 import TurmsNotification = im.turms.proto.TurmsNotification;
 import IInt64Value = google.protobuf.IInt64Value;
 export default class NotificationUtil {
