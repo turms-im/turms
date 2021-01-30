@@ -17,6 +17,7 @@
 
 package im.turms.turms;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -26,6 +27,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication(
         scanBasePackages = {"im.turms.turms", "im.turms.server.common"},
         proxyBeanMethods = false)
+@Log4j2
 public class TurmsApplication {
 
     public static void main(String[] args) {
@@ -40,7 +42,7 @@ public class TurmsApplication {
             // im.turms.turms.context.ApplicationContextConfig.handleContextClosedEvent
             // because the context hadn't been initialized.
 
-            // Don't print the exception because Spring should have done it
+            log.error(e);
             System.exit(1);
         }
     }

@@ -19,10 +19,10 @@ package im.turms.server.common.property.env.gateway;
 
 
 import com.fasterxml.jackson.annotation.JsonView;
+import im.turms.server.common.factory.NotificationFactory;
 import im.turms.server.common.property.env.common.ClientApiLoggingProperties;
 import im.turms.server.common.property.metadata.annotation.Description;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
-import im.turms.server.common.util.CloseReasonUtil;
 import lombok.Data;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
@@ -53,7 +53,7 @@ public class ClientApiProperties {
 
     public void setReturnReasonForServerError(boolean returnReasonForServerError) {
         this.returnReasonForServerError = returnReasonForServerError;
-        CloseReasonUtil.setReturnReasonForServerError(returnReasonForServerError);
+        NotificationFactory.returnReasonForServerError = returnReasonForServerError;
     }
 
 }

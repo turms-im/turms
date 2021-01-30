@@ -18,7 +18,6 @@
 package im.turms.server.common.property.env.gateway;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import im.turms.common.constant.DeviceType;
 import im.turms.server.common.property.metadata.annotation.Description;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
 import lombok.Data;
@@ -26,8 +25,6 @@ import org.springframework.web.reactive.socket.CloseStatus;
 
 import javax.validation.constraints.Min;
 import java.util.Set;
-
-import static im.turms.server.common.util.DeviceTypeUtil.BROWSER_SET;
 
 /**
  * @author James Chen
@@ -39,7 +36,7 @@ public class SessionProperties {
     @Description("A session will be closed if turms server doesn't receive any request (including heartbeat request) from the client during closeIdleSessionAfterSeconds." +
             "References: https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=207243549&idx=1&sn=4ebe4beb8123f1b5ab58810ac8bc5994&scene=0#rd")
     @Min(0)
-    private int closeIdleSessionAfterSeconds = 150;
+    private int closeIdleSessionAfterSeconds = 180;
 
     @JsonView(MutablePropertiesView.class)
     @Description("If the turms server only receives heartbeat requests from the client during switchProtocolAfterSeconds, " +
@@ -54,26 +51,14 @@ public class SessionProperties {
     @Min(0)
     private int minHeartbeatIntervalSeconds = closeIdleSessionAfterSeconds / 10;
 
-    @Description("Whether to enable to query the login failure reason")
-    private boolean enableQueryLoginFailureReason = true;
-
-    @Description("Whether to enable to query the disconnection reason")
-    private boolean enableQueryDisconnectionReason = true;
-
     @Description("The close status codes to ignore. " +
             "The code can be either the close status code of WebSocket " +
             "or the code of SessionCloseStatus")
-    private Set<Integer> closeStatusCodesToIgnore = Set.of(
+    private Set<Integer> closeStatusesToIgnore = Set.of(
             CloseStatus.NORMAL.getCode(),
             CloseStatus.GOING_AWAY.getCode(),
             CloseStatus.NO_STATUS_CODE.getCode(),
             CloseStatus.NO_CLOSE_FRAME.getCode());
-
-    @Description("The degraded device types that need to query the reason for session disconnection")
-    private Set<DeviceType> degradedDeviceTypesForDisconnectionReason = BROWSER_SET;
-
-    @Description("The degraded device types that need to query the reason for login failure")
-    private Set<DeviceType> degradedDeviceTypesForLoginFailureReason = BROWSER_SET;
 
     @JsonView(MutablePropertiesView.class)
     @Description("Whether to notify clients of the session information after connected with the server")
@@ -83,13 +68,5 @@ public class SessionProperties {
             "Note that user ID is always needed even if enableAuthentication is false; " +
             "If false, turms-gateway won't connect to the MongoDB server for user records")
     private boolean enableAuthentication = true;
-
-    @Description("The life duration of each reason record for session disconnection")
-    @Min(1)
-    private int disconnectionReasonExpireAfter = 30;
-
-    @Description("The life duration of each reason record for login failure")
-    @Min(1)
-    private int loginFailureReasonExpireAfter = 30;
 
 }

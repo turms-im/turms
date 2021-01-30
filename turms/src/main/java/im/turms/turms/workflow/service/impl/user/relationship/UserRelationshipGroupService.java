@@ -26,6 +26,7 @@ import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.util.AssertUtil;
+import im.turms.server.common.util.CollectorUtil;
 import im.turms.server.common.util.MapUtil;
 import im.turms.turms.bo.DateRange;
 import im.turms.turms.constant.DaoConstant;
@@ -136,7 +137,7 @@ public class UserRelationshipGroupService {
                         UserRelationshipGroupsWithVersion.Builder builder = UserRelationshipGroupsWithVersion.newBuilder()
                                 .setLastUpdatedDate(Int64Value.newBuilder().setValue(date.getTime()).build());
                         return queryRelationshipGroupsInfos(ownerId)
-                                .collectList()
+                                .collect(CollectorUtil.toList())
                                 .map(groups -> {
                                     for (UserRelationshipGroup group : groups) {
                                         builder.addUserRelationshipGroups(ProtoUtil.relationshipGroup2proto(group));

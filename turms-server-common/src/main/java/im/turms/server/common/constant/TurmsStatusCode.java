@@ -48,8 +48,6 @@ public enum TurmsStatusCode {
     // Server
     SERVER_INTERNAL_ERROR(1200, "Internal server error", 500),
     SERVER_UNAVAILABLE(1201, "The server is unavailable", 503),
-    // TODO: Remove after MessageStatusService is removed
-    DISABLED_FUNCTION(1202, "The function has been disabled on the server side", 405),
 
     //**********************************************************
     //* For error about admin activity
@@ -65,20 +63,17 @@ public enum TurmsStatusCode {
     // User
 
     // User - Login
-    LOGIN_USER_ID_NOT_NUMBER(2000, "The user ID must be a number", 400),
+    LOGIN_TIMEOUT(2000, "The user ID must be a number", 400),
     LOGIN_AUTHENTICATION_FAILED(2001, "The user's login details are incorrect", 401),
     LOGGING_IN_USER_NOT_ACTIVE(2002, "The logging in user is inactive", 401),
     LOGIN_FROM_FORBIDDEN_DEVICE_TYPE(2003, "The device type is forbidden to login", 401),
-    FORBIDDEN_DEVICE_TYPE_FOR_LOGIN_FAILURE_REASON(2004, "The device type is forbidden to access the login failure reason", 403),
-    LOGIN_FAILURE_REASON_CACHE_IS_DISABLED(2005, "The login failure reason cache is disabled", 510),
 
     // User - Session
     SESSION_SIMULTANEOUS_CONFLICTS_DECLINE(2100, "A different device has logged into your account", 409),
     SESSION_SIMULTANEOUS_CONFLICTS_NOTIFY(2101, "A different device attempted to log into your account", 409),
     SESSION_SIMULTANEOUS_CONFLICTS_OFFLINE(2102, "A different device has logged into your account", 409),
     CREATE_EXISTING_SESSION(2103, "The session has existed", 503),
-    FORBIDDEN_DEVICE_TYPE_FOR_SESSION_DISCONNECTION_REASON(2104, "The device type is forbidden to access the session disconnection reason", 403),
-    SESSION_DISCONNECTION_REASON_CACHE_IS_DISABLED(2105, "The session disconnection reason cache is disabled", 510),
+    UPDATE_NON_EXISTING_SESSION_HEARTBEAT(2104, "Cannot update the heartbeat of a non-existing session", 403),
 
     // User - Location
     USER_LOCATION_RELATED_FEATURES_ARE_DISABLED(2200, "The features related to user location are disabled", 510),

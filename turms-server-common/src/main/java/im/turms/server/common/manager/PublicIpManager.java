@@ -43,7 +43,7 @@ public class PublicIpManager {
     public Mono<String> getPublicIp() {
         List<String> ipDetectorAddresses = turmsPropertiesManager.getLocalProperties().getIp().getPublicIpDetectorAddresses();
         if (ipDetectorAddresses.isEmpty()) {
-            throw new IllegalStateException("Failed to detect the public IP because cannot find a IP detector address");
+            throw new IllegalStateException("Failed to detect the public IP because cannot find an IP detector address");
         }
         List<Mono<String>> monos = new ArrayList<>(ipDetectorAddresses.size());
         for (String checkerAddress : ipDetectorAddresses) {

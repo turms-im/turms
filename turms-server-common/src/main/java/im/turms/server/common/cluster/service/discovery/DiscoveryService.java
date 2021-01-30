@@ -28,6 +28,7 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.manager.address.IServiceAddressManager;
 import im.turms.server.common.property.env.common.cluster.DiscoveryProperties;
+import im.turms.server.common.util.CollectorUtil;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.rsocket.RSocket;
 import lombok.Getter;
@@ -164,7 +165,7 @@ public class DiscoveryService implements ClusterService {
         // Members
         listenMembersChangeEvent();
         List<Member> memberList = queryMembers()
-                .collectList()
+                .collect(CollectorUtil.toList())
                 .block(CRUD_TIMEOUT_DURATION);
         Member localMember = localNodeStatusManager.getLocalMember();
         for (Member member : memberList) {

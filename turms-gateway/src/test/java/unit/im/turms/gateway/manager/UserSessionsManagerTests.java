@@ -38,6 +38,7 @@ class UserSessionsManagerTests {
     private final long userId = 1L;
     private final UserStatus userStatus = UserStatus.AVAILABLE;
     private final DeviceType deviceType = DeviceType.ANDROID;
+    private final String serverId = "turms001";
 
     @Test
     void constructor_shouldSucceed_ifRequiredParamsExist() {
@@ -69,14 +70,14 @@ class UserSessionsManagerTests {
     void pushSessionNotification_shouldReturnTrue_ifSessionExists() {
         UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
         manager.addSessionIfAbsent(deviceType, null, null, 0, 0);
-        assertTrue(manager.pushSessionNotification(deviceType));
+        assertTrue(manager.pushSessionNotification(deviceType, serverId));
     }
 
     @Test
     void pushSessionNotification_shouldReturnFalse_ifSessionNotExists() {
         UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
         manager.addSessionIfAbsent(DeviceType.ANDROID, null, null, 0, 0);
-        assertFalse(manager.pushSessionNotification(DeviceType.IOS));
+        assertFalse(manager.pushSessionNotification(DeviceType.IOS, serverId));
     }
 
     @Test

@@ -69,4 +69,8 @@ public class GatewayProperties {
     @NestedConfigurationProperty
     private TcpProperties tcp = new TcpProperties();
 
+    @JsonView(MutablePropertiesView.class)
+    @NestedConfigurationProperty
+    private WebSocketProperties websocket = new WebSocketProperties();
+
 }

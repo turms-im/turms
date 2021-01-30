@@ -28,13 +28,13 @@ import java.util.Map;
 /**
  * @author James Chen
  */
-public class IntegerToEnumConverterFactory implements ConverterFactory<Integer, Enum> {
+public class IntegerToEnumConverterFactory implements ConverterFactory<Integer, Enum<?>> {
 
     private static final Map<Class<?>, IntegerToEnumConverter> POOL = new HashMap<>();
 
     @Override
     @NonNull
-    public <T extends Enum> Converter<Integer, T> getConverter(@Nullable Class<T> targetType) {
+    public <T extends Enum<?>> Converter<Integer, T> getConverter(@Nullable Class<T> targetType) {
         Class<?> enumType = targetType;
         while (enumType != null && !enumType.isEnum()) {
             enumType = enumType.getSuperclass();

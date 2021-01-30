@@ -17,9 +17,16 @@
 
 package im.turms.gateway.access.tcp.model;
 
+import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.gateway.pojo.bo.session.UserSession;
+import im.turms.gateway.pojo.bo.session.connection.NetConnection;
+import im.turms.server.common.dto.CloseReason;
+import io.netty.util.HashedWheelTimer;
+import io.netty.util.Timeout;
 import lombok.Data;
-import reactor.netty.Connection;
+
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 /**
  * @author James Chen
@@ -27,23 +34,39 @@ import reactor.netty.Connection;
 @Data
 public class UserSessionWrapper {
 
-    private final Connection connection;
+    private static final HashedWheelTimer IDLE_CONNECTION_TIMEOUT_TIMER = new HashedWheelTimer();
+    private final String ip;
+    private final Timeout connectionTimeoutTask;
+    private final Consumer<UserSession> onSessionEstablished;
+    private NetConnection connection;
     private UserSession userSession;
 
-    public UserSessionWrapper(Connection connection) {
+    public UserSessionWrapper(NetConnection connection, String ip, int closeAfter, Consumer<UserSession> onSessionEstablished) {
         this.connection = connection;
+        this.ip = ip;
+        this.onSessionEstablished = onSessionEstablished;
+        connectionTimeoutTask = closeAfter > 0
+                ? addIdleConnectionTimeoutTask(closeAfter)
+                : null;
     }
 
     public void setUserSession(UserSession userSession) {
         this.userSession = userSession;
-        connection.outbound()
-                .send(userSession.getNotificationFlux(), byteBuf -> true)
-                .then()
-                .subscribe();
+        userSession.setConnection(connection);
+        onSessionEstablished.accept(userSession);
     }
 
     public boolean hasUserSession() {
         return userSession != null;
+    }
+
+    private Timeout addIdleConnectionTimeoutTask(int closeIdleConnectionAfter) {
+        return IDLE_CONNECTION_TIMEOUT_TIMER.newTimeout(timeout -> {
+            CloseReason closeReason = CloseReason.get(SessionCloseStatus.LOGIN_TIMEOUT);
+            if (userSession == null || !userSession.isOpen()) {
+                connection.close(closeReason);
+            }
+        }, closeIdleConnectionAfter, TimeUnit.SECONDS);
     }
 
 }

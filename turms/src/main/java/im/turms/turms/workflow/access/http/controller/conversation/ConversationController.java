@@ -60,13 +60,20 @@ public class ConversationController {
             PrivateConversation.KeyList privateConversationKeys,
             @RequestParam(required = false) Set<Long> ownerIds,
             @RequestParam(required = false) Set<Long> groupIds) {
-        Flux<PrivateConversation> privateConversationsFlux = isEmptyPrivateConversationKeys(privateConversationKeys)
-                ? Flux.empty()
-                : conversationService.queryPrivateConversations(new HashSet<>(privateConversationKeys.getPrivateConversationKeys()));
+        Flux<PrivateConversation> privateConversationsFlux;
+        int privateConversationsSize = 0;
+        if (isEmptyPrivateConversationKeys(privateConversationKeys)) {
+            privateConversationsFlux = Flux.empty();
+        } else {
+            List<PrivateConversation.Key> keys = privateConversationKeys.getPrivateConversationKeys();
+            privateConversationsFlux = conversationService.queryPrivateConversations(new HashSet<>(keys));
+            privateConversationsSize += keys.size();
+        }
         if (ownerIds != null && !ownerIds.isEmpty()) {
+            privateConversationsSize += ownerIds.size();
             privateConversationsFlux = privateConversationsFlux.concatWith(conversationService.queryPrivateConversationsByOwnerIds(ownerIds));
         }
-        Mono<List<PrivateConversation>> privateConversations = privateConversationsFlux.collectList();
+        Mono<List<PrivateConversation>> privateConversations = privateConversationsFlux.collect(CollectorUtil.toList(privateConversationsSize));
         Mono<List<GroupConversation>> groupConversations = groupIds == null || groupIds.isEmpty()
                 ? Mono.just(Collections.emptyList())
                 : conversationService.queryGroupConversations(groupIds)

@@ -32,8 +32,6 @@ import org.springframework.data.mongodb.core.mapping.Sharded;
 import java.util.Date;
 
 /**
- * TODO: check whether hashed shard key can work with compound range index
- *
  * @author James Chen
  * @implNote In the compound index,
  * the first field is used to query requests according to the recipient ID,

@@ -19,6 +19,7 @@ package im.turms.server.common.plugin.base;
 
 import im.turms.server.common.plugin.extension.UserLocationLogHandler;
 import im.turms.server.common.property.TurmsProperties;
+import im.turms.server.common.property.env.common.PluginProperties;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.pf4j.DefaultPluginManager;
@@ -44,9 +45,10 @@ public abstract class AbstractTurmsPluginManager {
     protected AbstractTurmsPluginManager(ApplicationContext context, TurmsProperties localProperties) {
         this.context = context;
         turmsProperties = localProperties;
-        enabled = turmsProperties.getPlugin().isEnabled();
+        PluginProperties pluginProperties = turmsProperties.getPlugin();
+        enabled = pluginProperties.isEnabled();
         if (enabled) {
-            Path dir = Path.of(turmsProperties.getPlugin().getDir());
+            Path dir = Path.of(pluginProperties.getDir());
             pluginManager = new DefaultPluginManager(dir);
             pluginManager.loadPlugins();
             pluginManager.startPlugins();

@@ -24,9 +24,9 @@ import im.turms.common.model.dto.udpsignal.UdpRequestType;
 import im.turms.common.model.dto.udpsignal.UdpSignalRequest;
 import im.turms.gateway.access.udp.dto.UdpNotification;
 import im.turms.gateway.access.udp.dto.UdpSignalResponseBufferPool;
-import im.turms.gateway.access.websocket.dto.CloseStatusFactory;
 import im.turms.gateway.service.mediator.ServiceMediator;
 import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.UdpProperties;
@@ -36,7 +36,6 @@ import io.netty.channel.socket.DatagramPacket;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.socket.CloseStatus;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
@@ -128,8 +127,8 @@ public class UdpDispatcher {
                             .onErrorReturn(TurmsStatusCode.ILLEGAL_ARGUMENT)
                             .defaultIfEmpty(TurmsStatusCode.SEND_REQUEST_FROM_NON_EXISTING_SESSION);
                 case GO_OFFLINE:
-                    CloseStatus status = CloseStatusFactory.get(SessionCloseStatus.DISCONNECTED_BY_CLIENT);
-                    return serviceMediator.authAndSetLocalUserDeviceOffline(userId, deviceType, status, sessionId)
+                    CloseReason reason = CloseReason.get(SessionCloseStatus.DISCONNECTED_BY_CLIENT);
+                    return serviceMediator.authAndSetLocalUserDeviceOffline(userId, deviceType, reason, sessionId)
                             .thenReturn(TurmsStatusCode.OK);
                 default:
                     throw new IllegalStateException("Unexpected value: " + signalRequest.getType());

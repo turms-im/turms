@@ -21,36 +21,43 @@ import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.model.dto.udpsignal.UdpNotificationType;
 import im.turms.gateway.access.udp.UdpDispatcher;
 import im.turms.server.common.dto.CloseReason;
+import im.turms.server.common.util.ExceptionUtil;
 import lombok.Data;
+import reactor.util.retry.Retry;
+import reactor.util.retry.RetryBackoffSpec;
 
 import javax.validation.constraints.NotNull;
 import java.net.InetSocketAddress;
+import java.time.Duration;
 
 /**
  * @author James Chen
  */
 @Data
 public abstract class NetConnection {
+    protected static final RetryBackoffSpec RETRY_SEND_CLOSE_NOTIFICATION = Retry
+            .backoff(2, Duration.ofSeconds(3))
+            .filter(throwable -> !ExceptionUtil.isDisconnectedClientError(throwable));
 
     private InetSocketAddress address;
     private volatile boolean isConnected;
+    private volatile boolean isSwitchingToUdp;
     /**
      * true if it is switching UDP to TCP/WebSocket
      */
     private volatile boolean isConnectionRecovering;
 
-    public NetConnection(boolean isConnected) {
+    protected NetConnection(boolean isConnected) {
         this.isConnected = isConnected;
     }
 
     public void close(@NotNull CloseReason closeReason) {
         isConnected = false;
         isConnectionRecovering = false;
+        isSwitchingToUdp = closeReason.getCloseStatus().equals(SessionCloseStatus.SWITCH);
     }
 
     public void switchToUdp() {
-        isConnected = false;
-        isConnectionRecovering = false;
         close(CloseReason.get(SessionCloseStatus.SWITCH));
     }
 

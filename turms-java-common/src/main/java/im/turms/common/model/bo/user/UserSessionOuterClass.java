@@ -46,9 +46,9 @@ public final class UserSessionOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\035model/user/user_session.proto\022\016im.turm" +
-      "s.proto\"!\n\013UserSession\022\022\n\nsession_id\030\001 \001" +
-      "(\tB$\n\035im.turms.common.model.bo.userP\001\272\002\000" +
-      "b\006proto3"
+      "s.proto\"4\n\013UserSession\022\022\n\nsession_id\030\001 \001" +
+      "(\t\022\021\n\tserver_id\030\002 \001(\tB$\n\035im.turms.common" +
+      ".model.bo.userP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -59,7 +59,7 @@ public final class UserSessionOuterClass {
     internal_static_im_turms_proto_UserSession_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_UserSession_descriptor,
-        new java.lang.String[] { "SessionId", });
+        new java.lang.String[] { "SessionId", "ServerId", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

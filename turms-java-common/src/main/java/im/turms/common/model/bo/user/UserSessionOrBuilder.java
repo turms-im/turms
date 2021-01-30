@@ -35,4 +35,16 @@ public interface UserSessionOrBuilder extends
    */
   com.google.protobuf.ByteString
       getSessionIdBytes();
+
+  /**
+   * <code>string server_id = 2;</code>
+   * @return The serverId.
+   */
+  java.lang.String getServerId();
+  /**
+   * <code>string server_id = 2;</code>
+   * @return The bytes for serverId.
+   */
+  com.google.protobuf.ByteString
+      getServerIdBytes();
 }

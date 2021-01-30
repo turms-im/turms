@@ -61,7 +61,7 @@ public class ServiceAddressManager implements IServiceAddressManager {
         discoveryProperties = turmsPropertiesManager.getLocalProperties().getService().getDiscovery();
         port = serverProperties.getPort();
         if (port == null || port <= 0) {
-            throw new UnknownHostException("Invalid service port");
+            throw new UnknownHostException("Invalid service port: " + port);
         }
         bindHost = serverProperties.getAddress().getHostAddress();
         Ssl ssl = serverProperties.getSsl();

@@ -31,6 +31,7 @@ import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.redis.sharding.ShardingAlgorithm;
 import im.turms.server.common.util.AssertUtil;
+import im.turms.server.common.util.CollectorUtil;
 import im.turms.server.common.util.DeviceTypeUtil;
 import org.springframework.data.redis.core.ReactiveHashOperations;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
@@ -240,7 +241,7 @@ public class UserStatusService {
         }
         return getSessionOperations(userId).entries(userId)
                 .timeout(operationTimeout)
-                .collectList()
+                .collect(CollectorUtil.toList())
                 .map(entries -> {
                     UserStatus userStatus = null;
                     Map<DeviceType, String> onlineDeviceTypeAndNodeIdMap = null;

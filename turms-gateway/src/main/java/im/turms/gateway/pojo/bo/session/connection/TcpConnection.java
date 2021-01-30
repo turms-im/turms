@@ -19,7 +19,8 @@ package im.turms.gateway.pojo.bo.session.connection;
 
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.server.common.dto.CloseReason;
-import im.turms.server.common.util.CloseReasonUtil;
+import im.turms.server.common.factory.NotificationFactory;
+import im.turms.server.common.util.ExceptionUtil;
 import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Mono;
 import reactor.netty.Connection;
@@ -46,13 +47,31 @@ public class TcpConnection extends NetConnection {
     public void close(@NotNull CloseReason closeReason) {
         if (isConnected() && !connection.isDisposed()) {
             super.close(closeReason);
-            TurmsNotification closeNotification = CloseReasonUtil.toNotification(closeReason);
+            TurmsNotification closeNotification = NotificationFactory.fromReason(closeReason);
             connection
                     .outbound()
                     .sendObject(closeNotification)
                     .then()
-                    .onErrorResume(throwable -> Mono.empty())
-                    .subscribe(unused -> connection.dispose());
+                    .doOnError(throwable -> {
+                        if (!ExceptionUtil.isDisconnectedClientError(throwable)) {
+                            log.error("Failed to send the close notification", throwable);
+                        }
+                    })
+                    .retryWhen(RETRY_SEND_CLOSE_NOTIFICATION)
+                    .onErrorResume(throwable -> {
+                        log.error("Failed to send the close notification with retries exhausted: " + RETRY_SEND_CLOSE_NOTIFICATION.maxAttempts, throwable);
+                        return Mono.empty();
+                    })
+                    .doOnTerminate(() -> {
+                        try {
+                            connection.dispose();
+                        } catch (Exception e) {
+                            if (!ExceptionUtil.isDisconnectedClientError(e)) {
+                                log.error("Failed to close the connection", e);
+                            }
+                        }
+                    })
+                    .subscribe();
         }
     }
 

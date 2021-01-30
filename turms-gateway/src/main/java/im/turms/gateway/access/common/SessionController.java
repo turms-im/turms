@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.access.tcp.controller;
+package im.turms.gateway.access.common;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.UserStatus;
@@ -25,15 +25,15 @@ import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.user.CreateSessionRequest;
 import im.turms.gateway.access.tcp.dto.RequestHandlerResult;
 import im.turms.gateway.access.tcp.model.UserSessionWrapper;
+import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.pojo.bo.session.UserSession;
-import im.turms.gateway.pojo.bo.session.connection.TcpConnection;
 import im.turms.gateway.service.mediator.ServiceMediator;
+import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import io.netty.util.Timeout;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Mono;
-import reactor.netty.Connection;
 
 /**
  * @author James Chen
@@ -41,9 +41,11 @@ import reactor.netty.Connection;
 @Controller
 public class SessionController {
 
+    private final Node node;
     private final ServiceMediator serviceMediator;
 
-    public SessionController(ServiceMediator serviceMediator) {
+    public SessionController(Node node, ServiceMediator serviceMediator) {
+        this.node = node;
         this.serviceMediator = serviceMediator;
     }
 
@@ -57,11 +59,12 @@ public class SessionController {
     }
 
     public Mono<RequestHandlerResult> handleCreateSessionRequest(UserSessionWrapper sessionWrapper,
-                                                                 CreateSessionRequest createSessionRequest,
-                                                                 String ip,
-                                                                 Timeout idleConnectionTimeout) {
+                                                                 CreateSessionRequest createSessionRequest) {
         if (sessionWrapper.hasUserSession()) {
             return Mono.just(new RequestHandlerResult(TurmsStatusCode.CREATE_EXISTING_SESSION));
+        }
+        if (!node.isActive()) {
+            return Mono.just(new RequestHandlerResult(TurmsStatusCode.SERVER_UNAVAILABLE));
         }
         long userId = createSessionRequest.getUserId();
         String password = createSessionRequest.hasPassword()
@@ -88,32 +91,35 @@ public class SessionController {
                 deviceType,
                 userStatus,
                 position,
-                ip,
+                sessionWrapper.getIp(),
                 deviceDetails);
+        Timeout idleConnectionTimeout = sessionWrapper.getConnectionTimeoutTask();
+        Mono<RequestHandlerResult> resultMono;
         if (idleConnectionTimeout == null) {
-            return processLoginRequestMono
+            resultMono = processLoginRequestMono
                     .map(session -> {
-                        bindUserSession(sessionWrapper, session);
+                        sessionWrapper.setUserSession(session);
+                        UserSessionsManager userSessionsManager = serviceMediator.getUserSessionsManager(userId);
+                        serviceMediator.onSessionEstablished(userSessionsManager, session.getDeviceType());
+                        serviceMediator.triggerGoOnlinePlugins(userSessionsManager, session).subscribe();
                         return new RequestHandlerResult(TurmsStatusCode.OK);
                     });
         } else {
             DeviceType finalDeviceType = deviceType;
-            return processLoginRequestMono.flatMap(session -> {
+            resultMono = processLoginRequestMono.flatMap(session -> {
                 if (idleConnectionTimeout.cancel()) {
-                    bindUserSession(sessionWrapper, session);
+                    sessionWrapper.setUserSession(session);
+                    UserSessionsManager userSessionsManager = serviceMediator.getUserSessionsManager(userId);
+                    serviceMediator.onSessionEstablished(userSessionsManager, session.getDeviceType());
+                    serviceMediator.triggerGoOnlinePlugins(userSessionsManager, session).subscribe();
                     return Mono.just(new RequestHandlerResult(TurmsStatusCode.OK));
                 } else {
-                    return serviceMediator.setLocalUserDeviceOffline(userId, finalDeviceType, SessionCloseStatus.HEARTBEAT_TIMEOUT)
-                            .then(Mono.empty());
+                    return serviceMediator.setLocalUserDeviceOffline(userId, finalDeviceType, SessionCloseStatus.LOGIN_TIMEOUT)
+                            .map(ignored -> new RequestHandlerResult(TurmsStatusCode.LOGIN_TIMEOUT));
                 }
             });
         }
-    }
-
-    private void bindUserSession(UserSessionWrapper sessionWrapper, UserSession session) {
-        Connection connection = sessionWrapper.getConnection();
-        session.setConnection(new TcpConnection(connection, !connection.isDisposed()));
-        sessionWrapper.setUserSession(session);
+        return resultMono;
     }
 
 }

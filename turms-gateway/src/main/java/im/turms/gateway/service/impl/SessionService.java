@@ -35,6 +35,7 @@ import im.turms.server.common.constraint.ValidDeviceType;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.property.TurmsProperties;
+import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.SessionProperties;
 import im.turms.server.common.rpc.request.SetUserOfflineRequest;
 import im.turms.server.common.rpc.service.ISessionService;
@@ -69,8 +70,8 @@ import static im.turms.gateway.constant.MetricsConstant.ONLINE_USERS_GAUGE_NAME;
 public class SessionService implements ISessionService {
 
     private final Node node;
+    private final TurmsPropertiesManager turmsPropertiesManager;
     private final TurmsPluginManager turmsPluginManager;
-    private final ReasonCacheService reasonCacheService;
     private final SessionLocationService sessionLocationService;
     private final UserStatusService userStatusService;
     private final UserLoginActionService userLoginActionService;
@@ -86,16 +87,17 @@ public class SessionService implements ISessionService {
 
     public SessionService(
             Node node,
+            TurmsPropertiesManager turmsPropertiesManager,
             TurmsPluginManager turmsPluginManager,
             UserLoginActionService userLoginActionService,
             SessionLocationService sessionLocationService,
-            ReasonCacheService reasonCacheService,
             UserStatusService userStatusService,
             UserSimultaneousLoginService userSimultaneousLoginService,
             MetricsService metricsService) {
         this.node = node;
         this.userLoginActionService = userLoginActionService;
         this.sessionLocationService = sessionLocationService;
+        this.turmsPropertiesManager = turmsPropertiesManager;
         this.turmsPluginManager = turmsPluginManager;
         this.userStatusService = userStatusService;
         this.userSimultaneousLoginService = userSimultaneousLoginService;
@@ -103,7 +105,6 @@ public class SessionService implements ISessionService {
         // Use ConcurrentHashMap to avoid overwriting an existing sessions manager by accident
         sessionsManagerByUserId = new ConcurrentHashMap<>(4096);
         pluginEnabled = turmsProperties.getPlugin().isEnabled();
-        this.reasonCacheService = reasonCacheService;
 
         SessionProperties sessionProperties = turmsProperties.getGateway().getSession();
         closeIdleSessionAfterMillis = sessionProperties.getCloseIdleSessionAfterSeconds() * 1000;
@@ -217,23 +218,9 @@ public class SessionService implements ISessionService {
                     List<Mono<UserSession>> disconnectMonos = new ArrayList<>(deviceTypes.size());
                     for (DeviceType deviceType : deviceTypes) {
                         UserSession session = manager.getSession(deviceType);
-                        if (session != null) {
-                            boolean cacheDisconnectionReason = reasonCacheService.shouldCacheDisconnectionReason(userId, deviceType, closeReason);
-                            if (sessionLocationService.isLocationEnabled()) {
-                                if (cacheDisconnectionReason) {
-                                    int sessionId = session.getId();
-                                    disconnectMonos.add(reasonCacheService.cacheDisconnectionReason(userId, deviceType, sessionId, closeReason)
-                                            .then(sessionLocationService.removeUserLocation(userId, deviceType))
-                                            .thenReturn(session));
-                                } else {
-                                    disconnectMonos.add(sessionLocationService.removeUserLocation(userId, deviceType)
-                                            .thenReturn(session));
-                                }
-                            } else if (cacheDisconnectionReason) {
-                                int sessionId = session.getId();
-                                disconnectMonos.add(reasonCacheService.cacheDisconnectionReason(userId, deviceType, sessionId, closeReason)
-                                        .thenReturn(session));
-                            }
+                        if (session != null && sessionLocationService.isLocationEnabled()) {
+                            disconnectMonos.add(sessionLocationService.removeUserLocation(userId, deviceType)
+                                    .thenReturn(session));
                         }
                     }
                     return Flux.merge(disconnectMonos)
@@ -257,11 +244,13 @@ public class SessionService implements ISessionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        List<Mono<Boolean>> monos = new LinkedList<>();
-        for (Map.Entry<Long, UserSessionsManager> entry : sessionsManagerByUserId.entrySet()) {
+        Set<Map.Entry<Long, UserSessionsManager>> entries = sessionsManagerByUserId.entrySet();
+        List<Mono<Boolean>> monos = new ArrayList<>(entries.size());
+        for (Map.Entry<Long, UserSessionsManager> entry : entries) {
             Long userId = entry.getKey();
             Set<DeviceType> loggedInDeviceTypes = entry.getValue().getLoggedInDeviceTypes();
-            Mono<Boolean> mono = setLocalSessionOfflineByUserIdAndDeviceTypes(userId, loggedInDeviceTypes, closeReason, disconnectionDate);
+            Mono<Boolean> mono = setLocalSessionOfflineByUserIdAndDeviceTypes(userId, loggedInDeviceTypes, closeReason, disconnectionDate)
+                    .onErrorResume(t -> Mono.empty());
             monos.add(mono);
         }
         return Mono.when(monos);
@@ -360,8 +349,10 @@ public class SessionService implements ISessionService {
                         boolean conflicts = sessionsStatus.getLoggedInDeviceTypes().contains(deviceType);
                         if (conflicts) {
                             UserSession session = getLocalUserSession(userId, deviceType);
-                            boolean isSessionOnLocal = session != null && !session.getConnection().isConnected();
-                            if (isSessionOnLocal) {
+                            boolean isDisconnectedSessionOnLocal = session != null
+                                    && session.getConnection() != null
+                                    && !session.getConnection().isConnected();
+                            if (isDisconnectedSessionOnLocal) {
                                 // Note that the downstream should replace the disconnected connection
                                 // with the connected TCP/WebSocket connection
                                 Mono<Void> updateSessionInfoMono = userStatus == null || sessionsStatus.getUserStatus() == userStatus
@@ -428,11 +419,11 @@ public class SessionService implements ISessionService {
             }
         }
         if (nodeIdAndDeviceTypesMap != null) {
-            List<Mono<Boolean>> disconnectionRequests = new LinkedList<>();
-            for (String nodeId : nodeIdAndDeviceTypesMap.keySet()) {
+            Set<String> nodeIds = nodeIdAndDeviceTypesMap.keySet();
+            List<Mono<Boolean>> disconnectionRequests = new ArrayList<>(nodeIds.size());
+            for (String nodeId : nodeIds) {
                 Set<DeviceType> deviceTypes = nodeIdAndDeviceTypesMap.get(nodeId);
-                CloseReason closeReason = CloseReason.get(SessionCloseStatus.DISCONNECTED_BY_CLIENT);
-                SetUserOfflineRequest request = new SetUserOfflineRequest(userId, deviceTypes, closeReason);
+                SetUserOfflineRequest request = new SetUserOfflineRequest(userId, deviceTypes, SessionCloseStatus.DISCONNECTED_BY_CLIENT);
                 disconnectionRequests.add(node.getRpcService().requestResponse(nodeId, request));
             }
             return ReactorUtil.areAllTrue(disconnectionRequests);
@@ -445,7 +436,8 @@ public class SessionService implements ISessionService {
                                      @NotNull @ValidDeviceType DeviceType deviceType) {
         loggedInUsersCounter.increment();
         if (node.getSharedProperties().getGateway().getSession().isNotifyClientsOfSessionInfoAfterConnected()) {
-            userSessionsManager.pushSessionNotification(deviceType);
+            String serverId = turmsPropertiesManager.getLocalProperties().getGateway().getDiscovery().getIdentity();
+            userSessionsManager.pushSessionNotification(deviceType, serverId);
         }
     }
 

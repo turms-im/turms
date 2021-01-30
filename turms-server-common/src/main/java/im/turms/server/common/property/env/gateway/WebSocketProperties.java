@@ -15,21 +15,20 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.pojo.bo.session;
+package im.turms.server.common.property.env.gateway;
 
-import im.turms.common.constant.DeviceType;
+
+import im.turms.server.common.property.metadata.annotation.Description;
 import lombok.Data;
 
 /**
  * @author James Chen
  */
 @Data
-public class SessionDisconnectionReasonKey {
+public class WebSocketProperties {
 
-    private final Long userId;
-
-    private final DeviceType deviceType;
-
-    private final Integer sessionId;
+    @Description("A WebSocket connection will be closed on the server side if a client hasn't established a user session in a specified time. " +
+            "Note that the developers on the client side should take the responsibility to close the WebSocket connection according to their business requirements")
+    private int closeIdleConnectionAfterSeconds = 60 * 5;
 
 }

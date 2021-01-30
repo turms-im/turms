@@ -81,16 +81,19 @@ public class InboundRequestService {
     /**
      * If the method returns MonoError, the session should be closed by downstream.
      */
-    public Mono<Boolean> processHeartbeatRequest(Long userId, DeviceType deviceType) {
+    public Mono<TurmsStatusCode> processHeartbeatRequest(Long userId, DeviceType deviceType) {
         if (!node.isActive()) {
-            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_UNAVAILABLE));
+            return Mono.just(TurmsStatusCode.SERVER_UNAVAILABLE);
         }
         return sessionService.updateHeartbeatTimestamp(userId, deviceType)
+                .map(sessionExists -> sessionExists
+                        ? TurmsStatusCode.OK
+                        : TurmsStatusCode.UPDATE_NON_EXISTING_SESSION_HEARTBEAT)
                 .onErrorResume(throwable -> {
                     if (!ExceptionUtil.isClientError(throwable)) {
                         log.error(ErrorMessage.FAILED_TO_HANDLE_HEARTBEAT_REQUEST, throwable);
                     }
-                    return Mono.just(false);
+                    return Mono.just(TurmsStatusCode.SERVER_INTERNAL_ERROR);
                 });
     }
 
@@ -146,7 +149,7 @@ public class InboundRequestService {
                                 return Mono.just(serviceResponse);
                             })
                             .map(serviceResponse -> getNotificationFromResponse(serviceResponse, requestId))
-                            .defaultIfEmpty(getNotificationFromStatusCode(TurmsStatusCode.NO_CONTENT, requestId))
+                            .switchIfEmpty(Mono.fromCallable(() -> getNotificationFromStatusCode(TurmsStatusCode.NO_CONTENT, requestId)))
                             .doFinally(signalType -> tracingContext.clearMdc());
                     if (LoggingRequestUtil.shouldLog(serviceRequest.getType(), supportedLoggingResponseProperties)) {
                         notificationMono = notificationMono

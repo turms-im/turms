@@ -21,7 +21,6 @@ import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constraint.ValidDeviceType;
-import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.rpc.request.SetUserOfflineRequest;
 import im.turms.server.common.service.session.UserStatusService;
@@ -63,10 +62,10 @@ public class SessionService {
         }
         return userStatusService.getNodeIdAndDeviceMapByUserId(userId)
                 .flatMap(nodeIdAndDeviceTypeMap -> {
-                    List<Mono<Boolean>> monos = new LinkedList<>();
-                    CloseReason closeReason = CloseReason.get(closeStatus);
-                    for (Map.Entry<String, Collection<DeviceType>> entry : nodeIdAndDeviceTypeMap.asMap().entrySet()) {
-                        SetUserOfflineRequest request = new SetUserOfflineRequest(userId, (Set<DeviceType>) entry.getValue(), closeReason);
+                    Set<Map.Entry<String, Collection<DeviceType>>> entries = nodeIdAndDeviceTypeMap.asMap().entrySet();
+                    List<Mono<Boolean>> monos = new ArrayList<>(entries.size());
+                    for (Map.Entry<String, Collection<DeviceType>> entry : entries) {
+                        SetUserOfflineRequest request = new SetUserOfflineRequest(userId, (Set<DeviceType>) entry.getValue(), closeStatus);
                         monos.add(node.getRpcService().requestResponse(entry.getKey(), request));
                     }
                     return ReactorUtil.atLeastOneTrue(monos);
@@ -99,12 +98,12 @@ public class SessionService {
         } else {
             return userStatusService.getNodeIdAndDeviceMapByUserId(userId)
                     .flatMap(nodeIdAndDeviceTypeMap -> {
-                        List<Mono<Boolean>> monos = new LinkedList<>();
-                        CloseReason closeReason = CloseReason.get(closeStatus);
-                        for (Map.Entry<String, Collection<DeviceType>> entry : nodeIdAndDeviceTypeMap.asMap().entrySet()) {
+                        Set<Map.Entry<String, Collection<DeviceType>>> entries = nodeIdAndDeviceTypeMap.asMap().entrySet();
+                        List<Mono<Boolean>> monos = new ArrayList<>(entries.size());
+                        for (Map.Entry<String, Collection<DeviceType>> entry : entries) {
                             HashSet<DeviceType> types = new HashSet<>(CollectionUtils.intersection(deviceTypes, entry.getValue()));
                             if (!types.isEmpty()) {
-                                SetUserOfflineRequest request = new SetUserOfflineRequest(userId, types, closeReason);
+                                SetUserOfflineRequest request = new SetUserOfflineRequest(userId, types, closeStatus);
                                 monos.add(node.getRpcService().requestResponse(entry.getKey(), request));
                             }
                         }
@@ -127,8 +126,7 @@ public class SessionService {
         }
         return userStatusService.getNodeIdByUserIdAndDeviceType(userId, deviceType)
                 .flatMap(nodeId -> {
-                    CloseReason closeReason = CloseReason.get(closeStatus);
-                    SetUserOfflineRequest request = new SetUserOfflineRequest(userId, Set.of(deviceType), closeReason);
+                    SetUserOfflineRequest request = new SetUserOfflineRequest(userId, Set.of(deviceType), closeStatus);
                     return node.getRpcService().requestResponse(nodeId, request);
                 })
                 .defaultIfEmpty(false);

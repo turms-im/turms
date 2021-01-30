@@ -23,7 +23,6 @@ import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.gateway.access.udp.UdpDispatcher;
 import im.turms.gateway.pojo.bo.session.UserSession;
-import im.turms.gateway.pojo.bo.session.connection.NetConnection;
 import im.turms.server.common.constraint.ValidDeviceType;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.util.DeviceTypeUtil;
@@ -103,21 +102,21 @@ public final class UserSessionsManager {
     /**
      * @return true if the session exists
      */
-    public boolean pushSessionNotification(DeviceType deviceType) {
+    public boolean pushSessionNotification(DeviceType deviceType, String serverId) {
         UserSession userSession = sessionMap.get(deviceType);
-        if (userSession != null) {
-            im.turms.common.model.bo.user.UserSession session = im.turms.common.model.bo.user.UserSession.newBuilder()
-                    .setSessionId(Integer.toString(userSession.getId()))
-                    .build();
-            TurmsNotification notification = TurmsNotification.newBuilder()
-                    .setData(TurmsNotification.Data.newBuilder().setUserSession(session))
-                    .build();
-            ByteBuf byteBuffer = ProtoUtil.getDirectByteBuffer(notification);
-            userSession.tryEmitNextNotification(byteBuffer);
-            return true;
-        } else {
+        if (userSession == null) {
             return false;
         }
+        im.turms.common.model.bo.user.UserSession session = im.turms.common.model.bo.user.UserSession.newBuilder()
+                .setSessionId(Integer.toString(userSession.getId()))
+                .setServerId(serverId)
+                .build();
+        TurmsNotification notification = TurmsNotification.newBuilder()
+                .setData(TurmsNotification.Data.newBuilder().setUserSession(session))
+                .build();
+        ByteBuf byteBuffer = ProtoUtil.getDirectByteBuffer(notification);
+        userSession.tryEmitNextNotification(byteBuffer);
+        return true;
     }
 
     public UserSession getSession(@NotNull DeviceType deviceType) {
@@ -146,9 +145,8 @@ public final class UserSessionsManager {
                             setDeviceOffline(deviceType, closeReason);
                         } else {
                             int requestElapsedTime = (int) (now - session.getLastRequestTimestampMillis());
-                            NetConnection connection = session.getConnection();
-                            if (requestElapsedTime > switchProtocolAfterMillis && connection.isConnected() && UdpDispatcher.isEnabled() && deviceType != DeviceType.BROWSER) {
-                                connection.switchToUdp();
+                            if (requestElapsedTime > switchProtocolAfterMillis && session.isConnected() && UdpDispatcher.isEnabled() && deviceType != DeviceType.BROWSER) {
+                                session.getConnection().switchToUdp();
                             }
                             updateSessionHeartbeatTimeout(deviceType, session, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
                         }

@@ -17,15 +17,31 @@
 
 package im.turms.server.common.util;
 
+import com.mongodb.internal.connection.tlschannel.impl.TlsChannelImpl;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import io.rsocket.exceptions.ConnectionCloseException;
+import io.rsocket.exceptions.ConnectionErrorException;
+import reactor.netty.channel.AbortedException;
 
+import java.io.EOFException;
+import java.nio.channels.ClosedChannelException;
+import java.util.Set;
 import java.util.function.Supplier;
 
 /**
  * @author James Chen
  */
 public class ExceptionUtil {
+
+    private static final Set<Class<?>> DISCONNECTED_CLIENT_EXCEPTIONS = Set.of(
+            AbortedException.class,
+            ClosedChannelException.class,
+            EOFException.class,
+            TlsChannelImpl.EofException.class,
+            ConnectionErrorException.class,
+            ConnectionCloseException.class
+    );
 
     private ExceptionUtil() {
     }
@@ -36,6 +52,10 @@ public class ExceptionUtil {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public static boolean isDisconnectedClientError(Throwable throwable) {
+        return DISCONNECTED_CLIENT_EXCEPTIONS.contains(throwable.getClass());
     }
 
     public static boolean isClientError(Throwable throwable) {

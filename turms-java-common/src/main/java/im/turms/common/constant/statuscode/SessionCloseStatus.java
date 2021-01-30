@@ -25,25 +25,24 @@ import java.util.Map;
  * @see <a href="https://tools.ietf.org/html/rfc6455#page-47">Reserved Status Code Ranges</a>
  */
 public enum SessionCloseStatus {
+    SWITCH(300),
 
-    REDIRECT(4300),
-    SWITCH(4301),
+    ILLEGAL_REQUEST(400),
+    HEARTBEAT_TIMEOUT(401),
+    DISCONNECTED_BY_CLIENT(402),
+    DISCONNECTED_BY_OTHER_DEVICE(403),
 
-    ILLEGAL_REQUEST(4400),
-    HEARTBEAT_TIMEOUT(4401),
-    DISCONNECTED_BY_CLIENT(4402),
-    DISCONNECTED_BY_OTHER_DEVICE(4403),
+    SERVER_ERROR(500),
+    SERVER_CLOSED(501),
+    SERVER_UNAVAILABLE(502),
 
-    SERVER_ERROR(4500),
-    SERVER_CLOSED(4501),
-    SERVER_UNAVAILABLE(4502),
+    LOGIN_CONFLICT(600),
+    LOGIN_TIMEOUT(601),
 
-    LOGIN_CONFLICT(4600),
+    DISCONNECTED_BY_ADMIN(700),
+    USER_IS_DELETED_OR_INACTIVATED(701),
 
-    DISCONNECTED_BY_ADMIN(4700),
-    USER_IS_DELETED_OR_INACTIVATED(4701),
-
-    UNKNOWN_ERROR(4900);
+    UNKNOWN_ERROR(900);
 
     private static final Map<Integer, SessionCloseStatus> CODE_POOL = new HashMap<>((int) (SessionCloseStatus.values().length / 0.5));
 
@@ -72,7 +71,7 @@ public enum SessionCloseStatus {
     }
 
     public boolean isServerError() {
-        return 4500 <= code && code < 4600;
+        return 500 <= code && code < 600;
     }
 
 }

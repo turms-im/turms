@@ -18,9 +18,9 @@
 package im.turms.server.common.rpc.serializer.request;
 
 import im.turms.common.constant.DeviceType;
+import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.server.common.cluster.service.serialization.serializer.Serializer;
 import im.turms.server.common.cluster.service.serialization.serializer.SerializerId;
-import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.rpc.request.SetUserOfflineRequest;
 import im.turms.server.common.util.DeviceTypeUtil;
 import io.netty.buffer.ByteBuf;
@@ -35,9 +35,9 @@ public class SetUserOfflineRequestSerializer implements Serializer<SetUserOfflin
     @Override
     public void write(ByteBuf output, SetUserOfflineRequest data) {
         output.writeLong(data.getUserId());
-        CloseReason closeReason = data.getCloseReason();
-        int code = closeReason.getCode();
-        output.writeShort(closeReason.isTurmsStatusCode() ? -code : code);
+        SessionCloseStatus closeStatus = data.getCloseStatus();
+        int code = closeStatus.getCode();
+        output.writeShort(code);
         Set<DeviceType> deviceTypes = data.getDeviceTypes();
         if (!deviceTypes.isEmpty()) {
             byte deviceTypesByte = DeviceTypeUtil.deviceTypesToByte(deviceTypes);
@@ -49,17 +49,13 @@ public class SetUserOfflineRequestSerializer implements Serializer<SetUserOfflin
     public SetUserOfflineRequest read(ByteBuf input) {
         long userId = input.readLong();
         int code = input.readShort();
-        boolean isTurmsStatusCode = code < 0;
-        if (isTurmsStatusCode) {
-            code = -code;
-        }
-        CloseReason closeReason = CloseReason.get(code, null, isTurmsStatusCode);
+        SessionCloseStatus statusCode = SessionCloseStatus.get(code);
         Set<DeviceType> deviceTypes = null;
         if (input.readableBytes() > 0) {
             byte deviceTypesMask = input.readByte();
             deviceTypes = DeviceTypeUtil.byte2DeviceTypes(deviceTypesMask);
         }
-        return new SetUserOfflineRequest(userId, deviceTypes, closeReason);
+        return new SetUserOfflineRequest(userId, deviceTypes, statusCode);
     }
 
     @Override

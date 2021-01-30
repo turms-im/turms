@@ -19,10 +19,10 @@ package im.turms.server.common.dto;
 
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.pojo.ThrowableInfo;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.web.reactive.socket.CloseStatus;
 
 import javax.annotation.Nullable;
 
@@ -32,35 +32,52 @@ import javax.annotation.Nullable;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Data
 public class CloseReason {
-    /**
-     * Cases:
-     * 1. The business code of TurmsStatusCode
-     * 2. WebSocket status code
-     * 3. The code of SessionCloseStatus that can be used by both TCP/WebSocket connection
-     */
-    private final int code;
+    private final SessionCloseStatus closeStatus;
+    @Nullable
+    private final TurmsStatusCode businessStatusCode;
     @Nullable
     private final String reason;
-    private final boolean isTurmsStatusCode;
-
-    public static CloseReason get(int code, String reason, boolean isTurmsStatusCode) {
-        return new CloseReason(code, reason, isTurmsStatusCode);
-    }
 
     public static CloseReason get(SessionCloseStatus closeStatus) {
-        return new CloseReason(closeStatus.getCode(), null, false);
-    }
-
-    public static CloseReason get(TurmsStatusCode statusCode) {
-        return new CloseReason(statusCode.getBusinessCode(), null, true);
+        return new CloseReason(closeStatus, null, null);
     }
 
     public static CloseReason get(TurmsStatusCode statusCode, String reason) {
-        return new CloseReason(statusCode.getBusinessCode(), reason, true);
+        return new CloseReason(null, statusCode, reason);
     }
 
-    public static CloseReason get(CloseStatus closeStatus) {
-        return new CloseReason(closeStatus.getCode(), closeStatus.getReason(), false);
+    public static SessionCloseStatus statusCodeToCloseStatus(TurmsStatusCode code) {
+        SessionCloseStatus closeStatus;
+        switch (code) {
+            case SESSION_SIMULTANEOUS_CONFLICTS_DECLINE:
+            case SESSION_SIMULTANEOUS_CONFLICTS_NOTIFY:
+            case SESSION_SIMULTANEOUS_CONFLICTS_OFFLINE:
+                closeStatus = SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE;
+                break;
+            case SERVER_UNAVAILABLE:
+                closeStatus = SessionCloseStatus.SERVER_UNAVAILABLE;
+                break;
+            case ILLEGAL_ARGUMENT:
+            case LOGIN_FROM_FORBIDDEN_DEVICE_TYPE:
+                closeStatus = SessionCloseStatus.ILLEGAL_REQUEST;
+                break;
+            default:
+                closeStatus = code.isServerError()
+                        ? SessionCloseStatus.SERVER_ERROR
+                        : SessionCloseStatus.UNKNOWN_ERROR;
+                break;
+        }
+        return closeStatus;
+    }
+
+    public static CloseReason get(Throwable throwable) {
+        ThrowableInfo info = ThrowableInfo.get(throwable);
+        return get(info.getCode(), info.getReason());
+    }
+
+    public boolean isServerError() {
+        return (businessStatusCode != null && businessStatusCode.isServerError())
+                || (closeStatus != null && closeStatus.isServerError());
     }
 
 }

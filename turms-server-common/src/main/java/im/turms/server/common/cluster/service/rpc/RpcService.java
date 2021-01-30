@@ -26,13 +26,14 @@ import im.turms.server.common.cluster.service.serialization.serializer.Serialize
 import im.turms.server.common.cluster.service.serialization.serializer.SerializerPool;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.property.env.common.cluster.RpcProperties;
+import im.turms.server.common.util.CollectorUtil;
+import im.turms.server.common.util.ExceptionUtil;
+import im.turms.server.common.util.MapUtil;
 import io.micrometer.core.instrument.Tag;
 import io.netty.buffer.ByteBuf;
 import io.rsocket.Payload;
 import io.rsocket.RSocket;
 import io.rsocket.exceptions.ApplicationErrorException;
-import io.rsocket.exceptions.ConnectionCloseException;
-import io.rsocket.exceptions.ConnectionErrorException;
 import io.rsocket.util.ByteBufPayload;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
@@ -42,7 +43,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotNull;
-import java.nio.channels.ClosedChannelException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -100,7 +100,7 @@ public class RpcService implements ClusterService {
         String memberNodeId = info.getMember().getNodeId();
         return requestResponse(memberNodeId, info.getConnection(), request, timeoutDuration)
                 .onErrorResume(throwable -> {
-                    if (isConnectionError(throwable)) {
+                    if (ExceptionUtil.isDisconnectedClientError(throwable)) {
                         for (MemberInfoWithConnection memberInfo : discoveryService.getOtherActiveConnectedServiceMemberList()) {
                             String newMemberId = memberInfo.getMember().getNodeId();
                             if (!newMemberId.equals(memberNodeId)) {
@@ -295,7 +295,8 @@ public class RpcService implements ClusterService {
         }
         ByteBuf buffer = serializationService.serialize(request);
         Payload requestPayload = ByteBufPayload.create(buffer);
-        List<Mono<Pair<String, Payload>>> results = new ArrayList<>(members.size());
+        int size = members.size();
+        List<Mono<Pair<String, Payload>>> results = new ArrayList<>(size);
         for (MemberInfoWithConnection info : members) {
             String memberId = info.getMember().getNodeId();
             RSocket connection = info.getConnection();
@@ -318,7 +319,7 @@ public class RpcService implements ClusterService {
                     Payload payload = pair.getSecond();
                     Object data = getReturnValueFromRpc(payload.sliceData());
                     return (T) data;
-                })
+                }, CollectorUtil.toMap(MapUtil.getCapability(size)))
                 .onErrorMap(throwable -> tryLogAndTranslateThrowable(throwable, members));
     }
 
@@ -376,12 +377,6 @@ public class RpcService implements ClusterService {
             // e.g. ClosedChannelException
             return true;
         }
-    }
-
-    private boolean isConnectionError(Throwable throwable) {
-        return throwable instanceof ClosedChannelException
-                || throwable instanceof ConnectionErrorException
-                || throwable instanceof ConnectionCloseException;
     }
 
 }

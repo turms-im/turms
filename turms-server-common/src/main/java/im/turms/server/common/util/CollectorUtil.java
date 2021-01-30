@@ -17,9 +17,8 @@
 
 package im.turms.server.common.util;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -31,12 +30,20 @@ public class CollectorUtil {
     private CollectorUtil() {
     }
 
+    public static <T> Collector<T, ?, List<T>> toList() {
+        return Collectors.toCollection(LinkedList::new);
+    }
+
     public static <T> Collector<T, ?, List<T>> toList(int size) {
         return Collectors.toCollection(() -> new ArrayList<>(size));
     }
 
     public static <T> Collector<T, ?, HashSet<T>> toSet(int size) {
         return Collectors.toCollection(() -> new HashSet<>(size));
+    }
+
+    public static <K, V> Supplier<Map<K, V>> toMap(int size) {
+        return () -> new HashMap<>(size);
     }
 
 }

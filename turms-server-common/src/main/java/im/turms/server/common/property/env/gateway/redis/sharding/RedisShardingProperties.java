@@ -33,8 +33,4 @@ public class RedisShardingProperties {
 
     private ShardingAlgorithm algorithmForLocation = DEFAULT_SHARDING_ALGORITHM;
 
-    private ShardingAlgorithm algorithmForLoginFailureReason = DEFAULT_SHARDING_ALGORITHM;
-
-    private ShardingAlgorithm algorithmForSessionDisconnectionReason = DEFAULT_SHARDING_ALGORITHM;
-
 }

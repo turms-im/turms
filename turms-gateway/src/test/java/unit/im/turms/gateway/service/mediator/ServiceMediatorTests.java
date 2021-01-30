@@ -18,11 +18,15 @@
 package unit.im.turms.gateway.service.mediator;
 
 import im.turms.common.constant.DeviceType;
+import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.plugin.manager.TurmsPluginManager;
 import im.turms.gateway.pojo.bo.session.UserSession;
-import im.turms.gateway.service.impl.*;
+import im.turms.gateway.service.impl.InboundRequestService;
+import im.turms.gateway.service.impl.SessionService;
+import im.turms.gateway.service.impl.UserService;
+import im.turms.gateway.service.impl.UserSimultaneousLoginService;
 import im.turms.gateway.service.mediator.ServiceMediator;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
@@ -33,7 +37,6 @@ import im.turms.server.common.property.env.gateway.SessionProperties;
 import im.turms.server.common.util.ExceptionUtil;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.springframework.web.reactive.socket.CloseStatus;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -54,7 +57,7 @@ class ServiceMediatorTests {
 
     @Test
     void constructor_shouldSucceed() {
-        ServiceMediator mediator = new ServiceMediator(null, null, null, null, null, null, null);
+        ServiceMediator mediator = new ServiceMediator(null, null, null, null, null, null);
 
         assertNotNull(mediator);
     }
@@ -102,19 +105,9 @@ class ServiceMediatorTests {
     }
 
     @Test
-    void rejectLoginRequest_shouldSucceed() {
-        ServiceMediator mediator = newServiceMediator();
-        Mono<Boolean> result = mediator.rejectLoginRequest(TurmsStatusCode.SERVER_INTERNAL_ERROR, null, null, null);
-
-        StepVerifier.create(result)
-                .expectNext(true)
-                .verifyComplete();
-    }
-
-    @Test
     void setLocalUserDeviceOffline_shouldSucceed() {
         ServiceMediator mediator = newServiceMediator();
-        Mono<Boolean> result = mediator.setLocalUserDeviceOffline(userId, deviceType, CloseStatus.NORMAL);
+        Mono<Boolean> result = mediator.setLocalUserDeviceOffline(userId, deviceType, SessionCloseStatus.UNKNOWN_ERROR);
 
         StepVerifier.create(result)
                 .expectNext(true)
@@ -129,12 +122,12 @@ class ServiceMediatorTests {
     void onSessionEstablished_shouldSendSessionNotification_ifIsNotifyClientsOfSessionInfoAfterConnected() {
         ServiceMediator mediator = newServiceMediator();
         UserSessionsManager manager = mock(UserSessionsManager.class);
-        when(manager.pushSessionNotification(any()))
+        when(manager.pushSessionNotification(any(), any()))
                 .thenReturn(true);
         mediator.onSessionEstablished(manager, deviceType);
 
         boolean sessionExists = verify(manager, times(1))
-                .pushSessionNotification(deviceType);
+                .pushSessionNotification(deviceType, any());
         assertTrue(sessionExists);
     }
 
@@ -151,10 +144,10 @@ class ServiceMediatorTests {
     @Test
     void processHeartbeatRequest_shouldSucceed() {
         ServiceMediator mediator = newServiceMediator();
-        Mono<Boolean> result = mediator.processHeartbeatRequest(userId, deviceType);
+        Mono<TurmsStatusCode> result = mediator.processHeartbeatRequest(userId, deviceType);
 
         StepVerifier.create(result)
-                .expectNext(true)
+                .expectNext(TurmsStatusCode.OK)
                 .verifyComplete();
     }
 
@@ -198,12 +191,6 @@ class ServiceMediatorTests {
         when(userService.isActiveAndNotDeleted(any())).thenReturn(Mono.just(isActiveAndNotDeleted));
         when(userService.authenticate(any(), any())).thenReturn(Mono.just(isAuthenticated));
 
-        ReasonCacheService reasonCacheService = mock(ReasonCacheService.class);
-        when(reasonCacheService.shouldCacheLoginFailureReason(any(), any(), any()))
-                .thenReturn(true);
-        when(reasonCacheService.cacheLoginFailureReason(any(), any(), any(), any()))
-                .thenReturn(Mono.just(true));
-
         SessionService sessionService = mock(SessionService.class);
         UserSession userSession = mock(UserSession.class);
         when(sessionService.tryRegisterOnlineUser(any(), any(), any(), any(), any(), any()))
@@ -219,8 +206,8 @@ class ServiceMediatorTests {
         when(inboundRequestService.processServiceRequest(any()))
                 .thenReturn(Mono.empty());
         when(inboundRequestService.processHeartbeatRequest(any(), any(DeviceType.class)))
-                .thenReturn(Mono.just(true));
-        return new ServiceMediator(node, pluginManager, userService, reasonCacheService, sessionService, userSimultaneousLoginService, inboundRequestService);
+                .thenReturn(Mono.just(TurmsStatusCode.OK));
+        return new ServiceMediator(node, pluginManager, userService, sessionService, userSimultaneousLoginService, inboundRequestService);
     }
 
 }

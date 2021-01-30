@@ -24,7 +24,7 @@ import org.springframework.data.convert.ReadingConverter;
  * @author James Chen
  */
 @ReadingConverter
-public class IntegerToEnumConverter<T extends Enum> implements Converter<Integer, Enum> {
+public class IntegerToEnumConverter<T extends Enum<?>> implements Converter<Integer, Enum<?>> {
 
     private final Class<T> enumType;
 
@@ -33,7 +33,7 @@ public class IntegerToEnumConverter<T extends Enum> implements Converter<Integer
     }
 
     @Override
-    public Enum convert(Integer source) {
+    public Enum<?> convert(Integer source) {
         return enumType.getEnumConstants()[source];
     }
 

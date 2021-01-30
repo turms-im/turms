@@ -27,7 +27,10 @@ import im.turms.gateway.plugin.extension.UserOnlineStatusChangeHandler;
 import im.turms.gateway.plugin.manager.TurmsPluginManager;
 import im.turms.gateway.pojo.bo.login.UserLoginInfo;
 import im.turms.gateway.pojo.bo.session.UserSession;
-import im.turms.gateway.service.impl.*;
+import im.turms.gateway.service.impl.InboundRequestService;
+import im.turms.gateway.service.impl.SessionService;
+import im.turms.gateway.service.impl.UserService;
+import im.turms.gateway.service.impl.UserSimultaneousLoginService;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.CloseReason;
@@ -36,7 +39,6 @@ import im.turms.server.common.exception.TurmsBusinessException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.socket.CloseStatus;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
@@ -57,7 +59,6 @@ public class ServiceMediator {
     private final Node node;
     private final TurmsPluginManager turmsPluginManager;
     private final UserService userService;
-    private final ReasonCacheService reasonCacheService;
     private final SessionService sessionService;
     private final UserSimultaneousLoginService userSimultaneousLoginService;
     private final InboundRequestService inboundRequestService;
@@ -66,14 +67,12 @@ public class ServiceMediator {
             Node node,
             TurmsPluginManager turmsPluginManager,
             UserService userService,
-            ReasonCacheService reasonCacheService,
             SessionService sessionService,
             UserSimultaneousLoginService userSimultaneousLoginService,
             InboundRequestService inboundRequestService) {
         this.node = node;
         this.turmsPluginManager = turmsPluginManager;
         this.userService = userService;
-        this.reasonCacheService = reasonCacheService;
         this.sessionService = sessionService;
         this.userSimultaneousLoginService = userSimultaneousLoginService;
         this.inboundRequestService = inboundRequestService;
@@ -98,19 +97,6 @@ public class ServiceMediator {
                         : Mono.error(TurmsBusinessException.get(statusCode)));
     }
 
-    /**
-     * @return true if the reason has been cached
-     */
-    public Mono<Boolean> rejectLoginRequest(
-            @NotNull TurmsStatusCode statusCode,
-            @Nullable Long userId,
-            @Nullable DeviceType deviceType,
-            @Nullable Long requestId) {
-        return reasonCacheService.shouldCacheLoginFailureReason(userId, deviceType, requestId)
-                ? reasonCacheService.cacheLoginFailureReason(userId, deviceType, requestId, statusCode)
-                : Mono.just(false);
-    }
-
     // Disconnect
 
     /**
@@ -121,21 +107,19 @@ public class ServiceMediator {
         return sessionService.setLocalSessionOfflineByUserIdAndDeviceType(userId, deviceType, closeReason);
     }
 
-    public Mono<Boolean> setLocalUserDeviceOffline(Long userId, DeviceType deviceType, CloseStatus closeStatus) {
-        CloseReason closeReason = CloseReason.get(closeStatus);
-        return sessionService.setLocalSessionOfflineByUserIdAndDeviceType(userId, deviceType, closeReason);
-    }
-
     public Mono<Boolean> setLocalUserDeviceOffline(Long userId, DeviceType deviceType, CloseReason closeReason) {
         return sessionService.setLocalSessionOfflineByUserIdAndDeviceType(userId, deviceType, closeReason);
     }
 
-    public Mono<Boolean> authAndSetLocalUserDeviceOffline(Long userId, DeviceType deviceType, CloseStatus closeStatus, int sessionId) {
-        CloseReason closeReason = CloseReason.get(closeStatus);
+    public Mono<Boolean> authAndSetLocalUserDeviceOffline(Long userId, DeviceType deviceType, CloseReason closeReason, int sessionId) {
         return sessionService.authAndSetLocalSessionOfflineByUserIdAndDeviceType(userId, deviceType, closeReason, sessionId);
     }
 
     // Session
+
+    public UserSessionsManager getUserSessionsManager(Long userId) {
+        return sessionService.getUserSessionsManager(userId);
+    }
 
     public void onSessionEstablished(UserSessionsManager userSessionsManager, DeviceType deviceType) {
         sessionService.onSessionEstablished(userSessionsManager, deviceType);
@@ -147,7 +131,7 @@ public class ServiceMediator {
         return inboundRequestService.processServiceRequest(serviceRequest);
     }
 
-    public Mono<Boolean> processHeartbeatRequest(Long userId, DeviceType deviceType) {
+    public Mono<TurmsStatusCode> processHeartbeatRequest(Long userId, DeviceType deviceType) {
         return inboundRequestService.processHeartbeatRequest(userId, deviceType);
     }
 

@@ -50,9 +50,6 @@ public class DiscoveryProperties {
     private int jitterInSeconds = 5;
 
     @NestedConfigurationProperty
-    private AdvertiseProperties advertise = new AdvertiseProperties();
-
-    @NestedConfigurationProperty
     private Ssl clientSsl = new Ssl();
 
     @NestedConfigurationProperty

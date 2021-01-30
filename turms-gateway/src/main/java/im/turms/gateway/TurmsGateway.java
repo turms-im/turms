@@ -17,6 +17,7 @@
 
 package im.turms.gateway;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -34,6 +35,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication(
         scanBasePackages = {"im.turms.gateway", "im.turms.server.common"},
         proxyBeanMethods = false)
+@Log4j2
 public class TurmsGateway {
 
     public static void main(String[] args) {
@@ -44,7 +46,7 @@ public class TurmsGateway {
             // Make sure that turms can exit if SpringApplication failed to bootstrap (e.g. PortInUseException)
             // because there are still some non-daemon threads running after the context has been closed
 
-            // Don't print the exception because Spring should have done it
+            log.error(e);
             System.exit(1);
         }
     }

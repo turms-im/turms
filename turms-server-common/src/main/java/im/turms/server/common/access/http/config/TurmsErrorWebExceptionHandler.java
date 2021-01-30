@@ -17,6 +17,7 @@
 
 package im.turms.server.common.access.http.config;
 
+import im.turms.server.common.util.ExceptionUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.context.annotation.Configuration;
@@ -39,7 +40,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Use ErrorWebExceptionHandler instead of DefaultErrorAttributes
@@ -55,12 +55,6 @@ import java.util.Set;
 @Log4j2
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class TurmsErrorWebExceptionHandler implements ErrorWebExceptionHandler {
-
-    private static final Set<String> DISCONNECTED_CLIENT_EXCEPTIONS = Set.of(
-            "AbortedException",
-            "ClientAbortException",
-            "EOFException",
-            "EofException");
 
     private final ServerResponse.Context context;
     private final List<HttpMessageReader<?>> messageReaders;
@@ -104,7 +98,7 @@ public class TurmsErrorWebExceptionHandler implements ErrorWebExceptionHandler {
     }
 
     private boolean isDisconnectedClientError(Throwable throwable) {
-        if (DISCONNECTED_CLIENT_EXCEPTIONS.contains(throwable.getClass().getSimpleName())) {
+        if (ExceptionUtil.isDisconnectedClientError(throwable)) {
             return true;
         }
         String message = NestedExceptionUtils.getMostSpecificCause(throwable).getMessage();

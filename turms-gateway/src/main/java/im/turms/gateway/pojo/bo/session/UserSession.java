@@ -116,6 +116,10 @@ public final class UserSession {
         return isSessionOpen;
     }
 
+    public boolean isConnected() {
+        return connection != null && connection.isConnected();
+    }
+
     public Flux<ByteBuf> getNotificationFlux() {
         return notificationSink.asFlux();
     }
