@@ -40,8 +40,8 @@ class ProtoUtilTests {
         byte[] record = new byte[]{1, 2, 3, 4, 10, 11};
         CreateMessageRequest request = CreateMessageRequest
                 .newBuilder()
-                .setMessageId(Int64Value.newBuilder().setValue(messageId).build())
-                .setText(StringValue.newBuilder().setValue(text).build())
+                .setMessageId(Int64Value.of(messageId))
+                .setText(StringValue.of(text))
                 .addRecords(ByteString.copyFrom(record))
                 .build();
         ByteBuf buffer = ProtoUtil.getDirectByteBuffer(request);

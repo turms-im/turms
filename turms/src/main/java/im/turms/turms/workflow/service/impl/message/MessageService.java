@@ -832,7 +832,7 @@ public class MessageService {
         TurmsNotification notification = TurmsNotification
                 .newBuilder()
                 .setRelayedRequest(request)
-                .setRequestId(Int64Value.newBuilder().setValue(DaoConstant.ADMIN_REQUEST_ID).build())
+                .setRequestId(Int64Value.of(DaoConstant.ADMIN_REQUEST_ID))
                 .build();
         if (node.getSharedProperties().getService().getMessage().isSendMessageToOtherSenderOnlineDevices()) {
             recipientIds.add(message.getSenderId());

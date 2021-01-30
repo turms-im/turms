@@ -75,7 +75,7 @@ class TurmsRequestUtilTests {
     void parseSimpleRequest_shouldReturnRequestIdAndType_ifRequestIdExists() {
         long requestId = 1000L;
         ByteBuffer requestWithRequestId = TurmsRequest.newBuilder()
-                .setRequestId(Int64Value.newBuilder().setValue(requestId).build())
+                .setRequestId(Int64Value.of(requestId))
                 .setCreateMessageRequest(CreateMessageRequest.newBuilder().buildPartial())
                 .build()
                 .toByteString()

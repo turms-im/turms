@@ -128,11 +128,11 @@ public class UserRequestDispatcher {
 
     private TurmsNotification getNotificationFromHandlerResult(RequestHandlerResult result, long requestId) {
         TurmsNotification.Builder builder = TurmsNotification.newBuilder()
-                .setRequestId(Int64Value.newBuilder().setValue(requestId).build())
-                .setCode(Int32Value.newBuilder().setValue(result.getCode().getBusinessCode()).build());
+                .setRequestId(Int64Value.of(requestId))
+                .setCode(Int32Value.of(result.getCode().getBusinessCode()));
         String reason = result.getReason();
         if (reason != null) {
-            builder.setReason(StringValue.newBuilder().setValue(reason).build());
+            builder.setReason(StringValue.of(reason));
         }
         return builder.build();
     }

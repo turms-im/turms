@@ -136,8 +136,8 @@ public class MessageServiceController {
                                 .setCreateMessageRequest(ProtoUtil.cloneAndFillMessageRequest(request, message))
                                 .build();
                     } else {
-                        Int64Value.Builder messageIdBuilder = Int64Value.newBuilder().setValue(messageId);
-                        CreateMessageRequest.Builder requestBuilder = request.toBuilder().setMessageId(messageIdBuilder);
+                        CreateMessageRequest.Builder requestBuilder = request.toBuilder()
+                                .setMessageId(Int64Value.of(messageId));
                         if (messageService.getTimeType() == TimeType.LOCAL_SERVER_TIME) {
                             requestBuilder.setDeliveryDate(message.getDeliveryDate().getTime());
                         }

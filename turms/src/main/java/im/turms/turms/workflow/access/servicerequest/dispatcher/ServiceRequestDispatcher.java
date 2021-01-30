@@ -260,7 +260,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         TurmsNotification notificationForRecipients = TurmsNotification
                 .newBuilder()
                 .setRelayedRequest(dataForRecipients)
-                .setRequesterId(Int64Value.newBuilder().setValue(requesterId).build())
+                .setRequesterId(Int64Value.of(requesterId))
                 .build();
         ByteBuf notificationByteBuf = ProtoUtil.getDirectByteBuffer(notificationForRecipients);
         if (result.isForwardDataForRecipientsToOtherSenderOnlineDevices()) {

@@ -33,8 +33,8 @@ public class TurmsNotificationUtil {
     public static TurmsNotification sessionClosed(long requestId) {
         return TurmsNotification
                 .newBuilder()
-                .setRequestId(Int64Value.newBuilder().setValue(requestId).build())
-                .setCode(Int32Value.newBuilder().setValue(TurmsStatusCode.SERVER_INTERNAL_ERROR.getBusinessCode()).build())
+                .setRequestId(Int64Value.of(requestId))
+                .setCode(Int32Value.of(TurmsStatusCode.SERVER_INTERNAL_ERROR.getBusinessCode()))
                 .build();
     }
 

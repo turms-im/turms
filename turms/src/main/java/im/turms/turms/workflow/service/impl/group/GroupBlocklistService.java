@@ -229,7 +229,7 @@ public class GroupBlocklistService {
                                     }
                                     return Int64ValuesWithVersion
                                             .newBuilder()
-                                            .setLastUpdatedDate(Int64Value.newBuilder().setValue(version.getTime()).build())
+                                            .setLastUpdatedDate(Int64Value.of(version.getTime()))
                                             .addAllValues(ids)
                                             .build();
                                 });
@@ -267,7 +267,7 @@ public class GroupBlocklistService {
                                         throw TurmsBusinessException.get(TurmsStatusCode.NO_CONTENT);
                                     }
                                     UsersInfosWithVersion.Builder builder = UsersInfosWithVersion.newBuilder();
-                                    builder.setLastUpdatedDate(Int64Value.newBuilder().setValue(version.getTime()).build());
+                                    builder.setLastUpdatedDate(Int64Value.of(version.getTime()));
                                     for (User user : users) {
                                         UserInfo userInfo = ProtoUtil.userProfile2proto(user).build();
                                         builder.addUserInfos(userInfo);

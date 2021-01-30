@@ -692,7 +692,7 @@ public class GroupMemberService {
                                             builder.addGroupMembers(groupMember);
                                         }
                                         return Mono.just(builder
-                                                .setLastUpdatedDate(Int64Value.newBuilder().setValue(version.getTime()).build())
+                                                .setLastUpdatedDate(Int64Value.of(version.getTime()))
                                                 .build());
                                     }
                                 });

@@ -63,7 +63,7 @@ public enum TurmsStatusCode {
     // User
 
     // User - Login
-    LOGIN_TIMEOUT(2000, "The user ID must be a number", 400),
+    LOGIN_TIMEOUT(2000, "Login timeout", 408),
     LOGIN_AUTHENTICATION_FAILED(2001, "The user's login details are incorrect", 401),
     LOGGING_IN_USER_NOT_ACTIVE(2002, "The logging in user is inactive", 401),
     LOGIN_FROM_FORBIDDEN_DEVICE_TYPE(2003, "The device type is forbidden to login", 401),

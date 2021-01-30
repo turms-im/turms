@@ -135,7 +135,7 @@ public class UserRelationshipGroupService {
                 .flatMap(date -> {
                     if (lastUpdatedDate == null || lastUpdatedDate.before(date)) {
                         UserRelationshipGroupsWithVersion.Builder builder = UserRelationshipGroupsWithVersion.newBuilder()
-                                .setLastUpdatedDate(Int64Value.newBuilder().setValue(date.getTime()).build());
+                                .setLastUpdatedDate(Int64Value.of(date.getTime()));
                         return queryRelationshipGroupsInfos(ownerId)
                                 .collect(CollectorUtil.toList())
                                 .map(groups -> {

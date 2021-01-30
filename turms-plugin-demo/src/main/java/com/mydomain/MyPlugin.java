@@ -31,8 +31,7 @@ public class MyPlugin extends TurmsPlugin {
             if (turmsRequest.getKindCase() == TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST) {
                 CreateMessageRequest request = turmsRequest.getCreateMessageRequest();
                 CreateMessageRequest.Builder builder = request.toBuilder()
-                        .setText(StringValue.newBuilder().setValue("Hi Turms, I have changed the text of the request")
-                                .build());
+                        .setText(StringValue.of("Hi Turms, I have changed the text of the request"));
                 turmsRequest = turmsRequest.toBuilder()
                         .setCreateMessageRequest(builder)
                         .build();

@@ -40,8 +40,8 @@ public class NotificationFactory {
         TurmsStatusCode code = info.getCode();
         TurmsNotification.Builder builder = TurmsNotification
                 .newBuilder()
-                .setRequestId(Int64Value.newBuilder().setValue(requestId).build())
-                .setCode(Int32Value.newBuilder().setValue(code.getBusinessCode()).build());
+                .setRequestId(Int64Value.of(requestId))
+                .setCode(Int32Value.of(code.getBusinessCode()));
         String reason = info.getReason();
         trySetReason(builder, reason, code);
         return builder.build();
@@ -53,9 +53,9 @@ public class NotificationFactory {
         String reason = closeReason.getReason();
         TurmsNotification.Builder builder = TurmsNotification
                 .newBuilder()
-                .setCloseStatus(Int32Value.newBuilder().setValue(closeStatus.getCode()).build());
+                .setCloseStatus(Int32Value.of(closeStatus.getCode()));
         if (statusCode != null) {
-            builder.setCode(Int32Value.newBuilder().setValue(statusCode.getBusinessCode()).build());
+            builder.setCode(Int32Value.of(statusCode.getBusinessCode()));
         }
         trySetReason(builder, reason, statusCode);
         return builder.build();
@@ -65,10 +65,10 @@ public class NotificationFactory {
         if (reason != null) {
             if (TurmsStatusCode.isServerError(code.getBusinessCode())) {
                 if (returnReasonForServerError) {
-                    builder.setReason(StringValue.newBuilder().setValue(reason).build());
+                    builder.setReason(StringValue.of(reason));
                 }
             } else {
-                builder.setReason(StringValue.newBuilder().setValue(reason).build());
+                builder.setReason(StringValue.of(reason));
             }
         }
     }

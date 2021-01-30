@@ -185,12 +185,12 @@ public class InboundRequestService {
     private TurmsNotification getNotificationFromStatusCode(@NotNull TurmsStatusCode statusCode, @Nullable Long requestId) {
         int codeBusinessCode = statusCode.getBusinessCode();
         TurmsNotification.Builder builder = TurmsNotification.newBuilder()
-                .setCode(Int32Value.newBuilder().setValue(codeBusinessCode).build());
+                .setCode(Int32Value.of(codeBusinessCode));
         if (requestId != null) {
-            builder.setRequestId(Int64Value.newBuilder().setValue(requestId).build());
+            builder.setRequestId(Int64Value.of(requestId));
         }
         return builder
-                .setCode(Int32Value.newBuilder().setValue(codeBusinessCode).build())
+                .setCode(Int32Value.of(codeBusinessCode))
                 .build();
     }
 
@@ -203,16 +203,16 @@ public class InboundRequestService {
         TurmsNotification.Builder builder = TurmsNotification.newBuilder();
         String reason = serviceResponse.getReason();
         if (reason != null) {
-            builder.setReason(StringValue.newBuilder().setValue(reason).build());
+            builder.setReason(StringValue.of(reason));
         }
         TurmsNotification.Data dataForRequester = serviceResponse.getDataForRequester();
         if (dataForRequester != null) {
             builder.setData(dataForRequester);
         }
-        Int32Value businessCode = Int32Value.newBuilder().setValue(code.getBusinessCode()).build();
+        Int32Value businessCode = Int32Value.of(code.getBusinessCode());
         return builder
                 .setCode(businessCode)
-                .setRequestId(Int64Value.newBuilder().setValue(requestId).build())
+                .setRequestId(Int64Value.of(requestId))
                 .build();
     }
 

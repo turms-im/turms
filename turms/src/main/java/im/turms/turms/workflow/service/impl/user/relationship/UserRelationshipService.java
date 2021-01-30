@@ -223,7 +223,7 @@ public class UserRelationshipService {
                                         throw TurmsBusinessException.get(TurmsStatusCode.NO_CONTENT);
                                     }
                                     return Int64ValuesWithVersion.newBuilder()
-                                            .setLastUpdatedDate(Int64Value.newBuilder().setValue(date.getTime()).build())
+                                            .setLastUpdatedDate(Int64Value.of(date.getTime()))
                                             .addAllValues(ids)
                                             .build();
                                 });
@@ -256,8 +256,8 @@ public class UserRelationshipService {
                                     if (relationships.isEmpty()) {
                                         throw TurmsBusinessException.get(TurmsStatusCode.NO_CONTENT);
                                     }
-                                    UserRelationshipsWithVersion.Builder builder = UserRelationshipsWithVersion.newBuilder();
-                                    builder.setLastUpdatedDate(Int64Value.newBuilder().setValue(date.getTime()).build());
+                                    UserRelationshipsWithVersion.Builder builder = UserRelationshipsWithVersion.newBuilder()
+                                            .setLastUpdatedDate(Int64Value.of(date.getTime()));
                                     for (UserRelationship relationship : relationships) {
                                         im.turms.common.model.bo.user.UserRelationship userRelationship = ProtoUtil.relationship2proto(relationship).build();
                                         builder.addUserRelationships(userRelationship);

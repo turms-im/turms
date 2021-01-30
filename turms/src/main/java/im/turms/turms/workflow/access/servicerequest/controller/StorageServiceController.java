@@ -56,7 +56,7 @@ public class StorageServiceController {
                 Long keyNum = querySignedGetUrlRequest.hasKeyNum() ? querySignedGetUrlRequest.getKeyNum().getValue() : null;
                 return storageService.queryPresignedGetUrl(clientRequest.getUserId(), contentType, keyStr, keyNum)
                         .map(url -> RequestHandlerResultFactory.get(TurmsNotification.Data.newBuilder()
-                                .setUrl(StringValue.newBuilder().setValue(url).build())
+                                .setUrl(StringValue.of(url))
                                 .build()));
             } else {
                 return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The content type must not be UNRECOGNIZED"));
@@ -75,7 +75,7 @@ public class StorageServiceController {
                 Long keyNum = querySignedPutUrlRequest.hasKeyNum() ? querySignedPutUrlRequest.getKeyNum().getValue() : null;
                 return storageService.queryPresignedPutUrl(clientRequest.getUserId(), contentType, keyStr, keyNum, contentLength)
                         .map(url -> RequestHandlerResultFactory.get(TurmsNotification.Data.newBuilder()
-                                .setUrl(StringValue.newBuilder().setValue(url).build())
+                                .setUrl(StringValue.of(url))
                                 .build()));
             } else {
                 return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The content type must not be UNRECOGNIZED"));

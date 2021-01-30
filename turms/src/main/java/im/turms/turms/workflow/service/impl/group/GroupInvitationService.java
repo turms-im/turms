@@ -340,7 +340,7 @@ public class GroupInvitationService {
                                         builder.addGroupInvitations(ProtoUtil.groupInvitation2proto(groupInvitation));
                                     }
                                     return builder
-                                            .setLastUpdatedDate(Int64Value.newBuilder().setValue(version.getTime()).build())
+                                            .setLastUpdatedDate(Int64Value.of(version.getTime()))
                                             .build();
                                 });
                     } else {
@@ -374,8 +374,8 @@ public class GroupInvitationService {
                                                 if (groupInvitations.isEmpty()) {
                                                     throw TurmsBusinessException.get(TurmsStatusCode.NO_CONTENT);
                                                 }
-                                                GroupInvitationsWithVersion.Builder builder = GroupInvitationsWithVersion.newBuilder();
-                                                builder.setLastUpdatedDate(Int64Value.newBuilder().setValue(version.getTime()).build());
+                                                GroupInvitationsWithVersion.Builder builder = GroupInvitationsWithVersion.newBuilder()
+                                                        .setLastUpdatedDate(Int64Value.of(version.getTime()));
                                                 for (GroupInvitation invitation : groupInvitations) {
                                                     builder.addGroupInvitations(ProtoUtil.groupInvitation2proto(invitation).build());
                                                 }

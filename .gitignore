@@ -36,7 +36,7 @@ turms-plugin-demo/target/
 turms-apm/target/
 turms-docs/node_modules/
 turms-docs/src/.vuepress/dist/
-turms-client-java/target/
+turms-client-kotlin/target/
 turms-client-js/node_modules/
 turms-client-js/types/src/
 turms-client-js/dist/
