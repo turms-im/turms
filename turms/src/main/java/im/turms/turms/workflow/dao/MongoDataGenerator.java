@@ -53,6 +53,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
+import java.time.Duration;
 import java.util.*;
 
 /**
@@ -166,7 +167,7 @@ public class MongoDataGenerator {
     public void createCollectionsIfNotExist() {
         if (!context.isProduction() && clearAllCollectionsBeforeMocking) {
             log.info("Start clearing collections...");
-            clearAllCollections();
+            clearAllCollections().block(Duration.ofSeconds(120));
             log.info("All collections are cleared");
         }
         log.info("Start creating collections...");
@@ -194,32 +195,32 @@ public class MongoDataGenerator {
                 createCollectionIfNotExist(UserRelationshipGroup.class, null),
                 createCollectionIfNotExist(UserRelationshipGroupMember.class, null),
                 createCollectionIfNotExist(UserVersion.class, null))
-                .doOnTerminate(() -> {
+                .doOnError(t -> log.error("Failed to create collections", t))
+                .doOnSuccess(ignored -> {
                     log.info("All collections are created");
                     if (!context.isProduction() && isMockEnabled) {
                         try {
-                            mockData();
+                            mockData().block(Duration.ofSeconds(120));
                         } catch (Exception e) {
                             log.error("Failed to mock data", e);
                         }
                     }
                 })
-                .subscribe();
+                .block(Duration.ofSeconds(120));
     }
 
-    private void clearAllCollections() {
+    private Mono<Void> clearAllCollections() {
         Query queryAll = new Query();
-        List<Flux<?>> fluxes = new ArrayList<>(4);
+        List<Flux<?>> fluxes = new ArrayList<>(5);
         fluxes.add(adminMongoTemplate.getCollectionNames()
                 .flatMap(name -> {
                     if (ADMIN_COLLECTIONS.contains(name)) {
+                        Query query = queryAll;
                         if (Admin.COLLECTION_NAME.equals(name)) {
-                            Query query = new Query()
+                            query = new Query()
                                     .addCriteria(Criteria.where(Admin.Fields.ROLE_ID).ne(DaoConstant.ADMIN_ROLE_ROOT_ID));
-                            return adminMongoTemplate.remove(query, name);
-                        } else {
-                            return adminMongoTemplate.remove(queryAll, name);
                         }
+                        return adminMongoTemplate.remove(query, name);
                     } else {
                         return Mono.empty();
                     }
@@ -240,13 +241,13 @@ public class MongoDataGenerator {
                 .flatMap(name -> MESSAGE_COLLECTIONS.contains(name)
                         ? messageMongoTemplate.remove(queryAll, name)
                         : Mono.empty()));
-        Mono.when(fluxes).block();
+        return Mono.when(fluxes);
     }
 
     /**
      * Note: Better not to remove all mock data after turms closed
      */
-    private void mockData() {
+    private Mono<Void> mockData() {
         log.info("Start mocking...");
 
         final int adminCount = 10;
@@ -465,8 +466,7 @@ public class MongoDataGenerator {
             userRelatedObjs.add(relationshipGroupMember2);
         }
 
-        // Execute
-        Mono.when(
+        return Mono.when(
                 adminMongoTemplate.insertAll(adminRelatedObjs)
                         .doOnError(error -> log.error("Failed to mock admin-related data", error))
                         .doOnComplete(() -> log.info("Admin-related data has been mocked")),
@@ -482,7 +482,7 @@ public class MongoDataGenerator {
                 messageMongoTemplate.insertAll(messageRelatedObjs)
                         .doOnError(error -> log.error("Failed to mock message-related data", error))
                         .doOnComplete(() -> log.info("Message-related data has been mocked")))
-                .subscribe(ignored -> log.info("All data has been mocked"));
+                .doOnSuccess(ignored -> log.info("All data has been mocked"));
     }
 
     private <T> Mono<Boolean> createCollectionIfNotExist(
