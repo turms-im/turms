@@ -68,8 +68,6 @@
             <artifactId>common</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib -->
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>

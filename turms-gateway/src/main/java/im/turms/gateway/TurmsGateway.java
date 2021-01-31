@@ -39,7 +39,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class TurmsGateway {
 
     public static void main(String[] args) {
-        System.setProperty("log4j2.contextSelector", "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
         try {
             SpringApplication.run(TurmsGateway.class, args);
         } catch (Exception e) {

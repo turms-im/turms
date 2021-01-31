@@ -31,7 +31,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class TurmsApplication {
 
     public static void main(String[] args) {
-        System.setProperty("log4j2.contextSelector", "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector");
         try {
             SpringApplication.run(TurmsApplication.class, args);
         } catch (Exception e) {
