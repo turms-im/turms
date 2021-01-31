@@ -55,7 +55,7 @@ class UserService(private val turmsClient: TurmsClient) {
     init {
         turmsClient.driver.addOnDisconnectedListener { changeToOffline() }
         turmsClient.driver.addNotificationListener {
-            if (it.hasCloseStatus()) {
+            if (it.hasCloseStatus() && isLoggedIn) {
                 val info = SessionCloseInfo(
                     it.closeStatus.value,
                     if (it.hasCode()) it.code.value else null,

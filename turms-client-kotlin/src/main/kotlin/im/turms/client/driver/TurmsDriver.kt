@@ -22,8 +22,8 @@ import com.google.protobuf.Message
 import im.turms.client.driver.service.ConnectionService
 import im.turms.client.driver.service.HeartbeatService
 import im.turms.client.driver.service.MessageService
+import im.turms.client.extension.camelToSnakeCase
 import im.turms.client.model.ConnectionDisconnectInfo
-import im.turms.client.util.camelToSnakeCase
 import im.turms.common.model.dto.notification.TurmsNotification
 import im.turms.common.model.dto.request.TurmsRequest
 import kotlinx.coroutines.CoroutineScope

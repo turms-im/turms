@@ -19,7 +19,7 @@ package im.turms.client.driver.service
 import im.turms.client.constant.TurmsStatusCode
 import im.turms.client.driver.StateStore
 import im.turms.client.exception.TurmsBusinessException
-import im.turms.client.exception.tryResumeWithException
+import im.turms.client.extension.tryResumeWithException
 import im.turms.client.model.ConnectionDisconnectInfo
 import okhttp3.*
 import okhttp3.HttpUrl.Companion.toHttpUrl

@@ -47,7 +47,7 @@ export default class UserService {
         this._stateStore = turmsClient.driver.stateStore();
         turmsClient.driver.addOnDisconnectedListener(() => this._changeToOffline());
         turmsClient.driver.addNotificationListener(notification => {
-            if (notification.closeStatus) {
+            if (notification.closeStatus && this.isLoggedIn) {
                 this._changeToOffline({
                     closeStatus: notification.closeStatus,
                     businessStatus: notification.code,

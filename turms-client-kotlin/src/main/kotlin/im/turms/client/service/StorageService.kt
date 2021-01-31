@@ -21,7 +21,7 @@ import com.google.protobuf.StringValue
 import im.turms.client.TurmsClient
 import im.turms.client.constant.TurmsStatusCode
 import im.turms.client.exception.TurmsBusinessException
-import im.turms.client.exception.tryResumeWithException
+import im.turms.client.extension.tryResumeWithException
 import im.turms.common.constant.ContentType
 import im.turms.common.model.dto.request.TurmsRequest
 import im.turms.common.model.dto.request.storage.DeleteResourceRequest

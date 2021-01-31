@@ -23,9 +23,11 @@ object TurmsStatusCode {
     //**********************************************************
     //* Defined on the client side
     //**********************************************************
+
     //**********************************************************
     //* For application error
     //**********************************************************
+
     // Client - Request
     const val INVALID_REQUEST = 100
     const val CLIENT_REQUESTS_TOO_FREQUENT = 101
@@ -39,6 +41,7 @@ object TurmsStatusCode {
     //**********************************************************
     //* For business error
     //**********************************************************
+
     // User
     const val CLIENT_SESSION_ALREADY_ESTABLISHED = 300
     const val CLIENT_SESSION_HAS_BEEN_CLOSED = 301
@@ -52,6 +55,7 @@ object TurmsStatusCode {
     //**********************************************************
     //* Defined on the server side
     //**********************************************************
+
     // Successful responses
     const val OK = 1000
     const val NO_CONTENT = 1001
@@ -60,6 +64,7 @@ object TurmsStatusCode {
     //**********************************************************
     //* For application error
     //**********************************************************
+
     // Client
     const val INVALID_REQUEST_FROM_SERVER = 1100
     const val CLIENT_REQUESTS_TOO_FREQUENT_FROM_SERVER = 1101
@@ -75,7 +80,9 @@ object TurmsStatusCode {
     //**********************************************************
     //* For business error
     //**********************************************************
+
     // User
+
     // User - Login
     const val LOGIN_TIMEOUT = 2000
     const val LOGIN_AUTHENTICATION_FAILED = 2001
@@ -112,6 +119,7 @@ object TurmsStatusCode {
     const val FRIEND_REQUEST_SENDER_HAS_BEEN_BLOCKED = 2602
 
     // Group
+
     // Group - Info
     const val UPDATE_INFO_OF_NON_EXISTING_GROUP = 3000
     const val NOT_OWNER_TO_UPDATE_GROUP_INFO = 3001
@@ -180,6 +188,7 @@ object TurmsStatusCode {
     const val UPDATING_READ_DATE_IS_DISABLED = 4001
 
     // Message
+
     // Message - Send
     const val MESSAGE_RECIPIENT_NOT_ACTIVE = 5000
     const val MESSAGE_SENDER_NOT_IN_CONTACTS_OR_BLOCKED = 5001

@@ -20,8 +20,8 @@ import com.google.protobuf.Int64Value
 import im.turms.client.constant.TurmsStatusCode
 import im.turms.client.driver.StateStore
 import im.turms.client.exception.TurmsBusinessException
-import im.turms.client.exception.tryResumeWithException
 import im.turms.client.extension.isSuccessful
+import im.turms.client.extension.tryResumeWithException
 import im.turms.common.model.dto.notification.TurmsNotification
 import im.turms.common.model.dto.request.TurmsRequest
 import kotlinx.coroutines.Deferred

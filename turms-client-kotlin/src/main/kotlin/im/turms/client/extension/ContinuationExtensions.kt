@@ -14,22 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package im.turms.client.util
+
+package im.turms.client.extension
+
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 /**
  * @author James Chen
  */
-fun String.camelToSnakeCase(): String {
-    val builder = StringBuilder()
-    for (char in this) {
-        if (char.isUpperCase()) {
-            if (builder.isNotEmpty()) {
-                builder.append('_')
-            }
-            builder.append(char.toLowerCase())
-        } else {
-            builder.append(char)
-        }
+fun <T> Continuation<T>.tryResumeWithException(exception: Throwable) {
+    try {
+        resumeWithException(exception)
+    } catch (e: Exception) {
     }
-    return builder.toString()
+}
+
+fun <T> Continuation<T>.tryResume(value: T) {
+    try {
+        resume(value)
+    } catch (e: Exception) {
+    }
 }
