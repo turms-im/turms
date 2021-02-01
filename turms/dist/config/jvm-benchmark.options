@@ -1,8 +1,15 @@
+# Memory
+
 -Xms1g
 -Xmx1g
+-XX:-RestrictContended
+
+# GC
 
 -XX:+UseParallelGC
--XX:-RestrictContended
+-XX:+AlwaysPreTouch
+
+# Diagnostics
 
 -XX:+DisableAttachMechanism
 -Xnoclassgc
