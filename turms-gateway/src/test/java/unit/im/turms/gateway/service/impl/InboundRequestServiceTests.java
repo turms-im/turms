@@ -12,6 +12,7 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.manager.ServerStatusManager;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.ClientApiProperties;
@@ -40,7 +41,7 @@ class InboundRequestServiceTests {
 
     @Test
     void constructor_shouldReturnInstance() {
-        InboundRequestService inboundRequestService = new InboundRequestService(null, mockTurmsPropertiesManager(), null);
+        InboundRequestService inboundRequestService = new InboundRequestService(null, mockTurmsPropertiesManager(), null, null);
 
         assertNotNull(inboundRequestService);
     }
@@ -141,9 +142,8 @@ class InboundRequestServiceTests {
             boolean isFrequent,
             boolean updateHeartbeatSuccessfully,
             boolean handleRequestSuccessfully) {
+        // Node
         Node node = mock(Node.class);
-        when(node.isActive())
-                .thenReturn(isActive);
         RpcService rpcService = mock(RpcService.class);
         if (handleRequestSuccessfully) {
             when(rpcService.requestResponse(any(HandleServiceRequest.class)))
@@ -168,14 +168,19 @@ class InboundRequestServiceTests {
         when(node.getSharedProperties())
                 .thenReturn(turmsProperties);
 
+        // ServerStatusManager
+        ServerStatusManager serverStatusManager = mock(ServerStatusManager.class);
+        when(serverStatusManager.isActive())
+                .thenReturn(isActive);
 
+        // SessionService
         SessionService sessionService = mock(SessionService.class);
         when(sessionService.getLocalUserSession(any(), any()))
                 .thenReturn(session);
         when(sessionService.updateHeartbeatTimestamp(any(), any(UserSession.class)))
                 .thenReturn(Mono.just(updateHeartbeatSuccessfully));
 
-        return new InboundRequestService(node, mockTurmsPropertiesManager(), sessionService);
+        return new InboundRequestService(node, mockTurmsPropertiesManager(), serverStatusManager, sessionService);
     }
 
     private TurmsPropertiesManager mockTurmsPropertiesManager() {

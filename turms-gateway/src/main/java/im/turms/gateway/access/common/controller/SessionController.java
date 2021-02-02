@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.access.common;
+package im.turms.gateway.access.common.controller;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.UserStatus;
@@ -28,8 +28,8 @@ import im.turms.gateway.access.tcp.model.UserSessionWrapper;
 import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.service.mediator.ServiceMediator;
-import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.manager.ServerStatusManager;
 import io.netty.util.Timeout;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Controller;
@@ -41,11 +41,11 @@ import reactor.core.publisher.Mono;
 @Controller
 public class SessionController {
 
-    private final Node node;
+    private final ServerStatusManager serverStatusManager;
     private final ServiceMediator serviceMediator;
 
-    public SessionController(Node node, ServiceMediator serviceMediator) {
-        this.node = node;
+    public SessionController(ServerStatusManager serverStatusManager, ServiceMediator serviceMediator) {
+        this.serverStatusManager = serverStatusManager;
         this.serviceMediator = serviceMediator;
     }
 
@@ -63,7 +63,7 @@ public class SessionController {
         if (sessionWrapper.hasUserSession()) {
             return Mono.just(new RequestHandlerResult(TurmsStatusCode.CREATE_EXISTING_SESSION));
         }
-        if (!node.isActive()) {
+        if (!serverStatusManager.isActive()) {
             return Mono.just(new RequestHandlerResult(TurmsStatusCode.SERVER_UNAVAILABLE));
         }
         long userId = createSessionRequest.getUserId();

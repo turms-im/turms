@@ -18,6 +18,7 @@
 package im.turms.gateway.access.tcp.factory;
 
 import im.turms.gateway.access.tcp.handler.TcpHandlerConfig;
+import im.turms.server.common.manager.ServerStatusManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.TcpProperties;
 import im.turms.server.common.util.SslUtil;
@@ -43,12 +44,13 @@ public class TcpServerFactory {
 
     @Nullable
     public static DisposableServer create(TurmsPropertiesManager propertiesManager,
+                                          ServerStatusManager serverStatusManager,
                                           BiFunction<? super NettyInbound, ? super NettyOutbound, ? extends Publisher<Void>> handler) {
         TcpProperties tcpProperties = propertiesManager.getLocalProperties().getGateway().getTcp();
         if (!tcpProperties.isEnabled()) {
             return null;
         }
-        TcpHandlerConfig handlerConfig = new TcpHandlerConfig();
+        TcpHandlerConfig handlerConfig = new TcpHandlerConfig(serverStatusManager);
         TcpServer server = TcpServer.create()
                 // Don't set SO_SNDBUF and SO_RCVBUF because of
                 // the reasons mentioned in https://developer.aliyun.com/article/724580
@@ -62,7 +64,8 @@ public class TcpServerFactory {
                 .host(tcpProperties.getHost())
                 .port(tcpProperties.getPort())
                 .handle(handler)
-                .doOnConnection(handlerConfig::configure);
+                .doOnChannelInit((connectionObserver, channel, remoteAddress) -> handlerConfig.configureChannel(channel))
+                .doOnConnection(handlerConfig::configureConnection);
         Ssl ssl = tcpProperties.getSsl();
         if (ssl.isEnabled()) {
             server.secure(spec -> SslUtil.configureSslContextSpec(spec, ssl, true));

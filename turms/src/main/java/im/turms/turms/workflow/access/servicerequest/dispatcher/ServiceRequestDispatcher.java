@@ -26,8 +26,9 @@ import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
+import im.turms.server.common.exception.ThrowableInfo;
 import im.turms.server.common.log4j.ClientApiLogging;
-import im.turms.server.common.pojo.ThrowableInfo;
+import im.turms.server.common.manager.ServerStatusManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.ClientApiLoggingProperties;
 import im.turms.server.common.property.env.service.env.clientapi.property.LoggingRequestProperties;
@@ -68,6 +69,7 @@ import static im.turms.turms.constant.MetricsConstant.CLIENT_REQUEST_TAG_TYPE;
 public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
 
     private final Node node;
+    private final ServerStatusManager serverStatusManager;
     private final OutboundMessageService outboundMessageService;
     private final TurmsPluginManager turmsPluginManager;
 
@@ -78,9 +80,12 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
 
     public ServiceRequestDispatcher(ApplicationContext context,
                                     Node node,
+                                    ServerStatusManager serverStatusManager,
                                     OutboundMessageService outboundMessageService,
                                     TurmsPropertiesManager turmsPropertiesManager,
                                     TurmsPluginManager turmsPluginManager) {
+        this.node = node;
+        this.serverStatusManager = serverStatusManager;
         this.outboundMessageService = outboundMessageService;
         Set<TurmsRequest.KindCase> disabledEndpoints = turmsPropertiesManager.getLocalProperties().getService().getClientApi().getDisabledEndpoints();
         router = getMappings((ConfigurableApplicationContext) context, disabledEndpoints);
@@ -89,7 +94,6 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                 throw new IllegalStateException("No client request handler for the request type: " + kindCase.name());
             }
         }
-        this.node = node;
         this.turmsPluginManager = turmsPluginManager;
         pluginEnabled = turmsPropertiesManager.getLocalProperties().getPlugin().isEnabled();
         ClientApiLoggingProperties loggingProperties = node.getSharedProperties().getService().getClientApi().getLogging();
@@ -156,7 +160,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             String message = "The device type is missing for the request: " + serviceRequest;
             return Mono.just(new ServiceResponse(null, TurmsStatusCode.SERVER_INTERNAL_ERROR, message));
         }
-        if (!node.isActive()) {
+        if (!serverStatusManager.isActive()) {
             return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.SERVER_UNAVAILABLE));
         }
         TurmsRequest request;

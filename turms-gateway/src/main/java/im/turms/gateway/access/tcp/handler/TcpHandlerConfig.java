@@ -17,7 +17,10 @@
 
 package im.turms.gateway.access.tcp.handler;
 
+import im.turms.gateway.access.common.handler.ServerAvailabilityHandler;
 import im.turms.gateway.access.tcp.codec.TurmsProtobufEncoder;
+import im.turms.server.common.manager.ServerStatusManager;
+import io.netty.channel.Channel;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import reactor.netty.Connection;
@@ -27,11 +30,24 @@ import reactor.netty.Connection;
  */
 public class TcpHandlerConfig {
 
-    TurmsProtobufEncoder protobufEncoder = new TurmsProtobufEncoder();
+    private final TurmsProtobufEncoder protobufEncoder = new TurmsProtobufEncoder();
+    private ServerAvailabilityHandler serverAvailabilityHandler;
 
-    public void configure(Connection connection) {
+    public TcpHandlerConfig(ServerStatusManager serverStatusManager) {
+        if (serverAvailabilityHandler == null) {
+            serverAvailabilityHandler = new ServerAvailabilityHandler(serverStatusManager);
+        }
+    }
+
+    public void configureChannel(Channel channel) {
+        channel.pipeline().addFirst("serverAvailabilityHandler", serverAvailabilityHandler);
+    }
+
+    public void configureConnection(Connection connection) {
+        // Inbound
         connection.addHandlerLast("protobufFrameDecoder", new ProtobufVarint32FrameDecoder());
 
+        // Outbound
         connection.addHandlerLast("protobufFrameEncoder", new ProtobufVarint32LengthFieldPrepender());
         connection.addHandlerLast("protobufEncoder", protobufEncoder);
     }

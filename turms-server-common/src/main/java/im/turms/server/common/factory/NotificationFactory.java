@@ -24,7 +24,7 @@ import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.CloseReason;
-import im.turms.server.common.pojo.ThrowableInfo;
+import im.turms.server.common.exception.ThrowableInfo;
 
 /**
  * @author James Chen

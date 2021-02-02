@@ -19,7 +19,7 @@ package im.turms.server.common.dto;
 
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.server.common.constant.TurmsStatusCode;
-import im.turms.server.common.pojo.ThrowableInfo;
+import im.turms.server.common.exception.ThrowableInfo;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;

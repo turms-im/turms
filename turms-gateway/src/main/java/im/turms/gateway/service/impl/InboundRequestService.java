@@ -32,6 +32,7 @@ import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.log4j.ClientApiLogging;
+import im.turms.server.common.manager.ServerStatusManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.ClientApiLoggingProperties;
 import im.turms.server.common.property.env.service.env.clientapi.property.LoggingRequestProperties;
@@ -58,12 +59,17 @@ import java.util.Map;
 public class InboundRequestService {
 
     private final Node node;
+    private final ServerStatusManager serverStatusManager;
     private final SessionService sessionService;
     private final Map<TurmsRequest.KindCase, LoggingRequestProperties> supportedLoggingRequestProperties;
     private final Map<TurmsRequest.KindCase, LoggingRequestProperties> supportedLoggingResponseProperties;
 
-    public InboundRequestService(Node node, TurmsPropertiesManager propertiesManager, SessionService sessionService) {
+    public InboundRequestService(Node node,
+                                 TurmsPropertiesManager propertiesManager,
+                                 ServerStatusManager serverStatusManager,
+                                 SessionService sessionService) {
         this.node = node;
+        this.serverStatusManager = serverStatusManager;
         this.sessionService = sessionService;
         ClientApiLoggingProperties loggingProperties = propertiesManager.getLocalProperties().getGateway().getClientApi().getLogging();
         supportedLoggingRequestProperties = LoggingRequestUtil.getSupportedLoggingRequestProperties(
@@ -82,7 +88,7 @@ public class InboundRequestService {
      * If the method returns MonoError, the session should be closed by downstream.
      */
     public Mono<TurmsStatusCode> processHeartbeatRequest(Long userId, DeviceType deviceType) {
-        if (!node.isActive()) {
+        if (!serverStatusManager.isActive()) {
             return Mono.just(TurmsStatusCode.SERVER_UNAVAILABLE);
         }
         return sessionService.updateHeartbeatTimestamp(userId, deviceType)
@@ -103,7 +109,7 @@ public class InboundRequestService {
      */
     public Mono<TurmsNotification> processServiceRequest(ServiceRequest serviceRequest) {
         // Validate
-        if (!node.isActive()) {
+        if (!serverStatusManager.isActive()) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_UNAVAILABLE));
         }
         Long userId = serviceRequest.getUserId();

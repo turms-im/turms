@@ -15,17 +15,28 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.redis;
+package im.turms.server.common.manager;
+
+import im.turms.server.common.cluster.node.Node;
+import im.turms.server.common.monitor.MemoryMonitor;
+import org.springframework.stereotype.Component;
 
 /**
  * @author James Chen
  */
-public class RedisEntryId {
+@Component
+public class ServerStatusManager {
 
-    private RedisEntryId() {
+    private final Node node;
+
+    public ServerStatusManager(Node node) {
+        this.node = node;
+        // Load MemoryMonitor class
+        MemoryMonitor.DEFAULT.isExceeded();
     }
 
-    public static final byte SESSIONS_STATUS = 's';
-    public static final String LOCATION = "l";
+    public boolean isActive() {
+        return node.isActive() && !MemoryMonitor.DEFAULT.isExceeded();
+    }
 
 }

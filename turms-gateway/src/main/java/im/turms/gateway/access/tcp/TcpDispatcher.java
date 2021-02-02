@@ -17,20 +17,25 @@
 
 package im.turms.gateway.access.tcp;
 
-import im.turms.gateway.access.common.UserRequestDispatcher;
+import im.turms.gateway.access.common.controller.UserRequestDispatcher;
 import im.turms.gateway.access.tcp.factory.TcpServerFactory;
 import im.turms.gateway.access.tcp.model.UserSessionWrapper;
 import im.turms.gateway.pojo.bo.session.connection.TcpConnection;
+import im.turms.server.common.manager.ServerStatusManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import io.netty.buffer.ByteBuf;
 import lombok.extern.log4j.Log4j2;
+import org.reactivestreams.Publisher;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 import reactor.netty.Connection;
 import reactor.netty.DisposableServer;
+import reactor.netty.NettyInbound;
+import reactor.netty.NettyOutbound;
 
 import javax.annotation.PreDestroy;
 import java.net.InetSocketAddress;
+import java.util.function.BiFunction;
 
 /**
  * @author James Chen
@@ -43,9 +48,17 @@ public class TcpDispatcher {
     private final int closeIdleConnectionAfter;
 
     public TcpDispatcher(TurmsPropertiesManager propertiesManager,
+                         ServerStatusManager serverStatusManager,
                          UserRequestDispatcher userRequestDispatcher) {
         closeIdleConnectionAfter = propertiesManager.getLocalProperties().getGateway().getTcp().getCloseIdleConnectionAfterSeconds();
-        server = TcpServerFactory.create(propertiesManager, (inbound, outbound) -> {
+        server = TcpServerFactory.create(
+                propertiesManager,
+                serverStatusManager,
+                getConnectionHandler(userRequestDispatcher));
+    }
+
+    private BiFunction<NettyInbound, NettyOutbound, Publisher<Void>> getConnectionHandler(UserRequestDispatcher userRequestDispatcher) {
+        return (inbound, outbound) -> {
             Connection connection = (Connection) inbound;
             InetSocketAddress address = (InetSocketAddress) connection.address();
             String ip = address.getHostString();
@@ -70,7 +83,7 @@ public class TcpDispatcher {
                     })
                     .subscribe();
             return connection.onDispose();
-        });
+        };
     }
 
     @PreDestroy

@@ -34,7 +34,6 @@ export interface ConnectionDisconnectInfo {
 }
 
 export default class ConnectionService extends BaseService {
-    private static readonly WS_STATUS_CODE_GOING_AWAY = 1001;
 
     private readonly _initialWsUrl: string;
     private readonly _initialConnectTimeout: number;
@@ -64,7 +63,9 @@ export default class ConnectionService extends BaseService {
                 const ws = this._stateStore.websocket;
                 const status = ws?.readyState;
                 if (status === WebSocket.OPEN || status === WebSocket.CONNECTING) {
-                    ws.close(ConnectionService.WS_STATUS_CODE_GOING_AWAY);
+                    // Don't use 1001 because the code must be either 1000,
+                    // or between 3000 and 4999 according to Chrome
+                    ws.close(1000);
                 }
             });
         }

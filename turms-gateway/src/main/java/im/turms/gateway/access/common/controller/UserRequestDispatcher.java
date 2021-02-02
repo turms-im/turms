@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.access.common;
+package im.turms.gateway.access.common.controller;
 
 import com.google.protobuf.Int32Value;
 import com.google.protobuf.Int64Value;
@@ -33,8 +33,8 @@ import im.turms.gateway.service.mediator.ServiceMediator;
 import im.turms.gateway.util.TurmsRequestUtil;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.ServiceRequest;
+import im.turms.server.common.exception.ThrowableInfo;
 import im.turms.server.common.factory.NotificationFactory;
-import im.turms.server.common.pojo.ThrowableInfo;
 import im.turms.server.common.util.ProtoUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.EmptyByteBuf;
