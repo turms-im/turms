@@ -5,6 +5,8 @@ management:
         include: "*"
 logging:
   level:
+    im:
+      turms: DEBUG
     org:
       springframework:
         data:

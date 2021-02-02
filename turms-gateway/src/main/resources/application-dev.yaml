@@ -1,3 +1,10 @@
+logging:
+  level:
+    im:
+      turms: DEBUG
+
+############################### Turms ###############################
+
 turms:
   gateway:
     client-api:
