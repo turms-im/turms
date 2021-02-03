@@ -17,6 +17,7 @@
 
 package im.turms.server.common.cluster.node;
 
+import im.turms.server.common.access.common.resource.LoopResourcesFactory;
 import im.turms.server.common.cluster.service.config.SharedConfigService;
 import im.turms.server.common.cluster.service.config.SharedPropertyService;
 import im.turms.server.common.cluster.service.discovery.DiscoveryService;
@@ -33,8 +34,6 @@ import im.turms.server.common.property.env.common.cluster.NodeProperties;
 import im.turms.server.common.property.env.common.cluster.NodeProperties.NetworkProperties;
 import im.turms.server.common.property.env.common.cluster.SharedConfigProperties;
 import im.turms.server.common.util.SslUtil;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.util.concurrent.DefaultThreadFactory;
 import io.rsocket.SocketAcceptor;
 import io.rsocket.core.RSocketServer;
 import io.rsocket.transport.netty.server.CloseableChannel;
@@ -120,7 +119,6 @@ public class Node {
                 networkProperties.getPort(),
                 networkProperties.isAutoIncrement(),
                 networkProperties.getPortCount(),
-                clusterProperties.getRpc().getInputThreadNumber(),
                 discoveryProperties.getServerSsl());
         InetSocketAddress address = serverChannel.address();
         String clusterId = clusterProperties.getId();
@@ -143,7 +141,6 @@ public class Node {
                 nodeProperties.isLeaderEligible(),
                 address.getHostString(),
                 address.getPort(),
-                clusterProperties.getRpc().getOutputThreadNumber(),
                 discoveryProperties,
                 serviceAddressManager,
                 sharedConfigService);
@@ -208,17 +205,15 @@ public class Node {
                                                        int port,
                                                        boolean autoIncrement,
                                                        int portCount,
-                                                       int inputThreadNumber,
                                                        Ssl serverSsl) {
         int currentPort = port;
-        NioEventLoopGroup eventLoopGroup = new NioEventLoopGroup(inputThreadNumber, new DefaultThreadFactory("member-input"));
 
         // Loop until the server is set up, or an exception occurs
         while (true) {
             try {
                 InetSocketAddress inetSocketAddress = new InetSocketAddress(host, currentPort);
                 TcpServer tcpServer = TcpServer.create()
-                        .runOn(eventLoopGroup)
+                        .runOn(LoopResourcesFactory.createForServer("connection-server"))
                         .bindAddress(() -> inetSocketAddress);
                 if (serverSsl.isEnabled()) {
                     tcpServer.secure(spec -> SslUtil.configureSslContextSpec(spec, serverSsl, true));

@@ -115,7 +115,6 @@ public class DiscoveryService implements ClusterService {
             boolean isActive,
             String memberAddress,
             int memberPort,
-            int outputThreadCount,
             DiscoveryProperties discoveryProperties,
             IServiceAddressManager serviceAddressManager,
             SharedConfigService sharedConfigService) {
@@ -142,7 +141,7 @@ public class DiscoveryService implements ClusterService {
                 discoveryProperties.getHeartbeatIntervalInSeconds());
         serviceAddressManager.addListener(serviceAddress ->
                 localNodeStatusManager.upsertLocalNodeInfo(new Update().set(Member.Fields.serviceAddress, serviceAddress)));
-        this.connectionManager = new ConnectionManager(this, discoveryProperties, outputThreadCount);
+        this.connectionManager = new ConnectionManager(this, discoveryProperties);
         connectionManager.addMemberConnectionChangeListener(new MemberConnectionChangeListener() {
             @Override
             public void onMemberConnectionAdded(Member member, RSocket connection) {

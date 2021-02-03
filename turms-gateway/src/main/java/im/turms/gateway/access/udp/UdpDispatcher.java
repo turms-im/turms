@@ -25,6 +25,7 @@ import im.turms.common.model.dto.udpsignal.UdpSignalRequest;
 import im.turms.gateway.access.udp.dto.UdpNotification;
 import im.turms.gateway.access.udp.dto.UdpSignalResponseBufferPool;
 import im.turms.gateway.service.mediator.ServiceMediator;
+import im.turms.server.common.access.common.resource.LoopResourcesFactory;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.exception.TurmsBusinessException;
@@ -72,6 +73,7 @@ public class UdpDispatcher {
                     .option(ChannelOption.SO_REUSEADDR, true)
                     .host(udpProperties.getHost())
                     .port(udpProperties.getPort())
+                    .runOn(LoopResourcesFactory.createForServer("gateway-udp"))
                     .handle((inbound, outbound) -> {
                         Flux<DatagramPacket> responseFlux = inbound.receiveObject()
                                 .cast(DatagramPacket.class)

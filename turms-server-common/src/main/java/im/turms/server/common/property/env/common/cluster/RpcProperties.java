@@ -32,8 +32,4 @@ public class RpcProperties {
     @Min(1)
     private int timeoutInMillis = 15 * 1000;
 
-    private int inputThreadNumber = Math.max(Runtime.getRuntime().availableProcessors() / 2, 1);
-
-    private int outputThreadNumber = Math.max(Runtime.getRuntime().availableProcessors() / 2, 1);
-
 }

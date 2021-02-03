@@ -18,6 +18,7 @@
 package im.turms.gateway.access.tcp.factory;
 
 import im.turms.gateway.access.tcp.handler.TcpHandlerConfig;
+import im.turms.server.common.access.common.resource.LoopResourcesFactory;
 import im.turms.server.common.manager.ServerStatusManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.TcpProperties;
@@ -63,6 +64,7 @@ public class TcpServerFactory {
                 .childOption(TCP_NODELAY, false)
                 .host(tcpProperties.getHost())
                 .port(tcpProperties.getPort())
+                .runOn(LoopResourcesFactory.createForServer("gateway-tcp"))
                 .handle(handler)
                 .doOnChannelInit((connectionObserver, channel, remoteAddress) -> handlerConfig.configureChannel(channel))
                 .doOnConnection(handlerConfig::configureConnection);

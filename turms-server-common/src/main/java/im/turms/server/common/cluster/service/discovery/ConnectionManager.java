@@ -73,13 +73,13 @@ public class ConnectionManager {
     @Contended
     private boolean hasConnectedToAllMembers;
 
-    public ConnectionManager(DiscoveryService discoveryService, DiscoveryProperties discoveryProperties, int outputThreadNumber) {
+    public ConnectionManager(DiscoveryService discoveryService, DiscoveryProperties discoveryProperties) {
         this.discoveryService = discoveryService;
-        this.clientSsl = discoveryProperties.getClientSsl();
+        clientSsl = discoveryProperties.getClientSsl();
         keepaliveInterval = Duration.ofSeconds(discoveryProperties.getHeartbeatIntervalInSeconds());
         keepaliveTimeout = Duration.ofSeconds(discoveryProperties.getHeartbeatTimeoutInSeconds());
         reconnectInterval = Duration.ofSeconds(discoveryProperties.getReconnectIntervalInSeconds());
-        this.eventLoopGroup = new NioEventLoopGroup(outputThreadNumber, new DefaultThreadFactory("discovery-nio-output"));
+        eventLoopGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors(), new DefaultThreadFactory("connection-client"));
     }
 
     public void stop() {
