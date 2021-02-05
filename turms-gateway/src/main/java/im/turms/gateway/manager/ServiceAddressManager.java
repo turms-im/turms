@@ -24,10 +24,10 @@ import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.constant.AdvertiseStrategy;
 import im.turms.server.common.property.env.gateway.DiscoveryProperties;
+import im.turms.server.common.property.env.gateway.WebSocketProperties;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.web.server.Ssl;
 import org.springframework.stereotype.Component;
 
@@ -56,15 +56,17 @@ public class ServiceAddressManager implements IServiceAddressManager {
 
     public ServiceAddressManager(
             TurmsPropertiesManager turmsPropertiesManager,
-            ServerProperties serverProperties,
             PublicIpManager publicIpManager) throws UnknownHostException {
         discoveryProperties = turmsPropertiesManager.getLocalProperties().getGateway().getDiscovery();
-        port = serverProperties.getPort();
-        if (port == null || port <= 0) {
+        // FIXME: The code is legacy because we have supported TCP/UDP/WebSocket,
+        // so we should have three service addresses
+        WebSocketProperties webSocketProperties = turmsPropertiesManager.getLocalProperties().getGateway().getWebsocket();
+        port = webSocketProperties.getPort();
+        if (port <= 0) {
             throw new UnknownHostException("Invalid service port: " + port);
         }
-        bindHost = serverProperties.getAddress().getHostAddress();
-        Ssl ssl = serverProperties.getSsl();
+        bindHost = webSocketProperties.getHost();
+        Ssl ssl = webSocketProperties.getSsl();
         isSslEnabled = ssl != null && ssl.isEnabled();
         this.publicIpManager = publicIpManager;
         this.addressCollector = getAddressCollector(turmsPropertiesManager.getLocalProperties());

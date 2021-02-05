@@ -23,8 +23,8 @@ import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.model.bo.user.UserLocation;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.user.CreateSessionRequest;
+import im.turms.gateway.access.common.model.UserSessionWrapper;
 import im.turms.gateway.access.tcp.dto.RequestHandlerResult;
-import im.turms.gateway.access.tcp.model.UserSessionWrapper;
 import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.service.mediator.ServiceMediator;
@@ -94,20 +94,10 @@ public class SessionController {
                 sessionWrapper.getIp(),
                 deviceDetails);
         Timeout idleConnectionTimeout = sessionWrapper.getConnectionTimeoutTask();
-        Mono<RequestHandlerResult> resultMono;
-        if (idleConnectionTimeout == null) {
-            resultMono = processLoginRequestMono
-                    .map(session -> {
-                        sessionWrapper.setUserSession(session);
-                        UserSessionsManager userSessionsManager = serviceMediator.getUserSessionsManager(userId);
-                        serviceMediator.onSessionEstablished(userSessionsManager, session.getDeviceType());
-                        serviceMediator.triggerGoOnlinePlugins(userSessionsManager, session).subscribe();
-                        return new RequestHandlerResult(TurmsStatusCode.OK);
-                    });
-        } else {
-            DeviceType finalDeviceType = deviceType;
-            resultMono = processLoginRequestMono.flatMap(session -> {
-                if (idleConnectionTimeout.cancel()) {
+        DeviceType finalDeviceType = deviceType;
+        return processLoginRequestMono.flatMap(session -> {
+            if (idleConnectionTimeout == null || idleConnectionTimeout.cancel()) {
+                if (sessionWrapper.getConnection().isConnected()) {
                     sessionWrapper.setUserSession(session);
                     UserSessionsManager userSessionsManager = serviceMediator.getUserSessionsManager(userId);
                     serviceMediator.onSessionEstablished(userSessionsManager, session.getDeviceType());
@@ -115,11 +105,13 @@ public class SessionController {
                     return Mono.just(new RequestHandlerResult(TurmsStatusCode.OK));
                 } else {
                     return serviceMediator.setLocalUserDeviceOffline(userId, finalDeviceType, SessionCloseStatus.LOGIN_TIMEOUT)
-                            .map(ignored -> new RequestHandlerResult(TurmsStatusCode.LOGIN_TIMEOUT));
+                            .then(Mono.empty());
                 }
-            });
-        }
-        return resultMono;
+            } else {
+                return serviceMediator.setLocalUserDeviceOffline(userId, finalDeviceType, SessionCloseStatus.LOGIN_TIMEOUT)
+                        .map(ignored -> new RequestHandlerResult(TurmsStatusCode.LOGIN_TIMEOUT));
+            }
+        });
     }
 
 }

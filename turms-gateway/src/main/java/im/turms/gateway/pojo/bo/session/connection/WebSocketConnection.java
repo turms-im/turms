@@ -22,12 +22,13 @@ import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.factory.NotificationFactory;
 import im.turms.server.common.util.ExceptionUtil;
 import im.turms.server.common.util.ProtoUtil;
+import io.netty.buffer.ByteBuf;
+import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.WebSocketCloseStatus;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.core.io.buffer.NettyDataBufferFactory;
-import org.springframework.web.reactive.socket.CloseStatus;
-import org.springframework.web.reactive.socket.WebSocketMessage;
-import org.springframework.web.reactive.socket.WebSocketSession;
 import reactor.core.publisher.Mono;
+import reactor.netty.Connection;
+import reactor.netty.http.websocket.WebsocketOutbound;
 
 import javax.validation.constraints.NotNull;
 
@@ -37,11 +38,13 @@ import javax.validation.constraints.NotNull;
 @Log4j2
 public class WebSocketConnection extends NetConnection {
 
-    private final WebSocketSession connection;
+    private final Connection connection;
+    private final WebsocketOutbound out;
 
-    public WebSocketConnection(WebSocketSession connection, boolean isConnected) {
+    protected WebSocketConnection(Connection connection, boolean isConnected) {
         super(isConnected);
         this.connection = connection;
+        out = (WebsocketOutbound) connection;
     }
 
     /**
@@ -49,11 +52,12 @@ public class WebSocketConnection extends NetConnection {
      */
     @Override
     public void close(@NotNull CloseReason closeReason) {
-        if (isConnected() && connection.isOpen()) {
+        if (isConnected() && !connection.isDisposed()) {
             super.close(closeReason);
             TurmsNotification closeNotification = NotificationFactory.fromReason(closeReason);
-            WebSocketMessage message = connection.binaryMessage(factory -> ((NettyDataBufferFactory) factory).wrap(ProtoUtil.getDirectByteBuffer(closeNotification)));
-            connection.send(Mono.just(message))
+            ByteBuf message = ProtoUtil.getDirectByteBuffer(closeNotification);
+            out.sendObject(Mono.just(new BinaryWebSocketFrame(message)), byteBuf -> true)
+                    .then()
                     .doOnError(throwable -> {
                         if (!ExceptionUtil.isDisconnectedClientError(throwable)) {
                             log.error("Failed to send the close notification", throwable);
@@ -64,15 +68,21 @@ public class WebSocketConnection extends NetConnection {
                         log.error("Failed to send the close notification with retries exhausted: " + RETRY_SEND_CLOSE_NOTIFICATION.maxAttempts, throwable);
                         return Mono.empty();
                     })
-                    .flatMap(unused -> connection.close(CloseStatus.NORMAL)
-                            .onErrorResume(throwable -> {
-                                if (!ExceptionUtil.isDisconnectedClientError(throwable)) {
-                                    log.error("Failed to close the connection", throwable);
-                                }
-                                return Mono.empty();
-                            }))
+                    .doOnTerminate(this::close)
                     .subscribe();
         }
+    }
+
+    @Override
+    public void close() {
+        out.sendClose(WebSocketCloseStatus.NORMAL_CLOSURE.code(), null)
+                .onErrorResume(throwable -> {
+                    if (!ExceptionUtil.isDisconnectedClientError(throwable)) {
+                        log.error("Failed to close the connection", throwable);
+                    }
+                    return Mono.empty();
+                })
+                .subscribe();
     }
 
 }

@@ -43,7 +43,6 @@ class HeartbeatService(
         if (!isRunning) {
             heartbeatTimerDeferred = async {
                 while (isActive) {
-                    delay(heartbeatTimerInterval)
                     val now = System.currentTimeMillis()
                     val difference = (now - stateStore.lastRequestDate)
                         .coerceAtMost(now - lastHeartbeatRequestDate)
@@ -51,6 +50,7 @@ class HeartbeatService(
                         send()
                         lastHeartbeatRequestDate = now
                     }
+                    delay(heartbeatTimerInterval)
                 }
             }
         }

@@ -21,10 +21,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.property.metadata.annotation.Description;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
 import lombok.Data;
-import org.springframework.web.reactive.socket.CloseStatus;
 
 import javax.validation.constraints.Min;
-import java.util.Set;
 
 /**
  * @author James Chen
@@ -50,15 +48,6 @@ public class SessionProperties {
     @Description("The minimum interval to refresh the heartbeat status by client requests to avoid refreshing the heartbeat status frequently")
     @Min(0)
     private int minHeartbeatIntervalSeconds = closeIdleSessionAfterSeconds / 10;
-
-    @Description("The close status codes to ignore. " +
-            "The code can be either the close status code of WebSocket " +
-            "or the code of SessionCloseStatus")
-    private Set<Integer> closeStatusesToIgnore = Set.of(
-            CloseStatus.NORMAL.getCode(),
-            CloseStatus.GOING_AWAY.getCode(),
-            CloseStatus.NO_STATUS_CODE.getCode(),
-            CloseStatus.NO_CLOSE_FRAME.getCode());
 
     @JsonView(MutablePropertiesView.class)
     @Description("Whether to notify clients of the session information after connected with the server")

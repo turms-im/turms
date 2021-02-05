@@ -15,9 +15,11 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.access.http.config;
+package im.turms.turms.workflow.access.http.config;
 
 import im.turms.server.common.util.ExceptionUtil;
+import im.turms.turms.workflow.access.http.dto.response.ErrorAttributes;
+import im.turms.turms.workflow.access.http.dto.response.ErrorAttributesFactory;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.context.annotation.Configuration;
@@ -79,7 +81,7 @@ public class TurmsErrorWebExceptionHandler implements ErrorWebExceptionHandler {
         if (exchange.getResponse().isCommitted() || isDisconnectedClientError(throwable)) {
             return Mono.error(throwable);
         }
-        ErrorAttributes errorAttributes = new ErrorAttributes(throwable);
+        ErrorAttributes errorAttributes = ErrorAttributesFactory.parse(throwable);
         int status = errorAttributes.getStatus();
         Mono<ServerResponse> responseMono = ServerResponse
                 .status(status)

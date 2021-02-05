@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.access.tcp.model;
+package im.turms.gateway.access.common.model;
 
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.gateway.pojo.bo.session.UserSession;
@@ -58,6 +58,10 @@ public class UserSessionWrapper {
 
     public boolean hasUserSession() {
         return userSession != null;
+    }
+
+    public void closeConnection() {
+        connection.close();
     }
 
     private Timeout addIdleConnectionTimeoutTask(int closeIdleConnectionAfter) {

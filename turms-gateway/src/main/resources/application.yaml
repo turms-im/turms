@@ -28,20 +28,16 @@ turms:
         key-store-type: PKCS12
         key-store-password: imturms
         key-alias: turms
+    websocket:
+      ssl:
+        enabled: false # Enable SSL if needed. Make sure to mutate HTTP requests to HTTPS requests, or Netty will throw NotSslRecordException
+        enabled-protocols: TLSv1.2,TLSv1.3
+        key-store: classpath:keystore-test.p12 # keytool -genkeypair -keyalg RSA -keysize 2048 -validity 3650 -alias turms -keystore keystore-test.p12 -storetype PKCS12 -storepass imturms
+        key-store-type: PKCS12
+        key-store-password: imturms
+        key-alias: turms
 
-# WebSocket configuration
-server:
-  address: 0.0.0.0
-  port: 9510
-  ssl:
-    enabled: false # Enable SSL if needed. Make sure to mutate HTTP requests to HTTPS requests, or Netty will throw NotSslRecordException
-    enabled-protocols: TLSv1.2,TLSv1.3
-    key-store: classpath:keystore-test.p12 # keytool -genkeypair -keyalg RSA -keysize 2048 -validity 3650 -alias turms -keystore keystore-test.p12 -storetype PKCS12 -storepass imturms
-    key-store-type: PKCS12
-    key-store-password: imturms
-    key-alias: turms
-  netty:
-    connection-timeout: 10s # To mitigate the Slowloris DoS attack by lowering the timeout for the TCP connection handshake
+# Spring configuration
 spring:
   profiles:
     active: dev

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.access.http.config;
+package im.turms.turms.workflow.access.http.dto.response;
 
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
@@ -31,16 +31,12 @@ import java.util.Date;
 /**
  * @author James Chen
  */
-@Data
-public class ErrorAttributes {
+public class ErrorAttributesFactory {
 
-    private final int status;
-    private final int code;
-    private final String reason;
-    private final Date timestamp;
-    private final String exception;
+    private ErrorAttributesFactory() {
+    }
 
-    public ErrorAttributes(Throwable throwable) {
+    public static ErrorAttributes parse(Throwable throwable) {
         SimpleErrorAttributes attributes;
         if (throwable instanceof ResponseStatusException) {
             attributes = SimpleErrorAttributes.fromResponseStatusException((ResponseStatusException) throwable);
@@ -49,11 +45,11 @@ public class ErrorAttributes {
         } else {
             attributes = SimpleErrorAttributes.fromTrivialException(throwable);
         }
-        status = attributes.httpStatus;
-        code = attributes.statusCode.getBusinessCode();
-        reason = attributes.reason;
-        timestamp = new Date();
-        exception = throwable.getClass().getName();
+        return new ErrorAttributes(attributes.httpStatus,
+                attributes.statusCode.getBusinessCode(),
+                attributes.reason,
+                new Date(),
+                throwable.getClass().getName());
     }
 
     @Data

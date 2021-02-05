@@ -23,6 +23,8 @@ import im.turms.gateway.access.udp.UdpDispatcher;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.util.ExceptionUtil;
 import lombok.Data;
+import reactor.netty.Connection;
+import reactor.netty.http.HttpOperations;
 import reactor.util.retry.Retry;
 import reactor.util.retry.RetryBackoffSpec;
 
@@ -47,6 +49,14 @@ public abstract class NetConnection {
      */
     private volatile boolean isConnectionRecovering;
 
+    public static NetConnection create(Connection connection) {
+        if (connection instanceof HttpOperations) {
+            return new WebSocketConnection(connection, true);
+        } else {
+            return new TcpConnection(connection, true);
+        }
+    }
+
     protected NetConnection(boolean isConnected) {
         this.isConnected = isConnected;
     }
@@ -55,6 +65,12 @@ public abstract class NetConnection {
         isConnected = false;
         isConnectionRecovering = false;
         isSwitchingToUdp = closeReason.getCloseStatus().equals(SessionCloseStatus.SWITCH);
+    }
+
+    public void close() {
+        isConnected = false;
+        isConnectionRecovering = false;
+        isSwitchingToUdp = false;
     }
 
     public void switchToUdp() {

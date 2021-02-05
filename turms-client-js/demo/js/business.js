@@ -35,7 +35,7 @@ function setupClient(container, client, userId, password, targetId) {
     });
     client.userService.login(userId, password)
         .then(() => {
-            appendContainer(container, 'login: User one has logged in');
+            appendContainer(container, `login: User ${userId} has logged in`);
             client.messageService.queryMessagesWithTotal(1)
                 .then(messages => appendContainer(container, `Offline messages: ${beautify(messages)}`))
                 .catch(error => appendContainer(container, `failed to query offline messages ${beautify(error)}`, true));

@@ -89,7 +89,6 @@ class MessageService(
             val currentRequest = TurmsRequestCont(request, cont, null)
             val wasRequestAbsent = requestMap.putIfAbsent(requestId, currentRequest) == null
             if (wasRequestAbsent) {
-                request.toByteString()
                 val data = ByteBuffer.wrap(request.toByteArray())
                 val wasEnqueued: Boolean = stateStore.websocket!!.send(data.toByteString())
                 if (!wasEnqueued) {

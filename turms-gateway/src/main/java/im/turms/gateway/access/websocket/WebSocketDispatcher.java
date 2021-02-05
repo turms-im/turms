@@ -15,15 +15,16 @@
  * limitations under the License.
  */
 
-package im.turms.gateway.access.tcp;
+package im.turms.gateway.access.websocket;
 
 import im.turms.gateway.access.common.UserSessionDispatcher;
 import im.turms.gateway.access.common.controller.UserRequestDispatcher;
-import im.turms.gateway.access.tcp.factory.TcpServerFactory;
+import im.turms.gateway.access.websocket.factory.WebSocketFactory;
 import im.turms.gateway.service.mediator.ServiceMediator;
+import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.manager.ServerStatusManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
-import im.turms.server.common.property.env.gateway.TcpProperties;
+import im.turms.server.common.property.env.gateway.WebSocketProperties;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import reactor.netty.DisposableServer;
@@ -33,24 +34,28 @@ import javax.annotation.PreDestroy;
 /**
  * @author James Chen
  */
-@Log4j2
 @Component
-public class TcpDispatcher extends UserSessionDispatcher {
+@Log4j2
+public class WebSocketDispatcher extends UserSessionDispatcher {
 
     private final DisposableServer server;
 
-    public TcpDispatcher(TurmsPropertiesManager propertiesManager,
-                         ServiceMediator serviceMediator,
-                         ServerStatusManager serverStatusManager,
-                         UserRequestDispatcher userRequestDispatcher) {
-        super(serviceMediator, userRequestDispatcher, propertiesManager.getLocalProperties().getGateway().getTcp().getCloseIdleConnectionAfterSeconds());
-        TcpProperties tcpProperties = propertiesManager.getLocalProperties().getGateway().getTcp();
-        if (tcpProperties.isEnabled()) {
-            server = TcpServerFactory.create(
-                    tcpProperties,
+    public WebSocketDispatcher(
+            Node node,
+            TurmsPropertiesManager propertiesManager,
+            ServerStatusManager serverStatusManager,
+            ServiceMediator serviceMediator,
+            UserRequestDispatcher userRequestDispatcher) {
+        super(serviceMediator,
+                userRequestDispatcher,
+                node.getSharedProperties().getGateway().getWebsocket().getCloseIdleConnectionAfterSeconds());
+        WebSocketProperties webSocketProperties = propertiesManager.getLocalProperties().getGateway().getWebsocket();
+        if (webSocketProperties.isEnabled()) {
+            server = WebSocketFactory.create(
+                    webSocketProperties,
                     serverStatusManager,
                     bindConnectionWithSessionWrapper());
-            log.info(String.format("TCP server started on %s:%d", server.host(), server.port()));
+            log.info(String.format("WebSocket server started on %s:%d", server.host(), server.port()));
         } else {
             server = null;
         }
@@ -59,7 +64,7 @@ public class TcpDispatcher extends UserSessionDispatcher {
     @PreDestroy
     public void preDestroy() {
         if (server != null) {
-            log.info("Closing TCP server");
+            log.info("Closing WebSocket server");
             server.dispose();
         }
     }

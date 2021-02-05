@@ -17,21 +17,18 @@
 
 package im.turms.gateway.access.tcp.factory;
 
+import im.turms.gateway.access.common.function.ConnectionHandler;
 import im.turms.gateway.access.tcp.handler.TcpHandlerConfig;
 import im.turms.server.common.access.common.resource.LoopResourcesFactory;
 import im.turms.server.common.manager.ServerStatusManager;
-import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.TcpProperties;
 import im.turms.server.common.util.SslUtil;
-import org.reactivestreams.Publisher;
 import org.springframework.boot.web.server.Ssl;
+import reactor.netty.Connection;
 import reactor.netty.DisposableServer;
-import reactor.netty.NettyInbound;
-import reactor.netty.NettyOutbound;
 import reactor.netty.tcp.TcpServer;
 
 import javax.annotation.Nullable;
-import java.util.function.BiFunction;
 
 import static io.netty.channel.ChannelOption.*;
 
@@ -44,15 +41,14 @@ public class TcpServerFactory {
     }
 
     @Nullable
-    public static DisposableServer create(TurmsPropertiesManager propertiesManager,
+    public static DisposableServer create(TcpProperties tcpProperties,
                                           ServerStatusManager serverStatusManager,
-                                          BiFunction<? super NettyInbound, ? super NettyOutbound, ? extends Publisher<Void>> handler) {
-        TcpProperties tcpProperties = propertiesManager.getLocalProperties().getGateway().getTcp();
-        if (!tcpProperties.isEnabled()) {
-            return null;
-        }
+                                          ConnectionHandler handler) {
         TcpHandlerConfig handlerConfig = new TcpHandlerConfig(serverStatusManager);
         TcpServer server = TcpServer.create()
+                .host(tcpProperties.getHost())
+                .port(tcpProperties.getPort())
+                .option(CONNECT_TIMEOUT_MILLIS, tcpProperties.getConnectionTimeout())
                 // Don't set SO_SNDBUF and SO_RCVBUF because of
                 // the reasons mentioned in https://developer.aliyun.com/article/724580
                 .option(SO_REUSEADDR, true)
@@ -62,10 +58,8 @@ public class TcpServerFactory {
                 .childOption(SO_REUSEADDR, true)
                 .childOption(SO_LINGER, 0)
                 .childOption(TCP_NODELAY, false)
-                .host(tcpProperties.getHost())
-                .port(tcpProperties.getPort())
                 .runOn(LoopResourcesFactory.createForServer("gateway-tcp"))
-                .handle(handler)
+                .handle((in, out) -> handler.handle((Connection) in, in.receive(), out, ((Connection) in).onDispose()))
                 .doOnChannelInit((connectionObserver, channel, remoteAddress) -> handlerConfig.configureChannel(channel))
                 .doOnConnection(handlerConfig::configureConnection);
         Ssl ssl = tcpProperties.getSsl();

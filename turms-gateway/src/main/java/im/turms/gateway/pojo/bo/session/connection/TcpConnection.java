@@ -35,7 +35,7 @@ public class TcpConnection extends NetConnection {
 
     private final Connection connection;
 
-    public TcpConnection(Connection connection, boolean isConnected) {
+    protected TcpConnection(Connection connection, boolean isConnected) {
         super(isConnected);
         this.connection = connection;
     }
@@ -62,16 +62,19 @@ public class TcpConnection extends NetConnection {
                         log.error("Failed to send the close notification with retries exhausted: " + RETRY_SEND_CLOSE_NOTIFICATION.maxAttempts, throwable);
                         return Mono.empty();
                     })
-                    .doOnTerminate(() -> {
-                        try {
-                            connection.dispose();
-                        } catch (Exception e) {
-                            if (!ExceptionUtil.isDisconnectedClientError(e)) {
-                                log.error("Failed to close the connection", e);
-                            }
-                        }
-                    })
+                    .doOnTerminate(this::close)
                     .subscribe();
+        }
+    }
+
+    @Override
+    public void close() {
+        try {
+            connection.dispose();
+        } catch (Exception e) {
+            if (!ExceptionUtil.isDisconnectedClientError(e)) {
+                log.error("Failed to close the connection", e);
+            }
         }
     }
 

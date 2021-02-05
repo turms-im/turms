@@ -25,6 +25,7 @@ import io.rsocket.exceptions.ConnectionErrorException;
 import reactor.netty.channel.AbortedException;
 
 import java.io.EOFException;
+import java.io.IOException;
 import java.nio.channels.ClosedChannelException;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -55,7 +56,20 @@ public class ExceptionUtil {
     }
 
     public static boolean isDisconnectedClientError(Throwable throwable) {
-        return DISCONNECTED_CLIENT_EXCEPTIONS.contains(throwable.getClass());
+        Class<?> clazz = throwable.getClass();
+        if (DISCONNECTED_CLIENT_EXCEPTIONS.contains(clazz)) {
+            return true;
+        }
+        if (throwable instanceof IOException) {
+            String message = throwable.getMessage();
+            if (message == null) {
+                return false;
+            }
+            return message.contains("An existing connection was forcibly closed")
+                    || message.contains("Connection reset by peer")
+                    || message.contains("Broken pipe");
+        }
+        return false;
     }
 
     public static boolean isClientError(Throwable throwable) {

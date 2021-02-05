@@ -69,10 +69,12 @@ public class UdpDispatcher {
         isEnabled = udpProperties.isEnabled();
         if (udpProperties.isEnabled()) {
             notificationSink = Sinks.many().unicast().onBackpressureBuffer();
+            int port = udpProperties.getPort();
+            String host = udpProperties.getHost();
             connection = UdpServer.create()
+                    .host(host)
+                    .port(port)
                     .option(ChannelOption.SO_REUSEADDR, true)
-                    .host(udpProperties.getHost())
-                    .port(udpProperties.getPort())
                     .runOn(LoopResourcesFactory.createForServer("gateway-udp"))
                     .handle((inbound, outbound) -> {
                         Flux<DatagramPacket> responseFlux = inbound.receiveObject()
@@ -90,6 +92,7 @@ public class UdpDispatcher {
                     })
                     .bind()
                     .block();
+            log.info(String.format("UDP server started on %s:%d", host, port));
         } else {
             notificationSink = null;
             connection = null;

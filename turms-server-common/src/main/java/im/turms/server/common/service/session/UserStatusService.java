@@ -54,7 +54,6 @@ public class UserStatusService {
 
     private static final Byte STATUS_KEY_STATUS = 's';
 
-    private final Node node;
     private final ShardingAlgorithm shardingAlgorithmForSession;
     private final List<ReactiveRedisTemplate<Long, String>> sessionRedisTemplates;
     /**
@@ -90,11 +89,9 @@ public class UserStatusService {
     private final boolean cacheUserSessionsStatus;
 
     public UserStatusService(
-            Node node,
             TurmsPropertiesManager turmsPropertiesManager,
             ShardingAlgorithm shardingAlgorithmForSession,
             List<ReactiveRedisTemplate<Long, String>> sessionRedisTemplates) {
-        this.node = node;
         TurmsProperties turmsProperties = turmsPropertiesManager.getLocalProperties();
         cacheUserSessionsStatus = turmsProperties.getUserStatus().isCacheUserSessionsStatus();
         operationTimeout = Duration.ofSeconds(10);
