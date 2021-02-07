@@ -52,7 +52,7 @@ import java.util.function.Consumer;
 
 /**
  * The lifecycle of the local node is roughly the same with
- * the local Spring (HTTP/WebSocket) server that communicates with clients/admins
+ * the local Spring (TCP/UDP/HTTP/WebSocket) server that communicates with clients/admins
  *
  * @author James Chen
  */

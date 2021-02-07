@@ -76,7 +76,8 @@ public class LocalNodeStatusManager {
         Query memberQuery = new Query()
                 .addCriteria(Criteria.where(Member.ID_CLUSTER_ID).is(localMember.getClusterId()))
                 .addCriteria(Criteria.where(Member.ID_NODE_ID).is(nodeId));
-        return sharedConfigService.upsert(memberQuery, update, localMember, Member.class);
+        return sharedConfigService.upsert(memberQuery, update, localMember, Member.class)
+                .doOnSuccess(unused -> isLocalNodeRegistered = true);
     }
 
     public Mono<Void> registerLocalMember() {

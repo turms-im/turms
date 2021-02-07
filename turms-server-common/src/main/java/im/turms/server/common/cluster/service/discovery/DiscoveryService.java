@@ -33,6 +33,7 @@ import io.netty.util.concurrent.DefaultThreadFactory;
 import io.rsocket.RSocket;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -243,10 +244,18 @@ public class DiscoveryService implements ClusterService {
                                 String nodeId = ChangeStreamUtil.getStringFromId(event, Member.Key.Fields.nodeId);
                                 Member deletedMember = allKnownMembers.remove(nodeId);
                                 updateOtherActiveConnectedMemberList(false, deletedMember, null);
+                                // Note that we assume that there is no the case:
+                                // a node isn't shutdown but has just been unregistered in the registry
+                                // because the node may lose the connection with the registry and TTL has passed.
+                                // During the time, another node with the SAME node ID registers itself.
+                                // If the lost node recovers again, there is a potential bug.
                                 if (nodeId.equals(localNodeStatusManager.getLocalMember().getNodeId())) {
                                     localNodeStatusManager.setLocalNodeRegistered(false);
                                     if (!localNodeStatusManager.isClosing()) {
-                                        registerMember(localNodeStatusManager.getLocalMember()).subscribe();
+                                        localNodeStatusManager.registerLocalMember()
+                                                // Ignore the error because the node may has been registered by its heartbeat timer
+                                                .onErrorResume(DuplicateKeyException.class, e -> Mono.empty())
+                                                .subscribe();
                                     }
                                 }
                                 break;
