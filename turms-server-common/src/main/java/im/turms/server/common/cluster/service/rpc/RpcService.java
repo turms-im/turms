@@ -254,7 +254,10 @@ public class RpcService implements ClusterService {
                 .onErrorMap(throwable -> tryLogAndTranslateThrowable(throwable, memberNodeId));
     }
 
-    public <T> Flux<T> requestResponsesFromOtherMembers(List<MemberInfoWithConnection> members, @NotNull RpcCallable<T> request, @NotNull Duration timeout, boolean rejectIfMissingAnyConnection) {
+    public <T> Flux<T> requestResponsesFromOtherMembers(List<MemberInfoWithConnection> members,
+                                                        @NotNull RpcCallable<T> request,
+                                                        @NotNull Duration timeout,
+                                                        boolean rejectIfMissingAnyConnection) {
         if (members.isEmpty()) {
             return Flux.error(RpcException.get(RpcErrorCode.SERVICE_NOT_FOUND, TurmsStatusCode.SERVER_UNAVAILABLE));
         }
@@ -265,6 +268,7 @@ public class RpcService implements ClusterService {
         Payload requestPayload = ByteBufPayload.create(buffer);
         List<Mono<Payload>> results = new ArrayList<>(members.size());
         for (MemberInfoWithConnection info : members) {
+            requestPayload.retain();
             Mono<Payload> mono = info.getConnection().requestResponse(requestPayload)
                     .name(METRICS_NAME_RPC_REQUEST)
                     .tag(METRICS_TAG_REQUEST_NAME, request.name())
@@ -280,7 +284,8 @@ public class RpcService implements ClusterService {
         return (Flux<T>) flux
                 .timeout(timeout)
                 .flatMap(this::parsePayload)
-                .onErrorMap(throwable -> tryLogAndTranslateThrowable(throwable, members));
+                .onErrorMap(throwable -> tryLogAndTranslateThrowable(throwable, members))
+                .doOnTerminate(requestPayload::release);
     }
 
     private <T> Mono<Map<String, T>> requestResponsesAsMap(List<MemberInfoWithConnection> members,
@@ -298,6 +303,7 @@ public class RpcService implements ClusterService {
         int size = members.size();
         List<Mono<Pair<String, Payload>>> results = new ArrayList<>(size);
         for (MemberInfoWithConnection info : members) {
+            requestPayload.retain();
             String memberId = info.getMember().getNodeId();
             RSocket connection = info.getConnection();
             Mono<Pair<String, Payload>> mono = connection.requestResponse(requestPayload)
@@ -320,7 +326,8 @@ public class RpcService implements ClusterService {
                     Object data = getReturnValueFromRpc(payload.sliceData());
                     return (T) data;
                 }, CollectorUtil.toMap(MapUtil.getCapability(size)))
-                .onErrorMap(throwable -> tryLogAndTranslateThrowable(throwable, members));
+                .onErrorMap(throwable -> tryLogAndTranslateThrowable(throwable, members))
+                .doOnTerminate(requestPayload::release);
     }
 
     private <T> Mono<T> parsePayload(Payload payload) {
