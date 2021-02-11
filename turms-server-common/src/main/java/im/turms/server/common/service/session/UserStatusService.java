@@ -299,8 +299,7 @@ public class UserStatusService {
     public Mono<Boolean> addOnlineDeviceIfAbsent(@NotNull Long userId,
                                                  @NotNull @ValidDeviceType DeviceType deviceType,
                                                  @Nullable UserStatus userStatus,
-                                                 @NotNull Duration heartbeatTimeout,
-                                                 @NotNull UserSessionsStatus sessionsStatus) {
+                                                 @NotNull Duration heartbeatTimeout) {
         try {
             AssertUtil.notNull(userId, "userId");
             AssertUtil.notNull(deviceType, "deviceType");
@@ -308,23 +307,19 @@ public class UserStatusService {
             AssertUtil.state(userStatus != UserStatus.UNRECOGNIZED, "The user status must not be UNRECOGNIZED");
             AssertUtil.state(userStatus != UserStatus.OFFLINE, "The user status must not be OFFLINE");
             AssertUtil.notNull(heartbeatTimeout, "heartbeatTimeout");
-            AssertUtil.notNull(sessionsStatus, "sessionsStatus");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        if (userStatus == null) {
-            userStatus = UserStatus.AVAILABLE;
-        }
         ReactiveScriptingCommands commands = getSessionRedisTemplate(userId).getConnectionFactory().getReactiveConnection().scriptingCommands();
-        return RedisScriptExecutor.execute(commands,
-                ADD_ONLINE_USER_SCRIPT,
-                ReturnType.BOOLEAN,
-                3,
-                userId,
-                (byte) deviceType.getNumber(),
-                Node.getNodeId(),
-                (byte) userStatus.getNumber(),
-                (short) heartbeatTimeout.getSeconds());
+        Object[] args = new Object[userStatus == null ? 4 : 5];
+        args[0] = userId;
+        args[1] = (byte) deviceType.getNumber();
+        args[2] = Node.getNodeId();
+        args[3] = (short) heartbeatTimeout.getSeconds();
+        if (userStatus != null) {
+            args[4] = (byte) userStatus.getNumber();
+        }
+        return RedisScriptExecutor.execute(commands, ADD_ONLINE_USER_SCRIPT, ReturnType.BOOLEAN, args);
     }
 
     private ReactiveRedisTemplate<Long, String> getSessionRedisTemplate(long userId) {

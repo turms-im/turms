@@ -343,8 +343,9 @@ public class SessionService implements ISessionService {
         return userStatusService.fetchUserSessionsStatus(userId)
                 .flatMap(sessionsStatus -> {
                     // Check the current sessions status
-                    if (sessionsStatus.getUserStatus() == UserStatus.OFFLINE) {
-                        return addOnlineDeviceIfAbsent(userId, deviceType, userStatus, position, ip, deviceDetails, sessionsStatus);
+                    UserStatus existingUserStatus = sessionsStatus.getUserStatus();
+                    if (existingUserStatus == UserStatus.OFFLINE) {
+                        return addOnlineDeviceIfAbsent(userId, deviceType, userStatus, position, ip, deviceDetails);
                     } else {
                         boolean conflicts = sessionsStatus.getLoggedInDeviceTypes().contains(deviceType);
                         if (conflicts) {
@@ -355,7 +356,7 @@ public class SessionService implements ISessionService {
                             if (isDisconnectedSessionOnLocal) {
                                 // Note that the downstream should replace the disconnected connection
                                 // with the connected TCP/WebSocket connection
-                                Mono<Void> updateSessionInfoMono = userStatus == null || sessionsStatus.getUserStatus() == userStatus
+                                Mono<Void> updateSessionInfoMono = userStatus == null || existingUserStatus == userStatus
                                         ? Mono.empty()
                                         : userStatusService.updateOnlineUserStatus(userId, userStatus)
                                         .then()
@@ -372,7 +373,7 @@ public class SessionService implements ISessionService {
                         }
                         return disconnectConflictedDeviceTypes(userId, deviceType, sessionsStatus)
                                 .flatMap(wasSuccessful -> wasSuccessful
-                                        ? addOnlineDeviceIfAbsent(userId, deviceType, userStatus, position, ip, deviceDetails, sessionsStatus)
+                                        ? addOnlineDeviceIfAbsent(userId, deviceType, userStatus, position, ip, deviceDetails)
                                         : Mono.error(TurmsBusinessException.get(TurmsStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE)));
                     }
                 });
@@ -447,10 +448,9 @@ public class SessionService implements ISessionService {
             @Nullable UserStatus userStatus,
             @Nullable Point position,
             @Nullable String ip,
-            @Nullable String deviceDetails,
-            @NotNull UserSessionsStatus sessionsStatus) {
+            @Nullable String deviceDetails) {
         // Try to update the global user status
-        return userStatusService.addOnlineDeviceIfAbsent(userId, deviceType, userStatus, closeIdleSessionAfterDuration, sessionsStatus)
+        return userStatusService.addOnlineDeviceIfAbsent(userId, deviceType, userStatus, closeIdleSessionAfterDuration)
                 .flatMap(wasSuccessful -> {
                     if (!wasSuccessful) {
                         return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE));

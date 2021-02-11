@@ -39,7 +39,6 @@ public class RedisScriptExecutor {
     public static <T> Mono<T> execute(ReactiveScriptingCommands commands,
                                       RedisScript<?> script,
                                       ReturnType returnType,
-                                      int numKeys,
                                       Object... keysAndArgs) {
         ByteBuffer[] buffers = new ByteBuffer[keysAndArgs.length];
         for (int i = 0; i < keysAndArgs.length; i++) {
@@ -56,7 +55,7 @@ public class RedisScriptExecutor {
                 buffers[i] = ByteBuffer.wrap(((String) obj).getBytes(StandardCharsets.UTF_8));
             }
         }
-        return execute(commands, script, returnType, numKeys, buffers);
+        return execute(commands, script, returnType, buffers);
     }
 
     /**
@@ -65,12 +64,11 @@ public class RedisScriptExecutor {
     public static <T> Mono<T> execute(ReactiveScriptingCommands commands,
                                       RedisScript<?> script,
                                       ReturnType returnType,
-                                      int numKeys,
                                       ByteBuffer[] keysAndArgs) {
-        return (Mono<T>) commands.evalSha(script.getSha1(), returnType, numKeys, keysAndArgs)
+        return (Mono<T>) commands.evalSha(script.getSha1(), returnType, keysAndArgs.length, keysAndArgs)
                 .onErrorResume(e -> {
                     if (exceptionContainsNoScriptError(e)) {
-                        return commands.eval(ByteBuffer.wrap(script.getScriptAsString().getBytes(StandardCharsets.UTF_8)), returnType, numKeys, keysAndArgs);
+                        return commands.eval(ByteBuffer.wrap(script.getScriptAsString().getBytes(StandardCharsets.UTF_8)), returnType, keysAndArgs.length, keysAndArgs);
                     }
                     return Flux.error(e instanceof RuntimeException ? e : new RedisSystemException(e.getMessage(), e));
                 })
