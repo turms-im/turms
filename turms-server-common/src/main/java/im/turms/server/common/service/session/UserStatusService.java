@@ -29,12 +29,17 @@ import im.turms.server.common.constraint.ValidDeviceType;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
+import im.turms.server.common.redis.script.RedisScriptExecutor;
 import im.turms.server.common.redis.sharding.ShardingAlgorithm;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.CollectorUtil;
 import im.turms.server.common.util.DeviceTypeUtil;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.redis.connection.ReactiveScriptingCommands;
+import org.springframework.data.redis.connection.ReturnType;
 import org.springframework.data.redis.core.ReactiveHashOperations;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -53,6 +58,7 @@ import java.util.stream.Collectors;
 public class UserStatusService {
 
     private static final Byte STATUS_KEY_STATUS = 's';
+    private static final RedisScript<Boolean> ADD_ONLINE_USER_SCRIPT = RedisScript.of(new ClassPathResource("redis/try_add_online_user_with_ttl.lua"));
 
     private final ShardingAlgorithm shardingAlgorithmForSession;
     private final List<ReactiveRedisTemplate<Long, String>> sessionRedisTemplates;
@@ -306,31 +312,19 @@ public class UserStatusService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        String nodeId = Node.getNodeId();
-        // Do NOT use putAll() to put all values (the user status and the Node ID) in one command.
-        // Because putAll() may overwrite the registered session info and make trouble
-        // if a user with the same device type sends multiple login requests in a short time
-        // (This can also happen in different servers).
-        // So use putIfAbsent to make the code robust.
-        ReactiveHashOperations<Long, Object, Object> operations = getSessionOperations(userId);
-        Mono<Boolean> updateMono = operations.putIfAbsent(userId, deviceType, nodeId);
-        if (userStatus != null && userStatus != UserStatus.AVAILABLE) {
-            updateMono = updateMono
-                    .flatMap(wasSuccessful -> {
-                        if (wasSuccessful) {
-                            return operations.put(userId, STATUS_KEY_STATUS, userStatus)
-                                    .onErrorReturn(true)
-                                    .thenReturn(true);
-                        } else {
-                            return Mono.just(false);
-                        }
-                    });
+        if (userStatus == null) {
+            userStatus = UserStatus.AVAILABLE;
         }
-        return updateMono
-                .timeout(operationTimeout)
-                .flatMap(wasSuccessful -> wasSuccessful
-                        ? getSessionRedisTemplate(userId).expire(userId, heartbeatTimeout)
-                        : Mono.just(false));
+        ReactiveScriptingCommands commands = getSessionRedisTemplate(userId).getConnectionFactory().getReactiveConnection().scriptingCommands();
+        return RedisScriptExecutor.execute(commands,
+                ADD_ONLINE_USER_SCRIPT,
+                ReturnType.BOOLEAN,
+                3,
+                userId,
+                (byte) deviceType.getNumber(),
+                Node.getNodeId(),
+                (byte) userStatus.getNumber(),
+                (short) heartbeatTimeout.getSeconds());
     }
 
     private ReactiveRedisTemplate<Long, String> getSessionRedisTemplate(long userId) {
