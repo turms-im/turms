@@ -28,9 +28,9 @@ import java.nio.ByteBuffer;
 public class GeoUserIdSerializer implements RedisElementWriter<Long>, RedisElementReader<Long> {
 
     @Override
-    public ByteBuffer write(Long element) {
-        return ByteBuffer.allocateDirect(Long.BYTES)
-                .putLong(element)
+    public ByteBuffer write(Long userId) {
+        return ByteBuffer.allocate(Long.BYTES)
+                .putLong(userId)
                 .flip();
     }
 

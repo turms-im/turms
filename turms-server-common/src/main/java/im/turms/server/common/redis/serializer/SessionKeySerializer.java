@@ -17,7 +17,6 @@
 
 package im.turms.server.common.redis.serializer;
 
-import im.turms.server.common.redis.RedisEntryId;
 import org.springframework.data.redis.serializer.RedisElementReader;
 import org.springframework.data.redis.serializer.RedisElementWriter;
 
@@ -29,16 +28,14 @@ import java.nio.ByteBuffer;
 public class SessionKeySerializer implements RedisElementWriter<Long>, RedisElementReader<Long> {
 
     @Override
-    public ByteBuffer write(Long element) {
-        return ByteBuffer.allocateDirect(Byte.BYTES + Long.BYTES)
-                .put(RedisEntryId.SESSIONS_STATUS)
-                .putLong(element)
+    public ByteBuffer write(Long userId) {
+        return ByteBuffer.allocate(Long.BYTES)
+                .putLong(userId)
                 .flip();
     }
 
     @Override
     public Long read(ByteBuffer buffer) {
-        buffer.position(buffer.position() + Byte.BYTES);
         return buffer.getLong();
     }
 

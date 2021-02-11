@@ -30,10 +30,10 @@ import java.nio.ByteBuffer;
 public class GeoUserSessionIdSerializer implements RedisElementWriter<UserSessionId>, RedisElementReader<UserSessionId> {
 
     @Override
-    public ByteBuffer write(UserSessionId element) {
-        return ByteBuffer.allocateDirect(Long.BYTES + Byte.BYTES)
-                .putLong(element.getUserId())
-                .put((byte) element.getDeviceType().getNumber())
+    public ByteBuffer write(UserSessionId sessionId) {
+        return ByteBuffer.allocate(Long.BYTES + Byte.BYTES)
+                .putLong(sessionId.getUserId())
+                .put((byte) sessionId.getDeviceType().getNumber())
                 .flip();
     }
 

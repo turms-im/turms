@@ -68,7 +68,6 @@ import static im.turms.turms.constant.MetricsConstant.CLIENT_REQUEST_TAG_TYPE;
 @Service
 public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
 
-    private final Node node;
     private final ServerStatusManager serverStatusManager;
     private final OutboundMessageService outboundMessageService;
     private final TurmsPluginManager turmsPluginManager;
@@ -84,7 +83,6 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                                     OutboundMessageService outboundMessageService,
                                     TurmsPropertiesManager turmsPropertiesManager,
                                     TurmsPluginManager turmsPluginManager) {
-        this.node = node;
         this.serverStatusManager = serverStatusManager;
         this.outboundMessageService = outboundMessageService;
         Set<TurmsRequest.KindCase> disabledEndpoints = turmsPropertiesManager.getLocalProperties().getService().getClientApi().getDisabledEndpoints();

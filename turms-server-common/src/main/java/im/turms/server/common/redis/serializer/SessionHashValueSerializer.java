@@ -35,17 +35,17 @@ public class SessionHashValueSerializer implements RedisElementWriter<Object>, R
             // Note that we use the negative number for user status so that we can know
             // the type of the value from the first byte when deserializing
             int userStatus = -((UserStatus) element).getNumber();
-            return ByteBuffer.allocateDirect(Byte.BYTES)
+            return ByteBuffer.allocate(Byte.BYTES)
                     .put((byte) userStatus)
                     .flip();
         } else if (element instanceof String) {
-            byte[] bytes = ((String) element).getBytes(StandardCharsets.UTF_8);
-            if (bytes.length == 0 || bytes.length > Byte.MAX_VALUE) {
+            byte[] nodeIdBytes = ((String) element).getBytes(StandardCharsets.UTF_8);
+            if (nodeIdBytes.length == 0 || nodeIdBytes.length > Byte.MAX_VALUE) {
                 throw new IllegalArgumentException("The length of the nodeId must be greater than 0 and less than 128");
             }
-            return ByteBuffer.allocateDirect(Byte.BYTES + bytes.length)
-                    .put((byte) bytes.length)
-                    .put(bytes)
+            return ByteBuffer.allocate(Byte.BYTES + nodeIdBytes.length)
+                    .put((byte) nodeIdBytes.length)
+                    .put(nodeIdBytes)
                     .flip();
         } else {
             throw new IllegalArgumentException("The data must be an instance of UserStatus or String");

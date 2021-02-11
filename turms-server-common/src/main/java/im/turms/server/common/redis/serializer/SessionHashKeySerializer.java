@@ -35,7 +35,7 @@ public class SessionHashKeySerializer implements RedisElementWriter<Object>, Red
                 ? (byte) ((DeviceType) element).getNumber()
                 // im.turms.server.common.service.session.UserStatusService.STATUS_KEY_STATUS
                 : (byte) element;
-        return ByteBuffer.allocateDirect(Byte.BYTES)
+        return ByteBuffer.allocate(Byte.BYTES)
                 .put(data)
                 .flip();
     }
@@ -44,7 +44,7 @@ public class SessionHashKeySerializer implements RedisElementWriter<Object>, Red
     public Object read(ByteBuffer buffer) {
         byte data = buffer.get();
         return data == RedisEntryId.SESSIONS_STATUS
-                ? data
+                ? RedisEntryId.SESSIONS_STATUS
                 : DeviceType.forNumber(data);
     }
 
