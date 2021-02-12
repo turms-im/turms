@@ -28,17 +28,12 @@ export default {
         rows: {
             type: Array,
             required: true
-        },
-        text: {
-            type: String,
-            default: function() {
-                return this.$t('exportData');
-            }
         }
     },
     data() {
         return {
-            exporting: false
+            exporting: false,
+            text: this.$t('exportData')
         };
     },
     methods: {

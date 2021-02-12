@@ -1,5 +1,5 @@
 const fileSaver = require('file-saver');
-const Excel = require('exceljs/lib/exceljs.bare.js');
+const Excel = require('exceljs/lib/exceljs.bare');
 
 export default function exportExcel(fileName, worksheetName, headers, rows) {
     const workbook = new Excel.Workbook();

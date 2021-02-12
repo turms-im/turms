@@ -86,20 +86,23 @@ export default {
                     size: 'L',
                     fields: [
                         {
+                            id: 'groupId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('groupId', {required: true, onlyNumber: true})
+                            rules: this.$validator.create({required: true, onlyNumber: true})
                         },
                         {
+                            id: 'userId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('userId', {required: true, onlyNumber: true})
+                            rules: this.$validator.create({required: true, onlyNumber: true})
                         },
                         {
-                            type: 'INPUT',
-                            decorator: this.$validator.create('name')
+                            id: 'name',
+                            type: 'INPUT'
                         },
                         {
+                            id: 'role',
                             type: 'SELECT',
-                            decorator: this.$validator.create('role', {required: true}),
+                            rules: this.$validator.create({required: true}),
                             options: {
                                 values: [
                                     {
@@ -126,12 +129,12 @@ export default {
                             }
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('joinDate')
+                            id: 'joinDate',
+                            type: 'DATE'
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('muteEndDate')
+                            id: 'muteEndDate',
+                            type: 'DATE'
                         }
                     ]
                 },
@@ -141,12 +144,12 @@ export default {
                     size: 'L',
                     fields: [
                         {
-                            type: 'INPUT',
-                            decorator: this.$validator.create('name')
+                            id: 'name',
+                            type: 'INPUT'
                         },
                         {
+                            id: 'role',
                             type: 'SELECT',
-                            decorator: this.$validator.create('role'),
                             options: {
                                 values: [
                                     {
@@ -173,12 +176,12 @@ export default {
                             }
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('joinDate')
+                            id: 'joinDate',
+                            type: 'DATE'
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('muteEndDate')
+                            id: 'muteEndDate',
+                            type: 'DATE'
                         }
                     ]
                 }]
@@ -213,7 +216,8 @@ export default {
                         key: 'operation',
                         width: '10%'
                     }
-                ]}
+                ]
+            }
         };
     }
 };

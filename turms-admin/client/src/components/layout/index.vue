@@ -1,13 +1,15 @@
 <template>
     <a-layout class="layout">
         <login-modal />
-        <layout-sider ref="layoutSider" />
+        <layout-sider />
         <a-layout>
-            <layout-header ref="layoutHeader" />
+            <layout-header />
             <a-layout-content class="layout__content">
-                <keep-alive>
-                    <router-view />
-                </keep-alive>
+                <router-view v-slot="{ Component }">
+                    <keep-alive>
+                        <component :is="Component" />
+                    </keep-alive>
+                </router-view>
             </a-layout-content>
         </a-layout>
     </a-layout>
@@ -26,14 +28,14 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-    .layout {
-        height: 100%;
+.layout {
+    height: 100%;
 
-        &__content {
-            min-width: 1024px;
-            overflow-y: scroll;
-            padding: 24px 24px 24px 24px;
-            background-color: white;
-        }
+    &__content {
+        min-width: 1024px;
+        overflow-y: scroll;
+        padding: 24px 24px 24px 24px;
+        background-color: white;
     }
+}
 </style>

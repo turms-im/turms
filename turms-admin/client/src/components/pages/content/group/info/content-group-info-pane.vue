@@ -91,51 +91,55 @@ export default {
                     size: 'L',
                     fields: [
                         {
+                            id: 'typeId',
                             type: 'INPUT',
                             label: this.$t('groupTypeId'),
-                            decorator: this.$validator.create('typeId', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
+                            id: 'creatorId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('creatorId', {required: true, onlyNumber: true})
+                            rules: this.$validator.create({required: true, onlyNumber: true})
                         },
                         {
+                            id: 'ownerId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('ownerId', {required: true, onlyNumber: true})
+                            rules: this.$validator.create({required: true, onlyNumber: true})
                         },
                         {
-                            type: 'INPUT',
-                            decorator: this.$validator.create('name')
+                            id: 'name',
+                            type: 'INPUT'
                         },
                         {
+                            id: 'intro',
                             type: 'TEXTAREA',
-                            rows: 4,
-                            decorator: this.$validator.create('intro')
+                            rows: 4
                         },
                         {
+                            id: 'announcement',
                             type: 'TEXTAREA',
-                            rows: 4,
-                            decorator: this.$validator.create('announcement')
+                            rows: 4
                         },
                         {
+                            id: 'minimumScore',
                             type: 'INPUT',
-                            decorator: this.$validator.create('minimumScore', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('creationDate')
+                            id: 'creationDate',
+                            type: 'DATE'
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('deletionDate')
+                            id: 'deletionDate',
+                            type: 'DATE'
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('muteEndDate')
+                            id: 'muteEndDate',
+                            type: 'DATE'
                         },
                         {
+                            id: 'isActive',
                             type: 'SELECT',
-                            decorator: this.$validator.create('isActive'),
                             options: {
                                 values: [
                                     {
@@ -156,51 +160,55 @@ export default {
                     size: 'L',
                     fields: [
                         {
+                            id: 'typeId',
                             type: 'INPUT',
                             label: this.$t('groupTypeId'),
-                            decorator: this.$validator.create('typeId', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
+                            id: 'creatorId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('creatorId', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
+                            id: 'ownerId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('ownerId', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
-                            type: 'INPUT',
-                            decorator: this.$validator.create('name')
+                            id: 'name',
+                            type: 'INPUT'
                         },
                         {
+                            id: 'intro',
                             type: 'TEXTAREA',
-                            rows: 4,
-                            decorator: this.$validator.create('intro')
+                            rows: 4
                         },
                         {
+                            id: 'announcement',
                             type: 'TEXTAREA',
-                            rows: 4,
-                            decorator: this.$validator.create('announcement')
+                            rows: 4
                         },
                         {
+                            id: 'minimumScore',
                             type: 'INPUT',
-                            decorator: this.$validator.create('minimumScore', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('creationDate')
+                            id: 'creationDate',
+                            type: 'DATE'
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('deletionDate')
+                            id: 'deletionDate',
+                            type: 'DATE'
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('muteEndDate')
+                            id: 'muteEndDate',
+                            type: 'DATE'
                         },
                         {
+                            id: 'isActive',
                             type: 'SELECT',
-                            decorator: this.$validator.create('isActive'),
                             options: {
                                 values: [
                                     {
@@ -273,7 +281,8 @@ export default {
                         key: 'operation',
                         width: '6%'
                     }
-                ]}
+                ]
+            }
         };
     }
 };

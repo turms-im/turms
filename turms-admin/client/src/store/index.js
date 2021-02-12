@@ -1,15 +1,26 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import actions from './actions';
-import state from './state';
-import getters from './getters';
-import mutations from './mutations';
+import {reactive, readonly} from 'vue';
 
-Vue.use(Vuex);
-
-export default new Vuex.Store({
-    getters,
-    actions,
-    mutations,
-    state
-});
+export default {
+    install: app => {
+        const state = reactive({
+            tab: null,
+            admin: null,
+            url: ''
+        });
+        app.config.globalProperties.$store = {
+            getters: readonly(state),
+            setTab(tab) {
+                state.tab = tab;
+            },
+            setAdmin(admin) {
+                state.admin = admin;
+            },
+            setUrl(url) {
+                state.url = url;
+            },
+            clearAdmin() {
+                state.admin = null;
+            }
+        };
+    }
+};

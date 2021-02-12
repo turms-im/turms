@@ -26,33 +26,40 @@ export default {
                     size: 'XL',
                     fields: [
                         {
+                            id: 'name',
                             type: 'INPUT',
                             label: this.$t('typeName'),
-                            decorator: this.$validator.create('name', {required: true})
+                            rules: this.$validator.create({required: true})
                         },
                         {
+                            id: 'groupSizeLimit',
                             type: 'INPUT',
-                            decorator: this.$validator.create('groupSizeLimit', {required: true, onlyNumber: true})
+                            rules: this.$validator.create({required: true, onlyNumber: true})
                         },
                         {
+                            id: 'guestSpeakable',
                             type: 'SWITCH',
-                            decorator: this.$validator.create('guestSpeakable', {required: true})
+                            rules: this.$validator.create({required: true})
                         },
                         {
+                            id: 'selfInfoUpdatable',
                             type: 'SWITCH',
-                            decorator: this.$validator.create('selfInfoUpdatable', {required: true})
+                            rules: this.$validator.create({required: true})
                         },
                         {
+                            id: 'enableReadReceipt',
                             type: 'SWITCH',
-                            decorator: this.$validator.create('enableReadReceipt', {required: true})
+                            rules: this.$validator.create({required: true})
                         },
                         {
+                            id: 'messageEditable',
                             type: 'SWITCH',
-                            decorator: this.$validator.create('messageEditable', {required: true})
+                            rules: this.$validator.create({required: true})
                         },
                         {
+                            id: 'invitationStrategy',
                             type: 'SELECT',
-                            decorator: this.$validator.create('invitationStrategy', {required: true}),
+                            rules: this.$validator.create({required: true}),
                             options: {
                                 values: this.$rs.groupInvitationStrategies.map(name => {
                                     return {
@@ -63,8 +70,9 @@ export default {
                             }
                         },
                         {
+                            id: 'joinStrategy',
                             type: 'SELECT',
-                            decorator: this.$validator.create('joinStrategy', {required: true}),
+                            rules: this.$validator.create({required: true}),
                             options: {
                                 values: this.$rs.groupJoinStrategies.map(name => {
                                     return {
@@ -75,8 +83,9 @@ export default {
                             }
                         },
                         {
+                            id: 'groupInfoUpdateStrategy',
                             type: 'SELECT',
-                            decorator: this.$validator.create('groupInfoUpdateStrategy', {required: true}),
+                            rules: this.$validator.create({required: true}),
                             options: {
                                 values: this.$rs.groupUpdateStrategies.map(name => {
                                     return {
@@ -87,8 +96,9 @@ export default {
                             }
                         },
                         {
+                            id: 'memberInfoUpdateStrategy',
                             type: 'SELECT',
-                            decorator: this.$validator.create('memberInfoUpdateStrategy', {required: true}),
+                            rules: this.$validator.create({required: true}),
                             options: {
                                 values: this.$rs.groupUpdateStrategies.map(name => {
                                     return {
@@ -106,17 +116,18 @@ export default {
                     size: 'XL',
                     fields: [
                         {
+                            id: 'name',
                             type: 'INPUT',
-                            label: this.$t('typeName'),
-                            decorator: this.$validator.create('name')
+                            label: this.$t('typeName')
                         },
                         {
+                            id: 'groupSizeLimit',
                             type: 'INPUT',
-                            decorator: this.$validator.create('groupSizeLimit', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
+                            id: 'guestSpeakable',
                             type: 'SELECT',
-                            decorator: this.$validator.create('guestSpeakable'),
                             options: {
                                 values: [
                                     {
@@ -131,8 +142,8 @@ export default {
                             }
                         },
                         {
+                            id: 'selfInfoUpdatable',
                             type: 'SELECT',
-                            decorator: this.$validator.create('selfInfoUpdatable'),
                             options: {
                                 values: [
                                     {
@@ -147,8 +158,8 @@ export default {
                             }
                         },
                         {
+                            id: 'enableReadReceipt',
                             type: 'SELECT',
-                            decorator: this.$validator.create('enableReadReceipt'),
                             options: {
                                 values: [
                                     {
@@ -163,8 +174,8 @@ export default {
                             }
                         },
                         {
+                            id: 'messageEditable',
                             type: 'SELECT',
-                            decorator: this.$validator.create('messageEditable'),
                             options: {
                                 values: [
                                     {
@@ -179,8 +190,8 @@ export default {
                             }
                         },
                         {
+                            id: 'invitationStrategy',
                             type: 'SELECT',
-                            decorator: this.$validator.create('invitationStrategy'),
                             options: {
                                 values: this.$rs.groupInvitationStrategies.map(name => {
                                     return {
@@ -191,8 +202,8 @@ export default {
                             }
                         },
                         {
+                            id: 'joinStrategy',
                             type: 'SELECT',
-                            decorator: this.$validator.create('joinStrategy'),
                             options: {
                                 values: this.$rs.groupJoinStrategies.map(name => {
                                     return {
@@ -203,8 +214,8 @@ export default {
                             }
                         },
                         {
+                            id: 'groupInfoUpdateStrategy',
                             type: 'SELECT',
-                            decorator: this.$validator.create('groupInfoUpdateStrategy'),
                             options: {
                                 values: this.$rs.groupUpdateStrategies.map(name => {
                                     return {
@@ -215,8 +226,8 @@ export default {
                             }
                         },
                         {
+                            id: 'memberInfoUpdateStrategy',
                             type: 'SELECT',
-                            decorator: this.$validator.create('memberInfoUpdateStrategy'),
                             options: {
                                 values: this.$rs.groupUpdateStrategies.map(name => {
                                     return {
@@ -276,7 +287,8 @@ export default {
                         key: 'operation',
                         width: '8%'
                     }
-                ]}
+                ]
+            }
         };
     }
 };

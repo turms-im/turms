@@ -99,33 +99,39 @@ export default {
                     size: 'L',
                     fields: [
                         {
+                            id: 'isGroupMessage',
                             type: 'SWITCH',
-                            decorator: this.$validator.create('isGroupMessage', {required: true})
+                            rules: this.$validator.create({required: true})
                         },
                         {
+                            id: 'isSystemMessage',
                             type: 'SWITCH',
-                            decorator: this.$validator.create('isSystemMessage', {required: true})
+                            rules: this.$validator.create({required: true})
                         },
                         {
+                            id: 'senderId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('senderId', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
+                            id: 'targetId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('targetId', {required: true, onlyNumber: true})
+                            rules: this.$validator.create({required: true, onlyNumber: true})
                         },
                         {
+                            id: 'text',
                             type: 'TEXTAREA',
-                            rows: 4,
-                            decorator: this.$validator.create('text')
+                            rows: 4
                         },
                         {
+                            id: 'burnAfter',
                             type: 'INPUT',
-                            decorator: this.$validator.create('burnAfter', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
+                            id: 'referenceId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('referenceId', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         }
                     ]
                 },
@@ -135,8 +141,8 @@ export default {
                     size: 'L',
                     fields: [
                         {
+                            id: 'isSystemMessage',
                             type: 'SELECT',
-                            decorator: this.$validator.create('isSystemMessage'),
                             options: {
                                 values: [
                                     {
@@ -151,13 +157,14 @@ export default {
                             }
                         },
                         {
+                            id: 'text',
                             type: 'TEXTAREA',
-                            rows: 4,
-                            decorator: this.$validator.create('text')
+                            rows: 4
                         },
                         {
+                            id: 'burnAfter',
                             type: 'INPUT',
-                            decorator: this.$validator.create('burnAfter', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         }
                     ]
                 }]
@@ -205,7 +212,8 @@ export default {
                         key: 'operation',
                         width: '10%'
                     }
-                ]}
+                ]
+            }
         };
     }
 };

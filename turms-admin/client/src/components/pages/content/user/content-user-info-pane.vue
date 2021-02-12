@@ -67,32 +67,34 @@ export default {
                     type: 'CREATE',
                     fields: [
                         {
+                            id: 'id',
                             type: 'INPUT',
                             label: this.$t('userId'),
-                            decorator: this.$validator.create('id', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
-                            type: 'INPUT',
-                            decorator: this.$validator.create('password')
+                            id: 'password',
+                            type: 'INPUT'
                         },
                         {
-                            type: 'INPUT',
-                            decorator: this.$validator.create('name')
+                            id: 'name',
+                            type: 'INPUT'
                         },
                         {
+                            id: 'intro',
                             type: 'TEXTAREA',
                             label: this.$t('userIntro'),
                             placeholder: this.$t('userIntro'),
-                            rows: 4,
-                            decorator: this.$validator.create('intro')
+                            rows: 4
                         },
                         {
+                            id: 'permissionGroupId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('permissionGroupId', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
+                            id: 'profileAccess',
                             type: 'SELECT',
-                            decorator: this.$validator.create('profileAccess'),
                             options: {
                                 values: [
                                     {
@@ -111,12 +113,12 @@ export default {
                             }
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('registrationDate')
+                            id: 'registrationDate',
+                            type: 'DATE'
                         },
                         {
+                            id: 'isActive',
                             type: 'SELECT',
-                            decorator: this.$validator.create('isActive'),
                             options: {
                                 values: [
                                     {
@@ -136,32 +138,34 @@ export default {
                     type: 'UPDATE',
                     fields: [
                         {
+                            id: 'id',
                             type: 'INPUT',
                             label: this.$t('userId'),
-                            decorator: this.$validator.create('id', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
-                            type: 'INPUT',
-                            decorator: this.$validator.create('password')
+                            id: 'password',
+                            type: 'INPUT'
                         },
                         {
-                            type: 'INPUT',
-                            decorator: this.$validator.create('name')
+                            id: 'name',
+                            type: 'INPUT'
                         },
                         {
+                            id: 'intro',
                             type: 'TEXTAREA',
                             label: this.$t('userIntro'),
                             placeholder: this.$t('userIntro'),
-                            rows: 4,
-                            decorator: this.$validator.create('intro')
+                            rows: 4
                         },
                         {
+                            id: 'permissionGroupId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('permissionGroupId', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
+                            id: 'profileAccess',
                             type: 'SELECT',
-                            decorator: this.$validator.create('profileAccess'),
                             options: {
                                 values: [
                                     {
@@ -180,13 +184,13 @@ export default {
                             }
                         },
                         {
+                            id: 'registrationDate',
                             type: 'DATE',
-                            label: this.$t('registrationDate'),
-                            decorator: this.$validator.create('registrationDate')
+                            label: this.$t('registrationDate')
                         },
                         {
+                            id: 'isActive',
                             type: 'SELECT',
-                            decorator: this.$validator.create('isActive'),
                             options: {
                                 values: [
                                     {
@@ -248,7 +252,8 @@ export default {
                         key: 'operation',
                         width: '10%'
                     }
-                ]}
+                ]
+            }
         };
     }
 };

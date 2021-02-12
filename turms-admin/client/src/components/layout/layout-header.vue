@@ -13,7 +13,7 @@
                 {{ $t('currentServerUrl') }}: {{ globalUrl }}
             </div>
             <custom-input
-                v-model="url"
+                v-model:value="url"
                 :placeholder="$t('serverUrl')"
             />
         </a-modal>
@@ -21,7 +21,7 @@
             <div class="header__admin">
                 {{ admin.name }}
             </div>
-            <template slot="content">
+            <template #content>
                 <div class="header__admin-info">
                     {{ `${$t('account')}: ${admin.account}` }}
                 </div>
@@ -36,19 +36,19 @@
                 </div>
             </template>
         </a-popover>
-        <a-icon
+        <div
             class="header__change-server"
-            type="database"
             @click="openChangeServerModal"
-        />
+        >
+            <icon type="database" />
+        </div>
         <a-popconfirm
             :title="$t('confirmLogout')"
             @confirm="logout"
         >
-            <a-icon
-                class="header__logout"
-                type="logout"
-            />
+            <div class="header__logout">
+                <icon type="logout" />
+            </div>
         </a-popconfirm>
         <a-select
             default-value="chinese"
@@ -65,14 +65,16 @@
 
 <script>
 import axios from 'axios';
-const JSONbig = require('json-bigint');
-import Vue from 'vue';
 import CustomInput from '../common/custom-input';
+import Icon from '../common/icon';
+
+const JSONbig = require('json-bigint');
 
 export default {
     name: 'layout-header',
     components: {
-        CustomInput
+        CustomInput,
+        Icon
     },
     data() {
         return {
@@ -107,24 +109,15 @@ export default {
         changeServer() {
             this.isChanging = true;
             const url = this.url.replace(/\/$/, '');
-            this.$client.head(`${url}/admins`)
+            this.$http.head(`${url}/admins`)
                 .then(() => {
-                    axios.defaults.transformResponse =  [function (data) {
-                        if (data) {
-                            return JSONbig.parse(data);
-                        } else {
-                            return data;
-                        }
-                    }];
-                    Vue.prototype.$client = axios.create({
-                        baseURL: url,
-                        timeout: 10 * 1000
-                    });
-                    Vue.prototype.$client.defaults.headers.common = {
+                    axios.defaults.transformResponse = [(data) => data && JSONbig.parse(data)];
+                    this.$http.defaults.baseURL = url;
+                    this.$http.defaults.headers.common = {
                         account: this.$store.getters.admin.account,
                         password: this.$store.getters.admin.password
                     };
-                    this.$store.dispatch('setUrl', url);
+                    this.$store.setUrl(url);
                     this.$message.success(this.$t('changedServerSuccessfully'));
                     this.visible = false;
                 }).catch(error => {
@@ -134,7 +127,7 @@ export default {
                 });
         },
         logout() {
-            this.$store.dispatch('clearAdmin');
+            this.$store.clearAdmin();
             this.$message.success(this.$t('loggedOut'));
         }
     }
@@ -142,38 +135,38 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .header {
-        color: whitesmoke;
-        padding-right: 50px;
+.header {
+    color: whitesmoke;
+    padding-right: 50px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    .header__admin {
         display: flex;
-        justify-content: flex-end;
-        align-items: center;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: center;
 
-        .header__admin {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            justify-content: center;
-
-            .header__admin-info {
-                line-height: 28px;
-            }
-        }
-
-        .header__language-select {
-            margin-left: 36px;
-            width: 75px;
-        }
-
-        .header__change-server,
-        .header__logout {
-            font-size: 24px;
-            margin-left: 36px;
-            cursor: pointer;
+        .header__admin-info {
+            line-height: 28px;
         }
     }
 
-    .header__current-server-url {
-        margin-bottom: 16px;
+    .header__language-select {
+        margin-left: 36px;
+        width: 75px;
     }
+
+    .header__change-server,
+    .header__logout {
+        font-size: 24px;
+        margin-left: 36px;
+        cursor: pointer;
+    }
+}
+
+.header__current-server-url {
+    margin-bottom: 16px;
+}
 </style>

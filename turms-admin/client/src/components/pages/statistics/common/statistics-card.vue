@@ -1,7 +1,7 @@
 <template>
     <a-card
         size="small"
-        bordered
+        :bordered="true"
         :hoverable="true"
         class="statistics-card"
     >
@@ -14,10 +14,7 @@
                 placement="right"
                 :title="tooltip"
             >
-                <a-icon
-                    type="question-circle"
-                    class="statistics-card__title-icon"
-                />
+                <question-circle-outlined class="statistics-card__title-icon" />
             </a-tooltip>
         </p>
         <h1 class="statistics-card__content">
@@ -26,19 +23,16 @@
         <div
             class="statistics-card__footer ant-typography ant-typography-secondary"
         >
-            <a-icon
+            <caret-up-outlined
                 v-if="direction > 0"
-                type="caret-up"
                 class="statistics-card__footer-icon statistics-card__footer-icon__up"
             />
-            <a-icon
+            <minus-outlined
                 v-else-if="direction === 0"
-                type="minus"
                 class="statistics-card__footer-icon statistics-card__footer-icon__middle"
             />
-            <a-icon
+            <caret-down-outlined
                 v-else-if="direction < 0"
-                type="caret-down"
                 class="statistics-card__footer-icon statistics-card__footer-icon__down"
             />
             {{ footer }}
@@ -47,8 +41,16 @@
 </template>
 
 <script>
+import {CaretDownOutlined, CaretUpOutlined, MinusOutlined, QuestionCircleOutlined} from '@ant-design/icons-vue';
+
 export default {
     name: 'statistics-card',
+    components: {
+        QuestionCircleOutlined,
+        CaretUpOutlined,
+        MinusOutlined,
+        CaretDownOutlined
+    },
     props: {
         title: {
             type: String,
@@ -75,43 +77,43 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .statistics-card {
-        cursor: default;
+.statistics-card {
+    cursor: default;
 
-        .statistics-card__title {
-            text-align: center;
-        }
-
-        .statistics-card__title-icon {
-            margin-left: 6px;
-        }
-
-        .statistics-card__content {
-            text-align: center;
-        }
-
-        .statistics-card__footer {
-            display: flex;
-            text-align: center;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .statistics-card__footer-icon {
-            font-size: 20px;
-            margin-right: 8px;
-        }
-
-        .statistics-card__footer-icon__up {
-            color: #f00;
-        }
-
-        .statistics-card__footer-icon__middle {
-            color: #00bfff;
-        }
-
-        .statistics-card__footer-icon__down {
-            color: #3cb371;
-        }
+    .statistics-card__title {
+        text-align: center;
     }
+
+    .statistics-card__title-icon {
+        margin-left: 6px;
+    }
+
+    .statistics-card__content {
+        text-align: center;
+    }
+
+    .statistics-card__footer {
+        display: flex;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .statistics-card__footer-icon {
+        font-size: 20px;
+        margin-right: 8px;
+    }
+
+    .statistics-card__footer-icon__up {
+        color: #f00;
+    }
+
+    .statistics-card__footer-icon__middle {
+        color: #00bfff;
+    }
+
+    .statistics-card__footer-icon__down {
+        color: #3cb371;
+    }
+}
 </style>

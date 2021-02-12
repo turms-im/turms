@@ -39,6 +39,7 @@ module.exports = {
         'vue/html-closing-bracket-spacing': ['error'],
         'vue/no-static-inline-styles': ['error'],
         'vue/no-v-model-argument': 0,
-        'vue/no-mutating-props': 0
+        'vue/no-mutating-props': 0,
+        'vue/no-multiple-template-root': 0
     }
 };

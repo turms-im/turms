@@ -42,7 +42,7 @@ export default {
                     model: '',
                     name: 'names',
                     placeholder: this.$t('name'),
-                    decorator: {
+                    rules: {
                         nonSpace: true
                     }
                 },
@@ -59,21 +59,24 @@ export default {
                     size: 'L',
                     fields: [
                         {
+                            id: 'ownerId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('ownerId', {required: true, onlyNumber: true})
+                            rules: this.$validator.create({required: true, onlyNumber: true})
                         },
                         {
+                            id: 'index',
                             type: 'INPUT',
                             label: this.$t('groupIndex'),
-                            decorator: this.$validator.create('index', {required: true, onlyNumber: true})
+                            rules: this.$validator.create({required: true, onlyNumber: true})
                         },
                         {
+                            id: 'name',
                             type: 'INPUT',
-                            decorator: this.$validator.create('name', {required: true})
+                            rules: this.$validator.create({required: true})
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('creationDate')
+                            id: 'creationDate',
+                            type: 'DATE'
                         }
                     ]
                 },
@@ -83,12 +86,12 @@ export default {
                     size: 'L',
                     fields: [
                         {
-                            type: 'INPUT',
-                            decorator: this.$validator.create('name')
+                            id: 'name',
+                            type: 'INPUT'
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('creationDate')
+                            id: 'creationDate',
+                            type: 'DATE'
                         }
                     ]
                 }]
@@ -116,7 +119,8 @@ export default {
                         key: 'operation',
                         width: '10%'
                     }
-                ]}
+                ]
+            }
         };
     }
 };

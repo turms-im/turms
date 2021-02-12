@@ -2,7 +2,7 @@
     <a-layout-sider :trigger="null">
         <logo />
         <a-menu
-            v-model="selectedKeys"
+            v-model:selected-keys="selectedKeys"
             theme="dark"
             mode="inline"
             :open-keys="openKeys"
@@ -14,18 +14,18 @@
                     v-if="item.children"
                     :key="item.key"
                 >
-                    <span slot="title">
-                        <a-icon :type="item.iconType" />
+                    <template #title>
+                        <icon :type="item.iconType" />
                         <span>
                             {{ item.title }}
                         </span>
-                    </span>
+                    </template>
                     <a-menu-item
                         v-for="childItem in item.children"
                         :key="childItem.key"
                         :disabled="childItem.disabled"
                     >
-                        <a-icon :type="childItem.iconType" />
+                        <icon :type="childItem.iconType" />
                         {{ childItem.title }}
                     </a-menu-item>
                 </a-sub-menu>
@@ -34,7 +34,7 @@
                     :key="item.key"
                     :disabled="item.disabled"
                 >
-                    <a-icon :type="item.iconType" />
+                    <icon :type="item.iconType" />
                     {{ item.title }}
                 </a-menu-item>
             </template>
@@ -44,11 +44,13 @@
 
 <script>
 import Logo from '../common/logo';
+import Icon from '../common/icon';
 
 export default {
     name: 'layout-sider',
     components: {
-        Logo
+        Logo,
+        Icon
     },
     data() {
         const menuItems = [
@@ -77,7 +79,7 @@ export default {
             //     ]
             // },
             {
-                key: 'content',
+                key: '/content',
                 iconType: 'profile',
                 title: this.$t('contentManagement'),
                 children: [
@@ -120,33 +122,31 @@ export default {
             }
         ];
         return {
-            menuItems: menuItems,
-            openKeys: ['statistics'],
-            selectedKeys: ['statistics-user']
+            menuItems,
+            openKeys: ['/content'],
+            selectedKeys: ['/content/user']
         };
     },
     mounted() {
-        if (this.$route.fullPath) {
-            const paths = this.$route.fullPath.split('/');
-            if (paths.length === 3) {
-                this.openKeys = [paths[1]];
-            }
-            if (paths.length >= 2) {
-                this.selectedKeys = [this.$route.fullPath];
-            }
+        const fullPath = window.location.pathname || '';
+        const paths = fullPath.split('/')
+            .filter(path => path);
+        if (paths.length >= 2) {
+            this.openKeys = ['/' + paths[0]];
+        }
+        if (paths.length) {
+            this.selectedKeys = [fullPath];
         }
     },
     methods: {
         openChange(subMenu) {
-            if (subMenu.length > 0) {
-                this.openKeys = [subMenu[subMenu.length - 1]];
-            } else {
-                this.openKeys = [];
-            }
+            this.openKeys = subMenu.length
+                ? [subMenu[subMenu.length - 1]]
+                : [];
         },
         onMenuItemSelected(item) {
             this.$router.push(item.key);
-            this.$es.$emit('tabChanged', item.key);
+            this.$store.setTab(item.key);
         }
     }
 };

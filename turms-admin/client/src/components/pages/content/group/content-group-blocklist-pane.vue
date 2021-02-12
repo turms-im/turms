@@ -56,20 +56,23 @@ export default {
                     size: 'L',
                     fields: [
                         {
+                            id: 'groupId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('groupId', {required: true, onlyNumber: true})
+                            rules: this.$validator.create({required: true, onlyNumber: true})
                         },
                         {
+                            id: 'userId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('userId', {required: true, onlyNumber: true})
+                            rules: this.$validator.create({required: true, onlyNumber: true})
                         },
                         {
+                            id: 'requesterId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('requesterId', {required: true, onlyNumber: true})
+                            rules: this.$validator.create({required: true, onlyNumber: true})
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('blockDate')
+                            id: 'blockDate',
+                            type: 'DATE'
                         }
                     ]
                 },
@@ -79,12 +82,13 @@ export default {
                     size: 'L',
                     fields: [
                         {
+                            id: 'requesterId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('requesterId', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('blockDate')
+                            id: 'blockDate',
+                            type: 'DATE'
                         }
                     ]
                 }]
@@ -111,7 +115,8 @@ export default {
                         key: 'operation',
                         width: '15%'
                     }
-                ]}
+                ]
+            }
         };
     }
 };

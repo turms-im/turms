@@ -5,6 +5,15 @@ const CLIENT_DIR = path.resolve(__dirname, 'client');
 const isProd = NODE_ENV === 'production';
 
 module.exports = {
+    css: {
+        loaderOptions: {
+            less: {
+                lessOptions: {
+                    javascriptEnabled: true
+                }
+            }
+        }
+    },
     configureWebpack: config => {
         // config.node = false; // To avoid importing node environment by third party dependencies
         config.entry = {

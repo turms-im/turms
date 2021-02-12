@@ -9,6 +9,7 @@
 
 <script>
 import ContentTemplate from '../template/content-template';
+
 export default {
     name: 'content-user-permission-group-pane',
     components: {
@@ -25,27 +26,32 @@ export default {
                     size: 'XL',
                     fields: [
                         {
+                            id: 'id',
                             type: 'INPUT',
                             label: this.$t('permissionGroupId'),
-                            decorator: this.$validator.create('id', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
+                            id: 'creatableGroupTypeIds',
                             type: 'INPUT',
                             label: this.$t('creatableGroupTypeId'),
-                            decorator: this.$validator.create('creatableGroupTypeIds', {required: true})
+                            rules: this.$validator.create({required: true})
                         },
                         {
+                            id: 'ownedGroupLimit',
                             type: 'INPUT',
-                            decorator: this.$validator.create('ownedGroupLimit', {required: true, onlyNumber: true})
+                            rules: this.$validator.create({required: true, onlyNumber: true})
                         },
                         {
+                            id: 'ownedGroupLimitForEachGroupType',
                             type: 'INPUT',
-                            decorator: this.$validator.create('ownedGroupLimitForEachGroupType', {required: true, onlyNumber: true})
+                            rules: this.$validator.create({required: true, onlyNumber: true})
                         },
                         {
+                            id: 'groupTypeLimits',
                             type: 'INPUT',
                             label: this.$t('groupTypeLimit'),
-                            decorator: this.$validator.create('groupTypeLimits', {required: true})
+                            rules: this.$validator.create({required: true})
                         }
                     ]
                 },
@@ -55,22 +61,24 @@ export default {
                     size: 'XL',
                     fields: [
                         {
+                            id: 'creatableGroupTypeIds',
                             type: 'INPUT',
-                            label: this.$t('creatableGroupTypeId'),
-                            decorator: this.$validator.create('creatableGroupTypeIds')
+                            label: this.$t('creatableGroupTypeId')
                         },
                         {
+                            id: 'ownedGroupLimit',
                             type: 'INPUT',
-                            decorator: this.$validator.create('ownedGroupLimit', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
+                            id: 'ownedGroupLimitForEachGroupType',
                             type: 'INPUT',
-                            decorator: this.$validator.create('ownedGroupLimitForEachGroupType', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
+                            id: 'groupTypeLimits',
                             type: 'INPUT',
-                            label: this.$t('groupTypeLimit'),
-                            decorator: this.$validator.create('groupTypeLimits')
+                            label: this.$t('groupTypeLimit')
                         }
                     ]
                 }]
@@ -104,7 +112,8 @@ export default {
                         key: 'operation',
                         width: '10%'
                     }
-                ]}
+                ]
+            }
         };
     }
 };

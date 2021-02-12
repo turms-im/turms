@@ -41,8 +41,8 @@ export default {
                     type: 'UPDATE',
                     fields: [
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('readDate')
+                            id: 'readDate',
+                            type: 'DATE'
                         }
                     ]
                 }]
@@ -67,12 +67,12 @@ export default {
             },
             transform: (data) => {
                 let conversations = data.groupConversations || [];
-                conversations = conversations.flatMap(conversation => (Object.entries(conversation.memberIdAndReadDate)
-                    .map(entry => ({
+                conversations = conversations.flatMap(conversation => Object.entries(conversation.memberIdAndReadDate)
+                    .map(([memberId, date]) => ({
                         groupId: conversation.groupId,
-                        memberId: entry[0],
-                        readDate: new Date(entry[1])
-                    }))));
+                        memberId,
+                        readDate: new Date(date)
+                    })));
                 return {
                     total: conversations.length,
                     records: conversations

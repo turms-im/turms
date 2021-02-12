@@ -26,7 +26,7 @@ export default {
                     model: '',
                     name: 'ids',
                     placeholder: this.$t('groupQuestionId'),
-                    decorator: {
+                    rules: {
                         noBlank: true
                     }
                 },
@@ -43,23 +43,27 @@ export default {
                     type: 'CREATE',
                     fields: [
                         {
+                            id: 'groupId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('groupId', {required: true, onlyNumber: true})
+                            rules: this.$validator.create({required: true, onlyNumber: true})
                         },
                         {
+                            id: 'question',
                             type: 'INPUT',
-                            decorator: this.$validator.create('question', {required: true})
+                            rules: this.$validator.create({required: true})
                         },
                         {
+                            id: 'score',
                             type: 'INPUT',
-                            decorator: this.$validator.create('score', {required: true, onlyNumber: true})
+                            rules: this.$validator.create({required: true, onlyNumber: true})
                         },
                         {
+                            id: 'answers',
                             type: 'DYNAMIC-INPUT',
                             label: this.$t('answer'),
-                            placeholder: this.$t('validAnswer'),
-                            addButtonLabel: this.$t('addValidAnswer'),
-                            decorator: this.$validator.create('answers', {required: true},
+                            placeholder: this.$t('correctAnswer'),
+                            addButtonLabel: this.$t('addCorrectAnswer'),
+                            rules: this.$validator.create({required: true},
                                 {
                                     validateTrigger: ['change', 'blur'],
                                     rules: [
@@ -78,19 +82,21 @@ export default {
                     type: 'UPDATE',
                     fields: [
                         {
-                            type: 'INPUT',
-                            decorator: this.$validator.create('question')
+                            id: 'question',
+                            type: 'INPUT'
                         },
                         {
+                            id: 'score',
                             type: 'INPUT',
-                            decorator: this.$validator.create('score', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
+                            id: 'answers',
                             type: 'DYNAMIC-INPUT',
                             label: this.$t('answer'),
-                            placeholder: this.$t('validAnswer'),
-                            addButtonLabel: this.$t('addValidAnswer'),
-                            decorator: this.$validator.create('answers',
+                            placeholder: this.$t('correctAnswer'),
+                            addButtonLabel: this.$t('addCorrectAnswer'),
+                            rules: this.$validator.create(
                                 {
                                     validateTrigger: ['change', 'blur'],
                                     rules: [
@@ -131,7 +137,8 @@ export default {
                 {
                     key: 'operation',
                     width: '10%'
-                }]}
+                }]
+            }
         };
     }
 };

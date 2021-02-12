@@ -5,7 +5,7 @@ export default class UiUtil {
             for (const action of actionGroup) {
                 if (action.fields) {
                     for (const field of action.fields) {
-                        if (field.type.toUpperCase() === 'SELECT' && selectIds.includes(field.decorator[0])) {
+                        if (field.type.toUpperCase() === 'SELECT' && selectIds.includes(field.id)) {
                             if (!field.options) {
                                 field.options = {};
                             }

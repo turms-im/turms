@@ -11,9 +11,7 @@ export default {
     props: {
         statisticsData: {
             type: Array,
-            default: function () {
-                return [];
-            }
+            default: () => []
         },
         isMonthMode: {
             type: Boolean,
@@ -49,15 +47,13 @@ export default {
                 const records = JSON.parse(JSON.stringify(this.statisticsData))
                     .flatMap(record => {
                         const results = [];
-                        Object.entries(record).forEach(entry => {
-                            const key = entry[0];
+                        Object.entries(record).forEach(([key, value]) => {
                             if (key !== 'date') {
-                                const result = {};
-                                const value = entry[1];
-                                result.date = record['date'];
-                                result.type = this.$t(`${key}Number`);
-                                result.number = value;
-                                results.push(result);
+                                results.push({
+                                    date: record['date'],
+                                    type: this.$t(`${key}Number`),
+                                    number: value
+                                });
                             }
                         });
                         return results;
@@ -66,7 +62,9 @@ export default {
                 if (this.isMonthMode) {
                     format = 'Y-MM';
                 } else {
-                    const isSameYear = this.$moment(records[0].date).year() === this.$moment(records[records.length - 1].date).year();
+                    const year1 = this.$moment(records[0].date).year();
+                    const year2 = this.$moment(records[records.length - 1].date).year();
+                    const isSameYear = year1 === year2;
                     format = isSameYear ? 'MM-DD' : 'Y-MM-DD';
                 }
                 for (const record of records) {

@@ -8,9 +8,9 @@
         :filters="filters"
         :action-groups="actionGroups"
         :table="table"
-        @afterDataDeleted="afterDataDeleted"
-        @afterDataUpdated="afterDataUpdated"
-        @afterDataInitialized="afterDataInitialized"
+        @onDataDeleted="onDataDeleted"
+        @onDataUpdated="onDataUpdated"
+        @onDateInited="onDateInited"
     />
 </template>
 
@@ -35,7 +35,7 @@ export default {
                     model: '',
                     name: 'accounts',
                     placeholder: this.$t('adminAccount'),
-                    decorator: {
+                    rules: {
                         nonSpace: true
                     }
                 },
@@ -58,20 +58,24 @@ export default {
                     type: 'CREATE',
                     fields: [
                         {
+                            id: 'account',
                             type: 'INPUT',
-                            decorator: this.$validator.create('account', {required: true, noBlank: true, maxNumber: 32})
+                            rules: this.$validator.create({required: true, noBlank: true, maxNumber: 32})
                         },
                         {
+                            id: 'password',
                             type: 'INPUT',
-                            decorator: this.$validator.create('password', {required: true, noBlank: true, maxNumber: 32})
+                            rules: this.$validator.create({required: true, noBlank: true, maxNumber: 32})
                         },
                         {
+                            id: 'name',
                             type: 'INPUT',
-                            decorator: this.$validator.create('name', {required: true, noBlank: true, maxNumber: 32})
+                            rules: this.$validator.create({required: true, noBlank: true, maxNumber: 32})
                         },
                         {
+                            id: 'roleId',
                             type: 'SELECT',
-                            decorator: this.$validator.create('roleId', {required: true})
+                            rules: this.$validator.create({required: true})
                         }
                     ]
                 },
@@ -80,16 +84,18 @@ export default {
                     type: 'UPDATE',
                     fields: [
                         {
+                            id: 'password',
                             type: 'INPUT',
-                            decorator: this.$validator.create('password', {noBlank: true, maxNumber: 32})
+                            rules: this.$validator.create({noBlank: true, maxNumber: 32})
                         },
                         {
+                            id: 'name',
                             type: 'INPUT',
-                            decorator: this.$validator.create('name', {noBlank: true, maxNumber: 32})
+                            rules: this.$validator.create({noBlank: true, maxNumber: 32})
                         },
                         {
-                            type: 'SELECT',
-                            decorator: this.$validator.create('roleId')
+                            id: 'roleId',
+                            type: 'SELECT'
                         }
                     ]
                 }]
@@ -118,30 +124,32 @@ export default {
                 {
                     key: 'operation',
                     width: '10%'
-                }]}
+                }]
+            }
         };
     },
     methods: {
-        afterDataDeleted(accounts) {
-            if (accounts && accounts.includes(this.$store.getters.admin.account)) {
-                this.$store.dispatch('setAdmin', null);
+        onDataDeleted(accounts) {
+            if (accounts?.includes(this.$store.getters.admin.account)) {
+                this.$store.setAdmin();
             }
         },
-        afterDataUpdated(accounts, value) {
-            if (accounts.includes(this.$store.getters.admin.account)) {
+        onDataUpdated(accounts, value) {
+            const admin = this.$store.getters.admin;
+            if (accounts.includes(admin.account)) {
                 if (value.name) {
-                    this.$store.getters.admin.name = name;
+                    admin.name = value.name;
                 }
                 if (value.password) {
-                    this.$store.getters.admin.password = value.password;
+                    admin.password = value.password;
                 }
                 if (value.roleId) {
-                    this.$store.getters.admin.roleId = value.roleId;
+                    admin.roleId = value.roleId;
                 }
-                this.$store.dispatch('setAdmin', this.$store.getters.admin);
+                this.$store.setAdmin(admin);
             }
         },
-        afterDataInitialized(responseList) {
+        onDateInited(responseList) {
             const data = responseList[0].data.data.map(item => {
                 item.label = `${item.name}(${item.id})`;
                 return item;

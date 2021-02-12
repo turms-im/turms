@@ -36,7 +36,6 @@ import im.turms.turms.constraint.ValidUserRelationshipKey;
 import im.turms.turms.util.ProtoUtil;
 import im.turms.turms.workflow.dao.builder.QueryBuilder;
 import im.turms.turms.workflow.dao.builder.UpdateBuilder;
-import im.turms.turms.workflow.dao.domain.group.Group;
 import im.turms.turms.workflow.dao.domain.user.UserRelationship;
 import im.turms.turms.workflow.dao.domain.user.UserRelationshipGroup;
 import im.turms.turms.workflow.dao.domain.user.UserRelationshipGroupMember;
@@ -109,7 +108,7 @@ public class UserRelationshipGroupService {
                 groupName,
                 creationDate);
         ReactiveMongoOperations mongoOperations = operations != null ? operations : mongoTemplate;
-        return mongoOperations.insert(group, Group.COLLECTION_NAME);
+        return mongoOperations.insert(group, UserRelationshipGroup.COLLECTION_NAME);
     }
 
     public Flux<UserRelationshipGroup> queryRelationshipGroupsInfos(@NotNull Long ownerId) {

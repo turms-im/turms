@@ -18,6 +18,7 @@ export default class RequestUtil {
         });
         return params;
     }
+
     static getQueryParams(queryKey, targetKeys) {
         let params = '?';
         const isCompositeKey = queryKey.isCompositeKey || queryKey === 'keys';
@@ -25,17 +26,16 @@ export default class RequestUtil {
             const keyName = queryKey.name || queryKey;
             targetKeys.forEach((key, index) => {
                 key = JSONBig.parse(key);
-                Object.entries(key).forEach(entry => {
+                Object.entries(key).forEach(([itemKey, value]) => {
                     if (params !== '?') {
                         params += '&';
                     }
-                    params += `${keyName}[${index}].${entry[0]}=${entry[1]}`;
+                    params += `${keyName}[${index}].${itemKey}=${value}`;
                 });
             });
         } else {
             params += `${queryKey}=${targetKeys.join(',')}`;
         }
-        params = encodeURI(params);
-        return params;
+        return encodeURI(params);
     }
 }

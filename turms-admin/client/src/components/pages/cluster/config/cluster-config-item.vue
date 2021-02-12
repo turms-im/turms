@@ -1,53 +1,53 @@
 <template>
     <div class="cluster-config-item">
         <a-tooltip
-            v-if="pair[1].desc"
+            v-if="property.desc"
             placement="right"
-            :title="pair[1].desc"
+            :title="property.desc"
         >
-            <a-icon
-                type="question-circle"
-                class="cluster-config-item__info"
-            />
+            <span class="cluster-config-item__info">
+                <icon type="question-circle" />
+            </span>
         </a-tooltip>
-        <div :class="[{'cluster-config-item__name--deprecated': pair[1].deprecated}, 'cluster-config-item__name']">
-            <a-icon
-                v-if="!pair[1].mutable"
-                type="close"
+        <div :class="[{'cluster-config-item__name--deprecated': property.deprecated}, 'cluster-config-item__name']">
+            <span
+                v-if="!property.mutable"
                 class="cluster-config-item__immutable-icon"
-            />
-            {{ pair[0] }}
+            >
+                <icon type="close" />
+            </span>
+            {{ name }}
         </div>
-        <div v-if="pair[1].type === 'string'">
+        <div v-if="property.type === 'string'">
             <a-input
-                v-model="pair[1].value"
-                :disabled="!pair[1].mutable"
+                v-model:value="property.value"
+                :disabled="!property.mutable"
                 class="cluster-config-item__input"
             />
         </div>
-        <div v-if="isNumberType(pair[1].type)">
+        <div v-if="isNumberType(property.type)">
             <a-input-number
-                v-model="pair[1].value"
-                :disabled="!pair[1].mutable"
+                v-model:value="property.value"
+                :disabled="!property.mutable"
                 :min="0"
                 class="cluster-config-item__input-number"
             />
         </div>
-        <div v-if="pair[1].type === 'boolean'">
+        <div v-if="property.type === 'boolean'">
             <a-switch
-                v-model="pair[1].value"
-                :disabled="!pair[1].mutable"
+                v-model:checked="property.value"
+                :disabled="!property.mutable"
             />
         </div>
-        <div v-if="pair[1].type === 'enum'">
+        <div v-if="property.type === 'enum'">
             <a-select
-                v-model="pair[1].value"
+                v-model:value="property.value"
                 class="cluster-config-item__select"
+                :disabled="!property.mutable"
             >
                 <a-select-option
-                    v-for="(option, index) in pair[1].options"
+                    v-for="(option, index) in property.options"
                     :key="index"
-                    :disabled="!pair[1].mutable"
                     :value="option"
                 >
                     {{ option }}
@@ -55,31 +55,38 @@
             </a-select>
         </div>
         <div
-            v-if="!isNumberType(pair[1].type)
-                && pair[1].type !== 'string'
-                && pair[1].type !== 'boolean'
-                && pair[1].type !== 'enum'"
+            v-if="!isNumberType(property.type)
+                && property.type !== 'string'
+                && property.type !== 'boolean'
+                && property.type !== 'enum'"
         >
-            {{ pair[1].type }}
+            {{ property.type }}
         </div>
-        <div
+        <span
+            v-if="isValueChanged(property)"
             class="cluster-config-item__rollback"
-            @click="onRollbackClicked(pair[1])"
+            @click="onRollbackClicked(property)"
         >
-            <a-icon
-                v-if="isValueChanged(pair[1])"
-                type="rollback"
-            />
-        </div>
+            <icon type="rollback" />
+        </span>
     </div>
 </template>
 
 <script>
+import Icon from '../../../common/icon';
+
 export default {
     name: 'cluster-config-item',
+    components: {
+        Icon
+    },
     props: {
-        pair: {
-            type: Array,
+        name: {
+            type: String,
+            required: true
+        },
+        property: {
+            type: Object,
             required: true
         }
     },

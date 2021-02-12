@@ -41,17 +41,17 @@ const zh_CN = {
     'answer': '答案',
     'applyChanges': '应用更改',
     'basicInfo': '基本信息',
+    'blockDate': '拉黑时间',
+    'blockDateRange': {
+        'end': '拉黑结束时间',
+        'start': '拉黑开始时间'
+    },
     'blockedDateRange': {
         'end': '拉黑结束时间',
         'start': '拉黑开始时间'
     },
     'blockedUser': '拉黑用户',
     'blockedUserId': '被拉黑用户ID',
-    'blockDate': '拉黑时间',
-    'blockDateRange': {
-        'end': '拉黑结束时间',
-        'start': '拉黑开始时间'
-    },
     'body': 'Body',
     'burnAfter': '阅后即焚时间',
     'byDay': '按日',
@@ -67,6 +67,7 @@ const zh_CN = {
     'character': '角色',
     'chinese': '中文',
     'clearFilters': '清空过滤条件',
+    'clusterConfig': '集群配置',
     'clusterManagement': '集群管理',
     'confirmApplyChanges': '确认应用更改？',
     'confirmDeletion': '确认执行删除操作？',
@@ -178,6 +179,7 @@ const zh_CN = {
     'ignored': '已忽略',
     'inactive': '未激活',
     'intro': '介绍',
+    'invalidUrl': '无效URL',
     'invitationId': '邀请ID',
     'invitationStrategy': '邀请策略',
     'invitationStrategyAll': '所有者/管理者/成员/游客可发出邀请(不需要同意)',
@@ -227,7 +229,7 @@ const zh_CN = {
         'end': '登陆结束时间',
         'start': '登陆开始时间'
     },
-    'loginFailure': '登录失败',
+    'loginFailed': '登录失败',
     'loginSuccessfully': '登录成功',
     'logout': '退出',
     'manager': '管理员',

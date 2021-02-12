@@ -26,13 +26,11 @@ export default {
             this.refreshing = true;
             const hide = this.$message.loading(this.$t('refreshingData'), 0);
             this.refreshFunc()
-                .then(response => {
+                .then(() => {
                     this.$message.success(this.$t('refreshedDataSuccessfully'));
-                    return response;
                 })
                 .catch(error => {
                     this.$error(this.$t('failedToRefreshData'), error);
-                    throw error;
                 })
                 .finally(() => {
                     setTimeout(hide);

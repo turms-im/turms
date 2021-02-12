@@ -4,7 +4,7 @@
     >
         <div>
             <custom-input
-                v-model="ids"
+                v-model:value="ids"
                 :placeholder="$t('userId')"
                 class="search-filter search-filter-id"
                 :only-number-and-comma="true"
@@ -39,8 +39,7 @@
                 class="content-table"
             >
                 <template
-                    slot="operation"
-                    slot-scope="text, record"
+                    #operation="{ record }"
                 >
                     <div class="editable-row-operations">
                         <span v-if="!['OFFLINE', 'NONEXISTENT'].includes(record.userStatus)">
@@ -131,55 +130,46 @@ export default {
             this.selectedRowKeys.splice(0, this.selectedRowKeys.length);
             const userIds = this.ids
                 .split(',')
-                .filter(value => value !== '')
+                .filter(value => !isNaN(parseInt(value)))
                 .map(value => parseInt(value));
-            this.$client.get(this.$rs.apis.userStatus, {
+            this.$http.get(this.$rs.apis.userStatus, {
                 params: {
-                    ids: userIds.length ? userIds.join(',') : undefined
+                    ids: userIds?.join(',')
                 }
             })
                 .then(response => {
                     if (response.status === 204) {
                         this.records = [];
-                    } else {
-                        const records = response.data.data.flatMap(record => {
-                            const array = [];
-                            record.key = record.userId;
-                            if (record.sessionMap) {
-                                const keys = Object.keys(record.sessionMap);
-                                for (let i = 0; i < keys.length; i++) {
-                                    const target = JSONbig.parse(JSONbig.stringify(record));
-                                    const source = target.sessionMap[keys[i]];
-                                    const friendlyDate = this.$moment(source.loginDate).fromNow();
-                                    source.loginDate = `${source.loginDate} (${friendlyDate})`;
-                                    if (source.location && source.location.longitude && source.location.latitude) {
-                                        source.location = formatCoords(source.location.latitude, source.location.longitude).format();
-                                    }
-                                    delete target.sessionMap;
-                                    array.push(Object.assign(target, source));
-                                }
-                            } else {
-                                array.push(record);
-                            }
-                            return array;
-                        });
-                        this.records = [];
-                        for (const userId of userIds) {
-                            const userStatusInfo = records.find(record => record.key === userId);
-                            if (userStatusInfo) {
-                                this.records.push(userStatusInfo);
-                            } else {
-                                this.records.push({
-                                    key: userId,
-                                    userId,
-                                    userStatus: 'NONEXISTENT'
-                                });
-                            }
-                        }
+                        return;
                     }
+                    const records = response.data.data.flatMap(record => {
+                        const array = [];
+                        record.key = record.userId;
+                        if (record.sessionMap) {
+                            for (const key of Object.keys(record.sessionMap)) {
+                                const target = JSONbig.parse(JSONbig.stringify(record));
+                                const source = target.sessionMap[key];
+                                const friendlyDate = this.$moment(source.loginDate).fromNow();
+                                source.loginDate = `${source.loginDate} (${friendlyDate})`;
+                                if (source.location?.longitude && source.location?.latitude) {
+                                    source.location = formatCoords(source.location.latitude, source.location.longitude).format();
+                                }
+                                delete target.sessionMap;
+                                array.push(Object.assign(target, source));
+                            }
+                        } else {
+                            array.push(record);
+                        }
+                        return array;
+                    });
+                    this.records = userIds.map(userId => (records.find(record => record.key === userId) || {
+                        key: userId,
+                        userId,
+                        userStatus: 'NONEXISTENT'
+                    }));
                 })
                 .catch(error => {
-                    if (error.response && error.response.status === 404) {
+                    if (error.response?.status === 404) {
                         this.records = [];
                         this.total = 0;
                     }
@@ -212,7 +202,7 @@ export default {
                 ids: ids.join(','),
                 deviceTypes: deviceTypes ? deviceTypes.join(',') : undefined
             };
-            this.$client.put(`${this.$rs.apis.userStatus}?${this.$qs.encode(params)}`, {
+            this.$http.put(`${this.$rs.apis.userStatus}?${this.$qs.encode(params)}`, {
                 onlineStatus: 'OFFLINE'
             })
                 .then(() => {

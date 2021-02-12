@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import Calculate from './calculate';
 import CommonUtil from './common-util';
 import LayoutUtil from './layout-util';
@@ -6,9 +5,18 @@ import RequestUtil from './request-util';
 import UiUtil from './ui-util';
 import Validator from './validator';
 
-Vue.prototype.$cal = Calculate;
-Vue.prototype.$util = CommonUtil;
-Vue.prototype.$layout = LayoutUtil;
-Vue.prototype.$rq = RequestUtil;
-Vue.prototype.$ui = UiUtil;
-Vue.prototype.$validator = Validator;
+export default {
+    install: (app) => {
+        app.config.globalProperties.$cal = Calculate;
+        app.config.globalProperties.$util = CommonUtil;
+        app.config.globalProperties.$layout = LayoutUtil;
+        app.config.globalProperties.$rq = RequestUtil;
+        app.config.globalProperties.$ui = UiUtil;
+        app.config.globalProperties.$validator = Validator;
+        if (app.__VUE_I18N__?.global?.t) {
+            Validator.getMessage = app.__VUE_I18N__.global.t;
+        } else {
+            console.error('"app.__VUE_I18N__.global.t" doesn\'t exist');
+        }
+    }
+};

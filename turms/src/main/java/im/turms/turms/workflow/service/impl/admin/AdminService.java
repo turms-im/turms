@@ -170,6 +170,7 @@ public class AdminService {
             AssertUtil.noWhitespace(name, "name");
             AssertUtil.length(name, "name", MIN_NAME_LIMIT, MAX_NAME_LIMIT);
             AssertUtil.pastOrPresent(registrationDate, "registrationDate");
+            AssertUtil.notNull(roleId, "roleId");
             AssertUtil.state(!roleId.equals(DaoConstant.ADMIN_ROLE_ROOT_ID), "The role ID cannot be the root role ID: " + DaoConstant.ADMIN_ROLE_ROOT_ID);
         } catch (TurmsBusinessException e) {
             return Mono.error(e);

@@ -12,6 +12,7 @@
 
 <script>
 import StatisticsTemplate from './common/statistics-template';
+
 export default {
     name: 'statistics-user-pane',
     components: {StatisticsTemplate},
@@ -31,19 +32,24 @@ export default {
                 }
             },
             cards: [
-                {   id: 'registeredUsers',
+                {
+                    id: 'registeredUsers',
                     tooltip: '昨日新注册的用户数'
                 },
-                {   id: 'deletedUsers',
+                {
+                    id: 'deletedUsers',
                     tooltip: '昨日注销的用户数'
                 },
-                {   id: 'loggedInUsers',
+                {
+                    id: 'loggedInUsers',
                     tooltip: '昨日通过账号连接Turms服务器的用户数。当同一用户通过多台设备连接时，仍记为一次活跃'
                 },
-                {   id: 'usersWhoSentMessages',
+                {
+                    id: 'usersWhoSentMessages',
                     tooltip: '昨日有进行发送消息操作的用户总数'
                 },
-                {   id: 'maxOnlineUsers',
+                {
+                    id: 'maxOnlineUsers',
                     tooltip: '昨日最大用户同时连接数'
                 },
                 {

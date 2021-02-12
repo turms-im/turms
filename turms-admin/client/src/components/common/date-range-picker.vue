@@ -5,7 +5,7 @@
         :disabled="disabled"
         :disabled-date="disabledEndDate"
         :format="isMonthMode ? 'YYYY/MM' : showTime ? 'YYYY/MM/DD HH:mm:ss' : 'YYYY/MM/DD'"
-        :placeholder="placeholder"
+        :placeholder="computedPlaceholder"
         :mode="isMonthMode ? ['month', 'month'] : ['date', 'date']"
         :ranges="presets"
         :show-time="showTime"
@@ -28,9 +28,7 @@ export default {
         },
         placeholder: {
             type: Array,
-            default: function() {
-                return [this.$t('startDate'), this.$t('endDate')];
-            }
+            default: () => []
         },
         isMonthMode: {
             type: Boolean,
@@ -54,15 +52,14 @@ export default {
         },
         value: {
             type: Array,
-            default: function () {
-                return [];
-            }
+            default: () => []
         },
         includeToday: {
             type: Boolean,
             default: false
         }
     },
+    emits: ['update:value'],
     data() {
         let dateRange = [];
         let monthRange = [];
@@ -76,13 +73,18 @@ export default {
             monthRange = this.getLastMonthRange(3);
             dateRange = this.getLastMonthToYesterdayRange();
         }
-        this.$emit('input', this.isMonthMode ? monthRange : dateRange);
+        this.$emit('update:value', this.isMonthMode ? monthRange : dateRange);
         return {
             dateRange: dateRange,
             monthRange: monthRange
         };
     },
     computed: {
+        computedPlaceholder() {
+            return this.placeholder.length === 2
+                ? this.placeholder
+                : [this.$t('startDate'), this.$t('endDate')];
+        },
         range() {
             return [...this.value];
         },
@@ -106,7 +108,7 @@ export default {
     },
     watch: {
         isMonthMode: function (value) {
-            this.$emit('input', value ? this.monthRange : this.dateRange);
+            this.$emit('update:value', value ? this.monthRange : this.dateRange);
         }
     },
     methods: {
@@ -116,7 +118,7 @@ export default {
             } else {
                 this.dateRange = range;
             }
-            this.$emit('input', range);
+            this.$emit('update:value', range);
         },
         onPanelChange(range) {
             if (this.isMonthMode) {
@@ -124,7 +126,7 @@ export default {
             } else {
                 this.dateRange = range;
             }
-            this.$emit('input', range);
+            this.$emit('update:value', range);
         },
         disabledEndDate(currentDate) {
             if (this.isMonthMode) {

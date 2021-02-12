@@ -9,16 +9,16 @@
                 <custom-input
                     v-if="filter.type.toUpperCase() === 'INPUT'"
                     :key="index"
-                    v-model="filter.model"
+                    v-model:value="filter.model"
                     :placeholder="filter.placeholder"
-                    :only-number-and-comma="typeof filter.decorator === 'undefined' || filter.decorator.onlyNumberAndComma"
-                    :non-space="filter.decorator && filter.decorator.nonSpace"
+                    :only-number-and-comma="filter.rules == null || filter.rules.onlyNumberAndComma"
+                    :non-space="filter.rules?.nonSpace"
                     class="search-filter search-filter__input"
                 />
                 <a-select
                     v-if="filter.type.toUpperCase() === 'SELECT'"
                     :key="index"
-                    v-model="filter.model"
+                    v-model:value="filter.model"
                     class="search-filter search-filter__select"
                 >
                     <a-select-option
@@ -32,7 +32,7 @@
                 <date-range-picker
                     v-if="filter.type.toUpperCase() === 'DATE-RANGE'"
                     :key="index"
-                    v-model="filter.model"
+                    v-model:value="filter.model"
                     :include-today="true"
                     :show-time="true"
                     :placeholder="filter.placeholder || [$t(`${filter.name}Range.start`), $t(`${filter.name}Range.end`)]"
@@ -41,8 +41,8 @@
                 <a-date-picker
                     v-if="filter.type.toUpperCase() === 'DATE'"
                     :key="index"
-                    v-model="filter.model"
-                    :show-time="typeof filter.showTime === 'undefined' ? true : filter.showTime"
+                    v-model:value="filter.model"
+                    :show-time="filter.showTime ?? true"
                 />
             </template>
             <a-button
@@ -127,38 +127,37 @@
                 @change="handleTableChange"
             >
                 <template
-                    v-for="(column, index) in columnsData"
-                    :slot="column.dataIndex"
-                    slot-scope="text, record"
+                    v-for="column in columnsData"
+                    #[column.dataIndex]="{ text, record }"
                 >
                     <div
                         v-if="column.type === 'tree'"
-                        :key="index"
+                        :key="column.dataIndex"
                     >
                         <a-tree
                             :tree-data="text"
-                            show-icon
+                            :show-icon="true"
                         >
-                            <a-icon
-                                slot="bars"
-                                type="bars"
-                                class="content-template__list-icon"
-                            />
-                            <a-icon
-                                slot="close"
-                                type="close"
-                                class="content-template__close-icon"
-                            />
-                            <a-icon
-                                slot="check"
-                                type="check"
-                                class="content-template__check-icon"
-                            />
+                            <template #bars>
+                                <span class="content-template__list-icon">
+                                    <icon type="bars" />
+                                </span>
+                            </template>
+                            <template #close>
+                                <span class="content-template__close-icon">
+                                    <icon type="close" />
+                                </span>
+                            </template>
+                            <template #check>
+                                <span class="content-template__check-icon">
+                                    <icon type="check" />
+                                </span>
+                            </template>
                         </a-tree>
                     </div>
                     <div
                         v-else-if="column.dataIndex === 'operation'"
-                        :key="index"
+                        :key="column.dataIndex"
                         class="editable-row-operations"
                     >
                         <span>
@@ -172,7 +171,7 @@
                     </div>
                     <div
                         v-else
-                        :key="index"
+                        :key="column.dataIndex"
                     >
                         {{ getColumnValue(column, record) }}
                     </div>
@@ -184,6 +183,7 @@
 
 <script>
 import JSONBig from 'json-bigint';
+import Icon from '../../../common/icon';
 import Skeleton from '../../../common/skeleton';
 import CustomInput from '../../../common/custom-input';
 import ButtonModalTemplate from './button-modal-template';
@@ -193,6 +193,7 @@ import ContentTemplateExport from './content-template-export';
 export default {
     name: 'content-template',
     components: {
+        Icon,
         Skeleton,
         ButtonModalTemplate,
         CustomInput,
@@ -207,9 +208,7 @@ export default {
         initialDataUrls: {
             type: Array,
             required: false,
-            default: () => {
-                return [];
-            }
+            default: () => []
         },
         url: {
             type: String,
@@ -238,33 +237,23 @@ export default {
         params: {
             type: Object,
             required: false,
-            default: () => {
-                return {};
-            }
+            default: () => ({})
         },
         deletion: {
             type: Object,
-            default: function () {
-                return {};
-            }
+            default: () => ({})
         },
         filters: {
             type: Array,
-            default: function () {
-                return [];
-            }
+            default: () => []
         },
         actionGroups: {
             type: Array,
-            default: function () {
-                return [];
-            }
+            default: () => []
         },
         table: {
             type: Object,
-            default: function () {
-                return {};
-            }
+            default: () => ({})
         },
         transform: {
             type: Function,
@@ -345,22 +334,26 @@ export default {
             });
         },
         tableData() {
-            const recordsCopy = JSONBig.parse(JSONBig.stringify(this.records));
-            recordsCopy.forEach(recordCopy => {
-                Object.entries(recordCopy).forEach(entry => {
-                    if (entry[1]._isBigNumber) {
-                        recordCopy[entry[0]] = entry[1].toFixed();
-                    }
+            return JSONBig.parse(JSONBig.stringify(this.records))
+                .map(record => {
+                    Object.entries(record).forEach(([key, value]) => {
+                        if (value._isBigNumber) {
+                            record[key] = value.toFixed();
+                        } else if (key === this.recordKey) {
+                            const keyValue = record[key];
+                            record.originalKey = keyValue;
+                            record.key = typeof keyValue === 'object'
+                                ? JSON.stringify(keyValue)
+                                : keyValue;
+                            if (typeof keyValue === 'object') {
+                                Object.keys(keyValue).forEach(subKey => {
+                                    record[`${key}.${subKey}`] = keyValue[subKey];
+                                });
+                            }
+                        }
+                    });
+                    return record;
                 });
-                const key = recordCopy[this.recordKey];
-                recordCopy.originalKey = key;
-                if (typeof key === 'object') {
-                    recordCopy.key = JSON.stringify(key);
-                } else {
-                    recordCopy.key = key;
-                }
-            });
-            return recordsCopy;
         },
         admin() {
             return this.$store.getters.admin;
@@ -424,7 +417,7 @@ export default {
                 if (index === 'key') {
                     index = 'originalKey';
                 }
-                if (typeof value !== 'undefined') {
+                if (value != null) {
                     value = value[index];
                 } else {
                     value = record[index];
@@ -435,10 +428,7 @@ export default {
                     }
                 }
             }
-            if (typeof value === 'undefined' && typeof column.default !== 'undefined') {
-                value = column.default;
-            }
-            return value;
+            return value || column.default;
         },
         hanlePopconfirmVisibleChange(visible) {
             this.popconfirmVisible = visible && this.hasSelectedRows;
@@ -451,17 +441,14 @@ export default {
         },
         init() {
             if (this.initialDataUrls.length) {
-                const promises = [];
-                for (const url of this.initialDataUrls) {
-                    promises.push(this.$client.get(url));
-                }
+                const promises = this.initialDataUrls.map(url => this.$http.get(url));
                 Promise.all(promises)
-                    .then(responseList => {
-                        this.initialized = true;
-                        this.$emit('afterDataInitialized', responseList);
-                    })
                     .catch(() => {
                         setTimeout(() => this.init(), 3000);
+                    })
+                    .then(responseList => {
+                        this.initialized = true;
+                        this.$emit('onDateInited', responseList);
                     });
             } else {
                 this.initialized = true;
@@ -471,7 +458,7 @@ export default {
             if (typeof object === 'number' || typeof object === 'boolean') {
                 return object;
             } else if (object instanceof Array) {
-                if (object.length > 0) {
+                if (object.length) {
                     return object;
                 }
             } else if (object) {
@@ -479,14 +466,12 @@ export default {
             }
         },
         getTimeIfNotNull(object) {
-            if (object) {
-                return object.format();
-            }
+            return object?.format();
         },
         search() {
             this.loading = true;
             this.selectedRowKeys.splice(0, this.selectedRowKeys.length);
-            this.$client.get(this.queryUrl, {params: this.searchParams})
+            this.$http.get(this.queryUrl, {params: this.searchParams})
                 .then(response => {
                     if (response.status === 204) {
                         this.records = [];
@@ -504,7 +489,7 @@ export default {
                     }
                 })
                 .catch(error => {
-                    if (error.response && error.response.status === 404) {
+                    if (error.response?.status === 404) {
                         this.records = [];
                         this.total = 0;
                     }
@@ -519,7 +504,7 @@ export default {
             if (this.url) {
                 this.loading = true;
                 const params = this.$rq.getQueryParams(this.queryKey, deleteKeys);
-                return this.$client.delete(`${this.url}${params}`)
+                return this.$http.delete(`${this.url}${params}`)
                     .then(() => {
                         this.$message.success(this.$t('deletedSuccessfully'));
                         if (this.deletion.refresh) {
@@ -530,16 +515,14 @@ export default {
                                 if (this.recordKey === 'key') {
                                     itemKey = JSONBig.stringify(item.key);
                                 } else {
-                                    if (item.key._isBigNumber) {
-                                        itemKey = item.key.toString();
-                                    } else {
-                                        itemKey = item.key;
-                                    }
+                                    itemKey = item.key._isBigNumber
+                                        ? item.key.toString()
+                                        : item.key;
                                 }
                                 return !deleteKeys.includes(itemKey);
                             });
                         }
-                        this.$emit('afterDataDeleted', deleteKeys);
+                        this.$emit('onDataDeleted', deleteKeys);
                     })
                     .catch(error => {
                         this.$error(this.$t('deleteFailed'), error);

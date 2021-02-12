@@ -46,8 +46,8 @@ export default {
                     placeholder: this.$t('inviteeId')
                 },
                 {
+                    id: 'status',
                     type: 'SELECT',
-                    decorator: this.$validator.create('status'),
                     options: {
                         values: [
                             {
@@ -103,30 +103,35 @@ export default {
                     size: 'L',
                     fields: [
                         {
+                            id: 'id',
                             type: 'INPUT',
                             label: this.$t('groupInvitationId'),
-                            decorator: this.$validator.create('id', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
+                            id: 'inviterId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('inviterId', {required: true, onlyNumber: true})
+                            rules: this.$validator.create({required: true, onlyNumber: true})
                         },
                         {
+                            id: 'inviteeId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('inviteeId', {required: true, onlyNumber: true})
+                            rules: this.$validator.create({required: true, onlyNumber: true})
                         },
                         {
+                            id: 'groupId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('groupId', {required: true, onlyNumber: true})
+                            rules: this.$validator.create({required: true, onlyNumber: true})
                         },
                         {
+                            id: 'content',
                             type: 'TEXTAREA',
                             rows: 4,
-                            decorator: this.$validator.create('content', {required: true})
+                            rules: this.$validator.create({required: true})
                         },
                         {
+                            id: 'status',
                             type: 'SELECT',
-                            decorator: this.$validator.create('status'),
                             options: {
                                 values: [
                                     {
@@ -160,16 +165,16 @@ export default {
                             }
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('creationDate')
+                            id: 'creationDate',
+                            type: 'DATE'
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('responseDate')
+                            id: 'responseDate',
+                            type: 'DATE'
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('expirationDate')
+                            id: 'expirationDate',
+                            type: 'DATE'
                         }
                     ]
                 },
@@ -178,25 +183,28 @@ export default {
                     type: 'UPDATE',
                     fields: [
                         {
+                            id: 'inviterId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('inviterId', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
+                            id: 'inviteeId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('inviteeId', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
+                            id: 'groupId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('groupId', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
+                            id: 'content',
                             type: 'TEXTAREA',
-                            rows: 4,
-                            decorator: this.$validator.create('content')
+                            rows: 4
                         },
                         {
+                            id: 'status',
                             type: 'SELECT',
-                            decorator: this.$validator.create('status'),
                             options: {
                                 values: [
                                     {
@@ -230,16 +238,16 @@ export default {
                             }
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('creationDate')
+                            id: 'creationDate',
+                            type: 'DATE'
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('responseDate')
+                            id: 'responseDate',
+                            type: 'DATE'
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('expirationDate')
+                            id: 'expirationDate',
+                            type: 'DATE'
                         }
                     ]
                 }]
@@ -287,7 +295,8 @@ export default {
                         key: 'operation',
                         width: '10%'
                     }
-                ]}
+                ]
+            }
         };
     }
 };

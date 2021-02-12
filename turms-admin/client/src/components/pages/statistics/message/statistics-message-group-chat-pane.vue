@@ -12,6 +12,7 @@
 
 <script>
 import StatisticsTemplate from '../common/statistics-template';
+
 export default {
     name: 'statistics-message-group-chat-pane',
     components: {StatisticsTemplate},

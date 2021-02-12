@@ -11,7 +11,7 @@
             <div class="statistics-number-collapse__header">
                 <div>
                     <a-select
-                        v-model="dateMode"
+                        v-model:value="dateMode"
                         class="statistics-number-collapse__header__select"
                     >
                         <a-select-option value="day">
@@ -22,7 +22,7 @@
                         </a-select-option>
                     </a-select>
                     <date-range-picker
-                        v-model="dateRange"
+                        v-model:value="dateRange"
                         class="search-filter"
                         :is-month-mode="dateMode === 'month'"
                         :use-default-date="true"
@@ -43,17 +43,16 @@
                         @click="exportSvg"
                     >
                         {{ dataFormat === 'png' ? $t('exportPng') : $t('exportSvg') }}
-                        <a-menu
-                            slot="overlay"
-                            @click="changeDataFormat"
-                        >
-                            <a-menu-item key="png">
-                                {{ $t('exportPng') }}
-                            </a-menu-item>
-                            <a-menu-item key="svg">
-                                {{ $t('exportSvg') }}
-                            </a-menu-item>
-                        </a-menu>
+                        <template #overlay>
+                            <a-menu @click="changeDataFormat">
+                                <a-menu-item key="png">
+                                    {{ $t('exportPng') }}
+                                </a-menu-item>
+                                <a-menu-item key="svg">
+                                    {{ $t('exportSvg') }}
+                                </a-menu-item>
+                            </a-menu>
+                        </template>
                     </a-dropdown-button>
                     <export-button
                         class="statistics-number-collapse__header__item"
@@ -99,9 +98,7 @@ export default {
         },
         params: {
             type: Object,
-            default: () => {
-                return {};
-            }
+            default: () => ({})
         },
         worksheetName: {
             type: String,
@@ -168,10 +165,11 @@ export default {
             this.dataFormat = item.key;
         },
         exportSvg() {
+            const svg = this.$refs.chart.$el.querySelector('svg');
             if (this.dataFormat === 'png') {
-                saveSvgAsPng(this.$refs.chart.$el.querySelector('svg'), `${this.fileName}.png`);
+                saveSvgAsPng(svg, `${this.fileName}.png`);
             } else {
-                saveSvg(this.$refs.chart.$el.querySelector('svg'), `${this.fileName}.svg`);
+                saveSvg(svg, `${this.fileName}.svg`);
             }
         },
         refresh() {
@@ -189,7 +187,7 @@ export default {
                     endDate.utcOffset(-new Date().getTimezoneOffset()).format());
                 params.divideBy = this.dateMode.toUpperCase();
                 Object.assign(params, this.params || {});
-                this.$client.get(this.url, {params})
+                this.$http.get(this.url, {params})
                     .then(response => {
                         this.records = this.transformDate(response.data.data);
                         const headers = [];
@@ -199,7 +197,7 @@ export default {
                             key: 'date',
                             width
                         });
-                        Object.keys(this.records[0]).forEach(value =>  {
+                        Object.keys(this.records[0]).forEach(value => {
                             if (value !== 'date') {
                                 headers.push({
                                     header: this.$t(`${value}Number`),
@@ -243,19 +241,15 @@ export default {
                     result[record.date] = Object.assign(result[record.date] || {}, source);
                 });
             });
-            const results = [];
-            const entries = Object.entries(result);
-            if (entries.length) {
-                for (const entry of entries) {
+            return Object.entries(result)
+                .map(([date, value]) => {
                     const record = {};
-                    record.date = entry[0];
-                    for (const subEntry of Object.entries(entry[1])) {
-                        record[subEntry[0].replace(/Records$/, '')] = subEntry[1];
+                    record.date = date;
+                    for (const [itemKey, itemValue] of Object.entries(value)) {
+                        record[itemKey.replace(/Records$/, '')] = itemValue;
                     }
-                    results.push(record);
-                }
-                return results;
-            }
+                    return record;
+                });
         }
     }
 };

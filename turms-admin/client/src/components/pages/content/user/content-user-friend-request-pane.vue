@@ -96,41 +96,45 @@ export default {
                     size: 'L',
                     fields: [
                         {
+                            id: 'id',
                             type: 'INPUT',
                             label: this.$t('friendRequestId'),
-                            decorator: this.$validator.create('id', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
+                            id: 'requesterId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('requesterId', {required: true, onlyNumber: true})
+                            rules: this.$validator.create({required: true, onlyNumber: true})
                         },
                         {
+                            id: 'recipientId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('recipientId', {required: true, onlyNumber: true})
+                            rules: this.$validator.create({required: true, onlyNumber: true})
                         },
                         {
+                            id: 'content',
                             type: 'TEXTAREA',
                             rows: 4,
-                            decorator: this.$validator.create('content', {required: true})
+                            rules: this.$validator.create({required: true})
                         },
                         {
+                            id: 'reason',
                             type: 'TEXTAREA',
                             label: this.$t('requestReason'),
                             placeholder: this.$t('requestReason'),
-                            rows: 4,
-                            decorator: this.$validator.create('reason')
+                            rows: 4
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('creationDate')
+                            id: 'creationDate',
+                            type: 'DATE'
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('responseDate')
+                            id: 'responseDate',
+                            type: 'DATE'
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('expirationDate')
+                            id: 'expirationDate',
+                            type: 'DATE'
                         }
                     ]
                 },
@@ -140,36 +144,38 @@ export default {
                     size: 'L',
                     fields: [
                         {
+                            id: 'requesterId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('requesterId', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
+                            id: 'recipientId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('recipientId', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
+                            id: 'content',
                             type: 'TEXTAREA',
-                            rows: 4,
-                            decorator: this.$validator.create('content')
+                            rows: 4
                         },
                         {
+                            id: 'reason',
                             type: 'TEXTAREA',
                             label: this.$t('requestReason'),
                             placeholder: this.$t('requestReason'),
-                            rows: 4,
-                            decorator: this.$validator.create('reason')
+                            rows: 4
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('creationDate')
+                            id: 'creationDate',
+                            type: 'DATE'
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('responseDate')
+                            id: 'responseDate',
+                            type: 'DATE'
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('expirationDate')
+                            id: 'expirationDate',
+                            type: 'DATE'
                         }
                     ]
                 }]
@@ -219,7 +225,8 @@ export default {
                         key: 'operation',
                         width: '10%'
                     }
-                ]}
+                ]
+            }
         };
     }
 };

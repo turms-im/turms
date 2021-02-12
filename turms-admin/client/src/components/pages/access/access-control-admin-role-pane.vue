@@ -6,14 +6,16 @@
         :action-groups="actionGroups"
         :table="table"
         :transform="transform"
-        @afterDataInitialized="afterDataInitialized"
+        @onDateInited="onDateInited"
     />
 </template>
 
 <script>
 import ContentTemplate from '../content/template/content-template';
-let allPermissionsTree;
-let allPermissionsArray;
+
+let ALL_PERMISSIONS_TREE;
+let ALL_PERMISSIONS_ARRAY;
+
 export default {
     name: 'access-control-admin-role-pane',
     components: {
@@ -30,25 +32,29 @@ export default {
                     type: 'CREATE',
                     fields: [
                         {
+                            id: 'id',
                             type: 'INPUT',
                             label: this.$t('roleId'),
-                            decorator: this.$validator.create('id', {required: true, onlyNumber: true})
+                            rules: this.$validator.create({required: true, onlyNumber: true})
                         },
                         {
+                            id: 'name',
                             type: 'INPUT',
-                            decorator: this.$validator.create('name', {required: true, noBlank: true, maxNumber: 32})
+                            rules: this.$validator.create({required: true, noBlank: true, maxNumber: 32})
                         },
                         {
+                            id: 'rank',
                             type: 'INPUT',
-                            decorator: this.$validator.create('rank', {required: true, onlyNumber: true})
+                            rules: this.$validator.create({required: true, onlyNumber: true})
                         },
                         {
+                            id: 'permissions',
                             type: 'TREE',
                             label: this.$t('permission'),
                             checkedKeys: [],
                             data: {},
                             transform: this.transformParams,
-                            decorator: this.$validator.create('permissions', {required: true})
+                            rules: this.$validator.create({required: true})
                         }
                     ]
                 },
@@ -57,20 +63,22 @@ export default {
                     type: 'UPDATE',
                     fields: [
                         {
+                            id: 'name',
                             type: 'INPUT',
-                            decorator: this.$validator.create('name', {noBlank: true, maxNumber: 32})
+                            rules: this.$validator.create({noBlank: true, maxNumber: 32})
                         },
                         {
+                            id: 'rank',
                             type: 'INPUT',
-                            decorator: this.$validator.create('rank', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
+                            id: 'permissions',
                             type: 'TREE',
                             label: this.$t('permission'),
                             checkedKeys: [],
                             data: {},
-                            transform: this.transformParams,
-                            decorator: this.$validator.create('permissions')
+                            transform: this.transformParams
                         }
                     ]
                 }]
@@ -100,11 +108,19 @@ export default {
                         key: 'operation',
                         width: '10%'
                     }
-                ]}
+                ]
+            }
         };
     },
+    mounted() {
+        if (!ALL_PERMISSIONS_TREE) {
+            const permissions = JSON.parse(JSON.stringify(this.$rs.permissions));
+            ALL_PERMISSIONS_TREE = this.parseTree(permissions);
+            ALL_PERMISSIONS_ARRAY = this.parseArray(permissions);
+        }
+    },
     methods: {
-        afterDataInitialized(responseList) {
+        onDateInited(responseList) {
             const data = responseList[0].data.data.map(item => {
                 item.label = `${item.name}(${item.id})`;
                 return item;
@@ -112,14 +128,9 @@ export default {
             this.$ui.fillSelectsWithValues(['roleId', 'roleIds'], data, this.actionGroups);
         },
         transform(data) {
-            if (!allPermissionsTree) {
-                const permissions = JSON.parse(JSON.stringify(this.$rs.permissions));
-                allPermissionsTree = this.parseTree(permissions);
-                allPermissionsArray = this.parseArray(permissions);
-            }
-            this.fillTreeData(allPermissionsTree);
+            this.fillTreeData(ALL_PERMISSIONS_TREE);
             for (const record of data.records) {
-                const currentPermissions = JSON.parse(JSON.stringify(allPermissionsTree));
+                const currentPermissions = JSON.parse(JSON.stringify(ALL_PERMISSIONS_TREE));
                 for (const permission of record.permissions) {
                     const foundRecord = this.deepSearch(currentPermissions, 'key', (key, value) => value === permission);
                     if (foundRecord) {
@@ -130,74 +141,66 @@ export default {
                 }
                 record.permissions = currentPermissions;
             }
-            data.records.permissions = allPermissionsTree;
+            data.records.permissions = ALL_PERMISSIONS_TREE;
             return data;
         },
         fillTreeData(treeData) {
             for (const actions of this.actionGroups) {
                 for (const action of actions) {
                     for (const field of action.fields) {
-                        if (field.type.toUpperCase() === 'TREE' && field.decorator[0] === 'permissions') {
+                        if (field.type.toUpperCase() === 'TREE' && field.id === 'permissions') {
                             field.data = treeData;
                         }
                     }
                 }
             }
         },
-        deepSearch (object, key, predicate) {
-            if (Object.hasOwnProperty.call(object, key) && predicate(key, object[key]) === true) {
+        deepSearch(object, key, predicate) {
+            if (Object.hasOwnProperty.call(object, key) && predicate(key, object[key])) {
                 return object;
             }
-            for (let i = 0; i < Object.keys(object).length; i++) {
-                const nextObject = object[Object.keys(object)[i]];
-                if (nextObject && typeof nextObject === 'object') {
-                    const o = this.deepSearch(nextObject, key, predicate);
-                    if (o != null) return o;
+            for (const val of Object.values(object)) {
+                if (typeof val === 'object') {
+                    const o = this.deepSearch(val, key, predicate);
+                    if (o != null) {
+                        return o;
+                    }
                 }
             }
-            return null;
         },
         transformParams(checkedKeys) {
-            return checkedKeys.filter(key => allPermissionsArray.includes(key));
+            return checkedKeys.filter(key => ALL_PERMISSIONS_ARRAY.includes(key));
         },
         parseTree(permissions) {
             if (permissions instanceof Array) {
-                const records = [];
-                for (const permission of permissions) {
-                    records.push({
+                return permissions
+                    .map(permission => ({
                         scopedSlots: {
                             icon: 'close'
                         },
                         selectable: false,
                         title: permission,
-                        key: permission});
-                }
-                return records;
+                        key: permission
+                    }));
             } else {
-                const records = [];
-                for (const entry of Object.entries(permissions)) {
-                    records.push({
+                return Object.entries(permissions)
+                    .map(([key, value]) => ({
                         scopedSlots: {
                             icon: 'bars'
                         },
                         selectable: false,
-                        title: entry[0],
-                        key: entry[0],
-                        children: this.parseTree(entry[1])
-                    });
-                }
-                return records;
+                        title: key,
+                        key,
+                        children: this.parseTree(value)
+                    }));
             }
         },
         parseArray(permissions) {
             if (permissions instanceof Array) {
                 return permissions;
             } else {
-                const records = [];
-                for (const entry of Object.entries(permissions)) {
-                    records.push(...this.parseArray(entry[1]));
-                }
-                return records;
+                return Object.entries(permissions)
+                    .flatMap(entry => this.parseArray(entry[1]));
             }
         }
     }

@@ -2,28 +2,41 @@
   "name": "turms-admin",
   "version": "0.10.0-SNAPSHOT",
   "description": "",
+  "repository": {
+    "type": ""
+  },
+  "license": "",
   "scripts": {
-    "serve": "vue-cli-service serve --port 7510",
     "build": "cross-env NODE_ENV=production vue-cli-service build",
-    "lint": "npm run eslint && npm run stylelint",
     "delete": "pm2 delete server/ecosystem.config.js",
     "eslint": "eslint --fix --ext .js,.vue client server",
     "eslint:print": "eslint --print-config .eslintrc.js",
     "inspect": "vue-cli-service inspect",
+    "lint": "npm run eslint && npm run stylelint",
     "precommit": "npm run lint",
     "quickstart": "npm install && npm run build && npm run start",
     "reload": "pm2 reload server/ecosystem.config.js",
     "report": "vue-cli-service build --report",
     "restart": "pm2 restart server/ecosystem.config.js",
+    "serve": "vue-cli-service serve --port 7510",
     "start": "pm2 start server/ecosystem.config.js --env production",
     "stop": "pm2 stop server/ecosystem.config.js",
     "stylelint": "stylelint --fix client/**/*.{vue,html,css,sss,less,scss,sass}",
     "test": "jest"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run precommit"
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ],
   "dependencies": {
     "@antv/g2": "^3.5.17",
-    "ant-design-vue": "^1.7.2",
-    "axios": "^0.21.0",
+    "ant-design-vue": "^2.0.0",
+    "axios": "^0.21.1",
     "compression": "^1.7.4",
     "connect-history-api-fallback": "^1.6.0",
     "deep-diff": "^1.0.2",
@@ -32,66 +45,54 @@
     "file-saver": "^2.0.5",
     "formatcoords": "^1.1.3",
     "json-bigint": "^1.0.0",
-    "markdown-it": "^12.0.2",
+    "markdown-it": "^12.0.4",
     "moment": "^2.29.1",
     "save-svg-as-png": "^1.4.17",
-    "vue": "^2.6.12",
-    "vue-i18n": "^8.22.2",
-    "vue-router": "^3.4.9",
-    "vuex": "^3.6.0"
+    "vue": "^3.0.5",
+    "vue-i18n": "^9.0.0-rc.6",
+    "vue-router": "^4.0.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9",
-    "@babel/preset-env": "^7.12.7",
-    "@vue/cli": "^4.5.9",
-    "@vue/cli-plugin-babel": "^4.5.9",
-    "@vue/cli-plugin-eslint": "^4.5.9",
-    "@vue/cli-plugin-router": "^4.5.9",
-    "@vue/cli-plugin-vuex": "^4.5.9",
-    "@vue/cli-service": "^4.5.9",
+    "@babel/core": "^7.12.13",
+    "@babel/preset-env": "^7.12.13",
+    "@vue/cli": "^4.5.11",
+    "@vue/cli-plugin-babel": "^4.5.11",
+    "@vue/cli-plugin-eslint": "^4.5.11",
+    "@vue/cli-plugin-router": "^4.5.11",
+    "@vue/cli-service": "^4.5.11",
+    "@vue/compiler-sfc": "^3.0.5",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.2",
     "babel-plugin-import": "^1.13.3",
     "babel-plugin-transform-regexp-constructors": "^0.4.3",
-    "core-js": "^3.8.0",
-    "cross-env": "^7.0.2",
-    "eslint": "^7.14.0",
+    "core-js": "^3.8.3",
+    "cross-env": "^7.0.3",
+    "eslint": "^7.19.0",
     "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-vue": "^7.1.0",
-    "html-webpack-plugin": "^4.5.0",
-    "husky": "^4.3.0",
+    "eslint-plugin-vue": "^7.5.0",
+    "html-webpack-plugin": "^4.5.1",
+    "husky": "^4.3.8",
     "jest": "^26.6.3",
-    "lint-staged": "^10.5.2",
+    "less": "^4.1.1",
+    "less-loader": "^7.3.0",
+    "lint-staged": "^10.5.4",
     "node-sass": "^5.0.0",
-    "pm2": "^4.5.0",
-    "sass-loader": "^10.1.0",
-    "stylelint": "^13.8.0",
+    "pm2": "^4.5.4",
+    "sass-loader": "^10.1.1",
+    "stylelint": "^13.9.0",
     "stylelint-config-standard": "^20.0.0",
     "stylelint-webpack-plugin": "^2.1.1",
-    "terser-webpack-plugin": "^5.0.3",
+    "terser-webpack-plugin": "^4.2.3",
     "typescript-parser": "^2.6.1",
+    "vue-loader": "^16.1.2",
     "vue-style-loader": "^4.1.2",
-    "vue-template-compiler": "^2.6.12",
-    "webpack": "^4.44.2",
-    "webpack-bundle-analyzer": "^4.3.0",
-    "webpack-cli": "^4.3.0"
+    "webpack": "^4.46.0",
+    "webpack-bundle-analyzer": "^4.4.0",
+    "webpack-cli": "^4.5.0"
   },
   "postcss": {
     "plugins": {
       "autoprefixer": {}
     }
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions"
-  ],
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run precommit"
-    }
-  },
-  "license": "",
-  "repository": {
-    "type": ""
   }
 }

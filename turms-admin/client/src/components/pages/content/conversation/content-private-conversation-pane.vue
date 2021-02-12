@@ -44,8 +44,8 @@ export default {
                     type: 'UPDATE',
                     fields: [
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('readDate')
+                            id: 'readDate',
+                            type: 'DATE'
                         }
                     ]
                 }]
@@ -70,7 +70,8 @@ export default {
                         key: 'operation',
                         width: '10%'
                     }
-                ]},
+                ]
+            },
             transform: (data) => {
                 const conversations = data.privateConversations || [];
                 return {

@@ -8,7 +8,6 @@
     />
     <a-input
         v-else
-        v-decorator="decorator"
         :placeholder="placeholder"
         :value="computedValue"
         @change="onChange"
@@ -16,10 +15,32 @@
 </template>
 
 <script>
-const nonNumberRegx = /[^0-9]/g;
-const onlyNumberAndComma = /[^0-9,]/g;
-const nonSpecialCharsRegx = /[^0-9]/g;
-const nonSpaceRegx = /\s/g;
+const NON_NUMBER = /[^0-9]/g;
+const ONLY_NUMBER_AND_COMMA = /[^0-9,]/g;
+const NON_SPECIAL_CHARS = /[^0-9]/g;
+const NON_SPACE = /\s/g;
+
+const RULE_MAP = {
+    onlyNumber: (value) => {
+        return value
+            .replace(NON_NUMBER, '')
+            .substring(0, 19);
+    },
+    onlyNumberAndComma: (value) => {
+        return value.replace(ONLY_NUMBER_AND_COMMA, '');
+    },
+    nonSpecialChars: (value) => {
+        return value.replace(NON_SPECIAL_CHARS, '');
+    },
+    nonSpace: (value) => {
+        return value.replace(NON_SPACE, '');
+    },
+    maxLength: (value, maxLength) => {
+        return value.substring(0, maxLength);
+    }
+};
+
+const RULE_NAMES = Object.keys(RULE_MAP);
 
 export default {
     name: 'custom-input',
@@ -56,7 +77,7 @@ export default {
             type: Number,
             default: 1
         },
-        decorator: {
+        rules: {
             type: Array,
             default: () => []
         },
@@ -79,30 +100,22 @@ export default {
     },
     computed: {
         computedValue() {
-            return this.value ? this.value.toString() : null;
+            return this.value?.toString();
         }
     },
     methods: {
         onChange(e) {
-            let { value } = e.target;
-            if (this.onlyNumber) {
-                value = value.replace(nonNumberRegx, '');
-                value = value.substring(0, 19);
-            }
-            if (this.onlyNumberAndComma) {
-                value = value.replace(onlyNumberAndComma, '');
-            }
-            if (this.nonSpecialChars) {
-                value = value.replace(nonSpecialCharsRegx, '');
-            }
-            if (this.nonSpace) {
-                value = value.replace(nonSpaceRegx, '');
-            }
-            if (this.maxLength) {
-                value = value.substring(0, this.maxLength);
+            let {value} = e.target;
+            for (const name of RULE_NAMES) {
+                if (this[name]) {
+                    const transformer = RULE_MAP[name];
+                    if (transformer) {
+                        value = transformer(value, this.maxLength);
+                    }
+                }
             }
             if (this.computedValue !== value) {
-                this.$emit('input', value);
+                this.$emit('update:value', value);
             }
         }
     }

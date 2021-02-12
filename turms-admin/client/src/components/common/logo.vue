@@ -9,11 +9,11 @@ export default {
 </script>
 
 <style scoped>
-    .logo {
-        height: 36px;
-        background-image: url("../../assets/img/logo.svg");
-        background-repeat: no-repeat;
-        background-position: center;
-        margin: 16px;
-    }
+.logo {
+    height: 36px;
+    background-image: url("../../assets/img/logo.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    margin: 16px;
+}
 </style>

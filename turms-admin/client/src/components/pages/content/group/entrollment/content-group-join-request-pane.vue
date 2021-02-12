@@ -106,25 +106,29 @@ export default {
                     type: 'CREATE',
                     fields: [
                         {
+                            id: 'requesterId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('requesterId', {required: true, onlyNumber: true})
+                            rules: this.$validator.create({required: true, onlyNumber: true})
                         },
                         {
+                            id: 'responderId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('responderId', {required: true, onlyNumber: true})
+                            rules: this.$validator.create({required: true, onlyNumber: true})
                         },
                         {
+                            id: 'groupId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('groupId', {required: true, onlyNumber: true})
+                            rules: this.$validator.create({required: true, onlyNumber: true})
                         },
                         {
+                            id: 'content',
                             type: 'TEXTAREA',
                             rows: 4,
-                            decorator: this.$validator.create('content', {required: true})
+                            rules: this.$validator.create({required: true})
                         },
                         {
+                            id: 'status',
                             type: 'SELECT',
-                            decorator: this.$validator.create('status'),
                             options: {
                                 values: [
                                     {
@@ -158,16 +162,16 @@ export default {
                             }
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('creationDate')
+                            id: 'creationDate',
+                            type: 'DATE'
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('responseDate')
+                            id: 'responseDate',
+                            type: 'DATE'
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('expirationDate')
+                            id: 'expirationDate',
+                            type: 'DATE'
                         }
                     ]
                 },
@@ -176,25 +180,28 @@ export default {
                     type: 'UPDATE',
                     fields: [
                         {
+                            id: 'requesterId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('requesterId', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
+                            id: 'responderId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('responderId', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
+                            id: 'groupId',
                             type: 'INPUT',
-                            decorator: this.$validator.create('groupId', {onlyNumber: true})
+                            rules: this.$validator.create({onlyNumber: true})
                         },
                         {
+                            id: 'content',
                             type: 'TEXTAREA',
-                            rows: 4,
-                            decorator: this.$validator.create('content')
+                            rows: 4
                         },
                         {
+                            id: 'status',
                             type: 'SELECT',
-                            decorator: this.$validator.create('status'),
                             options: {
                                 values: [
                                     {
@@ -228,16 +235,16 @@ export default {
                             }
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('creationDate')
+                            id: 'creationDate',
+                            type: 'DATE'
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('responseDate')
+                            id: 'responseDate',
+                            type: 'DATE'
                         },
                         {
-                            type: 'DATE',
-                            decorator: this.$validator.create('expirationDate')
+                            id: 'expirationDate',
+                            type: 'DATE'
                         }
                     ]
                 }]
@@ -285,7 +292,8 @@ export default {
                         key: 'operation',
                         width: '10%'
                     }
-                ]}
+                ]
+            }
         };
     }
 };

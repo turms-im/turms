@@ -202,6 +202,7 @@ public class SharedPropertyService implements ClusterService {
                 .commonProperties(commonProperties)
                 .gatewayProperties(gatewayProperties)
                 .serviceProperties(serviceProperties)
+                .turmsProperties(turmsProperties)
                 .build();
     }
 }

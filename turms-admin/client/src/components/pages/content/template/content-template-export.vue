@@ -37,7 +37,8 @@ export default {
         },
         transform: {
             type: Function,
-            required: false
+            required: false,
+            default: null
         }
     },
     data() {
@@ -49,34 +50,22 @@ export default {
     },
     computed: {
         searchParams() {
-            const searchParams = JSONBig.parse(JSONBig.stringify(this.params));
-            searchParams.page = 0;
-            searchParams.size = 1000;
-            return searchParams;
+            const params = JSONBig.parse(JSONBig.stringify(this.params));
+            return Object.assign(params, {
+                page: 0,
+                size: 1000
+            });
         },
         headers() {
-            const headers = [];
-            const width = this.$rs.excel.width;
-            for (const entry of Object.entries(this.records[0])) {
-                const key = entry[0];
-                headers.push({
+            return Object.keys(this.records[0])
+                .map(key => ({
                     header: key,
                     key,
-                    width: width
-                });
-            }
-            return headers;
+                    width: this.$rs.excel.width
+                }));
         },
         rows() {
-            const rows = [];
-            for (const record of this.records) {
-                const row = {};
-                for (const entry of Object.entries(record)) {
-                    row[entry[0]] = entry[1];
-                }
-                rows.push(row);
-            }
-            return rows;
+            return this.records;
         }
     },
     methods: {
@@ -88,7 +77,7 @@ export default {
             const hide = this.$message.loading(this.$t('exportingData'), 0);
             this.fetchData()
                 .then(() => {
-                    if (this.records.length === 0) {
+                    if (!this.records.length) {
                         this.$message.info(this.$t('noRecordsToExport'));
                     } else {
                         return this.exportData();
@@ -101,8 +90,8 @@ export default {
                         this.$message.success(this.$t('exportLimitedRecordsSuccessfully', {number: this.records.length}));
                     }
                 })
-                .catch(() => {
-                    this.$message.error(this.$t('failedToExport'));
+                .catch(e => {
+                    this.$message.error(this.$t('failedToExport', e));
                 })
                 .finally(() => {
                     setTimeout(hide);
@@ -110,7 +99,7 @@ export default {
                 });
         },
         fetchData() {
-            return this.$client.get(this.url, {params: this.searchParams})
+            return this.$http.get(this.url, {params: this.searchParams})
                 .then(response => {
                     if (response.status === 204) {
                         this.records = [];
@@ -120,6 +109,13 @@ export default {
                             ? this.transform(response.data.data)
                             : response.data.data;
                         this.records = data.records.map(record => {
+                            Object.entries(record).forEach(([key, val]) => {
+                                if (val._isBigNumber) {
+                                    record[key] = val.toFixed();
+                                } else if (val instanceof Array) {
+                                    record[key] = val.join(',');
+                                }
+                            });
                             record.key = record[this.recordKey];
                             return record;
                         });

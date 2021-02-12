@@ -1,6 +1,6 @@
 <template>
     <a-tabs
-        v-model="activeKey"
+        v-model:active-key="activeKey"
     >
         <a-tab-pane
             key="private-chat"

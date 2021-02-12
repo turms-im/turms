@@ -4,7 +4,7 @@
         default-active-key="1"
     >
         <a-collapse-panel key="1">
-            <template slot="header">
+            <template #header>
                 <div class="daily-statistics-collapse__header">
                     <span>
                         {{ title }}
@@ -37,7 +37,7 @@
                         :footer="card.footer"
                         :direction="card.direction"
                         :tooltip="card.tooltip"
-                        :style="index > 3? 'margin-top: 12px':''"
+                        :style="index > 3 ? 'margin-top: 12px' : ''"
                     />
                 </a-col>
             </a-row>
@@ -92,10 +92,9 @@ export default {
                 key: 1,
                 width: width
             });
-            for (let i = 0; i < this.cards.length; i++) {
-                const item = this.cards[i];
+            for (const [i, card] of this.cards) {
                 headers.push({
-                    header: item.title,
+                    header: card.title,
                     key: i + 2,
                     width: width
                 });
@@ -106,9 +105,8 @@ export default {
             const rows = [];
             const row = {};
             row[1] = this.$moment(this.date).format('Y-MM-DD');
-            for (let i = 0; i < this.cards.length; i++) {
-                const item = this.cards[i];
-                row[i + 2] = item.content;
+            for (const [i, card] of this.cards) {
+                row[i + 2] = card.content;
             }
             rows.push(row);
             return rows;
@@ -117,14 +115,14 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-    .daily-statistics-collapse__header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-right: 18px;
+.daily-statistics-collapse__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 18px;
 
-        &__item {
-            margin-left: 16px;
-        }
+    &__item {
+        margin-left: 16px;
     }
+}
 </style>
