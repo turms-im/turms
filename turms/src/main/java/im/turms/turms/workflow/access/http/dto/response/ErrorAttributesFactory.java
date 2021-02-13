@@ -62,7 +62,10 @@ public class ErrorAttributesFactory {
         private static SimpleErrorAttributes fromTurmsBusinessException(TurmsBusinessException exception) {
             TurmsStatusCode statusCode = exception.getCode();
             HttpStatus httpStatus = HttpStatus.valueOf(statusCode.getHttpStatusCode());
-            String reason = statusCode.getReason();
+            String reason = exception.getReason();
+            if (reason == null) {
+                reason = statusCode.getReason();
+            }
             return new SimpleErrorAttributes(httpStatus.value(), statusCode, reason);
         }
 
