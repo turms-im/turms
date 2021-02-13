@@ -68,45 +68,51 @@ export default {
         CustomInput
     },
     data() {
+        const columns = [{
+            title: this.$t('userId'),
+            dataIndex: 'userId',
+            width: '20%',
+            slots: {customRender: 'userId'}
+        },
+        {
+            title: this.$t('userStatus'),
+            dataIndex: 'userStatus',
+            width: '15%',
+            slots: {customRender: 'userStatus'}
+        },
+        {
+            title: this.$t('onlineDevice'),
+            dataIndex: 'deviceType',
+            width: '15%',
+            slots: {customRender: 'deviceType'}
+        },
+        {
+            title: this.$t('loginDateAndOnlineTime'),
+            dataIndex: 'loginDate',
+            width: '20%',
+            slots: {customRender: 'loginDate'}
+        },
+        {
+            title: this.$t('currentLocation'),
+            dataIndex: 'location',
+            width: '20%',
+            slots: {customRender: 'location'}
+        },
+        {
+            title: this.$t('operation'),
+            dataIndex: 'operation',
+            width: '10%',
+            slots: {customRender: 'operation'}
+        }];
+        columns.forEach(column => {
+            if (column.key !== 'operation' && !['TREE'].includes(String(column.type).toUpperCase())) {
+                column.sorter = (a, b) => this.$util.sort(a[column.key], b[column.key]);
+            }
+        });
         return {
             isSearchById: false,
             records: [],
-            columns: [{
-                title: this.$t('userId'),
-                dataIndex: 'userId',
-                width: '20%',
-                scopedSlots: {customRender: 'userId'}
-            },
-            {
-                title: this.$t('userStatus'),
-                dataIndex: 'userStatus',
-                width: '15%',
-                scopedSlots: {customRender: 'userStatus'}
-            },
-            {
-                title: this.$t('onlineDevice'),
-                dataIndex: 'deviceType',
-                width: '15%',
-                scopedSlots: {customRender: 'deviceType'}
-            },
-            {
-                title: this.$t('loginDateAndOnlineTime'),
-                dataIndex: 'loginDate',
-                width: '20%',
-                scopedSlots: {customRender: 'loginDate'}
-            },
-            {
-                title: this.$t('currentLocation'),
-                dataIndex: 'location',
-                width: '20%',
-                scopedSlots: {customRender: 'location'}
-            },
-            {
-                title: this.$t('operation'),
-                dataIndex: 'operation',
-                width: '10%',
-                scopedSlots: {customRender: 'operation'}
-            }],
+            columns,
             ids: '',
             loading: false,
             selectedRowKeys: [],
@@ -127,7 +133,6 @@ export default {
     methods: {
         search() {
             this.loading = true;
-            this.selectedRowKeys.splice(0, this.selectedRowKeys.length);
             const userIds = this.ids
                 .split(',')
                 .filter(value => !isNaN(parseInt(value)))
@@ -171,11 +176,16 @@ export default {
                 .catch(error => {
                     if (error.response?.status === 404) {
                         this.records = [];
-                        this.total = 0;
                     }
                     this.$error(this.$t('updateFailed'), error);
                 })
-                .finally(() => this.loading = false);
+                .finally(() => {
+                    this.selectedRowKeys = this.selectedRowKeys
+                        .filter(key => this.records.some(record => record.rowKey === key));
+                    this.selectedRows = this.selectedRows
+                        .filter(row => this.records.some(record => record.rowKey === row.rowKey));
+                    this.loading = false;
+                });
         },
         setSelectedDevicesOffline() {
             if (!this.selectedRows.length) {

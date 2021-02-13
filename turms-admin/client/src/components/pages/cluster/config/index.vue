@@ -5,7 +5,7 @@
         :spinning="initialized && loading"
     >
         <div
-            class="cluster-management-tabs"
+            class="cluster-config"
         >
             <a-tabs>
                 <a-tab-pane
@@ -16,7 +16,7 @@
                     <cluster-config-pane :property-groups="currentConfig[title.key]" />
                 </a-tab-pane>
             </a-tabs>
-            <div class="cluster-management-tabs__action-group">
+            <div class="cluster-config__action-group">
                 <a-popconfirm
                     :title="$t('confirmRefresh')"
                     :visible="!!isRefreshPopVisible"
@@ -25,7 +25,7 @@
                 >
                     <a-button
                         type="primary"
-                        class="cluster-management-tabs__refresh"
+                        class="cluster-config__refresh"
                     >
                         {{ $t('refresh') }}
                     </a-button>
@@ -35,7 +35,7 @@
                     @confirm="requestResetToDefault"
                 >
                     <div
-                        class="cluster-management-tabs__action-group__item"
+                        class="cluster-config__action-group__item"
                     >
                         <a-button
                             type="danger"
@@ -51,7 +51,7 @@
                     @visibleChange="onRemoveChangesPopVisibleChanged"
                 >
                     <div
-                        class="cluster-management-tabs__action-group__item"
+                        class="cluster-config__action-group__item"
                     >
                         <a-button
                             :disabled="!changedNumber"
@@ -67,7 +67,7 @@
                     @visibleChange="onApplyChangesPopVisibleChanged"
                 >
                     <div
-                        class="cluster-management-tabs__action-group__item"
+                        class="cluster-config__action-group__item"
                     >
                         <a-button
                             type="primary"
@@ -88,7 +88,7 @@ import ClusterConfigPane from './cluster-config-pane';
 import Skeleton from '../../../common/skeleton';
 
 export default {
-    name: 'cluster-management-tabs',
+    name: 'cluster-config',
     components: {
         ClusterConfigPane,
         Skeleton
@@ -143,16 +143,12 @@ export default {
     },
     methods: {
         updateDiff() {
-            const differences = diff(this.currentConfig, this.defaultConfig) || [];
-            const diffs = differences.filter(difference => difference.path[difference.path.length - 1] === 'value');
+            const diffs = (diff(this.currentConfig, this.defaultConfig) || [])
+                .filter(difference => difference.path[difference.path.length - 1] === 'value');
             for (const difference of diffs) {
-                let config = this.currentConfig;
-                for (const currentPath of difference.path) {
-                    if (currentPath !== 'value') {
-                        config = config[currentPath];
-                    }
-                }
-                config.defaultValue = difference.rhs;
+                const paths = difference.path;
+                const targetPaths = paths.slice(0, paths.length - 1).concat('defaultValue');
+                this.$_.set(this.currentConfig, targetPaths, difference.rhs);
             }
             this.changedNumber = diffs?.length || 0;
         },
@@ -204,20 +200,9 @@ export default {
                 .filter(difference => difference.path[difference.path.length - 1] === 'value');
             const config = {};
             for (const difference of diffs) {
-                let targetIndex = config;
-                let valueIndex = this.currentConfig;
-                for (let i = 0; i < difference.path.length - 1; i++) {
-                    const currentPath = difference.path[i];
-                    if (!targetIndex[currentPath]) {
-                        targetIndex[currentPath] = {};
-                    }
-                    if (i === difference.path.length - 2) {
-                        targetIndex[currentPath] = valueIndex[currentPath].value;
-                    } else {
-                        targetIndex = targetIndex[currentPath];
-                        valueIndex = valueIndex[currentPath];
-                    }
-                }
+                const paths = difference.path;
+                const value = this.$_.get(this.currentConfig, paths);
+                this.$_.set(config, paths.slice(0, paths.length - 1), value);
             }
             return this.$http.put('/cluster/config', config)
                 .then(() => {
@@ -244,7 +229,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.cluster-management-tabs {
+.cluster-config {
     display: flex;
     flex-direction: column;
 

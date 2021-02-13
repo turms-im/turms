@@ -20,12 +20,12 @@ export default class RequestUtil {
     }
 
     static getQueryParams(queryKey, targetKeys) {
+        targetKeys = targetKeys.map(key => JSONBig.parse(key));
         let params = '?';
         const isCompositeKey = queryKey.isCompositeKey || queryKey === 'keys';
         if (isCompositeKey) {
             const keyName = queryKey.name || queryKey;
             targetKeys.forEach((key, index) => {
-                key = JSONBig.parse(key);
                 Object.entries(key).forEach(([itemKey, value]) => {
                     if (params !== '?') {
                         params += '&';

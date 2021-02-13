@@ -10,7 +10,7 @@
         :table="table"
         @onDataDeleted="onDataDeleted"
         @onDataUpdated="onDataUpdated"
-        @onDateInited="onDateInited"
+        @onDataInited="onDataInited"
     />
 </template>
 
@@ -149,7 +149,7 @@ export default {
                 this.$store.setAdmin(admin);
             }
         },
-        onDateInited(responseList) {
+        onDataInited(responseList) {
             const data = responseList[0].data.data.map(item => {
                 item.label = `${item.name}(${item.id})`;
                 return item;

@@ -98,7 +98,7 @@ export default {
     },
     methods: {
         isValueChanged(item) {
-            return typeof item.defaultValue !== 'undefined' && item.defaultValue !== item.value;
+            return item.defaultValue != null && item.defaultValue !== item.value;
         },
         onRollbackClicked(item) {
             item.value = JSON.parse(JSON.stringify(item.defaultValue));

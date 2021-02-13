@@ -31,10 +31,6 @@ export default {
             type: String,
             required: true
         },
-        recordKey: {
-            type: String,
-            required: true
-        },
         transform: {
             type: Function,
             required: false,
@@ -116,7 +112,6 @@ export default {
                                     record[key] = val.join(',');
                                 }
                             });
-                            record.key = record[this.recordKey];
                             return record;
                         });
                         this.total = data.total;

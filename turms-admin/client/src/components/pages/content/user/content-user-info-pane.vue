@@ -245,7 +245,7 @@ export default {
                     },
                     {
                         title: this.$t('isActive'),
-                        key: 'active',
+                        key: 'isActive',
                         width: '7.5%'
                     },
                     {

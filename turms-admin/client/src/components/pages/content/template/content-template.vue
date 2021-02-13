@@ -77,13 +77,13 @@
                     :fields="action.fields"
                     :type="action.type"
                     :query-key="queryKey"
-                    :record-key="recordKey"
                     :keys="selectedRowKeys"
                     :url="url"
                     :disabled="action.type === 'UPDATE' && !hasSelectedRows"
                     :params="action.params || {}"
                     :size="action.size"
                     class="action-button"
+                    @onDataUpdated="onRecordsUpdated"
                 />
                 <a-popconfirm
                     v-if="!deletion.disabled"
@@ -105,9 +105,8 @@
                 <content-template-export
                     :url="queryUrl"
                     :params="searchParams"
-                    :disabled="records.length === 0"
+                    :disabled="!records.length"
                     :file-name="'turms-' + name"
-                    :record-key="recordKey"
                     :transform="transform"
                     class="action-button"
                 />
@@ -116,7 +115,8 @@
         <a-spin :spinning="loading">
             <a-table
                 ref="table"
-                size="middle"
+                size="small"
+                row-key="rowKey"
                 :columns="columnsData"
                 :data-source="tableData"
                 :pagination="pageable ? pagination : false"
@@ -163,7 +163,7 @@
                         <span>
                             <a-popconfirm
                                 :title="$t('confirmDeletion')"
-                                @confirm="requestDelete([record.key])"
+                                @confirm="requestDelete([record.rowKey])"
                             >
                                 <a>{{ $t('delete') }}</a>
                             </a-popconfirm>
@@ -261,12 +261,14 @@ export default {
             default: null
         }
     },
+    emits: ['onDataInited'],
     data() {
         return {
             loading: false,
             initialData: [],
             records: [],
             activeKey: 1,
+            sorter: null,
             pagination: {
                 current: 1,
                 pageSize: 20
@@ -321,45 +323,32 @@ export default {
         columnsData() {
             return this.table.columns.map(column => {
                 const fields = column.key.split('.');
+                let sorter;
+                if (column.key !== 'operation' && !['TREE'].includes(String(column.type).toUpperCase())) {
+                    sorter = (a, b) => this.$util.sort(a[column.key], b[column.key]);
+                }
                 return {
                     title: column.title || this.$t(`${fields[fields.length - 1]}`),
                     dataIndex: column.key,
                     default: column.default,
                     type: column.type,
-                    scopedSlots: {
+                    slots: {
                         customRender: column.key
                     },
-                    width: column.width
+                    width: column.width,
+                    sorter
                 };
             });
         },
         tableData() {
-            return JSONBig.parse(JSONBig.stringify(this.records))
-                .map(record => {
-                    Object.entries(record).forEach(([key, value]) => {
-                        if (value._isBigNumber) {
-                            record[key] = value.toFixed();
-                        } else if (key === this.recordKey) {
-                            const keyValue = record[key];
-                            record.originalKey = keyValue;
-                            record.key = typeof keyValue === 'object'
-                                ? JSON.stringify(keyValue)
-                                : keyValue;
-                            if (typeof keyValue === 'object') {
-                                Object.keys(keyValue).forEach(subKey => {
-                                    record[`${key}.${subKey}`] = keyValue[subKey];
-                                });
-                            }
-                        }
-                    });
-                    return record;
-                });
+            // Must copy records, or <a-table> will cause "Error: Maximum recursive updates exceeded."
+            return JSON.parse(JSON.stringify(this.records));
         },
         admin() {
             return this.$store.getters.admin;
         },
         hasSelectedRows() {
-            return this.selectedRowKeys.length !== 0;
+            return !!this.selectedRowKeys.length;
         }
     },
     watch: {
@@ -411,32 +400,23 @@ export default {
             }
         },
         getColumnValue(column, record) {
-            const indexes = column.dataIndex.split('.');
-            let value;
-            for (let index of indexes) {
-                if (index === 'key') {
-                    index = 'originalKey';
-                }
-                if (value != null) {
-                    value = value[index];
-                } else {
-                    value = record[index];
-                    if (value instanceof Array) {
-                        value = value.join(',');
-                    } else if (column.dataIndex.endsWith('Date') && value) {
-                        value = this.$moment(value).format();
-                    }
-                }
+            let value = this.$_.get(record, column.dataIndex, column.default);
+            if (value instanceof Array) {
+                value = value.join(',');
+            } else if (column.dataIndex.endsWith('Date') && value) {
+                value = this.$moment(value).format();
             }
-            return value || column.default;
+            return value;
         },
         hanlePopconfirmVisibleChange(visible) {
             this.popconfirmVisible = visible && this.hasSelectedRows;
         },
-        handleTableChange(pagination) {
-            this.pagination = {...this.pagination, current: pagination.current};
-            if (this.pageable) {
-                this.search();
+        handleTableChange(pagination, filters, sorter) {
+            if (JSON.stringify(sorter) === JSON.stringify(this.sorter)) {
+                this.pagination = {...this.pagination, current: pagination.current};
+                if (this.pageable) {
+                    this.search();
+                }
             }
         },
         init() {
@@ -448,7 +428,7 @@ export default {
                     })
                     .then(responseList => {
                         this.initialized = true;
-                        this.$emit('onDateInited', responseList);
+                        this.$emit('onDataInited', responseList);
                     });
             } else {
                 this.initialized = true;
@@ -470,7 +450,6 @@ export default {
         },
         search() {
             this.loading = true;
-            this.selectedRowKeys.splice(0, this.selectedRowKeys.length);
             this.$http.get(this.queryUrl, {params: this.searchParams})
                 .then(response => {
                     if (response.status === 204) {
@@ -482,7 +461,16 @@ export default {
                             ? this.transform(response.data.data)
                             : response.data.data;
                         this.records = data.records.map(record => {
-                            record.key = record[this.recordKey];
+                            Object.entries(record).forEach(([key, value]) => {
+                                if (value._isBigNumber) {
+                                    record[key] = value.toFixed();
+                                } else if (key === this.recordKey && typeof value === 'object') {
+                                    Object.keys(value).forEach(subKey => {
+                                        record[`${key}.${subKey}`] = value[subKey];
+                                    });
+                                }
+                            });
+                            record.rowKey = JSONBig.stringify(record[this.recordKey]);
                             return record;
                         });
                         this.pagination = {...this.pagination, total: data.total};
@@ -495,7 +483,11 @@ export default {
                     }
                     this.$error(this.$t('failedToFetchData'), error);
                 })
-                .finally(() => this.loading = false);
+                .finally(() => {
+                    this.selectedRowKeys = this.selectedRowKeys
+                        .filter(key => this.records.some(record => record.rowKey === key));
+                    this.loading = false;
+                });
         },
         deleteSelectedRows() {
             this.requestDelete(this.selectedRowKeys);
@@ -510,17 +502,8 @@ export default {
                         if (this.deletion.refresh) {
                             this.search();
                         } else {
-                            this.records = this.records.filter(item => {
-                                let itemKey;
-                                if (this.recordKey === 'key') {
-                                    itemKey = JSONBig.stringify(item.key);
-                                } else {
-                                    itemKey = item.key._isBigNumber
-                                        ? item.key.toString()
-                                        : item.key;
-                                }
-                                return !deleteKeys.includes(itemKey);
-                            });
+                            this.records = this.records
+                                .filter(record => !deleteKeys.includes(record.rowKey));
                         }
                         this.$emit('onDataDeleted', deleteKeys);
                     })
@@ -529,6 +512,13 @@ export default {
                     })
                     .finally(() => this.loading = false);
             }
+        },
+        onRecordsUpdated(keys, values) {
+            this.records.forEach(record => {
+                if (keys.includes(record.rowKey)) {
+                    Object.assign(record, values);
+                }
+            });
         }
     }
 };

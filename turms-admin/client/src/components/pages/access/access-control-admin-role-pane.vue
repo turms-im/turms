@@ -6,7 +6,7 @@
         :action-groups="actionGroups"
         :table="table"
         :transform="transform"
-        @onDateInited="onDateInited"
+        @onDataInited="onDataInited"
     />
 </template>
 
@@ -120,7 +120,7 @@ export default {
         }
     },
     methods: {
-        onDateInited(responseList) {
+        onDataInited(responseList) {
             const data = responseList[0].data.data.map(item => {
                 item.label = `${item.name}(${item.id})`;
                 return item;
@@ -128,13 +128,13 @@ export default {
             this.$ui.fillSelectsWithValues(['roleId', 'roleIds'], data, this.actionGroups);
         },
         transform(data) {
-            this.fillTreeData(ALL_PERMISSIONS_TREE);
+            this.resetPermissionTreeData();
             for (const record of data.records) {
                 const currentPermissions = JSON.parse(JSON.stringify(ALL_PERMISSIONS_TREE));
-                for (const permission of record.permissions) {
-                    const foundRecord = this.deepSearch(currentPermissions, 'key', (key, value) => value === permission);
+                for (const ownedPermission of record.permissions) {
+                    const foundRecord = this.$util.deepSearch(currentPermissions, 'key', (key, value) => value === ownedPermission);
                     if (foundRecord) {
-                        foundRecord.scopedSlots = {
+                        foundRecord.slots = {
                             icon: 'check'
                         };
                     }
@@ -144,26 +144,14 @@ export default {
             data.records.permissions = ALL_PERMISSIONS_TREE;
             return data;
         },
-        fillTreeData(treeData) {
+        resetPermissionTreeData() {
             for (const actions of this.actionGroups) {
                 for (const action of actions) {
                     for (const field of action.fields) {
                         if (field.type.toUpperCase() === 'TREE' && field.id === 'permissions') {
-                            field.data = treeData;
+                            field.data = ALL_PERMISSIONS_TREE;
+                            return;
                         }
-                    }
-                }
-            }
-        },
-        deepSearch(object, key, predicate) {
-            if (Object.hasOwnProperty.call(object, key) && predicate(key, object[key])) {
-                return object;
-            }
-            for (const val of Object.values(object)) {
-                if (typeof val === 'object') {
-                    const o = this.deepSearch(val, key, predicate);
-                    if (o != null) {
-                        return o;
                     }
                 }
             }
@@ -175,7 +163,7 @@ export default {
             if (permissions instanceof Array) {
                 return permissions
                     .map(permission => ({
-                        scopedSlots: {
+                        slots: {
                             icon: 'close'
                         },
                         selectable: false,
@@ -185,7 +173,7 @@ export default {
             } else {
                 return Object.entries(permissions)
                     .map(([key, value]) => ({
-                        scopedSlots: {
+                        slots: {
                             icon: 'bars'
                         },
                         selectable: false,

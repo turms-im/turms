@@ -180,10 +180,6 @@ export default {
             type: String,
             default: 'ids'
         },
-        recordKey: {
-            type: String,
-            default: 'id'
-        },
         keys: {
             type: Array,
             default: () => []
@@ -336,16 +332,6 @@ export default {
             const params = this.$rq.getQueryParams(this.queryKey, this.keys);
             this.$http.put(`${this.url}${params}`, this.filterParams(values))
                 .then(() => {
-                    this.$parent.$data.records.forEach(record => {
-                        let currentKey = record[this.recordKey];
-                        currentKey = this.recordKey === 'key' ? JSON.stringify(currentKey) : currentKey;
-                        if (currentKey._isBigNumber) {
-                            currentKey = currentKey.toFixed();
-                        }
-                        if (this.keys.includes(currentKey)) {
-                            Object.assign(record, values);
-                        }
-                    });
                     this.$emit('onDataUpdated', this.keys, values);
                     this.visible = false;
                     this.$message.success(this.$t('updatedSuccessfully'));

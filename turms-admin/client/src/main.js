@@ -1,6 +1,7 @@
 import {createApp} from 'vue';
 import axios from 'axios';
 import moment from 'moment';
+import _ from 'lodash';
 import qs from 'querystring';
 import resources from './configs/resources';
 import App from './App.vue';
@@ -43,6 +44,11 @@ createApp(App)
             app.config.globalProperties.$moment = moment;
             app.config.globalProperties.$qs = qs;
             app.config.globalProperties.$rs = resources;
+            // Don't use "_" because of https://github.com/vuejs/vue-next/issues/2546
+            app.config.globalProperties.$_ = {
+                get: _.get,
+                set: _.set
+            };
         }
     })
     .mount('#app');

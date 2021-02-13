@@ -8,6 +8,7 @@
     />
     <a-input
         v-else
+        :rules="rules"
         :placeholder="placeholder"
         :value="computedValue"
         @change="onChange"
