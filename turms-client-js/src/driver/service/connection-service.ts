@@ -46,7 +46,7 @@ export default class ConnectionService extends BaseService {
 
     constructor(stateStore: StateStore, wsUrl?: string, connectTimeout?: number) {
         super(stateStore);
-        this._initialWsUrl = wsUrl || 'ws://localhost:9510';
+        this._initialWsUrl = wsUrl || 'ws://localhost:10510';
         this._initialConnectTimeout = isNaN(connectTimeout) || connectTimeout <= 0
             ? 60 * 1000
             : connectTimeout;

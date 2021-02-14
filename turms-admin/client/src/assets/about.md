@@ -13,7 +13,7 @@ turms-admin的前端部分采用ant-design-vue为UI框架。
 
 1. 安装[Node.js](https://nodejs.org/en)
 2. 执行npm run quickstart指令（该指令由npm install && npm run build && npm run start组成，包括了依赖包安装、前端构建与服务端执行）。等待PM2提示turms-admin的status为online（表明turms-admin服务端进程已启动）
-3. 打开浏览器，并输入http://localhost:7510/
+3. 打开浏览器，并输入http://localhost:6510/
 
 ## 常用运维指令
 

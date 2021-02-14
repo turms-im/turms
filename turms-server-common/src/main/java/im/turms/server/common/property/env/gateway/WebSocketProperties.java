@@ -31,7 +31,7 @@ public class WebSocketProperties {
 
     private boolean enabled = true;
     private String host = "0.0.0.0";
-    private int port = 9510;
+    private int port = 10510;
     /**
      * To mitigate the Slowloris DoS attack by lowering the timeout for the TCP connection handshake
      */

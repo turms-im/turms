@@ -65,8 +65,8 @@ function setupClient(container, client, userId, password, targetId) {
 }
 
 function start() {
-    const clientUserOne = new TurmsClient('ws://localhost:9510', 30 * 1000);
-    const clientUserTwo = new TurmsClient('ws://localhost:9510', 30 * 1000);
+    const clientUserOne = new TurmsClient('ws://localhost:10510', 30 * 1000);
+    const clientUserTwo = new TurmsClient('ws://localhost:10510', 30 * 1000);
     const USER_ONE_ID = '1';
     const USER_TWO_ID = '2';
     setupClient(userOneNotificationContainer, clientUserOne, USER_ONE_ID, '123', USER_TWO_ID);

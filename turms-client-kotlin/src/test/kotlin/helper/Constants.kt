@@ -17,7 +17,7 @@
 package helper
 
 object Constants {
-    const val WS_URL = "ws://localhost:9510"
+    const val WS_URL = "ws://localhost:10510"
     const val STORAGE_SERVER_URL = "http://localhost:9000"
     const val ORDER_FIRST = Int.MIN_VALUE
     const val ORDER_HIGHEST_PRIORITY = 0

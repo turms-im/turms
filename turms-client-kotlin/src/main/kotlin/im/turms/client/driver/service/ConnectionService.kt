@@ -190,7 +190,7 @@ class ConnectionService(
     }
 
     companion object {
-        private const val DEFAULT_WEBSOCKET_URL = "ws://localhost:9510"
+        private const val DEFAULT_WEBSOCKET_URL = "ws://localhost:10510"
         private const val DEFAULT_CONNECT_TIMEOUT = 30 * 1000
     }
 

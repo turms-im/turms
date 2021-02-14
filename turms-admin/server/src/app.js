@@ -4,7 +4,7 @@ const express = require('express');
 const compression = require('compression');
 const history = require('connect-history-api-fallback');
 
-const port = process.env.PORT || 7510;
+const port = process.env.PORT || 6510;
 const DIST_DIR = path.resolve(__dirname, '../../dist');
 const html = fs.readFileSync(`${DIST_DIR}/index.html`);
 const app = express();

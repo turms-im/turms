@@ -18,7 +18,7 @@
     "reload": "pm2 reload server/ecosystem.config.js",
     "report": "vue-cli-service build --report",
     "restart": "pm2 restart server/ecosystem.config.js",
-    "serve": "vue-cli-service serve --port 7510",
+    "serve": "vue-cli-service serve --port 6510",
     "start": "pm2 start server/ecosystem.config.js --env production",
     "stop": "pm2 stop server/ecosystem.config.js",
     "stylelint": "stylelint --fix client/**/*.{vue,html,css,sss,less,scss,sass}",
