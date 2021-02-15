@@ -1,5 +1,6 @@
 # HTTP(S) configuration
 server:
+  address: 0.0.0.0
   port: 8510
   ssl:
     enabled: false # Enable SSL if needed. Make sure to mutate HTTP requests to HTTPS requests, or Netty will throw NotSslRecordException
@@ -7,8 +8,6 @@ server:
     key-store-type: PKCS12
     key-store-password: imturms
     key-alias: turms
-  address: 0.0.0.0
-
 spring:
   application:
     name: turms

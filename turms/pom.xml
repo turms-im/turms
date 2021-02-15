@@ -36,7 +36,6 @@
         <java.version>11</java.version>
         <disruptor.version>3.4.2</disruptor.version>
         <protobuf.version>3.14.0</protobuf.version>
-        <guava.version>30.0-jre</guava.version>
         <spring-boot-admin-starter-client.version>2.3.1</spring-boot-admin-starter-client.version>
         <jmh.version>1.27</jmh.version>
         <commons-io.version>2.8.0</commons-io.version>
@@ -119,11 +118,6 @@
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java-util</artifactId>
             <version>${protobuf.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

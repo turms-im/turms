@@ -1,3 +1,8 @@
+# The server properties for metrics APIs (not for WebSocket)
+server:
+  address: 0.0.0.0
+  port: 9510
+
 turms:
   cluster:
     node:
