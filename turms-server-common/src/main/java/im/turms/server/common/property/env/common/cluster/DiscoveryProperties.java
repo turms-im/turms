@@ -34,11 +34,11 @@ public class DiscoveryProperties {
 
     @Min(0)
     @Max(SharedConfigService.EXPIRABLE_RECORD_TTL)
-    private int heartbeatTimeoutInSeconds = 10;
+    private int heartbeatTimeoutInSeconds = 30;
 
     @Min(0)
     @Max(SharedConfigService.EXPIRABLE_RECORD_TTL)
-    private int heartbeatIntervalInSeconds = 3;
+    private int heartbeatIntervalInSeconds = 10;
 
     @Min(0)
     @Max(SharedConfigService.EXPIRABLE_RECORD_TTL)

@@ -54,6 +54,7 @@ public class LocalNodeStatusManager {
     @Getter
     @Setter
     private volatile boolean isClosing;
+    private final long heartbeatTimeoutInMillis;
     private final Duration heartbeatInterval;
     private final long heartbeatIntervalInMillis;
     private ScheduledFuture<?> heartbeatFuture;
@@ -63,10 +64,12 @@ public class LocalNodeStatusManager {
             DiscoveryService discoveryService,
             SharedConfigService sharedConfigService,
             Member localMember,
+            int heartbeatTimeoutInSeconds,
             int heartbeatIntervalInSeconds) {
         this.discoveryService = discoveryService;
         this.sharedConfigService = sharedConfigService;
         this.localMember = localMember;
+        this.heartbeatTimeoutInMillis = heartbeatTimeoutInSeconds * 1000;
         this.heartbeatInterval = Duration.ofSeconds(heartbeatIntervalInSeconds);
         this.heartbeatIntervalInMillis = heartbeatInterval.toMillis();
     }
@@ -167,6 +170,7 @@ public class LocalNodeStatusManager {
         this.localMember.updateIfNotNull(
                 member.isSeed(),
                 member.isLeaderEligible(),
+                member.isHasJoinedCluster(),
                 member.isActive(),
                 member.getLastHeartbeatDate(),
                 member.getMemberHost(),
@@ -207,7 +211,7 @@ public class LocalNodeStatusManager {
         int availableMembersSize = 0;
         long lastHeartbeatTime = lastHeartbeatDate.getTime();
         for (Member knownMember : knownMembers) {
-            boolean isAvailable = (lastHeartbeatTime - knownMember.getLastHeartbeatDate().getTime()) < heartbeatIntervalInMillis;
+            boolean isAvailable = (lastHeartbeatTime - knownMember.getLastHeartbeatDate().getTime()) < heartbeatTimeoutInMillis;
             if (isAvailable) {
                 availableMemberNodeIds.add(knownMember.getNodeId());
                 availableMembersSize++;

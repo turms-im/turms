@@ -143,6 +143,7 @@ public class DiscoveryService implements ClusterService {
                 this,
                 sharedConfigService,
                 localMember,
+                discoveryProperties.getHeartbeatTimeoutInSeconds(),
                 discoveryProperties.getHeartbeatIntervalInSeconds());
         serviceAddressManager.addOnAddressesChangedListener(addresses -> {
             String metricsApiAddress = addresses.getMetricsApiAddress();
@@ -261,6 +262,7 @@ public class DiscoveryService implements ClusterService {
                                 memberToUpdate.updateIfNotNull(
                                         changedMember.isSeed(),
                                         changedMember.isLeaderEligible(),
+                                        changedMember.isHasJoinedCluster(),
                                         changedMember.isActive(),
                                         changedMember.getLastHeartbeatDate(),
                                         changedMember.getMemberHost(),

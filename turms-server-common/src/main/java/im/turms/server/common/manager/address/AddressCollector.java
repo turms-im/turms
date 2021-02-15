@@ -109,8 +109,8 @@ public class AddressCollector {
             return new AddressGroup(
                     host,
                     address,
-                    String.format("%s://%s", httpProtocol, host),
-                    String.format("%s://%s", wsProtocol, host));
+                    String.format("%s://%s", httpProtocol, address),
+                    String.format("%s://%s", wsProtocol, address));
         } else {
             throw new UnknownHostException("The address of the current server cannot be found");
         }

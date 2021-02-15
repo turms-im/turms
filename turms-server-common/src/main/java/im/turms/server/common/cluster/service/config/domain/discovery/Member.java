@@ -165,6 +165,7 @@ public final class Member {
     public void updateIfNotNull(
             Boolean isSeed,
             Boolean isLeaderEligible,
+            Boolean hasJoinedCluster,
             Boolean isActive,
             Date lastHeartbeatDate,
             String memberHost,
@@ -178,6 +179,9 @@ public final class Member {
         }
         if (isLeaderEligible != null) {
             this.isLeaderEligible = isLeaderEligible;
+        }
+        if (hasJoinedCluster != null) {
+            this.hasJoinedCluster = hasJoinedCluster;
         }
         if (isActive != null) {
             this.isActive = isActive;
