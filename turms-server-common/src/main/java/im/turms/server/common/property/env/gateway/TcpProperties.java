@@ -20,21 +20,15 @@ package im.turms.server.common.property.env.gateway;
 
 import im.turms.server.common.property.metadata.annotation.Description;
 import lombok.Data;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
-import org.springframework.boot.web.server.Ssl;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author James Chen
  */
 @Data
-public class TcpProperties {
+@EqualsAndHashCode(callSuper = true)
+public class TcpProperties extends BaseServerProperties {
 
-    /**
-     * We disable TCP currently until clients support TCP
-     */
-    private boolean enabled = false;
-    private String host = "0.0.0.0";
-    private int port = 11510;
     /**
      * To mitigate the Slowloris DoS attack by lowering the timeout for the TCP connection handshake
      */
@@ -43,8 +37,5 @@ public class TcpProperties {
     @Description("A TCP connection will be closed on the server side if a client hasn't established a user session in a specified time. " +
             "Note that the developers on the client side should take the responsibility to close the TCP connection according to their business requirements")
     private int closeIdleConnectionAfterSeconds = 60 * 5;
-
-    @NestedConfigurationProperty
-    private Ssl ssl = new Ssl();
 
 }

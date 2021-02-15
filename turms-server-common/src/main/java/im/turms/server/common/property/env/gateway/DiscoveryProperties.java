@@ -31,16 +31,16 @@ import lombok.Data;
 public class DiscoveryProperties {
 
     @JsonView(MutablePropertiesView.class)
-    @Description("The identity of this node exposed as a header \"identity\" in the handshake response. " +
-            "The property is usually used to help load balancing servers (e.g. Nginx) proxy\n" +
-            "(e.g. \"turms-east-0001\")")
+    @Description("The identity of the local node will be sent to clients as a notification if identity is not blank" +
+            " and turms.gateway.session.notifyClientsOfSessionInfoAfterConnected is true" +
+            " (e.g. \"turms-east-0001\")")
     private String identity = "";
 
     @JsonView(MutablePropertiesView.class)
     @Description("The advertise strategy is used to help clients or load balancing servers to access the local node. " +
             "Note: For security, do NOT use PUBLIC_ADDRESS in the production environment " +
             "to prevent from exposing the origin IP address for DDoS attack.")
-    private AdvertiseStrategy advertiseStrategy = AdvertiseStrategy.BIND_ADDRESS;
+    private AdvertiseStrategy advertiseStrategy = AdvertiseStrategy.LOCAL_ADDRESS;
 
     @JsonView(MutablePropertiesView.class)
     @Description("The advertise address of the local node exposed to the public. " +
@@ -50,8 +50,8 @@ public class DiscoveryProperties {
 
     @JsonView(MutablePropertiesView.class)
     @Description("Whether to attach the local port to the host.\n" +
-            "e.g. The local host is 100.131.251.96, and the port is 9510" +
-            "so that the service address exposed to the public will be 100.131.251.96:9510")
+            "e.g. The local host is 100.131.251.96, and the port is 10510" +
+            "so the service address will be 100.131.251.96:10510")
     private boolean attachPortToHost = true;
 
 }

@@ -28,12 +28,12 @@ turms:
           - category: all
     admin-api:
       enable-swagger: true
+      discovery:
+        advertise-strategy: local_address
     database:
       mongo-properties:
         default-properties:
           uri: mongodb://localhost:29510/turms-dev
-    discovery:
-      advertise-strategy: local_address
     mock:
       enabled: true
       clear-all-collections-before-mocking: true

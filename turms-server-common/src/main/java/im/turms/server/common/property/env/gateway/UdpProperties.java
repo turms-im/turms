@@ -19,18 +19,12 @@ package im.turms.server.common.property.env.gateway;
 
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author James Chen
  */
 @Data
-public class UdpProperties {
-
-    /**
-     * We disable UDP currently until clients support UDP
-     */
-    private boolean enabled = false;
-    private String host = "0.0.0.0";
-    private int port = 12510;
-
+@EqualsAndHashCode(callSuper = true)
+public class UdpProperties extends BaseServerProperties {
 }

@@ -77,7 +77,11 @@ public class MemberController {
                 addMemberDTO.getPriority(),
                 addMemberDTO.getMemberHost(),
                 addMemberDTO.getMemberPort(),
-                addMemberDTO.getServiceAddress(),
+                addMemberDTO.getMetricsApiAddress(),
+                addMemberDTO.getAdminApiAddress(),
+                addMemberDTO.getWsAddress(),
+                addMemberDTO.getTcpAddress(),
+                addMemberDTO.getUdpAddress(),
                 false,
                 addMemberDTO.isActive());
         return node.getDiscoveryService()

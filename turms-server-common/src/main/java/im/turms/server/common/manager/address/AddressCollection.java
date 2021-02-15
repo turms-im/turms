@@ -17,16 +17,16 @@
 
 package im.turms.server.common.manager.address;
 
-import java.util.function.Consumer;
+import lombok.Data;
 
 /**
  * @author James Chen
  */
-
-public interface IServiceAddressManager {
-
-    void addListener(Consumer<String> listener);
-
-    String getServiceAddress();
-
+@Data
+public class AddressCollection {
+    private final String metricsApiAddress;
+    private final String adminApiAddress;
+    private final String wsAddress;
+    private final String tcpAddress;
+    private final String udpAddress;
 }

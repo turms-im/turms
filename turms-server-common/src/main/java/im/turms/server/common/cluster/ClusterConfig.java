@@ -19,7 +19,7 @@ package im.turms.server.common.cluster;
 
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.node.NodeType;
-import im.turms.server.common.manager.address.IServiceAddressManager;
+import im.turms.server.common.manager.address.BaseServiceAddressManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -43,7 +43,7 @@ public class ClusterConfig {
             ApplicationContext context,
             NodeType nodeType,
             TurmsPropertiesManager turmsPropertiesManager,
-            IServiceAddressManager serviceAddressManager) {
+            BaseServiceAddressManager serviceAddressManager) {
         this.node = new Node(context, nodeType, turmsPropertiesManager, serviceAddressManager);
         node.start();
         return node;

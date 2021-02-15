@@ -19,8 +19,6 @@ package im.turms.server.common.property.env.common.cluster;
 
 
 import im.turms.server.common.cluster.service.config.SharedConfigService;
-import im.turms.server.common.property.constant.AdvertiseStrategy;
-import im.turms.server.common.property.metadata.annotation.Description;
 import lombok.Data;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.boot.web.server.Ssl;
@@ -54,26 +52,5 @@ public class DiscoveryProperties {
 
     @NestedConfigurationProperty
     private Ssl serverSsl = new Ssl();
-
-    @Data
-    public static class AdvertiseProperties {
-
-        @Description("The identity of this node exposes in the cluster if the identity is blank. The node name will be used as an identity " +
-                "(e.g. \"turms-east-0001\")")
-        private String identity = "";
-
-        @Description("The advertise strategy is used to choose to expose which type of address so that other nodes can access the local node")
-        private AdvertiseStrategy advertiseStrategy = AdvertiseStrategy.BIND_ADDRESS;
-
-        @Description("The advertise host of the local node exposed to the other members. Better use a private host " +
-                "(e.g. 100.131.251.96)")
-        private String advertiseHost = "";
-
-        @Description("Whether to attach the local port to the host.\n" +
-                "e.g. The local host is 100.131.251.96, and the port is 9510" +
-                "so that the service address exposed to the public will be 100.131.251.96:9510")
-        private boolean attachPortToHost = true;
-
-    }
 
 }

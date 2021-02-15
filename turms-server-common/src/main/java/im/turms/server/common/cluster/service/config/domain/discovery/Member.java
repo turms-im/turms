@@ -72,7 +72,11 @@ public final class Member {
     private String memberHost;
     private final int memberPort;
 
-    private String serviceAddress;
+    private String metricsApiAddress;
+    private String adminApiAddress;
+    private String wsAddress;
+    private String tcpAddress;
+    private String udpAddress;
 
     private boolean hasJoinedCluster;
 
@@ -95,7 +99,11 @@ public final class Member {
             Date lastHeartbeatDate,
             String memberHost,
             int memberPort,
-            String serviceAddress,
+            String metricsApiAddress,
+            String adminApiAddress,
+            String wsAddress,
+            String tcpAddress,
+            String udpAddress,
             boolean hasJoinedCluster,
             boolean isActive) {
         this.key = key;
@@ -108,7 +116,11 @@ public final class Member {
         this.lastHeartbeatDate = lastHeartbeatDate;
         this.memberHost = memberHost;
         this.memberPort = memberPort;
-        this.serviceAddress = serviceAddress;
+        this.metricsApiAddress = metricsApiAddress;
+        this.adminApiAddress = adminApiAddress;
+        this.wsAddress = wsAddress;
+        this.tcpAddress = tcpAddress;
+        this.udpAddress = udpAddress;
         this.hasJoinedCluster = hasJoinedCluster;
         this.isActive = isActive;
     }
@@ -124,7 +136,11 @@ public final class Member {
             int priority,
             String memberHost,
             int memberPort,
-            String serviceAddress,
+            String metricsApiAddress,
+            String adminApiAddress,
+            String wsAddress,
+            String tcpAddress,
+            String udpAddress,
             boolean hasJoinedCluster,
             boolean isActive) {
         this(new Key(clusterId, nodeId),
@@ -137,7 +153,11 @@ public final class Member {
                 registrationDate,
                 memberHost,
                 memberPort,
-                serviceAddress,
+                metricsApiAddress,
+                adminApiAddress,
+                wsAddress,
+                tcpAddress,
+                udpAddress,
                 hasJoinedCluster,
                 isActive);
     }
@@ -148,7 +168,11 @@ public final class Member {
             Boolean isActive,
             Date lastHeartbeatDate,
             String memberHost,
-            String serviceAddress) {
+            String metricsApiAddress,
+            String adminApiAddress,
+            String wsAddress,
+            String tcpAddress,
+            String udpAddress) {
         if (isSeed != null) {
             this.isSeed = isSeed;
         }
@@ -164,8 +188,20 @@ public final class Member {
         if (memberHost != null) {
             this.memberHost = memberHost;
         }
-        if (serviceAddress != null) {
-            this.serviceAddress = serviceAddress;
+        if (metricsApiAddress != null) {
+            this.metricsApiAddress = metricsApiAddress;
+        }
+        if (adminApiAddress != null) {
+            this.adminApiAddress = adminApiAddress;
+        }
+        if (wsAddress != null) {
+            this.wsAddress = wsAddress;
+        }
+        if (tcpAddress != null) {
+            this.tcpAddress = tcpAddress;
+        }
+        if (udpAddress != null) {
+            this.udpAddress = udpAddress;
         }
     }
 

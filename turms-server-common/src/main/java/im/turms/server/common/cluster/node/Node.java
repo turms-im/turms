@@ -25,7 +25,7 @@ import im.turms.server.common.cluster.service.idgen.IdService;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.cluster.service.rpc.RpcService;
 import im.turms.server.common.cluster.service.serialization.SerializationService;
-import im.turms.server.common.manager.address.IServiceAddressManager;
+import im.turms.server.common.manager.address.BaseServiceAddressManager;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.cluster.ClusterProperties;
@@ -92,7 +92,7 @@ public class Node {
             ApplicationContext context,
             NodeType nodeType,
             TurmsPropertiesManager turmsPropertiesManager,
-            IServiceAddressManager serviceAddressManager) {
+            BaseServiceAddressManager serviceAddressManager) {
         // Prepare node information
         this.context = context;
         Node.nodeType = nodeType;

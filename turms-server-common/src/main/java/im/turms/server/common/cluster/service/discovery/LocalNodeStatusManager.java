@@ -170,7 +170,11 @@ public class LocalNodeStatusManager {
                 member.isActive(),
                 member.getLastHeartbeatDate(),
                 member.getMemberHost(),
-                member.getServiceAddress());
+                member.getMetricsApiAddress(),
+                member.getAdminApiAddress(),
+                member.getWsAddress(),
+                member.getTcpAddress(),
+                member.getUdpAddress());
         if (isLeaderEligibleChanged) {
             if (isLeaderEligible) {
                 tryBecomeLeader().subscribe();

@@ -26,7 +26,7 @@ import im.turms.server.common.cluster.service.config.domain.discovery.Leader;
 import im.turms.server.common.cluster.service.config.domain.discovery.Member;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.manager.address.IServiceAddressManager;
+import im.turms.server.common.manager.address.BaseServiceAddressManager;
 import im.turms.server.common.property.env.common.cluster.DiscoveryProperties;
 import im.turms.server.common.util.CollectorUtil;
 import io.netty.util.concurrent.DefaultThreadFactory;
@@ -117,7 +117,7 @@ public class DiscoveryService implements ClusterService {
             String memberAddress,
             int memberPort,
             DiscoveryProperties discoveryProperties,
-            IServiceAddressManager serviceAddressManager,
+            BaseServiceAddressManager serviceAddressManager,
             SharedConfigService sharedConfigService) {
         Date now = new Date();
         Member localMember = new Member(clusterId,
@@ -130,7 +130,11 @@ public class DiscoveryService implements ClusterService {
                 (int) now.getTime(),
                 memberAddress,
                 memberPort,
-                serviceAddressManager.getServiceAddress(),
+                serviceAddressManager.getMetricsApiAddress(),
+                serviceAddressManager.getAdminApiAddress(),
+                serviceAddressManager.getWsAddress(),
+                serviceAddressManager.getTcpAddress(),
+                serviceAddressManager.getUdpAddress(),
                 false,
                 isActive);
         this.discoveryProperties = discoveryProperties;
@@ -140,8 +144,30 @@ public class DiscoveryService implements ClusterService {
                 sharedConfigService,
                 localMember,
                 discoveryProperties.getHeartbeatIntervalInSeconds());
-        serviceAddressManager.addListener(serviceAddress ->
-                localNodeStatusManager.upsertLocalNodeInfo(new Update().set(Member.Fields.serviceAddress, serviceAddress)));
+        serviceAddressManager.addOnAddressesChangedListener(addresses -> {
+            String metricsApiAddress = addresses.getMetricsApiAddress();
+            String adminApiAddress = addresses.getAdminApiAddress();
+            String wsAddress = addresses.getWsAddress();
+            String tcpAddress = addresses.getTcpAddress();
+            String udpAddress = addresses.getUdpAddress();
+            Update update = new Update();
+            if (metricsApiAddress != null) {
+                update.set(Member.Fields.metricsApiAddress, metricsApiAddress);
+            }
+            if (adminApiAddress != null) {
+                update.set(Member.Fields.adminApiAddress, adminApiAddress);
+            }
+            if (wsAddress != null) {
+                update.set(Member.Fields.wsAddress, wsAddress);
+            }
+            if (tcpAddress != null) {
+                update.set(Member.Fields.tcpAddress, tcpAddress);
+            }
+            if (udpAddress != null) {
+                update.set(Member.Fields.udpAddress, udpAddress);
+            }
+            localNodeStatusManager.upsertLocalNodeInfo(update).subscribe();
+        });
         this.connectionManager = new ConnectionManager(this, discoveryProperties);
         connectionManager.addMemberConnectionChangeListener(new MemberConnectionChangeListener() {
             @Override
@@ -238,7 +264,11 @@ public class DiscoveryService implements ClusterService {
                                         changedMember.isActive(),
                                         changedMember.getLastHeartbeatDate(),
                                         changedMember.getMemberHost(),
-                                        changedMember.getServiceAddress());
+                                        changedMember.getMetricsApiAddress(),
+                                        changedMember.getAdminApiAddress(),
+                                        changedMember.getWsAddress(),
+                                        changedMember.getTcpAddress(),
+                                        changedMember.getUdpAddress());
                                 break;
                             case DELETE:
                                 String nodeId = ChangeStreamUtil.getStringFromId(event, Member.Key.Fields.nodeId);
@@ -329,7 +359,7 @@ public class DiscoveryService implements ClusterService {
         } else {
             tempOtherActiveConnectedMemberList.remove(new MemberInfoWithConnection(member, null));
         }
-        tempOtherActiveConnectedMemberList.sort((m1, m2) -> MEMBER_PRIORITY_COMPARATOR.compare(m1.getMember(),m2.getMember()));
+        tempOtherActiveConnectedMemberList.sort((m1, m2) -> MEMBER_PRIORITY_COMPARATOR.compare(m1.getMember(), m2.getMember()));
         if (isServiceMember) {
             otherActiveConnectedServiceMemberList = tempOtherActiveConnectedMemberList;
         } else {

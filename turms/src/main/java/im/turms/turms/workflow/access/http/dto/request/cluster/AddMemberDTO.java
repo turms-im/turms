@@ -36,6 +36,10 @@ public class AddMemberDTO {
     private final int priority;
     private final String memberHost;
     private final int memberPort;
-    private final String serviceAddress;
+    private final String metricsApiAddress;
+    private final String adminApiAddress;
+    private final String wsAddress;
+    private final String tcpAddress;
+    private final String udpAddress;
     private final boolean isActive;
 }

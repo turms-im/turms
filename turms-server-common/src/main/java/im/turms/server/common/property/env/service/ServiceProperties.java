@@ -26,7 +26,6 @@ import im.turms.server.common.property.env.service.business.conversation.Convers
 import im.turms.server.common.property.env.service.business.message.MessageProperties;
 import im.turms.server.common.property.env.service.business.user.UserProperties;
 import im.turms.server.common.property.env.service.env.AdminApiProperties;
-import im.turms.server.common.property.env.service.env.DiscoveryProperties;
 import im.turms.server.common.property.env.service.env.LogProperties;
 import im.turms.server.common.property.env.service.env.MockProperties;
 import im.turms.server.common.property.env.service.env.clientapi.ClientApiProperties;
@@ -55,10 +54,6 @@ public class ServiceProperties {
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private DatabaseProperties database = new DatabaseProperties();
-
-    @JsonView(MutablePropertiesView.class)
-    @NestedConfigurationProperty
-    private DiscoveryProperties discovery = new DiscoveryProperties();
 
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty

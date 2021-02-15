@@ -1,7 +1,5 @@
 server:
-  error:
-    whitelabel:
-      enabled: false
+  address: 0.0.0.0
   port: 8510
   ssl:
     enabled: false # Enable SSL if needed. Make sure to mutate HTTP requests to HTTPS requests, or Netty will throw NotSslRecordException
@@ -9,9 +7,11 @@ server:
     key-store-type: PKCS12
     key-store-password: imturms
     key-alias: turms
-  address: 0.0.0.0
   netty:
     connection-timeout: 10s # To mitigate the Slowloris DoS attack by lowering the timeout for the TCP connection handshake
+  error:
+    whitelabel:
+      enabled: false
 spring:
   application:
     name: turms

@@ -437,7 +437,7 @@ public class SessionService implements ISessionService {
                                      @NotNull @ValidDeviceType DeviceType deviceType) {
         loggedInUsersCounter.increment();
         if (node.getSharedProperties().getGateway().getSession().isNotifyClientsOfSessionInfoAfterConnected()) {
-            String serverId = turmsPropertiesManager.getLocalProperties().getGateway().getDiscovery().getIdentity();
+            String serverId = turmsPropertiesManager.getLocalProperties().getGateway().getServiceDiscovery().getIdentity();
             userSessionsManager.pushSessionNotification(deviceType, serverId);
         }
     }
