@@ -29,9 +29,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -90,6 +92,7 @@ public class ControllerFilter implements WebFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+        allowAnyRequest(exchange.getResponse());
         return requestMappingHandlerMapping.getHandler(exchange)
                 .switchIfEmpty(Mono.defer(() -> isOpenApiEnabledAndOpenApiRequest(exchange)
                         // For the access to the OpenAPI page "/swagger-ui/index.html"
@@ -102,10 +105,23 @@ public class ControllerFilter implements WebFilter {
                         return filterHandlerMethod(handlerMethod, exchange, chain);
                     } else if (isOpenApiEnabledAndOpenApiRequest(exchange)) {
                         return chain.filter(exchange);
-                    }else {
+                    } else {
                         return filterUnhandledRequest(exchange, chain);
                     }
                 });
+    }
+
+    /**
+     * 1. We don't expose configs for developers to customize the cors config
+     * because it's better to be done by firewall/ECS/EC2
+     * 2. Note that no only CORS requests but also some normal requests need these headers
+     */
+    private void allowAnyRequest(ServerHttpResponse response) {
+        HttpHeaders headers = response.getHeaders();
+        headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+        headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "*");
+        headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "*");
+        headers.set(HttpHeaders.ACCESS_CONTROL_MAX_AGE, "7200");
     }
 
     private Mono<Void> filterHandlerMethod(HandlerMethod handlerMethod, ServerWebExchange exchange, WebFilterChain chain) {
@@ -154,17 +170,19 @@ public class ControllerFilter implements WebFilter {
     }
 
     private Mono<Void> filterUnhandledRequest(ServerWebExchange exchange, WebFilterChain chain) {
+        ServerHttpResponse response = exchange.getResponse();
         if (CorsUtils.isPreFlightRequest(exchange.getRequest())) {
-            return chain.filter(exchange);
+            response.setStatusCode(HttpStatus.OK);
+            return Mono.empty();
         }
         if (!enableAdminApi) {
-            exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
+            response.setStatusCode(HttpStatus.FORBIDDEN);
             return Mono.empty();
         }
         String account = parseAccount(exchange);
         String password = parsePassword(exchange);
         if (account == null || password == null) {
-            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+            response.setStatusCode(HttpStatus.UNAUTHORIZED);
             return Mono.empty();
         }
         return adminService.authenticate(account, password)
@@ -172,7 +190,7 @@ public class ControllerFilter implements WebFilter {
                     if (authenticated) {
                         return chain.filter(exchange);
                     } else {
-                        exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+                        response.setStatusCode(HttpStatus.UNAUTHORIZED);
                         return Mono.empty();
                     }
                 });

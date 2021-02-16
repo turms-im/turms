@@ -103,6 +103,8 @@ public class WebSocketFactory {
                 return response.status(HttpResponseStatus.OK)
                         .addHeader(ACCESS_CONTROL_ALLOW_ORIGIN, "*")
                         .addHeader(ACCESS_CONTROL_ALLOW_METHODS, "*")
+                        .addHeader(ACCESS_CONTROL_ALLOW_HEADERS, "*")
+                        .addHeader(ACCESS_CONTROL_MAX_AGE, "7200")
                         .send()
                         .then(Mono.never());
             }
