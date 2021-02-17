@@ -149,12 +149,10 @@ export default {
             }
         },
         login(url, account, password) {
+            const token = btoa(`${account}:${password}`);
             this.confirmLoading = true;
             this.$http.defaults.baseURL = url;
-            this.$http.defaults.headers.common = {
-                account,
-                password
-            };
+            this.$http.defaults.headers.common.Authorization = `Basic ${token}`;
             this.$http.head(this.$rs.apis.admin)
                 .then(() => {
                     return this.$http.get(this.$rs.apis.admin, {

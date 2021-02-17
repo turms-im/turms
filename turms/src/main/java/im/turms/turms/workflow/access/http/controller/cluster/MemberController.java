@@ -18,6 +18,7 @@
 package im.turms.turms.workflow.access.http.controller.cluster;
 
 import im.turms.server.common.cluster.node.Node;
+import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.cluster.node.NodeVersion;
 import im.turms.server.common.cluster.service.config.domain.discovery.Member;
 import im.turms.turms.workflow.access.http.dto.request.cluster.AddMemberDTO;
@@ -66,13 +67,14 @@ public class MemberController {
     @RequiredPermission(CLUSTER_MEMBERS_CREATE)
     public Mono<ResponseEntity<ResponseDTO<Void>>> addMember(@RequestBody AddMemberDTO addMemberDTO) {
         String clusterId = node.getDiscoveryService().getLocalMember().getClusterId();
+        NodeType nodeType = addMemberDTO.getNodeType();
         Member member = new Member(
                 clusterId,
                 addMemberDTO.getNodeId(),
-                addMemberDTO.getNodeType(),
+                nodeType,
                 NodeVersion.parse(addMemberDTO.getVersion()),
                 addMemberDTO.isSeed(),
-                addMemberDTO.isLeaderEligible(),
+                nodeType == NodeType.SERVICE && addMemberDTO.isLeaderEligible(),
                 addMemberDTO.getRegistrationDate(),
                 addMemberDTO.getPriority(),
                 addMemberDTO.getMemberHost(),

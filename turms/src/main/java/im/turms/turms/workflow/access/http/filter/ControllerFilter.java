@@ -38,6 +38,7 @@ import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.cors.reactive.CorsUtils;
 import org.springframework.web.method.HandlerMethod;
@@ -51,6 +52,7 @@ import reactor.core.publisher.Mono;
 import javax.validation.constraints.NotNull;
 import java.lang.reflect.Parameter;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -61,9 +63,9 @@ import java.util.Objects;
 @Component
 public class ControllerFilter implements WebFilter {
 
+    private static final String BASIC_AUTH_PREFIX = "Basic ";
+    private static final String ATTRIBUTES_ACCOUNT = "account";
     private static final BasicDBObject EMPTY_DBOJBECT = new BasicDBObject();
-    private static final String HEADER_ACCOUNT = "account";
-    private static final String HEADER_PASSWORD = "password";
     private static final String ATTR_BODY = "BODY";
     private static final List<String> DELETE_FILTER_PARAM_NAME = List.of("ids", "keys", "accounts");
 
@@ -106,19 +108,6 @@ public class ControllerFilter implements WebFilter {
                 });
     }
 
-    /**
-     * 1. We don't expose configs for developers to customize the cors config
-     * because it's better to be done by firewall/ECS/EC2
-     * 2. Note that no only CORS requests but also some normal requests need these headers
-     */
-    private void allowAnyRequest(ServerHttpResponse response) {
-        HttpHeaders headers = response.getHeaders();
-        headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-        headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "*");
-        headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "*");
-        headers.set(HttpHeaders.ACCESS_CONTROL_MAX_AGE, "7200");
-    }
-
     private Mono<Void> filterHandlerMethod(HandlerMethod handlerMethod, ServerWebExchange exchange, WebFilterChain chain) {
         if (isOpenApiEnabledAndOpenApiRequest(handlerMethod)) {
             return chain.filter(exchange);
@@ -138,33 +127,34 @@ public class ControllerFilter implements WebFilter {
                 return Mono.empty();
             }
         }
-        String account = parseAccount(exchange);
-        String password = parsePassword(exchange);
-        if (account != null && password != null) {
-            return adminService.authenticate(account, password)
-                    .flatMap(authenticated -> {
-                        if (authenticated == null || !authenticated) {
-                            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-                            return Mono.empty();
-                        }
-                        if (requiredPermission != null) {
-                            return adminService.isAdminAuthorized(exchange, account, requiredPermission.value())
-                                    .flatMap(authorized -> {
-                                        if (authorized != null && authorized) {
-                                            return tryPersistAndPass(account, exchange, chain, handlerMethod);
-                                        } else {
-                                            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-                                            return Mono.empty();
-                                        }
-                                    });
-                        } else {
-                            return tryPersistAndPass(account, exchange, chain, handlerMethod);
-                        }
-                    });
-        } else {
+        String[] credentials = parseAccountAndPassword(exchange);
+        if (credentials == null) {
             exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
             return Mono.empty();
         }
+        String account = credentials[0];
+        String password = credentials[1];
+        exchange.getAttributes().put(ATTRIBUTES_ACCOUNT, account);
+        return adminService.authenticate(account, password)
+                .flatMap(authenticated -> {
+                    if (authenticated == null || !authenticated) {
+                        exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+                        return Mono.empty();
+                    }
+                    if (requiredPermission != null) {
+                        return adminService.isAdminAuthorized(exchange, account, requiredPermission.value())
+                                .flatMap(authorized -> {
+                                    if (authorized != null && authorized) {
+                                        return tryPersistAndPass(account, exchange, chain, handlerMethod);
+                                    } else {
+                                        exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+                                        return Mono.empty();
+                                    }
+                                });
+                    } else {
+                        return tryPersistAndPass(account, exchange, chain, handlerMethod);
+                    }
+                });
     }
 
     /**
@@ -180,12 +170,17 @@ public class ControllerFilter implements WebFilter {
             response.setStatusCode(HttpStatus.FORBIDDEN);
             return Mono.empty();
         }
-        String account = parseAccount(exchange);
-        String password = parsePassword(exchange);
-        if (account == null || password == null) {
+        if (isOpenApiEnabledAndOpenApiRequest(exchange)) {
+            return chain.filter(exchange);
+        }
+        String[] credentials = parseAccountAndPassword(exchange);
+        if (credentials == null) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
             return Mono.empty();
         }
+        String account = credentials[0];
+        String password = credentials[1];
+        exchange.getAttributes().put(ATTRIBUTES_ACCOUNT, account);
         return adminService.authenticate(account, password)
                 .flatMap(authenticated -> {
                     if (authenticated) {
@@ -197,14 +192,32 @@ public class ControllerFilter implements WebFilter {
                 });
     }
 
-    private String parseAccount(@NotNull ServerWebExchange exchange) {
-        ServerHttpRequest request = exchange.getRequest();
-        return request.getHeaders().getFirst(HEADER_ACCOUNT);
+    /**
+     * 1. We don't expose configs for developers to customize the cors config
+     * because it's better to be done by firewall/ECS/EC2
+     * 2. Note that no only CORS requests but also some normal requests need these headers
+     */
+    private void allowAnyRequest(ServerHttpResponse response) {
+        HttpHeaders headers = response.getHeaders();
+        headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+        headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "*");
+        headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "*");
+        headers.set(HttpHeaders.ACCESS_CONTROL_MAX_AGE, "7200");
     }
 
-    private String parsePassword(@NotNull ServerWebExchange exchange) {
+    private String[] parseAccountAndPassword(@NotNull ServerWebExchange exchange) {
         ServerHttpRequest request = exchange.getRequest();
-        return request.getHeaders().getFirst(HEADER_PASSWORD);
+        String authorization = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
+        if (authorization == null || !authorization.startsWith(BASIC_AUTH_PREFIX)) {
+            return null;
+        }
+        try {
+            String encodedCredentials = authorization.substring(BASIC_AUTH_PREFIX.length());
+            byte[] decode = Base64.getDecoder().decode(encodedCredentials);
+            return StringUtils.split(new String(decode), ":");
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private Mono<Void> tryPersistAndPass(

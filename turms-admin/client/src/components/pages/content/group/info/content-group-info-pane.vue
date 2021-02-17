@@ -273,7 +273,6 @@ export default {
                         width: '7.5%'
                     },
                     {
-                        title: this.$t('isActive'),
                         key: 'isActive',
                         width: '6%'
                     },

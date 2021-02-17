@@ -112,11 +112,9 @@ export default {
             this.$http.head(`${url}/admins`)
                 .then(() => {
                     axios.defaults.transformResponse = [(data) => data && JSONbig.parse(data)];
+                    const token = btoa(`${this.$store.getters.admin.account}:${this.$store.getters.admin.password}`);
+                    this.$http.defaults.headers.common.Authorization = `Basic ${token}`;
                     this.$http.defaults.baseURL = url;
-                    this.$http.defaults.headers.common = {
-                        account: this.$store.getters.admin.account,
-                        password: this.$store.getters.admin.password
-                    };
                     this.$store.setUrl(url);
                     this.$message.success(this.$t('changedServerSuccessfully'));
                     this.visible = false;

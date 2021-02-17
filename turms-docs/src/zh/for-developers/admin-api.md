@@ -1,8 +1,8 @@
 # 管理员API接口
 
-Turms的API文档采用[Springfox](https://github.com/springfox/springfox) 3.X实现，并采用OpenAPI 3.0标准。
+Turms的API文档基于[Springdoc](https://github.com/springdoc/springdoc-openapi) 依赖实现，并采用OpenAPI 3.0标准。
 
-如果您需要查阅具体API的接口文档，则您需要在dist/config/application.yaml配置文件下，添加springfox.documentation.enabled属性，并赋值为true（dev profile下该属性默认为true）。在启动turms服务端后，访问 http://localhost:8510/swagger-ui/index.html 即可查阅API接口。如果您需要OpenAPI标准下API接口的JSON数据，可访问 http://localhost:8510/v3/api-docs 获取。
+Turms在生产环境下默认关闭OpenAPI的UI与API接口（dev profile下该接口默认开启），因此如果您需要查阅API接口文档，则您需要将dist/config/application.yaml配置文件下的springdoc.*.enabled=false属性删除。在启动turms服务端后，访问 http://localhost:8510/swagger-ui.html 即可查阅API接口。如果您需要OpenAPI标准下API接口的JSON数据，可访问 http://localhost:8510/v3/api-docs 获取。
 
 ## 接口设计准则
 
