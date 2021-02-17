@@ -18,8 +18,11 @@
 package im.turms.turms;
 
 import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.core.async.AsyncLogger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author James Chen
@@ -42,6 +45,10 @@ public class TurmsApplication {
             // because the context hadn't been initialized.
 
             log.error(e);
+            // Flush
+            AsyncLogger logger = (AsyncLogger) log;
+            logger.getContext().stop(1, TimeUnit.MINUTES);
+
             System.exit(1);
         }
     }

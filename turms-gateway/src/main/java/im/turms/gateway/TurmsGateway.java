@@ -18,8 +18,11 @@
 package im.turms.gateway;
 
 import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.core.async.AsyncLogger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Responsibilities:
@@ -46,6 +49,10 @@ public class TurmsGateway {
             // because there are still some non-daemon threads running after the context has been closed
 
             log.error(e);
+            // Flush
+            AsyncLogger logger = (AsyncLogger) log;
+            logger.getContext().stop(1, TimeUnit.MINUTES);
+
             System.exit(1);
         }
     }
