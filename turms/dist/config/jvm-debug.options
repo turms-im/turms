@@ -24,6 +24,8 @@
 # Enabling NMT causes a 5% -10% performance overhead
 -XX:NativeMemoryTracking=summary
 -XX:+HeapDumpOnOutOfMemoryError
+-XX:+HeapDumpAfterFullGC
+-XX:+HeapDumpBeforeFullGC
 -XX:HeapDumpPath=./turms_pid%p.hprof
 
 # Diagnostics - GC
