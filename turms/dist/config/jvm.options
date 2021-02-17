@@ -3,6 +3,9 @@
 -Xms1g
 -Xmx1g
 -XX:-RestrictContended
+-XX:+UseStringDeduplication
+# Remove this option once we supports primitive objects
+-XX:AutoBoxCacheMax=16384
 
 # GC
 
