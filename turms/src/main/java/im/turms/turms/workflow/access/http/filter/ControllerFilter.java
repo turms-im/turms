@@ -25,7 +25,9 @@ import im.turms.turms.workflow.access.http.permission.AdminPermission;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.service.impl.admin.AdminService;
 import im.turms.turms.workflow.service.impl.log.AdminActionLogService;
-import org.springframework.beans.factory.annotation.Value;
+import org.springdoc.core.SpringDocConfigProperties;
+import org.springdoc.webflux.api.OpenApiWebfluxResource;
+import org.springdoc.webflux.ui.SwaggerWelcomeWebFlux;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
@@ -72,15 +74,15 @@ public class ControllerFilter implements WebFilter {
     private final TurmsPluginManager turmsPluginManager;
     private final boolean pluginEnabled;
     private final boolean enableAdminApi;
-    @Value("${springfox.documentation.enabled}")
-    private boolean isOpenApiEnabled;
+    private final boolean isOpenApiEnabled;
 
     public ControllerFilter(
             Node node,
             RequestMappingHandlerMapping requestMappingHandlerMapping,
             AdminService adminService,
             AdminActionLogService adminActionLogService,
-            TurmsPluginManager turmsPluginManager) {
+            TurmsPluginManager turmsPluginManager,
+            SpringDocConfigProperties springDocConfigProperties) {
         this.requestMappingHandlerMapping = requestMappingHandlerMapping;
         this.adminService = adminService;
         this.adminActionLogService = adminActionLogService;
@@ -88,26 +90,19 @@ public class ControllerFilter implements WebFilter {
         this.turmsPluginManager = turmsPluginManager;
         pluginEnabled = node.getSharedProperties().getPlugin().isEnabled();
         enableAdminApi = node.getSharedProperties().getService().getAdminApi().isEnabled();
+        isOpenApiEnabled = springDocConfigProperties.getApiDocs().isEnabled();
     }
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         allowAnyRequest(exchange.getResponse());
         return requestMappingHandlerMapping.getHandler(exchange)
-                .switchIfEmpty(Mono.defer(() -> isOpenApiEnabledAndOpenApiRequest(exchange)
-                        // For the access to the OpenAPI page "/swagger-ui/index.html"
-                        ? chain.filter(exchange)
-                        // For the access to metrics
-                        : filterUnhandledRequest(exchange, chain)))
-                .flatMap(handlerMethodObject -> {
-                    if (handlerMethodObject instanceof HandlerMethod) {
-                        HandlerMethod handlerMethod = (HandlerMethod) handlerMethodObject;
-                        return filterHandlerMethod(handlerMethod, exchange, chain);
-                    } else if (isOpenApiEnabledAndOpenApiRequest(exchange)) {
-                        return chain.filter(exchange);
-                    } else {
-                        return filterUnhandledRequest(exchange, chain);
+                .switchIfEmpty(Mono.defer(() -> filterUnhandledRequest(exchange, chain)))
+                .flatMap(o -> {
+                    if (o instanceof HandlerMethod) {
+                        return filterHandlerMethod((HandlerMethod) o, exchange, chain);
                     }
+                    return filterUnhandledRequest(exchange, chain);
                 });
     }
 
@@ -125,6 +120,9 @@ public class ControllerFilter implements WebFilter {
     }
 
     private Mono<Void> filterHandlerMethod(HandlerMethod handlerMethod, ServerWebExchange exchange, WebFilterChain chain) {
+        if (isOpenApiEnabledAndOpenApiRequest(handlerMethod)) {
+            return chain.filter(exchange);
+        }
         RequiredPermission requiredPermission = handlerMethod.getMethodAnnotation(RequiredPermission.class);
         if (requiredPermission != null && requiredPermission.value().equals(AdminPermission.NONE)) {
             return chain.filter(exchange);
@@ -169,6 +167,9 @@ public class ControllerFilter implements WebFilter {
         }
     }
 
+    /**
+     * metrics Apis and swagger resources APIs don't have HandlerMethod instances
+     */
     private Mono<Void> filterUnhandledRequest(ServerWebExchange exchange, WebFilterChain chain) {
         ServerHttpResponse response = exchange.getResponse();
         if (CorsUtils.isPreFlightRequest(exchange.getRequest())) {
@@ -315,15 +316,16 @@ public class ControllerFilter implements WebFilter {
         }
     }
 
-    private boolean isOpenApiEnabledAndOpenApiRequest(@NotNull ServerWebExchange exchange) {
-        if (isOpenApiEnabled) {
-            String path = exchange.getRequest().getURI().getPath();
-            return path.startsWith("/v3/api-docs")
-                    || path.startsWith("/swagger-resources")
-                    || path.startsWith("/swagger-ui");
-        } else {
+    private boolean isOpenApiEnabledAndOpenApiRequest(HandlerMethod handlerMethod) {
+        if (!isOpenApiEnabled) {
             return false;
         }
+        Class<?> beanType = handlerMethod.getBeanType();
+        return OpenApiWebfluxResource.class.equals(beanType) || SwaggerWelcomeWebFlux.class.equals(beanType);
+    }
+
+    private boolean isOpenApiEnabledAndOpenApiRequest(ServerWebExchange exchange) {
+        return isOpenApiEnabled && exchange.getRequest().getURI().getPath().startsWith("/webjars/swagger-ui");
     }
 
 }

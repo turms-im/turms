@@ -66,9 +66,10 @@ management:
     web:
       exposure:
         include: info,health,env,heapdump,threaddump,metrics,prometheus
-springfox:
-  documentation:
-    enabled: true
+springdoc:
+  show-actuator: true
+  swagger-ui:
+    doc-expansion: none
 
 ############################### Turms ###############################
 

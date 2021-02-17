@@ -26,11 +26,8 @@ import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.access.http.util.PageUtil;
 import im.turms.turms.workflow.dao.domain.admin.Admin;
 import im.turms.turms.workflow.service.impl.admin.AdminService;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -57,25 +54,14 @@ public class AdminController {
 
     @RequestMapping(method = RequestMethod.HEAD)
     @RequiredPermission(NONE)
-    public Mono<Void> checkAccountAndPassword(
-            @RequestHeader String account,
-            @RequestHeader String password) {
-        if (StringUtils.isBlank(account) || StringUtils.isBlank(password)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
-        return adminService.authenticate(account, password)
-                .map(authenticated -> {
-                    HttpStatus httpStatus = authenticated != null && authenticated
-                            ? HttpStatus.OK
-                            : HttpStatus.UNAUTHORIZED;
-                    throw new ResponseStatusException(httpStatus);
-                });
+    public ResponseEntity<Void> checkAccountAndPassword() {
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping
     @RequiredPermission(ADMIN_CREATE)
     public Mono<ResponseEntity<ResponseDTO<Admin>>> addAdmin(
-            @RequestHeader("account") String requesterAccount,
+            @RequestAttribute("account") String requesterAccount,
             @RequestBody AddAdminDTO addAdminDTO) {
         Mono<Admin> generatedAdmin = adminService.authAndAddAdmin(
                 requesterAccount,
@@ -127,7 +113,7 @@ public class AdminController {
     @PutMapping
     @RequiredPermission(ADMIN_UPDATE)
     public Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateAdmins(
-            @RequestHeader("account") String requesterAccount,
+            @RequestAttribute("account") String requesterAccount,
             @RequestParam Set<String> accounts,
             @RequestBody UpdateAdminDTO updateAdminDTO) {
         Mono<UpdateResult> updateMono = adminService.authAndUpdateAdmins(
@@ -142,7 +128,7 @@ public class AdminController {
     @DeleteMapping
     @RequiredPermission(ADMIN_DELETE)
     public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteAdmins(
-            @RequestHeader("account") String requesterAccount,
+            @RequestAttribute("account") String requesterAccount,
             @RequestParam Set<String> accounts) {
         Mono<DeleteResult> deleteMono = adminService.authAndDeleteAdmins(requesterAccount, accounts);
         return ResponseFactory.deleteResult(deleteMono);

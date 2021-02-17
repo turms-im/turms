@@ -39,7 +39,7 @@
         <spring-boot-admin-starter-client.version>2.3.1</spring-boot-admin-starter-client.version>
         <jmh.version>1.27</jmh.version>
         <commons-io.version>2.8.0</commons-io.version>
-        <springfox-boot-starter.version>3.0.0</springfox-boot-starter.version>
+        <springdoc.version>1.5.4</springdoc.version>
 
         <spring-boot-thin-layout.version>1.0.25.RELEASE</spring-boot-thin-layout.version>
 
@@ -133,9 +133,9 @@
             <artifactId>caffeine</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-boot-starter</artifactId>
-            <version>${springfox-boot-starter.version}</version>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-webflux-ui</artifactId>
+            <version>${springdoc.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

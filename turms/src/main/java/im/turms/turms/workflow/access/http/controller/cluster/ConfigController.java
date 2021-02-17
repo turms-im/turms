@@ -26,9 +26,9 @@ import im.turms.server.common.util.PropertiesUtil;
 import im.turms.turms.workflow.access.http.dto.response.ResponseDTO;
 import im.turms.turms.workflow.access.http.dto.response.ResponseFactory;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -72,10 +72,8 @@ public class ConfigController {
      */
     @PutMapping
     @RequiredPermission(CLUSTER_CONFIG_UPDATE)
-    @ApiOperation(value = "", notes = "Do not call this method frequently because it costs a lot of resources")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "turmsProperties", dataTypeClass = TurmsProperties.class, paramType = "body")
-    })
+    @Operation(description = "Do not call this method frequently because it costs a lot of resources",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(schema = @Schema(implementation = TurmsProperties.class))))
     public Mono<ResponseEntity<ResponseDTO<Void>>> updateClusterConfig(
             @RequestParam(defaultValue = "false") Boolean reset,
             @RequestParam(defaultValue = "false") Boolean updateGlobalProperties,

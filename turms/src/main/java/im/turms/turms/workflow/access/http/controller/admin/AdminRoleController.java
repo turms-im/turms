@@ -53,7 +53,7 @@ public class AdminRoleController {
     @PostMapping
     @RequiredPermission(AdminPermission.ADMIN_ROLE_CREATE)
     public Mono<ResponseEntity<ResponseDTO<AdminRole>>> addAdminRole(
-            @RequestHeader("account") String requesterAccount,
+            @RequestAttribute("account") String requesterAccount,
             @RequestBody AddAdminRoleDTO addAdminRoleDTO) {
         Mono<AdminRole> adminRoleMono = adminRoleService.authAndAddAdminRole(
                 requesterAccount,
@@ -111,7 +111,7 @@ public class AdminRoleController {
     @PutMapping
     @RequiredPermission(AdminPermission.ADMIN_ROLE_UPDATE)
     public Mono<ResponseEntity<ResponseDTO<UpdateResultDTO>>> updateAdminRole(
-            @RequestHeader("account") String requesterAccount,
+            @RequestAttribute("account") String requesterAccount,
             @RequestParam Set<Long> ids,
             @RequestBody UpdateAdminRoleDTO updateAdminRoleDTO) {
         Mono<UpdateResult> updateMono = adminRoleService.authAndUpdateAdminRole(
@@ -126,7 +126,7 @@ public class AdminRoleController {
     @DeleteMapping
     @RequiredPermission(AdminPermission.ADMIN_ROLE_DELETE)
     public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteAdminRoles(
-            @RequestHeader("account") String requesterAccount,
+            @RequestAttribute("account") String requesterAccount,
             @RequestParam Set<Long> ids) {
         Mono<DeleteResult> deleteMono = adminRoleService.authAndDeleteAdminRoles(requesterAccount, ids);
         return ResponseFactory.deleteResult(deleteMono);

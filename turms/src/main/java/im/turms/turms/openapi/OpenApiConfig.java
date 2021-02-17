@@ -17,74 +17,47 @@
 
 package im.turms.turms.openapi;
 
-import com.fasterxml.classmate.TypeResolver;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
+import io.swagger.v3.core.converter.AnnotatedType;
+import io.swagger.v3.core.converter.ModelConverters;
+import io.swagger.v3.core.converter.ResolvedSchema;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springdoc.core.customizers.OpenApiCustomiser;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.ResponseEntity;
-import reactor.core.publisher.Mono;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.RequestParameterBuilder;
-import springfox.documentation.schema.ScalarType;
-import springfox.documentation.schema.WildcardType;
-import springfox.documentation.service.ParameterType;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
 
 import java.util.List;
 
-import static springfox.documentation.schema.AlternateTypeRules.newRule;
-
 /**
  * @author James Chen
- * @see <a href="https://springfox.github.io/springfox/docs/current">Springfox Reference Documentation</a>
- * @see springfox.boot.starter.autoconfigure.OpenApiAutoConfiguration
+ * @see <a href="https://springdoc.org">SpringDoc Reference Documentation</a>
+ * @see <a href="https://github.com/OAI/OpenAPI-Specification/blob/3.0.1/versions/3.0.1.md">OpenAPI Specification</a>
+ * @see org.springdoc.webflux.ui.SwaggerConfig
  */
 @Configuration
 public class OpenApiConfig {
 
-    private final TypeResolver typeResolver;
-
     private static final String PROJECT_NAME = "Turms";
-    private static final String HEADER_FIELD_NAME_ACCOUNT = "account";
-    private static final String HEADER_FIELD_NAME_PASSWORD = "password";
-    private static final String DEFAULT_ACCOUNT = "turms";
-    private static final String DEFAULT_PASSWORD = DEFAULT_ACCOUNT;
-
-    public OpenApiConfig(TypeResolver typeResolver) {
-        this.typeResolver = typeResolver;
-    }
 
     @Bean
-    public Docket docket(TurmsPropertiesManager turmsPropertiesManager) {
-        return new Docket(DocumentationType.OAS_30)
-                .apiInfo(new ApiInfoBuilder()
-                        .title(PROJECT_NAME)
-                        .version(turmsPropertiesManager.getLocalProperties().getCluster().getNode().getVersion())
-                        .build())
-                .additionalModels(typeResolver.resolve(TurmsProperties.class))
-                .alternateTypeRules(newRule(typeResolver.resolve(Mono.class,
-                        typeResolver.resolve(ResponseEntity.class, WildcardType.class)),
-                        typeResolver.resolve(WildcardType.class)))
-                .ignoredParameterTypes()
-                // TODO: Exclude the APIs that don't need these headers
-                //  Springfox doesn't support this for now: https://github.com/springfox/springfox/issues/1910
-                .globalRequestParameters(List.of(
-                        new RequestParameterBuilder()
-                                .name(HEADER_FIELD_NAME_ACCOUNT)
-                                .in(ParameterType.HEADER)
-                                .query(builder -> builder.defaultValue(DEFAULT_ACCOUNT)
-                                        .model(model -> model.scalarModel(ScalarType.STRING)))
-                                .required(true)
-                                .build(),
-                        new RequestParameterBuilder()
-                                .name(HEADER_FIELD_NAME_PASSWORD)
-                                .in(ParameterType.HEADER)
-                                .query(builder -> builder.defaultValue(DEFAULT_PASSWORD)
-                                        .model(model -> model.scalarModel(ScalarType.STRING)))
-                                .required(true)
-                                .build()));
+    public OpenApiCustomiser schemaCustomizer(TurmsPropertiesManager turmsPropertiesManager) {
+        ResolvedSchema resolvedSchema = ModelConverters.getInstance()
+                .resolveAsResolvedSchema(new AnnotatedType(TurmsProperties.class));
+        return openApi -> {
+            Info info = new Info().title(PROJECT_NAME)
+                    .version(turmsPropertiesManager.getLocalProperties().getCluster().getNode().getVersion());
+            SecurityScheme securityScheme = new SecurityScheme()
+                    .name("basicAuth")
+                    .scheme("basic")
+                    .type(SecurityScheme.Type.HTTP);
+            openApi.info(info)
+                    .schema(resolvedSchema.schema.getName(), resolvedSchema.schema)
+                    .security(List.of(new SecurityRequirement().addList(securityScheme.getName())))
+                    .getComponents().addSecuritySchemes(securityScheme.getName(), securityScheme);
+        };
     }
 
 }

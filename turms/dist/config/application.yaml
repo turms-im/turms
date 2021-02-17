@@ -59,8 +59,10 @@ management:
     web:
       exposure:
         include: info,health,env,heapdump,threaddump,metrics,prometheus
-springfox:
-  documentation:
+springdoc:
+  swagger-ui:
+    enabled: false
+  api-docs:
     enabled: false
 
 ############################### Turms ###############################
