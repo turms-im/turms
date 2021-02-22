@@ -24,6 +24,7 @@ import lombok.Data;
  */
 @Data
 public class AddressCollection {
+    private final String memberHost;
     private final String metricsApiAddress;
     private final String adminApiAddress;
     private final String wsAddress;

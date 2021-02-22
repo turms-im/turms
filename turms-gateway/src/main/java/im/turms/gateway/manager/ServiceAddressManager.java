@@ -24,7 +24,7 @@ import im.turms.server.common.manager.address.BaseServiceAddressManager;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.constant.AdvertiseStrategy;
-import im.turms.server.common.property.env.common.AdminApiDiscoveryProperties;
+import im.turms.server.common.property.env.common.AddressProperties;
 import im.turms.server.common.property.env.gateway.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
@@ -52,16 +52,25 @@ public class ServiceAddressManager extends BaseServiceAddressManager {
             ServerProperties metricsApiProperties,
             TurmsPropertiesManager turmsPropertiesManager,
             PublicIpManager publicIpManager) throws UnknownHostException {
-        super(publicIpManager);
+        super(publicIpManager, turmsPropertiesManager.getLocalProperties());
         updateCollectorAndAddresses(metricsApiProperties, turmsPropertiesManager.getLocalProperties());
         turmsPropertiesManager.addListeners(properties -> {
-            if (arePropertiesChange(properties)) {
+            boolean areAddressPropertiesChange = areAddressPropertiesChange(properties);
+            boolean isMemberHostChanged = updateMemberHostIfChanged(properties);
+            if (areAddressPropertiesChange) {
                 try {
                     updateCollectorAndAddresses(metricsApiProperties, properties);
                 } catch (Exception e) {
                     log.error("Failed to update address collector", e);
                 }
-                AddressCollection addresses = new AddressCollection(metricsApiAddress, null, wsAddress, tcpAddress, udpAddress);
+            }
+            if (areAddressPropertiesChange || isMemberHostChanged) {
+                AddressCollection addresses = new AddressCollection(getMemberHost(),
+                        metricsApiAddress,
+                        null,
+                        wsAddress,
+                        tcpAddress,
+                        udpAddress);
                 triggerOnAddressesChangedListeners(addresses);
             }
         });
@@ -88,8 +97,8 @@ public class ServiceAddressManager extends BaseServiceAddressManager {
     }
 
     private void updateCollectorAndAddresses(ServerProperties metricsApiProperties, TurmsProperties properties) throws UnknownHostException {
-        AdminApiDiscoveryProperties newMetricsApiAddressProperties = properties.getGateway().getMetricsApiDiscovery();
-        AddressCollector adminApiAddressesCollector = getAdminApiAddressCollector(metricsApiProperties, newMetricsApiAddressProperties);
+        AddressProperties newMetricsApiAddressProperties = properties.getGateway().getMetricsApiAddress();
+        AddressCollector adminApiAddressesCollector = getAddressCollector(newMetricsApiAddressProperties, metricsApiProperties);
         WebSocketProperties webSocketProperties = properties.getGateway().getWebsocket();
         TcpProperties tcpProperties = properties.getGateway().getTcp();
         UdpProperties udpProperties = properties.getGateway().getUdp();
@@ -117,7 +126,7 @@ public class ServiceAddressManager extends BaseServiceAddressManager {
         return new AddressCollector(bindHost, advertiseHost, port, isSslEnabled, attachPortToHost, advertiseStrategy, publicIpManager);
     }
 
-    private boolean arePropertiesChange(TurmsProperties newTurmsProperties) {
+    private boolean areAddressPropertiesChange(TurmsProperties newTurmsProperties) {
         DiscoveryProperties newDiscoveryProperties = newTurmsProperties.getGateway().getServiceDiscovery();
         return gatewayApiDiscoveryProperties.getAdvertiseStrategy() != newDiscoveryProperties.getAdvertiseStrategy()
                 || !StringUtils.equals(gatewayApiDiscoveryProperties.getAdvertiseHost(), newDiscoveryProperties.getAdvertiseHost())

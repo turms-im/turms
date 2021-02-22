@@ -18,7 +18,7 @@
 package im.turms.server.common.property.env.service.env;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import im.turms.server.common.property.env.common.AdminApiDiscoveryProperties;
+import im.turms.server.common.property.env.common.AddressProperties;
 import im.turms.server.common.property.metadata.annotation.Description;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
 import lombok.Data;
@@ -78,6 +78,6 @@ public class AdminApiProperties {
 
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
-    private AdminApiDiscoveryProperties discovery = new AdminApiDiscoveryProperties();
+    private AddressProperties address = new AddressProperties();
 
 }

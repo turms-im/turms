@@ -56,14 +56,14 @@ public class AddressCollector {
             @Nullable String bindHost,
             @Nullable String advertiseHost,
             @Nullable Integer port,
-            boolean isSslEnabled,
+            @Nullable Boolean isSslEnabled,
             boolean attachPortToIp,
             @NotNull AdvertiseStrategy advertiseStrategy,
             @NotNull PublicIpManager publicIpManager) throws UnknownHostException {
         this.bindHost = bindHost;
         this.advertiseHost = advertiseHost;
         this.port = port;
-        this.isSslEnabled = isSslEnabled;
+        this.isSslEnabled = isSslEnabled != null && isSslEnabled;
         this.attachPortToIp = attachPortToIp;
         this.advertiseStrategy = advertiseStrategy;
         this.publicIpManager = publicIpManager;

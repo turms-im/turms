@@ -19,6 +19,7 @@ package im.turms.server.common.property.env.common.cluster;
 
 
 import im.turms.server.common.cluster.service.config.SharedConfigService;
+import im.turms.server.common.property.env.common.AddressProperties;
 import lombok.Data;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.boot.web.server.Ssl;
@@ -52,5 +53,8 @@ public class DiscoveryProperties {
 
     @NestedConfigurationProperty
     private Ssl serverSsl = new Ssl();
+
+    @NestedConfigurationProperty
+    private AddressProperties address = new AddressProperties();
 
 }

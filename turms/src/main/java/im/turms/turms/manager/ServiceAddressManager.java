@@ -22,7 +22,7 @@ import im.turms.server.common.manager.address.AddressCollection;
 import im.turms.server.common.manager.address.AddressCollector;
 import im.turms.server.common.manager.address.BaseServiceAddressManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
-import im.turms.server.common.property.env.common.AdminApiDiscoveryProperties;
+import im.turms.server.common.property.env.common.AddressProperties;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.stereotype.Component;
@@ -36,7 +36,7 @@ import java.net.UnknownHostException;
 @Log4j2
 public class ServiceAddressManager extends BaseServiceAddressManager {
 
-    private AdminApiDiscoveryProperties adminApiDiscoveryProperties;
+    private AddressProperties adminApiAddressProperties;
     private String metricsApiAddress;
     private String adminApiAddress;
 
@@ -44,17 +44,26 @@ public class ServiceAddressManager extends BaseServiceAddressManager {
             TurmsPropertiesManager turmsPropertiesManager,
             ServerProperties adminApiServerProperties,
             PublicIpManager publicIpManager) throws UnknownHostException {
-        super(publicIpManager);
-        updateCollectorAndAddresses(adminApiServerProperties, turmsPropertiesManager.getLocalProperties().getService().getAdminApi().getDiscovery());
+        super(publicIpManager, turmsPropertiesManager.getLocalProperties());
+        updateCollectorAndAddresses(adminApiServerProperties, turmsPropertiesManager.getLocalProperties().getService().getAdminApi().getAddress());
         turmsPropertiesManager.addListeners(properties -> {
-            AdminApiDiscoveryProperties newAdminApiDiscoveryProperties = properties.getService().getAdminApi().getDiscovery();
-            if (!adminApiDiscoveryProperties.equals(newAdminApiDiscoveryProperties)) {
+            AddressProperties newAdminApiDiscoveryProperties = properties.getService().getAdminApi().getAddress();
+            boolean areAddressPropertiesChange = !adminApiAddressProperties.equals(newAdminApiDiscoveryProperties);
+            boolean isMemberHostChanged = updateMemberHostIfChanged(properties);
+            if (areAddressPropertiesChange) {
                 try {
                     updateCollectorAndAddresses(adminApiServerProperties, newAdminApiDiscoveryProperties);
                 } catch (UnknownHostException e) {
                     log.error("Failed to update address collector", e);
                 }
-                AddressCollection addresses = new AddressCollection(metricsApiAddress, adminApiAddress, null, null, null);
+            }
+            if (areAddressPropertiesChange || isMemberHostChanged) {
+                AddressCollection addresses = new AddressCollection(getMemberHost(),
+                        metricsApiAddress,
+                        adminApiAddress,
+                        null,
+                        null,
+                        null);
                 triggerOnAddressesChangedListeners(addresses);
             }
         });
@@ -70,11 +79,11 @@ public class ServiceAddressManager extends BaseServiceAddressManager {
         return adminApiAddress;
     }
 
-    private void updateCollectorAndAddresses(ServerProperties adminApiServerProperties, AdminApiDiscoveryProperties newAdminApiDiscoveryProperties) throws UnknownHostException {
-        AddressCollector adminApiAddressesCollector = getAdminApiAddressCollector(adminApiServerProperties, newAdminApiDiscoveryProperties);
+    private void updateCollectorAndAddresses(ServerProperties adminApiServerProperties, AddressProperties newAdminApiAddressProperties) throws UnknownHostException {
+        AddressCollector adminApiAddressesCollector = getAddressCollector(newAdminApiAddressProperties, adminApiServerProperties);
         metricsApiAddress = adminApiAddressesCollector.getHttpAddress() + "/actuator";
         adminApiAddress = adminApiAddressesCollector.getHttpAddress();
-        adminApiDiscoveryProperties = newAdminApiDiscoveryProperties;
+        adminApiAddressProperties = newAdminApiAddressProperties;
     }
 
 }

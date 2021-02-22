@@ -28,7 +28,7 @@ import lombok.Data;
  * @author James Chen
  */
 @Data
-public class AdminApiDiscoveryProperties {
+public class AddressProperties {
 
     @JsonView(MutablePropertiesView.class)
     @Description("The advertise strategy is used to decide which type of address should be used" +

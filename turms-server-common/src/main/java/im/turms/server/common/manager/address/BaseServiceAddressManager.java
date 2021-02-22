@@ -18,8 +18,9 @@
 package im.turms.server.common.manager.address;
 
 import im.turms.server.common.manager.PublicIpManager;
+import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.constant.AdvertiseStrategy;
-import im.turms.server.common.property.env.common.AdminApiDiscoveryProperties;
+import im.turms.server.common.property.env.common.AddressProperties;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.web.server.Ssl;
@@ -39,31 +40,22 @@ public abstract class BaseServiceAddressManager {
     protected final PublicIpManager publicIpManager;
 
     private final List<Consumer<AddressCollection>> onAddressesChangedListeners = new LinkedList<>();
+    private final String memberBindHost;
+    private AddressProperties memberAddressProperties;
+    private String memberHost;
 
-    protected BaseServiceAddressManager(PublicIpManager publicIpManager) {
+    protected BaseServiceAddressManager(PublicIpManager publicIpManager, TurmsProperties propertiesForMemberBindHost) {
         this.publicIpManager = publicIpManager;
+        memberAddressProperties = propertiesForMemberBindHost.getCluster().getDiscovery().getAddress();
+        memberBindHost = propertiesForMemberBindHost.getCluster().getNode().getNetwork().getHost();
     }
 
     public void addOnAddressesChangedListener(Consumer<AddressCollection> listener) {
         onAddressesChangedListeners.add(listener);
     }
 
-    protected AddressCollector getAdminApiAddressCollector(ServerProperties adminApiServerProperties, AdminApiDiscoveryProperties adminApiDiscoveryProperties) throws UnknownHostException {
-        Integer port = adminApiServerProperties.getPort();
-        if (port == null || port <= 0) {
-            throw new UnknownHostException("Invalid service port: " + port);
-        }
-        AdvertiseStrategy advertiseStrategy = adminApiDiscoveryProperties.getAdvertiseStrategy();
-        String advertiseHost = adminApiDiscoveryProperties.getAdvertiseHost();
-        boolean attachPortToHost = adminApiDiscoveryProperties.isAttachPortToHost();
-        InetAddress address = adminApiServerProperties.getAddress();
-        if (address == null) {
-            throw new IllegalStateException("The bind host isn't specified");
-        }
-        String bindHost = address.getHostAddress();
-        Ssl ssl = adminApiServerProperties.getSsl();
-        boolean isSslEnabled = ssl != null && ssl.isEnabled();
-        return new AddressCollector(bindHost, advertiseHost, adminApiServerProperties.getPort(), isSslEnabled, attachPortToHost, advertiseStrategy, publicIpManager);
+    public String getMemberHost() {
+        return memberHost;
     }
 
     public String getMetricsApiAddress() {
@@ -84,6 +76,45 @@ public abstract class BaseServiceAddressManager {
 
     public String getUdpAddress() {
         return null;
+    }
+
+    protected boolean updateMemberHostIfChanged(TurmsProperties newProperties) {
+        AddressProperties newAddressProperties = newProperties.getCluster().getDiscovery().getAddress();
+        boolean isAddressPropertiesChanged = !memberAddressProperties.equals(newAddressProperties);
+        if (isAddressPropertiesChanged) {
+            try {
+                getAddressCollector(newAddressProperties, memberBindHost, null, null);
+                memberAddressProperties = newAddressProperties;
+                return true;
+            } catch (UnknownHostException e) {
+                log.error(e);
+            }
+        }
+        return false;
+    }
+
+    protected AddressCollector getAddressCollector(AddressProperties addressProperties, ServerProperties serverProperties) throws UnknownHostException {
+        InetAddress address = serverProperties.getAddress();
+        Integer port = serverProperties.getPort();
+        if (address == null) {
+            throw new IllegalStateException("The bind host isn't specified");
+        }
+        if (port == null || port <= 0) {
+            throw new UnknownHostException("Invalid service port: " + port);
+        }
+        Ssl ssl = serverProperties.getSsl();
+        boolean isSslEnabled = ssl != null && ssl.isEnabled();
+        return getAddressCollector(addressProperties, address.getHostAddress(), port, isSslEnabled);
+    }
+
+    protected AddressCollector getAddressCollector(AddressProperties addressProperties,
+                                                   String host,
+                                                   Integer port,
+                                                   Boolean isSslEnabled) throws UnknownHostException {
+        AdvertiseStrategy advertiseStrategy = addressProperties.getAdvertiseStrategy();
+        String advertiseHost = addressProperties.getAdvertiseHost();
+        boolean attachPortToHost = addressProperties.isAttachPortToHost();
+        return new AddressCollector(host, advertiseHost, port, isSslEnabled, attachPortToHost, advertiseStrategy, publicIpManager);
     }
 
     protected void triggerOnAddressesChangedListeners(AddressCollection addresses) {
