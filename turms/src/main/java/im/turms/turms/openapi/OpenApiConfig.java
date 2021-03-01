@@ -17,11 +17,7 @@
 
 package im.turms.turms.openapi;
 
-import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
-import io.swagger.v3.core.converter.AnnotatedType;
-import io.swagger.v3.core.converter.ModelConverters;
-import io.swagger.v3.core.converter.ResolvedSchema;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
@@ -44,8 +40,6 @@ public class OpenApiConfig {
 
     @Bean
     public OpenApiCustomiser schemaCustomizer(TurmsPropertiesManager turmsPropertiesManager) {
-        ResolvedSchema resolvedSchema = ModelConverters.getInstance()
-                .resolveAsResolvedSchema(new AnnotatedType(TurmsProperties.class));
         return openApi -> {
             Info info = new Info().title(PROJECT_NAME)
                     .version(turmsPropertiesManager.getLocalProperties().getCluster().getNode().getVersion());
@@ -54,7 +48,6 @@ public class OpenApiConfig {
                     .scheme("basic")
                     .type(SecurityScheme.Type.HTTP);
             openApi.info(info)
-                    .schema(resolvedSchema.schema.getName(), resolvedSchema.schema)
                     .security(List.of(new SecurityRequirement().addList(securityScheme.getName())))
                     .getComponents().addSecuritySchemes(securityScheme.getName(), securityScheme);
         };
