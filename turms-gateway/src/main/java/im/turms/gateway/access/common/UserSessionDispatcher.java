@@ -92,10 +92,21 @@ public abstract class UserSessionDispatcher {
         return in
                 .doOnNext(requestData -> {
                     if (!connection.isDisposed()) {
+                        // Retain one so that it won't be released by FluxReceive
+                        // before we finish handling the buffer
+                        requestData.retain();
                         // Note that handleRequestData should never return MonoError
                         Mono<ByteBuf> response = userRequestDispatcher.handleRequest(sessionWrapper, requestData)
                                 .doOnError(throwable -> handleNotificationError(throwable, sessionWrapper.getUserSession()));
-                        sendNotifications(out, response, sessionWrapper.getConnection(), sessionWrapper.getUserSession()).subscribe();
+                        sendNotifications(out, response, sessionWrapper.getConnection(), sessionWrapper.getUserSession())
+                                .doFinally(signalType -> {
+                                    // The request should have been released if
+                                    // sent to another peer by RpcService
+                                    if (requestData.refCnt() > 0) {
+                                        requestData.release();
+                                    }
+                                })
+                                .subscribe();
                     }
                 })
                 .then()

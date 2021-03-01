@@ -27,7 +27,7 @@ import io.netty.handler.codec.MessageToMessageEncoder;
 import java.util.List;
 
 /**
- * Don't use ProtobufEncoder in Netty because it uses heap memory.
+ * Don't use io.netty.handler.codec.protobuf.ProtobufEncoder because it uses heap memory.
  *
  * @author James Chen
  * @see io.netty.handler.codec.protobuf.ProtobufEncoder

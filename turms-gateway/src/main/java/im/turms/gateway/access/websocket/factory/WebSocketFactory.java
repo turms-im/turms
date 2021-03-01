@@ -122,7 +122,9 @@ public class WebSocketFactory {
             return response.sendWebsocket((in, out) -> {
                 Flux<ByteBuf> inbound = in.aggregateFrames(MAX_FRAME_PAYLOAD_LENGTH)
                         .receiveFrames()
-                        // Note that PingWebSocketFrame will be handled by Netty itself
+                        // Note that:
+                        // 1. PingWebSocketFrame will be handled by Netty itself
+                        // 2. The flatMap is called by FluxReceive, which will release buffer after "onNext" returns
                         .flatMap(frame -> frame instanceof BinaryWebSocketFrame
                                 ? Mono.just(frame.content())
                                 : Mono.empty());
