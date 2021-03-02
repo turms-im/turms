@@ -22,11 +22,12 @@ import com.google.common.collect.Sets;
 import im.turms.common.constant.GroupMemberRole;
 import im.turms.common.constant.ProfileAccessStrategy;
 import im.turms.common.constant.RequestStatus;
-import im.turms.server.common.cluster.node.Node;
-import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.context.ApplicationContext;
 import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.manager.PasswordManager;
+import im.turms.server.common.mongo.IMongoDataGenerator;
+import im.turms.server.common.mongo.TurmsMongoClient;
+import im.turms.server.common.mongo.entity.MongoEntity;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.service.env.MockProperties;
 import im.turms.server.common.util.MapUtil;
@@ -42,19 +43,13 @@ import im.turms.turms.workflow.dao.domain.user.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.EventListener;
-import org.springframework.data.mongodb.core.CollectionOptions;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
-import javax.annotation.Nullable;
 import java.time.Duration;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * TODO: Extract the mocking feature as an independent project
@@ -62,38 +57,8 @@ import java.util.*;
  * @author James Chen
  */
 @Log4j2
-@Component
-public class MongoDataGenerator {
-
-    private static final List<String> ADMIN_COLLECTIONS = List.of(
-            Admin.COLLECTION_NAME,
-            AdminRole.COLLECTION_NAME);
-
-    private static final List<String> GROUP_COLLECTIONS = List.of(
-            Group.COLLECTION_NAME,
-            GroupBlockedUser.COLLECTION_NAME,
-            GroupInvitation.COLLECTION_NAME,
-            GroupJoinQuestion.COLLECTION_NAME,
-            GroupJoinRequest.COLLECTION_NAME,
-            GroupMember.COLLECTION_NAME,
-            GroupType.COLLECTION_NAME,
-            GroupVersion.COLLECTION_NAME);
-
-    private static final List<String> CONVERSATION_COLLECTIONS = List.of(
-            PrivateConversation.COLLECTION_NAME,
-            GroupConversation.COLLECTION_NAME);
-
-    private static final List<String> MESSAGE_COLLECTIONS = List.of(
-            Message.COLLECTION_NAME);
-
-    private static final List<String> USER_COLLECTIONS = List.of(
-            User.COLLECTION_NAME,
-            UserFriendRequest.COLLECTION_NAME,
-            UserPermissionGroup.COLLECTION_NAME,
-            UserRelationship.COLLECTION_NAME,
-            UserRelationshipGroup.COLLECTION_NAME,
-            UserRelationshipGroupMember.COLLECTION_NAME,
-            UserVersion.COLLECTION_NAME);
+@Component(MongoDataGenerator.BEAN_NAME)
+public class MongoDataGenerator implements IMongoDataGenerator {
 
     public final boolean isMockEnabled;
     public final int userNumber;
@@ -113,32 +78,39 @@ public class MongoDataGenerator {
     public final int targetUserToBeFriendRelationshipStart;
     public final int targetUserToBeFriendRelationshipEnd;
 
-    private final Node node;
-    private final ReactiveMongoTemplate adminMongoTemplate;
-    private final ReactiveMongoTemplate userMongoTemplate;
-    private final ReactiveMongoTemplate groupMongoTemplate;
-    private final ReactiveMongoTemplate conversationMongoTemplate;
-    private final ReactiveMongoTemplate messageMongoTemplate;
+    private final TurmsMongoClient adminMongoClient;
+    private final TurmsMongoClient userMongoClient;
+    private final TurmsMongoClient groupMongoClient;
+    private final TurmsMongoClient conversationMongoClient;
+    private final TurmsMongoClient messageMongoClient;
+    private final List<TurmsMongoClient> clients;
+
     private final PasswordManager passwordUtil;
     private final ApplicationContext context;
     private final boolean clearAllCollectionsBeforeMocking;
 
+    private long currentId = 1L;
+
     public MongoDataGenerator(
-            Node node,
-            ReactiveMongoTemplate adminMongoTemplate,
-            ReactiveMongoTemplate userMongoTemplate,
-            ReactiveMongoTemplate groupMongoTemplate,
-            ReactiveMongoTemplate conversationMongoTemplate,
-            ReactiveMongoTemplate messageMongoTemplate,
+            TurmsMongoClient adminMongoClient,
+            TurmsMongoClient userMongoClient,
+            TurmsMongoClient groupMongoClient,
+            TurmsMongoClient conversationMongoClient,
+            TurmsMongoClient messageMongoClient,
             PasswordManager passwordUtil,
             TurmsPropertiesManager turmsPropertiesManager,
             ApplicationContext context) {
-        this.node = node;
-        this.adminMongoTemplate = adminMongoTemplate;
-        this.userMongoTemplate = userMongoTemplate;
-        this.groupMongoTemplate = groupMongoTemplate;
-        this.conversationMongoTemplate = conversationMongoTemplate;
-        this.messageMongoTemplate = messageMongoTemplate;
+        this.adminMongoClient = adminMongoClient;
+        this.userMongoClient = userMongoClient;
+        this.groupMongoClient = groupMongoClient;
+        this.conversationMongoClient = conversationMongoClient;
+        this.messageMongoClient = messageMongoClient;
+        clients = List.of(adminMongoClient,
+                userMongoClient,
+                groupMongoClient,
+                conversationMongoClient,
+                messageMongoClient);
+
         this.passwordUtil = passwordUtil;
         this.context = context;
 
@@ -161,87 +133,41 @@ public class MongoDataGenerator {
         targetUserToBeFriendRelationshipEnd = step;
         targetUserToRequestFriendRequestStart = 1 + step;
         targetUserToRequestFriendRequestEnd = 1 + step * 2;
+
+        initCollections();
     }
 
-    @EventListener(classes = ContextRefreshedEvent.class)
-    public void createCollectionsIfNotExist() {
+    private void initCollections() {
+        Duration timeout = Duration.ofMinutes(1);
         if (!context.isProduction() && clearAllCollectionsBeforeMocking) {
-            log.info("Start clearing collections...");
-            clearAllCollections().block(Duration.ofSeconds(120));
+            log.info("Start dropping databases...");
+            dropAllDatabases().block(timeout);
             log.info("All collections are cleared");
         }
         log.info("Start creating collections...");
-        Mono.when(
-                createCollectionIfNotExist(Admin.class, null),
-                createCollectionIfNotExist(AdminRole.class, null),
-
-                createCollectionIfNotExist(Group.class, null),
-                createCollectionIfNotExist(GroupBlockedUser.class, null),
-                createCollectionIfNotExist(GroupInvitation.class, null),
-                createCollectionIfNotExist(GroupJoinQuestion.class, null),
-                createCollectionIfNotExist(GroupMember.class, null),
-                createCollectionIfNotExist(GroupType.class, null),
-                createCollectionIfNotExist(GroupVersion.class, null),
-
-                createCollectionIfNotExist(PrivateConversation.class, null),
-                createCollectionIfNotExist(GroupConversation.class, null),
-
-                createCollectionIfNotExist(Message.class, null),
-
-                createCollectionIfNotExist(User.class, null),
-                createCollectionIfNotExist(UserFriendRequest.class, null),
-                createCollectionIfNotExist(UserPermissionGroup.class, null),
-                createCollectionIfNotExist(UserRelationship.class, null),
-                createCollectionIfNotExist(UserRelationshipGroup.class, null),
-                createCollectionIfNotExist(UserRelationshipGroupMember.class, null),
-                createCollectionIfNotExist(UserVersion.class, null))
+        createCollectionsIfNotExist()
                 .doOnError(t -> log.error("Failed to create collections", t))
-                .doOnSuccess(ignored -> {
-                    log.info("All collections are created");
-                    if (!context.isProduction() && isMockEnabled) {
-                        try {
-                            mockData().block(Duration.ofSeconds(120));
-                        } catch (Exception e) {
-                            log.error("Failed to mock data", e);
-                        }
-                    }
-                })
-                .block(Duration.ofSeconds(120));
+                .doOnSuccess(ignored -> log.info("All collections are created"))
+                .then(ensureIndexesAndShard()
+                        .doOnError(t -> log.error("Failed to ensure indexes and shard", t))
+                        .then(Mono.defer(() -> !context.isProduction() && isMockEnabled
+                                ? mockData()
+                                : Mono.empty())))
+                .block(timeout);
     }
 
-    private Mono<Void> clearAllCollections() {
-        Query queryAll = new Query();
-        List<Flux<?>> fluxes = new ArrayList<>(5);
-        fluxes.add(adminMongoTemplate.getCollectionNames()
-                .flatMap(name -> {
-                    if (ADMIN_COLLECTIONS.contains(name)) {
-                        Query query = queryAll;
-                        if (Admin.COLLECTION_NAME.equals(name)) {
-                            query = new Query()
-                                    .addCriteria(Criteria.where(Admin.Fields.ROLE_ID).ne(DaoConstant.ADMIN_ROLE_ROOT_ID));
-                        }
-                        return adminMongoTemplate.remove(query, name);
-                    } else {
-                        return Mono.empty();
-                    }
-                }));
-        fluxes.add(userMongoTemplate.getCollectionNames()
-                .flatMap(name -> USER_COLLECTIONS.contains(name)
-                        ? userMongoTemplate.remove(queryAll, name)
-                        : Mono.empty()));
-        fluxes.add(groupMongoTemplate.getCollectionNames()
-                .flatMap(name -> GROUP_COLLECTIONS.contains(name)
-                        ? groupMongoTemplate.remove(queryAll, name)
-                        : Mono.empty()));
-        fluxes.add(conversationMongoTemplate.getCollectionNames()
-                .flatMap(name -> CONVERSATION_COLLECTIONS.contains(name)
-                        ? conversationMongoTemplate.remove(queryAll, name)
-                        : Mono.empty()));
-        fluxes.add(messageMongoTemplate.getCollectionNames()
-                .flatMap(name -> MESSAGE_COLLECTIONS.contains(name)
-                        ? messageMongoTemplate.remove(queryAll, name)
-                        : Mono.empty()));
-        return Mono.when(fluxes);
+    private Mono<Void> dropAllDatabases() {
+        return Mono.when(clients.stream()
+                .map(TurmsMongoClient::dropDatabase)
+                .collect(Collectors.toList()));
+    }
+
+    private Mono<Void> ensureIndexesAndShard() {
+        return Mono.when(clients.stream()
+                .map(client -> client.ensureIndexesAndShard(client.getRegisteredEntities().stream()
+                        .map(MongoEntity::getClazz)
+                        .collect(Collectors.toList())))
+                .collect(Collectors.toList()));
     }
 
     /**
@@ -317,7 +243,7 @@ public class MongoDataGenerator {
         }
         for (int i = targetUserForGroupInvitationStart; i <= targetUserForGroupInvitationEnd; i++) {
             GroupInvitation groupInvitation = new GroupInvitation(
-                    node.nextRandomId(ServiceType.GROUP_INVITATION),
+                    nextId(),
                     1L,
                     1L,
                     (long) i,
@@ -329,7 +255,7 @@ public class MongoDataGenerator {
             groupRelatedObjs.add(groupInvitation);
         }
         GroupJoinQuestion groupJoinQuestion = new GroupJoinQuestion(
-                node.nextRandomId(ServiceType.GROUP_JOIN_QUESTION),
+                nextId(),
                 1L,
                 "test-question",
                 Set.of("a", "b", "c"),
@@ -337,7 +263,7 @@ public class MongoDataGenerator {
         groupRelatedObjs.add(groupJoinQuestion);
         for (int i = targetUserForGroupJoinRequestStart; i <= targetUserForGroupJoinRequestEnd; i++) {
             GroupJoinRequest groupJoinRequest = new GroupJoinRequest(
-                    node.nextRandomId(ServiceType.GROUP_JOIN_REQUEST),
+                    nextId(),
                     "test-content",
                     RequestStatus.PENDING,
                     now,
@@ -366,7 +292,7 @@ public class MongoDataGenerator {
         long senderId = 1L;
         Set<Long> targetIds = new HashSet<>();
         for (int i = 1; i <= 100; i++) {
-            long id = node.nextRandomId(ServiceType.MESSAGE);
+            long id = nextId();
             long targetId = (long) 2 + (i % 9);
             targetIds.add(targetId);
             Message privateMessage = new Message(
@@ -383,7 +309,7 @@ public class MongoDataGenerator {
                     null,
                     30,
                     null);
-            id = node.nextRandomId(ServiceType.MESSAGE);
+            id = nextId();
             Message groupMessage = new Message(
                     id,
                     true,
@@ -436,7 +362,7 @@ public class MongoDataGenerator {
         }
         for (int i = targetUserToRequestFriendRequestStart; i <= targetUserToRequestFriendRequestEnd; i++) {
             UserFriendRequest userFriendRequest = new UserFriendRequest(
-                    node.nextRandomId(ServiceType.USER_FRIEND_REQUEST),
+                    nextId(),
                     "test-request",
                     RequestStatus.PENDING,
                     null,
@@ -466,50 +392,95 @@ public class MongoDataGenerator {
             userRelatedObjs.add(relationshipGroupMember2);
         }
 
-        return Mono.when(
-                adminMongoTemplate.insertAll(adminRelatedObjs)
-                        .doOnError(error -> log.error("Failed to mock admin-related data", error))
-                        .doOnComplete(() -> log.info("Admin-related data has been mocked")),
-                userMongoTemplate.insertAll(userRelatedObjs)
-                        .doOnError(error -> log.error("Failed to mock user-related data", error))
-                        .doOnComplete(() -> log.info("User-related data has been mocked")),
-                groupMongoTemplate.insertAll(groupRelatedObjs)
-                        .doOnError(error -> log.error("Failed to mock group-related data", error))
-                        .doOnComplete(() -> log.info("Group-related data has been mocked")),
-                conversationMongoTemplate.insertAll(conversationRelatedObjs)
-                        .doOnError(error -> log.error("Failed to mock conversation-related data", error))
-                        .doOnComplete(() -> log.info("Conversation-related data has been mocked")),
-                messageMongoTemplate.insertAll(messageRelatedObjs)
-                        .doOnError(error -> log.error("Failed to mock message-related data", error))
-                        .doOnComplete(() -> log.info("Message-related data has been mocked")))
-                .doOnSuccess(ignored -> log.info("All data has been mocked"));
+        // FIXME: Use "subscribeOn(Schedulers.boundedElastic())" for now because of a weired behaviour
+        // that TurmsMongoClient#insertAll seems blocking when running in debug mode
+        // but it won't block when running in non-debug mode
+        // and there is no blocking method after reviewing the whole workflow of TurmsMongoClient#insertAll
+        Mono<Void> adminMono = adminMongoClient.insertAll(adminRelatedObjs)
+                .doOnSubscribe(s -> log.info("Start mocking admin-related data"))
+                .doOnError(error -> log.error("Failed to mock admin-related data", error))
+                .doOnSuccess(unused -> log.info("Admin-related data has been mocked"))
+                .subscribeOn(Schedulers.boundedElastic());
+        Mono<Void> userMono = userMongoClient.insertAll(userRelatedObjs)
+                .doOnSubscribe(s -> log.info("Start mocking user-related data"))
+                .doOnError(error -> log.error("Failed to mock user-related data", error))
+                .doOnSuccess(unused -> log.info("User-related data has been mocked"))
+                .subscribeOn(Schedulers.boundedElastic());
+        Mono<Void> groupMono = groupMongoClient.insertAll(groupRelatedObjs)
+                .doOnSubscribe(s -> log.info("Start mocking group-related data"))
+                .doOnError(error -> log.error("Failed to mock group-related data", error))
+                .doOnSuccess(unused -> log.info("Group-related data has been mocked"))
+                .subscribeOn(Schedulers.boundedElastic());
+        Mono<Void> conversationMono = conversationMongoClient.insertAll(conversationRelatedObjs)
+                .doOnSubscribe(s -> log.info("Start mocking conversation-related data"))
+                .doOnError(error -> log.error("Failed to mock conversation-related data", error))
+                .doOnSuccess(unused -> log.info("Conversation-related data has been mocked"))
+                .subscribeOn(Schedulers.boundedElastic());
+        Mono<Void> messageMono = messageMongoClient.insertAll(messageRelatedObjs)
+                .doOnSubscribe(s -> log.info("Start mocking message-related data"))
+                .doOnError(error -> log.error("Failed to mock message-related data", error))
+                .doOnSuccess(unused -> log.info("Message-related data has been mocked"))
+                .subscribeOn(Schedulers.boundedElastic());
+        return Mono.when(adminMono, userMono, groupMono, conversationMono, messageMono)
+                .then()
+                .doOnSuccess(ignored -> log.info("All data has been mocked"))
+                .doOnError(t -> log.error("Failed to mock data", t));
     }
 
-    private <T> Mono<Boolean> createCollectionIfNotExist(
-            Class<T> clazz,
-            @Nullable CollectionOptions options) {
-        ReactiveMongoTemplate mongoTemplate;
+    private Mono<Void> createCollectionsIfNotExist() {
+        return Mono.when(
+                createCollectionIfNotExist(Admin.class),
+                createCollectionIfNotExist(AdminRole.class),
+
+                createCollectionIfNotExist(Group.class),
+                createCollectionIfNotExist(GroupBlockedUser.class),
+                createCollectionIfNotExist(GroupInvitation.class),
+                createCollectionIfNotExist(GroupJoinQuestion.class),
+                createCollectionIfNotExist(GroupMember.class),
+                createCollectionIfNotExist(GroupType.class),
+                createCollectionIfNotExist(GroupVersion.class),
+
+                createCollectionIfNotExist(PrivateConversation.class),
+                createCollectionIfNotExist(GroupConversation.class),
+
+                createCollectionIfNotExist(Message.class),
+
+                createCollectionIfNotExist(User.class),
+                createCollectionIfNotExist(UserFriendRequest.class),
+                createCollectionIfNotExist(UserPermissionGroup.class),
+                createCollectionIfNotExist(UserRelationship.class),
+                createCollectionIfNotExist(UserRelationshipGroup.class),
+                createCollectionIfNotExist(UserRelationshipGroupMember.class),
+                createCollectionIfNotExist(UserVersion.class));
+    }
+
+    private <T> Mono<Boolean> createCollectionIfNotExist(Class<T> clazz) {
+        TurmsMongoClient mongoClient;
         if (clazz == Admin.class || clazz == AdminRole.class) {
-            mongoTemplate = adminMongoTemplate;
+            mongoClient = adminMongoClient;
         } else if (clazz == User.class || clazz == UserFriendRequest.class
                 || clazz == UserPermissionGroup.class || clazz == UserRelationship.class
                 || clazz == UserRelationshipGroup.class || clazz == UserRelationshipGroupMember.class || clazz == UserVersion.class) {
-            mongoTemplate = userMongoTemplate;
+            mongoClient = userMongoClient;
         } else if (clazz == Group.class || clazz == GroupBlockedUser.class || clazz == GroupInvitation.class
                 || clazz == GroupJoinQuestion.class || clazz == GroupJoinRequest.class || clazz == GroupMember.class
                 || clazz == GroupType.class || clazz == GroupVersion.class) {
-            mongoTemplate = groupMongoTemplate;
+            mongoClient = groupMongoClient;
         } else if (clazz == PrivateConversation.class || clazz == GroupConversation.class) {
-            mongoTemplate = conversationMongoTemplate;
+            mongoClient = conversationMongoClient;
         } else if (clazz == Message.class) {
-            mongoTemplate = messageMongoTemplate;
+            mongoClient = messageMongoClient;
         } else {
             return Mono.error(new IllegalArgumentException("Unknown collection=" + clazz.getName()));
         }
-        return mongoTemplate.collectionExists(clazz)
-                .flatMap(exists -> exists != null && !exists
-                        ? mongoTemplate.createCollection(clazz, options).thenReturn(true)
-                        : Mono.just(false));
+        return mongoClient.collectionExists(clazz)
+                .flatMap(exists -> exists
+                        ? Mono.just(false)
+                        : mongoClient.createCollection(clazz).thenReturn(true));
+    }
+
+    private long nextId() {
+        return currentId++;
     }
 
 }

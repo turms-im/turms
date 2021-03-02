@@ -66,7 +66,7 @@ public class ExceptionUtil {
                 return false;
             }
             return message.contains("An existing connection was forcibly closed")
-                    || message.contains("Connection reset by peer")
+                    || message.contains("Connection reset")
                     || message.contains("Broken pipe");
         }
         return false;

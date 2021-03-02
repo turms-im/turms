@@ -17,33 +17,15 @@
 
 package im.turms.gateway.dao.config;
 
-import com.mongodb.MongoClientSettings;
-import com.mongodb.reactivestreams.client.MongoClient;
-import im.turms.server.common.dao.context.TurmsMongoMappingContext;
-import im.turms.server.common.dao.converter.EnumToIntegerConverter;
-import im.turms.server.common.dao.converter.IntegerToEnumConverter;
-import im.turms.server.common.dao.converter.IntegerToEnumConverterFactory;
+import im.turms.server.common.dao.domain.User;
+import im.turms.server.common.mongo.IMongoDataGenerator;
+import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.property.TurmsPropertiesManager;
+import im.turms.server.common.property.env.service.env.database.TurmsMongoProperties;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.mongo.MongoProperties;
-import org.springframework.boot.autoconfigure.mongo.MongoPropertiesClientSettingsBuilderCustomizer;
-import org.springframework.boot.autoconfigure.mongo.ReactiveMongoClientFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.core.convert.support.GenericConversionService;
-import org.springframework.data.convert.CustomConversions;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.mongodb.core.SimpleReactiveMongoDatabaseFactory;
-import org.springframework.data.mongodb.core.WriteResultChecking;
-import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
-import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
-import org.springframework.data.mongodb.core.convert.NoOpDbRefResolver;
-import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
-
-import java.util.List;
 
 /**
  * @author James Chen
@@ -55,46 +37,17 @@ public class MongoConfig {
 
     @Bean
     @ConditionalOnProperty("turms.gateway.session.enable-authentication")
-    public ReactiveMongoTemplate userMongoTemplate(TurmsPropertiesManager turmsPropertiesManager) {
-        MongoProperties properties = turmsPropertiesManager.getLocalProperties().getGateway().getDatabase().getMongoProperties().getUser();
-        // SimpleReactiveMongoDatabaseFactory
-        MongoPropertiesClientSettingsBuilderCustomizer customizer = new MongoPropertiesClientSettingsBuilderCustomizer(properties, null);
-        ReactiveMongoClientFactory clientFactory = new ReactiveMongoClientFactory(List.of(customizer));
-        MongoClient mongoClient = clientFactory.createMongoClient(MongoClientSettings.builder().build());
-        SimpleReactiveMongoDatabaseFactory databaseFactory = new SimpleReactiveMongoDatabaseFactory(mongoClient, properties.getMongoClientDatabase());
-
-        // MongoMappingContext
-        TurmsMongoMappingContext context = new TurmsMongoMappingContext();
-        // Not turms-gateway but turms is responsible for index creation
-        context.setAutoIndexCreation(false);
-
-        // MappingMongoConverter
-        MappingMongoConverter converter = newMongoConverter(context);
-
-        // ReactiveMongoTemplate
-        ReactiveMongoTemplate mongoTemplate = new ReactiveMongoTemplate(databaseFactory, converter);
-        mongoTemplate.setWriteResultChecking(WriteResultChecking.EXCEPTION);
-
-        return mongoTemplate;
+    public TurmsMongoClient userMongoClient(TurmsPropertiesManager turmsPropertiesManager) {
+        TurmsMongoProperties properties = turmsPropertiesManager.getLocalProperties().getGateway().getMongo().getUser();
+        TurmsMongoClient mongoClient = TurmsMongoClient.of(properties);
+        mongoClient.registerEntitiesByClasses(User.class);
+        return mongoClient;
     }
 
-    public MappingMongoConverter newMongoConverter(MongoMappingContext mongoMappingContext) {
-        // Rather than saving enum values in string, we save them in integer to avoid unnecessary space and performance
-        List<Converter<?, ?>> converters = List.of(
-                new EnumToIntegerConverter(),
-                new IntegerToEnumConverter(null));
-
-        // To avoid saving the class information in MongoDB
-        CustomConversions customConversions = new CustomConversions(CustomConversions.StoreConversions.NONE, converters);
-        MappingMongoConverter converter = new MappingMongoConverter(NoOpDbRefResolver.INSTANCE, mongoMappingContext);
-        converter.setTypeMapper(new DefaultMongoTypeMapper(null));
-        converter.setCustomConversions(customConversions);
-
-        ConversionService conversionService = converter.getConversionService();
-        ((GenericConversionService) conversionService)
-                .addConverterFactory(new IntegerToEnumConverterFactory());
-        converter.afterPropertiesSet();
-        return converter;
+    @Bean(IMongoDataGenerator.BEAN_NAME)
+    public IMongoDataGenerator mongoDataGenerator() {
+        return new IMongoDataGenerator() {
+        };
     }
 
 }

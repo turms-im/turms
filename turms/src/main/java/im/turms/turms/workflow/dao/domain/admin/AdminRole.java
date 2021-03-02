@@ -17,12 +17,12 @@
 
 package im.turms.turms.workflow.dao.domain.admin;
 
+import im.turms.server.common.mongo.entity.annotation.Document;
+import im.turms.server.common.mongo.entity.annotation.Field;
+import im.turms.server.common.mongo.entity.annotation.Id;
 import im.turms.turms.workflow.access.http.permission.AdminPermission;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForDifferentAmount;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Set;
 

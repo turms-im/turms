@@ -158,7 +158,7 @@ public class ControllerFilter implements WebFilter {
     }
 
     /**
-     * metrics Apis and swagger resources APIs don't have HandlerMethod instances
+     * metrics APIs and swagger resources APIs don't have HandlerMethod instances
      */
     private Mono<Void> filterUnhandledRequest(ServerWebExchange exchange, WebFilterChain chain) {
         ServerHttpResponse response = exchange.getResponse();

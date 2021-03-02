@@ -19,7 +19,7 @@ package im.turms.turms.workflow.access.http.controller.group;
 
 import com.mongodb.client.result.DeleteResult;
 import im.turms.common.constant.GroupMemberRole;
-import im.turms.turms.bo.DateRange;
+import im.turms.server.common.bo.common.DateRange;
 import im.turms.turms.workflow.access.http.dto.request.group.AddGroupMemberDTO;
 import im.turms.turms.workflow.access.http.dto.request.group.UpdateGroupMemberDTO;
 import im.turms.turms.workflow.access.http.dto.response.*;
@@ -142,7 +142,7 @@ public class GroupMemberController {
     public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteGroupMembers(
             GroupMember.KeyList keys) {
         Mono<DeleteResult> deleteMono = keys != null && !keys.getKeys().isEmpty()
-                ? groupMemberService.deleteGroupMembers(new HashSet<>(keys.getKeys()), null,true)
+                ? groupMemberService.deleteGroupMembers(new HashSet<>(keys.getKeys()), null, true)
                 : groupMemberService.deleteGroupMembers(true);
         Mono<DeleteResultDTO> mono = deleteMono.map(DeleteResultDTO::get);
         return ResponseFactory.okIfTruthy(mono);

@@ -17,8 +17,8 @@
 
 package unit.im.turms.turms.bo;
 
+import im.turms.server.common.bo.common.DateRange;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.turms.bo.DateRange;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;

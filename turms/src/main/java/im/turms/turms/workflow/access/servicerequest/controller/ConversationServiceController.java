@@ -67,14 +67,14 @@ public class ConversationServiceController {
             Mono<TurmsNotification.Data> dataFlux;
             if (!targetIds.isEmpty()) {
                 dataFlux = conversationService.queryPrivateConversations(clientRequest.getUserId(), targetIds)
-                    .map(conversation -> ProtoUtil.privateConversation2proto(conversation).build())
-                .collect(CollectorUtil.toList(targetIds.size()))
-                .map(conversations -> TurmsNotification.Data
-                        .newBuilder()
-                        .setConversations(Conversations.newBuilder()
-                                .addAllPrivateConversations(conversations)
-                                .build())
-                        .build());
+                        .map(conversation -> ProtoUtil.privateConversation2proto(conversation).build())
+                        .collect(CollectorUtil.toList(targetIds.size()))
+                        .map(conversations -> TurmsNotification.Data
+                                .newBuilder()
+                                .setConversations(Conversations.newBuilder()
+                                        .addAllPrivateConversations(conversations)
+                                        .build())
+                                .build());
             } else {
                 List<Long> groupIds = request.getGroupIdsList();
                 if (groupIds.isEmpty()) {

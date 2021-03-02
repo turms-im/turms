@@ -18,18 +18,13 @@
 package im.turms.turms.workflow.dao.domain.group;
 
 import im.turms.common.constant.RequestStatus;
+import im.turms.server.common.mongo.entity.IndexType;
+import im.turms.server.common.mongo.entity.annotation.*;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForColdData;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.CompoundIndex;
-import org.springframework.data.mongodb.core.index.HashIndexed;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.Sharded;
 
 import java.util.Date;
 
@@ -42,10 +37,9 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Document(GroupJoinRequest.COLLECTION_NAME)
-@CompoundIndex(
-        name = GroupJoinRequest.Fields.REQUESTER_ID + "_" + GroupJoinRequest.Fields.CREATION_DATE,
-        def = "{'" + GroupJoinRequest.Fields.REQUESTER_ID + "': 1, '" + GroupJoinRequest.Fields.CREATION_DATE + "': 1}")
-@Sharded(shardKey = GroupJoinRequest.Fields.REQUESTER_ID, immutableKey = true)
+@CompoundIndex({GroupJoinRequest.Fields.REQUESTER_ID,
+        GroupJoinRequest.Fields.CREATION_DATE})
+@Sharded(shardKey = GroupJoinRequest.Fields.REQUESTER_ID)
 public final class GroupJoinRequest {
 
     public static final String COLLECTION_NAME = "groupJoinRequest";
@@ -77,7 +71,7 @@ public final class GroupJoinRequest {
      */
     @Field(Fields.GROUP_ID)
     @OptionalIndexedForExtendedFeature
-    @HashIndexed
+    @Indexed(IndexType.HASH)
     private final Long groupId;
 
     @Field(Fields.REQUESTER_ID)

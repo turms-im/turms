@@ -31,9 +31,11 @@ import im.turms.server.common.property.env.service.env.clientapi.property.Loggin
 import im.turms.server.common.rpc.request.SendNotificationRequest;
 import im.turms.server.common.service.session.UserStatusService;
 import im.turms.server.common.util.*;
+import im.turms.turms.workflow.dao.MongoDataGenerator;
 import io.netty.buffer.ByteBuf;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -46,6 +48,7 @@ import java.util.*;
  */
 @Service
 @Log4j2
+@DependsOn(MongoDataGenerator.BEAN_NAME)
 public class OutboundMessageService {
 
     private final Node node;

@@ -19,24 +19,26 @@ package im.turms.server.common.cluster.service.config.domain.property;
 
 import im.turms.server.common.property.env.common.*;
 import im.turms.server.common.property.env.common.cluster.ClusterProperties;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
  * @author James Chen
  */
 @Data
+@AllArgsConstructor
 public class CommonProperties {
 
-    private final ClusterProperties cluster;
+    private ClusterProperties cluster;
 
-    private final IpProperties ip;
+    private IpProperties ip;
 
-    private final SecurityProperties security;
+    private SecurityProperties security;
 
-    private final PluginProperties plugin;
+    private PluginProperties plugin;
 
-    private final LocationProperties location;
+    private LocationProperties location;
 
-    private final UserStatusProperties userStatus;
+    private UserStatusProperties userStatus;
 
 }

@@ -15,20 +15,26 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.cluster.service.config.converter;
+package im.turms.server.common.mongo.codec;
 
-import org.springframework.core.convert.converter.Converter;
+import org.bson.BsonReader;
+import org.bson.BsonWriter;
 
 import java.time.Duration;
 
 /**
  * @author James Chen
  */
-public class LongToDurationConverter implements Converter<Long, Duration> {
+public class DurationCodec extends MongoCodec<Duration> {
 
     @Override
-    public Duration convert(Long millis) {
-        return Duration.ofMillis(millis);
+    public void encode(BsonWriter writer, Duration value) {
+        writer.writeInt64(value.toMillis());
+    }
+
+    @Override
+    public Duration decode(BsonReader reader) {
+        return Duration.ofMillis(reader.readInt64());
     }
 
 }

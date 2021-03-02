@@ -20,10 +20,10 @@ package im.turms.turms.workflow.dao.domain.group;
 import im.turms.common.constant.GroupInvitationStrategy;
 import im.turms.common.constant.GroupJoinStrategy;
 import im.turms.common.constant.GroupUpdateStrategy;
+import im.turms.server.common.mongo.entity.annotation.Document;
+import im.turms.server.common.mongo.entity.annotation.Field;
+import im.turms.server.common.mongo.entity.annotation.Id;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
  * No need to shard because there are only a few (or some) group types.

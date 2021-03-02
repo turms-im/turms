@@ -36,7 +36,7 @@ import java.util.function.BiFunction;
  */
 public class MetricsPool {
 
-    private static final MethodHandle GET_METER_MAP = InvokeUtil.getField(MeterRegistry.class, "meterMap");
+    private static final MethodHandle GET_METER_MAP = InvokeUtil.getGetter(MeterRegistry.class, "meterMap");
     private final MeterRegistry registry;
 
     public MetricsPool(MeterRegistry registry) {

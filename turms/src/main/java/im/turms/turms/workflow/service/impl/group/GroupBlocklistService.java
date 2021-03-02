@@ -20,30 +20,30 @@ package im.turms.turms.workflow.service.impl.group;
 import com.google.protobuf.Int64Value;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import com.mongodb.reactivestreams.client.ClientSession;
 import im.turms.common.model.bo.common.Int64ValuesWithVersion;
 import im.turms.common.model.bo.user.UserInfo;
 import im.turms.common.model.bo.user.UsersInfosWithVersion;
 import im.turms.common.util.Validator;
+import im.turms.server.common.bo.common.DateRange;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.mongo.TurmsMongoClient;
+import im.turms.server.common.mongo.operation.option.Filter;
+import im.turms.server.common.mongo.operation.option.QueryOptions;
+import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.util.AssertUtil;
-import im.turms.turms.bo.DateRange;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.constraint.ValidGroupBlockedUserKey;
 import im.turms.turms.util.ProtoUtil;
-import im.turms.turms.workflow.dao.builder.QueryBuilder;
-import im.turms.turms.workflow.dao.builder.UpdateBuilder;
+import im.turms.turms.workflow.dao.MongoDataGenerator;
 import im.turms.turms.workflow.dao.domain.group.GroupBlockedUser;
 import im.turms.turms.workflow.service.impl.user.UserService;
 import im.turms.turms.workflow.service.util.DomainConstraintUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.mongodb.core.ReactiveMongoOperations;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -60,20 +60,21 @@ import java.util.stream.Collectors;
  * @author James Chen
  */
 @Service
+@DependsOn(MongoDataGenerator.BEAN_NAME)
 public class GroupBlocklistService {
 
-    private final ReactiveMongoTemplate mongoTemplate;
+    private final TurmsMongoClient mongoClient;
     private final GroupMemberService groupMemberService;
     private final GroupVersionService groupVersionService;
     private final UserService userService;
 
     public GroupBlocklistService(
-            @Qualifier("groupMongoTemplate") ReactiveMongoTemplate mongoTemplate,
+            @Qualifier("groupMongoClient") TurmsMongoClient mongoClient,
             GroupMemberService groupMemberService,
             GroupVersionService groupVersionService,
             UserService userService) {
         this.groupMemberService = groupMemberService;
-        this.mongoTemplate = mongoTemplate;
+        this.mongoClient = mongoClient;
         this.groupVersionService = groupVersionService;
         this.userService = userService;
     }
@@ -86,7 +87,7 @@ public class GroupBlocklistService {
             @NotNull Long requesterId,
             @NotNull Long groupId,
             @NotNull Long userIdToBlock,
-            @Nullable ReactiveMongoOperations operations) {
+            @Nullable ClientSession session) {
         try {
             AssertUtil.notNull(requesterId, "requesterId");
             AssertUtil.notNull(groupId, "groupId");
@@ -109,23 +110,20 @@ public class GroupBlocklistService {
                                 true,
                                 false,
                                 false);
-                        if (operations != null) {
-                            return groupMemberService.deleteGroupMembers(groupId, userIdToBlock, operations, false)
-                                    .then(operations.insert(blockedUser, GroupBlockedUser.COLLECTION_NAME))
+                        if (session != null) {
+                            return groupMemberService.deleteGroupMembers(groupId, userIdToBlock, session, false)
+                                    .then(mongoClient.insert(session, blockedUser))
                                     .then(updateVersion.then().onErrorResume(throwable -> Mono.empty()));
                         } else {
-                            return mongoTemplate
-                                    .inTransaction()
-                                    .execute(newOperations -> groupMemberService.deleteGroupMembers(groupId, userIdToBlock, newOperations, false)
-                                            .then(newOperations.insert(blockedUser, GroupBlockedUser.COLLECTION_NAME))
+                            return mongoClient
+                                    .inTransaction(newSession -> groupMemberService.deleteGroupMembers(groupId, userIdToBlock, newSession, false)
+                                            .then(mongoClient.insert(newSession, blockedUser))
                                             .then(updateVersion.then().onErrorResume(throwable -> Mono.empty())))
-                                    .retryWhen(DaoConstant.TRANSACTION_RETRY)
-                                    .singleOrEmpty();
+                                    .retryWhen(DaoConstant.TRANSACTION_RETRY);
                         }
                     } else {
                         Mono<Boolean> updateVersion = groupVersionService.updateBlocklistVersion(groupId);
-                        ReactiveMongoOperations mongoOperations = operations != null ? operations : mongoTemplate;
-                        return mongoOperations.insert(blockedUser, GroupBlockedUser.COLLECTION_NAME)
+                        return mongoClient.insert(session, blockedUser)
                                 .then(updateVersion.then().onErrorResume(throwable -> Mono.empty()));
                     }
                 });
@@ -135,7 +133,7 @@ public class GroupBlocklistService {
             @NotNull Long requesterId,
             @NotNull Long groupId,
             @NotNull Long userIdToUnblock,
-            @Nullable ReactiveMongoOperations operations,
+            @Nullable ClientSession session,
             boolean updateBlocklistVersion) {
         try {
             AssertUtil.notNull(requesterId, "requesterId");
@@ -148,10 +146,10 @@ public class GroupBlocklistService {
                 .isOwnerOrManager(requesterId, groupId)
                 .flatMap(authenticated -> {
                     if (authenticated) {
-                        ReactiveMongoOperations mongoOperations = operations != null ? operations : mongoTemplate;
-                        Query query = new Query()
-                                .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(new GroupBlockedUser.Key(groupId, userIdToUnblock)));
-                        Mono<DeleteResult> removeMono = mongoOperations.remove(query, GroupBlockedUser.class, GroupBlockedUser.COLLECTION_NAME);
+                        GroupBlockedUser.Key key = new GroupBlockedUser.Key(groupId, userIdToUnblock);
+                        Filter filter = Filter.newBuilder()
+                                .eq(DaoConstant.ID_FIELD_NAME, key);
+                        Mono<DeleteResult> removeMono = mongoClient.deleteMany(session, GroupBlockedUser.class, filter);
                         if (updateBlocklistVersion) {
                             return removeMono.flatMap(result -> groupVersionService.updateBlocklistVersion(groupId)
                                     .onErrorResume(throwable -> Mono.empty())
@@ -170,10 +168,11 @@ public class GroupBlocklistService {
         } catch (TurmsBusinessException e) {
             return Flux.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(GroupBlockedUser.Fields.ID_GROUP_ID).is(groupId));
-        query.fields().include(GroupBlockedUser.Fields.ID_USER_ID);
-        return mongoTemplate
-                .find(query, GroupBlockedUser.class)
+        Filter filter = Filter.newBuilder().eq(GroupBlockedUser.Fields.ID_GROUP_ID, groupId);
+        QueryOptions options = QueryOptions.newBuilder()
+                .include(GroupBlockedUser.Fields.ID_USER_ID);
+        return mongoClient
+                .findMany(GroupBlockedUser.class, filter, options)
                 .map(groupBlockedUser -> groupBlockedUser.getKey().getUserId());
     }
 
@@ -184,14 +183,15 @@ public class GroupBlocklistService {
             @Nullable Set<Long> requesterIds,
             @Nullable Integer page,
             @Nullable Integer size) {
-        Query query = QueryBuilder
+        Filter filter = Filter
                 .newBuilder()
-                .addInIfNotNull(GroupBlockedUser.Fields.ID_USER_ID, userIds)
-                .addInIfNotNull(GroupBlockedUser.Fields.ID_GROUP_ID, groupIds)
-                .addInIfNotNull(GroupBlockedUser.Fields.REQUESTER_ID, requesterIds)
-                .addBetweenIfNotNull(GroupBlockedUser.Fields.BLOCK_DATE, blockDateRange)
+                .inIfNotNull(GroupBlockedUser.Fields.ID_USER_ID, userIds)
+                .inIfNotNull(GroupBlockedUser.Fields.ID_GROUP_ID, groupIds)
+                .inIfNotNull(GroupBlockedUser.Fields.REQUESTER_ID, requesterIds)
+                .addBetweenIfNotNull(GroupBlockedUser.Fields.BLOCK_DATE, blockDateRange);
+        QueryOptions options = QueryOptions.newBuilder()
                 .paginateIfNotNull(page, size);
-        return mongoTemplate.find(query, GroupBlockedUser.class, GroupBlockedUser.COLLECTION_NAME);
+        return mongoClient.findMany(GroupBlockedUser.class, filter, options);
     }
 
     public Mono<Long> countBlockedUsers(
@@ -199,14 +199,13 @@ public class GroupBlocklistService {
             @Nullable Set<Long> userIds,
             @Nullable DateRange blockDateRange,
             @Nullable Set<Long> requesterIds) {
-        Query query = QueryBuilder
+        Filter filter = Filter
                 .newBuilder()
-                .addInIfNotNull(GroupBlockedUser.Fields.ID_USER_ID, userIds)
-                .addInIfNotNull(GroupBlockedUser.Fields.ID_GROUP_ID, groupIds)
-                .addInIfNotNull(GroupBlockedUser.Fields.REQUESTER_ID, requesterIds)
-                .addBetweenIfNotNull(GroupBlockedUser.Fields.BLOCK_DATE, blockDateRange)
-                .buildQuery();
-        return mongoTemplate.count(query, GroupBlockedUser.class, GroupBlockedUser.COLLECTION_NAME);
+                .inIfNotNull(GroupBlockedUser.Fields.ID_USER_ID, userIds)
+                .inIfNotNull(GroupBlockedUser.Fields.ID_GROUP_ID, groupIds)
+                .inIfNotNull(GroupBlockedUser.Fields.REQUESTER_ID, requesterIds)
+                .addBetweenIfNotNull(GroupBlockedUser.Fields.BLOCK_DATE, blockDateRange);
+        return mongoClient.count(GroupBlockedUser.class, filter);
     }
 
     public Mono<Int64ValuesWithVersion> queryGroupBlockedUserIdsWithVersion(
@@ -298,7 +297,7 @@ public class GroupBlocklistService {
             blockDate = new Date();
         }
         GroupBlockedUser user = new GroupBlockedUser(groupId, userId, blockDate, requesterId);
-        return mongoTemplate.insert(user, GroupBlockedUser.COLLECTION_NAME);
+        return mongoClient.insert(user).thenReturn(user);
     }
 
     public Mono<UpdateResult> updateBlockedUsers(
@@ -317,14 +316,13 @@ public class GroupBlocklistService {
         if (Validator.areAllNull(blockDate, requesterId)) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
-        Query query = new Query()
-                .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(keys));
-        Update update = UpdateBuilder
+        Filter filter = Filter.newBuilder()
+                .in(DaoConstant.ID_FIELD_NAME, keys);
+        Update update = Update
                 .newBuilder()
                 .setIfNotNull(GroupBlockedUser.Fields.BLOCK_DATE, blockDate)
-                .setIfNotNull(GroupBlockedUser.Fields.REQUESTER_ID, requesterId)
-                .build();
-        return mongoTemplate.updateMulti(query, update, GroupBlockedUser.class, GroupBlockedUser.COLLECTION_NAME);
+                .setIfNotNull(GroupBlockedUser.Fields.REQUESTER_ID, requesterId);
+        return mongoClient.updateMany(GroupBlockedUser.class, filter, update);
     }
 
     public Mono<DeleteResult> deleteBlockedUsers(@NotEmpty Set<GroupBlockedUser.@ValidGroupBlockedUserKey Key> keys) {
@@ -336,9 +334,9 @@ public class GroupBlocklistService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query()
-                .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(keys));
-        return mongoTemplate.remove(query, GroupBlockedUser.class, GroupBlockedUser.COLLECTION_NAME);
+        Filter filter = Filter.newBuilder()
+                .in(DaoConstant.ID_FIELD_NAME, keys);
+        return mongoClient.deleteMany(GroupBlockedUser.class, filter);
     }
 
 }

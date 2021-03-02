@@ -68,7 +68,8 @@ public class PropertiesUtil {
     public static final Map<String, Object> METADATA = ImmutableMap.copyOf(getMetadata(new HashMap<>(32), TurmsProperties.class, false));
     public static final Map<String, Object> ONLY_MUTABLE_METADATA = ImmutableMap.copyOf(getMetadata(new HashMap<>(32), TurmsProperties.class, true));
 
-    PropertiesUtil() {}
+    PropertiesUtil() {
+    }
 
     public static boolean isMutableProperty(Field field) {
         JsonView jsonView = field.getDeclaredAnnotation(JsonView.class);
@@ -193,10 +194,10 @@ public class PropertiesUtil {
 
     public static String toMutablePropertiesString(Map<String, Object> propertiesForUpdating) {
         try {
-        return MUTABLE_PROPERTIES_WRITER.writeValueAsString(propertiesForUpdating);
-    } catch (JsonProcessingException e) {
-        throw new IllegalStateException(e);
-    }
+            return MUTABLE_PROPERTIES_WRITER.writeValueAsString(propertiesForUpdating);
+        } catch (JsonProcessingException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     // Persist

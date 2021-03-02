@@ -21,12 +21,12 @@ import im.turms.gateway.constant.DomainFieldName;
 import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.manager.PasswordManager;
+import im.turms.server.common.mongo.TurmsMongoClient;
+import im.turms.server.common.mongo.operation.option.Filter;
+import im.turms.server.common.mongo.operation.option.QueryOptions;
 import im.turms.server.common.util.AssertUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -39,16 +39,16 @@ import javax.validation.constraints.NotNull;
 @Service
 public class UserService {
 
-    private final ReactiveMongoTemplate mongoTemplate;
+    private final TurmsMongoClient mongoClient;
     private final PasswordManager passwordManager;
 
     /**
-     * @param mongoTemplate can be null if SessionProperties#enableAuthentication is false
+     * @param mongoClient can be null if SessionProperties#enableAuthentication is false
      */
     public UserService(
-            @Autowired(required = false) @Qualifier("userMongoTemplate") ReactiveMongoTemplate mongoTemplate,
+            @Autowired(required = false) @Qualifier("userMongoClient") TurmsMongoClient mongoClient,
             PasswordManager passwordManager) {
-        this.mongoTemplate = mongoTemplate;
+        this.mongoClient = mongoClient;
         this.passwordManager = passwordManager;
     }
 
@@ -60,10 +60,11 @@ public class UserService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query()
-                .addCriteria(Criteria.where(DomainFieldName.ID_FIELD_NAME).is(userId));
-        query.fields().include(User.Fields.PASSWORD);
-        return mongoTemplate.findOne(query, User.class)
+        Filter filter = Filter.newBuilder()
+                .eq(DomainFieldName.ID_FIELD_NAME, userId);
+        QueryOptions options = QueryOptions.newBuilder()
+                .include(User.Fields.PASSWORD);
+        return mongoClient.findOne(User.class, filter, options)
                 .map(user -> passwordManager.matchesUserPassword(rawPassword, user.getPassword()))
                 .defaultIfEmpty(false);
     }
@@ -74,11 +75,11 @@ public class UserService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query()
-                .addCriteria(Criteria.where(DomainFieldName.ID_FIELD_NAME).is(userId))
-                .addCriteria(Criteria.where(User.Fields.IS_ACTIVE).is(true))
-                .addCriteria(Criteria.where(User.Fields.DELETION_DATE).is(null));
-        return mongoTemplate.exists(query, User.class);
+        Filter filter = Filter.newBuilder()
+                .eq(DomainFieldName.ID_FIELD_NAME, userId)
+                .eq(User.Fields.IS_ACTIVE, true)
+                .eq(User.Fields.DELETION_DATE, null);
+        return mongoClient.exists(User.class, filter);
     }
 
 }

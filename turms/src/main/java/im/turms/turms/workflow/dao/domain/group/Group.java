@@ -17,16 +17,12 @@
 
 package im.turms.turms.workflow.dao.domain.group;
 
+import im.turms.server.common.mongo.entity.IndexType;
+import im.turms.server.common.mongo.entity.annotation.*;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForColdData;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForDifferentAmount;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.HashIndexed;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.Sharded;
 
 import java.util.Date;
 
@@ -35,7 +31,7 @@ import java.util.Date;
  */
 @Data
 @Document(Group.COLLECTION_NAME)
-@Sharded(immutableKey = true)
+@Sharded
 public final class Group {
 
     public static final String COLLECTION_NAME = "group";
@@ -56,7 +52,7 @@ public final class Group {
      */
     @Field(Fields.OWNER_ID)
     @OptionalIndexedForExtendedFeature
-    @HashIndexed
+    @Indexed(IndexType.HASH)
     private final Long ownerId;
 
     @Field(Fields.NAME)

@@ -17,6 +17,7 @@
 
 package im.turms.turms.workflow.service.impl.user;
 
+import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.model.changestream.OperationType;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
@@ -26,19 +27,18 @@ import im.turms.server.common.cluster.service.config.ChangeStreamUtil;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.mongo.TurmsMongoClient;
+import im.turms.server.common.mongo.operation.option.Filter;
+import im.turms.server.common.mongo.operation.option.QueryOptions;
+import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.constant.OperationResultConstant;
-import im.turms.turms.workflow.dao.builder.QueryBuilder;
-import im.turms.turms.workflow.dao.builder.UpdateBuilder;
+import im.turms.turms.workflow.dao.MongoDataGenerator;
 import im.turms.turms.workflow.dao.domain.user.UserPermissionGroup;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.mongodb.core.ChangeStreamOptions;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -56,18 +56,19 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Log4j2
 @Service
+@DependsOn(MongoDataGenerator.BEAN_NAME)
 public class UserPermissionGroupService {
 
     private final Map<Long, UserPermissionGroup> userPermissionGroupMap = new ConcurrentHashMap<>(16);
-    private final ReactiveMongoTemplate mongoTemplate;
+    private final TurmsMongoClient mongoTemplate;
     private final Node node;
     private final UserService userService;
 
     public UserPermissionGroupService(
-            @Qualifier("userMongoTemplate") ReactiveMongoTemplate mongoTemplate,
+            @Qualifier("userMongoClient") TurmsMongoClient mongoClient,
             Node node,
             UserService userService) {
-        this.mongoTemplate = mongoTemplate;
+        this.mongoTemplate = mongoClient;
         this.node = node;
         this.userService = userService;
 
@@ -79,15 +80,12 @@ public class UserPermissionGroupService {
                         Integer.MAX_VALUE,
                         Integer.MAX_VALUE,
                         Collections.emptyMap()));
-        mongoTemplate.find(new Query(), UserPermissionGroup.class, UserPermissionGroup.COLLECTION_NAME)
+        mongoClient.findAll(UserPermissionGroup.class)
                 .subscribe(userPermissionGroup -> userPermissionGroupMap.put(userPermissionGroup.getId(), userPermissionGroup));
-        mongoTemplate.changeStream(UserPermissionGroup.class)
-                .withOptions(ChangeStreamOptions.ChangeStreamOptionsBuilder::returnFullDocumentOnUpdate)
-                .watchCollection(UserPermissionGroup.class)
-                .listen()
+        mongoClient.watch(UserPermissionGroup.class, FullDocument.UPDATE_LOOKUP)
                 .doOnNext(event -> {
                     OperationType operationType = event.getOperationType();
-                    UserPermissionGroup userPermissionGroup = event.getBody();
+                    UserPermissionGroup userPermissionGroup = event.getFullDocument();
                     switch (operationType) {
                         case INSERT:
                         case UPDATE:
@@ -95,7 +93,7 @@ public class UserPermissionGroupService {
                             userPermissionGroupMap.put(userPermissionGroup.getId(), userPermissionGroup);
                             break;
                         case DELETE:
-                            long groupTypeId = ChangeStreamUtil.getIdAsLong(event);
+                            long groupTypeId = ChangeStreamUtil.getIdAsLong(event.getDocumentKey());
                             userPermissionGroupMap.remove(groupTypeId);
                             break;
                         case INVALIDATE:
@@ -116,10 +114,9 @@ public class UserPermissionGroupService {
     public Flux<UserPermissionGroup> queryUserPermissionGroups(
             @Nullable Integer page,
             @Nullable Integer size) {
-        Query query = QueryBuilder
-                .newBuilder()
+        QueryOptions options = QueryOptions.newBuilder()
                 .paginateIfNotNull(page, size);
-        return mongoTemplate.find(query, UserPermissionGroup.class, UserPermissionGroup.COLLECTION_NAME)
+        return mongoTemplate.findAll(UserPermissionGroup.class, options)
                 .concatWithValues(getDefaultUserPermissionGroup());
     }
 
@@ -147,7 +144,8 @@ public class UserPermissionGroupService {
                 ownedGroupLimitForEachGroupType,
                 groupTypeLimitMap);
         userPermissionGroupMap.put(groupId, userPermissionGroup);
-        return mongoTemplate.insert(userPermissionGroup, UserPermissionGroup.COLLECTION_NAME);
+        return mongoTemplate.insert(userPermissionGroup)
+                .thenReturn(userPermissionGroup);
     }
 
     public Mono<UpdateResult> updateUserPermissionGroups(
@@ -168,25 +166,24 @@ public class UserPermissionGroupService {
                 groupTypeLimitMap)) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
-        Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(groupIds));
-        Update update = UpdateBuilder.newBuilder()
+        Filter filter = Filter.newBuilder()
+                .in(DaoConstant.ID_FIELD_NAME, groupIds);
+        Update update = Update.newBuilder()
                 .setIfNotNull(UserPermissionGroup.Fields.CREATABLE_GROUP_TYPE_IDS, creatableGroupTypeIds)
                 .setIfNotNull(UserPermissionGroup.Fields.OWNED_GROUP_LIMIT, ownedGroupLimit)
                 .setIfNotNull(UserPermissionGroup.Fields.OWNED_GROUP_LIMIT_FOR_EACH_GROUP_TYPE, ownedGroupLimitForEachGroupType)
-                .setIfNotNull(UserPermissionGroup.Fields.GROUP_TYPE_LIMITS, groupTypeLimitMap)
-                .build();
-        return mongoTemplate.updateMulti(query, update, UserPermissionGroup.class, UserPermissionGroup.COLLECTION_NAME);
+                .setIfNotNull(UserPermissionGroup.Fields.GROUP_TYPE_LIMITS, groupTypeLimitMap);
+        return mongoTemplate.updateMany(UserPermissionGroup.class, filter, update);
     }
 
     public Mono<DeleteResult> deleteUserPermissionGroups(@Nullable Set<Long> groupIds) {
         if (groupIds != null && groupIds.contains(DaoConstant.DEFAULT_USER_PERMISSION_GROUP_ID)) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The default user permission group cannot be deleted"));
         }
-        Query query = QueryBuilder
+        Filter filter = Filter
                 .newBuilder()
-                .addInIfNotNull(DaoConstant.ID_FIELD_NAME, groupIds)
-                .buildQuery();
-        return mongoTemplate.remove(query, UserPermissionGroup.class, UserPermissionGroup.COLLECTION_NAME)
+                .inIfNotNull(DaoConstant.ID_FIELD_NAME, groupIds);
+        return mongoTemplate.deleteMany(UserPermissionGroup.class, filter)
                 .doOnNext(result -> {
                     if (groupIds != null) {
                         for (Long id : groupIds) {
@@ -209,7 +206,7 @@ public class UserPermissionGroupService {
         if (userPermissionGroup != null) {
             return Mono.just(userPermissionGroup);
         } else {
-            return mongoTemplate.findById(groupId, UserPermissionGroup.class, UserPermissionGroup.COLLECTION_NAME)
+            return mongoTemplate.findById(UserPermissionGroup.class, groupId)
                     .doOnNext(type -> userPermissionGroupMap.put(groupId, type));
         }
     }
@@ -222,7 +219,7 @@ public class UserPermissionGroupService {
     }
 
     public Mono<Long> countUserPermissionGroups() {
-        return mongoTemplate.count(new Query(), UserPermissionGroup.class, UserPermissionGroup.COLLECTION_NAME)
+        return mongoTemplate.countAll(UserPermissionGroup.class)
                 .map(number -> number + 1);
     }
 

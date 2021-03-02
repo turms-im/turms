@@ -23,7 +23,7 @@ package im.turms.server.common.redis.sharding;
 public class ConsistentHashingShardingAlgorithm extends ShardingAlgorithm {
 
     private static final int SLOT_COUNT = 1 << 16;
-    private static final long SLOT_MASK = SLOT_COUNT - 1;
+    private static final long SLOT_MASK = SLOT_COUNT - 1L;
 
     @Override
     public int doSharding(long userId, int serverCount) {

@@ -17,16 +17,13 @@
 
 package im.turms.turms.workflow.dao.domain.user;
 
+import im.turms.server.common.mongo.entity.IndexType;
+import im.turms.server.common.mongo.entity.ShardingStrategy;
+import im.turms.server.common.mongo.entity.annotation.*;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
-import org.springframework.data.mongodb.core.index.HashIndexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.Sharded;
-import org.springframework.data.mongodb.core.mapping.ShardingStrategy;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -40,7 +37,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor(onConstructor = @__(@PersistenceConstructor))
 @Document(UserRelationshipGroupMember.COLLECTION_NAME)
-@Sharded(shardKey = UserRelationshipGroupMember.Fields.ID_OWNER_ID, shardingStrategy = ShardingStrategy.HASH, immutableKey = true)
+@Sharded(shardKey = UserRelationshipGroupMember.Fields.ID_OWNER_ID, shardingStrategy = ShardingStrategy.HASH)
 public final class UserRelationshipGroupMember {
 
     public static final String COLLECTION_NAME = "userRelationshipGroupMember";
@@ -65,7 +62,7 @@ public final class UserRelationshipGroupMember {
     public static final class Key {
 
         @Field(Fields.OWNER_ID)
-        @HashIndexed
+        @Indexed(IndexType.HASH)
         private final Long ownerId;
 
         /**

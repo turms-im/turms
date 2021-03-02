@@ -17,17 +17,14 @@
 
 package im.turms.turms.workflow.dao.domain.user;
 
+import im.turms.server.common.mongo.entity.IndexType;
+import im.turms.server.common.mongo.entity.ShardingStrategy;
+import im.turms.server.common.mongo.entity.annotation.*;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
-import org.springframework.data.mongodb.core.index.HashIndexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.Sharded;
-import org.springframework.data.mongodb.core.mapping.ShardingStrategy;
 
 import java.util.Date;
 import java.util.List;
@@ -44,7 +41,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor(onConstructor = @__(@PersistenceConstructor))
 @Document(UserRelationship.COLLECTION_NAME)
-@Sharded(shardKey = UserRelationship.Fields.ID_OWNER_ID, shardingStrategy = ShardingStrategy.HASH, immutableKey = true)
+@Sharded(shardKey = UserRelationship.Fields.ID_OWNER_ID, shardingStrategy = ShardingStrategy.HASH)
 public final class UserRelationship {
 
     public static final String COLLECTION_NAME = "userRelationship";
@@ -71,12 +68,12 @@ public final class UserRelationship {
     public static final class Key {
 
         @Field(Fields.OWNER_ID)
-        @HashIndexed
+        @Indexed(IndexType.HASH)
         private Long ownerId;
 
         // The index is used by deleteAllRelationships
         @Field(Fields.RELATED_USER_ID)
-        @HashIndexed
+        @Indexed(IndexType.HASH)
         private Long relatedUserId;
 
         public static class Fields {

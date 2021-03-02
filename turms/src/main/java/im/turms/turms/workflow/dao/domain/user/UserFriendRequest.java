@@ -18,16 +18,11 @@
 package im.turms.turms.workflow.dao.domain.user;
 
 import im.turms.common.constant.RequestStatus;
+import im.turms.server.common.mongo.entity.annotation.*;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.CompoundIndex;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.Sharded;
 
 import java.util.Date;
 
@@ -42,16 +37,10 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Document(UserFriendRequest.COLLECTION_NAME)
-@CompoundIndex(
-        name = UserFriendRequest.Fields.RECIPIENT_ID + "_"
-                + UserFriendRequest.Fields.CREATION_DATE + "_"
-                + UserFriendRequest.Fields.REQUESTER_ID,
-        def = "{" +
-                "'" + UserFriendRequest.Fields.RECIPIENT_ID + "': 1," +
-                "'" + UserFriendRequest.Fields.CREATION_DATE + "': 1," +
-                "'" + UserFriendRequest.Fields.REQUESTER_ID + "': 1" +
-                "}")
-@Sharded(shardKey = UserFriendRequest.Fields.RECIPIENT_ID, immutableKey = true)
+@CompoundIndex({UserFriendRequest.Fields.RECIPIENT_ID,
+        UserFriendRequest.Fields.CREATION_DATE,
+        UserFriendRequest.Fields.REQUESTER_ID})
+@Sharded(shardKey = UserFriendRequest.Fields.RECIPIENT_ID)
 public final class UserFriendRequest {
 
     public static final String COLLECTION_NAME = "userFriendRequest";

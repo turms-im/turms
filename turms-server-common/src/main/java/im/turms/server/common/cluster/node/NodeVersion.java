@@ -17,6 +17,7 @@
 
 package im.turms.server.common.cluster.node;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.primitives.Ints;
 import lombok.Getter;
 import org.springframework.data.annotation.Transient;
@@ -28,6 +29,7 @@ import java.util.regex.Pattern;
 /**
  * @author James Chen
  */
+@Getter
 public class NodeVersion implements Comparable<NodeVersion> {
 
     private static final Pattern VERSION_PATTERN =
@@ -40,6 +42,7 @@ public class NodeVersion implements Comparable<NodeVersion> {
     private final byte patch;
     private final byte qualifier;
 
+    @JsonIgnore
     @Transient
     private final int version;
 
@@ -86,10 +89,6 @@ public class NodeVersion implements Comparable<NodeVersion> {
     @Override
     public int hashCode() {
         return Objects.hash(version);
-    }
-
-    public int getInteger() {
-        return version;
     }
 
     public static NodeVersion parse(String version) {

@@ -29,7 +29,7 @@ import im.turms.server.common.property.env.service.env.AdminApiProperties;
 import im.turms.server.common.property.env.service.env.LogProperties;
 import im.turms.server.common.property.env.service.env.MockProperties;
 import im.turms.server.common.property.env.service.env.clientapi.ClientApiProperties;
-import im.turms.server.common.property.env.service.env.database.DatabaseProperties;
+import im.turms.server.common.property.env.service.env.database.MongoProperties;
 import im.turms.server.common.property.env.service.env.redis.TurmsRedisProperties;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
 import lombok.Data;
@@ -53,15 +53,15 @@ public class ServiceProperties {
 
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
-    private DatabaseProperties database = new DatabaseProperties();
-
-    @JsonView(MutablePropertiesView.class)
-    @NestedConfigurationProperty
     private LogProperties log = new LogProperties();
 
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private MockProperties mock = new MockProperties();
+
+    @JsonView(MutablePropertiesView.class)
+    @NestedConfigurationProperty
+    private MongoProperties mongo = new MongoProperties();
 
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty

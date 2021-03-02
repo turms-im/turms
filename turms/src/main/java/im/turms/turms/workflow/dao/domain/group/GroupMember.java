@@ -18,17 +18,14 @@
 package im.turms.turms.workflow.dao.domain.group;
 
 import im.turms.common.constant.GroupMemberRole;
+import im.turms.server.common.mongo.entity.IndexType;
+import im.turms.server.common.mongo.entity.ShardingStrategy;
+import im.turms.server.common.mongo.entity.annotation.*;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
-import org.springframework.data.mongodb.core.index.HashIndexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.Sharded;
-import org.springframework.data.mongodb.core.mapping.ShardingStrategy;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -41,7 +38,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor(onConstructor = @__(@PersistenceConstructor))
 @Document(GroupMember.COLLECTION_NAME)
-@Sharded(shardKey = GroupMember.Fields.ID_GROUP_ID, shardingStrategy = ShardingStrategy.HASH, immutableKey = true)
+@Sharded(shardKey = GroupMember.Fields.ID_GROUP_ID, shardingStrategy = ShardingStrategy.HASH)
 public final class GroupMember {
 
     public static final String COLLECTION_NAME = "groupMember";
@@ -83,7 +80,7 @@ public final class GroupMember {
     public static final class Key {
 
         @Field(Fields.GROUP_ID)
-        @HashIndexed
+        @Indexed(IndexType.HASH)
         private Long groupId;
 
         @Field(Fields.USER_ID)

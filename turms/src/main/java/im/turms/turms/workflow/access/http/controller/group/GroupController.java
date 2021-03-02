@@ -18,7 +18,7 @@
 package im.turms.turms.workflow.access.http.controller.group;
 
 import com.mongodb.client.result.UpdateResult;
-import im.turms.turms.bo.DateRange;
+import im.turms.server.common.bo.common.DateRange;
 import im.turms.turms.constant.DivideBy;
 import im.turms.turms.workflow.access.http.dto.request.group.AddGroupDTO;
 import im.turms.turms.workflow.access.http.dto.request.group.GroupStatisticsDTO;

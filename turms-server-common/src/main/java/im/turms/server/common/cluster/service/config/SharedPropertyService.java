@@ -17,21 +17,22 @@
 
 package im.turms.server.common.cluster.service.config;
 
+import com.mongodb.client.model.changestream.FullDocument;
 import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.cluster.service.ClusterService;
 import im.turms.server.common.cluster.service.config.domain.property.CommonProperties;
 import im.turms.server.common.cluster.service.config.domain.property.SharedClusterProperties;
+import im.turms.server.common.mongo.operation.option.Filter;
+import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.GatewayProperties;
 import im.turms.server.common.property.env.service.ServiceProperties;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,8 +45,6 @@ import static im.turms.server.common.cluster.service.config.domain.property.Shar
  */
 @Log4j2
 public class SharedPropertyService implements ClusterService {
-
-    public static final TurmsProperties DEFAULT_PROPERTIES = new TurmsProperties();
 
     private final SharedConfigService sharedConfigService;
     private final String clusterId;
@@ -69,12 +68,12 @@ public class SharedPropertyService implements ClusterService {
 
     @Override
     public void start() {
-        sharedConfigService.subscribe(SharedClusterProperties.class, true)
+        sharedConfigService.subscribe(SharedClusterProperties.class, FullDocument.UPDATE_LOOKUP)
                 .doOnNext(event -> {
-                    SharedClusterProperties changedProperties = event.getBody();
+                    SharedClusterProperties changedProperties = event.getFullDocument();
                     String changeClusterId = changedProperties != null
                             ? changedProperties.getClusterId()
-                            : ChangeStreamUtil.getIdAsString(event);
+                            : ChangeStreamUtil.getIdAsString(event.getDocumentKey());
                     if (changeClusterId.equals(clusterId)) {
                         switch (event.getOperationType()) {
                             case INSERT:
@@ -94,7 +93,7 @@ public class SharedPropertyService implements ClusterService {
                 })
                 .onErrorContinue((throwable, o) -> log.error("Error while processing the change stream event of SharedProperties: {}", o, throwable))
                 .subscribe();
-        initializeSharedProperties().block();
+        initializeSharedProperties().block(Duration.ofMinutes(1));
     }
 
     /**
@@ -105,10 +104,10 @@ public class SharedPropertyService implements ClusterService {
         log.info("Share new turms properties to all members");
         SharedClusterProperties clusterProperties = getClusterProperties(sharedClusterProperties, turmsProperties);
         Date now = new Date();
-        Query query = new Query()
-                .addCriteria(Criteria.where("_id").is(clusterId))
-                .addCriteria(Criteria.where(SharedClusterProperties.Fields.lastUpdatedTime).lt(now));
-        Update update = new Update()
+        Filter filter = Filter.newBuilder()
+                .eq("_id", clusterId)
+                .lt(SharedClusterProperties.Fields.lastUpdatedTime, now);
+        Update update = Update.newBuilder()
                 .set(SharedClusterProperties.Fields.commonProperties, clusterProperties.getCommonProperties());
         if (clusterProperties.getGatewayProperties() != null) {
             update.set(SharedClusterProperties.Fields.gatewayProperties, clusterProperties.getGatewayProperties());
@@ -116,7 +115,7 @@ public class SharedPropertyService implements ClusterService {
         if (clusterProperties.getServiceProperties() != null) {
             update.set(SharedClusterProperties.Fields.serviceProperties, clusterProperties.getServiceProperties());
         }
-        return sharedConfigService.upsert(query, update, clusterProperties, SharedClusterProperties.class)
+        return sharedConfigService.upsert(SharedClusterProperties.class, filter, update, clusterProperties)
                 .doOnError(e -> log.error("Failed to share new turms properties", e))
                 .then(Mono.defer(() -> {
                     sharedClusterProperties = clusterProperties;
@@ -158,14 +157,16 @@ public class SharedPropertyService implements ClusterService {
     }
 
     private Mono<SharedClusterProperties> findAndUpdatePropertiesByNodeType(SharedClusterProperties clusterProperties) {
-        Query query = new Query().addCriteria(Criteria.where("_id").is(clusterId));
-        return sharedConfigService.findOne(query, SharedClusterProperties.class)
+        Filter filter = Filter.newBuilder()
+                .eq("_id", clusterId);
+        return sharedConfigService.findOne(SharedClusterProperties.class, filter)
                 .flatMap(properties -> {
                     if (nodeType == NodeType.GATEWAY) {
                         if (properties.getGatewayProperties() == null) {
-                            query.addCriteria(Criteria.where(SharedClusterProperties.Fields.gatewayProperties).is(null));
-                            Update update = Update.update(SharedClusterProperties.Fields.gatewayProperties, clusterProperties.getGatewayProperties());
-                            return sharedConfigService.updateFirst(query, update, SharedClusterProperties.class)
+                            filter.eq(SharedClusterProperties.Fields.gatewayProperties, null);
+                            Update update = Update.newBuilder()
+                                    .set(SharedClusterProperties.Fields.gatewayProperties, clusterProperties.getGatewayProperties());
+                            return sharedConfigService.updateOne(SharedClusterProperties.class, filter, update)
                                     .map(result -> {
                                         if (result.getModifiedCount() > 0) {
                                             properties.setGatewayProperties(clusterProperties.getGatewayProperties());
@@ -177,9 +178,10 @@ public class SharedPropertyService implements ClusterService {
                         }
                     } else {
                         if (properties.getServiceProperties() == null) {
-                            query.addCriteria(Criteria.where(SharedClusterProperties.Fields.serviceProperties).is(null));
-                            Update update = Update.update(SharedClusterProperties.Fields.serviceProperties, clusterProperties.getServiceProperties());
-                            return sharedConfigService.updateFirst(query, update, SharedClusterProperties.class)
+                            filter.eq(SharedClusterProperties.Fields.serviceProperties, null);
+                            Update update = Update.newBuilder()
+                                    .set(SharedClusterProperties.Fields.serviceProperties, clusterProperties.getServiceProperties());
+                            return sharedConfigService.updateOne(SharedClusterProperties.class, filter, update)
                                     .map(result -> {
                                         if (result.getModifiedCount() > 0) {
                                             properties.setServiceProperties(clusterProperties.getServiceProperties());

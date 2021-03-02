@@ -1,22 +1,7 @@
-logging:
-  level:
-    org:
-      springframework:
-        data:
-          mongodb:
-            core:
-              ReactiveMongoTemplate: debug
-
 ############################### Turms ###############################
 
 turms:
   service:
     activity-logging:
       included-categories:
-        -
-          name: ALL
-  database:
-    mongo-properties:
-      default-properties:
-        auto-index-creation: true
-        uri: mongodb://localhost:29510/turms-test
+        - name: ALL

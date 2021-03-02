@@ -18,12 +18,8 @@
 package im.turms.server.common.dao.domain;
 
 import im.turms.common.constant.ProfileAccessStrategy;
+import im.turms.server.common.mongo.entity.annotation.*;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.Sharded;
 
 import java.util.Date;
 
@@ -32,7 +28,7 @@ import java.util.Date;
  */
 @Data
 @Document(User.COLLECTION_NAME)
-@Sharded(immutableKey = true)
+@Sharded
 public final class User {
 
     public static final String COLLECTION_NAME = "user";

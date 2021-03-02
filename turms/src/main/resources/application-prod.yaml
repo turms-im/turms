@@ -1,4 +1,0 @@
-spring:
-  data:
-    mongodb:
-      uri: mongodb://user:password@localhost/turms

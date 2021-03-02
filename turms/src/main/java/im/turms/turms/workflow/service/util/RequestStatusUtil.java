@@ -18,8 +18,8 @@
 package im.turms.turms.workflow.service.util;
 
 import im.turms.common.constant.RequestStatus;
+import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.turms.workflow.dao.domain.group.GroupInvitation;
-import org.springframework.data.mongodb.core.query.Update;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;

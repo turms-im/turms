@@ -34,6 +34,7 @@ public class TurmsRedisProperties {
     private static final List<RedisProperties> REDIS_PROPERTIES_LIST = List.of(new RedisProperties());
 
     @NestedConfigurationProperty
+    @JsonIgnore
     @Transient
     private RedisShardingProperties shardingProperties = new RedisShardingProperties();
 

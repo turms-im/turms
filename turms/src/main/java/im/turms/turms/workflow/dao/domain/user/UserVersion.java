@@ -17,11 +17,11 @@
 
 package im.turms.turms.workflow.dao.domain.user;
 
+import im.turms.server.common.mongo.entity.annotation.Document;
+import im.turms.server.common.mongo.entity.annotation.Field;
+import im.turms.server.common.mongo.entity.annotation.Id;
+import im.turms.server.common.mongo.entity.annotation.Sharded;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.Sharded;
 
 import java.util.Date;
 
@@ -33,7 +33,7 @@ import java.util.Date;
  */
 @Data
 @Document(UserVersion.COLLECTION_NAME)
-@Sharded(immutableKey = true)
+@Sharded
 public final class UserVersion {
 
     public static final String COLLECTION_NAME = "userVersion";

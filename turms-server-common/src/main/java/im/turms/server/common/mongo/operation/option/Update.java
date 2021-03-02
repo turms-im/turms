@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-package im.turms.turms.workflow.dao.builder;
+package im.turms.server.common.mongo.operation.option;
 
-import org.springframework.data.mongodb.core.query.Update;
+import org.bson.Document;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -27,43 +27,59 @@ import java.util.Date;
 /**
  * @author James Chen
  */
-public class UpdateBuilder {
+public class Update {
 
-    private final Update update = new Update();
+    private final Document document = new Document();
 
-    private UpdateBuilder() {
+    private Update() {
     }
 
-    public static UpdateBuilder newBuilder() {
-        return new UpdateBuilder();
+    public static Update newBuilder() {
+        return new Update();
     }
 
-    public UpdateBuilder setIfNotNull(@NotNull String key, @Nullable Object value) {
+    public Update setIfNotNull(@NotNull String key, @Nullable Object value) {
         if (value != null) {
             if (value instanceof Collection) {
                 if (!((Collection<?>) value).isEmpty()) {
-                    update.set(key, value);
+                    document.append("$set", new Document(key, value));
                 }
             } else {
-                update.set(key, value);
+                document.append("$set", new Document(key, value));
             }
         }
         return this;
     }
 
-    public UpdateBuilder setOrUnsetDate(String key, Date date) {
+    public Update setOrUnsetDate(String key, Date date) {
         if (date != null) {
             if (date.getTime() > 0) {
-                update.set(key, date);
+                document.append("$set", new Document(key, date));
             } else {
-                update.unset(key);
+                document.append("$unset", key);
             }
         }
         return this;
     }
 
-    public Update build() {
-        return update;
+    public Update set(String key, Object value) {
+        document.append("$set", new Document(key, value));
+        return this;
     }
 
+    public Update setIfTrue(String key, Object value, boolean condition) {
+        if (condition) {
+            document.append("$set", new Document(key, value));
+        }
+        return this;
+    }
+
+    public Update unset(String key) {
+        document.append("$unset", key);
+        return this;
+    }
+
+    public Document asDocument() {
+        return document;
+    }
 }

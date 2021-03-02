@@ -17,6 +17,7 @@
 
 package im.turms.turms.workflow.service.impl.admin;
 
+import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import im.turms.common.util.Validator;
@@ -24,23 +25,22 @@ import im.turms.server.common.cluster.service.config.ChangeStreamUtil;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.constraint.NoWhitespace;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.mongo.TurmsMongoClient;
+import im.turms.server.common.mongo.operation.option.Filter;
+import im.turms.server.common.mongo.operation.option.QueryOptions;
+import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.workflow.access.http.permission.AdminPermission;
-import im.turms.turms.workflow.dao.builder.QueryBuilder;
-import im.turms.turms.workflow.dao.builder.UpdateBuilder;
+import im.turms.turms.workflow.dao.MongoDataGenerator;
 import im.turms.turms.workflow.dao.domain.admin.AdminRole;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.tuple.Triple;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.data.mongodb.core.ChangeStreamOptions;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -58,6 +58,7 @@ import java.util.stream.Collectors;
  */
 @Log4j2
 @Service
+@DependsOn(MongoDataGenerator.BEAN_NAME)
 public class AdminRoleService {
 
     private static final int MIN_ROLE_NAME_LIMIT = 1;
@@ -68,23 +69,21 @@ public class AdminRoleService {
     private static final String ERROR_NO_PERMISSION = "The account doesn't have the permissions";
 
     private final Map<Long, AdminRole> roles = new ConcurrentHashMap<>(16);
-    private final ReactiveMongoTemplate mongoTemplate;
+    private final TurmsMongoClient mongoClient;
     private final AdminService adminService;
 
-    public AdminRoleService(@Qualifier("adminMongoTemplate") ReactiveMongoTemplate mongoTemplate, @Lazy AdminService adminService) {
-        this.mongoTemplate = mongoTemplate;
+    public AdminRoleService(@Qualifier("adminMongoClient") TurmsMongoClient mongoClient,
+                            @Lazy AdminService adminService) {
+        this.mongoClient = mongoClient;
         this.adminService = adminService;
 
         listenAndLoadRoles();
     }
 
     public void listenAndLoadRoles() {
-        mongoTemplate.changeStream(AdminRole.class)
-                .withOptions(ChangeStreamOptions.ChangeStreamOptionsBuilder::returnFullDocumentOnUpdate)
-                .watchCollection(AdminRole.class)
-                .listen()
+        mongoClient.watch(AdminRole.class, FullDocument.UPDATE_LOOKUP)
                 .doOnNext(event -> {
-                    AdminRole adminRole = event.getBody();
+                    AdminRole adminRole = event.getFullDocument();
                     switch (event.getOperationType()) {
                         case INSERT:
                         case UPDATE:
@@ -92,7 +91,7 @@ public class AdminRoleService {
                             roles.put(adminRole.getId(), adminRole);
                             break;
                         case DELETE:
-                            long roleId = ChangeStreamUtil.getIdAsLong(event);
+                            long roleId = ChangeStreamUtil.getIdAsLong(event.getDocumentKey());
                             roles.remove(roleId);
                             break;
                         case INVALIDATE:
@@ -107,7 +106,7 @@ public class AdminRoleService {
 
         // Load
         resetRoles();
-        mongoTemplate.find(new Query(), AdminRole.class, AdminRole.COLLECTION_NAME)
+        mongoClient.findAll(AdminRole.class)
                 .doOnNext(role -> roles.put(role.getId(), role))
                 .subscribe();
     }
@@ -159,8 +158,11 @@ public class AdminRoleService {
         if (adminRole.getId().equals(DaoConstant.ADMIN_ROLE_ROOT_ID)) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED, "The new role ID cannot be the root role ID"));
         }
-        return mongoTemplate.insert(adminRole, AdminRole.COLLECTION_NAME)
-                .doOnNext(role -> roles.put(adminRole.getId(), role));
+        return mongoClient.insert(adminRole)
+                .map(id -> {
+                    roles.put(adminRole.getId(), adminRole);
+                    return adminRole;
+                });
     }
 
     public Mono<DeleteResult> authAndDeleteAdminRoles(
@@ -190,8 +192,9 @@ public class AdminRoleService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(roleIds));
-        return mongoTemplate.remove(query, AdminRole.class, AdminRole.COLLECTION_NAME)
+        Filter filter = Filter.newBuilder()
+                .in(DaoConstant.ID_FIELD_NAME, roleIds);
+        return mongoClient.deleteMany(AdminRole.class, filter)
                 .map(result -> {
                     for (Long id : roleIds) {
                         roles.remove(id);
@@ -252,13 +255,13 @@ public class AdminRoleService {
         if (Validator.areAllFalsy(newName, permissions, rank)) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
-        Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(roleIds));
-        Update update = UpdateBuilder.newBuilder()
+        Filter filter = Filter.newBuilder()
+                .in(DaoConstant.ID_FIELD_NAME, roleIds);
+        Update update = Update.newBuilder()
                 .setIfNotNull(AdminRole.Fields.NAME, newName)
                 .setIfNotNull(AdminRole.Fields.PERMISSIONS, permissions)
-                .setIfNotNull(AdminRole.Fields.RANK, rank)
-                .build();
-        return mongoTemplate.updateMulti(query, update, AdminRole.class, AdminRole.COLLECTION_NAME);
+                .setIfNotNull(AdminRole.Fields.RANK, rank);
+        return mongoClient.updateMany(AdminRole.class, filter, update);
     }
 
     public AdminRole getRootRole() {
@@ -272,14 +275,15 @@ public class AdminRoleService {
             @Nullable Set<Integer> ranks,
             @Nullable Integer page,
             @Nullable Integer size) {
-        Query query = QueryBuilder
+        Filter filter = Filter
                 .newBuilder()
-                .addInIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
-                .addInIfNotNull(AdminRole.Fields.NAME, names)
-                .addInIfNotNull(AdminRole.Fields.PERMISSIONS, includedPermissions)
-                .addInIfNotNull(AdminRole.Fields.RANK, ranks)
+                .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
+                .inIfNotNull(AdminRole.Fields.NAME, names)
+                .inIfNotNull(AdminRole.Fields.PERMISSIONS, includedPermissions)
+                .inIfNotNull(AdminRole.Fields.RANK, ranks);
+        QueryOptions options = QueryOptions.newBuilder()
                 .paginateIfNotNull(page, size);
-        Flux<AdminRole> roleFlux = Flux.from(mongoTemplate.find(query, AdminRole.class, AdminRole.COLLECTION_NAME));
+        Flux<AdminRole> roleFlux = mongoClient.findMany(AdminRole.class, filter, options);
         if (isRootRoleQualified(ids, names, includedPermissions, ranks)) {
             // TODO: respect the page and the size
             return roleFlux.concatWithValues(getRootRole());
@@ -292,14 +296,13 @@ public class AdminRoleService {
             @Nullable Set<String> names,
             @Nullable Set<AdminPermission> includedPermissions,
             @Nullable Set<Integer> ranks) {
-        Query query = QueryBuilder
+        Filter filter = Filter
                 .newBuilder()
-                .addInIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
-                .addInIfNotNull(AdminRole.Fields.NAME, names)
-                .addInIfNotNull(AdminRole.Fields.PERMISSIONS, includedPermissions)
-                .addInIfNotNull(AdminRole.Fields.RANK, ranks)
-                .buildQuery();
-        return mongoTemplate.count(query, AdminRole.class, AdminRole.COLLECTION_NAME)
+                .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
+                .inIfNotNull(AdminRole.Fields.NAME, names)
+                .inIfNotNull(AdminRole.Fields.PERMISSIONS, includedPermissions)
+                .inIfNotNull(AdminRole.Fields.RANK, ranks);
+        return mongoClient.count(AdminRole.class, filter)
                 // Add 1 because of the nested root role
                 .map(number -> number + 1);
     }
@@ -334,10 +337,11 @@ public class AdminRoleService {
         if (roleId.equals(DaoConstant.ADMIN_ROLE_ROOT_ID)) {
             return Mono.just(getRootRole().getRank());
         } else {
-            Query query = new Query();
-            query.addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(roleId));
-            query.fields().include(AdminRole.Fields.RANK);
-            return mongoTemplate.findOne(query, AdminRole.class, AdminRole.COLLECTION_NAME)
+            Filter filter = Filter.newBuilder()
+                    .eq(DaoConstant.ID_FIELD_NAME, roleId);
+            QueryOptions options = QueryOptions.newBuilder()
+                    .include(AdminRole.Fields.RANK);
+            return mongoClient.findOne(AdminRole.class, filter, options)
                     .map(AdminRole::getRank);
         }
     }
@@ -352,10 +356,11 @@ public class AdminRoleService {
         if (containsRoot && roleIds.size() == 1) {
             return Flux.just(getRootRole().getRank());
         } else {
-            Query query = new Query();
-            query.addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(roleIds));
-            query.fields().include(AdminRole.Fields.RANK);
-            Flux<AdminRole> roleFlux = mongoTemplate.find(query, AdminRole.class, AdminRole.COLLECTION_NAME);
+            Filter query = Filter.newBuilder()
+                    .in(DaoConstant.ID_FIELD_NAME, roleIds);
+            QueryOptions options = QueryOptions.newBuilder()
+                    .include(AdminRole.Fields.RANK);
+            Flux<AdminRole> roleFlux = mongoClient.findMany(AdminRole.class, query, options);
             if (containsRoot) {
                 roleFlux = roleFlux.concatWithValues(getRootRole());
             }
@@ -431,7 +436,7 @@ public class AdminRoleService {
         }
         return roleId.equals(DaoConstant.ADMIN_ROLE_ROOT_ID)
                 ? Mono.just(getRootRole())
-                : mongoTemplate.findById(roleId, AdminRole.class, AdminRole.COLLECTION_NAME)
+                : mongoClient.findById(AdminRole.class, roleId)
                 .doOnNext(role -> roles.put(roleId, role));
     }
 

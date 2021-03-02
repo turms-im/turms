@@ -15,12 +15,10 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.property.env.gateway;
+package im.turms.server.common.property.env.service.env.database;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.boot.autoconfigure.mongo.MongoProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.data.annotation.Transient;
 
@@ -28,20 +26,31 @@ import org.springframework.data.annotation.Transient;
  * @author James Chen
  */
 @Data
-public class DatabaseProperties {
+public class MongoProperties {
 
     @JsonIgnore
     @Transient
     @NestedConfigurationProperty
-    private Properties mongoProperties = new Properties();
+    private AdminMongoProperties admin = new AdminMongoProperties();
 
-    @Data
-    @NoArgsConstructor
-    public static class Properties {
+    @JsonIgnore
+    @Transient
+    @NestedConfigurationProperty
+    private UserMongoProperties user = new UserMongoProperties();
 
-        @NestedConfigurationProperty
-        private MongoProperties user = new MongoProperties();
+    @JsonIgnore
+    @Transient
+    @NestedConfigurationProperty
+    private GroupMongoProperties group = new GroupMongoProperties();
 
-    }
+    @JsonIgnore
+    @Transient
+    @NestedConfigurationProperty
+    private ConversationMongoProperties conversation = new ConversationMongoProperties();
+
+    @JsonIgnore
+    @Transient
+    @NestedConfigurationProperty
+    private MessageMongoProperties message = new MessageMongoProperties();
 
 }

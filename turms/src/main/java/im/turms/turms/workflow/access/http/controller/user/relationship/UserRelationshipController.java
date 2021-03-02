@@ -17,7 +17,7 @@
 
 package im.turms.turms.workflow.access.http.controller.user.relationship;
 
-import im.turms.turms.bo.DateRange;
+import im.turms.server.common.bo.common.DateRange;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.workflow.access.http.dto.request.user.AddRelationshipDTO;
 import im.turms.turms.workflow.access.http.dto.request.user.UpdateRelationshipDTO;

@@ -21,14 +21,13 @@ import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.cluster.service.config.SharedConfigService;
 import im.turms.server.common.cluster.service.config.domain.discovery.Leader;
 import im.turms.server.common.cluster.service.config.domain.discovery.Member;
+import im.turms.server.common.mongo.operation.option.Filter;
+import im.turms.server.common.mongo.operation.option.Update;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
@@ -69,17 +68,17 @@ public class LocalNodeStatusManager {
         this.discoveryService = discoveryService;
         this.sharedConfigService = sharedConfigService;
         this.localMember = localMember;
-        this.heartbeatTimeoutInMillis = heartbeatTimeoutInSeconds * 1000;
+        this.heartbeatTimeoutInMillis = heartbeatTimeoutInSeconds * 1000L;
         this.heartbeatInterval = Duration.ofSeconds(heartbeatIntervalInSeconds);
         this.heartbeatIntervalInMillis = heartbeatInterval.toMillis();
     }
 
     public Mono<Void> upsertLocalNodeInfo(Update update) {
         String nodeId = localMember.getNodeId();
-        Query memberQuery = new Query()
-                .addCriteria(Criteria.where(Member.ID_CLUSTER_ID).is(localMember.getClusterId()))
-                .addCriteria(Criteria.where(Member.ID_NODE_ID).is(nodeId));
-        return sharedConfigService.upsert(memberQuery, update, localMember, Member.class)
+        Filter memberFilter = Filter.newBuilder()
+                .eq(Member.ID_CLUSTER_ID, localMember.getClusterId())
+                .eq(Member.ID_NODE_ID, nodeId);
+        return sharedConfigService.upsert(Member.class, memberFilter, update, localMember)
                 .doOnSuccess(unused -> isLocalNodeRegistered = true);
     }
 
@@ -118,9 +117,9 @@ public class LocalNodeStatusManager {
 
     private Mono<Void> unregisterLocalMemberLeadership() {
         Member.Key key = new Member.Key(localMember.getClusterId(), localMember.getNodeId());
-        Query query = new Query()
-                .addCriteria(Criteria.where("_id").is(key));
-        return sharedConfigService.remove(query, Leader.class)
+        Filter query = Filter.newBuilder()
+                .eq("_id", key);
+        return sharedConfigService.remove(Leader.class, query)
                 .doOnSuccess(result -> {
                     if (result.getDeletedCount() > 0) {
                         discoveryService.notifyLeadershipChangeListeners(null);
@@ -144,7 +143,8 @@ public class LocalNodeStatusManager {
                 }
                 try {
                     Date now = new Date();
-                    Update update = new Update().set(Member.Fields.lastHeartbeatDate, now);
+                    Update update = Update.newBuilder()
+                            .set(Member.Fields.lastHeartbeatDate, now);
                     List<Mono<?>> monos = new LinkedList<>();
                     monos.add(upsertLocalNodeInfo(update));
                     if (isLocalNodeMaster()) {
@@ -189,12 +189,13 @@ public class LocalNodeStatusManager {
     }
 
     private Mono<Void> updateLocalLeaderHeartbeat(Date lastHeartbeatDate) {
-        Update update = new Update().set(Leader.Fields.lastHeartbeatDate, lastHeartbeatDate);
-        Query leaderQuery = new Query()
-                .addCriteria(Criteria.where("_id").is(localMember.getClusterId()))
-                .addCriteria(Criteria.where(Leader.Fields.nodeId).is(localMember.getNodeId()));
+        Update update = Update.newBuilder()
+                .set(Leader.Fields.lastHeartbeatDate, lastHeartbeatDate);
+        Filter leaderFilter = Filter.newBuilder()
+                .eq("_id", localMember.getClusterId())
+                .eq(Leader.Fields.nodeId, localMember.getNodeId());
         Leader leader = discoveryService.getLeader();
-        return sharedConfigService.upsert(leaderQuery, update, leader, Leader.class);
+        return sharedConfigService.upsert(Leader.class, leaderFilter, update, leader);
     }
 
     private Mono<Void> updateFollowersStatus(Date lastHeartbeatDate) {
@@ -233,19 +234,21 @@ public class LocalNodeStatusManager {
     }
 
     private Mono<Void> updateFollowersToUnavailable(Collection<String> unavailableMemberNodeIds) {
-        Query query = new Query()
-                .addCriteria(Criteria.where(Member.ID_NODE_ID).in(unavailableMemberNodeIds))
-                .addCriteria(Criteria.where(Member.ID_CLUSTER_ID).is(localMember.getClusterId()));
-        Update update = new Update().set(Member.Fields.hasJoinedCluster, false);
-        return sharedConfigService.updateMulti(query, update, Member.class).then();
+        Filter filter = Filter.newBuilder()
+                .in(Member.ID_NODE_ID, unavailableMemberNodeIds)
+                .eq(Member.ID_CLUSTER_ID, localMember.getClusterId());
+        Update update = Update.newBuilder()
+                .set(Member.Fields.hasJoinedCluster, false);
+        return sharedConfigService.updateMany(Member.class, filter, update).then();
     }
 
     private Mono<Void> updateFollowersToAvailable(Collection<String> availableMemberNodeIds) {
-        Query query = new Query()
-                .addCriteria(Criteria.where(Member.ID_NODE_ID).in(availableMemberNodeIds))
-                .addCriteria(Criteria.where(Member.ID_CLUSTER_ID).is(localMember.getClusterId()));
-        Update update = new Update().set(Member.Fields.hasJoinedCluster, true);
-        return sharedConfigService.updateMulti(query, update, Member.class).then();
+        Filter filter = Filter.newBuilder()
+                .in(Member.ID_NODE_ID, availableMemberNodeIds)
+                .eq(Member.ID_CLUSTER_ID, localMember.getClusterId());
+        Update update = Update.newBuilder()
+                .set(Member.Fields.hasJoinedCluster, true);
+        return sharedConfigService.updateMany(Member.class, filter, update).then();
     }
 
 }

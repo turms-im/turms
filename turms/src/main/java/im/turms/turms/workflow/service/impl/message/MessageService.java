@@ -23,30 +23,33 @@ import com.google.common.primitives.Longs;
 import com.google.protobuf.Int64Value;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import com.mongodb.reactivestreams.client.ClientSession;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.common.util.Validator;
+import im.turms.server.common.bo.common.DateRange;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dao.util.OperationResultUtil;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.manager.TrivialTaskManager;
+import im.turms.server.common.mongo.TurmsMongoClient;
+import im.turms.server.common.mongo.operation.option.Filter;
+import im.turms.server.common.mongo.operation.option.QueryOptions;
+import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.constant.TimeType;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.CollectorUtil;
-import im.turms.turms.bo.DateRange;
 import im.turms.turms.bo.ServicePermission;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.plugin.extension.handler.ExpiredMessageAutoDeletionNotificationHandler;
 import im.turms.turms.plugin.manager.TurmsPluginManager;
 import im.turms.turms.util.ProtoUtil;
-import im.turms.turms.workflow.dao.builder.QueryBuilder;
-import im.turms.turms.workflow.dao.builder.UpdateBuilder;
+import im.turms.turms.workflow.dao.MongoDataGenerator;
 import im.turms.turms.workflow.dao.domain.message.Message;
-import im.turms.turms.workflow.dao.util.AggregationUtil;
 import im.turms.turms.workflow.service.impl.conversation.ConversationService;
 import im.turms.turms.workflow.service.impl.group.GroupMemberService;
 import im.turms.turms.workflow.service.impl.statistics.MetricsService;
@@ -57,12 +60,8 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.ReactiveMongoOperations;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -86,9 +85,10 @@ import static im.turms.turms.constant.MetricsConstant.SENT_MESSAGES_COUNTER_NAME
  */
 @Service
 @Log4j2
+@DependsOn(MongoDataGenerator.BEAN_NAME)
 public class MessageService {
 
-    private final ReactiveMongoTemplate mongoTemplate;
+    private final TurmsMongoClient mongoClient;
     private final Node node;
     private final ConversationService conversationService;
     private final OutboundMessageService outboundMessageService;
@@ -104,7 +104,7 @@ public class MessageService {
 
     @Autowired
     public MessageService(
-            @Qualifier("messageMongoTemplate") ReactiveMongoTemplate mongoTemplate,
+            @Qualifier("messageMongoClient") TurmsMongoClient mongoClient,
             Node node,
             TurmsPropertiesManager turmsPropertiesManager,
             ConversationService conversationService,
@@ -114,7 +114,7 @@ public class MessageService {
             TurmsPluginManager turmsPluginManager,
             TrivialTaskManager taskManager,
             MetricsService metricsService) {
-        this.mongoTemplate = mongoTemplate;
+        this.mongoClient = mongoClient;
         this.node = node;
         this.conversationService = conversationService;
         this.groupMemberService = groupMemberService;
@@ -163,10 +163,10 @@ public class MessageService {
                 return Mono.just(message.getSenderId().equals(senderId));
             }
         }
-        Query query = new Query()
-                .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(messageId))
-                .addCriteria(Criteria.where(Message.Fields.SENDER_ID).is(senderId));
-        return mongoTemplate.exists(query, Message.class, Message.COLLECTION_NAME);
+        Filter filter = Filter.newBuilder()
+                .eq(DaoConstant.ID_FIELD_NAME, messageId)
+                .eq(Message.Fields.SENDER_ID, senderId);
+        return mongoClient.exists(Message.class, filter);
     }
 
     public Mono<Boolean> isMessageRecipient(@NotNull Long messageId, @NotNull Long recipientId) {
@@ -182,11 +182,11 @@ public class MessageService {
                 return Mono.just(message.getTargetId().equals(recipientId));
             }
         }
-        Query query = new Query()
-                .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(messageId))
-                .addCriteria(Criteria.where(Message.Fields.TARGET_ID).is(recipientId))
-                .addCriteria(Criteria.where(Message.Fields.IS_GROUP_MESSAGE).is(false));
-        return mongoTemplate.exists(query, Message.class, Message.COLLECTION_NAME);
+        Filter filter = Filter.newBuilder()
+                .eq(DaoConstant.ID_FIELD_NAME, messageId)
+                .eq(Message.Fields.TARGET_ID, recipientId)
+                .eq(Message.Fields.IS_GROUP_MESSAGE, false);
+        return mongoClient.exists(Message.class, filter);
     }
 
     public Mono<Boolean> isMessageRecipientOrSender(@NotNull Long messageId, @NotNull Long userId) {
@@ -210,9 +210,11 @@ public class MessageService {
             }
         }
         if (messageMono == null) {
-            Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(messageId));
-            query.fields().include(Message.Fields.DELIVERY_DATE);
-            messageMono = mongoTemplate.findOne(query, Message.class, Message.COLLECTION_NAME);
+            Filter filter = Filter.newBuilder()
+                    .eq(DaoConstant.ID_FIELD_NAME, messageId);
+            QueryOptions options = QueryOptions.newBuilder()
+                    .include(Message.Fields.DELIVERY_DATE);
+            messageMono = mongoClient.findOne(Message.class, filter, options);
         }
         return messageMono
                 .map(message -> {
@@ -259,8 +261,9 @@ public class MessageService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(messageId));
-        return mongoTemplate.findOne(query, Message.class, Message.COLLECTION_NAME);
+        Filter filter = Filter.newBuilder()
+                .eq(DaoConstant.ID_FIELD_NAME, messageId);
+        return mongoClient.findOne(Message.class, filter);
     }
 
     public Flux<Message> queryMessages(
@@ -274,11 +277,11 @@ public class MessageService {
             @Nullable DateRange deletionDateRange,
             @Nullable Integer page,
             @Nullable Integer size) {
-        QueryBuilder builder = QueryBuilder.newBuilder()
-                .addIsIfNotNull(Message.Fields.IS_GROUP_MESSAGE, areGroupMessages)
-                .addIsIfNotNull(Message.Fields.IS_SYSTEM_MESSAGE, areSystemMessages)
-                .addInIfNotNull(Message.Fields.SENDER_ID, senderIds)
-                .addInIfNotNull(Message.Fields.TARGET_ID, targetIds)
+        Filter filter = Filter.newBuilder()
+                .eqIfNotNull(Message.Fields.IS_GROUP_MESSAGE, areGroupMessages)
+                .eqIfNotNull(Message.Fields.IS_SYSTEM_MESSAGE, areSystemMessages)
+                .inIfNotNull(Message.Fields.SENDER_ID, senderIds)
+                .inIfNotNull(Message.Fields.TARGET_ID, targetIds)
                 .addBetweenIfNotNull(Message.Fields.DELIVERY_DATE, deliveryDateRange)
                 .addBetweenIfNotNull(Message.Fields.DELETION_DATE, deletionDateRange);
         Sort.Direction direction = null;
@@ -286,14 +289,13 @@ public class MessageService {
             boolean isAsc = deliveryDateRange != null && deliveryDateRange.getStart() != null;
             direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
         }
-        builder.addInIfNotNull(DaoConstant.ID_FIELD_NAME, messageIds);
-        Query query;
+        filter.inIfNotNull(DaoConstant.ID_FIELD_NAME, messageIds);
+        QueryOptions options = QueryOptions.newBuilder()
+                .paginateIfNotNull(page, size);
         if (direction != null) {
-            query = builder.paginateIfNotNull(page, size, direction, Message.Fields.DELIVERY_DATE);
-        } else {
-            query = builder.paginateIfNotNull(page, size);
+            options.sort(direction, Message.Fields.DELIVERY_DATE);
         }
-        return mongoTemplate.find(query, Message.class, Message.COLLECTION_NAME);
+        return mongoClient.findMany(Message.class, filter, options);
     }
 
     public Mono<Message> saveMessage(
@@ -345,7 +347,8 @@ public class MessageService {
                 records,
                 burnAfter,
                 referenceId);
-        Mono<Message> saveMessage = mongoTemplate.insert(message, Message.COLLECTION_NAME);
+        Mono<Message> saveMessage = mongoClient.insert(message)
+                .thenReturn(message);
         if (node.getSharedProperties().getService().getConversation().getReadReceipt().isUpdateReadDateAfterMessageSent()) {
             Mono<Void> upsertConversation = isGroupMessage
                     ? conversationService.upsertGroupConversationReadDate(targetId, senderId, deliveryDate)
@@ -364,10 +367,11 @@ public class MessageService {
             return Flux.error(e);
         }
         Date beforeDate = Date.from(Instant.now().minus(timeToLiveHours, ChronoUnit.HOURS));
-        Query query = new Query()
-                .addCriteria(Criteria.where(Message.Fields.DELIVERY_DATE).lt(beforeDate));
-        query.fields().include(DaoConstant.ID_FIELD_NAME);
-        return mongoTemplate.find(query, Message.class, Message.COLLECTION_NAME)
+        Filter filter = Filter.newBuilder()
+                .lt(Message.Fields.DELIVERY_DATE, beforeDate);
+        QueryOptions options = QueryOptions.newBuilder()
+                .include(DaoConstant.ID_FIELD_NAME);
+        return mongoClient.findMany(Message.class, filter, options)
                 .map(Message::getId);
     }
 
@@ -381,8 +385,9 @@ public class MessageService {
                         Mono<List<Long>> messageIdsToDeleteMono = Mono.just(expiredMessageIds);
                         List<ExpiredMessageAutoDeletionNotificationHandler> handlerList = turmsPluginManager.getExpiredMessageAutoDeletionNotificationHandlerList();
                         if (pluginEnabled && !handlerList.isEmpty()) {
-                            Query messagesQuery = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(expiredMessageIds));
-                            messageIdsToDeleteMono = mongoTemplate.find(messagesQuery, Message.class, Message.COLLECTION_NAME)
+                            Filter messagesFilter = Filter.newBuilder()
+                                    .in(DaoConstant.ID_FIELD_NAME, expiredMessageIds);
+                            messageIdsToDeleteMono = mongoClient.findMany(Message.class, messagesFilter)
                                     .collectList()
                                     .flatMap(messages -> {
                                         Mono<List<Message>> mono = Mono.just(messages);
@@ -401,8 +406,9 @@ public class MessageService {
                         }
                         return messageIdsToDeleteMono
                                 .flatMap(messageIds -> {
-                                    Query messagesQuery = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(messageIds));
-                                    return mongoTemplate.remove(messagesQuery, Message.class, Message.COLLECTION_NAME).then();
+                                    Filter messagesFilter = Filter.newBuilder()
+                                            .in(DaoConstant.ID_FIELD_NAME, messageIds);
+                                    return mongoClient.deleteMany(Message.class, messagesFilter).then();
                                 });
                     }
                 });
@@ -411,21 +417,21 @@ public class MessageService {
     public Mono<DeleteResult> deleteMessages(
             @Nullable Set<Long> messageIds,
             @Nullable Boolean deleteLogically) {
-        Query queryMessage = QueryBuilder
+        Filter filterMessage = Filter
                 .newBuilder()
-                .addInIfNotNull(DaoConstant.ID_FIELD_NAME, messageIds)
-                .buildQuery();
+                .inIfNotNull(DaoConstant.ID_FIELD_NAME, messageIds);
         if (deleteLogically == null) {
             deleteLogically = node.getSharedProperties()
                     .getService().getMessage()
                     .isDeleteMessageLogicallyByDefault();
         }
         if (deleteLogically) {
-            Update update = new Update().set(Message.Fields.DELETION_DATE, new Date());
-            return mongoTemplate.updateMulti(queryMessage, update, Message.class, Message.COLLECTION_NAME)
+            Update update = Update.newBuilder()
+                    .set(Message.Fields.DELETION_DATE, new Date());
+            return mongoClient.updateMany(Message.class, filterMessage, update)
                     .map(OperationResultUtil::update2delete);
         } else {
-            return mongoTemplate.remove(queryMessage, Message.class, Message.COLLECTION_NAME);
+            return mongoClient.deleteMany(Message.class, filterMessage);
         }
     }
 
@@ -436,7 +442,7 @@ public class MessageService {
             @Nullable List<byte[]> records,
             @Nullable @Min(0) Integer burnAfter,
             @Nullable @PastOrPresent Date recallDate,
-            @Nullable ReactiveMongoOperations operations) {
+            @Nullable ClientSession session) {
         try {
             AssertUtil.notEmpty(messageIds, "messageIds");
             AssertUtil.maxLength(text, "text", node.getSharedProperties().getService().getMessage().getMaxTextLimit());
@@ -449,20 +455,19 @@ public class MessageService {
         if (Validator.areAllNull(isSystemMessage, text, records, burnAfter, recallDate)) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
-        Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(messageIds));
-        Update update = UpdateBuilder.newBuilder()
+        Filter filter = Filter.newBuilder()
+                .in(DaoConstant.ID_FIELD_NAME, messageIds);
+        Update update = Update.newBuilder()
                 .setIfNotNull(Message.Fields.MODIFICATION_DATE, new Date())
                 .setIfNotNull(Message.Fields.TEXT, text)
                 .setIfNotNull(Message.Fields.RECORDS, records)
                 .setIfNotNull(Message.Fields.IS_SYSTEM_MESSAGE, isSystemMessage)
                 .setIfNotNull(Message.Fields.BURN_AFTER, burnAfter)
-                .setIfNotNull(Message.Fields.RECALL_DATE, recallDate)
-                .build();
-        ReactiveMongoOperations mongoOperations = operations != null ? operations : mongoTemplate;
+                .setIfNotNull(Message.Fields.RECALL_DATE, recallDate);
         if (recallDate == null) {
-            return mongoOperations.updateMulti(query, update, Message.class, Message.COLLECTION_NAME);
+            return mongoClient.updateMany(session, Message.class, filter, update);
         } else {
-            return mongoOperations.find(query, Message.class, Message.COLLECTION_NAME)
+            return mongoClient.findMany(Message.class, filter)
                     .map(message -> {
                         byte[] messageType = {BuiltinSystemMessageType.RECALL_MESSAGE};
                         byte[] messageId = Longs.toByteArray(message.getId());
@@ -493,13 +498,13 @@ public class MessageService {
             @Nullable List<byte[]> records,
             @Nullable @Min(0) Integer burnAfter,
             @Nullable @PastOrPresent Date recallDate,
-            @Nullable ReactiveMongoOperations operations) {
+            @Nullable ClientSession session) {
         try {
             AssertUtil.notNull(messageId, "messageId");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        return updateMessages(Set.of(messageId), isSystemMessage, text, records, burnAfter, recallDate, operations);
+        return updateMessages(Set.of(messageId), isSystemMessage, text, records, burnAfter, recallDate, session);
     }
 
     public Mono<Long> countMessages(
@@ -510,43 +515,39 @@ public class MessageService {
             @Nullable Set<Long> targetIds,
             @Nullable DateRange deliveryDateRange,
             @Nullable DateRange deletionDateRange) {
-        QueryBuilder builder = QueryBuilder.newBuilder()
-                .addIsIfNotNull(Message.Fields.IS_GROUP_MESSAGE, areGroupMessages)
-                .addIsIfNotNull(Message.Fields.IS_SYSTEM_MESSAGE, areSystemMessages)
-                .addIsIfNotNull(Message.Fields.SENDER_ID, senderIds)
-                .addIsIfNotNull(Message.Fields.TARGET_ID, targetIds)
+        Filter builder = Filter.newBuilder()
+                .eqIfNotNull(Message.Fields.IS_GROUP_MESSAGE, areGroupMessages)
+                .eqIfNotNull(Message.Fields.IS_SYSTEM_MESSAGE, areSystemMessages)
+                .eqIfNotNull(Message.Fields.SENDER_ID, senderIds)
+                .eqIfNotNull(Message.Fields.TARGET_ID, targetIds)
                 .addBetweenIfNotNull(Message.Fields.DELIVERY_DATE, deliveryDateRange)
                 .addBetweenIfNotNull(Message.Fields.DELETION_DATE, deletionDateRange);
-        Query query = builder.addInIfNotNull(DaoConstant.ID_FIELD_NAME, messageIds).buildQuery();
-        return mongoTemplate.count(query, Message.class, Message.COLLECTION_NAME);
+        Filter filter = builder.inIfNotNull(DaoConstant.ID_FIELD_NAME, messageIds);
+        return mongoClient.count(Message.class, filter);
     }
 
     public Mono<Long> countUsersWhoSentMessage(
             @Nullable DateRange dateRange,
             @Nullable Boolean areGroupMessages,
             @Nullable Boolean areSystemMessages) {
-        Criteria criteria = QueryBuilder.newBuilder()
+        Filter filter = Filter.newBuilder()
                 .addBetweenIfNotNull(Message.Fields.DELIVERY_DATE, dateRange)
-                .addIsIfNotNull(Message.Fields.IS_GROUP_MESSAGE, areGroupMessages)
-                .addIsIfNotNull(Message.Fields.IS_SYSTEM_MESSAGE, areSystemMessages)
-                .buildCriteria();
-        return AggregationUtil.countDistinct(
-                mongoTemplate,
-                criteria,
-                Message.Fields.SENDER_ID,
-                Message.class);
+                .eqIfNotNull(Message.Fields.IS_GROUP_MESSAGE, areGroupMessages)
+                .eqIfNotNull(Message.Fields.IS_SYSTEM_MESSAGE, areSystemMessages);
+        return mongoClient.countDistinct(
+                Message.class,
+                filter,
+                Message.Fields.SENDER_ID);
     }
 
     public Mono<Long> countGroupsThatSentMessages(@Nullable DateRange dateRange) {
-        Criteria criteria = QueryBuilder.newBuilder()
+        Filter filter = Filter.newBuilder()
                 .addBetweenIfNotNull(Message.Fields.DELIVERY_DATE, dateRange)
-                .add(Criteria.where(Message.Fields.IS_GROUP_MESSAGE).is(true))
-                .buildCriteria();
-        return AggregationUtil.countDistinct(
-                mongoTemplate,
-                criteria,
-                Message.Fields.TARGET_ID,
-                Message.class);
+                .eq(Message.Fields.IS_GROUP_MESSAGE, true);
+        return mongoClient.countDistinct(
+                Message.class,
+                filter,
+                Message.Fields.TARGET_ID);
     }
 
 //    public Mono<Long> countUsersWhoAcknowledgedMessage(
@@ -573,12 +574,11 @@ public class MessageService {
             @Nullable DateRange dateRange,
             @Nullable Boolean areGroupMessages,
             @Nullable Boolean areSystemMessages) {
-        Query query = QueryBuilder.newBuilder()
+        Filter filter = Filter.newBuilder()
                 .addBetweenIfNotNull(Message.Fields.DELIVERY_DATE, dateRange)
-                .addIsIfNotNull(Message.Fields.IS_GROUP_MESSAGE, areGroupMessages)
-                .addIsIfNotNull(Message.Fields.IS_SYSTEM_MESSAGE, areSystemMessages)
-                .buildQuery();
-        return mongoTemplate.count(query, Message.class, Message.COLLECTION_NAME);
+                .eqIfNotNull(Message.Fields.IS_GROUP_MESSAGE, areGroupMessages)
+                .eqIfNotNull(Message.Fields.IS_SYSTEM_MESSAGE, areSystemMessages);
+        return mongoClient.count(Message.class, filter);
     }
 
     public Mono<Long> countSentMessagesOnAverage(
@@ -684,11 +684,11 @@ public class MessageService {
         } catch (TurmsBusinessException e) {
             return Flux.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(messageId));
-        query.fields()
-                .include(Message.Fields.TARGET_ID)
-                .include(Message.Fields.IS_GROUP_MESSAGE);
-        return mongoTemplate.findOne(query, Message.class, Message.COLLECTION_NAME)
+        Filter filter = Filter.newBuilder()
+                .eq(DaoConstant.ID_FIELD_NAME, messageId);
+        QueryOptions options = QueryOptions.newBuilder()
+                .include(Message.Fields.TARGET_ID, Message.Fields.IS_GROUP_MESSAGE);
+        return mongoClient.findOne(Message.class, filter, options)
                 .flatMapMany(message -> {
                     if (message.getIsGroupMessage()) {
                         return groupMemberService.queryGroupMemberIds(message.groupId());

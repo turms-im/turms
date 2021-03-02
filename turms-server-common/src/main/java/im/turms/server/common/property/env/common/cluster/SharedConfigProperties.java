@@ -18,6 +18,7 @@
 package im.turms.server.common.property.env.common.cluster;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import im.turms.server.common.property.env.service.env.database.TurmsMongoProperties;
 import lombok.Data;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.data.annotation.Transient;
@@ -31,11 +32,6 @@ public class SharedConfigProperties {
     @JsonIgnore
     @Transient
     @NestedConfigurationProperty
-    private Mongo mongo = new Mongo();
-
-    @Data
-    public static class Mongo {
-        private String uri = "mongodb://localhost:29510/turms-config";
-    }
+    private TurmsMongoProperties mongo = new TurmsMongoProperties("mongodb://localhost:27510/turms-config");
 
 }

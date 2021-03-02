@@ -50,15 +50,13 @@ spring:
     max-in-memory-size: 64KB
   autoconfigure:
     exclude:
-    - org.springframework.boot.actuate.autoconfigure.metrics.MetricsEndpointAutoConfiguration
-    - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
-    - org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration
+      - org.springframework.boot.actuate.autoconfigure.metrics.MetricsEndpointAutoConfiguration
 management:
-# https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html
-# Prometheus is enabled by default. Uncomment the following lines to disable it.
-#  metrics:
-#    enable:
-#      prometheus: false
+  # https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html
+  # Prometheus is enabled by default. Uncomment the following lines to disable it.
+  #  metrics:
+  #    enable:
+  #      prometheus: false
   endpoints:
     jmx:
       exposure:
@@ -94,10 +92,6 @@ turms:
         key-store-password: imturms
         key-alias: turms
   service:
-    database:
-      mongo-properties:
-        default-properties:
-          uri: mongodb://localhost:29510/turms
     message:
       check-if-target-active-and-not-deleted: false
 #turms-plugin:

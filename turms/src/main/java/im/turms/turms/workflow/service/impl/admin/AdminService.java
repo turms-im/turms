@@ -18,6 +18,7 @@
 package im.turms.turms.workflow.service.impl.admin;
 
 import com.google.common.collect.Sets;
+import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import im.turms.common.util.Validator;
@@ -26,23 +27,22 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.constraint.NoWhitespace;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.manager.PasswordManager;
+import im.turms.server.common.mongo.TurmsMongoClient;
+import im.turms.server.common.mongo.operation.option.Filter;
+import im.turms.server.common.mongo.operation.option.QueryOptions;
+import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.bo.AdminInfo;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.workflow.access.http.permission.AdminPermission;
-import im.turms.turms.workflow.dao.builder.QueryBuilder;
-import im.turms.turms.workflow.dao.builder.UpdateBuilder;
+import im.turms.turms.workflow.dao.MongoDataGenerator;
 import im.turms.turms.workflow.dao.domain.admin.Admin;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.mongodb.core.ChangeStreamOptions;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
@@ -64,6 +64,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Log4j2
 @Service
+@DependsOn(MongoDataGenerator.BEAN_NAME)
 public class AdminService {
 
     private static final String ERROR_UPDATE_ADMIN_WITH_HIGHER_RANK = "Only a admin with a lower rank compared to the account can be created, updated, or deleted";
@@ -79,7 +80,7 @@ public class AdminService {
     public static final int MAX_PASSWORD_LIMIT = 32;
     public static final int MAX_NAME_LIMIT = 32;
     private final PasswordManager passwordManager;
-    private final ReactiveMongoTemplate mongoTemplate;
+    private final TurmsMongoClient mongoClient;
     private final AdminRoleService adminRoleService;
 
     /**
@@ -89,10 +90,10 @@ public class AdminService {
 
     public AdminService(
             PasswordManager passwordManager,
-            @Qualifier("adminMongoTemplate") ReactiveMongoTemplate mongoTemplate,
+            @Qualifier("adminMongoClient") TurmsMongoClient mongoClient,
             AdminRoleService adminRoleService) {
         this.passwordManager = passwordManager;
-        this.mongoTemplate = mongoTemplate;
+        this.mongoClient = mongoClient;
         this.adminRoleService = adminRoleService;
 
         listenAndLoadAdmins();
@@ -100,12 +101,9 @@ public class AdminService {
 
     public void listenAndLoadAdmins() {
         // Listen
-        mongoTemplate.changeStream(Admin.class)
-                .withOptions(ChangeStreamOptions.ChangeStreamOptionsBuilder::returnFullDocumentOnUpdate)
-                .watchCollection(Admin.class)
-                .listen()
+        mongoClient.watch(Admin.class, FullDocument.UPDATE_LOOKUP)
                 .doOnNext(event -> {
-                    Admin admin = event.getBody();
+                    Admin admin = event.getFullDocument();
                     switch (event.getOperationType()) {
                         case INSERT:
                         case UPDATE:
@@ -113,7 +111,7 @@ public class AdminService {
                             adminMap.put(admin.getAccount(), new AdminInfo(admin, null));
                             break;
                         case DELETE:
-                            String account = ChangeStreamUtil.getIdAsString(event);
+                            String account = ChangeStreamUtil.getIdAsString(event.getDocumentKey());
                             adminMap.remove(account);
                             break;
                         case INVALIDATE:
@@ -127,7 +125,7 @@ public class AdminService {
                 .subscribe();
 
         // Load
-        mongoTemplate.find(new Query(), Admin.class, Admin.COLLECTION_NAME)
+        mongoClient.findAll(Admin.class)
                 .collectList()
                 .doOnNext(admins -> {
                     boolean rootAdminExists = false;
@@ -215,9 +213,13 @@ public class AdminService {
         Admin admin = new Admin(account, password, name, roleId, registrationDate);
         AdminInfo adminInfo = new AdminInfo(admin, rawPassword);
         String finalAccount = account;
-        return upsert
-                ? mongoTemplate.save(admin, Admin.COLLECTION_NAME).doOnNext(result -> adminMap.put(finalAccount, adminInfo))
-                : mongoTemplate.insert(admin, Admin.COLLECTION_NAME).doOnNext(result -> adminMap.put(finalAccount, adminInfo));
+        Mono<?> result = upsert
+                ? mongoClient.upsert(admin)
+                : mongoClient.insert(admin);
+        return result.then(Mono.fromCallable(() -> {
+            adminMap.put(finalAccount, adminInfo);
+            return admin;
+        }));
     }
 
     public Mono<Long> queryRoleId(@NotNull String account) {
@@ -321,7 +323,7 @@ public class AdminService {
         if (adminInfo != null) {
             return Mono.just(adminInfo.getAdmin());
         } else {
-            return mongoTemplate.findById(account, Admin.class, Admin.COLLECTION_NAME)
+            return mongoClient.findById(Admin.class, account)
                     .doOnNext(admin -> adminMap.put(account, new AdminInfo(admin, null)));
         }
     }
@@ -331,11 +333,12 @@ public class AdminService {
             @Nullable Set<Long> roleIds,
             @Nullable Integer page,
             @Nullable Integer size) {
-        Query query = QueryBuilder.newBuilder()
-                .addInIfNotNull(DaoConstant.ID_FIELD_NAME, accounts)
-                .addInIfNotNull(Admin.Fields.ROLE_ID, roleIds)
+        Filter filter = Filter.newBuilder()
+                .inIfNotNull(DaoConstant.ID_FIELD_NAME, accounts)
+                .inIfNotNull(Admin.Fields.ROLE_ID, roleIds);
+        QueryOptions options = QueryOptions.newBuilder()
                 .paginateIfNotNull(page, size);
-        return mongoTemplate.find(query, Admin.class, Admin.COLLECTION_NAME);
+        return mongoClient.findMany(Admin.class, filter);
     }
 
     public Mono<DeleteResult> authAndDeleteAdmins(
@@ -360,9 +363,9 @@ public class AdminService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query()
-                .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(accounts));
-        return mongoTemplate.remove(query, Admin.class, Admin.COLLECTION_NAME)
+        Filter filter = Filter.newBuilder()
+                .in(DaoConstant.ID_FIELD_NAME, accounts);
+        return mongoClient.deleteMany(Admin.class, filter)
                 .map(result -> {
                     for (String account : accounts) {
                         adminMap.remove(account);
@@ -433,18 +436,17 @@ public class AdminService {
         if (Validator.areAllNull(rawPassword, name, roleId)) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
-        Query query = new Query();
-        query.addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(targetAccounts));
+        Filter filter = Filter.newBuilder()
+                .in(DaoConstant.ID_FIELD_NAME, targetAccounts);
         String password = rawPassword != null
                 ? passwordManager.encodeAdminPassword(rawPassword)
                 : null;
-        Update update = UpdateBuilder
+        Update update = Update
                 .newBuilder()
                 .setIfNotNull(Admin.Fields.PASSWORD, password)
                 .setIfNotNull(Admin.Fields.NAME, name)
-                .setIfNotNull(Admin.Fields.ROLE_ID, roleId)
-                .build();
-        return mongoTemplate.updateMulti(query, update, Admin.class)
+                .setIfNotNull(Admin.Fields.ROLE_ID, roleId);
+        return mongoClient.updateMany(Admin.class, filter, update)
                 .map(result -> {
                     if (rawPassword != null) {
                         for (String account : targetAccounts) {
@@ -459,11 +461,10 @@ public class AdminService {
     }
 
     public Mono<Long> countAdmins(@Nullable Set<String> accounts, @Nullable Set<Long> roleIds) {
-        Query query = QueryBuilder.newBuilder()
-                .addInIfNotNull(DaoConstant.ID_FIELD_NAME, accounts)
-                .addInIfNotNull(Admin.Fields.ROLE_ID, roleIds)
-                .buildQuery();
-        return mongoTemplate.count(query, Admin.class, Admin.COLLECTION_NAME);
+        Filter filter = Filter.newBuilder()
+                .inIfNotNull(DaoConstant.ID_FIELD_NAME, accounts)
+                .inIfNotNull(Admin.Fields.ROLE_ID, roleIds);
+        return mongoClient.count(Admin.class, filter);
     }
 
 }

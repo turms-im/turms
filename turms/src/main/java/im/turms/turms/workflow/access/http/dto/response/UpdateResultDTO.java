@@ -21,10 +21,10 @@ import com.mongodb.client.result.UpdateResult;
 import lombok.Data;
 
 /**
+ * @author James Chen
  * @implNote In most cases,
  * it's meaningful to use UpdateResultDTO instead of TurmsStatusCode.OK for the result of update operations
  * because a update operation is usually considered as successful even if the no documents changed (no documents matched)
- * @author James Chen
  */
 @Data
 public class UpdateResultDTO {

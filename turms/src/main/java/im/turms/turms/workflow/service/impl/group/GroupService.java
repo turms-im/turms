@@ -20,24 +20,28 @@ package im.turms.turms.workflow.service.impl.group;
 import com.google.protobuf.Int64Value;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import com.mongodb.reactivestreams.client.ClientSession;
 import im.turms.common.constant.GroupMemberRole;
 import im.turms.common.constant.GroupUpdateStrategy;
 import im.turms.common.model.bo.common.Int64ValuesWithVersion;
 import im.turms.common.model.bo.group.GroupsWithVersion;
 import im.turms.common.util.Validator;
+import im.turms.server.common.bo.common.DateRange;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dao.util.OperationResultUtil;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.mongo.TurmsMongoClient;
+import im.turms.server.common.mongo.operation.option.Filter;
+import im.turms.server.common.mongo.operation.option.QueryOptions;
+import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.ExceptionUtil;
-import im.turms.turms.bo.DateRange;
 import im.turms.turms.bo.ServicePermission;
 import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.util.ProtoUtil;
-import im.turms.turms.workflow.dao.builder.QueryBuilder;
-import im.turms.turms.workflow.dao.builder.UpdateBuilder;
+import im.turms.turms.workflow.dao.MongoDataGenerator;
 import im.turms.turms.workflow.dao.domain.group.Group;
 import im.turms.turms.workflow.dao.domain.group.GroupMember;
 import im.turms.turms.workflow.dao.domain.group.GroupType;
@@ -49,12 +53,8 @@ import im.turms.turms.workflow.service.impl.user.UserVersionService;
 import io.micrometer.core.instrument.Counter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.data.mongodb.core.ReactiveMongoOperations;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -78,10 +78,11 @@ import static im.turms.turms.workflow.dao.domain.group.GroupMember.Fields.ID_USE
  * @author James Chen
  */
 @Service
+@DependsOn(MongoDataGenerator.BEAN_NAME)
 public class GroupService {
 
     private final Node node;
-    private final ReactiveMongoTemplate mongoTemplate;
+    private final TurmsMongoClient mongoClient;
     private final GroupTypeService groupTypeService;
     private final GroupMemberService groupMemberService;
     private final GroupVersionService groupVersionService;
@@ -94,7 +95,7 @@ public class GroupService {
 
     public GroupService(
             Node node,
-            @Qualifier("groupMongoTemplate") ReactiveMongoTemplate mongoTemplate,
+            @Qualifier("groupMongoClient") TurmsMongoClient mongoClient,
             @Lazy GroupMemberService groupMemberService,
             GroupTypeService groupTypeService,
             UserVersionService userVersionService,
@@ -103,7 +104,7 @@ public class GroupService {
             ConversationService conversationService,
             MetricsService metricsService) {
         this.node = node;
-        this.mongoTemplate = mongoTemplate;
+        this.mongoClient = mongoClient;
         this.groupTypeService = groupTypeService;
         this.groupMemberService = groupMemberService;
         this.groupVersionService = groupVersionService;
@@ -143,28 +144,26 @@ public class GroupService {
         Long groupId = node.nextRandomId(ServiceType.GROUP);
         Group group = new Group(groupId, groupTypeId, creatorId, ownerId, groupName, intro,
                 announcement, minimumScore, creationDate, deletionDate, muteEndDate, isActive);
-        return mongoTemplate
-                .inTransaction()
-                .execute(operations -> {
+        return mongoClient
+                .inTransaction(session -> {
                     Date now = new Date();
-                    return operations.insert(group, Group.COLLECTION_NAME)
-                            .flatMap(grp -> groupMemberService.addGroupMember(
+                    return mongoClient.insert(session, group)
+                            .flatMap(unused -> groupMemberService.addGroupMember(
                                     group.getId(),
                                     creatorId,
                                     GroupMemberRole.OWNER,
                                     null,
                                     now,
                                     null,
-                                    operations)
+                                    session)
                                     .then(Mono.defer(() -> {
                                         createdGroupsCounter.increment();
                                         return groupVersionService.upsert(groupId, now)
                                                 .onErrorResume(t -> Mono.empty())
-                                                .thenReturn(grp);
+                                                .thenReturn(group);
                                     })));
                 })
-                .retryWhen(TRANSACTION_RETRY)
-                .singleOrEmpty();
+                .retryWhen(TRANSACTION_RETRY);
     }
 
     public Mono<Void> authAndDeleteGroup(@NotNull Long requesterId, @NotNull Long groupId) {
@@ -244,33 +243,31 @@ public class GroupService {
                     .isDeleteGroupLogicallyByDefault();
         }
         boolean finalShouldDeleteLogically = deleteLogically;
-        return mongoTemplate.inTransaction()
-                .execute(operations -> {
-                    Query query = QueryBuilder
-                            .newBuilder()
-                            .addInIfNotNull(ID_FIELD_NAME, groupIds)
-                            .buildQuery();
-                    Mono<DeleteResult> updateOrRemoveMono;
-                    if (finalShouldDeleteLogically) {
-                        Update update = new Update().set(Group.Fields.DELETION_DATE, new Date());
-                        updateOrRemoveMono = operations.updateMulti(query, update, Group.class, Group.COLLECTION_NAME)
-                                .map(OperationResultUtil::update2delete);
-                    } else {
-                        updateOrRemoveMono = operations.remove(query, Group.class, Group.COLLECTION_NAME);
-                    }
-                    return updateOrRemoveMono.flatMap(result -> {
-                        long count = result.getDeletedCount();
-                        if (count > 0) {
-                            deletedGroupsCounter.increment(count);
-                        }
-                        return groupMemberService.deleteAllGroupMembers(groupIds, operations, false)
-                                .then(conversationService.deleteGroupConversations(groupIds, operations))
-                                .then(groupVersionService.delete(groupIds, operations))
-                                .thenReturn(result);
-                    });
-                })
-                .retryWhen(TRANSACTION_RETRY)
-                .singleOrEmpty();
+        return mongoClient.inTransaction(session -> {
+            Filter filter = Filter
+                    .newBuilder()
+                    .inIfNotNull(ID_FIELD_NAME, groupIds);
+            Mono<DeleteResult> updateOrRemoveMono;
+            if (finalShouldDeleteLogically) {
+                Update update = Update.newBuilder()
+                        .set(Group.Fields.DELETION_DATE, new Date());
+                updateOrRemoveMono = mongoClient.updateMany(session, Group.class, filter, update)
+                        .map(OperationResultUtil::update2delete);
+            } else {
+                updateOrRemoveMono = mongoClient.deleteMany(session, Group.class, filter);
+            }
+            return updateOrRemoveMono.flatMap(result -> {
+                long count = result.getDeletedCount();
+                if (count > 0) {
+                    deletedGroupsCounter.increment(count);
+                }
+                return groupMemberService.deleteAllGroupMembers(groupIds, session, false)
+                        .then(conversationService.deleteGroupConversations(groupIds, session))
+                        .then(groupVersionService.delete(groupIds, session))
+                        .thenReturn(result);
+            });
+        })
+                .retryWhen(TRANSACTION_RETRY);
     }
 
     public Flux<Group> queryGroups(
@@ -288,18 +285,19 @@ public class GroupService {
         return getGroupIdsFromGroupIdsAndMemberIds(ids, memberIds)
                 .defaultIfEmpty(Collections.emptySet())
                 .flatMapMany(groupIds -> {
-                    Query query = QueryBuilder
+                    Filter filter = Filter
                             .newBuilder()
-                            .addInIfNotNull(ID_FIELD_NAME, groupIds)
-                            .addInIfNotNull(Group.Fields.TYPE_ID, typeIds)
-                            .addInIfNotNull(Group.Fields.CREATOR_ID, creatorIds)
-                            .addInIfNotNull(Group.Fields.OWNER_ID, ownerIds)
-                            .addIsIfNotNull(Group.Fields.IS_ACTIVE, isActive)
+                            .inIfNotNull(ID_FIELD_NAME, groupIds)
+                            .inIfNotNull(Group.Fields.TYPE_ID, typeIds)
+                            .inIfNotNull(Group.Fields.CREATOR_ID, creatorIds)
+                            .inIfNotNull(Group.Fields.OWNER_ID, ownerIds)
+                            .eqIfNotNull(Group.Fields.IS_ACTIVE, isActive)
                             .addBetweenIfNotNull(Group.Fields.CREATION_DATE, creationDateRange)
                             .addBetweenIfNotNull(Group.Fields.DELETION_DATE, deletionDateRange)
-                            .addBetweenIfNotNull(Group.Fields.MUTE_END_DATE, muteEndDateRange)
+                            .addBetweenIfNotNull(Group.Fields.MUTE_END_DATE, muteEndDateRange);
+                    QueryOptions options = QueryOptions.newBuilder()
                             .paginateIfNotNull(page, size);
-                    return mongoTemplate.find(query, Group.class, Group.COLLECTION_NAME);
+                    return mongoClient.findMany(Group.class, filter, options);
                 });
     }
 
@@ -309,9 +307,11 @@ public class GroupService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).is(groupId));
-        query.fields().include(Group.Fields.TYPE_ID);
-        return mongoTemplate.findOne(query, Group.class, Group.COLLECTION_NAME)
+        Filter filter = Filter.newBuilder()
+                .eq(ID_FIELD_NAME, groupId);
+        QueryOptions options = QueryOptions.newBuilder()
+                .include(Group.Fields.TYPE_ID);
+        return mongoClient.findOne(Group.class, filter, options)
                 .map(Group::getTypeId);
     }
 
@@ -321,9 +321,11 @@ public class GroupService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).is(groupId));
-        query.fields().include(Group.Fields.MINIMUM_SCORE);
-        return mongoTemplate.findOne(query, Group.class, Group.COLLECTION_NAME)
+        Filter filter = Filter.newBuilder()
+                .eq(ID_FIELD_NAME, groupId);
+        QueryOptions options = QueryOptions.newBuilder()
+                .include(Group.Fields.MINIMUM_SCORE);
+        return mongoClient.findOne(Group.class, filter, options)
                 .map(Group::getMinimumScore);
     }
 
@@ -332,7 +334,7 @@ public class GroupService {
             @NotNull Long groupId,
             @NotNull Long successorId,
             boolean quitAfterTransfer,
-            @Nullable ReactiveMongoOperations operations) {
+            @Nullable ClientSession session) {
         try {
             AssertUtil.notNull(successorId, "successorId");
         } catch (TurmsBusinessException e) {
@@ -341,7 +343,7 @@ public class GroupService {
         return groupMemberService
                 .isOwner(requesterId, groupId)
                 .flatMap(isOwner -> isOwner
-                        ? checkAndTransferGroupOwnership(requesterId, groupId, successorId, quitAfterTransfer, operations)
+                        ? checkAndTransferGroupOwnership(requesterId, groupId, successorId, quitAfterTransfer, session)
                         : Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_OWNER_TO_TRANSFER_GROUP)));
     }
 
@@ -351,9 +353,11 @@ public class GroupService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).is(groupId));
-        query.fields().include(Group.Fields.OWNER_ID);
-        return mongoTemplate.findOne(query, Group.class, Group.COLLECTION_NAME)
+        Filter filter = Filter.newBuilder()
+                .eq(ID_FIELD_NAME, groupId);
+        QueryOptions options = QueryOptions.newBuilder()
+                .include(Group.Fields.OWNER_ID);
+        return mongoClient.findOne(Group.class, filter, options)
                 .map(Group::getOwnerId);
     }
 
@@ -361,7 +365,7 @@ public class GroupService {
             @NotEmpty Set<Long> groupIds,
             @NotNull Long successorId,
             boolean quitAfterTransfer,
-            @Nullable ReactiveMongoOperations operations) {
+            @Nullable ClientSession session) {
         try {
             AssertUtil.notEmpty(groupIds, "groupIds");
             AssertUtil.notNull(successorId, "successorId");
@@ -403,7 +407,7 @@ public class GroupService {
             @NotNull Long groupId,
             @NotNull Long successorId,
             boolean quitAfterTransfer,
-            @Nullable ReactiveMongoOperations operations) {
+            @Nullable ClientSession session) {
         try {
             AssertUtil.notNull(groupId, "groupId");
             AssertUtil.notNull(successorId, "successorId");
@@ -428,7 +432,7 @@ public class GroupService {
                                                 return Mono.error(TurmsBusinessException.get(code, result.getReason()));
                                             }
                                             if (quitAfterTransfer) {
-                                                return groupMemberService.deleteGroupMembers(groupId, ownerId, operations, false);
+                                                return groupMemberService.deleteGroupMembers(groupId, ownerId, session, false);
                                             } else {
                                                 return groupMemberService.updateGroupMember(
                                                         groupId,
@@ -437,7 +441,7 @@ public class GroupService {
                                                         GroupMemberRole.MEMBER,
                                                         null,
                                                         null,
-                                                        operations,
+                                                        session,
                                                         false);
                                             }
                                         })
@@ -448,7 +452,7 @@ public class GroupService {
                                                 GroupMemberRole.OWNER,
                                                 null,
                                                 null,
-                                                operations,
+                                                session,
                                                 true))
                                         .then()));
     }
@@ -459,9 +463,11 @@ public class GroupService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).is(groupId));
-        query.fields().include(Group.Fields.TYPE_ID);
-        return mongoTemplate.findOne(query, Group.class, Group.COLLECTION_NAME)
+        Filter filter = Filter.newBuilder()
+                .eq(ID_FIELD_NAME, groupId);
+        QueryOptions options = QueryOptions.newBuilder()
+                .include(Group.Fields.TYPE_ID);
+        return mongoClient.findOne(Group.class, filter, options)
                 .flatMap(group -> groupTypeService.queryGroupType(group.getTypeId()));
     }
 
@@ -478,7 +484,7 @@ public class GroupService {
             @Nullable @PastOrPresent Date creationDate,
             @Nullable @PastOrPresent Date deletionDate,
             @Nullable Date muteEndDate,
-            @Nullable ReactiveMongoOperations operations) {
+            @Nullable ClientSession session) {
         try {
             AssertUtil.notNull(groupId, "groupId");
         } catch (TurmsBusinessException e) {
@@ -496,7 +502,7 @@ public class GroupService {
                 creationDate,
                 deletionDate,
                 muteEndDate,
-                operations)
+                session)
                 .then();
     }
 
@@ -513,7 +519,7 @@ public class GroupService {
             @Nullable @PastOrPresent Date creationDate,
             @Nullable @PastOrPresent Date deletionDate,
             @Nullable Date muteEndDate,
-            @Nullable ReactiveMongoOperations operations) {
+            @Nullable ClientSession session) {
         try {
             AssertUtil.notEmpty(groupIds, "groupIds");
             AssertUtil.min(minimumScore, "minimumScore", 0);
@@ -527,8 +533,9 @@ public class GroupService {
                 minimumScore, isActive, creationDate, deletionDate, muteEndDate)) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
-        Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).in(groupIds));
-        Update update = UpdateBuilder.newBuilder()
+        Filter filter = Filter.newBuilder()
+                .in(ID_FIELD_NAME, groupIds);
+        Update update = Update.newBuilder()
                 .setIfNotNull(Group.Fields.TYPE_ID, typeId)
                 .setIfNotNull(Group.Fields.CREATOR_ID, creatorId)
                 .setIfNotNull(Group.Fields.OWNER_ID, ownerId)
@@ -539,10 +546,8 @@ public class GroupService {
                 .setIfNotNull(Group.Fields.IS_ACTIVE, isActive)
                 .setIfNotNull(Group.Fields.CREATION_DATE, creationDate)
                 .setIfNotNull(Group.Fields.DELETION_DATE, deletionDate)
-                .setIfNotNull(Group.Fields.MUTE_END_DATE, muteEndDate)
-                .build();
-        ReactiveMongoOperations mongoOperations = operations != null ? operations : mongoTemplate;
-        return mongoOperations.updateMulti(query, update, Group.class, Group.COLLECTION_NAME)
+                .setIfNotNull(Group.Fields.MUTE_END_DATE, muteEndDate);
+        return mongoClient.updateMany(session, Group.class, filter, update)
                 .flatMap(result -> {
                     int size = groupIds.size();
                     if (size == 1) {
@@ -572,7 +577,7 @@ public class GroupService {
             @Nullable @PastOrPresent Date creationDate,
             @Nullable @PastOrPresent Date deletionDate,
             @Nullable Date muteEndDate,
-            @Nullable ReactiveMongoOperations operations) {
+            @Nullable ClientSession session) {
         try {
             AssertUtil.min(minimumScore, "minimumScore", 0);
             AssertUtil.pastOrPresent(creationDate, "creationDate");
@@ -607,7 +612,7 @@ public class GroupService {
                 })
                 .flatMap(code -> code == TurmsStatusCode.OK
                         ? updateGroupInformation(groupId, typeId, creatorId, ownerId, name, intro,
-                        announcement, minimumScore, isActive, creationDate, deletionDate, muteEndDate, operations)
+                        announcement, minimumScore, isActive, creationDate, deletionDate, muteEndDate, session)
                         : Mono.error(TurmsBusinessException.get(code)));
     }
 
@@ -616,7 +621,7 @@ public class GroupService {
             @Nullable Date lastUpdatedDate) {
         return groupVersionService.queryInfoVersion(groupId)
                 .flatMap(version -> lastUpdatedDate == null || lastUpdatedDate.before(version)
-                        ? mongoTemplate.findById(groupId, Group.class, Group.COLLECTION_NAME)
+                        ? mongoClient.findById(Group.class, groupId)
                         .map(group -> GroupsWithVersion.newBuilder()
                                 .addGroups(ProtoUtil.group2proto(group))
                                 .setLastUpdatedDate(Int64Value.of(version.getTime()))
@@ -631,8 +636,9 @@ public class GroupService {
         } catch (TurmsBusinessException e) {
             return Flux.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).in(groupIds));
-        return mongoTemplate.find(query, Group.class, Group.COLLECTION_NAME);
+        Filter filter = Filter.newBuilder()
+                .in(ID_FIELD_NAME, groupIds);
+        return mongoClient.findMany(Group.class, filter);
     }
 
     public Flux<Long> queryJoinedGroupIds(@NotNull Long memberId) {
@@ -641,10 +647,12 @@ public class GroupService {
         } catch (TurmsBusinessException e) {
             return Flux.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(ID_USER_ID).is(memberId));
-        query.fields().include(ID_GROUP_ID);
-        return mongoTemplate
-                .find(query, GroupMember.class)
+        Filter filter = Filter.newBuilder()
+                .eq(ID_USER_ID, memberId);
+        QueryOptions options = QueryOptions.newBuilder()
+                .include(ID_GROUP_ID);
+        return mongoClient
+                .findMany(GroupMember.class, filter, options)
                 .map(groupMember -> groupMember.getKey().getGroupId());
     }
 
@@ -811,9 +819,9 @@ public class GroupService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query()
-                .addCriteria(Criteria.where(Group.Fields.OWNER_ID).is(ownerId));
-        return mongoTemplate.count(query, Group.class, Group.COLLECTION_NAME);
+        Filter filter = Filter.newBuilder()
+                .eq(Group.Fields.OWNER_ID, ownerId);
+        return mongoClient.count(Group.class, filter);
     }
 
     public Mono<Long> countOwnedGroups(
@@ -825,18 +833,17 @@ public class GroupService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query()
-                .addCriteria(Criteria.where(Group.Fields.OWNER_ID).is(ownerId))
-                .addCriteria(Criteria.where(Group.Fields.TYPE_ID).is(groupTypeId));
-        return mongoTemplate.count(query, Group.class, Group.COLLECTION_NAME);
+        Filter filter = Filter.newBuilder()
+                .eq(Group.Fields.OWNER_ID, ownerId)
+                .eq(Group.Fields.TYPE_ID, groupTypeId);
+        return mongoClient.count(Group.class, filter);
     }
 
     public Mono<Long> countCreatedGroups(@Nullable DateRange dateRange) {
-        Query query = QueryBuilder.newBuilder()
+        Filter filter = Filter.newBuilder()
                 .addBetweenIfNotNull(Group.Fields.CREATION_DATE, dateRange)
-                .add(Criteria.where(Group.Fields.DELETION_DATE).is(null))
-                .buildQuery();
-        return mongoTemplate.count(query, Group.class, Group.COLLECTION_NAME);
+                .eq(Group.Fields.DELETION_DATE, null);
+        return mongoClient.count(Group.class, filter);
     }
 
     public Mono<Long> countGroups(
@@ -852,30 +859,28 @@ public class GroupService {
         return getGroupIdsFromGroupIdsAndMemberIds(ids, memberIds)
                 .defaultIfEmpty(Collections.emptySet())
                 .flatMap(groupIds -> {
-                    Query query = QueryBuilder
+                    Filter filter = Filter
                             .newBuilder()
-                            .addInIfNotNull(ID_FIELD_NAME, groupIds)
-                            .addInIfNotNull(Group.Fields.TYPE_ID, typeIds)
-                            .addInIfNotNull(Group.Fields.CREATOR_ID, creatorIds)
-                            .addInIfNotNull(Group.Fields.OWNER_ID, ownerIds)
-                            .addIsIfNotNull(Group.Fields.IS_ACTIVE, isActive)
+                            .inIfNotNull(ID_FIELD_NAME, groupIds)
+                            .inIfNotNull(Group.Fields.TYPE_ID, typeIds)
+                            .inIfNotNull(Group.Fields.CREATOR_ID, creatorIds)
+                            .inIfNotNull(Group.Fields.OWNER_ID, ownerIds)
+                            .eqIfNotNull(Group.Fields.IS_ACTIVE, isActive)
                             .addBetweenIfNotNull(Group.Fields.CREATION_DATE, creationDateRange)
                             .addBetweenIfNotNull(Group.Fields.DELETION_DATE, deletionDateRange)
-                            .addBetweenIfNotNull(Group.Fields.MUTE_END_DATE, muteEndDateRange)
-                            .buildQuery();
-                    return mongoTemplate.count(query, Group.class, Group.COLLECTION_NAME);
+                            .addBetweenIfNotNull(Group.Fields.MUTE_END_DATE, muteEndDateRange);
+                    return mongoClient.count(Group.class, filter);
                 });
     }
 
     public Mono<Long> countDeletedGroups(@Nullable DateRange dateRange) {
-        Query query = QueryBuilder.newBuilder()
-                .addBetweenIfNotNull(Group.Fields.DELETION_DATE, dateRange)
-                .buildQuery();
-        return mongoTemplate.count(query, Group.class, Group.COLLECTION_NAME);
+        Filter filter = Filter.newBuilder()
+                .addBetweenIfNotNull(Group.Fields.DELETION_DATE, dateRange);
+        return mongoClient.count(Group.class, filter);
     }
 
     public Mono<Long> count() {
-        return mongoTemplate.count(new Query(), Group.class, Group.COLLECTION_NAME);
+        return mongoClient.countAll(Group.class);
     }
 
     public Flux<Long> queryGroupMemberIds(@NotNull Long groupId) {
@@ -884,9 +889,11 @@ public class GroupService {
         } catch (TurmsBusinessException e) {
             return Flux.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(ID_GROUP_ID).is(groupId));
-        query.fields().include(ID_USER_ID);
-        return mongoTemplate.find(query, GroupMember.class, GroupMember.COLLECTION_NAME)
+        Filter filter = Filter.newBuilder()
+                .eq(ID_GROUP_ID, groupId);
+        QueryOptions options = QueryOptions.newBuilder()
+                .include(ID_USER_ID);
+        return mongoClient.findMany(GroupMember.class, filter, options)
                 .map(member -> member.getKey().getUserId());
     }
 
@@ -896,10 +903,10 @@ public class GroupService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query()
-                .addCriteria(Criteria.where(ID_FIELD_NAME).is(groupId))
-                .addCriteria(Criteria.where(Group.Fields.MUTE_END_DATE).gt(new Date()));
-        return mongoTemplate.exists(query, Group.class, Group.COLLECTION_NAME);
+        Filter filter = Filter.newBuilder()
+                .eq(ID_FIELD_NAME, groupId)
+                .gt(Group.Fields.MUTE_END_DATE, new Date());
+        return mongoClient.exists(Group.class, filter);
     }
 
     public Mono<Boolean> isGroupActiveAndNotDeleted(@NotNull Long groupId) {
@@ -908,11 +915,11 @@ public class GroupService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query()
-                .addCriteria(Criteria.where(ID_FIELD_NAME).is(groupId))
-                .addCriteria(Criteria.where(Group.Fields.IS_ACTIVE).is(true))
-                .addCriteria(Criteria.where(Group.Fields.DELETION_DATE).is(null));
-        return mongoTemplate.exists(query, Group.class, Group.COLLECTION_NAME);
+        Filter filter = Filter.newBuilder()
+                .eq(ID_FIELD_NAME, groupId)
+                .eq(Group.Fields.IS_ACTIVE, true)
+                .eq(Group.Fields.DELETION_DATE, null);
+        return mongoClient.exists(Group.class, filter);
     }
 
     private Mono<Set<Long>> getGroupIdsFromGroupIdsAndMemberIds(@Nullable Set<Long> groupIds, @Nullable Set<Long> memberIds) {

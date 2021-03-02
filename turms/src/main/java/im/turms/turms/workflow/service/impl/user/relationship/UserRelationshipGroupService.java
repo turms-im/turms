@@ -20,22 +20,26 @@ package im.turms.turms.workflow.service.impl.user.relationship;
 import com.google.protobuf.Int64Value;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import com.mongodb.reactivestreams.client.ClientSession;
 import im.turms.common.model.bo.user.UserRelationshipGroupsWithVersion;
+import im.turms.server.common.bo.common.DateRange;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.mongo.TurmsMongoClient;
+import im.turms.server.common.mongo.operation.option.Filter;
+import im.turms.server.common.mongo.operation.option.QueryOptions;
+import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.CollectorUtil;
 import im.turms.server.common.util.MapUtil;
-import im.turms.turms.bo.DateRange;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.constraint.ValidUserRelationshipGroupKey;
 import im.turms.turms.constraint.ValidUserRelationshipKey;
 import im.turms.turms.util.ProtoUtil;
-import im.turms.turms.workflow.dao.builder.QueryBuilder;
-import im.turms.turms.workflow.dao.builder.UpdateBuilder;
+import im.turms.turms.workflow.dao.MongoDataGenerator;
 import im.turms.turms.workflow.dao.domain.user.UserRelationship;
 import im.turms.turms.workflow.dao.domain.user.UserRelationshipGroup;
 import im.turms.turms.workflow.dao.domain.user.UserRelationshipGroupMember;
@@ -43,12 +47,8 @@ import im.turms.turms.workflow.service.documentation.UsesNonIndexedData;
 import im.turms.turms.workflow.service.impl.user.UserVersionService;
 import im.turms.turms.workflow.service.util.DomainConstraintUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.data.mongodb.core.ReactiveMongoOperations;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -65,19 +65,20 @@ import java.util.Set;
  * @author James Chen
  */
 @Service
+@DependsOn(MongoDataGenerator.BEAN_NAME)
 public class UserRelationshipGroupService {
 
     private final Node node;
-    private final ReactiveMongoTemplate mongoTemplate;
+    private final TurmsMongoClient mongoClient;
     private final UserVersionService userVersionService;
     private final UserRelationshipService userRelationshipService;
 
     public UserRelationshipGroupService(
             Node node,
-            @Qualifier("userMongoTemplate") ReactiveMongoTemplate mongoTemplate,
+            @Qualifier("userMongoClient") TurmsMongoClient mongoClient,
             UserVersionService userVersionService,
             @Lazy UserRelationshipService userRelationshipService) {
-        this.mongoTemplate = mongoTemplate;
+        this.mongoClient = mongoClient;
         this.node = node;
         this.userVersionService = userVersionService;
         this.userRelationshipService = userRelationshipService;
@@ -88,7 +89,7 @@ public class UserRelationshipGroupService {
             @Nullable Integer groupIndex,
             @NotNull String groupName,
             @Nullable @PastOrPresent Date creationDate,
-            @Nullable ReactiveMongoOperations operations) {
+            @Nullable ClientSession session) {
         try {
             AssertUtil.notNull(ownerId, "ownerId");
             AssertUtil.notNull(groupName, "groupName");
@@ -107,8 +108,8 @@ public class UserRelationshipGroupService {
                 groupIndex,
                 groupName,
                 creationDate);
-        ReactiveMongoOperations mongoOperations = operations != null ? operations : mongoTemplate;
-        return mongoOperations.insert(group, UserRelationshipGroup.COLLECTION_NAME);
+        return mongoClient.insert(session, group)
+                .thenReturn(group);
     }
 
     public Flux<UserRelationshipGroup> queryRelationshipGroupsInfos(@NotNull Long ownerId) {
@@ -117,9 +118,9 @@ public class UserRelationshipGroupService {
         } catch (TurmsBusinessException e) {
             return Flux.error(e);
         }
-        Query query = new Query()
-                .addCriteria(Criteria.where(UserRelationshipGroup.Fields.ID_OWNER_ID).is(ownerId));
-        return mongoTemplate.find(query, UserRelationshipGroup.class, UserRelationshipGroup.COLLECTION_NAME);
+        Filter filter = Filter.newBuilder()
+                .eq(UserRelationshipGroup.Fields.ID_OWNER_ID, ownerId);
+        return mongoClient.findMany(UserRelationshipGroup.class, filter);
     }
 
     public Mono<UserRelationshipGroupsWithVersion> queryRelationshipGroupsInfosWithVersion(
@@ -160,11 +161,12 @@ public class UserRelationshipGroupService {
         } catch (TurmsBusinessException e) {
             return Flux.error(e);
         }
-        Query query = new Query()
-                .addCriteria(Criteria.where(UserRelationshipGroupMember.Fields.ID_OWNER_ID).is(ownerId))
-                .addCriteria(Criteria.where(UserRelationshipGroupMember.Fields.ID_RELATED_USER_ID).is(relatedUserId));
-        query.fields().include(UserRelationshipGroupMember.Fields.ID_GROUP_INDEX);
-        return mongoTemplate.find(query, UserRelationshipGroupMember.class, UserRelationshipGroupMember.COLLECTION_NAME)
+        Filter filter = Filter.newBuilder()
+                .eq(UserRelationshipGroupMember.Fields.ID_OWNER_ID, ownerId)
+                .eq(UserRelationshipGroupMember.Fields.ID_RELATED_USER_ID, relatedUserId);
+        QueryOptions options = QueryOptions.newBuilder()
+                .include(UserRelationshipGroupMember.Fields.ID_GROUP_INDEX);
+        return mongoClient.findMany(UserRelationshipGroupMember.class, filter, options)
                 .map(member -> member.getKey().getGroupIndex());
     }
 
@@ -177,11 +179,12 @@ public class UserRelationshipGroupService {
         } catch (TurmsBusinessException e) {
             return Flux.error(e);
         }
-        Query query = new Query()
-                .addCriteria(Criteria.where(UserRelationshipGroupMember.Fields.ID_OWNER_ID).is(ownerId))
-                .addCriteria(Criteria.where(UserRelationshipGroupMember.Fields.ID_GROUP_INDEX).is(groupIndex));
-        query.fields().include(UserRelationshipGroupMember.Fields.ID_RELATED_USER_ID);
-        return mongoTemplate.find(query, UserRelationshipGroupMember.class, UserRelationshipGroupMember.COLLECTION_NAME)
+        Filter filter = Filter.newBuilder()
+                .eq(UserRelationshipGroupMember.Fields.ID_OWNER_ID, ownerId)
+                .eq(UserRelationshipGroupMember.Fields.ID_GROUP_INDEX, groupIndex);
+        QueryOptions options = QueryOptions.newBuilder()
+                .include(UserRelationshipGroupMember.Fields.ID_RELATED_USER_ID);
+        return mongoClient.findMany(UserRelationshipGroupMember.class, filter, options)
                 .map(member -> member.getKey().getRelatedUserId());
     }
 
@@ -196,10 +199,12 @@ public class UserRelationshipGroupService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query()
-                .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(new UserRelationshipGroup.Key(ownerId, groupIndex)));
-        Update update = new Update().set(UserRelationshipGroup.Fields.NAME, newGroupName);
-        return mongoTemplate.updateFirst(query, update, UserRelationshipGroup.class, UserRelationshipGroup.COLLECTION_NAME)
+        UserRelationshipGroup.Key key = new UserRelationshipGroup.Key(ownerId, groupIndex);
+        Filter filter = Filter.newBuilder()
+                .eq(DaoConstant.ID_FIELD_NAME, key);
+        Update update = Update.newBuilder()
+                .set(UserRelationshipGroup.Fields.NAME, newGroupName);
+        return mongoClient.updateOne(UserRelationshipGroup.class, filter, update)
                 .flatMap(result -> userVersionService.updateRelationshipGroupsVersion(ownerId)
                         .onErrorResume(t -> Mono.empty())
                         .thenReturn(result));
@@ -221,21 +226,20 @@ public class UserRelationshipGroupService {
         if (name == null && creationDate == null) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
-        Query query = new Query()
-                .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(keys));
-        Update update = UpdateBuilder
+        Filter filter = Filter.newBuilder()
+                .in(DaoConstant.ID_FIELD_NAME, keys);
+        Update update = Update
                 .newBuilder()
                 .setIfNotNull(UserRelationshipGroup.Fields.NAME, name)
-                .setIfNotNull(UserRelationshipGroup.Fields.CREATION_DATE, creationDate)
-                .build();
-        return mongoTemplate.updateMulti(query, update, UserRelationshipGroup.class, UserRelationshipGroup.COLLECTION_NAME);
+                .setIfNotNull(UserRelationshipGroup.Fields.CREATION_DATE, creationDate);
+        return mongoClient.updateMany(UserRelationshipGroup.class, filter, update);
     }
 
     public Mono<UserRelationshipGroupMember> addRelatedUserToRelationshipGroups(
             @NotNull Long ownerId,
             @NotNull Integer groupIndex,
             @NotNull Long relatedUserId,
-            @Nullable ReactiveMongoOperations operations) {
+            @Nullable ClientSession session) {
         try {
             AssertUtil.notNull(groupIndex, "groupIndex");
         } catch (TurmsBusinessException e) {
@@ -246,14 +250,13 @@ public class UserRelationshipGroupService {
                     if (!hasRelationship) {
                         return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ADD_NOT_RELATED_USER_TO_GROUP));
                     }
-                    ReactiveMongoOperations mongoOperations = operations != null ? operations : mongoTemplate;
                     Date now = new Date();
                     UserRelationshipGroupMember member = new UserRelationshipGroupMember(
                             ownerId, groupIndex, relatedUserId, now);
-                    return mongoOperations.save(member, UserRelationshipGroupMember.COLLECTION_NAME)
+                    return mongoClient.upsert(session, member)
                             .flatMap(groupMember -> userVersionService.updateRelationshipGroupsVersion(ownerId)
-                                    .onErrorResume(t -> Mono.empty())
-                                    .thenReturn(groupMember));
+                                    .onErrorResume(t -> Mono.empty()))
+                            .thenReturn(member);
                 });
     }
 
@@ -272,51 +275,50 @@ public class UserRelationshipGroupService {
         if (deleteGroupIndex.equals(newGroupIndex)) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         } else {
-            return mongoTemplate.inTransaction()
-                    .execute(operations -> {
-                        Query queryMember = new Query()
-                                .addCriteria(Criteria.where(UserRelationshipGroupMember.Fields.ID_OWNER_ID).is(ownerId))
-                                .addCriteria(Criteria.where(UserRelationshipGroupMember.Fields.ID_GROUP_INDEX).is(deleteGroupIndex));
-                        Query queryGroup = new Query()
-                                .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(new UserRelationshipGroup.Key(ownerId, deleteGroupIndex)));
-                        // FIXME: after https://github.com/turms-im/turms/issues/589 done
-                        Update update = new Update().set(UserRelationshipGroupMember.Fields.ID_GROUP_INDEX, newGroupIndex);
-                        return operations.updateFirst(queryMember, update, UserRelationshipGroupMember.class, UserRelationshipGroupMember.COLLECTION_NAME)
-                                .then(operations.remove(queryGroup, UserRelationshipGroup.class, UserRelationshipGroup.COLLECTION_NAME))
-                                .then(userVersionService.updateRelationshipGroupsVersion(ownerId).onErrorResume(t -> Mono.empty()));
-                    })
-                    .retryWhen(DaoConstant.TRANSACTION_RETRY)
-                    .singleOrEmpty();
+            return mongoClient.inTransaction(session -> {
+                Filter filterMember = Filter.newBuilder()
+                        .eq(UserRelationshipGroupMember.Fields.ID_OWNER_ID, ownerId)
+                        .eq(UserRelationshipGroupMember.Fields.ID_GROUP_INDEX, deleteGroupIndex);
+                UserRelationshipGroup.Key key = new UserRelationshipGroup.Key(ownerId, deleteGroupIndex);
+                Filter filterGroup = Filter.newBuilder()
+                        .eq(DaoConstant.ID_FIELD_NAME, key);
+                // FIXME: after https://github.com/turms-im/turms/issues/589 done
+                Update update = Update.newBuilder()
+                        .set(UserRelationshipGroupMember.Fields.ID_GROUP_INDEX, newGroupIndex);
+                return mongoClient.updateMany(session, UserRelationshipGroupMember.class, filterMember, update)
+                        .then(mongoClient.deleteMany(session, UserRelationshipGroup.class, filterGroup))
+                        .then(userVersionService.updateRelationshipGroupsVersion(ownerId).onErrorResume(t -> Mono.empty()));
+            })
+                    .retryWhen(DaoConstant.TRANSACTION_RETRY);
         }
     }
 
     public Mono<DeleteResult> deleteAllRelationshipGroups(
             @NotEmpty Set<Long> ownerIds,
-            @Nullable ReactiveMongoOperations operations,
+            @Nullable ClientSession session,
             boolean updateRelationshipGroupsVersion) {
         try {
             AssertUtil.notEmpty(ownerIds, "ownerIds");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query()
-                .addCriteria(Criteria.where(UserRelationshipGroup.Fields.ID_OWNER_ID).in(ownerIds))
-                .addCriteria(Criteria.where(UserRelationshipGroup.Fields.ID_GROUP_INDEX).ne(0));
-        ReactiveMongoOperations mongoOperations = operations != null ? operations : mongoTemplate;
+        Filter filter = Filter.newBuilder()
+                .in(UserRelationshipGroup.Fields.ID_OWNER_ID, ownerIds)
+                .ne(UserRelationshipGroup.Fields.ID_GROUP_INDEX, 0);
         if (updateRelationshipGroupsVersion) {
-            return mongoOperations.remove(query, UserRelationshipGroup.class, UserRelationshipGroup.COLLECTION_NAME)
+            return mongoClient.deleteMany(session, UserRelationshipGroup.class, filter)
                     .flatMap(result -> userVersionService.updateRelationshipGroupsVersion(ownerIds)
                             .onErrorResume(t -> Mono.empty())
                             .thenReturn(result));
         } else {
-            return mongoOperations.remove(query, UserRelationshipGroup.class, UserRelationshipGroup.COLLECTION_NAME);
+            return mongoClient.deleteMany(session, UserRelationshipGroup.class, filter);
         }
     }
 
     public Mono<DeleteResult> deleteRelatedUserFromAllRelationshipGroups(
             @NotNull Long ownerId,
             @NotNull Long relatedUserId,
-            @Nullable ReactiveMongoOperations operations,
+            @Nullable ClientSession session,
             boolean updateRelationshipGroupsMembersVersion) {
         try {
             AssertUtil.notNull(ownerId, "ownerId");
@@ -324,12 +326,12 @@ public class UserRelationshipGroupService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        return deleteRelatedUsersFromAllRelationshipGroups(Set.of(new UserRelationship.Key(ownerId, relatedUserId)), operations, updateRelationshipGroupsMembersVersion);
+        return deleteRelatedUsersFromAllRelationshipGroups(Set.of(new UserRelationship.Key(ownerId, relatedUserId)), session, updateRelationshipGroupsMembersVersion);
     }
 
     public Mono<DeleteResult> deleteRelatedUsersFromAllRelationshipGroups(
             @NotEmpty Set<UserRelationship.@ValidUserRelationshipKey Key> keys,
-            @Nullable ReactiveMongoOperations operations,
+            @Nullable ClientSession session,
             boolean updateRelationshipGroupsMembersVersion) {
         try {
             AssertUtil.notEmpty(keys, "keys");
@@ -339,11 +341,10 @@ public class UserRelationshipGroupService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query()
-                .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(keys));
-        ReactiveMongoOperations mongoOperations = operations != null ? operations : mongoTemplate;
+        Filter filter = Filter.newBuilder()
+                .in(DaoConstant.ID_FIELD_NAME, keys);
         if (updateRelationshipGroupsMembersVersion) {
-            return mongoOperations.remove(query, UserRelationshipGroupMember.class, UserRelationshipGroupMember.COLLECTION_NAME)
+            return mongoClient.deleteMany(session, UserRelationshipGroupMember.class, filter)
                     .flatMap(result -> {
                         Set<Long> ownerIds = new HashSet<>(MapUtil.getCapability(keys.size()));
                         for (UserRelationship.Key key : keys) {
@@ -354,7 +355,7 @@ public class UserRelationshipGroupService {
                                 .thenReturn(result);
                     });
         } else {
-            return mongoOperations.remove(query, UserRelationshipGroupMember.class, UserRelationshipGroupMember.COLLECTION_NAME);
+            return mongoClient.deleteMany(session, UserRelationshipGroupMember.class, filter);
         }
     }
 
@@ -371,19 +372,21 @@ public class UserRelationshipGroupService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query()
-                .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(new UserRelationshipGroupMember.Key(ownerId, currentGroupIndex, relatedUserId)));
+        UserRelationshipGroupMember.Key key = new UserRelationshipGroupMember.Key(ownerId, currentGroupIndex, relatedUserId);
+        Filter filter = Filter.newBuilder()
+                .eq(DaoConstant.ID_FIELD_NAME, key);
         if (currentGroupIndex.equals(targetGroupIndex)) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         } else {
             // FIXME: after https://github.com/turms-im/turms/issues/589 done
-            Update update = new Update().set(UserRelationshipGroupMember.Fields.ID_GROUP_INDEX, targetGroupIndex);
-            return mongoTemplate.updateFirst(query, update, UserRelationshipGroupMember.class, UserRelationshipGroupMember.COLLECTION_NAME);
+            Update update = Update.newBuilder()
+                    .set(UserRelationshipGroupMember.Fields.ID_GROUP_INDEX, targetGroupIndex);
+            return mongoClient.updateOne(UserRelationshipGroupMember.class, filter, update);
         }
     }
 
     public Mono<DeleteResult> deleteRelationshipGroups() {
-        return mongoTemplate.remove(new Query(), UserRelationshipGroup.class, UserRelationshipGroup.COLLECTION_NAME);
+        return mongoClient.deleteAll(UserRelationshipGroup.class);
     }
 
     public Mono<DeleteResult> deleteRelationshipGroups(@NotEmpty Set<UserRelationshipGroup.@ValidUserRelationshipGroupKey Key> keys) {
@@ -395,9 +398,9 @@ public class UserRelationshipGroupService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query()
-                .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(keys));
-        return mongoTemplate.remove(query, UserRelationshipGroup.class, UserRelationshipGroup.COLLECTION_NAME);
+        Filter filter = Filter.newBuilder()
+                .in(DaoConstant.ID_FIELD_NAME, keys);
+        return mongoClient.deleteMany(UserRelationshipGroup.class, filter);
     }
 
     public Flux<UserRelationshipGroup> queryRelationshipGroups(
@@ -407,14 +410,15 @@ public class UserRelationshipGroupService {
             @Nullable DateRange creationDateRange,
             @Nullable Integer page,
             @Nullable Integer size) {
-        Query query = QueryBuilder
+        Filter filter = Filter
                 .newBuilder()
-                .addInIfNotNull(UserRelationshipGroup.Fields.ID_OWNER_ID, ownerIds)
-                .addInIfNotNull(UserRelationshipGroup.Fields.ID_GROUP_INDEX, indexes)
-                .addInIfNotNull(UserRelationshipGroup.Fields.NAME, names)
-                .addBetweenIfNotNull(UserRelationshipGroup.Fields.CREATION_DATE, creationDateRange)
+                .inIfNotNull(UserRelationshipGroup.Fields.ID_OWNER_ID, ownerIds)
+                .inIfNotNull(UserRelationshipGroup.Fields.ID_GROUP_INDEX, indexes)
+                .inIfNotNull(UserRelationshipGroup.Fields.NAME, names)
+                .addBetweenIfNotNull(UserRelationshipGroup.Fields.CREATION_DATE, creationDateRange);
+        QueryOptions options = QueryOptions.newBuilder()
                 .paginateIfNotNull(page, size);
-        return mongoTemplate.find(query, UserRelationshipGroup.class, UserRelationshipGroup.COLLECTION_NAME);
+        return mongoClient.findMany(UserRelationshipGroup.class, filter, options);
     }
 
     public Mono<Long> countRelationshipGroups(
@@ -422,14 +426,13 @@ public class UserRelationshipGroupService {
             @Nullable Set<Integer> indexes,
             @Nullable Set<String> names,
             @Nullable DateRange creationDateRange) {
-        Query query = QueryBuilder
+        Filter filter = Filter
                 .newBuilder()
-                .addInIfNotNull(UserRelationshipGroup.Fields.ID_OWNER_ID, ownerIds)
-                .addInIfNotNull(UserRelationshipGroup.Fields.ID_GROUP_INDEX, indexes)
-                .addInIfNotNull(UserRelationshipGroup.Fields.NAME, names)
-                .addBetweenIfNotNull(UserRelationshipGroup.Fields.CREATION_DATE, creationDateRange)
-                .buildQuery();
-        return mongoTemplate.count(query, UserRelationshipGroup.class, UserRelationshipGroup.COLLECTION_NAME);
+                .inIfNotNull(UserRelationshipGroup.Fields.ID_OWNER_ID, ownerIds)
+                .inIfNotNull(UserRelationshipGroup.Fields.ID_GROUP_INDEX, indexes)
+                .inIfNotNull(UserRelationshipGroup.Fields.NAME, names)
+                .addBetweenIfNotNull(UserRelationshipGroup.Fields.CREATION_DATE, creationDateRange);
+        return mongoClient.count(UserRelationshipGroup.class, filter);
     }
 
 }

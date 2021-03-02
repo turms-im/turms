@@ -18,13 +18,13 @@
 package unit.im.turms.gateway.dao.config;
 
 import im.turms.gateway.dao.config.MongoConfig;
+import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
-import im.turms.server.common.property.env.gateway.DatabaseProperties;
 import im.turms.server.common.property.env.gateway.GatewayProperties;
+import im.turms.server.common.property.env.gateway.MongoProperties;
+import im.turms.server.common.property.env.service.env.database.TurmsMongoProperties;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.autoconfigure.mongo.MongoProperties;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
@@ -36,22 +36,20 @@ import static org.mockito.Mockito.when;
 class MongoConfigTests {
 
     @Test
-    void userMongoTemplate_shouldReturnNotNullInstance() {
+    void userMongoClient_shouldReturnNotNullInstance() {
         MongoConfig mongoConfig = new MongoConfig();
         TurmsProperties turmsProperties = new TurmsProperties();
         GatewayProperties gateway = new GatewayProperties();
-        DatabaseProperties database = new DatabaseProperties();
-        DatabaseProperties.Properties mongoProperties = new DatabaseProperties.Properties();
-        mongoProperties.setUser(new MongoProperties());
-        database.setMongoProperties(mongoProperties);
-        gateway.setDatabase(database);
+        MongoProperties mongo = new MongoProperties();
+        mongo.setUser(new TurmsMongoProperties());
+        gateway.setMongo(mongo);
         turmsProperties.setGateway(gateway);
         TurmsPropertiesManager propertiesManager = mock(TurmsPropertiesManager.class);
         when(propertiesManager.getLocalProperties())
                 .thenReturn(turmsProperties);
-        ReactiveMongoTemplate template = mongoConfig.userMongoTemplate(propertiesManager);
+        TurmsMongoClient mongoClient = mongoConfig.userMongoClient(propertiesManager);
 
-        assertNotNull(template);
+        assertNotNull(mongoClient);
     }
 
 }

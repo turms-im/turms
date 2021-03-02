@@ -18,20 +18,12 @@
 package im.turms.turms.workflow.dao.config;
 
 import com.google.common.collect.Maps;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.WriteConcern;
-import com.mongodb.reactivestreams.client.MongoClient;
-import com.mongodb.reactivestreams.client.MongoDatabase;
 import im.turms.server.common.bo.log.UserLocationLog;
-import im.turms.server.common.dao.context.TurmsMongoMappingContext;
-import im.turms.server.common.dao.converter.EnumToIntegerConverter;
-import im.turms.server.common.dao.converter.IntegerToEnumConverter;
-import im.turms.server.common.dao.converter.IntegerToEnumConverterFactory;
 import im.turms.server.common.dao.domain.User;
-import im.turms.server.common.dao.util.MongoUtil;
-import im.turms.server.common.property.TurmsProperties;
+import im.turms.server.common.mongo.TurmsMongoClient;
+import im.turms.server.common.mongo.operation.MongoCollectionOptions;
 import im.turms.server.common.property.TurmsPropertiesManager;
-import im.turms.server.common.property.env.service.env.database.DatabaseProperties;
+import im.turms.server.common.property.env.service.env.database.*;
 import im.turms.turms.workflow.dao.domain.admin.Admin;
 import im.turms.turms.workflow.dao.domain.admin.AdminRole;
 import im.turms.turms.workflow.dao.domain.conversation.GroupConversation;
@@ -40,26 +32,10 @@ import im.turms.turms.workflow.dao.domain.group.*;
 import im.turms.turms.workflow.dao.domain.message.Message;
 import im.turms.turms.workflow.dao.domain.user.*;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.boot.autoconfigure.mongo.MongoProperties;
-import org.springframework.boot.autoconfigure.mongo.MongoPropertiesClientSettingsBuilderCustomizer;
-import org.springframework.boot.autoconfigure.mongo.ReactiveMongoClientFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.core.convert.support.GenericConversionService;
-import org.springframework.data.convert.CustomConversions;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.mongodb.core.SimpleReactiveMongoDatabaseFactory;
-import org.springframework.data.mongodb.core.WriteConcernResolver;
-import org.springframework.data.mongodb.core.WriteResultChecking;
-import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
-import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
-import org.springframework.data.mongodb.core.convert.NoOpDbRefResolver;
-import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
-import org.springframework.data.util.Pair;
 
-import java.util.*;
+import java.util.Map;
 
 /**
  * @author James Chen
@@ -70,190 +46,71 @@ import java.util.*;
 public class MongoConfig {
 
     private static final int SERVICE_TYPES_NUMBER = 5;
-    // hash code of MongoProperties -> ReactiveMongoTemplate
-    // because MongoProperties doesn't have a custom hashcode implementation but a native implementation
-    private static final Map<Integer, Pair<ReactiveMongoTemplate, MongoDatabase>> TEMPLATE_MAP = Maps.newHashMapWithExpectedSize(SERVICE_TYPES_NUMBER);
-    private static final int DEFAULT_MONGO_PROPERTIES_HASHCODE = getPropertiesHashCode(new MongoProperties());
-    private final TurmsPropertiesManager turmsPropertiesManager;
-    private final Map<Class<?>, WriteConcern> writeConcernMap;
+    private static final Map<String, TurmsMongoClient> CLIENT_MAP = Maps.newHashMapWithExpectedSize(SERVICE_TYPES_NUMBER);
 
-    public MongoConfig(TurmsPropertiesManager turmsPropertiesManager) {
-        this.turmsPropertiesManager = turmsPropertiesManager;
-        writeConcernMap = initWriteConcernMap(turmsPropertiesManager.getLocalProperties());
-    }
-
-    private static int getPropertiesHashCode(MongoProperties properties) {
-        int result = Objects.hash(properties.getHost(), properties.getPort(), properties.getUri(),
-                properties.getDatabase(), properties.getAuthenticationDatabase(),
-                properties.getGridFsDatabase(), properties.getUsername(),
-                properties.getReplicaSetName(), properties.getFieldNamingStrategy(),
-                properties.getUuidRepresentation(), properties.isAutoIndexCreation());
-        result = 31 * result + Arrays.hashCode(properties.getPassword());
-        return result;
-    }
-
-    private Map<Class<?>, WriteConcern> initWriteConcernMap(TurmsProperties turmsProperties) {
-        DatabaseProperties.WriteConcern writeConcern = turmsProperties.getService().getDatabase().getWriteConcern();
-        Map<Class<?>, WriteConcern> map = new IdentityHashMap<>();
-
-        map.put(Admin.class, writeConcern.getAdmin());
-        map.put(AdminRole.class, writeConcern.getAdminRole());
-
-        map.put(User.class, writeConcern.getUser());
-        map.put(UserFriendRequest.class, writeConcern.getUserFriendRequest());
-        map.put(UserLocationLog.class, writeConcern.getUserLocation());
-        map.put(UserPermissionGroup.class, writeConcern.getUserPermissionGroup());
-        map.put(UserRelationship.class, writeConcern.getUserRelationship());
-        map.put(UserRelationshipGroup.class, writeConcern.getUserRelationshipGroup());
-        map.put(UserRelationshipGroupMember.class, writeConcern.getUserRelationshipGroupMember());
-        map.put(UserVersion.class, writeConcern.getUserVersion());
-
-        map.put(Group.class, writeConcern.getGroup());
-        map.put(GroupBlockedUser.class, writeConcern.getGroupBlockedUser());
-        map.put(GroupInvitation.class, writeConcern.getGroupInvitation());
-        map.put(GroupJoinQuestion.class, writeConcern.getGroupJoinQuestion());
-        map.put(GroupJoinRequest.class, writeConcern.getGroupJoinRequest());
-        map.put(GroupMember.class, writeConcern.getGroupMember());
-        map.put(GroupType.class, writeConcern.getGroupType());
-        map.put(GroupVersion.class, writeConcern.getGroupVersion());
-
-        map.put(PrivateConversation.class, writeConcern.getConversation());
-        map.put(GroupConversation.class, writeConcern.getConversation());
-
-        map.put(Message.class, writeConcern.getMessage());
-
-        return map;
+    @Bean
+    public TurmsMongoClient adminMongoClient(TurmsPropertiesManager turmsPropertiesManager) {
+        AdminMongoProperties properties = turmsPropertiesManager.getLocalProperties().getService().getMongo().getAdmin();
+        TurmsMongoClient mongoClient = getMongoClient(properties);
+        mongoClient.registerEntitiesByOptions(
+                MongoCollectionOptions.of(Admin.class, properties.getAdminWriteConcern()),
+                MongoCollectionOptions.of(AdminRole.class, properties.getAdminRoleWriteConcern()));
+        return mongoClient;
     }
 
     @Bean
-    public WriteConcernResolver writeConcernResolver() {
-        return action -> {
-            Class<?> entityType = action.getEntityType();
-            if (entityType == null) {
-                return WriteConcern.ACKNOWLEDGED;
-            }
-            WriteConcern writeConcern = writeConcernMap.get(entityType);
-            if (writeConcern == null) {
-                log.warn("An unknown entity type {} attempts to store documents", entityType.getName());
-                return action.getDefaultWriteConcern();
-            } else {
-                return writeConcern;
-            }
-        };
+    public TurmsMongoClient userMongoClient(TurmsPropertiesManager turmsPropertiesManager) {
+        UserMongoProperties properties = turmsPropertiesManager.getLocalProperties().getService().getMongo().getUser();
+        TurmsMongoClient mongoClient = getMongoClient(properties);
+        mongoClient.registerEntitiesByOptions(
+                MongoCollectionOptions.of(User.class, properties.getUserWriteConcern()),
+                MongoCollectionOptions.of(UserFriendRequest.class, properties.getUserFriendRequestWriteConcern()),
+                MongoCollectionOptions.of(UserLocationLog.class, properties.getUserLocationWriteConcern()),
+                MongoCollectionOptions.of(UserPermissionGroup.class, properties.getUserPermissionGroupWriteConcern()),
+                MongoCollectionOptions.of(UserRelationship.class, properties.getUserRelationshipWriteConcern()),
+                MongoCollectionOptions.of(UserRelationshipGroup.class, properties.getUserRelationshipGroupWriteConcern()),
+                MongoCollectionOptions.of(UserRelationshipGroupMember.class, properties.getUserRelationshipGroupMemberWriteConcern()),
+                MongoCollectionOptions.of(UserVersion.class, properties.getUserVersionWriteConcern()));
+        return mongoClient;
     }
 
     @Bean
-    public ReactiveMongoTemplate adminMongoTemplate(
-            TurmsPropertiesManager turmsPropertiesManager,
-            WriteConcernResolver writeConcernResolver) {
-        Pair<ReactiveMongoTemplate, MongoDatabase> pair = getMongoTemplateAndAdmin(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getAdmin(), writeConcernResolver);
-        ReactiveMongoTemplate template = pair.getFirst();
-        MongoUtil.createIndexesAndShard(template, pair.getSecond(), Set.of(Admin.class, AdminRole.class));
-        return template;
+    public TurmsMongoClient groupMongoClient(TurmsPropertiesManager turmsPropertiesManager) {
+        GroupMongoProperties properties = turmsPropertiesManager.getLocalProperties().getService().getMongo().getGroup();
+        TurmsMongoClient mongoClient = getMongoClient(properties);
+        mongoClient.registerEntitiesByOptions(
+                MongoCollectionOptions.of(Group.class, properties.getGroupWriteConcern()),
+                MongoCollectionOptions.of(GroupBlockedUser.class, properties.getGroupBlockedUserWriteConcern()),
+                MongoCollectionOptions.of(GroupInvitation.class, properties.getGroupInvitationWriteConcern()),
+                MongoCollectionOptions.of(GroupJoinQuestion.class, properties.getGroupJoinQuestionWriteConcern()),
+                MongoCollectionOptions.of(GroupJoinRequest.class, properties.getGroupJoinRequestWriteConcern()),
+                MongoCollectionOptions.of(GroupMember.class, properties.getGroupMemberWriteConcern()),
+                MongoCollectionOptions.of(GroupType.class, properties.getGroupTypeWriteConcern()),
+                MongoCollectionOptions.of(GroupVersion.class, properties.getGroupVersionWriteConcern()));
+        return mongoClient;
     }
 
     @Bean
-    public ReactiveMongoTemplate userMongoTemplate(
-            TurmsPropertiesManager turmsPropertiesManager,
-            WriteConcernResolver writeConcernResolver) {
-        Pair<ReactiveMongoTemplate, MongoDatabase> pair = getMongoTemplateAndAdmin(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getUser(), writeConcernResolver);
-        ReactiveMongoTemplate template = pair.getFirst();
-        MongoUtil.createIndexesAndShard(template, pair.getSecond(), Set.of(User.class,
-                UserFriendRequest.class,
-                UserLocationLog.class,
-                UserPermissionGroup.class,
-                UserRelationship.class,
-                UserRelationshipGroup.class,
-                UserRelationshipGroupMember.class,
-                UserVersion.class));
-        return template;
+    public TurmsMongoClient conversationMongoClient(TurmsPropertiesManager turmsPropertiesManager) {
+        ConversationMongoProperties properties = turmsPropertiesManager.getLocalProperties().getService().getMongo().getConversation();
+        TurmsMongoClient mongoClient = getMongoClient(properties);
+        mongoClient.registerEntitiesByOptions(
+                MongoCollectionOptions.of(PrivateConversation.class, properties.getConversationWriteConcern()),
+                MongoCollectionOptions.of(GroupConversation.class, properties.getConversationWriteConcern()));
+        return mongoClient;
     }
 
     @Bean
-    public ReactiveMongoTemplate groupMongoTemplate(
-            TurmsPropertiesManager turmsPropertiesManager,
-            WriteConcernResolver writeConcernResolver) {
-        Pair<ReactiveMongoTemplate, MongoDatabase> pair = getMongoTemplateAndAdmin(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getGroup(), writeConcernResolver);
-        ReactiveMongoTemplate template = pair.getFirst();
-        MongoUtil.createIndexesAndShard(template, pair.getSecond(), Set.of(Group.class,
-                GroupBlockedUser.class,
-                GroupInvitation.class,
-                GroupJoinQuestion.class,
-                GroupJoinRequest.class,
-                GroupMember.class,
-                GroupType.class,
-                GroupVersion.class));
-        return template;
+    public TurmsMongoClient messageMongoClient(TurmsPropertiesManager turmsPropertiesManager) {
+        MessageMongoProperties properties = turmsPropertiesManager.getLocalProperties().getService().getMongo().getMessage();
+        TurmsMongoClient mongoClient = getMongoClient(properties);
+        mongoClient.registerEntitiesByOptions(
+                MongoCollectionOptions.of(Message.class, properties.getMessageWriteConcern()));
+        return mongoClient;
     }
 
-    @Bean
-    public ReactiveMongoTemplate conversationMongoTemplate(
-            TurmsPropertiesManager turmsPropertiesManager,
-            WriteConcernResolver writeConcernResolver) {
-        Pair<ReactiveMongoTemplate, MongoDatabase> pair = getMongoTemplateAndAdmin(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getConversation(), writeConcernResolver);
-        ReactiveMongoTemplate template = pair.getFirst();
-        MongoUtil.createIndexesAndShard(template, pair.getSecond(), Set.of(PrivateConversation.class, GroupConversation.class));
-        return template;
-    }
-
-    @Bean
-    public ReactiveMongoTemplate messageMongoTemplate(
-            TurmsPropertiesManager turmsPropertiesManager,
-            WriteConcernResolver writeConcernResolver) {
-        Pair<ReactiveMongoTemplate, MongoDatabase> pair = getMongoTemplateAndAdmin(turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getMessage(), writeConcernResolver);
-        ReactiveMongoTemplate template = pair.getFirst();
-        MongoUtil.createIndexesAndShard(template, pair.getSecond(), Set.of(Message.class));
-        return template;
-    }
-
-    public MappingMongoConverter newMongoConverter(MongoMappingContext mongoMappingContext) {
-        List<Converter<?, ?>> converters = new ArrayList<>();
-        // Rather than saving enum values in string, we save them in integer to avoid unnecessary space and performance
-        converters.add(new EnumToIntegerConverter());
-        converters.add(new IntegerToEnumConverter(null));
-
-        // To avoid saving the class information in MongoDB
-        CustomConversions customConversions = new CustomConversions(CustomConversions.StoreConversions.NONE, converters);
-        MappingMongoConverter converter = new MappingMongoConverter(NoOpDbRefResolver.INSTANCE, mongoMappingContext);
-        converter.setTypeMapper(new DefaultMongoTypeMapper(null));
-        converter.setCustomConversions(customConversions);
-
-        ConversionService conversionService = converter.getConversionService();
-        ((GenericConversionService) conversionService)
-                .addConverterFactory(new IntegerToEnumConverterFactory());
-        converter.afterPropertiesSet();
-        return converter;
-    }
-
-    private Pair<ReactiveMongoTemplate, MongoDatabase> getMongoTemplateAndAdmin(
-            MongoProperties properties,
-            WriteConcernResolver writeConcernResolver) {
-        return TEMPLATE_MAP.computeIfAbsent(getPropertiesHashCode(properties), key -> {
-            MongoProperties currentProperties = key == DEFAULT_MONGO_PROPERTIES_HASHCODE
-                    ? turmsPropertiesManager.getLocalProperties().getService().getDatabase().getMongoProperties().getDefaultProperties()
-                    : properties;
-            // SimpleReactiveMongoDatabaseFactory
-            MongoPropertiesClientSettingsBuilderCustomizer customizer = new MongoPropertiesClientSettingsBuilderCustomizer(currentProperties, null);
-            ReactiveMongoClientFactory clientFactory = new ReactiveMongoClientFactory(List.of(customizer));
-            MongoClient mongoClient = clientFactory.createMongoClient(MongoClientSettings.builder().build());
-            SimpleReactiveMongoDatabaseFactory databaseFactory = new SimpleReactiveMongoDatabaseFactory(mongoClient, currentProperties.getMongoClientDatabase());
-
-            // MongoMappingContext
-            // Note that we don't use the field naming strategy specified by developer
-            TurmsMongoMappingContext context = new TurmsMongoMappingContext();
-            // We check and create indexes ourselves
-            context.setAutoIndexCreation(false);
-
-            // MappingMongoConverter
-            MappingMongoConverter converter = newMongoConverter(context);
-
-            // ReactiveMongoTemplate
-            ReactiveMongoTemplate mongoTemplate = new ReactiveMongoTemplate(databaseFactory, converter);
-            mongoTemplate.setWriteConcernResolver(writeConcernResolver);
-            mongoTemplate.setWriteResultChecking(WriteResultChecking.EXCEPTION);
-
-            return Pair.of(mongoTemplate, mongoClient.getDatabase("admin"));
-        });
+    private synchronized TurmsMongoClient getMongoClient(TurmsMongoProperties properties) {
+        return CLIENT_MAP.computeIfAbsent(properties.getUri(), key -> TurmsMongoClient.of(properties));
     }
 
 }

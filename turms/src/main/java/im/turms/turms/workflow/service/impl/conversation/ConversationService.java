@@ -20,22 +20,23 @@ package im.turms.turms.workflow.service.impl.conversation;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.reactivestreams.client.ClientSession;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.mongo.TurmsMongoClient;
+import im.turms.server.common.mongo.operation.option.Filter;
+import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.property.env.service.business.conversation.ReadReceiptProperties;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.MapUtil;
 import im.turms.turms.constant.DaoConstant;
+import im.turms.turms.workflow.dao.MongoDataGenerator;
 import im.turms.turms.workflow.dao.domain.conversation.GroupConversation;
 import im.turms.turms.workflow.dao.domain.conversation.PrivateConversation;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.mongodb.core.ReactiveMongoOperations;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -50,16 +51,17 @@ import java.util.*;
  */
 @Log4j2
 @Service
+@DependsOn(MongoDataGenerator.BEAN_NAME)
 public class ConversationService {
 
     private final Node node;
-    private final ReactiveMongoTemplate mongoTemplate;
+    private final TurmsMongoClient mongoClient;
 
     public ConversationService(
             Node node,
-            @Qualifier("conversationMongoTemplate") ReactiveMongoTemplate mongoTemplate) {
+            @Qualifier("conversationMongoClient") TurmsMongoClient mongoClient) {
         this.node = node;
-        this.mongoTemplate = mongoTemplate;
+        this.mongoClient = mongoClient;
     }
 
     // TODO: authenticate
@@ -104,15 +106,15 @@ public class ConversationService {
             readDate = new Date();
         }
         String fieldKey = GroupConversation.Fields.MEMBER_ID_AND_READ_DATE + "." + memberId;
-        Query query = new Query()
-                .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(groupId));
+        Filter filter = Filter.newBuilder()
+                .eq(DaoConstant.ID_FIELD_NAME, groupId);
         if (!node.getSharedProperties().getService().getConversation().getReadReceipt().isAllowMoveReadDateForward()) {
-            query.addCriteria(new Criteria().orOperator(
-                    Criteria.where(fieldKey).is(null),
-                    Criteria.where(fieldKey).lt(readDate)));
+            filter.or(Filter.newBuilder().eq(fieldKey, null),
+                    Filter.newBuilder().lt(fieldKey, readDate));
         }
-        Update update = new Update().set(fieldKey, readDate);
-        return mongoTemplate.upsert(query, update, GroupConversation.class, GroupConversation.COLLECTION_NAME).then();
+        Update update = Update.newBuilder()
+                .set(fieldKey, readDate);
+        return mongoClient.upsert(GroupConversation.class, filter, update);
     }
 
     public Mono<Void> upsertGroupConversationsReadDate(@NotNull Set<GroupConversation.GroupConversionMemberKey> keys,
@@ -138,15 +140,15 @@ public class ConversationService {
         for (Map.Entry<Long, Collection<Long>> entry : entries) {
             Long groupId = entry.getKey();
             Collection<Long> memberIds = entry.getValue();
-            Query query = new Query()
-                    .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(groupId));
-            Update update = new Update();
+            Filter filter = Filter.newBuilder()
+                    .eq(DaoConstant.ID_FIELD_NAME, groupId);
+            Update update = Update.newBuilder();
             for (Long memberId : memberIds) {
                 String fieldKey = GroupConversation.Fields.MEMBER_ID_AND_READ_DATE + "." + memberId;
                 // Ignore isAllowMoveReadDateForward()
                 update.set(fieldKey, readDate);
             }
-            upsertMonos.add(mongoTemplate.upsert(query, update, GroupConversation.class, GroupConversation.COLLECTION_NAME).then());
+            upsertMonos.add(mongoClient.upsert(GroupConversation.class, filter, update).then());
         }
         return Mono.when(upsertMonos);
     }
@@ -174,16 +176,16 @@ public class ConversationService {
         if (readDate == null) {
             readDate = new Date();
         }
-        Query query = new Query()
-                .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(keys));
+        Filter filter = Filter.newBuilder()
+                .in(DaoConstant.ID_FIELD_NAME, keys);
         if (!node.getSharedProperties().getService().getConversation().getReadReceipt().isAllowMoveReadDateForward()) {
-            query.addCriteria(new Criteria().orOperator(
-                    Criteria.where(PrivateConversation.Fields.READ_DATE).is(null),
-                    Criteria.where(PrivateConversation.Fields.READ_DATE).lt(readDate)));
+            // TODO: Fix duplicate key error
+//            filter.or(Filter.newBuilder().eq(PrivateConversation.Fields.READ_DATE, null),
+//                    Filter.newBuilder().eq(PrivateConversation.Fields.READ_DATE, readDate));
         }
-        Update update = new Update()
+        Update update = Update.newBuilder()
                 .set(PrivateConversation.Fields.READ_DATE, readDate);
-        return mongoTemplate.upsert(query, update, PrivateConversation.class, PrivateConversation.COLLECTION_NAME).then();
+        return mongoClient.upsert(PrivateConversation.class, filter, update);
     }
 
     public Flux<GroupConversation> queryGroupConversations(@NotNull Collection<Long> groupIds) {
@@ -195,8 +197,9 @@ public class ConversationService {
         if (groupIds.isEmpty()) {
             return Flux.empty();
         }
-        Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(groupIds));
-        return mongoTemplate.find(query, GroupConversation.class, GroupConversation.COLLECTION_NAME);
+        Filter filter = Filter.newBuilder()
+                .in(DaoConstant.ID_FIELD_NAME, groupIds);
+        return mongoClient.findMany(GroupConversation.class, filter);
     }
 
     public Flux<PrivateConversation> queryPrivateConversationsByOwnerIds(
@@ -209,9 +212,9 @@ public class ConversationService {
         if (ownerIds.isEmpty()) {
             return Flux.empty();
         }
-        Query query = new Query()
-                .addCriteria(Criteria.where(PrivateConversation.Fields.ID_OWNER_ID).in(ownerIds));
-        return mongoTemplate.find(query, PrivateConversation.class, PrivateConversation.COLLECTION_NAME);
+        Filter filter = Filter.newBuilder()
+                .in(PrivateConversation.Fields.ID_OWNER_ID, ownerIds);
+        return mongoClient.findMany(PrivateConversation.class, filter);
     }
 
     public Flux<PrivateConversation> queryPrivateConversations(
@@ -240,8 +243,9 @@ public class ConversationService {
         } catch (TurmsBusinessException e) {
             return Flux.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(keys));
-        return mongoTemplate.find(query, PrivateConversation.class, PrivateConversation.COLLECTION_NAME);
+        Filter filter = Filter.newBuilder()
+                .in(DaoConstant.ID_FIELD_NAME, keys);
+        return mongoClient.findMany(PrivateConversation.class, filter);
     }
 
     public Mono<DeleteResult> deletePrivateConversations(@NotNull Set<PrivateConversation.Key> keys) {
@@ -250,34 +254,31 @@ public class ConversationService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(keys));
-        return mongoTemplate.remove(query, PrivateConversation.class, PrivateConversation.COLLECTION_NAME);
+        Filter filter = Filter.newBuilder()
+                .in(DaoConstant.ID_FIELD_NAME, keys);
+        return mongoClient.deleteMany(PrivateConversation.class, filter);
     }
 
-    public Mono<DeleteResult> deletePrivateConversations(@NotNull Set<Long> userIds, @Nullable ReactiveMongoOperations operations) {
+    public Mono<DeleteResult> deletePrivateConversations(@NotNull Set<Long> userIds, @Nullable ClientSession session) {
         try {
             AssertUtil.notNull(userIds, "userIds");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(PrivateConversation.Fields.ID_OWNER_ID).in(userIds));
-        ReactiveMongoOperations mongoOperations = operations == null
-                ? mongoTemplate
-                : operations;
-        return mongoOperations.remove(query, PrivateConversation.class, PrivateConversation.COLLECTION_NAME);
+        Filter filter = Filter.newBuilder()
+                .in(PrivateConversation.Fields.ID_OWNER_ID, userIds);
+        return mongoClient.deleteMany(session, PrivateConversation.class, filter);
     }
 
-    public Mono<DeleteResult> deleteGroupConversations(@NotNull Set<Long> groupIds, @Nullable ReactiveMongoOperations operations) {
+    public Mono<DeleteResult> deleteGroupConversations(@NotNull Set<Long> groupIds, @Nullable ClientSession session) {
         try {
             AssertUtil.notNull(groupIds, "groupIds");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(groupIds));
-        ReactiveMongoOperations mongoOperations = operations == null
-                ? mongoTemplate
-                : operations;
-        return mongoOperations.remove(query, GroupConversation.class, GroupConversation.COLLECTION_NAME);
+        Filter filter = Filter.newBuilder()
+                .in(DaoConstant.ID_FIELD_NAME, groupIds);
+        return mongoClient.deleteMany(session, GroupConversation.class, filter);
     }
 
 }

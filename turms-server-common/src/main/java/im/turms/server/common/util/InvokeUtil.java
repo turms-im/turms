@@ -20,6 +20,7 @@ package im.turms.server.common.util;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 /**
  * @author James Chen
@@ -29,11 +30,48 @@ public class InvokeUtil {
     private InvokeUtil() {
     }
 
-    public static MethodHandle getField(Class<?> clazz, String fieldName) {
+    public static MethodHandle getGetter(Class<?> clazz, String fieldName) {
         try {
             Field field = clazz.getDeclaredField(fieldName);
             field.setAccessible(true);
             return MethodHandles.lookup().unreflectGetter(field);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    public static MethodHandle getGetter(Field field) {
+        try {
+            field.setAccessible(true);
+            return MethodHandles.lookup().unreflectGetter(field);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    public static MethodHandle getSetter(Class<?> clazz, String fieldName) {
+        try {
+            Field field = clazz.getDeclaredField(fieldName);
+            field.setAccessible(true);
+            return MethodHandles.lookup().unreflectSetter(field);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    public static MethodHandle getSetter(Field field) {
+        try {
+            field.setAccessible(true);
+            return MethodHandles.lookup().unreflectSetter(field);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    public static MethodHandle method2Handle(Method method) {
+        try {
+            method.setAccessible(true);
+            return MethodHandles.lookup().unreflect(method);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }

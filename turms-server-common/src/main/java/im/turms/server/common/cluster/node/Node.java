@@ -132,7 +132,7 @@ public class Node {
         // Init services
         // we pass the properties one by one rather than passing the node instance
         // to know their dependency relationships explicitly.
-        sharedConfigService = new SharedConfigService(sharedConfigProperties.getMongo().getUri());
+        sharedConfigService = new SharedConfigService(sharedConfigProperties.getMongo());
         discoveryService = new DiscoveryService(clusterId,
                 nodeId,
                 nodeType,
@@ -226,7 +226,7 @@ public class Node {
                 return channel;
             } catch (Exception e) { // e.g. port in use
                 if (e instanceof ChannelBindException && autoIncrement && currentPort <= port + portCount) {
-                    log.error("Failed to bind on the port {}. Trying to bind on the next port {}", currentPort++, currentPort);
+                    log.warn("Failed to bind on the port {}. Trying to bind on the next port {}", currentPort++, currentPort);
                 } else {
                     log.error("Failed to set up the local discovery server", e);
                     throw e;

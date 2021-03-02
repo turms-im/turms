@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.turms.bo;
+package im.turms.server.common.bo.common;
 
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;

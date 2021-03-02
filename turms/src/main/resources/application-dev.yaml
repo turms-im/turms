@@ -7,16 +7,14 @@ logging:
   level:
     im:
       turms: DEBUG
-    org:
-      springframework:
-        data:
-          mongodb:
-            core:
-              ReactiveMongoTemplate: DEBUG
 
 ############################### Turms ###############################
 
 turms:
+  cluster:
+    shared-config:
+      mongo:
+        uri: mongodb://localhost:29510/turms-config-dev
   service:
     client-api:
       logging:
@@ -28,15 +26,20 @@ turms:
           - category: all
     admin-api:
       enable-swagger: true
-      discovery:
-        advertise-strategy: local_address
-    database:
-      mongo-properties:
-        default-properties:
-          uri: mongodb://localhost:29510/turms-dev
     mock:
       enabled: true
       clear-all-collections-before-mocking: true
+    mongo:
+      admin:
+        uri: mongodb://localhost:29510/turms-dev
+      user:
+        uri: mongodb://localhost:29510/turms-dev
+      group:
+        uri: mongodb://localhost:29510/turms-dev
+      conversation:
+        uri: mongodb://localhost:29510/turms-dev
+      message:
+        uri: mongodb://localhost:29510/turms-dev
 turms-plugin:
   minio:
     retry:

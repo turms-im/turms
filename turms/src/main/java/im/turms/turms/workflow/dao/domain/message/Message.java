@@ -17,15 +17,10 @@
 
 package im.turms.turms.workflow.dao.domain.message;
 
+import im.turms.server.common.mongo.entity.annotation.*;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForColdData;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.CompoundIndex;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.Sharded;
 
 import java.util.Date;
 import java.util.List;
@@ -35,10 +30,8 @@ import java.util.List;
  */
 @Data
 @Document(Message.COLLECTION_NAME)
-@CompoundIndex(
-        name = Message.Fields.TARGET_ID + "_" + Message.Fields.DELIVERY_DATE,
-        def = "{'" + Message.Fields.TARGET_ID + "': 1, '" + Message.Fields.DELIVERY_DATE + "': 1}")
-@Sharded(shardKey = {Message.Fields.TARGET_ID, Message.Fields.DELIVERY_DATE}, immutableKey = true)
+@CompoundIndex({Message.Fields.TARGET_ID, Message.Fields.DELIVERY_DATE})
+@Sharded(shardKey = {Message.Fields.TARGET_ID, Message.Fields.DELIVERY_DATE})
 public final class Message {
 
     public static final String COLLECTION_NAME = "message";

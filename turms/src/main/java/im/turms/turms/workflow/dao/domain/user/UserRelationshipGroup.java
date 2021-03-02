@@ -17,16 +17,13 @@
 
 package im.turms.turms.workflow.dao.domain.user;
 
+import im.turms.server.common.mongo.entity.IndexType;
+import im.turms.server.common.mongo.entity.ShardingStrategy;
+import im.turms.server.common.mongo.entity.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
-import org.springframework.data.mongodb.core.index.HashIndexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.Sharded;
-import org.springframework.data.mongodb.core.mapping.ShardingStrategy;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -38,7 +35,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor(onConstructor = @__(@PersistenceConstructor))
 @Document(UserRelationshipGroup.COLLECTION_NAME)
-@Sharded(shardKey = UserRelationshipGroup.Fields.ID_OWNER_ID, shardingStrategy = ShardingStrategy.HASH, immutableKey = true)
+@Sharded(shardKey = UserRelationshipGroup.Fields.ID_OWNER_ID, shardingStrategy = ShardingStrategy.HASH)
 public final class UserRelationshipGroup {
 
     public static final String COLLECTION_NAME = "userRelationshipGroup";
@@ -72,7 +69,7 @@ public final class UserRelationshipGroup {
     public static final class Key {
 
         @Field(Fields.OWNER_ID)
-        @HashIndexed
+        @Indexed(IndexType.HASH)
         private Long ownerId;
 
         /**

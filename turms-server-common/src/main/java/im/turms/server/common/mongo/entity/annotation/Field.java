@@ -15,20 +15,18 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.cluster.service.config.converter;
+package im.turms.server.common.mongo.entity.annotation;
 
-import org.springframework.core.convert.converter.Converter;
-
-import java.time.Duration;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author James Chen
  */
-public class DurationToLongConverter implements Converter<Duration, Long> {
-
-    @Override
-    public Long convert(Duration duration) {
-        return duration.toMillis();
-    }
-
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD})
+public @interface Field {
+    String value() default "";
 }

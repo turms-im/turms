@@ -47,6 +47,7 @@
         </Routing>
     </Appenders>
     <Loggers>
+        <!--        <Logger name="org.mongodb.driver" level="debug" />-->
         <Root level="info">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="Routing"/>

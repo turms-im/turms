@@ -20,19 +20,17 @@ package im.turms.server.common.cluster;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.manager.address.BaseServiceAddressManager;
+import im.turms.server.common.mongo.IMongoDataGenerator;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 
 import javax.annotation.PreDestroy;
 
 /**
  * @author James Chen
  */
-@Order(Ordered.HIGHEST_PRECEDENCE)
 @Configuration
 public class ClusterConfig {
 
@@ -43,7 +41,8 @@ public class ClusterConfig {
             ApplicationContext context,
             NodeType nodeType,
             TurmsPropertiesManager turmsPropertiesManager,
-            BaseServiceAddressManager serviceAddressManager) {
+            BaseServiceAddressManager serviceAddressManager,
+            IMongoDataGenerator mongoDataGenerator) {
         this.node = new Node(context, nodeType, turmsPropertiesManager, serviceAddressManager);
         node.start();
         return node;

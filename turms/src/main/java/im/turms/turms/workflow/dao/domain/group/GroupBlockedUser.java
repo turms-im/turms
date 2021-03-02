@@ -17,16 +17,12 @@
 
 package im.turms.turms.workflow.dao.domain.group;
 
+import im.turms.server.common.mongo.entity.annotation.*;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceConstructor;
-import org.springframework.data.mongodb.core.index.CompoundIndex;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.Sharded;
 
 import java.util.Date;
 import java.util.List;
@@ -37,10 +33,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor(onConstructor = @__(@PersistenceConstructor))
 @Document(GroupBlockedUser.COLLECTION_NAME)
-@CompoundIndex(
-        name = GroupBlockedUser.Key.Fields.GROUP_ID + "_" + GroupBlockedUser.Key.Fields.USER_ID,
-        def = "{'" + GroupBlockedUser.Fields.ID_GROUP_ID + "': 1, '" + GroupBlockedUser.Fields.ID_USER_ID + "': 1}")
-@Sharded(shardKey = GroupBlockedUser.Fields.ID_GROUP_ID, immutableKey = true)
+@CompoundIndex({GroupBlockedUser.Fields.ID_GROUP_ID, GroupBlockedUser.Fields.ID_USER_ID})
+@Sharded(shardKey = GroupBlockedUser.Fields.ID_GROUP_ID)
 public final class GroupBlockedUser {
 
     public static final String COLLECTION_NAME = "groupBlockedUser";

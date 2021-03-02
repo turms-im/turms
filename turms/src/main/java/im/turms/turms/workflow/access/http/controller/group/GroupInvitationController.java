@@ -18,7 +18,7 @@
 package im.turms.turms.workflow.access.http.controller.group;
 
 import im.turms.common.constant.RequestStatus;
-import im.turms.turms.bo.DateRange;
+import im.turms.server.common.bo.common.DateRange;
 import im.turms.turms.workflow.access.http.dto.request.group.AddGroupInvitationDTO;
 import im.turms.turms.workflow.access.http.dto.request.group.UpdateGroupInvitationDTO;
 import im.turms.turms.workflow.access.http.dto.response.*;

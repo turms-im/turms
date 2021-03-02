@@ -36,7 +36,7 @@ public class GatewayProperties {
 
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
-    private DatabaseProperties database = new DatabaseProperties();
+    private MongoProperties mongo = new MongoProperties();
 
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty

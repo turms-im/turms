@@ -17,7 +17,7 @@
 
 package im.turms.turms.workflow.access.http.controller.group;
 
-import im.turms.turms.bo.DateRange;
+import im.turms.server.common.bo.common.DateRange;
 import im.turms.turms.workflow.access.http.dto.request.group.AddGroupBlockedUserDTO;
 import im.turms.turms.workflow.access.http.dto.request.group.UpdateGroupBlockedUserDTO;
 import im.turms.turms.workflow.access.http.dto.response.*;

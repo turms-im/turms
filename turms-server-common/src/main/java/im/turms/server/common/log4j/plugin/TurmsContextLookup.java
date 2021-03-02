@@ -40,7 +40,7 @@ import java.lang.invoke.MethodHandle;
 @Plugin(name = "myctx", category = StrLookup.CATEGORY)
 public class TurmsContextLookup implements StrLookup {
 
-    private static final MethodHandle GET_LOGGER = InvokeUtil.getField(RingBufferLogEvent.class, "asyncLogger");
+    private static final MethodHandle GET_LOGGER = InvokeUtil.getGetter(RingBufferLogEvent.class, "asyncLogger");
 
     @Override
     public String lookup(String key) {

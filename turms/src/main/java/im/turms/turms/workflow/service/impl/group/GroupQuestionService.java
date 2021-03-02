@@ -28,6 +28,10 @@ import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.mongo.TurmsMongoClient;
+import im.turms.server.common.mongo.operation.option.Filter;
+import im.turms.server.common.mongo.operation.option.QueryOptions;
+import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.CollectorUtil;
 import im.turms.turms.bo.GroupQuestionIdAndAnswer;
@@ -35,16 +39,12 @@ import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.constraint.ValidGroupQuestionIdAndAnswer;
 import im.turms.turms.util.ProtoUtil;
-import im.turms.turms.workflow.dao.builder.QueryBuilder;
-import im.turms.turms.workflow.dao.builder.UpdateBuilder;
+import im.turms.turms.workflow.dao.MongoDataGenerator;
 import im.turms.turms.workflow.dao.domain.group.GroupJoinQuestion;
 import im.turms.turms.workflow.service.util.DomainConstraintUtil;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -63,21 +63,22 @@ import java.util.stream.Collectors;
  * @author James Chen
  */
 @Service
+@DependsOn(MongoDataGenerator.BEAN_NAME)
 public class GroupQuestionService {
 
     private final Node node;
-    private final ReactiveMongoTemplate mongoTemplate;
+    private final TurmsMongoClient mongoClient;
     private final GroupMemberService groupMemberService;
     private final GroupService groupService;
     private final GroupVersionService groupVersionService;
 
     public GroupQuestionService(
             Node node,
-            @Qualifier("groupMongoTemplate") ReactiveMongoTemplate mongoTemplate,
+            @Qualifier("groupMongoClient") TurmsMongoClient mongoClient,
             GroupMemberService groupMemberService,
             GroupVersionService groupVersionService,
             GroupService groupService) {
-        this.mongoTemplate = mongoTemplate;
+        this.mongoClient = mongoClient;
         this.node = node;
         this.groupMemberService = groupMemberService;
         this.groupVersionService = groupVersionService;
@@ -94,14 +95,13 @@ public class GroupQuestionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query()
-                .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(questionId))
-                .addCriteria(Criteria.where(GroupJoinQuestion.Fields.ANSWERS).in(answer));
-        if (groupId != null) {
-            query.addCriteria(Criteria.where(GroupJoinQuestion.Fields.GROUP_ID).is(groupId));
-        }
-        query.fields().include(GroupJoinQuestion.Fields.SCORE);
-        return mongoTemplate.findOne(query, GroupJoinQuestion.class, GroupJoinQuestion.COLLECTION_NAME)
+        Filter filter = Filter.newBuilder()
+                .eq(DaoConstant.ID_FIELD_NAME, questionId)
+                .in(GroupJoinQuestion.Fields.ANSWERS, answer)
+                .eqIfNotNull(GroupJoinQuestion.Fields.GROUP_ID, groupId);
+        QueryOptions options = QueryOptions.newBuilder()
+                .include(GroupJoinQuestion.Fields.SCORE);
+        return mongoClient.findOne(GroupJoinQuestion.class, filter, options)
                 .map(GroupJoinQuestion::getScore);
     }
 
@@ -221,10 +221,10 @@ public class GroupQuestionService {
                 question,
                 answers,
                 score);
-        return mongoTemplate.insert(groupJoinQuestion, GroupJoinQuestion.COLLECTION_NAME)
-                .flatMap(joinQuestion -> groupVersionService.updateJoinQuestionsVersion(groupId)
+        return mongoClient.insert(groupJoinQuestion)
+                .flatMap(unused -> groupVersionService.updateJoinQuestionsVersion(groupId)
                         .onErrorResume(t -> Mono.empty())
-                        .thenReturn(joinQuestion));
+                ).thenReturn(groupJoinQuestion);
     }
 
     public Mono<Long> queryGroupId(@NotNull Long questionId) {
@@ -233,9 +233,11 @@ public class GroupQuestionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(questionId));
-        query.fields().include(GroupJoinQuestion.Fields.GROUP_ID);
-        return mongoTemplate.findOne(query, GroupJoinQuestion.class, GroupJoinQuestion.COLLECTION_NAME)
+        Filter filter = Filter.newBuilder()
+                .eq(DaoConstant.ID_FIELD_NAME, questionId);
+        QueryOptions options = QueryOptions.newBuilder()
+                .include(GroupJoinQuestion.Fields.GROUP_ID);
+        return mongoClient.findOne(GroupJoinQuestion.class, filter, options)
                 .map(GroupJoinQuestion::getGroupId);
     }
 
@@ -251,8 +253,9 @@ public class GroupQuestionService {
                 .flatMap(groupId -> groupMemberService.isOwnerOrManager(requesterId, groupId)
                         .flatMap(authenticated -> {
                             if (authenticated != null && authenticated) {
-                                Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(questionId));
-                                return mongoTemplate.remove(query, GroupJoinQuestion.class, GroupJoinQuestion.COLLECTION_NAME)
+                                Filter filter = Filter.newBuilder()
+                                        .eq(DaoConstant.ID_FIELD_NAME, questionId);
+                                return mongoClient.deleteMany(GroupJoinQuestion.class, filter)
                                         .flatMap(result -> groupVersionService.updateJoinQuestionsVersion(groupId)
                                                 .onErrorResume(t -> Mono.empty())
                                                 .then());
@@ -268,32 +271,31 @@ public class GroupQuestionService {
             @Nullable Integer page,
             @Nullable Integer size,
             boolean withAnswers) {
-        Query query = QueryBuilder
+        Filter filter = Filter
                 .newBuilder()
-                .addInIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
-                .addInIfNotNull(GroupJoinQuestion.Fields.GROUP_ID, groupIds)
+                .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
+                .inIfNotNull(GroupJoinQuestion.Fields.GROUP_ID, groupIds);
+        QueryOptions options = QueryOptions.newBuilder()
                 .paginateIfNotNull(page, size);
         if (!withAnswers) {
-            query.fields().exclude(GroupJoinQuestion.Fields.ANSWERS);
+            options.exclude(GroupJoinQuestion.Fields.ANSWERS);
         }
-        return mongoTemplate.find(query, GroupJoinQuestion.class, GroupJoinQuestion.COLLECTION_NAME);
+        return mongoClient.findMany(GroupJoinQuestion.class, filter, options);
     }
 
     public Mono<Long> countGroupJoinQuestions(@Nullable Set<Long> ids, @Nullable Set<Long> groupIds) {
-        Query query = QueryBuilder
+        Filter filter = Filter
                 .newBuilder()
-                .addInIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
-                .addInIfNotNull(GroupJoinQuestion.Fields.GROUP_ID, groupIds)
-                .buildQuery();
-        return mongoTemplate.count(query, GroupJoinQuestion.class, GroupJoinQuestion.COLLECTION_NAME);
+                .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
+                .inIfNotNull(GroupJoinQuestion.Fields.GROUP_ID, groupIds);
+        return mongoClient.count(GroupJoinQuestion.class, filter);
     }
 
     public Mono<DeleteResult> deleteGroupJoinQuestions(@Nullable Set<Long> ids) {
-        Query query = QueryBuilder
+        Filter filter = Filter
                 .newBuilder()
-                .addInIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
-                .buildQuery();
-        return mongoTemplate.remove(query, GroupJoinQuestion.class, GroupJoinQuestion.COLLECTION_NAME);
+                .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids);
+        return mongoClient.deleteMany(GroupJoinQuestion.class, filter);
     }
 
     public Mono<GroupJoinQuestionsWithVersion> queryGroupJoinQuestionsWithVersion(
@@ -356,13 +358,13 @@ public class GroupQuestionService {
                 .flatMap(groupId -> groupMemberService.isOwnerOrManager(requesterId, groupId)
                         .flatMap(authenticated -> {
                             if (authenticated != null && authenticated) {
-                                Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(questionId));
-                                Update update = UpdateBuilder.newBuilder()
+                                Filter filter = Filter.newBuilder()
+                                        .eq(DaoConstant.ID_FIELD_NAME, questionId);
+                                Update update = Update.newBuilder()
                                         .setIfNotNull(GroupJoinQuestion.Fields.QUESTION, question)
                                         .setIfNotNull(GroupJoinQuestion.Fields.ANSWERS, answers)
-                                        .setIfNotNull(GroupJoinQuestion.Fields.SCORE, score)
-                                        .build();
-                                return mongoTemplate.updateFirst(query, update, GroupJoinQuestion.class, GroupJoinQuestion.COLLECTION_NAME)
+                                        .setIfNotNull(GroupJoinQuestion.Fields.SCORE, score);
+                                return mongoClient.updateOne(GroupJoinQuestion.class, filter, update)
                                         .flatMap(result -> groupVersionService.updateJoinQuestionsVersion(groupId)
                                                 .onErrorResume(t -> Mono.empty())
                                                 .thenReturn(result));
@@ -387,14 +389,14 @@ public class GroupQuestionService {
         if (Validator.areAllFalsy(groupId, question, answers, score)) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
-        Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(ids));
-        Update update = UpdateBuilder.newBuilder()
+        Filter filter = Filter.newBuilder()
+                .in(DaoConstant.ID_FIELD_NAME, ids);
+        Update update = Update.newBuilder()
                 .setIfNotNull(GroupJoinQuestion.Fields.GROUP_ID, groupId)
                 .setIfNotNull(GroupJoinQuestion.Fields.QUESTION, question)
                 .setIfNotNull(GroupJoinQuestion.Fields.ANSWERS, answers)
-                .setIfNotNull(GroupJoinQuestion.Fields.SCORE, score)
-                .build();
-        return mongoTemplate.updateMulti(query, update, GroupJoinQuestion.class, GroupJoinQuestion.COLLECTION_NAME);
+                .setIfNotNull(GroupJoinQuestion.Fields.SCORE, score);
+        return mongoClient.updateMany(GroupJoinQuestion.class, filter, update);
     }
 
 }

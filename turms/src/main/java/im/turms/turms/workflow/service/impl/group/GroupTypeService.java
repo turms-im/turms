@@ -17,6 +17,7 @@
 
 package im.turms.turms.workflow.service.impl.group;
 
+import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.model.changestream.OperationType;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
@@ -30,19 +31,18 @@ import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.constraint.NoWhitespace;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.mongo.TurmsMongoClient;
+import im.turms.server.common.mongo.operation.option.Filter;
+import im.turms.server.common.mongo.operation.option.QueryOptions;
+import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.constant.OperationResultConstant;
-import im.turms.turms.workflow.dao.builder.QueryBuilder;
-import im.turms.turms.workflow.dao.builder.UpdateBuilder;
+import im.turms.turms.workflow.dao.MongoDataGenerator;
 import im.turms.turms.workflow.dao.domain.group.GroupType;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.mongodb.core.ChangeStreamOptions;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -60,15 +60,16 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Log4j2
 @Service
+@DependsOn(MongoDataGenerator.BEAN_NAME)
 public class GroupTypeService {
 
     private final Node node;
     private final Map<Long, GroupType> groupTypeMap = new ConcurrentHashMap<>(16);
-    private final ReactiveMongoTemplate mongoTemplate;
+    private final TurmsMongoClient mongoTemplate;
 
     public GroupTypeService(
             Node node,
-            @Qualifier("groupMongoTemplate") ReactiveMongoTemplate mongoTemplate) {
+            @Qualifier("groupMongoClient") TurmsMongoClient mongoTemplate) {
         this.node = node;
         this.mongoTemplate = mongoTemplate;
         initGroupTypes();
@@ -89,13 +90,10 @@ public class GroupTypeService {
                         true,
                         true,
                         true));
-        mongoTemplate.changeStream(GroupType.class)
-                .withOptions(ChangeStreamOptions.ChangeStreamOptionsBuilder::returnFullDocumentOnUpdate)
-                .watchCollection(GroupType.class)
-                .listen()
+        mongoTemplate.watch(GroupType.class, FullDocument.UPDATE_LOOKUP)
                 .doOnNext(event -> {
                     OperationType operationType = event.getOperationType();
-                    GroupType groupType = event.getBody();
+                    GroupType groupType = event.getFullDocument();
                     switch (operationType) {
                         case INSERT:
                         case UPDATE:
@@ -103,7 +101,7 @@ public class GroupTypeService {
                             groupTypeMap.put(groupType.getId(), groupType);
                             break;
                         case DELETE:
-                            long groupTypeId = ChangeStreamUtil.getIdAsLong(event);
+                            long groupTypeId = ChangeStreamUtil.getIdAsLong(event.getDocumentKey());
                             groupTypeMap.remove(groupTypeId);
                             break;
                         case INVALIDATE:
@@ -115,7 +113,7 @@ public class GroupTypeService {
                 })
                 .onErrorContinue((throwable, o) -> log.error("Error while processing the change stream event of GroupType: {}", o, throwable))
                 .subscribe();
-        mongoTemplate.find(new Query(), GroupType.class, GroupType.COLLECTION_NAME)
+        mongoTemplate.findAll(GroupType.class)
                 .doOnNext(groupType -> groupTypeMap.put(groupType.getId(), groupType))
                 .subscribe();
     }
@@ -127,10 +125,9 @@ public class GroupTypeService {
     public Flux<GroupType> queryGroupTypes(
             @Nullable Integer page,
             @Nullable Integer size) {
-        Query query = QueryBuilder
-                .newBuilder()
+        QueryOptions options = QueryOptions.newBuilder()
                 .paginateIfNotNull(page, size);
-        return mongoTemplate.find(query, GroupType.class, GroupType.COLLECTION_NAME)
+        return mongoTemplate.findAll(GroupType.class, options)
                 // TODO: respect page and size
                 .concatWithValues(getDefaultGroupType());
     }
@@ -176,7 +173,7 @@ public class GroupTypeService {
                 enableReadReceipt,
                 messageEditable);
         groupTypeMap.put(id, groupType);
-        return mongoTemplate.insert(groupType, GroupType.COLLECTION_NAME);
+        return mongoTemplate.insert(groupType).thenReturn(groupType);
     }
 
     public Mono<UpdateResult> updateGroupTypes(
@@ -210,8 +207,9 @@ public class GroupTypeService {
                 messageEditable)) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
-        Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(ids));
-        Update update = UpdateBuilder.newBuilder()
+        Filter filter = Filter.newBuilder()
+                .in(DaoConstant.ID_FIELD_NAME, ids);
+        Update update = Update.newBuilder()
                 .setIfNotNull(GroupType.Fields.NAME, name)
                 .setIfNotNull(GroupType.Fields.GROUP_SIZE_LIMIT, groupSizeLimit)
                 .setIfNotNull(GroupType.Fields.INVITATION_STRATEGY, groupInvitationStrategy)
@@ -221,20 +219,18 @@ public class GroupTypeService {
                 .setIfNotNull(GroupType.Fields.GUEST_SPEAKABLE, guestSpeakable)
                 .setIfNotNull(GroupType.Fields.SELF_INFO_UPDATABLE, selfInfoUpdatable)
                 .setIfNotNull(GroupType.Fields.ENABLE_READ_RECEIPT, enableReadReceipt)
-                .setIfNotNull(GroupType.Fields.MESSAGE_EDITABLE, messageEditable)
-                .build();
-        return mongoTemplate.updateMulti(query, update, GroupType.class, GroupType.COLLECTION_NAME);
+                .setIfNotNull(GroupType.Fields.MESSAGE_EDITABLE, messageEditable);
+        return mongoTemplate.updateMany(GroupType.class, filter, update);
     }
 
     public Mono<DeleteResult> deleteGroupTypes(@Nullable Set<Long> groupTypeIds) {
         if (groupTypeIds != null && groupTypeIds.contains(DaoConstant.DEFAULT_GROUP_TYPE_ID)) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The default group type cannot be deleted"));
         }
-        Query query = QueryBuilder
+        Filter filter = Filter
                 .newBuilder()
-                .addInIfNotNull(DaoConstant.ID_FIELD_NAME, groupTypeIds)
-                .buildQuery();
-        return mongoTemplate.remove(query, GroupType.class, GroupType.COLLECTION_NAME)
+                .inIfNotNull(DaoConstant.ID_FIELD_NAME, groupTypeIds);
+        return mongoTemplate.deleteMany(GroupType.class, filter)
                 .doOnNext(result -> {
                     if (groupTypeIds != null) {
                         for (Long id : groupTypeIds) {
@@ -256,7 +252,7 @@ public class GroupTypeService {
         if (groupType != null) {
             return Mono.just(groupType);
         } else {
-            return mongoTemplate.findById(groupTypeId, GroupType.class, GroupType.COLLECTION_NAME)
+            return mongoTemplate.findById(GroupType.class, groupTypeId)
                     .doOnNext(type -> groupTypeMap.put(groupTypeId, type));
         }
     }
@@ -268,7 +264,7 @@ public class GroupTypeService {
     }
 
     public Mono<Long> countGroupTypes() {
-        return mongoTemplate.count(new Query(), GroupType.class, GroupType.COLLECTION_NAME)
+        return mongoTemplate.countAll(GroupType.class)
                 .map(number -> number + 1);
     }
 

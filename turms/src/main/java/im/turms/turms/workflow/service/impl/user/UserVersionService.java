@@ -19,15 +19,17 @@ package im.turms.turms.workflow.service.impl.user;
 
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import com.mongodb.reactivestreams.client.ClientSession;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.mongo.TurmsMongoClient;
+import im.turms.server.common.mongo.operation.option.Filter;
+import im.turms.server.common.mongo.operation.option.QueryOptions;
+import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.util.AssertUtil;
+import im.turms.turms.workflow.dao.MongoDataGenerator;
 import im.turms.turms.workflow.dao.domain.user.UserVersion;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.mongodb.core.ReactiveMongoOperations;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -44,12 +46,13 @@ import static im.turms.turms.constant.DaoConstant.ID_FIELD_NAME;
  * @author James Chen
  */
 @Service
+@DependsOn(MongoDataGenerator.BEAN_NAME)
 public class UserVersionService {
 
-    private final ReactiveMongoTemplate mongoTemplate;
+    private final TurmsMongoClient mongoClient;
 
-    public UserVersionService(@Qualifier("userMongoTemplate") ReactiveMongoTemplate mongoTemplate) {
-        this.mongoTemplate = mongoTemplate;
+    public UserVersionService(@Qualifier("userMongoClient") TurmsMongoClient mongoClient) {
+        this.mongoClient = mongoClient;
     }
 
     // Query
@@ -60,9 +63,11 @@ public class UserVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).is(userId));
-        query.fields().include(UserVersion.Fields.RELATIONSHIPS);
-        return mongoTemplate.findOne(query, UserVersion.class, UserVersion.COLLECTION_NAME)
+        Filter filter = Filter.newBuilder()
+                .eq(ID_FIELD_NAME, userId);
+        QueryOptions options = QueryOptions.newBuilder()
+                .include(UserVersion.Fields.RELATIONSHIPS);
+        return mongoClient.findOne(UserVersion.class, filter, options)
                 .map(UserVersion::getRelationships);
     }
 
@@ -72,9 +77,11 @@ public class UserVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).is(userId));
-        query.fields().include(UserVersion.Fields.SENT_GROUP_INVITATIONS);
-        return mongoTemplate.findOne(query, UserVersion.class, UserVersion.COLLECTION_NAME)
+        Filter filter = Filter.newBuilder()
+                .eq(ID_FIELD_NAME, userId);
+        QueryOptions options = QueryOptions.newBuilder()
+                .include(UserVersion.Fields.SENT_GROUP_INVITATIONS);
+        return mongoClient.findOne(UserVersion.class, filter, options)
                 .map(UserVersion::getSentGroupInvitations);
     }
 
@@ -84,9 +91,11 @@ public class UserVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).is(userId));
-        query.fields().include(UserVersion.Fields.RECEIVED_GROUP_INVITATIONS);
-        return mongoTemplate.findOne(query, UserVersion.class, UserVersion.COLLECTION_NAME)
+        Filter filter = Filter.newBuilder()
+                .eq(ID_FIELD_NAME, userId);
+        QueryOptions options = QueryOptions.newBuilder()
+                .include(UserVersion.Fields.RECEIVED_GROUP_INVITATIONS);
+        return mongoClient.findOne(UserVersion.class, filter, options)
                 .map(UserVersion::getReceivedGroupInvitations);
     }
 
@@ -96,9 +105,11 @@ public class UserVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).is(userId));
-        query.fields().include(UserVersion.Fields.GROUP_JOIN_REQUESTS);
-        return mongoTemplate.findOne(query, UserVersion.class, UserVersion.COLLECTION_NAME)
+        Filter filter = Filter.newBuilder()
+                .eq(ID_FIELD_NAME, userId);
+        QueryOptions options = QueryOptions.newBuilder()
+                .include(UserVersion.Fields.GROUP_JOIN_REQUESTS);
+        return mongoClient.findOne(UserVersion.class, filter, options)
                 .map(UserVersion::getGroupJoinRequests);
     }
 
@@ -108,9 +119,11 @@ public class UserVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).is(userId));
-        query.fields().include(UserVersion.Fields.RELATIONSHIP_GROUPS);
-        return mongoTemplate.findOne(query, UserVersion.class, UserVersion.COLLECTION_NAME)
+        Filter filter = Filter.newBuilder()
+                .eq(ID_FIELD_NAME, userId);
+        QueryOptions options = QueryOptions.newBuilder()
+                .include(UserVersion.Fields.RELATIONSHIP_GROUPS);
+        return mongoClient.findOne(UserVersion.class, filter, options)
                 .map(UserVersion::getRelationshipGroups);
     }
 
@@ -120,9 +133,9 @@ public class UserVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).is(userId));
-        query.fields().include(UserVersion.Fields.JOINED_GROUPS);
-        return mongoTemplate.findOne(query, UserVersion.class, UserVersion.COLLECTION_NAME)
+        Filter filter = Filter.newBuilder().eq(ID_FIELD_NAME, userId);
+        QueryOptions options = QueryOptions.newBuilder().include(UserVersion.Fields.JOINED_GROUPS);
+        return mongoClient.findOne(UserVersion.class, filter, options)
                 .map(UserVersion::getJoinedGroups);
     }
 
@@ -132,9 +145,11 @@ public class UserVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).is(userId));
-        query.fields().include(UserVersion.Fields.SENT_FRIEND_REQUESTS);
-        return mongoTemplate.findOne(query, UserVersion.class, UserVersion.COLLECTION_NAME)
+        Filter filter = Filter.newBuilder()
+                .eq(ID_FIELD_NAME, userId);
+        QueryOptions options = QueryOptions.newBuilder()
+                .include(UserVersion.Fields.SENT_FRIEND_REQUESTS);
+        return mongoClient.findOne(UserVersion.class, filter, options)
                 .map(UserVersion::getSentFriendRequests);
     }
 
@@ -144,9 +159,11 @@ public class UserVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).is(userId));
-        query.fields().include(UserVersion.Fields.RECEIVED_FRIEND_REQUESTS);
-        return mongoTemplate.findOne(query, UserVersion.class, UserVersion.COLLECTION_NAME)
+        Filter filter = Filter.newBuilder()
+                .eq(ID_FIELD_NAME, userId);
+        QueryOptions options = QueryOptions.newBuilder()
+                .include(UserVersion.Fields.RECEIVED_FRIEND_REQUESTS);
+        return mongoClient.findOne(UserVersion.class, filter, options)
                 .map(UserVersion::getReceivedFriendRequests);
     }
 
@@ -155,7 +172,7 @@ public class UserVersionService {
     public Mono<UserVersion> upsertEmptyUserVersion(
             @NotNull Long userId,
             @NotNull Date timestamp,
-            @Nullable ReactiveMongoOperations operations) {
+            @Nullable ClientSession session) {
         try {
             AssertUtil.notNull(userId, "userId");
             AssertUtil.notNull(timestamp, "timestamp");
@@ -163,18 +180,18 @@ public class UserVersionService {
             return Mono.error(e);
         }
         UserVersion userVersion = new UserVersion(userId, timestamp, timestamp, timestamp, timestamp, timestamp, timestamp, timestamp, timestamp, timestamp);
-        ReactiveMongoOperations mongoOperations = operations != null ? operations : mongoTemplate;
-        return mongoOperations.save(userVersion, UserVersion.COLLECTION_NAME);
+        return mongoClient.upsert(session, userVersion)
+                .thenReturn(userVersion);
     }
 
     // Update
 
-    public Mono<UpdateResult> updateRelationshipsVersion(@NotNull Long userId, @Nullable ReactiveMongoOperations operations) {
-        return updateSpecificVersion(userId, operations, UserVersion.Fields.RELATIONSHIPS);
+    public Mono<UpdateResult> updateRelationshipsVersion(@NotNull Long userId, @Nullable ClientSession session) {
+        return updateSpecificVersion(userId, session, UserVersion.Fields.RELATIONSHIPS);
     }
 
-    public Mono<UpdateResult> updateRelationshipsVersion(@NotEmpty Set<Long> userIds, @Nullable ReactiveMongoOperations operations) {
-        return updateSpecificVersion(userIds, operations, UserVersion.Fields.RELATIONSHIPS);
+    public Mono<UpdateResult> updateRelationshipsVersion(@NotEmpty Set<Long> userIds, @Nullable ClientSession session) {
+        return updateSpecificVersion(userIds, session, UserVersion.Fields.RELATIONSHIPS);
     }
 
     public Mono<UpdateResult> updateSentFriendRequestsVersion(@NotNull Long userId) {
@@ -217,40 +234,40 @@ public class UserVersionService {
         return updateSpecificVersion(userId, null, UserVersion.Fields.JOINED_GROUPS);
     }
 
-    public Mono<UpdateResult> updateSpecificVersion(@NotNull Long userId, @Nullable ReactiveMongoOperations operations, @NotEmpty String... fields) {
-        return updateSpecificVersion(Collections.singleton(userId), operations, fields);
+    public Mono<UpdateResult> updateSpecificVersion(@NotNull Long userId, @Nullable ClientSession session, @NotEmpty String... fields) {
+        return updateSpecificVersion(Collections.singleton(userId), session, fields);
     }
 
-    public Mono<UpdateResult> updateSpecificVersion(@NotEmpty Set<Long> userIds, @Nullable ReactiveMongoOperations operations, @NotEmpty String... fields) {
+    public Mono<UpdateResult> updateSpecificVersion(@NotEmpty Set<Long> userIds, @Nullable ClientSession session, @NotEmpty String... fields) {
         try {
             AssertUtil.notEmpty(userIds, "userIds");
             AssertUtil.notEmpty(fields, "fields");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).in(userIds));
-        Update update = new Update();
+        Filter filter = Filter.newBuilder()
+                .in(ID_FIELD_NAME, userIds);
         Date now = new Date();
+        Update update = Update.newBuilder();
         for (String field : fields) {
             update.set(field, now);
         }
-        ReactiveMongoOperations mongoOperations = operations != null ? operations : mongoTemplate;
-        return mongoOperations.updateMulti(query, update, UserVersion.class, UserVersion.COLLECTION_NAME);
+        return mongoClient.updateMany(session, UserVersion.class, filter, update);
     }
 
     // Delete
 
     public Mono<DeleteResult> delete(
             @NotEmpty Set<Long> userIds,
-            @Nullable ReactiveMongoOperations operations) {
+            @Nullable ClientSession session) {
         try {
             AssertUtil.notEmpty(userIds, "userIds");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(ID_FIELD_NAME).in(userIds));
-        ReactiveMongoOperations mongoOperations = operations != null ? operations : mongoTemplate;
-        return mongoOperations.remove(query, UserVersion.COLLECTION_NAME);
+        Filter filter = Filter.newBuilder()
+                .in(ID_FIELD_NAME, userIds);
+        return mongoClient.deleteMany(session, UserVersion.class, filter);
     }
 
 }

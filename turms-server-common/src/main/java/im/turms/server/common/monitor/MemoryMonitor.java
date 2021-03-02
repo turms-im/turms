@@ -80,7 +80,7 @@ public class MemoryMonitor {
                     updateUsedMemory();
                     updateMemoryPercentage();
                     if (log.isDebugEnabled()) {
-                        log.debug("Used memory: {}/{}", getMbString(usedMemory), getMbString(TOTAL_MEMORY));
+                        log.debug("Used memory: {}/{}", asMbString(usedMemory), asMbString(TOTAL_MEMORY));
                     }
                 }, 0, 15, TimeUnit.SECONDS);
     }
@@ -102,7 +102,7 @@ public class MemoryMonitor {
                 + MEMORY_BEAN.getNonHeapMemoryUsage().getUsed();
     }
 
-    private String getMbString(long bytes) {
+    private String asMbString(long bytes) {
         return bytes / 1024 / 1024 + "MB";
     }
 

@@ -17,6 +17,7 @@
 
 package im.turms.server.common.cluster.service.discovery;
 
+import com.mongodb.client.model.changestream.FullDocument;
 import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.cluster.node.NodeVersion;
 import im.turms.server.common.cluster.service.ClusterService;
@@ -27,6 +28,8 @@ import im.turms.server.common.cluster.service.config.domain.discovery.Member;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.manager.address.BaseServiceAddressManager;
+import im.turms.server.common.mongo.operation.option.Filter;
+import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.property.env.common.cluster.DiscoveryProperties;
 import im.turms.server.common.util.CollectorUtil;
 import io.netty.util.concurrent.DefaultThreadFactory;
@@ -34,9 +37,6 @@ import io.rsocket.RSocket;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -152,25 +152,13 @@ public class DiscoveryService implements ClusterService {
             String wsAddress = addresses.getWsAddress();
             String tcpAddress = addresses.getTcpAddress();
             String udpAddress = addresses.getUdpAddress();
-            Update update = new Update();
-            if (nodeHost != null) {
-                update.set(Member.Fields.memberHost, nodeHost);
-            }
-            if (metricsApiAddress != null) {
-                update.set(Member.Fields.metricsApiAddress, metricsApiAddress);
-            }
-            if (adminApiAddress != null) {
-                update.set(Member.Fields.adminApiAddress, adminApiAddress);
-            }
-            if (wsAddress != null) {
-                update.set(Member.Fields.wsAddress, wsAddress);
-            }
-            if (tcpAddress != null) {
-                update.set(Member.Fields.tcpAddress, tcpAddress);
-            }
-            if (udpAddress != null) {
-                update.set(Member.Fields.udpAddress, udpAddress);
-            }
+            Update update = Update.newBuilder()
+                    .setIfNotNull(Member.Fields.memberHost, nodeHost)
+                    .setIfNotNull(Member.Fields.metricsApiAddress, metricsApiAddress)
+                    .setIfNotNull(Member.Fields.adminApiAddress, adminApiAddress)
+                    .setIfNotNull(Member.Fields.wsAddress, wsAddress)
+                    .setIfNotNull(Member.Fields.tcpAddress, tcpAddress)
+                    .setIfNotNull(Member.Fields.udpAddress, udpAddress);
             localNodeStatusManager.upsertLocalNodeInfo(update).subscribe();
         });
         this.connectionManager = new ConnectionManager(this, discoveryProperties);
@@ -212,18 +200,18 @@ public class DiscoveryService implements ClusterService {
     }
 
     private Flux<Member> queryMembers() {
-        Criteria criteria = Criteria.where(Member.ID_CLUSTER_ID);
-        Query query = new Query().addCriteria(criteria.is(localNodeStatusManager.getLocalMember().getClusterId()));
-        return sharedConfigService.find(query, Member.class);
+        Filter filter = Filter.newBuilder()
+                .eq(Member.ID_CLUSTER_ID, localNodeStatusManager.getLocalMember().getClusterId());
+        return sharedConfigService.find(Member.class, filter);
     }
 
     private void listenLeadershipChangeEvent() {
-        sharedConfigService.subscribe(Leader.class, true)
+        sharedConfigService.subscribe(Leader.class, FullDocument.UPDATE_LOOKUP)
                 .doOnNext(event -> {
-                    Leader changedLeader = event.getBody();
+                    Leader changedLeader = event.getFullDocument();
                     String clusterId = changedLeader != null
                             ? changedLeader.getClusterId()
-                            : ChangeStreamUtil.getIdAsString(event);
+                            : ChangeStreamUtil.getIdAsString(event.getDocumentKey());
                     if (clusterId.equals(localNodeStatusManager.getLocalMember().getClusterId())) {
                         switch (event.getOperationType()) {
                             case INSERT:
@@ -249,12 +237,12 @@ public class DiscoveryService implements ClusterService {
     }
 
     private void listenMembersChangeEvent() {
-        sharedConfigService.subscribe(Member.class, true)
+        sharedConfigService.subscribe(Member.class, FullDocument.UPDATE_LOOKUP)
                 .doOnNext(event -> {
-                    Member changedMember = event.getBody();
+                    Member changedMember = event.getFullDocument();
                     String clusterId = changedMember != null
                             ? changedMember.getClusterId()
-                            : ChangeStreamUtil.getStringFromId(event, Member.Key.Fields.clusterId);
+                            : ChangeStreamUtil.getStringFromId(event.getDocumentKey(), Member.Key.Fields.clusterId);
                     if (clusterId.equals(localNodeStatusManager.getLocalMember().getClusterId())) {
                         switch (event.getOperationType()) {
                             case INSERT:
@@ -277,7 +265,7 @@ public class DiscoveryService implements ClusterService {
                                         changedMember.getUdpAddress());
                                 break;
                             case DELETE:
-                                String nodeId = ChangeStreamUtil.getStringFromId(event, Member.Key.Fields.nodeId);
+                                String nodeId = ChangeStreamUtil.getStringFromId(event.getDocumentKey(), Member.Key.Fields.nodeId);
                                 Member deletedMember = allKnownMembers.remove(nodeId);
                                 updateOtherActiveConnectedMemberList(false, deletedMember, null);
                                 // Note that we assume that there is no the case:
@@ -382,10 +370,6 @@ public class DiscoveryService implements ClusterService {
         return index != -1 ? index : null;
     }
 
-    public boolean onlyOneMemberInCluster() {
-        return allKnownMembers.size() == 1;
-    }
-
     @Override
     public void stop() {
         localNodeStatusManager.setClosing(true);
@@ -407,10 +391,10 @@ public class DiscoveryService implements ClusterService {
     }
 
     public Mono<Void> unregisterMembers(Set<String> nodeIds) {
-        Query query = new Query()
-                .addCriteria(Criteria.where(Member.ID_CLUSTER_ID).is(getLocalMember().getClusterId()))
-                .addCriteria(Criteria.where(Member.ID_NODE_ID).in(nodeIds));
-        return sharedConfigService.remove(query, Member.class).then();
+        Filter filter = Filter.newBuilder()
+                .eq(Member.ID_CLUSTER_ID, getLocalMember().getClusterId())
+                .in(Member.ID_NODE_ID, nodeIds);
+        return sharedConfigService.remove(Member.class, filter).then();
     }
 
     public Mono<Void> updateMemberInfo(@NotNull String id,
@@ -421,20 +405,14 @@ public class DiscoveryService implements ClusterService {
         if (member == null) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NO_CONTENT));
         }
-        Query query = new Query()
-                .addCriteria(Criteria.where(Member.ID_CLUSTER_ID).is(getLocalMember().getClusterId()))
-                .addCriteria(Criteria.where(Member.ID_NODE_ID).is(id));
-        Update update = new Update();
-        if (isSeed != null) {
-            update.set(Member.Fields.isSeed, isSeed);
-        }
-        if (isLeaderEligible != null) {
-            update.set(Member.Fields.isLeaderEligible, isLeaderEligible);
-        }
-        if (isActive != null) {
-            update.set(Member.Fields.isActive, isActive);
-        }
-        return sharedConfigService.upsert(query, update, member, Member.class);
+        Filter filter = Filter.newBuilder()
+                .eq(Member.ID_CLUSTER_ID, getLocalMember().getClusterId())
+                .eq(Member.ID_NODE_ID, id);
+        Update update = Update.newBuilder()
+                .setIfNotNull(Member.Fields.isSeed, isSeed)
+                .setIfNotNull(Member.Fields.isLeaderEligible, isLeaderEligible)
+                .setIfNotNull(Member.Fields.isActive, isActive);
+        return sharedConfigService.upsert(Member.class, filter, update, member);
     }
 
     // Event

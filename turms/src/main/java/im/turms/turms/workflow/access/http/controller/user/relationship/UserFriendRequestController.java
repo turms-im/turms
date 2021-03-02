@@ -18,7 +18,7 @@
 package im.turms.turms.workflow.access.http.controller.user.relationship;
 
 import im.turms.common.constant.RequestStatus;
-import im.turms.turms.bo.DateRange;
+import im.turms.server.common.bo.common.DateRange;
 import im.turms.turms.workflow.access.http.dto.request.user.AddFriendRequestDTO;
 import im.turms.turms.workflow.access.http.dto.request.user.UpdateFriendRequestDTO;
 import im.turms.turms.workflow.access.http.dto.response.*;

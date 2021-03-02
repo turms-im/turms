@@ -25,7 +25,9 @@ import im.turms.server.common.log4j.AdminApiLogging;
 import im.turms.turms.bo.AdminAction;
 import im.turms.turms.plugin.extension.handler.AdminActionHandler;
 import im.turms.turms.plugin.manager.TurmsPluginManager;
+import im.turms.turms.workflow.dao.MongoDataGenerator;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nullable;
@@ -38,6 +40,7 @@ import java.util.Date;
  */
 @Service
 @Log4j2
+@DependsOn(MongoDataGenerator.BEAN_NAME)
 public class AdminActionLogService {
 
     private final Node node;

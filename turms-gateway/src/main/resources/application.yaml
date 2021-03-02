@@ -61,11 +61,11 @@ spring:
       - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
       - org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration
 management:
-# https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html
-# Prometheus is enabled by default. Uncomment the following lines to disable it.
-#  metrics:
-#    enable:
-#      prometheus: false
+  # https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html
+  # Prometheus is enabled by default. Uncomment the following lines to disable it.
+  #  metrics:
+  #    enable:
+  #      prometheus: false
   endpoints:
     jmx:
       exposure:

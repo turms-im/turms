@@ -17,7 +17,7 @@
 
 package im.turms.server.common.cluster.service.config;
 
-import org.springframework.data.mongodb.core.ChangeStreamEvent;
+import org.bson.BsonDocument;
 
 /**
  * @author James Chen
@@ -27,27 +27,24 @@ public class ChangeStreamUtil {
     private ChangeStreamUtil() {
     }
 
-    public static String getStringFromId(ChangeStreamEvent<?> event, String key) {
-        return event.getRaw()
-                .getDocumentKey()
+    public static String getStringFromId(BsonDocument key, String keyField) {
+        return key
                 .get("_id")
                 .asDocument()
-                .get(key)
+                .get(keyField)
                 .asString()
                 .getValue();
     }
 
-    public static long getIdAsLong(ChangeStreamEvent<?> event) {
-        return event.getRaw()
-                .getDocumentKey()
+    public static long getIdAsLong(BsonDocument key) {
+        return key
                 .get("_id")
                 .asInt64()
                 .getValue();
     }
 
-    public static String getIdAsString(ChangeStreamEvent<?> event) {
-        return event.getRaw()
-                .getDocumentKey()
+    public static String getIdAsString(BsonDocument key) {
+        return key
                 .get("_id")
                 .asString()
                 .getValue();

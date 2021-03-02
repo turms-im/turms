@@ -17,11 +17,11 @@
 
 package im.turms.server.common.cluster.service.config.domain.discovery;
 
+import im.turms.server.common.mongo.entity.annotation.Document;
+import im.turms.server.common.mongo.entity.annotation.Id;
+import im.turms.server.common.mongo.entity.annotation.Indexed;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 

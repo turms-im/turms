@@ -18,7 +18,7 @@
 package im.turms.turms.workflow.access.http.controller.user.relationship;
 
 import com.mongodb.client.result.DeleteResult;
-import im.turms.turms.bo.DateRange;
+import im.turms.server.common.bo.common.DateRange;
 import im.turms.turms.workflow.access.http.dto.request.user.AddRelationshipGroupDTO;
 import im.turms.turms.workflow.access.http.dto.request.user.UpdateRelationshipGroupDTO;
 import im.turms.turms.workflow.access.http.dto.response.*;

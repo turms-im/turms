@@ -17,6 +17,9 @@
 
 package im.turms.server.common.cluster.service.config.domain.property;
 
+import im.turms.server.common.mongo.entity.annotation.Document;
+import im.turms.server.common.mongo.entity.annotation.Id;
+import im.turms.server.common.mongo.entity.annotation.PropertySetter;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.env.gateway.GatewayProperties;
 import im.turms.server.common.property.env.service.ServiceProperties;
@@ -25,10 +28,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
-import org.springframework.data.annotation.AccessType;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
@@ -90,21 +90,22 @@ public class SharedClusterProperties {
         }
     }
 
-    @AccessType(AccessType.Type.PROPERTY)
+    @PropertySetter
     public void setCommonProperties(CommonProperties commonProperties) {
         this.commonProperties = commonProperties;
         tryInitTurmsProperties();
     }
 
-    @AccessType(AccessType.Type.PROPERTY)
+    @PropertySetter
     public void setServiceProperties(ServiceProperties serviceProperties) {
         this.serviceProperties = serviceProperties;
         tryInitTurmsProperties();
     }
 
-    @AccessType(AccessType.Type.PROPERTY)
+    @PropertySetter
     public void setGatewayProperties(GatewayProperties gatewayProperties) {
         this.gatewayProperties = gatewayProperties;
         tryInitTurmsProperties();
     }
+
 }

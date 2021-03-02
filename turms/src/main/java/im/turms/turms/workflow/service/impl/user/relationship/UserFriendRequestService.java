@@ -20,36 +20,36 @@ package im.turms.turms.workflow.service.impl.user.relationship;
 import com.google.protobuf.Int64Value;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import com.mongodb.reactivestreams.client.ClientSession;
 import im.turms.common.constant.RequestStatus;
 import im.turms.common.constant.ResponseAction;
 import im.turms.common.model.bo.user.UserFriendRequestsWithVersion;
 import im.turms.common.util.Validator;
+import im.turms.server.common.bo.common.DateRange;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.manager.TrivialTaskManager;
+import im.turms.server.common.mongo.TurmsMongoClient;
+import im.turms.server.common.mongo.operation.option.Filter;
+import im.turms.server.common.mongo.operation.option.QueryOptions;
+import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.util.AssertUtil;
-import im.turms.turms.bo.DateRange;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.constraint.ValidRequestStatus;
 import im.turms.turms.constraint.ValidResponseAction;
 import im.turms.turms.util.ProtoUtil;
-import im.turms.turms.workflow.dao.builder.QueryBuilder;
-import im.turms.turms.workflow.dao.builder.UpdateBuilder;
+import im.turms.turms.workflow.dao.MongoDataGenerator;
 import im.turms.turms.workflow.dao.domain.user.UserFriendRequest;
 import im.turms.turms.workflow.service.documentation.UsesNonIndexedData;
 import im.turms.turms.workflow.service.impl.user.UserVersionService;
 import im.turms.turms.workflow.service.util.DomainConstraintUtil;
 import im.turms.turms.workflow.service.util.RequestStatusUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.mongodb.core.ReactiveMongoOperations;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -67,22 +67,23 @@ import java.util.Set;
  * @author James Chen
  */
 @Service
+@DependsOn(MongoDataGenerator.BEAN_NAME)
 public class UserFriendRequestService {
 
     private final Node node;
-    private final ReactiveMongoTemplate mongoTemplate;
+    private final TurmsMongoClient mongoClient;
     private final UserVersionService userVersionService;
     private final UserRelationshipService userRelationshipService;
 
     public UserFriendRequestService(
             Node node,
             TurmsPropertiesManager turmsPropertiesManager,
-            @Qualifier("userMongoTemplate") ReactiveMongoTemplate mongoTemplate,
+            @Qualifier("userMongoClient") TurmsMongoClient mongoClient,
             UserVersionService userVersionService,
             UserRelationshipService userRelationshipService,
             TrivialTaskManager taskManager) {
         this.node = node;
-        this.mongoTemplate = mongoTemplate;
+        this.mongoClient = mongoClient;
         this.userVersionService = userVersionService;
         this.userRelationshipService = userRelationshipService;
 
@@ -104,9 +105,9 @@ public class UserFriendRequestService {
 
     public Mono<Void> removeAllExpiredFriendRequests() {
         Date now = new Date();
-        Query query = new Query()
-                .addCriteria(Criteria.where(UserFriendRequest.Fields.EXPIRATION_DATE).lt(now));
-        return mongoTemplate.remove(query, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME).then();
+        Filter filter = Filter.newBuilder()
+                .lt(UserFriendRequest.Fields.EXPIRATION_DATE, now);
+        return mongoClient.deleteMany(UserFriendRequest.class, filter).then();
     }
 
     /**
@@ -117,11 +118,12 @@ public class UserFriendRequestService {
     @UsesNonIndexedData
     public Mono<UpdateResult> updateExpiredRequestsStatus() {
         Date now = new Date();
-        Query query = new Query()
-                .addCriteria(Criteria.where(UserFriendRequest.Fields.EXPIRATION_DATE).lt(now))
-                .addCriteria(Criteria.where(UserFriendRequest.Fields.STATUS).is(RequestStatus.PENDING));
-        Update update = new Update().set(UserFriendRequest.Fields.STATUS, RequestStatus.EXPIRED);
-        return mongoTemplate.updateMulti(query, update, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME);
+        Filter filter = Filter.newBuilder()
+                .lt(UserFriendRequest.Fields.EXPIRATION_DATE, now)
+                .eq(UserFriendRequest.Fields.STATUS, RequestStatus.PENDING);
+        Update update = Update.newBuilder()
+                .set(UserFriendRequest.Fields.STATUS, RequestStatus.EXPIRED);
+        return mongoClient.updateMany(UserFriendRequest.class, filter, update);
     }
 
     /**
@@ -140,13 +142,13 @@ public class UserFriendRequestService {
             return Mono.error(e);
         }
         Date now = new Date();
-        Query query = new Query()
-                .addCriteria(Criteria.where(UserFriendRequest.Fields.REQUESTER_ID).is(requesterId))
-                .addCriteria(Criteria.where(UserFriendRequest.Fields.RECIPIENT_ID).is(recipientId))
-                .addCriteria(Criteria.where(UserFriendRequest.Fields.STATUS).is(RequestStatus.PENDING))
-                .addCriteria(Criteria.where(UserFriendRequest.Fields.CREATION_DATE).gt(creationDateAfter))
-                .addCriteria(Criteria.where(UserFriendRequest.Fields.EXPIRATION_DATE).gt(now));
-        return mongoTemplate.exists(query, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME);
+        Filter filter = Filter.newBuilder()
+                .eq(UserFriendRequest.Fields.REQUESTER_ID, requesterId)
+                .eq(UserFriendRequest.Fields.RECIPIENT_ID, recipientId)
+                .eq(UserFriendRequest.Fields.STATUS, RequestStatus.PENDING)
+                .gt(UserFriendRequest.Fields.CREATION_DATE, creationDateAfter)
+                .gt(UserFriendRequest.Fields.EXPIRATION_DATE, now);
+        return mongoClient.exists(UserFriendRequest.class, filter);
     }
 
     /**
@@ -165,13 +167,13 @@ public class UserFriendRequestService {
             return Mono.error(e);
         }
         // Do not need to check expirationDate because both PENDING status or EXPIRED status has been used
-        Query query = new Query()
-                .addCriteria(Criteria.where(UserFriendRequest.Fields.REQUESTER_ID).is(requesterId))
-                .addCriteria(Criteria.where(UserFriendRequest.Fields.RECIPIENT_ID).is(recipientId))
-                .addCriteria(Criteria.where(UserFriendRequest.Fields.CREATION_DATE).gt(creationDateAfter))
-                .addCriteria(Criteria.where(UserFriendRequest.Fields.STATUS)
-                        .in(RequestStatus.PENDING, RequestStatus.DECLINED, RequestStatus.IGNORED, RequestStatus.EXPIRED));
-        return mongoTemplate.exists(query, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME);
+        Filter filter = Filter.newBuilder()
+                .eq(UserFriendRequest.Fields.REQUESTER_ID, requesterId)
+                .eq(UserFriendRequest.Fields.RECIPIENT_ID, recipientId)
+                .gt(UserFriendRequest.Fields.CREATION_DATE, creationDateAfter)
+                .in(UserFriendRequest.Fields.STATUS,
+                        RequestStatus.PENDING, RequestStatus.DECLINED, RequestStatus.IGNORED, RequestStatus.EXPIRED);
+        return mongoClient.exists(UserFriendRequest.class, filter);
     }
 
     public Mono<UserFriendRequest> createFriendRequest(
@@ -217,10 +219,10 @@ public class UserFriendRequestService {
         }
         UserFriendRequest userFriendRequest = new UserFriendRequest(id, content, status, reason, creationDate,
                 expirationDate, responseDate, requesterId, recipientId);
-        return mongoTemplate.insert(userFriendRequest, UserFriendRequest.COLLECTION_NAME)
-                .flatMap(request -> userVersionService.updateReceivedFriendRequestsVersion(recipientId).onErrorResume(t -> Mono.empty())
+        return mongoClient.insert(userFriendRequest)
+                .flatMap(unused -> userVersionService.updateReceivedFriendRequestsVersion(recipientId).onErrorResume(t -> Mono.empty())
                         .then(userVersionService.updateSentFriendRequestsVersion(requesterId).onErrorResume(t -> Mono.empty()))
-                        .thenReturn(request));
+                ).thenReturn(userFriendRequest);
     }
 
     public Mono<UserFriendRequest> authAndCreateFriendRequest(
@@ -268,7 +270,7 @@ public class UserFriendRequestService {
             @NotNull Long requestId,
             @NotNull @ValidRequestStatus RequestStatus requestStatus,
             @Nullable String reason,
-            @Nullable ReactiveMongoOperations operations) {
+            @Nullable ClientSession session) {
         try {
             AssertUtil.notNull(requestId, "requestId");
             AssertUtil.notNull(requestStatus, "requestStatus");
@@ -277,17 +279,14 @@ public class UserFriendRequestService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query()
-                .addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(requestId))
-                .addCriteria(Criteria.where(UserFriendRequest.Fields.STATUS).is(RequestStatus.PENDING));
-        Update update = new Update()
+        Filter filter = Filter.newBuilder()
+                .eq(DaoConstant.ID_FIELD_NAME, requestId)
+                .eq(UserFriendRequest.Fields.STATUS, RequestStatus.PENDING);
+        Update update = Update.newBuilder()
                 .set(UserFriendRequest.Fields.STATUS, requestStatus)
-                .unset(UserFriendRequest.Fields.EXPIRATION_DATE);
-        if (reason != null) {
-            update.set(UserFriendRequest.Fields.REASON, reason);
-        }
-        ReactiveMongoOperations mongoOperations = operations != null ? operations : mongoTemplate;
-        return mongoOperations.updateFirst(query, update, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME)
+                .unset(UserFriendRequest.Fields.EXPIRATION_DATE)
+                .setIfNotNull(UserFriendRequest.Fields.REASON, reason);
+        return mongoClient.updateOne(session, UserFriendRequest.class, filter, update)
                 .flatMap(result -> result.getModifiedCount() > 0
                         ? queryRecipientId(requestId)
                         .flatMap(recipientId -> userVersionService.updateSentFriendRequestsVersion(recipientId)
@@ -319,18 +318,18 @@ public class UserFriendRequestService {
         if (Validator.areAllNull(requesterId, recipientId, content, status, reason, creationDate, responseDate, expirationDate)) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
-        Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).in(requestIds));
-        Update update = UpdateBuilder
+        Filter filter = Filter.newBuilder()
+                .in(DaoConstant.ID_FIELD_NAME, requestIds);
+        Update update = Update
                 .newBuilder()
                 .setIfNotNull(UserFriendRequest.Fields.REQUESTER_ID, requesterId)
                 .setIfNotNull(UserFriendRequest.Fields.RECIPIENT_ID, recipientId)
                 .setIfNotNull(UserFriendRequest.Fields.CONTENT, content)
                 .setIfNotNull(UserFriendRequest.Fields.REASON, reason)
                 .setIfNotNull(UserFriendRequest.Fields.CREATION_DATE, creationDate)
-                .setIfNotNull(UserFriendRequest.Fields.EXPIRATION_DATE, expirationDate)
-                .build();
+                .setIfNotNull(UserFriendRequest.Fields.EXPIRATION_DATE, expirationDate);
         RequestStatusUtil.updateResponseDateBasedOnStatus(update, status, new Date());
-        return mongoTemplate.updateMulti(query, update, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME);
+        return mongoClient.updateMany(UserFriendRequest.class, filter, update);
     }
 
     public Mono<Long> queryRecipientId(@NotNull Long requestId) {
@@ -339,9 +338,11 @@ public class UserFriendRequestService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(requestId));
-        query.fields().include(UserFriendRequest.Fields.RECIPIENT_ID);
-        return mongoTemplate.findOne(query, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME)
+        Filter filter = Filter.newBuilder()
+                .eq(DaoConstant.ID_FIELD_NAME, requestId);
+        QueryOptions options = QueryOptions.newBuilder()
+                .include(UserFriendRequest.Fields.RECIPIENT_ID);
+        return mongoClient.findOne(UserFriendRequest.class, filter, options)
                 .map(UserFriendRequest::getRecipientId);
     }
 
@@ -351,11 +352,12 @@ public class UserFriendRequestService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Query query = new Query().addCriteria(Criteria.where(DaoConstant.ID_FIELD_NAME).is(requestId));
-        query.fields()
-                .include(UserFriendRequest.Fields.REQUESTER_ID)
-                .include(UserFriendRequest.Fields.RECIPIENT_ID);
-        return mongoTemplate.findOne(query, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME);
+        Filter filter = Filter.newBuilder()
+                .eq(DaoConstant.ID_FIELD_NAME, requestId);
+        QueryOptions options = QueryOptions.newBuilder()
+                .include(UserFriendRequest.Fields.REQUESTER_ID,
+                        UserFriendRequest.Fields.RECIPIENT_ID);
+        return mongoClient.findOne(UserFriendRequest.class, filter, options);
     }
 
     public Mono<Void> handleFriendRequest(
@@ -378,12 +380,10 @@ public class UserFriendRequestService {
                     }
                     switch (action) {
                         case ACCEPT:
-                            return mongoTemplate.inTransaction()
-                                    .execute(operations -> updatePendingFriendRequestStatus(friendRequestId, RequestStatus.ACCEPTED, reason, operations)
-                                            .then(userRelationshipService.friendTwoUsers(request.getRequesterId(), requesterId, operations))
-                                            .then())
-                                    .retryWhen(DaoConstant.TRANSACTION_RETRY)
-                                    .singleOrEmpty();
+                            return mongoClient.inTransaction(session -> updatePendingFriendRequestStatus(friendRequestId, RequestStatus.ACCEPTED, reason, session)
+                                    .then(userRelationshipService.friendTwoUsers(request.getRequesterId(), requesterId, session))
+                                    .then())
+                                    .retryWhen(DaoConstant.TRANSACTION_RETRY);
                         case IGNORE:
                             return updatePendingFriendRequestStatus(friendRequestId, RequestStatus.IGNORED, reason, null)
                                     .then();
@@ -436,9 +436,9 @@ public class UserFriendRequestService {
         } catch (TurmsBusinessException e) {
             return Flux.error(e);
         }
-        Query query = new Query()
-                .addCriteria(Criteria.where(UserFriendRequest.Fields.RECIPIENT_ID).is(recipientId));
-        return queryExpirableData(query);
+        Filter filter = Filter.newBuilder()
+                .eq(UserFriendRequest.Fields.RECIPIENT_ID, recipientId);
+        return queryExpirableData(filter);
     }
 
     @UsesNonIndexedData
@@ -448,13 +448,13 @@ public class UserFriendRequestService {
         } catch (TurmsBusinessException e) {
             return Flux.error(e);
         }
-        Query query = new Query()
-                .addCriteria(Criteria.where(UserFriendRequest.Fields.REQUESTER_ID).is(requesterId));
-        return queryExpirableData(query);
+        Filter filter = Filter.newBuilder()
+                .eq(UserFriendRequest.Fields.REQUESTER_ID, requesterId);
+        return queryExpirableData(filter);
     }
 
-    private Flux<UserFriendRequest> queryExpirableData(Query query) {
-        return mongoTemplate.find(query, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME)
+    private Flux<UserFriendRequest> queryExpirableData(Filter filter) {
+        return mongoClient.findMany(UserFriendRequest.class, filter)
                 .map(friendRequest -> {
                     Date expirationDate = friendRequest.getExpirationDate();
                     boolean isExpired = expirationDate != null
@@ -467,11 +467,10 @@ public class UserFriendRequestService {
     }
 
     public Mono<DeleteResult> deleteFriendRequests(@Nullable Set<Long> ids) {
-        Query query = QueryBuilder
+        Filter filter = Filter
                 .newBuilder()
-                .addInIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
-                .buildQuery();
-        return mongoTemplate.remove(query, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME);
+                .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids);
+        return mongoClient.deleteMany(UserFriendRequest.class, filter);
     }
 
     public Flux<UserFriendRequest> queryFriendRequests(
@@ -484,17 +483,17 @@ public class UserFriendRequestService {
             @Nullable DateRange expirationDateRange,
             @Nullable Integer page,
             @Nullable Integer size) {
-        Query query = QueryBuilder
-                .newBuilder()
-                .addInIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
-                .addInIfNotNull(UserFriendRequest.Fields.REQUESTER_ID, requesterIds)
-                .addInIfNotNull(UserFriendRequest.Fields.RECIPIENT_ID, recipientIds)
-                .addInIfNotNull(UserFriendRequest.Fields.STATUS, statuses)
+        Filter filter = Filter.newBuilder()
+                .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
+                .inIfNotNull(UserFriendRequest.Fields.REQUESTER_ID, requesterIds)
+                .inIfNotNull(UserFriendRequest.Fields.RECIPIENT_ID, recipientIds)
+                .inIfNotNull(UserFriendRequest.Fields.STATUS, statuses)
                 .addBetweenIfNotNull(UserFriendRequest.Fields.CREATION_DATE, creationDateRange)
                 .addBetweenIfNotNull(UserFriendRequest.Fields.RESPONSE_DATE, responseDateRange)
-                .addBetweenIfNotNull(UserFriendRequest.Fields.EXPIRATION_DATE, expirationDateRange)
+                .addBetweenIfNotNull(UserFriendRequest.Fields.EXPIRATION_DATE, expirationDateRange);
+        QueryOptions options = QueryOptions.newBuilder()
                 .paginateIfNotNull(page, size);
-        return mongoTemplate.find(query, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME);
+        return mongoClient.findMany(UserFriendRequest.class, filter, options);
     }
 
     public Mono<Long> countFriendRequests(
@@ -505,17 +504,16 @@ public class UserFriendRequestService {
             @Nullable DateRange creationDateRange,
             @Nullable DateRange responseDateRange,
             @Nullable DateRange expirationDateRange) {
-        Query query = QueryBuilder
+        Filter filter = Filter
                 .newBuilder()
-                .addInIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
-                .addInIfNotNull(UserFriendRequest.Fields.REQUESTER_ID, requesterIds)
-                .addInIfNotNull(UserFriendRequest.Fields.RECIPIENT_ID, recipientIds)
-                .addInIfNotNull(UserFriendRequest.Fields.STATUS, statuses)
+                .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
+                .inIfNotNull(UserFriendRequest.Fields.REQUESTER_ID, requesterIds)
+                .inIfNotNull(UserFriendRequest.Fields.RECIPIENT_ID, recipientIds)
+                .inIfNotNull(UserFriendRequest.Fields.STATUS, statuses)
                 .addBetweenIfNotNull(UserFriendRequest.Fields.CREATION_DATE, creationDateRange)
                 .addBetweenIfNotNull(UserFriendRequest.Fields.RESPONSE_DATE, responseDateRange)
-                .addBetweenIfNotNull(UserFriendRequest.Fields.EXPIRATION_DATE, expirationDateRange)
-                .buildQuery();
-        return mongoTemplate.count(query, UserFriendRequest.class, UserFriendRequest.COLLECTION_NAME);
+                .addBetweenIfNotNull(UserFriendRequest.Fields.EXPIRATION_DATE, expirationDateRange);
+        return mongoClient.count(UserFriendRequest.class, filter);
     }
 
     private void validFriendRequestContentLength(@Nullable String content) {
