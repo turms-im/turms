@@ -165,6 +165,10 @@ public class ConversationService {
         return upsertPrivateConversationsReadDate(Set.of(new PrivateConversation.Key(ownerId, targetId)), readDate);
     }
 
+    /**
+     * @throws com.mongodb.DuplicateKeyException if {@code readDate} isn't after the read date in DB
+     *                                           when "isAllowMoveReadDateForward" is enabled
+     */
     public Mono<Void> upsertPrivateConversationsReadDate(@NotNull Set<PrivateConversation.Key> keys,
                                                          @Nullable @PastOrPresent Date readDate) {
         try {
@@ -179,9 +183,8 @@ public class ConversationService {
         Filter filter = Filter.newBuilder()
                 .in(DaoConstant.ID_FIELD_NAME, keys);
         if (!node.getSharedProperties().getService().getConversation().getReadReceipt().isAllowMoveReadDateForward()) {
-            // TODO: Fix duplicate key error
-//            filter.or(Filter.newBuilder().eq(PrivateConversation.Fields.READ_DATE, null),
-//                    Filter.newBuilder().eq(PrivateConversation.Fields.READ_DATE, readDate));
+            filter.or(Filter.newBuilder().eq(PrivateConversation.Fields.READ_DATE, null),
+                    Filter.newBuilder().lt(PrivateConversation.Fields.READ_DATE, readDate));
         }
         Update update = Update.newBuilder()
                 .set(PrivateConversation.Fields.READ_DATE, readDate);
