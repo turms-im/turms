@@ -18,6 +18,7 @@
 package im.turms.server.common.mongo.operation;
 
 import com.mongodb.ClientSessionOptions;
+import com.mongodb.TransactionOptions;
 import com.mongodb.client.model.*;
 import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import com.mongodb.client.model.changestream.FullDocument;
@@ -61,18 +62,28 @@ import java.util.stream.Collectors;
 @Log4j2
 public class TurmsMongoOperations implements MongoOperationsSupport {
 
-    private static final ClientSessionOptions DEFAULT_SESSION_OPTIONS = ClientSessionOptions.builder().build();
     private static final EncoderContext DEFAULT_ENCODER_CONTEXT = EncoderContext.builder().build();
+
+    private static final BsonDocument ID_ONLY = new BsonDocument("_id", BsonPool.BSON_INT32_1);
+    private static final Filter FILTER_ALL = Filter.newBuilder();
+    private static final BsonDocument FILTER_ALL_DOCUMENT = new BsonDocument();
+    private static final BsonDocument EMPTY_FILTER = FILTER_ALL_DOCUMENT;
+
+    /**
+     * Session
+     */
+    private static final ClientSessionOptions DEFAULT_SESSION_OPTIONS = ClientSessionOptions.builder().build();
+    private static final TransactionOptions DEFAULT_TRANSACTION_OPTIONS = TransactionOptions.builder().build();
+
+    /**
+     * CRUD
+     */
     private static final UpdateOptions DEFAULT_UPDATE_OPTIONS = new UpdateOptions();
     private static final DeleteOptions DEFAULT_DELETE_OPTIONS = new DeleteOptions();
     private static final UpdateOptions DEFAULT_UPSERT_OPTIONS = new UpdateOptions().upsert(true);
     private static final CountOptions DEFAULT_COUNT_OPTIONS = new CountOptions();
     private static final InsertOneOptions DEFAULT_INSERT_ONE_OPTIONS = new InsertOneOptions();
     private static final InsertManyOptions DEFAULT_INSERT_MANY_OPTIONS = new InsertManyOptions();
-    private static final Bson ID_ONLY = new BsonDocument("_id", BsonPool.BSON_INT32_1);
-    private static final Filter FILTER_ALL = Filter.newBuilder();
-    private static final BsonDocument FILTER_ALL_DOCUMENT = new BsonDocument();
-    private static final BsonDocument EMPTY_FILTER = FILTER_ALL_DOCUMENT;
 
     private final MongoContext context;
     private final MongoExceptionTranslator translator = new MongoExceptionTranslator();
@@ -401,10 +412,13 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
      */
 
     @Override
-    public <T> Mono<T> inTransaction(Function<ClientSession, Mono<T>> execute) {
+    public <T> Mono<T> inTransaction(Function<ClientSession, Mono<T>> action) {
         return Mono.usingWhen(
                 context.getClient().startSession(DEFAULT_SESSION_OPTIONS),
-                execute,
+                session -> {
+                    session.startTransaction(DEFAULT_TRANSACTION_OPTIONS);
+                    return action.apply(session);
+                },
                 ClientSession::commitTransaction,
                 (session, t) -> session.abortTransaction(),
                 ClientSession::commitTransaction);
