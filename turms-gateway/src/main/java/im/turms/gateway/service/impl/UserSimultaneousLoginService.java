@@ -23,7 +23,6 @@ import com.google.common.collect.SetMultimap;
 import im.turms.common.constant.DeviceType;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constraint.ValidDeviceType;
-import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.constant.LoginConflictStrategy;
 import im.turms.server.common.property.constant.SimultaneousLoginStrategy;
 import im.turms.server.common.util.DeviceTypeUtil;
@@ -51,15 +50,13 @@ public class UserSimultaneousLoginService {
      */
     private Set<DeviceType> forbiddenDeviceTypes;
 
-    public UserSimultaneousLoginService(
-            Node node,
-            TurmsPropertiesManager turmsPropertiesManager) {
+    public UserSimultaneousLoginService(Node node) {
         this.node = node;
         applyStrategy(node.getSharedProperties()
                 .getGateway()
                 .getSimultaneousLogin()
                 .getStrategy());
-        turmsPropertiesManager.addListeners(turmsProperties ->
+        node.addPropertiesChangeListener(turmsProperties ->
                 applyStrategy(turmsProperties.getGateway().getSimultaneousLogin().getStrategy()));
     }
 

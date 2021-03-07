@@ -19,6 +19,7 @@ package im.turms.server.common.property.env.gateway;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.property.metadata.annotation.Description;
+import im.turms.server.common.property.metadata.annotation.GlobalProperty;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
 import lombok.Data;
 
@@ -30,16 +31,19 @@ public class LogProperties {
 
     // User
 
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to log user login action")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private boolean logUserLoginAction = true;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to log user logout action")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private boolean logUserLogoutAction = true;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to log user location")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private boolean logUserLocation = true;
 
 }

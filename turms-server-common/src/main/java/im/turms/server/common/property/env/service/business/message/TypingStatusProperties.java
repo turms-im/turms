@@ -19,6 +19,7 @@ package im.turms.server.common.property.env.service.business.message;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.property.metadata.annotation.Description;
+import im.turms.server.common.property.metadata.annotation.GlobalProperty;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
 import lombok.Data;
 
@@ -28,8 +29,9 @@ import lombok.Data;
 @Data
 public class TypingStatusProperties {
 
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to notify users of typing statuses sent by other users")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     boolean enabled = true;
 
 }

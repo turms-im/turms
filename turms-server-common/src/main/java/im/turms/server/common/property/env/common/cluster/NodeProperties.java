@@ -38,7 +38,7 @@ public class NodeProperties {
     private boolean activeByDefault = true;
 
     @Description("Only works when it's a service node")
-    private boolean isLeaderEligible = true;
+    private boolean leaderEligible = true;
 
     @Data
     public static class NetworkProperties {

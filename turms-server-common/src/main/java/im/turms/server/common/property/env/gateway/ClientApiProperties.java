@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.factory.NotificationFactory;
 import im.turms.server.common.property.env.common.ClientApiLoggingProperties;
 import im.turms.server.common.property.metadata.annotation.Description;
+import im.turms.server.common.property.metadata.annotation.GlobalProperty;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
 import lombok.Data;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
@@ -34,12 +35,11 @@ import javax.validation.constraints.Min;
 @Data
 public class ClientApiProperties {
 
-    /**
-     * If 0, there is no debounce.
-     * Better set the same value as client's for a better UX.
-     */
+    @Description("The minimum allowed interval between client requests. " +
+            "If 0, there is no debounce. " +
+            "It's better set the same value as client's for a better UX.")
+    @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    @Description("The minimum allowed interval between client requests")
     @Min(0)
     private int minClientRequestIntervalMillis = 0;
 

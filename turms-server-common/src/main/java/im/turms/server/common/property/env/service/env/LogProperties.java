@@ -19,6 +19,7 @@ package im.turms.server.common.property.env.service.env;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.property.metadata.annotation.Description;
+import im.turms.server.common.property.metadata.annotation.GlobalProperty;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
 import lombok.Data;
 
@@ -30,22 +31,26 @@ public class LogProperties {
 
     // Admin
 
-    @JsonView(MutablePropertiesView.class)
     @Description("The destination of the logs of admin action")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private boolean logAdminAction = true;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to log the parameters of requests")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private boolean logAdminRequestParams = true;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to log the body of requests. Better log the body of requests by monitor systems (e.g. Nginx, AWS)")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private boolean logAdminRequestBody = false;
 
     // User
 
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to log user location")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private boolean logUserLocation = true;
 
 }

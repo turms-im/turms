@@ -20,6 +20,7 @@ package im.turms.server.common.property.env.service.business.activity;
 import im.turms.server.common.constant.CronConstant;
 import im.turms.server.common.constraint.ValidCron;
 import im.turms.server.common.property.metadata.annotation.Description;
+import im.turms.server.common.property.metadata.annotation.GlobalProperty;
 import lombok.Data;
 
 /**
@@ -33,6 +34,7 @@ public class StatisticsProperties {
     private String onlineUsersNumberLoggingCron = CronConstant.DEFAULT_ONLINE_USERS_NUMBER_LOGGING_CRON;
 
     @Description("Whether to log online users number")
+    @GlobalProperty
     private boolean logOnlineUsersNumber = true;
 
 }

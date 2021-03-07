@@ -22,6 +22,7 @@ import im.turms.server.common.constant.CronConstant;
 import im.turms.server.common.constraint.ValidCron;
 import im.turms.server.common.property.constant.TimeType;
 import im.turms.server.common.property.metadata.annotation.Description;
+import im.turms.server.common.property.metadata.annotation.GlobalProperty;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
 import lombok.Data;
 
@@ -33,31 +34,37 @@ import javax.validation.constraints.Min;
 @Data
 public class MessageProperties {
 
-    @JsonView(MutablePropertiesView.class)
     @Description("The time type for the delivery time of message")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private TimeType timeType = TimeType.LOCAL_SERVER_TIME;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to check if the target (recipient or group) of a message is active and not deleted")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private boolean checkIfTargetActiveAndNotDeleted = true;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("The maximum allowed length for the text of a message")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     @Min(0)
     private int maxTextLimit = 500;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("The maximum allowed size for the records of a message")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     @Min(0)
     private int maxRecordsSizeBytes = 15 * 1024 * 1024;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to persist messages in databases.\n" +
             "Note: If false, senders will not get the message ID after the message has sent and cannot edit it")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private boolean messagePersistent = true;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to persist the records of messages in databases")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private boolean recordsPersistent = false;
 
     @JsonView(MutablePropertiesView.class)
@@ -66,46 +73,51 @@ public class MessageProperties {
     private int messageTimeToLiveHours = 30 * 24;
 
     @Description("Clean the expired messages when the cron expression is triggered")
+    @GlobalProperty
     @ValidCron
     private String expiredMessagesCheckerCron = CronConstant.DEFAULT_EXPIRED_MESSAGES_CHECKER_CRON;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to delete messages logically by default")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private boolean deleteMessageLogicallyByDefault = true;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to allow users to send messages to a stranger")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private boolean allowSendingMessagesToStranger = true;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to allow users to send messages to themselves")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private boolean allowSendingMessagesToOneself = false;
 
-    @JsonView(MutablePropertiesView.class)
-    @Description("Whether to delete private messages after acknowledged by the recipient")
-    private boolean deletePrivateMessageAfterAcknowledged = false;
-
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to allow users to recall messages.\n" +
             "Note: To recall messages, more system resources are needed")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private boolean allowRecallingMessage = true;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to allow the sender of a message to edit the message")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private boolean allowEditingMessageBySender = true;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("The available recall duration for the sender of a message")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     @Min(0)
     private int availableRecallDurationSeconds = 60 * 5;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("The default available messages number with the \"total\" field that users request")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     @Min(0)
     private int defaultAvailableMessagesNumberWithTotal = 1;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to send the message to the other sender's online devices when sending a message")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private boolean sendMessageToOtherSenderOnlineDevices = true;
 
     @Description("The maximum size of the cache of sent messages.")

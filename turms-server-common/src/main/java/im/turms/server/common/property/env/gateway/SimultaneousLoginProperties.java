@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.property.constant.LoginConflictStrategy;
 import im.turms.server.common.property.constant.SimultaneousLoginStrategy;
 import im.turms.server.common.property.metadata.annotation.Description;
+import im.turms.server.common.property.metadata.annotation.GlobalProperty;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
 import lombok.Data;
 
@@ -31,20 +32,24 @@ import lombok.Data;
 @Data
 public class SimultaneousLoginProperties {
 
-    @JsonView(MutablePropertiesView.class)
     @Description("The simultaneous login strategy is used to control which devices can be online at the same time")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private SimultaneousLoginStrategy strategy = SimultaneousLoginStrategy.ALLOW_ONE_DEVICE_OF_EACH_DEVICE_TYPE_ONLINE;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("The login conflict strategy is used for servers to know how to behave if a device is logging in when there are conflicted and logged-in devices")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private LoginConflictStrategy loginConflictStrategy = LoginConflictStrategy.DISCONNECT_LOGGED_IN_DEVICES;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to allow the devices of DeviceType.UNKNOWN to login")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private boolean allowDeviceTypeUnknownLogin = true;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to allow the devices of DeviceType.OTHERS to login")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private boolean allowDeviceTypeOthersLogin = true;
 
 }

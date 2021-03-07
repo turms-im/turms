@@ -29,6 +29,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.metadata.annotation.Description;
+import im.turms.server.common.property.metadata.annotation.GlobalProperty;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.yaml.snakeyaml.DumperOptions;
@@ -51,11 +52,12 @@ import java.util.stream.Collectors;
 public class PropertiesUtil {
 
     private static final String PACKAGE_NAME = TurmsProperties.class.getPackageName();
-    private static final String FIELD_NAME_TYPE = "type";
     private static final String FIELD_NAME_DEPRECATED = "deprecated";
-    private static final String FIELD_NAME_MUTABLE = "mutable";
     private static final String FIELD_NAME_DESC = "desc";
+    private static final String FIELD_NAME_GLOBAL = "global";
+    private static final String FIELD_NAME_MUTABLE = "mutable";
     private static final String FIELD_NAME_OPTIONS = "options";
+    private static final String FIELD_NAME_TYPE = "type";
 
     public static final ObjectWriter MUTABLE_PROPERTIES_WRITER = new ObjectMapper()
             .setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
@@ -154,6 +156,7 @@ public class PropertiesUtil {
                     HashMap<Object, Object> fieldMap = Maps.newHashMapWithExpectedSize(5);
                     fieldMap.put(FIELD_NAME_TYPE, "enum");
                     fieldMap.put(FIELD_NAME_DEPRECATED, field.isAnnotationPresent(Deprecated.class));
+                    fieldMap.put(FIELD_NAME_GLOBAL, field.isAnnotationPresent(GlobalProperty.class));
                     fieldMap.put(FIELD_NAME_MUTABLE, isMutableProperty(field));
                     fieldMap.put(FIELD_NAME_OPTIONS, field.getType().getEnumConstants());
                     if (field.isAnnotationPresent(Description.class)) {

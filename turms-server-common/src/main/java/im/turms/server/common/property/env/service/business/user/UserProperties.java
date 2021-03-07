@@ -19,6 +19,7 @@ package im.turms.server.common.property.env.service.business.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.property.metadata.annotation.Description;
+import im.turms.server.common.property.metadata.annotation.GlobalProperty;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
 import lombok.Data;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
@@ -33,19 +34,24 @@ public class UserProperties {
     @NestedConfigurationProperty
     private FriendRequestProperties friendRequest = new FriendRequestProperties();
 
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to respond to client with the OFFLINE status if a user is in INVISIBLE status")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private boolean respondOfflineIfInvisible = false;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to delete the two-sided relationships when a user requests to delete a relationship")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private boolean deleteTwoSidedRelationships = false;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to delete a user logically")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private boolean deleteUserLogically = true;
 
     @Description("Whether to activate a user when added by default")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private boolean activateUserWhenAdded = true;
 
 }

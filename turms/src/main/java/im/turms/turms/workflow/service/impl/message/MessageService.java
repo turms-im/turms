@@ -97,7 +97,7 @@ public class MessageService {
     private final TurmsPluginManager turmsPluginManager;
     private final boolean pluginEnabled;
     @Getter
-    private final TimeType timeType;
+    private TimeType timeType;
     private final Cache<Long, Message> sentMessageCache;
 
     private final Counter sentMessageCounter;
@@ -122,7 +122,7 @@ public class MessageService {
         this.outboundMessageService = outboundMessageService;
         this.turmsPluginManager = turmsPluginManager;
         pluginEnabled = node.getSharedProperties().getPlugin().isEnabled();
-        timeType = turmsPropertiesManager.getLocalProperties().getService().getMessage().getTimeType();
+        timeType = node.getSharedProperties().getService().getMessage().getTimeType();
         int relayedMessageCacheMaxSize = turmsPropertiesManager.getLocalProperties().getService().getMessage().getSentMessageCacheMaxSize();
         if (relayedMessageCacheMaxSize > 0 && turmsPropertiesManager.getLocalProperties().getService().getMessage().isMessagePersistent()) {
             this.sentMessageCache = Caffeine
@@ -133,8 +133,8 @@ public class MessageService {
         } else {
             sentMessageCache = null;
         }
-
         sentMessageCounter = metricsService.getRegistry().counter(SENT_MESSAGES_COUNTER_NAME);
+        node.addPropertiesChangeListener(properties -> timeType = properties.getService().getMessage().getTimeType());
         // Set up the checker for expired messages join requests
         taskManager.reschedule(
                 "messagesChecker",

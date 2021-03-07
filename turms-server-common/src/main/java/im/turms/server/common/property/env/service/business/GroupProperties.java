@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.constant.CronConstant;
 import im.turms.server.common.constraint.ValidCron;
 import im.turms.server.common.property.metadata.annotation.Description;
+import im.turms.server.common.property.metadata.annotation.GlobalProperty;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
 import lombok.Data;
 
@@ -32,44 +33,53 @@ import javax.validation.constraints.Min;
 @Data
 public class GroupProperties {
 
-    @JsonView(MutablePropertiesView.class)
     @Description("The maximum allowed length for the text of a group invitation")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     @Min(0)
     private int groupInvitationContentLimit = 200;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("A group invitation will become expired after the TTL has elapsed. Cannot be infinite for performance reason")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     @Min(1)
     private int groupInvitationTimeToLiveHours = 30 * 24;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("The maximum allowed length for the text of a group join request")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     @Min(0)
     private int groupJoinRequestContentLimit = 200;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("A group join request will become expired after the TTL has elapsed. Cannot be infinite for performance reason")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     @Min(1)
     private int groupJoinRequestTimeToLiveHours = 30 * 24;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to allow users to recall the join requests sent by themselves")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private boolean allowRecallingJoinRequestSentByOneself = false;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to allow the owner and managers of a group to recall pending group invitations")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private boolean allowRecallingPendingGroupInvitationByOwnerAndManager = false;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to delete groups logically by default")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private boolean deleteGroupLogicallyByDefault = true;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to delete expired group join requests when the cron expression is triggered")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private boolean deleteExpiredGroupJoinRequestsWhenCronTriggered = false;
 
-    @JsonView(MutablePropertiesView.class)
     @Description("Whether to delete expired group invitations when the cron expression is triggered")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
     private boolean deleteExpiredGroupInvitationsWhenCronTriggered = false;
 
     @Description("Clean or update the expired group join requests when the cron expression is triggered." +
@@ -82,6 +92,7 @@ public class GroupProperties {
     private String expiredGroupInvitationsCheckerCron = CronConstant.DEFAULT_EXPIRED_GROUP_INVITATIONS_CHECKER_CRON;
 
     @Description("Whether to activate a group when created by default")
+    @GlobalProperty
     private boolean activateGroupWhenCreated = true;
 
 }
