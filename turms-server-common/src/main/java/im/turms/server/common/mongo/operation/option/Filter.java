@@ -39,6 +39,10 @@ public class Filter {
         return new Filter();
     }
 
+    public Document asDocument() {
+        return document;
+    }
+
     /**
      * [start, end)
      */
@@ -61,8 +65,13 @@ public class Filter {
         return this;
     }
 
-    public Filter eqIfFalse(@NotNull String key, @Nullable Object obj, boolean bool) {
-        if (!bool) {
+    public Filter eq(String key, Object value) {
+        document.append(key, value);
+        return this;
+    }
+
+    public Filter eqIfFalse(@NotNull String key, @Nullable Object obj, boolean condition) {
+        if (!condition) {
             document.append(key, new Document("$eq", obj));
         }
         return this;
@@ -72,30 +81,6 @@ public class Filter {
         if (obj != null) {
             document.append(key, new Document("$eq", obj));
         }
-        return this;
-    }
-
-    public Filter inIfNotNull(@NotNull String key, @Nullable Collection<?> collection) {
-        if (collection != null && !collection.isEmpty()) {
-            document.append(key, new Document("$in", collection));
-        }
-        return this;
-    }
-
-    public Filter neNullIfNotNull(@NotNull String key, @Nullable Object obj) {
-        if (obj != null) {
-            document.append(key, new Document("$ne", null));
-        }
-        return this;
-    }
-
-    public Filter eq(String isGroupMessage, Object value) {
-        document.append(isGroupMessage, value);
-        return this;
-    }
-
-    public Filter lt(String key, Date date) {
-        document.append(key, new Document("$lt", date));
         return this;
     }
 
@@ -114,8 +99,27 @@ public class Filter {
         return this;
     }
 
+    public Filter inIfNotNull(@NotNull String key, @Nullable Collection<?> collection) {
+        if (collection != null && !collection.isEmpty()) {
+            document.append(key, new Document("$in", collection));
+        }
+        return this;
+    }
+
+    public Filter lt(String key, Date date) {
+        document.append(key, new Document("$lt", date));
+        return this;
+    }
+
     public Filter ne(String key, Object value) {
         document.append(key, new Document("$ne", value));
+        return this;
+    }
+
+    public Filter neNullIfNotNull(@NotNull String key, @Nullable Object obj) {
+        if (obj != null) {
+            document.append(key, new Document("$ne", null));
+        }
         return this;
     }
 
@@ -126,9 +130,5 @@ public class Filter {
         }
         document.append("$or", documents);
         return this;
-    }
-
-    public Document asDocument() {
-        return document;
     }
 }

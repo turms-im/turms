@@ -57,7 +57,7 @@ import java.util.stream.Collectors;
  * @author James Chen
  */
 @Log4j2
-@Component(MongoDataGenerator.BEAN_NAME)
+@Component(IMongoDataGenerator.BEAN_NAME)
 public class MongoDataGenerator implements IMongoDataGenerator {
 
     public final boolean isMockEnabled;

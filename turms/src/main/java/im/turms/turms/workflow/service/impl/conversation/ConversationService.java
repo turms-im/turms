@@ -24,6 +24,7 @@ import com.mongodb.reactivestreams.client.ClientSession;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.mongo.IMongoDataGenerator;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.Update;
@@ -31,7 +32,6 @@ import im.turms.server.common.property.env.service.business.conversation.ReadRec
 import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.MapUtil;
 import im.turms.turms.constant.DaoConstant;
-import im.turms.turms.workflow.dao.MongoDataGenerator;
 import im.turms.turms.workflow.dao.domain.conversation.GroupConversation;
 import im.turms.turms.workflow.dao.domain.conversation.PrivateConversation;
 import lombok.extern.log4j.Log4j2;
@@ -51,7 +51,7 @@ import java.util.*;
  */
 @Log4j2
 @Service
-@DependsOn(MongoDataGenerator.BEAN_NAME)
+@DependsOn(IMongoDataGenerator.BEAN_NAME)
 public class ConversationService {
 
     private final Node node;

@@ -66,8 +66,8 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
 
     private static final BsonDocument ID_ONLY = new BsonDocument("_id", BsonPool.BSON_INT32_1);
     private static final Filter FILTER_ALL = Filter.newBuilder();
-    private static final BsonDocument FILTER_ALL_DOCUMENT = new BsonDocument();
-    private static final BsonDocument EMPTY_FILTER = FILTER_ALL_DOCUMENT;
+    private static final BsonDocument EMPTY_FILTER = new BsonDocument();
+    private static final BsonDocument FILTER_ALL_DOCUMENT = EMPTY_FILTER;
 
     /**
      * Session
@@ -78,12 +78,12 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     /**
      * CRUD
      */
-    private static final UpdateOptions DEFAULT_UPDATE_OPTIONS = new UpdateOptions();
-    private static final DeleteOptions DEFAULT_DELETE_OPTIONS = new DeleteOptions();
-    private static final UpdateOptions DEFAULT_UPSERT_OPTIONS = new UpdateOptions().upsert(true);
     private static final CountOptions DEFAULT_COUNT_OPTIONS = new CountOptions();
-    private static final InsertOneOptions DEFAULT_INSERT_ONE_OPTIONS = new InsertOneOptions();
+    private static final DeleteOptions DEFAULT_DELETE_OPTIONS = new DeleteOptions();
     private static final InsertManyOptions DEFAULT_INSERT_MANY_OPTIONS = new InsertManyOptions();
+    private static final InsertOneOptions DEFAULT_INSERT_ONE_OPTIONS = new InsertOneOptions();
+    private static final UpdateOptions DEFAULT_UPDATE_OPTIONS = new UpdateOptions();
+    private static final UpdateOptions DEFAULT_UPSERT_OPTIONS = new UpdateOptions().upsert(true);
 
     private final MongoContext context;
     private final MongoExceptionTranslator translator = new MongoExceptionTranslator();
@@ -305,6 +305,10 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         Publisher<DeleteResult> source = collection.deleteMany(FILTER_ALL_DOCUMENT, DEFAULT_DELETE_OPTIONS);
         return Mono.from(source);
     }
+
+    /**
+     * Change Stream
+     */
 
     @Override
     public <T> Flux<ChangeStreamDocument<T>> watch(Class<T> clazz, FullDocument fullDocument) {

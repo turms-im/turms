@@ -25,13 +25,13 @@ import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.log4j.ClientApiLogging;
+import im.turms.server.common.mongo.IMongoDataGenerator;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.ClientApiLoggingProperties;
 import im.turms.server.common.property.env.service.env.clientapi.property.LoggingRequestProperties;
 import im.turms.server.common.rpc.request.SendNotificationRequest;
 import im.turms.server.common.service.session.UserStatusService;
 import im.turms.server.common.util.*;
-import im.turms.turms.workflow.dao.MongoDataGenerator;
 import io.netty.buffer.ByteBuf;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
@@ -48,7 +48,7 @@ import java.util.*;
  */
 @Service
 @Log4j2
-@DependsOn(MongoDataGenerator.BEAN_NAME)
+@DependsOn(IMongoDataGenerator.BEAN_NAME)
 public class OutboundMessageService {
 
     private final Node node;

@@ -18,7 +18,6 @@ import org.springframework.util.StringUtils;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -32,7 +31,7 @@ import java.util.List;
  */
 public class RedisTemplateFactory {
 
-    private static final List<ClientResources> POOL = new LinkedList<>();
+    private static final List<ClientResources> POOL = new ArrayList<>(4);
 
     private RedisTemplateFactory() {
     }

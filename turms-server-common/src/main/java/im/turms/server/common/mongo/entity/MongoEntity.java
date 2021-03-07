@@ -87,7 +87,7 @@ public class MongoEntity<T> {
                 ? CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, clazz.getName()).intern()
                 : document.value();
         if (!StringUtils.hasText(name)) {
-            throw new IllegalStateException("The collection name is blank from: " + clazz.getName());
+            throw new IllegalStateException("The collection name should not be blank for the class " + clazz.getName());
         }
         return name;
     }
@@ -102,7 +102,7 @@ public class MongoEntity<T> {
         }
         String[] fields = index.value();
         if (fields.length == 0) {
-            throw new IllegalStateException("There is no field to index for the class " + clazz.getName());
+            throw new IllegalStateException("CompoundIndex doesn't specify which fields to index for the class " + clazz.getName());
         }
         BsonDocument document = new BsonDocument();
         for (String key : fields) {

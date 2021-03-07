@@ -38,6 +38,15 @@ public class Update {
         return new Update();
     }
 
+    public Document asDocument() {
+        return document;
+    }
+
+    public Update set(String key, Object value) {
+        document.append("$set", new Document(key, value));
+        return this;
+    }
+
     public Update setIfNotNull(@NotNull String key, @Nullable Object value) {
         if (value != null) {
             if (value instanceof Collection) {
@@ -47,6 +56,13 @@ public class Update {
             } else {
                 document.append("$set", new Document(key, value));
             }
+        }
+        return this;
+    }
+
+    public Update setIfTrue(String key, Object value, boolean condition) {
+        if (condition) {
+            document.append("$set", new Document(key, value));
         }
         return this;
     }
@@ -62,24 +78,9 @@ public class Update {
         return this;
     }
 
-    public Update set(String key, Object value) {
-        document.append("$set", new Document(key, value));
-        return this;
-    }
-
-    public Update setIfTrue(String key, Object value, boolean condition) {
-        if (condition) {
-            document.append("$set", new Document(key, value));
-        }
-        return this;
-    }
-
     public Update unset(String key) {
         document.append("$unset", key);
         return this;
     }
 
-    public Document asDocument() {
-        return document;
-    }
 }

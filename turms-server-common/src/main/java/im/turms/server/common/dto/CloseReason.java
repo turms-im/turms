@@ -46,30 +46,6 @@ public class CloseReason {
         return new CloseReason(null, statusCode, reason);
     }
 
-    public static SessionCloseStatus statusCodeToCloseStatus(TurmsStatusCode code) {
-        SessionCloseStatus closeStatus;
-        switch (code) {
-            case SESSION_SIMULTANEOUS_CONFLICTS_DECLINE:
-            case SESSION_SIMULTANEOUS_CONFLICTS_NOTIFY:
-            case SESSION_SIMULTANEOUS_CONFLICTS_OFFLINE:
-                closeStatus = SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE;
-                break;
-            case SERVER_UNAVAILABLE:
-                closeStatus = SessionCloseStatus.SERVER_UNAVAILABLE;
-                break;
-            case ILLEGAL_ARGUMENT:
-            case LOGIN_FROM_FORBIDDEN_DEVICE_TYPE:
-                closeStatus = SessionCloseStatus.ILLEGAL_REQUEST;
-                break;
-            default:
-                closeStatus = code.isServerError()
-                        ? SessionCloseStatus.SERVER_ERROR
-                        : SessionCloseStatus.UNKNOWN_ERROR;
-                break;
-        }
-        return closeStatus;
-    }
-
     public static CloseReason get(Throwable throwable) {
         ThrowableInfo info = ThrowableInfo.get(throwable);
         return get(info.getCode(), info.getReason());

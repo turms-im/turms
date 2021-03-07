@@ -30,6 +30,7 @@ import im.turms.server.common.bo.session.UserSessionsStatus;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.mongo.IMongoDataGenerator;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
@@ -42,7 +43,6 @@ import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.constraint.ValidGroupMemberRole;
 import im.turms.turms.util.ProtoUtil;
-import im.turms.turms.workflow.dao.MongoDataGenerator;
 import im.turms.turms.workflow.dao.domain.group.GroupBlockedUser;
 import im.turms.turms.workflow.dao.domain.group.GroupMember;
 import im.turms.turms.workflow.service.util.DomainConstraintUtil;
@@ -66,7 +66,7 @@ import static im.turms.server.common.util.MapUtil.getCapability;
  * @author James Chen
  */
 @Service
-@DependsOn(MongoDataGenerator.BEAN_NAME)
+@DependsOn(IMongoDataGenerator.BEAN_NAME)
 public class GroupMemberService {
 
     private final Node node;

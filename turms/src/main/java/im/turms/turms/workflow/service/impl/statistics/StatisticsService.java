@@ -55,7 +55,7 @@ public class StatisticsService {
                 () -> {
                     if (node.isLocalNodeMaster() && node.getSharedProperties().getService().getActivityLogging().getStatistics().isLogOnlineUsersNumber()) {
                         countOnlineUsers()
-                                .doOnNext(integer -> log.info(ONLINE_USERS_NUMBER_LOGGING_FORMAT, integer))
+                                .doOnNext(count -> log.info(ONLINE_USERS_NUMBER_LOGGING_FORMAT, count))
                                 .subscribe();
                     }
                 });
@@ -63,7 +63,7 @@ public class StatisticsService {
 
     /**
      * @implNote Note that the count requests are sent by turms but all responses should come from turms-gateway
-     * so that we don't need to count the local online users like ".map(count -> count + countLocalOnlineUsers())"
+     * so we don't need to count the local online users like ".map(count -> count + countLocalOnlineUsers())"
      */
     public Mono<Map<String, Integer>> countOnlineUsersByNodes() {
         CountOnlineUsersRequest request = new CountOnlineUsersRequest();

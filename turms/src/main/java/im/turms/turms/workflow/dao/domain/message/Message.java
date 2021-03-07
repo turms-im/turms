@@ -37,11 +37,10 @@ public final class Message {
     public static final String COLLECTION_NAME = "message";
 
     /**
-     * Note that the ID is only used when user forwards a created message to another recipient/group
-     * so that it not the common for most instant messaging scenarios and the ID doesn't be used as a part of the shard key.
-     * <p>
-     * WARNING: Because of the reason mentioned above, it's not
-     * to avoid
+     * Note that because it's not common for most instant messaging scenarios to
+     * send query requests that depends on ID only, and ID is only used to query
+     * a message when a user forwards (copies) it to another recipient/group currently,
+     * we don't use ID as a part of the shard key.
      */
     @Id
     private final Long id;

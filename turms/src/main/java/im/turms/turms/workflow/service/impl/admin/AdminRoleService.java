@@ -25,6 +25,7 @@ import im.turms.server.common.cluster.service.config.ChangeStreamUtil;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.constraint.NoWhitespace;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.mongo.IMongoDataGenerator;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
@@ -33,7 +34,6 @@ import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.workflow.access.http.permission.AdminPermission;
-import im.turms.turms.workflow.dao.MongoDataGenerator;
 import im.turms.turms.workflow.dao.domain.admin.AdminRole;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.tuple.Triple;
@@ -58,7 +58,7 @@ import java.util.stream.Collectors;
  */
 @Log4j2
 @Service
-@DependsOn(MongoDataGenerator.BEAN_NAME)
+@DependsOn(IMongoDataGenerator.BEAN_NAME)
 public class AdminRoleService {
 
     private static final int MIN_ROLE_NAME_LIMIT = 1;

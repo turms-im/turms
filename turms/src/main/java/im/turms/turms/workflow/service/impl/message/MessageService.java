@@ -34,6 +34,7 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dao.util.OperationResultUtil;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.manager.TrivialTaskManager;
+import im.turms.server.common.mongo.IMongoDataGenerator;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
@@ -48,7 +49,6 @@ import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.plugin.extension.handler.ExpiredMessageAutoDeletionNotificationHandler;
 import im.turms.turms.plugin.manager.TurmsPluginManager;
 import im.turms.turms.util.ProtoUtil;
-import im.turms.turms.workflow.dao.MongoDataGenerator;
 import im.turms.turms.workflow.dao.domain.message.Message;
 import im.turms.turms.workflow.service.impl.conversation.ConversationService;
 import im.turms.turms.workflow.service.impl.group.GroupMemberService;
@@ -85,7 +85,7 @@ import static im.turms.turms.constant.MetricsConstant.SENT_MESSAGES_COUNTER_NAME
  */
 @Service
 @Log4j2
-@DependsOn(MongoDataGenerator.BEAN_NAME)
+@DependsOn(IMongoDataGenerator.BEAN_NAME)
 public class MessageService {
 
     private final TurmsMongoClient mongoClient;

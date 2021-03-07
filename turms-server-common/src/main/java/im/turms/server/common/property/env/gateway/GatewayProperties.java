@@ -20,7 +20,6 @@ package im.turms.server.common.property.env.gateway;
 import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.property.env.common.AddressProperties;
 import im.turms.server.common.property.env.gateway.redis.TurmsRedisProperties;
-import im.turms.server.common.property.metadata.annotation.Description;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
 import lombok.Data;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
@@ -30,9 +29,6 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
  */
 @Data
 public class GatewayProperties {
-
-    @Description("The url exposed to clients. See org.springframework.web.util.pattern.PathPattern")
-    private String url = "/";
 
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty

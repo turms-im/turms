@@ -27,6 +27,7 @@ import im.turms.common.util.Validator;
 import im.turms.server.common.bo.common.DateRange;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.mongo.IMongoDataGenerator;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
@@ -37,7 +38,6 @@ import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.constraint.ValidUserRelationshipKey;
 import im.turms.turms.util.ProtoUtil;
-import im.turms.turms.workflow.dao.MongoDataGenerator;
 import im.turms.turms.workflow.dao.domain.user.UserRelationship;
 import im.turms.turms.workflow.dao.domain.user.UserRelationshipGroupMember;
 import im.turms.turms.workflow.dao.domain.user.UserVersion;
@@ -65,7 +65,7 @@ import static im.turms.turms.workflow.dao.domain.user.UserRelationshipGroupMembe
  * @author James Chen
  */
 @Service
-@DependsOn(MongoDataGenerator.BEAN_NAME)
+@DependsOn(IMongoDataGenerator.BEAN_NAME)
 public class UserRelationshipService {
 
     private final UserVersionService userVersionService;

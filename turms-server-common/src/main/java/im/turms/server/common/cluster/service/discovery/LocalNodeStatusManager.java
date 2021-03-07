@@ -145,7 +145,7 @@ public class LocalNodeStatusManager {
                     Date now = new Date();
                     Update update = Update.newBuilder()
                             .set(Member.Fields.lastHeartbeatDate, now);
-                    List<Mono<?>> monos = new LinkedList<>();
+                    List<Mono<?>> monos = new ArrayList<>(3);
                     monos.add(upsertLocalNodeInfo(update));
                     if (isLocalNodeMaster()) {
                         monos.add(updateLocalLeaderHeartbeat(now));

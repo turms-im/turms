@@ -130,7 +130,7 @@ public class Node {
         nodeId = tempNodeId;
 
         // Init services
-        // we pass the properties one by one rather than passing the node instance
+        // pass the properties one by one rather than passing the node instance
         // to know their dependency relationships explicitly.
         sharedConfigService = new SharedConfigService(sharedConfigProperties.getMongo());
         discoveryService = new DiscoveryService(clusterId,

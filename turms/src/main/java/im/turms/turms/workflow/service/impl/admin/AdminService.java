@@ -27,6 +27,7 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.constraint.NoWhitespace;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.manager.PasswordManager;
+import im.turms.server.common.mongo.IMongoDataGenerator;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
@@ -36,7 +37,6 @@ import im.turms.turms.bo.AdminInfo;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.workflow.access.http.permission.AdminPermission;
-import im.turms.turms.workflow.dao.MongoDataGenerator;
 import im.turms.turms.workflow.dao.domain.admin.Admin;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -64,7 +64,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Log4j2
 @Service
-@DependsOn(MongoDataGenerator.BEAN_NAME)
+@DependsOn(IMongoDataGenerator.BEAN_NAME)
 public class AdminService {
 
     private static final String ERROR_UPDATE_ADMIN_WITH_HIGHER_RANK = "Only a admin with a lower rank compared to the account can be created, updated, or deleted";

@@ -25,6 +25,7 @@ import im.turms.server.common.property.TurmsPropertiesManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 
 import javax.annotation.PreDestroy;
 
@@ -32,6 +33,7 @@ import javax.annotation.PreDestroy;
  * @author James Chen
  */
 @Configuration
+@DependsOn(IMongoDataGenerator.BEAN_NAME)
 public class ClusterConfig {
 
     private Node node;
@@ -41,8 +43,7 @@ public class ClusterConfig {
             ApplicationContext context,
             NodeType nodeType,
             TurmsPropertiesManager turmsPropertiesManager,
-            BaseServiceAddressManager serviceAddressManager,
-            IMongoDataGenerator mongoDataGenerator) {
+            BaseServiceAddressManager serviceAddressManager) {
         this.node = new Node(context, nodeType, turmsPropertiesManager, serviceAddressManager);
         node.start();
         return node;
