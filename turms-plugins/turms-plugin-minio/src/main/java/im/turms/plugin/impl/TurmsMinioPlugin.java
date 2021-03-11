@@ -456,7 +456,9 @@ public class TurmsMinioPlugin extends TurmsPlugin {
             }
         }
 
-        private Mono<Boolean> hasPermissionToPut(@NotNull Long requesterId, @NotNull ContentType contentType, @Nullable String keyStr,
+        private Mono<Boolean> hasPermissionToPut(@NotNull Long requesterId,
+                                                 @NotNull ContentType contentType,
+                                                 @Nullable String keyStr,
                                                  @Nullable Long keyNum) {
             switch (contentType) {
                 case PROFILE:

@@ -494,7 +494,8 @@ public class SessionService implements ISessionService {
                 });
     }
 
-    private void removeSessionsManagerIfEmpty(@NotNull CloseReason closeReason, @NotNull UserSessionsManager manager,
+    private void removeSessionsManagerIfEmpty(@NotNull CloseReason closeReason,
+                                              @NotNull UserSessionsManager manager,
                                               @NotNull Long userId) {
         if (manager.getSessionsNumber() == 0) {
             sessionsManagerByUserId.remove(userId);

@@ -50,11 +50,9 @@ class UserSessionsManagerTests {
     @Test
     void constructor_shouldThrow_ifRequiredParamsNotExist() {
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() ->
-                        new UserSessionsManager(null, userStatus));
+                .isThrownBy(() -> new UserSessionsManager(null, userStatus));
         assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(() ->
-                        new UserSessionsManager(userId, null));
+                .isThrownBy(() -> new UserSessionsManager(userId, null));
     }
 
     @Test
