@@ -23,7 +23,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * @author James Chen
@@ -34,9 +35,8 @@ class DateRangeTests {
     void of_shouldThrowException_whenPassingWrongParameters() {
         Date earlier = new Date(0);
         Date later = new Date(1);
-        assertThrows(
-                TurmsBusinessException.class,
-                () -> DateRange.of(later, earlier));
+        assertThatExceptionOfType(TurmsBusinessException.class)
+                .isThrownBy(() -> DateRange.of(later, earlier));
     }
 
     @Test
@@ -50,14 +50,14 @@ class DateRangeTests {
         DateRange same = DateRange.of(earlier, earlier);
         DateRange earlierLater = DateRange.of(earlier, later);
 
-        assertNull(nullNull);
-        assertEquals(earlier, nullDate.getEnd());
-        assertEquals(earlier, dateNull.getStart());
-        assertEquals(earlier, dateNull.getStart());
-        assertEquals(earlier, same.getStart());
-        assertEquals(earlier, same.getEnd());
-        assertEquals(earlier, earlierLater.getStart());
-        assertEquals(later, earlierLater.getEnd());
+        assertThat(nullNull).isNull();
+        assertThat(nullDate.getEnd()).isEqualTo(earlier);
+        assertThat(dateNull.getStart()).isEqualTo(earlier);
+        assertThat(dateNull.getStart()).isEqualTo(earlier);
+        assertThat(same.getStart()).isEqualTo(earlier);
+        assertThat(same.getEnd()).isEqualTo(earlier);
+        assertThat(earlierLater.getStart()).isEqualTo(earlier);
+        assertThat(earlierLater.getEnd()).isEqualTo(later);
     }
 
 }

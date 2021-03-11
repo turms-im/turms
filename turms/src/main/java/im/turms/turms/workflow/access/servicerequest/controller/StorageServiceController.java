@@ -32,7 +32,9 @@ import im.turms.turms.workflow.service.impl.storage.StorageService;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Mono;
 
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.*;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.DELETE_RESOURCE_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_SIGNED_GET_URL_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_SIGNED_PUT_URL_REQUEST;
 
 /**
  * @author James Chen
@@ -59,7 +61,8 @@ public class StorageServiceController {
                                 .setUrl(StringValue.of(url))
                                 .build()));
             } else {
-                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The content type must not be UNRECOGNIZED"));
+                return Mono
+                        .error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The content type must not be UNRECOGNIZED"));
             }
         };
     }
@@ -78,7 +81,8 @@ public class StorageServiceController {
                                 .setUrl(StringValue.of(url))
                                 .build()));
             } else {
-                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The content type must not be UNRECOGNIZED"));
+                return Mono
+                        .error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The content type must not be UNRECOGNIZED"));
             }
         };
     }
@@ -94,7 +98,8 @@ public class StorageServiceController {
                 return storageService.deleteResource(clientRequest.getUserId(), contentType, keyStr, keyNum)
                         .thenReturn(RequestHandlerResultFactory.OK);
             } else {
-                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The content type must not be UNRECOGNIZED"));
+                return Mono
+                        .error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The content type must not be UNRECOGNIZED"));
             }
         };
     }

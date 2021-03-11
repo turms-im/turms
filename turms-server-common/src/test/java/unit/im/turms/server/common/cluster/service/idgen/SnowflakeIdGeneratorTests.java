@@ -7,10 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class SnowflakeIdGeneratorTests {
 
@@ -22,10 +19,16 @@ class SnowflakeIdGeneratorTests {
         long previousId = -1;
         for (int i = 0; i < number; i++) {
             long newId = generator.nextIncreasingId();
-            assertThat("ID should be greater than 0", newId, greaterThan(0L));
-            assertThat("ID should increment", newId, greaterThan(previousId));
-            boolean added = ids.add(newId);
-            assertTrue(added, "ID is duplicate");
+            assertThat(newId)
+                    .as("ID should be greater than 0")
+                    .isPositive();
+            assertThat(newId)
+                    .as("ID should increment")
+                    .isGreaterThan(previousId);
+            boolean newIdAlreadyExists = ids.add(newId);
+            assertThat(newIdAlreadyExists)
+                    .as("ID should not be duplicate")
+                    .isTrue();
             previousId = newId;
         }
     }
@@ -39,16 +42,21 @@ class SnowflakeIdGeneratorTests {
         boolean isMonotonicallyIncreasing = true;
         for (int i = 0; i < number; i++) {
             long newId = generator.nextRandomId();
-            assertThat("ID should be greater than 0", newId, greaterThan(0L));
+            assertThat(newId)
+                    .as("ID should be greater than 0")
+                    .isPositive();
             if (newId < previousId) {
                 isMonotonicallyIncreasing = false;
             }
-            boolean added = ids.add(newId);
-            assertTrue(added, "ID is duplicate");
-            System.out.println(newId);
+            boolean newIdAlreadyExists = ids.add(newId);
+            assertThat(newIdAlreadyExists)
+                    .as("ID should not be duplicate")
+                    .isTrue();
             previousId = newId;
         }
-        assertFalse(isMonotonicallyIncreasing, "ID should not be monotonically increasing");
+        assertThat(isMonotonicallyIncreasing)
+                .as("ID should not be monotonically increasing")
+                .isFalse();
     }
 
 }

@@ -22,7 +22,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.ImmutableMap;
@@ -43,13 +48,17 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
  * @author James Chen
  */
-public class PropertiesUtil {
+public final class PropertiesUtil {
 
     private static final String PACKAGE_NAME = TurmsProperties.class.getPackageName();
     private static final String FIELD_NAME_DEPRECATED = "deprecated";
@@ -68,9 +77,10 @@ public class PropertiesUtil {
     public static final TypeReference<HashMap<String, Object>> TYPE_REF_MAP = new TypeReference<>() {
     };
     public static final Map<String, Object> METADATA = ImmutableMap.copyOf(getMetadata(new HashMap<>(32), TurmsProperties.class, false));
-    public static final Map<String, Object> ONLY_MUTABLE_METADATA = ImmutableMap.copyOf(getMetadata(new HashMap<>(32), TurmsProperties.class, true));
+    public static final Map<String, Object> ONLY_MUTABLE_METADATA =
+            ImmutableMap.copyOf(getMetadata(new HashMap<>(32), TurmsProperties.class, true));
 
-    PropertiesUtil() {
+    private PropertiesUtil() {
     }
 
     public static boolean isMutableProperty(Field field) {
@@ -113,7 +123,8 @@ public class PropertiesUtil {
 
     // Structure analysis
 
-    public static Map<String, Object> getPropertyValueMap(TurmsProperties turmsProperties, boolean returnOnlyMutableProperties) throws IOException {
+    public static Map<String, Object> getPropertyValueMap(TurmsProperties turmsProperties, boolean returnOnlyMutableProperties)
+            throws IOException {
         return returnOnlyMutableProperties
                 ? MAPPER.readValue(MUTABLE_PROPERTIES_WRITER.writeValueAsBytes(turmsProperties), TYPE_REF_MAP)
                 : MAPPER.readValue(MAPPER.writeValueAsBytes(turmsProperties), TYPE_REF_MAP);

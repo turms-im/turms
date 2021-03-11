@@ -31,6 +31,7 @@ import im.turms.server.common.util.ProtoUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.util.HashedWheelTimer;
 import io.netty.util.Timeout;
+import io.netty.util.TimerTask;
 import lombok.Data;
 import org.springframework.data.geo.Point;
 import org.springframework.util.Assert;
@@ -55,7 +56,8 @@ public final class UserSessionsManager {
 
     private final Long userId;
     private UserStatus userStatus;
-    private final Map<DeviceType, UserSession> sessionMap = new ConcurrentHashMap<>(MapUtil.getCapability(DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length));
+    private final Map<DeviceType, UserSession> sessionMap =
+            new ConcurrentHashMap<>(MapUtil.getCapability(DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length));
 
     public UserSessionsManager(
             @NotNull Long userId,
@@ -135,23 +137,29 @@ public final class UserSessionsManager {
      * @param session Don't remove this parameter by using "getSession(deviceType)"
      *                because it needs to call hashcode() to find session every time
      */
-    private void updateSessionHeartbeatTimeout(@NotNull @ValidDeviceType DeviceType deviceType, @NotNull UserSession session, int closeIdleSessionAfterMillis, int switchProtocolAfterMillis) {
-        Timeout newTimeout = HEARTBEAT_TIMER.newTimeout(timeout -> {
-                    if (session.isOpen()) {
-                        long now = System.currentTimeMillis();
-                        int heartbeatElapsedTime = (int) (now - session.getLastHeartbeatTimestampMillis());
-                        if (heartbeatElapsedTime > closeIdleSessionAfterMillis) {
-                            CloseReason closeReason = CloseReason.get(SessionCloseStatus.HEARTBEAT_TIMEOUT);
-                            setDeviceOffline(deviceType, closeReason);
-                        } else {
-                            int requestElapsedTime = (int) (now - session.getLastRequestTimestampMillis());
-                            if (requestElapsedTime > switchProtocolAfterMillis && session.isConnected() && UdpDispatcher.isEnabled() && deviceType != DeviceType.BROWSER) {
-                                session.getConnection().switchToUdp();
-                            }
-                            updateSessionHeartbeatTimeout(deviceType, session, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
-                        }
-                    }
-                },
+    private void updateSessionHeartbeatTimeout(@NotNull @ValidDeviceType DeviceType deviceType, @NotNull UserSession session,
+                                               int closeIdleSessionAfterMillis, int switchProtocolAfterMillis) {
+        TimerTask checkHeartbeatTask = timeout -> {
+            if (!session.isOpen()) {
+                return;
+            }
+            long now = System.currentTimeMillis();
+            int heartbeatElapsedTime = (int) (now - session.getLastHeartbeatTimestampMillis());
+            if (heartbeatElapsedTime > closeIdleSessionAfterMillis) {
+                CloseReason closeReason = CloseReason.get(SessionCloseStatus.HEARTBEAT_TIMEOUT);
+                setDeviceOffline(deviceType, closeReason);
+            } else {
+                int requestElapsedTime = (int) (now - session.getLastRequestTimestampMillis());
+                if (requestElapsedTime > switchProtocolAfterMillis
+                        && session.isConnected()
+                        && UdpDispatcher.isEnabled()
+                        && deviceType != DeviceType.BROWSER) {
+                    session.getConnection().switchToUdp();
+                }
+                updateSessionHeartbeatTimeout(deviceType, session, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
+            }
+        };
+        Timeout newTimeout = HEARTBEAT_TIMER.newTimeout(checkHeartbeatTask,
                 Math.max(closeIdleSessionAfterMillis / 3000, 1),
                 TimeUnit.SECONDS);
         session.setHeartbeatTimeout(newTimeout);

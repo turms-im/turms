@@ -20,7 +20,7 @@ package im.turms.server.common.util;
 /**
  * @author James Chen
  */
-public class IntegerUtil {
+public final class IntegerUtil {
 
     private IntegerUtil() {
     }

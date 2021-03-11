@@ -41,12 +41,12 @@ public class ClientApiProperties {
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
     @Min(0)
-    private int minClientRequestIntervalMillis = 0;
+    private int minClientRequestIntervalMillis;
 
     @Description("Whether to return the reason for the server error to the client. " +
             "Note: 1. It may reveal sensitive data like the IP of internal servers if true; " +
             "2. turms-gateway never return the information of stack traces no matter it is true or false.")
-    private boolean returnReasonForServerError = false;
+    private boolean returnReasonForServerError;
 
     @NestedConfigurationProperty
     private ClientApiLoggingProperties logging = new ClientApiLoggingProperties();

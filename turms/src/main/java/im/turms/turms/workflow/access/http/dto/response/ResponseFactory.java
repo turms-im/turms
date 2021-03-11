@@ -32,7 +32,7 @@ import java.util.Collection;
  * @author James Chen
  */
 @Data
-public class ResponseFactory {
+public final class ResponseFactory {
 
     private ResponseFactory() {
     }

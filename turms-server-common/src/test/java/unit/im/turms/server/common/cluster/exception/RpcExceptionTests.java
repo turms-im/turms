@@ -23,7 +23,7 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import io.rsocket.exceptions.ApplicationErrorException;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author James Chen
@@ -37,9 +37,9 @@ class RpcExceptionTests {
         String message = "My error message";
         RpcException exception = RpcException.get(errorCode, statusCode, message);
 
-        assertEquals(exception.getErrorCode(), errorCode);
-        assertEquals(exception.getStatusCode(), statusCode);
-        assertEquals(exception.getDescription(), message);
+        assertThat(errorCode).isEqualTo(exception.getErrorCode());
+        assertThat(statusCode).isEqualTo(exception.getStatusCode());
+        assertThat(message).isEqualTo(exception.getDescription());
     }
 
     @Test
@@ -50,7 +50,7 @@ class RpcExceptionTests {
         RpcException exception = RpcException.get(errorCode, statusCode, description);
 
         RpcException parsedException = RpcException.parse(new ApplicationErrorException(exception.getMessage()));
-        assertEquals(exception, parsedException);
+        assertThat(parsedException).isEqualTo(exception);
     }
 
 }

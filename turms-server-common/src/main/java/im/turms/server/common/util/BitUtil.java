@@ -20,7 +20,7 @@ package im.turms.server.common.util;
 /**
  * @author James Chen
  */
-public class BitUtil {
+public final class BitUtil {
 
     private BitUtil() {
     }

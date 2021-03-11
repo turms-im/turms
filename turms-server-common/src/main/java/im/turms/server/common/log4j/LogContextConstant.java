@@ -20,7 +20,7 @@ package im.turms.server.common.log4j;
 /**
  * @author James Chen
  */
-public class LogContextConstant {
+public final class LogContextConstant {
     private LogContextConstant() {
     }
 

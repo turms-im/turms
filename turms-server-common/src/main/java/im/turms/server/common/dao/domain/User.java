@@ -18,7 +18,11 @@
 package im.turms.server.common.dao.domain;
 
 import im.turms.common.constant.ProfileAccessStrategy;
-import im.turms.server.common.mongo.entity.annotation.*;
+import im.turms.server.common.mongo.entity.annotation.Document;
+import im.turms.server.common.mongo.entity.annotation.Field;
+import im.turms.server.common.mongo.entity.annotation.Id;
+import im.turms.server.common.mongo.entity.annotation.Indexed;
+import im.turms.server.common.mongo.entity.annotation.Sharded;
 import lombok.Data;
 
 import java.util.Date;
@@ -64,7 +68,7 @@ public final class User {
     @Indexed
     private final Date lastUpdatedDate;
 
-    public static class Fields {
+    public static final class Fields {
 
         public static final String PASSWORD = "pw";
         public static final String NAME = "n";

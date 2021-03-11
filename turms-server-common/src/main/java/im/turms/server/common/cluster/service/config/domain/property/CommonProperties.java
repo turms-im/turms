@@ -17,7 +17,11 @@
 
 package im.turms.server.common.cluster.service.config.domain.property;
 
-import im.turms.server.common.property.env.common.*;
+import im.turms.server.common.property.env.common.IpProperties;
+import im.turms.server.common.property.env.common.LocationProperties;
+import im.turms.server.common.property.env.common.PluginProperties;
+import im.turms.server.common.property.env.common.SecurityProperties;
+import im.turms.server.common.property.env.common.UserStatusProperties;
 import im.turms.server.common.property.env.common.cluster.ClusterProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;

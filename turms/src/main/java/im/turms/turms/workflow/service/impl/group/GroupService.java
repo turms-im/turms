@@ -65,10 +65,16 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import static im.turms.turms.constant.DaoConstant.*;
+import static im.turms.turms.constant.DaoConstant.DEFAULT_GROUP_TYPE_ID;
+import static im.turms.turms.constant.DaoConstant.ID_FIELD_NAME;
+import static im.turms.turms.constant.DaoConstant.TRANSACTION_RETRY;
 import static im.turms.turms.constant.MetricsConstant.CREATED_GROUPS_COUNTER_NAME;
 import static im.turms.turms.constant.MetricsConstant.DELETED_GROUPS_COUNTER_NAME;
 import static im.turms.turms.workflow.dao.domain.group.GroupMember.Fields.ID_GROUP_ID;
@@ -600,7 +606,9 @@ public class GroupService {
                                     .map(isOwner -> isOwner ? TurmsStatusCode.OK : TurmsStatusCode.NOT_OWNER_TO_UPDATE_GROUP_INFO);
                         case OWNER_MANAGER:
                             return groupMemberService.isOwnerOrManager(requesterId, groupId)
-                                    .map(isOwnerOrManager -> isOwnerOrManager ? TurmsStatusCode.OK : TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_UPDATE_GROUP_INFO);
+                                    .map(isOwnerOrManager -> isOwnerOrManager
+                                            ? TurmsStatusCode.OK
+                                            : TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_UPDATE_GROUP_INFO);
                         case OWNER_MANAGER_MEMBER:
                             return groupMemberService.isOwnerOrManagerOrMember(requesterId, groupId)
                                     .map(isMember -> isMember ? TurmsStatusCode.OK : TurmsStatusCode.NOT_MEMBER_TO_UPDATE_GROUP_INFO);
@@ -752,7 +760,8 @@ public class GroupService {
                 .flatMap(userPermissionGroup -> {
                     Integer ownedGroupLimit = userPermissionGroup.getOwnedGroupLimit();
                     if (ownedGroupLimit == Integer.MAX_VALUE) {
-                        String reason = String.format("The number of groups owned by the requester has reached the limit %d", ownedGroupLimit);
+                        String reason =
+                                String.format("The number of groups owned by the requester has reached the limit %d", ownedGroupLimit);
                         return Mono.just(ServicePermission.get(TurmsStatusCode.OK, reason));
                     } else {
                         return countOwnedGroups(requesterId)
@@ -763,7 +772,8 @@ public class GroupService {
                                         code = TurmsStatusCode.OK;
                                     } else {
                                         code = TurmsStatusCode.MAX_OWNED_GROUPS_REACHED;
-                                        reason = String.format("The number of groups owned by the requester has reached the limit %d", ownedGroupLimit);
+                                        reason = String.format("The number of groups owned by the requester has reached the limit %d",
+                                                ownedGroupLimit);
                                     }
                                     return ServicePermission.get(code, reason);
                                 });
@@ -798,14 +808,16 @@ public class GroupService {
                         }
                         boolean hasUnlimitedGroups = userPermissionGroup.getOwnedGroupLimitForEachGroupType() == Integer.MAX_VALUE
                                 && (userPermissionGroup.getGroupTypeLimits() == null
-                                || userPermissionGroup.getGroupTypeLimits().getOrDefault(groupTypeId, Integer.MAX_VALUE) == Integer.MAX_VALUE);
+                                || userPermissionGroup.getGroupTypeLimits()
+                                .getOrDefault(groupTypeId, Integer.MAX_VALUE) == Integer.MAX_VALUE);
                         if (hasUnlimitedGroups) {
                             return Mono.just(ServicePermission.OK);
                         }
                         return countOwnedGroups(requesterId, groupTypeId)
                                 .map(ownedGroupsNumber -> {
                                     boolean canCreate = ownedGroupsNumber < userPermissionGroup.getOwnedGroupLimitForEachGroupType()
-                                            && userPermissionGroup.getGroupTypeLimits().getOrDefault(groupTypeId, Integer.MAX_VALUE) < Integer.MAX_VALUE;
+                                            && userPermissionGroup.getGroupTypeLimits().getOrDefault(groupTypeId, Integer.MAX_VALUE) <
+                                            Integer.MAX_VALUE;
                                     TurmsStatusCode code = canCreate ? TurmsStatusCode.OK : TurmsStatusCode.MAX_OWNED_GROUPS_REACHED;
                                     return ServicePermission.get(code);
                                 });

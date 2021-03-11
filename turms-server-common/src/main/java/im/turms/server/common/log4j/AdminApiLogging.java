@@ -23,7 +23,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * @author James Chen
  */
-public class AdminApiLogging {
+public final class AdminApiLogging {
 
     public static final Logger logger = LogManager.getLogger(AdminApiLogging.class);
 

@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * @author James Chen
  */
-public class TurmsMongoClient implements MongoOperationsSupport {
+public final class TurmsMongoClient implements MongoOperationsSupport {
 
     private final MongoContext context;
     @Delegate

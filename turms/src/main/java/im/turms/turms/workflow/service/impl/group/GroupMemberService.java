@@ -57,7 +57,12 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static im.turms.server.common.util.MapUtil.getCapability;
@@ -370,7 +375,9 @@ public class GroupMemberService {
                             if (code == TurmsStatusCode.OK) {
                                 return Mono.just(Pair.of(ServicePermission.OK, strategy));
                             } else {
-                                String reason = String.format("The inviter with the role %s isn't allowed to send an invitation under the strategy %s", inviterRole, strategy);
+                                String reason = String.format(
+                                        "The inviter with the role %s isn't allowed to send an invitation under the strategy %s",
+                                        inviterRole, strategy);
                                 return Mono.just(Pair.of(ServicePermission.get(code, reason), strategy));
                             }
                         })
@@ -419,7 +426,8 @@ public class GroupMemberService {
                         }
                         return groupService.isGroupActiveAndNotDeleted(groupId)
                                 .flatMap(isActive -> isActive
-                                        ? isMemberMuted(groupId, senderId).map(muted -> muted ? TurmsStatusCode.MUTED_MEMBER_SEND_MESSAGE : TurmsStatusCode.OK)
+                                        ? isMemberMuted(groupId, senderId)
+                                        .map(muted -> muted ? TurmsStatusCode.MUTED_MEMBER_SEND_MESSAGE : TurmsStatusCode.OK)
                                         : Mono.just(TurmsStatusCode.SEND_MESSAGE_TO_INACTIVE_GROUP));
                     }
                 });
@@ -727,7 +735,8 @@ public class GroupMemberService {
                     .map(isOwner -> isOwner ? TurmsStatusCode.OK : TurmsStatusCode.NOT_OWNER_TO_UPDATE_GROUP_MEMBER_INFO);
         } else if (muteEndDate != null || (name != null && !requesterId.equals(memberId))) {
             isAuthorizedMono = isOwnerOrManager(requesterId, groupId)
-                    .map(isOwnerOrManager -> isOwnerOrManager ? TurmsStatusCode.OK : TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_UPDATE_GROUP_MEMBER_INFO);
+                    .map(isOwnerOrManager -> isOwnerOrManager ? TurmsStatusCode.OK :
+                            TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_UPDATE_GROUP_MEMBER_INFO);
         } else {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }

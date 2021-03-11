@@ -23,7 +23,7 @@ package im.turms.server.common.constant;
  * @author James Chen
  * @see org.springframework.scheduling.support.CronExpression
  */
-public class CronConstant {
+public final class CronConstant {
 
     private CronConstant() {
     }

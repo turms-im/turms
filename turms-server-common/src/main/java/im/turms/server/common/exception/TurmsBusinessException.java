@@ -33,7 +33,7 @@ import java.util.Map;
  */
 @EqualsAndHashCode(callSuper = false)
 @Data
-public class TurmsBusinessException extends NoStackTraceException {
+public final class TurmsBusinessException extends NoStackTraceException {
 
     private static final Map<TurmsStatusCode, TurmsBusinessException> EXCEPTION_POOL = new EnumMap<>(TurmsStatusCode.class);
 

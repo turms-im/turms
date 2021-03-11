@@ -47,7 +47,8 @@ public abstract class RpcCallable<T> implements ApplicationContextAware {
             return context.getBean(clazz);
         } catch (NoSuchBeanDefinitionException e) {
             NodeType nodeType = ExceptionUtil.suppress(() -> context.getBean(NodeType.class));
-            String message = String.format("Failed to get the bean. The request type %s may be sent to the wrong server %s", name(), nodeType);
+            String message =
+                    String.format("Failed to get the bean. The request type %s may be sent to the wrong server %s", name(), nodeType);
             throw new IllegalStateException(message, e);
         }
     }

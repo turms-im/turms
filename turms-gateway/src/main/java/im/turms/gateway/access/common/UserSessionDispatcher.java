@@ -117,12 +117,14 @@ public abstract class UserSessionDispatcher {
                     }
                 })
                 .then()
-                .onErrorResume(throwable -> handleConnectionError(throwable, sessionWrapper.getConnection(), sessionWrapper.getUserSession()));
+                .onErrorResume(
+                        throwable -> handleConnectionError(throwable, sessionWrapper.getConnection(), sessionWrapper.getUserSession()));
     }
 
     private Mono<Void> tryRemoveSessionInfoOnConnectionClosed(Mono<Void> onClose, UserSessionWrapper sessionWrapper) {
         return onClose
-                .onErrorResume(throwable -> handleConnectionError(throwable, sessionWrapper.getConnection(), sessionWrapper.getUserSession()))
+                .onErrorResume(
+                        throwable -> handleConnectionError(throwable, sessionWrapper.getConnection(), sessionWrapper.getUserSession()))
                 .doOnTerminate(() -> {
                     UserSession userSession = sessionWrapper.getUserSession();
                     if (userSession != null && userSession.isOpen()) {

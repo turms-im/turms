@@ -25,7 +25,7 @@ import java.lang.reflect.Method;
 /**
  * @author James Chen
  */
-public class InvokeUtil {
+public final class InvokeUtil {
 
     private InvokeUtil() {
     }

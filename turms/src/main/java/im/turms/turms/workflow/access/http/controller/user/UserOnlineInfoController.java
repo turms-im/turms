@@ -39,7 +39,12 @@ import im.turms.turms.workflow.service.impl.user.onlineuser.UsersNearbyService;
 import org.springframework.data.geo.Point;
 import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -79,7 +84,8 @@ public class UserOnlineInfoController {
 
     @GetMapping("/count")
     @RequiredPermission(AdminPermission.STATISTICS_USER_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<OnlineUserNumberDTO>>> countOnlineUsers(@RequestParam(required = false, defaultValue = "false") Boolean countByNodes) {
+    public Mono<ResponseEntity<ResponseDTO<OnlineUserNumberDTO>>> countOnlineUsers(
+            @RequestParam(required = false, defaultValue = "false") Boolean countByNodes) {
         if (countByNodes != null && countByNodes) {
             return ResponseFactory.okIfTruthy(statisticsService.countOnlineUsersByNodes()
                     .map(nodeIdAndNumberMap -> {
@@ -131,7 +137,9 @@ public class UserOnlineInfoController {
 
     @GetMapping("/locations")
     @RequiredPermission(AdminPermission.USER_ONLINE_INFO_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<List<UserLocationDTO>>>> queryUserLocations(@RequestParam Set<Long> ids, @RequestParam(required = false) DeviceType deviceType) {
+    public Mono<ResponseEntity<ResponseDTO<List<UserLocationDTO>>>> queryUserLocations(@RequestParam Set<Long> ids,
+                                                                                       @RequestParam(required = false)
+                                                                                               DeviceType deviceType) {
         List<Mono<Pair<Long, Point>>> monos = new ArrayList<>(ids.size());
         for (Long userId : ids) {
             monos.add(sessionLocationService.getUserLocation(userId, deviceType)

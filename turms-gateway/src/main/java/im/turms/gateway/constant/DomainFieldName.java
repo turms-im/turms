@@ -20,7 +20,7 @@ package im.turms.gateway.constant;
 /**
  * @author James Chen
  */
-public class DomainFieldName {
+public final class DomainFieldName {
 
     private DomainFieldName() {
     }

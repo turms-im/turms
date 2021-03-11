@@ -68,7 +68,7 @@ public final class UserVersion {
     @Field(Fields.JOINED_GROUPS)
     private final Date joinedGroups;
 
-    public static class Fields {
+    public static final class Fields {
 
         public static final String SENT_FRIEND_REQUESTS = "sfr";
         public static final String RECEIVED_FRIEND_REQUESTS = "rfr";

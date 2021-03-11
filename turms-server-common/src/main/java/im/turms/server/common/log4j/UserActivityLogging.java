@@ -23,7 +23,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * @author James Chen
  */
-public class UserActivityLogging {
+public final class UserActivityLogging {
 
     public static final Logger logger = LogManager.getLogger(UserActivityLogging.class);
 

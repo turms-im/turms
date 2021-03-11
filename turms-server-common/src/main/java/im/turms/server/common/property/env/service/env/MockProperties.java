@@ -29,13 +29,13 @@ import javax.validation.constraints.Min;
 public class MockProperties {
 
     @Description("Whether to mock data. Note that mocking only works in non-production environments")
-    private boolean enabled = false;
+    private boolean enabled;
 
     @Description("The user number to mock")
     @Min(0)
     private int userNumber = 1000;
 
     @Description("Whether to clear all collections before mocking at startup")
-    private boolean clearAllCollectionsBeforeMocking = false;
+    private boolean clearAllCollectionsBeforeMocking;
 
 }

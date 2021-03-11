@@ -19,7 +19,11 @@ package im.turms.turms.workflow.dao.domain.conversation;
 
 import im.turms.server.common.mongo.entity.IndexType;
 import im.turms.server.common.mongo.entity.ShardingStrategy;
-import im.turms.server.common.mongo.entity.annotation.*;
+import im.turms.server.common.mongo.entity.annotation.Document;
+import im.turms.server.common.mongo.entity.annotation.Field;
+import im.turms.server.common.mongo.entity.annotation.Id;
+import im.turms.server.common.mongo.entity.annotation.Indexed;
+import im.turms.server.common.mongo.entity.annotation.Sharded;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -58,7 +62,7 @@ public final class PrivateConversation {
         @Field(Fields.TARGET_ID)
         private Long targetId;
 
-        public static class Fields {
+        public static final class Fields {
             public static final String OWNER_ID = "oid";
             public static final String TARGET_ID = "tid";
 
@@ -73,7 +77,7 @@ public final class PrivateConversation {
         private List<Key> privateConversationKeys;
     }
 
-    public static class Fields {
+    public static final class Fields {
         public static final String ID_OWNER_ID = "_id." + Key.Fields.OWNER_ID;
         public static final String ID_TARGET_ID = "_id." + Key.Fields.TARGET_ID;
         public static final String READ_DATE = "rd";

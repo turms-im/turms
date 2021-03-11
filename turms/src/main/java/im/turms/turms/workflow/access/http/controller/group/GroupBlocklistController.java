@@ -20,13 +20,24 @@ package im.turms.turms.workflow.access.http.controller.group;
 import im.turms.server.common.bo.common.DateRange;
 import im.turms.turms.workflow.access.http.dto.request.group.AddGroupBlockedUserDTO;
 import im.turms.turms.workflow.access.http.dto.request.group.UpdateGroupBlockedUserDTO;
-import im.turms.turms.workflow.access.http.dto.response.*;
+import im.turms.turms.workflow.access.http.dto.response.DeleteResultDTO;
+import im.turms.turms.workflow.access.http.dto.response.PaginationDTO;
+import im.turms.turms.workflow.access.http.dto.response.ResponseDTO;
+import im.turms.turms.workflow.access.http.dto.response.ResponseFactory;
+import im.turms.turms.workflow.access.http.dto.response.UpdateResultDTO;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.access.http.util.PageUtil;
 import im.turms.turms.workflow.dao.domain.group.GroupBlockedUser;
 import im.turms.turms.workflow.service.impl.group.GroupBlocklistService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -35,7 +46,10 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import static im.turms.turms.workflow.access.http.permission.AdminPermission.*;
+import static im.turms.turms.workflow.access.http.permission.AdminPermission.GROUP_BLOCKLIST_CREATE;
+import static im.turms.turms.workflow.access.http.permission.AdminPermission.GROUP_BLOCKLIST_DELETE;
+import static im.turms.turms.workflow.access.http.permission.AdminPermission.GROUP_BLOCKLIST_QUERY;
+import static im.turms.turms.workflow.access.http.permission.AdminPermission.GROUP_BLOCKLIST_UPDATE;
 
 /**
  * @author James Chen
@@ -54,7 +68,8 @@ public class GroupBlocklistController {
 
     @PostMapping
     @RequiredPermission(GROUP_BLOCKLIST_CREATE)
-    public Mono<ResponseEntity<ResponseDTO<GroupBlockedUser>>> addGroupBlockedUser(@RequestBody AddGroupBlockedUserDTO addGroupBlockedUserDTO) {
+    public Mono<ResponseEntity<ResponseDTO<GroupBlockedUser>>> addGroupBlockedUser(
+            @RequestBody AddGroupBlockedUserDTO addGroupBlockedUserDTO) {
         Mono<GroupBlockedUser> createMono = groupBlocklistService.addBlockedUser(
                 addGroupBlockedUserDTO.getGroupId(),
                 addGroupBlockedUserDTO.getUserId(),

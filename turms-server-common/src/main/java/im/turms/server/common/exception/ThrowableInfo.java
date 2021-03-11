@@ -21,7 +21,7 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import lombok.Data;
 
 @Data
-public class ThrowableInfo {
+public final class ThrowableInfo {
 
     private final TurmsStatusCode code;
     private final String reason;

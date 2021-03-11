@@ -19,7 +19,18 @@ package im.turms.turms.workflow.access.servicerequest.controller;
 
 import im.turms.common.constant.ResponseAction;
 import im.turms.common.model.dto.notification.TurmsNotification;
-import im.turms.common.model.dto.request.user.relationship.*;
+import im.turms.common.model.dto.request.user.relationship.CreateFriendRequestRequest;
+import im.turms.common.model.dto.request.user.relationship.CreateRelationshipGroupRequest;
+import im.turms.common.model.dto.request.user.relationship.CreateRelationshipRequest;
+import im.turms.common.model.dto.request.user.relationship.DeleteRelationshipGroupRequest;
+import im.turms.common.model.dto.request.user.relationship.DeleteRelationshipRequest;
+import im.turms.common.model.dto.request.user.relationship.QueryFriendRequestsRequest;
+import im.turms.common.model.dto.request.user.relationship.QueryRelatedUserIdsRequest;
+import im.turms.common.model.dto.request.user.relationship.QueryRelationshipGroupsRequest;
+import im.turms.common.model.dto.request.user.relationship.QueryRelationshipsRequest;
+import im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest;
+import im.turms.common.model.dto.request.user.relationship.UpdateRelationshipGroupRequest;
+import im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.workflow.access.servicerequest.dispatcher.ClientRequestHandler;
@@ -36,7 +47,18 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.*;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.CREATE_FRIEND_REQUEST_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.CREATE_RELATIONSHIP_GROUP_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.CREATE_RELATIONSHIP_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.DELETE_RELATIONSHIP_GROUP_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.DELETE_RELATIONSHIP_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_FRIEND_REQUESTS_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_RELATED_USER_IDS_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_RELATIONSHIPS_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_RELATIONSHIP_GROUPS_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.UPDATE_FRIEND_REQUEST_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.UPDATE_RELATIONSHIP_GROUP_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.UPDATE_RELATIONSHIP_REQUEST;
 
 /**
  * @author James Chen
@@ -72,7 +94,8 @@ public class UserRelationshipServiceController {
                     .map(friendRequest -> node.getSharedProperties()
                             .getService()
                             .getNotification().isNotifyRecipientWhenReceivingFriendRequest()
-                            ? RequestHandlerResultFactory.get(friendRequest.getId(), request.getRecipientId(), clientRequest.getTurmsRequest())
+                            ? RequestHandlerResultFactory
+                            .get(friendRequest.getId(), request.getRecipientId(), clientRequest.getTurmsRequest())
                             : RequestHandlerResultFactory.get(friendRequest.getId()));
         };
     }
@@ -110,7 +133,8 @@ public class UserRelationshipServiceController {
                     false,
                     null)
                     .then(Mono.fromCallable(() ->
-                            node.getSharedProperties().getService().getNotification().isNotifyRelatedUserAfterAddedToOneSidedRelationshipGroupByOthers()
+                            node.getSharedProperties().getService().getNotification()
+                                    .isNotifyRelatedUserAfterAddedToOneSidedRelationshipGroupByOthers()
                                     ? RequestHandlerResultFactory.get(request.getUserId(), clientRequest.getTurmsRequest())
                                     : RequestHandlerResultFactory.OK));
         };
@@ -161,7 +185,8 @@ public class UserRelationshipServiceController {
                         request.getUserId(),
                         null);
             }
-            return deleteMono.then(Mono.fromCallable(() -> node.getSharedProperties().getService().getNotification().isNotifyMemberAfterRemovedFromRelationshipGroupByOthers()
+            return deleteMono.then(Mono.fromCallable(() -> node.getSharedProperties().getService().getNotification()
+                    .isNotifyMemberAfterRemovedFromRelationshipGroupByOthers()
                     ? RequestHandlerResultFactory.get(request.getUserId(), clientRequest.getTurmsRequest())
                     : RequestHandlerResultFactory.OK));
         };
@@ -258,9 +283,10 @@ public class UserRelationshipServiceController {
                     clientRequest.getUserId(),
                     action,
                     reason)
-                    .then(Mono.fromCallable(() -> node.getSharedProperties().getService().getNotification().isNotifyRequesterAfterFriendRequestUpdated()
-                            ? RequestHandlerResultFactory.get(request.getRequestId(), clientRequest.getTurmsRequest())
-                            : RequestHandlerResultFactory.OK));
+                    .then(Mono.fromCallable(
+                            () -> node.getSharedProperties().getService().getNotification().isNotifyRequesterAfterFriendRequestUpdated()
+                                    ? RequestHandlerResultFactory.get(request.getRequestId(), clientRequest.getTurmsRequest())
+                                    : RequestHandlerResultFactory.OK));
         };
     }
 
@@ -292,7 +318,8 @@ public class UserRelationshipServiceController {
                     null,
                     true,
                     null)
-                    .then(Mono.fromCallable(() -> node.getSharedProperties().getService().getNotification().isNotifyRelatedUserAfterOneSidedRelationshipUpdatedByOthers()
+                    .then(Mono.fromCallable(() -> node.getSharedProperties().getService().getNotification()
+                            .isNotifyRelatedUserAfterOneSidedRelationshipUpdatedByOthers()
                             ? RequestHandlerResultFactory.get(request.getUserId(), clientRequest.getTurmsRequest())
                             : RequestHandlerResultFactory.OK));
         };

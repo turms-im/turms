@@ -260,7 +260,8 @@ public class GroupQuestionService {
                                                 .onErrorResume(t -> Mono.empty())
                                                 .then());
                             } else {
-                                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_DELETE_GROUP_QUESTION));
+                                return Mono
+                                        .error(TurmsBusinessException.get(TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_DELETE_GROUP_QUESTION));
                             }
                         }));
     }
@@ -326,7 +327,8 @@ public class GroupQuestionService {
                                     GroupJoinQuestionsWithVersion.Builder builder = GroupJoinQuestionsWithVersion.newBuilder();
                                     builder.setLastUpdatedDate(Int64Value.of(version.getTime()));
                                     for (GroupJoinQuestion question : groupJoinQuestions) {
-                                        im.turms.common.model.bo.group.GroupJoinQuestion.Builder questionBuilder = ProtoUtil.groupJoinQuestion2proto(question);
+                                        im.turms.common.model.bo.group.GroupJoinQuestion.Builder questionBuilder =
+                                                ProtoUtil.groupJoinQuestion2proto(question);
                                         builder.addGroupJoinQuestions(questionBuilder.build());
                                     }
                                     return builder.build();
@@ -369,7 +371,8 @@ public class GroupQuestionService {
                                                 .onErrorResume(t -> Mono.empty())
                                                 .thenReturn(result));
                             } else {
-                                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_UPDATE_GROUP_QUESTION));
+                                return Mono
+                                        .error(TurmsBusinessException.get(TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_UPDATE_GROUP_QUESTION));
                             }
                         }));
     }

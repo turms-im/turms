@@ -38,10 +38,10 @@ import static im.turms.common.model.dto.request.TurmsRequest.KindCase.KIND_NOT_S
  * @author James Chen
  */
 @Log4j2
-public class TurmsRequestUtil {
+public final class TurmsRequestUtil {
 
     /**
-     * @see im.turms.common.model.dto.request.TurmsRequest:72
+     * {@link im.turms.common.model.dto.request.TurmsRequest:72}
      */
     private static final int TURMS_REQUEST_REQUEST_ID_TAG = 10;
     private static final ExtensionRegistry REGISTRY = ExtensionRegistry.getEmptyRegistry();

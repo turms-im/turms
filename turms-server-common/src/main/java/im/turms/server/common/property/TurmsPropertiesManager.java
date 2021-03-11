@@ -53,7 +53,8 @@ public class TurmsPropertiesManager {
     private Node node;
     private TurmsProperties localTurmsProperties;
 
-    public TurmsPropertiesManager(@Lazy Node node, TurmsProperties localTurmsProperties, ApplicationContext context) throws JsonProcessingException {
+    public TurmsPropertiesManager(@Lazy Node node, TurmsProperties localTurmsProperties, ApplicationContext context)
+            throws JsonProcessingException {
         this.node = node;
         this.localTurmsProperties = localTurmsProperties;
         // Get latestConfigFilePath according to the active profiles

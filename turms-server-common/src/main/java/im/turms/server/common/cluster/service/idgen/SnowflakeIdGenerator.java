@@ -81,7 +81,8 @@ public class SnowflakeIdGenerator {
 
     public void updateNodeInfo(int dataCenterId, int memberId) {
         if (dataCenterId >= (1 << DATA_CENTER_ID_BITS)) {
-            String reason = String.format("Illegal dataCenterId %d. The dataCenterId must be in the range [0, %d)", dataCenterId, 1 << DATA_CENTER_ID_BITS);
+            String reason = String.format("Illegal dataCenterId %d. The dataCenterId must be in the range [0, %d)", dataCenterId,
+                    1 << DATA_CENTER_ID_BITS);
             throw new IllegalArgumentException(reason);
         }
         if (memberId >= (1 << MEMBER_ID_BITS)) {

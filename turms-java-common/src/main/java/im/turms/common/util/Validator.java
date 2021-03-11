@@ -22,7 +22,7 @@ import java.util.Collection;
 /**
  * @author James Chen
  */
-public class Validator {
+public final class Validator {
 
     private Validator() {
     }

@@ -29,7 +29,7 @@ import java.util.Objects;
 /**
  * @author James Chen
  */
-public class RequestStatusUtil {
+public final class RequestStatusUtil {
 
     private RequestStatusUtil() {
     }
@@ -54,7 +54,9 @@ public class RequestStatusUtil {
         }
     }
 
-    public static Update updateResponseDateBasedOnStatus(@NotNull Update update, @Nullable RequestStatus status, @Nullable Date responseDate) {
+    public static Update updateResponseDateBasedOnStatus(@NotNull Update update,
+                                                         @Nullable RequestStatus status,
+                                                         @Nullable Date responseDate) {
         if (status != null) {
             if (RequestStatusUtil.isProcessedByResponder(status)) {
                 if (responseDate == null) {

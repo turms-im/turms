@@ -44,7 +44,7 @@ public final class GroupConversation {
     @Field(Fields.MEMBER_ID_AND_READ_DATE)
     private final Map<Long, Date> memberIdAndReadDate;
 
-    public static class Fields {
+    public static final class Fields {
         public static final String MEMBER_ID_AND_READ_DATE = "mr";
 
         private Fields() {

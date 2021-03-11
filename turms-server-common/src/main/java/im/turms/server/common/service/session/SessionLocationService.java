@@ -265,7 +265,8 @@ public class SessionLocationService {
     }
 
     private ReactiveGeoOperations<String, UserSessionId> getGeoByUserSessionIdOperations(long userId) {
-        return geoByUserSessionIdOperationsList.get(shardingAlgorithmForLocation.doSharding(userId, geoByUserSessionIdOperationsList.size()));
+        return geoByUserSessionIdOperationsList
+                .get(shardingAlgorithmForLocation.doSharding(userId, geoByUserSessionIdOperationsList.size()));
     }
 
     private ReactiveGeoOperations<String, Long> getGeoByUserIdOperations(long userId) {

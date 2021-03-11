@@ -59,7 +59,8 @@ public class TcpConnection extends NetConnection {
                     })
                     .retryWhen(RETRY_SEND_CLOSE_NOTIFICATION)
                     .onErrorResume(throwable -> {
-                        log.error("Failed to send the close notification with retries exhausted: " + RETRY_SEND_CLOSE_NOTIFICATION.maxAttempts, throwable);
+                        log.error("Failed to send the close notification with retries exhausted: " +
+                                RETRY_SEND_CLOSE_NOTIFICATION.maxAttempts, throwable);
                         return Mono.empty();
                     })
                     .doOnTerminate(this::close)

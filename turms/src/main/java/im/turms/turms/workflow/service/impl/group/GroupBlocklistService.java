@@ -116,9 +116,10 @@ public class GroupBlocklistService {
                                     .then(updateVersion.then().onErrorResume(throwable -> Mono.empty()));
                         } else {
                             return mongoClient
-                                    .inTransaction(newSession -> groupMemberService.deleteGroupMembers(groupId, userIdToBlock, newSession, false)
-                                            .then(mongoClient.insert(newSession, blockedUser))
-                                            .then(updateVersion.then().onErrorResume(throwable -> Mono.empty())))
+                                    .inTransaction(
+                                            newSession -> groupMemberService.deleteGroupMembers(groupId, userIdToBlock, newSession, false)
+                                                    .then(mongoClient.insert(newSession, blockedUser))
+                                                    .then(updateVersion.then().onErrorResume(throwable -> Mono.empty())))
                                     .retryWhen(DaoConstant.TRANSACTION_RETRY);
                         }
                     } else {

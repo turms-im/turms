@@ -30,7 +30,7 @@ import java.util.Map;
 /**
  * @author James Chen
  */
-public class UdpSignalResponseBufferPool {
+public final class UdpSignalResponseBufferPool {
 
     private static final Map<TurmsStatusCode, ByteBuf> CODE_POOL = new EnumMap<>(TurmsStatusCode.class);
     private static final Map<UdpNotificationType, ByteBuf> NOTIFICATION_POOL = new EnumMap<>(UdpNotificationType.class);

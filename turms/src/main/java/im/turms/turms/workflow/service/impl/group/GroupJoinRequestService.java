@@ -163,7 +163,8 @@ public class GroupJoinRequestService {
                             null);
                     return mongoClient.insert(groupJoinRequest)
                             .flatMap(unused -> groupVersionService.updateJoinRequestsVersion(groupId).onErrorResume(t -> Mono.empty())
-                                    .then(userVersionService.updateSentGroupJoinRequestsVersion(requesterId).onErrorResume(t -> Mono.empty())))
+                                    .then(userVersionService.updateSentGroupJoinRequestsVersion(requesterId)
+                                            .onErrorResume(t -> Mono.empty())))
                             .thenReturn(groupJoinRequest);
                 });
     }
@@ -222,7 +223,8 @@ public class GroupJoinRequestService {
                             .set(GroupJoinRequest.Fields.RESPONDER_ID, requesterId);
                     return mongoClient.updateOne(GroupJoinRequest.class, filter, update)
                             .flatMap(result -> result.getModifiedCount() > 0
-                                    ? Mono.when(groupVersionService.updateJoinRequestsVersion(request.getGroupId()).onErrorResume(t -> Mono.empty()),
+                                    ? Mono.when(
+                                    groupVersionService.updateJoinRequestsVersion(request.getGroupId()).onErrorResume(t -> Mono.empty()),
                                     userVersionService.updateSentGroupJoinRequestsVersion(requesterId).onErrorResume(t -> Mono.empty()))
                                     : Mono.empty());
                 });

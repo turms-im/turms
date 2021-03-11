@@ -26,7 +26,7 @@ import im.turms.server.common.util.ProtoUtil;
 import io.netty.buffer.ByteBuf;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author James Chen
@@ -37,7 +37,7 @@ class ProtoUtilTests {
     void getDirectByteBuffer_shouldBeParsedToOriginalRequest() throws InvalidProtocolBufferException {
         int messageId = 9999;
         String text = "Test Text";
-        byte[] record = new byte[]{1, 2, 3, 4, 10, 11};
+        byte[] record = new byte[] {1, 2, 3, 4, 10, 11};
         CreateMessageRequest request = CreateMessageRequest
                 .newBuilder()
                 .setMessageId(Int64Value.of(messageId))
@@ -47,7 +47,7 @@ class ProtoUtilTests {
         ByteBuf buffer = ProtoUtil.getDirectByteBuffer(request);
         CreateMessageRequest parsedRequest = CreateMessageRequest.parseFrom(buffer.nioBuffer());
 
-        assertEquals(request, parsedRequest);
+        assertThat(parsedRequest).isEqualTo(request);
     }
 
 }

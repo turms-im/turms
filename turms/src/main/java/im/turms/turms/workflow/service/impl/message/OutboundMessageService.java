@@ -31,7 +31,11 @@ import im.turms.server.common.property.env.common.ClientApiLoggingProperties;
 import im.turms.server.common.property.env.service.env.clientapi.property.LoggingRequestProperties;
 import im.turms.server.common.rpc.request.SendNotificationRequest;
 import im.turms.server.common.service.session.UserStatusService;
-import im.turms.server.common.util.*;
+import im.turms.server.common.util.CollectorUtil;
+import im.turms.server.common.util.LoggingRequestUtil;
+import im.turms.server.common.util.MapUtil;
+import im.turms.server.common.util.ProtoUtil;
+import im.turms.server.common.util.ReactorUtil;
 import io.netty.buffer.ByteBuf;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
@@ -41,7 +45,12 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotNull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author James Chen
@@ -139,9 +148,11 @@ public class OutboundMessageService {
             return Flux.merge(monos)
                     .collect(CollectorUtil.toList(recipientIdsSize))
                     .flatMap(pairs -> {
-                        int expectedMembersCount = Math.min(node.getDiscoveryService().getActiveSortedGatewayMemberList().size(), recipientIdsSize);
+                        int expectedMembersCount =
+                                Math.min(node.getDiscoveryService().getActiveSortedGatewayMemberList().size(), recipientIdsSize);
                         int expectedRecipientCountPerMember = Math.min(1, recipientIdsSize / expectedMembersCount);
-                        SetMultimap<String, Long> userIdsByNodeId = HashMultimap.create(expectedMembersCount, expectedRecipientCountPerMember);
+                        SetMultimap<String, Long> userIdsByNodeId =
+                                HashMultimap.create(expectedMembersCount, expectedRecipientCountPerMember);
                         for (RecipientAndNodeIds pair : pairs) {
                             for (String nodeId : pair.getNodeIds()) {
                                 userIdsByNodeId.put(nodeId, pair.getRecipientId());

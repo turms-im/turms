@@ -43,15 +43,27 @@ import reactor.netty.http.server.WebsocketServerSpec;
 import java.util.List;
 import java.util.function.BiFunction;
 
-import static com.google.common.net.HttpHeaders.*;
-import static io.netty.channel.ChannelOption.*;
+import static com.google.common.net.HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS;
+import static com.google.common.net.HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS;
+import static com.google.common.net.HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN;
+import static com.google.common.net.HttpHeaders.ACCESS_CONTROL_MAX_AGE;
+import static com.google.common.net.HttpHeaders.ACCESS_CONTROL_REQUEST_METHOD;
+import static com.google.common.net.HttpHeaders.CONNECTION;
+import static com.google.common.net.HttpHeaders.ORIGIN;
+import static com.google.common.net.HttpHeaders.SEC_WEBSOCKET_KEY;
+import static com.google.common.net.HttpHeaders.UPGRADE;
+import static io.netty.channel.ChannelOption.CONNECT_TIMEOUT_MILLIS;
+import static io.netty.channel.ChannelOption.SO_BACKLOG;
+import static io.netty.channel.ChannelOption.SO_LINGER;
+import static io.netty.channel.ChannelOption.SO_REUSEADDR;
+import static io.netty.channel.ChannelOption.TCP_NODELAY;
 import static io.netty.handler.codec.http.HttpMethod.OPTIONS;
 
 /**
  * @author James Chen
  */
 @Log4j2
-public class WebSocketFactory {
+public final class WebSocketFactory {
     /**
      * Note: The average size of turms requests is 16~64 bytes,
      */
@@ -94,7 +106,7 @@ public class WebSocketFactory {
     }
 
     /**
-     * @see ReactorNettyRequestUpgradeStrategy#upgrade(org.springframework.web.server.ServerWebExchange, org.springframework.web.reactive.socket.WebSocketHandler, java.lang.String, java.util.function.Supplier)
+     * @see ReactorNettyRequestUpgradeStrategy#upgrade
      */
     private static BiFunction<HttpServerRequest, HttpServerResponse, Publisher<Void>> getHttpRequestHandler(ConnectionHandler handler) {
         return (request, response) -> {
@@ -144,7 +156,7 @@ public class WebSocketFactory {
     }
 
     /**
-     * @see HandshakeWebSocketService#handleRequest(org.springframework.web.server.ServerWebExchange, org.springframework.web.reactive.socket.WebSocketHandler)
+     * @see HandshakeWebSocketService#handleRequest
      * @see org.springframework.web.server.handler.ExceptionHandlingWebHandler
      */
     private static HttpResponseStatus validateHandshakeRequest(HttpServerRequest request) {

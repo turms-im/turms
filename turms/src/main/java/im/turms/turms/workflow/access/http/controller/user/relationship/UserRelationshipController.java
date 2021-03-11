@@ -22,14 +22,25 @@ import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.workflow.access.http.dto.request.user.AddRelationshipDTO;
 import im.turms.turms.workflow.access.http.dto.request.user.UpdateRelationshipDTO;
 import im.turms.turms.workflow.access.http.dto.request.user.UserRelationshipDTO;
-import im.turms.turms.workflow.access.http.dto.response.*;
+import im.turms.turms.workflow.access.http.dto.response.DeleteResultDTO;
+import im.turms.turms.workflow.access.http.dto.response.PaginationDTO;
+import im.turms.turms.workflow.access.http.dto.response.ResponseDTO;
+import im.turms.turms.workflow.access.http.dto.response.ResponseFactory;
+import im.turms.turms.workflow.access.http.dto.response.UpdateResultDTO;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.access.http.util.PageUtil;
 import im.turms.turms.workflow.dao.domain.user.UserRelationship;
 import im.turms.turms.workflow.service.impl.user.relationship.UserRelationshipGroupService;
 import im.turms.turms.workflow.service.impl.user.relationship.UserRelationshipService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -39,7 +50,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static im.turms.turms.workflow.access.http.permission.AdminPermission.*;
+import static im.turms.turms.workflow.access.http.permission.AdminPermission.USER_RELATIONSHIP_CREATE;
+import static im.turms.turms.workflow.access.http.permission.AdminPermission.USER_RELATIONSHIP_DELETE;
+import static im.turms.turms.workflow.access.http.permission.AdminPermission.USER_RELATIONSHIP_QUERY;
+import static im.turms.turms.workflow.access.http.permission.AdminPermission.USER_RELATIONSHIP_UPDATE;
 
 /**
  * @author James Chen
@@ -52,7 +66,8 @@ public class UserRelationshipController {
     private final UserRelationshipGroupService userRelationshipGroupService;
     private final PageUtil pageUtil;
 
-    public UserRelationshipController(UserRelationshipService userRelationshipService, PageUtil pageUtil, UserRelationshipGroupService userRelationshipGroupService) {
+    public UserRelationshipController(UserRelationshipService userRelationshipService, PageUtil pageUtil,
+                                      UserRelationshipGroupService userRelationshipGroupService) {
         this.userRelationshipService = userRelationshipService;
         this.pageUtil = pageUtil;
         this.userRelationshipGroupService = userRelationshipGroupService;
@@ -138,7 +153,8 @@ public class UserRelationshipController {
     private Flux<UserRelationshipDTO> relationship2dto(Boolean withGroupIndexes, Flux<UserRelationship> relationshipsFlux) {
         return relationshipsFlux
                 .flatMap(relationship -> withGroupIndexes
-                        ? userRelationshipGroupService.queryGroupIndexes(relationship.getKey().getOwnerId(), relationship.getKey().getRelatedUserId())
+                        ? userRelationshipGroupService
+                        .queryGroupIndexes(relationship.getKey().getOwnerId(), relationship.getKey().getRelatedUserId())
                         .collect(Collectors.toSet())
                         .map(indexes -> UserRelationshipDTO.fromDomain(relationship, indexes))
                         : Mono.just(UserRelationshipDTO.fromDomain(relationship)));

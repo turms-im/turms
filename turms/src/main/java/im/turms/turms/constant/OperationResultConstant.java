@@ -23,7 +23,7 @@ import com.mongodb.client.result.UpdateResult;
 /**
  * @author James Chen
  */
-public class OperationResultConstant {
+public final class OperationResultConstant {
 
     private OperationResultConstant() {
     }

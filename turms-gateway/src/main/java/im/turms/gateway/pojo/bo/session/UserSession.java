@@ -51,13 +51,13 @@ public final class UserSession {
     @Nullable
     private Point loginLocation;
     /**
-     * 1. Use Sinks.Many<ByteBuf> instead of Sinks.Many<TurmsNotification>
+     * 1. Use {@link ByteBuf} instead of {@link im.turms.common.model.dto.notification.TurmsNotification}
      * so that turms-gateway can transfer data through zero copy (if SSL is disabled)
      * and don't need to parse it when the data comes from turms.
      * <p>
      * 2. Although we can forward the same WebSocketMessage when there are different recipients connecting to the local turms-gateway,
-     * we still use ByteBuf for code clarity and extensibility (we will integrate UDP in the future) and ByteBuf won't be copied in the scenario
-     * so it's acceptable.
+     * we still use ByteBuf for code clarity and extensibility (we will integrate UDP in the future)
+     * and ByteBuf won't be copied in the scenario so it's acceptable.
      * Note that the ByteBuf (TurmsNotification) comes from turms servers in most scenarios.
      */
     @Getter(AccessLevel.PRIVATE)

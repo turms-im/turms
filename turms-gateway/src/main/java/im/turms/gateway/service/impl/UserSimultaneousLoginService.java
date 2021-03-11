@@ -83,7 +83,8 @@ public class UserSimultaneousLoginService {
     }
 
     private SetMultimap<DeviceType, DeviceType> newExclusiveDeviceFromStrategy(SimultaneousLoginStrategy strategy) {
-        SetMultimap<DeviceType, DeviceType> newExclusiveDeviceTypes = HashMultimap.create(DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length, DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length);
+        SetMultimap<DeviceType, DeviceType> newExclusiveDeviceTypes =
+                HashMultimap.create(DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length, DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length);
         for (DeviceType deviceType : DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES) {
             // Every device type conflicts with itself
             newExclusiveDeviceTypes.put(deviceType, deviceType);

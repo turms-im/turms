@@ -145,12 +145,14 @@ public class InboundRequestService {
                                 if (throwable instanceof RpcException) {
                                     RpcException rpcException = (RpcException) throwable;
                                     if (rpcException.isServerError()) {
-                                        LogUtil.error(log, context, ErrorMessage.FAILED_TO_HANDLE_SERVICE_REQUEST_WITH_REQUEST, serviceRequest, throwable);
+                                        LogUtil.error(log, context, ErrorMessage.FAILED_TO_HANDLE_SERVICE_REQUEST_WITH_REQUEST,
+                                                serviceRequest, throwable);
                                     }
                                     serviceResponse = new ServiceResponse(null, rpcException.getStatusCode(), throwable.getMessage());
                                 } else {
                                     log.error(ErrorMessage.FAILED_TO_HANDLE_SERVICE_REQUEST_WITH_REQUEST, serviceRequest, throwable);
-                                    serviceResponse = new ServiceResponse(null, TurmsStatusCode.SERVER_INTERNAL_ERROR, throwable.getMessage());
+                                    serviceResponse =
+                                            new ServiceResponse(null, TurmsStatusCode.SERVER_INTERNAL_ERROR, throwable.getMessage());
                                 }
                                 return Mono.just(serviceResponse);
                             })

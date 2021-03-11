@@ -20,7 +20,7 @@ package im.turms.server.common.redis;
 /**
  * @author James Chen
  */
-public class RedisEntryId {
+public final class RedisEntryId {
 
     private RedisEntryId() {
     }

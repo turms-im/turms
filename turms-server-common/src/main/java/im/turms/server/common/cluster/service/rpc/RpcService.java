@@ -133,7 +133,8 @@ public class RpcService implements ClusterService {
             }
             RSocket connection = discoveryService.getConnectionManager().getMemberConnection(memberNodeId);
             if (connection == null) {
-                return Mono.error(RpcException.get(RpcErrorCode.CONNECTION_NOT_FOUND, TurmsStatusCode.SERVER_UNAVAILABLE, "The RSocket instance is missing for the member ID: " + memberNodeId));
+                return Mono.error(RpcException.get(RpcErrorCode.CONNECTION_NOT_FOUND, TurmsStatusCode.SERVER_UNAVAILABLE,
+                        "The RSocket instance is missing for the member ID: " + memberNodeId));
             }
             return requestResponse0(memberNodeId, connection, request, timeout);
         } catch (Exception e) {
@@ -168,7 +169,9 @@ public class RpcService implements ClusterService {
      * 2. a non-empty publisher if the peer responds with an non-empty valid payload;
      * 3. error for other cases (e.g. no peer exists).
      */
-    public <T> Flux<T> requestResponsesFromOtherServices(@NotNull RpcCallable<T> request, @NotNull Duration timeout, boolean rejectIfMissingAnyConnection) {
+    public <T> Flux<T> requestResponsesFromOtherServices(@NotNull RpcCallable<T> request,
+                                                         @NotNull Duration timeout,
+                                                         boolean rejectIfMissingAnyConnection) {
         List<MemberInfoWithConnection> members = discoveryService.getOtherActiveConnectedServiceMemberList();
         return requestResponsesFromOtherMembers(members, request, timeout, rejectIfMissingAnyConnection);
     }
@@ -187,7 +190,9 @@ public class RpcService implements ClusterService {
      * 2. a non-empty publisher if the peer responds with an non-empty valid payload;
      * 3. error for other cases (e.g. no peer exists).
      */
-    public <T> Flux<T> requestResponsesFromOtherGateways(@NotNull RpcCallable<T> request, @NotNull Duration timeout, boolean rejectIfMissingAnyConnection) {
+    public <T> Flux<T> requestResponsesFromOtherGateways(@NotNull RpcCallable<T> request,
+                                                         @NotNull Duration timeout,
+                                                         boolean rejectIfMissingAnyConnection) {
         List<MemberInfoWithConnection> members = discoveryService.getOtherActiveConnectedServiceMemberList();
         return requestResponsesFromOtherMembers(members, request, timeout, rejectIfMissingAnyConnection);
     }
@@ -196,9 +201,10 @@ public class RpcService implements ClusterService {
      * @return 1. an non-empty publisher that publishes an empty map if all peers respond with an empty payload;
      * 2. a non-empty publisher that publishes a non-empty map if any peer responds with an non-empty valid payload;
      * 3. error for other cases (e.g. no peer exists).
-     * Map<String, T> = Member node ID -> Response
+     * The key is the member node ID, and the value is the response
      */
-    public <T> Mono<Map<String, T>> requestResponsesAsMapFromOtherServices(@NotNull RpcCallable<T> request, boolean rejectIfMissingAnyConnection) {
+    public <T> Mono<Map<String, T>> requestResponsesAsMapFromOtherServices(@NotNull RpcCallable<T> request,
+                                                                           boolean rejectIfMissingAnyConnection) {
         return requestResponsesAsMapFromOtherServices(request, timeoutDuration, rejectIfMissingAnyConnection);
     }
 
@@ -206,9 +212,11 @@ public class RpcService implements ClusterService {
      * @return 1. an non-empty publisher that publishes an empty map if all peers respond with an empty payload;
      * 2. a non-empty publisher that publishes a non-empty map if any peer responds with an non-empty valid payload;
      * 3. error for other cases (e.g. no peer exists).
-     * Map<String, T> = Member node ID -> Response
+     * The key is the member node ID, and the value is the response
      */
-    public <T> Mono<Map<String, T>> requestResponsesAsMapFromOtherServices(@NotNull RpcCallable<T> request, @NotNull Duration timeout, boolean rejectIfMissingAnyConnection) {
+    public <T> Mono<Map<String, T>> requestResponsesAsMapFromOtherServices(@NotNull RpcCallable<T> request,
+                                                                           @NotNull Duration timeout,
+                                                                           boolean rejectIfMissingAnyConnection) {
         List<MemberInfoWithConnection> members = discoveryService.getOtherActiveConnectedServiceMemberList();
         return requestResponsesAsMap(members, request, timeout, rejectIfMissingAnyConnection);
     }
@@ -217,9 +225,10 @@ public class RpcService implements ClusterService {
      * @return 1. an non-empty publisher that publishes an empty map if all peers respond with an empty payload;
      * 2. a non-empty publisher that publishes a non-empty map if any peer responds with an non-empty valid payload;
      * 3. error for other cases (e.g. no peer exists).
-     * Map<String, T> = Member node ID -> Response
+     * The key is the member node ID, and the value is the response
      */
-    public <T> Mono<Map<String, T>> requestResponsesAsMapFromOtherGateways(@NotNull RpcCallable<T> request, boolean rejectIfMissingAnyConnection) {
+    public <T> Mono<Map<String, T>> requestResponsesAsMapFromOtherGateways(@NotNull RpcCallable<T> request,
+                                                                           boolean rejectIfMissingAnyConnection) {
         return requestResponsesAsMapFromOtherGateways(request, timeoutDuration, rejectIfMissingAnyConnection);
     }
 
@@ -227,9 +236,11 @@ public class RpcService implements ClusterService {
      * @return 1. an non-empty publisher that publishes an empty map if all peers respond with an empty payload;
      * 2. a non-empty publisher that publishes a non-empty map if any peer responds with an non-empty valid payload;
      * 3. error for other cases (e.g. no peer exists).
-     * Map<String, T> = Member node ID -> Response
+     * The key is the member node ID, and the value is the response
      */
-    public <T> Mono<Map<String, T>> requestResponsesAsMapFromOtherGateways(@NotNull RpcCallable<T> request, @NotNull Duration timeout, boolean rejectIfMissingAnyConnection) {
+    public <T> Mono<Map<String, T>> requestResponsesAsMapFromOtherGateways(@NotNull RpcCallable<T> request,
+                                                                           @NotNull Duration timeout,
+                                                                           boolean rejectIfMissingAnyConnection) {
         List<MemberInfoWithConnection> members = discoveryService.getOtherActiveConnectedGatewayMemberList();
         return requestResponsesAsMap(members, request, timeout, rejectIfMissingAnyConnection);
     }
@@ -262,7 +273,8 @@ public class RpcService implements ClusterService {
             return Flux.error(RpcException.get(RpcErrorCode.SERVICE_NOT_FOUND, TurmsStatusCode.SERVER_UNAVAILABLE));
         }
         if (rejectIfMissingAnyConnection && !discoveryService.getConnectionManager().isHasConnectedToAllMembers()) {
-            return Flux.error(RpcException.get(RpcErrorCode.CONNECTION_NOT_FOUND, TurmsStatusCode.SERVER_UNAVAILABLE, "Not all connections are established"));
+            return Flux.error(RpcException
+                    .get(RpcErrorCode.CONNECTION_NOT_FOUND, TurmsStatusCode.SERVER_UNAVAILABLE, "Not all connections are established"));
         }
         ByteBuf buffer = serializationService.serialize(request);
         Payload requestPayload = ByteBufPayload.create(buffer);
@@ -296,7 +308,8 @@ public class RpcService implements ClusterService {
             return Mono.error(RpcException.get(RpcErrorCode.SERVICE_NOT_FOUND, TurmsStatusCode.SERVER_UNAVAILABLE));
         }
         if (rejectIfMissingAnyConnection && !discoveryService.getLocalNodeStatusManager().getLocalMember().isActive()) {
-            return Mono.error(RpcException.get(RpcErrorCode.CONNECTION_NOT_FOUND, TurmsStatusCode.SERVER_UNAVAILABLE, "Not all connections are established"));
+            return Mono.error(RpcException
+                    .get(RpcErrorCode.CONNECTION_NOT_FOUND, TurmsStatusCode.SERVER_UNAVAILABLE, "Not all connections are established"));
         }
         ByteBuf buffer = serializationService.serialize(request);
         Payload requestPayload = ByteBufPayload.create(buffer);

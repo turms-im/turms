@@ -17,7 +17,11 @@
 
 package im.turms.turms.workflow.dao.domain.group;
 
-import im.turms.server.common.mongo.entity.annotation.*;
+import im.turms.server.common.mongo.entity.annotation.CompoundIndex;
+import im.turms.server.common.mongo.entity.annotation.Document;
+import im.turms.server.common.mongo.entity.annotation.Field;
+import im.turms.server.common.mongo.entity.annotation.Id;
+import im.turms.server.common.mongo.entity.annotation.Sharded;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -67,7 +71,7 @@ public final class GroupBlockedUser {
         @Field(Fields.USER_ID)
         private Long userId;
 
-        public static class Fields {
+        public static final class Fields {
             public static final String GROUP_ID = "gid";
             public static final String USER_ID = "uid";
 
@@ -82,7 +86,7 @@ public final class GroupBlockedUser {
         private List<Key> keys;
     }
 
-    public static class Fields {
+    public static final class Fields {
         public static final String ID_GROUP_ID = "_id." + Key.Fields.GROUP_ID;
         public static final String ID_USER_ID = "_id." + Key.Fields.USER_ID;
         public static final String BLOCK_DATE = "bd";

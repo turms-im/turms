@@ -28,7 +28,7 @@ import java.util.Arrays;
 /**
  * @author James Chen
  */
-public class SslUtil {
+public final class SslUtil {
 
     private SslUtil() {
     }
@@ -54,7 +54,7 @@ public class SslUtil {
         private final boolean forServer;
         private final Ssl ssl;
 
-        public MySslServerCustomizer(Ssl ssl, boolean forServer) {
+        MySslServerCustomizer(Ssl ssl, boolean forServer) {
             super(ssl, null, null);
             this.ssl = ssl;
             this.forServer = forServer;

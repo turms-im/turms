@@ -21,7 +21,12 @@ import com.google.common.base.CaseFormat;
 import com.mongodb.client.model.IndexModel;
 import com.mongodb.client.model.IndexOptions;
 import im.turms.server.common.mongo.BsonPool;
-import im.turms.server.common.mongo.entity.annotation.*;
+import im.turms.server.common.mongo.entity.annotation.CompoundIndex;
+import im.turms.server.common.mongo.entity.annotation.Document;
+import im.turms.server.common.mongo.entity.annotation.Id;
+import im.turms.server.common.mongo.entity.annotation.Indexed;
+import im.turms.server.common.mongo.entity.annotation.PropertySetter;
+import im.turms.server.common.mongo.entity.annotation.Sharded;
 import im.turms.server.common.util.InvokeUtil;
 import lombok.Data;
 import lombok.Getter;
@@ -35,8 +40,15 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Nullable;
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Field;
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -121,7 +133,7 @@ public class MongoEntity<T> {
         }
         String[] keys = sharded.shardKey();
         if (keys.length == 0) {
-            keys = new String[]{"_id"};
+            keys = new String[] {"_id"};
         }
         if (sharded.shardingStrategy().equals(ShardingStrategy.HASH)) {
             if (keys.length > 1) {
@@ -192,7 +204,8 @@ public class MongoEntity<T> {
             if (entityFields == null) {
                 entityFields = new HashMap<>(16);
             }
-            entityFields.put(fieldName, new EntityField(fieldClass, keyClass, elementClass, fieldName, isIdField, ctorParamIndex, getter, setter));
+            entityFields.put(fieldName,
+                    new EntityField(fieldClass, keyClass, elementClass, fieldName, isIdField, ctorParamIndex, getter, setter));
         }
         return new EntityFieldsInfo(
                 idField,
@@ -235,7 +248,8 @@ public class MongoEntity<T> {
      * @implNote Note that we just follow the original name without any naming convention
      */
     private String parseFieldName(Field field) {
-        im.turms.server.common.mongo.entity.annotation.Field property = field.getAnnotation(im.turms.server.common.mongo.entity.annotation.Field.class);
+        im.turms.server.common.mongo.entity.annotation.Field property =
+                field.getAnnotation(im.turms.server.common.mongo.entity.annotation.Field.class);
         return property == null ? field.getName() : property.value();
     }
 

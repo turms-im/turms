@@ -51,10 +51,17 @@ import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.*;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_MESSAGES_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.UPDATE_MESSAGE_REQUEST;
 
 /**
  * @author James Chen
@@ -88,7 +95,8 @@ public class MessageServiceController {
             Mono<Pair<Message, Set<Long>>> messageAndRelatedUserIdsMono;
             boolean isGroupMessage = request.hasGroupId();
             if (!isGroupMessage && !request.hasRecipientId()) {
-                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The recipientId must not be null for private messages"));
+                return Mono.error(TurmsBusinessException
+                        .get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The recipientId must not be null for private messages"));
             }
             long targetId = isGroupMessage ? request.getGroupId().getValue() : request.getRecipientId().getValue();
             if (request.hasMessageId()) {
@@ -260,7 +268,8 @@ public class MessageServiceController {
                             resultMono = resultMono.doOnSuccess(ignored -> {
                                 Mono<Void> mono = areGroupMessages
                                         ? conversationService.upsertGroupConversationReadDate(messages.get(0).groupId(), userId, new Date())
-                                        : conversationService.upsertPrivateConversationReadDate(userId, messages.get(0).getTargetId(), new Date());
+                                        : conversationService
+                                        .upsertPrivateConversationReadDate(userId, messages.get(0).getTargetId(), new Date());
                                 mono.subscribe();
                             });
                         }

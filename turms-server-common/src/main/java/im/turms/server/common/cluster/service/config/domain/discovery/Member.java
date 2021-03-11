@@ -82,11 +82,6 @@ public final class Member {
 
     private boolean isActive;
 
-    /**
-     * This constructor is used by Spring Data MongoDB to parse BSON to the model object
-     * or it will throw "org.springframework.data.mapping.MappingException:
-     * No property clusterId found on entity class im.turms.cluster.service.config.domain.config.discovery.Member to bind constructor parameter to!"
-     */
     @PersistenceConstructor
     public Member(
             Key key,
@@ -209,15 +204,6 @@ public final class Member {
         }
     }
 
-    @Data
-    @FieldNameConstants
-    public static class Key {
-        private final String clusterId;
-
-        @Indexed
-        private final String nodeId;
-    }
-
     @JsonIgnore
     public String getClusterId() {
         return getKey().getClusterId();
@@ -241,6 +227,15 @@ public final class Member {
 
     public boolean isSameAddress(Member member) {
         return memberHost.equals(member.getMemberHost()) && memberPort == member.getMemberPort();
+    }
+
+    @Data
+    @FieldNameConstants
+    public static class Key {
+        private final String clusterId;
+
+        @Indexed
+        private final String nodeId;
     }
 
 }

@@ -24,12 +24,16 @@ import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nullable;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author James Chen
  */
-public class SerializerUtil {
+public final class SerializerUtil {
 
     private SerializerUtil() {
     }

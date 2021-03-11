@@ -37,7 +37,7 @@ public class ReadReceiptProperties {
     @Description("Whether to allow to move the last read date forward")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    private boolean allowMoveReadDateForward = false;
+    private boolean allowMoveReadDateForward;
 
     @Description("Whether to use the server time to set the last read date when updating")
     @GlobalProperty
@@ -46,7 +46,7 @@ public class ReadReceiptProperties {
 
     @JsonView(MutablePropertiesView.class)
     @Description("Whether to update the read date when a user queries messages")
-    private boolean updateReadDateWhenUserQueryingMessage = false;
+    private boolean updateReadDateWhenUserQueryingMessage;
 
     @Description("Whether to update the read date after a user sent a message")
     @GlobalProperty

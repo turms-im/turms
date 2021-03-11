@@ -22,8 +22,7 @@ import im.turms.gateway.pojo.bo.session.UserSession;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.geo.Point;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author James Chen
@@ -42,7 +41,7 @@ class UserSessionTests {
                 deviceType,
                 loginLocation,
                 logId);
-        assertNotNull(userSession);
+        assertThat(userSession).isNotNull();
     }
 
     @Test
@@ -52,9 +51,9 @@ class UserSessionTests {
                 deviceType,
                 loginLocation,
                 logId);
-        assertEquals(deviceType, userSession.getDeviceType());
-        assertEquals(loginLocation, userSession.getLoginLocation());
-        assertEquals(logId, userSession.getLogId());
+        assertThat(userSession.getDeviceType()).isEqualTo(deviceType);
+        assertThat(userSession.getLoginLocation()).isEqualTo(loginLocation);
+        assertThat(userSession.getLogId()).isEqualTo(logId);
     }
 
 }

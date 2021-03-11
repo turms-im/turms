@@ -7,7 +7,11 @@ import io.lettuce.core.cluster.ClusterTopologyRefreshOptions;
 import io.lettuce.core.resource.ClientResources;
 import io.lettuce.core.resource.DefaultClientResources;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
-import org.springframework.data.redis.connection.*;
+import org.springframework.data.redis.connection.RedisClusterConfiguration;
+import org.springframework.data.redis.connection.RedisNode;
+import org.springframework.data.redis.connection.RedisPassword;
+import org.springframework.data.redis.connection.RedisSentinelConfiguration;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
@@ -29,14 +33,15 @@ import java.util.List;
  * @see org.springframework.boot.autoconfigure.data.redis.RedisConnectionConfiguration
  * @see org.springframework.boot.autoconfigure.data.redis.LettuceConnectionConfiguration
  */
-public class RedisTemplateFactory {
+public final class RedisTemplateFactory {
 
     private static final List<ClientResources> POOL = new ArrayList<>(4);
 
     private RedisTemplateFactory() {
     }
 
-    public static <K, V> List<ReactiveRedisTemplate<K, V>> getTemplates(List<RedisProperties> propertiesList, RedisSerializationContext<K, V> serializationContext) {
+    public static <K, V> List<ReactiveRedisTemplate<K, V>> getTemplates(List<RedisProperties> propertiesList,
+                                                                        RedisSerializationContext<K, V> serializationContext) {
         List<ReactiveRedisTemplate<K, V>> templates = new ArrayList<>(propertiesList.size());
         for (RedisProperties properties : propertiesList) {
             LettuceConnectionFactory connectionFactory = RedisTemplateFactory.getRedisConnectionFactory(properties);
@@ -184,7 +189,7 @@ public class RedisTemplateFactory {
     private static ConnectionInfo parseUrl(String url) {
         try {
             URI uri = new URI(url);
-            boolean useSsl = (url.startsWith("rediss://"));
+            boolean useSsl = url.startsWith("rediss://");
             String password = null;
             if (uri.getUserInfo() != null) {
                 password = uri.getUserInfo();

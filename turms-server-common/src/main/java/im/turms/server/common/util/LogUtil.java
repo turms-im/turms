@@ -27,7 +27,7 @@ import java.io.Closeable;
 /**
  * @author James Chen
  */
-public class LogUtil {
+public final class LogUtil {
 
     private LogUtil() {
     }
@@ -59,7 +59,7 @@ public class LogUtil {
     private static class TurmsContext implements Closeable {
         private final boolean isInitialized;
 
-        public TurmsContext(ContextView contextView) {
+        TurmsContext(ContextView contextView) {
             TracingContext tracingContext = contextView.hasKey(TracingContext.CTX_KEY_NAME)
                     ? contextView.get(TracingContext.CTX_KEY_NAME)
                     : null;

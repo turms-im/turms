@@ -120,7 +120,8 @@ public class EntityCodec<T> implements Codec<T> {
                     try {
                         value = decode(field, reader, decoderContext);
                     } catch (Exception e) {
-                        String message = String.format("Failed to decode the field %s of the class %s", fieldName, entity.getClazz().getName());
+                        String message =
+                                String.format("Failed to decode the field %s of the class %s", fieldName, entity.getClazz().getName());
                         throw new IllegalStateException(message, e);
                     }
                 }
@@ -155,7 +156,8 @@ public class EntityCodec<T> implements Codec<T> {
                     try {
                         value = decode(field, reader, decoderContext);
                     } catch (Exception e) {
-                        String message = String.format("Failed to decode the field %s of the class %s", fieldName, entity.getClazz().getName());
+                        String message =
+                                String.format("Failed to decode the field %s of the class %s", fieldName, entity.getClazz().getName());
                         throw new IllegalStateException(message, e);
                     }
                 }

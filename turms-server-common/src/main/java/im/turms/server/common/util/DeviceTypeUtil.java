@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 /**
  * @author James Chen
  */
-public class DeviceTypeUtil {
+public final class DeviceTypeUtil {
 
     public static final DeviceType[] ALL_DEVICE_TYPES = DeviceType.values();
     public static final DeviceType[] ALL_AVAILABLE_DEVICE_TYPES = Arrays.stream(ALL_DEVICE_TYPES)

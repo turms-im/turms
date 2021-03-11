@@ -31,7 +31,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * @author James Chen
  */
-public class RedisScriptExecutor {
+public final class RedisScriptExecutor {
 
     private RedisScriptExecutor() {
     }
@@ -44,7 +44,7 @@ public class RedisScriptExecutor {
         for (int i = 0; i < keysAndArgs.length; i++) {
             Object obj = keysAndArgs[i];
             if (obj instanceof Byte) {
-                buffers[i] = ByteBuffer.wrap(new byte[]{(byte) obj});
+                buffers[i] = ByteBuffer.wrap(new byte[] {(byte) obj});
             } else if (obj instanceof Short) {
                 buffers[i] = ByteBuffer.allocate(Short.BYTES).putShort((short) obj).flip();
             } else if (obj instanceof Integer) {
@@ -68,7 +68,8 @@ public class RedisScriptExecutor {
         return (Mono<T>) commands.evalSha(script.getSha1(), returnType, keysAndArgs.length, keysAndArgs)
                 .onErrorResume(e -> {
                     if (exceptionContainsNoScriptError(e)) {
-                        return commands.eval(ByteBuffer.wrap(script.getScriptAsString().getBytes(StandardCharsets.UTF_8)), returnType, keysAndArgs.length, keysAndArgs);
+                        return commands.eval(ByteBuffer.wrap(script.getScriptAsString().getBytes(StandardCharsets.UTF_8)), returnType,
+                                keysAndArgs.length, keysAndArgs);
                     }
                     return Flux.error(e instanceof RuntimeException ? e : new RedisSystemException(e.getMessage(), e));
                 })

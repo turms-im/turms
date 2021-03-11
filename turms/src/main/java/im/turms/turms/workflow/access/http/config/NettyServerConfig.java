@@ -22,7 +22,9 @@ import org.springframework.boot.web.embedded.netty.NettyServerCustomizer;
 import org.springframework.context.annotation.Configuration;
 import reactor.netty.http.server.HttpServer;
 
-import static io.netty.channel.ChannelOption.*;
+import static io.netty.channel.ChannelOption.SO_LINGER;
+import static io.netty.channel.ChannelOption.SO_REUSEADDR;
+import static io.netty.channel.ChannelOption.TCP_NODELAY;
 
 /**
  * @author James Chen

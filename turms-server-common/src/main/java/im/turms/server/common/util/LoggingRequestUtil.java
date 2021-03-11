@@ -32,7 +32,7 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * @author James Chen
  */
-public class LoggingRequestUtil {
+public final class LoggingRequestUtil {
 
     private LoggingRequestUtil() {
     }
@@ -73,7 +73,8 @@ public class LoggingRequestUtil {
         return result;
     }
 
-    public static boolean shouldLog(TurmsRequest.KindCase requestType, Map<TurmsRequest.KindCase, LoggingRequestProperties> requestPropertiesMap) {
+    public static boolean shouldLog(TurmsRequest.KindCase requestType,
+                                    Map<TurmsRequest.KindCase, LoggingRequestProperties> requestPropertiesMap) {
         LoggingRequestProperties requestProperties = requestPropertiesMap.get(requestType);
         if (requestProperties == null) {
             return false;

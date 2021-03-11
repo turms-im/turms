@@ -27,14 +27,24 @@ import im.turms.turms.workflow.access.http.dto.response.ResponseDTO;
 import im.turms.turms.workflow.access.http.dto.response.ResponseFactory;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import static im.turms.turms.workflow.access.http.permission.AdminPermission.*;
+import static im.turms.turms.workflow.access.http.permission.AdminPermission.CLUSTER_MEMBERS_CREATE;
+import static im.turms.turms.workflow.access.http.permission.AdminPermission.CLUSTER_MEMBERS_DELETE;
+import static im.turms.turms.workflow.access.http.permission.AdminPermission.CLUSTER_MEMBERS_QUERY;
+import static im.turms.turms.workflow.access.http.permission.AdminPermission.CLUSTER_MEMBERS_UPDATE;
 
 
 /**

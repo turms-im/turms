@@ -25,7 +25,7 @@ import im.turms.server.common.constant.TurmsStatusCode;
 /**
  * @author James Chen
  */
-public class TurmsNotificationUtil {
+public final class TurmsNotificationUtil {
 
     private TurmsNotificationUtil() {
     }

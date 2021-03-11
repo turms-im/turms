@@ -38,7 +38,7 @@ import javax.annotation.Nullable;
  * so that we can avoid intermediary objects
  */
 @Getter
-public class QueryOptions {
+public final class QueryOptions {
 
     private BsonDocument projection;
     private BsonDocument sort;

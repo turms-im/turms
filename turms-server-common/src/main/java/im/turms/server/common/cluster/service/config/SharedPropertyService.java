@@ -55,7 +55,10 @@ public class SharedPropertyService implements ClusterService {
 
     private final List<Consumer<TurmsProperties>> propertiesChangeListeners = new LinkedList<>();
 
-    public SharedPropertyService(String clusterId, NodeType nodeType, TurmsPropertiesManager turmsPropertiesManager, SharedConfigService sharedConfigService) {
+    public SharedPropertyService(String clusterId,
+                                 NodeType nodeType,
+                                 TurmsPropertiesManager turmsPropertiesManager,
+                                 SharedConfigService sharedConfigService) {
         this.clusterId = clusterId;
         this.nodeType = nodeType;
         this.turmsPropertiesManager = turmsPropertiesManager;
@@ -91,13 +94,14 @@ public class SharedPropertyService implements ClusterService {
                         }
                     }
                 })
-                .onErrorContinue((throwable, o) -> log.error("Error while processing the change stream event of SharedProperties: {}", o, throwable))
+                .onErrorContinue(
+                        (throwable, o) -> log.error("Error while processing the change stream event of SharedProperties: {}", o, throwable))
                 .subscribe();
         initializeSharedProperties().block(Duration.ofMinutes(1));
     }
 
     /**
-     * @implNote We don't support the partial update by Map<String, Object> because
+     * @implNote We don't support the partial update by {@link java.util.Map} because
      * there is not an efficient way to update nested objects of a document in MongoDB.
      */
     public Mono<Void> updateSharedProperties(TurmsProperties turmsProperties) {
@@ -196,7 +200,8 @@ public class SharedPropertyService implements ClusterService {
                 });
     }
 
-    private static SharedClusterProperties getClusterProperties(SharedClusterProperties clusterPropertiesSource, TurmsProperties turmsProperties) {
+    private static SharedClusterProperties getClusterProperties(SharedClusterProperties clusterPropertiesSource,
+                                                                TurmsProperties turmsProperties) {
         CommonProperties commonProperties = getCommonProperties(turmsProperties);
         GatewayProperties gatewayProperties = turmsProperties.getGateway();
         ServiceProperties serviceProperties = turmsProperties.getService();

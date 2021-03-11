@@ -162,7 +162,8 @@ public class GroupInvitationService {
                                     return createGroupInvitation(null, groupId, inviterId, inviteeId, finalContent,
                                             RequestStatus.PENDING, null, null, null);
                                 } else {
-                                    return Mono.error(TurmsBusinessException.get(TurmsStatusCode.REDUNDANT_GROUP_INVITATION, "The invitation is redundant under the strategy " + strategy));
+                                    return Mono.error(TurmsBusinessException.get(TurmsStatusCode.REDUNDANT_GROUP_INVITATION,
+                                            "The invitation is redundant under the strategy " + strategy));
                                 }
                             });
                 });
@@ -205,7 +206,8 @@ public class GroupInvitationService {
         if (status == null) {
             status = RequestStatus.PENDING;
         }
-        GroupInvitation groupInvitation = new GroupInvitation(id, groupId, inviterId, inviteeId, content, status, creationDate, responseDate, expirationDate);
+        GroupInvitation groupInvitation =
+                new GroupInvitation(id, groupId, inviterId, inviteeId, content, status, creationDate, responseDate, expirationDate);
         return mongoClient.insert(groupInvitation)
                 .flatMap(invitation -> groupVersionService.updateGroupInvitationsVersion(groupId).onErrorResume(t -> Mono.empty())
                         .then(userVersionService.updateSentGroupInvitationsVersion(inviterId).onErrorResume(t -> Mono.empty()))
@@ -260,7 +262,8 @@ public class GroupInvitationService {
                     return groupMemberService.isOwnerOrManager(requesterId, invitation.getGroupId())
                             .flatMap(authenticated -> {
                                 if (!authenticated) {
-                                    return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_RECALL_INVITATION));
+                                    return Mono
+                                            .error(TurmsBusinessException.get(TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_RECALL_INVITATION));
                                 }
                                 Filter filter = Filter.newBuilder()
                                         .eq(ID_FIELD_NAME, invitationId);

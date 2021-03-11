@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -51,7 +51,7 @@ class OutboundMessageServiceTests {
     @Test
     void constructor_shouldReturnInstance() {
         OutboundMessageService outboundMessageService = new OutboundMessageService(null, null, null);
-        assertNotNull(outboundMessageService);
+        assertThat(outboundMessageService).isNotNull();
     }
 
     @Test
@@ -66,8 +66,9 @@ class OutboundMessageServiceTests {
 
         ByteBuf byteBuf = PreferredDirectByteBufAllocator.DEFAULT.directBuffer();
         Set<Long> recipientIds = Set.of(1L);
+        boolean sent = outboundMessageService.sendNotificationToLocalClients(byteBuf, recipientIds);
 
-        assertTrue(outboundMessageService.sendNotificationToLocalClients(byteBuf, recipientIds));
+        assertThat(sent).isTrue();
     }
 
     @Test
@@ -76,8 +77,9 @@ class OutboundMessageServiceTests {
 
         ByteBuf byteBuf = PreferredDirectByteBufAllocator.DEFAULT.directBuffer();
         Set<Long> recipientIds = Set.of(1L);
+        boolean sent = outboundMessageService.sendNotificationToLocalClients(byteBuf, recipientIds);
 
-        assertFalse(outboundMessageService.sendNotificationToLocalClients(byteBuf, recipientIds));
+        assertThat(sent).isFalse();
     }
 
     private OutboundMessageService newOutboundMessageService(UserSessionsManager userSessionsManager) {

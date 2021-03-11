@@ -19,7 +19,11 @@ package im.turms.server.common.redis;
 
 
 import im.turms.server.common.bo.session.UserSessionId;
-import im.turms.server.common.redis.serializer.*;
+import im.turms.server.common.redis.serializer.GeoUserIdSerializer;
+import im.turms.server.common.redis.serializer.GeoUserSessionIdSerializer;
+import im.turms.server.common.redis.serializer.SessionHashKeySerializer;
+import im.turms.server.common.redis.serializer.SessionHashValueSerializer;
+import im.turms.server.common.redis.serializer.SessionKeySerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -27,7 +31,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 /**
  * @author James Chen
  */
-public class RedisSerializationContextPool {
+public final class RedisSerializationContextPool {
 
     private RedisSerializationContextPool() {
     }

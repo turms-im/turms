@@ -27,7 +27,7 @@ import java.util.Date;
 /**
  * @author James Chen
  */
-public class Update {
+public final class Update {
 
     private final Document document = new Document();
 

@@ -27,7 +27,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -43,15 +44,17 @@ class UserSessionsManagerTests {
     @Test
     void constructor_shouldSucceed_ifRequiredParamsExist() {
         UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
-        assertNotNull(manager);
+        assertThat(manager).isNotNull();
     }
 
     @Test
     void constructor_shouldThrow_ifRequiredParamsNotExist() {
-        assertThrows(IllegalArgumentException.class, () ->
-                new UserSessionsManager(null, userStatus));
-        assertThrows(IllegalArgumentException.class, () ->
-                new UserSessionsManager(userId, null));
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() ->
+                        new UserSessionsManager(null, userStatus));
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() ->
+                        new UserSessionsManager(userId, null));
     }
 
     @Test
@@ -61,30 +64,30 @@ class UserSessionsManagerTests {
         NetConnection connection = mock(NetConnection.class);
         manager.getSession(deviceType).setConnection(connection);
 
-        assertEquals(1, manager.getSessionMap().size());
+        assertThat(manager.getSessionMap()).hasSize(1);
         manager.setDeviceOffline(deviceType, CloseReason.get(SessionCloseStatus.SERVER_CLOSED));
-        assertEquals(0, manager.getSessionMap().size());
+        assertThat(manager.getSessionMap()).isEmpty();
     }
 
     @Test
     void pushSessionNotification_shouldReturnTrue_ifSessionExists() {
         UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
         manager.addSessionIfAbsent(deviceType, null, null, 0, 0);
-        assertTrue(manager.pushSessionNotification(deviceType, serverId));
+        assertThat(manager.pushSessionNotification(deviceType, serverId)).isTrue();
     }
 
     @Test
     void pushSessionNotification_shouldReturnFalse_ifSessionNotExists() {
         UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
         manager.addSessionIfAbsent(DeviceType.ANDROID, null, null, 0, 0);
-        assertFalse(manager.pushSessionNotification(DeviceType.IOS, serverId));
+        assertThat(manager.pushSessionNotification(DeviceType.IOS, serverId)).isFalse();
     }
 
     @Test
     void getSession_shouldReturnSession() {
         UserSessionsManager manager = new UserSessionsManager(userId, userStatus);
         manager.addSessionIfAbsent(deviceType, null, null, 0, 0);
-        assertNotNull(manager.getSession(deviceType));
+        assertThat(manager.getSession(deviceType)).isNotNull();
     }
 
     @Test
@@ -93,7 +96,7 @@ class UserSessionsManagerTests {
         manager.addSessionIfAbsent(DeviceType.ANDROID, null, null, 0, 0);
         manager.addSessionIfAbsent(DeviceType.IOS, null, null, 1, 0);
         manager.addSessionIfAbsent(DeviceType.DESKTOP, null, null, 1, 0);
-        assertEquals(3, manager.getSessionsNumber());
+        assertThat(manager.getSessionsNumber()).isEqualTo(3);
     }
 
     @Test
@@ -105,9 +108,9 @@ class UserSessionsManagerTests {
 
         Set<DeviceType> loggedInDeviceTypes = manager.getLoggedInDeviceTypes();
 
-        assertTrue(loggedInDeviceTypes.contains(DeviceType.ANDROID));
-        assertTrue(loggedInDeviceTypes.contains(DeviceType.IOS));
-        assertTrue(loggedInDeviceTypes.contains(DeviceType.DESKTOP));
+        assertThat(loggedInDeviceTypes.contains(DeviceType.ANDROID)).isTrue();
+        assertThat(loggedInDeviceTypes.contains(DeviceType.IOS)).isTrue();
+        assertThat(loggedInDeviceTypes.contains(DeviceType.DESKTOP)).isTrue();
     }
 
 }

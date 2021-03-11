@@ -29,7 +29,7 @@ import java.util.Map;
 /**
  * @author James Chen
  */
-public class ServiceResponseFactory {
+public final class ServiceResponseFactory {
 
     private static final Map<TurmsStatusCode, ServiceResponse> RESPONSE_POOL = new EnumMap<>(TurmsStatusCode.class);
     public static final ServiceResponse NO_CONTENT;

@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Collections;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author James Chen
@@ -37,25 +37,25 @@ class DeviceTypeUtilTests {
     @Test
     void byte2DeviceTypes_shouldReturnCorrespondingDeviceTypes_forNotZeroByte() {
         Set<DeviceType> deviceTypes = DeviceTypeUtil.byte2DeviceTypes(DEVICE_TYPES_BYTES);
-        assertEquals(DEVICE_TYPES, deviceTypes);
+        assertThat(deviceTypes).hasSameElementsAs(DEVICE_TYPES);
     }
 
     @Test
     void deviceTypesToByte_shouldReturnCorrespondingByte_forNotEmptyDeviceTypes() {
         byte deviceTypesByte = DeviceTypeUtil.deviceTypesToByte(DEVICE_TYPES);
-        assertEquals(DEVICE_TYPES_BYTES, deviceTypesByte);
+        assertThat(deviceTypesByte).isEqualTo(DEVICE_TYPES_BYTES);
     }
 
     @Test
     void byte2DeviceTypes_shouldReturnEmptyDeviceTypes_forZeroByte() {
         Set<DeviceType> deviceTypes = DeviceTypeUtil.byte2DeviceTypes((byte) 0);
-        assertEquals(Collections.emptySet(), deviceTypes);
+        assertThat(deviceTypes).hasSameElementsAs(Collections.emptySet());
     }
 
     @Test
     void deviceTypesToByte_shouldReturn0_forEmptyDeviceTypes() {
         byte deviceTypesByte = DeviceTypeUtil.deviceTypesToByte(Collections.emptySet());
-        assertEquals(0, deviceTypesByte);
+        assertThat(deviceTypesByte).isZero();
     }
 
 }

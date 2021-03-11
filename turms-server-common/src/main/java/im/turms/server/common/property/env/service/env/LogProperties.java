@@ -44,7 +44,7 @@ public class LogProperties {
     @Description("Whether to log the body of requests. Better log the body of requests by monitor systems (e.g. Nginx, AWS)")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    private boolean logAdminRequestBody = false;
+    private boolean logAdminRequestBody;
 
     // User
 

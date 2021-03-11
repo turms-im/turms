@@ -58,7 +58,7 @@ public final class GroupVersion {
     @Field(Fields.INVITATIONS)
     private final Date invitations;
 
-    public static class Fields {
+    public static final class Fields {
         public static final String INFO = "inf";
         public static final String MEMBERS = "mbr";
         public static final String BLOCKLIST = "bl";

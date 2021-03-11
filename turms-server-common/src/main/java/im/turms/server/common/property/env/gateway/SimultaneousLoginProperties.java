@@ -37,7 +37,8 @@ public class SimultaneousLoginProperties {
     @JsonView(MutablePropertiesView.class)
     private SimultaneousLoginStrategy strategy = SimultaneousLoginStrategy.ALLOW_ONE_DEVICE_OF_EACH_DEVICE_TYPE_ONLINE;
 
-    @Description("The login conflict strategy is used for servers to know how to behave if a device is logging in when there are conflicted and logged-in devices")
+    @Description("The login conflict strategy is used for servers to know how to behave " +
+            "if a device is logging in when there are conflicted and logged-in devices")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
     private LoginConflictStrategy loginConflictStrategy = LoginConflictStrategy.DISCONNECT_LOGGED_IN_DEVICES;

@@ -43,7 +43,7 @@ import static im.turms.server.common.constant.TurmsStatusCode.STATUS_CODE_LENGTH
  */
 @Getter
 @EqualsAndHashCode(callSuper = false)
-public class RpcException extends NoStackTraceException {
+public final class RpcException extends NoStackTraceException {
 
     private static final int CODE_STRING_LENGTH = ERROR_CODE_LENGTH + STATUS_CODE_LENGTH + 1;
     private static final Map<Pair<RpcErrorCode, TurmsStatusCode>, RpcException> EXCEPTION_POOL;
@@ -71,7 +71,8 @@ public class RpcException extends NoStackTraceException {
 
     private RpcException(RpcErrorCode errorCode, TurmsStatusCode statusCode, @Nullable String description) {
         // FIXME: This is a terrible implementation to use getMessage() for both serialization and logging
-        //  (RSocket uses getMessage() of Throwable to serialize the throwable instance, see io.rsocket.frame.ErrorFrameCodec.encode(io.netty.buffer.ByteBufAllocator, int, java.lang.Throwable))
+        //  (RSocket uses getMessage() of Throwable to serialize the throwable instance,
+        //  see io.rsocket.frame.ErrorFrameCodec.encode(io.netty.buffer.ByteBufAllocator, int, java.lang.Throwable))
         //  but getMessage() is also used to log throwable instances.
         //  So we should use a custom encoder once the issue https://github.com/rsocket/rsocket-java/issues/741 has been fixed.
         super(errorCode.getErrorCode() + ":" + statusCode.getBusinessCode() + description);

@@ -26,7 +26,7 @@ import java.time.Duration;
 /**
  * @author James Chen
  */
-public class DaoConstant {
+public final class DaoConstant {
 
     private DaoConstant() {
     }
@@ -45,8 +45,9 @@ public class DaoConstant {
     public static final int MONGO_TRANSACTION_RETRIES_NUMBER = 3;
     public static final Duration MONGO_TRANSACTION_BACKOFF = Duration.ofSeconds(3);
 
-    public static final Retry TRANSACTION_RETRY = Retry.withThrowable(reactor.retry.Retry.allBut(DuplicateKeyException.class, TurmsBusinessException.class)
-            .retryMax(MONGO_TRANSACTION_RETRIES_NUMBER)
-            .fixedBackoff(MONGO_TRANSACTION_BACKOFF));
+    public static final Retry TRANSACTION_RETRY =
+            Retry.withThrowable(reactor.retry.Retry.allBut(DuplicateKeyException.class, TurmsBusinessException.class)
+                    .retryMax(MONGO_TRANSACTION_RETRIES_NUMBER)
+                    .fixedBackoff(MONGO_TRANSACTION_BACKOFF));
 
 }

@@ -20,7 +20,7 @@ package im.turms.gateway.constant;
 /**
  * @author James Chen
  */
-public class MetricsConstant {
+public final class MetricsConstant {
 
     private MetricsConstant() {
     }

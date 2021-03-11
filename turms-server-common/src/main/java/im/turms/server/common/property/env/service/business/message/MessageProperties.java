@@ -65,7 +65,7 @@ public class MessageProperties {
     @Description("Whether to persist the records of messages in databases")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    private boolean recordsPersistent = false;
+    private boolean recordsPersistent;
 
     @JsonView(MutablePropertiesView.class)
     @Description("A message will become expired after the TTL has elapsed. Cannot be infinite for performance reason")
@@ -90,7 +90,7 @@ public class MessageProperties {
     @Description("Whether to allow users to send messages to themselves")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    private boolean allowSendingMessagesToOneself = false;
+    private boolean allowSendingMessagesToOneself;
 
     @Description("Whether to allow users to recall messages.\n" +
             "Note: To recall messages, more system resources are needed")
@@ -119,6 +119,10 @@ public class MessageProperties {
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
     private boolean sendMessageToOtherSenderOnlineDevices = true;
+
+    /**
+     * Cache
+     */
 
     @Description("The maximum size of the cache of sent messages.")
     @Min(0)

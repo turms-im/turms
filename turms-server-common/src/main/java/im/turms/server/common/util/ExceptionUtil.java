@@ -33,7 +33,7 @@ import java.util.function.Supplier;
 /**
  * @author James Chen
  */
-public class ExceptionUtil {
+public final class ExceptionUtil {
 
     private static final Set<Class<?>> DISCONNECTED_CLIENT_EXCEPTIONS = Set.of(
             AbortedException.class,

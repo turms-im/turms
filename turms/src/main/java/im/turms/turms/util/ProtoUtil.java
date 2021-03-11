@@ -18,15 +18,27 @@
 package im.turms.turms.util;
 
 import com.google.common.collect.Maps;
-import com.google.protobuf.*;
+import com.google.protobuf.BoolValue;
+import com.google.protobuf.ByteString;
+import com.google.protobuf.Int32Value;
+import com.google.protobuf.Int64Value;
+import com.google.protobuf.StringValue;
 import im.turms.common.constant.GroupMemberRole;
 import im.turms.common.constant.ProfileAccessStrategy;
 import im.turms.common.constant.RequestStatus;
 import im.turms.common.constant.UserStatus;
 import im.turms.common.model.bo.conversation.GroupConversation;
 import im.turms.common.model.bo.conversation.PrivateConversation;
-import im.turms.common.model.bo.group.*;
-import im.turms.common.model.bo.user.*;
+import im.turms.common.model.bo.group.Group;
+import im.turms.common.model.bo.group.GroupInvitation;
+import im.turms.common.model.bo.group.GroupJoinQuestion;
+import im.turms.common.model.bo.group.GroupJoinRequest;
+import im.turms.common.model.bo.group.GroupMember;
+import im.turms.common.model.bo.user.UserFriendRequest;
+import im.turms.common.model.bo.user.UserInfo;
+import im.turms.common.model.bo.user.UserRelationship;
+import im.turms.common.model.bo.user.UserRelationshipGroup;
+import im.turms.common.model.bo.user.UserStatusDetail;
 import im.turms.common.model.dto.request.message.CreateMessageRequest;
 import im.turms.server.common.bo.session.UserSessionsStatus;
 import im.turms.server.common.dao.domain.User;
@@ -43,7 +55,7 @@ import java.util.Map;
  * @author James Chen
  */
 @Log4j2
-public class ProtoUtil {
+public final class ProtoUtil {
 
     private ProtoUtil() {
     }
@@ -122,7 +134,8 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static UserFriendRequest.Builder friendRequest2proto(@NotNull im.turms.turms.workflow.dao.domain.user.UserFriendRequest userFriendRequest) {
+    public static UserFriendRequest.Builder friendRequest2proto(
+            @NotNull im.turms.turms.workflow.dao.domain.user.UserFriendRequest userFriendRequest) {
         UserFriendRequest.Builder builder = UserFriendRequest.newBuilder();
         Long requestId = userFriendRequest.getId();
         Date creationDate = userFriendRequest.getCreationDate();
@@ -159,7 +172,8 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static UserRelationship.Builder relationship2proto(@NotNull im.turms.turms.workflow.dao.domain.user.UserRelationship relationship) {
+    public static UserRelationship.Builder relationship2proto(
+            @NotNull im.turms.turms.workflow.dao.domain.user.UserRelationship relationship) {
         UserRelationship.Builder builder = UserRelationship.newBuilder();
         im.turms.turms.workflow.dao.domain.user.UserRelationship.Key key = relationship.getKey();
         Date establishmentDate = relationship.getEstablishmentDate();
@@ -183,7 +197,8 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static UserRelationshipGroup.Builder relationshipGroup2proto(@NotNull im.turms.turms.workflow.dao.domain.user.UserRelationshipGroup relationshipGroup) {
+    public static UserRelationshipGroup.Builder relationshipGroup2proto(
+            @NotNull im.turms.turms.workflow.dao.domain.user.UserRelationshipGroup relationshipGroup) {
         UserRelationshipGroup.Builder builder = UserRelationshipGroup.newBuilder();
         im.turms.turms.workflow.dao.domain.user.UserRelationshipGroup.Key key = relationshipGroup.getKey();
         if (key != null) {
@@ -244,7 +259,8 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static GroupInvitation.Builder groupInvitation2proto(@NotNull im.turms.turms.workflow.dao.domain.group.GroupInvitation invitation) {
+    public static GroupInvitation.Builder groupInvitation2proto(
+            @NotNull im.turms.turms.workflow.dao.domain.group.GroupInvitation invitation) {
         GroupInvitation.Builder builder = GroupInvitation.newBuilder();
         Long invitationId = invitation.getId();
         Date creationDate = invitation.getCreationDate();
@@ -281,7 +297,8 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static GroupJoinRequest.Builder groupJoinRequest2proto(@NotNull im.turms.turms.workflow.dao.domain.group.GroupJoinRequest groupJoinRequest) {
+    public static GroupJoinRequest.Builder groupJoinRequest2proto(
+            @NotNull im.turms.turms.workflow.dao.domain.group.GroupJoinRequest groupJoinRequest) {
         GroupJoinRequest.Builder builder = GroupJoinRequest.newBuilder();
         Long requestId = groupJoinRequest.getId();
         Date creationDate = groupJoinRequest.getCreationDate();
@@ -318,7 +335,8 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static GroupJoinQuestion.Builder groupJoinQuestion2proto(@NotNull im.turms.turms.workflow.dao.domain.group.GroupJoinQuestion question) {
+    public static GroupJoinQuestion.Builder groupJoinQuestion2proto(
+            @NotNull im.turms.turms.workflow.dao.domain.group.GroupJoinQuestion question) {
         GroupJoinQuestion.Builder builder = GroupJoinQuestion.newBuilder();
         Long questionId = question.getId();
         Long groupId = question.getGroupId();
@@ -372,7 +390,8 @@ public class ProtoUtil {
 
     // Conversation
 
-    public static PrivateConversation.Builder privateConversation2proto(im.turms.turms.workflow.dao.domain.conversation.PrivateConversation privateConversation) {
+    public static PrivateConversation.Builder privateConversation2proto(
+            im.turms.turms.workflow.dao.domain.conversation.PrivateConversation privateConversation) {
         PrivateConversation.Builder builder = PrivateConversation.newBuilder();
         im.turms.turms.workflow.dao.domain.conversation.PrivateConversation.Key key = privateConversation.getKey();
         if (key != null) {
@@ -392,7 +411,8 @@ public class ProtoUtil {
         return builder;
     }
 
-    public static GroupConversation.Builder groupConversations2proto(im.turms.turms.workflow.dao.domain.conversation.GroupConversation groupConversation) {
+    public static GroupConversation.Builder groupConversations2proto(
+            im.turms.turms.workflow.dao.domain.conversation.GroupConversation groupConversation) {
         GroupConversation.Builder builder = GroupConversation.newBuilder();
         Long groupId = groupConversation.getGroupId();
         if (groupId != null) {
@@ -413,7 +433,7 @@ public class ProtoUtil {
         Boolean isSystemMessage = message.getIsSystemMessage();
         Date deliveryDate = message.getDeliveryDate();
         String text = message.getText();
-//        Long senderId = message.getSenderId(); the field is duplicate with requesterId
+        // message.getSenderId() is just requesterId
         Long targetId = message.getTargetId();
         List<byte[]> records = message.getRecords();
         Integer burnAfter = message.getBurnAfter();

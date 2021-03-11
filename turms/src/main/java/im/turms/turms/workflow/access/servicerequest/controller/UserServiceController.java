@@ -28,7 +28,13 @@ import im.turms.common.model.bo.user.UserSessionIds;
 import im.turms.common.model.bo.user.UsersInfosWithVersion;
 import im.turms.common.model.bo.user.UsersOnlineStatuses;
 import im.turms.common.model.dto.notification.TurmsNotification;
-import im.turms.common.model.dto.request.user.*;
+import im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest;
+import im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest;
+import im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest;
+import im.turms.common.model.dto.request.user.QueryUserProfileRequest;
+import im.turms.common.model.dto.request.user.UpdateUserLocationRequest;
+import im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest;
+import im.turms.common.model.dto.request.user.UpdateUserRequest;
 import im.turms.server.common.bo.session.UserSessionsStatus;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
@@ -50,10 +56,20 @@ import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.*;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_USER_IDS_NEARBY_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_USER_INFOS_NEARBY_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_USER_ONLINE_STATUSES_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_USER_PROFILE_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.UPDATE_USER_LOCATION_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.UPDATE_USER_ONLINE_STATUS_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.UPDATE_USER_REQUEST;
 
 /**
  * @author James Chen
@@ -251,7 +267,8 @@ public class UserServiceController {
             UpdateUserOnlineStatusRequest request = clientRequest.getTurmsRequest().getUpdateUserOnlineStatusRequest();
             UserStatus userStatus = request.getUserStatus();
             if (userStatus == UserStatus.UNRECOGNIZED) {
-                return Mono.just(RequestHandlerResultFactory.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The user status must not be UNRECOGNIZED"));
+                return Mono.just(RequestHandlerResultFactory
+                        .get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The user status must not be UNRECOGNIZED"));
             }
             Set<DeviceType> deviceTypes = request.getDeviceTypesCount() > 0 ? Sets.newHashSet(request.getDeviceTypesList()) : null;
             Mono<Boolean> updateMono;
@@ -262,8 +279,10 @@ public class UserServiceController {
             } else {
                 updateMono = userStatusService.updateOnlineUserStatus(clientRequest.getUserId(), userStatus);
             }
-            boolean notifyMembers = node.getSharedProperties().getService().getNotification().isNotifyMembersAfterOtherMemberOnlineStatusUpdated();
-            boolean notifyRelatedUser = node.getSharedProperties().getService().getNotification().isNotifyRelatedUsersAfterOtherRelatedUserOnlineStatusUpdated();
+            boolean notifyMembers =
+                    node.getSharedProperties().getService().getNotification().isNotifyMembersAfterOtherMemberOnlineStatusUpdated();
+            boolean notifyRelatedUser = node.getSharedProperties().getService().getNotification()
+                    .isNotifyRelatedUsersAfterOtherRelatedUserOnlineStatusUpdated();
             if (!notifyMembers && !notifyRelatedUser) {
                 return updateMono.thenReturn(RequestHandlerResultFactory.OK);
             } else {
@@ -303,7 +322,8 @@ public class UserServiceController {
                     null,
                     null)
                     .then(Mono.defer(() -> {
-                        if (node.getSharedProperties().getService().getNotification().isNotifyRelatedUsersAfterOtherRelatedUserInfoUpdated()) {
+                        if (node.getSharedProperties().getService().getNotification()
+                                .isNotifyRelatedUsersAfterOtherRelatedUserInfoUpdated()) {
                             return userRelationshipService.queryRelatedUserIds(Set.of(clientRequest.getUserId()), false)
                                     .collect(Collectors.toSet())
                                     .map(relatedUserIds -> relatedUserIds.isEmpty()

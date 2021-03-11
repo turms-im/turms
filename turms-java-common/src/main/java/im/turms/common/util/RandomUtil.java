@@ -22,7 +22,7 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * @author James Chen
  */
-public class RandomUtil {
+public final class RandomUtil {
 
     private RandomUtil() {
     }

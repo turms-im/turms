@@ -41,7 +41,10 @@ public class StorageService {
         this.provider = turmsPluginManager.getStorageServiceProvider();
     }
 
-    public Mono<String> queryPresignedGetUrl(@NotNull Long requesterId, @NotNull ContentType contentType, @Nullable String keyStr, @Nullable Long keyNum) {
+    public Mono<String> queryPresignedGetUrl(@NotNull Long requesterId,
+                                             @NotNull ContentType contentType,
+                                             @Nullable String keyStr,
+                                             @Nullable Long keyNum) {
         try {
             AssertUtil.notNull(requesterId, "requesterId");
             AssertUtil.notNull(contentType, "contentType");
@@ -59,7 +62,11 @@ public class StorageService {
         }
     }
 
-    public Mono<String> queryPresignedPutUrl(@NotNull Long requesterId, @NotNull ContentType contentType, @Nullable String keyStr, @Nullable Long keyNum, long contentLength) {
+    public Mono<String> queryPresignedPutUrl(@NotNull Long requesterId,
+                                             @NotNull ContentType contentType,
+                                             @Nullable String keyStr,
+                                             @Nullable Long keyNum,
+                                             long contentLength) {
         try {
             AssertUtil.notNull(requesterId, "requesterId");
             AssertUtil.notNull(contentType, "contentType");
@@ -77,7 +84,10 @@ public class StorageService {
         }
     }
 
-    public Mono<Void> deleteResource(@NotNull Long requesterId, @NotNull ContentType contentType, @Nullable String keyStr, @Nullable Long keyNum) {
+    public Mono<Void> deleteResource(@NotNull Long requesterId,
+                                     @NotNull ContentType contentType,
+                                     @Nullable String keyStr,
+                                     @Nullable Long keyNum) {
         try {
             AssertUtil.notNull(requesterId, "requesterId");
             AssertUtil.notNull(contentType, "contentType");

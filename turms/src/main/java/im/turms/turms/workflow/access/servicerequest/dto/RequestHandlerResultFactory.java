@@ -33,7 +33,7 @@ import java.util.Set;
 /**
  * @author James Chen
  */
-public class RequestHandlerResultFactory {
+public final class RequestHandlerResultFactory {
 
     private static final Map<TurmsStatusCode, RequestHandlerResult> POOL = new EnumMap<>(TurmsStatusCode.class);
 
@@ -51,7 +51,8 @@ public class RequestHandlerResultFactory {
             null);
 
     public static RequestHandlerResult get(@NotNull TurmsStatusCode code) {
-        return POOL.computeIfAbsent(code, statusCode -> new RequestHandlerResult(null, false, Collections.emptySet(), null, statusCode, null));
+        return POOL
+                .computeIfAbsent(code, statusCode -> new RequestHandlerResult(null, false, Collections.emptySet(), null, statusCode, null));
     }
 
     public static RequestHandlerResult get(@NotNull TurmsStatusCode code, @Nullable String reason) {

@@ -27,7 +27,7 @@ import java.util.concurrent.ThreadFactory;
 /**
  * @author James Chen
  */
-public class LoopResourcesFactory {
+public final class LoopResourcesFactory {
 
     private static final int DEFAULT_ACCEPTOR_THREADS = 1;
     private static final int DEFAULT_WORKER_THREADS = Math.max(Runtime.getRuntime().availableProcessors(), 1);

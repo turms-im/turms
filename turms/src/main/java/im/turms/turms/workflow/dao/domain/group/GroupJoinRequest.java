@@ -19,7 +19,12 @@ package im.turms.turms.workflow.dao.domain.group;
 
 import im.turms.common.constant.RequestStatus;
 import im.turms.server.common.mongo.entity.IndexType;
-import im.turms.server.common.mongo.entity.annotation.*;
+import im.turms.server.common.mongo.entity.annotation.CompoundIndex;
+import im.turms.server.common.mongo.entity.annotation.Document;
+import im.turms.server.common.mongo.entity.annotation.Field;
+import im.turms.server.common.mongo.entity.annotation.Id;
+import im.turms.server.common.mongo.entity.annotation.Indexed;
+import im.turms.server.common.mongo.entity.annotation.Sharded;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForColdData;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.AllArgsConstructor;

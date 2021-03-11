@@ -19,7 +19,11 @@ package im.turms.turms.workflow.dao.domain.user;
 
 import im.turms.server.common.mongo.entity.IndexType;
 import im.turms.server.common.mongo.entity.ShardingStrategy;
-import im.turms.server.common.mongo.entity.annotation.*;
+import im.turms.server.common.mongo.entity.annotation.Document;
+import im.turms.server.common.mongo.entity.annotation.Field;
+import im.turms.server.common.mongo.entity.annotation.Id;
+import im.turms.server.common.mongo.entity.annotation.Indexed;
+import im.turms.server.common.mongo.entity.annotation.Sharded;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -76,7 +80,7 @@ public final class UserRelationshipGroupMember {
         @OptionalIndexedForExtendedFeature
         private final Long relatedUserId;
 
-        public static class Fields {
+        public static final class Fields {
             public static final String OWNER_ID = "oid";
             public static final String GROUP_INDEX = "gidx";
             public static final String RELATED_USER_ID = "ruid";
@@ -86,7 +90,7 @@ public final class UserRelationshipGroupMember {
         }
     }
 
-    public static class Fields {
+    public static final class Fields {
         public static final String ID_OWNER_ID = "_id." + Key.Fields.OWNER_ID;
         public static final String ID_GROUP_INDEX = "_id." + Key.Fields.GROUP_INDEX;
         public static final String ID_RELATED_USER_ID = "_id." + Key.Fields.RELATED_USER_ID;

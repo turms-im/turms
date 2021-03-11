@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
  * @see io.micrometer.core.instrument.binder.jvm.JvmMemoryMetrics
  */
 @Log4j2
-public class MemoryMonitor {
+public final class MemoryMonitor {
 
     // TODO: make configurable
     private static final int MEMORY_WATER_MARK = 85;

@@ -17,7 +17,12 @@
 
 package im.turms.turms.workflow.dao.domain.message;
 
-import im.turms.server.common.mongo.entity.annotation.*;
+import im.turms.server.common.mongo.entity.annotation.CompoundIndex;
+import im.turms.server.common.mongo.entity.annotation.Document;
+import im.turms.server.common.mongo.entity.annotation.Field;
+import im.turms.server.common.mongo.entity.annotation.Id;
+import im.turms.server.common.mongo.entity.annotation.Indexed;
+import im.turms.server.common.mongo.entity.annotation.Sharded;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForColdData;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.Data;
@@ -100,7 +105,7 @@ public final class Message {
         return isGroupMessage != null && isGroupMessage ? targetId : null;
     }
 
-    public static class Fields {
+    public static final class Fields {
         public static final String IS_GROUP_MESSAGE = "gm";
         public static final String IS_SYSTEM_MESSAGE = "sm";
         public static final String DELIVERY_DATE = "dyd";

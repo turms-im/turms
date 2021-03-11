@@ -33,6 +33,7 @@ public class IpProperties {
     @JsonView(MutablePropertiesView.class)
     @Description("The public IP detectors will only be used to query the public IP of the local node " +
             "if needed (e.g. If the discovery property \"advertiseStrategy\" is PUBLIC_ADDRESS")
-    private List<String> publicIpDetectorAddresses = List.of("https://checkip.amazonaws.com", "https://bot.whatismyipaddress.com", "https://myip.dnsomatic.com");
+    private List<String> publicIpDetectorAddresses =
+            List.of("https://checkip.amazonaws.com", "https://bot.whatismyipaddress.com", "https://myip.dnsomatic.com");
 
 }

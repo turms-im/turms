@@ -57,7 +57,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.*;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.CREATE_SESSION_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.DELETE_SESSION_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.KIND_NOT_SET;
 import static im.turms.turms.constant.MetricsConstant.CLIENT_REQUEST_NAME;
 import static im.turms.turms.constant.MetricsConstant.CLIENT_REQUEST_TAG_TYPE;
 
@@ -85,7 +87,8 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                                     TurmsPluginManager turmsPluginManager) {
         this.serverStatusManager = serverStatusManager;
         this.outboundMessageService = outboundMessageService;
-        Set<TurmsRequest.KindCase> disabledEndpoints = turmsPropertiesManager.getLocalProperties().getService().getClientApi().getDisabledEndpoints();
+        Set<TurmsRequest.KindCase> disabledEndpoints =
+                turmsPropertiesManager.getLocalProperties().getService().getClientApi().getDisabledEndpoints();
         router = getMappings((ConfigurableApplicationContext) context, disabledEndpoints);
         for (TurmsRequest.KindCase kindCase : TurmsRequest.KindCase.values()) {
             if (!router.containsKey(kindCase) && kindCase != KIND_NOT_SET && !isRequestForGateway(kindCase)) {
@@ -107,7 +110,8 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                 loggingProperties.getExcludedResponseTypes());
     }
 
-    private Map<TurmsRequest.KindCase, ClientRequestHandler> getMappings(ConfigurableApplicationContext context, Set<TurmsRequest.KindCase> disabledEndpoints) {
+    private Map<TurmsRequest.KindCase, ClientRequestHandler> getMappings(ConfigurableApplicationContext context,
+                                                                         Set<TurmsRequest.KindCase> disabledEndpoints) {
         Map<TurmsRequest.KindCase, ClientRequestHandler> mappingMap = new EnumMap<>(TurmsRequest.KindCase.class);
         ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
         String[] definitionNames = beanFactory.getBeanDefinitionNames();
@@ -179,7 +183,8 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                 request,
                 serviceRequest.getTurmsRequestBuffer());
         Mono<ClientRequest> clientRequestMono = Mono.just(clientRequest);
-        List<im.turms.turms.plugin.extension.handler.ClientRequestHandler> clientClientRequestHandlerList = turmsPluginManager.getClientRequestHandlerList();
+        List<im.turms.turms.plugin.extension.handler.ClientRequestHandler> clientClientRequestHandlerList =
+                turmsPluginManager.getClientRequestHandlerList();
         if (pluginEnabled) {
             for (im.turms.turms.plugin.extension.handler.ClientRequestHandler clientRequestHandler : clientClientRequestHandlerList) {
                 clientRequestMono = clientRequestMono.flatMap(clientRequestHandler::transform);
@@ -267,8 +272,10 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         ByteBuf notificationByteBuf = ProtoUtil.getDirectByteBuffer(notificationForRecipients);
         if (result.isForwardDataForRecipientsToOtherSenderOnlineDevices()) {
             notificationByteBuf.retain();
-            Mono<Boolean> notifyRequesterMono = outboundMessageService.forwardNotification(notificationForRecipients, notificationByteBuf, requesterId, requesterDevice);
-            Mono<Boolean> notifyRecipientsMono = outboundMessageService.forwardNotification(notificationForRecipients, notificationByteBuf, recipients);
+            Mono<Boolean> notifyRequesterMono = outboundMessageService
+                    .forwardNotification(notificationForRecipients, notificationByteBuf, requesterId, requesterDevice);
+            Mono<Boolean> notifyRecipientsMono =
+                    outboundMessageService.forwardNotification(notificationForRecipients, notificationByteBuf, recipients);
             return Mono.when(notifyRequesterMono, notifyRecipientsMono)
                     .doOnTerminate(notificationByteBuf::release);
         } else {

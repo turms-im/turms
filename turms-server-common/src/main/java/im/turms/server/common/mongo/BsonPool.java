@@ -25,7 +25,7 @@ import org.bson.BsonString;
  * @implNote We can try to make BsonValue a primitive class
  * in the future to avoid creating objects
  */
-public class BsonPool {
+public final class BsonPool {
 
     private BsonPool() {
     }

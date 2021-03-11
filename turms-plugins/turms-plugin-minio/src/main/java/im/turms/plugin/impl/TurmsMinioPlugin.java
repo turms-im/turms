@@ -40,7 +40,19 @@ import software.amazon.awssdk.http.nio.netty.NettyNioAsyncHttpClient;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
 import software.amazon.awssdk.services.s3.S3Configuration;
-import software.amazon.awssdk.services.s3.model.*;
+import software.amazon.awssdk.services.s3.model.BucketLifecycleConfiguration;
+import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.ExpirationStatus;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.HeadBucketRequest;
+import software.amazon.awssdk.services.s3.model.HeadBucketResponse;
+import software.amazon.awssdk.services.s3.model.LifecycleExpiration;
+import software.amazon.awssdk.services.s3.model.LifecycleRule;
+import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
+import software.amazon.awssdk.services.s3.model.PutBucketLifecycleConfigurationRequest;
+import software.amazon.awssdk.services.s3.model.PutBucketPolicyRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
@@ -51,7 +63,11 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.time.Duration;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * @author James Chen
@@ -65,7 +81,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
     @Extension
     public static class MinioStorageServiceProvider extends StorageServiceProvider {
 
-        private static final Logger log = LogManager.getLogger(MinioStorageServiceProvider.class);
+        private static final Logger logger = LogManager.getLogger(MinioStorageServiceProvider.class);
 
         private static final int TIMEOUT_SECONDS = 10;
 
@@ -83,8 +99,11 @@ public class TurmsMinioPlugin extends TurmsPlugin {
         }
 
         @Override
-        public Mono<Void> deleteResource(@NotNull Long requesterId, @NotNull ContentType contentType, String keyStr, @Nullable Long keyNum) {
-            return hasPermissionToDelete(requesterId, contentType, keyStr, keyNum)
+        public Mono<Void> deleteResource(@NotNull Long requesterId,
+                                         @NotNull ContentType contentType,
+                                         String keyStr,
+                                         @Nullable Long keyNum) {
+            return hasPermissionToDelete(requesterId, contentType, keyNum)
                     .flatMap(hasPermission -> {
                         if (!hasPermission) {
                             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED));
@@ -98,11 +117,13 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                                 if (keyNum != null) {
                                     key = keyNum.toString();
                                 } else {
-                                    return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The group ID must not be null"));
+                                    return Mono.error(TurmsBusinessException
+                                            .get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The group ID must not be null"));
                                 }
                                 break;
                             case ATTACHMENT:
-                                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The attachments cannot be deleted"));
+                                return Mono.error(TurmsBusinessException
+                                        .get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The attachments cannot be deleted"));
                             default:
                                 return Mono.error(new IllegalStateException("Unexpected value: " + contentType));
                         }
@@ -115,14 +136,18 @@ public class TurmsMinioPlugin extends TurmsPlugin {
         }
 
         @Override
-        public Mono<String> queryPresignedGetUrl(@NotNull Long requesterId, @NotNull ContentType contentType, String keyStr, @Nullable Long keyNum) {
-            return hasPermissionToGet(requesterId, contentType, keyStr, keyNum)
+        public Mono<String> queryPresignedGetUrl(@NotNull Long requesterId,
+                                                 @NotNull ContentType contentType,
+                                                 String keyStr,
+                                                 @Nullable Long keyNum) {
+            return hasPermissionToGet(requesterId, contentType, keyNum)
                     .flatMap(hasPermission -> {
                         if (hasPermission) {
                             switch (contentType) {
                                 case PROFILE:
                                 case GROUP_PROFILE:
-                                    return Mono.error(TurmsBusinessException.get(TurmsStatusCode.REDUNDANT_REQUEST_FOR_PRESIGNED_PROFILE_URL));
+                                    return Mono
+                                            .error(TurmsBusinessException.get(TurmsStatusCode.REDUNDANT_REQUEST_FOR_PRESIGNED_PROFILE_URL));
                                 case ATTACHMENT:
                                     if (keyNum != null) {
                                         String key;
@@ -134,7 +159,8 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                                         String url = presignedUrlForGet(getBucketName(contentType), key);
                                         return Mono.just(url);
                                     } else {
-                                        return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The message ID must not be null"));
+                                        return Mono.error(TurmsBusinessException
+                                                .get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The message ID must not be null"));
                                     }
                                 default:
                                     return Mono.error(new IllegalStateException("Unexpected value: " + contentType));
@@ -146,7 +172,11 @@ public class TurmsMinioPlugin extends TurmsPlugin {
         }
 
         @Override
-        public Mono<String> queryPresignedPutUrl(@NotNull Long requesterId, @NotNull ContentType contentType, @Nullable String keyStr, @Nullable Long keyNum, long contentLength) {
+        public Mono<String> queryPresignedPutUrl(@NotNull Long requesterId,
+                                                 @NotNull ContentType contentType,
+                                                 @Nullable String keyStr,
+                                                 @Nullable Long keyNum,
+                                                 long contentLength) {
             int sizeLimit;
             switch (contentType) {
                 case PROFILE:
@@ -181,7 +211,8 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                                 if (keyNum != null) {
                                     objectKey = keyNum.toString();
                                 } else {
-                                    return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The group ID must not be null"));
+                                    return Mono.error(TurmsBusinessException
+                                            .get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The group ID must not be null"));
                                 }
                                 break;
                             case ATTACHMENT:
@@ -193,7 +224,8 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                                         objectKey = keyNum.toString();
                                     }
                                 } else {
-                                    return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The message ID must not be null"));
+                                    return Mono.error(TurmsBusinessException
+                                            .get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The message ID must not be null"));
                                 }
                                 break;
                             default:
@@ -229,7 +261,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                                 currentRetryTimes++;
                                 int maxAttempts = minioProperties.getRetry().getMaxAttempts();
                                 if (maxAttempts > 0 && currentRetryTimes > maxAttempts) {
-                                    log.warn("The MinIO client failed to initialize");
+                                    logger.warn("The MinIO client failed to initialize");
                                     executor.shutdown();
                                     throw new RuntimeException("The MinIO client failed to initialize");
                                 }
@@ -241,7 +273,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                             }
                         }, minioProperties.getRetry().getInitialInterval(), minioProperties.getRetry().getInterval(), TimeUnit.SECONDS);
                     } else {
-                        log.warn("The MinIO client failed to initialize");
+                        logger.warn("The MinIO client failed to initialize");
                     }
                 }
             }
@@ -271,7 +303,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                     .credentialsProvider(credentialsProvider)
                     .region(region)
                     .build();
-            log.info("The MinIO client is connecting to: {}", endpoint);
+            logger.info("The MinIO client is connecting to: {}", endpoint);
         }
 
         private void initBuckets() throws InterruptedException, ExecutionException, TimeoutException {
@@ -280,13 +312,13 @@ public class TurmsMinioPlugin extends TurmsPlugin {
                     boolean exists = bucketExists(type);
                     String bucket = getBucketName(type);
                     if (!exists) {
-                        log.info("Bucket {} is being created", bucket);
+                        logger.info("Bucket {} is being created", bucket);
                         createBucket(type);
                         putBucketPolicy(type);
                         putBucketLifecycleConfig(type);
-                        log.info("Bucket {} is created", bucket);
+                        logger.info("Bucket {} is created", bucket);
                     } else {
-                        log.info("Bucket {} has already existed", bucket);
+                        logger.info("Bucket {} has already existed", bucket);
                     }
                 }
             }
@@ -408,7 +440,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
 
         // Permission
 
-        private Mono<Boolean> hasPermissionToGet(@NotNull Long requesterId, @NotNull ContentType contentType, @Nullable String keyStr, @Nullable Long keyNum) {
+        private Mono<Boolean> hasPermissionToGet(@NotNull Long requesterId, @NotNull ContentType contentType, @Nullable Long keyNum) {
             switch (contentType) {
                 case PROFILE:
                 case GROUP_PROFILE:
@@ -424,7 +456,8 @@ public class TurmsMinioPlugin extends TurmsPlugin {
             }
         }
 
-        private Mono<Boolean> hasPermissionToPut(@NotNull Long requesterId, @NotNull ContentType contentType, @Nullable String keyStr, @Nullable Long keyNum) {
+        private Mono<Boolean> hasPermissionToPut(@NotNull Long requesterId, @NotNull ContentType contentType, @Nullable String keyStr,
+                                                 @Nullable Long keyNum) {
             switch (contentType) {
                 case PROFILE:
                     return Mono.just(true);
@@ -445,7 +478,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
             }
         }
 
-        private Mono<Boolean> hasPermissionToDelete(@NotNull Long requesterId, @NotNull ContentType contentType, @Nullable String keyStr, @Nullable Long keyNum) {
+        private Mono<Boolean> hasPermissionToDelete(@NotNull Long requesterId, @NotNull ContentType contentType, @Nullable Long keyNum) {
             switch (contentType) {
                 case PROFILE:
                     return Mono.just(true);

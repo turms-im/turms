@@ -42,7 +42,7 @@ public class FriendRequestProperties {
     @Description("Whether to allow resending a friend request after the previous request has been declined, ignored, or expired")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    private boolean allowResendingRequestAfterDeclinedOrIgnoredOrExpired = false;
+    private boolean allowResendingRequestAfterDeclinedOrIgnoredOrExpired;
 
     @Description("A friend request will become expired after the TTL has elapsed. Cannot be infinite for performance reason")
     @GlobalProperty
@@ -58,6 +58,6 @@ public class FriendRequestProperties {
     @Description("Whether to delete expired when the cron expression is triggered")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    private boolean deleteExpiredRequestsWhenCronTriggered = false;
+    private boolean deleteExpiredRequestsWhenCronTriggered;
 
 }

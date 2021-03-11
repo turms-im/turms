@@ -42,10 +42,13 @@ import reactor.test.StepVerifier;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author James Chen
@@ -59,7 +62,7 @@ class ServiceMediatorTests {
     void constructor_shouldSucceed() {
         ServiceMediator mediator = new ServiceMediator(null, null, null, null, null, null);
 
-        assertNotNull(mediator);
+        assertThat(mediator).isNotNull();
     }
 
     // Login
@@ -127,8 +130,8 @@ class ServiceMediatorTests {
         mediator.onSessionEstablished(manager, deviceType);
 
         boolean sessionExists = verify(manager, times(1))
-                .pushSessionNotification(deviceType, any());
-        assertTrue(sessionExists);
+                .pushSessionNotification(eq(deviceType), any());
+        assertThat(sessionExists).isTrue();
     }
 
     @Test

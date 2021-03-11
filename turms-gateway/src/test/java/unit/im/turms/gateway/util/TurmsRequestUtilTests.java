@@ -27,8 +27,8 @@ import org.junit.jupiter.api.Test;
 
 import java.nio.ByteBuffer;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * @author James Chen
@@ -37,7 +37,8 @@ class TurmsRequestUtilTests {
 
     @Test
     void parseSimpleRequest_shouldThrow_forNullArgument() {
-        assertThrows(IllegalArgumentException.class, () -> TurmsRequestUtil.parseSimpleRequest(null));
+        assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(() -> TurmsRequestUtil.parseSimpleRequest(null));
     }
 
     @Test
@@ -47,7 +48,8 @@ class TurmsRequestUtilTests {
                 .toByteString()
                 .asReadOnlyByteBuffer();
 
-        assertThrows(TurmsBusinessException.class, () -> TurmsRequestUtil.parseSimpleRequest(emptyRequest));
+        assertThatExceptionOfType(TurmsBusinessException.class)
+                .isThrownBy(() -> TurmsRequestUtil.parseSimpleRequest(emptyRequest));
     }
 
     @Test
@@ -57,7 +59,8 @@ class TurmsRequestUtilTests {
                 .toByteString()
                 .asReadOnlyByteBuffer();
 
-        assertThrows(TurmsBusinessException.class, () -> TurmsRequestUtil.parseSimpleRequest(partialRequestWithoutRequestId));
+        assertThatExceptionOfType(TurmsBusinessException.class)
+                .isThrownBy(() -> TurmsRequestUtil.parseSimpleRequest(partialRequestWithoutRequestId));
     }
 
     @Test
@@ -68,7 +71,8 @@ class TurmsRequestUtilTests {
                 .toByteString()
                 .asReadOnlyByteBuffer();
 
-        assertThrows(TurmsBusinessException.class, () -> TurmsRequestUtil.parseSimpleRequest(partialRequestWithNullRequestId));
+        assertThatExceptionOfType(TurmsBusinessException.class)
+                .isThrownBy(() -> TurmsRequestUtil.parseSimpleRequest(partialRequestWithNullRequestId));
     }
 
     @Test
@@ -82,8 +86,8 @@ class TurmsRequestUtilTests {
                 .asReadOnlyByteBuffer();
 
         SimpleTurmsRequest request = TurmsRequestUtil.parseSimpleRequest(requestWithRequestId);
-        assertEquals(requestId, request.getRequestId());
-        assertEquals(TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, request.getType());
+        assertThat(request.getRequestId()).isEqualTo(requestId);
+        assertThat(request.getType()).isEqualTo(TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST);
     }
 
 }

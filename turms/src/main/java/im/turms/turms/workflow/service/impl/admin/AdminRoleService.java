@@ -63,9 +63,11 @@ public class AdminRoleService {
 
     private static final int MIN_ROLE_NAME_LIMIT = 1;
     private static final int MAX_ROLE_NAME_LIMIT = 32;
-    private static final AdminRole ROOT_ROLE = new AdminRole(DaoConstant.ADMIN_ROLE_ROOT_ID, "ROOT", AdminPermission.ALL, Integer.MAX_VALUE);
+    private static final AdminRole ROOT_ROLE =
+            new AdminRole(DaoConstant.ADMIN_ROLE_ROOT_ID, "ROOT", AdminPermission.ALL, Integer.MAX_VALUE);
 
-    private static final String ERROR_UPDATE_ROLE_WITH_HIGHER_RANK = "Only a role with a lower rank compared to the one of the account can be created, updated, or deleted";
+    private static final String ERROR_UPDATE_ROLE_WITH_HIGHER_RANK =
+            "Only a role with a lower rank compared to the one of the account can be created, updated, or deleted";
     private static final String ERROR_NO_PERMISSION = "The account doesn't have the permissions";
 
     private final Map<Long, AdminRole> roles = new ConcurrentHashMap<>(16);
@@ -101,7 +103,8 @@ public class AdminRoleService {
                             log.fatal("Detect an illegal operation on AdminRole collection: " + event);
                     }
                 })
-                .onErrorContinue((throwable, o) -> log.error("Error while processing the change stream event of AdminRole: {}", o, throwable))
+                .onErrorContinue(
+                        (throwable, o) -> log.error("Error while processing the change stream event of AdminRole: {}", o, throwable))
                 .subscribe();
 
         // Load
@@ -496,10 +499,7 @@ public class AdminRoleService {
         if (includedPermissions != null && !includedPermissions.containsAll(rootRole.getPermissions())) {
             return false;
         }
-        if (ranks != null && !ranks.contains(rootRole.getRank())) {
-            return false;
-        }
-        return true;
+        return ranks == null || ranks.contains(rootRole.getRank());
     }
 
 }

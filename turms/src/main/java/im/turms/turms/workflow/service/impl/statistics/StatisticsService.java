@@ -51,9 +51,11 @@ public class StatisticsService {
         this.node = node;
         taskManager.reschedule(
                 "onlineUsersNumberLogging",
-                turmsPropertiesManager.getLocalProperties().getService().getActivityLogging().getStatistics().getOnlineUsersNumberLoggingCron(),
+                turmsPropertiesManager.getLocalProperties().getService().getActivityLogging().getStatistics()
+                        .getOnlineUsersNumberLoggingCron(),
                 () -> {
-                    if (node.isLocalNodeMaster() && node.getSharedProperties().getService().getActivityLogging().getStatistics().isLogOnlineUsersNumber()) {
+                    if (node.isLocalNodeMaster() &&
+                            node.getSharedProperties().getService().getActivityLogging().getStatistics().isLogOnlineUsersNumber()) {
                         countOnlineUsers()
                                 .doOnNext(count -> log.info(ONLINE_USERS_NUMBER_LOGGING_FORMAT, count))
                                 .subscribe();

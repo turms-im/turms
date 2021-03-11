@@ -93,7 +93,8 @@ public abstract class BaseServiceAddressManager {
         return false;
     }
 
-    protected AddressCollector getAddressCollector(AddressProperties addressProperties, ServerProperties serverProperties) throws UnknownHostException {
+    protected AddressCollector getAddressCollector(AddressProperties addressProperties, ServerProperties serverProperties)
+            throws UnknownHostException {
         InetAddress address = serverProperties.getAddress();
         Integer port = serverProperties.getPort();
         if (address == null) {

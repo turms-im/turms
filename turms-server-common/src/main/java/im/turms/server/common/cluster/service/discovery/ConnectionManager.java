@@ -39,7 +39,11 @@ import reactor.netty.tcp.TcpClient;
 
 import javax.annotation.Nullable;
 import java.time.Duration;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -175,7 +179,8 @@ public class ConnectionManager {
         TcpClientTransport transport = TcpClientTransport.create(client);
         return RSocketConnector.create()
                 .interceptors(registry -> {
-                    MicrometerDuplexConnectionInterceptor connectionInterceptor = new MicrometerDuplexConnectionInterceptor(Metrics.REGISTRY);
+                    MicrometerDuplexConnectionInterceptor connectionInterceptor =
+                            new MicrometerDuplexConnectionInterceptor(Metrics.REGISTRY);
                     MicrometerRSocketInterceptor interactionInterceptor = new MicrometerRSocketInterceptor(Metrics.REGISTRY);
                     registry.forConnection(connectionInterceptor);
                     registry.forRequester(interactionInterceptor);

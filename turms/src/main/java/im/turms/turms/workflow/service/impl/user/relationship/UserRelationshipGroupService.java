@@ -268,7 +268,8 @@ public class UserRelationshipGroupService {
             AssertUtil.notNull(ownerId, "ownerId");
             AssertUtil.notNull(deleteGroupIndex, "deleteGroupIndex");
             AssertUtil.notNull(newGroupIndex, "newGroupIndex");
-            AssertUtil.state(!deleteGroupIndex.equals(DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX), "The default relationship group cannot be deleted");
+            AssertUtil.state(!deleteGroupIndex.equals(DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX),
+                    "The default relationship group cannot be deleted");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
@@ -326,7 +327,8 @@ public class UserRelationshipGroupService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        return deleteRelatedUsersFromAllRelationshipGroups(Set.of(new UserRelationship.Key(ownerId, relatedUserId)), session, updateRelationshipGroupsMembersVersion);
+        return deleteRelatedUsersFromAllRelationshipGroups(Set.of(new UserRelationship.Key(ownerId, relatedUserId)), session,
+                updateRelationshipGroupsMembersVersion);
     }
 
     public Mono<DeleteResult> deleteRelatedUsersFromAllRelationshipGroups(

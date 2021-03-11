@@ -31,7 +31,7 @@ import java.util.Date;
 /**
  * @author James Chen
  */
-public class ErrorAttributesFactory {
+public final class ErrorAttributesFactory {
 
     private ErrorAttributesFactory() {
     }

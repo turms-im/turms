@@ -67,7 +67,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @DependsOn(IMongoDataGenerator.BEAN_NAME)
 public class AdminService {
 
-    private static final String ERROR_UPDATE_ADMIN_WITH_HIGHER_RANK = "Only a admin with a lower rank compared to the account can be created, updated, or deleted";
+    private static final String ERROR_UPDATE_ADMIN_WITH_HIGHER_RANK =
+            "Only a admin with a lower rank compared to the account can be created, updated, or deleted";
     /**
      * Use the hard-coded account because it's immutable.
      */
@@ -169,7 +170,8 @@ public class AdminService {
             AssertUtil.length(name, "name", MIN_NAME_LIMIT, MAX_NAME_LIMIT);
             AssertUtil.pastOrPresent(registrationDate, "registrationDate");
             AssertUtil.notNull(roleId, "roleId");
-            AssertUtil.state(!roleId.equals(DaoConstant.ADMIN_ROLE_ROOT_ID), "The role ID cannot be the root role ID: " + DaoConstant.ADMIN_ROLE_ROOT_ID);
+            AssertUtil.state(!roleId.equals(DaoConstant.ADMIN_ROLE_ROOT_ID),
+                    "The role ID cannot be the root role ID: " + DaoConstant.ADMIN_ROLE_ROOT_ID);
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
@@ -408,12 +410,14 @@ public class AdminService {
                                 return adminRoleService.queryRankByRole(roleId)
                                         .flatMap(targetRoleRank -> triple.getMiddle() > targetRoleRank
                                                 ? updateAdmins(targetAccounts, rawPassword, name, roleId)
-                                                : Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED, ERROR_UPDATE_ADMIN_WITH_HIGHER_RANK)));
+                                                : Mono.error(TurmsBusinessException
+                                                .get(TurmsStatusCode.UNAUTHORIZED, ERROR_UPDATE_ADMIN_WITH_HIGHER_RANK)));
                             } else {
                                 return updateAdmins(targetAccounts, rawPassword, name, null);
                             }
                         } else {
-                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED, ERROR_UPDATE_ADMIN_WITH_HIGHER_RANK));
+                            return Mono
+                                    .error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED, ERROR_UPDATE_ADMIN_WITH_HIGHER_RANK));
                         }
                     });
         }

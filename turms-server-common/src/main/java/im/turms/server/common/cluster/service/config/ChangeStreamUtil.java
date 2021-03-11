@@ -22,7 +22,7 @@ import org.bson.BsonDocument;
 /**
  * @author James Chen
  */
-public class ChangeStreamUtil {
+public final class ChangeStreamUtil {
 
     private ChangeStreamUtil() {
     }

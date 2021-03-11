@@ -60,12 +60,12 @@ public class GroupProperties {
     @Description("Whether to allow users to recall the join requests sent by themselves")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    private boolean allowRecallingJoinRequestSentByOneself = false;
+    private boolean allowRecallingJoinRequestSentByOneself;
 
     @Description("Whether to allow the owner and managers of a group to recall pending group invitations")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    private boolean allowRecallingPendingGroupInvitationByOwnerAndManager = false;
+    private boolean allowRecallingPendingGroupInvitationByOwnerAndManager;
 
     @Description("Whether to delete groups logically by default")
     @GlobalProperty
@@ -75,20 +75,22 @@ public class GroupProperties {
     @Description("Whether to delete expired group join requests when the cron expression is triggered")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    private boolean deleteExpiredGroupJoinRequestsWhenCronTriggered = false;
+    private boolean deleteExpiredGroupJoinRequestsWhenCronTriggered;
 
     @Description("Whether to delete expired group invitations when the cron expression is triggered")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    private boolean deleteExpiredGroupInvitationsWhenCronTriggered = false;
+    private boolean deleteExpiredGroupInvitationsWhenCronTriggered;
 
-    @Description("Clean or update the expired group join requests when the cron expression is triggered." +
-            " Clean if deleteExpiredGroupJoinRequestsWhenCronTriggered is true and update if deleteExpiredGroupJoinRequestsWhenCronTriggered is false")
+    @Description("Clean or update the expired group join requests when the cron expression is triggered. " +
+            "Clean if deleteExpiredGroupJoinRequestsWhenCronTriggered is true " +
+            "and update if deleteExpiredGroupJoinRequestsWhenCronTriggered is false")
     @ValidCron
     private String expiredGroupJoinRequestsCheckerCron = CronConstant.DEFAULT_EXPIRED_GROUP_JOIN_REQUESTS_CHECKER_CRON;
 
-    @Description("Clean or update the expired group invitations when the cron expression is triggered." +
-            " Clean if deleteExpiredGroupInvitationsWhenCronTriggered is true and update if deleteExpiredGroupInvitationsWhenCronTriggered is false")
+    @Description("Clean or update the expired group invitations when the cron expression is triggered. " +
+            "Clean if deleteExpiredGroupInvitationsWhenCronTriggered is true " +
+            "and update if deleteExpiredGroupInvitationsWhenCronTriggered is false")
     private String expiredGroupInvitationsCheckerCron = CronConstant.DEFAULT_EXPIRED_GROUP_INVITATIONS_CHECKER_CRON;
 
     @Description("Whether to activate a group when created by default")

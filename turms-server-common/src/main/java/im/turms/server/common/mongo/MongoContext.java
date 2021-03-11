@@ -29,13 +29,23 @@ import im.turms.server.common.mongo.entity.MongoEntity;
 import im.turms.server.common.mongo.operation.MongoCollectionOptions;
 import im.turms.server.common.util.CollectorUtil;
 import lombok.Getter;
-import org.bson.codecs.*;
+import org.bson.codecs.BsonCodecProvider;
+import org.bson.codecs.BsonValueCodecProvider;
+import org.bson.codecs.Codec;
+import org.bson.codecs.DocumentCodecProvider;
+import org.bson.codecs.IterableCodecProvider;
+import org.bson.codecs.MapCodecProvider;
+import org.bson.codecs.ValueCodecProvider;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.jsr310.Jsr310CodecProvider;
 import org.springframework.data.util.Pair;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author James Chen
@@ -111,7 +121,8 @@ public class MongoContext {
                 .collect(CollectorUtil.toList(classes.size())));
     }
 
-    public synchronized List<Pair<MongoEntity<?>, MongoCollection<?>>> registerEntitiesByOptions(Collection<MongoCollectionOptions> optionsList) {
+    public synchronized List<Pair<MongoEntity<?>, MongoCollection<?>>> registerEntitiesByOptions(
+            Collection<MongoCollectionOptions> optionsList) {
         List<Pair<MongoEntity<?>, MongoCollection<?>>> pairs = new ArrayList<>(optionsList.size());
         for (MongoCollectionOptions properties : optionsList) {
             Class<?> clazz = properties.getClazz();

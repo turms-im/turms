@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.TimeZone;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
@@ -36,7 +36,7 @@ class ApplicationContextConfigTests {
     @Test
     void constructor_shouldSetTimeZoneToUTC() {
         new ApplicationContextConfig(null);
-        assertEquals("UTC", TimeZone.getDefault().getID());
+        assertThat(TimeZone.getDefault().getID()).isEqualTo("UTC");
     }
 
     @Test

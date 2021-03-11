@@ -21,7 +21,7 @@ import im.turms.server.common.cluster.node.NodeType;
 import im.turms.turms.cluster.NodeConfig;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author James Chen
@@ -30,7 +30,7 @@ class NodeConfigTests {
 
     @Test
     void nodeType_shouldReturnService() {
-        assertEquals(NodeType.SERVICE, new NodeConfig().nodeType());
+        assertThat(new NodeConfig().nodeType()).isEqualTo(NodeType.SERVICE);
     }
 
 }

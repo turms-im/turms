@@ -252,7 +252,8 @@ public class UserService {
                                             : ServicePermission.get(TurmsStatusCode.PROFILE_REQUESTER_HAS_BEEN_BLOCKED));
                         case UNRECOGNIZED:
                         default:
-                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_INTERNAL_ERROR, "Unexpected value " + user.getProfileAccess()));
+                            return Mono.error(TurmsBusinessException
+                                    .get(TurmsStatusCode.SERVER_INTERNAL_ERROR, "Unexpected value " + user.getProfileAccess()));
                     }
                 })
                 .defaultIfEmpty(ServicePermission.get(TurmsStatusCode.USER_PROFILE_NOT_FOUND));

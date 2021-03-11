@@ -19,14 +19,26 @@ package im.turms.server.common.mongo.operation;
 
 import com.mongodb.ClientSessionOptions;
 import com.mongodb.TransactionOptions;
-import com.mongodb.client.model.*;
+import com.mongodb.client.model.Accumulators;
+import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.CountOptions;
+import com.mongodb.client.model.DeleteOptions;
+import com.mongodb.client.model.IndexModel;
+import com.mongodb.client.model.InsertManyOptions;
+import com.mongodb.client.model.InsertOneOptions;
+import com.mongodb.client.model.Projections;
+import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertManyResult;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
-import com.mongodb.reactivestreams.client.*;
+import com.mongodb.reactivestreams.client.AggregatePublisher;
+import com.mongodb.reactivestreams.client.ClientSession;
+import com.mongodb.reactivestreams.client.FindPublisher;
+import com.mongodb.reactivestreams.client.MongoCollection;
+import com.mongodb.reactivestreams.client.MongoDatabase;
 import im.turms.server.common.mongo.BsonPool;
 import im.turms.server.common.mongo.MongoContext;
 import im.turms.server.common.mongo.entity.MongoEntity;
@@ -369,8 +381,10 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
                 .doOnError(throwable -> log.error("Failed to enable sharding", throwable));
         Mono<Document> shardCollection = Mono.from(adminDatabase.runCommand(new Document("shardCollection", namespace)
                 .append("key", shardKey)))
-                .doOnError(throwable -> log.error("Failed to shard the collection {} with the shard key {}", namespace, shardKey.toJson(), throwable))
-                .doOnSuccess(ignored -> log.info("Shard the collection {} with the shard key {} successfully", namespace, shardKey.toJson()));
+                .doOnError(throwable -> log
+                        .error("Failed to shard the collection {} with the shard key {}", namespace, shardKey.toJson(), throwable))
+                .doOnSuccess(
+                        ignored -> log.info("Shard the collection {} with the shard key {} successfully", namespace, shardKey.toJson()));
         return enableSharding
                 .then(shardCollection)
                 .then();

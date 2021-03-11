@@ -74,10 +74,21 @@ import javax.validation.constraints.PastOrPresent;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import static im.turms.server.common.constant.TurmsStatusCode.*;
+import static im.turms.server.common.constant.TurmsStatusCode.ILLEGAL_ARGUMENT;
+import static im.turms.server.common.constant.TurmsStatusCode.MESSAGE_RECALL_TIMEOUT;
+import static im.turms.server.common.constant.TurmsStatusCode.NOT_SENDER_TO_UPDATE_MESSAGE;
+import static im.turms.server.common.constant.TurmsStatusCode.OK;
+import static im.turms.server.common.constant.TurmsStatusCode.RECALLING_MESSAGE_IS_DISABLED;
+import static im.turms.server.common.constant.TurmsStatusCode.RECALL_NON_EXISTING_MESSAGE;
+import static im.turms.server.common.constant.TurmsStatusCode.UPDATING_MESSAGE_BY_SENDER_IS_DISABLED;
 import static im.turms.turms.constant.MetricsConstant.SENT_MESSAGES_COUNTER_NAME;
 
 /**
@@ -128,7 +139,8 @@ public class MessageService {
             this.sentMessageCache = Caffeine
                     .newBuilder()
                     .maximumSize(relayedMessageCacheMaxSize)
-                    .expireAfterWrite(Duration.ofSeconds(turmsPropertiesManager.getLocalProperties().getService().getMessage().getSentMessageExpireAfter()))
+                    .expireAfterWrite(Duration.ofSeconds(
+                            turmsPropertiesManager.getLocalProperties().getService().getMessage().getSentMessageExpireAfter()))
                     .build();
         } else {
             sentMessageCache = null;
@@ -383,7 +395,8 @@ public class MessageService {
                         return Mono.empty();
                     } else {
                         Mono<List<Long>> messageIdsToDeleteMono = Mono.just(expiredMessageIds);
-                        List<ExpiredMessageAutoDeletionNotificationHandler> handlerList = turmsPluginManager.getExpiredMessageAutoDeletionNotificationHandlerList();
+                        List<ExpiredMessageAutoDeletionNotificationHandler> handlerList =
+                                turmsPluginManager.getExpiredMessageAutoDeletionNotificationHandlerList();
                         if (pluginEnabled && !handlerList.isEmpty()) {
                             Filter messagesFilter = Filter.newBuilder()
                                     .in(DaoConstant.ID_FIELD_NAME, expiredMessageIds);
@@ -808,7 +821,8 @@ public class MessageService {
         Date deliveryDate = new Date();
         Mono<Pair<Message, Set<Long>>> saveMono = referenceId != null
                 ? authAndCloneAndSaveMessage(senderId, referenceId, isGroupMessage, isSystemMessage, targetId)
-                : authAndSaveMessage(messageId, senderId, targetId, isGroupMessage, isSystemMessage, text, records, burnAfter, deliveryDate, null);
+                : authAndSaveMessage(messageId, senderId, targetId, isGroupMessage, isSystemMessage, text, records, burnAfter, deliveryDate,
+                null);
         return saveMono
                 .flatMap(pair -> {
                     Message message = pair.getLeft();
@@ -871,7 +885,8 @@ public class MessageService {
                     count += record.length;
                 }
                 if (count > maxRecordsSize) {
-                    throw TurmsBusinessException.get(ILLEGAL_ARGUMENT, "The total size of records must be less than or equal to " + maxRecordsSize);
+                    throw TurmsBusinessException
+                            .get(ILLEGAL_ARGUMENT, "The total size of records must be less than or equal to " + maxRecordsSize);
                 }
             }
         }

@@ -37,7 +37,9 @@ import reactor.core.publisher.Mono;
 import java.util.Date;
 import java.util.List;
 
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.*;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_CONVERSATIONS_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.UPDATE_CONVERSATION_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.UPDATE_TYPING_STATUS_REQUEST;
 
 /**
  * @author James Chen
@@ -125,7 +127,8 @@ public class ConversationServiceController {
             UpdateConversationRequest request = clientRequest.getTurmsRequest()
                     .getUpdateConversationRequest();
             if (!request.hasTargetId() && !request.hasGroupId()) {
-                return Mono.just(RequestHandlerResultFactory.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The targetId and groupId must not all null"));
+                return Mono.just(RequestHandlerResultFactory
+                        .get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The targetId and groupId must not all null"));
             }
             Long requesterId = clientRequest.getUserId();
             long readDateValue = request.getReadDate();
@@ -142,7 +145,8 @@ public class ConversationServiceController {
             }
             return mono.then(Mono.defer(() -> {
                 if (isUpdatePrivateConversationRequest) {
-                    if (node.getSharedProperties().getService().getNotification().isNotifyPrivateConversationParticipantAfterReadDateUpdated()) {
+                    if (node.getSharedProperties().getService().getNotification()
+                            .isNotifyPrivateConversationParticipantAfterReadDateUpdated()) {
                         return Mono.just(RequestHandlerResultFactory.get(
                                 targetId,
                                 clientRequest.getTurmsRequest(),
@@ -151,7 +155,8 @@ public class ConversationServiceController {
                         return Mono.just(RequestHandlerResultFactory.OK);
                     }
                 } else {
-                    if (node.getSharedProperties().getService().getNotification().isNotifyGroupConversationParticipantsAfterReadDateUpdated()) {
+                    if (node.getSharedProperties().getService().getNotification()
+                            .isNotifyGroupConversationParticipantsAfterReadDateUpdated()) {
                         return groupMemberService.queryGroupMemberIds(targetId)
                                 .collect(CollectorUtil.toSet(32))
                                 .map(memberIds -> RequestHandlerResultFactory.get(

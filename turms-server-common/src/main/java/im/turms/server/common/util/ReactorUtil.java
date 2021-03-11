@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * @author James Chen
  */
-public class ReactorUtil {
+public final class ReactorUtil {
 
     private ReactorUtil() {
     }

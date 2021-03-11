@@ -90,7 +90,8 @@ public class UserFriendRequestService {
         // Set up the checker for expired user friend requests
         taskManager.reschedule(
                 "userFriendRequestsChecker",
-                turmsPropertiesManager.getLocalProperties().getService().getUser().getFriendRequest().getExpiredUserFriendRequestsCheckerCron(),
+                turmsPropertiesManager.getLocalProperties().getService().getUser().getFriendRequest()
+                        .getExpiredUserFriendRequestsCheckerCron(),
                 () -> {
                     if (node.isLocalNodeMaster()) {
                         if (node.getSharedProperties().getService().getUser()
@@ -261,7 +262,8 @@ public class UserFriendRequestService {
                         String finalContent = content != null ? content : "";
                         return requestExists
                                 ? Mono.error(TurmsBusinessException.get(TurmsStatusCode.CREATE_EXISTING_FRIEND_REQUEST))
-                                : createFriendRequest(null, requesterId, recipientId, finalContent, RequestStatus.PENDING, creationDate, null, null, null);
+                                : createFriendRequest(null, requesterId, recipientId, finalContent,
+                                RequestStatus.PENDING, creationDate, null, null, null);
                     });
                 });
     }
@@ -380,9 +382,10 @@ public class UserFriendRequestService {
                     }
                     switch (action) {
                         case ACCEPT:
-                            return mongoClient.inTransaction(session -> updatePendingFriendRequestStatus(friendRequestId, RequestStatus.ACCEPTED, reason, session)
-                                    .then(userRelationshipService.friendTwoUsers(request.getRequesterId(), requesterId, session))
-                                    .then())
+                            return mongoClient.inTransaction(
+                                    session -> updatePendingFriendRequestStatus(friendRequestId, RequestStatus.ACCEPTED, reason, session)
+                                            .then(userRelationshipService.friendTwoUsers(request.getRequesterId(), requesterId, session))
+                                            .then())
                                     .retryWhen(DaoConstant.TRANSACTION_RETRY);
                         case IGNORE:
                             return updatePendingFriendRequestStatus(friendRequestId, RequestStatus.IGNORED, reason, null)
@@ -391,7 +394,8 @@ public class UserFriendRequestService {
                             return updatePendingFriendRequestStatus(friendRequestId, RequestStatus.DECLINED, reason, null)
                                     .then();
                         default:
-                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The response action must not be UNRECOGNIZED"));
+                            return Mono.error(TurmsBusinessException
+                                    .get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The response action must not be UNRECOGNIZED"));
                     }
                 });
     }

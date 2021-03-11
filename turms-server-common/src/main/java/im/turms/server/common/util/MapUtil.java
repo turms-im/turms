@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * @author James Chen
  */
-public class MapUtil {
+public final class MapUtil {
 
     private MapUtil() {
     }

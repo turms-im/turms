@@ -19,14 +19,27 @@ package im.turms.server.common.actuator.metrics;
 
 import com.google.common.collect.Sets;
 import im.turms.server.common.util.InvokeUtil;
-import io.micrometer.core.instrument.*;
+import io.micrometer.core.instrument.Measurement;
+import io.micrometer.core.instrument.Meter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Statistic;
+import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.composite.CompositeMeterRegistry;
 import lombok.SneakyThrows;
 import org.springframework.boot.actuate.endpoint.InvalidEndpointRequestException;
 import org.springframework.util.StringUtils;
 
 import java.lang.invoke.MethodHandle;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.BiFunction;
 
 /**
@@ -43,15 +56,15 @@ public class MetricsPool {
         this.registry = registry;
     }
 
-    Set<String> collectNames() {
+    public Set<String> collectNames() {
         return collectNames(registry);
     }
 
-    List<Meter> findFirstMatchingMeters(String name, List<String> tags) {
+    public List<Meter> findFirstMatchingMeters(String name, List<String> tags) {
         return findFirstMatchingMeters(registry, name, parseTags(tags));
     }
 
-    Map<String, Double> getSamples(Collection<Meter> meters) {
+    public Map<String, Double> getSamples(Collection<Meter> meters) {
         Map<String, Double> samples = new LinkedHashMap<>();
         for (Meter meter : meters) {
             for (Measurement measurement : meter.measure()) {
@@ -62,7 +75,7 @@ public class MetricsPool {
         return samples;
     }
 
-    Map<String, Set<String>> getAvailableTags(Collection<Meter> meters) {
+    public Map<String, Set<String>> getAvailableTags(Collection<Meter> meters) {
         Map<String, Set<String>> availableTags = new HashMap<>();
         for (Meter meter : meters) {
             for (Tag tag : meter.getId().getTags()) {
@@ -72,6 +85,10 @@ public class MetricsPool {
         }
         return availableTags;
     }
+
+    /**
+     * Internal Implementations
+     */
 
     @SneakyThrows
     private Set<String> collectNames(MeterRegistry registry) {

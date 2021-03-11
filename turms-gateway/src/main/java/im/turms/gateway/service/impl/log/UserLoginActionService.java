@@ -63,7 +63,8 @@ public class UserLoginActionService {
         boolean logUserLoginAction = node.getSharedProperties().getGateway().getLog().isLogUserLoginAction();
         boolean triggerHandlers = turmsPluginManager.isEnabled() && !turmsPluginManager.getUserLoginActionLogHandlerList().isEmpty();
         if (logUserLoginAction || triggerHandlers) {
-            UserLoginActionLog loginAction = new UserLoginActionLog(logId, userId, loginDate, position, ip, userStatus, loggingInDeviceType, deviceDetails);
+            UserLoginActionLog loginAction =
+                    new UserLoginActionLog(logId, userId, loginDate, position, ip, userStatus, loggingInDeviceType, deviceDetails);
             if (logUserLoginAction) {
                 UserActivityLogging.log(loginAction);
             }

@@ -17,7 +17,16 @@
 
 package im.turms.server.common.cluster.service.serialization.serializer;
 
-import im.turms.server.common.cluster.service.serialization.serializer.impl.*;
+import im.turms.server.common.cluster.service.serialization.serializer.impl.BoolSerializer;
+import im.turms.server.common.cluster.service.serialization.serializer.impl.ByteSerializer;
+import im.turms.server.common.cluster.service.serialization.serializer.impl.CharSerializer;
+import im.turms.server.common.cluster.service.serialization.serializer.impl.DoubleSerializer;
+import im.turms.server.common.cluster.service.serialization.serializer.impl.FloatSerializer;
+import im.turms.server.common.cluster.service.serialization.serializer.impl.IntegerSerializer;
+import im.turms.server.common.cluster.service.serialization.serializer.impl.ListSerializer;
+import im.turms.server.common.cluster.service.serialization.serializer.impl.LongSerializer;
+import im.turms.server.common.cluster.service.serialization.serializer.impl.ShortSerializer;
+import im.turms.server.common.cluster.service.serialization.serializer.impl.StringSerializer;
 import im.turms.server.common.rpc.serializer.dto.ServiceResponseSerializer;
 import im.turms.server.common.rpc.serializer.request.CountOnlineUsersRequestSerializer;
 import im.turms.server.common.rpc.serializer.request.HandleServiceRequestSerializer;
@@ -34,7 +43,7 @@ import java.util.Map;
  * @author James Chen
  */
 @Log4j2
-public class SerializerPool {
+public final class SerializerPool {
 
     private static final Map<Integer, Serializer> SERIALIZERS_BY_ID = new HashMap<>(32);
     private static final Map<Class<?>, Serializer> SERIALIZERS_BY_CLASS = new IdentityHashMap<>(32);

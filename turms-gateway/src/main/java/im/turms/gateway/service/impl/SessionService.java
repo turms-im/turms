@@ -57,7 +57,12 @@ import javax.annotation.PreDestroy;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static im.turms.gateway.constant.MetricsConstant.LOGGED_IN_USERS_COUNTER_NAME;
@@ -174,7 +179,8 @@ public class SessionService implements ISessionService {
         }
         UserSession session = manager.getSession(deviceType);
         if (session.getId() == sessionId) {
-            return setLocalSessionOfflineByUserIdAndDeviceTypes0(userId, Collections.singleton(deviceType), closeReason, new Date(), manager);
+            return setLocalSessionOfflineByUserIdAndDeviceTypes0(userId, Collections.singleton(deviceType), closeReason, new Date(),
+                    manager);
         } else {
             return Mono.just(false);
         }
@@ -363,7 +369,8 @@ public class SessionService implements ISessionService {
                                         .onErrorResume(throwable -> Mono.empty());
                                 if (position != null) {
                                     updateSessionInfoMono = updateSessionInfoMono
-                                            .flatMap(unused -> sessionLocationService.upsertUserLocation(userId, deviceType, position, new Date())
+                                            .flatMap(unused -> sessionLocationService
+                                                    .upsertUserLocation(userId, deviceType, position, new Date())
                                                     .onErrorResume(throwable -> Mono.empty()));
                                 }
                                 return updateSessionInfoMono.thenReturn(session);
@@ -458,11 +465,13 @@ public class SessionService implements ISessionService {
                     UserStatus finalUserStatus = userStatus != null ? userStatus : UserStatus.AVAILABLE;
                     UserSessionsManager manager = sessionsManagerByUserId.computeIfAbsent(userId, key ->
                             new UserSessionsManager(key, finalUserStatus));
-                    UserSession session = manager.addSessionIfAbsent(deviceType, position, null, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
+                    UserSession session =
+                            manager.addSessionIfAbsent(deviceType, position, null, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
                     // This should never happen
                     if (session == null) {
                         manager.setDeviceOffline(deviceType, CloseReason.get(SessionCloseStatus.LOGIN_CONFLICT));
-                        session = manager.addSessionIfAbsent(deviceType, position, null, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
+                        session = manager.addSessionIfAbsent(deviceType, position, null, closeIdleSessionAfterMillis,
+                                switchProtocolAfterMillis);
                         if (session == null) {
                             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_INTERNAL_ERROR));
                         }
@@ -473,17 +482,20 @@ public class SessionService implements ISessionService {
                     if (position != null && sessionLocationService.isLocationEnabled()) {
                         return sessionLocationService.upsertUserLocation(userId, deviceType, position, now)
                                 .doOnSuccess(ignored -> userLoginActionService
-                                        .tryLogLoginActionAndTriggerHandlers(logId, userId, finalUserStatus, deviceType, position, ip, deviceDetails, now))
+                                        .tryLogLoginActionAndTriggerHandlers(logId, userId, finalUserStatus, deviceType, position, ip,
+                                                deviceDetails, now))
                                 .thenReturn(session);
                     } else {
                         userLoginActionService
-                                .tryLogLoginActionAndTriggerHandlers(logId, userId, finalUserStatus, deviceType, position, ip, deviceDetails, now);
+                                .tryLogLoginActionAndTriggerHandlers(logId, userId, finalUserStatus, deviceType, position, ip,
+                                        deviceDetails, now);
                         return Mono.just(session);
                     }
                 });
     }
 
-    private void removeSessionsManagerIfEmpty(@NotNull CloseReason closeReason, @NotNull UserSessionsManager manager, @NotNull Long userId) {
+    private void removeSessionsManagerIfEmpty(@NotNull CloseReason closeReason, @NotNull UserSessionsManager manager,
+                                              @NotNull Long userId) {
         if (manager.getSessionsNumber() == 0) {
             sessionsManagerByUserId.remove(userId);
         }

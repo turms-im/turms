@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -43,7 +43,7 @@ class InboundRequestServiceTests {
     void constructor_shouldReturnInstance() {
         InboundRequestService inboundRequestService = new InboundRequestService(null, mockTurmsPropertiesManager(), null, null);
 
-        assertNotNull(inboundRequestService);
+        assertThat(inboundRequestService).isNotNull();
     }
 
     @Test
@@ -55,7 +55,8 @@ class InboundRequestServiceTests {
 
         StepVerifier.create(result)
                 .expectErrorMatches(throwable ->
-                        throwable instanceof TurmsBusinessException && ((TurmsBusinessException) throwable).getCode().equals(TurmsStatusCode.SERVER_UNAVAILABLE))
+                        throwable instanceof TurmsBusinessException &&
+                                ((TurmsBusinessException) throwable).getCode().equals(TurmsStatusCode.SERVER_UNAVAILABLE))
                 .verify();
     }
 
@@ -68,7 +69,8 @@ class InboundRequestServiceTests {
 
         StepVerifier.create(result)
                 .expectErrorMatches(throwable ->
-                        throwable instanceof TurmsBusinessException && ((TurmsBusinessException) throwable).getCode().equals(TurmsStatusCode.SEND_REQUEST_FROM_NON_EXISTING_SESSION))
+                        throwable instanceof TurmsBusinessException && ((TurmsBusinessException) throwable).getCode()
+                                .equals(TurmsStatusCode.SEND_REQUEST_FROM_NON_EXISTING_SESSION))
                 .verify();
     }
 
@@ -84,7 +86,8 @@ class InboundRequestServiceTests {
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(request);
 
         StepVerifier.create(result)
-                .expectNextMatches(notification -> notification.getCode().getValue() == TurmsStatusCode.CLIENT_REQUESTS_TOO_FREQUENT.getBusinessCode())
+                .expectNextMatches(
+                        notification -> notification.getCode().getValue() == TurmsStatusCode.CLIENT_REQUESTS_TOO_FREQUENT.getBusinessCode())
                 .verifyComplete();
     }
 
@@ -100,7 +103,8 @@ class InboundRequestServiceTests {
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(request);
 
         StepVerifier.create(result)
-                .expectNextMatches(notification -> notification.getCode().getValue() == TurmsStatusCode.SERVER_INTERNAL_ERROR.getBusinessCode())
+                .expectNextMatches(
+                        notification -> notification.getCode().getValue() == TurmsStatusCode.SERVER_INTERNAL_ERROR.getBusinessCode())
                 .verifyComplete();
     }
 
@@ -116,7 +120,8 @@ class InboundRequestServiceTests {
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(request);
 
         StepVerifier.create(result)
-                .expectNextMatches(notification -> notification.getCode().getValue() == TurmsStatusCode.SERVER_INTERNAL_ERROR.getBusinessCode())
+                .expectNextMatches(
+                        notification -> notification.getCode().getValue() == TurmsStatusCode.SERVER_INTERNAL_ERROR.getBusinessCode())
                 .verifyComplete();
     }
 

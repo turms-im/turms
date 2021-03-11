@@ -31,8 +31,9 @@ import javax.validation.constraints.Min;
 @Data
 public class SessionProperties {
 
-    @Description("A session will be closed if turms server doesn't receive any request (including heartbeat request) from the client during closeIdleSessionAfterSeconds." +
-            "References: https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=207243549&idx=1&sn=4ebe4beb8123f1b5ab58810ac8bc5994&scene=0#rd")
+    @Description("A session will be closed if turms server doesn't receive any request " +
+            "(including heartbeat request) from the client during closeIdleSessionAfterSeconds. References: " +
+            "https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&mid=207243549&idx=1&sn=4ebe4beb8123f1b5ab58810ac8bc5994&scene=0#rd")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
     @Min(0)
@@ -47,7 +48,8 @@ public class SessionProperties {
     @Min(0)
     private int switchProtocolAfterSeconds = closeIdleSessionAfterSeconds * 3;
 
-    @Description("The minimum interval to refresh the heartbeat status by client requests to avoid refreshing the heartbeat status frequently")
+    @Description("The minimum interval to refresh the heartbeat status by client requests " +
+            "to avoid refreshing the heartbeat status frequently")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
     @Min(0)

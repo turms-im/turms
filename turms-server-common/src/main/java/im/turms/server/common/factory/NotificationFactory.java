@@ -29,7 +29,7 @@ import im.turms.server.common.exception.ThrowableInfo;
 /**
  * @author James Chen
  */
-public class NotificationFactory {
+public final class NotificationFactory {
 
     public static boolean returnReasonForServerError;
 

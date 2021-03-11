@@ -43,8 +43,21 @@ import reactor.core.publisher.Mono;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 /**
@@ -67,7 +80,8 @@ public class DiscoveryService implements ClusterService {
     };
 
     @Getter
-    private final ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1, new DefaultThreadFactory("turms-cluster-discovery"));
+    private final ScheduledExecutorService scheduler =
+            new ScheduledThreadPoolExecutor(1, new DefaultThreadFactory("turms-cluster-discovery"));
     private ScheduledFuture<?> notifyMembersChangeFuture;
 
     private final DiscoveryProperties discoveryProperties;

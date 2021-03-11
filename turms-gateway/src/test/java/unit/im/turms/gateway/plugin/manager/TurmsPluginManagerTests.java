@@ -24,8 +24,8 @@ import im.turms.server.common.property.env.common.PluginProperties;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -35,7 +35,7 @@ import static org.mockito.Mockito.when;
 class TurmsPluginManagerTests {
 
     @Test
-    void constructor_shouldInitPlugins_ifPluginEnabled() throws Exception {
+    void constructor_shouldInitPlugins_ifPluginEnabled() {
         ApplicationContext context = mock(ApplicationContext.class);
         TurmsPropertiesManager propertiesManager = mock(TurmsPropertiesManager.class);
         TurmsProperties properties = new TurmsProperties();
@@ -47,15 +47,15 @@ class TurmsPluginManagerTests {
                 .thenReturn(properties);
         TurmsPluginManager turmsPluginManager = new TurmsPluginManager(context, propertiesManager);
 
-        assertNotNull(turmsPluginManager.getUserLoginActionLogHandlerList());
-        assertNotNull(turmsPluginManager.getUserLocationLogHandlerList());
-        assertNotNull(turmsPluginManager.getNotificationHandlerList());
-        assertNotNull(turmsPluginManager.getUserAuthenticatorList());
-        assertNotNull(turmsPluginManager.getUserOnlineStatusChangeHandlerList());
+        assertThat(turmsPluginManager.getUserLoginActionLogHandlerList()).isNotNull();
+        assertThat(turmsPluginManager.getUserLocationLogHandlerList()).isNotNull();
+        assertThat(turmsPluginManager.getNotificationHandlerList()).isNotNull();
+        assertThat(turmsPluginManager.getUserAuthenticatorList()).isNotNull();
+        assertThat(turmsPluginManager.getUserOnlineStatusChangeHandlerList()).isNotNull();
     }
 
     @Test
-    void destroy_shouldSucceed() throws Exception {
+    void destroy_shouldSucceed() {
         ApplicationContext context = mock(ApplicationContext.class);
         TurmsPropertiesManager propertiesManager = mock(TurmsPropertiesManager.class);
         TurmsProperties properties = new TurmsProperties();
@@ -66,7 +66,9 @@ class TurmsPluginManagerTests {
         when(propertiesManager.getLocalProperties())
                 .thenReturn(properties);
         TurmsPluginManager turmsPluginManager = new TurmsPluginManager(context, propertiesManager);
-        assertDoesNotThrow(turmsPluginManager::destroy);
+
+        assertThatCode(turmsPluginManager::destroy)
+                .doesNotThrowAnyException();
     }
 
 }

@@ -29,13 +29,23 @@ import javax.validation.constraints.NotNull;
  */
 public abstract class StorageServiceProvider extends TurmsExtension {
 
-    public abstract Mono<Void> deleteResource(@NotNull Long requesterId, @NotNull ContentType contentType, @Nullable String keyStr, @Nullable Long keyNum);
+    public abstract Mono<Void> deleteResource(@NotNull Long requesterId,
+                                              @NotNull ContentType contentType,
+                                              @Nullable String keyStr,
+                                              @Nullable Long keyNum);
 
-    public abstract Mono<String> queryPresignedGetUrl(@NotNull Long requesterId, @NotNull ContentType contentType, @Nullable String keyStr, @Nullable Long keyNum);
+    public abstract Mono<String> queryPresignedGetUrl(@NotNull Long requesterId,
+                                                      @NotNull ContentType contentType,
+                                                      @Nullable String keyStr,
+                                                      @Nullable Long keyNum);
 
     /**
      * @param contentLength For S3-like object storage service, there is no content-length-range for PUT requests,
      */
-    public abstract Mono<String> queryPresignedPutUrl(@NotNull Long requesterId, @NotNull ContentType contentType, @Nullable String keyStr, @Nullable Long keyNum, long contentLength);
+    public abstract Mono<String> queryPresignedPutUrl(@NotNull Long requesterId,
+                                                      @NotNull ContentType contentType,
+                                                      @Nullable String keyStr,
+                                                      @Nullable Long keyNum,
+                                                      long contentLength);
 
 }

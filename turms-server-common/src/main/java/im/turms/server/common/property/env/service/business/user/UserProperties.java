@@ -37,12 +37,12 @@ public class UserProperties {
     @Description("Whether to respond to client with the OFFLINE status if a user is in INVISIBLE status")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    private boolean respondOfflineIfInvisible = false;
+    private boolean respondOfflineIfInvisible;
 
     @Description("Whether to delete the two-sided relationships when a user requests to delete a relationship")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    private boolean deleteTwoSidedRelationships = false;
+    private boolean deleteTwoSidedRelationships;
 
     @Description("Whether to delete a user logically")
     @GlobalProperty

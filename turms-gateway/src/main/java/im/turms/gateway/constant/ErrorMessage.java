@@ -22,7 +22,7 @@ package im.turms.gateway.constant;
  *
  * @author James Chen
  */
-public class ErrorMessage {
+public final class ErrorMessage {
 
     private ErrorMessage() {
     }

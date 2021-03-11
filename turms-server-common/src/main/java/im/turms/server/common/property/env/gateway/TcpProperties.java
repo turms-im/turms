@@ -35,7 +35,8 @@ public class TcpProperties extends BaseServerProperties {
     private int connectionTimeout = 30;
 
     @Description("A TCP connection will be closed on the server side if a client hasn't established a user session in a specified time. " +
-            "Note that the developers on the client side should take the responsibility to close the TCP connection according to their business requirements")
+            "Note that the developers on the client side should take the responsibility " +
+            "to close the TCP connection according to their business requirements")
     private int closeIdleConnectionAfterSeconds = 60 * 5;
 
 }

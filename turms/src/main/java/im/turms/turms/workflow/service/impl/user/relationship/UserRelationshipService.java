@@ -54,7 +54,11 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static im.turms.turms.constant.DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX;
@@ -252,7 +256,8 @@ public class UserRelationshipService {
                                     UserRelationshipsWithVersion.Builder builder = UserRelationshipsWithVersion.newBuilder()
                                             .setLastUpdatedDate(Int64Value.of(date.getTime()));
                                     for (UserRelationship relationship : relationships) {
-                                        im.turms.common.model.bo.user.UserRelationship userRelationship = ProtoUtil.relationship2proto(relationship).build();
+                                        im.turms.common.model.bo.user.UserRelationship userRelationship =
+                                                ProtoUtil.relationship2proto(relationship).build();
                                         builder.addUserRelationships(userRelationship);
                                     }
                                     return builder.build();
@@ -464,7 +469,8 @@ public class UserRelationshipService {
             monos.add(mongoClient.upsert(session, userRelationship));
         } else {
             monos.add(mongoClient.insert(session, userRelationship)
-                    .onErrorMap(DuplicateKeyException.class, e -> TurmsBusinessException.get(TurmsStatusCode.CREATE_EXISTING_RELATIONSHIP)));
+                    .onErrorMap(DuplicateKeyException.class,
+                            e -> TurmsBusinessException.get(TurmsStatusCode.CREATE_EXISTING_RELATIONSHIP)));
         }
         if (newGroupIndex != null && deleteGroupIndex != null && !newGroupIndex.equals(deleteGroupIndex)) {
             monos.add(userRelationshipGroupService.moveRelatedUserToNewGroup(ownerId, relatedUserId, deleteGroupIndex, newGroupIndex));
@@ -476,8 +482,8 @@ public class UserRelationshipService {
             }
             if (deleteGroupIndex != null) {
                 Integer targetGroupIndex = newGroupIndex != null ? newGroupIndex : DEFAULT_RELATIONSHIP_GROUP_INDEX;
-                Mono<UpdateResult> delete = userRelationshipGroupService.moveRelatedUserToNewGroup
-                        (ownerId, relatedUserId, deleteGroupIndex, targetGroupIndex);
+                Mono<UpdateResult> delete = userRelationshipGroupService
+                        .moveRelatedUserToNewGroup(ownerId, relatedUserId, deleteGroupIndex, targetGroupIndex);
                 monos.add(delete);
             }
         }

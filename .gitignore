@@ -27,6 +27,7 @@ mvnw.cmd
 .mvn/
 
 ### Custom ###
+target/
 turms-server-common/target/
 turms/target/
 turms/src/docs/

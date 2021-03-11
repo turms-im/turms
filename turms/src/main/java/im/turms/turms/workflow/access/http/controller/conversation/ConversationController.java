@@ -32,7 +32,13 @@ import im.turms.turms.workflow.dao.domain.conversation.GroupConversation;
 import im.turms.turms.workflow.dao.domain.conversation.PrivateConversation;
 import im.turms.turms.workflow.service.impl.conversation.ConversationService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -71,9 +77,11 @@ public class ConversationController {
         }
         if (ownerIds != null && !ownerIds.isEmpty()) {
             privateConversationsSize += ownerIds.size();
-            privateConversationsFlux = privateConversationsFlux.concatWith(conversationService.queryPrivateConversationsByOwnerIds(ownerIds));
+            privateConversationsFlux =
+                    privateConversationsFlux.concatWith(conversationService.queryPrivateConversationsByOwnerIds(ownerIds));
         }
-        Mono<List<PrivateConversation>> privateConversations = privateConversationsFlux.collect(CollectorUtil.toList(privateConversationsSize));
+        Mono<List<PrivateConversation>> privateConversations =
+                privateConversationsFlux.collect(CollectorUtil.toList(privateConversationsSize));
         Mono<List<GroupConversation>> groupConversations = groupIds == null || groupIds.isEmpty()
                 ? Mono.just(Collections.emptyList())
                 : conversationService.queryGroupConversations(groupIds)
@@ -111,10 +119,14 @@ public class ConversationController {
             @RequestBody UpdateConversationDTO updateConversationDTO) {
         Mono<Void> updatePrivateConversions = isEmptyPrivateConversationKeys(privateConversationKeys)
                 ? Mono.empty()
-                : conversationService.upsertPrivateConversationsReadDate(new HashSet<>(privateConversationKeys.getPrivateConversationKeys()), updateConversationDTO.getReadDate());
+                : conversationService
+                .upsertPrivateConversationsReadDate(new HashSet<>(privateConversationKeys.getPrivateConversationKeys()),
+                        updateConversationDTO.getReadDate());
         Mono<Void> updateGroupConversationsMono = isEmptyGroupConversationKeys(groupConversationMemberKeys)
                 ? Mono.empty()
-                : conversationService.upsertGroupConversationsReadDate(new HashSet<>(groupConversationMemberKeys.getGroupConversationMemberKeys()), updateConversationDTO.getReadDate());
+                : conversationService
+                .upsertGroupConversationsReadDate(new HashSet<>(groupConversationMemberKeys.getGroupConversationMemberKeys()),
+                        updateConversationDTO.getReadDate());
         return Mono.when(updatePrivateConversions, updateGroupConversationsMono)
                 .thenReturn(ResponseFactory.OK);
     }

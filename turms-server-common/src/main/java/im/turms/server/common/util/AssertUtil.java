@@ -30,7 +30,7 @@ import static im.turms.common.util.Validator.areAllFalsy;
 /**
  * @author James Chen
  */
-public class AssertUtil {
+public final class AssertUtil {
 
     private AssertUtil() {
     }
@@ -75,7 +75,8 @@ public class AssertUtil {
         if (s != null) {
             int length = s.length();
             if (length < min || length > max) {
-                throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, name + " must have length between " + min + " and " + max);
+                throw TurmsBusinessException
+                        .get(TurmsStatusCode.ILLEGAL_ARGUMENT, name + " must have length between " + min + " and " + max);
             }
         }
     }

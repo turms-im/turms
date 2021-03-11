@@ -30,12 +30,16 @@ import reactor.netty.tcp.TcpServer;
 
 import javax.annotation.Nullable;
 
-import static io.netty.channel.ChannelOption.*;
+import static io.netty.channel.ChannelOption.CONNECT_TIMEOUT_MILLIS;
+import static io.netty.channel.ChannelOption.SO_BACKLOG;
+import static io.netty.channel.ChannelOption.SO_LINGER;
+import static io.netty.channel.ChannelOption.SO_REUSEADDR;
+import static io.netty.channel.ChannelOption.TCP_NODELAY;
 
 /**
  * @author James Chen
  */
-public class TcpServerFactory {
+public final class TcpServerFactory {
 
     private TcpServerFactory() {
     }

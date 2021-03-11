@@ -52,7 +52,7 @@ public final class UserPermissionGroup {
     // group type id -> limit
     private final Map<Long, Integer> groupTypeLimits;
 
-    public static class Fields {
+    public static final class Fields {
         public static final String CREATABLE_GROUP_TYPE_IDS = "cgtid";
         public static final String OWNED_GROUP_LIMIT = "ogl";
         public static final String OWNED_GROUP_LIMIT_FOR_EACH_GROUP_TYPE = "oglegt";

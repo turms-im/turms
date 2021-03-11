@@ -19,12 +19,27 @@ package im.turms.turms.workflow.access.servicerequest.controller;
 
 import im.turms.common.constant.GroupMemberRole;
 import im.turms.common.model.dto.notification.TurmsNotification;
-import im.turms.common.model.dto.request.group.*;
+import im.turms.common.model.dto.request.group.CreateGroupRequest;
+import im.turms.common.model.dto.request.group.DeleteGroupRequest;
+import im.turms.common.model.dto.request.group.QueryGroupRequest;
+import im.turms.common.model.dto.request.group.QueryJoinedGroupIdsRequest;
+import im.turms.common.model.dto.request.group.QueryJoinedGroupInfosRequest;
+import im.turms.common.model.dto.request.group.UpdateGroupRequest;
 import im.turms.common.model.dto.request.group.blocklist.CreateGroupBlockedUserRequest;
 import im.turms.common.model.dto.request.group.blocklist.DeleteGroupBlockedUserRequest;
 import im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserIdsRequest;
 import im.turms.common.model.dto.request.group.blocklist.QueryGroupBlockedUserInfosRequest;
-import im.turms.common.model.dto.request.group.enrollment.*;
+import im.turms.common.model.dto.request.group.enrollment.CheckGroupJoinQuestionsAnswersRequest;
+import im.turms.common.model.dto.request.group.enrollment.CreateGroupInvitationRequest;
+import im.turms.common.model.dto.request.group.enrollment.CreateGroupJoinQuestionRequest;
+import im.turms.common.model.dto.request.group.enrollment.CreateGroupJoinRequestRequest;
+import im.turms.common.model.dto.request.group.enrollment.DeleteGroupInvitationRequest;
+import im.turms.common.model.dto.request.group.enrollment.DeleteGroupJoinQuestionRequest;
+import im.turms.common.model.dto.request.group.enrollment.DeleteGroupJoinRequestRequest;
+import im.turms.common.model.dto.request.group.enrollment.QueryGroupInvitationsRequest;
+import im.turms.common.model.dto.request.group.enrollment.QueryGroupJoinQuestionsRequest;
+import im.turms.common.model.dto.request.group.enrollment.QueryGroupJoinRequestsRequest;
+import im.turms.common.model.dto.request.group.enrollment.UpdateGroupJoinQuestionRequest;
 import im.turms.common.model.dto.request.group.member.CreateGroupMemberRequest;
 import im.turms.common.model.dto.request.group.member.DeleteGroupMemberRequest;
 import im.turms.common.model.dto.request.group.member.QueryGroupMembersRequest;
@@ -36,7 +51,12 @@ import im.turms.turms.bo.GroupQuestionIdAndAnswer;
 import im.turms.turms.workflow.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.turms.workflow.access.servicerequest.dispatcher.ServiceRequestMapping;
 import im.turms.turms.workflow.access.servicerequest.dto.RequestHandlerResultFactory;
-import im.turms.turms.workflow.service.impl.group.*;
+import im.turms.turms.workflow.service.impl.group.GroupBlocklistService;
+import im.turms.turms.workflow.service.impl.group.GroupInvitationService;
+import im.turms.turms.workflow.service.impl.group.GroupJoinRequestService;
+import im.turms.turms.workflow.service.impl.group.GroupMemberService;
+import im.turms.turms.workflow.service.impl.group.GroupQuestionService;
+import im.turms.turms.workflow.service.impl.group.GroupService;
 import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Mono;
 
@@ -46,7 +66,31 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.*;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.CHECK_GROUP_JOIN_QUESTIONS_ANSWERS_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.CREATE_GROUP_BLOCKED_USER_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.CREATE_GROUP_INVITATION_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.CREATE_GROUP_JOIN_QUESTION_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.CREATE_GROUP_JOIN_REQUEST_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.CREATE_GROUP_MEMBER_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.CREATE_GROUP_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.DELETE_GROUP_BLOCKED_USER_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.DELETE_GROUP_INVITATION_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.DELETE_GROUP_JOIN_QUESTION_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.DELETE_GROUP_JOIN_REQUEST_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.DELETE_GROUP_MEMBER_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.DELETE_GROUP_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_GROUP_BLOCKED_USER_IDS_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_GROUP_BLOCKED_USER_INFOS_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_GROUP_INVITATIONS_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_GROUP_JOIN_QUESTIONS_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_GROUP_JOIN_REQUESTS_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_GROUP_MEMBERS_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_GROUP_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_JOINED_GROUP_IDS_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_JOINED_GROUP_INFOS_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.UPDATE_GROUP_JOIN_QUESTION_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.UPDATE_GROUP_MEMBER_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.UPDATE_GROUP_REQUEST;
 
 /**
  * @author James Chen
@@ -178,7 +222,9 @@ public class GroupServiceController {
             Mono<Void> updateMono;
             if (successorId != null) {
                 boolean quitAfterTransfer = request.hasQuitAfterTransfer() && request.getQuitAfterTransfer().getValue();
-                updateMono = groupService.authAndTransferGroupOwnership(clientRequest.getUserId(), request.getGroupId(), successorId, quitAfterTransfer, null);
+                updateMono = groupService
+                        .authAndTransferGroupOwnership(clientRequest.getUserId(), request.getGroupId(), successorId, quitAfterTransfer,
+                                null);
             } else {
                 Integer minimumScore = request.hasMinimumScore() ? request.getMinimumScore().getValue() : null;
                 Long groupTypeId = request.hasGroupTypeId() ? request.getGroupTypeId().getValue() : null;
@@ -226,9 +272,10 @@ public class GroupServiceController {
                     request.getGroupId(),
                     request.getUserId(),
                     null)
-                    .then(Mono.fromCallable(() -> node.getSharedProperties().getService().getNotification().isNotifyUserAfterBlockedByGroup()
-                            ? RequestHandlerResultFactory.get(request.getUserId(), clientRequest.getTurmsRequest())
-                            : RequestHandlerResultFactory.OK));
+                    .then(Mono
+                            .fromCallable(() -> node.getSharedProperties().getService().getNotification().isNotifyUserAfterBlockedByGroup()
+                                    ? RequestHandlerResultFactory.get(request.getUserId(), clientRequest.getTurmsRequest())
+                                    : RequestHandlerResultFactory.OK));
         };
     }
 
@@ -243,9 +290,10 @@ public class GroupServiceController {
                     request.getUserId(),
                     null,
                     true)
-                    .then(Mono.fromCallable(() -> node.getSharedProperties().getService().getNotification().isNotifyUserAfterUnblockedByGroup()
-                            ? RequestHandlerResultFactory.get(request.getUserId(), clientRequest.getTurmsRequest())
-                            : RequestHandlerResultFactory.OK));
+                    .then(Mono.fromCallable(
+                            () -> node.getSharedProperties().getService().getNotification().isNotifyUserAfterUnblockedByGroup()
+                                    ? RequestHandlerResultFactory.get(request.getUserId(), clientRequest.getTurmsRequest())
+                                    : RequestHandlerResultFactory.OK));
         };
     }
 
@@ -328,7 +376,8 @@ public class GroupServiceController {
                                     .collect(Collectors.toSet())
                                     .map(recipientsIds -> recipientsIds.isEmpty()
                                             ? RequestHandlerResultFactory.OK
-                                            : RequestHandlerResultFactory.get(joinRequest.getId(), recipientsIds, false, clientRequest.getTurmsRequest()));
+                                            : RequestHandlerResultFactory
+                                            .get(joinRequest.getId(), recipientsIds, false, clientRequest.getTurmsRequest()));
                         } else {
                             return Mono.just(RequestHandlerResultFactory.OK);
                         }
@@ -347,9 +396,12 @@ public class GroupServiceController {
                 Set<String> answers = new HashSet<>(request.getAnswersList());
                 int score = request.getScore();
                 return score >= 0
-                        ? groupQuestionService.authAndCreateGroupJoinQuestion(clientRequest.getUserId(), request.getGroupId(), request.getQuestion(), answers, score)
+                        ? groupQuestionService
+                        .authAndCreateGroupJoinQuestion(clientRequest.getUserId(), request.getGroupId(), request.getQuestion(), answers,
+                                score)
                         .map(question -> RequestHandlerResultFactory.get(question.getId()))
-                        : Mono.just(RequestHandlerResultFactory.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The score must be greater than or equal to 0"));
+                        : Mono.just(
+                        RequestHandlerResultFactory.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The score must be greater than or equal to 0"));
             }
         };
     }
@@ -362,7 +414,8 @@ public class GroupServiceController {
                     .flatMap(inviteeId -> groupInvitationService.recallPendingGroupInvitation(
                             clientRequest.getUserId(),
                             request.getInvitationId())
-                            .then(Mono.fromCallable(() -> node.getSharedProperties().getService().getNotification().isNotifyInviteeAfterGroupInvitationRecalled()
+                            .then(Mono.fromCallable(() -> node.getSharedProperties().getService().getNotification()
+                                    .isNotifyInviteeAfterGroupInvitationRecalled()
                                     ? RequestHandlerResultFactory.get(inviteeId, clientRequest.getTurmsRequest())
                                     : RequestHandlerResultFactory.OK)));
         };
@@ -377,7 +430,8 @@ public class GroupServiceController {
                     clientRequest.getUserId(),
                     request.getRequestId())
                     .then(Mono.defer(() -> {
-                        if (node.getSharedProperties().getService().getNotification().isNotifyOwnerAndManagersAfterGroupJoinRequestRecalled()) {
+                        if (node.getSharedProperties().getService().getNotification()
+                                .isNotifyOwnerAndManagersAfterGroupJoinRequestRecalled()) {
                             return groupJoinRequestService.queryGroupId(request.getRequestId())
                                     .flatMap(groupId -> groupMemberService.queryGroupManagersAndOwnerId(groupId)
                                             .collect(Collectors.toSet())
@@ -495,7 +549,8 @@ public class GroupServiceController {
             if (role == null || role == GroupMemberRole.UNRECOGNIZED) {
                 role = GroupMemberRole.MEMBER;
             } else if (role == GroupMemberRole.OWNER) {
-                return Mono.just(RequestHandlerResultFactory.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The role of the new member must not be OWNER"));
+                return Mono.just(RequestHandlerResultFactory
+                        .get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The role of the new member must not be OWNER"));
             }
             return groupMemberService.authAndAddGroupMember(
                     clientRequest.getUserId(),
@@ -505,7 +560,8 @@ public class GroupServiceController {
                     name,
                     muteEndDate,
                     null)
-                    .map(member -> member != null && node.getSharedProperties().getService().getNotification().isNotifyUserAfterAddedToGroupByOthers()
+                    .map(member -> member != null &&
+                            node.getSharedProperties().getService().getNotification().isNotifyUserAfterAddedToGroupByOthers()
                             ? RequestHandlerResultFactory.get(request.getUserId(), clientRequest.getTurmsRequest())
                             : RequestHandlerResultFactory.OK);
         };
@@ -523,10 +579,11 @@ public class GroupServiceController {
                     request.getMemberId(),
                     successorId,
                     quitAfterTransfer)
-                    .then(Mono.fromCallable(() -> node.getSharedProperties().getService().getNotification().isNotifyUserAfterRemovedFromGroupByOthers()
-                            && !clientRequest.getUserId().equals(request.getMemberId())
-                            ? RequestHandlerResultFactory.get(request.getMemberId(), clientRequest.getTurmsRequest())
-                            : RequestHandlerResultFactory.OK));
+                    .then(Mono.fromCallable(
+                            () -> node.getSharedProperties().getService().getNotification().isNotifyUserAfterRemovedFromGroupByOthers()
+                                    && !clientRequest.getUserId().equals(request.getMemberId())
+                                    ? RequestHandlerResultFactory.get(request.getMemberId(), clientRequest.getTurmsRequest())
+                                    : RequestHandlerResultFactory.OK));
         };
     }
 

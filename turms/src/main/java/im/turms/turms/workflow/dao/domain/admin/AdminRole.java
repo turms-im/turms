@@ -62,7 +62,7 @@ public final class AdminRole {
     @OptionalIndexedForDifferentAmount
     private final Integer rank;
 
-    public static class Fields {
+    public static final class Fields {
         public static final String NAME = "n";
         public static final String PERMISSIONS = "perm";
         public static final String RANK = "rank";

@@ -25,7 +25,11 @@ import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.constant.AdvertiseStrategy;
 import im.turms.server.common.property.env.common.AddressProperties;
-import im.turms.server.common.property.env.gateway.*;
+import im.turms.server.common.property.env.gateway.BaseServerProperties;
+import im.turms.server.common.property.env.gateway.DiscoveryProperties;
+import im.turms.server.common.property.env.gateway.TcpProperties;
+import im.turms.server.common.property.env.gateway.UdpProperties;
+import im.turms.server.common.property.env.gateway.WebSocketProperties;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
@@ -96,7 +100,8 @@ public class ServiceAddressManager extends BaseServiceAddressManager {
         return udpAddress;
     }
 
-    private void updateCollectorAndAddresses(ServerProperties metricsApiProperties, TurmsProperties properties) throws UnknownHostException {
+    private void updateCollectorAndAddresses(ServerProperties metricsApiProperties, TurmsProperties properties)
+            throws UnknownHostException {
         AddressProperties newMetricsApiAddressProperties = properties.getGateway().getMetricsApiAddress();
         AddressCollector adminApiAddressesCollector = getAddressCollector(newMetricsApiAddressProperties, metricsApiProperties);
         WebSocketProperties webSocketProperties = properties.getGateway().getWebsocket();
@@ -115,7 +120,8 @@ public class ServiceAddressManager extends BaseServiceAddressManager {
                 : null;
     }
 
-    private AddressCollector geGatewayApiAddressCollector(BaseServerProperties serverProperties, DiscoveryProperties gatewayApiDiscoveryProperties) throws UnknownHostException {
+    private AddressCollector geGatewayApiAddressCollector(BaseServerProperties serverProperties,
+                                                          DiscoveryProperties gatewayApiDiscoveryProperties) throws UnknownHostException {
         AdvertiseStrategy advertiseStrategy = gatewayApiDiscoveryProperties.getAdvertiseStrategy();
         String advertiseHost = gatewayApiDiscoveryProperties.getAdvertiseHost();
         boolean attachPortToHost = gatewayApiDiscoveryProperties.isAttachPortToHost();

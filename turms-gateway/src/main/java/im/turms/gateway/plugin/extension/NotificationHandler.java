@@ -32,6 +32,8 @@ import java.util.Set;
  */
 public abstract class NotificationHandler extends TurmsExtension {
 
-    public abstract Mono<Void> handle(@NotNull TurmsNotification notification, @NotEmpty Set<Long> recipientIds, @NotNull Set<Long> offlineRecipientIds);
+    public abstract Mono<Void> handle(@NotNull TurmsNotification notification,
+                                      @NotEmpty Set<Long> recipientIds,
+                                      @NotNull Set<Long> offlineRecipientIds);
 
 }

@@ -31,7 +31,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
@@ -73,7 +78,8 @@ public class ConfigController {
     @PutMapping
     @RequiredPermission(CLUSTER_CONFIG_UPDATE)
     @Operation(description = "Do not call this method frequently because it costs a lot of resources",
-            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(schema = @Schema(implementation = TurmsProperties.class))))
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(content =
+            @Content(schema = @Schema(implementation = TurmsProperties.class))))
     public Mono<ResponseEntity<ResponseDTO<Void>>> updateClusterConfig(
             @RequestParam(defaultValue = "false") Boolean reset,
             @RequestParam(defaultValue = "false") Boolean updateGlobalProperties,

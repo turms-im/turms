@@ -43,7 +43,8 @@ public class TcpDispatcher extends UserSessionDispatcher {
                          ServiceMediator serviceMediator,
                          ServerStatusManager serverStatusManager,
                          UserRequestDispatcher userRequestDispatcher) {
-        super(serviceMediator, userRequestDispatcher, propertiesManager.getLocalProperties().getGateway().getTcp().getCloseIdleConnectionAfterSeconds());
+        super(serviceMediator, userRequestDispatcher,
+                propertiesManager.getLocalProperties().getGateway().getTcp().getCloseIdleConnectionAfterSeconds());
         TcpProperties tcpProperties = propertiesManager.getLocalProperties().getGateway().getTcp();
         if (tcpProperties.isEnabled()) {
             server = TcpServerFactory.create(

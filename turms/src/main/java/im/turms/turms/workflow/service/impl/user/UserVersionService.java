@@ -179,7 +179,8 @@ public class UserVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        UserVersion userVersion = new UserVersion(userId, timestamp, timestamp, timestamp, timestamp, timestamp, timestamp, timestamp, timestamp, timestamp);
+        UserVersion userVersion =
+                new UserVersion(userId, timestamp, timestamp, timestamp, timestamp, timestamp, timestamp, timestamp, timestamp, timestamp);
         return mongoClient.upsert(session, userVersion)
                 .thenReturn(userVersion);
     }
@@ -238,7 +239,9 @@ public class UserVersionService {
         return updateSpecificVersion(Collections.singleton(userId), session, fields);
     }
 
-    public Mono<UpdateResult> updateSpecificVersion(@NotEmpty Set<Long> userIds, @Nullable ClientSession session, @NotEmpty String... fields) {
+    public Mono<UpdateResult> updateSpecificVersion(@NotEmpty Set<Long> userIds,
+                                                    @Nullable ClientSession session,
+                                                    @NotEmpty String... fields) {
         try {
             AssertUtil.notEmpty(userIds, "userIds");
             AssertUtil.notEmpty(fields, "fields");

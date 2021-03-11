@@ -31,7 +31,7 @@ import java.nio.ByteBuffer;
  * @author James Chen
  */
 @Log4j2
-public class ProtoUtil {
+public final class ProtoUtil {
 
     private ProtoUtil() {
     }

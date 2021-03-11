@@ -23,7 +23,7 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.springframework.boot.SpringApplication;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 
 /**
  * @author James Chen
@@ -37,7 +37,8 @@ class TurmsApplicationTests {
         MockedStatic<SpringApplication> application = Mockito.mockStatic(SpringApplication.class);
         application.when(() -> SpringApplication.run(TurmsApplication.class, args)).thenReturn(null);
 
-        assertDoesNotThrow(() -> TurmsApplication.main(args));
+        assertThatNoException()
+                .isThrownBy(() -> TurmsApplication.main(args));
     }
 
 }

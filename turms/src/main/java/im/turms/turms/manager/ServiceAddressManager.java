@@ -45,7 +45,8 @@ public class ServiceAddressManager extends BaseServiceAddressManager {
             ServerProperties adminApiServerProperties,
             PublicIpManager publicIpManager) throws UnknownHostException {
         super(publicIpManager, turmsPropertiesManager.getLocalProperties());
-        updateCollectorAndAddresses(adminApiServerProperties, turmsPropertiesManager.getLocalProperties().getService().getAdminApi().getAddress());
+        updateCollectorAndAddresses(adminApiServerProperties,
+                turmsPropertiesManager.getLocalProperties().getService().getAdminApi().getAddress());
         turmsPropertiesManager.addListeners(properties -> {
             AddressProperties newAdminApiDiscoveryProperties = properties.getService().getAdminApi().getAddress();
             boolean areAddressPropertiesChange = !adminApiAddressProperties.equals(newAdminApiDiscoveryProperties);
@@ -79,7 +80,8 @@ public class ServiceAddressManager extends BaseServiceAddressManager {
         return adminApiAddress;
     }
 
-    private void updateCollectorAndAddresses(ServerProperties adminApiServerProperties, AddressProperties newAdminApiAddressProperties) throws UnknownHostException {
+    private void updateCollectorAndAddresses(ServerProperties adminApiServerProperties, AddressProperties newAdminApiAddressProperties)
+            throws UnknownHostException {
         AddressCollector adminApiAddressesCollector = getAddressCollector(newAdminApiAddressProperties, adminApiServerProperties);
         metricsApiAddress = adminApiAddressesCollector.getHttpAddress() + "/actuator";
         adminApiAddress = adminApiAddressesCollector.getHttpAddress();

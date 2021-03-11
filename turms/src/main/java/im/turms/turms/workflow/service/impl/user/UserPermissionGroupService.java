@@ -103,7 +103,8 @@ public class UserPermissionGroupService {
                             log.fatal("Detect an illegal operation on UserPermissionGroup collection: " + event);
                     }
                 })
-                .onErrorContinue((throwable, o) -> log.error("Error while processing the change stream event of UserPermissionGroup: {}", o, throwable))
+                .onErrorContinue((throwable, o) -> log
+                        .error("Error while processing the change stream event of UserPermissionGroup: {}", o, throwable))
                 .subscribe();
     }
 
@@ -178,7 +179,8 @@ public class UserPermissionGroupService {
 
     public Mono<DeleteResult> deleteUserPermissionGroups(@Nullable Set<Long> groupIds) {
         if (groupIds != null && groupIds.contains(DaoConstant.DEFAULT_USER_PERMISSION_GROUP_ID)) {
-            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The default user permission group cannot be deleted"));
+            return Mono.error(TurmsBusinessException
+                    .get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The default user permission group cannot be deleted"));
         }
         Filter filter = Filter
                 .newBuilder()
@@ -214,7 +216,8 @@ public class UserPermissionGroupService {
     public Mono<UserPermissionGroup> queryUserPermissionGroupByUserId(@NotNull Long userId) {
         return userService.queryUserPermissionGroupId(userId)
                 .flatMap(groupId -> queryUserPermissionGroup(groupId)
-                        .switchIfEmpty(Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_INTERNAL_ERROR, "The user is in a nonexistent permission group " + groupId))))
+                        .switchIfEmpty(Mono.error(TurmsBusinessException
+                                .get(TurmsStatusCode.SERVER_INTERNAL_ERROR, "The user is in a nonexistent permission group " + groupId))))
                 .switchIfEmpty(Mono.error(TurmsBusinessException.get(TurmsStatusCode.QUERY_PERMISSION_OF_NON_EXISTING_USER)));
     }
 

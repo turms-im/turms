@@ -125,7 +125,8 @@ public class Node {
         String tempNodeId = nodeProperties.getId();
         if (StringUtils.isBlank(nodeId)) {
             tempNodeId = RandomStringUtils.randomAlphanumeric(8).toLowerCase();
-            log.warn("A random node ID {} has been used. You should better set a node ID manually in the production environment", tempNodeId);
+            log.warn("A random node ID {} has been used. You should better set a node ID manually in the production environment",
+                    tempNodeId);
         }
         nodeId = tempNodeId;
 

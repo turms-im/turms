@@ -26,6 +26,6 @@ import java.lang.annotation.Target;
  * @author James Chen
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
+@Target(ElementType.FIELD)
 public @interface Id {
 }

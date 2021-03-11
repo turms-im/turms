@@ -59,7 +59,7 @@ public final class Admin {
     @OptionalIndexedForDifferentAmount
     private final Date registrationDate;
 
-    public static class Fields {
+    public static final class Fields {
         public static final String PASSWORD = "pw";
         public static final String NAME = "n";
         public static final String ROLE_ID = "rid";

@@ -18,7 +18,12 @@
 package im.turms.turms.workflow.dao.domain.user;
 
 import im.turms.common.constant.RequestStatus;
-import im.turms.server.common.mongo.entity.annotation.*;
+import im.turms.server.common.mongo.entity.annotation.CompoundIndex;
+import im.turms.server.common.mongo.entity.annotation.Document;
+import im.turms.server.common.mongo.entity.annotation.Field;
+import im.turms.server.common.mongo.entity.annotation.Id;
+import im.turms.server.common.mongo.entity.annotation.Indexed;
+import im.turms.server.common.mongo.entity.annotation.Sharded;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -87,7 +92,7 @@ public final class UserFriendRequest {
     @OptionalIndexedForExtendedFeature
     private final Long recipientId;
 
-    public static class Fields {
+    public static final class Fields {
         public static final String CONTENT = "cnt";
         public static final String STATUS = "stat";
         public static final String REASON = "rsn";

@@ -48,7 +48,12 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -58,7 +63,8 @@ import java.util.stream.Collectors;
 public class UserStatusService {
 
     private static final Byte STATUS_KEY_STATUS = 's';
-    private static final RedisScript<Boolean> ADD_ONLINE_USER_SCRIPT = RedisScript.of(new ClassPathResource("redis/try_add_online_user_with_ttl.lua"));
+    private static final RedisScript<Boolean> ADD_ONLINE_USER_SCRIPT =
+            RedisScript.of(new ClassPathResource("redis/try_add_online_user_with_ttl.lua"));
 
     private final ShardingAlgorithm shardingAlgorithmForSession;
     private final List<ReactiveRedisTemplate<Long, String>> sessionRedisTemplates;
@@ -310,7 +316,8 @@ public class UserStatusService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        ReactiveScriptingCommands commands = getSessionRedisTemplate(userId).getConnectionFactory().getReactiveConnection().scriptingCommands();
+        ReactiveScriptingCommands commands =
+                getSessionRedisTemplate(userId).getConnectionFactory().getReactiveConnection().scriptingCommands();
         Object[] args = new Object[userStatus == null ? 4 : 5];
         args[0] = userId;
         args[1] = (byte) deviceType.getNumber();
