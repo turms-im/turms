@@ -17,7 +17,9 @@
 
 package im.turms.turms.workflow.dao;
 
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import im.turms.common.constant.GroupMemberRole;
 import im.turms.common.constant.ProfileAccessStrategy;
@@ -173,14 +175,21 @@ public class MongoDataGenerator implements IMongoDataGenerator {
     }
 
     private Mono<Void> dropAllDatabases() {
-        return Mono.when(clients.stream()
-                .map(TurmsMongoClient::dropDatabase)
-                .collect(Collectors.toList()));
+        Mono<Void> dropDatabase = Mono.empty();
+        for (TurmsMongoClient client : clients) {
+            dropDatabase = dropDatabase
+                    .then(Mono.defer(client::dropDatabase));
+        }
+        return dropDatabase;
     }
 
     private Mono<Void> ensureIndexesAndShard() {
-        return Mono.when(clients.stream()
-                .map(client -> client.ensureIndexesAndShard(client.getRegisteredEntities().stream()
+        Multimap<TurmsMongoClient, MongoEntity<?>> map = HashMultimap.create(5, 8);
+        for (TurmsMongoClient client : clients) {
+            map.putAll(client, client.getRegisteredEntities());
+        }
+        return Mono.when(map.asMap().entrySet().stream()
+                .map(entry -> entry.getKey().ensureIndexesAndShard(entry.getValue().stream()
                         .map(MongoEntity::getClazz)
                         .collect(Collectors.toList())))
                 .collect(Collectors.toList()));

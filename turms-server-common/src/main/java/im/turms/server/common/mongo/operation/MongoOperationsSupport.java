@@ -95,6 +95,8 @@ public interface MongoOperationsSupport {
 
     <T> Mono<Void> ensureIndexes(Class<T> clazz, List<IndexModel> indexModels);
 
+    Mono<Void> enableSharding(MongoDatabase databaseToShard, MongoDatabase adminDatabase);
+
     Mono<Void> shard(MongoDatabase databaseToShard, MongoDatabase adminDatabase, MongoEntity<?> entity);
 
     Mono<Void> ensureIndexesAndShard(Collection<Class<?>> classes);

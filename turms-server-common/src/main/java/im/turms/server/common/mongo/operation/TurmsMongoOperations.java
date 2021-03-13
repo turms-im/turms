@@ -58,7 +58,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
@@ -362,12 +361,25 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         }
         MongoCollection<T> collection = context.getCollection(clazz);
         Publisher<String> source = collection.createIndexes(indexModels);
-        return Flux.from(source).then();
+        String collectionName = context.getEntity(clazz).getCollectionName();
+        return Flux.from(source)
+                .then()
+                .doOnError(throwable -> log.error("Failed to index the collection {}", collectionName, throwable))
+                .doOnSuccess(ignored -> log.info("Indexing the collection {} successfully", collectionName));
     }
 
     /**
      * Shard
      */
+
+    @Override
+    public Mono<Void> enableSharding(MongoDatabase databaseToShard, MongoDatabase adminDatabase) {
+        String dbName = databaseToShard.getName();
+        Mono<Document> enableSharding = Mono.from(adminDatabase.runCommand(new Document("enableSharding", dbName)))
+                .doOnError(throwable -> log.error("Failed to enable sharding the database {}", dbName, throwable))
+                .doOnSuccess(ignored -> log.info("Enable sharding the database {} successfully", dbName));
+        return enableSharding.then();
+    }
 
     @Override
     public Mono<Void> shard(MongoDatabase databaseToShard, MongoDatabase adminDatabase, MongoEntity<?> entity) {
@@ -377,30 +389,38 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         }
         String dbName = databaseToShard.getName();
         String namespace = String.format("%s.%s", dbName, entity.getCollectionName());
-        Mono<Document> enableSharding = Mono.from(adminDatabase.runCommand(new Document("enableSharding", dbName)))
-                .doOnError(throwable -> log.error("Failed to enable sharding", throwable));
         Mono<Document> shardCollection = Mono.from(adminDatabase.runCommand(new Document("shardCollection", namespace)
                 .append("key", shardKey)))
                 .doOnError(throwable -> log
                         .error("Failed to shard the collection {} with the shard key {}", namespace, shardKey.toJson(), throwable))
                 .doOnSuccess(
                         ignored -> log.info("Shard the collection {} with the shard key {} successfully", namespace, shardKey.toJson()));
-        return enableSharding
-                .then(shardCollection)
-                .then();
+        return shardCollection.then();
     }
 
+    /**
+     * @implNote Send requests to ensure indexes and shard collections synchronously
+     * to avoid mongo servers throwing "LockBusy" error (error code 46)
+     */
     @Override
     public Mono<Void> ensureIndexesAndShard(Collection<Class<?>> classes) {
-        List<Mono<Void>> monos = new ArrayList<>(classes.size());
+        Mono<Void> ensureIndexes = Mono.empty();
         for (Class<?> clazz : classes) {
             MongoEntity<?> entity = context.getEntity(clazz);
-            List<IndexModel> indexes = entity.getIndexes();
-            Mono<Void> mono = ensureIndexes(entity.getClazz(), indexes)
-                    .then(shard(context.getDatabase(), context.getAdminDatabase(), entity));
-            monos.add(mono);
+            ensureIndexes = ensureIndexes
+                    .then(Mono.defer(() -> ensureIndexes(entity.getClazz(), entity.getIndexes())));
         }
-        return Flux.merge(monos).then();
+        return ensureIndexes
+                .then(Mono.defer(() -> enableSharding(context.getDatabase(), context.getAdminDatabase())))
+                .then(Mono.defer(() -> {
+                    Mono<Void> shardEntities = Mono.empty();
+                    for (Class<?> clazz : classes) {
+                        MongoEntity<?> entity = context.getEntity(clazz);
+                        shardEntities = shardEntities
+                                .then(Mono.defer(() -> shard(context.getDatabase(), context.getAdminDatabase(), entity)));
+                    }
+                    return shardEntities;
+                }));
     }
 
     @Override
