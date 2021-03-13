@@ -27,6 +27,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.PreDestroy;
+
 /**
  * @author James Chen
  * @see org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration
@@ -35,13 +37,22 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MongoConfig {
 
+    private TurmsMongoClient userMongoClient;
+
+    @PreDestroy
+    public void destroy() {
+        if (userMongoClient != null) {
+            userMongoClient.destroy();
+        }
+    }
+
     @Bean
     @ConditionalOnProperty("turms.gateway.session.enable-authentication")
     public TurmsMongoClient userMongoClient(TurmsPropertiesManager turmsPropertiesManager) {
         TurmsMongoProperties properties = turmsPropertiesManager.getLocalProperties().getGateway().getMongo().getUser();
-        TurmsMongoClient mongoClient = TurmsMongoClient.of(properties);
-        mongoClient.registerEntitiesByClasses(User.class);
-        return mongoClient;
+        userMongoClient = TurmsMongoClient.of(properties);
+        userMongoClient.registerEntitiesByClasses(User.class);
+        return userMongoClient;
     }
 
     @Bean(IMongoDataGenerator.BEAN_NAME)

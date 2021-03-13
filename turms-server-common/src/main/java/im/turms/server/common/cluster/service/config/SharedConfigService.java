@@ -56,6 +56,11 @@ public class SharedConfigService implements ClusterService {
         mongoClient.ensureIndexesAndShard(classes).block(Duration.ofMinutes(1));
     }
 
+    @Override
+    public void stop() {
+        mongoClient.destroy();
+    }
+
     /**
      * Note that only listen to the change in the same cluster
      */

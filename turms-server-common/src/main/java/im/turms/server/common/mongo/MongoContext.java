@@ -89,6 +89,10 @@ public class MongoContext {
         adminDatabase = client.getDatabase("admin");
     }
 
+    public void destroy() {
+        client.close();
+    }
+
     public <T> Codec<T> getCodec(Class<T> clazz) {
         return codecRegistry.get(clazz);
     }

@@ -97,7 +97,7 @@ public class MongoEntity<T> {
         Document document = clazz.getAnnotation(Document.class);
         String name = document != null && StringUtils.hasText(document.value())
                 ? document.value()
-                : CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, clazz.getName()).intern();
+                : CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, clazz.getSimpleName()).intern();
         if (!StringUtils.hasText(name)) {
             throw new IllegalStateException("The collection name should not be blank for the class " + clazz.getName());
         }

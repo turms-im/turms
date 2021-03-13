@@ -69,15 +69,20 @@ public class Node {
     @Getter
     private static String nodeId;
 
+    /**
+     * Context
+     */
     @Getter
     private final ApplicationContext context;
 
-    // Transport
-
+    /**
+     * Transport
+     */
     private final CloseableChannel serverChannel;
 
-    // Services
-
+    /**
+     * Services
+     */
     private final SharedConfigService sharedConfigService;
     private final SharedPropertyService sharedPropertyService;
     private final DiscoveryService discoveryService;
@@ -162,12 +167,43 @@ public class Node {
     }
 
     public void stop() {
-        sharedConfigService.stop();
-        sharedPropertyService.stop();
-        discoveryService.stop();
-        serializationService.stop();
-        rpcService.stop();
-        idService.stop();
+        try {
+            serverChannel.dispose();
+        } catch (Exception e) {
+            log.error("Failed to stop the local server", e);
+        }
+        try {
+            // Note that discoveryService should be stopped before sharedConfigService
+            // because discoveryService need to unregister the local member info in the shared config
+            discoveryService.stop();
+        } catch (Exception e) {
+            log.error("Failed to stop DiscoveryService", e);
+        }
+        try {
+            sharedConfigService.stop();
+        } catch (Exception e) {
+            log.error("Failed to stop SharedConfigService", e);
+        }
+        try {
+            sharedPropertyService.stop();
+        } catch (Exception e) {
+            log.error("Failed to stop SharedPropertyService", e);
+        }
+        try {
+            serializationService.stop();
+        } catch (Exception e) {
+            log.error("Failed to stop SerializationService", e);
+        }
+        try {
+            rpcService.stop();
+        } catch (Exception e) {
+            log.error("Failed to stop RpcService", e);
+        }
+        try {
+            idService.stop();
+        } catch (Exception e) {
+            log.error("Failed to stop IdService", e);
+        }
     }
 
     // Frequently used methods for external classes

@@ -52,6 +52,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.PreDestroy;
 import java.util.Map;
 
 /**
@@ -64,6 +65,17 @@ public class MongoConfig {
 
     private static final int SERVICE_TYPES_NUMBER = 5;
     private static final Map<String, TurmsMongoClient> CLIENT_MAP = Maps.newHashMapWithExpectedSize(SERVICE_TYPES_NUMBER);
+
+    @PreDestroy
+    public void destroy() {
+        for (TurmsMongoClient client : CLIENT_MAP.values()) {
+            try {
+                client.destroy();
+            } catch (Exception ignored) {
+                log.error("Failed to destroy a mongo client");
+            }
+        }
+    }
 
     @Bean
     public TurmsMongoClient adminMongoClient(TurmsPropertiesManager turmsPropertiesManager) {

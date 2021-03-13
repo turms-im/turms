@@ -54,6 +54,10 @@ public final class TurmsMongoClient implements MongoOperationsSupport {
         operations = new TurmsMongoOperations(context);
     }
 
+    public void destroy() {
+        context.destroy();
+    }
+
     public List<MongoEntity<?>> registerEntitiesByOptions(MongoCollectionOptions... optionsList) {
         return registerEntitiesByOptions(Arrays.stream(optionsList)
                 .collect(CollectorUtil.toList(optionsList.length)));
