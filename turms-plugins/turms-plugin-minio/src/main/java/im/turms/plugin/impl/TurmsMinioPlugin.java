@@ -194,7 +194,7 @@ public class TurmsMinioPlugin extends TurmsPlugin {
             if (sizeLimit != 0 && contentLength > sizeLimit) {
                 throw TurmsBusinessException.get(TurmsStatusCode.FILE_TOO_LARGE);
             }
-            return hasPermissionToPut(requesterId, contentType, keyStr, keyNum)
+            return hasPermissionToPut(requesterId, contentType, keyNum)
                     .flatMap(hasPermission -> {
                         if (!hasPermission) {
                             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED));
@@ -458,7 +458,6 @@ public class TurmsMinioPlugin extends TurmsPlugin {
 
         private Mono<Boolean> hasPermissionToPut(@NotNull Long requesterId,
                                                  @NotNull ContentType contentType,
-                                                 @Nullable String keyStr,
                                                  @Nullable Long keyNum) {
             switch (contentType) {
                 case PROFILE:

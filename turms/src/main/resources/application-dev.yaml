@@ -24,8 +24,6 @@ turms:
           - category: all
         included-notification-categories:
           - category: all
-    admin-api:
-      enable-swagger: true
     mock:
       enabled: true
       clear-all-collections-before-mocking: true
