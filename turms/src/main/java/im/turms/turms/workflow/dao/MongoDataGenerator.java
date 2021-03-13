@@ -184,7 +184,7 @@ public class MongoDataGenerator implements IMongoDataGenerator {
     }
 
     private Mono<Void> ensureIndexesAndShard() {
-        Multimap<TurmsMongoClient, MongoEntity<?>> map = HashMultimap.create(5, 8);
+        Multimap<TurmsMongoClient, MongoEntity<?>> map = HashMultimap.create(clients.size(), 8);
         for (TurmsMongoClient client : clients) {
             map.putAll(client, client.getRegisteredEntities());
         }

@@ -34,7 +34,7 @@ public class SessionHashValueSerializer implements RedisElementWriter<Object>, R
         if (element instanceof UserStatus) {
             // Note that we use the negative number for user status so that we can know
             // the type of the value from the first byte when deserializing
-            int userStatus = -((UserStatus) element).getNumber();
+            int userStatus = ((UserStatus) element).getNumber();
             return ByteBuffer.allocate(Byte.BYTES)
                     .put((byte) userStatus)
                     .flip();
@@ -43,8 +43,7 @@ public class SessionHashValueSerializer implements RedisElementWriter<Object>, R
             if (nodeIdBytes.length == 0 || nodeIdBytes.length > Byte.MAX_VALUE) {
                 throw new IllegalArgumentException("The length of the nodeId must be greater than 0 and less than 128");
             }
-            return ByteBuffer.allocate(Byte.BYTES + nodeIdBytes.length)
-                    .put((byte) nodeIdBytes.length)
+            return ByteBuffer.allocate(nodeIdBytes.length)
                     .put(nodeIdBytes)
                     .flip();
         } else {
@@ -54,11 +53,18 @@ public class SessionHashValueSerializer implements RedisElementWriter<Object>, R
 
     @Override
     public Object read(ByteBuffer buffer) {
-        byte data = buffer.get();
-        if (data <= 0) {
-            return UserStatus.forNumber(-data);
+        int remaining = buffer.remaining();
+        if (remaining == 0) {
+            throw new IllegalStateException("The buffer should not be empty");
+        } else if (remaining == 1) {
+            byte value = buffer.get();
+            UserStatus userStatus = UserStatus.forNumber(value);
+            if (userStatus == null) {
+                throw new IllegalArgumentException("Cannot convert " + value + " to UserStatus");
+            }
+            return userStatus;
         } else {
-            byte[] bytes = new byte[data];
+            byte[] bytes = new byte[remaining];
             buffer.get(bytes);
             return new String(bytes, StandardCharsets.UTF_8);
         }
