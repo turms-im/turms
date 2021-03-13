@@ -15,7 +15,6 @@
 
 -XX:+PrintFlagsFinal
 
--XX:+UnlockCommercialFeatures
 -XX:+FlightRecorder
 -XX:StartFlightRecording=dumponexit=true,filename=./turms.jfr,maxsize=128m,delay=60s
 

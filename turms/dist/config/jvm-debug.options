@@ -15,7 +15,6 @@
 
 # Diagnostics
 
--XX:+UnlockCommercialFeatures
 -XX:+FlightRecorder
 -XX:StartFlightRecording=dumponexit=true,filename=./turms.jfr,maxsize=128m,settings=profile,delay=60s
 
