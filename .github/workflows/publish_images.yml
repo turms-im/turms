@@ -1,0 +1,37 @@
+name: Publish Images
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  publish:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: master
+
+      - name: Build turms-admin image
+        run: DOCKER_BUILDKIT=1 docker build --rm=false -t "docker.pkg.github.com/$GITHUB_REPOSITORY/turms-admin:latest" -f turms-admin/Dockerfile turms-admin/
+
+      - name: Build turms image
+        run: DOCKER_BUILDKIT=1 docker build --rm=false -t "docker.pkg.github.com/$GITHUB_REPOSITORY/turms:latest" -f turms/Dockerfile .
+
+      - name: Build turms-gateway image
+        run: DOCKER_BUILDKIT=1 docker build --rm=false -t "docker.pkg.github.com/$GITHUB_REPOSITORY/turms-gateway:latest" -f turms-gateway/Dockerfile .
+
+      - name: Docker login
+        run: docker login docker.pkg.github.com -u $GITHUB_ACTOR -p $GITHUB_TOKEN
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Publish turms-admin to GPR
+        run: docker push "docker.pkg.github.com/$GITHUB_REPOSITORY/turms-admin:latest"
+
+      - name: Publish turms to GPR
+        run: docker push "docker.pkg.github.com/$GITHUB_REPOSITORY/turms:latest"
+
+      - name: Publish turms-gateway to GPR
+        run: docker push "docker.pkg.github.com/$GITHUB_REPOSITORY/turms-gateway:latest"

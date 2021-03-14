@@ -47,6 +47,7 @@
 
     <modules>
         <module>turms</module>
+        <module>turms-client-kotlin</module>
         <module>turms-gateway</module>
         <module>turms-java-common</module>
         <module>turms-plugin-demo</module>

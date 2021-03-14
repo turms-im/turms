@@ -11,3 +11,6 @@
 
 !turms-server-common/src
 !turms-server-common/pom.xml
+
+!turms-client-kotlin/src
+!turms-client-kotlin/pom.xml

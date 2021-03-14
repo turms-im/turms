@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>im.turms</groupId>
-    <artifactId>turms-client-java</artifactId>
+    <artifactId>turms-client-kotlin</artifactId>
     <version>0.10.0-SNAPSHOT</version>
 
     <properties>

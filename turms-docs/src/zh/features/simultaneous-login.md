@@ -5,7 +5,7 @@
 1. 手动配置。开发者在调用客户端的turmsClient.userService.login()接口时，可以手动配置具体的登录设备类型。如给实际为iOS的设备，指定以Android的身份进行登录（这种操作是被允许的）。另外，您也能手动配置登录设备类型为UNKNOWN。
 2. 默认配置。如果您未手动配置具体登录设备类型，则在默认情况下，各Turms客户端会自动识别当前运行环境，并指定当前登录设备类型。
    * turms-client-js 会判断当前运行环境是浏览器还是Node.js，如果是浏览器，则以Browser身份登录，否则以Desktop身份登录
-   * turms-client-java 会判断当前的运行环境是Android还是桌面系统，分别以Android、Desktop的身份登录
+   * turms-client-kotlin 会判断当前的运行环境是Android还是桌面系统，分别以Android、Desktop的身份登录
    * turms-client-swift 则默认以iOS身份进行登录
 
 相关配置类：im.turms.server.common.property.env.gateway.SessionProperties

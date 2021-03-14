@@ -4,9 +4,8 @@
 # Stage 0 : BUILD JAR
 ####################################################################
 FROM maven:3-adoptopenjdk-11 AS maven-builder
-COPY . /build/
-WORKDIR /build/
-RUN mvn -pl turms-java-common,turms-server-common,turms-gateway \
+COPY . ./
+RUN mvn -pl turms-java-common,turms-server-common,turms-client-kotlin,turms-gateway \
     clean package -DskipTests -P artifact-fat-jar
 
 ####################################################################
@@ -14,7 +13,7 @@ RUN mvn -pl turms-java-common,turms-server-common,turms-gateway \
 ####################################################################
 FROM adoptopenjdk/openjdk11:jre AS layers-builder
 WORKDIR /build/
-COPY turms-gateway/target/*.jar ./app.jar
+COPY --from=maven-builder /turms-gateway/target/*.jar ./app.jar
 RUN ["mkdir", "dependencies", "snapshot-dependencies", "spring-boot-loader", "application"]
 RUN java -Djarmode=layertools -jar app.jar extract
 
@@ -26,7 +25,7 @@ FROM adoptopenjdk/openjdk11:jre
 ENV TURMS_GATEWAY_HOME=/opt/turms/turms-gateway
 WORKDIR ${TURMS_GATEWAY_HOME}
 
-COPY turms-gateway/dist ./
+COPY /turms-gateway/dist ./
 COPY --from=layers-builder /build/dependencies/ ./
 COPY --from=layers-builder /build/snapshot-dependencies/ ./
 COPY --from=layers-builder /build/spring-boot-loader/ ./

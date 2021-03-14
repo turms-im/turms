@@ -40,7 +40,7 @@
         <!-- Testing -->
         <dependency>
             <groupId>im.turms</groupId>
-            <artifactId>turms-client-java</artifactId>
+            <artifactId>turms-client-kotlin</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
