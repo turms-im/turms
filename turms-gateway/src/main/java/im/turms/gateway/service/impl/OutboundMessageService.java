@@ -31,7 +31,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -64,9 +63,7 @@ public class OutboundMessageService implements IOutboundMessageService {
      * @return true if the notification has forwarded to one recipient at least
      */
     @Override
-    public boolean sendNotificationToLocalClients(
-            @NotNull ByteBuf notificationData,
-            @NotEmpty Set<Long> recipientIds) {
+    public boolean sendNotificationToLocalClients(ByteBuf notificationData, Set<Long> recipientIds) {
         AssertUtil.notNull(notificationData, "notificationData");
         AssertUtil.notEmpty(recipientIds, "recipientIds");
         // Prepare data
@@ -95,7 +92,7 @@ public class OutboundMessageService implements IOutboundMessageService {
                     // no matter the notification is queued successfully or not.
                     // Otherwise, there is a potential memory leak
                     userSession.tryEmitNextNotification(wrappedNotificationData);
-                    // Keep the logic easy and we don't care about whether the notification is really flushed
+                    // Keep the logic easy, and we don't care about whether the notification is really flushed
                     hasForwardedMessageToOneRecipient = true;
                     userSession.getConnection().tryNotifyClientToRecover();
                 }
@@ -124,6 +121,7 @@ public class OutboundMessageService implements IOutboundMessageService {
                                 @NotNull Set<Long> offlineRecipientIds) {
         TurmsNotification notification = null;
         try {
+            // Note that "parseFrom" won't block because the buffer is fully read
             notification = TurmsNotification.parseFrom(notificationData.nioBuffer());
         } catch (Exception e) {
             log.error("Failed to parse TurmsNotification", e);

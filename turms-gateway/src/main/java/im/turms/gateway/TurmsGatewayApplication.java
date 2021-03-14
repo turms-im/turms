@@ -39,13 +39,13 @@ import java.util.concurrent.TimeUnit;
         scanBasePackages = {"im.turms.gateway", "im.turms.server.common"},
         proxyBeanMethods = false)
 @Log4j2
-public class TurmsGateway {
+public class TurmsGatewayApplication {
 
     public static void main(String[] args) {
         try {
-            SpringApplication.run(TurmsGateway.class, args);
+            SpringApplication.run(TurmsGatewayApplication.class, args);
         } catch (Exception e) {
-            // Make sure that turms can exit if SpringApplication failed to bootstrap (e.g. PortInUseException)
+            // Make sure turms can exit if SpringApplication failed to bootstrap (e.g. PortInUseException)
             // because there are still some non-daemon threads running after the context has been closed
 
             log.error(e);

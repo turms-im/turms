@@ -156,9 +156,9 @@ public class SessionService implements ISessionService {
      */
     @Override
     public Mono<Boolean> setLocalSessionOfflineByUserIdAndDeviceTypes(
-            @NotNull Long userId,
-            @NotEmpty Set<@ValidDeviceType DeviceType> deviceTypes,
-            @NotNull CloseReason closeReason) {
+            Long userId,
+            Set<DeviceType> deviceTypes,
+            CloseReason closeReason) {
         return setLocalSessionOfflineByUserIdAndDeviceTypes(userId, deviceTypes, closeReason, new Date());
     }
 
@@ -263,9 +263,7 @@ public class SessionService implements ISessionService {
     }
 
     @Override
-    public Mono<Boolean> setLocalUserOffline(
-            @NotNull Long userId,
-            @NotNull CloseReason closeReason) {
+    public Mono<Boolean> setLocalUserOffline(Long userId, CloseReason closeReason) {
         return setLocalSessionOfflineByUserIdAndDeviceTypes(userId, DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET, closeReason, new Date());
     }
 

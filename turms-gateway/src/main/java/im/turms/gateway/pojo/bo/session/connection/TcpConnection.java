@@ -25,8 +25,6 @@ import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Mono;
 import reactor.netty.Connection;
 
-import javax.validation.constraints.NotNull;
-
 /**
  * @author James Chen
  */
@@ -44,7 +42,7 @@ public class TcpConnection extends NetConnection {
      * It's acceptable that the method isn't thread-safe
      */
     @Override
-    public void close(@NotNull CloseReason closeReason) {
+    public void close(CloseReason closeReason) {
         if (isConnected() && !connection.isDisposed()) {
             super.close(closeReason);
             TurmsNotification closeNotification = NotificationFactory.fromReason(closeReason);

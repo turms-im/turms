@@ -61,7 +61,7 @@ if [ -z "$TURMS_HOME" ]; then
   TURMS_HOME=$(dirname "$TURMS_HOME")
 fi
 
-TURMS_LIBRARY="$TURMS_HOME/lib/*"
+TURMS_LIBRARY=".:$TURMS_HOME/lib/*"
 
 if [ -z "$TURMS_PATH_CONF" ]; then TURMS_PATH_CONF="$TURMS_HOME"/config; fi
 
@@ -102,7 +102,7 @@ for option in "$@"; do
   esac
 done
 
-JVM_OPTIONS="$(grep -v '^#' "$TURMS_JVM_OPTIONS" | awk '{print}' ORS=' ' | tr -s ' ')"
+JVM_OPTIONS="$(tr -d "\r" < "$TURMS_JVM_OPTIONS" | grep -v "^#" | tr "\n" " " | tr -s " ")"
 JVM_OPTIONS+=" -Dspring.config.location=$TURMS_APP_CONF"
 
 MAIN_CLASS="im.turms.turms.TurmsApplication"

@@ -37,7 +37,7 @@ public class TurmsApplication {
         try {
             SpringApplication.run(TurmsApplication.class, args);
         } catch (Exception e) {
-            // Make sure that turms can exit if SpringApplication failed to bootstrap (e.g. PortInUseException)
+            // Make sure turms can exit if SpringApplication failed to bootstrap (e.g. PortInUseException)
             // because there are still some non-daemon threads running after the context has been closed
 
             // Note that org.springframework.boot.SpringApplication.handleRunFailure may not trigger

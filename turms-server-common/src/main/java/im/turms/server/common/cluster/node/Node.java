@@ -174,7 +174,7 @@ public class Node {
         }
         try {
             // Note that discoveryService should be stopped before sharedConfigService
-            // because discoveryService need to unregister the local member info in the shared config
+            // because discoveryService needs to unregister the local member info in the shared config
             discoveryService.stop();
         } catch (Exception e) {
             log.error("Failed to stop DiscoveryService", e);

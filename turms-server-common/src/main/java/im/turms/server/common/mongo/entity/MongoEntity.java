@@ -150,12 +150,12 @@ public class MongoEntity<T> {
         }
     }
 
-    private EntityFieldsInfo parseFields(Class<?> clazz, PreferredConstructor<T, ?> constructor, Method[] methods) {
+    private EntityFieldsInfo parseFields(Class<?> clazz, PreferredConstructor<T, ?> constructor, Method[] allClassMethods) {
         Field[] fields = clazz.getDeclaredFields();
         String idField = null;
         Map<String, EntityField<?>> entityFields = null;
         List<IndexModel> entityIndexes = null;
-        Map<String, MethodHandle> setterMethods = parseSetterMethods(methods);
+        Map<String, MethodHandle> setterMethods = parseSetterMethods(allClassMethods);
         for (Field field : fields) {
             int modifiers = field.getModifiers();
             if (Modifier.isStatic(modifiers) || field.isAnnotationPresent(Transient.class)) {

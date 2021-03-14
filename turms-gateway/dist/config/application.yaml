@@ -1,0 +1,73 @@
+# The server properties for metrics APIs (not for WebSocket)
+server:
+  address: 0.0.0.0
+  port: 9510
+
+turms:
+  cluster:
+    discovery:
+      client-ssl:
+        enabled: false # Enable SSL if needed
+        enabled-protocols: TLSv1.2,TLSv1.3
+        key-store: classpath:keystore-test.p12 # keytool -genkeypair -keyalg RSA -keysize 2048 -validity 3650 -alias turms -keystore keystore-test.p12 -storetype PKCS12 -storepass imturms
+        key-store-type: PKCS12
+        key-store-password: imturms
+        key-alias: turms
+      server-ssl:
+        enabled: false # Enable SSL if needed
+        enabled-protocols: TLSv1.2,TLSv1.3
+        key-store: classpath:keystore-test.p12 # keytool -genkeypair -keyalg RSA -keysize 2048 -validity 3650 -alias turms -keystore keystore-test.p12 -storetype PKCS12 -storepass imturms
+        key-store-type: PKCS12
+        key-store-password: imturms
+        key-alias: turms
+  gateway:
+    session:
+      enable-authentication: false
+    websocket:
+      enabled: true
+      port: 10510
+      ssl:
+        enabled: false # Enable SSL if needed. Make sure to mutate HTTP requests to HTTPS requests, or Netty will throw NotSslRecordException
+        enabled-protocols: TLSv1.2,TLSv1.3
+        key-store: classpath:keystore-test.p12 # keytool -genkeypair -keyalg RSA -keysize 2048 -validity 3650 -alias turms -keystore keystore-test.p12 -storetype PKCS12 -storepass imturms
+        key-store-type: PKCS12
+        key-store-password: imturms
+        key-alias: turms
+    tcp:
+      # Disable TCP currently until clients support TCP
+      enabled: false
+      port: 11510
+      ssl:
+        enabled: false # Enable SSL if needed
+        enabled-protocols: TLSv1.2,TLSv1.3
+        key-store: classpath:keystore-test.p12 # keytool -genkeypair -keyalg RSA -keysize 2048 -validity 3650 -alias turms -keystore keystore-test.p12 -storetype PKCS12 -storepass imturms
+        key-store-type: PKCS12
+        key-store-password: imturms
+        key-alias: turms
+    udp:
+      # Disable UDP currently until clients support UDP
+      enabled: false
+      port: 12510
+
+# Spring configuration
+spring:
+  profiles:
+    active: dev
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.actuate.autoconfigure.metrics.MetricsEndpointAutoConfiguration
+      - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
+      - org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration
+management:
+  # https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html
+  # Prometheus is enabled by default. Uncomment the following lines to disable it.
+  #  metrics:
+  #    enable:
+  #      prometheus: false
+  endpoints:
+    jmx:
+      exposure:
+        exclude: "*"
+    web:
+      exposure:
+        include: info,health,env,heapdump,threaddump,metrics,prometheus

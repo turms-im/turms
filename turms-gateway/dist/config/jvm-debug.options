@@ -1,0 +1,32 @@
+# Memory
+
+-Xms1g
+-Xmx1g
+-XX:-RestrictContended
+-XX:+UseStringDeduplication
+# Remove this option once we supports primitive objects
+-XX:AutoBoxCacheMax=16384
+
+# GC
+
+# -XX:+UnlockExperimentalVMOptions
+# -XX:+UseEpsilonGC
+-XX:+UseG1GC
+
+# Diagnostics
+
+-XX:+FlightRecorder
+-XX:StartFlightRecording=dumponexit=true,filename=./turms-gateway.jfr,maxsize=128m,settings=profile,delay=60s
+
+# Diagnostics - Memory
+
+# Enabling NMT causes a 5% -10% performance overhead
+-XX:NativeMemoryTracking=summary
+-XX:+HeapDumpOnOutOfMemoryError
+-XX:+HeapDumpAfterFullGC
+-XX:+HeapDumpBeforeFullGC
+-XX:HeapDumpPath=./turms-gateway_pid%p.hprof
+
+# Diagnostics - GC
+
+-Xlog:gc*,gc+age=trace,safepoint:file=./turms-gateway-gc.log:utctime,pid,tags:filecount=32,filesize=32m

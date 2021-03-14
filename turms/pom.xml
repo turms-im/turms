@@ -36,8 +36,6 @@
         <commons-io.version>2.8.0</commons-io.version>
         <springdoc.version>1.5.5</springdoc.version>
 
-        <spring-boot-thin-layout.version>1.0.25.RELEASE</spring-boot-thin-layout.version>
-
         <junit-platform-surefire-provider.version>1.3.2</junit-platform-surefire-provider.version>
         <spotbugs.version>4.2.2</spotbugs.version>
 
@@ -147,20 +145,17 @@
         </profile>
 
         <profile>
-            <id>artifact-turms-thin</id>
+            <id>artifact-thin-jar</id>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-compiler-plugin</artifactId>
-                        <version>${maven-compiler-plugin.version}</version>
                         <configuration>
                             <source>11</source>
                             <target>11</target>
                             <annotationProcessors>
                                 <annotationProcessor>lombok.launch.AnnotationProcessorHider$AnnotationProcessor
-                                </annotationProcessor>
-                                <annotationProcessor>org.pf4j.processor.ExtensionAnnotationProcessor
                                 </annotationProcessor>
                                 <annotationProcessor>org.pf4j.processor.ExtensionAnnotationProcessor
                                 </annotationProcessor>
@@ -170,12 +165,10 @@
                     <plugin>
                         <groupId>org.springframework.boot.experimental</groupId>
                         <artifactId>spring-boot-thin-maven-plugin</artifactId>
-                        <version>${spring-boot-thin-layout.version}</version>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-dependency-plugin</artifactId>
-                        <version>${maven-dependency-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>copy-dependencies</id>
@@ -195,7 +188,7 @@
         </profile>
 
         <profile>
-            <id>artifact-turms-fat</id>
+            <id>artifact-fat-jar</id>
             <build>
                 <plugins>
                     <plugin>
@@ -206,6 +199,9 @@
                                 <id>repackage</id>
                                 <configuration>
                                     <attach>false</attach>
+                                    <layers>
+                                        <enabled>true</enabled>
+                                    </layers>
                                     <finalName>turms-${project.version}</finalName>
                                 </configuration>
                             </execution>
