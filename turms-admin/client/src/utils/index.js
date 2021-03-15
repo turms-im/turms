@@ -13,10 +13,11 @@ export default {
         app.config.globalProperties.$rq = RequestUtil;
         app.config.globalProperties.$ui = UiUtil;
         app.config.globalProperties.$validator = Validator;
-        if (app.__VUE_I18N__?.global?.t) {
-            Validator.getMessage = app.__VUE_I18N__.global.t;
+        const t = app._context.provides[app.__VUE_I18N_SYMBOL__]?.global?.t;
+        if (t) {
+            Validator.getMessage = t;
         } else {
-            console.error('"app.__VUE_I18N__.global.t" doesn\'t exist');
+            throw new Error('"app.__VUE_I18N__.global.t" doesn\'t exist');
         }
     }
 };
