@@ -2,7 +2,6 @@
 # Stage 0 : BUILD
 ####################################################################
 FROM node:14-alpine as builder
-WORKDIR app
 COPY . .
 
 # build in China
@@ -18,9 +17,26 @@ RUN apk add --no-cache python make g++ \
 ####################################################################
 # Stage 1 : RUN
 ####################################################################
-FROM node:14-alpine
-WORKDIR opt/turms/turms-admin
-COPY --from=builder /app/dist ./dist
+FROM nginx:1.18-alpine
+COPY --from=builder /dist /usr/share/nginx/html
+
+RUN echo '                                                        \
+server {                                                          \
+    listen       6510;                                            \
+    server_name  localhost;                                       \
+    gzip on;                                                      \
+                                                                  \
+    location / {                                                  \
+        root   /usr/share/nginx/html;                             \
+        try_files $uri /index.html;                               \
+    }                                                             \
+                                                                  \
+    error_page   500 502 503 504  /50x.html;                      \
+    location = /50x.html {                                        \
+        root   /usr/share/nginx/html;                             \
+    }                                                             \
+}' > /etc/nginx/conf.d/default.conf
+
 EXPOSE 6510
 
-CMD [ "node", "run", "start" ]
+CMD ["nginx", "-g", "daemon off;"]
