@@ -1,10 +1,10 @@
 # 客户端接口
 
-Turms客户端目前支持JavaScript、Java与Swift这三种语言，对外暴露一致的接口，并且表现为一致的行为。各语言版本之间的部分接口参数可能出现不完全一致的情况，这主要体现在：1. 接口采用更贴近当前语言特性及习惯的参数与语法；2. turms-client-js独有的用于服务降级配置的参数与接口。
+Turms客户端目前支持JavaScript、Kotlin与Swift这三种语言，对外暴露一致的接口，并且表现为一致的行为。各语言版本之间的部分接口参数可能出现不完全一致的情况，这主要体现在：1. 接口采用更贴近当前语言特性及习惯的参数与语法；2. turms-client-js独有的用于服务降级配置的参数与接口。
 
 由于Turms各语言客户端行为具有高度的一致性，因此如果您基于上述任意一种语言进行业务开发，您可以在代码逻辑不做改变的情况下，轻松将已写好的业务代码翻译为另外两种语言（具体可参考在本文结尾处的示例）。
 
-（之后还会支持C++，其他语言暂不在考虑范围内）
+（之后还会支持C#与C++，其他语言暂不在考虑范围内）
 
 ## Quick Start
 
@@ -65,11 +65,11 @@ TODO：Turms客户端为快速迭代，目前均采用WebSocket协议。但近�
 
 客户端主要接口的差异如下表：
 
-|              | JavaScript客户端                  | Java客户端                             | Swift客户端              | 实例            |
+|              | JavaScript客户端                  | Kotlin客户端                       | Swift客户端              | 实例            |
 | ------------ | --------------------------------- | -------------------------------------- | ------------------------ | ------------------------ |
 | 时间表达单位 | 一律为毫秒                        | 一律为毫秒 | 采用TimeInterval（即秒） | connectTimeout |
 | 业务异常模型 | TurmsBusinessError（继承自Error） | TurmsBusinessException（继承自不携带栈信息的RuntimeException） | TurmsBusinessError（继承自Error） |    |
-| 异步模型     | Promise模型                       | Future模型      | 由PromiseKit提供的Promise模型 |                          |
+| 异步模型     | Promise模型                       | Coroutines模型 | 由PromiseKit提供的Promise模型 |                          |
 
 补充：对于对外暴露的回调函数实现，Turms的Swift客户端没有采用Swift常见的delegate代理模式，而是和其他语言客户端一样通过函数传递逃逸闭包。
 
@@ -199,7 +199,7 @@ client.userService.login('1', '123')
 	});
 ```
 
-### turms-client-kotlin版本
+### turms-client-kotlin版本（TODO：尚未更新。以下示例仍是turms-client-java的版本）
 
 ```java
 // Initialize client

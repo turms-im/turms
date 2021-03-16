@@ -33,14 +33,14 @@ Turms属性分为三大类配置：Turms Service配置、Turms Gateway配置，�
 
 #### 非业务相关类
 
-| 类                   | 字段名    | 描述                                     |
-| -------------------- | --------- | ---------------------------------------- |
-| AdminApiProperties   | adminApi  | 管理员API接口相关配置                    |
-| DatabaseProperties   | database  | MongoDB数据库相关配置                    |
-| DiscoveryProperties  | discovery | 管理员API服务对外暴露的Advertise相关配置 |
-| LogProperties        | log       | 日志相关配置                             |
-| MockProperties       | mock      | Mock数据相关配置                         |
-| TurmsRedisProperties | redis     | Redis数据库相关配置                      |
+| 类                   | 字段名    | 描述                                     | 补充                                                         |
+| -------------------- | --------- | ---------------------------------------- | ------------------------------------------------------------ |
+| AdminApiProperties   | adminApi  | 管理员API接口相关配置                    |                                                              |
+| DiscoveryProperties  | discovery | 管理员API服务对外暴露的Advertise相关配置 |                                                              |
+| LogProperties        | log       | 日志相关配置                             |                                                              |
+| MockProperties       | mock      | Mock数据相关配置                         |                                                              |
+| MongoProperties      | mongo     | MongoDB数据库相关配置                    | Turms完全复用MongoDB的URI配置。参考文档：<br />https://docs.mongodb.com/manual/reference/connection-string/ |
+| TurmsRedisProperties | redis     | Redis数据库相关配置                      |                                                              |
 
 #### 业务相关类
 
@@ -54,20 +54,20 @@ Turms属性分为三大类配置：Turms Service配置、Turms Gateway配置，�
 | NotificationProperties | notification | 通知相关配置         |
 | StatisticsProperties   | statistics   | 统计相关配置         |
 
-#### Turms Gateway配置
+### Turms Gateway配置
 
 | 类                          | 字段名            | 描述                                                         |
 | --------------------------- | ----------------- | ------------------------------------------------------------ |
-| DatabaseProperties          | database          | MongoDB数据库相关配置                                        |
-| DiscoveryProperties         | discovery         | 网关对外暴露的Advertise相关配置                              |
 | ClientApiProperties         | clientApi         | 面向客户端的HTTP接入层相关配置（即ReasonController的相关配置） |
+| DiscoveryProperties         | discovery         | 网关对外暴露的Advertise相关配置                              |
 | LogProperties               | log               | 日志相关配置                                                 |
+| MongoProperties             | mongo             | MongoDB数据库相关配置                                        |
 | PluginProperties            | plugin            | 插件相关配置                                                 |
 | SimultaneousLoginProperties | simultaneousLogin | 多端登录相关配置                                             |
 | SessionProperties           | session           | 会话相关配置                                                 |
 | TurmsRedisProperties        | redis             | Redis数据库相关配置                                          |
 
-#### Common通用配置
+### Common通用配置
 
 | 类                   | 字段名     | 描述                                                         |
 | -------------------- | ---------- | ------------------------------------------------------------ |

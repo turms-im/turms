@@ -63,13 +63,12 @@ Turms基于读扩散消息模型进行架构设计，对业务模型感知同时
 | <span style="white-space:nowrap;">turms</span>               | Turms服务端。对用户提供各种IM业务逻辑的实现，对管理员提供基础数据管理、权限控制、集群配置等功能 |
 | <span style="white-space:nowrap;">turms-gateway</span>       | Turms客户端网关（推送服务端）。负责用户鉴权与会话保持、消息推送，以及Turms服务端的负载均衡等功能 |
 | <span style="white-space:nowrap;">turms-client-js</span>     | 对外暴露IM业务相关的API接口，并在底层实现与Turms服务端的各种交互逻辑（如路由跳转、自动重连、心跳检查等）。您在使用该库时，无需关心背后的逻辑 |
-| <span style="white-space:nowrap;">turms-client-kotlin</span>   | 同上                                                         |
+| <span style="white-space:nowrap;">turms-client-kotlin</span> | 同上                                                         |
 | <span style="white-space:nowrap;">turms-client-swift</span>  | 同上                                                         |
 | <span style="white-space:nowrap;">turms-admin</span>         | 为Turms服务端集群提供：内容管理、集群配置等功能              |
 | ~~<span style="white-space:nowrap;">turms-apm</span>~~       | （该项目将会被移除，其功能将会集成到turms-admin中）为Turms服务端集群提供监控与报警功能 |
 | <span style="white-space:nowrap;">turms-plugin</span>        | 当指定事件（如用户上下线、消息接收与转发等）被触发时，turms和turms-gateway会调用对应的自定义插件以方便开发者实现各种各样定制化功能 |
 | <span style="white-space:nowrap;">turms-plugin-minio</span>  | 基于turms-plugin实现的存储服务插件。用于与MinIO服务端进行交互 |
-| <span style="white-space:nowrap;">turms-cli（TODO）</span>   | 尚未发布。运维工具。负责运维整个Turms的生态，如Turms运行环境检测、集群自动搭建、Turms各类服务端的启动与守护等功能 |
 | <span style="white-space:nowrap;">turms-data（TODO）</span>  | 尚未发布。基于Flink生态的独立数据分析系统，负责实时ETL与业务数据统计分析，为turms的管理员统计接口与turms-admin报表等运营功能提供底层数据支持 |
 | <span style="white-space:nowrap;">turms-client-cpp（TODO）</span> | 尚未发布。                                                   |
 

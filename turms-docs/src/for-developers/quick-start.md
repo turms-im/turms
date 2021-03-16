@@ -1,12 +1,12 @@
 # Quick Start
 
-若您网络畅通，第一次完成以下全部操作大概需要花费10~30分钟。当您熟练之后，可在1~3分钟完成各种集群的部署工作（之后会提供turms-cli来实现一键全自动跨主机搭建Turms集群的功能）
+若您网络畅通，第一次完成以下全部操作大概需要花费10~30分钟。当您熟练之后，可在1~3分钟完成各种集群的部署工作。
 
 ## 步骤
 
 1. MongoDB集群搭建（用于业务数据存储、服务发现、配置管理）
 
-   - 下载并安装[MongoDB](https://www.mongodb.com/download-center/community)（要求最低版本为：4.0。推荐版本为最新稳定版）。以RHEL/CentOS为例（具体可参考：https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat）：
+   - 下载并安装[MongoDB](https://www.mongodb.com/download-center/community)（要求最低版本号为：4.0。推荐版本为最新稳定版）。以RHEL/CentOS为例（具体可参考：https://docs.mongodb.com/manual/tutorial/install-mongodb-on-red-hat）：
 
      ```bash
      cat <<EOF > /etc/yum.repos.d/mongodb-org-4.4.repo
@@ -43,13 +43,29 @@
 
 3. Turms集群搭建（以下为手动搭建方案，之后会提供turms-cli做自动化集群部署）
 
-   方案一：~~下载并解压[Turms服务端](https://github.com/turms-im/turms/releases)压缩包~~（由于v.0.10.0尚未发布在release页面，目前只能通过方案二运行Turms集群）
+   方案一：拉取Turms服务端Docker镜像，并运行：
 
+   ```bash
+   # Pull images
+   docker pull ghcr.io/turms-im/turms-admin
+   docker pull ghcr.io/turms-im/turms
+   docker pull ghcr.io/turms-im/turms-gateway
+   
+   # Run images
+   docker run -p 6510:6510 ghcr.io/turms-im/turms-admin
+   docker run -p 7510:7510 -p 8510:8510 ghcr.io/turms-im/turms
+   docker run --ulimit nofile=102400:102400 -p 7510:7510 -p 9510:9510 -p 10510:10510 -p 11510:11510 -p 12510:12510 ghcr.io/turms-im/turms-gateway
+   ```
+   
+   另外，您可以通过volume挂载的方式来使用自定义的application.yaml与jvm.options配置“-v /your-custom-config-dir:/opt/turms/turms/config”。
+   
+   方案二：~~下载并解压[Turms服务端](https://github.com/turms-im/turms/releases)压缩包~~（由于v.0.10.0尚未发布在release页面中，因此该方案暂不可用），根据下述步骤运行：
+   
    - （如果您将MongoDB与Redis都安装默认配置安装在本地，可跳过此步骤）根据您的需求配置config/jvm.options、config/application.yaml（您可以在此处配置Turms自定义的配置参数，并且您也可以在此处配置多个MongoDB或mongos的服务端地址。具体可参考：https://docs.mongodb.com/manual/reference/connection-string）。
    
    - （推荐使用Ansible）在所有需要运行Turms服务端的系统上，运行bin/turms脚本（默认以Thin包形式执行，若需以Fat包形式执行，请在执行脚本时加上“-f”参数，如：“sh turms.sh -f”。之后再运行turms-gateway服务端。turms与turms-gateway服务端会通过MongoDB（作为服务注册中心）来自动寻找其他服务端节点，由此Turms集群开始运作。
    
-   方案二：克隆Turms仓库源码，直接通过IDE运行turms与turms-gateway服务端。（参考命令：git clone --depth 1 https://github.com/turms-im/turms.git）
+   方案三：克隆Turms仓库源码，直接通过IDE运行turms与turms-gateway服务端。（参考命令：git clone --depth 1 https://github.com/turms-im/turms.git）
 
 **提醒**
 
