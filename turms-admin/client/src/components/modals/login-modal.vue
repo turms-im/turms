@@ -45,7 +45,6 @@
                     v-model:value="form.password"
                     :placeholder="$t('adminPassword')"
                     type="password"
-                    autocomplete
                 >
                     <template #prefix>
                         <span class="login-form__input-icon">
@@ -55,9 +54,6 @@
                 </a-input>
             </a-form-item>
             <a-form-item>
-                <a-checkbox>
-                    {{ $t('remember') }}
-                </a-checkbox>
                 <a-button
                     :loading="confirmLoading"
                     class="login-form__submit"
@@ -86,7 +82,7 @@ export default {
     data() {
         return {
             form: {
-                url: DEFAULT_URL,
+                url: localStorage.getItem(this.$rs.storage.url) || DEFAULT_URL,
                 account: '',
                 password: ''
             },
@@ -94,7 +90,6 @@ export default {
                 url: this.$validator.create({required: true, noBlank: true}),
                 account: this.$validator.create({required: true, noBlank: true}),
                 password: this.$validator.create({required: true, noBlank: true, maxNumber: 32})
-                // remember: ['remember', {valuePropName: 'checked', initialValue: true}]
             },
             confirmLoading: false,
             url: DEFAULT_URL
@@ -163,6 +158,7 @@ export default {
                         const admin = response.data?.data?.[0];
                         if (admin) {
                             admin.password = password;
+                            localStorage.setItem(this.$rs.storage.url, url);
                             this.$store.setAdmin(admin);
                             this.$store.setUrl(url);
                             this.$message.success(this.$t('loginSuccessfully'));
