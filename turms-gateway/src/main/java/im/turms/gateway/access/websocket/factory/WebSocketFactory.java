@@ -98,7 +98,7 @@ public final class WebSocketFactory {
                         channel.pipeline().addFirst("serverAvailabilityHandler", serverAvailabilityHandler));
         Ssl ssl = webSocketProperties.getSsl();
         if (ssl.isEnabled()) {
-            server.secure(spec -> SslUtil.configureSslContextSpec(spec, ssl, true));
+            server.secure(spec -> SslUtil.configureSslContextSpec(spec, ssl, true), true);
         }
         return server
                 .bind()
