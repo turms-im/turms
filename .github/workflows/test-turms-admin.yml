@@ -1,0 +1,22 @@
+name: Tests for turms-admin
+
+on: push
+
+jobs:
+  ui-tests:
+    runs-on: ubuntu-20.04
+    container: cypress/browsers:node14.16.0-chrome89-ff86
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Fetch package-lock.json
+        run: npm --prefix turms-admin i
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          working-directory: turms-admin
+          build: npm run build
+          start: npm run serve
+          wait-on: 'http://localhost:6510'

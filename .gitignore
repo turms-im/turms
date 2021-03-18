@@ -34,6 +34,8 @@ turms/src/docs/
 turms/dist/bin/
 turms-gateway/target/
 turms-plugin-demo/target/
+turms-admin/cypress/screenshots/
+turms-admin/cypress/videos/
 turms-apm/target/
 turms-docs/node_modules/
 turms-docs/src/.vuepress/dist/

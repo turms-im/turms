@@ -8,8 +8,9 @@ module.exports = {
         parser: '@babel/eslint-parser'
     },
     extends: [
-        'plugin:vue/recommended',
-        'eslint:recommended'
+        'eslint:recommended',
+        'plugin:cypress/recommended',
+        'plugin:vue/recommended'
     ],
     rules: {
         'quotes': ['error', 'single'],
