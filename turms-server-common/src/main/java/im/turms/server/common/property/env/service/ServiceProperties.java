@@ -32,13 +32,19 @@ import im.turms.server.common.property.env.service.env.clientapi.ClientApiProper
 import im.turms.server.common.property.env.service.env.database.MongoProperties;
 import im.turms.server.common.property.env.service.env.redis.TurmsRedisProperties;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * @author James Chen
  */
+@AllArgsConstructor
+@Builder(toBuilder = true)
 @Data
+@NoArgsConstructor
 public class ServiceProperties {
 
     // Env

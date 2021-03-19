@@ -160,18 +160,16 @@ class InboundRequestServiceTests {
         when(node.getRpcService())
                 .thenReturn(rpcService);
 
-        TurmsProperties turmsProperties = new TurmsProperties();
-        GatewayProperties gateway = new GatewayProperties();
-        ClientApiProperties clientApi = new ClientApiProperties();
-        if (isFrequent) {
-            clientApi.setMinClientRequestIntervalMillis(Integer.MAX_VALUE);
-        } else {
-            clientApi.setMinClientRequestIntervalMillis(0);
-        }
-        gateway.setClientApi(clientApi);
-        turmsProperties.setGateway(gateway);
+        int minClientRequestInterval = isFrequent ? Integer.MAX_VALUE : 0;
+        TurmsProperties properties = new TurmsProperties().toBuilder()
+                .gateway(new GatewayProperties().toBuilder()
+                        .clientApi(new ClientApiProperties().toBuilder()
+                                .minClientRequestIntervalMillis(minClientRequestInterval)
+                                .build())
+                        .build())
+                .build();
         when(node.getSharedProperties())
-                .thenReturn(turmsProperties);
+                .thenReturn(properties);
 
         // ServerStatusManager
         ServerStatusManager serverStatusManager = mock(ServerStatusManager.class);
@@ -190,9 +188,8 @@ class InboundRequestServiceTests {
 
     private TurmsPropertiesManager mockTurmsPropertiesManager() {
         TurmsPropertiesManager propertiesManager = mock(TurmsPropertiesManager.class);
-        TurmsProperties properties = new TurmsProperties();
         when(propertiesManager.getLocalProperties())
-                .thenReturn(properties);
+                .thenReturn(new TurmsProperties());
         return propertiesManager;
     }
 

@@ -18,14 +18,20 @@
 package im.turms.server.common.property.env.service.env;
 
 import im.turms.server.common.property.metadata.annotation.Description;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
 
 /**
  * @author James Chen
  */
+@AllArgsConstructor
+@Builder(toBuilder = true)
 @Data
+@NoArgsConstructor
 public class MockProperties {
 
     @Description("Whether to mock data. Note that mocking only works in non-production environments")

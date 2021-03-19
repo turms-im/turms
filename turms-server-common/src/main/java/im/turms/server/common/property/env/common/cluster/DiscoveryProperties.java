@@ -20,7 +20,10 @@ package im.turms.server.common.property.env.common.cluster;
 
 import im.turms.server.common.cluster.service.config.SharedConfigService;
 import im.turms.server.common.property.env.common.AddressProperties;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.boot.web.server.Ssl;
 
@@ -30,7 +33,10 @@ import javax.validation.constraints.Min;
 /**
  * @author James Chen
  */
+@AllArgsConstructor
+@Builder(toBuilder = true)
 @Data
+@NoArgsConstructor
 public class DiscoveryProperties {
 
     @Min(0)

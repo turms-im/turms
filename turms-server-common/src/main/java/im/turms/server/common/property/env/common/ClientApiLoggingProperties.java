@@ -22,7 +22,10 @@ import im.turms.server.common.property.constant.LoggingRequestCategory;
 import im.turms.server.common.property.env.service.env.clientapi.property.LoggingCategoryProperties;
 import im.turms.server.common.property.env.service.env.clientapi.property.LoggingRequestProperties;
 import im.turms.server.common.property.metadata.annotation.Description;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -31,7 +34,10 @@ import java.util.Set;
 /**
  * @author James Chen
  */
+@AllArgsConstructor
+@Builder(toBuilder = true)
 @Data
+@NoArgsConstructor
 public class ClientApiLoggingProperties {
 
     private static final String DESC_STRATEGY_TO_GET_INCLUDED_REQUESTS = "Turms will get the requests to log from the union of " +

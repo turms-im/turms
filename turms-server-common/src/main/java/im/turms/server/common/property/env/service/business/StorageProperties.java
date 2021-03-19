@@ -17,7 +17,10 @@
 
 package im.turms.server.common.property.env.service.business;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.util.MimeTypeUtils;
 
 import javax.validation.constraints.Min;
@@ -28,7 +31,10 @@ import java.time.Duration;
  *
  * @author James Chen
  */
+@AllArgsConstructor
+@Builder(toBuilder = true)
 @Data
+@NoArgsConstructor
 public class StorageProperties {
 
     @Min(0)

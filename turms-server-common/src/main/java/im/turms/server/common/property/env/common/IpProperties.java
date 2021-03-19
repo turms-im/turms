@@ -20,14 +20,20 @@ package im.turms.server.common.property.env.common;
 import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.property.metadata.annotation.Description;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 /**
  * @author James Chen
  */
+@AllArgsConstructor
+@Builder(toBuilder = true)
 @Data
+@NoArgsConstructor
 public class IpProperties {
 
     @JsonView(MutablePropertiesView.class)

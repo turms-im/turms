@@ -24,12 +24,18 @@ import im.turms.server.common.property.constant.SimultaneousLoginStrategy;
 import im.turms.server.common.property.metadata.annotation.Description;
 import im.turms.server.common.property.metadata.annotation.GlobalProperty;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author James Chen
  */
+@AllArgsConstructor
+@Builder(toBuilder = true)
 @Data
+@NoArgsConstructor
 public class SimultaneousLoginProperties {
 
     @Description("The simultaneous login strategy is used to control which devices can be online at the same time")

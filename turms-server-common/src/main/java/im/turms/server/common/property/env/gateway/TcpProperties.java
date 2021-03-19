@@ -19,14 +19,20 @@ package im.turms.server.common.property.env.gateway;
 
 
 import im.turms.server.common.property.metadata.annotation.Description;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * @author James Chen
  */
+@AllArgsConstructor
+@Builder(toBuilder = true)
 @Data
 @EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 public class TcpProperties extends BaseServerProperties {
 
     /**

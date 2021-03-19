@@ -175,13 +175,14 @@ class ServiceMediatorTests {
             boolean isAuthenticated,
             boolean isForbiddenDeviceType) {
         Node node = mock(Node.class);
-        TurmsProperties properties = new TurmsProperties();
-        GatewayProperties gateway = new GatewayProperties();
-        SessionProperties session = new SessionProperties();
-        session.setNotifyClientsOfSessionInfoAfterConnected(true);
-        session.setEnableAuthentication(enableAuthentication);
-        gateway.setSession(session);
-        properties.setGateway(gateway);
+        TurmsProperties properties = new TurmsProperties().toBuilder()
+                .gateway(new GatewayProperties().toBuilder()
+                        .session(new SessionProperties().toBuilder()
+                                .notifyClientsOfSessionInfoAfterConnected(true)
+                                .enableAuthentication(enableAuthentication)
+                                .build())
+                        .build())
+                .build();
         when(node.getSharedProperties())
                 .thenReturn(properties);
 

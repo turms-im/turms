@@ -18,13 +18,17 @@
 package im.turms.server.common.property.env.gateway;
 
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * @author James Chen
  */
+@Builder(toBuilder = true)
 @Data
 @EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 public class UdpProperties extends BaseServerProperties {
 }

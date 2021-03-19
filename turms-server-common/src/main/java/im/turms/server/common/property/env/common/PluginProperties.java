@@ -18,14 +18,20 @@
 package im.turms.server.common.property.env.common;
 
 import im.turms.server.common.property.metadata.annotation.Description;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Convention over configuration
  *
  * @author James Chen
  */
+@AllArgsConstructor
+@Builder(toBuilder = true)
 @Data
+@NoArgsConstructor
 public class PluginProperties {
 
     @Description("Whether to enable plugins")

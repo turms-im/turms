@@ -17,7 +17,10 @@
 
 package im.turms.server.common.property.env.service.business.activity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
@@ -25,7 +28,10 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
  * @implNote To make it clearer for developers to configure the logging behaviors of client requests and the responses
  * we put the properties together in ClientApiProperties instead of ActivityLoggingProperties
  */
+@AllArgsConstructor
+@Builder(toBuilder = true)
 @Data
+@NoArgsConstructor
 public class ActivityLoggingProperties {
 
     @NestedConfigurationProperty

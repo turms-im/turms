@@ -19,6 +19,7 @@ package im.turms.server.common.property.env.service.env.clientapi.property;
 
 import im.turms.common.model.dto.request.TurmsRequest;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -26,9 +27,10 @@ import lombok.NoArgsConstructor;
 /**
  * @author James Chen
  */
+@AllArgsConstructor
+@Builder(toBuilder = true)
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@AllArgsConstructor
 @NoArgsConstructor
 public class LoggingRequestProperties {
 

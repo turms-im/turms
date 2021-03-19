@@ -18,13 +18,19 @@
 package im.turms.server.common.property.env.service.business.conversation;
 
 import im.turms.server.common.property.env.service.business.message.TypingStatusProperties;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * @author James Chen
  */
+@AllArgsConstructor
+@Builder(toBuilder = true)
 @Data
+@NoArgsConstructor
 public class ConversationProperties {
 
     @NestedConfigurationProperty

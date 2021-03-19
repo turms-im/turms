@@ -38,15 +38,16 @@ class MongoConfigTests {
     @Test
     void userMongoClient_shouldReturnNotNullInstance() {
         MongoConfig mongoConfig = new MongoConfig();
-        TurmsProperties turmsProperties = new TurmsProperties();
-        GatewayProperties gateway = new GatewayProperties();
-        MongoProperties mongo = new MongoProperties();
-        mongo.setUser(new TurmsMongoProperties());
-        gateway.setMongo(mongo);
-        turmsProperties.setGateway(gateway);
+        TurmsProperties properties = new TurmsProperties().toBuilder()
+                .gateway(new GatewayProperties().toBuilder()
+                        .mongo(new MongoProperties().toBuilder()
+                                .user(new TurmsMongoProperties())
+                                .build())
+                        .build())
+                .build();
         TurmsPropertiesManager propertiesManager = mock(TurmsPropertiesManager.class);
         when(propertiesManager.getLocalProperties())
-                .thenReturn(turmsProperties);
+                .thenReturn(properties);
         TurmsMongoClient mongoClient = mongoConfig.userMongoClient(propertiesManager);
 
         assertThat(mongoClient).isNotNull();

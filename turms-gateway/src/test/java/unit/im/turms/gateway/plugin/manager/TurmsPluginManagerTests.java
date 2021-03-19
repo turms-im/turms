@@ -38,11 +38,12 @@ class TurmsPluginManagerTests {
     void constructor_shouldInitPlugins_ifPluginEnabled() {
         ApplicationContext context = mock(ApplicationContext.class);
         TurmsPropertiesManager propertiesManager = mock(TurmsPropertiesManager.class);
-        TurmsProperties properties = new TurmsProperties();
-        PluginProperties plugin = new PluginProperties();
-        plugin.setEnabled(true);
-        plugin.setDir(".");
-        properties.setPlugin(plugin);
+        TurmsProperties properties = new TurmsProperties().toBuilder()
+                .plugin(new PluginProperties().toBuilder()
+                        .enabled(true)
+                        .dir(".")
+                        .build())
+                .build();
         when(propertiesManager.getLocalProperties())
                 .thenReturn(properties);
         TurmsPluginManager turmsPluginManager = new TurmsPluginManager(context, propertiesManager);
@@ -58,11 +59,12 @@ class TurmsPluginManagerTests {
     void destroy_shouldSucceed() {
         ApplicationContext context = mock(ApplicationContext.class);
         TurmsPropertiesManager propertiesManager = mock(TurmsPropertiesManager.class);
-        TurmsProperties properties = new TurmsProperties();
-        PluginProperties plugin = new PluginProperties();
-        plugin.setEnabled(true);
-        plugin.setDir(".");
-        properties.setPlugin(plugin);
+        TurmsProperties properties = new TurmsProperties().toBuilder()
+                .plugin(new PluginProperties().toBuilder()
+                        .enabled(true)
+                        .dir(".")
+                        .build())
+                .build();
         when(propertiesManager.getLocalProperties())
                 .thenReturn(properties);
         TurmsPluginManager turmsPluginManager = new TurmsPluginManager(context, propertiesManager);

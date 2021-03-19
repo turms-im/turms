@@ -18,7 +18,10 @@
 package im.turms.server.common.property.env.service.env.redis;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.data.annotation.Transient;
@@ -28,7 +31,10 @@ import java.util.List;
 /**
  * @author James Chen
  */
+@AllArgsConstructor
+@Builder(toBuilder = true)
 @Data
+@NoArgsConstructor
 public class TurmsRedisProperties {
 
     private static final List<RedisProperties> REDIS_PROPERTIES_LIST = List.of(new RedisProperties());

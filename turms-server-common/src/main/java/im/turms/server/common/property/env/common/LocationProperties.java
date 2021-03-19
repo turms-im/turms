@@ -21,7 +21,10 @@ package im.turms.server.common.property.env.common;
 import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.property.metadata.annotation.Description;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
@@ -29,7 +32,10 @@ import javax.validation.constraints.Min;
 /**
  * @author James Chen
  */
+@AllArgsConstructor
+@Builder(toBuilder = true)
 @Data
+@NoArgsConstructor
 public class LocationProperties {
 
     @Description("Whether to handle users' locations")

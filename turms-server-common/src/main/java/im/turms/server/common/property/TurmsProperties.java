@@ -28,6 +28,7 @@ import im.turms.server.common.property.env.gateway.GatewayProperties;
 import im.turms.server.common.property.env.service.ServiceProperties;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -41,10 +42,11 @@ import org.springframework.stereotype.Component;
  *
  * @author James Chen
  */
+@AllArgsConstructor
+@Builder(toBuilder = true)
 @Component
 @ConfigurationProperties(prefix = "turms", ignoreUnknownFields = false)
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class TurmsProperties {
 

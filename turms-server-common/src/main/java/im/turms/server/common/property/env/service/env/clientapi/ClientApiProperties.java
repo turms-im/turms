@@ -20,7 +20,10 @@ package im.turms.server.common.property.env.service.env.clientapi;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.server.common.property.env.common.ClientApiLoggingProperties;
 import im.turms.server.common.property.metadata.annotation.Description;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import java.util.Collections;
@@ -29,7 +32,10 @@ import java.util.Set;
 /**
  * @author James Chen
  */
+@AllArgsConstructor
+@Builder(toBuilder = true)
 @Data
+@NoArgsConstructor
 public class ClientApiProperties {
 
     @Description("The disabled endpoints for client requests. Return ILLEGAL_ARGUMENT if a client tries to access them")

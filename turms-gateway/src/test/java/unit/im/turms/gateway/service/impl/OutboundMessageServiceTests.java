@@ -84,12 +84,13 @@ class OutboundMessageServiceTests {
 
     private OutboundMessageService newOutboundMessageService(UserSessionsManager userSessionsManager) {
         Node node = mock(Node.class);
-        TurmsProperties turmsProperties = new TurmsProperties();
-        PluginProperties plugin = new PluginProperties();
-        plugin.setEnabled(true);
-        turmsProperties.setPlugin(plugin);
+        TurmsProperties properties = new TurmsProperties().toBuilder()
+                .plugin(new PluginProperties().toBuilder()
+                        .enabled(true)
+                        .build())
+                .build();
         when(node.getSharedProperties())
-                .thenReturn(turmsProperties);
+                .thenReturn(properties);
 
         NotificationHandler handler = mock(NotificationHandler.class);
         when(handler.handle(any(), any(), any()))

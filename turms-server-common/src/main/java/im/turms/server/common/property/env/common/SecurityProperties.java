@@ -21,12 +21,18 @@ package im.turms.server.common.property.env.common;
 import im.turms.server.common.property.constant.PasswordEncodingAlgorithm;
 import im.turms.server.common.property.metadata.annotation.Description;
 import im.turms.server.common.property.metadata.annotation.ImmutableOnceApplied;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author James Chen
  */
+@AllArgsConstructor
+@Builder(toBuilder = true)
 @Data
+@NoArgsConstructor
 public class SecurityProperties {
 
     @ImmutableOnceApplied

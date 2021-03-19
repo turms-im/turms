@@ -18,13 +18,19 @@
 package im.turms.server.common.property.env.common.cluster;
 
 import im.turms.server.common.property.metadata.annotation.Description;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * @author James Chen
  */
+@AllArgsConstructor
+@Builder(toBuilder = true)
 @Data
+@NoArgsConstructor
 public class NodeProperties {
 
     @Description("e.g. \"turms001\", \"turms002\"")

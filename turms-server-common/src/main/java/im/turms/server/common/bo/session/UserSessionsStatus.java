@@ -29,9 +29,9 @@ import java.util.Set;
 /**
  * @author James Chen
  */
-@Data
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
+@Data
 public final class UserSessionsStatus {
 
     private final UserStatus userStatus;

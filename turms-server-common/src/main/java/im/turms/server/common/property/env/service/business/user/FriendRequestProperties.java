@@ -23,14 +23,20 @@ import im.turms.server.common.constraint.ValidCron;
 import im.turms.server.common.property.metadata.annotation.Description;
 import im.turms.server.common.property.metadata.annotation.GlobalProperty;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
 
 /**
  * @author James Chen
  */
+@AllArgsConstructor
+@Builder(toBuilder = true)
 @Data
+@NoArgsConstructor
 public class FriendRequestProperties {
 
     @Description("The maximum allowed length for the text of a friend request")

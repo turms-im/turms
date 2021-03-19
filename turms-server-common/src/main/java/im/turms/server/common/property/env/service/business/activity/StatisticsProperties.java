@@ -21,12 +21,18 @@ import im.turms.server.common.constant.CronConstant;
 import im.turms.server.common.constraint.ValidCron;
 import im.turms.server.common.property.metadata.annotation.Description;
 import im.turms.server.common.property.metadata.annotation.GlobalProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author James Chen
  */
+@AllArgsConstructor
+@Builder(toBuilder = true)
 @Data
+@NoArgsConstructor
 public class StatisticsProperties {
 
     @Description("The cron expression to specify the time to log online users' number")

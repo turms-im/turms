@@ -24,7 +24,10 @@ import im.turms.server.common.property.env.common.ClientApiLoggingProperties;
 import im.turms.server.common.property.metadata.annotation.Description;
 import im.turms.server.common.property.metadata.annotation.GlobalProperty;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import javax.validation.constraints.Min;
@@ -32,7 +35,10 @@ import javax.validation.constraints.Min;
 /**
  * @author James Chen
  */
+@AllArgsConstructor
+@Builder(toBuilder = true)
 @Data
+@NoArgsConstructor
 public class ClientApiProperties {
 
     @Description("The minimum allowed interval between client requests. " +
