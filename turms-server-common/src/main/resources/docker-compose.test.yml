@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  mongodb-router:
+    image: 'bitnami/mongodb-sharded:4.4-debian-10'
+    environment:
+      - MONGODB_ADVERTISED_HOSTNAME=mongodb-router
+      - MONGODB_SHARDING_MODE=mongos
+      - MONGODB_CFG_PRIMARY_HOST=mongodb-cfg
+      - MONGODB_CFG_REPLICA_SET_NAME=cfgreplicaset
+      - MONGODB_REPLICA_SET_KEY=replicasetkey123
+      - MONGODB_ROOT_PASSWORD=turms
+
+  mongodb-shard0:
+    image: 'docker.io/bitnami/mongodb-sharded:4.4-debian-10'
+    environment:
+      - MONGODB_ADVERTISED_HOSTNAME=mongodb-shard0
+      - MONGODB_SHARDING_MODE=shardsvr
+      - MONGODB_MONGOS_HOST=mongodb-router
+      - MONGODB_ROOT_PASSWORD=turms
+      - MONGODB_REPLICA_SET_MODE=primary
+      - MONGODB_REPLICA_SET_KEY=replicasetkey123
+      - MONGODB_REPLICA_SET_NAME=shard0
+
+  mongodb-cfg:
+    image: 'docker.io/bitnami/mongodb-sharded:4.4-debian-10'
+    environment:
+      - MONGODB_ADVERTISED_HOSTNAME=mongodb-cfg
+      - MONGODB_SHARDING_MODE=configsvr
+      - MONGODB_ROOT_PASSWORD=turms
+      - MONGODB_REPLICA_SET_MODE=primary
+      - MONGODB_REPLICA_SET_KEY=replicasetkey123
+      - MONGODB_REPLICA_SET_NAME=cfgreplicaset
+
+  redis:
+    image: redis:6.2-alpine
