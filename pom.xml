@@ -35,16 +35,23 @@
         <commons-collections4.version>4.4</commons-collections4.version>
         <disruptor.version>3.4.2</disruptor.version>
         <guava.version>30.1-jre</guava.version>
-        <jmh.version>1.28</jmh.version>
         <mongodb.version>4.2.2</mongodb.version>
         <pf4j.version>3.6.0</pf4j.version>
         <protobuf.version>3.15.5</protobuf.version>
+
+        <!-- Runtime Deps for Testing -->
+        <assertj-guava.version>3.4.0</assertj-guava.version>
+        <jmh.version>1.28</jmh.version>
         <testcontainers.version>1.15.2</testcontainers.version>
 
         <!-- Maven plugins -->
         <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
         <spotbugs-maven-plugin.version>4.2.0</spotbugs-maven-plugin.version>
         <spring-boot-thin-layout.version>1.0.26.RELEASE</spring-boot-thin-layout.version>
+
+        <!-- Configs -->
+        <skipITs>false</skipITs>
+        <skipUTs>false</skipUTs>
     </properties>
 
     <modules>
@@ -197,6 +204,12 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-guava</artifactId>
+            <version>${assertj-guava.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.openjdk.jmh</groupId>
             <artifactId>jmh-core</artifactId>
             <version>${jmh.version}</version>
@@ -301,13 +314,52 @@
         <plugins>
             <!-- https://spotbugs.readthedocs.io/en/stable/maven.html -->
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
                 <version>${spotbugs-maven-plugin.version}</version>
             </plugin>
+
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>versions-maven-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <argLine>
+                        --illegal-access=permit
+                    </argLine>
+                    <includes>
+                        <include>**/*Tests.java</include>
+                    </includes>
+                    <skipTests>${skipUTs}</skipTests>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven-failsafe-plugin.version}</version>
+                <configuration>
+                    <argLine>
+                        --illegal-access=permit
+                    </argLine>
+                    <includes>
+                        <include>**/*IT.java</include>
+                    </includes>
+                    <skipITs>${skipITs}</skipITs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
