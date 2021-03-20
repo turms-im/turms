@@ -172,7 +172,7 @@ public class UserOnlineInfoController {
         } else {
             updateMono = userStatusService.updateOnlineUsersStatus(ids, onlineStatus);
         }
-        return Mono.just(ResponseFactory.OK);
+        return updateMono.thenReturn(ResponseFactory.OK);
     }
 
 }
