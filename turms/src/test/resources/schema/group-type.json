@@ -1,0 +1,52 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": [
+      "gius",
+      "gsl",
+      "err",
+      "me",
+      "js",
+      "mius",
+      "is",
+      "gs",
+      "n",
+      "siu"
+    ],
+    "properties": {
+      "_id": {
+        "bsonType": "long"
+      },
+      "gius": {
+        "bsonType": "int"
+      },
+      "gsl": {
+        "bsonType": "int"
+      },
+      "err": {
+        "bsonType": "bool"
+      },
+      "me": {
+        "bsonType": "bool"
+      },
+      "js": {
+        "bsonType": "int"
+      },
+      "mius": {
+        "bsonType": "int"
+      },
+      "is": {
+        "bsonType": "int"
+      },
+      "gs": {
+        "bsonType": "bool"
+      },
+      "n": {
+        "bsonType": "string"
+      },
+      "siu": {
+        "bsonType": "bool"
+      }
+    }
+  }
+}

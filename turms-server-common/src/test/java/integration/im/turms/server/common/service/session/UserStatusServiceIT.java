@@ -91,7 +91,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
 
     @Order(1)
     @Test
-    void addOnlineDeviceIfAbsent_shouldSucceed_ifAbsentForFirstUserWithDifferent() {
+    void addOnlineDeviceIfAbsent_shouldSucceed_ifAbsentForFirstUserWithDifferentDevice() {
         Mono<Boolean> addOnlineDevice =
                 USER_STATUS_SERVICE.addOnlineDeviceIfAbsent(USER_1_ID, USER_1_DIFF_DEVICE, USER_INITIAL_STATUS, Duration.ofSeconds(60));
         StepVerifier

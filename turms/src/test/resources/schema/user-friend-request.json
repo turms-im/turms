@@ -1,0 +1,32 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": [
+      "cd",
+      "stat",
+      "cnt",
+      "rtid",
+      "rrid"
+    ],
+    "properties": {
+      "_id": {
+        "bsonType": "long"
+      },
+      "cd": {
+        "bsonType": "date"
+      },
+      "stat": {
+        "bsonType": "int"
+      },
+      "cnt": {
+        "bsonType": "string"
+      },
+      "rtid": {
+        "bsonType": "long"
+      },
+      "rrid": {
+        "bsonType": "long"
+      }
+    }
+  }
+}

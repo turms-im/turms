@@ -1,0 +1,31 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": [
+      "q",
+      "score",
+      "gid",
+      "ans"
+    ],
+    "properties": {
+      "_id": {
+        "bsonType": "long"
+      },
+      "q": {
+        "bsonType": "string"
+      },
+      "score": {
+        "bsonType": "int"
+      },
+      "gid": {
+        "bsonType": "long"
+      },
+      "ans": {
+        "bsonType": "array",
+        "items": {
+          "bsonType": "string"
+        }
+      }
+    }
+  }
+}

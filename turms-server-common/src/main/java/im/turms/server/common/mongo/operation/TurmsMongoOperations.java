@@ -445,6 +445,15 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         return Mono.from(source);
     }
 
+    @Override
+    public Mono<Boolean> validate(Class<?> clazz, String jsonSchema) {
+        MongoCollection<?> collection = context.getCollection(clazz);
+        FindPublisher<Document> publisher = collection.find(Document.parse(jsonSchema), Document.class)
+                .projection(ID_ONLY)
+                .limit(1);
+        return Mono.from(publisher).hasElement();
+    }
+
     /**
      * Transaction
      */

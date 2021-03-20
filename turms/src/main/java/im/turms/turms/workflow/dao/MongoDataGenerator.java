@@ -21,7 +21,10 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
+import im.turms.common.constant.GroupInvitationStrategy;
+import im.turms.common.constant.GroupJoinStrategy;
 import im.turms.common.constant.GroupMemberRole;
+import im.turms.common.constant.GroupUpdateStrategy;
 import im.turms.common.constant.ProfileAccessStrategy;
 import im.turms.common.constant.RequestStatus;
 import im.turms.server.common.context.ApplicationContext;
@@ -66,12 +69,11 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * TODO: Extract the mocking feature as an independent project
- *
  * @author James Chen
  */
 @Log4j2
@@ -103,7 +105,7 @@ public class MongoDataGenerator implements IMongoDataGenerator {
     private final TurmsMongoClient messageMongoClient;
     private final List<TurmsMongoClient> clients;
 
-    private final PasswordManager passwordUtil;
+    private final PasswordManager passwordManager;
     private final ApplicationContext context;
     private final boolean clearAllCollectionsBeforeMocking;
 
@@ -115,7 +117,7 @@ public class MongoDataGenerator implements IMongoDataGenerator {
             TurmsMongoClient groupMongoClient,
             TurmsMongoClient conversationMongoClient,
             TurmsMongoClient messageMongoClient,
-            PasswordManager passwordUtil,
+            PasswordManager passwordManager,
             TurmsPropertiesManager turmsPropertiesManager,
             ApplicationContext context) {
         this.adminMongoClient = adminMongoClient;
@@ -129,7 +131,7 @@ public class MongoDataGenerator implements IMongoDataGenerator {
                 conversationMongoClient,
                 messageMongoClient);
 
-        this.passwordUtil = passwordUtil;
+        this.passwordManager = passwordManager;
         this.context = context;
 
         MockProperties mockProperties = turmsPropertiesManager.getLocalProperties().getService().getMock();
@@ -214,7 +216,7 @@ public class MongoDataGenerator implements IMongoDataGenerator {
         final long guestRoleId = 2L;
         Admin guest = new Admin(
                 "guest",
-                passwordUtil.encodeAdminPassword("guest"),
+                passwordManager.encodeAdminPassword("guest"),
                 "guest",
                 guestRoleId,
                 now);
@@ -222,7 +224,7 @@ public class MongoDataGenerator implements IMongoDataGenerator {
         for (int i = 1; i <= adminCount; i++) {
             Admin admin = new Admin(
                     "account" + i,
-                    passwordUtil.encodeAdminPassword("123"),
+                    passwordManager.encodeAdminPassword("123"),
                     "my-name",
                     1L,
                     DateUtils.addDays(now, -i));
@@ -313,6 +315,18 @@ public class MongoDataGenerator implements IMongoDataGenerator {
             groupRelatedObjs.add(groupMember);
         }
 
+        groupRelatedObjs.add(new GroupType(1L,
+                "test",
+                1000,
+                GroupInvitationStrategy.ALL,
+                GroupJoinStrategy.ACCEPT_ANY_REQUEST,
+                GroupUpdateStrategy.OWNER_MANAGER,
+                GroupUpdateStrategy.OWNER_MANAGER_MEMBER,
+                true,
+                true,
+                true,
+                true));
+
         // Message
         long senderId = 1L;
         Set<Long> targetIds = new HashSet<>();
@@ -368,7 +382,7 @@ public class MongoDataGenerator implements IMongoDataGenerator {
             Date userDate = DateUtils.addDays(now, -i);
             User user = new User(
                     (long) i,
-                    passwordUtil.encodeUserPassword("123"),
+                    passwordManager.encodeUserPassword("123"),
                     "user-name",
                     "user-intro",
                     ProfileAccessStrategy.ALL,
@@ -385,6 +399,7 @@ public class MongoDataGenerator implements IMongoDataGenerator {
             userRelatedObjs.add(userVersion);
             userRelatedObjs.add(relationshipGroup);
         }
+
         for (int i = targetUserToRequestFriendRequestStart; i <= targetUserToRequestFriendRequestEnd; i++) {
             UserFriendRequest userFriendRequest = new UserFriendRequest(
                     nextId(),
@@ -398,6 +413,9 @@ public class MongoDataGenerator implements IMongoDataGenerator {
                     (long) i);
             userRelatedObjs.add(userFriendRequest);
         }
+
+        userRelatedObjs.add(new UserPermissionGroup(1L, Set.of(1L), 10, 10, Map.of(1L, 1)));
+
         for (int i = targetUserToBeFriendRelationshipStart; i <= targetUserToBeFriendRelationshipEnd; i++) {
             UserRelationship userRelationship1 = new UserRelationship(
                     new UserRelationship.Key(1L, (long) i),
@@ -420,7 +438,7 @@ public class MongoDataGenerator implements IMongoDataGenerator {
         // FIXME: Use "subscribeOn(Schedulers.boundedElastic())" for now because of a weired behaviour
         // that TurmsMongoClient#insertAll seems blocking when running in debug mode
         // but it won't block when running in non-debug mode
-        // and there is no blocking method after reviewing the whole workflow of TurmsMongoClient#insertAll
+        // and there is no blocking method after reviewing the workflow of TurmsMongoClient#insertAll
         Mono<Void> adminMono = adminMongoClient.insertAll(adminRelatedObjs)
                 .doOnSubscribe(s -> log.info("Start mocking admin-related data"))
                 .doOnError(error -> log.error("Failed to mock admin-related data", error))
@@ -501,6 +519,9 @@ public class MongoDataGenerator implements IMongoDataGenerator {
         return mongoClient.collectionExists(clazz)
                 .flatMap(exists -> exists
                         ? Mono.just(false)
+                        // Note that we do NOT assign a validator to collections
+                        // because it's very common that business scenarios change over time
+                        // and some new fields need to be added
                         : mongoClient.createCollection(clazz).thenReturn(true));
     }
 

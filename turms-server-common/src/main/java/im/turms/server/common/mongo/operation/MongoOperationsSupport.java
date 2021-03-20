@@ -107,5 +107,7 @@ public interface MongoOperationsSupport {
 
     Mono<Void> dropDatabase();
 
+    Mono<Boolean> validate(Class<?> clazz, String jsonSchema);
+
     <T> Mono<T> inTransaction(Function<ClientSession, Mono<T>> execute);
 }

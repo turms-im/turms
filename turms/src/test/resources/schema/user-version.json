@@ -1,0 +1,48 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": [
+      "r",
+      "sgi",
+      "rg",
+      "rgi",
+      "rgm",
+      "jg",
+      "sfr",
+      "gjr",
+      "rfr"
+    ],
+    "properties": {
+      "_id": {
+        "bsonType": "long"
+      },
+      "r": {
+        "bsonType": "date"
+      },
+      "sgi": {
+        "bsonType": "date"
+      },
+      "rg": {
+        "bsonType": "date"
+      },
+      "rgi": {
+        "bsonType": "date"
+      },
+      "rgm": {
+        "bsonType": "date"
+      },
+      "jg": {
+        "bsonType": "date"
+      },
+      "sfr": {
+        "bsonType": "date"
+      },
+      "gjr": {
+        "bsonType": "date"
+      },
+      "rfr": {
+        "bsonType": "date"
+      }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": [
+      "perm",
+      "rank",
+      "n"
+    ],
+    "properties": {
+      "_id": {
+        "bsonType": "long"
+      },
+      "perm": {
+        "bsonType": "array",
+        "items": {
+          "bsonType": "int"
+        }
+      },
+      "rank": {
+        "bsonType": "int"
+      },
+      "n": {
+        "bsonType": "string"
+      }
+    }
+  }
+}
