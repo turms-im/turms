@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TurmsMongoProperties {
 
-    private String uri = "mongodb://localhost:27510/turms";
+    private String uri = "mongodb://localhost:27017/turms";
 
     public TurmsMongoProperties(String uri) {
         if (uri != null) {

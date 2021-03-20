@@ -24,7 +24,7 @@
    
      ```bash
      pip3 install mtools[mlaunch]
-     mlaunch init --replicaset --sharded 1 --nodes 1 --config 1 --hostname localhost --port 29510 --mongos 1
+     mlaunch init --replicaset --sharded 1 --nodes 1 --config 1 --hostname localhost --port 27017 --mongos 1
      ```
      
      请确保运行正常，否则Turms会抛出MongoSocketOpenException异常。

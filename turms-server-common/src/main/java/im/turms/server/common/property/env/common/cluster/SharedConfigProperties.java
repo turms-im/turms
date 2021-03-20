@@ -38,6 +38,6 @@ public class SharedConfigProperties {
     @JsonIgnore
     @Transient
     @NestedConfigurationProperty
-    private TurmsMongoProperties mongo = new TurmsMongoProperties("mongodb://localhost:27510/turms-config");
+    private TurmsMongoProperties mongo = new TurmsMongoProperties("mongodb://localhost:27017/turms-config");
 
 }

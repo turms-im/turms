@@ -14,7 +14,7 @@ turms:
   cluster:
     shared-config:
       mongo:
-        uri: mongodb://localhost:29510/turms-config-dev
+        uri: mongodb://localhost:27017/turms-config-dev
   service:
     client-api:
       logging:
@@ -29,15 +29,15 @@ turms:
       clear-all-collections-before-mocking: true
     mongo:
       admin:
-        uri: mongodb://localhost:29510/turms-dev
+        uri: mongodb://localhost:27017/turms-dev
       user:
-        uri: mongodb://localhost:29510/turms-dev
+        uri: mongodb://localhost:27017/turms-dev
       group:
-        uri: mongodb://localhost:29510/turms-dev
+        uri: mongodb://localhost:27017/turms-dev
       conversation:
-        uri: mongodb://localhost:29510/turms-dev
+        uri: mongodb://localhost:27017/turms-dev
       message:
-        uri: mongodb://localhost:29510/turms-dev
+        uri: mongodb://localhost:27017/turms-dev
 turms-plugin:
   minio:
     retry:

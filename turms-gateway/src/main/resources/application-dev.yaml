@@ -9,7 +9,7 @@ turms:
   cluster:
     shared-config:
       mongo:
-        uri: mongodb://localhost:29510/turms-config-dev
+        uri: mongodb://localhost:27017/turms-config-dev
   gateway:
     client-api:
       logging:
@@ -20,4 +20,4 @@ turms:
       return-reason-for-server-error: true
     mongo:
       user:
-        uri: mongodb://localhost:29510/turms-dev
+        uri: mongodb://localhost:27017/turms-dev
