@@ -5,8 +5,7 @@
 ####################################################################
 FROM maven:3-adoptopenjdk-11 AS maven-builder
 COPY . ./
-RUN mvn -pl turms-java-common,turms-server-common,turms \
-    clean package -DskipTests -P artifact-fat-jar
+RUN mvn clean package -am -B -DskipTests -P artifact-fat-jar -pl turms --no-transfer-progress
 
 ####################################################################
 # Stage 1: BUILD LAYERS
