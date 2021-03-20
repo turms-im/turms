@@ -362,7 +362,7 @@ public class SessionService implements ISessionService {
                                 // with the connected TCP/WebSocket connection
                                 Mono<Void> updateSessionInfoMono = userStatus == null || existingUserStatus == userStatus
                                         ? Mono.empty()
-                                        : userStatusService.updateOnlineUserStatus(userId, userStatus)
+                                        : userStatusService.updateOnlineUserStatusIfPresent(userId, userStatus)
                                         .then()
                                         .onErrorResume(throwable -> Mono.empty());
                                 if (position != null) {

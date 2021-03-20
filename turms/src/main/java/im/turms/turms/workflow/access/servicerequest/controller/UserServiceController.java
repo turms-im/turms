@@ -277,7 +277,7 @@ public class UserServiceController {
                         ? sessionService.disconnect(clientRequest.getUserId(), deviceTypes, SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE)
                         : sessionService.disconnect(clientRequest.getUserId(), SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE);
             } else {
-                updateMono = userStatusService.updateOnlineUserStatus(clientRequest.getUserId(), userStatus);
+                updateMono = userStatusService.updateOnlineUserStatusIfPresent(clientRequest.getUserId(), userStatus);
             }
             boolean notifyMembers =
                     node.getSharedProperties().getService().getNotification().isNotifyMembersAfterOtherMemberOnlineStatusUpdated();

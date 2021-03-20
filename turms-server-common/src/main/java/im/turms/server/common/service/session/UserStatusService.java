@@ -66,6 +66,8 @@ public class UserStatusService {
     private static final RedisScript<Boolean> ADD_ONLINE_USER_SCRIPT =
             RedisScript.of(new ClassPathResource("redis/try_add_online_user_with_ttl.lua"));
 
+    private final Node node;
+
     private final ShardingAlgorithm shardingAlgorithmForSession;
     private final List<ReactiveRedisTemplate<Long, String>> sessionRedisTemplates;
     /**
@@ -101,9 +103,11 @@ public class UserStatusService {
     private final boolean cacheUserSessionsStatus;
 
     public UserStatusService(
+            Node node,
             TurmsPropertiesManager turmsPropertiesManager,
             ShardingAlgorithm shardingAlgorithmForSession,
             List<ReactiveRedisTemplate<Long, String>> sessionRedisTemplates) {
+        this.node = node;
         TurmsProperties turmsProperties = turmsPropertiesManager.getLocalProperties();
         cacheUserSessionsStatus = turmsProperties.getUserStatus().isCacheUserSessionsStatus();
         operationTimeout = Duration.ofSeconds(10);
@@ -193,17 +197,22 @@ public class UserStatusService {
             case 0:
                 return Mono.just(true);
             case 1:
-                return updateOnlineUserStatus(userIds.iterator().next(), userStatus);
+                return updateOnlineUserStatusIfPresent(userIds.iterator().next(), userStatus);
             default:
                 List<Mono<Boolean>> monos = new ArrayList<>(userIds.size());
                 for (Long userId : userIds) {
-                    monos.add(updateOnlineUserStatus(userId, userStatus));
+                    monos.add(updateOnlineUserStatusIfPresent(userId, userStatus));
                 }
                 return Flux.merge(monos).all(value -> value);
         }
     }
 
-    public Mono<Boolean> updateOnlineUserStatus(@NotNull Long userId, @NotNull UserStatus userStatus) {
+    /**
+     * @return true if updated
+     * @implNote Redis doesn't support a command like "HSETEX" currently
+     * (https://github.com/redis/redis/issues/2905)
+     */
+    public Mono<Boolean> updateOnlineUserStatusIfPresent(@NotNull Long userId, @NotNull UserStatus userStatus) {
         try {
             AssertUtil.notNull(userId, "userId");
             AssertUtil.notNull(userStatus, "userStatus");
@@ -212,8 +221,11 @@ public class UserStatusService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        return getSessionOperations(userId)
-                .put(userId, STATUS_KEY_STATUS, userStatus)
+        ReactiveHashOperations<Long, Object, Object> sessionOperations = getSessionOperations(userId);
+        return sessionOperations
+                .get(userId, STATUS_KEY_STATUS)
+                .flatMap(o -> sessionOperations.put(userId, STATUS_KEY_STATUS, userStatus).thenReturn(true))
+                .defaultIfEmpty(false)
                 .timeout(operationTimeout);
     }
 
@@ -227,6 +239,9 @@ public class UserStatusService {
         return getSessionRedisTemplate(userId).expire(userId, timeout).timeout(operationTimeout);
     }
 
+    /**
+     * @return OFFLINE instead of MonoEmpty for an offline user
+     */
     public Mono<UserSessionsStatus> getUserSessionsStatus(@NotNull Long userId) {
         try {
             AssertUtil.notNull(userId, "userId");
@@ -242,6 +257,9 @@ public class UserStatusService {
         return fetchUserSessionsStatus(userId);
     }
 
+    /**
+     * @return OFFLINE instead of MonoEmpty for an offline user
+     */
     public Mono<UserSessionsStatus> fetchUserSessionsStatus(@NotNull Long userId) {
         try {
             AssertUtil.notNull(userId, "userId");
@@ -282,11 +300,12 @@ public class UserStatusService {
 
     /**
      * Note that the method only removes the device information of a user
-     * and don't remove the online status information to avoid querying and removing one more time.
+     * and doesn't remove the online status information to avoid querying and removing one more time.
      * The status will be removed when the TTL has been reached
      * and turms won't respond an incorrect user status to clients
      * because turms will check both the "status" and the online devices.
      *
+     * @return ture if at least one device type was present (online)
      * @see UserStatusService#fetchUserSessionsStatus(java.lang.Long)
      */
     public Mono<Boolean> removeStatusByUserIdAndDeviceTypes(@NotNull Long userId, @NotEmpty Set<DeviceType> deviceTypes) {
@@ -302,6 +321,9 @@ public class UserStatusService {
                 .map(number -> number > 0);
     }
 
+    /**
+     * @return true if the userId:deviceType was absent (offline)
+     */
     public Mono<Boolean> addOnlineDeviceIfAbsent(@NotNull Long userId,
                                                  @NotNull @ValidDeviceType DeviceType deviceType,
                                                  @Nullable UserStatus userStatus,
@@ -321,7 +343,7 @@ public class UserStatusService {
         Object[] args = new Object[userStatus == null ? 4 : 5];
         args[0] = userId;
         args[1] = (byte) deviceType.getNumber();
-        args[2] = Node.getNodeId();
+        args[2] = node.getLocalMemberId();
         args[3] = (short) heartbeatTimeout.getSeconds();
         if (userStatus != null) {
             args[4] = (byte) userStatus.getNumber();
