@@ -11,7 +11,7 @@ services:
       - MONGODB_REPLICA_SET_KEY=replicasetkey123
       - MONGODB_ROOT_PASSWORD=turms
 
-  mongodb-shard0:
+  mongodb-shard:
     image: 'docker.io/bitnami/mongodb-sharded:4.4-debian-10'
     environment:
       - MONGODB_ADVERTISED_HOSTNAME=mongodb-shard0

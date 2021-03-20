@@ -11,8 +11,8 @@ import java.util.Optional;
  */
 public class TestingEnvContainer extends DockerComposeContainer {
 
-    private static final String MONGO_SERVICE_NAME = "mongodb-router";
-    private static final String REDIS_SERVICE_NAME = "redis";
+    private static final String MONGO_SERVICE_NAME = "mongodb-router_1";
+    private static final String REDIS_SERVICE_NAME = "redis_1";
     private static final int MONGO_SERVICE_PORT = 27017;
     private static final int REDIS_SERVICE_PORT = 6379;
 
@@ -46,7 +46,7 @@ public class TestingEnvContainer extends DockerComposeContainer {
         return getServicePort(MONGO_SERVICE_NAME, MONGO_SERVICE_PORT);
     }
 
-    public String getReidsHost() {
+    public String getRedisHost() {
         return getServiceHost(REDIS_SERVICE_NAME, REDIS_SERVICE_PORT);
     }
 
