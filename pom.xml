@@ -312,7 +312,6 @@
 
     <build>
         <plugins>
-            <!-- https://spotbugs.readthedocs.io/en/stable/maven.html -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>

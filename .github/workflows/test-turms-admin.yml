@@ -1,6 +1,6 @@
-name: Tests for turms-admin
+name: Test turms-admin
 
-on: push
+on: [ push, pull_request ]
 
 jobs:
   ui-tests:
