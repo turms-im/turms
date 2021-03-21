@@ -414,7 +414,7 @@ public class MongoDataGenerator implements IMongoDataGenerator {
             userRelatedObjs.add(userFriendRequest);
         }
 
-        userRelatedObjs.add(new UserPermissionGroup(1L, Set.of(1L), 10, 10, Map.of(1L, 1)));
+        userRelatedObjs.add(new UserPermissionGroup(1L, Set.of(1L), 10, 10, Map.of(1L, 1, 2L, 1)));
 
         for (int i = targetUserToBeFriendRelationshipStart; i <= targetUserToBeFriendRelationshipEnd; i++) {
             UserRelationship userRelationship1 = new UserRelationship(

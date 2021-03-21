@@ -28,6 +28,7 @@ import im.turms.server.common.mongo.entity.MongoEntity;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
 import im.turms.server.common.mongo.operation.option.Update;
+import org.bson.Document;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -94,6 +95,8 @@ public interface MongoOperationsSupport {
     <T> Mono<Long> countDistinct(Class<T> clazz, Filter filter, String groupByFieldName);
 
     <T> Mono<Void> ensureIndexes(Class<T> clazz, List<IndexModel> indexModels);
+
+    <T> Flux<Document> listIndexes(Class<T> clazz);
 
     Mono<Void> enableSharding(MongoDatabase databaseToShard, MongoDatabase adminDatabase);
 

@@ -37,6 +37,7 @@ import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.AggregatePublisher;
 import com.mongodb.reactivestreams.client.ClientSession;
 import com.mongodb.reactivestreams.client.FindPublisher;
+import com.mongodb.reactivestreams.client.ListIndexesPublisher;
 import com.mongodb.reactivestreams.client.MongoCollection;
 import com.mongodb.reactivestreams.client.MongoDatabase;
 import im.turms.server.common.mongo.BsonPool;
@@ -367,6 +368,13 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
                 .then()
                 .doOnError(throwable -> log.error("Failed to index the collection {}", collectionName, throwable))
                 .doOnSuccess(ignored -> log.info("Indexing the collection {} successfully", collectionName));
+    }
+
+    @Override
+    public <T> Flux<Document> listIndexes(Class<T> clazz) {
+        MongoCollection<T> collection = context.getCollection(clazz);
+        ListIndexesPublisher<Document> source = collection.listIndexes();
+        return Flux.from(source);
     }
 
     /**

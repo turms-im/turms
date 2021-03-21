@@ -1,0 +1,31 @@
+[
+  {
+    "v": 2,
+    "key": {
+      "_id": 1
+    },
+    "name": "_id_"
+  },
+  {
+    "v": 2,
+    "key": {
+      "gid": "hashed"
+    },
+    "name": "gid_hashed"
+  },
+  {
+    "v": 2,
+    "key": {
+      "ed": 1
+    },
+    "name": "ed_1"
+  },
+  {
+    "v": 2,
+    "key": {
+      "ieid": 1,
+      "cd": 1
+    },
+    "name": "ieid_1_cd_1"
+  }
+]

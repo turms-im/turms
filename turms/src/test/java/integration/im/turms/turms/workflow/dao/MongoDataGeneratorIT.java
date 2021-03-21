@@ -11,6 +11,7 @@ import im.turms.server.common.property.env.service.ServiceProperties;
 import im.turms.server.common.property.env.service.env.MockProperties;
 import im.turms.server.common.property.env.service.env.database.TurmsMongoProperties;
 import im.turms.server.common.testing.BaseIntegrationTest;
+import im.turms.server.common.util.CollectorUtil;
 import im.turms.turms.workflow.dao.MongoDataGenerator;
 import im.turms.turms.workflow.dao.domain.admin.Admin;
 import im.turms.turms.workflow.dao.domain.admin.AdminRole;
@@ -31,14 +32,15 @@ import im.turms.turms.workflow.dao.domain.user.UserRelationship;
 import im.turms.turms.workflow.dao.domain.user.UserRelationshipGroup;
 import im.turms.turms.workflow.dao.domain.user.UserRelationshipGroupMember;
 import im.turms.turms.workflow.dao.domain.user.UserVersion;
+import org.bson.Document;
 import org.junit.jupiter.api.Test;
 import reactor.test.StepVerifier;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -48,8 +50,39 @@ import static org.mockito.Mockito.when;
  */
 class MongoDataGeneratorIT extends BaseIntegrationTest {
 
-    @Test
-    void validateSchemas() {
+    static final TurmsMongoClient MONGO_CLIENT;
+    static final List<Class<?>> MODEL_CLASSES = List.of(
+            // Admin
+            Admin.class,
+            AdminRole.class,
+            // Group
+            Group.class,
+            GroupBlockedUser.class,
+            GroupInvitation.class,
+            GroupJoinQuestion.class,
+            GroupJoinRequest.class,
+            GroupMember.class,
+            GroupType.class,
+            GroupVersion.class,
+            // Message
+            Message.class,
+            // Conversation
+            GroupConversation.class,
+            PrivateConversation.class,
+            // User
+            User.class,
+            UserFriendRequest.class,
+            UserPermissionGroup.class,
+            UserRelationship.class,
+            UserRelationshipGroup.class,
+            UserRelationshipGroupMember.class,
+            UserVersion.class);
+
+    static {
+        TurmsMongoProperties mongoProperties = new TurmsMongoProperties(ENV.getMongoUri("turms-test"));
+        MONGO_CLIENT = TurmsMongoClient.of(mongoProperties);
+        MONGO_CLIENT.registerEntitiesByClasses(MODEL_CLASSES);
+
         // Mock
         PasswordManager passwordManager = mock(PasswordManager.class);
         when(passwordManager.encodeAdminPassword(anyString())).thenReturn("123");
@@ -67,72 +100,63 @@ class MongoDataGeneratorIT extends BaseIntegrationTest {
         ApplicationContext context = mock(ApplicationContext.class);
         when(context.isProduction()).thenReturn(false);
 
-        // Build a mongo client
-        TurmsMongoProperties mongoProperties = new TurmsMongoProperties(ENV.getMongoUri("turms-test"));
-        TurmsMongoClient mongoClient = TurmsMongoClient.of(mongoProperties);
-
         // init and populate collections
-        new MongoDataGenerator(mongoClient,
-                mongoClient,
-                mongoClient,
-                mongoClient,
-                mongoClient,
+        new MongoDataGenerator(MONGO_CLIENT,
+                MONGO_CLIENT,
+                MONGO_CLIENT,
+                MONGO_CLIENT,
+                MONGO_CLIENT,
                 passwordManager,
                 propertiesManager,
                 context);
-
-        // Admin
-        validateSchema(mongoClient, Admin.class);
-        validateSchema(mongoClient, AdminRole.class);
-
-        // Group
-        validateSchema(mongoClient, Group.class);
-        validateSchema(mongoClient, GroupBlockedUser.class);
-        validateSchema(mongoClient, GroupInvitation.class);
-        validateSchema(mongoClient, GroupJoinQuestion.class);
-        validateSchema(mongoClient, GroupJoinRequest.class);
-        validateSchema(mongoClient, GroupMember.class);
-        validateSchema(mongoClient, GroupType.class);
-        validateSchema(mongoClient, GroupVersion.class);
-
-        // Message
-        validateSchema(mongoClient, Message.class);
-
-        // Conversation
-        validateSchema(mongoClient, GroupConversation.class);
-        validateSchema(mongoClient, PrivateConversation.class);
-
-        // User
-        validateSchema(mongoClient, User.class);
-        validateSchema(mongoClient, UserFriendRequest.class);
-        validateSchema(mongoClient, UserPermissionGroup.class);
-        validateSchema(mongoClient, UserRelationship.class);
-        validateSchema(mongoClient, UserRelationshipGroup.class);
-        validateSchema(mongoClient, UserRelationshipGroupMember.class);
-        validateSchema(mongoClient, UserVersion.class);
     }
 
-    private void validateSchema(TurmsMongoClient mongoClient, Class<?> clazz) {
-        Duration timeout = Duration.ofSeconds(10);
-        String schemaFileName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN, clazz.getSimpleName());
-        StepVerifier.create(mongoClient.validate(clazz, readJsonSchema(schemaFileName)))
-                .as("Entity " + clazz.getSimpleName() + " should have a valid schema")
-                .expectNext(true)
-                .expectComplete()
-                .verify(timeout);
+    @Test
+    void validateSchemas() {
+        for (Class<?> modelClass : MODEL_CLASSES) {
+            String schemaFileName = getFileName(modelClass);
+            String jsonSchema = readText("schema/" + schemaFileName + ".json");
+            StepVerifier.create(MONGO_CLIENT.validate(modelClass, jsonSchema))
+                    .expectNext(true)
+                    .as("Entity " + modelClass.getSimpleName() + " should have a valid schema")
+                    .expectComplete()
+                    .verify(DEFAULT_IO_TIMEOUT);
+        }
     }
 
-    private String readJsonSchema(String name) {
-        String path = "schema/" + name + ".json";
-        InputStream resource = MongoDataGeneratorIT.class.getClassLoader().getResourceAsStream(path);
-        if (resource == null) {
-            throw new IllegalStateException("Cannot find resource " + path);
+    @Test
+    void validateIndexes() {
+        for (Class<?> modelClass : MODEL_CLASSES) {
+            StepVerifier.create(MONGO_CLIENT.listIndexes(modelClass).collect(CollectorUtil.toList(8)))
+                    .assertNext(indexes -> {
+                        String schemaFileName = getFileName(modelClass);
+                        String json = readText("index/" + schemaFileName + ".json");
+                        List<Document> expectedIndexes = (List<Document>) Document.parse("{\"json\":" + json + "}").get("json");
+                        assertThat(indexes)
+                                .as("Entity " + modelClass.getSimpleName() + " should have the expected size")
+                                .hasSize(expectedIndexes.size());
+                        expectedIndexes.forEach(expectedIndex -> {
+                            Object expectedIndexName = expectedIndex.get("name");
+                            Optional<Document> found = indexes.stream()
+                                    .filter(document -> document.get("name").equals(expectedIndexName))
+                                    .findFirst();
+                            assertThat(found)
+                                    .as("Cannot find the index " + expectedIndexName)
+                                    .isPresent();
+                            Document index = found.get();
+                            for (Map.Entry<String, Object> entry : expectedIndex.entrySet()) {
+                                assertThat(index.get(entry.getKey())).isEqualTo(entry.getValue());
+                            }
+                        });
+                    })
+                    .as("Entity " + modelClass.getSimpleName() + " should have valid index models")
+                    .expectComplete()
+                    .verify(DEFAULT_IO_TIMEOUT);
         }
-        try {
-            return new String(resource.readAllBytes(), StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    }
+
+    private String getFileName(Class<?> modelClass) {
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_HYPHEN, modelClass.getSimpleName());
     }
 
 }
