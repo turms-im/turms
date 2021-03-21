@@ -72,7 +72,7 @@ public class MongoEntity<T> {
      * Shard key and Index
      */
     private final BsonDocument shardKey;
-    private final BsonDocument compoundIndex;
+    private final IndexModel compoundIndex;
     private final List<IndexModel> indexes;
 
     /**
@@ -107,7 +107,7 @@ public class MongoEntity<T> {
     /**
      * @implNote The method doesn't the support shard keys that contains a hashed key supported in 4.4
      */
-    private BsonDocument parseCompoundIndex(Class<T> clazz) {
+    private IndexModel parseCompoundIndex(Class<T> clazz) {
         CompoundIndex index = clazz.getAnnotation(CompoundIndex.class);
         if (index == null) {
             return null;
@@ -120,7 +120,7 @@ public class MongoEntity<T> {
         for (String key : fields) {
             document.append(key, BsonPool.BSON_INT32_1);
         }
-        return document;
+        return new IndexModel(document);
     }
 
     /**
@@ -187,7 +187,7 @@ public class MongoEntity<T> {
             List<IndexModel> indexModels = parseIndexes(field);
             if (!indexModels.isEmpty()) {
                 if (entityIndexes == null) {
-                    entityIndexes = new ArrayList<>(16);
+                    entityIndexes = new ArrayList<>(8);
                 }
                 entityIndexes.addAll(indexModels);
             }
