@@ -167,6 +167,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         }
         TurmsRequest request;
         try {
+            // Note that "parseFrom" won't block because the buffer is fully read
             request = TurmsRequest.parseFrom(serviceRequest.getTurmsRequestBuffer().nioBuffer());
         } catch (InvalidProtocolBufferException e) {
             return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.INVALID_REQUEST));

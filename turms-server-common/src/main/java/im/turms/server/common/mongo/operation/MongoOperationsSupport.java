@@ -91,7 +91,7 @@ public interface MongoOperationsSupport {
 
     <T> Flux<ChangeStreamDocument<T>> watch(Class<T> clazz, FullDocument fullDocument);
 
-    Mono<Long> countDistinct(Class<?> clazz, Filter filter, String groupByFieldName);
+    <T> Mono<Long> countDistinct(Class<T> clazz, Filter filter, String groupByFieldName);
 
     <T> Mono<Void> ensureIndexes(Class<T> clazz, List<IndexModel> indexModels);
 

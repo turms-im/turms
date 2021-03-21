@@ -21,7 +21,6 @@ import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -81,7 +80,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
     @Test
     void addOnlineDeviceIfAbsent_shouldSucceed_ifAbsentForFirstUser() {
         Mono<Boolean> addOnlineDevice =
-                USER_STATUS_SERVICE.addOnlineDeviceIfAbsent(USER_1_ID, USER_1_DEVICE, USER_INITIAL_STATUS, Duration.ofSeconds(60));
+                USER_STATUS_SERVICE.addOnlineDeviceIfAbsent(USER_1_ID, USER_1_DEVICE, USER_INITIAL_STATUS, DEFAULT_IO_TIMEOUT);
         StepVerifier
                 .create(addOnlineDevice)
                 .expectNext(true)
@@ -93,7 +92,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
     @Test
     void addOnlineDeviceIfAbsent_shouldSucceed_ifAbsentForFirstUserWithDifferentDevice() {
         Mono<Boolean> addOnlineDevice =
-                USER_STATUS_SERVICE.addOnlineDeviceIfAbsent(USER_1_ID, USER_1_DIFF_DEVICE, USER_INITIAL_STATUS, Duration.ofSeconds(60));
+                USER_STATUS_SERVICE.addOnlineDeviceIfAbsent(USER_1_ID, USER_1_DIFF_DEVICE, USER_INITIAL_STATUS, DEFAULT_IO_TIMEOUT);
         StepVerifier
                 .create(addOnlineDevice)
                 .expectNext(true)
@@ -105,7 +104,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
     @Test
     void addOnlineDeviceIfAbsent_shouldSucceed_ifAbsentForSecondUser() {
         Mono<Boolean> addOnlineDevice =
-                USER_STATUS_SERVICE.addOnlineDeviceIfAbsent(USER_2_ID, USER_2_DEVICE, USER_INITIAL_STATUS, Duration.ofSeconds(60));
+                USER_STATUS_SERVICE.addOnlineDeviceIfAbsent(USER_2_ID, USER_2_DEVICE, USER_INITIAL_STATUS, DEFAULT_IO_TIMEOUT);
         StepVerifier
                 .create(addOnlineDevice)
                 .expectNext(true)
@@ -117,7 +116,7 @@ class UserStatusServiceIT extends BaseIntegrationTest {
     @Test
     void addOnlineDeviceIfAbsent_shouldFail_ifPresent() {
         Mono<Boolean> addOnlineDevice =
-                USER_STATUS_SERVICE.addOnlineDeviceIfAbsent(USER_1_ID, USER_1_DEVICE, USER_INITIAL_STATUS, Duration.ofSeconds(60));
+                USER_STATUS_SERVICE.addOnlineDeviceIfAbsent(USER_1_ID, USER_1_DEVICE, USER_INITIAL_STATUS, DEFAULT_IO_TIMEOUT);
         StepVerifier
                 .create(addOnlineDevice)
                 .expectNext(false)

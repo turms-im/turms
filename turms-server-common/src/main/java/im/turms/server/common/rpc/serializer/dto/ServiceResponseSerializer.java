@@ -47,6 +47,7 @@ public class ServiceResponseSerializer implements Serializer<ServiceResponse> {
         if (input.readableBytes() > 0) {
             ByteBuf dataBuffer = input.slice();
             try {
+                // Note that "parseFrom" won't block because the buffer is fully read
                 data = TurmsNotification.Data.parseFrom(dataBuffer.nioBuffer());
             } catch (InvalidProtocolBufferException e) {
                 throw Exceptions.propagate(e);

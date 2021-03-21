@@ -73,6 +73,9 @@ public class UserRelationshipGroupService {
     private final UserVersionService userVersionService;
     private final UserRelationshipService userRelationshipService;
 
+    /**
+     * @param userRelationshipService is lazy because: UserRelationshipService -> UserRelationshipGroupService -> UserRelationshipService
+     */
     public UserRelationshipGroupService(
             Node node,
             @Qualifier("userMongoClient") TurmsMongoClient mongoClient,

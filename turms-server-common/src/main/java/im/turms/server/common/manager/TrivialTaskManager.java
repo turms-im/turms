@@ -32,9 +32,9 @@ import java.util.concurrent.ScheduledFuture;
 @Component
 public class TrivialTaskManager {
 
-    Map<String, ScheduledFuture<?>> scheduledTaskMap;
+    private final Map<String, ScheduledFuture<?>> scheduledTaskMap;
 
-    TaskScheduler taskScheduler;
+    private final TaskScheduler taskScheduler;
 
     public TrivialTaskManager() {
         scheduledTaskMap = new ConcurrentHashMap<>();

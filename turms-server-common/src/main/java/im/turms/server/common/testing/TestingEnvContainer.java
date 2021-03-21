@@ -28,7 +28,7 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
         super(getComposeFile());
         withExposedService(MONGO_SERVICE_NAME, MONGO_SERVICE_PORT);
         withExposedService(REDIS_SERVICE_NAME, REDIS_SERVICE_PORT);
-        // FIXME: testcontainers emits the actual STDIN string as the STDERR string
+        // FIXME: testcontainers emits the actual STDOUT string as the STDERR string
         withLogConsumer(MONGO_SERVICE_NAME, new ServiceLogConsumer(MONGO_SERVICE_NAME));
         withLogConsumer(REDIS_SERVICE_NAME, new ServiceLogConsumer(REDIS_SERVICE_NAME));
         // Wait for the shard server to join the cluster, or it will throw "No Shards Found" error

@@ -335,9 +335,9 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
      */
 
     @Override
-    public Mono<Long> countDistinct(Class<?> clazz,
-                                    Filter filter,
-                                    String groupByFieldName) {
+    public <T> Mono<Long> countDistinct(Class<T> clazz,
+                                        Filter filter,
+                                        String groupByFieldName) {
         MongoCollection<?> collection = context.getCollection(clazz);
         List<Bson> pipeline = List.of(
                 Aggregates.match(filter.asDocument()),

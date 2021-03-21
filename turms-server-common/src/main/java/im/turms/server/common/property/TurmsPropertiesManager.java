@@ -17,7 +17,6 @@
 
 package im.turms.server.common.property;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.context.ApplicationContext;
 import im.turms.server.common.util.PropertiesUtil;
@@ -53,8 +52,10 @@ public class TurmsPropertiesManager {
     private Node node;
     private TurmsProperties localTurmsProperties;
 
-    public TurmsPropertiesManager(@Lazy Node node, TurmsProperties localTurmsProperties, ApplicationContext context)
-            throws JsonProcessingException {
+    /**
+     * @param node is lazy because: Node -> TurmsPropertiesManager -> Node
+     */
+    public TurmsPropertiesManager(@Lazy Node node, TurmsProperties localTurmsProperties, ApplicationContext context) {
         this.node = node;
         this.localTurmsProperties = localTurmsProperties;
         // Get latestConfigFilePath according to the active profiles

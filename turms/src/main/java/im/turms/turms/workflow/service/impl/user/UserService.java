@@ -51,7 +51,6 @@ import im.turms.turms.workflow.service.util.DomainConstraintUtil;
 import io.micrometer.core.instrument.Counter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -91,7 +90,7 @@ public class UserService {
             @Qualifier("userMongoClient") TurmsMongoClient mongoClient,
             PasswordManager passwordManager,
             UserRelationshipService userRelationshipService,
-            @Lazy GroupMemberService groupMemberService,
+            GroupMemberService groupMemberService,
             UserVersionService userVersionService,
             UserRelationshipGroupService userRelationshipGroupService,
             SessionService sessionService,
@@ -112,9 +111,6 @@ public class UserService {
         deletedUsersCounter = metricsService.getRegistry().counter(MetricsConstant.DELETED_USERS_COUNTER_NAME);
     }
 
-    /**
-     * @return
-     */
     public Mono<ServicePermission> isAllowedToSendMessageToTarget(
             @NotNull Boolean isGroupMessage,
             @NotNull Boolean isSystemMessage,
@@ -410,7 +406,7 @@ public class UserService {
                 .eqIfFalse(User.Fields.DELETION_DATE, null, queryDeletedRecords);
         QueryOptions options = QueryOptions.newBuilder()
                 .paginateIfNotNull(page, size);
-        return mongoClient.findMany(User.class, filter);
+        return mongoClient.findMany(User.class, filter, options);
     }
 
     public Mono<Long> countRegisteredUsers(@Nullable DateRange dateRange, boolean queryDeletedRecords) {

@@ -54,7 +54,6 @@ import io.micrometer.core.instrument.Counter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -102,7 +101,7 @@ public class GroupService {
     public GroupService(
             Node node,
             @Qualifier("groupMongoClient") TurmsMongoClient mongoClient,
-            @Lazy GroupMemberService groupMemberService,
+            GroupMemberService groupMemberService,
             GroupTypeService groupTypeService,
             UserVersionService userVersionService,
             GroupVersionService groupVersionService,

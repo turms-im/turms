@@ -49,6 +49,7 @@ import im.turms.turms.workflow.service.util.DomainConstraintUtil;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -80,10 +81,13 @@ public class GroupMemberService {
     private final GroupVersionService groupVersionService;
     private final UserStatusService userStatusService;
 
+    /**
+     * @param groupService is lazy because: GroupService -> GroupMemberService -> GroupService
+     */
     public GroupMemberService(
             Node node,
             @Qualifier("groupMongoClient") TurmsMongoClient mongoClient,
-            GroupService groupService,
+            @Lazy GroupService groupService,
             GroupVersionService groupVersionService,
             UserStatusService userStatusService) {
         this.mongoClient = mongoClient;

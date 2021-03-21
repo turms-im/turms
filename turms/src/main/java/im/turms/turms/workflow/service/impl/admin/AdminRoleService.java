@@ -74,6 +74,9 @@ public class AdminRoleService {
     private final TurmsMongoClient mongoClient;
     private final AdminService adminService;
 
+    /**
+     * @param adminService is lazy because: AdminService -> AdminRoleService -> AdminService
+     */
     public AdminRoleService(@Qualifier("adminMongoClient") TurmsMongoClient mongoClient,
                             @Lazy AdminService adminService) {
         this.mongoClient = mongoClient;
