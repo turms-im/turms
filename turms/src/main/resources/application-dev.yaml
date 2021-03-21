@@ -24,6 +24,8 @@ turms:
           - category: all
         included-notification-categories:
           - category: all
+    message:
+      check-if-target-active-and-not-deleted: false
     mock:
       enabled: true
       clear-all-collections-before-mocking: true

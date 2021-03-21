@@ -89,9 +89,6 @@ turms:
         key-store-type: PKCS12
         key-store-password: imturms
         key-alias: turms
-  service:
-    message:
-      check-if-target-active-and-not-deleted: false
 #turms-plugin:
 #  mock:
 #    enabled: true

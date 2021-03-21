@@ -17,7 +17,6 @@
 
 package im.turms.turms.openapi;
 
-import im.turms.server.common.property.TurmsPropertiesManager;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
@@ -45,7 +44,7 @@ public class OpenApiConfig {
     }
 
     @Bean
-    public OpenApiCustomiser schemaCustomizer(TurmsPropertiesManager turmsPropertiesManager) {
+    public OpenApiCustomiser schemaCustomizer() {
         return openApi -> {
             Info info = new Info().title(PROJECT_NAME)
                     .version(projectVersion);
