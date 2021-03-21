@@ -32,7 +32,7 @@ COPY --from=layers-builder /build/application/ ./
 
 # RPC
 EXPOSE 7510
-# Admin APIs
+# Metrics APIs + Admin APIs
 EXPOSE 8510
 
 RUN ["chmod", "+x", "./bin/turms.sh"]

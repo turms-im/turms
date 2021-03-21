@@ -33,8 +33,6 @@ spring:
       prod:
         - prod
         - prod-latest
-  hazelcast:
-    config: classpath:hazelcast.yaml
   boot:
     admin:
       client:

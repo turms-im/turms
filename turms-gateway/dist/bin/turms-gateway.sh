@@ -61,7 +61,7 @@ if [ -z "$TURMS_GATEWAY_HOME" ]; then
   TURMS_GATEWAY_HOME=$(dirname "$TURMS_GATEWAY_HOME")
 fi
 
-TURMS_GATEWAY_LIBRARY=".:$TURMS_GATEWAY_HOME/lib/*"
+TURMS_GATEWAY_LIB=".:$TURMS_GATEWAY_HOME/lib/*"
 
 if [ -z "$TURMS_GATEWAY_PATH_CONF" ]; then TURMS_GATEWAY_PATH_CONF="$TURMS_GATEWAY_HOME"/config; fi
 
@@ -75,7 +75,7 @@ TURMS_GATEWAY_PATH_CONF=$(
   pwd
 )
 TURMS_GATEWAY_APP_CONF="$TURMS_GATEWAY_PATH_CONF"/application.yaml
-TURMS_GATEWAY_JVM_OPTIONS="$TURMS_GATEWAY_PATH_CONF"/jvm.options
+TURMS_GATEWAY_JVM_CONF="$TURMS_GATEWAY_PATH_CONF"/jvm.options
 
 cd "$TURMS_GATEWAY_HOME"
 
@@ -84,8 +84,9 @@ echo "Current environment:"
 echo "JAVA_HOME: $JAVA"
 echo "TURMS_GATEWAY_HOME: $TURMS_GATEWAY_HOME"
 echo "TURMS_GATEWAY_APP_CONF: $TURMS_GATEWAY_APP_CONF"
-echo "TURMS_GATEWAY_JVM_OPTIONS: $TURMS_GATEWAY_JVM_OPTIONS"
-echo "TURMS_GATEWAY_LIBRARY: $TURMS_GATEWAY_LIBRARY"
+echo "TURMS_GATEWAY_JVM_CONF: $TURMS_GATEWAY_JVM_CONF"
+echo "TURMS_GATEWAY_JVM_OPTS: $TURMS_GATEWAY_JVM_OPTS"
+echo "TURMS_GATEWAY_LIB: $TURMS_GATEWAY_LIB"
 
 # Parse options
 
@@ -102,8 +103,9 @@ for option in "$@"; do
   esac
 done
 
-JVM_OPTIONS="$(tr -d "\r" < "$TURMS_GATEWAY_JVM_OPTIONS" | grep -v "^#" | tr "\n" " " | tr -s " ")"
+JVM_OPTIONS="$(tr -d "\r" < "$TURMS_GATEWAY_JVM_CONF" | grep -v "^#" | tr "\n" " " | tr -s " ")"
 JVM_OPTIONS+=" -Dspring.config.location=$TURMS_GATEWAY_APP_CONF"
+JVM_OPTIONS+=" ${TURMS_GATEWAY_JVM_OPTS}"
 
 MAIN_CLASS="im.turms.turms.TurmsGatewayApplication"
 if [ "$USE_FAT_JAR" = true ]; then
@@ -116,7 +118,7 @@ if [ "$DAEMONIZE" = true ]; then
   exec \
     "$JAVA" \
     $JVM_OPTIONS \
-    -cp "$TURMS_GATEWAY_LIBRARY" \
+    -cp "$TURMS_GATEWAY_LIB" \
     "$MAIN_CLASS" \
     "$@" \
     <&- &
@@ -126,7 +128,7 @@ else
   exec \
     "$JAVA" \
     $JVM_OPTIONS \
-    -cp "$TURMS_GATEWAY_LIBRARY" \
+    -cp "$TURMS_GATEWAY_LIB" \
     "$MAIN_CLASS" \
     "$@"
   set +x

@@ -61,7 +61,7 @@ if [ -z "$TURMS_HOME" ]; then
   TURMS_HOME=$(dirname "$TURMS_HOME")
 fi
 
-TURMS_LIBRARY=".:$TURMS_HOME/lib/*"
+TURMS_LIB=".:$TURMS_HOME/lib/*"
 
 if [ -z "$TURMS_PATH_CONF" ]; then TURMS_PATH_CONF="$TURMS_HOME"/config; fi
 
@@ -75,7 +75,7 @@ TURMS_PATH_CONF=$(
   pwd
 )
 TURMS_APP_CONF="$TURMS_PATH_CONF"/application.yaml
-TURMS_JVM_OPTIONS="$TURMS_PATH_CONF"/jvm.options
+TURMS_JVM_CONF="$TURMS_PATH_CONF"/jvm.options
 
 cd "$TURMS_HOME"
 
@@ -84,8 +84,9 @@ echo "Current environment:"
 echo "JAVA_HOME: $JAVA"
 echo "TURMS_HOME: $TURMS_HOME"
 echo "TURMS_APP_CONF: $TURMS_APP_CONF"
-echo "TURMS_JVM_OPTIONS: $TURMS_JVM_OPTIONS"
-echo "TURMS_LIBRARY: $TURMS_LIBRARY"
+echo "TURMS_JVM_CONF: $TURMS_JVM_CONF"
+echo "TURMS_JVM_OPTS: $TURMS_JVM_OPTS"
+echo "TURMS_LIB: $TURMS_LIB"
 
 # Parse options
 
@@ -102,8 +103,9 @@ for option in "$@"; do
   esac
 done
 
-JVM_OPTIONS="$(tr -d "\r" < "$TURMS_JVM_OPTIONS" | grep -v "^#" | tr "\n" " " | tr -s " ")"
+JVM_OPTIONS="$(tr -d "\r" < "$TURMS_JVM_CONF" | grep -v "^#" | tr "\n" " " | tr -s " ")"
 JVM_OPTIONS+=" -Dspring.config.location=$TURMS_APP_CONF"
+JVM_OPTIONS+=" ${TURMS_JVM_OPTS}"
 
 MAIN_CLASS="im.turms.turms.TurmsApplication"
 if [ "$USE_FAT_JAR" = true ]; then
@@ -116,7 +118,7 @@ if [ "$DAEMONIZE" = true ]; then
   exec \
     "$JAVA" \
     $JVM_OPTIONS \
-    -cp "$TURMS_LIBRARY" \
+    -cp "$TURMS_LIB" \
     "$MAIN_CLASS" \
     "$@" \
     <&- &
@@ -126,7 +128,7 @@ else
   exec \
     "$JAVA" \
     $JVM_OPTIONS \
-    -cp "$TURMS_LIBRARY" \
+    -cp "$TURMS_LIB" \
     "$MAIN_CLASS" \
     "$@"
   set +x

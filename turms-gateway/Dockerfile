@@ -32,7 +32,7 @@ COPY --from=layers-builder /build/application/ ./
 
 # RPC
 EXPOSE 7510
-# Metrics APIs + Admin APIs
+# Metrics APIs
 EXPOSE 9510
 # WebSocket
 EXPOSE 10510
