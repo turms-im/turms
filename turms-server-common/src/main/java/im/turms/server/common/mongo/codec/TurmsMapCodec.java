@@ -30,12 +30,12 @@ import java.util.Map;
 /**
  * @author James Chen
  */
-public class TurmsMapCodec extends MongoCodec<Map> {
+public class TurmsMapCodec<K, V> extends MongoCodec<Map> {
 
-    private final Class keyClass;
-    private final Class valueClass;
+    private final Class<K> keyClass;
+    private final Class<V> valueClass;
 
-    public TurmsMapCodec(Class keyClass, Class valueClass) {
+    public TurmsMapCodec(Class<K> keyClass, Class<V> valueClass) {
         super(Map.class);
         this.keyClass = keyClass;
         this.valueClass = valueClass;
@@ -61,39 +61,38 @@ public class TurmsMapCodec extends MongoCodec<Map> {
         Map map = new HashMap<>(32);
         reader.readStartDocument();
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
-            Codec<String> keyCodec = registry.get(String.class);
-            String key = keyCodec.decode(reader, decoderContext);
-            Codec valueCodec = registry.get(valueClass);
-            Object value = valueCodec.decode(reader, decoderContext);
-            map.put(toObject(keyClass, key), value);
+            String key = reader.readName();
+            Codec<V> valueCodec = registry.get(valueClass);
+            V value = valueCodec.decode(reader, decoderContext);
+            map.put(parseKeyStr(key, keyClass), value);
         }
         reader.readEndDocument();
         return map;
     }
 
-    private Object toObject(Class clazz, String value) {
-        if (String.class == clazz) {
+    private Object parseKeyStr(String value, Class<?> keyClass) {
+        if (String.class == keyClass) {
             return value;
         }
-        if (Boolean.class == clazz) {
+        if (Boolean.class == keyClass) {
             return Boolean.parseBoolean(value);
         }
-        if (Byte.class == clazz) {
+        if (Byte.class == keyClass) {
             return Byte.parseByte(value);
         }
-        if (Short.class == clazz) {
+        if (Short.class == keyClass) {
             return Short.parseShort(value);
         }
-        if (Integer.class == clazz) {
+        if (Integer.class == keyClass) {
             return Integer.parseInt(value);
         }
-        if (Long.class == clazz) {
+        if (Long.class == keyClass) {
             return Long.parseLong(value);
         }
-        if (Float.class == clazz) {
+        if (Float.class == keyClass) {
             return Float.parseFloat(value);
         }
-        if (Double.class == clazz) {
+        if (Double.class == keyClass) {
             return Double.parseDouble(value);
         }
         return value;
