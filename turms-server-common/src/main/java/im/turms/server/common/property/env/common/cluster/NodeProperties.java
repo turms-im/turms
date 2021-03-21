@@ -36,8 +36,6 @@ public class NodeProperties {
     @Description("e.g. \"turms001\", \"turms002\"")
     private String id = "";
 
-    private String version = "";
-
     @NestedConfigurationProperty
     private NetworkProperties network = new NetworkProperties();
 

@@ -5,8 +5,6 @@ server:
 
 turms:
   cluster:
-    node:
-      version: @project.version@
     discovery:
       client-ssl:
         enabled: false # Enable SSL if needed

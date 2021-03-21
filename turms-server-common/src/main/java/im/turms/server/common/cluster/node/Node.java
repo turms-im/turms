@@ -42,6 +42,7 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.boot.web.server.Ssl;
 import org.springframework.context.ApplicationContext;
 import reactor.netty.ChannelBindException;
@@ -95,6 +96,7 @@ public class Node {
      */
     public Node(
             ApplicationContext context,
+            BuildProperties buildProperties,
             NodeType nodeType,
             TurmsPropertiesManager turmsPropertiesManager,
             BaseServiceAddressManager serviceAddressManager) {
@@ -110,7 +112,7 @@ public class Node {
 
         NodeVersion nodeVersion;
         try {
-            String version = nodeProperties.getVersion();
+            String version = buildProperties.getVersion();
             nodeVersion = NodeVersion.parse(version);
             log.info("The local node version is {}", version);
         } catch (Exception e) {

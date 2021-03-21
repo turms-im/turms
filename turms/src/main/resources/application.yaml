@@ -73,8 +73,6 @@ springdoc:
 
 turms:
   cluster:
-    node:
-      version: @project.version@
     id: turms
     discovery:
       client-ssl:

@@ -22,6 +22,7 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springdoc.core.customizers.OpenApiCustomiser;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -37,12 +38,17 @@ import java.util.List;
 public class OpenApiConfig {
 
     private static final String PROJECT_NAME = "Turms";
+    private final String projectVersion;
+
+    public OpenApiConfig(BuildProperties properties) {
+        projectVersion = properties.getVersion();
+    }
 
     @Bean
     public OpenApiCustomiser schemaCustomizer(TurmsPropertiesManager turmsPropertiesManager) {
         return openApi -> {
             Info info = new Info().title(PROJECT_NAME)
-                    .version(turmsPropertiesManager.getLocalProperties().getCluster().getNode().getVersion());
+                    .version(projectVersion);
             SecurityScheme securityScheme = new SecurityScheme()
                     .name("basicAuth")
                     .scheme("basic")
