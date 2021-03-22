@@ -400,10 +400,10 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         String namespace = String.format("%s.%s", dbName, entity.getCollectionName());
         Mono<Document> shardCollection = Mono.from(adminDatabase.runCommand(new Document("shardCollection", namespace)
                 .append("key", shardKey)))
-                .doOnError(throwable -> log
-                        .error("Failed to shard the collection {} with the shard key {}", namespace, shardKey.toJson(), throwable))
-                .doOnSuccess(
-                        ignored -> log.info("Shard the collection {} with the shard key {} successfully", namespace, shardKey.toJson()));
+                .doOnError(throwable ->
+                        log.error("Failed to shard the collection {} with the shard key {}", namespace, shardKey.toJson(), throwable))
+                .doOnSuccess(ignored ->
+                        log.info("Shard the collection {} with the shard key {} successfully", namespace, shardKey.toJson()));
         return shardCollection.then();
     }
 
@@ -455,8 +455,8 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     public Mono<Boolean> collectionExists(Class<?> clazz) {
         MongoEntity<?> entity = context.getEntity(clazz);
         return Flux.from(context.getDatabase().listCollectionNames())
-                .filter(s -> s.equals(entity.getCollectionName()))
-                .map(s -> true)
+                .filter(name -> name.equals(entity.getCollectionName()))
+                .map(name -> true)
                 .single(false);
     }
 

@@ -191,9 +191,7 @@ public class DiscoveryService implements ClusterService {
 
     @Override
     public void start() {
-        // Leadership
         listenLeadershipChangeEvent();
-        localNodeStatusManager.tryBecomeLeader().block();
 
         // Members
         listenMembersChangeEvent();
@@ -203,13 +201,16 @@ public class DiscoveryService implements ClusterService {
         Member localMember = localNodeStatusManager.getLocalMember();
         for (Member member : memberList) {
             if (localMember.isSameNode(member)) {
-                String message = "Failed to bootstrap the local node because the local node has been registered: " + member;
+                String message = "Failed to bootstrap the local node because the local node has been registered: "
+                        + "[Local Node]: " + localMember + ", "
+                        + "[Registered Node]" + member;
                 throw new IllegalStateException(message);
             }
             onAddOrUpdateMember(member);
         }
 
         localNodeStatusManager.registerLocalMember().block(CRUD_TIMEOUT_DURATION);
+        localNodeStatusManager.tryBecomeLeader().block();
         localNodeStatusManager.startHeartbeat();
     }
 
