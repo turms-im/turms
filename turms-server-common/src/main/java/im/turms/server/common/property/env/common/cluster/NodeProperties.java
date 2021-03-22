@@ -46,7 +46,7 @@ public class NodeProperties {
 
     @Data
     public static class NetworkProperties {
-        private String host = "127.0.0.1";
+        private String host = "0.0.0.0";
         private int port = 7510;
         private boolean autoIncrement = true;
         private int portCount = 100;
