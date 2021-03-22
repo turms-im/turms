@@ -46,8 +46,8 @@ public abstract class BaseServiceAddressManager {
 
     protected BaseServiceAddressManager(PublicIpManager publicIpManager, TurmsProperties propertiesForMemberBindHost) {
         this.publicIpManager = publicIpManager;
-        memberAddressProperties = propertiesForMemberBindHost.getCluster().getDiscovery().getAddress();
         memberBindHost = propertiesForMemberBindHost.getCluster().getNode().getNetwork().getHost();
+        updateMemberHostIfChanged(propertiesForMemberBindHost);
     }
 
     public void addOnAddressesChangedListener(Consumer<AddressCollection> listener) {
@@ -80,10 +80,10 @@ public abstract class BaseServiceAddressManager {
 
     protected boolean updateMemberHostIfChanged(TurmsProperties newProperties) {
         AddressProperties newAddressProperties = newProperties.getCluster().getDiscovery().getAddress();
-        boolean isAddressPropertiesChanged = !memberAddressProperties.equals(newAddressProperties);
+        boolean isAddressPropertiesChanged = !newAddressProperties.equals(memberAddressProperties);
         if (isAddressPropertiesChanged) {
             try {
-                getAddressCollector(newAddressProperties, memberBindHost, null, null);
+                memberHost = getAddressCollector(newAddressProperties, memberBindHost, null, null).getHost();
                 memberAddressProperties = newAddressProperties;
                 return true;
             } catch (UnknownHostException e) {

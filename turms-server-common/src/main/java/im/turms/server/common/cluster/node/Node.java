@@ -147,7 +147,6 @@ public class Node {
                 nodeVersion,
                 nodeType == NodeType.SERVICE && nodeProperties.isLeaderEligible(),
                 nodeProperties.isActiveByDefault(),
-                address.getHostString(),
                 address.getPort(),
                 discoveryProperties,
                 serviceAddressManager,
