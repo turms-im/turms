@@ -1,0 +1,25 @@
+name: Publish turms
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  publish:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: master
+
+      - name: Build turms image
+        run: DOCKER_BUILDKIT=1 docker build --rm=false -t "ghcr.io/turms-im/turms:latest" -f turms/Dockerfile .
+
+      - name: Docker login
+        run: docker login ghcr.io -u $GITHUB_ACTOR -p $GITHUB_TOKEN
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Publish turms
+        run: docker push "ghcr.io/turms-im/turms:latest"
