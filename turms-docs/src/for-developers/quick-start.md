@@ -2,7 +2,19 @@
 
 若您网络畅通，第一次完成以下全部操作大概需要花费10~30分钟。当您熟练之后，可在1~3分钟完成各种集群的部署工作。
 
-## 步骤
+## 全自动搭建步骤
+
+通过以下命令，可以全自动地搭建一套完整的Turms最小集群（包含turms、turms-gateway与turms-admin）及其依赖服务端（MongoDB分片集群与Redis）
+
+```bash
+git clone --depth 1 https://github.com/turms-im/turms.git
+cd turms
+docker-compose -f docker-compose.standalone.yml up --force-recreate
+```
+
+等集群完成搭建后，可以通过“http://localhost:6510”访问turms-admin后台管理系统，并输入账号密码（默认均为“turms”）。如果登录成功，则说明turms服务端也已经成功启动。
+
+## 手动搭建步骤
 
 1. MongoDB集群搭建（用于业务数据存储、服务发现、配置管理）
 

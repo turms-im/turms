@@ -13,7 +13,19 @@ Turms是一套全球范围内最为先进的开源即时通讯引擎。
 * turms-admin的Demo地址（Prod配置）：~~http://47.99.56.54:9512/~~
 （租约到期，等发布v0.10.0时再提供在线Demo）：登陆turms-admin时，在turms服务端地址栏处输入：http://120.24.57.206:9510/ ，且账号与密码均为：guest。该账号有查询与增加领域模型的权限，无更新与删除领域模型的权限
 
-您还可以使用任意turms-client(java/js/swift)客户端，来登录该turms服务端，并与其他用户进行各种交互。
+您还可以使用任意turms-client-(java/js/swift)客户端，来登录该turms服务端，并与其他用户进行各种交互。
+
+### Quick Start
+
+通过以下命令，可以全自动地搭建一套完整的Turms最小集群（包含turms、turms-gateway与turms-admin）及其依赖服务端（MongoDB分片集群与Redis）
+
+```bash
+git clone --depth 1 https://github.com/turms-im/turms.git
+cd turms
+docker-compose -f docker-compose.standalone.yml up --force-recreate
+```
+
+等集群完成搭建后，可以通过“http://localhost:6510”访问turms-admin后台管理系统，并输入账号密码（默认均为“turms”）。如果登录成功，则说明turms服务端也已经成功启动。
 
 ### 特性
 
