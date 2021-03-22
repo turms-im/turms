@@ -28,6 +28,7 @@ import im.turms.turms.workflow.service.impl.log.AdminActionLogService;
 import org.springdoc.core.SpringDocConfigProperties;
 import org.springdoc.webflux.api.OpenApiWebfluxResource;
 import org.springdoc.webflux.ui.SwaggerWelcomeWebFlux;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
@@ -78,13 +79,16 @@ public class ControllerFilter implements WebFilter {
     private final boolean enableAdminApi;
     private final boolean isOpenApiEnabled;
 
+    /**
+     * @param springDocConfigProperties {@link org.springdoc.core.SpringDocConfiguration}
+     */
     public ControllerFilter(
             Node node,
             RequestMappingHandlerMapping requestMappingHandlerMapping,
             AdminService adminService,
             AdminActionLogService adminActionLogService,
             TurmsPluginManager turmsPluginManager,
-            SpringDocConfigProperties springDocConfigProperties) {
+            @Autowired(required = false) SpringDocConfigProperties springDocConfigProperties) {
         this.requestMappingHandlerMapping = requestMappingHandlerMapping;
         this.adminService = adminService;
         this.adminActionLogService = adminActionLogService;
@@ -92,7 +96,7 @@ public class ControllerFilter implements WebFilter {
         this.turmsPluginManager = turmsPluginManager;
         pluginEnabled = node.getSharedProperties().getPlugin().isEnabled();
         enableAdminApi = node.getSharedProperties().getService().getAdminApi().isEnabled();
-        isOpenApiEnabled = springDocConfigProperties.getApiDocs().isEnabled();
+        isOpenApiEnabled = springDocConfigProperties != null && springDocConfigProperties.getApiDocs().isEnabled();
     }
 
     @Override
