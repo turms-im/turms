@@ -53,12 +53,4 @@ public class TurmsRedisProperties {
     @Transient
     private List<RedisProperties> location = REDIS_PROPERTIES_LIST;
 
-    @JsonIgnore
-    @Transient
-    private List<RedisProperties> loginFailureReason = REDIS_PROPERTIES_LIST;
-
-    @JsonIgnore
-    @Transient
-    private List<RedisProperties> sessionDisconnectionReason = REDIS_PROPERTIES_LIST;
-
 }
