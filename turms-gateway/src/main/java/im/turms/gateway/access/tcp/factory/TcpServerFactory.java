@@ -56,9 +56,7 @@ public final class TcpServerFactory {
                 // Don't set SO_SNDBUF and SO_RCVBUF because of
                 // the reasons mentioned in https://developer.aliyun.com/article/724580
                 .option(SO_REUSEADDR, true)
-                // large enough to handle bursts and GC pauses
-                // but don't set too large to prevent SYN-Flood attacks
-                .option(SO_BACKLOG, 4096)
+                .option(SO_BACKLOG, tcpProperties.getBacklog())
                 .childOption(SO_REUSEADDR, true)
                 .childOption(SO_LINGER, 0)
                 .childOption(TCP_NODELAY, false)

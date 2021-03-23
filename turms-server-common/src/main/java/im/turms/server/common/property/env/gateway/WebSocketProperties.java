@@ -35,6 +35,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class WebSocketProperties extends BaseServerProperties {
 
+    @Description("The maximum number of connection requests waiting in the backlog queue. " +
+            "Large enough to handle bursts and GC pauses " +
+            "but don't set too large to prevent SYN-Flood attacks")
+    private int backlog = 4096;
+
     /**
      * To mitigate the Slowloris DoS attack by lowering the timeout for the TCP connection handshake
      */

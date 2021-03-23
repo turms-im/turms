@@ -86,9 +86,7 @@ public final class WebSocketFactory {
                 .port(webSocketProperties.getPort())
                 .option(CONNECT_TIMEOUT_MILLIS, webSocketProperties.getConnectionTimeout())
                 .option(SO_REUSEADDR, true)
-                // large enough to handle bursts and GC pauses
-                // but don't set too large to prevent SYN-Flood attacks
-                .option(SO_BACKLOG, 4096)
+                .option(SO_BACKLOG, webSocketProperties.getBacklog())
                 .childOption(SO_REUSEADDR, true)
                 .childOption(SO_LINGER, 0)
                 .childOption(TCP_NODELAY, false)
