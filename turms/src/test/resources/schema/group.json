@@ -1,7 +1,7 @@
 {
-  "$jsonSchema":{
-    "bsonType":"object",
-    "required":[
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": [
       "cd",
       "ac",
       "ms",
@@ -12,36 +12,36 @@
       "annt",
       "cid"
     ],
-    "properties":{
+    "properties": {
       "_id": {
         "bsonType": "long"
       },
-      "cd":{
-        "bsonType":"date"
+      "cd": {
+        "bsonType": "date"
       },
-      "ac":{
-        "bsonType":"bool"
+      "ac": {
+        "bsonType": "bool"
       },
-      "ms":{
-        "bsonType":"int"
+      "ms": {
+        "bsonType": "int"
       },
-      "intro":{
-        "bsonType":"string"
+      "intro": {
+        "bsonType": "string"
       },
-      "oid":{
-        "bsonType":"long"
+      "oid": {
+        "bsonType": "long"
       },
-      "tid":{
-        "bsonType":"long"
+      "tid": {
+        "bsonType": "long"
       },
-      "n":{
-        "bsonType":"string"
+      "n": {
+        "bsonType": "string"
       },
-      "annt":{
-        "bsonType":"string"
+      "annt": {
+        "bsonType": "string"
       },
-      "cid":{
-        "bsonType":"long"
+      "cid": {
+        "bsonType": "long"
       }
     }
   }
