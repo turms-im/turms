@@ -426,7 +426,7 @@ public class DiscoveryService implements ClusterService {
                 .setIfNotNull(Member.Fields.isSeed, isSeed)
                 .setIfNotNull(Member.Fields.isLeaderEligible, isLeaderEligible)
                 .setIfNotNull(Member.Fields.isActive, isActive);
-        return sharedConfigService.upsert(Member.class, filter, update, member);
+        return sharedConfigService.upsert(filter, update, member);
     }
 
     // Event

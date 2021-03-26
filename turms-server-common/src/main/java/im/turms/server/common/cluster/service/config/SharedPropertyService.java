@@ -119,7 +119,7 @@ public class SharedPropertyService implements ClusterService {
         if (clusterProperties.getServiceProperties() != null) {
             update.set(SharedClusterProperties.Fields.serviceProperties, clusterProperties.getServiceProperties());
         }
-        return sharedConfigService.upsert(SharedClusterProperties.class, filter, update, clusterProperties)
+        return sharedConfigService.upsert(filter, update, clusterProperties)
                 .doOnError(e -> log.error("Failed to share new turms properties", e))
                 .then(Mono.defer(() -> {
                     sharedClusterProperties = clusterProperties;

@@ -84,7 +84,7 @@ public class LocalNodeStatusManager {
         Filter memberFilter = Filter.newBuilder()
                 .eq(Member.ID_CLUSTER_ID, localMember.getClusterId())
                 .eq(Member.ID_NODE_ID, nodeId);
-        return sharedConfigService.upsert(Member.class, memberFilter, update, localMember)
+        return sharedConfigService.upsert(memberFilter, update, localMember)
                 .doOnSuccess(unused -> isLocalNodeRegistered = true);
     }
 
@@ -201,7 +201,7 @@ public class LocalNodeStatusManager {
                 .eq("_id", localMember.getClusterId())
                 .eq(Leader.Fields.nodeId, localMember.getNodeId());
         Leader leader = discoveryService.getLeader();
-        return sharedConfigService.upsert(Leader.class, leaderFilter, update, leader);
+        return sharedConfigService.upsert(leaderFilter, update, leader);
     }
 
     private Mono<Void> updateFollowersStatus(Date lastHeartbeatDate) {
