@@ -71,7 +71,7 @@
 import Logo from '../common/logo';
 import Icon from '../common/icon';
 
-const DEFAULT_URL = 'http://localhost:8510';
+const DEFAULT_URL = `${window.location.protocol}//${window.location.hostname}:8510`;
 
 export default {
     name: 'login-modal',
@@ -91,8 +91,7 @@ export default {
                 account: this.$validator.create({required: true, noBlank: true}),
                 password: this.$validator.create({required: true, noBlank: true, maxNumber: 32})
             },
-            confirmLoading: false,
-            url: DEFAULT_URL
+            confirmLoading: false
         };
     },
     computed: {
