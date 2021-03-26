@@ -84,8 +84,8 @@ public class Filter {
         return this;
     }
 
-    public Filter gt(String key, Date date) {
-        document.append(key, new Document("$gt", date));
+    public Filter gt(String key, Object value) {
+        document.append(key, new Document("$gt", value));
         return this;
     }
 
@@ -106,8 +106,8 @@ public class Filter {
         return this;
     }
 
-    public Filter lt(String key, Date date) {
-        document.append(key, new Document("$lt", date));
+    public Filter lt(String key, Object value) {
+        document.append(key, new Document("$lt", value));
         return this;
     }
 
