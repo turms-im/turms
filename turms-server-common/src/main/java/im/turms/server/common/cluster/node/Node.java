@@ -218,7 +218,7 @@ public class Node {
     }
 
     public boolean isActive() {
-        return discoveryService.getLocalNodeStatusManager().getLocalMember().isActive();
+        return discoveryService.getLocalNodeStatusManager().getLocalMember().getStatus().isActive();
     }
 
     public long nextIncreasingId(ServiceType serviceType) {

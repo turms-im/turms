@@ -153,7 +153,7 @@ public class LocalNodeStatusManager {
                     }
                     Mono.when(monos)
                             .timeout(heartbeatInterval)
-                            .doOnSuccess(ignored -> localMember.setLastHeartbeatDate(now))
+                            .doOnSuccess(ignored -> localMember.getStatus().setLastHeartbeatDate(now))
                             .doOnError(e -> log.error("Failed to send heartbeat request", e))
                             .subscribe();
                 } catch (Exception e) {
@@ -170,15 +170,15 @@ public class LocalNodeStatusManager {
         this.localMember.updateIfNotNull(
                 member.isSeed(),
                 member.isLeaderEligible(),
-                member.isHasJoinedCluster(),
-                member.isActive(),
-                member.getLastHeartbeatDate(),
                 member.getMemberHost(),
                 member.getMetricsApiAddress(),
                 member.getAdminApiAddress(),
                 member.getWsAddress(),
                 member.getTcpAddress(),
-                member.getUdpAddress());
+                member.getUdpAddress(),
+                member.getStatus().isHealthy(),
+                member.getStatus().isActive(),
+                member.getStatus().getLastHeartbeatDate());
         if (isLeaderEligibleChanged) {
             if (isLeaderEligible) {
                 tryBecomeLeader().subscribe();
@@ -212,7 +212,8 @@ public class LocalNodeStatusManager {
         int availableMembersSize = 0;
         long lastHeartbeatTime = lastHeartbeatDate.getTime();
         for (Member knownMember : knownMembers) {
-            boolean isAvailable = (lastHeartbeatTime - knownMember.getLastHeartbeatDate().getTime()) < heartbeatTimeoutInMillis;
+            Date memberHeartbeat = knownMember.getStatus().getLastHeartbeatDate();
+            boolean isAvailable = memberHeartbeat != null && (lastHeartbeatTime - memberHeartbeat.getTime()) < heartbeatTimeoutInMillis;
             if (isAvailable) {
                 availableMemberNodeIds.add(knownMember.getNodeId());
                 availableMembersSize++;
@@ -238,7 +239,7 @@ public class LocalNodeStatusManager {
                 .in(Member.ID_NODE_ID, unavailableMemberNodeIds)
                 .eq(Member.ID_CLUSTER_ID, localMember.getClusterId());
         Update update = Update.newBuilder()
-                .set(Member.Fields.hasJoinedCluster, false);
+                .set(Member.STATUS_IS_HEALTHY, false);
         return sharedConfigService.updateMany(Member.class, filter, update).then();
     }
 
@@ -247,7 +248,7 @@ public class LocalNodeStatusManager {
                 .in(Member.ID_NODE_ID, availableMemberNodeIds)
                 .eq(Member.ID_CLUSTER_ID, localMember.getClusterId());
         Update update = Update.newBuilder()
-                .set(Member.Fields.hasJoinedCluster, true);
+                .set(Member.STATUS_IS_HEALTHY, true);
         return sharedConfigService.updateMany(Member.class, filter, update).then();
     }
 

@@ -23,6 +23,7 @@ import im.turms.server.common.cluster.node.NodeVersion;
 import im.turms.server.common.mongo.entity.annotation.Document;
 import im.turms.server.common.mongo.entity.annotation.Id;
 import im.turms.server.common.mongo.entity.annotation.Indexed;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldNameConstants;
@@ -33,14 +34,17 @@ import java.util.Date;
 /**
  * @author James Chen
  */
-@Document
 @Data
-@FieldNameConstants
+@Document
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@FieldNameConstants
 public final class Member {
 
     public static final String ID_CLUSTER_ID = "_id.clusterId";
     public static final String ID_NODE_ID = "_id.nodeId";
+    public static final String STATUS_IS_HEALTHY = Fields.status + "." + MemberStatus.Fields.isHealthy;
+    public static final String STATUS_IS_ACTIVE = Fields.status + "." + MemberStatus.Fields.isActive;
+    public static final String STATUS_LAST_HEARTBEAT_DATE = Fields.status + "." + MemberStatus.Fields.lastHeartbeatDate;
 
     @Id
     @EqualsAndHashCode.Include
@@ -51,23 +55,28 @@ public final class Member {
     private final NodeType nodeType;
 
     /**
-     * If it's a seed member, we won't remove the member record even if the heartbeat has timed out.
+     * For a seed member, it won't be removed from the config server even if TTL (60s) passed
+     * (TTL should be always longer than the heartbeat timeout).
      * Otherwise, the record will be removed automatically.
      */
     private boolean isSeed;
 
-    private boolean isLeaderEligible;
-
     private final Date registrationDate;
 
-    private final int priority;
+    /**
+     * Only active leader-eligible turms server (not turms-gateway) can be a leader
+     */
+    private boolean isLeaderEligible;
 
     /**
-     * Note that the TTL index isn't the heartbeat timeout but is only used to make sure
-     * the record can be removed automatically even if the turms server crashes
+     * The priority to be a leader.
+     * 1. When there is no leader, a qualified (active, leader-eligible, and nodeType=SERVICE) member
+     * with a highest priority will be selected as a leader.
+     * 2. When there is a leader, even if a new qualified member with a higher priority joins,
+     * the new member will NOT be elected as a new leader immediately until the existing leader dies,
+     * or a developer triggers a new leader election manually via admin API.
      */
-    @Indexed(partialFilter = "{" + Fields.isSeed + ":{$eq:false}}", expireAfterSeconds = 60)
-    private volatile Date lastHeartbeatDate;
+    private int priority;
 
     private String memberHost;
     private final int memberPort;
@@ -78,9 +87,7 @@ public final class Member {
     private String tcpAddress;
     private String udpAddress;
 
-    private boolean hasJoinedCluster;
-
-    private boolean isActive;
+    private final MemberStatus status;
 
     @PersistenceConstructor
     public Member(
@@ -91,7 +98,6 @@ public final class Member {
             boolean isLeaderEligible,
             Date registrationDate,
             int priority,
-            Date lastHeartbeatDate,
             String memberHost,
             int memberPort,
             String metricsApiAddress,
@@ -99,8 +105,7 @@ public final class Member {
             String wsAddress,
             String tcpAddress,
             String udpAddress,
-            boolean hasJoinedCluster,
-            boolean isActive) {
+            MemberStatus status) {
         this.key = key;
         this.nodeType = nodeType;
         this.nodeVersion = nodeVersion;
@@ -108,7 +113,6 @@ public final class Member {
         this.isLeaderEligible = isLeaderEligible;
         this.registrationDate = registrationDate;
         this.priority = priority;
-        this.lastHeartbeatDate = lastHeartbeatDate;
         this.memberHost = memberHost;
         this.memberPort = memberPort;
         this.metricsApiAddress = metricsApiAddress;
@@ -116,8 +120,7 @@ public final class Member {
         this.wsAddress = wsAddress;
         this.tcpAddress = tcpAddress;
         this.udpAddress = udpAddress;
-        this.hasJoinedCluster = hasJoinedCluster;
-        this.isActive = isActive;
+        this.status = status;
     }
 
     public Member(
@@ -145,7 +148,6 @@ public final class Member {
                 isLeaderEligible,
                 registrationDate,
                 priority,
-                registrationDate,
                 memberHost,
                 memberPort,
                 metricsApiAddress,
@@ -153,36 +155,31 @@ public final class Member {
                 wsAddress,
                 tcpAddress,
                 udpAddress,
-                hasJoinedCluster,
-                isActive);
+                new MemberStatus(hasJoinedCluster, isActive, new Date()));
     }
 
     public void updateIfNotNull(
             Boolean isSeed,
             Boolean isLeaderEligible,
-            Boolean hasJoinedCluster,
-            Boolean isActive,
-            Date lastHeartbeatDate,
+            Integer priority,
             String memberHost,
             String metricsApiAddress,
             String adminApiAddress,
             String wsAddress,
             String tcpAddress,
-            String udpAddress) {
+            String udpAddress,
+            // Status
+            Boolean hasJoinedCluster,
+            Boolean isActive,
+            Date lastHeartbeatDate) {
         if (isSeed != null) {
             this.isSeed = isSeed;
         }
         if (isLeaderEligible != null) {
             this.isLeaderEligible = isLeaderEligible;
         }
-        if (hasJoinedCluster != null) {
-            this.hasJoinedCluster = hasJoinedCluster;
-        }
-        if (isActive != null) {
-            this.isActive = isActive;
-        }
-        if (lastHeartbeatDate != null) {
-            this.lastHeartbeatDate = lastHeartbeatDate;
+        if (priority != null) {
+            this.priority = priority;
         }
         if (memberHost != null) {
             this.memberHost = memberHost;
@@ -201,6 +198,16 @@ public final class Member {
         }
         if (udpAddress != null) {
             this.udpAddress = udpAddress;
+        }
+        // Status
+        if (hasJoinedCluster != null) {
+            status.setHealthy(hasJoinedCluster);
+        }
+        if (isActive != null) {
+            status.setActive(isActive);
+        }
+        if (lastHeartbeatDate != null) {
+            status.setLastHeartbeatDate(lastHeartbeatDate);
         }
     }
 
@@ -236,6 +243,32 @@ public final class Member {
 
         @Indexed
         private final String nodeId;
+    }
+
+    @AllArgsConstructor
+    @Data
+    @FieldNameConstants
+    public static class MemberStatus {
+        /**
+         * True if the last heartbeat has not timed out.
+         * isHealthy only works as an indicate for node status,
+         * and it can still handle client requests even if a node isn't healthy.
+         */
+        private boolean isHealthy;
+
+        /**
+         * If a node isn't healthy, it cannot handle client requests.
+         * Developer can update the value via admin API.
+         * Useful for blue-green deployment.
+         */
+        private boolean isActive;
+
+        /**
+         * Note that the TTL index isn't the heartbeat timeout but is only used to make sure
+         * the record can be removed automatically even if the turms server crashes
+         */
+        @Indexed(partialFilter = "{" + Member.Fields.isSeed + ":{$eq:false}}", expireAfterSeconds = 60)
+        private volatile Date lastHeartbeatDate;
     }
 
 }

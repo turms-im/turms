@@ -250,35 +250,25 @@ public class DiscoveryService implements ClusterService {
     }
 
     private void listenMembersChangeEvent() {
-        sharedConfigService.subscribe(Member.class, FullDocument.UPDATE_LOOKUP)
+        // Because the information of members changes frequently due to lastHeartbeatDate,
+        // use DEFAULT instead of UPDATE_LOOKUP to reduce the overhead of data
+        sharedConfigService.subscribe(Member.class, FullDocument.DEFAULT)
                 .doOnNext(event -> {
                     Member changedMember = event.getFullDocument();
                     String clusterId = changedMember != null
                             ? changedMember.getClusterId()
                             : ChangeStreamUtil.getStringFromId(event.getDocumentKey(), Member.Key.Fields.clusterId);
+                    String nodeId = ChangeStreamUtil.getStringFromId(event.getDocumentKey(), Member.Key.Fields.nodeId);
                     if (clusterId.equals(localNodeStatusManager.getLocalMember().getClusterId())) {
                         switch (event.getOperationType()) {
                             case INSERT:
                             case REPLACE:
-                                onAddOrUpdateMember(changedMember);
+                                onMemberAddedOrReplaced(changedMember);
                                 break;
                             case UPDATE:
-                                Member memberToUpdate = allKnownMembers.get(changedMember.getNodeId());
-                                memberToUpdate.updateIfNotNull(
-                                        changedMember.isSeed(),
-                                        changedMember.isLeaderEligible(),
-                                        changedMember.isHasJoinedCluster(),
-                                        changedMember.isActive(),
-                                        changedMember.getLastHeartbeatDate(),
-                                        changedMember.getMemberHost(),
-                                        changedMember.getMetricsApiAddress(),
-                                        changedMember.getAdminApiAddress(),
-                                        changedMember.getWsAddress(),
-                                        changedMember.getTcpAddress(),
-                                        changedMember.getUdpAddress());
+                                onMemberUpdated(nodeId, event.getUpdateDescription());
                                 break;
                             case DELETE:
-                                String nodeId = ChangeStreamUtil.getStringFromId(event.getDocumentKey(), Member.Key.Fields.nodeId);
                                 Member deletedMember = allKnownMembers.remove(nodeId);
                                 updateOtherActiveConnectedMemberList(false, deletedMember, null);
                                 // Note that we assume that there is no the case:
@@ -305,17 +295,103 @@ public class DiscoveryService implements ClusterService {
                 .subscribe();
     }
 
-    private void onAddOrUpdateMember(Member member) {
+    private void onMemberUpdated(String nodeId, UpdateDescription updateDescription) {
+        // TODO: edge case for member not found
+        Member memberToUpdate = allKnownMembers.get(nodeId);
+        // Status
+        Boolean hasJoinedCluster = null;
+        Boolean isActive = null;
+        Date lastHeartbeatDate = null;
+        // Info
+        Boolean isSeed = null;
+        Boolean isLeaderEligible = null;
+        Integer priority = null;
+        String memberHost = null;
+        String metricsApiAddress = null;
+        String adminApiAddress = null;
+        String wsAddress = null;
+        String tcpAddress = null;
+        String udpAddress = null;
+        Set<Map.Entry<String, BsonValue>> entries = updateDescription.getUpdatedFields().entrySet();
+        for (Map.Entry<String, BsonValue> entry : entries) {
+            String fieldName = entry.getKey();
+            BsonValue value = entry.getValue();
+            // Check status change
+            if (fieldName.endsWith(Member.MemberStatus.Fields.lastHeartbeatDate)) {
+                lastHeartbeatDate = new Date(value.asDateTime().getValue());
+                continue;
+            }
+            if (fieldName.endsWith(Member.MemberStatus.Fields.isHealthy)) {
+                hasJoinedCluster = value.asBoolean().getValue();
+                continue;
+            }
+            if (fieldName.endsWith(Member.MemberStatus.Fields.isActive)) {
+                isActive = value.asBoolean().getValue();
+                continue;
+            }
+            // Check info
+            if (fieldName.equals(Member.Fields.isSeed)) {
+                isSeed = value.asBoolean().getValue();
+                continue;
+            }
+            if (fieldName.equals(Member.Fields.isLeaderEligible)) {
+                isLeaderEligible = value.asBoolean().getValue();
+                continue;
+            }
+            if (fieldName.equals(Member.Fields.priority)) {
+                priority = value.asInt32().getValue();
+                continue;
+            }
+            if (fieldName.equals(Member.Fields.memberHost)) {
+                memberHost = value.asString().getValue();
+                continue;
+            }
+            if (fieldName.equals(Member.Fields.metricsApiAddress)) {
+                metricsApiAddress = value.asString().getValue();
+                continue;
+            }
+            if (fieldName.equals(Member.Fields.adminApiAddress)) {
+                adminApiAddress = value.asString().getValue();
+                continue;
+            }
+            if (fieldName.equals(Member.Fields.wsAddress)) {
+                wsAddress = value.asString().getValue();
+                continue;
+            }
+            if (fieldName.equals(Member.Fields.tcpAddress)) {
+                tcpAddress = value.asString().getValue();
+                continue;
+            }
+            if (fieldName.equals(Member.Fields.udpAddress)) {
+                udpAddress = value.asString().getValue();
+            }
+        }
+        memberToUpdate.updateIfNotNull(
+                isSeed,
+                isLeaderEligible,
+                priority,
+                memberHost,
+                metricsApiAddress,
+                adminApiAddress,
+                wsAddress,
+                tcpAddress,
+                udpAddress,
+                hasJoinedCluster,
+                isActive,
+                lastHeartbeatDate);
+    }
+
+    private void onMemberAddedOrReplaced(Member newMember) {
         synchronized (this) {
-            String nodeId = member.getNodeId();
-            allKnownMembers.put(nodeId, member);
+            String nodeId = newMember.getNodeId();
+            allKnownMembers.put(nodeId, newMember);
             boolean isLocalNode = nodeId.equals(localNodeStatusManager.getLocalMember().getNodeId());
             if (isLocalNode) {
-                localNodeStatusManager.updateInfo(member);
+                localNodeStatusManager.updateInfo(newMember);
             }
-            RSocket connection = connectionManager.getMemberConnection(member.getNodeId());
-            if (member.isActive() && connection != null) {
-                updateOtherActiveConnectedMemberList(true, member, connection);
+            RSocket connection = connectionManager.getMemberConnection(newMember.getNodeId());
+            if (newMember.getStatus().isActive() && connection != null) {
+                updateOtherActiveConnectedMemberList(true, newMember, connection);
                 if (notifyMembersChangeFuture != null) {
                     notifyMembersChangeFuture.cancel(false);
                 }
@@ -325,7 +401,7 @@ public class DiscoveryService implements ClusterService {
                         TimeUnit.SECONDS);
             }
         }
-        connectionManager.connectMemberUntilSucceedOrRemoved(member);
+        connectionManager.connectMemberUntilSucceedOrRemoved(newMember);
     }
 
     private synchronized void updateActiveMembers(Collection<Member> allKnownMembers) {
@@ -335,7 +411,7 @@ public class DiscoveryService implements ClusterService {
         List<Member> tempActiveSortedServiceMemberList = new ArrayList<>(size);
         List<Member> tempActiveSortedGatewayMemberList = new ArrayList<>(size);
         for (Member member : list) {
-            if (member.isActive()) {
+            if (member.getStatus().isActive()) {
                 if (member.getNodeType() == NodeType.SERVICE) {
                     tempActiveSortedServiceMemberList.add(member);
                 } else {
