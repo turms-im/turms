@@ -93,7 +93,7 @@ public class UserFriendRequestService {
                 turmsPropertiesManager.getLocalProperties().getService().getUser().getFriendRequest()
                         .getExpiredUserFriendRequestsCheckerCron(),
                 () -> {
-                    if (node.isLocalNodeMaster()) {
+                    if (node.isLocalNodeLeader()) {
                         if (node.getSharedProperties().getService().getUser()
                                 .getFriendRequest().isDeleteExpiredRequestsWhenCronTriggered()) {
                             removeAllExpiredFriendRequests().subscribe();

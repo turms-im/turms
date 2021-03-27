@@ -20,7 +20,11 @@ package im.turms.turms.workflow.access.http.controller.cluster;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.cluster.node.NodeVersion;
+import im.turms.server.common.cluster.service.config.domain.discovery.Leader;
 import im.turms.server.common.cluster.service.config.domain.discovery.Member;
+import im.turms.server.common.cluster.service.discovery.DiscoveryService;
+import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.turms.workflow.access.http.dto.request.cluster.AddMemberDTO;
 import im.turms.turms.workflow.access.http.dto.request.cluster.UpdateMemberDTO;
 import im.turms.turms.workflow.access.http.dto.response.ResponseDTO;
@@ -41,6 +45,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import static im.turms.turms.workflow.access.http.permission.AdminPermission.CLUSTER_LEADER_QUERY;
+import static im.turms.turms.workflow.access.http.permission.AdminPermission.CLUSTER_LEADER_UPDATE;
 import static im.turms.turms.workflow.access.http.permission.AdminPermission.CLUSTER_MEMBERS_CREATE;
 import static im.turms.turms.workflow.access.http.permission.AdminPermission.CLUSTER_MEMBERS_DELETE;
 import static im.turms.turms.workflow.access.http.permission.AdminPermission.CLUSTER_MEMBERS_QUERY;
@@ -110,16 +116,33 @@ public class MemberController {
                 id,
                 updateMemberDTO.getIsSeed(),
                 updateMemberDTO.getIsLeaderEligible(),
-                updateMemberDTO.getIsActive());
+                updateMemberDTO.getIsActive(),
+                updateMemberDTO.getPriority());
         return addMemberMono.thenReturn(ResponseFactory.OK);
     }
 
-    @GetMapping("/master")
-    @RequiredPermission(CLUSTER_MEMBERS_QUERY)
-    public ResponseEntity<ResponseDTO<Member>> queryMaster() {
-        String nodeId = node.getDiscoveryService().getLeader().getNodeId();
-        Member master = node.getDiscoveryService().getAllKnownMembers().get(nodeId);
-        return ResponseFactory.okIfTruthy(master);
+    // Leader
+
+    @GetMapping("/leader")
+    @RequiredPermission(CLUSTER_LEADER_QUERY)
+    public ResponseEntity<ResponseDTO<Member>> queryLeader() {
+        DiscoveryService discoveryService = node.getDiscoveryService();
+        Leader leader = discoveryService.getLeader();
+        if (leader == null) {
+            throw TurmsBusinessException.get(TurmsStatusCode.NO_CONTENT);
+        }
+        String nodeId = leader.getNodeId();
+        Member member = discoveryService.getAllKnownMembers().get(nodeId);
+        return ResponseFactory.okIfTruthy(member);
+    }
+
+    @PostMapping("/leader")
+    @RequiredPermission(CLUSTER_LEADER_UPDATE)
+    public Mono<ResponseEntity<ResponseDTO<Member>>> electNewLeader(@RequestParam(required = false) String id) {
+        Mono<Member> leader = id == null
+                ? node.getDiscoveryService().electNewLeaderByPriority()
+                : node.getDiscoveryService().electNewLeaderByNodeId(id);
+        return ResponseFactory.okIfTruthy(leader);
     }
 
 }

@@ -27,4 +27,5 @@ public class UpdateMemberDTO {
     private final Boolean isSeed;
     private final Boolean isLeaderEligible;
     private final Boolean isActive;
+    private final Integer priority;
 }

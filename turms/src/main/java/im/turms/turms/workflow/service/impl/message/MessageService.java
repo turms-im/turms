@@ -152,7 +152,7 @@ public class MessageService {
                 "messagesChecker",
                 turmsPropertiesManager.getLocalProperties().getService().getMessage().getExpiredMessagesCheckerCron(),
                 () -> {
-                    if (node.isLocalNodeMaster()) {
+                    if (node.isLocalNodeLeader()) {
                         int messagesTimeToLiveHours = node.getSharedProperties()
                                 .getService()
                                 .getMessage()

@@ -54,7 +54,7 @@ public class StatisticsService {
                 turmsPropertiesManager.getLocalProperties().getService().getActivityLogging().getStatistics()
                         .getOnlineUsersNumberLoggingCron(),
                 () -> {
-                    if (node.isLocalNodeMaster() &&
+                    if (node.isLocalNodeLeader() &&
                             node.getSharedProperties().getService().getActivityLogging().getStatistics().isLogOnlineUsersNumber()) {
                         countOnlineUsers()
                                 .doOnNext(count -> log.info(ONLINE_USERS_NUMBER_LOGGING_FORMAT, count))

@@ -18,6 +18,7 @@
 package im.turms.server.common.cluster.service.discovery;
 
 import com.mongodb.client.model.changestream.FullDocument;
+import com.mongodb.client.model.changestream.UpdateDescription;
 import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.cluster.node.NodeVersion;
 import im.turms.server.common.cluster.service.ClusterService;
@@ -36,6 +37,7 @@ import io.netty.util.concurrent.DefaultThreadFactory;
 import io.rsocket.RSocket;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+import org.bson.BsonValue;
 import org.springframework.dao.DuplicateKeyException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -58,7 +60,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 /**
  * @author James Chen
@@ -67,17 +68,7 @@ import java.util.function.Consumer;
 public class DiscoveryService implements ClusterService {
 
     private static final Duration CRUD_TIMEOUT_DURATION = Duration.ofSeconds(10);
-    private static final Comparator<Member> MEMBER_PRIORITY_COMPARATOR = (m1, m2) -> {
-        int m1Priority = m1.getPriority();
-        int m2Priority = m2.getPriority();
-        if (m1Priority == m2Priority) {
-            // Don't use 0 to make sure that the order is consistent in every nodes
-            // and it should never happen
-            return m1.getNodeId().hashCode() < m2.getNodeId().hashCode() ? -1 : 1;
-        } else {
-            return m1Priority < m2Priority ? -1 : 1;
-        }
-    };
+    private static final Comparator<Member> MEMBER_PRIORITY_COMPARATOR = DiscoveryService::compareMemberPriority;
 
     @Getter
     private final ScheduledExecutorService scheduler =
@@ -96,6 +87,7 @@ public class DiscoveryService implements ClusterService {
      * Don't use volatile for better performance
      */
     @Getter
+    @Nullable
     private Leader leader;
 
     /**
@@ -187,6 +179,18 @@ public class DiscoveryService implements ClusterService {
         });
     }
 
+    private static int compareMemberPriority(Member m1, Member m2) {
+        int m1Priority = m1.getPriority();
+        int m2Priority = m2.getPriority();
+        if (m1Priority == m2Priority) {
+            // Don't use 0 to make sure that the order is consistent in every nodes
+            // and it should never happen
+            return m1.getNodeId().hashCode() < m2.getNodeId().hashCode() ? -1 : 1;
+        } else {
+            return m1Priority < m2Priority ? -1 : 1;
+        }
+    }
+
     @Override
     public void start() {
         listenLeadershipChangeEvent();
@@ -204,11 +208,13 @@ public class DiscoveryService implements ClusterService {
                         + "[Registered Node]" + member;
                 throw new IllegalStateException(message);
             }
-            onAddOrUpdateMember(member);
+            onMemberAddedOrReplaced(member);
         }
+        onMemberAddedOrReplaced(localMember);
+        updateActiveMembers(allKnownMembers.values());
 
         localNodeStatusManager.registerLocalMember().block(CRUD_TIMEOUT_DURATION);
-        localNodeStatusManager.tryBecomeLeader().block();
+        localNodeStatusManager.tryBecomeFirstLeader().block();
         localNodeStatusManager.startHeartbeat();
     }
 
@@ -238,7 +244,7 @@ public class DiscoveryService implements ClusterService {
                                 Mono.delay(Duration.ofSeconds(delay))
                                         .subscribe(ignored -> {
                                             if (leader == null) {
-                                                localNodeStatusManager.tryBecomeLeader().subscribe();
+                                                localNodeStatusManager.tryBecomeFirstLeader().subscribe();
                                             }
                                         });
                                 break;
@@ -489,7 +495,8 @@ public class DiscoveryService implements ClusterService {
     public Mono<Void> updateMemberInfo(@NotNull String id,
                                        @Nullable Boolean isSeed,
                                        @Nullable Boolean isLeaderEligible,
-                                       @Nullable Boolean isActive) {
+                                       @Nullable Boolean isActive,
+                                       @Nullable Integer priority) {
         Member member = allKnownMembers.get(id);
         if (member == null) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NO_CONTENT));
@@ -500,7 +507,10 @@ public class DiscoveryService implements ClusterService {
         Update update = Update.newBuilder()
                 .setIfNotNull(Member.Fields.isSeed, isSeed)
                 .setIfNotNull(Member.Fields.isLeaderEligible, isLeaderEligible)
-                .setIfNotNull(Member.Fields.isActive, isActive);
+                .setIfNotNull(Member.STATUS_IS_ACTIVE, isActive)
+                .setIfNotNull(Member.Fields.priority, priority);
+        // Note that we just need to update the member info in the config server
+        // and the listener to the change stream will do remaining jobs.
         return sharedConfigService.upsert(filter, update, member);
     }
 
@@ -524,6 +534,77 @@ public class DiscoveryService implements ClusterService {
 
     public boolean isKnownMember(String nodeId) {
         return allKnownMembers.containsKey(nodeId);
+    }
+
+    // Leader
+
+    /**
+     * @return members with the same highest priority
+     */
+    public List<Member> findQualifiedMembersToBeLeader() {
+        List<Member> members = new ArrayList<>(activeSortedServiceMemberList.size());
+        int highestPriority = Integer.MIN_VALUE;
+        for (Member member : activeSortedServiceMemberList) {
+            if (member.getPriority() < highestPriority) {
+                return members;
+            }
+            if (isQualifiedToBeLeader(member)) {
+                highestPriority = member.getPriority();
+                members.add(member);
+            }
+        }
+        return members;
+    }
+
+    /**
+     * @implNote Even a member with a lower priority is qualified to be a leader
+     */
+    public boolean isQualifiedToBeLeader(Member member) {
+        return member.getNodeType() == NodeType.SERVICE
+                && member.isLeaderEligible()
+                && member.getStatus().isActive();
+    }
+
+    public Mono<Member> electNewLeaderByMember(Member member) {
+        String clusterId = member.getClusterId();
+        String nodeId = member.getNodeId();
+        if (!isQualifiedToBeLeader(member)) {
+            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_QUALIFIED_MEMBER_TO_BE_LEADER));
+        }
+        int generation = leader == null ? 1 : leader.getGeneration() + 1;
+        Filter filter = Filter.newBuilder()
+                .eq(Leader.Fields.clusterId, clusterId)
+                .or(Filter.newBuilder().eq(Leader.Fields.generation, null),
+                        Filter.newBuilder().lt(Leader.Fields.generation, generation));
+        Date now = new Date();
+        Update update = Update.newBuilder()
+                .set(Leader.Fields.nodeId, nodeId)
+                .set(Leader.Fields.renewDate, now);
+        Leader localLeader = new Leader(clusterId, nodeId, now, generation);
+        return sharedConfigService.upsert(filter, update, localLeader).thenReturn(member);
+    }
+
+    public Mono<Member> electNewLeaderByNodeId(String nodeId) {
+        Member member = allKnownMembers.get(nodeId);
+        if (member == null) {
+            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NON_EXISTING_MEMBER_TO_BE_LEADER));
+        }
+        return electNewLeaderByMember(member);
+    }
+
+    public Mono<Member> electNewLeaderByPriority() {
+        List<Member> qualifiedMembers = findQualifiedMembersToBeLeader();
+        if (qualifiedMembers.isEmpty()) {
+            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NO_QUALIFIED_MEMBER_TO_BE_LEADER));
+        }
+        if (leader != null) {
+            for (Member qualifiedMember : qualifiedMembers) {
+                if (qualifiedMember.getNodeId().equals(leader.getNodeId())) {
+                    return Mono.just(qualifiedMember);
+                }
+            }
+        }
+        return electNewLeaderByNodeId(qualifiedMembers.get(0).getNodeId());
     }
 
 }

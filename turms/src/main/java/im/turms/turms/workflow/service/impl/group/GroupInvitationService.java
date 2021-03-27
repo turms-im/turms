@@ -96,7 +96,7 @@ public class GroupInvitationService {
                 "groupInvitationsChecker",
                 turmsPropertiesManager.getLocalProperties().getService().getGroup().getExpiredGroupInvitationsCheckerCron(),
                 () -> {
-                    if (node.isLocalNodeMaster()) {
+                    if (node.isLocalNodeLeader()) {
                         if (node.getSharedProperties().getService().getGroup()
                                 .isDeleteExpiredGroupInvitationsWhenCronTriggered()) {
                             removeAllExpiredGroupInvitations().subscribe();

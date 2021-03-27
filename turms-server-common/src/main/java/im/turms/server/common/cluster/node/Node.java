@@ -229,8 +229,8 @@ public class Node {
         return idService.nextRandomId(serviceType);
     }
 
-    public boolean isLocalNodeMaster() {
-        return discoveryService.getLocalNodeStatusManager().isLocalNodeMaster();
+    public boolean isLocalNodeLeader() {
+        return discoveryService.getLocalNodeStatusManager().isLocalNodeLeader();
     }
 
     public String getLocalMemberId() {

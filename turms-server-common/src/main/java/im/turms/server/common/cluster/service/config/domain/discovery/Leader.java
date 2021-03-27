@@ -28,19 +28,26 @@ import java.util.Date;
 /**
  * @author James Chen
  */
+@Data
 @Document
 @FieldNameConstants
-@Data
 public final class Leader {
 
-    private static final int LEADER_MAX_TTL = 60;
+    private static final int LEASE_DURATION = 60;
 
     @Id
     private final String clusterId;
 
     private final String nodeId;
 
-    @Indexed(expireAfterSeconds = LEADER_MAX_TTL)
-    private final Date lastHeartbeatDate;
+    @Indexed(expireAfterSeconds = LEASE_DURATION)
+    private final Date renewDate;
+
+    /**
+     * Start from 1.
+     * Used to prevent the previous leader tries to renew itself
+     * if it hasn't detected the leader change.
+     */
+    private final int generation;
 
 }

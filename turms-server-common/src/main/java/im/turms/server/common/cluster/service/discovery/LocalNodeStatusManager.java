@@ -17,7 +17,6 @@
 
 package im.turms.server.common.cluster.service.discovery;
 
-import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.cluster.service.config.SharedConfigService;
 import im.turms.server.common.cluster.service.config.domain.discovery.Leader;
 import im.turms.server.common.cluster.service.config.domain.discovery.Member;
@@ -109,10 +108,11 @@ public class LocalNodeStatusManager {
                 });
     }
 
-    public Mono<Void> tryBecomeLeader() {
-        if (localMember.getNodeType() == NodeType.SERVICE && localMember.isLeaderEligible()) {
+    public Mono<Void> tryBecomeFirstLeader() {
+        List<Member> qualifiedMembersToBeLeader = discoveryService.findQualifiedMembersToBeLeader();
+        if (qualifiedMembersToBeLeader.contains(localMember)) {
             String clusterId = localMember.getClusterId();
-            Leader localLeader = new Leader(clusterId, localMember.getNodeId(), new Date());
+            Leader localLeader = new Leader(clusterId, localMember.getNodeId(), new Date(), 1);
             return sharedConfigService.insert(localLeader)
                     .then()
                     .onErrorResume(DuplicateKeyException.class, t -> Mono.empty());
@@ -128,7 +128,7 @@ public class LocalNodeStatusManager {
         return sharedConfigService.remove(Leader.class, query).then();
     }
 
-    public boolean isLocalNodeMaster() {
+    public boolean isLocalNodeLeader() {
         Leader leader = discoveryService.getLeader();
         return leader != null
                 && leader.getNodeId().equals(localMember.getNodeId())
@@ -143,13 +143,13 @@ public class LocalNodeStatusManager {
                 }
                 try {
                     Date now = new Date();
-                    Update update = Update.newBuilder()
-                            .set(Member.Fields.lastHeartbeatDate, now);
-                    List<Mono<?>> monos = new ArrayList<>(3);
-                    monos.add(upsertLocalNodeInfo(update));
-                    if (isLocalNodeMaster()) {
-                        monos.add(updateLocalLeaderHeartbeat(now));
-                        monos.add(updateFollowersStatus(now));
+                    List<Mono<?>> monos = new ArrayList<>(2);
+                    monos.add(upsertLocalNodeInfo(Update.newBuilder()
+                            .set(Member.STATUS_LAST_HEARTBEAT_DATE, now)));
+                    if (isLocalNodeLeader()) {
+                        monos.add(renewLocalLeader(now).flatMap(isLeader -> {
+                            return isLeader ? updateMembersStatus(now) : Mono.empty();
+                        }));
                     }
                     Mono.when(monos)
                             .timeout(heartbeatInterval)
@@ -170,6 +170,7 @@ public class LocalNodeStatusManager {
         this.localMember.updateIfNotNull(
                 member.isSeed(),
                 member.isLeaderEligible(),
+                member.getPriority(),
                 member.getMemberHost(),
                 member.getMetricsApiAddress(),
                 member.getAdminApiAddress(),
@@ -181,33 +182,42 @@ public class LocalNodeStatusManager {
                 member.getStatus().getLastHeartbeatDate());
         if (isLeaderEligibleChanged) {
             if (isLeaderEligible) {
-                tryBecomeLeader().subscribe();
+                tryBecomeFirstLeader().subscribe();
             } else {
                 unregisterLocalMemberLeadership().subscribe();
             }
         }
     }
 
-    private Mono<Void> updateLocalLeaderHeartbeat(Date lastHeartbeatDate) {
-        Update update = Update.newBuilder()
-                .set(Leader.Fields.lastHeartbeatDate, lastHeartbeatDate);
-        Filter leaderFilter = Filter.newBuilder()
-                .eq("_id", localMember.getClusterId())
-                .eq(Leader.Fields.nodeId, localMember.getNodeId());
+    private Mono<Boolean> renewLocalLeader(Date renewDate) {
         Leader leader = discoveryService.getLeader();
-        return sharedConfigService.upsert(leaderFilter, update, leader);
+        if (leader == null) {
+            return Mono.just(false);
+        }
+        Filter filter = Filter.newBuilder()
+                .eq("_id", localMember.getClusterId())
+                .eq(Leader.Fields.nodeId, localMember.getNodeId())
+                .eq(Leader.Fields.generation, leader.getGeneration());
+        Update update = Update.newBuilder()
+                .set(Leader.Fields.renewDate, renewDate);
+        return sharedConfigService.updateOne(Leader.class, filter, update)
+                .flatMap(updateResult -> {
+                    // For cases: no leader or leader has changed
+                    if (updateResult.getMatchedCount() == 0) {
+                        return sharedConfigService.insert(leader)
+                                // True for the case: no leader
+                                .thenReturn(true)
+                                // False for the case: leader has changed
+                                .onErrorResume(DuplicateKeyException.class, e -> Mono.just(false));
+                    } else {
+                        return Mono.just(true);
+                    }
+                });
     }
 
-    private Mono<Void> updateFollowersStatus(Date lastHeartbeatDate) {
+    private Mono<Void> updateMembersStatus(Date lastHeartbeatDate) {
         Collection<Member> knownMembers = discoveryService.getAllKnownMembers().values();
-        if (knownMembers.isEmpty()) {
-            return Mono.empty();
-        }
         int knownMembersSize = knownMembers.size();
-        boolean hasOnlyLocalNode = knownMembersSize == 1 && knownMembers.iterator().next().isSameNode(localMember);
-        if (hasOnlyLocalNode) {
-            return Mono.empty();
-        }
         List<String> availableMemberNodeIds = new LinkedList<>();
         int availableMembersSize = 0;
         long lastHeartbeatTime = lastHeartbeatDate.getTime();

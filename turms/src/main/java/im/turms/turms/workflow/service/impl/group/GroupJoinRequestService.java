@@ -94,7 +94,7 @@ public class GroupJoinRequestService {
                 "groupJoinRequestsChecker",
                 turmsPropertiesManager.getLocalProperties().getService().getGroup().getExpiredGroupJoinRequestsCheckerCron(),
                 () -> {
-                    if (node.isLocalNodeMaster()) {
+                    if (node.isLocalNodeLeader()) {
                         if (node.getSharedProperties().getService().getGroup()
                                 .isDeleteExpiredGroupJoinRequestsWhenCronTriggered()) {
                             removeAllExpiredGroupJoinRequests().subscribe();

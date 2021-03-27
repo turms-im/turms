@@ -56,6 +56,11 @@ public enum TurmsStatusCode {
     // Admin
     UNAUTHORIZED(1300, "Unauthorized", 401),
 
+    // Cluster - Leader
+    NON_EXISTING_MEMBER_TO_BE_LEADER(1800, "Cannot find the node", 404),
+    NO_QUALIFIED_MEMBER_TO_BE_LEADER(1801, "No qualified node to be a leader", 503),
+    NOT_QUALIFIED_MEMBER_TO_BE_LEADER(1802, "Only qualified node (isLeaderEligible=true, nodeType=SERVICE) can be a leader", 403),
+
     //**********************************************************
     //* For business error
     //**********************************************************
