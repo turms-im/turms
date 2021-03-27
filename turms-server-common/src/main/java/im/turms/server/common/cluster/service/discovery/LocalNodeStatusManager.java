@@ -125,13 +125,7 @@ public class LocalNodeStatusManager {
         Member.Key key = new Member.Key(localMember.getClusterId(), localMember.getNodeId());
         Filter query = Filter.newBuilder()
                 .eq("_id", key);
-        return sharedConfigService.remove(Leader.class, query)
-                .doOnSuccess(result -> {
-                    if (result.getDeletedCount() > 0) {
-                        discoveryService.notifyLeadershipChangeListeners(null);
-                    }
-                })
-                .then();
+        return sharedConfigService.remove(Leader.class, query).then();
     }
 
     public boolean isLocalNodeMaster() {

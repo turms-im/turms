@@ -118,7 +118,6 @@ public class DiscoveryService implements ClusterService {
     @Getter
     private List<MemberInfoWithConnection> otherActiveConnectedGatewayMemberList = Collections.emptyList();
 
-    private final List<Consumer<Leader>> leadershipChangeListeners = new LinkedList<>();
     private final List<MembersChangeListener> membersChangeListeners = new LinkedList<>();
 
     public DiscoveryService(
@@ -438,16 +437,6 @@ public class DiscoveryService implements ClusterService {
     private void notifyMembersChangeListeners() {
         for (MembersChangeListener listener : membersChangeListeners) {
             listener.onMembersChange();
-        }
-    }
-
-    public void addListenerOnLeadershipChange(Consumer<Leader> listener) {
-        leadershipChangeListeners.add(listener);
-    }
-
-    public void notifyLeadershipChangeListeners(@Nullable Leader leader) {
-        for (Consumer<Leader> listener : leadershipChangeListeners) {
-            listener.accept(leader);
         }
     }
 
