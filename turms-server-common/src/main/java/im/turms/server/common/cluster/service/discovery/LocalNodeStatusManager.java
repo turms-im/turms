@@ -122,9 +122,9 @@ public class LocalNodeStatusManager {
     }
 
     private Mono<Void> unregisterLocalMemberLeadership() {
-        Member.Key key = new Member.Key(localMember.getClusterId(), localMember.getNodeId());
         Filter query = Filter.newBuilder()
-                .eq("_id", key);
+                .eq("_id", localMember.getClusterId())
+                .eq(Leader.Fields.nodeId, localMember.getNodeId());
         return sharedConfigService.remove(Leader.class, query).then();
     }
 
