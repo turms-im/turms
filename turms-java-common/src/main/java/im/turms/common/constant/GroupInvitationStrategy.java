@@ -18,19 +18,20 @@
 package im.turms.common.constant;
 
 public enum GroupInvitationStrategy {
-    ALL_REQUIRING_ACCEPTANCE,
-    OWNER_MANAGER_MEMBER_REQUIRING_ACCEPTANCE,
-    OWNER_MANAGER_REQUIRING_ACCEPTANCE,
-    OWNER_REQUIRING_ACCEPTANCE,
+    ALL_REQUIRING_APPROVAL,
+    OWNER_MANAGER_MEMBER_REQUIRING_APPROVAL,
+    OWNER_MANAGER_REQUIRING_APPROVAL,
+    OWNER_REQUIRING_APPROVAL,
     ALL,
     OWNER_MANAGER_MEMBER,
     OWNER_MANAGER,
     OWNER;
 
-    public boolean requireAcceptance() {
-         return this == GroupInvitationStrategy.ALL_REQUIRING_ACCEPTANCE
-                || this == GroupInvitationStrategy.OWNER_REQUIRING_ACCEPTANCE
-                || this == GroupInvitationStrategy.OWNER_MANAGER_REQUIRING_ACCEPTANCE
-                || this == GroupInvitationStrategy.OWNER_MANAGER_MEMBER_REQUIRING_ACCEPTANCE;
+    public boolean requiresApproval() {
+        return this == GroupInvitationStrategy.ALL_REQUIRING_APPROVAL
+                || this == GroupInvitationStrategy.OWNER_REQUIRING_APPROVAL
+                || this == GroupInvitationStrategy.OWNER_MANAGER_REQUIRING_APPROVAL
+                || this == GroupInvitationStrategy.OWNER_MANAGER_MEMBER_REQUIRING_APPROVAL;
     }
+
 }

@@ -157,7 +157,7 @@ public class GroupInvitationService {
                                     return Mono.error(TurmsBusinessException.get(code));
                                 }
                                 GroupInvitationStrategy strategy = pair.getRight();
-                                if (strategy.requireAcceptance()) {
+                                if (strategy.requiresApproval()) {
                                     String finalContent = content != null ? content : "";
                                     return createGroupInvitation(null, groupId, inviterId, inviteeId, finalContent,
                                             RequestStatus.PENDING, null, null, null);

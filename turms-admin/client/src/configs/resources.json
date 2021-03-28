@@ -3,13 +3,13 @@
         "width": 25
     },
     "groupInvitationStrategies": [
-        "ALL_REQUIRING_ACCEPTANCE",
+        "ALL_REQUIRING_APPROVAL",
         "ALL",
-        "OWNER_MANAGER_MEMBER_REQUIRING_ACCEPTANCE",
+        "OWNER_MANAGER_MEMBER_REQUIRING_APPROVAL",
         "OWNER_MANAGER_MEMBER",
-        "OWNER_MANAGER_REQUIRING_ACCEPTANCE",
+        "OWNER_MANAGER_REQUIRING_APPROVAL",
         "OWNER_MANAGER",
-        "OWNER_REQUIRING_ACCEPTANCE",
+        "OWNER_REQUIRING_APPROVAL",
         "OWNER"
     ],
     "groupJoinStrategies": [

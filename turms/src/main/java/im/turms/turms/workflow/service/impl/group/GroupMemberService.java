@@ -814,20 +814,20 @@ public class GroupMemberService {
         TurmsStatusCode isAllowToAddRole;
         switch (groupInvitationStrategy) {
             case OWNER:
-            case OWNER_REQUIRING_ACCEPTANCE:
+            case OWNER_REQUIRING_APPROVAL:
                 isAllowToAddRole = requesterRole == GroupMemberRole.OWNER
                         ? TurmsStatusCode.OK
                         : TurmsStatusCode.NOT_OWNER_TO_SEND_INVITATION;
                 break;
             case OWNER_MANAGER:
-            case OWNER_MANAGER_REQUIRING_ACCEPTANCE:
+            case OWNER_MANAGER_REQUIRING_APPROVAL:
                 isAllowToAddRole = requesterRole == GroupMemberRole.OWNER
                         || requesterRole == GroupMemberRole.MANAGER
                         ? TurmsStatusCode.OK
                         : TurmsStatusCode.NOT_OWNER_OR_MANAGER_TO_SEND_INVITATION;
                 break;
             case OWNER_MANAGER_MEMBER:
-            case OWNER_MANAGER_MEMBER_REQUIRING_ACCEPTANCE:
+            case OWNER_MANAGER_MEMBER_REQUIRING_APPROVAL:
                 isAllowToAddRole = requesterRole == GroupMemberRole.OWNER
                         || requesterRole == GroupMemberRole.MANAGER
                         || requesterRole == GroupMemberRole.MEMBER

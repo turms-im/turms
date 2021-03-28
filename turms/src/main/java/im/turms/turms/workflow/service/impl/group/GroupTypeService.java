@@ -82,7 +82,7 @@ public class GroupTypeService {
                         DaoConstant.DEFAULT_GROUP_TYPE_ID,
                         DaoConstant.DEFAULT_GROUP_TYPE_NAME,
                         500,
-                        GroupInvitationStrategy.OWNER_MANAGER_MEMBER_REQUIRING_ACCEPTANCE,
+                        GroupInvitationStrategy.OWNER_MANAGER_MEMBER_REQUIRING_APPROVAL,
                         GroupJoinStrategy.DECLINE_ANY_REQUEST,
                         GroupUpdateStrategy.OWNER_MANAGER,
                         GroupUpdateStrategy.OWNER_MANAGER,
