@@ -44,7 +44,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static im.turms.turms.workflow.access.http.permission.AdminPermission.CLUSTER_CONFIG_UPDATE;
-import static im.turms.turms.workflow.access.http.permission.AdminPermission.CLUSTER_INFO_QUERY;
+import static im.turms.turms.workflow.access.http.permission.AdminPermission.CLUSTER_CONFIG_QUERY;
 
 /**
  * @author James Chen
@@ -63,7 +63,7 @@ public class ConfigController {
     }
 
     @GetMapping
-    @RequiredPermission(CLUSTER_INFO_QUERY)
+    @RequiredPermission(CLUSTER_CONFIG_QUERY)
     public ResponseEntity<ResponseDTO<Map<String, Object>>> queryClusterConfig(@RequestParam(defaultValue = "false") Boolean onlyMutable) {
         try {
             return ResponseFactory.okIfTruthy(PropertiesUtil.getPropertyValueMap(node.getSharedProperties(), onlyMutable));
@@ -94,7 +94,7 @@ public class ConfigController {
     }
 
     @GetMapping("/metadata")
-    @RequiredPermission(CLUSTER_INFO_QUERY)
+    @RequiredPermission(CLUSTER_CONFIG_QUERY)
     public ResponseEntity<ResponseDTO<Map<String, Object>>> queryClusterConfigMetadata(
             @RequestParam(defaultValue = "false") Boolean onlyMutable,
             @RequestParam(defaultValue = "false") Boolean withValue) {
