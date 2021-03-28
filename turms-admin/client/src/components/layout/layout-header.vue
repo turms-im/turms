@@ -51,13 +51,16 @@
             </div>
         </a-popconfirm>
         <a-select
-            default-value="chinese"
+            v-model:value="locale"
             class="header__language-select"
             size="small"
-            @change="changeLanguage"
         >
-            <a-select-option value="chinese">
-                {{ $t('chinese') }}
+            <a-select-option
+                v-for="lang in locales"
+                :key="lang.value"
+                :value="lang.value"
+            >
+                {{ lang.label }}
             </a-select-option>
         </a-select>
     </a-layout-header>
@@ -80,7 +83,15 @@ export default {
         return {
             isChanging: false,
             visible: false,
-            url: ''
+            url: '',
+            locale: this.$store.getters.locale,
+            locales: [{
+                label: 'English',
+                value: this.$locales.enUS.locale
+            }, {
+                label: '中文',
+                value: this.$locales.zhCN.locale
+            }]
         };
     },
     computed: {
@@ -93,13 +104,15 @@ export default {
     },
     watch: {
         globalUrl() {
-            this.url = this.globalUrl.toString();
+            this.url = this.globalUrl;
+        },
+        locale(locale) {
+            this.locale = locale;
+            this.$store.setLocale(locale);
+            localStorage.setItem(this.$rs.storage.locale, locale);
         }
     },
     methods: {
-        changeLanguage() {
-            //TODO: v1.0.x
-        },
         openChangeServerModal() {
             this.visible = true;
         },
@@ -119,7 +132,7 @@ export default {
                     this.$message.success(this.$t('changedServerSuccessfully'));
                     this.visible = false;
                 }).catch(error => {
-                    this.$error(this.$t('failedToChangedServer'), error);
+                    this.$error(this.$t('failedToChangeServer'), error);
                 }).finally(() => {
                     this.isChanging = false;
                 });
@@ -153,7 +166,7 @@ export default {
 
     .header__language-select {
         margin-left: 36px;
-        width: 75px;
+        width: 96px;
     }
 
     .header__change-server,

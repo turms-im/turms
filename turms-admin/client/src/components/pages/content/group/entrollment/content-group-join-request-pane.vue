@@ -25,25 +25,25 @@ export default {
                     type: 'INPUT',
                     model: '',
                     name: 'ids',
-                    placeholder: this.$t('joinRequestId')
+                    placeholder: 'joinRequestId'
                 },
                 {
                     type: 'INPUT',
                     model: '',
                     name: 'groupIds',
-                    placeholder: this.$t('groupId')
+                    placeholder: 'groupId'
                 },
                 {
                     type: 'INPUT',
                     model: '',
                     name: 'requesterIds',
-                    placeholder: this.$t('requesterId')
+                    placeholder: 'requesterId'
                 },
                 {
                     type: 'INPUT',
                     model: '',
                     name: 'responderIds',
-                    placeholder: this.$t('responderId')
+                    placeholder: 'responderId'
                 },
                 {
                     type: 'SELECT',
@@ -52,35 +52,35 @@ export default {
                     options: {
                         base: [{
                             id: 'ALL',
-                            label: this.$t('allStatuses')
+                            label: 'allStatuses'
                         },
                         {
                             id: 'PENDING',
-                            label: this.$t('pending')
+                            label: 'pending'
                         },
                         {
                             id: 'ACCEPTED',
-                            label: this.$t('accepted')
+                            label: 'accepted'
                         },
                         {
                             id: 'ACCEPTED_WITHOUT_CONFIRM',
-                            label: this.$t('acceptedWithoutConfirm')
+                            label: 'acceptedWithoutConfirm'
                         },
                         {
                             id: 'DECLINED',
-                            label: this.$t('declined')
+                            label: 'declined'
                         },
                         {
                             id: 'IGNORED',
-                            label: this.$t('ignored')
+                            label: 'ignored'
                         },
                         {
                             id: 'EXPIRED',
-                            label: this.$t('expired')
+                            label: 'expired'
                         },
                         {
                             id: 'CANCELED',
-                            label: this.$t('canceled')
+                            label: 'canceled'
                         }]
                     }
                 },
@@ -102,7 +102,7 @@ export default {
             ],
             actionGroups: [
                 [{
-                    title: this.$t('addJoinRequest'),
+                    title: 'addJoinRequest',
                     type: 'CREATE',
                     fields: [
                         {
@@ -133,31 +133,31 @@ export default {
                                 values: [
                                     {
                                         id: 'PENDING',
-                                        label: this.$t('pending')
+                                        label: 'pending'
                                     },
                                     {
                                         id: 'ACCEPTED',
-                                        label: this.$t('accepted')
+                                        label: 'accepted'
                                     },
                                     {
                                         id: 'ACCEPTED_WITHOUT_CONFIRM',
-                                        label: this.$t('acceptedWithoutConfirm')
+                                        label: 'acceptedWithoutConfirm'
                                     },
                                     {
                                         id: 'DECLINED',
-                                        label: this.$t('declined')
+                                        label: 'declined'
                                     },
                                     {
                                         id: 'IGNORED',
-                                        label: this.$t('ignored')
+                                        label: 'ignored'
                                     },
                                     {
                                         id: 'EXPIRED',
-                                        label: this.$t('expired')
+                                        label: 'expired'
                                     },
                                     {
                                         id: 'CANCELED',
-                                        label: this.$t('canceled')
+                                        label: 'canceled'
                                     }]
                             }
                         },
@@ -176,7 +176,7 @@ export default {
                     ]
                 },
                 {
-                    title: this.$t('updateSelectedJoinRequests'),
+                    title: 'updateSelectedJoinRequests',
                     type: 'UPDATE',
                     fields: [
                         {
@@ -206,31 +206,31 @@ export default {
                                 values: [
                                     {
                                         id: 'PENDING',
-                                        label: this.$t('pending')
+                                        label: 'pending'
                                     },
                                     {
                                         id: 'ACCEPTED',
-                                        label: this.$t('accepted')
+                                        label: 'accepted'
                                     },
                                     {
                                         id: 'ACCEPTED_WITHOUT_CONFIRM',
-                                        label: this.$t('acceptedWithoutConfirm')
+                                        label: 'acceptedWithoutConfirm'
                                     },
                                     {
                                         id: 'DECLINED',
-                                        label: this.$t('declined')
+                                        label: 'declined'
                                     },
                                     {
                                         id: 'IGNORED',
-                                        label: this.$t('ignored')
+                                        label: 'ignored'
                                     },
                                     {
                                         id: 'EXPIRED',
-                                        label: this.$t('expired')
+                                        label: 'expired'
                                     },
                                     {
                                         id: 'CANCELED',
-                                        label: this.$t('canceled')
+                                        label: 'canceled'
                                     }]
                             }
                         },
@@ -252,7 +252,7 @@ export default {
             table: {
                 columns: [
                     {
-                        title: this.$t('joinRequestId'),
+                        title: 'joinRequestId',
                         key: 'id',
                         width: '10%'
                     },

@@ -17,7 +17,7 @@
                     <template #title>
                         <icon :type="item.iconType" />
                         <span>
-                            {{ item.title }}
+                            {{ $t(item.title) }}
                         </span>
                     </template>
                     <a-menu-item
@@ -26,7 +26,7 @@
                         :disabled="childItem.disabled"
                     >
                         <icon :type="childItem.iconType" />
-                        {{ childItem.title }}
+                        {{ $t(childItem.title) }}
                     </a-menu-item>
                 </a-sub-menu>
                 <a-menu-item
@@ -35,7 +35,7 @@
                     :disabled="item.disabled"
                 >
                     <icon :type="item.iconType" />
-                    {{ item.title }}
+                    {{ $t(item.title) }}
                 </a-menu-item>
             </template>
         </a-menu>
@@ -81,44 +81,44 @@ export default {
             {
                 key: '/content',
                 iconType: 'profile',
-                title: this.$t('contentManagement'),
+                title: 'contentManagement',
                 children: [
                     {
                         key: '/content/user',
                         iconType: 'user',
-                        title: this.$t('userClass')
+                        title: 'userClass'
                     },
                     {
                         key: '/content/group',
                         iconType: 'team',
-                        title: this.$t('groupClass')
+                        title: 'groupClass'
                     },
                     {
                         key: '/content/conversation',
                         iconType: 'message',
-                        title: this.$t('conversationClass')
+                        title: 'conversationClass'
                     },
                     {
                         key: '/content/message',
                         iconType: 'message',
-                        title: this.$t('messageClass')
+                        title: 'messageClass'
                     }
                 ]
             },
             {
                 key: '/access',
                 iconType: 'safety',
-                title: this.$t('accessControl')
+                title: 'accessControl'
             },
             {
                 key: '/cluster',
                 iconType: 'cluster',
-                title: this.$t('clusterManagement')
+                title: 'clusterManagement'
             },
             {
                 key: '/about',
                 iconType: 'info-circle',
-                title: this.$t('about')
+                title: 'about'
             }
         ];
         return {

@@ -21,20 +21,20 @@ export default {
             url: this.$rs.apis.userPermissionGroup,
             actionGroups: [
                 [{
-                    title: this.$t('addPermissionGroup'),
+                    title: 'addPermissionGroup',
                     type: 'CREATE',
                     size: 'XL',
                     fields: [
                         {
                             id: 'id',
                             type: 'INPUT',
-                            label: this.$t('permissionGroupId'),
+                            label: 'permissionGroupId',
                             rules: this.$validator.create({onlyNumber: true})
                         },
                         {
                             id: 'creatableGroupTypeIds',
                             type: 'INPUT',
-                            label: this.$t('creatableGroupTypeId'),
+                            label: 'creatableGroupTypeId',
                             rules: this.$validator.create({required: true})
                         },
                         {
@@ -50,20 +50,20 @@ export default {
                         {
                             id: 'groupTypeLimits',
                             type: 'INPUT',
-                            label: this.$t('groupTypeLimit'),
+                            label: 'groupTypeLimit',
                             rules: this.$validator.create({required: true})
                         }
                     ]
                 },
                 {
-                    title: this.$t('updateSelectedPermissionGroups'),
+                    title: 'updateSelectedPermissionGroups',
                     type: 'UPDATE',
                     size: 'XL',
                     fields: [
                         {
                             id: 'creatableGroupTypeIds',
                             type: 'INPUT',
-                            label: this.$t('creatableGroupTypeId')
+                            label: 'creatableGroupTypeId'
                         },
                         {
                             id: 'ownedGroupLimit',
@@ -78,7 +78,7 @@ export default {
                         {
                             id: 'groupTypeLimits',
                             type: 'INPUT',
-                            label: this.$t('groupTypeLimit')
+                            label: 'groupTypeLimit'
                         }
                     ]
                 }]
@@ -86,12 +86,12 @@ export default {
             table: {
                 columns: [
                     {
-                        title: this.$t('permissionGroupId'),
+                        title: 'permissionGroupId',
                         key: 'id',
                         width: '20%'
                     },
                     {
-                        title: this.$t('creatableGroupTypeId'),
+                        title: 'creatableGroupTypeId',
                         key: 'creatableGroupTypeIds',
                         width: '20%'
                     },
@@ -104,7 +104,7 @@ export default {
                         width: '15%'
                     },
                     {
-                        title: this.$t('groupTypeLimit'),
+                        title: 'groupTypeLimit',
                         key: 'groupTypeLimits',
                         width: '20%'
                     },

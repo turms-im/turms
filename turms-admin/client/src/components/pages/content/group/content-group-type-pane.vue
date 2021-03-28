@@ -21,14 +21,14 @@ export default {
             url: this.$rs.apis.groupType,
             actionGroups: [
                 [{
-                    title: this.$t('addGroupType'),
+                    title: 'addGroupType',
                     type: 'CREATE',
                     size: 'XL',
                     fields: [
                         {
                             id: 'name',
                             type: 'INPUT',
-                            label: this.$t('typeName'),
+                            label: 'typeName',
                             rules: this.$validator.create({required: true})
                         },
                         {
@@ -111,14 +111,14 @@ export default {
                     ]
                 },
                 {
-                    title: this.$t('updateSelectedGroupTypes'),
+                    title: 'updateSelectedGroupTypes',
                     type: 'UPDATE',
                     size: 'XL',
                     fields: [
                         {
                             id: 'name',
                             type: 'INPUT',
-                            label: this.$t('typeName')
+                            label: 'typeName'
                         },
                         {
                             id: 'groupSizeLimit',
@@ -131,11 +131,11 @@ export default {
                             options: {
                                 values: [
                                     {
-                                        label: this.$t('yes'),
+                                        label: 'yes',
                                         id: true
                                     },
                                     {
-                                        label: this.$t('no'),
+                                        label: 'no',
                                         id: false
                                     }
                                 ]
@@ -147,11 +147,11 @@ export default {
                             options: {
                                 values: [
                                     {
-                                        label: this.$t('yes'),
+                                        label: 'yes',
                                         id: true
                                     },
                                     {
-                                        label: this.$t('no'),
+                                        label: 'no',
                                         id: false
                                     }
                                 ]
@@ -163,11 +163,11 @@ export default {
                             options: {
                                 values: [
                                     {
-                                        label: this.$t('yes'),
+                                        label: 'yes',
                                         id: true
                                     },
                                     {
-                                        label: this.$t('no'),
+                                        label: 'no',
                                         id: false
                                     }
                                 ]
@@ -179,11 +179,11 @@ export default {
                             options: {
                                 values: [
                                     {
-                                        label: this.$t('yes'),
+                                        label: 'yes',
                                         id: true
                                     },
                                     {
-                                        label: this.$t('no'),
+                                        label: 'no',
                                         id: false
                                     }
                                 ]
@@ -243,7 +243,7 @@ export default {
             table: {
                 columns: [
                     {
-                        title: this.$t('groupTypeId'),
+                        title: 'groupTypeId',
                         key: 'id',
                         width: '10%'
                     },

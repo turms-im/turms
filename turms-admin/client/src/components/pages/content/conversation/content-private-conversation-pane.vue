@@ -35,12 +35,12 @@ export default {
                     type: 'INPUT',
                     model: '',
                     name: 'ownerIds',
-                    placeholder: this.$t('ownerId')
+                    placeholder: 'ownerId'
                 }
             ],
             actionGroups: [
                 [{
-                    title: this.$t('updateSelectedConversationReadDate'),
+                    title: 'updateSelectedConversationReadDate',
                     type: 'UPDATE',
                     fields: [
                         {
@@ -58,12 +58,12 @@ export default {
                     },
                     {
                         key: 'key.targetId',
-                        title: this.$t('recipientId'),
+                        title: 'recipientId',
                         width: '30%'
                     },
                     {
                         key: 'readDate',
-                        title: this.$t('lastReadDate'),
+                        title: 'lastReadDate',
                         width: '30%'
                     },
                     {

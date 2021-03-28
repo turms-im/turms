@@ -45,10 +45,10 @@
                     </div>
                 </a-popconfirm>
                 <a-popconfirm
-                    :title="$t('confirmRemoveChanges')"
-                    :visible="!!isRemoveChangesPopVisible"
-                    @confirm="removeChanges"
-                    @visibleChange="onRemoveChangesPopVisibleChanged"
+                    :title="$t('confirmDiscardChanges')"
+                    :visible="!!isDiscardChangesPopVisible"
+                    @confirm="discardChanges"
+                    @visibleChange="onDiscardChangesPopVisibleChanged"
                 >
                     <div
                         class="cluster-config__action-group__item"
@@ -56,7 +56,7 @@
                         <a-button
                             :disabled="!changedNumber"
                         >
-                            {{ $t('removeChanges') }}
+                            {{ $t('discardChanges') }}
                         </a-button>
                     </div>
                 </a-popconfirm>
@@ -100,7 +100,7 @@ export default {
             defaultConfig: {},
             currentConfig: {},
             changedNumber: 0,
-            isRemoveChangesPopVisible: false,
+            isDiscardChangesPopVisible: false,
             isRefreshPopVisible: false,
             isApplyChangesPopVisible: false
         };
@@ -190,9 +190,9 @@ export default {
                     this.$error(this.$t('updateFailed'), error);
                 });
         },
-        removeChanges() {
+        discardChanges() {
             this.currentConfig = JSON.parse(JSON.stringify(this.defaultConfig));
-            this.$message.success(this.$t('removeChangesSuccessfully'));
+            this.$message.success(this.$t('discardChangesSuccessfully'));
         },
         requestApplyChanges() {
             // const configWithValue = this.extractValues(this.currentConfig, true);
@@ -213,8 +213,8 @@ export default {
                     this.$error(this.$t('updateFailed'), error);
                 });
         },
-        onRemoveChangesPopVisibleChanged() {
-            this.isRemoveChangesPopVisible = this.changedNumber && !this.isRemoveChangesPopVisible;
+        onDiscardChangesPopVisibleChanged() {
+            this.isDiscardChangesPopVisible = this.changedNumber && !this.isDiscardChangesPopVisible;
         },
         onApplyChangesPopVisibleChanged() {
             this.isApplyChangesPopVisible = this.changedNumber && !this.isApplyChangesPopVisible;

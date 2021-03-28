@@ -25,25 +25,25 @@ export default {
                     type: 'INPUT',
                     model: '',
                     name: 'ids',
-                    placeholder: this.$t('invitationId')
+                    placeholder: 'invitationId'
                 },
                 {
                     type: 'INPUT',
                     model: '',
                     name: 'groupIds',
-                    placeholder: this.$t('groupId')
+                    placeholder: 'groupId'
                 },
                 {
                     type: 'INPUT',
                     model: '',
                     name: 'inviterIds',
-                    placeholder: this.$t('inviterId')
+                    placeholder: 'inviterId'
                 },
                 {
                     type: 'INPUT',
                     model: '',
                     name: 'inviteeIds',
-                    placeholder: this.$t('inviteeId')
+                    placeholder: 'inviteeId'
                 },
                 {
                     id: 'status',
@@ -52,31 +52,31 @@ export default {
                         values: [
                             {
                                 id: 'PENDING',
-                                label: this.$t('pending')
+                                label: 'pending'
                             },
                             {
                                 id: 'ACCEPTED',
-                                label: this.$t('accepted')
+                                label: 'accepted'
                             },
                             {
                                 id: 'ACCEPTED_WITHOUT_CONFIRM',
-                                label: this.$t('acceptedWithoutConfirm')
+                                label: 'acceptedWithoutConfirm'
                             },
                             {
                                 id: 'DECLINED',
-                                label: this.$t('declined')
+                                label: 'declined'
                             },
                             {
                                 id: 'IGNORED',
-                                label: this.$t('ignored')
+                                label: 'ignored'
                             },
                             {
                                 id: 'EXPIRED',
-                                label: this.$t('expired')
+                                label: 'expired'
                             },
                             {
                                 id: 'CANCELED',
-                                label: this.$t('canceled')
+                                label: 'canceled'
                             }]
                     }
                 },
@@ -98,14 +98,14 @@ export default {
             ],
             actionGroups: [
                 [{
-                    title: this.$t('addInvitation'),
+                    title: 'addInvitation',
                     type: 'CREATE',
                     size: 'L',
                     fields: [
                         {
                             id: 'id',
                             type: 'INPUT',
-                            label: this.$t('groupInvitationId'),
+                            label: 'groupInvitationId',
                             rules: this.$validator.create({onlyNumber: true})
                         },
                         {
@@ -136,31 +136,31 @@ export default {
                                 values: [
                                     {
                                         id: 'PENDING',
-                                        label: this.$t('pending')
+                                        label: 'pending'
                                     },
                                     {
                                         id: 'ACCEPTED',
-                                        label: this.$t('accepted')
+                                        label: 'accepted'
                                     },
                                     {
                                         id: 'ACCEPTED_WITHOUT_CONFIRM',
-                                        label: this.$t('acceptedWithoutConfirm')
+                                        label: 'acceptedWithoutConfirm'
                                     },
                                     {
                                         id: 'DECLINED',
-                                        label: this.$t('declined')
+                                        label: 'declined'
                                     },
                                     {
                                         id: 'IGNORED',
-                                        label: this.$t('ignored')
+                                        label: 'ignored'
                                     },
                                     {
                                         id: 'EXPIRED',
-                                        label: this.$t('expired')
+                                        label: 'expired'
                                     },
                                     {
                                         id: 'CANCELED',
-                                        label: this.$t('canceled')
+                                        label: 'canceled'
                                     }]
                             }
                         },
@@ -179,7 +179,7 @@ export default {
                     ]
                 },
                 {
-                    title: this.$t('updateSelectedInvitations'),
+                    title: 'updateSelectedInvitations',
                     type: 'UPDATE',
                     fields: [
                         {
@@ -209,31 +209,31 @@ export default {
                                 values: [
                                     {
                                         id: 'PENDING',
-                                        label: this.$t('pending')
+                                        label: 'pending'
                                     },
                                     {
                                         id: 'ACCEPTED',
-                                        label: this.$t('accepted')
+                                        label: 'accepted'
                                     },
                                     {
                                         id: 'ACCEPTED_WITHOUT_CONFIRM',
-                                        label: this.$t('acceptedWithoutConfirm')
+                                        label: 'acceptedWithoutConfirm'
                                     },
                                     {
                                         id: 'DECLINED',
-                                        label: this.$t('declined')
+                                        label: 'declined'
                                     },
                                     {
                                         id: 'IGNORED',
-                                        label: this.$t('ignored')
+                                        label: 'ignored'
                                     },
                                     {
                                         id: 'EXPIRED',
-                                        label: this.$t('expired')
+                                        label: 'expired'
                                     },
                                     {
                                         id: 'CANCELED',
-                                        label: this.$t('canceled')
+                                        label: 'canceled'
                                     }]
                             }
                         },
@@ -255,7 +255,7 @@ export default {
             table: {
                 columns: [
                     {
-                        title: this.$t('invitationId'),
+                        title: 'invitationId',
                         key: 'id',
                         width: '10%'
                     },

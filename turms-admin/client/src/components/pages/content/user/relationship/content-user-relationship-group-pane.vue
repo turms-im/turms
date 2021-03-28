@@ -29,19 +29,19 @@ export default {
                     type: 'INPUT',
                     model: '',
                     name: 'ownerIds',
-                    placeholder: this.$t('ownerId')
+                    placeholder: 'ownerId'
                 },
                 {
                     type: 'INPUT',
                     model: '',
                     name: 'indexes',
-                    placeholder: this.$t('groupIndex')
+                    placeholder: 'groupIndex'
                 },
                 {
                     type: 'INPUT',
                     model: '',
                     name: 'names',
-                    placeholder: this.$t('name'),
+                    placeholder: 'name',
                     rules: {
                         nonSpace: true
                     }
@@ -54,7 +54,7 @@ export default {
             ],
             actionGroups: [
                 [{
-                    title: this.$t('addUserRelationshipGroup'),
+                    title: 'addUserRelationshipGroup',
                     type: 'CREATE',
                     size: 'L',
                     fields: [
@@ -66,7 +66,7 @@ export default {
                         {
                             id: 'index',
                             type: 'INPUT',
-                            label: this.$t('groupIndex'),
+                            label: 'groupIndex',
                             rules: this.$validator.create({required: true, onlyNumber: true})
                         },
                         {
@@ -81,7 +81,7 @@ export default {
                     ]
                 },
                 {
-                    title: this.$t('updateSelectedUserRelationshipGroups'),
+                    title: 'updateSelectedUserRelationshipGroups',
                     type: 'UPDATE',
                     size: 'L',
                     fields: [
@@ -103,7 +103,7 @@ export default {
                         width: '20%'
                     },
                     {
-                        title: this.$t('relationshipGroupIndex'),
+                        title: 'relationshipGroupIndex',
                         key: 'key.index',
                         width: '20%'
                     },

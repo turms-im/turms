@@ -29,13 +29,13 @@ export default {
                     type: 'INPUT',
                     model: '',
                     name: 'groupIds',
-                    placeholder: this.$t('groupId')
+                    placeholder: 'groupId'
                 },
                 {
                     type: 'INPUT',
                     model: '',
                     name: 'userIds',
-                    placeholder: this.$t('userId')
+                    placeholder: 'userId'
                 },
                 {
                     type: 'SELECT',
@@ -44,27 +44,27 @@ export default {
                     options: {
                         base: [{
                             id: 'ALL',
-                            label: this.$t('allRoles')
+                            label: 'allRoles'
                         },
                         {
                             id: 'OWNER',
-                            label: this.$t('owner')
+                            label: 'owner'
                         },
                         {
                             id: 'MANAGER',
-                            label: this.$t('manager')
+                            label: 'manager'
                         },
                         {
                             id: 'MEMBER',
-                            label: this.$t('member')
+                            label: 'member'
                         },
                         {
                             id: 'GUEST',
-                            label: this.$t('guest')
+                            label: 'guest'
                         },
                         {
                             id: 'ANONYMOUS_GUEST',
-                            label: this.$t('anonymousGuest')
+                            label: 'anonymousGuest'
                         }]
                     }
                 },
@@ -81,7 +81,7 @@ export default {
             ],
             actionGroups: [
                 [{
-                    title: this.$t('addGroupMember'),
+                    title: 'addGroupMember',
                     type: 'CREATE',
                     size: 'L',
                     fields: [
@@ -107,23 +107,23 @@ export default {
                                 values: [
                                     {
                                         id: 'OWNER',
-                                        label: this.$t('owner')
+                                        label: 'owner'
                                     },
                                     {
                                         id: 'MANAGER',
-                                        label: this.$t('manager')
+                                        label: 'manager'
                                     },
                                     {
                                         id: 'MEMBER',
-                                        label: this.$t('member')
+                                        label: 'member'
                                     },
                                     {
                                         id: 'GUEST',
-                                        label: this.$t('guest')
+                                        label: 'guest'
                                     },
                                     {
                                         id: 'ANONYMOUS_GUEST',
-                                        label: this.$t('anonymousGuest')
+                                        label: 'anonymousGuest'
                                     }
                                 ]
                             }
@@ -139,7 +139,7 @@ export default {
                     ]
                 },
                 {
-                    title: this.$t('updateSelectedGroupMembers'),
+                    title: 'updateSelectedGroupMembers',
                     type: 'UPDATE',
                     size: 'L',
                     fields: [
@@ -154,23 +154,23 @@ export default {
                                 values: [
                                     {
                                         id: 'OWNER',
-                                        label: this.$t('owner')
+                                        label: 'owner'
                                     },
                                     {
                                         id: 'MANAGER',
-                                        label: this.$t('manager')
+                                        label: 'manager'
                                     },
                                     {
                                         id: 'MEMBER',
-                                        label: this.$t('member')
+                                        label: 'member'
                                     },
                                     {
                                         id: 'GUEST',
-                                        label: this.$t('guest')
+                                        label: 'guest'
                                     },
                                     {
                                         id: 'ANONYMOUS_GUEST',
-                                        label: this.$t('anonymousGuest')
+                                        label: 'anonymousGuest'
                                     }
                                 ]
                             }

@@ -167,6 +167,7 @@
         "message": "/messages"
     },
     "storage": {
-        "url": "url"
+        "url": "url",
+        "locale": "locale"
     }
 }

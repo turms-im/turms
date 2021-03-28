@@ -4,7 +4,7 @@
         type="primary"
         @click.stop="exportDate"
     >
-        {{ text }}
+        {{ $t('exportData') }}
     </a-button>
 </template>
 <script>
@@ -32,8 +32,7 @@ export default {
     },
     data() {
         return {
-            exporting: false,
-            text: this.$t('exportData')
+            exporting: false
         };
     },
     methods: {
@@ -42,7 +41,7 @@ export default {
                 return;
             }
             this.exporting = true;
-            const hide = this.$message.loading(this.$t('exportingData'), 0);
+            const hide = this.$message.loading(this.$t('exportingDataAsExcel'), 0);
             exportExcel(this.fileName, this.worksheetName, this.headers, this.rows)
                 .then(() => {
                     this.$message.success(this.$t('exportSuccessfully'));

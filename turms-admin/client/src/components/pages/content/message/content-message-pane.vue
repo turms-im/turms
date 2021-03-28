@@ -29,19 +29,19 @@ export default {
                     type: 'INPUT',
                     model: '',
                     name: 'ids',
-                    placeholder: this.$t('messageId')
+                    placeholder: 'messageId'
                 },
                 {
                     type: 'INPUT',
                     model: '',
                     name: 'senderIds',
-                    placeholder: this.$t('senderId')
+                    placeholder: 'senderId'
                 },
                 {
                     type: 'INPUT',
                     model: '',
                     name: 'targetIds',
-                    placeholder: this.$t('targetId')
+                    placeholder: 'targetId'
                 },
                 {
                     type: 'DATE-RANGE',
@@ -60,15 +60,15 @@ export default {
                     options: {
                         base: [{
                             id: 'ALL',
-                            label: this.$t('userMessageAndSystemMessage')
+                            label: 'userMessageAndSystemMessage'
                         },
                         {
                             id: false,
-                            label: this.$t('privateChatMessage')
+                            label: 'privateMessage'
                         },
                         {
                             id: true,
-                            label: this.$t('groupChatMessage')
+                            label: 'groupMessage'
                         }]
                     }
                 },
@@ -79,22 +79,22 @@ export default {
                     options: {
                         base: [{
                             id: 'ALL',
-                            label: this.$t('userMessageAndSystemMessage')
+                            label: 'userMessageAndSystemMessage'
                         },
                         {
                             id: false,
-                            label: this.$t('userMessage')
+                            label: 'userMessage'
                         },
                         {
                             id: true,
-                            label: this.$t('systemMessage')
+                            label: 'systemMessage'
                         }]
                     }
                 }
             ],
             actionGroups: [
                 [{
-                    title: this.$t('addMessage'),
+                    title: 'addMessage',
                     type: 'CREATE',
                     size: 'L',
                     fields: [
@@ -136,7 +136,7 @@ export default {
                     ]
                 },
                 {
-                    title: this.$t('updateSelectedMessages'),
+                    title: 'updateSelectedMessages',
                     type: 'UPDATE',
                     size: 'L',
                     fields: [
@@ -146,11 +146,11 @@ export default {
                             options: {
                                 values: [
                                     {
-                                        label: this.$t('yes'),
+                                        label: 'yes',
                                         id: true
                                     },
                                     {
-                                        label: this.$t('no'),
+                                        label: 'no',
                                         id: false
                                     }
                                 ]
@@ -172,7 +172,7 @@ export default {
             table: {
                 columns: [
                     {
-                        title: this.$t('messageId'),
+                        title: 'messageId',
                         key: 'id',
                         width: '10%'
                     },

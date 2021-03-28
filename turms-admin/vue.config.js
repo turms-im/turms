@@ -23,7 +23,7 @@ module.exports = {
             config.plugins.push(
                 new webpack.ContextReplacementPlugin(
                     /moment[/\\]locale$/,
-                    /zh-cn/
+                    /en|zh-cn/
                 ));
         } else {
             config.devtool = 'source-map';

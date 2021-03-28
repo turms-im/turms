@@ -19,7 +19,7 @@ export default {
     data() {
         return {
             name: 'message-group-chat',
-            nameLabel: this.$t('groupChatMessage'),
+            nameLabel: this.$t('groupMessage'),
             path: '/statistics/message/private-chat',
             url: `${this.$rs.apis.message}/count`,
             params: {

@@ -5,7 +5,6 @@
 </template>
 
 <script>
-import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
 import Layout from './components/layout/index';
 
 export default {
@@ -13,10 +12,27 @@ export default {
     components: {
         Layout
     },
-    data() {
-        return {
-            locale: zhCN
-        };
+    computed: {
+        locale() {
+            const locales = Object.values(this.$locales);
+            for (const locale of locales) {
+                if (this.$store.getters.locale === locale.locale) {
+                    return locale;
+                }
+            }
+            return locales.enUS;
+        }
+    },
+    watch: {
+        locale(locale) {
+            this.$i18n.locale = locale.locale;
+        }
+    },
+    created() {
+        const locale = localStorage.getItem(this.$rs.storage.locale);
+        if (locale) {
+            this.$store.setLocale(locale);
+        }
     }
 };
 </script>

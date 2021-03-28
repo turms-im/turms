@@ -10,7 +10,7 @@
                     v-if="filter.type.toUpperCase() === 'INPUT'"
                     :key="index"
                     v-model:value="filter.model"
-                    :placeholder="filter.placeholder"
+                    :placeholder="$t(filter.placeholder)"
                     :only-number-and-comma="filter.rules == null || filter.rules.onlyNumberAndComma"
                     :non-space="filter.rules?.nonSpace"
                     class="search-filter search-filter__input"
@@ -26,7 +26,7 @@
                         :key="option.id.toString()"
                         :value="option.id.toString()"
                     >
-                        {{ option.label }}
+                        {{ $t(option.label) }}
                     </a-select-option>
                 </a-select>
                 <date-range-picker
@@ -35,7 +35,7 @@
                     v-model:value="filter.model"
                     :include-today="true"
                     :show-time="true"
-                    :placeholder="filter.placeholder || [$t(`${filter.name}Range.start`), $t(`${filter.name}Range.end`)]"
+                    :placeholder="getDatePickerPlaceholder(filter)"
                     class="search-filter search-filter__date-picker"
                 />
                 <a-date-picker
@@ -72,8 +72,8 @@
                 <button-modal-template
                     v-for="(action, actionIndex) in actions"
                     :key="actionIndex"
-                    :button-label="action.buttonLabel || action.title"
-                    :title="action.title"
+                    :button-label="$t(action.buttonLabel || action.title)"
+                    :title="$t(action.title)"
                     :fields="action.fields"
                     :type="action.type"
                     :query-key="queryKey"
@@ -328,7 +328,7 @@ export default {
                     sorter = (a, b) => this.$util.sort(a[column.key], b[column.key]);
                 }
                 return {
-                    title: column.title || this.$t(`${fields[fields.length - 1]}`),
+                    title: (column.title && this.$t(column.title)) || this.$t(`${fields[fields.length - 1]}`),
                     dataIndex: column.key,
                     default: column.default,
                     type: column.type,
@@ -388,6 +388,12 @@ export default {
                     filter.model = null;
                 }
             }
+        },
+        getDatePickerPlaceholder(filter) {
+            if (filter.placeholder) {
+                return this.$t(filter.placeholder);
+            }
+            return [this.$t(`${filter.name}Range.start`), this.$t(`${filter.name}Range.end`)];
         },
         load() {
             if (this.admin) {

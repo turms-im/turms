@@ -68,51 +68,9 @@ export default {
         CustomInput
     },
     data() {
-        const columns = [{
-            title: this.$t('userId'),
-            dataIndex: 'userId',
-            width: '20%',
-            slots: {customRender: 'userId'}
-        },
-        {
-            title: this.$t('userStatus'),
-            dataIndex: 'userStatus',
-            width: '15%',
-            slots: {customRender: 'userStatus'}
-        },
-        {
-            title: this.$t('onlineDevice'),
-            dataIndex: 'deviceType',
-            width: '15%',
-            slots: {customRender: 'deviceType'}
-        },
-        {
-            title: this.$t('loginDateAndOnlineTime'),
-            dataIndex: 'loginDate',
-            width: '20%',
-            slots: {customRender: 'loginDate'}
-        },
-        {
-            title: this.$t('currentLocation'),
-            dataIndex: 'location',
-            width: '20%',
-            slots: {customRender: 'location'}
-        },
-        {
-            title: this.$t('operation'),
-            dataIndex: 'operation',
-            width: '10%',
-            slots: {customRender: 'operation'}
-        }];
-        columns.forEach(column => {
-            if (column.key !== 'operation' && !['TREE'].includes(String(column.type).toUpperCase())) {
-                column.sorter = (a, b) => this.$util.sort(a[column.key], b[column.key]);
-            }
-        });
         return {
             isSearchById: false,
             records: [],
-            columns,
             ids: '',
             loading: false,
             selectedRowKeys: [],
@@ -128,6 +86,51 @@ export default {
     computed: {
         admin() {
             return this.$store.getters.admin;
+        },
+        columns() {
+            const columns = [{
+                title: this.$t('userId'),
+                dataIndex: 'userId',
+                width: '20%',
+                slots: {customRender: 'userId'}
+            },
+            {
+                title: this.$t('userStatus'),
+                dataIndex: 'userStatus',
+                width: '15%',
+                slots: {customRender: 'userStatus'}
+            },
+            {
+                title: this.$t('onlineDevice'),
+                dataIndex: 'deviceType',
+                width: '15%',
+                slots: {customRender: 'deviceType'}
+            },
+            {
+                title: this.$t('loginDateAndOnlineTime'),
+                dataIndex: 'loginDate',
+                width: '20%',
+                slots: {customRender: 'loginDate'}
+            },
+            {
+                title: this.$t('currentLocation'),
+                dataIndex: 'location',
+                width: '20%',
+                slots: {customRender: 'location'}
+            },
+            {
+                title: this.$t('operation'),
+                dataIndex: 'operation',
+                width: '10%',
+                slots: {customRender: 'operation'}
+            }];
+            columns.forEach(column => {
+                if (column.key !== 'operation' && !['TREE'].includes(String(column.type).toUpperCase())) {
+                    column.sorter = (a, b) => this.$util.sort(a[column.key], b[column.key]);
+                }
+                return columns;
+            });
+            return columns;
         }
     },
     methods: {

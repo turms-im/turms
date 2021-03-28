@@ -8,7 +8,7 @@
     />
     <a-input
         v-else
-        :rules="rules"
+        :rules="$validator.parseRules(rules)"
         :placeholder="placeholder"
         :value="computedValue"
         @change="onChange"

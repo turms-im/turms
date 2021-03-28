@@ -29,7 +29,7 @@ export default {
                     type: 'INPUT',
                     model: '',
                     name: 'ids',
-                    placeholder: this.$t('userId')
+                    placeholder: 'userId'
                 },
                 {
                     type: 'DATE-RANGE',
@@ -48,28 +48,28 @@ export default {
                     options: {
                         base: [{
                             id: 'ALL',
-                            label: this.$t('activeAndInactive')
+                            label: 'activeAndInactive'
                         },
                         {
                             id: true,
-                            label: this.$t('isActive')
+                            label: 'isActive'
                         },
                         {
                             id: false,
-                            label: this.$t('inactive')
+                            label: 'inactive'
                         }]
                     }
                 }
             ],
             actionGroups: [
                 [{
-                    title: this.$t('addUser'),
+                    title: 'addUser',
                     type: 'CREATE',
                     fields: [
                         {
                             id: 'id',
                             type: 'INPUT',
-                            label: this.$t('userId'),
+                            label: 'userId',
                             rules: this.$validator.create({onlyNumber: true})
                         },
                         {
@@ -83,8 +83,8 @@ export default {
                         {
                             id: 'intro',
                             type: 'TEXTAREA',
-                            label: this.$t('userIntro'),
-                            placeholder: this.$t('userIntro'),
+                            label: 'userIntro',
+                            placeholder: 'userIntro',
                             rows: 4
                         },
                         {
@@ -123,24 +123,24 @@ export default {
                                 values: [
                                     {
                                         id: true,
-                                        label: this.$t('isActive')
+                                        label: 'isActive'
                                     },
                                     {
                                         id: false,
-                                        label: this.$t('inactive')
+                                        label: 'inactive'
                                     }]
                             }
                         }
                     ]
                 },
                 {
-                    title: this.$t('updateSelectedUsers'),
+                    title: 'updateSelectedUsers',
                     type: 'UPDATE',
                     fields: [
                         {
                             id: 'id',
                             type: 'INPUT',
-                            label: this.$t('userId'),
+                            label: 'userId',
                             rules: this.$validator.create({onlyNumber: true})
                         },
                         {
@@ -154,8 +154,8 @@ export default {
                         {
                             id: 'intro',
                             type: 'TEXTAREA',
-                            label: this.$t('userIntro'),
-                            placeholder: this.$t('userIntro'),
+                            label: 'userIntro',
+                            placeholder: 'userIntro',
                             rows: 4
                         },
                         {
@@ -186,7 +186,7 @@ export default {
                         {
                             id: 'registrationDate',
                             type: 'DATE',
-                            label: this.$t('registrationDate')
+                            label: 'registrationDate'
                         },
                         {
                             id: 'isActive',
@@ -195,11 +195,11 @@ export default {
                                 values: [
                                     {
                                         id: true,
-                                        label: this.$t('isActive')
+                                        label: 'isActive'
                                     },
                                     {
                                         id: false,
-                                        label: this.$t('inactive')
+                                        label: 'inactive'
                                     }]
                             }
                         }
@@ -209,7 +209,7 @@ export default {
             table: {
                 columns: [
                     {
-                        title: this.$t('userId'),
+                        title: 'userId',
                         key: 'id',
                         width: '12.5%'
                     },
@@ -218,7 +218,7 @@ export default {
                         width: '10%'
                     },
                     {
-                        title: this.$t('username'),
+                        title: 'username',
                         key: 'name',
                         width: '10%'
                     },
@@ -239,7 +239,6 @@ export default {
                         width: '10%'
                     },
                     {
-                        title: this.$t('cancelDate'),
                         key: 'deletionDate',
                         width: '10%'
                     },

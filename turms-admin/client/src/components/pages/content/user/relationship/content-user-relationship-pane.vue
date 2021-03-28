@@ -33,19 +33,19 @@ export default {
                     type: 'INPUT',
                     model: '',
                     name: 'ownerIds',
-                    placeholder: this.$t('ownerId')
+                    placeholder: 'ownerId'
                 },
                 {
                     type: 'INPUT',
                     model: '',
                     name: 'relatedUserIds',
-                    placeholder: this.$t('relatedUserId')
+                    placeholder: 'relatedUserId'
                 },
                 {
                     type: 'INPUT',
                     model: '',
                     name: 'groupIndexes',
-                    placeholder: this.$t('relationshipGroupIndex')
+                    placeholder: 'relationshipGroupIndex'
                 },
                 {
                     type: 'DATE-RANGE',
@@ -60,7 +60,7 @@ export default {
             ],
             actionGroups: [
                 [{
-                    title: this.$t('addUserRelationship'),
+                    title: 'addUserRelationship',
                     type: 'CREATE',
                     size: 'L',
                     fields: [
@@ -85,7 +85,7 @@ export default {
                     ]
                 },
                 {
-                    title: this.$t('updateSelectedUserRelationships'),
+                    title: 'updateSelectedUserRelationships',
                     type: 'UPDATE',
                     size: 'L',
                     fields: [
@@ -119,7 +119,7 @@ export default {
                         width: '17.5%'
                     },
                     {
-                        title: this.$t('relationshipGroupIndex'),
+                        title: 'relationshipGroupIndex',
                         key: 'groupIndexes',
                         width: '15%'
                     },

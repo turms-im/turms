@@ -25,7 +25,7 @@ export default {
                     type: 'INPUT',
                     model: '',
                     name: 'ids',
-                    placeholder: this.$t('groupQuestionId'),
+                    placeholder: 'groupQuestionId',
                     rules: {
                         noBlank: true
                     }
@@ -34,12 +34,12 @@ export default {
                     type: 'INPUT',
                     model: '',
                     name: 'groupIds',
-                    placeholder: this.$t('groupId')
+                    placeholder: 'groupId'
                 }
             ],
             actionGroups: [
                 [{
-                    title: this.$t('addGroupQuestion'),
+                    title: 'addGroupQuestion',
                     type: 'CREATE',
                     fields: [
                         {
@@ -60,9 +60,9 @@ export default {
                         {
                             id: 'answers',
                             type: 'DYNAMIC-INPUT',
-                            label: this.$t('answer'),
-                            placeholder: this.$t('correctAnswer'),
-                            addButtonLabel: this.$t('addCorrectAnswer'),
+                            label: 'answer',
+                            placeholder: 'correctAnswer',
+                            addButtonLabel: 'addCorrectAnswer',
                             rules: this.$validator.create({required: true},
                                 {
                                     validateTrigger: ['change', 'blur'],
@@ -70,7 +70,7 @@ export default {
                                         {
                                             required: true,
                                             whitespace: true,
-                                            message: this.$t('operateAnswerPrompt')
+                                            message: 'operateAnswerPrompt'
                                         }
                                     ]
                                 })
@@ -78,7 +78,7 @@ export default {
                     ]
                 },
                 {
-                    title: this.$t('updateSelectedGroupQuestions'),
+                    title: 'updateSelectedGroupQuestions',
                     type: 'UPDATE',
                     fields: [
                         {
@@ -93,9 +93,9 @@ export default {
                         {
                             id: 'answers',
                             type: 'DYNAMIC-INPUT',
-                            label: this.$t('answer'),
-                            placeholder: this.$t('correctAnswer'),
-                            addButtonLabel: this.$t('addCorrectAnswer'),
+                            label: 'answer',
+                            placeholder: 'correctAnswer',
+                            addButtonLabel: 'addCorrectAnswer',
                             rules: this.$validator.create(
                                 {
                                     validateTrigger: ['change', 'blur'],
@@ -103,7 +103,7 @@ export default {
                                         {
                                             required: true,
                                             whitespace: true,
-                                            message: this.$t('operateAnswerPrompt')
+                                            message: 'operateAnswerPrompt'
                                         }
                                     ]
                                 })
@@ -113,7 +113,7 @@ export default {
             ],
             table: {
                 columns: [{
-                    title: this.$t('questionId'),
+                    title: 'questionId',
                     key: 'id',
                     width: '15%'
                 },
@@ -126,7 +126,7 @@ export default {
                     width: '25%'
                 },
                 {
-                    title: this.$t('answer'),
+                    title: 'answer',
                     key: 'answers',
                     width: '25%'
                 },

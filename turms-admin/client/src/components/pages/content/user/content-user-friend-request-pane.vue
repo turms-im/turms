@@ -25,19 +25,19 @@ export default {
                     type: 'INPUT',
                     model: '',
                     name: 'ids',
-                    placeholder: this.$t('friendRequestId')
+                    placeholder: 'friendRequestId'
                 },
                 {
                     type: 'INPUT',
                     model: '',
                     name: 'requesterIds',
-                    placeholder: this.$t('requesterId')
+                    placeholder: 'requesterId'
                 },
                 {
                     type: 'INPUT',
                     model: '',
                     name: 'recipientIds',
-                    placeholder: this.$t('recipientId')
+                    placeholder: 'recipientId'
                 },
                 {
                     type: 'SELECT',
@@ -46,35 +46,35 @@ export default {
                     options: {
                         base: [{
                             id: 'ALL',
-                            label: this.$t('allStatuses')
+                            label: 'allStatuses'
                         },
                         {
                             id: 'PENDING',
-                            label: this.$t('pending')
+                            label: 'pending'
                         },
                         {
                             id: 'ACCEPTED',
-                            label: this.$t('accepted')
+                            label: 'accepted'
                         },
                         {
                             id: 'ACCEPTED_WITHOUT_CONFIRM',
-                            label: this.$t('acceptedWithoutConfirm')
+                            label: 'acceptedWithoutConfirm'
                         },
                         {
                             id: 'DECLINED',
-                            label: this.$t('declined')
+                            label: 'declined'
                         },
                         {
                             id: 'IGNORED',
-                            label: this.$t('ignored')
+                            label: 'ignored'
                         },
                         {
                             id: 'EXPIRED',
-                            label: this.$t('expired')
+                            label: 'expired'
                         },
                         {
                             id: 'CANCELED',
-                            label: this.$t('canceled')
+                            label: 'canceled'
                         }]
                     }
                 },
@@ -91,14 +91,14 @@ export default {
             ],
             actionGroups: [
                 [{
-                    title: this.$t('addFriendRequest'),
+                    title: 'addFriendRequest',
                     type: 'CREATE',
                     size: 'L',
                     fields: [
                         {
                             id: 'id',
                             type: 'INPUT',
-                            label: this.$t('friendRequestId'),
+                            label: 'friendRequestId',
                             rules: this.$validator.create({onlyNumber: true})
                         },
                         {
@@ -120,8 +120,8 @@ export default {
                         {
                             id: 'reason',
                             type: 'TEXTAREA',
-                            label: this.$t('requestReason'),
-                            placeholder: this.$t('requestReason'),
+                            label: 'requestReason',
+                            placeholder: 'requestReason',
                             rows: 4
                         },
                         {
@@ -139,7 +139,7 @@ export default {
                     ]
                 },
                 {
-                    title: this.$t('updateSelectedFriendRequests'),
+                    title: 'updateSelectedFriendRequests',
                     type: 'UPDATE',
                     size: 'L',
                     fields: [
@@ -161,8 +161,8 @@ export default {
                         {
                             id: 'reason',
                             type: 'TEXTAREA',
-                            label: this.$t('requestReason'),
-                            placeholder: this.$t('requestReason'),
+                            label:'requestReason',
+                            placeholder: 'requestReason',
                             rows: 4
                         },
                         {
@@ -183,7 +183,7 @@ export default {
             table: {
                 columns: [
                     {
-                        title: this.$t('friendRequestId'),
+                        title: 'friendRequestId',
                         key: 'id',
                         width: '10%'
                     },
@@ -192,12 +192,12 @@ export default {
                         width: '10%'
                     },
                     {
-                        title: this.$t('requestStatus'),
+                        title: 'requestStatus',
                         key: 'status',
                         width: '10%'
                     },
                     {
-                        title: this.$t('requestReason'),
+                        title: 'requestReason',
                         key: 'reason',
                         width: '10%'
                     },

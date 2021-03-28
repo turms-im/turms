@@ -36,13 +36,13 @@
                         :name="field.id"
                         :label-col="labelCol"
                         :wrapper-col="wrapperCol"
-                        :label="field.label || $t(`${field.id}`)"
-                        :rules="field.rules"
+                        :label="(field.label && $t(field.label)) || $t(`${field.id}`)"
+                        :rules="$validator.parseRules(field.rules)"
                     >
                         <a-input
                             v-if="field.type.toUpperCase() === 'INPUT'"
                             v-model:value="formState[field.id]"
-                            :placeholder="field.placeholder || ''"
+                            :placeholder="(field.placeholder && $t(field.placeholder)) || ''"
                         />
                         <a-date-picker
                             v-if="field.type.toUpperCase() === 'DATE'"
@@ -61,7 +61,7 @@
                             :key="index"
                             v-model:value="formState[field.id]"
                             :rows="field.rows"
-                            :placeholder="field.placeholder || $t(`${field.id}`)"
+                            :placeholder="(field.placeholder && $t(field.placeholder)) || $t(`${field.id}`)"
                         />
                         <a-select
                             v-if="field.type.toUpperCase() === 'SELECT'"
@@ -83,7 +83,7 @@
                                 :key="value.id.toString()"
                                 :value="value.id.toString()"
                             >
-                                {{ value.label }}
+                                {{ $t(value.label) }}
                             </a-select-option>
                         </a-select>
                         <a-tree
@@ -101,14 +101,14 @@
                             v-for="(val, subIndex) in formState[field.id].items"
                             :key="subIndex"
                             :name="`${field.id}.${subIndex}`"
-                            :label="subIndex ? '' : field.label"
+                            :label="subIndex ? '' : $t(field.label)"
                             :required="false"
-                            :rules="field.rules"
+                            :rules="$validator.parseRules(field.rules)"
                             v-bind="subIndex ? $layout.formItemLayoutWithoutLabel : $layout.formItemLayout"
                         >
                             <a-input
                                 v-model:value="formState[field.id].items[subIndex]"
-                                :placeholder="field.placeholder"
+                                :placeholder="$t(field.placeholder)"
                                 class="dynamic-input"
                             />
                             <minus-circle-outlined
@@ -127,7 +127,7 @@
                                 @click="addNewInput(field)"
                             >
                                 <plus-outlined />
-                                {{ field.addButtonLabel }}
+                                {{ $t(field.addButtonLabel) }}
                             </a-button>
                         </a-form-item>
                     </template>
@@ -241,13 +241,13 @@ export default {
         }
     },
     methods: {
+        addNewInput(field) {
+            this.formState[field.id].items.push('');
+        },
         deleteInput(field, index) {
             if (index) {
                 this.formState[field.id].items.splice(index, 1);
             }
-        },
-        addNewInput(field) {
-            this.formState[field.id].items.push('');
         },
         disabledDate(current) {
             // Cannot select the days before today and today

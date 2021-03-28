@@ -29,25 +29,25 @@ export default {
                     type: 'INPUT',
                     model: '',
                     name: 'ids',
-                    placeholder: this.$t('groupId')
+                    placeholder: 'groupId'
                 },
                 {
                     type: 'INPUT',
                     model: '',
                     name: 'typeIds',
-                    placeholder: this.$t('groupTypeId')
+                    placeholder: 'groupTypeId'
                 },
                 {
                     type: 'INPUT',
                     model: '',
                     name: 'creatorIds',
-                    placeholder: this.$t('creatorId')
+                    placeholder: 'creatorId'
                 },
                 {
                     type: 'INPUT',
                     model: '',
                     name: 'ownerIds',
-                    placeholder: this.$t('ownerId')
+                    placeholder: 'ownerId'
                 },
                 {
                     type: 'SELECT',
@@ -56,15 +56,15 @@ export default {
                     options: {
                         base: [{
                             id: 'ALL',
-                            label: this.$t('activeAndInactive')
+                            label: 'activeAndInactive'
                         },
                         {
                             id: true,
-                            label: this.$t('isActive')
+                            label: 'isActive'
                         },
                         {
                             id: false,
-                            label: this.$t('inactive')
+                            label: 'inactive'
                         }]
                     }
                 },
@@ -86,14 +86,14 @@ export default {
             ],
             actionGroups: [
                 [{
-                    title: this.$t('addGroup'),
+                    title: 'addGroup',
                     type: 'CREATE',
                     size: 'L',
                     fields: [
                         {
                             id: 'typeId',
                             type: 'INPUT',
-                            label: this.$t('groupTypeId'),
+                            label: 'groupTypeId',
                             rules: this.$validator.create({onlyNumber: true})
                         },
                         {
@@ -144,25 +144,25 @@ export default {
                                 values: [
                                     {
                                         id: true,
-                                        label: this.$t('isActive')
+                                        label: 'isActive'
                                     },
                                     {
                                         id: false,
-                                        label: this.$t('inactive')
+                                        label: 'inactive'
                                     }]
                             }
                         }
                     ]
                 },
                 {
-                    title: this.$t('updateSelectedGroups'),
+                    title: 'updateSelectedGroups',
                     type: 'UPDATE',
                     size: 'L',
                     fields: [
                         {
                             id: 'typeId',
                             type: 'INPUT',
-                            label: this.$t('groupTypeId'),
+                            label: 'groupTypeId',
                             rules: this.$validator.create({onlyNumber: true})
                         },
                         {
@@ -213,11 +213,11 @@ export default {
                                 values: [
                                     {
                                         id: true,
-                                        label: this.$t('isActive')
+                                        label: 'isActive'
                                     },
                                     {
                                         id: false,
-                                        label: this.$t('inactive')
+                                        label: 'inactive'
                                     }]
                             }
                         }
@@ -227,12 +227,12 @@ export default {
             table: {
                 columns: [
                     {
-                        title: this.$t('groupId'),
+                        title: 'groupId',
                         key: 'id',
                         width: '8%'
                     },
                     {
-                        title: this.$t('groupTypeId'),
+                        title: 'groupTypeId',
                         key: 'typeId',
                         width: '8%'
                     },

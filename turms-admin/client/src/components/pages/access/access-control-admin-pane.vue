@@ -34,7 +34,7 @@ export default {
                     type: 'INPUT',
                     model: '',
                     name: 'accounts',
-                    placeholder: this.$t('adminAccount'),
+                    placeholder: 'adminAccount',
                     rules: {
                         nonSpace: true
                     }
@@ -47,14 +47,14 @@ export default {
                     options: {
                         base: [{
                             id: 'ALL',
-                            label: this.$t('allRoles')
+                            label: 'allRoles'
                         }]
                     }
                 }
             ],
             actionGroups: [
                 [{
-                    title: this.$t('addAdmin'),
+                    title: 'addAdmin',
                     type: 'CREATE',
                     fields: [
                         {
@@ -80,7 +80,7 @@ export default {
                     ]
                 },
                 {
-                    title: this.$t('updateSelectedAdmins'),
+                    title: 'updateSelectedAdmins',
                     type: 'UPDATE',
                     fields: [
                         {

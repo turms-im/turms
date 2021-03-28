@@ -29,19 +29,19 @@ export default {
                     type: 'INPUT',
                     model: '',
                     name: 'groupIds',
-                    placeholder: this.$t('groupId')
+                    placeholder: 'groupId'
                 },
                 {
                     type: 'INPUT',
                     model: '',
                     name: 'userIds',
-                    placeholder: this.$t('userId')
+                    placeholder: 'userId'
                 },
                 {
                     type: 'INPUT',
                     model: '',
                     name: 'requesterIds',
-                    placeholder: this.$t('requesterId')
+                    placeholder: 'requesterId'
                 },
                 {
                     type: 'DATE-RANGE',
@@ -51,7 +51,7 @@ export default {
             ],
             actionGroups: [
                 [{
-                    title: this.$t('addBlockedUser'),
+                    title: 'addBlockedUser',
                     type: 'CREATE',
                     size: 'L',
                     fields: [
@@ -77,7 +77,7 @@ export default {
                     ]
                 },
                 {
-                    title: this.$t('updateSelectedBlockedUsers'),
+                    title: 'updateSelectedBlockedUsers',
                     type: 'UPDATE',
                     size: 'L',
                     fields: [

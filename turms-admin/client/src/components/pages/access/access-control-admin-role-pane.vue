@@ -28,13 +28,13 @@ export default {
             initialDataUrls: [this.$rs.apis.adminRole],
             actionGroups: [
                 [{
-                    title: this.$t('addRole'),
+                    title: 'addRole',
                     type: 'CREATE',
                     fields: [
                         {
                             id: 'id',
                             type: 'INPUT',
-                            label: this.$t('roleId'),
+                            label: 'roleId',
                             rules: this.$validator.create({required: true, onlyNumber: true})
                         },
                         {
@@ -50,7 +50,7 @@ export default {
                         {
                             id: 'permissions',
                             type: 'TREE',
-                            label: this.$t('permission'),
+                            label: 'permission',
                             checkedKeys: [],
                             data: {},
                             transform: this.transformParams,
@@ -59,7 +59,7 @@ export default {
                     ]
                 },
                 {
-                    title: this.$t('updateSelectedRoles'),
+                    title: 'updateSelectedRoles',
                     type: 'UPDATE',
                     fields: [
                         {
@@ -75,7 +75,7 @@ export default {
                         {
                             id: 'permissions',
                             type: 'TREE',
-                            label: this.$t('permission'),
+                            label: 'permission',
                             checkedKeys: [],
                             data: {},
                             transform: this.transformParams
@@ -86,7 +86,7 @@ export default {
             table: {
                 columns: [
                     {
-                        title: this.$t('roleId'),
+                        title: 'roleId',
                         key: 'id',
                         width: '15%'
                     },
@@ -99,7 +99,7 @@ export default {
                         width: '15%'
                     },
                     {
-                        title: this.$t('permission'),
+                        title: 'permission',
                         key: 'permissions',
                         type: 'tree',
                         width: '45%'

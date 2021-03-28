@@ -1,4 +1,6 @@
 import {createApp} from 'vue';
+import enUS from 'ant-design-vue/es/locale/en_US';
+import zhCN from 'ant-design-vue/es/locale/zh_CN';
 import axios from 'axios';
 import moment from 'moment';
 import _ from 'lodash';
@@ -15,7 +17,6 @@ import store from './store';
 import JSONbig from 'json-bigint';
 
 const isProd = process.env.NODE_ENV === 'production';
-// Vue.config.productionTip = false;
 if (isProd) {
     if (window.console) {
         ['log', 'debug', 'warn', 'info'].forEach(method => {
@@ -35,17 +36,22 @@ createApp(App)
     .use(store)
     .use({
         install: app => {
-            app.config.globalProperties.$http = axios.create({
+            const globalProperties = app.config.globalProperties;
+            globalProperties.$http = axios.create({
                 timeout: 15 * 1000,
                 transformResponse: [function (data) {
                     return data ? JSONbig.parse(data) : data;
                 }]
             });
-            app.config.globalProperties.$moment = moment;
-            app.config.globalProperties.$qs = qs;
-            app.config.globalProperties.$rs = resources;
+            globalProperties.$locales = {
+                enUS,
+                zhCN
+            };
+            globalProperties.$moment = moment;
+            globalProperties.$qs = qs;
+            globalProperties.$rs = resources;
             // Don't use "_" because of https://github.com/vuejs/vue-next/issues/2546
-            app.config.globalProperties.$_ = {
+            globalProperties.$_ = {
                 get: _.get,
                 set: _.set
             };

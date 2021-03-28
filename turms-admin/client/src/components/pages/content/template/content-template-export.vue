@@ -70,7 +70,7 @@ export default {
                 return;
             }
             this.exporting = true;
-            const hide = this.$message.loading(this.$t('exportingData'), 0);
+            const hide = this.$message.loading(this.$t('exportingDataAsExcel'), 0);
             this.fetchData()
                 .then(() => {
                     if (!this.records.length) {

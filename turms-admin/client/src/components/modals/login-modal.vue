@@ -13,7 +13,7 @@
             ref="form"
             :wrapper-col="{span: 24}"
             :model="form"
-            :rules="rules"
+            :rules="$validator.parseRules(rules)"
             class="login-form"
             @finish="onValidationPass"
             @finishFailed="onValidationFailed"
