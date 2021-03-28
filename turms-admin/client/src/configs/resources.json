@@ -127,15 +127,20 @@
                 "ADMIN_ROLE_DELETE",
                 "ADMIN_ROLE_UPDATE",
                 "ADMIN_ROLE_QUERY"
-            ],
-            "ADMIN_ACTION_LOG": [
-                "ADMIN_ACTION_LOG_DELETE",
-                "ADMIN_ACTION_LOG_QUERY"
             ]
         },
+        "CLUSTER_MEMBER": [
+            "CLUSTER_MEMBERS_CREATE",
+            "CLUSTER_MEMBERS_DELETE",
+            "CLUSTER_MEMBERS_UPDATE",
+            "CLUSTER_MEMBERS_QUERY"
+        ],
+        "CLUSTER_LEADER": [
+            "CLUSTER_LEADER_UPDATE",
+            "CLUSTER_LEADER_QUERY"
+        ],
         "CLUSTER_CONFIG": [
-            "CLUSTER_CONFIG_UPDATE",
-            "CLUSTER_CONFIG_QUERY"
+            "CLUSTER_CONFIG_UPDATE"
         ]
     },
     "apis": {
