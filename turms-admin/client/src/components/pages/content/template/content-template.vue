@@ -417,8 +417,9 @@ export default {
         hanlePopconfirmVisibleChange(visible) {
             this.popconfirmVisible = visible && this.hasSelectedRows;
         },
-        handleTableChange(pagination, filters, sorter) {
-            if (JSON.stringify(sorter) === JSON.stringify(this.sorter)) {
+        handleTableChange(pagination) {
+            const isPaginationChanged = JSON.stringify(pagination) !== JSON.stringify(this.pagination);
+            if (isPaginationChanged) {
                 this.pagination = {...this.pagination, current: pagination.current};
                 if (this.pageable) {
                     this.search();

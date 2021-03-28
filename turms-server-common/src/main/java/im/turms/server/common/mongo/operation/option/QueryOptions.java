@@ -65,12 +65,15 @@ public final class QueryOptions {
         return this;
     }
 
+    /**
+     * @param page starts from 0
+     */
     public QueryOptions paginateIfNotNull(@Nullable Integer page, @Nullable Integer size) {
         if (size != null) {
             if (page == null) {
                 page = 0;
             }
-            skip = size * (page - 1);
+            skip = size * page;
             limit = size;
         }
         return this;
