@@ -1,4 +1,3 @@
-import './ant-style.css';
 import {
     Button,
     Card,
