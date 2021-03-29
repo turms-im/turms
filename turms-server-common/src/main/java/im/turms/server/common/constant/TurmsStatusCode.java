@@ -55,6 +55,7 @@ public enum TurmsStatusCode {
 
     // Admin
     UNAUTHORIZED(1300, "Unauthorized", 401),
+    NO_FILTER_FOR_DELETE_OPERATION(1301, "Delete operation should have at least one filter", 400),
 
     // Cluster - Leader
     NON_EXISTING_MEMBER_TO_BE_LEADER(1800, "Cannot find the node", 404),

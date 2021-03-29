@@ -43,10 +43,11 @@ public class AdminApiProperties {
     @GlobalProperty
     private boolean enabled = true;
 
-    @Description("Whether to allow administrators to delete data without any filter")
+    @Description("Whether to allow administrators to delete data without any filter. " +
+            "Better false to prevent administrators from deleting all data by accident")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    private boolean allowDeletingWithoutFilter = true;
+    private boolean allowDeletingWithoutFilter;
 
     // FIXME: The property is unused
     @Description("The maximum day difference per query request")

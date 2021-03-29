@@ -17,6 +17,7 @@
 
 package im.turms.common.util;
 
+import java.lang.reflect.Array;
 import java.util.Collection;
 
 /**
@@ -39,6 +40,10 @@ public final class Validator {
                     }
                 } else if (o instanceof Collection) {
                     if (!((Collection<?>) o).isEmpty()) {
+                        return false;
+                    }
+                } else if (o.getClass().isArray()) {
+                    if (Array.getLength(o) > 0) {
                         return false;
                     }
                 } else {

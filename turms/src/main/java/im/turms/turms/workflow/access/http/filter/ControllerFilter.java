@@ -40,7 +40,6 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.cors.reactive.CorsUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerMapping;
@@ -51,11 +50,9 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotNull;
-import java.lang.reflect.Parameter;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -68,7 +65,6 @@ public class ControllerFilter implements WebFilter {
     private static final String ATTRIBUTES_ACCOUNT = "account";
     private static final BasicDBObject EMPTY_DBOJBECT = new BasicDBObject();
     private static final String ATTR_BODY = "BODY";
-    private static final List<String> DELETE_FILTER_PARAM_NAME = List.of("ids", "keys", "accounts");
 
     private final Node node;
     private final RequestMappingHandlerMapping requestMappingHandlerMapping;
@@ -123,13 +119,6 @@ public class ControllerFilter implements WebFilter {
         if (!enableAdminApi) {
             exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
             return Mono.empty();
-        }
-        if (!node.getSharedProperties().getService().getAdminApi().isAllowDeletingWithoutFilter()) {
-            DeleteMapping deleteMapping = handlerMethod.getMethodAnnotation(DeleteMapping.class);
-            if (deleteMapping != null && !isValidDeleteRequest(handlerMethod, exchange, deleteMapping)) {
-                exchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
-                return Mono.empty();
-            }
         }
         String[] credentials = parseAccountAndPassword(exchange);
         if (credentials == null) {
@@ -314,23 +303,6 @@ public class ControllerFilter implements WebFilter {
             }
         };
         return exchange.mutate().request(mutatedRequest).build();
-    }
-
-    private boolean isValidDeleteRequest(HandlerMethod handlerMethod, ServerWebExchange exchange, DeleteMapping deleteMapping) {
-        String methodFilterName = null;
-        for (Parameter parameter : handlerMethod.getMethod().getParameters()) {
-            String name = parameter.getName();
-            if (DELETE_FILTER_PARAM_NAME.contains(name)) {
-                methodFilterName = name;
-            }
-        }
-        if (methodFilterName == null) {
-            return true;
-        } else {
-            MultiValueMap<String, String> queryParams = exchange.getRequest().getQueryParams();
-            String filterValue = queryParams.getFirst(methodFilterName);
-            return filterValue != null && !filterValue.isBlank();
-        }
     }
 
     private boolean isOpenApiEnabledAndOpenApiRequest(HandlerMethod handlerMethod) {
