@@ -74,8 +74,12 @@ TURMS_PATH_CONF=$(
   cd "$TURMS_PATH_CONF"
   pwd
 )
-TURMS_APP_CONF="$TURMS_PATH_CONF"/application.yaml
-TURMS_JVM_CONF="$TURMS_PATH_CONF"/jvm.options
+if [ -z "$TURMS_APP_CONF" ]; then
+  TURMS_APP_CONF="$TURMS_PATH_CONF"/application.yaml
+fi
+if [ -z "$TURMS_JVM_CONF" ]; then
+  TURMS_JVM_CONF="$TURMS_PATH_CONF"/jvm.options
+fi
 
 cd "$TURMS_HOME"
 
