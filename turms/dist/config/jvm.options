@@ -11,6 +11,9 @@
 
 -XX:+UseG1GC
 
+# Module
+--illegal-access=permit
+
 # Diagnostics
 
 -XX:+PrintFlagsFinal
