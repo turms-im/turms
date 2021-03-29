@@ -34,5 +34,6 @@ public final class BsonPool {
     public static final BsonInt32 BSON_INT32_1 = new BsonInt32(1);
     public static final BsonInt32 BSON_INT32_NEGATIVE_1 = new BsonInt32(-1);
     public static final BsonString BSON_STRING_HASHED = new BsonString("hashed");
+    public static final BsonString BSON_STRING_EMPTY = new BsonString("");
 
 }

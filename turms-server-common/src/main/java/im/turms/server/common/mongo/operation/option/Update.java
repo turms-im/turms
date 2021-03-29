@@ -17,6 +17,7 @@
 
 package im.turms.server.common.mongo.operation.option;
 
+import im.turms.server.common.mongo.BsonPool;
 import org.bson.Document;
 
 import javax.annotation.Nullable;
@@ -30,6 +31,8 @@ import java.util.Date;
 public final class Update {
 
     private final Document document = new Document();
+    private Document set;
+    private Document unset;
 
     private Update() {
     }
@@ -42,44 +45,60 @@ public final class Update {
         return document;
     }
 
-    public Update set(String key, Object value) {
-        document.append("$set", new Document(key, value));
-        return this;
+    public Update set(String field, Object value) {
+        return appendSet(field, value);
     }
 
-    public Update setIfNotNull(@NotNull String key, @Nullable Object value) {
+    public Update setIfNotNull(@NotNull String field, @Nullable Object value) {
         if (value != null) {
             if (value instanceof Collection) {
                 if (!((Collection<?>) value).isEmpty()) {
-                    document.append("$set", new Document(key, value));
+                    appendSet(field, value);
                 }
             } else {
-                document.append("$set", new Document(key, value));
+                appendSet(field, value);
             }
         }
         return this;
     }
 
-    public Update setIfTrue(String key, Object value, boolean condition) {
+    public Update setIfTrue(String field, Object value, boolean condition) {
         if (condition) {
-            document.append("$set", new Document(key, value));
+            appendSet(field, value);
         }
         return this;
     }
 
-    public Update setOrUnsetDate(String key, Date date) {
+    public Update setOrUnsetDate(String field, Date date) {
         if (date != null) {
             if (date.getTime() > 0) {
-                document.append("$set", new Document(key, date));
+                appendSet(field, date);
             } else {
-                document.append("$unset", key);
+                appendUnset(field);
             }
         }
         return this;
     }
 
-    public Update unset(String key) {
-        document.append("$unset", key);
+    public Update unset(String field) {
+        return appendUnset(field);
+    }
+
+    private Update appendSet(String key, Object value) {
+        if (set == null) {
+            set = new Document();
+            document.append("$set", set);
+        }
+        set.put(key, value);
+        return this;
+    }
+
+    private Update appendUnset(String field) {
+        if (unset == null) {
+            unset = new Document();
+            document.append("$unset", unset);
+        }
+        unset.put(field, BsonPool.BSON_STRING_EMPTY);
         return this;
     }
 
