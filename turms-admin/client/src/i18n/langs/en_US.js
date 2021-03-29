@@ -217,6 +217,7 @@ const en_US = {
     'manager': 'Manager',
     'maxOnlineUsersNumber': '-',
     'member': 'Member',
+    'memberId': 'Member ID',
     'memberInfoUpdateStrategy': 'Member Info Update Strategy',
     'messageClass': 'Message',
     'messageEditable': 'Message Editable',

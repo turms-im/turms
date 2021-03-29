@@ -217,6 +217,7 @@ const zh_CN = {
     'manager': '管理员',
     'maxOnlineUsersNumber': '用户同时在线峰值',
     'member': '群成员',
+    'memberId': '群成员ID',
     'memberInfoUpdateStrategy': '群成员信息更新策略',
     'messageClass': '消息类',
     'messageEditable': '允许编辑消息',
