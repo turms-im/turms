@@ -31,6 +31,7 @@
                 <a-input
                     ref="accountInput"
                     v-model:value="form.account"
+                    autocomplete="username"
                     :placeholder="$t('adminAccount')"
                 >
                     <template #prefix>
@@ -43,6 +44,7 @@
             <a-form-item name="password">
                 <a-input
                     v-model:value="form.password"
+                    autocomplete="current-password"
                     :placeholder="$t('adminPassword')"
                     type="password"
                 >
