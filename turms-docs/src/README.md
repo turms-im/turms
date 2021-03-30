@@ -9,14 +9,14 @@ Turms是一套全球范围内最为先进的开源即时通讯引擎。
 （当前Demo的服务端版本：ghcr.io/turms-im/turms:latest、ghcr.io/turms-im/turms-gateway:latest、ghcr.io/turms-im/turms-admin:latest）
 
 * turms-admin服务端地址：http://120.24.57.206:6510
-  登陆turms-admin时，在turms服务端地址栏处输入：http://120.24.57.206:8510 ，且账号与密码均为：turms（ROOT角色）
-* turms服务端的管理员API地址（PROD配置，无Mock数据）：http://120.24.57.206:8510
+  登陆turms-admin时，在turms服务端地址栏处输入：http://120.24.57.206:8510 ，且账号与密码均为：guest（该账号有查询与增加领域模型的权限，无更新与删除领域模型的权限）
+* turms服务端的管理员API地址（DEV配置，带Mock数据）：http://120.24.57.206:8510
   （提醒：如果您直接打开该页面，会提示401无权限”）
 * turms-gateway服务端地址：http://120.24.57.206:10510 （WebSocket端口）、http://120.24.57.206:11510 （TCP端口）
 
 您可以使用任意turms-client-(java/js/swift)客户端，向turms-gateway服务端发送请求，并与其他用户进行交互。
 
-另外，Playground由一条指令全自动搭建：`docker-compose -f docker-compose.standalone.yml up --force-recreate -d`
+另外，Playground由一条指令全自动搭建：`ENV=dev docker-compose -f docker-compose.standalone.yml up --force-recreate -d`
 
 ### Quick Start
 
