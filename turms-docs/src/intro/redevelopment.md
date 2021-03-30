@@ -5,7 +5,7 @@
 Turms基于Apache V2协议进行开发，并深入贯彻开源精神与宗旨。既欢迎其他开发者或团队的借鉴，也不担心抄袭。
 因为Turms有且只有一个目标：致力于构建全球范围内最为卓越开源即时通讯引擎。
 
-对于任何二次开发者或团队，Turms后期都会不加保留为其逐步开放各种相关架构设计、技术选型、代码视图设计等文档，甚至为二次开发者提供响应式编程水平测试（如果无法通过这些基础测试，那就无法基于Turms进行二次开发）。
+对于任何二次开发者或团队，Turms后期都会不加保留为其逐步开放各种相关架构设计、技术选型、代码视图设计等文档。
 不管任何开发者或团队是借鉴还是抄袭，Turms对其提出的issues都将一视同仁，对有价值的问题都将予以热心答复。
 
 因为Turms的目标很简单：致力于构建全球范围内最为卓越开源即时通讯引擎。
@@ -25,12 +25,29 @@ Turms基于Apache V2协议进行开发，并深入贯彻开源精神与宗旨。
 
 ## 培训
 
-### 使用Reactor时的常见误区
+### 架构
 
-（如果您的团队初学Reactor也不必太紧张。只要多练习勤上手，思想不要太僵化，达到熟练编写上层代码水平还是不难的）
+#### 技术架构简述（TODO）
 
-Turms服务端深度使用Reactor框架进行代码编写，而Reactor官方文档对很多语法组合讲解比较抽象与晦涩，尤其在结合复杂的业务代码时，想把握住Reactor的数据流就比较困难。因此本章节对使用Reactor进行开发时的常见误区进行基本讲解，以帮助二次开发者能更好地掌握并上手其语法（若您未曾了解过Reactor，您可以先阅读 [Reactor 3 Reference Guide](https://projectreactor.io/docs/core/release/reference/) 文档，以了解其基本概念）。
+#### 业务请求流程（TODO）
 
-其中，最后一个练习由：im.turms.gateway.access.websocket.config.TurmsWebSocketHandler#handle 部分代码简化而来，此方法承载了业务层面上的会话接入、用户请求处理路由、服务端消息响应与通知等逻辑，是Reactor框架在Turms服务端处相对最复杂的体现，若您能根据Turms的源码注释看懂每个语句的意义（不必过于深究业务细节），同时也能实战在轻松运用以下练习的语法点并避开常见误区，那么就能够开始基于Turms做二次开发了。
+### 开发
 
-（TODO）
+#### 代码拉取
+
+1. git clone https://github.com/turms-im/turms.git
+
+2. 由于Turms各子项目的proto模型文件放在一个独立的仓库之中，因此您还需要通过以下命令来拉取submodule中的代码。
+
+```
+git submodule update --init --recursive
+git submodule foreach git pull origin master
+```
+
+#### 插件开发
+
+参考 [插件开发](https://turms-im.github.io/docs/for-developers/custom-plugin.html)
+
+#### 配置项开发（TODO）
+
+### 测试（TODO）
