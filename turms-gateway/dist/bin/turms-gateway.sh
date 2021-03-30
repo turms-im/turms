@@ -108,7 +108,7 @@ for option in "$@"; do
 done
 
 JVM_OPTIONS="$(tr -d "\r" < "$TURMS_GATEWAY_JVM_CONF" | grep -v "^#" | tr "\n" " " | tr -s " ")"
-JVM_OPTIONS+=" -Dspring.config.location=$TURMS_GATEWAY_APP_CONF"
+JVM_OPTIONS+=" -Dspring.config.location=classpath:/,$TURMS_GATEWAY_APP_CONF"
 JVM_OPTIONS+=" ${TURMS_GATEWAY_JVM_OPTS}"
 
 MAIN_CLASS="im.turms.turms.TurmsGatewayApplication"
