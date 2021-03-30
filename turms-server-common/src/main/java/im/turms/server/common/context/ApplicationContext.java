@@ -61,6 +61,8 @@ public class ApplicationContext {
         this.activeProfile = activeProfile;
         this.isProduction = isProduction;
 
+        log.info("Running in a {} environment", isProduction ? "production" : "non-production");
+
         setupErrorHandlerContext();
     }
 
