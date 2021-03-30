@@ -1,3 +1,10 @@
+# docker-compose -f docker-compose.standalone.yml up --force-recreate
+#
+# Run in a specific environment (e.g. "dev"):
+# Powershell: $env:ENV="dev";docker-compose -f docker-compose.standalone.yml up --force-recreate
+# Unix: ENV=dev docker-compose -f docker-compose.standalone.yml up --force-recreate
+#
+
 version: "3.4"
 
 services:
@@ -61,6 +68,8 @@ services:
         condition: service_healthy
     environment:
       TURMS_JVM_OPTS: >
+        -Dspring.profiles.active=${ENV}
+
         -Dturms.cluster.node.network.auto-increment=false
 
         -Dturms.cluster.discovery.address.advertise-strategy=advertise_address
@@ -102,6 +111,8 @@ services:
         condition: service_healthy
     environment:
       TURMS_GATEWAY_JVM_OPTS: >
+        -Dspring.profiles.active=${ENV}
+
         -Dturms.cluster.node.network.auto-increment=false
         -Dturms.cluster.node.network.port=7610
 
