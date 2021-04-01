@@ -33,6 +33,30 @@
 
 ### IM架构特性（TODO）
 
+## 架构说明
+
+![参考架构图](https://raw.githubusercontent.com/turms-im/assets/master/turms/reference-architecture.png)
+
+### 客户端访问服务端经典流程
+
+该流程为客户端访问服务端经典流程，也是Turms架构实现水平扩展的过程，您可以根据实际情况进行简化。
+
+* 当客户端需要与服务端建立连接时，客户端通过DNS服务端来查询接入层服务端域名对应的IP地址，而该IP地址指向LVS、Nginx、或turms-gateway（根据您实际应用规模而定）。该DNS服务端可以配置一个或多个公网VIP地址（生产环境中切勿配置真实IP地址，以防御DDoS攻击），并通过轮询或其他策略返回给客户端一个VIP地址。
+
+* 客户端拿到VIP地址之后，客户端可以向该地址发起业务请求的Protobuf数据流。
+
+* 该数据流经过负载均衡服务端（可选）的转发后，会先到达turms-gateway。turms-gateway会先对该数据流进行简单的Protobuf格式校验（不校验具体业务请求的合法性，是为了与turms服务端进行业务逻辑解耦，以实现turms服务端对业务请求格式进行更新后，turms-gateway不需要停机），如果是非法数据流，则直接断开TCP连接。否则，若为合法请求，则会对其进行部分解析，以确认turms-gateway能够自行处理这个请求。如果能够自行处理则在处理后返回响应，如果无法处理，则先根据负载均衡策略从可用的turms服务端列表中选出一个turms服务端，再通过自研的RPC框架将请求转发给turms服务端。
+
+  补充：由于turms-gateway采用了无状态的架构设计，因此任意用户可以连接到任意一个turms-gateway服务端上，您也可以弹性增删turms-gateway节点，以实现弹性水平拓展；状态（即用户会话信息）被转移到了分布式内存Redis服务端当中。
+
+* turms服务端收到RPC请求（包裹着用户请求）后，对其进行校验与处理（处理过程中通常会发送对应的CRUD请求至mongos进行处理），并将产生的响应与通知，发回给turms-gateway。
+
+  补充：Turms采用MongoDB的分片副本架构。mongos收到CRUD请求后，会根据配置进行请求路由
+
+* 对于响应，turms-gateway会将响应直接透传给用户。对于通知，turms-gateway会先查询通知所涉及到的用户，再通过Redis查询该批用户各自所连接的turms-gateway地址，并触发NotificationHandler插件方法以协助开发者实现自定义逻辑（如：实现离线用户的消息推送功能）。之后，turms-gateway会将通知转发给在线用户所连接的turms-gateway，而收到通知的turms-gateway会将该通知转发给自身所连接的对应用户。
+
+  （值得一提的是，以上所有RPC、数据库调用均是异步非阻塞的）
+
 ## Roadmap
 
 1. 支持Turms独有的微服务架构
