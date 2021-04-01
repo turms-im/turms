@@ -33,7 +33,11 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 @NoArgsConstructor
 public class NodeProperties {
 
-    @Description("e.g. \"turms001\", \"turms002\"")
+    public static final int NODE_ID_MAX_LENGTH = 32;
+
+    @Description("The node ID must start with a letter or underscore, " +
+            "and matches zero or more of characters [a-zA-Z0-9_] after the beginning. " +
+            "e.g. \"turms001\", \"turms_002\"")
     private String id = "";
 
     @NestedConfigurationProperty

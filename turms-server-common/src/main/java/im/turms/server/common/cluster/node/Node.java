@@ -134,6 +134,15 @@ public class Node {
             tempNodeId = RandomStringUtils.randomAlphanumeric(8).toLowerCase();
             log.warn("A random node ID {} has been used. You should better set a node ID manually in the production environment",
                     tempNodeId);
+        } else {
+            if (tempNodeId.length() > NodeProperties.NODE_ID_MAX_LENGTH) {
+                throw new IllegalArgumentException(
+                        "The length of node ID must be less than or equals to " + NodeProperties.NODE_ID_MAX_LENGTH);
+            }
+            if (!tempNodeId.matches("^[a-zA-Z_]\\w*$")) {
+                throw new IllegalArgumentException("The node ID must start with a letter or underscore, " +
+                        "and matches zero or more of characters [a-zA-Z0-9_] after the beginning");
+            }
         }
         nodeId = tempNodeId;
 

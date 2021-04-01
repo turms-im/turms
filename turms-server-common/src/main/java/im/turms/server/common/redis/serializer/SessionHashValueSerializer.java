@@ -18,6 +18,7 @@
 package im.turms.server.common.redis.serializer;
 
 import im.turms.common.constant.UserStatus;
+import im.turms.server.common.property.env.common.cluster.NodeProperties;
 import org.springframework.data.redis.serializer.RedisElementReader;
 import org.springframework.data.redis.serializer.RedisElementWriter;
 
@@ -40,8 +41,9 @@ public class SessionHashValueSerializer implements RedisElementWriter<Object>, R
                     .flip();
         } else if (element instanceof String) {
             byte[] nodeIdBytes = ((String) element).getBytes(StandardCharsets.UTF_8);
-            if (nodeIdBytes.length == 0 || nodeIdBytes.length > Byte.MAX_VALUE) {
-                throw new IllegalArgumentException("The length of the nodeId must be greater than 0 and less than 128");
+            if (nodeIdBytes.length == 0 || nodeIdBytes.length > NodeProperties.NODE_ID_MAX_LENGTH) {
+                throw new IllegalArgumentException(
+                        "The length of node ID must be greater than 0 and less than or equals to " + NodeProperties.NODE_ID_MAX_LENGTH);
             }
             return ByteBuffer.allocate(nodeIdBytes.length)
                     .put(nodeIdBytes)
