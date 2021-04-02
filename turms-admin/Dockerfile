@@ -25,15 +25,12 @@ server {                                                          \
     listen       6510;                                            \
     server_name  localhost;                                       \
     gzip on;                                                      \
+    gzip_vary on;                                                 \
+    gzip_types text/css application/javascript image/svg+xml;     \
                                                                   \
     location / {                                                  \
         root   /usr/share/nginx/html;                             \
         try_files $uri /index.html;                               \
-    }                                                             \
-                                                                  \
-    error_page   500 502 503 504  /50x.html;                      \
-    location = /50x.html {                                        \
-        root   /usr/share/nginx/html;                             \
     }                                                             \
 }' > /etc/nginx/conf.d/default.conf
 
