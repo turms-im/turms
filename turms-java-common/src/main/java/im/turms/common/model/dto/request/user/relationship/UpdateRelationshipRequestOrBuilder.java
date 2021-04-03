@@ -31,47 +31,35 @@ public interface UpdateRelationshipRequestOrBuilder extends
   long getUserId();
 
   /**
-   * <code>.google.protobuf.BoolValue blocked = 2;</code>
+   * <code>bool blocked = 2;</code>
    * @return Whether the blocked field is set.
    */
   boolean hasBlocked();
   /**
-   * <code>.google.protobuf.BoolValue blocked = 2;</code>
+   * <code>bool blocked = 2;</code>
    * @return The blocked.
    */
-  com.google.protobuf.BoolValue getBlocked();
-  /**
-   * <code>.google.protobuf.BoolValue blocked = 2;</code>
-   */
-  com.google.protobuf.BoolValueOrBuilder getBlockedOrBuilder();
+  boolean getBlocked();
 
   /**
-   * <code>.google.protobuf.Int32Value new_group_index = 3;</code>
+   * <code>int32 new_group_index = 3;</code>
    * @return Whether the newGroupIndex field is set.
    */
   boolean hasNewGroupIndex();
   /**
-   * <code>.google.protobuf.Int32Value new_group_index = 3;</code>
+   * <code>int32 new_group_index = 3;</code>
    * @return The newGroupIndex.
    */
-  com.google.protobuf.Int32Value getNewGroupIndex();
-  /**
-   * <code>.google.protobuf.Int32Value new_group_index = 3;</code>
-   */
-  com.google.protobuf.Int32ValueOrBuilder getNewGroupIndexOrBuilder();
+  int getNewGroupIndex();
 
   /**
-   * <code>.google.protobuf.Int32Value delete_group_index = 4;</code>
+   * <code>int32 delete_group_index = 4;</code>
    * @return Whether the deleteGroupIndex field is set.
    */
   boolean hasDeleteGroupIndex();
   /**
-   * <code>.google.protobuf.Int32Value delete_group_index = 4;</code>
+   * <code>int32 delete_group_index = 4;</code>
    * @return The deleteGroupIndex.
    */
-  com.google.protobuf.Int32Value getDeleteGroupIndex();
-  /**
-   * <code>.google.protobuf.Int32Value delete_group_index = 4;</code>
-   */
-  com.google.protobuf.Int32ValueOrBuilder getDeleteGroupIndexOrBuilder();
+  int getDeleteGroupIndex();
 }

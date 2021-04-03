@@ -17,7 +17,6 @@
 
 package im.turms.turms.workflow.service.impl.user.relationship;
 
-import com.google.protobuf.Int64Value;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
@@ -220,7 +219,7 @@ public class UserRelationshipService {
                                         throw TurmsBusinessException.get(TurmsStatusCode.NO_CONTENT);
                                     }
                                     return Int64ValuesWithVersion.newBuilder()
-                                            .setLastUpdatedDate(Int64Value.of(date.getTime()))
+                                            .setLastUpdatedDate(date.getTime())
                                             .addAllValues(ids)
                                             .build();
                                 });
@@ -254,7 +253,7 @@ public class UserRelationshipService {
                                         throw TurmsBusinessException.get(TurmsStatusCode.NO_CONTENT);
                                     }
                                     UserRelationshipsWithVersion.Builder builder = UserRelationshipsWithVersion.newBuilder()
-                                            .setLastUpdatedDate(Int64Value.of(date.getTime()));
+                                            .setLastUpdatedDate(date.getTime());
                                     for (UserRelationship relationship : relationships) {
                                         im.turms.common.model.bo.user.UserRelationship userRelationship =
                                                 ProtoUtil.relationship2proto(relationship).build();

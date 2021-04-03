@@ -25,77 +25,57 @@ public interface UserRelationshipOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>.google.protobuf.Int64Value owner_id = 1;</code>
+   * <code>int64 owner_id = 1;</code>
    * @return Whether the ownerId field is set.
    */
   boolean hasOwnerId();
   /**
-   * <code>.google.protobuf.Int64Value owner_id = 1;</code>
+   * <code>int64 owner_id = 1;</code>
    * @return The ownerId.
    */
-  com.google.protobuf.Int64Value getOwnerId();
-  /**
-   * <code>.google.protobuf.Int64Value owner_id = 1;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getOwnerIdOrBuilder();
+  long getOwnerId();
 
   /**
-   * <code>.google.protobuf.Int64Value related_user_id = 2;</code>
+   * <code>int64 related_user_id = 2;</code>
    * @return Whether the relatedUserId field is set.
    */
   boolean hasRelatedUserId();
   /**
-   * <code>.google.protobuf.Int64Value related_user_id = 2;</code>
+   * <code>int64 related_user_id = 2;</code>
    * @return The relatedUserId.
    */
-  com.google.protobuf.Int64Value getRelatedUserId();
-  /**
-   * <code>.google.protobuf.Int64Value related_user_id = 2;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getRelatedUserIdOrBuilder();
+  long getRelatedUserId();
 
   /**
-   * <code>.google.protobuf.Int64Value block_date = 3;</code>
+   * <code>int64 block_date = 3;</code>
    * @return Whether the blockDate field is set.
    */
   boolean hasBlockDate();
   /**
-   * <code>.google.protobuf.Int64Value block_date = 3;</code>
+   * <code>int64 block_date = 3;</code>
    * @return The blockDate.
    */
-  com.google.protobuf.Int64Value getBlockDate();
-  /**
-   * <code>.google.protobuf.Int64Value block_date = 3;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getBlockDateOrBuilder();
+  long getBlockDate();
 
   /**
-   * <code>.google.protobuf.Int64Value group_index = 4;</code>
+   * <code>int64 group_index = 4;</code>
    * @return Whether the groupIndex field is set.
    */
   boolean hasGroupIndex();
   /**
-   * <code>.google.protobuf.Int64Value group_index = 4;</code>
+   * <code>int64 group_index = 4;</code>
    * @return The groupIndex.
    */
-  com.google.protobuf.Int64Value getGroupIndex();
-  /**
-   * <code>.google.protobuf.Int64Value group_index = 4;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getGroupIndexOrBuilder();
+  long getGroupIndex();
 
   /**
-   * <code>.google.protobuf.Int64Value establishment_date = 5;</code>
+   * <code>int64 establishment_date = 5;</code>
    * @return Whether the establishmentDate field is set.
    */
   boolean hasEstablishmentDate();
   /**
-   * <code>.google.protobuf.Int64Value establishment_date = 5;</code>
+   * <code>int64 establishment_date = 5;</code>
    * @return The establishmentDate.
    */
-  com.google.protobuf.Int64Value getEstablishmentDate();
-  /**
-   * <code>.google.protobuf.Int64Value establishment_date = 5;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getEstablishmentDateOrBuilder();
+  long getEstablishmentDate();
 }

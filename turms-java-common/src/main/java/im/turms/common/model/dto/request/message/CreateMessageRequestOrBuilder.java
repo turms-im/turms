@@ -25,77 +25,64 @@ public interface CreateMessageRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>.google.protobuf.Int64Value message_id = 1;</code>
+   * <code>int64 message_id = 1;</code>
    * @return Whether the messageId field is set.
    */
   boolean hasMessageId();
   /**
-   * <code>.google.protobuf.Int64Value message_id = 1;</code>
+   * <code>int64 message_id = 1;</code>
    * @return The messageId.
    */
-  com.google.protobuf.Int64Value getMessageId();
-  /**
-   * <code>.google.protobuf.Int64Value message_id = 1;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getMessageIdOrBuilder();
+  long getMessageId();
 
   /**
    * <pre>
-   * is_system_message can only be true if the user is an administrator, or turms server will return an error
+   * is_system_message can only be true if the user is an administrator,
+   * or turms server will return an error
    * </pre>
    *
-   * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
+   * <code>bool is_system_message = 2;</code>
    * @return Whether the isSystemMessage field is set.
    */
   boolean hasIsSystemMessage();
   /**
    * <pre>
-   * is_system_message can only be true if the user is an administrator, or turms server will return an error
+   * is_system_message can only be true if the user is an administrator,
+   * or turms server will return an error
    * </pre>
    *
-   * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
+   * <code>bool is_system_message = 2;</code>
    * @return The isSystemMessage.
    */
-  com.google.protobuf.BoolValue getIsSystemMessage();
-  /**
-   * <pre>
-   * is_system_message can only be true if the user is an administrator, or turms server will return an error
-   * </pre>
-   *
-   * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
-   */
-  com.google.protobuf.BoolValueOrBuilder getIsSystemMessageOrBuilder();
+  boolean getIsSystemMessage();
 
   /**
-   * <code>.google.protobuf.Int64Value group_id = 3;</code>
+   * <code>int64 group_id = 3;</code>
    * @return Whether the groupId field is set.
    */
   boolean hasGroupId();
   /**
-   * <code>.google.protobuf.Int64Value group_id = 3;</code>
+   * <code>int64 group_id = 3;</code>
    * @return The groupId.
    */
-  com.google.protobuf.Int64Value getGroupId();
-  /**
-   * <code>.google.protobuf.Int64Value group_id = 3;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getGroupIdOrBuilder();
+  long getGroupId();
 
   /**
-   * <code>.google.protobuf.Int64Value recipient_id = 4;</code>
+   * <code>int64 recipient_id = 4;</code>
    * @return Whether the recipientId field is set.
    */
   boolean hasRecipientId();
   /**
-   * <code>.google.protobuf.Int64Value recipient_id = 4;</code>
+   * <code>int64 recipient_id = 4;</code>
    * @return The recipientId.
    */
-  com.google.protobuf.Int64Value getRecipientId();
-  /**
-   * <code>.google.protobuf.Int64Value recipient_id = 4;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getRecipientIdOrBuilder();
+  long getRecipientId();
 
+  /**
+   * <code>int64 delivery_date = 5;</code>
+   * @return Whether the deliveryDate field is set.
+   */
+  boolean hasDeliveryDate();
   /**
    * <code>int64 delivery_date = 5;</code>
    * @return The deliveryDate.
@@ -103,19 +90,21 @@ public interface CreateMessageRequestOrBuilder extends
   long getDeliveryDate();
 
   /**
-   * <code>.google.protobuf.StringValue text = 6;</code>
+   * <code>string text = 6;</code>
    * @return Whether the text field is set.
    */
   boolean hasText();
   /**
-   * <code>.google.protobuf.StringValue text = 6;</code>
+   * <code>string text = 6;</code>
    * @return The text.
    */
-  com.google.protobuf.StringValue getText();
+  java.lang.String getText();
   /**
-   * <code>.google.protobuf.StringValue text = 6;</code>
+   * <code>string text = 6;</code>
+   * @return The bytes for text.
    */
-  com.google.protobuf.StringValueOrBuilder getTextOrBuilder();
+  com.google.protobuf.ByteString
+      getTextBytes();
 
   /**
    * <code>repeated bytes records = 7;</code>
@@ -135,17 +124,13 @@ public interface CreateMessageRequestOrBuilder extends
   com.google.protobuf.ByteString getRecords(int index);
 
   /**
-   * <code>.google.protobuf.Int32Value burn_after = 8;</code>
+   * <code>int32 burn_after = 8;</code>
    * @return Whether the burnAfter field is set.
    */
   boolean hasBurnAfter();
   /**
-   * <code>.google.protobuf.Int32Value burn_after = 8;</code>
+   * <code>int32 burn_after = 8;</code>
    * @return The burnAfter.
    */
-  com.google.protobuf.Int32Value getBurnAfter();
-  /**
-   * <code>.google.protobuf.Int32Value burn_after = 8;</code>
-   */
-  com.google.protobuf.Int32ValueOrBuilder getBurnAfterOrBuilder();
+  int getBurnAfter();
 }

@@ -46,28 +46,25 @@ public final class QueryRelationshipsRequestOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n;request/user/relationship/query_relati" +
-      "onships_request.proto\022\016im.turms.proto\032\036g" +
-      "oogle/protobuf/wrappers.proto\"\304\001\n\031QueryR" +
-      "elationshipsRequest\022\020\n\010user_ids\030\001 \003(\003\022+\n" +
-      "\007blocked\030\002 \001(\0132\032.google.protobuf.BoolVal" +
-      "ue\0220\n\013group_index\030\003 \001(\0132\033.google.protobu" +
-      "f.Int32Value\0226\n\021last_updated_date\030\004 \001(\0132" +
-      "\033.google.protobuf.Int64ValueB:\n3im.turms" +
-      ".common.model.dto.request.user.relations" +
-      "hipP\001\272\002\000b\006proto3"
+      "onships_request.proto\022\016im.turms.proto\"\257\001" +
+      "\n\031QueryRelationshipsRequest\022\020\n\010user_ids\030" +
+      "\001 \003(\003\022\024\n\007blocked\030\002 \001(\010H\000\210\001\001\022\030\n\013group_ind" +
+      "ex\030\003 \001(\005H\001\210\001\001\022\036\n\021last_updated_date\030\004 \001(\003" +
+      "H\002\210\001\001B\n\n\010_blockedB\016\n\014_group_indexB\024\n\022_la" +
+      "st_updated_dateB:\n3im.turms.common.model" +
+      ".dto.request.user.relationshipP\001\272\002\000b\006pro" +
+      "to3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
         });
     internal_static_im_turms_proto_QueryRelationshipsRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_im_turms_proto_QueryRelationshipsRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_QueryRelationshipsRequest_descriptor,
-        new java.lang.String[] { "UserIds", "Blocked", "GroupIndex", "LastUpdatedDate", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "UserIds", "Blocked", "GroupIndex", "LastUpdatedDate", "Blocked", "GroupIndex", "LastUpdatedDate", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

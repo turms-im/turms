@@ -55,6 +55,7 @@ private static final long serialVersionUID = 0L;
     if (extensionRegistry == null) {
       throw new java.lang.NullPointerException();
     }
+    int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
         com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
@@ -70,17 +71,9 @@ private static final long serialVersionUID = 0L;
             groupIndex_ = input.readInt32();
             break;
           }
-          case 18: {
-            com.google.protobuf.Int32Value.Builder subBuilder = null;
-            if (targetGroupIndex_ != null) {
-              subBuilder = targetGroupIndex_.toBuilder();
-            }
-            targetGroupIndex_ = input.readMessage(com.google.protobuf.Int32Value.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(targetGroupIndex_);
-              targetGroupIndex_ = subBuilder.buildPartial();
-            }
-
+          case 16: {
+            bitField0_ |= 0x00000001;
+            targetGroupIndex_ = input.readInt32();
             break;
           }
           default: {
@@ -115,6 +108,7 @@ private static final long serialVersionUID = 0L;
             im.turms.common.model.dto.request.user.relationship.DeleteRelationshipGroupRequest.class, im.turms.common.model.dto.request.user.relationship.DeleteRelationshipGroupRequest.Builder.class);
   }
 
+  private int bitField0_;
   public static final int GROUP_INDEX_FIELD_NUMBER = 1;
   private int groupIndex_;
   /**
@@ -127,29 +121,22 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int TARGET_GROUP_INDEX_FIELD_NUMBER = 2;
-  private com.google.protobuf.Int32Value targetGroupIndex_;
+  private int targetGroupIndex_;
   /**
-   * <code>.google.protobuf.Int32Value target_group_index = 2;</code>
+   * <code>int32 target_group_index = 2;</code>
    * @return Whether the targetGroupIndex field is set.
    */
   @java.lang.Override
   public boolean hasTargetGroupIndex() {
-    return targetGroupIndex_ != null;
+    return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>.google.protobuf.Int32Value target_group_index = 2;</code>
+   * <code>int32 target_group_index = 2;</code>
    * @return The targetGroupIndex.
    */
   @java.lang.Override
-  public com.google.protobuf.Int32Value getTargetGroupIndex() {
-    return targetGroupIndex_ == null ? com.google.protobuf.Int32Value.getDefaultInstance() : targetGroupIndex_;
-  }
-  /**
-   * <code>.google.protobuf.Int32Value target_group_index = 2;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.Int32ValueOrBuilder getTargetGroupIndexOrBuilder() {
-    return getTargetGroupIndex();
+  public int getTargetGroupIndex() {
+    return targetGroupIndex_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -169,8 +156,8 @@ private static final long serialVersionUID = 0L;
     if (groupIndex_ != 0) {
       output.writeInt32(1, groupIndex_);
     }
-    if (targetGroupIndex_ != null) {
-      output.writeMessage(2, getTargetGroupIndex());
+    if (((bitField0_ & 0x00000001) != 0)) {
+      output.writeInt32(2, targetGroupIndex_);
     }
     unknownFields.writeTo(output);
   }
@@ -185,9 +172,9 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(1, groupIndex_);
     }
-    if (targetGroupIndex_ != null) {
+    if (((bitField0_ & 0x00000001) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(2, getTargetGroupIndex());
+        .computeInt32Size(2, targetGroupIndex_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -208,8 +195,8 @@ private static final long serialVersionUID = 0L;
         != other.getGroupIndex()) return false;
     if (hasTargetGroupIndex() != other.hasTargetGroupIndex()) return false;
     if (hasTargetGroupIndex()) {
-      if (!getTargetGroupIndex()
-          .equals(other.getTargetGroupIndex())) return false;
+      if (getTargetGroupIndex()
+          != other.getTargetGroupIndex()) return false;
     }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
@@ -226,7 +213,7 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getGroupIndex();
     if (hasTargetGroupIndex()) {
       hash = (37 * hash) + TARGET_GROUP_INDEX_FIELD_NUMBER;
-      hash = (53 * hash) + getTargetGroupIndex().hashCode();
+      hash = (53 * hash) + getTargetGroupIndex();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -363,12 +350,8 @@ private static final long serialVersionUID = 0L;
       super.clear();
       groupIndex_ = 0;
 
-      if (targetGroupIndexBuilder_ == null) {
-        targetGroupIndex_ = null;
-      } else {
-        targetGroupIndex_ = null;
-        targetGroupIndexBuilder_ = null;
-      }
+      targetGroupIndex_ = 0;
+      bitField0_ = (bitField0_ & ~0x00000001);
       return this;
     }
 
@@ -395,12 +378,14 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public im.turms.common.model.dto.request.user.relationship.DeleteRelationshipGroupRequest buildPartial() {
       im.turms.common.model.dto.request.user.relationship.DeleteRelationshipGroupRequest result = new im.turms.common.model.dto.request.user.relationship.DeleteRelationshipGroupRequest(this);
+      int from_bitField0_ = bitField0_;
+      int to_bitField0_ = 0;
       result.groupIndex_ = groupIndex_;
-      if (targetGroupIndexBuilder_ == null) {
+      if (((from_bitField0_ & 0x00000001) != 0)) {
         result.targetGroupIndex_ = targetGroupIndex_;
-      } else {
-        result.targetGroupIndex_ = targetGroupIndexBuilder_.build();
+        to_bitField0_ |= 0x00000001;
       }
+      result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
     }
@@ -453,7 +438,7 @@ private static final long serialVersionUID = 0L;
         setGroupIndex(other.getGroupIndex());
       }
       if (other.hasTargetGroupIndex()) {
-        mergeTargetGroupIndex(other.getTargetGroupIndex());
+        setTargetGroupIndex(other.getTargetGroupIndex());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -483,6 +468,7 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+    private int bitField0_;
 
     private int groupIndex_ ;
     /**
@@ -515,123 +501,43 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private com.google.protobuf.Int32Value targetGroupIndex_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder> targetGroupIndexBuilder_;
+    private int targetGroupIndex_ ;
     /**
-     * <code>.google.protobuf.Int32Value target_group_index = 2;</code>
+     * <code>int32 target_group_index = 2;</code>
      * @return Whether the targetGroupIndex field is set.
      */
+    @java.lang.Override
     public boolean hasTargetGroupIndex() {
-      return targetGroupIndexBuilder_ != null || targetGroupIndex_ != null;
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>.google.protobuf.Int32Value target_group_index = 2;</code>
+     * <code>int32 target_group_index = 2;</code>
      * @return The targetGroupIndex.
      */
-    public com.google.protobuf.Int32Value getTargetGroupIndex() {
-      if (targetGroupIndexBuilder_ == null) {
-        return targetGroupIndex_ == null ? com.google.protobuf.Int32Value.getDefaultInstance() : targetGroupIndex_;
-      } else {
-        return targetGroupIndexBuilder_.getMessage();
-      }
+    @java.lang.Override
+    public int getTargetGroupIndex() {
+      return targetGroupIndex_;
     }
     /**
-     * <code>.google.protobuf.Int32Value target_group_index = 2;</code>
+     * <code>int32 target_group_index = 2;</code>
+     * @param value The targetGroupIndex to set.
+     * @return This builder for chaining.
      */
-    public Builder setTargetGroupIndex(com.google.protobuf.Int32Value value) {
-      if (targetGroupIndexBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        targetGroupIndex_ = value;
-        onChanged();
-      } else {
-        targetGroupIndexBuilder_.setMessage(value);
-      }
-
+    public Builder setTargetGroupIndex(int value) {
+      bitField0_ |= 0x00000001;
+      targetGroupIndex_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.Int32Value target_group_index = 2;</code>
-     */
-    public Builder setTargetGroupIndex(
-        com.google.protobuf.Int32Value.Builder builderForValue) {
-      if (targetGroupIndexBuilder_ == null) {
-        targetGroupIndex_ = builderForValue.build();
-        onChanged();
-      } else {
-        targetGroupIndexBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int32Value target_group_index = 2;</code>
-     */
-    public Builder mergeTargetGroupIndex(com.google.protobuf.Int32Value value) {
-      if (targetGroupIndexBuilder_ == null) {
-        if (targetGroupIndex_ != null) {
-          targetGroupIndex_ =
-            com.google.protobuf.Int32Value.newBuilder(targetGroupIndex_).mergeFrom(value).buildPartial();
-        } else {
-          targetGroupIndex_ = value;
-        }
-        onChanged();
-      } else {
-        targetGroupIndexBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int32Value target_group_index = 2;</code>
+     * <code>int32 target_group_index = 2;</code>
+     * @return This builder for chaining.
      */
     public Builder clearTargetGroupIndex() {
-      if (targetGroupIndexBuilder_ == null) {
-        targetGroupIndex_ = null;
-        onChanged();
-      } else {
-        targetGroupIndex_ = null;
-        targetGroupIndexBuilder_ = null;
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int32Value target_group_index = 2;</code>
-     */
-    public com.google.protobuf.Int32Value.Builder getTargetGroupIndexBuilder() {
-
+      bitField0_ = (bitField0_ & ~0x00000001);
+      targetGroupIndex_ = 0;
       onChanged();
-      return getTargetGroupIndexFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.Int32Value target_group_index = 2;</code>
-     */
-    public com.google.protobuf.Int32ValueOrBuilder getTargetGroupIndexOrBuilder() {
-      if (targetGroupIndexBuilder_ != null) {
-        return targetGroupIndexBuilder_.getMessageOrBuilder();
-      } else {
-        return targetGroupIndex_ == null ?
-            com.google.protobuf.Int32Value.getDefaultInstance() : targetGroupIndex_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.Int32Value target_group_index = 2;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder>
-        getTargetGroupIndexFieldBuilder() {
-      if (targetGroupIndexBuilder_ == null) {
-        targetGroupIndexBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder>(
-                getTargetGroupIndex(),
-                getParentForChildren(),
-                isClean());
-        targetGroupIndex_ = null;
-      }
-      return targetGroupIndexBuilder_;
+      return this;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

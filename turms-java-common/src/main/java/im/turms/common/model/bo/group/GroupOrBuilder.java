@@ -25,152 +25,130 @@ public interface GroupOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>.google.protobuf.Int64Value id = 1;</code>
+   * <code>int64 id = 1;</code>
    * @return Whether the id field is set.
    */
   boolean hasId();
   /**
-   * <code>.google.protobuf.Int64Value id = 1;</code>
+   * <code>int64 id = 1;</code>
    * @return The id.
    */
-  com.google.protobuf.Int64Value getId();
-  /**
-   * <code>.google.protobuf.Int64Value id = 1;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getIdOrBuilder();
+  long getId();
 
   /**
-   * <code>.google.protobuf.Int64Value type_id = 2;</code>
+   * <code>int64 type_id = 2;</code>
    * @return Whether the typeId field is set.
    */
   boolean hasTypeId();
   /**
-   * <code>.google.protobuf.Int64Value type_id = 2;</code>
+   * <code>int64 type_id = 2;</code>
    * @return The typeId.
    */
-  com.google.protobuf.Int64Value getTypeId();
-  /**
-   * <code>.google.protobuf.Int64Value type_id = 2;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getTypeIdOrBuilder();
+  long getTypeId();
 
   /**
-   * <code>.google.protobuf.Int64Value creator_id = 3;</code>
+   * <code>int64 creator_id = 3;</code>
    * @return Whether the creatorId field is set.
    */
   boolean hasCreatorId();
   /**
-   * <code>.google.protobuf.Int64Value creator_id = 3;</code>
+   * <code>int64 creator_id = 3;</code>
    * @return The creatorId.
    */
-  com.google.protobuf.Int64Value getCreatorId();
-  /**
-   * <code>.google.protobuf.Int64Value creator_id = 3;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getCreatorIdOrBuilder();
+  long getCreatorId();
 
   /**
-   * <code>.google.protobuf.Int64Value owner_id = 4;</code>
+   * <code>int64 owner_id = 4;</code>
    * @return Whether the ownerId field is set.
    */
   boolean hasOwnerId();
   /**
-   * <code>.google.protobuf.Int64Value owner_id = 4;</code>
+   * <code>int64 owner_id = 4;</code>
    * @return The ownerId.
    */
-  com.google.protobuf.Int64Value getOwnerId();
-  /**
-   * <code>.google.protobuf.Int64Value owner_id = 4;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getOwnerIdOrBuilder();
+  long getOwnerId();
 
   /**
-   * <code>.google.protobuf.StringValue name = 5;</code>
+   * <code>string name = 5;</code>
    * @return Whether the name field is set.
    */
   boolean hasName();
   /**
-   * <code>.google.protobuf.StringValue name = 5;</code>
+   * <code>string name = 5;</code>
    * @return The name.
    */
-  com.google.protobuf.StringValue getName();
+  java.lang.String getName();
   /**
-   * <code>.google.protobuf.StringValue name = 5;</code>
+   * <code>string name = 5;</code>
+   * @return The bytes for name.
    */
-  com.google.protobuf.StringValueOrBuilder getNameOrBuilder();
+  com.google.protobuf.ByteString
+      getNameBytes();
 
   /**
-   * <code>.google.protobuf.StringValue intro = 6;</code>
+   * <code>string intro = 6;</code>
    * @return Whether the intro field is set.
    */
   boolean hasIntro();
   /**
-   * <code>.google.protobuf.StringValue intro = 6;</code>
+   * <code>string intro = 6;</code>
    * @return The intro.
    */
-  com.google.protobuf.StringValue getIntro();
+  java.lang.String getIntro();
   /**
-   * <code>.google.protobuf.StringValue intro = 6;</code>
+   * <code>string intro = 6;</code>
+   * @return The bytes for intro.
    */
-  com.google.protobuf.StringValueOrBuilder getIntroOrBuilder();
+  com.google.protobuf.ByteString
+      getIntroBytes();
 
   /**
-   * <code>.google.protobuf.StringValue announcement = 7;</code>
+   * <code>string announcement = 7;</code>
    * @return Whether the announcement field is set.
    */
   boolean hasAnnouncement();
   /**
-   * <code>.google.protobuf.StringValue announcement = 7;</code>
+   * <code>string announcement = 7;</code>
    * @return The announcement.
    */
-  com.google.protobuf.StringValue getAnnouncement();
+  java.lang.String getAnnouncement();
   /**
-   * <code>.google.protobuf.StringValue announcement = 7;</code>
+   * <code>string announcement = 7;</code>
+   * @return The bytes for announcement.
    */
-  com.google.protobuf.StringValueOrBuilder getAnnouncementOrBuilder();
+  com.google.protobuf.ByteString
+      getAnnouncementBytes();
 
   /**
-   * <code>.google.protobuf.Int64Value creation_date = 8;</code>
+   * <code>int64 creation_date = 8;</code>
    * @return Whether the creationDate field is set.
    */
   boolean hasCreationDate();
   /**
-   * <code>.google.protobuf.Int64Value creation_date = 8;</code>
+   * <code>int64 creation_date = 8;</code>
    * @return The creationDate.
    */
-  com.google.protobuf.Int64Value getCreationDate();
-  /**
-   * <code>.google.protobuf.Int64Value creation_date = 8;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getCreationDateOrBuilder();
+  long getCreationDate();
 
   /**
-   * <code>.google.protobuf.Int64Value mute_end_date = 9;</code>
+   * <code>int64 mute_end_date = 9;</code>
    * @return Whether the muteEndDate field is set.
    */
   boolean hasMuteEndDate();
   /**
-   * <code>.google.protobuf.Int64Value mute_end_date = 9;</code>
+   * <code>int64 mute_end_date = 9;</code>
    * @return The muteEndDate.
    */
-  com.google.protobuf.Int64Value getMuteEndDate();
-  /**
-   * <code>.google.protobuf.Int64Value mute_end_date = 9;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getMuteEndDateOrBuilder();
+  long getMuteEndDate();
 
   /**
-   * <code>.google.protobuf.BoolValue active = 10;</code>
+   * <code>bool active = 10;</code>
    * @return Whether the active field is set.
    */
   boolean hasActive();
   /**
-   * <code>.google.protobuf.BoolValue active = 10;</code>
+   * <code>bool active = 10;</code>
    * @return The active.
    */
-  com.google.protobuf.BoolValue getActive();
-  /**
-   * <code>.google.protobuf.BoolValue active = 10;</code>
-   */
-  com.google.protobuf.BoolValueOrBuilder getActiveOrBuilder();
+  boolean getActive();
 }

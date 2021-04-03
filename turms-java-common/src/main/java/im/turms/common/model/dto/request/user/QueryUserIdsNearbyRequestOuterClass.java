@@ -46,26 +46,23 @@ public final class QueryUserIdsNearbyRequestOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n0request/user/query_user_ids_nearby_req" +
-      "uest.proto\022\016im.turms.proto\032\036google/proto" +
-      "buf/wrappers.proto\"\240\001\n\031QueryUserIdsNearb" +
-      "yRequest\022\020\n\010latitude\030\001 \001(\002\022\021\n\tlongitude\030" +
-      "\002 \001(\002\022-\n\010distance\030\003 \001(\0132\033.google.protobu" +
-      "f.FloatValue\022/\n\nmax_number\030\004 \001(\0132\033.googl" +
-      "e.protobuf.Int32ValueB-\n&im.turms.common" +
-      ".model.dto.request.userP\001\272\002\000b\006proto3"
+      "uest.proto\022\016im.turms.proto\"\214\001\n\031QueryUser" +
+      "IdsNearbyRequest\022\020\n\010latitude\030\001 \001(\002\022\021\n\tlo" +
+      "ngitude\030\002 \001(\002\022\025\n\010distance\030\003 \001(\002H\000\210\001\001\022\027\n\n" +
+      "max_number\030\004 \001(\005H\001\210\001\001B\013\n\t_distanceB\r\n\013_m" +
+      "ax_numberB-\n&im.turms.common.model.dto.r" +
+      "equest.userP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
         });
     internal_static_im_turms_proto_QueryUserIdsNearbyRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_im_turms_proto_QueryUserIdsNearbyRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_QueryUserIdsNearbyRequest_descriptor,
-        new java.lang.String[] { "Latitude", "Longitude", "Distance", "MaxNumber", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "Latitude", "Longitude", "Distance", "MaxNumber", "Distance", "MaxNumber", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

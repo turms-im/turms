@@ -33,6 +33,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private GroupJoinQuestion() {
+    question_ = "";
     answers_ = com.google.protobuf.LazyStringArrayList.EMPTY;
   }
 
@@ -67,65 +68,34 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
-          case 10: {
-            com.google.protobuf.Int64Value.Builder subBuilder = null;
-            if (id_ != null) {
-              subBuilder = id_.toBuilder();
-            }
-            id_ = input.readMessage(com.google.protobuf.Int64Value.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(id_);
-              id_ = subBuilder.buildPartial();
-            }
-
+          case 8: {
+            bitField0_ |= 0x00000001;
+            id_ = input.readInt64();
             break;
           }
-          case 18: {
-            com.google.protobuf.Int64Value.Builder subBuilder = null;
-            if (groupId_ != null) {
-              subBuilder = groupId_.toBuilder();
-            }
-            groupId_ = input.readMessage(com.google.protobuf.Int64Value.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(groupId_);
-              groupId_ = subBuilder.buildPartial();
-            }
-
+          case 16: {
+            bitField0_ |= 0x00000002;
+            groupId_ = input.readInt64();
             break;
           }
           case 26: {
-            com.google.protobuf.StringValue.Builder subBuilder = null;
-            if (question_ != null) {
-              subBuilder = question_.toBuilder();
-            }
-            question_ = input.readMessage(com.google.protobuf.StringValue.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(question_);
-              question_ = subBuilder.buildPartial();
-            }
-
+            java.lang.String s = input.readStringRequireUtf8();
+            bitField0_ |= 0x00000004;
+            question_ = s;
             break;
           }
           case 34: {
             java.lang.String s = input.readStringRequireUtf8();
-            if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+            if (!((mutable_bitField0_ & 0x00000008) != 0)) {
               answers_ = new com.google.protobuf.LazyStringArrayList();
-              mutable_bitField0_ |= 0x00000001;
+              mutable_bitField0_ |= 0x00000008;
             }
             answers_.add(s);
             break;
           }
-          case 42: {
-            com.google.protobuf.Int32Value.Builder subBuilder = null;
-            if (score_ != null) {
-              subBuilder = score_.toBuilder();
-            }
-            score_ = input.readMessage(com.google.protobuf.Int32Value.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(score_);
-              score_ = subBuilder.buildPartial();
-            }
-
+          case 40: {
+            bitField0_ |= 0x00000008;
+            score_ = input.readInt32();
             break;
           }
           default: {
@@ -143,7 +113,7 @@ private static final long serialVersionUID = 0L;
       throw new com.google.protobuf.InvalidProtocolBufferException(
           e).setUnfinishedMessage(this);
     } finally {
-      if (((mutable_bitField0_ & 0x00000001) != 0)) {
+      if (((mutable_bitField0_ & 0x00000008) != 0)) {
         answers_ = answers_.getUnmodifiableView();
       }
       this.unknownFields = unknownFields.build();
@@ -163,82 +133,89 @@ private static final long serialVersionUID = 0L;
             im.turms.common.model.bo.group.GroupJoinQuestion.class, im.turms.common.model.bo.group.GroupJoinQuestion.Builder.class);
   }
 
+  private int bitField0_;
   public static final int ID_FIELD_NUMBER = 1;
-  private com.google.protobuf.Int64Value id_;
+  private long id_;
   /**
-   * <code>.google.protobuf.Int64Value id = 1;</code>
+   * <code>int64 id = 1;</code>
    * @return Whether the id field is set.
    */
   @java.lang.Override
   public boolean hasId() {
-    return id_ != null;
+    return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>.google.protobuf.Int64Value id = 1;</code>
+   * <code>int64 id = 1;</code>
    * @return The id.
    */
   @java.lang.Override
-  public com.google.protobuf.Int64Value getId() {
-    return id_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : id_;
-  }
-  /**
-   * <code>.google.protobuf.Int64Value id = 1;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.Int64ValueOrBuilder getIdOrBuilder() {
-    return getId();
+  public long getId() {
+    return id_;
   }
 
   public static final int GROUP_ID_FIELD_NUMBER = 2;
-  private com.google.protobuf.Int64Value groupId_;
+  private long groupId_;
   /**
-   * <code>.google.protobuf.Int64Value group_id = 2;</code>
+   * <code>int64 group_id = 2;</code>
    * @return Whether the groupId field is set.
    */
   @java.lang.Override
   public boolean hasGroupId() {
-    return groupId_ != null;
+    return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>.google.protobuf.Int64Value group_id = 2;</code>
+   * <code>int64 group_id = 2;</code>
    * @return The groupId.
    */
   @java.lang.Override
-  public com.google.protobuf.Int64Value getGroupId() {
-    return groupId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : groupId_;
-  }
-  /**
-   * <code>.google.protobuf.Int64Value group_id = 2;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.Int64ValueOrBuilder getGroupIdOrBuilder() {
-    return getGroupId();
+  public long getGroupId() {
+    return groupId_;
   }
 
   public static final int QUESTION_FIELD_NUMBER = 3;
-  private com.google.protobuf.StringValue question_;
+  private volatile java.lang.Object question_;
   /**
-   * <code>.google.protobuf.StringValue question = 3;</code>
+   * <code>string question = 3;</code>
    * @return Whether the question field is set.
    */
   @java.lang.Override
   public boolean hasQuestion() {
-    return question_ != null;
+    return ((bitField0_ & 0x00000004) != 0);
   }
   /**
-   * <code>.google.protobuf.StringValue question = 3;</code>
+   * <code>string question = 3;</code>
    * @return The question.
    */
   @java.lang.Override
-  public com.google.protobuf.StringValue getQuestion() {
-    return question_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : question_;
+  public java.lang.String getQuestion() {
+    java.lang.Object ref = question_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs =
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      question_ = s;
+      return s;
+    }
   }
   /**
-   * <code>.google.protobuf.StringValue question = 3;</code>
+   * <code>string question = 3;</code>
+   * @return The bytes for question.
    */
   @java.lang.Override
-  public com.google.protobuf.StringValueOrBuilder getQuestionOrBuilder() {
-    return getQuestion();
+  public com.google.protobuf.ByteString
+      getQuestionBytes() {
+    java.lang.Object ref = question_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      question_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
   public static final int ANSWERS_FIELD_NUMBER = 4;
@@ -277,29 +254,22 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int SCORE_FIELD_NUMBER = 5;
-  private com.google.protobuf.Int32Value score_;
+  private int score_;
   /**
-   * <code>.google.protobuf.Int32Value score = 5;</code>
+   * <code>int32 score = 5;</code>
    * @return Whether the score field is set.
    */
   @java.lang.Override
   public boolean hasScore() {
-    return score_ != null;
+    return ((bitField0_ & 0x00000008) != 0);
   }
   /**
-   * <code>.google.protobuf.Int32Value score = 5;</code>
+   * <code>int32 score = 5;</code>
    * @return The score.
    */
   @java.lang.Override
-  public com.google.protobuf.Int32Value getScore() {
-    return score_ == null ? com.google.protobuf.Int32Value.getDefaultInstance() : score_;
-  }
-  /**
-   * <code>.google.protobuf.Int32Value score = 5;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.Int32ValueOrBuilder getScoreOrBuilder() {
-    return getScore();
+  public int getScore() {
+    return score_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -316,20 +286,20 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (id_ != null) {
-      output.writeMessage(1, getId());
+    if (((bitField0_ & 0x00000001) != 0)) {
+      output.writeInt64(1, id_);
     }
-    if (groupId_ != null) {
-      output.writeMessage(2, getGroupId());
+    if (((bitField0_ & 0x00000002) != 0)) {
+      output.writeInt64(2, groupId_);
     }
-    if (question_ != null) {
-      output.writeMessage(3, getQuestion());
+    if (((bitField0_ & 0x00000004) != 0)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, question_);
     }
     for (int i = 0; i < answers_.size(); i++) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 4, answers_.getRaw(i));
     }
-    if (score_ != null) {
-      output.writeMessage(5, getScore());
+    if (((bitField0_ & 0x00000008) != 0)) {
+      output.writeInt32(5, score_);
     }
     unknownFields.writeTo(output);
   }
@@ -340,17 +310,16 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (id_ != null) {
+    if (((bitField0_ & 0x00000001) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(1, getId());
+        .computeInt64Size(1, id_);
     }
-    if (groupId_ != null) {
+    if (((bitField0_ & 0x00000002) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(2, getGroupId());
+        .computeInt64Size(2, groupId_);
     }
-    if (question_ != null) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(3, getQuestion());
+    if (((bitField0_ & 0x00000004) != 0)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, question_);
     }
     {
       int dataSize = 0;
@@ -360,9 +329,9 @@ private static final long serialVersionUID = 0L;
       size += dataSize;
       size += 1 * getAnswersList().size();
     }
-    if (score_ != null) {
+    if (((bitField0_ & 0x00000008) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(5, getScore());
+        .computeInt32Size(5, score_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -381,13 +350,13 @@ private static final long serialVersionUID = 0L;
 
     if (hasId() != other.hasId()) return false;
     if (hasId()) {
-      if (!getId()
-          .equals(other.getId())) return false;
+      if (getId()
+          != other.getId()) return false;
     }
     if (hasGroupId() != other.hasGroupId()) return false;
     if (hasGroupId()) {
-      if (!getGroupId()
-          .equals(other.getGroupId())) return false;
+      if (getGroupId()
+          != other.getGroupId()) return false;
     }
     if (hasQuestion() != other.hasQuestion()) return false;
     if (hasQuestion()) {
@@ -398,8 +367,8 @@ private static final long serialVersionUID = 0L;
         .equals(other.getAnswersList())) return false;
     if (hasScore() != other.hasScore()) return false;
     if (hasScore()) {
-      if (!getScore()
-          .equals(other.getScore())) return false;
+      if (getScore()
+          != other.getScore()) return false;
     }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
@@ -414,11 +383,13 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     if (hasId()) {
       hash = (37 * hash) + ID_FIELD_NUMBER;
-      hash = (53 * hash) + getId().hashCode();
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getId());
     }
     if (hasGroupId()) {
       hash = (37 * hash) + GROUP_ID_FIELD_NUMBER;
-      hash = (53 * hash) + getGroupId().hashCode();
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getGroupId());
     }
     if (hasQuestion()) {
       hash = (37 * hash) + QUESTION_FIELD_NUMBER;
@@ -430,7 +401,7 @@ private static final long serialVersionUID = 0L;
     }
     if (hasScore()) {
       hash = (37 * hash) + SCORE_FIELD_NUMBER;
-      hash = (53 * hash) + getScore().hashCode();
+      hash = (53 * hash) + getScore();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -565,32 +536,16 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      if (idBuilder_ == null) {
-        id_ = null;
-      } else {
-        id_ = null;
-        idBuilder_ = null;
-      }
-      if (groupIdBuilder_ == null) {
-        groupId_ = null;
-      } else {
-        groupId_ = null;
-        groupIdBuilder_ = null;
-      }
-      if (questionBuilder_ == null) {
-        question_ = null;
-      } else {
-        question_ = null;
-        questionBuilder_ = null;
-      }
-      answers_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      id_ = 0L;
       bitField0_ = (bitField0_ & ~0x00000001);
-      if (scoreBuilder_ == null) {
-        score_ = null;
-      } else {
-        score_ = null;
-        scoreBuilder_ = null;
-      }
+      groupId_ = 0L;
+      bitField0_ = (bitField0_ & ~0x00000002);
+      question_ = "";
+      bitField0_ = (bitField0_ & ~0x00000004);
+      answers_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      bitField0_ = (bitField0_ & ~0x00000008);
+      score_ = 0;
+      bitField0_ = (bitField0_ & ~0x00000010);
       return this;
     }
 
@@ -618,31 +573,29 @@ private static final long serialVersionUID = 0L;
     public im.turms.common.model.bo.group.GroupJoinQuestion buildPartial() {
       im.turms.common.model.bo.group.GroupJoinQuestion result = new im.turms.common.model.bo.group.GroupJoinQuestion(this);
       int from_bitField0_ = bitField0_;
-      if (idBuilder_ == null) {
+      int to_bitField0_ = 0;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
         result.id_ = id_;
-      } else {
-        result.id_ = idBuilder_.build();
+        to_bitField0_ |= 0x00000001;
       }
-      if (groupIdBuilder_ == null) {
+      if (((from_bitField0_ & 0x00000002) != 0)) {
         result.groupId_ = groupId_;
-      } else {
-        result.groupId_ = groupIdBuilder_.build();
+        to_bitField0_ |= 0x00000002;
       }
-      if (questionBuilder_ == null) {
-        result.question_ = question_;
-      } else {
-        result.question_ = questionBuilder_.build();
+      if (((from_bitField0_ & 0x00000004) != 0)) {
+        to_bitField0_ |= 0x00000004;
       }
-      if (((bitField0_ & 0x00000001) != 0)) {
+      result.question_ = question_;
+      if (((bitField0_ & 0x00000008) != 0)) {
         answers_ = answers_.getUnmodifiableView();
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ = (bitField0_ & ~0x00000008);
       }
       result.answers_ = answers_;
-      if (scoreBuilder_ == null) {
+      if (((from_bitField0_ & 0x00000010) != 0)) {
         result.score_ = score_;
-      } else {
-        result.score_ = scoreBuilder_.build();
+        to_bitField0_ |= 0x00000008;
       }
+      result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
     }
@@ -692,18 +645,20 @@ private static final long serialVersionUID = 0L;
     public Builder mergeFrom(im.turms.common.model.bo.group.GroupJoinQuestion other) {
       if (other == im.turms.common.model.bo.group.GroupJoinQuestion.getDefaultInstance()) return this;
       if (other.hasId()) {
-        mergeId(other.getId());
+        setId(other.getId());
       }
       if (other.hasGroupId()) {
-        mergeGroupId(other.getGroupId());
+        setGroupId(other.getGroupId());
       }
       if (other.hasQuestion()) {
-        mergeQuestion(other.getQuestion());
+        bitField0_ |= 0x00000004;
+        question_ = other.question_;
+        onChanged();
       }
       if (!other.answers_.isEmpty()) {
         if (answers_.isEmpty()) {
           answers_ = other.answers_;
-          bitField0_ = (bitField0_ & ~0x00000001);
+          bitField0_ = (bitField0_ & ~0x00000008);
         } else {
           ensureAnswersIsMutable();
           answers_.addAll(other.answers_);
@@ -711,7 +666,7 @@ private static final long serialVersionUID = 0L;
         onChanged();
       }
       if (other.hasScore()) {
-        mergeScore(other.getScore());
+        setScore(other.getScore());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -743,368 +698,172 @@ private static final long serialVersionUID = 0L;
     }
     private int bitField0_;
 
-    private com.google.protobuf.Int64Value id_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> idBuilder_;
+    private long id_ ;
     /**
-     * <code>.google.protobuf.Int64Value id = 1;</code>
+     * <code>int64 id = 1;</code>
      * @return Whether the id field is set.
      */
+    @java.lang.Override
     public boolean hasId() {
-      return idBuilder_ != null || id_ != null;
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>.google.protobuf.Int64Value id = 1;</code>
+     * <code>int64 id = 1;</code>
      * @return The id.
      */
-    public com.google.protobuf.Int64Value getId() {
-      if (idBuilder_ == null) {
-        return id_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : id_;
-      } else {
-        return idBuilder_.getMessage();
-      }
+    @java.lang.Override
+    public long getId() {
+      return id_;
     }
     /**
-     * <code>.google.protobuf.Int64Value id = 1;</code>
+     * <code>int64 id = 1;</code>
+     * @param value The id to set.
+     * @return This builder for chaining.
      */
-    public Builder setId(com.google.protobuf.Int64Value value) {
-      if (idBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        id_ = value;
-        onChanged();
-      } else {
-        idBuilder_.setMessage(value);
-      }
-
+    public Builder setId(long value) {
+      bitField0_ |= 0x00000001;
+      id_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value id = 1;</code>
-     */
-    public Builder setId(
-        com.google.protobuf.Int64Value.Builder builderForValue) {
-      if (idBuilder_ == null) {
-        id_ = builderForValue.build();
-        onChanged();
-      } else {
-        idBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value id = 1;</code>
-     */
-    public Builder mergeId(com.google.protobuf.Int64Value value) {
-      if (idBuilder_ == null) {
-        if (id_ != null) {
-          id_ =
-            com.google.protobuf.Int64Value.newBuilder(id_).mergeFrom(value).buildPartial();
-        } else {
-          id_ = value;
-        }
-        onChanged();
-      } else {
-        idBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value id = 1;</code>
+     * <code>int64 id = 1;</code>
+     * @return This builder for chaining.
      */
     public Builder clearId() {
-      if (idBuilder_ == null) {
-        id_ = null;
-        onChanged();
-      } else {
-        id_ = null;
-        idBuilder_ = null;
-      }
-
+      bitField0_ = (bitField0_ & ~0x00000001);
+      id_ = 0L;
+      onChanged();
       return this;
     }
-    /**
-     * <code>.google.protobuf.Int64Value id = 1;</code>
-     */
-    public com.google.protobuf.Int64Value.Builder getIdBuilder() {
 
-      onChanged();
-      return getIdFieldBuilder().getBuilder();
-    }
+    private long groupId_ ;
     /**
-     * <code>.google.protobuf.Int64Value id = 1;</code>
-     */
-    public com.google.protobuf.Int64ValueOrBuilder getIdOrBuilder() {
-      if (idBuilder_ != null) {
-        return idBuilder_.getMessageOrBuilder();
-      } else {
-        return id_ == null ?
-            com.google.protobuf.Int64Value.getDefaultInstance() : id_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.Int64Value id = 1;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
-        getIdFieldBuilder() {
-      if (idBuilder_ == null) {
-        idBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>(
-                getId(),
-                getParentForChildren(),
-                isClean());
-        id_ = null;
-      }
-      return idBuilder_;
-    }
-
-    private com.google.protobuf.Int64Value groupId_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> groupIdBuilder_;
-    /**
-     * <code>.google.protobuf.Int64Value group_id = 2;</code>
+     * <code>int64 group_id = 2;</code>
      * @return Whether the groupId field is set.
      */
+    @java.lang.Override
     public boolean hasGroupId() {
-      return groupIdBuilder_ != null || groupId_ != null;
+      return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>.google.protobuf.Int64Value group_id = 2;</code>
+     * <code>int64 group_id = 2;</code>
      * @return The groupId.
      */
-    public com.google.protobuf.Int64Value getGroupId() {
-      if (groupIdBuilder_ == null) {
-        return groupId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : groupId_;
-      } else {
-        return groupIdBuilder_.getMessage();
-      }
+    @java.lang.Override
+    public long getGroupId() {
+      return groupId_;
     }
     /**
-     * <code>.google.protobuf.Int64Value group_id = 2;</code>
+     * <code>int64 group_id = 2;</code>
+     * @param value The groupId to set.
+     * @return This builder for chaining.
      */
-    public Builder setGroupId(com.google.protobuf.Int64Value value) {
-      if (groupIdBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        groupId_ = value;
-        onChanged();
-      } else {
-        groupIdBuilder_.setMessage(value);
-      }
-
+    public Builder setGroupId(long value) {
+      bitField0_ |= 0x00000002;
+      groupId_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value group_id = 2;</code>
-     */
-    public Builder setGroupId(
-        com.google.protobuf.Int64Value.Builder builderForValue) {
-      if (groupIdBuilder_ == null) {
-        groupId_ = builderForValue.build();
-        onChanged();
-      } else {
-        groupIdBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value group_id = 2;</code>
-     */
-    public Builder mergeGroupId(com.google.protobuf.Int64Value value) {
-      if (groupIdBuilder_ == null) {
-        if (groupId_ != null) {
-          groupId_ =
-            com.google.protobuf.Int64Value.newBuilder(groupId_).mergeFrom(value).buildPartial();
-        } else {
-          groupId_ = value;
-        }
-        onChanged();
-      } else {
-        groupIdBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value group_id = 2;</code>
+     * <code>int64 group_id = 2;</code>
+     * @return This builder for chaining.
      */
     public Builder clearGroupId() {
-      if (groupIdBuilder_ == null) {
-        groupId_ = null;
-        onChanged();
-      } else {
-        groupId_ = null;
-        groupIdBuilder_ = null;
-      }
-
+      bitField0_ = (bitField0_ & ~0x00000002);
+      groupId_ = 0L;
+      onChanged();
       return this;
     }
-    /**
-     * <code>.google.protobuf.Int64Value group_id = 2;</code>
-     */
-    public com.google.protobuf.Int64Value.Builder getGroupIdBuilder() {
 
-      onChanged();
-      return getGroupIdFieldBuilder().getBuilder();
-    }
+    private java.lang.Object question_ = "";
     /**
-     * <code>.google.protobuf.Int64Value group_id = 2;</code>
-     */
-    public com.google.protobuf.Int64ValueOrBuilder getGroupIdOrBuilder() {
-      if (groupIdBuilder_ != null) {
-        return groupIdBuilder_.getMessageOrBuilder();
-      } else {
-        return groupId_ == null ?
-            com.google.protobuf.Int64Value.getDefaultInstance() : groupId_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.Int64Value group_id = 2;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
-        getGroupIdFieldBuilder() {
-      if (groupIdBuilder_ == null) {
-        groupIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>(
-                getGroupId(),
-                getParentForChildren(),
-                isClean());
-        groupId_ = null;
-      }
-      return groupIdBuilder_;
-    }
-
-    private com.google.protobuf.StringValue question_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> questionBuilder_;
-    /**
-     * <code>.google.protobuf.StringValue question = 3;</code>
+     * <code>string question = 3;</code>
      * @return Whether the question field is set.
      */
     public boolean hasQuestion() {
-      return questionBuilder_ != null || question_ != null;
+      return ((bitField0_ & 0x00000004) != 0);
     }
     /**
-     * <code>.google.protobuf.StringValue question = 3;</code>
+     * <code>string question = 3;</code>
      * @return The question.
      */
-    public com.google.protobuf.StringValue getQuestion() {
-      if (questionBuilder_ == null) {
-        return question_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : question_;
+    public java.lang.String getQuestion() {
+      java.lang.Object ref = question_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        question_ = s;
+        return s;
       } else {
-        return questionBuilder_.getMessage();
+        return (java.lang.String) ref;
       }
     }
     /**
-     * <code>.google.protobuf.StringValue question = 3;</code>
+     * <code>string question = 3;</code>
+     * @return The bytes for question.
      */
-    public Builder setQuestion(com.google.protobuf.StringValue value) {
-      if (questionBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        question_ = value;
-        onChanged();
+    public com.google.protobuf.ByteString
+        getQuestionBytes() {
+      java.lang.Object ref = question_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        question_ = b;
+        return b;
       } else {
-        questionBuilder_.setMessage(value);
+        return (com.google.protobuf.ByteString) ref;
       }
-
-      return this;
     }
     /**
-     * <code>.google.protobuf.StringValue question = 3;</code>
+     * <code>string question = 3;</code>
+     * @param value The question to set.
+     * @return This builder for chaining.
      */
     public Builder setQuestion(
-        com.google.protobuf.StringValue.Builder builderForValue) {
-      if (questionBuilder_ == null) {
-        question_ = builderForValue.build();
-        onChanged();
-      } else {
-        questionBuilder_.setMessage(builderForValue.build());
-      }
-
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+      question_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.StringValue question = 3;</code>
-     */
-    public Builder mergeQuestion(com.google.protobuf.StringValue value) {
-      if (questionBuilder_ == null) {
-        if (question_ != null) {
-          question_ =
-            com.google.protobuf.StringValue.newBuilder(question_).mergeFrom(value).buildPartial();
-        } else {
-          question_ = value;
-        }
-        onChanged();
-      } else {
-        questionBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.StringValue question = 3;</code>
+     * <code>string question = 3;</code>
+     * @return This builder for chaining.
      */
     public Builder clearQuestion() {
-      if (questionBuilder_ == null) {
-        question_ = null;
-        onChanged();
-      } else {
-        question_ = null;
-        questionBuilder_ = null;
-      }
-
+      bitField0_ = (bitField0_ & ~0x00000004);
+      question_ = getDefaultInstance().getQuestion();
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.StringValue question = 3;</code>
+     * <code>string question = 3;</code>
+     * @param value The bytes for question to set.
+     * @return This builder for chaining.
      */
-    public com.google.protobuf.StringValue.Builder getQuestionBuilder() {
-
+    public Builder setQuestionBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      bitField0_ |= 0x00000004;
+      question_ = value;
       onChanged();
-      return getQuestionFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.StringValue question = 3;</code>
-     */
-    public com.google.protobuf.StringValueOrBuilder getQuestionOrBuilder() {
-      if (questionBuilder_ != null) {
-        return questionBuilder_.getMessageOrBuilder();
-      } else {
-        return question_ == null ?
-            com.google.protobuf.StringValue.getDefaultInstance() : question_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.StringValue question = 3;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>
-        getQuestionFieldBuilder() {
-      if (questionBuilder_ == null) {
-        questionBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>(
-                getQuestion(),
-                getParentForChildren(),
-                isClean());
-        question_ = null;
-      }
-      return questionBuilder_;
+      return this;
     }
 
     private com.google.protobuf.LazyStringList answers_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     private void ensureAnswersIsMutable() {
-      if (!((bitField0_ & 0x00000001) != 0)) {
+      if (!((bitField0_ & 0x00000008) != 0)) {
         answers_ = new com.google.protobuf.LazyStringArrayList(answers_);
-        bitField0_ |= 0x00000001;
+        bitField0_ |= 0x00000008;
        }
     }
     /**
@@ -1189,7 +948,7 @@ private static final long serialVersionUID = 0L;
      */
     public Builder clearAnswers() {
       answers_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      bitField0_ = (bitField0_ & ~0x00000001);
+      bitField0_ = (bitField0_ & ~0x00000008);
       onChanged();
       return this;
     }
@@ -1210,123 +969,43 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private com.google.protobuf.Int32Value score_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder> scoreBuilder_;
+    private int score_ ;
     /**
-     * <code>.google.protobuf.Int32Value score = 5;</code>
+     * <code>int32 score = 5;</code>
      * @return Whether the score field is set.
      */
+    @java.lang.Override
     public boolean hasScore() {
-      return scoreBuilder_ != null || score_ != null;
+      return ((bitField0_ & 0x00000010) != 0);
     }
     /**
-     * <code>.google.protobuf.Int32Value score = 5;</code>
+     * <code>int32 score = 5;</code>
      * @return The score.
      */
-    public com.google.protobuf.Int32Value getScore() {
-      if (scoreBuilder_ == null) {
-        return score_ == null ? com.google.protobuf.Int32Value.getDefaultInstance() : score_;
-      } else {
-        return scoreBuilder_.getMessage();
-      }
+    @java.lang.Override
+    public int getScore() {
+      return score_;
     }
     /**
-     * <code>.google.protobuf.Int32Value score = 5;</code>
+     * <code>int32 score = 5;</code>
+     * @param value The score to set.
+     * @return This builder for chaining.
      */
-    public Builder setScore(com.google.protobuf.Int32Value value) {
-      if (scoreBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        score_ = value;
-        onChanged();
-      } else {
-        scoreBuilder_.setMessage(value);
-      }
-
+    public Builder setScore(int value) {
+      bitField0_ |= 0x00000010;
+      score_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.Int32Value score = 5;</code>
-     */
-    public Builder setScore(
-        com.google.protobuf.Int32Value.Builder builderForValue) {
-      if (scoreBuilder_ == null) {
-        score_ = builderForValue.build();
-        onChanged();
-      } else {
-        scoreBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int32Value score = 5;</code>
-     */
-    public Builder mergeScore(com.google.protobuf.Int32Value value) {
-      if (scoreBuilder_ == null) {
-        if (score_ != null) {
-          score_ =
-            com.google.protobuf.Int32Value.newBuilder(score_).mergeFrom(value).buildPartial();
-        } else {
-          score_ = value;
-        }
-        onChanged();
-      } else {
-        scoreBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int32Value score = 5;</code>
+     * <code>int32 score = 5;</code>
+     * @return This builder for chaining.
      */
     public Builder clearScore() {
-      if (scoreBuilder_ == null) {
-        score_ = null;
-        onChanged();
-      } else {
-        score_ = null;
-        scoreBuilder_ = null;
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int32Value score = 5;</code>
-     */
-    public com.google.protobuf.Int32Value.Builder getScoreBuilder() {
-
+      bitField0_ = (bitField0_ & ~0x00000010);
+      score_ = 0;
       onChanged();
-      return getScoreFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.Int32Value score = 5;</code>
-     */
-    public com.google.protobuf.Int32ValueOrBuilder getScoreOrBuilder() {
-      if (scoreBuilder_ != null) {
-        return scoreBuilder_.getMessageOrBuilder();
-      } else {
-        return score_ == null ?
-            com.google.protobuf.Int32Value.getDefaultInstance() : score_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.Int32Value score = 5;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder>
-        getScoreFieldBuilder() {
-      if (scoreBuilder_ == null) {
-        scoreBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder>(
-                getScore(),
-                getParentForChildren(),
-                isClean());
-        score_ = null;
-      }
-      return scoreBuilder_;
+      return this;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

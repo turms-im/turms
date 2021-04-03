@@ -46,27 +46,23 @@ public final class GroupJoinQuestionOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n%model/group/group_join_question.proto\022" +
-      "\016im.turms.proto\032\036google/protobuf/wrapper" +
-      "s.proto\"\330\001\n\021GroupJoinQuestion\022\'\n\002id\030\001 \001(" +
-      "\0132\033.google.protobuf.Int64Value\022-\n\010group_" +
-      "id\030\002 \001(\0132\033.google.protobuf.Int64Value\022.\n" +
-      "\010question\030\003 \001(\0132\034.google.protobuf.String" +
-      "Value\022\017\n\007answers\030\004 \003(\t\022*\n\005score\030\005 \001(\0132\033." +
-      "google.protobuf.Int32ValueB%\n\036im.turms.c" +
-      "ommon.model.bo.groupP\001\272\002\000b\006proto3"
+      "\016im.turms.proto\"\242\001\n\021GroupJoinQuestion\022\017\n" +
+      "\002id\030\001 \001(\003H\000\210\001\001\022\025\n\010group_id\030\002 \001(\003H\001\210\001\001\022\025\n" +
+      "\010question\030\003 \001(\tH\002\210\001\001\022\017\n\007answers\030\004 \003(\t\022\022\n" +
+      "\005score\030\005 \001(\005H\003\210\001\001B\005\n\003_idB\013\n\t_group_idB\013\n" +
+      "\t_questionB\010\n\006_scoreB%\n\036im.turms.common." +
+      "model.bo.groupP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
         });
     internal_static_im_turms_proto_GroupJoinQuestion_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_im_turms_proto_GroupJoinQuestion_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_GroupJoinQuestion_descriptor,
-        new java.lang.String[] { "Id", "GroupId", "Question", "Answers", "Score", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "Id", "GroupId", "Question", "Answers", "Score", "Id", "GroupId", "Question", "Score", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -25,80 +25,77 @@ public interface UserInfoOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>.google.protobuf.Int64Value id = 1;</code>
+   * <code>int64 id = 1;</code>
    * @return Whether the id field is set.
    */
   boolean hasId();
   /**
-   * <code>.google.protobuf.Int64Value id = 1;</code>
+   * <code>int64 id = 1;</code>
    * @return The id.
    */
-  com.google.protobuf.Int64Value getId();
-  /**
-   * <code>.google.protobuf.Int64Value id = 1;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getIdOrBuilder();
+  long getId();
 
   /**
-   * <code>.google.protobuf.StringValue name = 2;</code>
+   * <code>string name = 2;</code>
    * @return Whether the name field is set.
    */
   boolean hasName();
   /**
-   * <code>.google.protobuf.StringValue name = 2;</code>
+   * <code>string name = 2;</code>
    * @return The name.
    */
-  com.google.protobuf.StringValue getName();
+  java.lang.String getName();
   /**
-   * <code>.google.protobuf.StringValue name = 2;</code>
+   * <code>string name = 2;</code>
+   * @return The bytes for name.
    */
-  com.google.protobuf.StringValueOrBuilder getNameOrBuilder();
+  com.google.protobuf.ByteString
+      getNameBytes();
 
   /**
-   * <code>.google.protobuf.StringValue intro = 3;</code>
+   * <code>string intro = 3;</code>
    * @return Whether the intro field is set.
    */
   boolean hasIntro();
   /**
-   * <code>.google.protobuf.StringValue intro = 3;</code>
+   * <code>string intro = 3;</code>
    * @return The intro.
    */
-  com.google.protobuf.StringValue getIntro();
+  java.lang.String getIntro();
   /**
-   * <code>.google.protobuf.StringValue intro = 3;</code>
+   * <code>string intro = 3;</code>
+   * @return The bytes for intro.
    */
-  com.google.protobuf.StringValueOrBuilder getIntroOrBuilder();
+  com.google.protobuf.ByteString
+      getIntroBytes();
 
   /**
-   * <code>.google.protobuf.Int64Value registration_date = 4;</code>
+   * <code>int64 registration_date = 4;</code>
    * @return Whether the registrationDate field is set.
    */
   boolean hasRegistrationDate();
   /**
-   * <code>.google.protobuf.Int64Value registration_date = 4;</code>
+   * <code>int64 registration_date = 4;</code>
    * @return The registrationDate.
    */
-  com.google.protobuf.Int64Value getRegistrationDate();
-  /**
-   * <code>.google.protobuf.Int64Value registration_date = 4;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getRegistrationDateOrBuilder();
+  long getRegistrationDate();
 
   /**
-   * <code>.google.protobuf.BoolValue active = 5;</code>
+   * <code>bool active = 5;</code>
    * @return Whether the active field is set.
    */
   boolean hasActive();
   /**
-   * <code>.google.protobuf.BoolValue active = 5;</code>
+   * <code>bool active = 5;</code>
    * @return The active.
    */
-  com.google.protobuf.BoolValue getActive();
-  /**
-   * <code>.google.protobuf.BoolValue active = 5;</code>
-   */
-  com.google.protobuf.BoolValueOrBuilder getActiveOrBuilder();
+  boolean getActive();
 
+  /**
+   * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
+   * @return Whether the profileAccessStrategy field is set.
+   */
+  boolean hasProfileAccessStrategy();
   /**
    * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
    * @return The enum numeric value on the wire for profileAccessStrategy.

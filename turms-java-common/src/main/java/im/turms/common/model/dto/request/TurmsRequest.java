@@ -59,6 +59,7 @@ private static final long serialVersionUID = 0L;
     if (extensionRegistry == null) {
       throw new java.lang.NullPointerException();
     }
+    int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
         com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
@@ -69,17 +70,9 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
-          case 10: {
-            com.google.protobuf.Int64Value.Builder subBuilder = null;
-            if (requestId_ != null) {
-              subBuilder = requestId_.toBuilder();
-            }
-            requestId_ = input.readMessage(com.google.protobuf.Int64Value.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(requestId_);
-              requestId_ = subBuilder.buildPartial();
-            }
-
+          case 8: {
+            bitField0_ |= 0x00000001;
+            requestId_ = input.readInt64();
             break;
           }
           case 26: {
@@ -884,6 +877,7 @@ private static final long serialVersionUID = 0L;
             im.turms.common.model.dto.request.TurmsRequest.class, im.turms.common.model.dto.request.TurmsRequest.Builder.class);
   }
 
+  private int bitField0_;
   private int kindCase_ = 0;
   private java.lang.Object kind_;
   public enum KindCase
@@ -1032,19 +1026,19 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int REQUEST_ID_FIELD_NUMBER = 1;
-  private com.google.protobuf.Int64Value requestId_;
+  private long requestId_;
   /**
    * <pre>
    * Note: request_id is allowed to be duplicate because
    * it is used for clients to identify the response of the same request id in a session
    * </pre>
    *
-   * <code>.google.protobuf.Int64Value request_id = 1;</code>
+   * <code>int64 request_id = 1;</code>
    * @return Whether the requestId field is set.
    */
   @java.lang.Override
   public boolean hasRequestId() {
-    return requestId_ != null;
+    return ((bitField0_ & 0x00000001) != 0);
   }
   /**
    * <pre>
@@ -1052,24 +1046,12 @@ private static final long serialVersionUID = 0L;
    * it is used for clients to identify the response of the same request id in a session
    * </pre>
    *
-   * <code>.google.protobuf.Int64Value request_id = 1;</code>
+   * <code>int64 request_id = 1;</code>
    * @return The requestId.
    */
   @java.lang.Override
-  public com.google.protobuf.Int64Value getRequestId() {
-    return requestId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : requestId_;
-  }
-  /**
-   * <pre>
-   * Note: request_id is allowed to be duplicate because
-   * it is used for clients to identify the response of the same request id in a session
-   * </pre>
-   *
-   * <code>.google.protobuf.Int64Value request_id = 1;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.Int64ValueOrBuilder getRequestIdOrBuilder() {
-    return getRequestId();
+  public long getRequestId() {
+    return requestId_;
   }
 
   public static final int CREATE_SESSION_REQUEST_FIELD_NUMBER = 3;
@@ -2911,8 +2893,8 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (requestId_ != null) {
-      output.writeMessage(1, getRequestId());
+    if (((bitField0_ & 0x00000001) != 0)) {
+      output.writeInt64(1, requestId_);
     }
     if (kindCase_ == 3) {
       output.writeMessage(3, (im.turms.common.model.dto.request.user.CreateSessionRequest) kind_);
@@ -3088,9 +3070,9 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (requestId_ != null) {
+    if (((bitField0_ & 0x00000001) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(1, getRequestId());
+        .computeInt64Size(1, requestId_);
     }
     if (kindCase_ == 3) {
       size += com.google.protobuf.CodedOutputStream
@@ -3329,8 +3311,8 @@ private static final long serialVersionUID = 0L;
 
     if (hasRequestId() != other.hasRequestId()) return false;
     if (hasRequestId()) {
-      if (!getRequestId()
-          .equals(other.getRequestId())) return false;
+      if (getRequestId()
+          != other.getRequestId()) return false;
     }
     if (!getKindCase().equals(other.getKindCase())) return false;
     switch (kindCase_) {
@@ -3570,7 +3552,8 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     if (hasRequestId()) {
       hash = (37 * hash) + REQUEST_ID_FIELD_NUMBER;
-      hash = (53 * hash) + getRequestId().hashCode();
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getRequestId());
     }
     switch (kindCase_) {
       case 3:
@@ -3933,12 +3916,8 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      if (requestIdBuilder_ == null) {
-        requestId_ = null;
-      } else {
-        requestId_ = null;
-        requestIdBuilder_ = null;
-      }
+      requestId_ = 0L;
+      bitField0_ = (bitField0_ & ~0x00000001);
       kindCase_ = 0;
       kind_ = null;
       return this;
@@ -3967,10 +3946,11 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public im.turms.common.model.dto.request.TurmsRequest buildPartial() {
       im.turms.common.model.dto.request.TurmsRequest result = new im.turms.common.model.dto.request.TurmsRequest(this);
-      if (requestIdBuilder_ == null) {
+      int from_bitField0_ = bitField0_;
+      int to_bitField0_ = 0;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
         result.requestId_ = requestId_;
-      } else {
-        result.requestId_ = requestIdBuilder_.build();
+        to_bitField0_ |= 0x00000001;
       }
       if (kindCase_ == 3) {
         if (createSessionRequestBuilder_ == null) {
@@ -4357,6 +4337,7 @@ private static final long serialVersionUID = 0L;
           result.kind_ = querySignedPutUrlRequestBuilder_.build();
         }
       }
+      result.bitField0_ = to_bitField0_;
       result.kindCase_ = kindCase_;
       onBuilt();
       return result;
@@ -4407,7 +4388,7 @@ private static final long serialVersionUID = 0L;
     public Builder mergeFrom(im.turms.common.model.dto.request.TurmsRequest other) {
       if (other == im.turms.common.model.dto.request.TurmsRequest.getDefaultInstance()) return this;
       if (other.hasRequestId()) {
-        mergeRequestId(other.getRequestId());
+        setRequestId(other.getRequestId());
       }
       switch (other.getKindCase()) {
         case CREATE_SESSION_REQUEST: {
@@ -4677,21 +4658,21 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
+    private int bitField0_;
 
-    private com.google.protobuf.Int64Value requestId_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> requestIdBuilder_;
+    private long requestId_ ;
     /**
      * <pre>
      * Note: request_id is allowed to be duplicate because
      * it is used for clients to identify the response of the same request id in a session
      * </pre>
      *
-     * <code>.google.protobuf.Int64Value request_id = 1;</code>
+     * <code>int64 request_id = 1;</code>
      * @return Whether the requestId field is set.
      */
+    @java.lang.Override
     public boolean hasRequestId() {
-      return requestIdBuilder_ != null || requestId_ != null;
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
      * <pre>
@@ -4699,15 +4680,12 @@ private static final long serialVersionUID = 0L;
      * it is used for clients to identify the response of the same request id in a session
      * </pre>
      *
-     * <code>.google.protobuf.Int64Value request_id = 1;</code>
+     * <code>int64 request_id = 1;</code>
      * @return The requestId.
      */
-    public com.google.protobuf.Int64Value getRequestId() {
-      if (requestIdBuilder_ == null) {
-        return requestId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : requestId_;
-      } else {
-        return requestIdBuilder_.getMessage();
-      }
+    @java.lang.Override
+    public long getRequestId() {
+      return requestId_;
     }
     /**
      * <pre>
@@ -4715,19 +4693,14 @@ private static final long serialVersionUID = 0L;
      * it is used for clients to identify the response of the same request id in a session
      * </pre>
      *
-     * <code>.google.protobuf.Int64Value request_id = 1;</code>
+     * <code>int64 request_id = 1;</code>
+     * @param value The requestId to set.
+     * @return This builder for chaining.
      */
-    public Builder setRequestId(com.google.protobuf.Int64Value value) {
-      if (requestIdBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        requestId_ = value;
-        onChanged();
-      } else {
-        requestIdBuilder_.setMessage(value);
-      }
-
+    public Builder setRequestId(long value) {
+      bitField0_ |= 0x00000001;
+      requestId_ = value;
+      onChanged();
       return this;
     }
     /**
@@ -4736,110 +4709,14 @@ private static final long serialVersionUID = 0L;
      * it is used for clients to identify the response of the same request id in a session
      * </pre>
      *
-     * <code>.google.protobuf.Int64Value request_id = 1;</code>
-     */
-    public Builder setRequestId(
-        com.google.protobuf.Int64Value.Builder builderForValue) {
-      if (requestIdBuilder_ == null) {
-        requestId_ = builderForValue.build();
-        onChanged();
-      } else {
-        requestIdBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <pre>
-     * Note: request_id is allowed to be duplicate because
-     * it is used for clients to identify the response of the same request id in a session
-     * </pre>
-     *
-     * <code>.google.protobuf.Int64Value request_id = 1;</code>
-     */
-    public Builder mergeRequestId(com.google.protobuf.Int64Value value) {
-      if (requestIdBuilder_ == null) {
-        if (requestId_ != null) {
-          requestId_ =
-            com.google.protobuf.Int64Value.newBuilder(requestId_).mergeFrom(value).buildPartial();
-        } else {
-          requestId_ = value;
-        }
-        onChanged();
-      } else {
-        requestIdBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <pre>
-     * Note: request_id is allowed to be duplicate because
-     * it is used for clients to identify the response of the same request id in a session
-     * </pre>
-     *
-     * <code>.google.protobuf.Int64Value request_id = 1;</code>
+     * <code>int64 request_id = 1;</code>
+     * @return This builder for chaining.
      */
     public Builder clearRequestId() {
-      if (requestIdBuilder_ == null) {
-        requestId_ = null;
-        onChanged();
-      } else {
-        requestId_ = null;
-        requestIdBuilder_ = null;
-      }
-
-      return this;
-    }
-    /**
-     * <pre>
-     * Note: request_id is allowed to be duplicate because
-     * it is used for clients to identify the response of the same request id in a session
-     * </pre>
-     *
-     * <code>.google.protobuf.Int64Value request_id = 1;</code>
-     */
-    public com.google.protobuf.Int64Value.Builder getRequestIdBuilder() {
-
+      bitField0_ = (bitField0_ & ~0x00000001);
+      requestId_ = 0L;
       onChanged();
-      return getRequestIdFieldBuilder().getBuilder();
-    }
-    /**
-     * <pre>
-     * Note: request_id is allowed to be duplicate because
-     * it is used for clients to identify the response of the same request id in a session
-     * </pre>
-     *
-     * <code>.google.protobuf.Int64Value request_id = 1;</code>
-     */
-    public com.google.protobuf.Int64ValueOrBuilder getRequestIdOrBuilder() {
-      if (requestIdBuilder_ != null) {
-        return requestIdBuilder_.getMessageOrBuilder();
-      } else {
-        return requestId_ == null ?
-            com.google.protobuf.Int64Value.getDefaultInstance() : requestId_;
-      }
-    }
-    /**
-     * <pre>
-     * Note: request_id is allowed to be duplicate because
-     * it is used for clients to identify the response of the same request id in a session
-     * </pre>
-     *
-     * <code>.google.protobuf.Int64Value request_id = 1;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
-        getRequestIdFieldBuilder() {
-      if (requestIdBuilder_ == null) {
-        requestIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>(
-                getRequestId(),
-                getParentForChildren(),
-                isClean());
-        requestId_ = null;
-      }
-      return requestIdBuilder_;
+      return this;
     }
 
     private com.google.protobuf.SingleFieldBuilderV3<

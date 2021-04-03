@@ -46,19 +46,18 @@ public final class UserRelationshipGroupsWithVersionOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n6model/user/user_relationship_groups_wi" +
-      "th_version.proto\022\016im.turms.proto\032\036google" +
-      "/protobuf/wrappers.proto\032(model/user/use" +
-      "r_relationship_group.proto\"\244\001\n!UserRelat" +
-      "ionshipGroupsWithVersion\022G\n\030user_relatio" +
-      "nship_groups\030\001 \003(\0132%.im.turms.proto.User" +
-      "RelationshipGroup\0226\n\021last_updated_date\030\002" +
-      " \001(\0132\033.google.protobuf.Int64ValueB$\n\035im." +
-      "turms.common.model.bo.userP\001\272\002\000b\006proto3"
+      "th_version.proto\022\016im.turms.proto\032(model/" +
+      "user/user_relationship_group.proto\"\242\001\n!U" +
+      "serRelationshipGroupsWithVersion\022G\n\030user" +
+      "_relationship_groups\030\001 \003(\0132%.im.turms.pr" +
+      "oto.UserRelationshipGroup\022\036\n\021last_update" +
+      "d_date\030\002 \001(\003H\000\210\001\001B\024\n\022_last_updated_dateB" +
+      "$\n\035im.turms.common.model.bo.userP\001\272\002\000b\006p" +
+      "roto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
           im.turms.common.model.bo.user.UserRelationshipGroupOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_UserRelationshipGroupsWithVersion_descriptor =
@@ -66,8 +65,7 @@ public final class UserRelationshipGroupsWithVersionOuterClass {
     internal_static_im_turms_proto_UserRelationshipGroupsWithVersion_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_UserRelationshipGroupsWithVersion_descriptor,
-        new java.lang.String[] { "UserRelationshipGroups", "LastUpdatedDate", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "UserRelationshipGroups", "LastUpdatedDate", "LastUpdatedDate", });
     im.turms.common.model.bo.user.UserRelationshipGroupOuterClass.getDescriptor();
   }
 

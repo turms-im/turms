@@ -40,17 +40,13 @@ public interface AudioFileOrBuilder extends
   im.turms.common.model.bo.file.AudioFile.DescriptionOrBuilder getDescriptionOrBuilder();
 
   /**
-   * <code>.google.protobuf.BytesValue data = 2;</code>
+   * <code>bytes data = 2;</code>
    * @return Whether the data field is set.
    */
   boolean hasData();
   /**
-   * <code>.google.protobuf.BytesValue data = 2;</code>
+   * <code>bytes data = 2;</code>
    * @return The data.
    */
-  com.google.protobuf.BytesValue getData();
-  /**
-   * <code>.google.protobuf.BytesValue data = 2;</code>
-   */
-  com.google.protobuf.BytesValueOrBuilder getDataOrBuilder();
+  com.google.protobuf.ByteString getData();
 }

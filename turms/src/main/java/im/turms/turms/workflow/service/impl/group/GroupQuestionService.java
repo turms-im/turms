@@ -325,7 +325,7 @@ public class GroupQuestionService {
                                         throw TurmsBusinessException.get(TurmsStatusCode.NO_CONTENT);
                                     }
                                     GroupJoinQuestionsWithVersion.Builder builder = GroupJoinQuestionsWithVersion.newBuilder();
-                                    builder.setLastUpdatedDate(Int64Value.of(version.getTime()));
+                                    builder.setLastUpdatedDate(version.getTime());
                                     for (GroupJoinQuestion question : groupJoinQuestions) {
                                         im.turms.common.model.bo.group.GroupJoinQuestion.Builder questionBuilder =
                                                 ProtoUtil.groupJoinQuestion2proto(question);

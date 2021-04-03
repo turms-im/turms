@@ -46,33 +46,29 @@ public final class UpdateGroupRequestOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n(request/group/update_group_request.pro" +
-      "to\022\016im.turms.proto\032\036google/protobuf/wrap" +
-      "pers.proto\"\301\003\n\022UpdateGroupRequest\022\020\n\010gro" +
-      "up_id\030\001 \001(\003\0220\n\ngroup_name\030\002 \001(\0132\034.google" +
-      ".protobuf.StringValue\022+\n\005intro\030\003 \001(\0132\034.g" +
-      "oogle.protobuf.StringValue\0222\n\014announceme" +
-      "nt\030\004 \001(\0132\034.google.protobuf.StringValue\0222" +
-      "\n\rminimum_score\030\005 \001(\0132\033.google.protobuf." +
-      "Int32Value\0222\n\rgroup_type_id\030\006 \001(\0132\033.goog" +
-      "le.protobuf.Int64Value\0222\n\rmute_end_date\030" +
-      "\007 \001(\0132\033.google.protobuf.Int64Value\0221\n\014su" +
-      "ccessor_id\030\010 \001(\0132\033.google.protobuf.Int64" +
-      "Value\0227\n\023quit_after_transfer\030\t \001(\0132\032.goo" +
-      "gle.protobuf.BoolValueB.\n\'im.turms.commo" +
-      "n.model.dto.request.groupP\001\272\002\000b\006proto3"
+      "to\022\016im.turms.proto\"\210\003\n\022UpdateGroupReques" +
+      "t\022\020\n\010group_id\030\001 \001(\003\022\027\n\ngroup_name\030\002 \001(\tH" +
+      "\000\210\001\001\022\022\n\005intro\030\003 \001(\tH\001\210\001\001\022\031\n\014announcement" +
+      "\030\004 \001(\tH\002\210\001\001\022\032\n\rminimum_score\030\005 \001(\005H\003\210\001\001\022" +
+      "\032\n\rgroup_type_id\030\006 \001(\003H\004\210\001\001\022\032\n\rmute_end_" +
+      "date\030\007 \001(\003H\005\210\001\001\022\031\n\014successor_id\030\010 \001(\003H\006\210" +
+      "\001\001\022 \n\023quit_after_transfer\030\t \001(\010H\007\210\001\001B\r\n\013" +
+      "_group_nameB\010\n\006_introB\017\n\r_announcementB\020" +
+      "\n\016_minimum_scoreB\020\n\016_group_type_idB\020\n\016_m" +
+      "ute_end_dateB\017\n\r_successor_idB\026\n\024_quit_a" +
+      "fter_transferB.\n\'im.turms.common.model.d" +
+      "to.request.groupP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
         });
     internal_static_im_turms_proto_UpdateGroupRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_im_turms_proto_UpdateGroupRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_UpdateGroupRequest_descriptor,
-        new java.lang.String[] { "GroupId", "GroupName", "Intro", "Announcement", "MinimumScore", "GroupTypeId", "MuteEndDate", "SuccessorId", "QuitAfterTransfer", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "GroupId", "GroupName", "Intro", "Announcement", "MinimumScore", "GroupTypeId", "MuteEndDate", "SuccessorId", "QuitAfterTransfer", "GroupName", "Intro", "Announcement", "MinimumScore", "GroupTypeId", "MuteEndDate", "SuccessorId", "QuitAfterTransfer", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

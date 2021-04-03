@@ -47,27 +47,23 @@ public final class QueryRelatedUserIdsRequestOuterClass {
     java.lang.String[] descriptorData = {
       "\n>request/user/relationship/query_relate" +
       "d_user_ids_request.proto\022\016im.turms.proto" +
-      "\032\036google/protobuf/wrappers.proto\"\263\001\n\032Que" +
-      "ryRelatedUserIdsRequest\022+\n\007blocked\030\001 \001(\013" +
-      "2\032.google.protobuf.BoolValue\0220\n\013group_in" +
-      "dex\030\002 \001(\0132\033.google.protobuf.Int32Value\0226" +
-      "\n\021last_updated_date\030\003 \001(\0132\033.google.proto" +
-      "buf.Int64ValueB:\n3im.turms.common.model." +
-      "dto.request.user.relationshipP\001\272\002\000b\006prot" +
-      "o3"
+      "\"\236\001\n\032QueryRelatedUserIdsRequest\022\024\n\007block" +
+      "ed\030\001 \001(\010H\000\210\001\001\022\030\n\013group_index\030\002 \001(\005H\001\210\001\001\022" +
+      "\036\n\021last_updated_date\030\003 \001(\003H\002\210\001\001B\n\n\010_bloc" +
+      "kedB\016\n\014_group_indexB\024\n\022_last_updated_dat" +
+      "eB:\n3im.turms.common.model.dto.request.u" +
+      "ser.relationshipP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
         });
     internal_static_im_turms_proto_QueryRelatedUserIdsRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_im_turms_proto_QueryRelatedUserIdsRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_QueryRelatedUserIdsRequest_descriptor,
-        new java.lang.String[] { "Blocked", "GroupIndex", "LastUpdatedDate", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "Blocked", "GroupIndex", "LastUpdatedDate", "Blocked", "GroupIndex", "LastUpdatedDate", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

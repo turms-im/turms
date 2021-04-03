@@ -33,6 +33,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private UpdateMessageRequest() {
+    text_ = "";
     records_ = java.util.Collections.emptyList();
   }
 
@@ -73,37 +74,22 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 18: {
-            com.google.protobuf.StringValue.Builder subBuilder = null;
-            if (text_ != null) {
-              subBuilder = text_.toBuilder();
-            }
-            text_ = input.readMessage(com.google.protobuf.StringValue.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(text_);
-              text_ = subBuilder.buildPartial();
-            }
-
+            java.lang.String s = input.readStringRequireUtf8();
+            bitField0_ |= 0x00000001;
+            text_ = s;
             break;
           }
           case 26: {
-            if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+            if (!((mutable_bitField0_ & 0x00000002) != 0)) {
               records_ = new java.util.ArrayList<com.google.protobuf.ByteString>();
-              mutable_bitField0_ |= 0x00000001;
+              mutable_bitField0_ |= 0x00000002;
             }
             records_.add(input.readBytes());
             break;
           }
-          case 34: {
-            com.google.protobuf.Int64Value.Builder subBuilder = null;
-            if (recallDate_ != null) {
-              subBuilder = recallDate_.toBuilder();
-            }
-            recallDate_ = input.readMessage(com.google.protobuf.Int64Value.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(recallDate_);
-              recallDate_ = subBuilder.buildPartial();
-            }
-
+          case 32: {
+            bitField0_ |= 0x00000002;
+            recallDate_ = input.readInt64();
             break;
           }
           default: {
@@ -121,7 +107,7 @@ private static final long serialVersionUID = 0L;
       throw new com.google.protobuf.InvalidProtocolBufferException(
           e).setUnfinishedMessage(this);
     } finally {
-      if (((mutable_bitField0_ & 0x00000001) != 0)) {
+      if (((mutable_bitField0_ & 0x00000002) != 0)) {
         records_ = java.util.Collections.unmodifiableList(records_); // C
       }
       this.unknownFields = unknownFields.build();
@@ -141,6 +127,7 @@ private static final long serialVersionUID = 0L;
             im.turms.common.model.dto.request.message.UpdateMessageRequest.class, im.turms.common.model.dto.request.message.UpdateMessageRequest.Builder.class);
   }
 
+  private int bitField0_;
   public static final int MESSAGE_ID_FIELD_NUMBER = 1;
   private long messageId_;
   /**
@@ -153,29 +140,49 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int TEXT_FIELD_NUMBER = 2;
-  private com.google.protobuf.StringValue text_;
+  private volatile java.lang.Object text_;
   /**
-   * <code>.google.protobuf.StringValue text = 2;</code>
+   * <code>string text = 2;</code>
    * @return Whether the text field is set.
    */
   @java.lang.Override
   public boolean hasText() {
-    return text_ != null;
+    return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>.google.protobuf.StringValue text = 2;</code>
+   * <code>string text = 2;</code>
    * @return The text.
    */
   @java.lang.Override
-  public com.google.protobuf.StringValue getText() {
-    return text_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : text_;
+  public java.lang.String getText() {
+    java.lang.Object ref = text_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs =
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      text_ = s;
+      return s;
+    }
   }
   /**
-   * <code>.google.protobuf.StringValue text = 2;</code>
+   * <code>string text = 2;</code>
+   * @return The bytes for text.
    */
   @java.lang.Override
-  public com.google.protobuf.StringValueOrBuilder getTextOrBuilder() {
-    return getText();
+  public com.google.protobuf.ByteString
+      getTextBytes() {
+    java.lang.Object ref = text_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      text_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
   public static final int RECORDS_FIELD_NUMBER = 3;
@@ -206,29 +213,22 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int RECALL_DATE_FIELD_NUMBER = 4;
-  private com.google.protobuf.Int64Value recallDate_;
+  private long recallDate_;
   /**
-   * <code>.google.protobuf.Int64Value recall_date = 4;</code>
+   * <code>int64 recall_date = 4;</code>
    * @return Whether the recallDate field is set.
    */
   @java.lang.Override
   public boolean hasRecallDate() {
-    return recallDate_ != null;
+    return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>.google.protobuf.Int64Value recall_date = 4;</code>
+   * <code>int64 recall_date = 4;</code>
    * @return The recallDate.
    */
   @java.lang.Override
-  public com.google.protobuf.Int64Value getRecallDate() {
-    return recallDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : recallDate_;
-  }
-  /**
-   * <code>.google.protobuf.Int64Value recall_date = 4;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.Int64ValueOrBuilder getRecallDateOrBuilder() {
-    return getRecallDate();
+  public long getRecallDate() {
+    return recallDate_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -248,14 +248,14 @@ private static final long serialVersionUID = 0L;
     if (messageId_ != 0L) {
       output.writeInt64(1, messageId_);
     }
-    if (text_ != null) {
-      output.writeMessage(2, getText());
+    if (((bitField0_ & 0x00000001) != 0)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, text_);
     }
     for (int i = 0; i < records_.size(); i++) {
       output.writeBytes(3, records_.get(i));
     }
-    if (recallDate_ != null) {
-      output.writeMessage(4, getRecallDate());
+    if (((bitField0_ & 0x00000002) != 0)) {
+      output.writeInt64(4, recallDate_);
     }
     unknownFields.writeTo(output);
   }
@@ -270,9 +270,8 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt64Size(1, messageId_);
     }
-    if (text_ != null) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(2, getText());
+    if (((bitField0_ & 0x00000001) != 0)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, text_);
     }
     {
       int dataSize = 0;
@@ -283,9 +282,9 @@ private static final long serialVersionUID = 0L;
       size += dataSize;
       size += 1 * getRecordsList().size();
     }
-    if (recallDate_ != null) {
+    if (((bitField0_ & 0x00000002) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(4, getRecallDate());
+        .computeInt64Size(4, recallDate_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -313,8 +312,8 @@ private static final long serialVersionUID = 0L;
         .equals(other.getRecordsList())) return false;
     if (hasRecallDate() != other.hasRecallDate()) return false;
     if (hasRecallDate()) {
-      if (!getRecallDate()
-          .equals(other.getRecallDate())) return false;
+      if (getRecallDate()
+          != other.getRecallDate()) return false;
     }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
@@ -340,7 +339,8 @@ private static final long serialVersionUID = 0L;
     }
     if (hasRecallDate()) {
       hash = (37 * hash) + RECALL_DATE_FIELD_NUMBER;
-      hash = (53 * hash) + getRecallDate().hashCode();
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getRecallDate());
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -477,20 +477,12 @@ private static final long serialVersionUID = 0L;
       super.clear();
       messageId_ = 0L;
 
-      if (textBuilder_ == null) {
-        text_ = null;
-      } else {
-        text_ = null;
-        textBuilder_ = null;
-      }
-      records_ = java.util.Collections.emptyList();
+      text_ = "";
       bitField0_ = (bitField0_ & ~0x00000001);
-      if (recallDateBuilder_ == null) {
-        recallDate_ = null;
-      } else {
-        recallDate_ = null;
-        recallDateBuilder_ = null;
-      }
+      records_ = java.util.Collections.emptyList();
+      bitField0_ = (bitField0_ & ~0x00000002);
+      recallDate_ = 0L;
+      bitField0_ = (bitField0_ & ~0x00000004);
       return this;
     }
 
@@ -518,22 +510,22 @@ private static final long serialVersionUID = 0L;
     public im.turms.common.model.dto.request.message.UpdateMessageRequest buildPartial() {
       im.turms.common.model.dto.request.message.UpdateMessageRequest result = new im.turms.common.model.dto.request.message.UpdateMessageRequest(this);
       int from_bitField0_ = bitField0_;
+      int to_bitField0_ = 0;
       result.messageId_ = messageId_;
-      if (textBuilder_ == null) {
-        result.text_ = text_;
-      } else {
-        result.text_ = textBuilder_.build();
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        to_bitField0_ |= 0x00000001;
       }
-      if (((bitField0_ & 0x00000001) != 0)) {
+      result.text_ = text_;
+      if (((bitField0_ & 0x00000002) != 0)) {
         records_ = java.util.Collections.unmodifiableList(records_);
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ = (bitField0_ & ~0x00000002);
       }
       result.records_ = records_;
-      if (recallDateBuilder_ == null) {
+      if (((from_bitField0_ & 0x00000004) != 0)) {
         result.recallDate_ = recallDate_;
-      } else {
-        result.recallDate_ = recallDateBuilder_.build();
+        to_bitField0_ |= 0x00000002;
       }
+      result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
     }
@@ -586,12 +578,14 @@ private static final long serialVersionUID = 0L;
         setMessageId(other.getMessageId());
       }
       if (other.hasText()) {
-        mergeText(other.getText());
+        bitField0_ |= 0x00000001;
+        text_ = other.text_;
+        onChanged();
       }
       if (!other.records_.isEmpty()) {
         if (records_.isEmpty()) {
           records_ = other.records_;
-          bitField0_ = (bitField0_ & ~0x00000001);
+          bitField0_ = (bitField0_ & ~0x00000002);
         } else {
           ensureRecordsIsMutable();
           records_.addAll(other.records_);
@@ -599,7 +593,7 @@ private static final long serialVersionUID = 0L;
         onChanged();
       }
       if (other.hasRecallDate()) {
-        mergeRecallDate(other.getRecallDate());
+        setRecallDate(other.getRecallDate());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -662,130 +656,94 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private com.google.protobuf.StringValue text_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> textBuilder_;
+    private java.lang.Object text_ = "";
     /**
-     * <code>.google.protobuf.StringValue text = 2;</code>
+     * <code>string text = 2;</code>
      * @return Whether the text field is set.
      */
     public boolean hasText() {
-      return textBuilder_ != null || text_ != null;
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>.google.protobuf.StringValue text = 2;</code>
+     * <code>string text = 2;</code>
      * @return The text.
      */
-    public com.google.protobuf.StringValue getText() {
-      if (textBuilder_ == null) {
-        return text_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : text_;
+    public java.lang.String getText() {
+      java.lang.Object ref = text_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        text_ = s;
+        return s;
       } else {
-        return textBuilder_.getMessage();
+        return (java.lang.String) ref;
       }
     }
     /**
-     * <code>.google.protobuf.StringValue text = 2;</code>
+     * <code>string text = 2;</code>
+     * @return The bytes for text.
      */
-    public Builder setText(com.google.protobuf.StringValue value) {
-      if (textBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        text_ = value;
-        onChanged();
+    public com.google.protobuf.ByteString
+        getTextBytes() {
+      java.lang.Object ref = text_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        text_ = b;
+        return b;
       } else {
-        textBuilder_.setMessage(value);
+        return (com.google.protobuf.ByteString) ref;
       }
-
-      return this;
     }
     /**
-     * <code>.google.protobuf.StringValue text = 2;</code>
+     * <code>string text = 2;</code>
+     * @param value The text to set.
+     * @return This builder for chaining.
      */
     public Builder setText(
-        com.google.protobuf.StringValue.Builder builderForValue) {
-      if (textBuilder_ == null) {
-        text_ = builderForValue.build();
-        onChanged();
-      } else {
-        textBuilder_.setMessage(builderForValue.build());
-      }
-
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+      text_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.StringValue text = 2;</code>
-     */
-    public Builder mergeText(com.google.protobuf.StringValue value) {
-      if (textBuilder_ == null) {
-        if (text_ != null) {
-          text_ =
-            com.google.protobuf.StringValue.newBuilder(text_).mergeFrom(value).buildPartial();
-        } else {
-          text_ = value;
-        }
-        onChanged();
-      } else {
-        textBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.StringValue text = 2;</code>
+     * <code>string text = 2;</code>
+     * @return This builder for chaining.
      */
     public Builder clearText() {
-      if (textBuilder_ == null) {
-        text_ = null;
-        onChanged();
-      } else {
-        text_ = null;
-        textBuilder_ = null;
-      }
-
+      bitField0_ = (bitField0_ & ~0x00000001);
+      text_ = getDefaultInstance().getText();
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.StringValue text = 2;</code>
+     * <code>string text = 2;</code>
+     * @param value The bytes for text to set.
+     * @return This builder for chaining.
      */
-    public com.google.protobuf.StringValue.Builder getTextBuilder() {
-
+    public Builder setTextBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      bitField0_ |= 0x00000001;
+      text_ = value;
       onChanged();
-      return getTextFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.StringValue text = 2;</code>
-     */
-    public com.google.protobuf.StringValueOrBuilder getTextOrBuilder() {
-      if (textBuilder_ != null) {
-        return textBuilder_.getMessageOrBuilder();
-      } else {
-        return text_ == null ?
-            com.google.protobuf.StringValue.getDefaultInstance() : text_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.StringValue text = 2;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>
-        getTextFieldBuilder() {
-      if (textBuilder_ == null) {
-        textBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>(
-                getText(),
-                getParentForChildren(),
-                isClean());
-        text_ = null;
-      }
-      return textBuilder_;
+      return this;
     }
 
     private java.util.List<com.google.protobuf.ByteString> records_ = java.util.Collections.emptyList();
     private void ensureRecordsIsMutable() {
-      if (!((bitField0_ & 0x00000001) != 0)) {
+      if (!((bitField0_ & 0x00000002) != 0)) {
         records_ = new java.util.ArrayList<com.google.protobuf.ByteString>(records_);
-        bitField0_ |= 0x00000001;
+        bitField0_ |= 0x00000002;
        }
     }
     /**
@@ -794,7 +752,7 @@ private static final long serialVersionUID = 0L;
      */
     public java.util.List<com.google.protobuf.ByteString>
         getRecordsList() {
-      return ((bitField0_ & 0x00000001) != 0) ?
+      return ((bitField0_ & 0x00000002) != 0) ?
                java.util.Collections.unmodifiableList(records_) : records_;
     }
     /**
@@ -861,128 +819,48 @@ private static final long serialVersionUID = 0L;
      */
     public Builder clearRecords() {
       records_ = java.util.Collections.emptyList();
-      bitField0_ = (bitField0_ & ~0x00000001);
+      bitField0_ = (bitField0_ & ~0x00000002);
       onChanged();
       return this;
     }
 
-    private com.google.protobuf.Int64Value recallDate_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> recallDateBuilder_;
+    private long recallDate_ ;
     /**
-     * <code>.google.protobuf.Int64Value recall_date = 4;</code>
+     * <code>int64 recall_date = 4;</code>
      * @return Whether the recallDate field is set.
      */
+    @java.lang.Override
     public boolean hasRecallDate() {
-      return recallDateBuilder_ != null || recallDate_ != null;
+      return ((bitField0_ & 0x00000004) != 0);
     }
     /**
-     * <code>.google.protobuf.Int64Value recall_date = 4;</code>
+     * <code>int64 recall_date = 4;</code>
      * @return The recallDate.
      */
-    public com.google.protobuf.Int64Value getRecallDate() {
-      if (recallDateBuilder_ == null) {
-        return recallDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : recallDate_;
-      } else {
-        return recallDateBuilder_.getMessage();
-      }
+    @java.lang.Override
+    public long getRecallDate() {
+      return recallDate_;
     }
     /**
-     * <code>.google.protobuf.Int64Value recall_date = 4;</code>
+     * <code>int64 recall_date = 4;</code>
+     * @param value The recallDate to set.
+     * @return This builder for chaining.
      */
-    public Builder setRecallDate(com.google.protobuf.Int64Value value) {
-      if (recallDateBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        recallDate_ = value;
-        onChanged();
-      } else {
-        recallDateBuilder_.setMessage(value);
-      }
-
+    public Builder setRecallDate(long value) {
+      bitField0_ |= 0x00000004;
+      recallDate_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value recall_date = 4;</code>
-     */
-    public Builder setRecallDate(
-        com.google.protobuf.Int64Value.Builder builderForValue) {
-      if (recallDateBuilder_ == null) {
-        recallDate_ = builderForValue.build();
-        onChanged();
-      } else {
-        recallDateBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value recall_date = 4;</code>
-     */
-    public Builder mergeRecallDate(com.google.protobuf.Int64Value value) {
-      if (recallDateBuilder_ == null) {
-        if (recallDate_ != null) {
-          recallDate_ =
-            com.google.protobuf.Int64Value.newBuilder(recallDate_).mergeFrom(value).buildPartial();
-        } else {
-          recallDate_ = value;
-        }
-        onChanged();
-      } else {
-        recallDateBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value recall_date = 4;</code>
+     * <code>int64 recall_date = 4;</code>
+     * @return This builder for chaining.
      */
     public Builder clearRecallDate() {
-      if (recallDateBuilder_ == null) {
-        recallDate_ = null;
-        onChanged();
-      } else {
-        recallDate_ = null;
-        recallDateBuilder_ = null;
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value recall_date = 4;</code>
-     */
-    public com.google.protobuf.Int64Value.Builder getRecallDateBuilder() {
-
+      bitField0_ = (bitField0_ & ~0x00000004);
+      recallDate_ = 0L;
       onChanged();
-      return getRecallDateFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.Int64Value recall_date = 4;</code>
-     */
-    public com.google.protobuf.Int64ValueOrBuilder getRecallDateOrBuilder() {
-      if (recallDateBuilder_ != null) {
-        return recallDateBuilder_.getMessageOrBuilder();
-      } else {
-        return recallDate_ == null ?
-            com.google.protobuf.Int64Value.getDefaultInstance() : recallDate_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.Int64Value recall_date = 4;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
-        getRecallDateFieldBuilder() {
-      if (recallDateBuilder_ == null) {
-        recallDateBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>(
-                getRecallDate(),
-                getParentForChildren(),
-                isClean());
-        recallDate_ = null;
-      }
-      return recallDateBuilder_;
+      return this;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

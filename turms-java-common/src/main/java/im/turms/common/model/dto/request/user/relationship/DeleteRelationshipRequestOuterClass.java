@@ -46,27 +46,24 @@ public final class DeleteRelationshipRequestOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n;request/user/relationship/delete_relat" +
-      "ionship_request.proto\022\016im.turms.proto\032\036g" +
-      "oogle/protobuf/wrappers.proto\"\227\001\n\031Delete" +
-      "RelationshipRequest\022\017\n\007user_id\030\001 \001(\003\0220\n\013" +
-      "group_index\030\002 \001(\0132\033.google.protobuf.Int3" +
-      "2Value\0227\n\022target_group_index\030\003 \001(\0132\033.goo" +
-      "gle.protobuf.Int32ValueB:\n3im.turms.comm" +
-      "on.model.dto.request.user.relationshipP\001" +
-      "\272\002\000b\006proto3"
+      "ionship_request.proto\022\016im.turms.proto\"\216\001" +
+      "\n\031DeleteRelationshipRequest\022\017\n\007user_id\030\001" +
+      " \001(\003\022\030\n\013group_index\030\002 \001(\005H\000\210\001\001\022\037\n\022target" +
+      "_group_index\030\003 \001(\005H\001\210\001\001B\016\n\014_group_indexB" +
+      "\025\n\023_target_group_indexB:\n3im.turms.commo" +
+      "n.model.dto.request.user.relationshipP\001\272" +
+      "\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
         });
     internal_static_im_turms_proto_DeleteRelationshipRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_im_turms_proto_DeleteRelationshipRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_DeleteRelationshipRequest_descriptor,
-        new java.lang.String[] { "UserId", "GroupIndex", "TargetGroupIndex", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "UserId", "GroupIndex", "TargetGroupIndex", "GroupIndex", "TargetGroupIndex", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

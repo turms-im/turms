@@ -42,94 +42,70 @@ public interface QueryMessagesRequestOrBuilder extends
   long getIds(int index);
 
   /**
-   * <code>.google.protobuf.Int32Value size = 2;</code>
+   * <code>int32 size = 2;</code>
    * @return Whether the size field is set.
    */
   boolean hasSize();
   /**
-   * <code>.google.protobuf.Int32Value size = 2;</code>
+   * <code>int32 size = 2;</code>
    * @return The size.
    */
-  com.google.protobuf.Int32Value getSize();
-  /**
-   * <code>.google.protobuf.Int32Value size = 2;</code>
-   */
-  com.google.protobuf.Int32ValueOrBuilder getSizeOrBuilder();
+  int getSize();
 
   /**
-   * <code>.google.protobuf.BoolValue are_group_messages = 3;</code>
+   * <code>bool are_group_messages = 3;</code>
    * @return Whether the areGroupMessages field is set.
    */
   boolean hasAreGroupMessages();
   /**
-   * <code>.google.protobuf.BoolValue are_group_messages = 3;</code>
+   * <code>bool are_group_messages = 3;</code>
    * @return The areGroupMessages.
    */
-  com.google.protobuf.BoolValue getAreGroupMessages();
-  /**
-   * <code>.google.protobuf.BoolValue are_group_messages = 3;</code>
-   */
-  com.google.protobuf.BoolValueOrBuilder getAreGroupMessagesOrBuilder();
+  boolean getAreGroupMessages();
 
   /**
-   * <code>.google.protobuf.BoolValue are_system_messages = 4;</code>
+   * <code>bool are_system_messages = 4;</code>
    * @return Whether the areSystemMessages field is set.
    */
   boolean hasAreSystemMessages();
   /**
-   * <code>.google.protobuf.BoolValue are_system_messages = 4;</code>
+   * <code>bool are_system_messages = 4;</code>
    * @return The areSystemMessages.
    */
-  com.google.protobuf.BoolValue getAreSystemMessages();
-  /**
-   * <code>.google.protobuf.BoolValue are_system_messages = 4;</code>
-   */
-  com.google.protobuf.BoolValueOrBuilder getAreSystemMessagesOrBuilder();
+  boolean getAreSystemMessages();
 
   /**
-   * <code>.google.protobuf.Int64Value from_id = 5;</code>
+   * <code>int64 from_id = 5;</code>
    * @return Whether the fromId field is set.
    */
   boolean hasFromId();
   /**
-   * <code>.google.protobuf.Int64Value from_id = 5;</code>
+   * <code>int64 from_id = 5;</code>
    * @return The fromId.
    */
-  com.google.protobuf.Int64Value getFromId();
-  /**
-   * <code>.google.protobuf.Int64Value from_id = 5;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getFromIdOrBuilder();
+  long getFromId();
 
   /**
-   * <code>.google.protobuf.Int64Value delivery_date_after = 6;</code>
+   * <code>int64 delivery_date_after = 6;</code>
    * @return Whether the deliveryDateAfter field is set.
    */
   boolean hasDeliveryDateAfter();
   /**
-   * <code>.google.protobuf.Int64Value delivery_date_after = 6;</code>
+   * <code>int64 delivery_date_after = 6;</code>
    * @return The deliveryDateAfter.
    */
-  com.google.protobuf.Int64Value getDeliveryDateAfter();
-  /**
-   * <code>.google.protobuf.Int64Value delivery_date_after = 6;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getDeliveryDateAfterOrBuilder();
+  long getDeliveryDateAfter();
 
   /**
-   * <code>.google.protobuf.Int64Value delivery_date_before = 7;</code>
+   * <code>int64 delivery_date_before = 7;</code>
    * @return Whether the deliveryDateBefore field is set.
    */
   boolean hasDeliveryDateBefore();
   /**
-   * <code>.google.protobuf.Int64Value delivery_date_before = 7;</code>
+   * <code>int64 delivery_date_before = 7;</code>
    * @return The deliveryDateBefore.
    */
-  com.google.protobuf.Int64Value getDeliveryDateBefore();
-  /**
-   * <code>.google.protobuf.Int64Value delivery_date_before = 7;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getDeliveryDateBeforeOrBuilder();
+  long getDeliveryDateBefore();
 
   /**
    * <code>bool with_total = 8;</code>

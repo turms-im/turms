@@ -37,32 +37,36 @@ public interface UpdateUserLocationRequestOrBuilder extends
   float getLongitude();
 
   /**
-   * <code>.google.protobuf.StringValue name = 3;</code>
+   * <code>string name = 3;</code>
    * @return Whether the name field is set.
    */
   boolean hasName();
   /**
-   * <code>.google.protobuf.StringValue name = 3;</code>
+   * <code>string name = 3;</code>
    * @return The name.
    */
-  com.google.protobuf.StringValue getName();
+  java.lang.String getName();
   /**
-   * <code>.google.protobuf.StringValue name = 3;</code>
+   * <code>string name = 3;</code>
+   * @return The bytes for name.
    */
-  com.google.protobuf.StringValueOrBuilder getNameOrBuilder();
+  com.google.protobuf.ByteString
+      getNameBytes();
 
   /**
-   * <code>.google.protobuf.StringValue address = 4;</code>
+   * <code>string address = 4;</code>
    * @return Whether the address field is set.
    */
   boolean hasAddress();
   /**
-   * <code>.google.protobuf.StringValue address = 4;</code>
+   * <code>string address = 4;</code>
    * @return The address.
    */
-  com.google.protobuf.StringValue getAddress();
+  java.lang.String getAddress();
   /**
-   * <code>.google.protobuf.StringValue address = 4;</code>
+   * <code>string address = 4;</code>
+   * @return The bytes for address.
    */
-  com.google.protobuf.StringValueOrBuilder getAddressOrBuilder();
+  com.google.protobuf.ByteString
+      getAddressBytes();
 }

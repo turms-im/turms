@@ -30,7 +30,7 @@ public interface TurmsNotificationOrBuilder extends
    * it is used for clients to identify the response of the same request id in a session
    * </pre>
    *
-   * <code>.google.protobuf.Int64Value request_id = 1;</code>
+   * <code>int64 request_id = 1;</code>
    * @return Whether the requestId field is set.
    */
   boolean hasRequestId();
@@ -40,49 +40,38 @@ public interface TurmsNotificationOrBuilder extends
    * it is used for clients to identify the response of the same request id in a session
    * </pre>
    *
-   * <code>.google.protobuf.Int64Value request_id = 1;</code>
+   * <code>int64 request_id = 1;</code>
    * @return The requestId.
    */
-  com.google.protobuf.Int64Value getRequestId();
-  /**
-   * <pre>
-   * Note: request_id is allowed to be duplicate because
-   * it is used for clients to identify the response of the same request id in a session
-   * </pre>
-   *
-   * <code>.google.protobuf.Int64Value request_id = 1;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getRequestIdOrBuilder();
+  long getRequestId();
 
   /**
-   * <code>.google.protobuf.Int32Value code = 2;</code>
+   * <code>int32 code = 2;</code>
    * @return Whether the code field is set.
    */
   boolean hasCode();
   /**
-   * <code>.google.protobuf.Int32Value code = 2;</code>
+   * <code>int32 code = 2;</code>
    * @return The code.
    */
-  com.google.protobuf.Int32Value getCode();
-  /**
-   * <code>.google.protobuf.Int32Value code = 2;</code>
-   */
-  com.google.protobuf.Int32ValueOrBuilder getCodeOrBuilder();
+  int getCode();
 
   /**
-   * <code>.google.protobuf.StringValue reason = 3;</code>
+   * <code>string reason = 3;</code>
    * @return Whether the reason field is set.
    */
   boolean hasReason();
   /**
-   * <code>.google.protobuf.StringValue reason = 3;</code>
+   * <code>string reason = 3;</code>
    * @return The reason.
    */
-  com.google.protobuf.StringValue getReason();
+  java.lang.String getReason();
   /**
-   * <code>.google.protobuf.StringValue reason = 3;</code>
+   * <code>string reason = 3;</code>
+   * @return The bytes for reason.
    */
-  com.google.protobuf.StringValueOrBuilder getReasonOrBuilder();
+  com.google.protobuf.ByteString
+      getReasonBytes();
 
   /**
    * <code>.im.turms.proto.TurmsNotification.Data data = 4;</code>
@@ -121,7 +110,7 @@ public interface TurmsNotificationOrBuilder extends
    * when recipients need the requester_id.
    * </pre>
    *
-   * <code>.google.protobuf.Int64Value requester_id = 6;</code>
+   * <code>int64 requester_id = 6;</code>
    * @return Whether the requesterId field is set.
    */
   boolean hasRequesterId();
@@ -132,33 +121,19 @@ public interface TurmsNotificationOrBuilder extends
    * when recipients need the requester_id.
    * </pre>
    *
-   * <code>.google.protobuf.Int64Value requester_id = 6;</code>
+   * <code>int64 requester_id = 6;</code>
    * @return The requesterId.
    */
-  com.google.protobuf.Int64Value getRequesterId();
-  /**
-   * <pre>
-   * requester_id only exists when a requester triggers a notification to its recipients
-   * Note: Do not move requester_id to TurmsRequest because it needs to rebuild a whole TurmsNotification
-   * when recipients need the requester_id.
-   * </pre>
-   *
-   * <code>.google.protobuf.Int64Value requester_id = 6;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getRequesterIdOrBuilder();
+  long getRequesterId();
 
   /**
-   * <code>.google.protobuf.Int32Value close_status = 7;</code>
+   * <code>int32 close_status = 7;</code>
    * @return Whether the closeStatus field is set.
    */
   boolean hasCloseStatus();
   /**
-   * <code>.google.protobuf.Int32Value close_status = 7;</code>
+   * <code>int32 close_status = 7;</code>
    * @return The closeStatus.
    */
-  com.google.protobuf.Int32Value getCloseStatus();
-  /**
-   * <code>.google.protobuf.Int32Value close_status = 7;</code>
-   */
-  com.google.protobuf.Int32ValueOrBuilder getCloseStatusOrBuilder();
+  int getCloseStatus();
 }

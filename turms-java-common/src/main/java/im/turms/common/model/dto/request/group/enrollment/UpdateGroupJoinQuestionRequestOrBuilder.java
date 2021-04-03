@@ -31,19 +31,21 @@ public interface UpdateGroupJoinQuestionRequestOrBuilder extends
   long getQuestionId();
 
   /**
-   * <code>.google.protobuf.StringValue question = 2;</code>
+   * <code>string question = 2;</code>
    * @return Whether the question field is set.
    */
   boolean hasQuestion();
   /**
-   * <code>.google.protobuf.StringValue question = 2;</code>
+   * <code>string question = 2;</code>
    * @return The question.
    */
-  com.google.protobuf.StringValue getQuestion();
+  java.lang.String getQuestion();
   /**
-   * <code>.google.protobuf.StringValue question = 2;</code>
+   * <code>string question = 2;</code>
+   * @return The bytes for question.
    */
-  com.google.protobuf.StringValueOrBuilder getQuestionOrBuilder();
+  com.google.protobuf.ByteString
+      getQuestionBytes();
 
   /**
    * <code>repeated string answers = 3;</code>
@@ -71,17 +73,13 @@ public interface UpdateGroupJoinQuestionRequestOrBuilder extends
       getAnswersBytes(int index);
 
   /**
-   * <code>.google.protobuf.Int32Value score = 4;</code>
+   * <code>int32 score = 4;</code>
    * @return Whether the score field is set.
    */
   boolean hasScore();
   /**
-   * <code>.google.protobuf.Int32Value score = 4;</code>
+   * <code>int32 score = 4;</code>
    * @return The score.
    */
-  com.google.protobuf.Int32Value getScore();
-  /**
-   * <code>.google.protobuf.Int32Value score = 4;</code>
-   */
-  com.google.protobuf.Int32ValueOrBuilder getScoreOrBuilder();
+  int getScore();
 }

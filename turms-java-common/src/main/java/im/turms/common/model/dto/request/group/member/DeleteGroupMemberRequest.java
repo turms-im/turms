@@ -55,6 +55,7 @@ private static final long serialVersionUID = 0L;
     if (extensionRegistry == null) {
       throw new java.lang.NullPointerException();
     }
+    int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
         com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
@@ -75,30 +76,14 @@ private static final long serialVersionUID = 0L;
             memberId_ = input.readInt64();
             break;
           }
-          case 26: {
-            com.google.protobuf.Int64Value.Builder subBuilder = null;
-            if (successorId_ != null) {
-              subBuilder = successorId_.toBuilder();
-            }
-            successorId_ = input.readMessage(com.google.protobuf.Int64Value.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(successorId_);
-              successorId_ = subBuilder.buildPartial();
-            }
-
+          case 24: {
+            bitField0_ |= 0x00000001;
+            successorId_ = input.readInt64();
             break;
           }
-          case 34: {
-            com.google.protobuf.BoolValue.Builder subBuilder = null;
-            if (quitAfterTransfer_ != null) {
-              subBuilder = quitAfterTransfer_.toBuilder();
-            }
-            quitAfterTransfer_ = input.readMessage(com.google.protobuf.BoolValue.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(quitAfterTransfer_);
-              quitAfterTransfer_ = subBuilder.buildPartial();
-            }
-
+          case 32: {
+            bitField0_ |= 0x00000002;
+            quitAfterTransfer_ = input.readBool();
             break;
           }
           default: {
@@ -133,6 +118,7 @@ private static final long serialVersionUID = 0L;
             im.turms.common.model.dto.request.group.member.DeleteGroupMemberRequest.class, im.turms.common.model.dto.request.group.member.DeleteGroupMemberRequest.Builder.class);
   }
 
+  private int bitField0_;
   public static final int GROUP_ID_FIELD_NUMBER = 1;
   private long groupId_;
   /**
@@ -156,55 +142,41 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int SUCCESSOR_ID_FIELD_NUMBER = 3;
-  private com.google.protobuf.Int64Value successorId_;
+  private long successorId_;
   /**
-   * <code>.google.protobuf.Int64Value successor_id = 3;</code>
+   * <code>int64 successor_id = 3;</code>
    * @return Whether the successorId field is set.
    */
   @java.lang.Override
   public boolean hasSuccessorId() {
-    return successorId_ != null;
+    return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>.google.protobuf.Int64Value successor_id = 3;</code>
+   * <code>int64 successor_id = 3;</code>
    * @return The successorId.
    */
   @java.lang.Override
-  public com.google.protobuf.Int64Value getSuccessorId() {
-    return successorId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : successorId_;
-  }
-  /**
-   * <code>.google.protobuf.Int64Value successor_id = 3;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.Int64ValueOrBuilder getSuccessorIdOrBuilder() {
-    return getSuccessorId();
+  public long getSuccessorId() {
+    return successorId_;
   }
 
   public static final int QUIT_AFTER_TRANSFER_FIELD_NUMBER = 4;
-  private com.google.protobuf.BoolValue quitAfterTransfer_;
+  private boolean quitAfterTransfer_;
   /**
-   * <code>.google.protobuf.BoolValue quit_after_transfer = 4;</code>
+   * <code>bool quit_after_transfer = 4;</code>
    * @return Whether the quitAfterTransfer field is set.
    */
   @java.lang.Override
   public boolean hasQuitAfterTransfer() {
-    return quitAfterTransfer_ != null;
+    return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>.google.protobuf.BoolValue quit_after_transfer = 4;</code>
+   * <code>bool quit_after_transfer = 4;</code>
    * @return The quitAfterTransfer.
    */
   @java.lang.Override
-  public com.google.protobuf.BoolValue getQuitAfterTransfer() {
-    return quitAfterTransfer_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : quitAfterTransfer_;
-  }
-  /**
-   * <code>.google.protobuf.BoolValue quit_after_transfer = 4;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.BoolValueOrBuilder getQuitAfterTransferOrBuilder() {
-    return getQuitAfterTransfer();
+  public boolean getQuitAfterTransfer() {
+    return quitAfterTransfer_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -227,11 +199,11 @@ private static final long serialVersionUID = 0L;
     if (memberId_ != 0L) {
       output.writeInt64(2, memberId_);
     }
-    if (successorId_ != null) {
-      output.writeMessage(3, getSuccessorId());
+    if (((bitField0_ & 0x00000001) != 0)) {
+      output.writeInt64(3, successorId_);
     }
-    if (quitAfterTransfer_ != null) {
-      output.writeMessage(4, getQuitAfterTransfer());
+    if (((bitField0_ & 0x00000002) != 0)) {
+      output.writeBool(4, quitAfterTransfer_);
     }
     unknownFields.writeTo(output);
   }
@@ -250,13 +222,13 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt64Size(2, memberId_);
     }
-    if (successorId_ != null) {
+    if (((bitField0_ & 0x00000001) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(3, getSuccessorId());
+        .computeInt64Size(3, successorId_);
     }
-    if (quitAfterTransfer_ != null) {
+    if (((bitField0_ & 0x00000002) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(4, getQuitAfterTransfer());
+        .computeBoolSize(4, quitAfterTransfer_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -279,13 +251,13 @@ private static final long serialVersionUID = 0L;
         != other.getMemberId()) return false;
     if (hasSuccessorId() != other.hasSuccessorId()) return false;
     if (hasSuccessorId()) {
-      if (!getSuccessorId()
-          .equals(other.getSuccessorId())) return false;
+      if (getSuccessorId()
+          != other.getSuccessorId()) return false;
     }
     if (hasQuitAfterTransfer() != other.hasQuitAfterTransfer()) return false;
     if (hasQuitAfterTransfer()) {
-      if (!getQuitAfterTransfer()
-          .equals(other.getQuitAfterTransfer())) return false;
+      if (getQuitAfterTransfer()
+          != other.getQuitAfterTransfer()) return false;
     }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
@@ -306,11 +278,13 @@ private static final long serialVersionUID = 0L;
         getMemberId());
     if (hasSuccessorId()) {
       hash = (37 * hash) + SUCCESSOR_ID_FIELD_NUMBER;
-      hash = (53 * hash) + getSuccessorId().hashCode();
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getSuccessorId());
     }
     if (hasQuitAfterTransfer()) {
       hash = (37 * hash) + QUIT_AFTER_TRANSFER_FIELD_NUMBER;
-      hash = (53 * hash) + getQuitAfterTransfer().hashCode();
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getQuitAfterTransfer());
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -449,18 +423,10 @@ private static final long serialVersionUID = 0L;
 
       memberId_ = 0L;
 
-      if (successorIdBuilder_ == null) {
-        successorId_ = null;
-      } else {
-        successorId_ = null;
-        successorIdBuilder_ = null;
-      }
-      if (quitAfterTransferBuilder_ == null) {
-        quitAfterTransfer_ = null;
-      } else {
-        quitAfterTransfer_ = null;
-        quitAfterTransferBuilder_ = null;
-      }
+      successorId_ = 0L;
+      bitField0_ = (bitField0_ & ~0x00000001);
+      quitAfterTransfer_ = false;
+      bitField0_ = (bitField0_ & ~0x00000002);
       return this;
     }
 
@@ -487,18 +453,19 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public im.turms.common.model.dto.request.group.member.DeleteGroupMemberRequest buildPartial() {
       im.turms.common.model.dto.request.group.member.DeleteGroupMemberRequest result = new im.turms.common.model.dto.request.group.member.DeleteGroupMemberRequest(this);
+      int from_bitField0_ = bitField0_;
+      int to_bitField0_ = 0;
       result.groupId_ = groupId_;
       result.memberId_ = memberId_;
-      if (successorIdBuilder_ == null) {
+      if (((from_bitField0_ & 0x00000001) != 0)) {
         result.successorId_ = successorId_;
-      } else {
-        result.successorId_ = successorIdBuilder_.build();
+        to_bitField0_ |= 0x00000001;
       }
-      if (quitAfterTransferBuilder_ == null) {
+      if (((from_bitField0_ & 0x00000002) != 0)) {
         result.quitAfterTransfer_ = quitAfterTransfer_;
-      } else {
-        result.quitAfterTransfer_ = quitAfterTransferBuilder_.build();
+        to_bitField0_ |= 0x00000002;
       }
+      result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
     }
@@ -554,10 +521,10 @@ private static final long serialVersionUID = 0L;
         setMemberId(other.getMemberId());
       }
       if (other.hasSuccessorId()) {
-        mergeSuccessorId(other.getSuccessorId());
+        setSuccessorId(other.getSuccessorId());
       }
       if (other.hasQuitAfterTransfer()) {
-        mergeQuitAfterTransfer(other.getQuitAfterTransfer());
+        setQuitAfterTransfer(other.getQuitAfterTransfer());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -587,6 +554,7 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+    private int bitField0_;
 
     private long groupId_ ;
     /**
@@ -650,242 +618,82 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private com.google.protobuf.Int64Value successorId_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> successorIdBuilder_;
+    private long successorId_ ;
     /**
-     * <code>.google.protobuf.Int64Value successor_id = 3;</code>
+     * <code>int64 successor_id = 3;</code>
      * @return Whether the successorId field is set.
      */
+    @java.lang.Override
     public boolean hasSuccessorId() {
-      return successorIdBuilder_ != null || successorId_ != null;
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>.google.protobuf.Int64Value successor_id = 3;</code>
+     * <code>int64 successor_id = 3;</code>
      * @return The successorId.
      */
-    public com.google.protobuf.Int64Value getSuccessorId() {
-      if (successorIdBuilder_ == null) {
-        return successorId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : successorId_;
-      } else {
-        return successorIdBuilder_.getMessage();
-      }
+    @java.lang.Override
+    public long getSuccessorId() {
+      return successorId_;
     }
     /**
-     * <code>.google.protobuf.Int64Value successor_id = 3;</code>
+     * <code>int64 successor_id = 3;</code>
+     * @param value The successorId to set.
+     * @return This builder for chaining.
      */
-    public Builder setSuccessorId(com.google.protobuf.Int64Value value) {
-      if (successorIdBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        successorId_ = value;
-        onChanged();
-      } else {
-        successorIdBuilder_.setMessage(value);
-      }
-
+    public Builder setSuccessorId(long value) {
+      bitField0_ |= 0x00000001;
+      successorId_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value successor_id = 3;</code>
-     */
-    public Builder setSuccessorId(
-        com.google.protobuf.Int64Value.Builder builderForValue) {
-      if (successorIdBuilder_ == null) {
-        successorId_ = builderForValue.build();
-        onChanged();
-      } else {
-        successorIdBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value successor_id = 3;</code>
-     */
-    public Builder mergeSuccessorId(com.google.protobuf.Int64Value value) {
-      if (successorIdBuilder_ == null) {
-        if (successorId_ != null) {
-          successorId_ =
-            com.google.protobuf.Int64Value.newBuilder(successorId_).mergeFrom(value).buildPartial();
-        } else {
-          successorId_ = value;
-        }
-        onChanged();
-      } else {
-        successorIdBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value successor_id = 3;</code>
+     * <code>int64 successor_id = 3;</code>
+     * @return This builder for chaining.
      */
     public Builder clearSuccessorId() {
-      if (successorIdBuilder_ == null) {
-        successorId_ = null;
-        onChanged();
-      } else {
-        successorId_ = null;
-        successorIdBuilder_ = null;
-      }
-
+      bitField0_ = (bitField0_ & ~0x00000001);
+      successorId_ = 0L;
+      onChanged();
       return this;
     }
-    /**
-     * <code>.google.protobuf.Int64Value successor_id = 3;</code>
-     */
-    public com.google.protobuf.Int64Value.Builder getSuccessorIdBuilder() {
 
-      onChanged();
-      return getSuccessorIdFieldBuilder().getBuilder();
-    }
+    private boolean quitAfterTransfer_ ;
     /**
-     * <code>.google.protobuf.Int64Value successor_id = 3;</code>
-     */
-    public com.google.protobuf.Int64ValueOrBuilder getSuccessorIdOrBuilder() {
-      if (successorIdBuilder_ != null) {
-        return successorIdBuilder_.getMessageOrBuilder();
-      } else {
-        return successorId_ == null ?
-            com.google.protobuf.Int64Value.getDefaultInstance() : successorId_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.Int64Value successor_id = 3;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
-        getSuccessorIdFieldBuilder() {
-      if (successorIdBuilder_ == null) {
-        successorIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>(
-                getSuccessorId(),
-                getParentForChildren(),
-                isClean());
-        successorId_ = null;
-      }
-      return successorIdBuilder_;
-    }
-
-    private com.google.protobuf.BoolValue quitAfterTransfer_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder> quitAfterTransferBuilder_;
-    /**
-     * <code>.google.protobuf.BoolValue quit_after_transfer = 4;</code>
+     * <code>bool quit_after_transfer = 4;</code>
      * @return Whether the quitAfterTransfer field is set.
      */
+    @java.lang.Override
     public boolean hasQuitAfterTransfer() {
-      return quitAfterTransferBuilder_ != null || quitAfterTransfer_ != null;
+      return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>.google.protobuf.BoolValue quit_after_transfer = 4;</code>
+     * <code>bool quit_after_transfer = 4;</code>
      * @return The quitAfterTransfer.
      */
-    public com.google.protobuf.BoolValue getQuitAfterTransfer() {
-      if (quitAfterTransferBuilder_ == null) {
-        return quitAfterTransfer_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : quitAfterTransfer_;
-      } else {
-        return quitAfterTransferBuilder_.getMessage();
-      }
+    @java.lang.Override
+    public boolean getQuitAfterTransfer() {
+      return quitAfterTransfer_;
     }
     /**
-     * <code>.google.protobuf.BoolValue quit_after_transfer = 4;</code>
+     * <code>bool quit_after_transfer = 4;</code>
+     * @param value The quitAfterTransfer to set.
+     * @return This builder for chaining.
      */
-    public Builder setQuitAfterTransfer(com.google.protobuf.BoolValue value) {
-      if (quitAfterTransferBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        quitAfterTransfer_ = value;
-        onChanged();
-      } else {
-        quitAfterTransferBuilder_.setMessage(value);
-      }
-
+    public Builder setQuitAfterTransfer(boolean value) {
+      bitField0_ |= 0x00000002;
+      quitAfterTransfer_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.BoolValue quit_after_transfer = 4;</code>
-     */
-    public Builder setQuitAfterTransfer(
-        com.google.protobuf.BoolValue.Builder builderForValue) {
-      if (quitAfterTransferBuilder_ == null) {
-        quitAfterTransfer_ = builderForValue.build();
-        onChanged();
-      } else {
-        quitAfterTransferBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.BoolValue quit_after_transfer = 4;</code>
-     */
-    public Builder mergeQuitAfterTransfer(com.google.protobuf.BoolValue value) {
-      if (quitAfterTransferBuilder_ == null) {
-        if (quitAfterTransfer_ != null) {
-          quitAfterTransfer_ =
-            com.google.protobuf.BoolValue.newBuilder(quitAfterTransfer_).mergeFrom(value).buildPartial();
-        } else {
-          quitAfterTransfer_ = value;
-        }
-        onChanged();
-      } else {
-        quitAfterTransferBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.BoolValue quit_after_transfer = 4;</code>
+     * <code>bool quit_after_transfer = 4;</code>
+     * @return This builder for chaining.
      */
     public Builder clearQuitAfterTransfer() {
-      if (quitAfterTransferBuilder_ == null) {
-        quitAfterTransfer_ = null;
-        onChanged();
-      } else {
-        quitAfterTransfer_ = null;
-        quitAfterTransferBuilder_ = null;
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.BoolValue quit_after_transfer = 4;</code>
-     */
-    public com.google.protobuf.BoolValue.Builder getQuitAfterTransferBuilder() {
-
+      bitField0_ = (bitField0_ & ~0x00000002);
+      quitAfterTransfer_ = false;
       onChanged();
-      return getQuitAfterTransferFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.BoolValue quit_after_transfer = 4;</code>
-     */
-    public com.google.protobuf.BoolValueOrBuilder getQuitAfterTransferOrBuilder() {
-      if (quitAfterTransferBuilder_ != null) {
-        return quitAfterTransferBuilder_.getMessageOrBuilder();
-      } else {
-        return quitAfterTransfer_ == null ?
-            com.google.protobuf.BoolValue.getDefaultInstance() : quitAfterTransfer_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.BoolValue quit_after_transfer = 4;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder>
-        getQuitAfterTransferFieldBuilder() {
-      if (quitAfterTransferBuilder_ == null) {
-        quitAfterTransferBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder>(
-                getQuitAfterTransfer(),
-                getParentForChildren(),
-                isClean());
-        quitAfterTransfer_ = null;
-      }
-      return quitAfterTransferBuilder_;
+      return this;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

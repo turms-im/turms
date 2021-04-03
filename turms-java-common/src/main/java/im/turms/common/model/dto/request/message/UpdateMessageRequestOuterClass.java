@@ -46,26 +46,23 @@ public final class UpdateMessageRequestOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n,request/message/update_message_request" +
-      ".proto\022\016im.turms.proto\032\036google/protobuf/" +
-      "wrappers.proto\"\231\001\n\024UpdateMessageRequest\022" +
-      "\022\n\nmessage_id\030\001 \001(\003\022*\n\004text\030\002 \001(\0132\034.goog" +
-      "le.protobuf.StringValue\022\017\n\007records\030\003 \003(\014" +
-      "\0220\n\013recall_date\030\004 \001(\0132\033.google.protobuf." +
-      "Int64ValueB0\n)im.turms.common.model.dto." +
-      "request.messageP\001\272\002\000b\006proto3"
+      ".proto\022\016im.turms.proto\"\201\001\n\024UpdateMessage" +
+      "Request\022\022\n\nmessage_id\030\001 \001(\003\022\021\n\004text\030\002 \001(" +
+      "\tH\000\210\001\001\022\017\n\007records\030\003 \003(\014\022\030\n\013recall_date\030\004" +
+      " \001(\003H\001\210\001\001B\007\n\005_textB\016\n\014_recall_dateB0\n)im" +
+      ".turms.common.model.dto.request.messageP" +
+      "\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
         });
     internal_static_im_turms_proto_UpdateMessageRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_im_turms_proto_UpdateMessageRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_UpdateMessageRequest_descriptor,
-        new java.lang.String[] { "MessageId", "Text", "Records", "RecallDate", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "MessageId", "Text", "Records", "RecallDate", "Text", "RecallDate", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

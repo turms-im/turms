@@ -137,10 +137,10 @@ public class ConversationServiceController {
             long targetId;
             Mono<Void> mono;
             if (isUpdatePrivateConversationRequest) {
-                targetId = request.getTargetId().getValue();
+                targetId = request.getTargetId();
                 mono = conversationService.authAndUpsertPrivateConversationReadDate(requesterId, targetId, readDate);
             } else {
-                targetId = request.getGroupId().getValue();
+                targetId = request.getGroupId();
                 mono = conversationService.authAndUpsertGroupConversationReadDate(targetId, requesterId, readDate);
             }
             return mono.then(Mono.defer(() -> {

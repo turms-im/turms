@@ -33,6 +33,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private CreateMessageRequest() {
+    text_ = "";
     records_ = java.util.Collections.emptyList();
   }
 
@@ -67,95 +68,48 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
-          case 10: {
-            com.google.protobuf.Int64Value.Builder subBuilder = null;
-            if (messageId_ != null) {
-              subBuilder = messageId_.toBuilder();
-            }
-            messageId_ = input.readMessage(com.google.protobuf.Int64Value.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(messageId_);
-              messageId_ = subBuilder.buildPartial();
-            }
-
+          case 8: {
+            bitField0_ |= 0x00000001;
+            messageId_ = input.readInt64();
             break;
           }
-          case 18: {
-            com.google.protobuf.BoolValue.Builder subBuilder = null;
-            if (isSystemMessage_ != null) {
-              subBuilder = isSystemMessage_.toBuilder();
-            }
-            isSystemMessage_ = input.readMessage(com.google.protobuf.BoolValue.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(isSystemMessage_);
-              isSystemMessage_ = subBuilder.buildPartial();
-            }
-
+          case 16: {
+            bitField0_ |= 0x00000002;
+            isSystemMessage_ = input.readBool();
             break;
           }
-          case 26: {
-            com.google.protobuf.Int64Value.Builder subBuilder = null;
-            if (groupId_ != null) {
-              subBuilder = groupId_.toBuilder();
-            }
-            groupId_ = input.readMessage(com.google.protobuf.Int64Value.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(groupId_);
-              groupId_ = subBuilder.buildPartial();
-            }
-
+          case 24: {
+            bitField0_ |= 0x00000004;
+            groupId_ = input.readInt64();
             break;
           }
-          case 34: {
-            com.google.protobuf.Int64Value.Builder subBuilder = null;
-            if (recipientId_ != null) {
-              subBuilder = recipientId_.toBuilder();
-            }
-            recipientId_ = input.readMessage(com.google.protobuf.Int64Value.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(recipientId_);
-              recipientId_ = subBuilder.buildPartial();
-            }
-
+          case 32: {
+            bitField0_ |= 0x00000008;
+            recipientId_ = input.readInt64();
             break;
           }
           case 40: {
-
+            bitField0_ |= 0x00000010;
             deliveryDate_ = input.readInt64();
             break;
           }
           case 50: {
-            com.google.protobuf.StringValue.Builder subBuilder = null;
-            if (text_ != null) {
-              subBuilder = text_.toBuilder();
-            }
-            text_ = input.readMessage(com.google.protobuf.StringValue.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(text_);
-              text_ = subBuilder.buildPartial();
-            }
-
+            java.lang.String s = input.readStringRequireUtf8();
+            bitField0_ |= 0x00000020;
+            text_ = s;
             break;
           }
           case 58: {
-            if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+            if (!((mutable_bitField0_ & 0x00000040) != 0)) {
               records_ = new java.util.ArrayList<com.google.protobuf.ByteString>();
-              mutable_bitField0_ |= 0x00000001;
+              mutable_bitField0_ |= 0x00000040;
             }
             records_.add(input.readBytes());
             break;
           }
-          case 66: {
-            com.google.protobuf.Int32Value.Builder subBuilder = null;
-            if (burnAfter_ != null) {
-              subBuilder = burnAfter_.toBuilder();
-            }
-            burnAfter_ = input.readMessage(com.google.protobuf.Int32Value.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(burnAfter_);
-              burnAfter_ = subBuilder.buildPartial();
-            }
-
+          case 64: {
+            bitField0_ |= 0x00000040;
+            burnAfter_ = input.readInt32();
             break;
           }
           default: {
@@ -173,7 +127,7 @@ private static final long serialVersionUID = 0L;
       throw new com.google.protobuf.InvalidProtocolBufferException(
           e).setUnfinishedMessage(this);
     } finally {
-      if (((mutable_bitField0_ & 0x00000001) != 0)) {
+      if (((mutable_bitField0_ & 0x00000040) != 0)) {
         records_ = java.util.Collections.unmodifiableList(records_); // C
       }
       this.unknownFields = unknownFields.build();
@@ -193,124 +147,103 @@ private static final long serialVersionUID = 0L;
             im.turms.common.model.dto.request.message.CreateMessageRequest.class, im.turms.common.model.dto.request.message.CreateMessageRequest.Builder.class);
   }
 
+  private int bitField0_;
   public static final int MESSAGE_ID_FIELD_NUMBER = 1;
-  private com.google.protobuf.Int64Value messageId_;
+  private long messageId_;
   /**
-   * <code>.google.protobuf.Int64Value message_id = 1;</code>
+   * <code>int64 message_id = 1;</code>
    * @return Whether the messageId field is set.
    */
   @java.lang.Override
   public boolean hasMessageId() {
-    return messageId_ != null;
+    return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>.google.protobuf.Int64Value message_id = 1;</code>
+   * <code>int64 message_id = 1;</code>
    * @return The messageId.
    */
   @java.lang.Override
-  public com.google.protobuf.Int64Value getMessageId() {
-    return messageId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : messageId_;
-  }
-  /**
-   * <code>.google.protobuf.Int64Value message_id = 1;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.Int64ValueOrBuilder getMessageIdOrBuilder() {
-    return getMessageId();
+  public long getMessageId() {
+    return messageId_;
   }
 
   public static final int IS_SYSTEM_MESSAGE_FIELD_NUMBER = 2;
-  private com.google.protobuf.BoolValue isSystemMessage_;
+  private boolean isSystemMessage_;
   /**
    * <pre>
-   * is_system_message can only be true if the user is an administrator, or turms server will return an error
+   * is_system_message can only be true if the user is an administrator,
+   * or turms server will return an error
    * </pre>
    *
-   * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
+   * <code>bool is_system_message = 2;</code>
    * @return Whether the isSystemMessage field is set.
    */
   @java.lang.Override
   public boolean hasIsSystemMessage() {
-    return isSystemMessage_ != null;
+    return ((bitField0_ & 0x00000002) != 0);
   }
   /**
    * <pre>
-   * is_system_message can only be true if the user is an administrator, or turms server will return an error
+   * is_system_message can only be true if the user is an administrator,
+   * or turms server will return an error
    * </pre>
    *
-   * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
+   * <code>bool is_system_message = 2;</code>
    * @return The isSystemMessage.
    */
   @java.lang.Override
-  public com.google.protobuf.BoolValue getIsSystemMessage() {
-    return isSystemMessage_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : isSystemMessage_;
-  }
-  /**
-   * <pre>
-   * is_system_message can only be true if the user is an administrator, or turms server will return an error
-   * </pre>
-   *
-   * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.BoolValueOrBuilder getIsSystemMessageOrBuilder() {
-    return getIsSystemMessage();
+  public boolean getIsSystemMessage() {
+    return isSystemMessage_;
   }
 
   public static final int GROUP_ID_FIELD_NUMBER = 3;
-  private com.google.protobuf.Int64Value groupId_;
+  private long groupId_;
   /**
-   * <code>.google.protobuf.Int64Value group_id = 3;</code>
+   * <code>int64 group_id = 3;</code>
    * @return Whether the groupId field is set.
    */
   @java.lang.Override
   public boolean hasGroupId() {
-    return groupId_ != null;
+    return ((bitField0_ & 0x00000004) != 0);
   }
   /**
-   * <code>.google.protobuf.Int64Value group_id = 3;</code>
+   * <code>int64 group_id = 3;</code>
    * @return The groupId.
    */
   @java.lang.Override
-  public com.google.protobuf.Int64Value getGroupId() {
-    return groupId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : groupId_;
-  }
-  /**
-   * <code>.google.protobuf.Int64Value group_id = 3;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.Int64ValueOrBuilder getGroupIdOrBuilder() {
-    return getGroupId();
+  public long getGroupId() {
+    return groupId_;
   }
 
   public static final int RECIPIENT_ID_FIELD_NUMBER = 4;
-  private com.google.protobuf.Int64Value recipientId_;
+  private long recipientId_;
   /**
-   * <code>.google.protobuf.Int64Value recipient_id = 4;</code>
+   * <code>int64 recipient_id = 4;</code>
    * @return Whether the recipientId field is set.
    */
   @java.lang.Override
   public boolean hasRecipientId() {
-    return recipientId_ != null;
+    return ((bitField0_ & 0x00000008) != 0);
   }
   /**
-   * <code>.google.protobuf.Int64Value recipient_id = 4;</code>
+   * <code>int64 recipient_id = 4;</code>
    * @return The recipientId.
    */
   @java.lang.Override
-  public com.google.protobuf.Int64Value getRecipientId() {
-    return recipientId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : recipientId_;
-  }
-  /**
-   * <code>.google.protobuf.Int64Value recipient_id = 4;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.Int64ValueOrBuilder getRecipientIdOrBuilder() {
-    return getRecipientId();
+  public long getRecipientId() {
+    return recipientId_;
   }
 
   public static final int DELIVERY_DATE_FIELD_NUMBER = 5;
   private long deliveryDate_;
+  /**
+   * <code>int64 delivery_date = 5;</code>
+   * @return Whether the deliveryDate field is set.
+   */
+  @java.lang.Override
+  public boolean hasDeliveryDate() {
+    return ((bitField0_ & 0x00000010) != 0);
+  }
   /**
    * <code>int64 delivery_date = 5;</code>
    * @return The deliveryDate.
@@ -321,29 +254,49 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int TEXT_FIELD_NUMBER = 6;
-  private com.google.protobuf.StringValue text_;
+  private volatile java.lang.Object text_;
   /**
-   * <code>.google.protobuf.StringValue text = 6;</code>
+   * <code>string text = 6;</code>
    * @return Whether the text field is set.
    */
   @java.lang.Override
   public boolean hasText() {
-    return text_ != null;
+    return ((bitField0_ & 0x00000020) != 0);
   }
   /**
-   * <code>.google.protobuf.StringValue text = 6;</code>
+   * <code>string text = 6;</code>
    * @return The text.
    */
   @java.lang.Override
-  public com.google.protobuf.StringValue getText() {
-    return text_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : text_;
+  public java.lang.String getText() {
+    java.lang.Object ref = text_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs =
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      text_ = s;
+      return s;
+    }
   }
   /**
-   * <code>.google.protobuf.StringValue text = 6;</code>
+   * <code>string text = 6;</code>
+   * @return The bytes for text.
    */
   @java.lang.Override
-  public com.google.protobuf.StringValueOrBuilder getTextOrBuilder() {
-    return getText();
+  public com.google.protobuf.ByteString
+      getTextBytes() {
+    java.lang.Object ref = text_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      text_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
   public static final int RECORDS_FIELD_NUMBER = 7;
@@ -374,29 +327,22 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int BURN_AFTER_FIELD_NUMBER = 8;
-  private com.google.protobuf.Int32Value burnAfter_;
+  private int burnAfter_;
   /**
-   * <code>.google.protobuf.Int32Value burn_after = 8;</code>
+   * <code>int32 burn_after = 8;</code>
    * @return Whether the burnAfter field is set.
    */
   @java.lang.Override
   public boolean hasBurnAfter() {
-    return burnAfter_ != null;
+    return ((bitField0_ & 0x00000040) != 0);
   }
   /**
-   * <code>.google.protobuf.Int32Value burn_after = 8;</code>
+   * <code>int32 burn_after = 8;</code>
    * @return The burnAfter.
    */
   @java.lang.Override
-  public com.google.protobuf.Int32Value getBurnAfter() {
-    return burnAfter_ == null ? com.google.protobuf.Int32Value.getDefaultInstance() : burnAfter_;
-  }
-  /**
-   * <code>.google.protobuf.Int32Value burn_after = 8;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.Int32ValueOrBuilder getBurnAfterOrBuilder() {
-    return getBurnAfter();
+  public int getBurnAfter() {
+    return burnAfter_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -413,29 +359,29 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (messageId_ != null) {
-      output.writeMessage(1, getMessageId());
+    if (((bitField0_ & 0x00000001) != 0)) {
+      output.writeInt64(1, messageId_);
     }
-    if (isSystemMessage_ != null) {
-      output.writeMessage(2, getIsSystemMessage());
+    if (((bitField0_ & 0x00000002) != 0)) {
+      output.writeBool(2, isSystemMessage_);
     }
-    if (groupId_ != null) {
-      output.writeMessage(3, getGroupId());
+    if (((bitField0_ & 0x00000004) != 0)) {
+      output.writeInt64(3, groupId_);
     }
-    if (recipientId_ != null) {
-      output.writeMessage(4, getRecipientId());
+    if (((bitField0_ & 0x00000008) != 0)) {
+      output.writeInt64(4, recipientId_);
     }
-    if (deliveryDate_ != 0L) {
+    if (((bitField0_ & 0x00000010) != 0)) {
       output.writeInt64(5, deliveryDate_);
     }
-    if (text_ != null) {
-      output.writeMessage(6, getText());
+    if (((bitField0_ & 0x00000020) != 0)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 6, text_);
     }
     for (int i = 0; i < records_.size(); i++) {
       output.writeBytes(7, records_.get(i));
     }
-    if (burnAfter_ != null) {
-      output.writeMessage(8, getBurnAfter());
+    if (((bitField0_ & 0x00000040) != 0)) {
+      output.writeInt32(8, burnAfter_);
     }
     unknownFields.writeTo(output);
   }
@@ -446,29 +392,28 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (messageId_ != null) {
+    if (((bitField0_ & 0x00000001) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(1, getMessageId());
+        .computeInt64Size(1, messageId_);
     }
-    if (isSystemMessage_ != null) {
+    if (((bitField0_ & 0x00000002) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(2, getIsSystemMessage());
+        .computeBoolSize(2, isSystemMessage_);
     }
-    if (groupId_ != null) {
+    if (((bitField0_ & 0x00000004) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(3, getGroupId());
+        .computeInt64Size(3, groupId_);
     }
-    if (recipientId_ != null) {
+    if (((bitField0_ & 0x00000008) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(4, getRecipientId());
+        .computeInt64Size(4, recipientId_);
     }
-    if (deliveryDate_ != 0L) {
+    if (((bitField0_ & 0x00000010) != 0)) {
       size += com.google.protobuf.CodedOutputStream
         .computeInt64Size(5, deliveryDate_);
     }
-    if (text_ != null) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(6, getText());
+    if (((bitField0_ & 0x00000020) != 0)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, text_);
     }
     {
       int dataSize = 0;
@@ -479,9 +424,9 @@ private static final long serialVersionUID = 0L;
       size += dataSize;
       size += 1 * getRecordsList().size();
     }
-    if (burnAfter_ != null) {
+    if (((bitField0_ & 0x00000040) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(8, getBurnAfter());
+        .computeInt32Size(8, burnAfter_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -500,26 +445,29 @@ private static final long serialVersionUID = 0L;
 
     if (hasMessageId() != other.hasMessageId()) return false;
     if (hasMessageId()) {
-      if (!getMessageId()
-          .equals(other.getMessageId())) return false;
+      if (getMessageId()
+          != other.getMessageId()) return false;
     }
     if (hasIsSystemMessage() != other.hasIsSystemMessage()) return false;
     if (hasIsSystemMessage()) {
-      if (!getIsSystemMessage()
-          .equals(other.getIsSystemMessage())) return false;
+      if (getIsSystemMessage()
+          != other.getIsSystemMessage()) return false;
     }
     if (hasGroupId() != other.hasGroupId()) return false;
     if (hasGroupId()) {
-      if (!getGroupId()
-          .equals(other.getGroupId())) return false;
+      if (getGroupId()
+          != other.getGroupId()) return false;
     }
     if (hasRecipientId() != other.hasRecipientId()) return false;
     if (hasRecipientId()) {
-      if (!getRecipientId()
-          .equals(other.getRecipientId())) return false;
+      if (getRecipientId()
+          != other.getRecipientId()) return false;
     }
-    if (getDeliveryDate()
-        != other.getDeliveryDate()) return false;
+    if (hasDeliveryDate() != other.hasDeliveryDate()) return false;
+    if (hasDeliveryDate()) {
+      if (getDeliveryDate()
+          != other.getDeliveryDate()) return false;
+    }
     if (hasText() != other.hasText()) return false;
     if (hasText()) {
       if (!getText()
@@ -529,8 +477,8 @@ private static final long serialVersionUID = 0L;
         .equals(other.getRecordsList())) return false;
     if (hasBurnAfter() != other.hasBurnAfter()) return false;
     if (hasBurnAfter()) {
-      if (!getBurnAfter()
-          .equals(other.getBurnAfter())) return false;
+      if (getBurnAfter()
+          != other.getBurnAfter()) return false;
     }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
@@ -545,23 +493,29 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     if (hasMessageId()) {
       hash = (37 * hash) + MESSAGE_ID_FIELD_NUMBER;
-      hash = (53 * hash) + getMessageId().hashCode();
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getMessageId());
     }
     if (hasIsSystemMessage()) {
       hash = (37 * hash) + IS_SYSTEM_MESSAGE_FIELD_NUMBER;
-      hash = (53 * hash) + getIsSystemMessage().hashCode();
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getIsSystemMessage());
     }
     if (hasGroupId()) {
       hash = (37 * hash) + GROUP_ID_FIELD_NUMBER;
-      hash = (53 * hash) + getGroupId().hashCode();
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getGroupId());
     }
     if (hasRecipientId()) {
       hash = (37 * hash) + RECIPIENT_ID_FIELD_NUMBER;
-      hash = (53 * hash) + getRecipientId().hashCode();
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getRecipientId());
     }
-    hash = (37 * hash) + DELIVERY_DATE_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getDeliveryDate());
+    if (hasDeliveryDate()) {
+      hash = (37 * hash) + DELIVERY_DATE_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getDeliveryDate());
+    }
     if (hasText()) {
       hash = (37 * hash) + TEXT_FIELD_NUMBER;
       hash = (53 * hash) + getText().hashCode();
@@ -572,7 +526,7 @@ private static final long serialVersionUID = 0L;
     }
     if (hasBurnAfter()) {
       hash = (37 * hash) + BURN_AFTER_FIELD_NUMBER;
-      hash = (53 * hash) + getBurnAfter().hashCode();
+      hash = (53 * hash) + getBurnAfter();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -707,46 +661,22 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      if (messageIdBuilder_ == null) {
-        messageId_ = null;
-      } else {
-        messageId_ = null;
-        messageIdBuilder_ = null;
-      }
-      if (isSystemMessageBuilder_ == null) {
-        isSystemMessage_ = null;
-      } else {
-        isSystemMessage_ = null;
-        isSystemMessageBuilder_ = null;
-      }
-      if (groupIdBuilder_ == null) {
-        groupId_ = null;
-      } else {
-        groupId_ = null;
-        groupIdBuilder_ = null;
-      }
-      if (recipientIdBuilder_ == null) {
-        recipientId_ = null;
-      } else {
-        recipientId_ = null;
-        recipientIdBuilder_ = null;
-      }
-      deliveryDate_ = 0L;
-
-      if (textBuilder_ == null) {
-        text_ = null;
-      } else {
-        text_ = null;
-        textBuilder_ = null;
-      }
-      records_ = java.util.Collections.emptyList();
+      messageId_ = 0L;
       bitField0_ = (bitField0_ & ~0x00000001);
-      if (burnAfterBuilder_ == null) {
-        burnAfter_ = null;
-      } else {
-        burnAfter_ = null;
-        burnAfterBuilder_ = null;
-      }
+      isSystemMessage_ = false;
+      bitField0_ = (bitField0_ & ~0x00000002);
+      groupId_ = 0L;
+      bitField0_ = (bitField0_ & ~0x00000004);
+      recipientId_ = 0L;
+      bitField0_ = (bitField0_ & ~0x00000008);
+      deliveryDate_ = 0L;
+      bitField0_ = (bitField0_ & ~0x00000010);
+      text_ = "";
+      bitField0_ = (bitField0_ & ~0x00000020);
+      records_ = java.util.Collections.emptyList();
+      bitField0_ = (bitField0_ & ~0x00000040);
+      burnAfter_ = 0;
+      bitField0_ = (bitField0_ & ~0x00000080);
       return this;
     }
 
@@ -774,42 +704,41 @@ private static final long serialVersionUID = 0L;
     public im.turms.common.model.dto.request.message.CreateMessageRequest buildPartial() {
       im.turms.common.model.dto.request.message.CreateMessageRequest result = new im.turms.common.model.dto.request.message.CreateMessageRequest(this);
       int from_bitField0_ = bitField0_;
-      if (messageIdBuilder_ == null) {
+      int to_bitField0_ = 0;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
         result.messageId_ = messageId_;
-      } else {
-        result.messageId_ = messageIdBuilder_.build();
+        to_bitField0_ |= 0x00000001;
       }
-      if (isSystemMessageBuilder_ == null) {
+      if (((from_bitField0_ & 0x00000002) != 0)) {
         result.isSystemMessage_ = isSystemMessage_;
-      } else {
-        result.isSystemMessage_ = isSystemMessageBuilder_.build();
+        to_bitField0_ |= 0x00000002;
       }
-      if (groupIdBuilder_ == null) {
+      if (((from_bitField0_ & 0x00000004) != 0)) {
         result.groupId_ = groupId_;
-      } else {
-        result.groupId_ = groupIdBuilder_.build();
+        to_bitField0_ |= 0x00000004;
       }
-      if (recipientIdBuilder_ == null) {
+      if (((from_bitField0_ & 0x00000008) != 0)) {
         result.recipientId_ = recipientId_;
-      } else {
-        result.recipientId_ = recipientIdBuilder_.build();
+        to_bitField0_ |= 0x00000008;
       }
-      result.deliveryDate_ = deliveryDate_;
-      if (textBuilder_ == null) {
-        result.text_ = text_;
-      } else {
-        result.text_ = textBuilder_.build();
+      if (((from_bitField0_ & 0x00000010) != 0)) {
+        result.deliveryDate_ = deliveryDate_;
+        to_bitField0_ |= 0x00000010;
       }
-      if (((bitField0_ & 0x00000001) != 0)) {
+      if (((from_bitField0_ & 0x00000020) != 0)) {
+        to_bitField0_ |= 0x00000020;
+      }
+      result.text_ = text_;
+      if (((bitField0_ & 0x00000040) != 0)) {
         records_ = java.util.Collections.unmodifiableList(records_);
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ = (bitField0_ & ~0x00000040);
       }
       result.records_ = records_;
-      if (burnAfterBuilder_ == null) {
+      if (((from_bitField0_ & 0x00000080) != 0)) {
         result.burnAfter_ = burnAfter_;
-      } else {
-        result.burnAfter_ = burnAfterBuilder_.build();
+        to_bitField0_ |= 0x00000040;
       }
+      result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
     }
@@ -859,27 +788,29 @@ private static final long serialVersionUID = 0L;
     public Builder mergeFrom(im.turms.common.model.dto.request.message.CreateMessageRequest other) {
       if (other == im.turms.common.model.dto.request.message.CreateMessageRequest.getDefaultInstance()) return this;
       if (other.hasMessageId()) {
-        mergeMessageId(other.getMessageId());
+        setMessageId(other.getMessageId());
       }
       if (other.hasIsSystemMessage()) {
-        mergeIsSystemMessage(other.getIsSystemMessage());
+        setIsSystemMessage(other.getIsSystemMessage());
       }
       if (other.hasGroupId()) {
-        mergeGroupId(other.getGroupId());
+        setGroupId(other.getGroupId());
       }
       if (other.hasRecipientId()) {
-        mergeRecipientId(other.getRecipientId());
+        setRecipientId(other.getRecipientId());
       }
-      if (other.getDeliveryDate() != 0L) {
+      if (other.hasDeliveryDate()) {
         setDeliveryDate(other.getDeliveryDate());
       }
       if (other.hasText()) {
-        mergeText(other.getText());
+        bitField0_ |= 0x00000020;
+        text_ = other.text_;
+        onChanged();
       }
       if (!other.records_.isEmpty()) {
         if (records_.isEmpty()) {
           records_ = other.records_;
-          bitField0_ = (bitField0_ & ~0x00000001);
+          bitField0_ = (bitField0_ & ~0x00000040);
         } else {
           ensureRecordsIsMutable();
           records_.addAll(other.records_);
@@ -887,7 +818,7 @@ private static final long serialVersionUID = 0L;
         onChanged();
       }
       if (other.hasBurnAfter()) {
-        mergeBurnAfter(other.getBurnAfter());
+        setBurnAfter(other.getBurnAfter());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -919,519 +850,191 @@ private static final long serialVersionUID = 0L;
     }
     private int bitField0_;
 
-    private com.google.protobuf.Int64Value messageId_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> messageIdBuilder_;
+    private long messageId_ ;
     /**
-     * <code>.google.protobuf.Int64Value message_id = 1;</code>
+     * <code>int64 message_id = 1;</code>
      * @return Whether the messageId field is set.
      */
+    @java.lang.Override
     public boolean hasMessageId() {
-      return messageIdBuilder_ != null || messageId_ != null;
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>.google.protobuf.Int64Value message_id = 1;</code>
+     * <code>int64 message_id = 1;</code>
      * @return The messageId.
      */
-    public com.google.protobuf.Int64Value getMessageId() {
-      if (messageIdBuilder_ == null) {
-        return messageId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : messageId_;
-      } else {
-        return messageIdBuilder_.getMessage();
-      }
+    @java.lang.Override
+    public long getMessageId() {
+      return messageId_;
     }
     /**
-     * <code>.google.protobuf.Int64Value message_id = 1;</code>
+     * <code>int64 message_id = 1;</code>
+     * @param value The messageId to set.
+     * @return This builder for chaining.
      */
-    public Builder setMessageId(com.google.protobuf.Int64Value value) {
-      if (messageIdBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        messageId_ = value;
-        onChanged();
-      } else {
-        messageIdBuilder_.setMessage(value);
-      }
-
+    public Builder setMessageId(long value) {
+      bitField0_ |= 0x00000001;
+      messageId_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value message_id = 1;</code>
-     */
-    public Builder setMessageId(
-        com.google.protobuf.Int64Value.Builder builderForValue) {
-      if (messageIdBuilder_ == null) {
-        messageId_ = builderForValue.build();
-        onChanged();
-      } else {
-        messageIdBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value message_id = 1;</code>
-     */
-    public Builder mergeMessageId(com.google.protobuf.Int64Value value) {
-      if (messageIdBuilder_ == null) {
-        if (messageId_ != null) {
-          messageId_ =
-            com.google.protobuf.Int64Value.newBuilder(messageId_).mergeFrom(value).buildPartial();
-        } else {
-          messageId_ = value;
-        }
-        onChanged();
-      } else {
-        messageIdBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value message_id = 1;</code>
+     * <code>int64 message_id = 1;</code>
+     * @return This builder for chaining.
      */
     public Builder clearMessageId() {
-      if (messageIdBuilder_ == null) {
-        messageId_ = null;
-        onChanged();
-      } else {
-        messageId_ = null;
-        messageIdBuilder_ = null;
-      }
-
+      bitField0_ = (bitField0_ & ~0x00000001);
+      messageId_ = 0L;
+      onChanged();
       return this;
     }
-    /**
-     * <code>.google.protobuf.Int64Value message_id = 1;</code>
-     */
-    public com.google.protobuf.Int64Value.Builder getMessageIdBuilder() {
 
-      onChanged();
-      return getMessageIdFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.Int64Value message_id = 1;</code>
-     */
-    public com.google.protobuf.Int64ValueOrBuilder getMessageIdOrBuilder() {
-      if (messageIdBuilder_ != null) {
-        return messageIdBuilder_.getMessageOrBuilder();
-      } else {
-        return messageId_ == null ?
-            com.google.protobuf.Int64Value.getDefaultInstance() : messageId_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.Int64Value message_id = 1;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
-        getMessageIdFieldBuilder() {
-      if (messageIdBuilder_ == null) {
-        messageIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>(
-                getMessageId(),
-                getParentForChildren(),
-                isClean());
-        messageId_ = null;
-      }
-      return messageIdBuilder_;
-    }
-
-    private com.google.protobuf.BoolValue isSystemMessage_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder> isSystemMessageBuilder_;
+    private boolean isSystemMessage_ ;
     /**
      * <pre>
-     * is_system_message can only be true if the user is an administrator, or turms server will return an error
+     * is_system_message can only be true if the user is an administrator,
+     * or turms server will return an error
      * </pre>
      *
-     * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
+     * <code>bool is_system_message = 2;</code>
      * @return Whether the isSystemMessage field is set.
      */
+    @java.lang.Override
     public boolean hasIsSystemMessage() {
-      return isSystemMessageBuilder_ != null || isSystemMessage_ != null;
+      return ((bitField0_ & 0x00000002) != 0);
     }
     /**
      * <pre>
-     * is_system_message can only be true if the user is an administrator, or turms server will return an error
+     * is_system_message can only be true if the user is an administrator,
+     * or turms server will return an error
      * </pre>
      *
-     * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
+     * <code>bool is_system_message = 2;</code>
      * @return The isSystemMessage.
      */
-    public com.google.protobuf.BoolValue getIsSystemMessage() {
-      if (isSystemMessageBuilder_ == null) {
-        return isSystemMessage_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : isSystemMessage_;
-      } else {
-        return isSystemMessageBuilder_.getMessage();
-      }
+    @java.lang.Override
+    public boolean getIsSystemMessage() {
+      return isSystemMessage_;
     }
     /**
      * <pre>
-     * is_system_message can only be true if the user is an administrator, or turms server will return an error
+     * is_system_message can only be true if the user is an administrator,
+     * or turms server will return an error
      * </pre>
      *
-     * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
+     * <code>bool is_system_message = 2;</code>
+     * @param value The isSystemMessage to set.
+     * @return This builder for chaining.
      */
-    public Builder setIsSystemMessage(com.google.protobuf.BoolValue value) {
-      if (isSystemMessageBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        isSystemMessage_ = value;
-        onChanged();
-      } else {
-        isSystemMessageBuilder_.setMessage(value);
-      }
-
+    public Builder setIsSystemMessage(boolean value) {
+      bitField0_ |= 0x00000002;
+      isSystemMessage_ = value;
+      onChanged();
       return this;
     }
     /**
      * <pre>
-     * is_system_message can only be true if the user is an administrator, or turms server will return an error
+     * is_system_message can only be true if the user is an administrator,
+     * or turms server will return an error
      * </pre>
      *
-     * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
-     */
-    public Builder setIsSystemMessage(
-        com.google.protobuf.BoolValue.Builder builderForValue) {
-      if (isSystemMessageBuilder_ == null) {
-        isSystemMessage_ = builderForValue.build();
-        onChanged();
-      } else {
-        isSystemMessageBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <pre>
-     * is_system_message can only be true if the user is an administrator, or turms server will return an error
-     * </pre>
-     *
-     * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
-     */
-    public Builder mergeIsSystemMessage(com.google.protobuf.BoolValue value) {
-      if (isSystemMessageBuilder_ == null) {
-        if (isSystemMessage_ != null) {
-          isSystemMessage_ =
-            com.google.protobuf.BoolValue.newBuilder(isSystemMessage_).mergeFrom(value).buildPartial();
-        } else {
-          isSystemMessage_ = value;
-        }
-        onChanged();
-      } else {
-        isSystemMessageBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <pre>
-     * is_system_message can only be true if the user is an administrator, or turms server will return an error
-     * </pre>
-     *
-     * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
+     * <code>bool is_system_message = 2;</code>
+     * @return This builder for chaining.
      */
     public Builder clearIsSystemMessage() {
-      if (isSystemMessageBuilder_ == null) {
-        isSystemMessage_ = null;
-        onChanged();
-      } else {
-        isSystemMessage_ = null;
-        isSystemMessageBuilder_ = null;
-      }
-
+      bitField0_ = (bitField0_ & ~0x00000002);
+      isSystemMessage_ = false;
+      onChanged();
       return this;
     }
-    /**
-     * <pre>
-     * is_system_message can only be true if the user is an administrator, or turms server will return an error
-     * </pre>
-     *
-     * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
-     */
-    public com.google.protobuf.BoolValue.Builder getIsSystemMessageBuilder() {
 
-      onChanged();
-      return getIsSystemMessageFieldBuilder().getBuilder();
-    }
+    private long groupId_ ;
     /**
-     * <pre>
-     * is_system_message can only be true if the user is an administrator, or turms server will return an error
-     * </pre>
-     *
-     * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
-     */
-    public com.google.protobuf.BoolValueOrBuilder getIsSystemMessageOrBuilder() {
-      if (isSystemMessageBuilder_ != null) {
-        return isSystemMessageBuilder_.getMessageOrBuilder();
-      } else {
-        return isSystemMessage_ == null ?
-            com.google.protobuf.BoolValue.getDefaultInstance() : isSystemMessage_;
-      }
-    }
-    /**
-     * <pre>
-     * is_system_message can only be true if the user is an administrator, or turms server will return an error
-     * </pre>
-     *
-     * <code>.google.protobuf.BoolValue is_system_message = 2;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder>
-        getIsSystemMessageFieldBuilder() {
-      if (isSystemMessageBuilder_ == null) {
-        isSystemMessageBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder>(
-                getIsSystemMessage(),
-                getParentForChildren(),
-                isClean());
-        isSystemMessage_ = null;
-      }
-      return isSystemMessageBuilder_;
-    }
-
-    private com.google.protobuf.Int64Value groupId_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> groupIdBuilder_;
-    /**
-     * <code>.google.protobuf.Int64Value group_id = 3;</code>
+     * <code>int64 group_id = 3;</code>
      * @return Whether the groupId field is set.
      */
+    @java.lang.Override
     public boolean hasGroupId() {
-      return groupIdBuilder_ != null || groupId_ != null;
+      return ((bitField0_ & 0x00000004) != 0);
     }
     /**
-     * <code>.google.protobuf.Int64Value group_id = 3;</code>
+     * <code>int64 group_id = 3;</code>
      * @return The groupId.
      */
-    public com.google.protobuf.Int64Value getGroupId() {
-      if (groupIdBuilder_ == null) {
-        return groupId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : groupId_;
-      } else {
-        return groupIdBuilder_.getMessage();
-      }
+    @java.lang.Override
+    public long getGroupId() {
+      return groupId_;
     }
     /**
-     * <code>.google.protobuf.Int64Value group_id = 3;</code>
+     * <code>int64 group_id = 3;</code>
+     * @param value The groupId to set.
+     * @return This builder for chaining.
      */
-    public Builder setGroupId(com.google.protobuf.Int64Value value) {
-      if (groupIdBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        groupId_ = value;
-        onChanged();
-      } else {
-        groupIdBuilder_.setMessage(value);
-      }
-
+    public Builder setGroupId(long value) {
+      bitField0_ |= 0x00000004;
+      groupId_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value group_id = 3;</code>
-     */
-    public Builder setGroupId(
-        com.google.protobuf.Int64Value.Builder builderForValue) {
-      if (groupIdBuilder_ == null) {
-        groupId_ = builderForValue.build();
-        onChanged();
-      } else {
-        groupIdBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value group_id = 3;</code>
-     */
-    public Builder mergeGroupId(com.google.protobuf.Int64Value value) {
-      if (groupIdBuilder_ == null) {
-        if (groupId_ != null) {
-          groupId_ =
-            com.google.protobuf.Int64Value.newBuilder(groupId_).mergeFrom(value).buildPartial();
-        } else {
-          groupId_ = value;
-        }
-        onChanged();
-      } else {
-        groupIdBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value group_id = 3;</code>
+     * <code>int64 group_id = 3;</code>
+     * @return This builder for chaining.
      */
     public Builder clearGroupId() {
-      if (groupIdBuilder_ == null) {
-        groupId_ = null;
-        onChanged();
-      } else {
-        groupId_ = null;
-        groupIdBuilder_ = null;
-      }
-
+      bitField0_ = (bitField0_ & ~0x00000004);
+      groupId_ = 0L;
+      onChanged();
       return this;
     }
-    /**
-     * <code>.google.protobuf.Int64Value group_id = 3;</code>
-     */
-    public com.google.protobuf.Int64Value.Builder getGroupIdBuilder() {
 
-      onChanged();
-      return getGroupIdFieldBuilder().getBuilder();
-    }
+    private long recipientId_ ;
     /**
-     * <code>.google.protobuf.Int64Value group_id = 3;</code>
-     */
-    public com.google.protobuf.Int64ValueOrBuilder getGroupIdOrBuilder() {
-      if (groupIdBuilder_ != null) {
-        return groupIdBuilder_.getMessageOrBuilder();
-      } else {
-        return groupId_ == null ?
-            com.google.protobuf.Int64Value.getDefaultInstance() : groupId_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.Int64Value group_id = 3;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
-        getGroupIdFieldBuilder() {
-      if (groupIdBuilder_ == null) {
-        groupIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>(
-                getGroupId(),
-                getParentForChildren(),
-                isClean());
-        groupId_ = null;
-      }
-      return groupIdBuilder_;
-    }
-
-    private com.google.protobuf.Int64Value recipientId_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> recipientIdBuilder_;
-    /**
-     * <code>.google.protobuf.Int64Value recipient_id = 4;</code>
+     * <code>int64 recipient_id = 4;</code>
      * @return Whether the recipientId field is set.
      */
+    @java.lang.Override
     public boolean hasRecipientId() {
-      return recipientIdBuilder_ != null || recipientId_ != null;
+      return ((bitField0_ & 0x00000008) != 0);
     }
     /**
-     * <code>.google.protobuf.Int64Value recipient_id = 4;</code>
+     * <code>int64 recipient_id = 4;</code>
      * @return The recipientId.
      */
-    public com.google.protobuf.Int64Value getRecipientId() {
-      if (recipientIdBuilder_ == null) {
-        return recipientId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : recipientId_;
-      } else {
-        return recipientIdBuilder_.getMessage();
-      }
+    @java.lang.Override
+    public long getRecipientId() {
+      return recipientId_;
     }
     /**
-     * <code>.google.protobuf.Int64Value recipient_id = 4;</code>
+     * <code>int64 recipient_id = 4;</code>
+     * @param value The recipientId to set.
+     * @return This builder for chaining.
      */
-    public Builder setRecipientId(com.google.protobuf.Int64Value value) {
-      if (recipientIdBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        recipientId_ = value;
-        onChanged();
-      } else {
-        recipientIdBuilder_.setMessage(value);
-      }
-
+    public Builder setRecipientId(long value) {
+      bitField0_ |= 0x00000008;
+      recipientId_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value recipient_id = 4;</code>
-     */
-    public Builder setRecipientId(
-        com.google.protobuf.Int64Value.Builder builderForValue) {
-      if (recipientIdBuilder_ == null) {
-        recipientId_ = builderForValue.build();
-        onChanged();
-      } else {
-        recipientIdBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value recipient_id = 4;</code>
-     */
-    public Builder mergeRecipientId(com.google.protobuf.Int64Value value) {
-      if (recipientIdBuilder_ == null) {
-        if (recipientId_ != null) {
-          recipientId_ =
-            com.google.protobuf.Int64Value.newBuilder(recipientId_).mergeFrom(value).buildPartial();
-        } else {
-          recipientId_ = value;
-        }
-        onChanged();
-      } else {
-        recipientIdBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value recipient_id = 4;</code>
+     * <code>int64 recipient_id = 4;</code>
+     * @return This builder for chaining.
      */
     public Builder clearRecipientId() {
-      if (recipientIdBuilder_ == null) {
-        recipientId_ = null;
-        onChanged();
-      } else {
-        recipientId_ = null;
-        recipientIdBuilder_ = null;
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value recipient_id = 4;</code>
-     */
-    public com.google.protobuf.Int64Value.Builder getRecipientIdBuilder() {
-
+      bitField0_ = (bitField0_ & ~0x00000008);
+      recipientId_ = 0L;
       onChanged();
-      return getRecipientIdFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.Int64Value recipient_id = 4;</code>
-     */
-    public com.google.protobuf.Int64ValueOrBuilder getRecipientIdOrBuilder() {
-      if (recipientIdBuilder_ != null) {
-        return recipientIdBuilder_.getMessageOrBuilder();
-      } else {
-        return recipientId_ == null ?
-            com.google.protobuf.Int64Value.getDefaultInstance() : recipientId_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.Int64Value recipient_id = 4;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
-        getRecipientIdFieldBuilder() {
-      if (recipientIdBuilder_ == null) {
-        recipientIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>(
-                getRecipientId(),
-                getParentForChildren(),
-                isClean());
-        recipientId_ = null;
-      }
-      return recipientIdBuilder_;
+      return this;
     }
 
     private long deliveryDate_ ;
+    /**
+     * <code>int64 delivery_date = 5;</code>
+     * @return Whether the deliveryDate field is set.
+     */
+    @java.lang.Override
+    public boolean hasDeliveryDate() {
+      return ((bitField0_ & 0x00000010) != 0);
+    }
     /**
      * <code>int64 delivery_date = 5;</code>
      * @return The deliveryDate.
@@ -1446,7 +1049,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setDeliveryDate(long value) {
-
+      bitField0_ |= 0x00000010;
       deliveryDate_ = value;
       onChanged();
       return this;
@@ -1456,136 +1059,100 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearDeliveryDate() {
-
+      bitField0_ = (bitField0_ & ~0x00000010);
       deliveryDate_ = 0L;
       onChanged();
       return this;
     }
 
-    private com.google.protobuf.StringValue text_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> textBuilder_;
+    private java.lang.Object text_ = "";
     /**
-     * <code>.google.protobuf.StringValue text = 6;</code>
+     * <code>string text = 6;</code>
      * @return Whether the text field is set.
      */
     public boolean hasText() {
-      return textBuilder_ != null || text_ != null;
+      return ((bitField0_ & 0x00000020) != 0);
     }
     /**
-     * <code>.google.protobuf.StringValue text = 6;</code>
+     * <code>string text = 6;</code>
      * @return The text.
      */
-    public com.google.protobuf.StringValue getText() {
-      if (textBuilder_ == null) {
-        return text_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : text_;
+    public java.lang.String getText() {
+      java.lang.Object ref = text_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        text_ = s;
+        return s;
       } else {
-        return textBuilder_.getMessage();
+        return (java.lang.String) ref;
       }
     }
     /**
-     * <code>.google.protobuf.StringValue text = 6;</code>
+     * <code>string text = 6;</code>
+     * @return The bytes for text.
      */
-    public Builder setText(com.google.protobuf.StringValue value) {
-      if (textBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        text_ = value;
-        onChanged();
+    public com.google.protobuf.ByteString
+        getTextBytes() {
+      java.lang.Object ref = text_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        text_ = b;
+        return b;
       } else {
-        textBuilder_.setMessage(value);
+        return (com.google.protobuf.ByteString) ref;
       }
-
-      return this;
     }
     /**
-     * <code>.google.protobuf.StringValue text = 6;</code>
+     * <code>string text = 6;</code>
+     * @param value The text to set.
+     * @return This builder for chaining.
      */
     public Builder setText(
-        com.google.protobuf.StringValue.Builder builderForValue) {
-      if (textBuilder_ == null) {
-        text_ = builderForValue.build();
-        onChanged();
-      } else {
-        textBuilder_.setMessage(builderForValue.build());
-      }
-
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000020;
+      text_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.StringValue text = 6;</code>
-     */
-    public Builder mergeText(com.google.protobuf.StringValue value) {
-      if (textBuilder_ == null) {
-        if (text_ != null) {
-          text_ =
-            com.google.protobuf.StringValue.newBuilder(text_).mergeFrom(value).buildPartial();
-        } else {
-          text_ = value;
-        }
-        onChanged();
-      } else {
-        textBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.StringValue text = 6;</code>
+     * <code>string text = 6;</code>
+     * @return This builder for chaining.
      */
     public Builder clearText() {
-      if (textBuilder_ == null) {
-        text_ = null;
-        onChanged();
-      } else {
-        text_ = null;
-        textBuilder_ = null;
-      }
-
+      bitField0_ = (bitField0_ & ~0x00000020);
+      text_ = getDefaultInstance().getText();
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.StringValue text = 6;</code>
+     * <code>string text = 6;</code>
+     * @param value The bytes for text to set.
+     * @return This builder for chaining.
      */
-    public com.google.protobuf.StringValue.Builder getTextBuilder() {
-
+    public Builder setTextBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      bitField0_ |= 0x00000020;
+      text_ = value;
       onChanged();
-      return getTextFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.StringValue text = 6;</code>
-     */
-    public com.google.protobuf.StringValueOrBuilder getTextOrBuilder() {
-      if (textBuilder_ != null) {
-        return textBuilder_.getMessageOrBuilder();
-      } else {
-        return text_ == null ?
-            com.google.protobuf.StringValue.getDefaultInstance() : text_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.StringValue text = 6;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>
-        getTextFieldBuilder() {
-      if (textBuilder_ == null) {
-        textBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>(
-                getText(),
-                getParentForChildren(),
-                isClean());
-        text_ = null;
-      }
-      return textBuilder_;
+      return this;
     }
 
     private java.util.List<com.google.protobuf.ByteString> records_ = java.util.Collections.emptyList();
     private void ensureRecordsIsMutable() {
-      if (!((bitField0_ & 0x00000001) != 0)) {
+      if (!((bitField0_ & 0x00000040) != 0)) {
         records_ = new java.util.ArrayList<com.google.protobuf.ByteString>(records_);
-        bitField0_ |= 0x00000001;
+        bitField0_ |= 0x00000040;
        }
     }
     /**
@@ -1594,7 +1161,7 @@ private static final long serialVersionUID = 0L;
      */
     public java.util.List<com.google.protobuf.ByteString>
         getRecordsList() {
-      return ((bitField0_ & 0x00000001) != 0) ?
+      return ((bitField0_ & 0x00000040) != 0) ?
                java.util.Collections.unmodifiableList(records_) : records_;
     }
     /**
@@ -1661,128 +1228,48 @@ private static final long serialVersionUID = 0L;
      */
     public Builder clearRecords() {
       records_ = java.util.Collections.emptyList();
-      bitField0_ = (bitField0_ & ~0x00000001);
+      bitField0_ = (bitField0_ & ~0x00000040);
       onChanged();
       return this;
     }
 
-    private com.google.protobuf.Int32Value burnAfter_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder> burnAfterBuilder_;
+    private int burnAfter_ ;
     /**
-     * <code>.google.protobuf.Int32Value burn_after = 8;</code>
+     * <code>int32 burn_after = 8;</code>
      * @return Whether the burnAfter field is set.
      */
+    @java.lang.Override
     public boolean hasBurnAfter() {
-      return burnAfterBuilder_ != null || burnAfter_ != null;
+      return ((bitField0_ & 0x00000080) != 0);
     }
     /**
-     * <code>.google.protobuf.Int32Value burn_after = 8;</code>
+     * <code>int32 burn_after = 8;</code>
      * @return The burnAfter.
      */
-    public com.google.protobuf.Int32Value getBurnAfter() {
-      if (burnAfterBuilder_ == null) {
-        return burnAfter_ == null ? com.google.protobuf.Int32Value.getDefaultInstance() : burnAfter_;
-      } else {
-        return burnAfterBuilder_.getMessage();
-      }
+    @java.lang.Override
+    public int getBurnAfter() {
+      return burnAfter_;
     }
     /**
-     * <code>.google.protobuf.Int32Value burn_after = 8;</code>
+     * <code>int32 burn_after = 8;</code>
+     * @param value The burnAfter to set.
+     * @return This builder for chaining.
      */
-    public Builder setBurnAfter(com.google.protobuf.Int32Value value) {
-      if (burnAfterBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        burnAfter_ = value;
-        onChanged();
-      } else {
-        burnAfterBuilder_.setMessage(value);
-      }
-
+    public Builder setBurnAfter(int value) {
+      bitField0_ |= 0x00000080;
+      burnAfter_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.Int32Value burn_after = 8;</code>
-     */
-    public Builder setBurnAfter(
-        com.google.protobuf.Int32Value.Builder builderForValue) {
-      if (burnAfterBuilder_ == null) {
-        burnAfter_ = builderForValue.build();
-        onChanged();
-      } else {
-        burnAfterBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int32Value burn_after = 8;</code>
-     */
-    public Builder mergeBurnAfter(com.google.protobuf.Int32Value value) {
-      if (burnAfterBuilder_ == null) {
-        if (burnAfter_ != null) {
-          burnAfter_ =
-            com.google.protobuf.Int32Value.newBuilder(burnAfter_).mergeFrom(value).buildPartial();
-        } else {
-          burnAfter_ = value;
-        }
-        onChanged();
-      } else {
-        burnAfterBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int32Value burn_after = 8;</code>
+     * <code>int32 burn_after = 8;</code>
+     * @return This builder for chaining.
      */
     public Builder clearBurnAfter() {
-      if (burnAfterBuilder_ == null) {
-        burnAfter_ = null;
-        onChanged();
-      } else {
-        burnAfter_ = null;
-        burnAfterBuilder_ = null;
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int32Value burn_after = 8;</code>
-     */
-    public com.google.protobuf.Int32Value.Builder getBurnAfterBuilder() {
-
+      bitField0_ = (bitField0_ & ~0x00000080);
+      burnAfter_ = 0;
       onChanged();
-      return getBurnAfterFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.Int32Value burn_after = 8;</code>
-     */
-    public com.google.protobuf.Int32ValueOrBuilder getBurnAfterOrBuilder() {
-      if (burnAfterBuilder_ != null) {
-        return burnAfterBuilder_.getMessageOrBuilder();
-      } else {
-        return burnAfter_ == null ?
-            com.google.protobuf.Int32Value.getDefaultInstance() : burnAfter_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.Int32Value burn_after = 8;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder>
-        getBurnAfterFieldBuilder() {
-      if (burnAfterBuilder_ == null) {
-        burnAfterBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder>(
-                getBurnAfter(),
-                getParentForChildren(),
-                isClean());
-        burnAfter_ = null;
-      }
-      return burnAfterBuilder_;
+      return this;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

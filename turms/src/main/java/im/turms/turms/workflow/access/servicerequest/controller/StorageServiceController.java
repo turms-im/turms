@@ -54,11 +54,11 @@ public class StorageServiceController {
             QuerySignedGetUrlRequest querySignedGetUrlRequest = clientRequest.getTurmsRequest().getQuerySignedGetUrlRequest();
             ContentType contentType = querySignedGetUrlRequest.getContentType();
             if (contentType != ContentType.UNRECOGNIZED) {
-                String keyStr = querySignedGetUrlRequest.hasKeyStr() ? querySignedGetUrlRequest.getKeyStr().getValue() : null;
-                Long keyNum = querySignedGetUrlRequest.hasKeyNum() ? querySignedGetUrlRequest.getKeyNum().getValue() : null;
+                String keyStr = querySignedGetUrlRequest.hasKeyStr() ? querySignedGetUrlRequest.getKeyStr() : null;
+                Long keyNum = querySignedGetUrlRequest.hasKeyNum() ? querySignedGetUrlRequest.getKeyNum() : null;
                 return storageService.queryPresignedGetUrl(clientRequest.getUserId(), contentType, keyStr, keyNum)
                         .map(url -> RequestHandlerResultFactory.get(TurmsNotification.Data.newBuilder()
-                                .setUrl(StringValue.of(url))
+                                .setUrl(url)
                                 .build()));
             } else {
                 return Mono
@@ -74,11 +74,11 @@ public class StorageServiceController {
             ContentType contentType = querySignedPutUrlRequest.getContentType();
             if (contentType != ContentType.UNRECOGNIZED) {
                 long contentLength = querySignedPutUrlRequest.getContentLength();
-                String keyStr = querySignedPutUrlRequest.hasKeyStr() ? querySignedPutUrlRequest.getKeyStr().getValue() : null;
-                Long keyNum = querySignedPutUrlRequest.hasKeyNum() ? querySignedPutUrlRequest.getKeyNum().getValue() : null;
+                String keyStr = querySignedPutUrlRequest.hasKeyStr() ? querySignedPutUrlRequest.getKeyStr() : null;
+                Long keyNum = querySignedPutUrlRequest.hasKeyNum() ? querySignedPutUrlRequest.getKeyNum() : null;
                 return storageService.queryPresignedPutUrl(clientRequest.getUserId(), contentType, keyStr, keyNum, contentLength)
                         .map(url -> RequestHandlerResultFactory.get(TurmsNotification.Data.newBuilder()
-                                .setUrl(StringValue.of(url))
+                                .setUrl(url)
                                 .build()));
             } else {
                 return Mono
@@ -93,8 +93,8 @@ public class StorageServiceController {
             DeleteResourceRequest deleteResourceRequest = clientRequest.getTurmsRequest().getDeleteResourceRequest();
             ContentType contentType = deleteResourceRequest.getContentType();
             if (contentType != ContentType.UNRECOGNIZED) {
-                String keyStr = deleteResourceRequest.hasKeyStr() ? deleteResourceRequest.getKeyStr().getValue() : null;
-                Long keyNum = deleteResourceRequest.hasKeyNum() ? deleteResourceRequest.getKeyNum().getValue() : null;
+                String keyStr = deleteResourceRequest.hasKeyStr() ? deleteResourceRequest.getKeyStr() : null;
+                Long keyNum = deleteResourceRequest.hasKeyNum() ? deleteResourceRequest.getKeyNum() : null;
                 return storageService.deleteResource(clientRequest.getUserId(), contentType, keyStr, keyNum)
                         .thenReturn(RequestHandlerResultFactory.OK);
             } else {

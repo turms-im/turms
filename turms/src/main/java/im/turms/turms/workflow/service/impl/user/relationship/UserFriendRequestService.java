@@ -424,7 +424,7 @@ public class UserFriendRequestService {
                                         builder.addUserFriendRequests(ProtoUtil.friendRequest2proto(request));
                                     }
                                     return builder
-                                            .setLastUpdatedDate(Int64Value.of(version.getTime()))
+                                            .setLastUpdatedDate(version.getTime())
                                             .build();
                                 });
                     } else {

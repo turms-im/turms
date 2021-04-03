@@ -17,8 +17,6 @@
 
 package im.turms.gateway.access.tcp.util;
 
-import com.google.protobuf.Int32Value;
-import com.google.protobuf.Int64Value;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.server.common.constant.TurmsStatusCode;
 
@@ -33,8 +31,8 @@ public final class TurmsNotificationUtil {
     public static TurmsNotification sessionClosed(long requestId) {
         return TurmsNotification
                 .newBuilder()
-                .setRequestId(Int64Value.of(requestId))
-                .setCode(Int32Value.of(TurmsStatusCode.SERVER_INTERNAL_ERROR.getBusinessCode()))
+                .setRequestId(requestId)
+                .setCode(TurmsStatusCode.SERVER_INTERNAL_ERROR.getBusinessCode())
                 .build();
     }
 

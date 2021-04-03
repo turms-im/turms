@@ -46,32 +46,28 @@ public final class QueryMessagesRequestOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n,request/message/query_messages_request" +
-      ".proto\022\016im.turms.proto\032\036google/protobuf/" +
-      "wrappers.proto\"\366\002\n\024QueryMessagesRequest\022" +
-      "\013\n\003ids\030\001 \003(\003\022)\n\004size\030\002 \001(\0132\033.google.prot" +
-      "obuf.Int32Value\0226\n\022are_group_messages\030\003 " +
-      "\001(\0132\032.google.protobuf.BoolValue\0227\n\023are_s" +
-      "ystem_messages\030\004 \001(\0132\032.google.protobuf.B" +
-      "oolValue\022,\n\007from_id\030\005 \001(\0132\033.google.proto" +
-      "buf.Int64Value\0228\n\023delivery_date_after\030\006 " +
-      "\001(\0132\033.google.protobuf.Int64Value\0229\n\024deli" +
-      "very_date_before\030\007 \001(\0132\033.google.protobuf" +
-      ".Int64Value\022\022\n\nwith_total\030\010 \001(\010B0\n)im.tu" +
-      "rms.common.model.dto.request.messageP\001\272\002" +
-      "\000b\006proto3"
+      ".proto\022\016im.turms.proto\"\335\002\n\024QueryMessages" +
+      "Request\022\013\n\003ids\030\001 \003(\003\022\021\n\004size\030\002 \001(\005H\000\210\001\001\022" +
+      "\037\n\022are_group_messages\030\003 \001(\010H\001\210\001\001\022 \n\023are_" +
+      "system_messages\030\004 \001(\010H\002\210\001\001\022\024\n\007from_id\030\005 " +
+      "\001(\003H\003\210\001\001\022 \n\023delivery_date_after\030\006 \001(\003H\004\210" +
+      "\001\001\022!\n\024delivery_date_before\030\007 \001(\003H\005\210\001\001\022\022\n" +
+      "\nwith_total\030\010 \001(\010B\007\n\005_sizeB\025\n\023_are_group" +
+      "_messagesB\026\n\024_are_system_messagesB\n\n\010_fr" +
+      "om_idB\026\n\024_delivery_date_afterB\027\n\025_delive" +
+      "ry_date_beforeB0\n)im.turms.common.model." +
+      "dto.request.messageP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
         });
     internal_static_im_turms_proto_QueryMessagesRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_im_turms_proto_QueryMessagesRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_QueryMessagesRequest_descriptor,
-        new java.lang.String[] { "Ids", "Size", "AreGroupMessages", "AreSystemMessages", "FromId", "DeliveryDateAfter", "DeliveryDateBefore", "WithTotal", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "Ids", "Size", "AreGroupMessages", "AreSystemMessages", "FromId", "DeliveryDateAfter", "DeliveryDateBefore", "WithTotal", "Size", "AreGroupMessages", "AreSystemMessages", "FromId", "DeliveryDateAfter", "DeliveryDateBefore", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

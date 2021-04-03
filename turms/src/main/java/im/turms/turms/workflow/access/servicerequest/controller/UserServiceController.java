@@ -129,8 +129,8 @@ public class UserServiceController {
     public ClientRequestHandler handleQueryUserIdsNearbyRequest() {
         return clientRequest -> {
             QueryUserIdsNearbyRequest request = clientRequest.getTurmsRequest().getQueryUserIdsNearbyRequest();
-            Double distance = request.hasDistance() ? (double) request.getDistance().getValue() : null;
-            Short maxNumber = request.hasMaxNumber() ? (short) request.getMaxNumber().getValue() : null;
+            Double distance = request.hasDistance() ? (double) request.getDistance() : null;
+            Short maxNumber = request.hasMaxNumber() ? (short) request.getMaxNumber() : null;
             Mono<Void> upsertMono = sessionLocationService.upsertUserLocation(
                     clientRequest.getUserId(),
                     clientRequest.getDeviceType(),
@@ -181,8 +181,8 @@ public class UserServiceController {
     public ClientRequestHandler handleQueryUsersInfosNearbyRequest() {
         return clientRequest -> {
             QueryUserInfosNearbyRequest request = clientRequest.getTurmsRequest().getQueryUserInfosNearbyRequest();
-            Double distance = request.hasDistance() ? (double) request.getDistance().getValue() : null;
-            Short maxNumber = request.hasMaxNumber() ? (short) request.getMaxNumber().getValue() : null;
+            Double distance = request.hasDistance() ? (double) request.getDistance() : null;
+            Short maxNumber = request.hasMaxNumber() ? (short) request.getMaxNumber() : null;
             Mono<Void> upsertMono = sessionLocationService.upsertUserLocation(
                     clientRequest.getUserId(),
                     clientRequest.getDeviceType(),
@@ -308,9 +308,9 @@ public class UserServiceController {
     public ClientRequestHandler handleUpdateUserRequest() {
         return clientRequest -> {
             UpdateUserRequest request = clientRequest.getTurmsRequest().getUpdateUserRequest();
-            String password = request.hasPassword() ? request.getPassword().getValue() : null;
-            String name = request.hasName() ? request.getName().getValue() : null;
-            String intro = request.hasIntro() ? request.getIntro().getValue() : null;
+            String password = request.hasPassword() ? request.getPassword() : null;
+            String name = request.hasName() ? request.getName() : null;
+            String intro = request.hasIntro() ? request.getIntro() : null;
             ProfileAccessStrategy profileAccessStrategy = request.getProfileAccessStrategy();
             return userService.updateUser(
                     clientRequest.getUserId(),

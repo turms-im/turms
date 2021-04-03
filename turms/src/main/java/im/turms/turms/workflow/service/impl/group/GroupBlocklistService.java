@@ -17,7 +17,6 @@
 
 package im.turms.turms.workflow.service.impl.group;
 
-import com.google.protobuf.Int64Value;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
@@ -229,7 +228,7 @@ public class GroupBlocklistService {
                                     }
                                     return Int64ValuesWithVersion
                                             .newBuilder()
-                                            .setLastUpdatedDate(Int64Value.of(version.getTime()))
+                                            .setLastUpdatedDate(version.getTime())
                                             .addAllValues(ids)
                                             .build();
                                 });
@@ -267,7 +266,7 @@ public class GroupBlocklistService {
                                         throw TurmsBusinessException.get(TurmsStatusCode.NO_CONTENT);
                                     }
                                     UsersInfosWithVersion.Builder builder = UsersInfosWithVersion.newBuilder();
-                                    builder.setLastUpdatedDate(Int64Value.of(version.getTime()));
+                                    builder.setLastUpdatedDate(version.getTime());
                                     for (User user : users) {
                                         UserInfo userInfo = ProtoUtil.userProfile2proto(user).build();
                                         builder.addUserInfos(userInfo);

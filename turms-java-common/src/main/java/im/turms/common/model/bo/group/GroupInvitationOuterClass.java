@@ -46,25 +46,22 @@ public final class GroupInvitationOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\"model/group/group_invitation.proto\022\016im" +
-      ".turms.proto\032\036google/protobuf/wrappers.p" +
-      "roto\032\035constant/request_status.proto\"\223\003\n\017" +
-      "GroupInvitation\022\'\n\002id\030\001 \001(\0132\033.google.pro" +
-      "tobuf.Int64Value\0222\n\rcreation_date\030\002 \001(\0132" +
-      "\033.google.protobuf.Int64Value\022-\n\007content\030" +
-      "\003 \001(\0132\034.google.protobuf.StringValue\022-\n\006s" +
-      "tatus\030\004 \001(\0162\035.im.turms.proto.RequestStat" +
-      "us\0224\n\017expiration_date\030\005 \001(\0132\033.google.pro" +
-      "tobuf.Int64Value\022-\n\010group_id\030\006 \001(\0132\033.goo" +
-      "gle.protobuf.Int64Value\022/\n\ninviter_id\030\007 " +
-      "\001(\0132\033.google.protobuf.Int64Value\022/\n\ninvi" +
-      "tee_id\030\010 \001(\0132\033.google.protobuf.Int64Valu" +
-      "eB%\n\036im.turms.common.model.bo.groupP\001\272\002\000" +
-      "b\006proto3"
+      ".turms.proto\032\035constant/request_status.pr" +
+      "oto\"\336\002\n\017GroupInvitation\022\017\n\002id\030\001 \001(\003H\000\210\001\001" +
+      "\022\032\n\rcreation_date\030\002 \001(\003H\001\210\001\001\022\024\n\007content\030" +
+      "\003 \001(\tH\002\210\001\001\0222\n\006status\030\004 \001(\0162\035.im.turms.pr" +
+      "oto.RequestStatusH\003\210\001\001\022\034\n\017expiration_dat" +
+      "e\030\005 \001(\003H\004\210\001\001\022\025\n\010group_id\030\006 \001(\003H\005\210\001\001\022\027\n\ni" +
+      "nviter_id\030\007 \001(\003H\006\210\001\001\022\027\n\ninvitee_id\030\010 \001(\003" +
+      "H\007\210\001\001B\005\n\003_idB\020\n\016_creation_dateB\n\n\010_conte" +
+      "ntB\t\n\007_statusB\022\n\020_expiration_dateB\013\n\t_gr" +
+      "oup_idB\r\n\013_inviter_idB\r\n\013_invitee_idB%\n\036" +
+      "im.turms.common.model.bo.groupP\001\272\002\000b\006pro" +
+      "to3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
           im.turms.common.constant.RequestStatusOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_GroupInvitation_descriptor =
@@ -72,8 +69,7 @@ public final class GroupInvitationOuterClass {
     internal_static_im_turms_proto_GroupInvitation_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_GroupInvitation_descriptor,
-        new java.lang.String[] { "Id", "CreationDate", "Content", "Status", "ExpirationDate", "GroupId", "InviterId", "InviteeId", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "Id", "CreationDate", "Content", "Status", "ExpirationDate", "GroupId", "InviterId", "InviteeId", "Id", "CreationDate", "Content", "Status", "ExpirationDate", "GroupId", "InviterId", "InviteeId", });
     im.turms.common.constant.RequestStatusOuterClass.getDescriptor();
   }
 

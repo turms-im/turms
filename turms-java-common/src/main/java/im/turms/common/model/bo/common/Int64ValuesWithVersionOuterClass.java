@@ -46,24 +46,22 @@ public final class Int64ValuesWithVersionOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n,model/common/int64_values_with_version" +
-      ".proto\022\016im.turms.proto\032\036google/protobuf/" +
-      "wrappers.proto\"`\n\026Int64ValuesWithVersion" +
-      "\022\016\n\006values\030\001 \003(\003\0226\n\021last_updated_date\030\002 " +
-      "\001(\0132\033.google.protobuf.Int64ValueB&\n\037im.t" +
-      "urms.common.model.bo.commonP\001\272\002\000b\006proto3"
+      ".proto\022\016im.turms.proto\"^\n\026Int64ValuesWit" +
+      "hVersion\022\016\n\006values\030\001 \003(\003\022\036\n\021last_updated" +
+      "_date\030\002 \001(\003H\000\210\001\001B\024\n\022_last_updated_dateB&" +
+      "\n\037im.turms.common.model.bo.commonP\001\272\002\000b\006" +
+      "proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
         });
     internal_static_im_turms_proto_Int64ValuesWithVersion_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_im_turms_proto_Int64ValuesWithVersion_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_Int64ValuesWithVersion_descriptor,
-        new java.lang.String[] { "Values", "LastUpdatedDate", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "Values", "LastUpdatedDate", "LastUpdatedDate", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

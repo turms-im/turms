@@ -17,9 +17,6 @@
 
 package im.turms.server.common.factory;
 
-import com.google.protobuf.Int32Value;
-import com.google.protobuf.Int64Value;
-import com.google.protobuf.StringValue;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.server.common.constant.TurmsStatusCode;
@@ -40,8 +37,8 @@ public final class NotificationFactory {
         TurmsStatusCode code = info.getCode();
         TurmsNotification.Builder builder = TurmsNotification
                 .newBuilder()
-                .setRequestId(Int64Value.of(requestId))
-                .setCode(Int32Value.of(code.getBusinessCode()));
+                .setRequestId(requestId)
+                .setCode(code.getBusinessCode());
         String reason = info.getReason();
         trySetReason(builder, reason, code);
         return builder.build();
@@ -53,9 +50,9 @@ public final class NotificationFactory {
         String reason = closeReason.getReason();
         TurmsNotification.Builder builder = TurmsNotification
                 .newBuilder()
-                .setCloseStatus(Int32Value.of(closeStatus.getCode()));
+                .setCloseStatus(closeStatus.getCode());
         if (statusCode != null) {
-            builder.setCode(Int32Value.of(statusCode.getBusinessCode()));
+            builder.setCode(statusCode.getBusinessCode());
         }
         trySetReason(builder, reason, statusCode);
         return builder.build();
@@ -65,10 +62,10 @@ public final class NotificationFactory {
         if (reason != null) {
             if (TurmsStatusCode.isServerError(code.getBusinessCode())) {
                 if (returnReasonForServerError) {
-                    builder.setReason(StringValue.of(reason));
+                    builder.setReason(reason);
                 }
             } else {
-                builder.setReason(StringValue.of(reason));
+                builder.setReason(reason);
             }
         }
     }

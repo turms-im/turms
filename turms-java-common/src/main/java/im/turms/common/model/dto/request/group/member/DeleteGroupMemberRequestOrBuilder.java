@@ -37,32 +37,24 @@ public interface DeleteGroupMemberRequestOrBuilder extends
   long getMemberId();
 
   /**
-   * <code>.google.protobuf.Int64Value successor_id = 3;</code>
+   * <code>int64 successor_id = 3;</code>
    * @return Whether the successorId field is set.
    */
   boolean hasSuccessorId();
   /**
-   * <code>.google.protobuf.Int64Value successor_id = 3;</code>
+   * <code>int64 successor_id = 3;</code>
    * @return The successorId.
    */
-  com.google.protobuf.Int64Value getSuccessorId();
-  /**
-   * <code>.google.protobuf.Int64Value successor_id = 3;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getSuccessorIdOrBuilder();
+  long getSuccessorId();
 
   /**
-   * <code>.google.protobuf.BoolValue quit_after_transfer = 4;</code>
+   * <code>bool quit_after_transfer = 4;</code>
    * @return Whether the quitAfterTransfer field is set.
    */
   boolean hasQuitAfterTransfer();
   /**
-   * <code>.google.protobuf.BoolValue quit_after_transfer = 4;</code>
+   * <code>bool quit_after_transfer = 4;</code>
    * @return The quitAfterTransfer.
    */
-  com.google.protobuf.BoolValue getQuitAfterTransfer();
-  /**
-   * <code>.google.protobuf.BoolValue quit_after_transfer = 4;</code>
-   */
-  com.google.protobuf.BoolValueOrBuilder getQuitAfterTransferOrBuilder();
+  boolean getQuitAfterTransfer();
 }

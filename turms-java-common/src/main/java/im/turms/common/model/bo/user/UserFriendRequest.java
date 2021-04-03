@@ -33,7 +33,9 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private UserFriendRequest() {
+    content_ = "";
     requestStatus_ = 0;
+    reason_ = "";
   }
 
   @java.lang.Override
@@ -56,6 +58,7 @@ private static final long serialVersionUID = 0L;
     if (extensionRegistry == null) {
       throw new java.lang.NullPointerException();
     }
+    int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
         com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
@@ -66,101 +69,47 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
-          case 10: {
-            com.google.protobuf.Int64Value.Builder subBuilder = null;
-            if (id_ != null) {
-              subBuilder = id_.toBuilder();
-            }
-            id_ = input.readMessage(com.google.protobuf.Int64Value.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(id_);
-              id_ = subBuilder.buildPartial();
-            }
-
+          case 8: {
+            bitField0_ |= 0x00000001;
+            id_ = input.readInt64();
             break;
           }
-          case 18: {
-            com.google.protobuf.Int64Value.Builder subBuilder = null;
-            if (creationDate_ != null) {
-              subBuilder = creationDate_.toBuilder();
-            }
-            creationDate_ = input.readMessage(com.google.protobuf.Int64Value.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(creationDate_);
-              creationDate_ = subBuilder.buildPartial();
-            }
-
+          case 16: {
+            bitField0_ |= 0x00000002;
+            creationDate_ = input.readInt64();
             break;
           }
           case 26: {
-            com.google.protobuf.StringValue.Builder subBuilder = null;
-            if (content_ != null) {
-              subBuilder = content_.toBuilder();
-            }
-            content_ = input.readMessage(com.google.protobuf.StringValue.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(content_);
-              content_ = subBuilder.buildPartial();
-            }
-
+            java.lang.String s = input.readStringRequireUtf8();
+            bitField0_ |= 0x00000004;
+            content_ = s;
             break;
           }
           case 32: {
             int rawValue = input.readEnum();
-
+            bitField0_ |= 0x00000008;
             requestStatus_ = rawValue;
             break;
           }
           case 42: {
-            com.google.protobuf.StringValue.Builder subBuilder = null;
-            if (reason_ != null) {
-              subBuilder = reason_.toBuilder();
-            }
-            reason_ = input.readMessage(com.google.protobuf.StringValue.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(reason_);
-              reason_ = subBuilder.buildPartial();
-            }
-
+            java.lang.String s = input.readStringRequireUtf8();
+            bitField0_ |= 0x00000010;
+            reason_ = s;
             break;
           }
-          case 50: {
-            com.google.protobuf.Int64Value.Builder subBuilder = null;
-            if (expirationDate_ != null) {
-              subBuilder = expirationDate_.toBuilder();
-            }
-            expirationDate_ = input.readMessage(com.google.protobuf.Int64Value.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(expirationDate_);
-              expirationDate_ = subBuilder.buildPartial();
-            }
-
+          case 48: {
+            bitField0_ |= 0x00000020;
+            expirationDate_ = input.readInt64();
             break;
           }
-          case 58: {
-            com.google.protobuf.Int64Value.Builder subBuilder = null;
-            if (requesterId_ != null) {
-              subBuilder = requesterId_.toBuilder();
-            }
-            requesterId_ = input.readMessage(com.google.protobuf.Int64Value.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(requesterId_);
-              requesterId_ = subBuilder.buildPartial();
-            }
-
+          case 56: {
+            bitField0_ |= 0x00000040;
+            requesterId_ = input.readInt64();
             break;
           }
-          case 66: {
-            com.google.protobuf.Int64Value.Builder subBuilder = null;
-            if (recipientId_ != null) {
-              subBuilder = recipientId_.toBuilder();
-            }
-            recipientId_ = input.readMessage(com.google.protobuf.Int64Value.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(recipientId_);
-              recipientId_ = subBuilder.buildPartial();
-            }
-
+          case 64: {
+            bitField0_ |= 0x00000080;
+            recipientId_ = input.readInt64();
             break;
           }
           default: {
@@ -195,86 +144,100 @@ private static final long serialVersionUID = 0L;
             im.turms.common.model.bo.user.UserFriendRequest.class, im.turms.common.model.bo.user.UserFriendRequest.Builder.class);
   }
 
+  private int bitField0_;
   public static final int ID_FIELD_NUMBER = 1;
-  private com.google.protobuf.Int64Value id_;
+  private long id_;
   /**
-   * <code>.google.protobuf.Int64Value id = 1;</code>
+   * <code>int64 id = 1;</code>
    * @return Whether the id field is set.
    */
   @java.lang.Override
   public boolean hasId() {
-    return id_ != null;
+    return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>.google.protobuf.Int64Value id = 1;</code>
+   * <code>int64 id = 1;</code>
    * @return The id.
    */
   @java.lang.Override
-  public com.google.protobuf.Int64Value getId() {
-    return id_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : id_;
-  }
-  /**
-   * <code>.google.protobuf.Int64Value id = 1;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.Int64ValueOrBuilder getIdOrBuilder() {
-    return getId();
+  public long getId() {
+    return id_;
   }
 
   public static final int CREATION_DATE_FIELD_NUMBER = 2;
-  private com.google.protobuf.Int64Value creationDate_;
+  private long creationDate_;
   /**
-   * <code>.google.protobuf.Int64Value creation_date = 2;</code>
+   * <code>int64 creation_date = 2;</code>
    * @return Whether the creationDate field is set.
    */
   @java.lang.Override
   public boolean hasCreationDate() {
-    return creationDate_ != null;
+    return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>.google.protobuf.Int64Value creation_date = 2;</code>
+   * <code>int64 creation_date = 2;</code>
    * @return The creationDate.
    */
   @java.lang.Override
-  public com.google.protobuf.Int64Value getCreationDate() {
-    return creationDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : creationDate_;
-  }
-  /**
-   * <code>.google.protobuf.Int64Value creation_date = 2;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.Int64ValueOrBuilder getCreationDateOrBuilder() {
-    return getCreationDate();
+  public long getCreationDate() {
+    return creationDate_;
   }
 
   public static final int CONTENT_FIELD_NUMBER = 3;
-  private com.google.protobuf.StringValue content_;
+  private volatile java.lang.Object content_;
   /**
-   * <code>.google.protobuf.StringValue content = 3;</code>
+   * <code>string content = 3;</code>
    * @return Whether the content field is set.
    */
   @java.lang.Override
   public boolean hasContent() {
-    return content_ != null;
+    return ((bitField0_ & 0x00000004) != 0);
   }
   /**
-   * <code>.google.protobuf.StringValue content = 3;</code>
+   * <code>string content = 3;</code>
    * @return The content.
    */
   @java.lang.Override
-  public com.google.protobuf.StringValue getContent() {
-    return content_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : content_;
+  public java.lang.String getContent() {
+    java.lang.Object ref = content_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs =
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      content_ = s;
+      return s;
+    }
   }
   /**
-   * <code>.google.protobuf.StringValue content = 3;</code>
+   * <code>string content = 3;</code>
+   * @return The bytes for content.
    */
   @java.lang.Override
-  public com.google.protobuf.StringValueOrBuilder getContentOrBuilder() {
-    return getContent();
+  public com.google.protobuf.ByteString
+      getContentBytes() {
+    java.lang.Object ref = content_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      content_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
   public static final int REQUEST_STATUS_FIELD_NUMBER = 4;
   private int requestStatus_;
+  /**
+   * <code>.im.turms.proto.RequestStatus request_status = 4;</code>
+   * @return Whether the requestStatus field is set.
+   */
+  @java.lang.Override public boolean hasRequestStatus() {
+    return ((bitField0_ & 0x00000008) != 0);
+  }
   /**
    * <code>.im.turms.proto.RequestStatus request_status = 4;</code>
    * @return The enum numeric value on the wire for requestStatus.
@@ -293,107 +256,106 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int REASON_FIELD_NUMBER = 5;
-  private com.google.protobuf.StringValue reason_;
+  private volatile java.lang.Object reason_;
   /**
-   * <code>.google.protobuf.StringValue reason = 5;</code>
+   * <code>string reason = 5;</code>
    * @return Whether the reason field is set.
    */
   @java.lang.Override
   public boolean hasReason() {
-    return reason_ != null;
+    return ((bitField0_ & 0x00000010) != 0);
   }
   /**
-   * <code>.google.protobuf.StringValue reason = 5;</code>
+   * <code>string reason = 5;</code>
    * @return The reason.
    */
   @java.lang.Override
-  public com.google.protobuf.StringValue getReason() {
-    return reason_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : reason_;
+  public java.lang.String getReason() {
+    java.lang.Object ref = reason_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs =
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      reason_ = s;
+      return s;
+    }
   }
   /**
-   * <code>.google.protobuf.StringValue reason = 5;</code>
+   * <code>string reason = 5;</code>
+   * @return The bytes for reason.
    */
   @java.lang.Override
-  public com.google.protobuf.StringValueOrBuilder getReasonOrBuilder() {
-    return getReason();
+  public com.google.protobuf.ByteString
+      getReasonBytes() {
+    java.lang.Object ref = reason_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      reason_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
   public static final int EXPIRATION_DATE_FIELD_NUMBER = 6;
-  private com.google.protobuf.Int64Value expirationDate_;
+  private long expirationDate_;
   /**
-   * <code>.google.protobuf.Int64Value expiration_date = 6;</code>
+   * <code>int64 expiration_date = 6;</code>
    * @return Whether the expirationDate field is set.
    */
   @java.lang.Override
   public boolean hasExpirationDate() {
-    return expirationDate_ != null;
+    return ((bitField0_ & 0x00000020) != 0);
   }
   /**
-   * <code>.google.protobuf.Int64Value expiration_date = 6;</code>
+   * <code>int64 expiration_date = 6;</code>
    * @return The expirationDate.
    */
   @java.lang.Override
-  public com.google.protobuf.Int64Value getExpirationDate() {
-    return expirationDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : expirationDate_;
-  }
-  /**
-   * <code>.google.protobuf.Int64Value expiration_date = 6;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.Int64ValueOrBuilder getExpirationDateOrBuilder() {
-    return getExpirationDate();
+  public long getExpirationDate() {
+    return expirationDate_;
   }
 
   public static final int REQUESTER_ID_FIELD_NUMBER = 7;
-  private com.google.protobuf.Int64Value requesterId_;
+  private long requesterId_;
   /**
-   * <code>.google.protobuf.Int64Value requester_id = 7;</code>
+   * <code>int64 requester_id = 7;</code>
    * @return Whether the requesterId field is set.
    */
   @java.lang.Override
   public boolean hasRequesterId() {
-    return requesterId_ != null;
+    return ((bitField0_ & 0x00000040) != 0);
   }
   /**
-   * <code>.google.protobuf.Int64Value requester_id = 7;</code>
+   * <code>int64 requester_id = 7;</code>
    * @return The requesterId.
    */
   @java.lang.Override
-  public com.google.protobuf.Int64Value getRequesterId() {
-    return requesterId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : requesterId_;
-  }
-  /**
-   * <code>.google.protobuf.Int64Value requester_id = 7;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.Int64ValueOrBuilder getRequesterIdOrBuilder() {
-    return getRequesterId();
+  public long getRequesterId() {
+    return requesterId_;
   }
 
   public static final int RECIPIENT_ID_FIELD_NUMBER = 8;
-  private com.google.protobuf.Int64Value recipientId_;
+  private long recipientId_;
   /**
-   * <code>.google.protobuf.Int64Value recipient_id = 8;</code>
+   * <code>int64 recipient_id = 8;</code>
    * @return Whether the recipientId field is set.
    */
   @java.lang.Override
   public boolean hasRecipientId() {
-    return recipientId_ != null;
+    return ((bitField0_ & 0x00000080) != 0);
   }
   /**
-   * <code>.google.protobuf.Int64Value recipient_id = 8;</code>
+   * <code>int64 recipient_id = 8;</code>
    * @return The recipientId.
    */
   @java.lang.Override
-  public com.google.protobuf.Int64Value getRecipientId() {
-    return recipientId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : recipientId_;
-  }
-  /**
-   * <code>.google.protobuf.Int64Value recipient_id = 8;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.Int64ValueOrBuilder getRecipientIdOrBuilder() {
-    return getRecipientId();
+  public long getRecipientId() {
+    return recipientId_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -410,29 +372,29 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (id_ != null) {
-      output.writeMessage(1, getId());
+    if (((bitField0_ & 0x00000001) != 0)) {
+      output.writeInt64(1, id_);
     }
-    if (creationDate_ != null) {
-      output.writeMessage(2, getCreationDate());
+    if (((bitField0_ & 0x00000002) != 0)) {
+      output.writeInt64(2, creationDate_);
     }
-    if (content_ != null) {
-      output.writeMessage(3, getContent());
+    if (((bitField0_ & 0x00000004) != 0)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, content_);
     }
-    if (requestStatus_ != im.turms.common.constant.RequestStatus.PENDING.getNumber()) {
+    if (((bitField0_ & 0x00000008) != 0)) {
       output.writeEnum(4, requestStatus_);
     }
-    if (reason_ != null) {
-      output.writeMessage(5, getReason());
+    if (((bitField0_ & 0x00000010) != 0)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 5, reason_);
     }
-    if (expirationDate_ != null) {
-      output.writeMessage(6, getExpirationDate());
+    if (((bitField0_ & 0x00000020) != 0)) {
+      output.writeInt64(6, expirationDate_);
     }
-    if (requesterId_ != null) {
-      output.writeMessage(7, getRequesterId());
+    if (((bitField0_ & 0x00000040) != 0)) {
+      output.writeInt64(7, requesterId_);
     }
-    if (recipientId_ != null) {
-      output.writeMessage(8, getRecipientId());
+    if (((bitField0_ & 0x00000080) != 0)) {
+      output.writeInt64(8, recipientId_);
     }
     unknownFields.writeTo(output);
   }
@@ -443,37 +405,35 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (id_ != null) {
+    if (((bitField0_ & 0x00000001) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(1, getId());
+        .computeInt64Size(1, id_);
     }
-    if (creationDate_ != null) {
+    if (((bitField0_ & 0x00000002) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(2, getCreationDate());
+        .computeInt64Size(2, creationDate_);
     }
-    if (content_ != null) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(3, getContent());
+    if (((bitField0_ & 0x00000004) != 0)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, content_);
     }
-    if (requestStatus_ != im.turms.common.constant.RequestStatus.PENDING.getNumber()) {
+    if (((bitField0_ & 0x00000008) != 0)) {
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(4, requestStatus_);
     }
-    if (reason_ != null) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(5, getReason());
+    if (((bitField0_ & 0x00000010) != 0)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, reason_);
     }
-    if (expirationDate_ != null) {
+    if (((bitField0_ & 0x00000020) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(6, getExpirationDate());
+        .computeInt64Size(6, expirationDate_);
     }
-    if (requesterId_ != null) {
+    if (((bitField0_ & 0x00000040) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(7, getRequesterId());
+        .computeInt64Size(7, requesterId_);
     }
-    if (recipientId_ != null) {
+    if (((bitField0_ & 0x00000080) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(8, getRecipientId());
+        .computeInt64Size(8, recipientId_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -492,20 +452,23 @@ private static final long serialVersionUID = 0L;
 
     if (hasId() != other.hasId()) return false;
     if (hasId()) {
-      if (!getId()
-          .equals(other.getId())) return false;
+      if (getId()
+          != other.getId()) return false;
     }
     if (hasCreationDate() != other.hasCreationDate()) return false;
     if (hasCreationDate()) {
-      if (!getCreationDate()
-          .equals(other.getCreationDate())) return false;
+      if (getCreationDate()
+          != other.getCreationDate()) return false;
     }
     if (hasContent() != other.hasContent()) return false;
     if (hasContent()) {
       if (!getContent()
           .equals(other.getContent())) return false;
     }
-    if (requestStatus_ != other.requestStatus_) return false;
+    if (hasRequestStatus() != other.hasRequestStatus()) return false;
+    if (hasRequestStatus()) {
+      if (requestStatus_ != other.requestStatus_) return false;
+    }
     if (hasReason() != other.hasReason()) return false;
     if (hasReason()) {
       if (!getReason()
@@ -513,18 +476,18 @@ private static final long serialVersionUID = 0L;
     }
     if (hasExpirationDate() != other.hasExpirationDate()) return false;
     if (hasExpirationDate()) {
-      if (!getExpirationDate()
-          .equals(other.getExpirationDate())) return false;
+      if (getExpirationDate()
+          != other.getExpirationDate()) return false;
     }
     if (hasRequesterId() != other.hasRequesterId()) return false;
     if (hasRequesterId()) {
-      if (!getRequesterId()
-          .equals(other.getRequesterId())) return false;
+      if (getRequesterId()
+          != other.getRequesterId()) return false;
     }
     if (hasRecipientId() != other.hasRecipientId()) return false;
     if (hasRecipientId()) {
-      if (!getRecipientId()
-          .equals(other.getRecipientId())) return false;
+      if (getRecipientId()
+          != other.getRecipientId()) return false;
     }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
@@ -539,33 +502,40 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     if (hasId()) {
       hash = (37 * hash) + ID_FIELD_NUMBER;
-      hash = (53 * hash) + getId().hashCode();
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getId());
     }
     if (hasCreationDate()) {
       hash = (37 * hash) + CREATION_DATE_FIELD_NUMBER;
-      hash = (53 * hash) + getCreationDate().hashCode();
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getCreationDate());
     }
     if (hasContent()) {
       hash = (37 * hash) + CONTENT_FIELD_NUMBER;
       hash = (53 * hash) + getContent().hashCode();
     }
-    hash = (37 * hash) + REQUEST_STATUS_FIELD_NUMBER;
-    hash = (53 * hash) + requestStatus_;
+    if (hasRequestStatus()) {
+      hash = (37 * hash) + REQUEST_STATUS_FIELD_NUMBER;
+      hash = (53 * hash) + requestStatus_;
+    }
     if (hasReason()) {
       hash = (37 * hash) + REASON_FIELD_NUMBER;
       hash = (53 * hash) + getReason().hashCode();
     }
     if (hasExpirationDate()) {
       hash = (37 * hash) + EXPIRATION_DATE_FIELD_NUMBER;
-      hash = (53 * hash) + getExpirationDate().hashCode();
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getExpirationDate());
     }
     if (hasRequesterId()) {
       hash = (37 * hash) + REQUESTER_ID_FIELD_NUMBER;
-      hash = (53 * hash) + getRequesterId().hashCode();
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getRequesterId());
     }
     if (hasRecipientId()) {
       hash = (37 * hash) + RECIPIENT_ID_FIELD_NUMBER;
-      hash = (53 * hash) + getRecipientId().hashCode();
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getRecipientId());
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -700,50 +670,22 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      if (idBuilder_ == null) {
-        id_ = null;
-      } else {
-        id_ = null;
-        idBuilder_ = null;
-      }
-      if (creationDateBuilder_ == null) {
-        creationDate_ = null;
-      } else {
-        creationDate_ = null;
-        creationDateBuilder_ = null;
-      }
-      if (contentBuilder_ == null) {
-        content_ = null;
-      } else {
-        content_ = null;
-        contentBuilder_ = null;
-      }
+      id_ = 0L;
+      bitField0_ = (bitField0_ & ~0x00000001);
+      creationDate_ = 0L;
+      bitField0_ = (bitField0_ & ~0x00000002);
+      content_ = "";
+      bitField0_ = (bitField0_ & ~0x00000004);
       requestStatus_ = 0;
-
-      if (reasonBuilder_ == null) {
-        reason_ = null;
-      } else {
-        reason_ = null;
-        reasonBuilder_ = null;
-      }
-      if (expirationDateBuilder_ == null) {
-        expirationDate_ = null;
-      } else {
-        expirationDate_ = null;
-        expirationDateBuilder_ = null;
-      }
-      if (requesterIdBuilder_ == null) {
-        requesterId_ = null;
-      } else {
-        requesterId_ = null;
-        requesterIdBuilder_ = null;
-      }
-      if (recipientIdBuilder_ == null) {
-        recipientId_ = null;
-      } else {
-        recipientId_ = null;
-        recipientIdBuilder_ = null;
-      }
+      bitField0_ = (bitField0_ & ~0x00000008);
+      reason_ = "";
+      bitField0_ = (bitField0_ & ~0x00000010);
+      expirationDate_ = 0L;
+      bitField0_ = (bitField0_ & ~0x00000020);
+      requesterId_ = 0L;
+      bitField0_ = (bitField0_ & ~0x00000040);
+      recipientId_ = 0L;
+      bitField0_ = (bitField0_ & ~0x00000080);
       return this;
     }
 
@@ -770,42 +712,41 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public im.turms.common.model.bo.user.UserFriendRequest buildPartial() {
       im.turms.common.model.bo.user.UserFriendRequest result = new im.turms.common.model.bo.user.UserFriendRequest(this);
-      if (idBuilder_ == null) {
+      int from_bitField0_ = bitField0_;
+      int to_bitField0_ = 0;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
         result.id_ = id_;
-      } else {
-        result.id_ = idBuilder_.build();
+        to_bitField0_ |= 0x00000001;
       }
-      if (creationDateBuilder_ == null) {
+      if (((from_bitField0_ & 0x00000002) != 0)) {
         result.creationDate_ = creationDate_;
-      } else {
-        result.creationDate_ = creationDateBuilder_.build();
+        to_bitField0_ |= 0x00000002;
       }
-      if (contentBuilder_ == null) {
-        result.content_ = content_;
-      } else {
-        result.content_ = contentBuilder_.build();
+      if (((from_bitField0_ & 0x00000004) != 0)) {
+        to_bitField0_ |= 0x00000004;
+      }
+      result.content_ = content_;
+      if (((from_bitField0_ & 0x00000008) != 0)) {
+        to_bitField0_ |= 0x00000008;
       }
       result.requestStatus_ = requestStatus_;
-      if (reasonBuilder_ == null) {
-        result.reason_ = reason_;
-      } else {
-        result.reason_ = reasonBuilder_.build();
+      if (((from_bitField0_ & 0x00000010) != 0)) {
+        to_bitField0_ |= 0x00000010;
       }
-      if (expirationDateBuilder_ == null) {
+      result.reason_ = reason_;
+      if (((from_bitField0_ & 0x00000020) != 0)) {
         result.expirationDate_ = expirationDate_;
-      } else {
-        result.expirationDate_ = expirationDateBuilder_.build();
+        to_bitField0_ |= 0x00000020;
       }
-      if (requesterIdBuilder_ == null) {
+      if (((from_bitField0_ & 0x00000040) != 0)) {
         result.requesterId_ = requesterId_;
-      } else {
-        result.requesterId_ = requesterIdBuilder_.build();
+        to_bitField0_ |= 0x00000040;
       }
-      if (recipientIdBuilder_ == null) {
+      if (((from_bitField0_ & 0x00000080) != 0)) {
         result.recipientId_ = recipientId_;
-      } else {
-        result.recipientId_ = recipientIdBuilder_.build();
+        to_bitField0_ |= 0x00000080;
       }
+      result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
     }
@@ -855,28 +796,32 @@ private static final long serialVersionUID = 0L;
     public Builder mergeFrom(im.turms.common.model.bo.user.UserFriendRequest other) {
       if (other == im.turms.common.model.bo.user.UserFriendRequest.getDefaultInstance()) return this;
       if (other.hasId()) {
-        mergeId(other.getId());
+        setId(other.getId());
       }
       if (other.hasCreationDate()) {
-        mergeCreationDate(other.getCreationDate());
+        setCreationDate(other.getCreationDate());
       }
       if (other.hasContent()) {
-        mergeContent(other.getContent());
+        bitField0_ |= 0x00000004;
+        content_ = other.content_;
+        onChanged();
       }
-      if (other.requestStatus_ != 0) {
-        setRequestStatusValue(other.getRequestStatusValue());
+      if (other.hasRequestStatus()) {
+        setRequestStatus(other.getRequestStatus());
       }
       if (other.hasReason()) {
-        mergeReason(other.getReason());
+        bitField0_ |= 0x00000010;
+        reason_ = other.reason_;
+        onChanged();
       }
       if (other.hasExpirationDate()) {
-        mergeExpirationDate(other.getExpirationDate());
+        setExpirationDate(other.getExpirationDate());
       }
       if (other.hasRequesterId()) {
-        mergeRequesterId(other.getRequesterId());
+        setRequesterId(other.getRequesterId());
       }
       if (other.hasRecipientId()) {
-        mergeRecipientId(other.getRecipientId());
+        setRecipientId(other.getRecipientId());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -906,365 +851,177 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+    private int bitField0_;
 
-    private com.google.protobuf.Int64Value id_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> idBuilder_;
+    private long id_ ;
     /**
-     * <code>.google.protobuf.Int64Value id = 1;</code>
+     * <code>int64 id = 1;</code>
      * @return Whether the id field is set.
      */
+    @java.lang.Override
     public boolean hasId() {
-      return idBuilder_ != null || id_ != null;
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>.google.protobuf.Int64Value id = 1;</code>
+     * <code>int64 id = 1;</code>
      * @return The id.
      */
-    public com.google.protobuf.Int64Value getId() {
-      if (idBuilder_ == null) {
-        return id_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : id_;
-      } else {
-        return idBuilder_.getMessage();
-      }
+    @java.lang.Override
+    public long getId() {
+      return id_;
     }
     /**
-     * <code>.google.protobuf.Int64Value id = 1;</code>
+     * <code>int64 id = 1;</code>
+     * @param value The id to set.
+     * @return This builder for chaining.
      */
-    public Builder setId(com.google.protobuf.Int64Value value) {
-      if (idBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        id_ = value;
-        onChanged();
-      } else {
-        idBuilder_.setMessage(value);
-      }
-
+    public Builder setId(long value) {
+      bitField0_ |= 0x00000001;
+      id_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value id = 1;</code>
-     */
-    public Builder setId(
-        com.google.protobuf.Int64Value.Builder builderForValue) {
-      if (idBuilder_ == null) {
-        id_ = builderForValue.build();
-        onChanged();
-      } else {
-        idBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value id = 1;</code>
-     */
-    public Builder mergeId(com.google.protobuf.Int64Value value) {
-      if (idBuilder_ == null) {
-        if (id_ != null) {
-          id_ =
-            com.google.protobuf.Int64Value.newBuilder(id_).mergeFrom(value).buildPartial();
-        } else {
-          id_ = value;
-        }
-        onChanged();
-      } else {
-        idBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value id = 1;</code>
+     * <code>int64 id = 1;</code>
+     * @return This builder for chaining.
      */
     public Builder clearId() {
-      if (idBuilder_ == null) {
-        id_ = null;
-        onChanged();
-      } else {
-        id_ = null;
-        idBuilder_ = null;
-      }
-
+      bitField0_ = (bitField0_ & ~0x00000001);
+      id_ = 0L;
+      onChanged();
       return this;
     }
-    /**
-     * <code>.google.protobuf.Int64Value id = 1;</code>
-     */
-    public com.google.protobuf.Int64Value.Builder getIdBuilder() {
 
-      onChanged();
-      return getIdFieldBuilder().getBuilder();
-    }
+    private long creationDate_ ;
     /**
-     * <code>.google.protobuf.Int64Value id = 1;</code>
-     */
-    public com.google.protobuf.Int64ValueOrBuilder getIdOrBuilder() {
-      if (idBuilder_ != null) {
-        return idBuilder_.getMessageOrBuilder();
-      } else {
-        return id_ == null ?
-            com.google.protobuf.Int64Value.getDefaultInstance() : id_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.Int64Value id = 1;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
-        getIdFieldBuilder() {
-      if (idBuilder_ == null) {
-        idBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>(
-                getId(),
-                getParentForChildren(),
-                isClean());
-        id_ = null;
-      }
-      return idBuilder_;
-    }
-
-    private com.google.protobuf.Int64Value creationDate_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> creationDateBuilder_;
-    /**
-     * <code>.google.protobuf.Int64Value creation_date = 2;</code>
+     * <code>int64 creation_date = 2;</code>
      * @return Whether the creationDate field is set.
      */
+    @java.lang.Override
     public boolean hasCreationDate() {
-      return creationDateBuilder_ != null || creationDate_ != null;
+      return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>.google.protobuf.Int64Value creation_date = 2;</code>
+     * <code>int64 creation_date = 2;</code>
      * @return The creationDate.
      */
-    public com.google.protobuf.Int64Value getCreationDate() {
-      if (creationDateBuilder_ == null) {
-        return creationDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : creationDate_;
-      } else {
-        return creationDateBuilder_.getMessage();
-      }
+    @java.lang.Override
+    public long getCreationDate() {
+      return creationDate_;
     }
     /**
-     * <code>.google.protobuf.Int64Value creation_date = 2;</code>
+     * <code>int64 creation_date = 2;</code>
+     * @param value The creationDate to set.
+     * @return This builder for chaining.
      */
-    public Builder setCreationDate(com.google.protobuf.Int64Value value) {
-      if (creationDateBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        creationDate_ = value;
-        onChanged();
-      } else {
-        creationDateBuilder_.setMessage(value);
-      }
-
+    public Builder setCreationDate(long value) {
+      bitField0_ |= 0x00000002;
+      creationDate_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value creation_date = 2;</code>
-     */
-    public Builder setCreationDate(
-        com.google.protobuf.Int64Value.Builder builderForValue) {
-      if (creationDateBuilder_ == null) {
-        creationDate_ = builderForValue.build();
-        onChanged();
-      } else {
-        creationDateBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value creation_date = 2;</code>
-     */
-    public Builder mergeCreationDate(com.google.protobuf.Int64Value value) {
-      if (creationDateBuilder_ == null) {
-        if (creationDate_ != null) {
-          creationDate_ =
-            com.google.protobuf.Int64Value.newBuilder(creationDate_).mergeFrom(value).buildPartial();
-        } else {
-          creationDate_ = value;
-        }
-        onChanged();
-      } else {
-        creationDateBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value creation_date = 2;</code>
+     * <code>int64 creation_date = 2;</code>
+     * @return This builder for chaining.
      */
     public Builder clearCreationDate() {
-      if (creationDateBuilder_ == null) {
-        creationDate_ = null;
-        onChanged();
-      } else {
-        creationDate_ = null;
-        creationDateBuilder_ = null;
-      }
-
+      bitField0_ = (bitField0_ & ~0x00000002);
+      creationDate_ = 0L;
+      onChanged();
       return this;
     }
-    /**
-     * <code>.google.protobuf.Int64Value creation_date = 2;</code>
-     */
-    public com.google.protobuf.Int64Value.Builder getCreationDateBuilder() {
 
-      onChanged();
-      return getCreationDateFieldBuilder().getBuilder();
-    }
+    private java.lang.Object content_ = "";
     /**
-     * <code>.google.protobuf.Int64Value creation_date = 2;</code>
-     */
-    public com.google.protobuf.Int64ValueOrBuilder getCreationDateOrBuilder() {
-      if (creationDateBuilder_ != null) {
-        return creationDateBuilder_.getMessageOrBuilder();
-      } else {
-        return creationDate_ == null ?
-            com.google.protobuf.Int64Value.getDefaultInstance() : creationDate_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.Int64Value creation_date = 2;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
-        getCreationDateFieldBuilder() {
-      if (creationDateBuilder_ == null) {
-        creationDateBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>(
-                getCreationDate(),
-                getParentForChildren(),
-                isClean());
-        creationDate_ = null;
-      }
-      return creationDateBuilder_;
-    }
-
-    private com.google.protobuf.StringValue content_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> contentBuilder_;
-    /**
-     * <code>.google.protobuf.StringValue content = 3;</code>
+     * <code>string content = 3;</code>
      * @return Whether the content field is set.
      */
     public boolean hasContent() {
-      return contentBuilder_ != null || content_ != null;
+      return ((bitField0_ & 0x00000004) != 0);
     }
     /**
-     * <code>.google.protobuf.StringValue content = 3;</code>
+     * <code>string content = 3;</code>
      * @return The content.
      */
-    public com.google.protobuf.StringValue getContent() {
-      if (contentBuilder_ == null) {
-        return content_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : content_;
+    public java.lang.String getContent() {
+      java.lang.Object ref = content_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        content_ = s;
+        return s;
       } else {
-        return contentBuilder_.getMessage();
+        return (java.lang.String) ref;
       }
     }
     /**
-     * <code>.google.protobuf.StringValue content = 3;</code>
+     * <code>string content = 3;</code>
+     * @return The bytes for content.
      */
-    public Builder setContent(com.google.protobuf.StringValue value) {
-      if (contentBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        content_ = value;
-        onChanged();
+    public com.google.protobuf.ByteString
+        getContentBytes() {
+      java.lang.Object ref = content_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        content_ = b;
+        return b;
       } else {
-        contentBuilder_.setMessage(value);
+        return (com.google.protobuf.ByteString) ref;
       }
-
-      return this;
     }
     /**
-     * <code>.google.protobuf.StringValue content = 3;</code>
+     * <code>string content = 3;</code>
+     * @param value The content to set.
+     * @return This builder for chaining.
      */
     public Builder setContent(
-        com.google.protobuf.StringValue.Builder builderForValue) {
-      if (contentBuilder_ == null) {
-        content_ = builderForValue.build();
-        onChanged();
-      } else {
-        contentBuilder_.setMessage(builderForValue.build());
-      }
-
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+      content_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.StringValue content = 3;</code>
-     */
-    public Builder mergeContent(com.google.protobuf.StringValue value) {
-      if (contentBuilder_ == null) {
-        if (content_ != null) {
-          content_ =
-            com.google.protobuf.StringValue.newBuilder(content_).mergeFrom(value).buildPartial();
-        } else {
-          content_ = value;
-        }
-        onChanged();
-      } else {
-        contentBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.StringValue content = 3;</code>
+     * <code>string content = 3;</code>
+     * @return This builder for chaining.
      */
     public Builder clearContent() {
-      if (contentBuilder_ == null) {
-        content_ = null;
-        onChanged();
-      } else {
-        content_ = null;
-        contentBuilder_ = null;
-      }
-
+      bitField0_ = (bitField0_ & ~0x00000004);
+      content_ = getDefaultInstance().getContent();
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.StringValue content = 3;</code>
+     * <code>string content = 3;</code>
+     * @param value The bytes for content to set.
+     * @return This builder for chaining.
      */
-    public com.google.protobuf.StringValue.Builder getContentBuilder() {
-
+    public Builder setContentBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      bitField0_ |= 0x00000004;
+      content_ = value;
       onChanged();
-      return getContentFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.StringValue content = 3;</code>
-     */
-    public com.google.protobuf.StringValueOrBuilder getContentOrBuilder() {
-      if (contentBuilder_ != null) {
-        return contentBuilder_.getMessageOrBuilder();
-      } else {
-        return content_ == null ?
-            com.google.protobuf.StringValue.getDefaultInstance() : content_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.StringValue content = 3;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>
-        getContentFieldBuilder() {
-      if (contentBuilder_ == null) {
-        contentBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>(
-                getContent(),
-                getParentForChildren(),
-                isClean());
-        content_ = null;
-      }
-      return contentBuilder_;
+      return this;
     }
 
     private int requestStatus_ = 0;
+    /**
+     * <code>.im.turms.proto.RequestStatus request_status = 4;</code>
+     * @return Whether the requestStatus field is set.
+     */
+    @java.lang.Override public boolean hasRequestStatus() {
+      return ((bitField0_ & 0x00000008) != 0);
+    }
     /**
      * <code>.im.turms.proto.RequestStatus request_status = 4;</code>
      * @return The enum numeric value on the wire for requestStatus.
@@ -1278,7 +1035,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setRequestStatusValue(int value) {
-
+      bitField0_ |= 0x00000008;
       requestStatus_ = value;
       onChanged();
       return this;
@@ -1302,7 +1059,7 @@ private static final long serialVersionUID = 0L;
       if (value == null) {
         throw new NullPointerException();
       }
-
+      bitField0_ |= 0x00000008;
       requestStatus_ = value.getNumber();
       onChanged();
       return this;
@@ -1312,486 +1069,210 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearRequestStatus() {
-
+      bitField0_ = (bitField0_ & ~0x00000008);
       requestStatus_ = 0;
       onChanged();
       return this;
     }
 
-    private com.google.protobuf.StringValue reason_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> reasonBuilder_;
+    private java.lang.Object reason_ = "";
     /**
-     * <code>.google.protobuf.StringValue reason = 5;</code>
+     * <code>string reason = 5;</code>
      * @return Whether the reason field is set.
      */
     public boolean hasReason() {
-      return reasonBuilder_ != null || reason_ != null;
+      return ((bitField0_ & 0x00000010) != 0);
     }
     /**
-     * <code>.google.protobuf.StringValue reason = 5;</code>
+     * <code>string reason = 5;</code>
      * @return The reason.
      */
-    public com.google.protobuf.StringValue getReason() {
-      if (reasonBuilder_ == null) {
-        return reason_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : reason_;
+    public java.lang.String getReason() {
+      java.lang.Object ref = reason_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        reason_ = s;
+        return s;
       } else {
-        return reasonBuilder_.getMessage();
+        return (java.lang.String) ref;
       }
     }
     /**
-     * <code>.google.protobuf.StringValue reason = 5;</code>
+     * <code>string reason = 5;</code>
+     * @return The bytes for reason.
      */
-    public Builder setReason(com.google.protobuf.StringValue value) {
-      if (reasonBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        reason_ = value;
-        onChanged();
+    public com.google.protobuf.ByteString
+        getReasonBytes() {
+      java.lang.Object ref = reason_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        reason_ = b;
+        return b;
       } else {
-        reasonBuilder_.setMessage(value);
+        return (com.google.protobuf.ByteString) ref;
       }
-
-      return this;
     }
     /**
-     * <code>.google.protobuf.StringValue reason = 5;</code>
+     * <code>string reason = 5;</code>
+     * @param value The reason to set.
+     * @return This builder for chaining.
      */
     public Builder setReason(
-        com.google.protobuf.StringValue.Builder builderForValue) {
-      if (reasonBuilder_ == null) {
-        reason_ = builderForValue.build();
-        onChanged();
-      } else {
-        reasonBuilder_.setMessage(builderForValue.build());
-      }
-
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+      reason_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.StringValue reason = 5;</code>
-     */
-    public Builder mergeReason(com.google.protobuf.StringValue value) {
-      if (reasonBuilder_ == null) {
-        if (reason_ != null) {
-          reason_ =
-            com.google.protobuf.StringValue.newBuilder(reason_).mergeFrom(value).buildPartial();
-        } else {
-          reason_ = value;
-        }
-        onChanged();
-      } else {
-        reasonBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.StringValue reason = 5;</code>
+     * <code>string reason = 5;</code>
+     * @return This builder for chaining.
      */
     public Builder clearReason() {
-      if (reasonBuilder_ == null) {
-        reason_ = null;
-        onChanged();
-      } else {
-        reason_ = null;
-        reasonBuilder_ = null;
-      }
-
+      bitField0_ = (bitField0_ & ~0x00000010);
+      reason_ = getDefaultInstance().getReason();
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.StringValue reason = 5;</code>
+     * <code>string reason = 5;</code>
+     * @param value The bytes for reason to set.
+     * @return This builder for chaining.
      */
-    public com.google.protobuf.StringValue.Builder getReasonBuilder() {
-
+    public Builder setReasonBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      bitField0_ |= 0x00000010;
+      reason_ = value;
       onChanged();
-      return getReasonFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.StringValue reason = 5;</code>
-     */
-    public com.google.protobuf.StringValueOrBuilder getReasonOrBuilder() {
-      if (reasonBuilder_ != null) {
-        return reasonBuilder_.getMessageOrBuilder();
-      } else {
-        return reason_ == null ?
-            com.google.protobuf.StringValue.getDefaultInstance() : reason_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.StringValue reason = 5;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>
-        getReasonFieldBuilder() {
-      if (reasonBuilder_ == null) {
-        reasonBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>(
-                getReason(),
-                getParentForChildren(),
-                isClean());
-        reason_ = null;
-      }
-      return reasonBuilder_;
+      return this;
     }
 
-    private com.google.protobuf.Int64Value expirationDate_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> expirationDateBuilder_;
+    private long expirationDate_ ;
     /**
-     * <code>.google.protobuf.Int64Value expiration_date = 6;</code>
+     * <code>int64 expiration_date = 6;</code>
      * @return Whether the expirationDate field is set.
      */
+    @java.lang.Override
     public boolean hasExpirationDate() {
-      return expirationDateBuilder_ != null || expirationDate_ != null;
+      return ((bitField0_ & 0x00000020) != 0);
     }
     /**
-     * <code>.google.protobuf.Int64Value expiration_date = 6;</code>
+     * <code>int64 expiration_date = 6;</code>
      * @return The expirationDate.
      */
-    public com.google.protobuf.Int64Value getExpirationDate() {
-      if (expirationDateBuilder_ == null) {
-        return expirationDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : expirationDate_;
-      } else {
-        return expirationDateBuilder_.getMessage();
-      }
+    @java.lang.Override
+    public long getExpirationDate() {
+      return expirationDate_;
     }
     /**
-     * <code>.google.protobuf.Int64Value expiration_date = 6;</code>
+     * <code>int64 expiration_date = 6;</code>
+     * @param value The expirationDate to set.
+     * @return This builder for chaining.
      */
-    public Builder setExpirationDate(com.google.protobuf.Int64Value value) {
-      if (expirationDateBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        expirationDate_ = value;
-        onChanged();
-      } else {
-        expirationDateBuilder_.setMessage(value);
-      }
-
+    public Builder setExpirationDate(long value) {
+      bitField0_ |= 0x00000020;
+      expirationDate_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value expiration_date = 6;</code>
-     */
-    public Builder setExpirationDate(
-        com.google.protobuf.Int64Value.Builder builderForValue) {
-      if (expirationDateBuilder_ == null) {
-        expirationDate_ = builderForValue.build();
-        onChanged();
-      } else {
-        expirationDateBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value expiration_date = 6;</code>
-     */
-    public Builder mergeExpirationDate(com.google.protobuf.Int64Value value) {
-      if (expirationDateBuilder_ == null) {
-        if (expirationDate_ != null) {
-          expirationDate_ =
-            com.google.protobuf.Int64Value.newBuilder(expirationDate_).mergeFrom(value).buildPartial();
-        } else {
-          expirationDate_ = value;
-        }
-        onChanged();
-      } else {
-        expirationDateBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value expiration_date = 6;</code>
+     * <code>int64 expiration_date = 6;</code>
+     * @return This builder for chaining.
      */
     public Builder clearExpirationDate() {
-      if (expirationDateBuilder_ == null) {
-        expirationDate_ = null;
-        onChanged();
-      } else {
-        expirationDate_ = null;
-        expirationDateBuilder_ = null;
-      }
-
+      bitField0_ = (bitField0_ & ~0x00000020);
+      expirationDate_ = 0L;
+      onChanged();
       return this;
     }
-    /**
-     * <code>.google.protobuf.Int64Value expiration_date = 6;</code>
-     */
-    public com.google.protobuf.Int64Value.Builder getExpirationDateBuilder() {
 
-      onChanged();
-      return getExpirationDateFieldBuilder().getBuilder();
-    }
+    private long requesterId_ ;
     /**
-     * <code>.google.protobuf.Int64Value expiration_date = 6;</code>
-     */
-    public com.google.protobuf.Int64ValueOrBuilder getExpirationDateOrBuilder() {
-      if (expirationDateBuilder_ != null) {
-        return expirationDateBuilder_.getMessageOrBuilder();
-      } else {
-        return expirationDate_ == null ?
-            com.google.protobuf.Int64Value.getDefaultInstance() : expirationDate_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.Int64Value expiration_date = 6;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
-        getExpirationDateFieldBuilder() {
-      if (expirationDateBuilder_ == null) {
-        expirationDateBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>(
-                getExpirationDate(),
-                getParentForChildren(),
-                isClean());
-        expirationDate_ = null;
-      }
-      return expirationDateBuilder_;
-    }
-
-    private com.google.protobuf.Int64Value requesterId_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> requesterIdBuilder_;
-    /**
-     * <code>.google.protobuf.Int64Value requester_id = 7;</code>
+     * <code>int64 requester_id = 7;</code>
      * @return Whether the requesterId field is set.
      */
+    @java.lang.Override
     public boolean hasRequesterId() {
-      return requesterIdBuilder_ != null || requesterId_ != null;
+      return ((bitField0_ & 0x00000040) != 0);
     }
     /**
-     * <code>.google.protobuf.Int64Value requester_id = 7;</code>
+     * <code>int64 requester_id = 7;</code>
      * @return The requesterId.
      */
-    public com.google.protobuf.Int64Value getRequesterId() {
-      if (requesterIdBuilder_ == null) {
-        return requesterId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : requesterId_;
-      } else {
-        return requesterIdBuilder_.getMessage();
-      }
+    @java.lang.Override
+    public long getRequesterId() {
+      return requesterId_;
     }
     /**
-     * <code>.google.protobuf.Int64Value requester_id = 7;</code>
+     * <code>int64 requester_id = 7;</code>
+     * @param value The requesterId to set.
+     * @return This builder for chaining.
      */
-    public Builder setRequesterId(com.google.protobuf.Int64Value value) {
-      if (requesterIdBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        requesterId_ = value;
-        onChanged();
-      } else {
-        requesterIdBuilder_.setMessage(value);
-      }
-
+    public Builder setRequesterId(long value) {
+      bitField0_ |= 0x00000040;
+      requesterId_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value requester_id = 7;</code>
-     */
-    public Builder setRequesterId(
-        com.google.protobuf.Int64Value.Builder builderForValue) {
-      if (requesterIdBuilder_ == null) {
-        requesterId_ = builderForValue.build();
-        onChanged();
-      } else {
-        requesterIdBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value requester_id = 7;</code>
-     */
-    public Builder mergeRequesterId(com.google.protobuf.Int64Value value) {
-      if (requesterIdBuilder_ == null) {
-        if (requesterId_ != null) {
-          requesterId_ =
-            com.google.protobuf.Int64Value.newBuilder(requesterId_).mergeFrom(value).buildPartial();
-        } else {
-          requesterId_ = value;
-        }
-        onChanged();
-      } else {
-        requesterIdBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value requester_id = 7;</code>
+     * <code>int64 requester_id = 7;</code>
+     * @return This builder for chaining.
      */
     public Builder clearRequesterId() {
-      if (requesterIdBuilder_ == null) {
-        requesterId_ = null;
-        onChanged();
-      } else {
-        requesterId_ = null;
-        requesterIdBuilder_ = null;
-      }
-
+      bitField0_ = (bitField0_ & ~0x00000040);
+      requesterId_ = 0L;
+      onChanged();
       return this;
     }
-    /**
-     * <code>.google.protobuf.Int64Value requester_id = 7;</code>
-     */
-    public com.google.protobuf.Int64Value.Builder getRequesterIdBuilder() {
 
-      onChanged();
-      return getRequesterIdFieldBuilder().getBuilder();
-    }
+    private long recipientId_ ;
     /**
-     * <code>.google.protobuf.Int64Value requester_id = 7;</code>
-     */
-    public com.google.protobuf.Int64ValueOrBuilder getRequesterIdOrBuilder() {
-      if (requesterIdBuilder_ != null) {
-        return requesterIdBuilder_.getMessageOrBuilder();
-      } else {
-        return requesterId_ == null ?
-            com.google.protobuf.Int64Value.getDefaultInstance() : requesterId_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.Int64Value requester_id = 7;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
-        getRequesterIdFieldBuilder() {
-      if (requesterIdBuilder_ == null) {
-        requesterIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>(
-                getRequesterId(),
-                getParentForChildren(),
-                isClean());
-        requesterId_ = null;
-      }
-      return requesterIdBuilder_;
-    }
-
-    private com.google.protobuf.Int64Value recipientId_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> recipientIdBuilder_;
-    /**
-     * <code>.google.protobuf.Int64Value recipient_id = 8;</code>
+     * <code>int64 recipient_id = 8;</code>
      * @return Whether the recipientId field is set.
      */
+    @java.lang.Override
     public boolean hasRecipientId() {
-      return recipientIdBuilder_ != null || recipientId_ != null;
+      return ((bitField0_ & 0x00000080) != 0);
     }
     /**
-     * <code>.google.protobuf.Int64Value recipient_id = 8;</code>
+     * <code>int64 recipient_id = 8;</code>
      * @return The recipientId.
      */
-    public com.google.protobuf.Int64Value getRecipientId() {
-      if (recipientIdBuilder_ == null) {
-        return recipientId_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : recipientId_;
-      } else {
-        return recipientIdBuilder_.getMessage();
-      }
+    @java.lang.Override
+    public long getRecipientId() {
+      return recipientId_;
     }
     /**
-     * <code>.google.protobuf.Int64Value recipient_id = 8;</code>
+     * <code>int64 recipient_id = 8;</code>
+     * @param value The recipientId to set.
+     * @return This builder for chaining.
      */
-    public Builder setRecipientId(com.google.protobuf.Int64Value value) {
-      if (recipientIdBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        recipientId_ = value;
-        onChanged();
-      } else {
-        recipientIdBuilder_.setMessage(value);
-      }
-
+    public Builder setRecipientId(long value) {
+      bitField0_ |= 0x00000080;
+      recipientId_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value recipient_id = 8;</code>
-     */
-    public Builder setRecipientId(
-        com.google.protobuf.Int64Value.Builder builderForValue) {
-      if (recipientIdBuilder_ == null) {
-        recipientId_ = builderForValue.build();
-        onChanged();
-      } else {
-        recipientIdBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value recipient_id = 8;</code>
-     */
-    public Builder mergeRecipientId(com.google.protobuf.Int64Value value) {
-      if (recipientIdBuilder_ == null) {
-        if (recipientId_ != null) {
-          recipientId_ =
-            com.google.protobuf.Int64Value.newBuilder(recipientId_).mergeFrom(value).buildPartial();
-        } else {
-          recipientId_ = value;
-        }
-        onChanged();
-      } else {
-        recipientIdBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value recipient_id = 8;</code>
+     * <code>int64 recipient_id = 8;</code>
+     * @return This builder for chaining.
      */
     public Builder clearRecipientId() {
-      if (recipientIdBuilder_ == null) {
-        recipientId_ = null;
-        onChanged();
-      } else {
-        recipientId_ = null;
-        recipientIdBuilder_ = null;
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value recipient_id = 8;</code>
-     */
-    public com.google.protobuf.Int64Value.Builder getRecipientIdBuilder() {
-
+      bitField0_ = (bitField0_ & ~0x00000080);
+      recipientId_ = 0L;
       onChanged();
-      return getRecipientIdFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.Int64Value recipient_id = 8;</code>
-     */
-    public com.google.protobuf.Int64ValueOrBuilder getRecipientIdOrBuilder() {
-      if (recipientIdBuilder_ != null) {
-        return recipientIdBuilder_.getMessageOrBuilder();
-      } else {
-        return recipientId_ == null ?
-            com.google.protobuf.Int64Value.getDefaultInstance() : recipientId_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.Int64Value recipient_id = 8;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
-        getRecipientIdFieldBuilder() {
-      if (recipientIdBuilder_ == null) {
-        recipientIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>(
-                getRecipientId(),
-                getParentForChildren(),
-                isClean());
-        recipientId_ = null;
-      }
-      return recipientIdBuilder_;
+      return this;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

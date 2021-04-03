@@ -51,35 +51,31 @@ public final class AudioFileOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\033model/file/audio_file.proto\022\016im.turms." +
-      "proto\032\036google/protobuf/wrappers.proto\"\227\002" +
-      "\n\tAudioFile\022:\n\013description\030\001 \001(\0132%.im.tu" +
-      "rms.proto.AudioFile.Description\022)\n\004data\030" +
-      "\002 \001(\0132\033.google.protobuf.BytesValue\032\242\001\n\013D" +
-      "escription\022\013\n\003url\030\001 \001(\t\022-\n\010duration\030\002 \001(" +
-      "\0132\033.google.protobuf.Int32Value\022)\n\004size\030\003" +
-      " \001(\0132\033.google.protobuf.Int32Value\022,\n\006for" +
-      "mat\030\004 \001(\0132\034.google.protobuf.StringValueB" +
-      "$\n\035im.turms.common.model.bo.fileP\001\272\002\000b\006p" +
-      "roto3"
+      "proto\"\364\001\n\tAudioFile\022?\n\013description\030\001 \001(\013" +
+      "2%.im.turms.proto.AudioFile.DescriptionH" +
+      "\000\210\001\001\022\021\n\004data\030\002 \001(\014H\001\210\001\001\032z\n\013Description\022\013" +
+      "\n\003url\030\001 \001(\t\022\025\n\010duration\030\002 \001(\005H\000\210\001\001\022\021\n\004si" +
+      "ze\030\003 \001(\005H\001\210\001\001\022\023\n\006format\030\004 \001(\tH\002\210\001\001B\013\n\t_d" +
+      "urationB\007\n\005_sizeB\t\n\007_formatB\016\n\014_descript" +
+      "ionB\007\n\005_dataB$\n\035im.turms.common.model.bo" +
+      ".fileP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
         });
     internal_static_im_turms_proto_AudioFile_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_im_turms_proto_AudioFile_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_AudioFile_descriptor,
-        new java.lang.String[] { "Description", "Data", });
+        new java.lang.String[] { "Description", "Data", "Description", "Data", });
     internal_static_im_turms_proto_AudioFile_Description_descriptor =
       internal_static_im_turms_proto_AudioFile_descriptor.getNestedTypes().get(0);
     internal_static_im_turms_proto_AudioFile_Description_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_AudioFile_Description_descriptor,
-        new java.lang.String[] { "Url", "Duration", "Size", "Format", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "Url", "Duration", "Size", "Format", "Duration", "Size", "Format", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

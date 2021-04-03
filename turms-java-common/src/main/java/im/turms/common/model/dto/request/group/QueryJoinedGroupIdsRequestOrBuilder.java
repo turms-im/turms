@@ -25,17 +25,13 @@ public interface QueryJoinedGroupIdsRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>.google.protobuf.Int64Value last_updated_date = 1;</code>
+   * <code>int64 last_updated_date = 1;</code>
    * @return Whether the lastUpdatedDate field is set.
    */
   boolean hasLastUpdatedDate();
   /**
-   * <code>.google.protobuf.Int64Value last_updated_date = 1;</code>
+   * <code>int64 last_updated_date = 1;</code>
    * @return The lastUpdatedDate.
    */
-  com.google.protobuf.Int64Value getLastUpdatedDate();
-  /**
-   * <code>.google.protobuf.Int64Value last_updated_date = 1;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getLastUpdatedDateOrBuilder();
+  long getLastUpdatedDate();
 }

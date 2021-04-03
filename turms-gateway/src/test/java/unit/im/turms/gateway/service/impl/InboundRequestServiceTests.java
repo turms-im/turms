@@ -87,7 +87,7 @@ class InboundRequestServiceTests {
 
         StepVerifier.create(result)
                 .expectNextMatches(
-                        notification -> notification.getCode().getValue() == TurmsStatusCode.CLIENT_REQUESTS_TOO_FREQUENT.getBusinessCode())
+                        notification -> notification.getCode() == TurmsStatusCode.CLIENT_REQUESTS_TOO_FREQUENT.getBusinessCode())
                 .verifyComplete();
     }
 
@@ -104,7 +104,7 @@ class InboundRequestServiceTests {
 
         StepVerifier.create(result)
                 .expectNextMatches(
-                        notification -> notification.getCode().getValue() == TurmsStatusCode.SERVER_INTERNAL_ERROR.getBusinessCode())
+                        notification -> notification.getCode() == TurmsStatusCode.SERVER_INTERNAL_ERROR.getBusinessCode())
                 .verifyComplete();
     }
 
@@ -121,7 +121,7 @@ class InboundRequestServiceTests {
 
         StepVerifier.create(result)
                 .expectNextMatches(
-                        notification -> notification.getCode().getValue() == TurmsStatusCode.SERVER_INTERNAL_ERROR.getBusinessCode())
+                        notification -> notification.getCode() == TurmsStatusCode.SERVER_INTERNAL_ERROR.getBusinessCode())
                 .verifyComplete();
     }
 
@@ -137,7 +137,7 @@ class InboundRequestServiceTests {
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(request);
 
         StepVerifier.create(result)
-                .expectNextMatches(notification -> notification.getCode().getValue() == responseForSuccess.getCode().getBusinessCode())
+                .expectNextMatches(notification -> notification.getCode() == responseForSuccess.getCode().getBusinessCode())
                 .verifyComplete();
     }
 

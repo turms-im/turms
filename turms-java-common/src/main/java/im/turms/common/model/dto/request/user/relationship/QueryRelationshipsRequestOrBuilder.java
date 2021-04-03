@@ -42,47 +42,35 @@ public interface QueryRelationshipsRequestOrBuilder extends
   long getUserIds(int index);
 
   /**
-   * <code>.google.protobuf.BoolValue blocked = 2;</code>
+   * <code>bool blocked = 2;</code>
    * @return Whether the blocked field is set.
    */
   boolean hasBlocked();
   /**
-   * <code>.google.protobuf.BoolValue blocked = 2;</code>
+   * <code>bool blocked = 2;</code>
    * @return The blocked.
    */
-  com.google.protobuf.BoolValue getBlocked();
-  /**
-   * <code>.google.protobuf.BoolValue blocked = 2;</code>
-   */
-  com.google.protobuf.BoolValueOrBuilder getBlockedOrBuilder();
+  boolean getBlocked();
 
   /**
-   * <code>.google.protobuf.Int32Value group_index = 3;</code>
+   * <code>int32 group_index = 3;</code>
    * @return Whether the groupIndex field is set.
    */
   boolean hasGroupIndex();
   /**
-   * <code>.google.protobuf.Int32Value group_index = 3;</code>
+   * <code>int32 group_index = 3;</code>
    * @return The groupIndex.
    */
-  com.google.protobuf.Int32Value getGroupIndex();
-  /**
-   * <code>.google.protobuf.Int32Value group_index = 3;</code>
-   */
-  com.google.protobuf.Int32ValueOrBuilder getGroupIndexOrBuilder();
+  int getGroupIndex();
 
   /**
-   * <code>.google.protobuf.Int64Value last_updated_date = 4;</code>
+   * <code>int64 last_updated_date = 4;</code>
    * @return Whether the lastUpdatedDate field is set.
    */
   boolean hasLastUpdatedDate();
   /**
-   * <code>.google.protobuf.Int64Value last_updated_date = 4;</code>
+   * <code>int64 last_updated_date = 4;</code>
    * @return The lastUpdatedDate.
    */
-  com.google.protobuf.Int64Value getLastUpdatedDate();
-  /**
-   * <code>.google.protobuf.Int64Value last_updated_date = 4;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getLastUpdatedDateOrBuilder();
+  long getLastUpdatedDate();
 }

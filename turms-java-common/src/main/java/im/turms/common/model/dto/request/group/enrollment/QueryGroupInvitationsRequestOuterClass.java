@@ -47,27 +47,23 @@ public final class QueryGroupInvitationsRequestOuterClass {
     java.lang.String[] descriptorData = {
       "\n>request/group/enrollment/query_group_i" +
       "nvitations_request.proto\022\016im.turms.proto" +
-      "\032\036google/protobuf/wrappers.proto\"\271\001\n\034Que" +
-      "ryGroupInvitationsRequest\022-\n\010group_id\030\001 " +
-      "\001(\0132\033.google.protobuf.Int64Value\0222\n\016are_" +
-      "sent_by_me\030\002 \001(\0132\032.google.protobuf.BoolV" +
-      "alue\0226\n\021last_updated_date\030\003 \001(\0132\033.google" +
-      ".protobuf.Int64ValueB9\n2im.turms.common." +
-      "model.dto.request.group.enrollmentP\001\272\002\000b" +
-      "\006proto3"
+      "\"\250\001\n\034QueryGroupInvitationsRequest\022\025\n\010gro" +
+      "up_id\030\001 \001(\003H\000\210\001\001\022\033\n\016are_sent_by_me\030\002 \001(\010" +
+      "H\001\210\001\001\022\036\n\021last_updated_date\030\003 \001(\003H\002\210\001\001B\013\n" +
+      "\t_group_idB\021\n\017_are_sent_by_meB\024\n\022_last_u" +
+      "pdated_dateB9\n2im.turms.common.model.dto" +
+      ".request.group.enrollmentP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
         });
     internal_static_im_turms_proto_QueryGroupInvitationsRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_im_turms_proto_QueryGroupInvitationsRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_QueryGroupInvitationsRequest_descriptor,
-        new java.lang.String[] { "GroupId", "AreSentByMe", "LastUpdatedDate", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "GroupId", "AreSentByMe", "LastUpdatedDate", "GroupId", "AreSentByMe", "LastUpdatedDate", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

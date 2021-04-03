@@ -36,34 +36,32 @@ public interface QuerySignedPutUrlRequestOrBuilder extends
   im.turms.common.constant.ContentType getContentType();
 
   /**
-   * <code>.google.protobuf.StringValue key_str = 2;</code>
+   * <code>string key_str = 2;</code>
    * @return Whether the keyStr field is set.
    */
   boolean hasKeyStr();
   /**
-   * <code>.google.protobuf.StringValue key_str = 2;</code>
+   * <code>string key_str = 2;</code>
    * @return The keyStr.
    */
-  com.google.protobuf.StringValue getKeyStr();
+  java.lang.String getKeyStr();
   /**
-   * <code>.google.protobuf.StringValue key_str = 2;</code>
+   * <code>string key_str = 2;</code>
+   * @return The bytes for keyStr.
    */
-  com.google.protobuf.StringValueOrBuilder getKeyStrOrBuilder();
+  com.google.protobuf.ByteString
+      getKeyStrBytes();
 
   /**
-   * <code>.google.protobuf.Int64Value key_num = 3;</code>
+   * <code>int64 key_num = 3;</code>
    * @return Whether the keyNum field is set.
    */
   boolean hasKeyNum();
   /**
-   * <code>.google.protobuf.Int64Value key_num = 3;</code>
+   * <code>int64 key_num = 3;</code>
    * @return The keyNum.
    */
-  com.google.protobuf.Int64Value getKeyNum();
-  /**
-   * <code>.google.protobuf.Int64Value key_num = 3;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getKeyNumOrBuilder();
+  long getKeyNum();
 
   /**
    * <code>int64 content_length = 4;</code>

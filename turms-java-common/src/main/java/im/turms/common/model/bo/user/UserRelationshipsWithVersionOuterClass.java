@@ -46,19 +46,17 @@ public final class UserRelationshipsWithVersionOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n0model/user/user_relationships_with_ver" +
-      "sion.proto\022\016im.turms.proto\032\036google/proto" +
-      "buf/wrappers.proto\032\"model/user/user_rela" +
-      "tionship.proto\"\224\001\n\034UserRelationshipsWith" +
-      "Version\022<\n\022user_relationships\030\001 \003(\0132 .im" +
-      ".turms.proto.UserRelationship\0226\n\021last_up" +
-      "dated_date\030\002 \001(\0132\033.google.protobuf.Int64" +
-      "ValueB$\n\035im.turms.common.model.bo.userP\001" +
-      "\272\002\000b\006proto3"
+      "sion.proto\022\016im.turms.proto\032\"model/user/u" +
+      "ser_relationship.proto\"\222\001\n\034UserRelations" +
+      "hipsWithVersion\022<\n\022user_relationships\030\001 " +
+      "\003(\0132 .im.turms.proto.UserRelationship\022\036\n" +
+      "\021last_updated_date\030\002 \001(\003H\000\210\001\001B\024\n\022_last_u" +
+      "pdated_dateB$\n\035im.turms.common.model.bo." +
+      "userP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
           im.turms.common.model.bo.user.UserRelationshipOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_UserRelationshipsWithVersion_descriptor =
@@ -66,8 +64,7 @@ public final class UserRelationshipsWithVersionOuterClass {
     internal_static_im_turms_proto_UserRelationshipsWithVersion_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_UserRelationshipsWithVersion_descriptor,
-        new java.lang.String[] { "UserRelationships", "LastUpdatedDate", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "UserRelationships", "LastUpdatedDate", "LastUpdatedDate", });
     im.turms.common.model.bo.user.UserRelationshipOuterClass.getDescriptor();
   }
 

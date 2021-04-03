@@ -180,7 +180,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         ClientRequest clientRequest = new ClientRequest(
                 serviceRequest.getUserId(),
                 serviceRequest.getDeviceType(),
-                request.getRequestId().getValue(),
+                request.getRequestId(),
                 request,
                 serviceRequest.getTurmsRequestBuffer());
         Mono<ClientRequest> clientRequestMono = Mono.just(clientRequest);
@@ -268,7 +268,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         TurmsNotification notificationForRecipients = TurmsNotification
                 .newBuilder()
                 .setRelayedRequest(dataForRecipients)
-                .setRequesterId(Int64Value.of(requesterId))
+                .setRequesterId(requesterId)
                 .build();
         ByteBuf notificationByteBuf = ProtoUtil.getDirectByteBuffer(notificationForRecipients);
         if (result.isForwardDataForRecipientsToOtherSenderOnlineDevices()) {

@@ -17,7 +17,6 @@
 
 package im.turms.turms.workflow.service.impl.group;
 
-import com.google.protobuf.Int64Value;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
@@ -709,7 +708,7 @@ public class GroupMemberService {
                                             builder.addGroupMembers(groupMember);
                                         }
                                         return Mono.just(builder
-                                                .setLastUpdatedDate(Int64Value.of(version.getTime()))
+                                                .setLastUpdatedDate(version.getTime())
                                                 .build());
                                     }
                                 });

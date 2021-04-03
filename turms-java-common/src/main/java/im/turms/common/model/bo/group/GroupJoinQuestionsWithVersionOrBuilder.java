@@ -49,17 +49,13 @@ public interface GroupJoinQuestionsWithVersionOrBuilder extends
       int index);
 
   /**
-   * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
+   * <code>int64 last_updated_date = 2;</code>
    * @return Whether the lastUpdatedDate field is set.
    */
   boolean hasLastUpdatedDate();
   /**
-   * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
+   * <code>int64 last_updated_date = 2;</code>
    * @return The lastUpdatedDate.
    */
-  com.google.protobuf.Int64Value getLastUpdatedDate();
-  /**
-   * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getLastUpdatedDateOrBuilder();
+  long getLastUpdatedDate();
 }

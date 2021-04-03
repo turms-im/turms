@@ -46,19 +46,17 @@ public final class GroupJoinRequestsWithVersionOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n2model/group/group_join_requests_with_v" +
-      "ersion.proto\022\016im.turms.proto\032\036google/pro" +
-      "tobuf/wrappers.proto\032$model/group/group_" +
-      "join_request.proto\"\225\001\n\034GroupJoinRequests" +
-      "WithVersion\022=\n\023group_join_requests\030\001 \003(\013" +
-      "2 .im.turms.proto.GroupJoinRequest\0226\n\021la" +
-      "st_updated_date\030\002 \001(\0132\033.google.protobuf." +
-      "Int64ValueB%\n\036im.turms.common.model.bo.g" +
-      "roupP\001\272\002\000b\006proto3"
+      "ersion.proto\022\016im.turms.proto\032$model/grou" +
+      "p/group_join_request.proto\"\223\001\n\034GroupJoin" +
+      "RequestsWithVersion\022=\n\023group_join_reques" +
+      "ts\030\001 \003(\0132 .im.turms.proto.GroupJoinReque" +
+      "st\022\036\n\021last_updated_date\030\002 \001(\003H\000\210\001\001B\024\n\022_l" +
+      "ast_updated_dateB%\n\036im.turms.common.mode" +
+      "l.bo.groupP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
           im.turms.common.model.bo.group.GroupJoinRequestOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_GroupJoinRequestsWithVersion_descriptor =
@@ -66,8 +64,7 @@ public final class GroupJoinRequestsWithVersionOuterClass {
     internal_static_im_turms_proto_GroupJoinRequestsWithVersion_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_GroupJoinRequestsWithVersion_descriptor,
-        new java.lang.String[] { "GroupJoinRequests", "LastUpdatedDate", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "GroupJoinRequests", "LastUpdatedDate", "LastUpdatedDate", });
     im.turms.common.model.bo.group.GroupJoinRequestOuterClass.getDescriptor();
   }
 

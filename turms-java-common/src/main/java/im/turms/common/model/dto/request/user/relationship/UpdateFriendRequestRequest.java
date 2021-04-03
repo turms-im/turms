@@ -34,6 +34,7 @@ private static final long serialVersionUID = 0L;
   }
   private UpdateFriendRequestRequest() {
     responseAction_ = 0;
+    reason_ = "";
   }
 
   @java.lang.Override
@@ -56,6 +57,7 @@ private static final long serialVersionUID = 0L;
     if (extensionRegistry == null) {
       throw new java.lang.NullPointerException();
     }
+    int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
         com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
@@ -78,16 +80,9 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 26: {
-            com.google.protobuf.StringValue.Builder subBuilder = null;
-            if (reason_ != null) {
-              subBuilder = reason_.toBuilder();
-            }
-            reason_ = input.readMessage(com.google.protobuf.StringValue.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(reason_);
-              reason_ = subBuilder.buildPartial();
-            }
-
+            java.lang.String s = input.readStringRequireUtf8();
+            bitField0_ |= 0x00000001;
+            reason_ = s;
             break;
           }
           default: {
@@ -122,6 +117,7 @@ private static final long serialVersionUID = 0L;
             im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest.class, im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest.Builder.class);
   }
 
+  private int bitField0_;
   public static final int REQUEST_ID_FIELD_NUMBER = 1;
   private long requestId_;
   /**
@@ -153,29 +149,49 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int REASON_FIELD_NUMBER = 3;
-  private com.google.protobuf.StringValue reason_;
+  private volatile java.lang.Object reason_;
   /**
-   * <code>.google.protobuf.StringValue reason = 3;</code>
+   * <code>string reason = 3;</code>
    * @return Whether the reason field is set.
    */
   @java.lang.Override
   public boolean hasReason() {
-    return reason_ != null;
+    return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>.google.protobuf.StringValue reason = 3;</code>
+   * <code>string reason = 3;</code>
    * @return The reason.
    */
   @java.lang.Override
-  public com.google.protobuf.StringValue getReason() {
-    return reason_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : reason_;
+  public java.lang.String getReason() {
+    java.lang.Object ref = reason_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs =
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      reason_ = s;
+      return s;
+    }
   }
   /**
-   * <code>.google.protobuf.StringValue reason = 3;</code>
+   * <code>string reason = 3;</code>
+   * @return The bytes for reason.
    */
   @java.lang.Override
-  public com.google.protobuf.StringValueOrBuilder getReasonOrBuilder() {
-    return getReason();
+  public com.google.protobuf.ByteString
+      getReasonBytes() {
+    java.lang.Object ref = reason_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      reason_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
   private byte memoizedIsInitialized = -1;
@@ -198,8 +214,8 @@ private static final long serialVersionUID = 0L;
     if (responseAction_ != im.turms.common.constant.ResponseAction.ACCEPT.getNumber()) {
       output.writeEnum(2, responseAction_);
     }
-    if (reason_ != null) {
-      output.writeMessage(3, getReason());
+    if (((bitField0_ & 0x00000001) != 0)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, reason_);
     }
     unknownFields.writeTo(output);
   }
@@ -218,9 +234,8 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(2, responseAction_);
     }
-    if (reason_ != null) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(3, getReason());
+    if (((bitField0_ & 0x00000001) != 0)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, reason_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -402,12 +417,8 @@ private static final long serialVersionUID = 0L;
 
       responseAction_ = 0;
 
-      if (reasonBuilder_ == null) {
-        reason_ = null;
-      } else {
-        reason_ = null;
-        reasonBuilder_ = null;
-      }
+      reason_ = "";
+      bitField0_ = (bitField0_ & ~0x00000001);
       return this;
     }
 
@@ -434,13 +445,15 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest buildPartial() {
       im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest result = new im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRequest(this);
+      int from_bitField0_ = bitField0_;
+      int to_bitField0_ = 0;
       result.requestId_ = requestId_;
       result.responseAction_ = responseAction_;
-      if (reasonBuilder_ == null) {
-        result.reason_ = reason_;
-      } else {
-        result.reason_ = reasonBuilder_.build();
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        to_bitField0_ |= 0x00000001;
       }
+      result.reason_ = reason_;
+      result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
     }
@@ -496,7 +509,9 @@ private static final long serialVersionUID = 0L;
         setResponseActionValue(other.getResponseActionValue());
       }
       if (other.hasReason()) {
-        mergeReason(other.getReason());
+        bitField0_ |= 0x00000001;
+        reason_ = other.reason_;
+        onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -526,6 +541,7 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+    private int bitField0_;
 
     private long requestId_ ;
     /**
@@ -612,123 +628,87 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private com.google.protobuf.StringValue reason_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> reasonBuilder_;
+    private java.lang.Object reason_ = "";
     /**
-     * <code>.google.protobuf.StringValue reason = 3;</code>
+     * <code>string reason = 3;</code>
      * @return Whether the reason field is set.
      */
     public boolean hasReason() {
-      return reasonBuilder_ != null || reason_ != null;
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>.google.protobuf.StringValue reason = 3;</code>
+     * <code>string reason = 3;</code>
      * @return The reason.
      */
-    public com.google.protobuf.StringValue getReason() {
-      if (reasonBuilder_ == null) {
-        return reason_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : reason_;
+    public java.lang.String getReason() {
+      java.lang.Object ref = reason_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        reason_ = s;
+        return s;
       } else {
-        return reasonBuilder_.getMessage();
+        return (java.lang.String) ref;
       }
     }
     /**
-     * <code>.google.protobuf.StringValue reason = 3;</code>
+     * <code>string reason = 3;</code>
+     * @return The bytes for reason.
      */
-    public Builder setReason(com.google.protobuf.StringValue value) {
-      if (reasonBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        reason_ = value;
-        onChanged();
+    public com.google.protobuf.ByteString
+        getReasonBytes() {
+      java.lang.Object ref = reason_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        reason_ = b;
+        return b;
       } else {
-        reasonBuilder_.setMessage(value);
+        return (com.google.protobuf.ByteString) ref;
       }
-
-      return this;
     }
     /**
-     * <code>.google.protobuf.StringValue reason = 3;</code>
+     * <code>string reason = 3;</code>
+     * @param value The reason to set.
+     * @return This builder for chaining.
      */
     public Builder setReason(
-        com.google.protobuf.StringValue.Builder builderForValue) {
-      if (reasonBuilder_ == null) {
-        reason_ = builderForValue.build();
-        onChanged();
-      } else {
-        reasonBuilder_.setMessage(builderForValue.build());
-      }
-
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+      reason_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.StringValue reason = 3;</code>
-     */
-    public Builder mergeReason(com.google.protobuf.StringValue value) {
-      if (reasonBuilder_ == null) {
-        if (reason_ != null) {
-          reason_ =
-            com.google.protobuf.StringValue.newBuilder(reason_).mergeFrom(value).buildPartial();
-        } else {
-          reason_ = value;
-        }
-        onChanged();
-      } else {
-        reasonBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.StringValue reason = 3;</code>
+     * <code>string reason = 3;</code>
+     * @return This builder for chaining.
      */
     public Builder clearReason() {
-      if (reasonBuilder_ == null) {
-        reason_ = null;
-        onChanged();
-      } else {
-        reason_ = null;
-        reasonBuilder_ = null;
-      }
-
+      bitField0_ = (bitField0_ & ~0x00000001);
+      reason_ = getDefaultInstance().getReason();
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.StringValue reason = 3;</code>
+     * <code>string reason = 3;</code>
+     * @param value The bytes for reason to set.
+     * @return This builder for chaining.
      */
-    public com.google.protobuf.StringValue.Builder getReasonBuilder() {
-
+    public Builder setReasonBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      bitField0_ |= 0x00000001;
+      reason_ = value;
       onChanged();
-      return getReasonFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.StringValue reason = 3;</code>
-     */
-    public com.google.protobuf.StringValueOrBuilder getReasonOrBuilder() {
-      if (reasonBuilder_ != null) {
-        return reasonBuilder_.getMessageOrBuilder();
-      } else {
-        return reason_ == null ?
-            com.google.protobuf.StringValue.getDefaultInstance() : reason_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.StringValue reason = 3;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>
-        getReasonFieldBuilder() {
-      if (reasonBuilder_ == null) {
-        reasonBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>(
-                getReason(),
-                getParentForChildren(),
-                isClean());
-        reason_ = null;
-      }
-      return reasonBuilder_;
+      return this;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

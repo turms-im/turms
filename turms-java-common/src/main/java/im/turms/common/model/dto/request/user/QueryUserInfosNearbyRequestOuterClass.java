@@ -46,26 +46,23 @@ public final class QueryUserInfosNearbyRequestOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n2request/user/query_user_infos_nearby_r" +
-      "equest.proto\022\016im.turms.proto\032\036google/pro" +
-      "tobuf/wrappers.proto\"\242\001\n\033QueryUserInfosN" +
-      "earbyRequest\022\020\n\010latitude\030\001 \001(\002\022\021\n\tlongit" +
-      "ude\030\002 \001(\002\022-\n\010distance\030\003 \001(\0132\033.google.pro" +
-      "tobuf.FloatValue\022/\n\nmax_number\030\004 \001(\0132\033.g" +
-      "oogle.protobuf.Int32ValueB-\n&im.turms.co" +
-      "mmon.model.dto.request.userP\001\272\002\000b\006proto3"
+      "equest.proto\022\016im.turms.proto\"\216\001\n\033QueryUs" +
+      "erInfosNearbyRequest\022\020\n\010latitude\030\001 \001(\002\022\021" +
+      "\n\tlongitude\030\002 \001(\002\022\025\n\010distance\030\003 \001(\002H\000\210\001\001" +
+      "\022\027\n\nmax_number\030\004 \001(\005H\001\210\001\001B\013\n\t_distanceB\r" +
+      "\n\013_max_numberB-\n&im.turms.common.model.d" +
+      "to.request.userP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
         });
     internal_static_im_turms_proto_QueryUserInfosNearbyRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_im_turms_proto_QueryUserInfosNearbyRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_QueryUserInfosNearbyRequest_descriptor,
-        new java.lang.String[] { "Latitude", "Longitude", "Distance", "MaxNumber", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "Latitude", "Longitude", "Distance", "MaxNumber", "Distance", "MaxNumber", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

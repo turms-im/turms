@@ -17,9 +17,6 @@
 
 package im.turms.gateway.access.common.controller;
 
-import com.google.protobuf.Int32Value;
-import com.google.protobuf.Int64Value;
-import com.google.protobuf.StringValue;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.common.util.RandomUtil;
@@ -128,11 +125,11 @@ public class UserRequestDispatcher {
 
     private TurmsNotification getNotificationFromHandlerResult(RequestHandlerResult result, long requestId) {
         TurmsNotification.Builder builder = TurmsNotification.newBuilder()
-                .setRequestId(Int64Value.of(requestId))
-                .setCode(Int32Value.of(result.getCode().getBusinessCode()));
+                .setRequestId(requestId)
+                .setCode(result.getCode().getBusinessCode());
         String reason = result.getReason();
         if (reason != null) {
-            builder.setReason(StringValue.of(reason));
+            builder.setReason(reason);
         }
         return builder.build();
     }

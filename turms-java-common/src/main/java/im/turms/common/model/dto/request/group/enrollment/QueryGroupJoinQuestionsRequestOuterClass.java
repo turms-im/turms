@@ -47,25 +47,22 @@ public final class QueryGroupJoinQuestionsRequestOuterClass {
     java.lang.String[] descriptorData = {
       "\nArequest/group/enrollment/query_group_j" +
       "oin_questions_request.proto\022\016im.turms.pr" +
-      "oto\032\036google/protobuf/wrappers.proto\"\200\001\n\036" +
-      "QueryGroupJoinQuestionsRequest\022\020\n\010group_" +
-      "id\030\001 \001(\003\022\024\n\014with_answers\030\002 \001(\010\0226\n\021last_u" +
-      "pdated_date\030\003 \001(\0132\033.google.protobuf.Int6" +
-      "4ValueB9\n2im.turms.common.model.dto.requ" +
-      "est.group.enrollmentP\001\272\002\000b\006proto3"
+      "oto\"~\n\036QueryGroupJoinQuestionsRequest\022\020\n" +
+      "\010group_id\030\001 \001(\003\022\024\n\014with_answers\030\002 \001(\010\022\036\n" +
+      "\021last_updated_date\030\003 \001(\003H\000\210\001\001B\024\n\022_last_u" +
+      "pdated_dateB9\n2im.turms.common.model.dto" +
+      ".request.group.enrollmentP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
         });
     internal_static_im_turms_proto_QueryGroupJoinQuestionsRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_im_turms_proto_QueryGroupJoinQuestionsRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_QueryGroupJoinQuestionsRequest_descriptor,
-        new java.lang.String[] { "GroupId", "WithAnswers", "LastUpdatedDate", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "GroupId", "WithAnswers", "LastUpdatedDate", "LastUpdatedDate", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

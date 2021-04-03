@@ -46,21 +46,19 @@ public final class UpdateGroupMemberRequestOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n6request/group/member/update_group_memb" +
-      "er_request.proto\022\016im.turms.proto\032\036google" +
-      "/protobuf/wrappers.proto\032 constant/group" +
-      "_member_role.proto\"\316\001\n\030UpdateGroupMember" +
-      "Request\022\020\n\010group_id\030\001 \001(\003\022\021\n\tmember_id\030\002" +
-      " \001(\003\022*\n\004name\030\003 \001(\0132\034.google.protobuf.Str" +
-      "ingValue\022-\n\004role\030\004 \001(\0162\037.im.turms.proto." +
-      "GroupMemberRole\0222\n\rmute_end_date\030\005 \001(\0132\033" +
-      ".google.protobuf.Int64ValueB5\n.im.turms." +
+      "er_request.proto\022\016im.turms.proto\032 consta" +
+      "nt/group_member_role.proto\"\306\001\n\030UpdateGro" +
+      "upMemberRequest\022\020\n\010group_id\030\001 \001(\003\022\021\n\tmem" +
+      "ber_id\030\002 \001(\003\022\021\n\004name\030\003 \001(\tH\000\210\001\001\0222\n\004role\030" +
+      "\004 \001(\0162\037.im.turms.proto.GroupMemberRoleH\001" +
+      "\210\001\001\022\032\n\rmute_end_date\030\005 \001(\003H\002\210\001\001B\007\n\005_name" +
+      "B\007\n\005_roleB\020\n\016_mute_end_dateB5\n.im.turms." +
       "common.model.dto.request.group.memberP\001\272" +
       "\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
           im.turms.common.constant.GroupMemberRoleOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_UpdateGroupMemberRequest_descriptor =
@@ -68,8 +66,7 @@ public final class UpdateGroupMemberRequestOuterClass {
     internal_static_im_turms_proto_UpdateGroupMemberRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_UpdateGroupMemberRequest_descriptor,
-        new java.lang.String[] { "GroupId", "MemberId", "Name", "Role", "MuteEndDate", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "GroupId", "MemberId", "Name", "Role", "MuteEndDate", "Name", "Role", "MuteEndDate", });
     im.turms.common.constant.GroupMemberRoleOuterClass.getDescriptor();
   }
 

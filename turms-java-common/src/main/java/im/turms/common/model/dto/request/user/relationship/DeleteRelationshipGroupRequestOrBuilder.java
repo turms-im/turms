@@ -31,17 +31,13 @@ public interface DeleteRelationshipGroupRequestOrBuilder extends
   int getGroupIndex();
 
   /**
-   * <code>.google.protobuf.Int32Value target_group_index = 2;</code>
+   * <code>int32 target_group_index = 2;</code>
    * @return Whether the targetGroupIndex field is set.
    */
   boolean hasTargetGroupIndex();
   /**
-   * <code>.google.protobuf.Int32Value target_group_index = 2;</code>
+   * <code>int32 target_group_index = 2;</code>
    * @return The targetGroupIndex.
    */
-  com.google.protobuf.Int32Value getTargetGroupIndex();
-  /**
-   * <code>.google.protobuf.Int32Value target_group_index = 2;</code>
-   */
-  com.google.protobuf.Int32ValueOrBuilder getTargetGroupIndexOrBuilder();
+  int getTargetGroupIndex();
 }

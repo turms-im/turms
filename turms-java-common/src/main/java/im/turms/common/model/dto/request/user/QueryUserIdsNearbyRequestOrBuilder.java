@@ -37,32 +37,24 @@ public interface QueryUserIdsNearbyRequestOrBuilder extends
   float getLongitude();
 
   /**
-   * <code>.google.protobuf.FloatValue distance = 3;</code>
+   * <code>float distance = 3;</code>
    * @return Whether the distance field is set.
    */
   boolean hasDistance();
   /**
-   * <code>.google.protobuf.FloatValue distance = 3;</code>
+   * <code>float distance = 3;</code>
    * @return The distance.
    */
-  com.google.protobuf.FloatValue getDistance();
-  /**
-   * <code>.google.protobuf.FloatValue distance = 3;</code>
-   */
-  com.google.protobuf.FloatValueOrBuilder getDistanceOrBuilder();
+  float getDistance();
 
   /**
-   * <code>.google.protobuf.Int32Value max_number = 4;</code>
+   * <code>int32 max_number = 4;</code>
    * @return Whether the maxNumber field is set.
    */
   boolean hasMaxNumber();
   /**
-   * <code>.google.protobuf.Int32Value max_number = 4;</code>
+   * <code>int32 max_number = 4;</code>
    * @return The maxNumber.
    */
-  com.google.protobuf.Int32Value getMaxNumber();
-  /**
-   * <code>.google.protobuf.Int32Value max_number = 4;</code>
-   */
-  com.google.protobuf.Int32ValueOrBuilder getMaxNumberOrBuilder();
+  int getMaxNumber();
 }

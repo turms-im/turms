@@ -18,11 +18,7 @@
 package im.turms.turms.util;
 
 import com.google.common.collect.Maps;
-import com.google.protobuf.BoolValue;
 import com.google.protobuf.ByteString;
-import com.google.protobuf.Int32Value;
-import com.google.protobuf.Int64Value;
-import com.google.protobuf.StringValue;
 import im.turms.common.constant.GroupMemberRole;
 import im.turms.common.constant.ProfileAccessStrategy;
 import im.turms.common.constant.RequestStatus;
@@ -74,28 +70,28 @@ public final class ProtoUtil {
         Long targetId = message.getTargetId();
         Long groupId = message.groupId();
         if (messageId != null) {
-            builder.setId(Int64Value.of(messageId));
+            builder.setId(messageId);
         }
         if (isSystemMessage != null) {
-            builder.setIsSystemMessage(BoolValue.of(isSystemMessage));
+            builder.setIsSystemMessage(isSystemMessage);
         }
         if (deliveryDate != null) {
-            builder.setDeliveryDate(Int64Value.of(deliveryDate.getTime()));
+            builder.setDeliveryDate(deliveryDate.getTime());
         }
         if (modificationDate != null) {
-            builder.setModificationDate(Int64Value.of(modificationDate.getTime()));
+            builder.setModificationDate(modificationDate.getTime());
         }
         if (text != null) {
-            builder.setText(StringValue.of(text));
+            builder.setText(text);
         }
         if (senderId != null) {
-            builder.setSenderId(Int64Value.of(senderId));
+            builder.setSenderId(senderId);
         }
         if (targetId != null) {
-            builder.setRecipientId(Int64Value.of(targetId));
+            builder.setRecipientId(targetId);
         }
         if (groupId != null) {
-            builder.setGroupId(Int64Value.of(groupId));
+            builder.setGroupId(groupId);
         }
         if (records != null && !records.isEmpty()) {
             for (byte[] record : records) {
@@ -114,19 +110,19 @@ public final class ProtoUtil {
         Boolean active = user.getIsActive();
         ProfileAccessStrategy profileAccess = user.getProfileAccess();
         if (userId != null) {
-            builder.setId(Int64Value.of(userId));
+            builder.setId(userId);
         }
         if (name != null) {
-            builder.setName(StringValue.of(name));
+            builder.setName(name);
         }
         if (intro != null) {
-            builder.setIntro(StringValue.of(intro));
+            builder.setIntro(intro);
         }
         if (registrationDate != null) {
-            builder.setRegistrationDate(Int64Value.of(registrationDate.getTime()));
+            builder.setRegistrationDate(registrationDate.getTime());
         }
         if (active != null) {
-            builder.setActive(BoolValue.of(active));
+            builder.setActive(active);
         }
         if (profileAccess != null) {
             builder.setProfileAccessStrategy(profileAccess);
@@ -146,28 +142,28 @@ public final class ProtoUtil {
         Long requesterId = userFriendRequest.getRequesterId();
         Long recipientId = userFriendRequest.getRecipientId();
         if (requestId != null) {
-            builder.setId(Int64Value.of(requestId));
+            builder.setId(requestId);
         }
         if (creationDate != null) {
-            builder.setCreationDate(Int64Value.of(creationDate.getTime()));
+            builder.setCreationDate(creationDate.getTime());
         }
         if (content != null) {
-            builder.setContent(StringValue.of(content));
+            builder.setContent(content);
         }
         if (status != null) {
             builder.setRequestStatus(status);
         }
         if (reason != null) {
-            builder.setReason(StringValue.of(reason));
+            builder.setReason(reason);
         }
         if (expirationDate != null) {
-            builder.setExpirationDate(Int64Value.of(expirationDate.getTime()));
+            builder.setExpirationDate(expirationDate.getTime());
         }
         if (requesterId != null) {
-            builder.setRequesterId(Int64Value.of(requesterId));
+            builder.setRequesterId(requesterId);
         }
         if (recipientId != null) {
-            builder.setRecipientId(Int64Value.of(recipientId));
+            builder.setRecipientId(recipientId);
         }
         return builder;
     }
@@ -182,17 +178,17 @@ public final class ProtoUtil {
             Long ownerId = key.getOwnerId();
             Long relatedUserId = key.getRelatedUserId();
             if (ownerId != null) {
-                builder.setOwnerId(Int64Value.of(ownerId));
+                builder.setOwnerId(ownerId);
             }
             if (relatedUserId != null) {
-                builder.setRelatedUserId(Int64Value.of(relatedUserId));
+                builder.setRelatedUserId(relatedUserId);
             }
         }
         if (blockDate != null) {
-            builder.setBlockDate(Int64Value.of(blockDate.getTime()));
+            builder.setBlockDate(blockDate.getTime());
         }
         if (establishmentDate != null) {
-            builder.setEstablishmentDate(Int64Value.of(establishmentDate.getTime()));
+            builder.setEstablishmentDate(establishmentDate.getTime());
         }
         return builder;
     }
@@ -227,34 +223,34 @@ public final class ProtoUtil {
         Date muteEndDate = group.getMuteEndDate();
         Boolean active = group.getIsActive();
         if (groupId != null) {
-            builder.setId(Int64Value.of(groupId));
+            builder.setId(groupId);
         }
         if (typeId != null) {
-            builder.setTypeId(Int64Value.of(typeId));
+            builder.setTypeId(typeId);
         }
         if (creatorId != null) {
-            builder.setCreatorId(Int64Value.of(creatorId));
+            builder.setCreatorId(creatorId);
         }
         if (ownerId != null) {
-            builder.setOwnerId(Int64Value.of(ownerId));
+            builder.setOwnerId(ownerId);
         }
         if (name != null) {
-            builder.setName(StringValue.of(name));
+            builder.setName(name);
         }
         if (intro != null) {
-            builder.setIntro(StringValue.of(intro));
+            builder.setIntro(intro);
         }
         if (announcement != null) {
-            builder.setAnnouncement(StringValue.of(announcement));
+            builder.setAnnouncement(announcement);
         }
         if (creationDate != null) {
-            builder.setCreationDate(Int64Value.of(creationDate.getTime()));
+            builder.setCreationDate(creationDate.getTime());
         }
         if (muteEndDate != null) {
-            builder.setMuteEndDate(Int64Value.of(muteEndDate.getTime()));
+            builder.setMuteEndDate(muteEndDate.getTime());
         }
         if (active != null) {
-            builder.setActive(BoolValue.of(active));
+            builder.setActive(active);
         }
         return builder;
     }
@@ -271,28 +267,28 @@ public final class ProtoUtil {
         Long inviterId = invitation.getInviterId();
         Long inviteeId = invitation.getInviteeId();
         if (invitationId != null) {
-            builder.setId(Int64Value.of(invitationId));
+            builder.setId(invitationId);
         }
         if (creationDate != null) {
-            builder.setCreationDate(Int64Value.of(creationDate.getTime()));
+            builder.setCreationDate(creationDate.getTime());
         }
         if (content != null) {
-            builder.setContent(StringValue.of(content));
+            builder.setContent(content);
         }
         if (status != null) {
             builder.setStatusValue(status.getNumber());
         }
         if (expirationDate != null) {
-            builder.setExpirationDate(Int64Value.of(expirationDate.getTime()));
+            builder.setExpirationDate(expirationDate.getTime());
         }
         if (groupId != null) {
-            builder.setGroupId(Int64Value.of(groupId));
+            builder.setGroupId(groupId);
         }
         if (inviterId != null) {
-            builder.setInviterId(Int64Value.of(inviterId));
+            builder.setInviterId(inviterId);
         }
         if (inviteeId != null) {
-            builder.setInviteeId(Int64Value.of(inviteeId));
+            builder.setInviteeId(inviteeId);
         }
         return builder;
     }
@@ -309,28 +305,28 @@ public final class ProtoUtil {
         Long requesterId = groupJoinRequest.getRequesterId();
         Long responderId = groupJoinRequest.getResponderId();
         if (requestId != null) {
-            builder.setId(Int64Value.of(requestId));
+            builder.setId(requestId);
         }
         if (creationDate != null) {
-            builder.setCreationDate(Int64Value.of(creationDate.getTime()));
+            builder.setCreationDate(creationDate.getTime());
         }
         if (content != null) {
-            builder.setContent(StringValue.of(content));
+            builder.setContent(content);
         }
         if (status != null) {
             builder.setStatus(status);
         }
         if (expirationDate != null) {
-            builder.setExpirationDate(Int64Value.of(expirationDate.getTime()));
+            builder.setExpirationDate(expirationDate.getTime());
         }
         if (groupId != null) {
-            builder.setGroupId(Int64Value.of(groupId));
+            builder.setGroupId(groupId);
         }
         if (requesterId != null) {
-            builder.setRequesterId(Int64Value.of(requesterId));
+            builder.setRequesterId(requesterId);
         }
         if (responderId != null) {
-            builder.setResponderId(Int64Value.of(responderId));
+            builder.setResponderId(responderId);
         }
         return builder;
     }
@@ -342,13 +338,13 @@ public final class ProtoUtil {
         Long groupId = question.getGroupId();
         String content = question.getQuestion();
         if (questionId != null) {
-            builder.setId(Int64Value.of(questionId));
+            builder.setId(questionId);
         }
         if (groupId != null) {
-            builder.setGroupId(Int64Value.of(groupId));
+            builder.setGroupId(groupId);
         }
         if (content != null) {
-            builder.setQuestion(StringValue.of(content));
+            builder.setQuestion(content);
         }
         if (question.getAnswers() != null && !question.getAnswers().isEmpty()) {
             builder.addAllAnswers(question.getAnswers());
@@ -363,10 +359,10 @@ public final class ProtoUtil {
             Long groupId = key.getGroupId();
             Long userId = key.getUserId();
             if (groupId != null) {
-                builder.setGroupId(Int64Value.of(groupId));
+                builder.setGroupId(groupId);
             }
             if (userId != null) {
-                builder.setUserId(Int64Value.of(userId));
+                builder.setUserId(userId);
             }
         }
         String name = groupMember.getName();
@@ -374,16 +370,16 @@ public final class ProtoUtil {
         Date joinDate = groupMember.getJoinDate();
         Date muteEndDate = groupMember.getMuteEndDate();
         if (name != null) {
-            builder.setName(StringValue.of(name));
+            builder.setName(name);
         }
         if (role != null) {
             builder.setRole(role);
         }
         if (joinDate != null) {
-            builder.setJoinDate(Int64Value.of(joinDate.getTime()));
+            builder.setJoinDate(joinDate.getTime());
         }
         if (muteEndDate != null) {
-            builder.setMuteEndDate(Int64Value.of(muteEndDate.getTime()));
+            builder.setMuteEndDate(muteEndDate.getTime());
         }
         return builder;
     }
@@ -438,21 +434,21 @@ public final class ProtoUtil {
         List<byte[]> records = message.getRecords();
         Integer burnAfter = message.getBurnAfter();
         if (messageId != null) {
-            builder.setMessageId(Int64Value.of(messageId));
+            builder.setMessageId(messageId);
         }
         if (isGroupMessage) {
-            builder.setGroupId(Int64Value.of(targetId));
+            builder.setGroupId(targetId);
         } else {
-            builder.setRecipientId(Int64Value.of(targetId));
+            builder.setRecipientId(targetId);
         }
         if (isSystemMessage != null) {
-            builder.setIsSystemMessage(BoolValue.of(isSystemMessage));
+            builder.setIsSystemMessage(isSystemMessage);
         }
         if (deliveryDate != null) {
             builder.setDeliveryDate(deliveryDate.getTime());
         }
         if (text != null) {
-            builder.setText(StringValue.of(text));
+            builder.setText(text);
         }
         if (records != null && !records.isEmpty()) {
             for (byte[] record : records) {
@@ -461,7 +457,7 @@ public final class ProtoUtil {
             }
         }
         if (burnAfter != null) {
-            builder.setBurnAfter(Int32Value.of(burnAfter));
+            builder.setBurnAfter(burnAfter);
         }
         return builder;
     }
@@ -487,7 +483,7 @@ public final class ProtoUtil {
             boolean convertInvisibleToOffline) {
         GroupMember.Builder builder = GroupMember
                 .newBuilder()
-                .setUserId(Int64Value.of(userId));
+                .setUserId(userId);
         if (userSessionsStatus == null) {
             builder.setUserStatus(UserStatus.OFFLINE);
         } else {
@@ -509,14 +505,14 @@ public final class ProtoUtil {
         Integer burnAfter = message.getBurnAfter();
 
         if (messageId != null) {
-            builder.setMessageId(Int64Value.of(messageId));
+            builder.setMessageId(messageId);
         } else {
             builder.clearMessageId();
         }
-        builder.setIsSystemMessage(BoolValue.of(isSystemMessage));
+        builder.setIsSystemMessage(isSystemMessage);
         builder.setDeliveryDate(deliveryDate.getTime());
         if (text != null) {
-            builder.setText(StringValue.of(text));
+            builder.setText(text);
         }
         if (records != null) {
             for (byte[] record : records) {
@@ -524,7 +520,7 @@ public final class ProtoUtil {
             }
         }
         if (burnAfter != null) {
-            builder.setBurnAfter(Int32Value.of(burnAfter));
+            builder.setBurnAfter(burnAfter);
         }
         return builder;
     }

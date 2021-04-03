@@ -31,20 +31,27 @@ public interface CreateSessionRequestOrBuilder extends
   long getUserId();
 
   /**
-   * <code>.google.protobuf.StringValue password = 2;</code>
+   * <code>string password = 2;</code>
    * @return Whether the password field is set.
    */
   boolean hasPassword();
   /**
-   * <code>.google.protobuf.StringValue password = 2;</code>
+   * <code>string password = 2;</code>
    * @return The password.
    */
-  com.google.protobuf.StringValue getPassword();
+  java.lang.String getPassword();
   /**
-   * <code>.google.protobuf.StringValue password = 2;</code>
+   * <code>string password = 2;</code>
+   * @return The bytes for password.
    */
-  com.google.protobuf.StringValueOrBuilder getPasswordOrBuilder();
+  com.google.protobuf.ByteString
+      getPasswordBytes();
 
+  /**
+   * <code>.im.turms.proto.UserStatus user_status = 3;</code>
+   * @return Whether the userStatus field is set.
+   */
+  boolean hasUserStatus();
   /**
    * <code>.im.turms.proto.UserStatus user_status = 3;</code>
    * @return The enum numeric value on the wire for userStatus.
@@ -68,19 +75,21 @@ public interface CreateSessionRequestOrBuilder extends
   im.turms.common.constant.DeviceType getDeviceType();
 
   /**
-   * <code>.google.protobuf.StringValue device_details = 5;</code>
+   * <code>string device_details = 5;</code>
    * @return Whether the deviceDetails field is set.
    */
   boolean hasDeviceDetails();
   /**
-   * <code>.google.protobuf.StringValue device_details = 5;</code>
+   * <code>string device_details = 5;</code>
    * @return The deviceDetails.
    */
-  com.google.protobuf.StringValue getDeviceDetails();
+  java.lang.String getDeviceDetails();
   /**
-   * <code>.google.protobuf.StringValue device_details = 5;</code>
+   * <code>string device_details = 5;</code>
+   * @return The bytes for deviceDetails.
    */
-  com.google.protobuf.StringValueOrBuilder getDeviceDetailsOrBuilder();
+  com.google.protobuf.ByteString
+      getDeviceDetailsBytes();
 
   /**
    * <code>.im.turms.proto.UserLocation location = 6;</code>

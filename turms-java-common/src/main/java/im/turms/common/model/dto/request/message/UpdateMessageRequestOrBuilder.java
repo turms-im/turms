@@ -31,19 +31,21 @@ public interface UpdateMessageRequestOrBuilder extends
   long getMessageId();
 
   /**
-   * <code>.google.protobuf.StringValue text = 2;</code>
+   * <code>string text = 2;</code>
    * @return Whether the text field is set.
    */
   boolean hasText();
   /**
-   * <code>.google.protobuf.StringValue text = 2;</code>
+   * <code>string text = 2;</code>
    * @return The text.
    */
-  com.google.protobuf.StringValue getText();
+  java.lang.String getText();
   /**
-   * <code>.google.protobuf.StringValue text = 2;</code>
+   * <code>string text = 2;</code>
+   * @return The bytes for text.
    */
-  com.google.protobuf.StringValueOrBuilder getTextOrBuilder();
+  com.google.protobuf.ByteString
+      getTextBytes();
 
   /**
    * <code>repeated bytes records = 3;</code>
@@ -63,17 +65,13 @@ public interface UpdateMessageRequestOrBuilder extends
   com.google.protobuf.ByteString getRecords(int index);
 
   /**
-   * <code>.google.protobuf.Int64Value recall_date = 4;</code>
+   * <code>int64 recall_date = 4;</code>
    * @return Whether the recallDate field is set.
    */
   boolean hasRecallDate();
   /**
-   * <code>.google.protobuf.Int64Value recall_date = 4;</code>
+   * <code>int64 recall_date = 4;</code>
    * @return The recallDate.
    */
-  com.google.protobuf.Int64Value getRecallDate();
-  /**
-   * <code>.google.protobuf.Int64Value recall_date = 4;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getRecallDateOrBuilder();
+  long getRecallDate();
 }

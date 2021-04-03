@@ -37,47 +37,47 @@ public interface UserLocationOrBuilder extends
   float getLongitude();
 
   /**
-   * <code>.google.protobuf.StringValue name = 3;</code>
+   * <code>string name = 3;</code>
    * @return Whether the name field is set.
    */
   boolean hasName();
   /**
-   * <code>.google.protobuf.StringValue name = 3;</code>
+   * <code>string name = 3;</code>
    * @return The name.
    */
-  com.google.protobuf.StringValue getName();
+  java.lang.String getName();
   /**
-   * <code>.google.protobuf.StringValue name = 3;</code>
+   * <code>string name = 3;</code>
+   * @return The bytes for name.
    */
-  com.google.protobuf.StringValueOrBuilder getNameOrBuilder();
+  com.google.protobuf.ByteString
+      getNameBytes();
 
   /**
-   * <code>.google.protobuf.StringValue address = 4;</code>
+   * <code>string address = 4;</code>
    * @return Whether the address field is set.
    */
   boolean hasAddress();
   /**
-   * <code>.google.protobuf.StringValue address = 4;</code>
+   * <code>string address = 4;</code>
    * @return The address.
    */
-  com.google.protobuf.StringValue getAddress();
+  java.lang.String getAddress();
   /**
-   * <code>.google.protobuf.StringValue address = 4;</code>
+   * <code>string address = 4;</code>
+   * @return The bytes for address.
    */
-  com.google.protobuf.StringValueOrBuilder getAddressOrBuilder();
+  com.google.protobuf.ByteString
+      getAddressBytes();
 
   /**
-   * <code>.google.protobuf.Int64Value timestamp = 5;</code>
+   * <code>int64 timestamp = 5;</code>
    * @return Whether the timestamp field is set.
    */
   boolean hasTimestamp();
   /**
-   * <code>.google.protobuf.Int64Value timestamp = 5;</code>
+   * <code>int64 timestamp = 5;</code>
    * @return The timestamp.
    */
-  com.google.protobuf.Int64Value getTimestamp();
-  /**
-   * <code>.google.protobuf.Int64Value timestamp = 5;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getTimestampOrBuilder();
+  long getTimestamp();
 }

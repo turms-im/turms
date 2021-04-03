@@ -17,7 +17,6 @@
 
 package im.turms.turms.workflow.service.impl.group;
 
-import com.google.protobuf.Int64Value;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import im.turms.common.constant.GroupInvitationStrategy;
@@ -346,7 +345,7 @@ public class GroupInvitationService {
                                         builder.addGroupInvitations(ProtoUtil.groupInvitation2proto(groupInvitation));
                                     }
                                     return builder
-                                            .setLastUpdatedDate(Int64Value.of(version.getTime()))
+                                            .setLastUpdatedDate(version.getTime())
                                             .build();
                                 });
                     } else {
@@ -381,7 +380,7 @@ public class GroupInvitationService {
                                                     throw TurmsBusinessException.get(TurmsStatusCode.NO_CONTENT);
                                                 }
                                                 GroupInvitationsWithVersion.Builder builder = GroupInvitationsWithVersion.newBuilder()
-                                                        .setLastUpdatedDate(Int64Value.of(version.getTime()));
+                                                        .setLastUpdatedDate(version.getTime());
                                                 for (GroupInvitation invitation : groupInvitations) {
                                                     builder.addGroupInvitations(ProtoUtil.groupInvitation2proto(invitation).build());
                                                 }

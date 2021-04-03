@@ -25,50 +25,49 @@ public interface GroupInvitationOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>.google.protobuf.Int64Value id = 1;</code>
+   * <code>int64 id = 1;</code>
    * @return Whether the id field is set.
    */
   boolean hasId();
   /**
-   * <code>.google.protobuf.Int64Value id = 1;</code>
+   * <code>int64 id = 1;</code>
    * @return The id.
    */
-  com.google.protobuf.Int64Value getId();
-  /**
-   * <code>.google.protobuf.Int64Value id = 1;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getIdOrBuilder();
+  long getId();
 
   /**
-   * <code>.google.protobuf.Int64Value creation_date = 2;</code>
+   * <code>int64 creation_date = 2;</code>
    * @return Whether the creationDate field is set.
    */
   boolean hasCreationDate();
   /**
-   * <code>.google.protobuf.Int64Value creation_date = 2;</code>
+   * <code>int64 creation_date = 2;</code>
    * @return The creationDate.
    */
-  com.google.protobuf.Int64Value getCreationDate();
-  /**
-   * <code>.google.protobuf.Int64Value creation_date = 2;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getCreationDateOrBuilder();
+  long getCreationDate();
 
   /**
-   * <code>.google.protobuf.StringValue content = 3;</code>
+   * <code>string content = 3;</code>
    * @return Whether the content field is set.
    */
   boolean hasContent();
   /**
-   * <code>.google.protobuf.StringValue content = 3;</code>
+   * <code>string content = 3;</code>
    * @return The content.
    */
-  com.google.protobuf.StringValue getContent();
+  java.lang.String getContent();
   /**
-   * <code>.google.protobuf.StringValue content = 3;</code>
+   * <code>string content = 3;</code>
+   * @return The bytes for content.
    */
-  com.google.protobuf.StringValueOrBuilder getContentOrBuilder();
+  com.google.protobuf.ByteString
+      getContentBytes();
 
+  /**
+   * <code>.im.turms.proto.RequestStatus status = 4;</code>
+   * @return Whether the status field is set.
+   */
+  boolean hasStatus();
   /**
    * <code>.im.turms.proto.RequestStatus status = 4;</code>
    * @return The enum numeric value on the wire for status.
@@ -81,62 +80,46 @@ public interface GroupInvitationOrBuilder extends
   im.turms.common.constant.RequestStatus getStatus();
 
   /**
-   * <code>.google.protobuf.Int64Value expiration_date = 5;</code>
+   * <code>int64 expiration_date = 5;</code>
    * @return Whether the expirationDate field is set.
    */
   boolean hasExpirationDate();
   /**
-   * <code>.google.protobuf.Int64Value expiration_date = 5;</code>
+   * <code>int64 expiration_date = 5;</code>
    * @return The expirationDate.
    */
-  com.google.protobuf.Int64Value getExpirationDate();
-  /**
-   * <code>.google.protobuf.Int64Value expiration_date = 5;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getExpirationDateOrBuilder();
+  long getExpirationDate();
 
   /**
-   * <code>.google.protobuf.Int64Value group_id = 6;</code>
+   * <code>int64 group_id = 6;</code>
    * @return Whether the groupId field is set.
    */
   boolean hasGroupId();
   /**
-   * <code>.google.protobuf.Int64Value group_id = 6;</code>
+   * <code>int64 group_id = 6;</code>
    * @return The groupId.
    */
-  com.google.protobuf.Int64Value getGroupId();
-  /**
-   * <code>.google.protobuf.Int64Value group_id = 6;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getGroupIdOrBuilder();
+  long getGroupId();
 
   /**
-   * <code>.google.protobuf.Int64Value inviter_id = 7;</code>
+   * <code>int64 inviter_id = 7;</code>
    * @return Whether the inviterId field is set.
    */
   boolean hasInviterId();
   /**
-   * <code>.google.protobuf.Int64Value inviter_id = 7;</code>
+   * <code>int64 inviter_id = 7;</code>
    * @return The inviterId.
    */
-  com.google.protobuf.Int64Value getInviterId();
-  /**
-   * <code>.google.protobuf.Int64Value inviter_id = 7;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getInviterIdOrBuilder();
+  long getInviterId();
 
   /**
-   * <code>.google.protobuf.Int64Value invitee_id = 8;</code>
+   * <code>int64 invitee_id = 8;</code>
    * @return Whether the inviteeId field is set.
    */
   boolean hasInviteeId();
   /**
-   * <code>.google.protobuf.Int64Value invitee_id = 8;</code>
+   * <code>int64 invitee_id = 8;</code>
    * @return The inviteeId.
    */
-  com.google.protobuf.Int64Value getInviteeId();
-  /**
-   * <code>.google.protobuf.Int64Value invitee_id = 8;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getInviteeIdOrBuilder();
+  long getInviteeId();
 }

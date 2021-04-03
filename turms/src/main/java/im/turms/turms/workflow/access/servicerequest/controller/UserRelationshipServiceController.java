@@ -121,7 +121,7 @@ public class UserRelationshipServiceController {
             // It is unnecessary to check whether requester is in the blocklist of the target user
             // because only a one-sided relationship will be created here
             int groupIndex = request.hasGroupIndex() ?
-                    request.getGroupIndex().getValue() : DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX;
+                    request.getGroupIndex() : DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX;
             Date blockDate = request.getBlocked() ? new Date() : null;
             return userRelationshipService.upsertOneSidedRelationship(
                     clientRequest.getUserId(),
@@ -146,7 +146,7 @@ public class UserRelationshipServiceController {
             DeleteRelationshipGroupRequest request = clientRequest.getTurmsRequest().getDeleteRelationshipGroupRequest();
             Integer groupIndex = request.getGroupIndex();
             int targetGroupIndex = request.hasTargetGroupIndex() ?
-                    request.getTargetGroupIndex().getValue() : DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX;
+                    request.getTargetGroupIndex() : DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX;
             if (node.getSharedProperties().getService().getNotification()
                     .isNotifyMembersAfterOneSidedRelationshipGroupUpdatedByOthers()) {
                 return userRelationshipGroupService.queryRelatedUserIdsInRelationshipGroup(
@@ -196,7 +196,7 @@ public class UserRelationshipServiceController {
     public ClientRequestHandler handleQueryFriendRequestsRequest() {
         return clientRequest -> {
             QueryFriendRequestsRequest request = clientRequest.getTurmsRequest().getQueryFriendRequestsRequest();
-            Date lastUpdatedDate = request.hasLastUpdatedDate() ? new Date(request.getLastUpdatedDate().getValue()) : null;
+            Date lastUpdatedDate = request.hasLastUpdatedDate() ? new Date(request.getLastUpdatedDate()) : null;
             return userFriendRequestService.queryFriendRequestsWithVersion(
                     clientRequest.getUserId(),
                     request.getAreSentByMe(),
@@ -213,9 +213,9 @@ public class UserRelationshipServiceController {
     public ClientRequestHandler handleQueryRelatedUserIdsRequest() {
         return clientRequest -> {
             QueryRelatedUserIdsRequest request = clientRequest.getTurmsRequest().getQueryRelatedUserIdsRequest();
-            int groupIndex = request.hasGroupIndex() ? request.getGroupIndex().getValue() : DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX;
-            Date lastUpdatedDate = request.hasLastUpdatedDate() ? new Date(request.getLastUpdatedDate().getValue()) : null;
-            Boolean isBlocked = request.hasBlocked() ? request.getBlocked().getValue() : null;
+            int groupIndex = request.hasGroupIndex() ? request.getGroupIndex() : DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX;
+            Date lastUpdatedDate = request.hasLastUpdatedDate() ? new Date(request.getLastUpdatedDate()) : null;
+            Boolean isBlocked = request.hasBlocked() ? request.getBlocked() : null;
             return userRelationshipService.queryRelatedUserIdsWithVersion(
                     clientRequest.getUserId(),
                     groupIndex,
@@ -235,7 +235,7 @@ public class UserRelationshipServiceController {
             QueryRelationshipGroupsRequest request = clientRequest.getTurmsRequest()
                     .getQueryRelationshipGroupsRequest();
             Date lastUpdatedDate = request.hasLastUpdatedDate() ?
-                    new Date(request.getLastUpdatedDate().getValue()) : null;
+                    new Date(request.getLastUpdatedDate()) : null;
             return userRelationshipGroupService.queryRelationshipGroupsInfosWithVersion(
                     clientRequest.getUserId(),
                     lastUpdatedDate)
@@ -254,10 +254,10 @@ public class UserRelationshipServiceController {
                     .getQueryRelationshipsRequest();
             Set<Long> ids = request.getUserIdsCount() != 0 ?
                     new HashSet<>(request.getUserIdsList()) : null;
-            int groupIndex = request.hasGroupIndex() ? request.getGroupIndex().getValue() : DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX;
-            Boolean isBlocked = request.hasBlocked() ? request.getBlocked().getValue() : null;
+            int groupIndex = request.hasGroupIndex() ? request.getGroupIndex() : DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX;
+            Boolean isBlocked = request.hasBlocked() ? request.getBlocked() : null;
             Date lastUpdatedDate = request.hasLastUpdatedDate() ?
-                    new Date(request.getLastUpdatedDate().getValue()) : null;
+                    new Date(request.getLastUpdatedDate()) : null;
             return userRelationshipService.queryRelationshipsWithVersion(
                     clientRequest.getUserId(),
                     ids,
@@ -277,7 +277,7 @@ public class UserRelationshipServiceController {
         return clientRequest -> {
             UpdateFriendRequestRequest request = clientRequest.getTurmsRequest().getUpdateFriendRequestRequest();
             ResponseAction action = request.getResponseAction();
-            String reason = request.hasReason() ? request.getReason().getValue() : null;
+            String reason = request.hasReason() ? request.getReason() : null;
             return userFriendRequestService.handleFriendRequest(
                     request.getRequestId(),
                     clientRequest.getUserId(),
@@ -306,9 +306,9 @@ public class UserRelationshipServiceController {
     public ClientRequestHandler handleUpdateRelationshipRequest() {
         return clientRequest -> {
             UpdateRelationshipRequest request = clientRequest.getTurmsRequest().getUpdateRelationshipRequest();
-            Date blockDate = request.hasBlocked() && request.getBlocked().getValue() ? new Date() : null;
-            Integer newGroupIndex = request.hasNewGroupIndex() ? request.getNewGroupIndex().getValue() : null;
-            Integer deleteGroupIndex = request.hasDeleteGroupIndex() ? request.getDeleteGroupIndex().getValue() : null;
+            Date blockDate = request.hasBlocked() && request.getBlocked() ? new Date() : null;
+            Integer newGroupIndex = request.hasNewGroupIndex() ? request.getNewGroupIndex() : null;
+            Integer deleteGroupIndex = request.hasDeleteGroupIndex() ? request.getDeleteGroupIndex() : null;
             return userRelationshipService.upsertOneSidedRelationship(
                     clientRequest.getUserId(),
                     request.getUserId(),

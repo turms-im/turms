@@ -631,7 +631,7 @@ public class GroupService {
                         ? mongoClient.findById(Group.class, groupId)
                         .map(group -> GroupsWithVersion.newBuilder()
                                 .addGroups(ProtoUtil.group2proto(group))
-                                .setLastUpdatedDate(Int64Value.of(version.getTime()))
+                                .setLastUpdatedDate(version.getTime())
                                 .build())
                         : Mono.error(TurmsBusinessException.get(TurmsStatusCode.ALREADY_UP_TO_DATE)))
                 .switchIfEmpty(Mono.error(TurmsBusinessException.get(TurmsStatusCode.ALREADY_UP_TO_DATE)));
@@ -687,7 +687,7 @@ public class GroupService {
                                     return Int64ValuesWithVersion
                                             .newBuilder()
                                             .addAllValues(ids)
-                                            .setLastUpdatedDate(Int64Value.of(version.getTime()))
+                                            .setLastUpdatedDate(version.getTime())
                                             .build();
                                 });
                     } else {
@@ -715,7 +715,7 @@ public class GroupService {
                                         builder.addGroups(ProtoUtil.group2proto(group));
                                     }
                                     return builder
-                                            .setLastUpdatedDate(Int64Value.of(version.getTime()))
+                                            .setLastUpdatedDate(version.getTime())
                                             .build();
                                 });
                     } else {

@@ -17,7 +17,6 @@
 
 package im.turms.turms.workflow.service.impl.user.relationship;
 
-import com.google.protobuf.Int64Value;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
@@ -138,7 +137,7 @@ public class UserRelationshipGroupService {
                 .flatMap(date -> {
                     if (lastUpdatedDate == null || lastUpdatedDate.before(date)) {
                         UserRelationshipGroupsWithVersion.Builder builder = UserRelationshipGroupsWithVersion.newBuilder()
-                                .setLastUpdatedDate(Int64Value.of(date.getTime()));
+                                .setLastUpdatedDate(date.getTime());
                         return queryRelationshipGroupsInfos(ownerId)
                                 .collect(CollectorUtil.toList())
                                 .map(groups -> {

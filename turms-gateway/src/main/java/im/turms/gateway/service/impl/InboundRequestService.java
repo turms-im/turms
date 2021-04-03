@@ -17,9 +17,6 @@
 
 package im.turms.gateway.service.impl;
 
-import com.google.protobuf.Int32Value;
-import com.google.protobuf.Int64Value;
-import com.google.protobuf.StringValue;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
@@ -193,12 +190,12 @@ public class InboundRequestService {
     private TurmsNotification getNotificationFromStatusCode(@NotNull TurmsStatusCode statusCode, @Nullable Long requestId) {
         int codeBusinessCode = statusCode.getBusinessCode();
         TurmsNotification.Builder builder = TurmsNotification.newBuilder()
-                .setCode(Int32Value.of(codeBusinessCode));
+                .setCode(codeBusinessCode);
         if (requestId != null) {
-            builder.setRequestId(Int64Value.of(requestId));
+            builder.setRequestId(requestId);
         }
         return builder
-                .setCode(Int32Value.of(codeBusinessCode))
+                .setCode(codeBusinessCode)
                 .build();
     }
 
@@ -211,16 +208,15 @@ public class InboundRequestService {
         TurmsNotification.Builder builder = TurmsNotification.newBuilder();
         String reason = serviceResponse.getReason();
         if (reason != null) {
-            builder.setReason(StringValue.of(reason));
+            builder.setReason(reason);
         }
         TurmsNotification.Data dataForRequester = serviceResponse.getDataForRequester();
         if (dataForRequester != null) {
             builder.setData(dataForRequester);
         }
-        Int32Value businessCode = Int32Value.of(code.getBusinessCode());
         return builder
-                .setCode(businessCode)
-                .setRequestId(Int64Value.of(requestId))
+                .setCode(code.getBusinessCode())
+                .setRequestId(requestId)
                 .build();
     }
 

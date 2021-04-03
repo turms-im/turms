@@ -25,34 +25,26 @@ public interface UpdateConversationRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>.google.protobuf.Int64Value target_id = 1;</code>
+   * <code>int64 target_id = 1;</code>
    * @return Whether the targetId field is set.
    */
   boolean hasTargetId();
   /**
-   * <code>.google.protobuf.Int64Value target_id = 1;</code>
+   * <code>int64 target_id = 1;</code>
    * @return The targetId.
    */
-  com.google.protobuf.Int64Value getTargetId();
-  /**
-   * <code>.google.protobuf.Int64Value target_id = 1;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getTargetIdOrBuilder();
+  long getTargetId();
 
   /**
-   * <code>.google.protobuf.Int64Value group_id = 2;</code>
+   * <code>int64 group_id = 2;</code>
    * @return Whether the groupId field is set.
    */
   boolean hasGroupId();
   /**
-   * <code>.google.protobuf.Int64Value group_id = 2;</code>
+   * <code>int64 group_id = 2;</code>
    * @return The groupId.
    */
-  com.google.protobuf.Int64Value getGroupId();
-  /**
-   * <code>.google.protobuf.Int64Value group_id = 2;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getGroupIdOrBuilder();
+  long getGroupId();
 
   /**
    * <code>int64 read_date = 3;</code>

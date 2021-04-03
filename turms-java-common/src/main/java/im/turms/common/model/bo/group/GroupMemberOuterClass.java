@@ -46,26 +46,24 @@ public final class GroupMemberOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\036model/group/group_member.proto\022\016im.tur" +
-      "ms.proto\032\036google/protobuf/wrappers.proto" +
-      "\032 constant/group_member_role.proto\032\032cons" +
-      "tant/user_status.proto\032\032constant/device_" +
-      "type.proto\"\222\003\n\013GroupMember\022-\n\010group_id\030\001" +
-      " \001(\0132\033.google.protobuf.Int64Value\022,\n\007use" +
-      "r_id\030\002 \001(\0132\033.google.protobuf.Int64Value\022" +
-      "*\n\004name\030\003 \001(\0132\034.google.protobuf.StringVa" +
-      "lue\022-\n\004role\030\004 \001(\0162\037.im.turms.proto.Group" +
-      "MemberRole\022.\n\tjoin_date\030\005 \001(\0132\033.google.p" +
-      "rotobuf.Int64Value\0222\n\rmute_end_date\030\006 \001(" +
-      "\0132\033.google.protobuf.Int64Value\022/\n\013user_s" +
-      "tatus\030\007 \001(\0162\032.im.turms.proto.UserStatus\022" +
-      "6\n\022using_device_types\030\010 \003(\0162\032.im.turms.p" +
-      "roto.DeviceTypeB%\n\036im.turms.common.model" +
-      ".bo.groupP\001\272\002\000b\006proto3"
+      "ms.proto\032 constant/group_member_role.pro" +
+      "to\032\032constant/user_status.proto\032\032constant" +
+      "/device_type.proto\"\376\002\n\013GroupMember\022\025\n\010gr" +
+      "oup_id\030\001 \001(\003H\000\210\001\001\022\024\n\007user_id\030\002 \001(\003H\001\210\001\001\022" +
+      "\021\n\004name\030\003 \001(\tH\002\210\001\001\0222\n\004role\030\004 \001(\0162\037.im.tu" +
+      "rms.proto.GroupMemberRoleH\003\210\001\001\022\026\n\tjoin_d" +
+      "ate\030\005 \001(\003H\004\210\001\001\022\032\n\rmute_end_date\030\006 \001(\003H\005\210" +
+      "\001\001\0224\n\013user_status\030\007 \001(\0162\032.im.turms.proto" +
+      ".UserStatusH\006\210\001\001\0226\n\022using_device_types\030\010" +
+      " \003(\0162\032.im.turms.proto.DeviceTypeB\013\n\t_gro" +
+      "up_idB\n\n\010_user_idB\007\n\005_nameB\007\n\005_roleB\014\n\n_" +
+      "join_dateB\020\n\016_mute_end_dateB\016\n\014_user_sta" +
+      "tusB%\n\036im.turms.common.model.bo.groupP\001\272" +
+      "\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
           im.turms.common.constant.GroupMemberRoleOuterClass.getDescriptor(),
           im.turms.common.constant.UserStatusOuterClass.getDescriptor(),
           im.turms.common.constant.DeviceTypeOuterClass.getDescriptor(),
@@ -75,8 +73,7 @@ public final class GroupMemberOuterClass {
     internal_static_im_turms_proto_GroupMember_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_GroupMember_descriptor,
-        new java.lang.String[] { "GroupId", "UserId", "Name", "Role", "JoinDate", "MuteEndDate", "UserStatus", "UsingDeviceTypes", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "GroupId", "UserId", "Name", "Role", "JoinDate", "MuteEndDate", "UserStatus", "UsingDeviceTypes", "GroupId", "UserId", "Name", "Role", "JoinDate", "MuteEndDate", "UserStatus", });
     im.turms.common.constant.GroupMemberRoleOuterClass.getDescriptor();
     im.turms.common.constant.UserStatusOuterClass.getDescriptor();
     im.turms.common.constant.DeviceTypeOuterClass.getDescriptor();

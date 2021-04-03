@@ -31,19 +31,15 @@ public interface QueryGroupMembersRequestOrBuilder extends
   long getGroupId();
 
   /**
-   * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
+   * <code>int64 last_updated_date = 2;</code>
    * @return Whether the lastUpdatedDate field is set.
    */
   boolean hasLastUpdatedDate();
   /**
-   * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
+   * <code>int64 last_updated_date = 2;</code>
    * @return The lastUpdatedDate.
    */
-  com.google.protobuf.Int64Value getLastUpdatedDate();
-  /**
-   * <code>.google.protobuf.Int64Value last_updated_date = 2;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getLastUpdatedDateOrBuilder();
+  long getLastUpdatedDate();
 
   /**
    * <code>repeated int64 member_ids = 3;</code>
@@ -63,17 +59,13 @@ public interface QueryGroupMembersRequestOrBuilder extends
   long getMemberIds(int index);
 
   /**
-   * <code>.google.protobuf.BoolValue with_status = 4;</code>
+   * <code>bool with_status = 4;</code>
    * @return Whether the withStatus field is set.
    */
   boolean hasWithStatus();
   /**
-   * <code>.google.protobuf.BoolValue with_status = 4;</code>
+   * <code>bool with_status = 4;</code>
    * @return The withStatus.
    */
-  com.google.protobuf.BoolValue getWithStatus();
-  /**
-   * <code>.google.protobuf.BoolValue with_status = 4;</code>
-   */
-  com.google.protobuf.BoolValueOrBuilder getWithStatusOrBuilder();
+  boolean getWithStatus();
 }

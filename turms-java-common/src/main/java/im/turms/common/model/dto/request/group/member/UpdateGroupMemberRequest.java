@@ -33,6 +33,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private UpdateGroupMemberRequest() {
+    name_ = "";
     role_ = 0;
   }
 
@@ -56,6 +57,7 @@ private static final long serialVersionUID = 0L;
     if (extensionRegistry == null) {
       throw new java.lang.NullPointerException();
     }
+    int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
         com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
@@ -77,35 +79,20 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 26: {
-            com.google.protobuf.StringValue.Builder subBuilder = null;
-            if (name_ != null) {
-              subBuilder = name_.toBuilder();
-            }
-            name_ = input.readMessage(com.google.protobuf.StringValue.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(name_);
-              name_ = subBuilder.buildPartial();
-            }
-
+            java.lang.String s = input.readStringRequireUtf8();
+            bitField0_ |= 0x00000001;
+            name_ = s;
             break;
           }
           case 32: {
             int rawValue = input.readEnum();
-
+            bitField0_ |= 0x00000002;
             role_ = rawValue;
             break;
           }
-          case 42: {
-            com.google.protobuf.Int64Value.Builder subBuilder = null;
-            if (muteEndDate_ != null) {
-              subBuilder = muteEndDate_.toBuilder();
-            }
-            muteEndDate_ = input.readMessage(com.google.protobuf.Int64Value.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(muteEndDate_);
-              muteEndDate_ = subBuilder.buildPartial();
-            }
-
+          case 40: {
+            bitField0_ |= 0x00000004;
+            muteEndDate_ = input.readInt64();
             break;
           }
           default: {
@@ -140,6 +127,7 @@ private static final long serialVersionUID = 0L;
             im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest.class, im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest.Builder.class);
   }
 
+  private int bitField0_;
   public static final int GROUP_ID_FIELD_NUMBER = 1;
   private long groupId_;
   /**
@@ -163,33 +151,60 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int NAME_FIELD_NUMBER = 3;
-  private com.google.protobuf.StringValue name_;
+  private volatile java.lang.Object name_;
   /**
-   * <code>.google.protobuf.StringValue name = 3;</code>
+   * <code>string name = 3;</code>
    * @return Whether the name field is set.
    */
   @java.lang.Override
   public boolean hasName() {
-    return name_ != null;
+    return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>.google.protobuf.StringValue name = 3;</code>
+   * <code>string name = 3;</code>
    * @return The name.
    */
   @java.lang.Override
-  public com.google.protobuf.StringValue getName() {
-    return name_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : name_;
+  public java.lang.String getName() {
+    java.lang.Object ref = name_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs =
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      name_ = s;
+      return s;
+    }
   }
   /**
-   * <code>.google.protobuf.StringValue name = 3;</code>
+   * <code>string name = 3;</code>
+   * @return The bytes for name.
    */
   @java.lang.Override
-  public com.google.protobuf.StringValueOrBuilder getNameOrBuilder() {
-    return getName();
+  public com.google.protobuf.ByteString
+      getNameBytes() {
+    java.lang.Object ref = name_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      name_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
   public static final int ROLE_FIELD_NUMBER = 4;
   private int role_;
+  /**
+   * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
+   * @return Whether the role field is set.
+   */
+  @java.lang.Override public boolean hasRole() {
+    return ((bitField0_ & 0x00000002) != 0);
+  }
   /**
    * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
    * @return The enum numeric value on the wire for role.
@@ -208,29 +223,22 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int MUTE_END_DATE_FIELD_NUMBER = 5;
-  private com.google.protobuf.Int64Value muteEndDate_;
+  private long muteEndDate_;
   /**
-   * <code>.google.protobuf.Int64Value mute_end_date = 5;</code>
+   * <code>int64 mute_end_date = 5;</code>
    * @return Whether the muteEndDate field is set.
    */
   @java.lang.Override
   public boolean hasMuteEndDate() {
-    return muteEndDate_ != null;
+    return ((bitField0_ & 0x00000004) != 0);
   }
   /**
-   * <code>.google.protobuf.Int64Value mute_end_date = 5;</code>
+   * <code>int64 mute_end_date = 5;</code>
    * @return The muteEndDate.
    */
   @java.lang.Override
-  public com.google.protobuf.Int64Value getMuteEndDate() {
-    return muteEndDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : muteEndDate_;
-  }
-  /**
-   * <code>.google.protobuf.Int64Value mute_end_date = 5;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.Int64ValueOrBuilder getMuteEndDateOrBuilder() {
-    return getMuteEndDate();
+  public long getMuteEndDate() {
+    return muteEndDate_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -253,14 +261,14 @@ private static final long serialVersionUID = 0L;
     if (memberId_ != 0L) {
       output.writeInt64(2, memberId_);
     }
-    if (name_ != null) {
-      output.writeMessage(3, getName());
+    if (((bitField0_ & 0x00000001) != 0)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, name_);
     }
-    if (role_ != im.turms.common.constant.GroupMemberRole.OWNER.getNumber()) {
+    if (((bitField0_ & 0x00000002) != 0)) {
       output.writeEnum(4, role_);
     }
-    if (muteEndDate_ != null) {
-      output.writeMessage(5, getMuteEndDate());
+    if (((bitField0_ & 0x00000004) != 0)) {
+      output.writeInt64(5, muteEndDate_);
     }
     unknownFields.writeTo(output);
   }
@@ -279,17 +287,16 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt64Size(2, memberId_);
     }
-    if (name_ != null) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(3, getName());
+    if (((bitField0_ & 0x00000001) != 0)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, name_);
     }
-    if (role_ != im.turms.common.constant.GroupMemberRole.OWNER.getNumber()) {
+    if (((bitField0_ & 0x00000002) != 0)) {
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(4, role_);
     }
-    if (muteEndDate_ != null) {
+    if (((bitField0_ & 0x00000004) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(5, getMuteEndDate());
+        .computeInt64Size(5, muteEndDate_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -315,11 +322,14 @@ private static final long serialVersionUID = 0L;
       if (!getName()
           .equals(other.getName())) return false;
     }
-    if (role_ != other.role_) return false;
+    if (hasRole() != other.hasRole()) return false;
+    if (hasRole()) {
+      if (role_ != other.role_) return false;
+    }
     if (hasMuteEndDate() != other.hasMuteEndDate()) return false;
     if (hasMuteEndDate()) {
-      if (!getMuteEndDate()
-          .equals(other.getMuteEndDate())) return false;
+      if (getMuteEndDate()
+          != other.getMuteEndDate()) return false;
     }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
@@ -342,11 +352,14 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + NAME_FIELD_NUMBER;
       hash = (53 * hash) + getName().hashCode();
     }
-    hash = (37 * hash) + ROLE_FIELD_NUMBER;
-    hash = (53 * hash) + role_;
+    if (hasRole()) {
+      hash = (37 * hash) + ROLE_FIELD_NUMBER;
+      hash = (53 * hash) + role_;
+    }
     if (hasMuteEndDate()) {
       hash = (37 * hash) + MUTE_END_DATE_FIELD_NUMBER;
-      hash = (53 * hash) + getMuteEndDate().hashCode();
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getMuteEndDate());
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -485,20 +498,12 @@ private static final long serialVersionUID = 0L;
 
       memberId_ = 0L;
 
-      if (nameBuilder_ == null) {
-        name_ = null;
-      } else {
-        name_ = null;
-        nameBuilder_ = null;
-      }
+      name_ = "";
+      bitField0_ = (bitField0_ & ~0x00000001);
       role_ = 0;
-
-      if (muteEndDateBuilder_ == null) {
-        muteEndDate_ = null;
-      } else {
-        muteEndDate_ = null;
-        muteEndDateBuilder_ = null;
-      }
+      bitField0_ = (bitField0_ & ~0x00000002);
+      muteEndDate_ = 0L;
+      bitField0_ = (bitField0_ & ~0x00000004);
       return this;
     }
 
@@ -525,19 +530,23 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest buildPartial() {
       im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest result = new im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest(this);
+      int from_bitField0_ = bitField0_;
+      int to_bitField0_ = 0;
       result.groupId_ = groupId_;
       result.memberId_ = memberId_;
-      if (nameBuilder_ == null) {
-        result.name_ = name_;
-      } else {
-        result.name_ = nameBuilder_.build();
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        to_bitField0_ |= 0x00000001;
+      }
+      result.name_ = name_;
+      if (((from_bitField0_ & 0x00000002) != 0)) {
+        to_bitField0_ |= 0x00000002;
       }
       result.role_ = role_;
-      if (muteEndDateBuilder_ == null) {
+      if (((from_bitField0_ & 0x00000004) != 0)) {
         result.muteEndDate_ = muteEndDate_;
-      } else {
-        result.muteEndDate_ = muteEndDateBuilder_.build();
+        to_bitField0_ |= 0x00000004;
       }
+      result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
     }
@@ -593,13 +602,15 @@ private static final long serialVersionUID = 0L;
         setMemberId(other.getMemberId());
       }
       if (other.hasName()) {
-        mergeName(other.getName());
+        bitField0_ |= 0x00000001;
+        name_ = other.name_;
+        onChanged();
       }
-      if (other.role_ != 0) {
-        setRoleValue(other.getRoleValue());
+      if (other.hasRole()) {
+        setRole(other.getRole());
       }
       if (other.hasMuteEndDate()) {
-        mergeMuteEndDate(other.getMuteEndDate());
+        setMuteEndDate(other.getMuteEndDate());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -629,6 +640,7 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+    private int bitField0_;
 
     private long groupId_ ;
     /**
@@ -692,126 +704,97 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private com.google.protobuf.StringValue name_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> nameBuilder_;
+    private java.lang.Object name_ = "";
     /**
-     * <code>.google.protobuf.StringValue name = 3;</code>
+     * <code>string name = 3;</code>
      * @return Whether the name field is set.
      */
     public boolean hasName() {
-      return nameBuilder_ != null || name_ != null;
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>.google.protobuf.StringValue name = 3;</code>
+     * <code>string name = 3;</code>
      * @return The name.
      */
-    public com.google.protobuf.StringValue getName() {
-      if (nameBuilder_ == null) {
-        return name_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : name_;
+    public java.lang.String getName() {
+      java.lang.Object ref = name_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        name_ = s;
+        return s;
       } else {
-        return nameBuilder_.getMessage();
+        return (java.lang.String) ref;
       }
     }
     /**
-     * <code>.google.protobuf.StringValue name = 3;</code>
+     * <code>string name = 3;</code>
+     * @return The bytes for name.
      */
-    public Builder setName(com.google.protobuf.StringValue value) {
-      if (nameBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        name_ = value;
-        onChanged();
+    public com.google.protobuf.ByteString
+        getNameBytes() {
+      java.lang.Object ref = name_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        name_ = b;
+        return b;
       } else {
-        nameBuilder_.setMessage(value);
+        return (com.google.protobuf.ByteString) ref;
       }
-
-      return this;
     }
     /**
-     * <code>.google.protobuf.StringValue name = 3;</code>
+     * <code>string name = 3;</code>
+     * @param value The name to set.
+     * @return This builder for chaining.
      */
     public Builder setName(
-        com.google.protobuf.StringValue.Builder builderForValue) {
-      if (nameBuilder_ == null) {
-        name_ = builderForValue.build();
-        onChanged();
-      } else {
-        nameBuilder_.setMessage(builderForValue.build());
-      }
-
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+      name_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.StringValue name = 3;</code>
-     */
-    public Builder mergeName(com.google.protobuf.StringValue value) {
-      if (nameBuilder_ == null) {
-        if (name_ != null) {
-          name_ =
-            com.google.protobuf.StringValue.newBuilder(name_).mergeFrom(value).buildPartial();
-        } else {
-          name_ = value;
-        }
-        onChanged();
-      } else {
-        nameBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.StringValue name = 3;</code>
+     * <code>string name = 3;</code>
+     * @return This builder for chaining.
      */
     public Builder clearName() {
-      if (nameBuilder_ == null) {
-        name_ = null;
-        onChanged();
-      } else {
-        name_ = null;
-        nameBuilder_ = null;
-      }
-
+      bitField0_ = (bitField0_ & ~0x00000001);
+      name_ = getDefaultInstance().getName();
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.StringValue name = 3;</code>
+     * <code>string name = 3;</code>
+     * @param value The bytes for name to set.
+     * @return This builder for chaining.
      */
-    public com.google.protobuf.StringValue.Builder getNameBuilder() {
-
+    public Builder setNameBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      bitField0_ |= 0x00000001;
+      name_ = value;
       onChanged();
-      return getNameFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.StringValue name = 3;</code>
-     */
-    public com.google.protobuf.StringValueOrBuilder getNameOrBuilder() {
-      if (nameBuilder_ != null) {
-        return nameBuilder_.getMessageOrBuilder();
-      } else {
-        return name_ == null ?
-            com.google.protobuf.StringValue.getDefaultInstance() : name_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.StringValue name = 3;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>
-        getNameFieldBuilder() {
-      if (nameBuilder_ == null) {
-        nameBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>(
-                getName(),
-                getParentForChildren(),
-                isClean());
-        name_ = null;
-      }
-      return nameBuilder_;
+      return this;
     }
 
     private int role_ = 0;
+    /**
+     * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
+     * @return Whether the role field is set.
+     */
+    @java.lang.Override public boolean hasRole() {
+      return ((bitField0_ & 0x00000002) != 0);
+    }
     /**
      * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
      * @return The enum numeric value on the wire for role.
@@ -825,7 +808,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setRoleValue(int value) {
-
+      bitField0_ |= 0x00000002;
       role_ = value;
       onChanged();
       return this;
@@ -849,7 +832,7 @@ private static final long serialVersionUID = 0L;
       if (value == null) {
         throw new NullPointerException();
       }
-
+      bitField0_ |= 0x00000002;
       role_ = value.getNumber();
       onChanged();
       return this;
@@ -859,129 +842,49 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearRole() {
-
+      bitField0_ = (bitField0_ & ~0x00000002);
       role_ = 0;
       onChanged();
       return this;
     }
 
-    private com.google.protobuf.Int64Value muteEndDate_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> muteEndDateBuilder_;
+    private long muteEndDate_ ;
     /**
-     * <code>.google.protobuf.Int64Value mute_end_date = 5;</code>
+     * <code>int64 mute_end_date = 5;</code>
      * @return Whether the muteEndDate field is set.
      */
+    @java.lang.Override
     public boolean hasMuteEndDate() {
-      return muteEndDateBuilder_ != null || muteEndDate_ != null;
+      return ((bitField0_ & 0x00000004) != 0);
     }
     /**
-     * <code>.google.protobuf.Int64Value mute_end_date = 5;</code>
+     * <code>int64 mute_end_date = 5;</code>
      * @return The muteEndDate.
      */
-    public com.google.protobuf.Int64Value getMuteEndDate() {
-      if (muteEndDateBuilder_ == null) {
-        return muteEndDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : muteEndDate_;
-      } else {
-        return muteEndDateBuilder_.getMessage();
-      }
+    @java.lang.Override
+    public long getMuteEndDate() {
+      return muteEndDate_;
     }
     /**
-     * <code>.google.protobuf.Int64Value mute_end_date = 5;</code>
+     * <code>int64 mute_end_date = 5;</code>
+     * @param value The muteEndDate to set.
+     * @return This builder for chaining.
      */
-    public Builder setMuteEndDate(com.google.protobuf.Int64Value value) {
-      if (muteEndDateBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        muteEndDate_ = value;
-        onChanged();
-      } else {
-        muteEndDateBuilder_.setMessage(value);
-      }
-
+    public Builder setMuteEndDate(long value) {
+      bitField0_ |= 0x00000004;
+      muteEndDate_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value mute_end_date = 5;</code>
-     */
-    public Builder setMuteEndDate(
-        com.google.protobuf.Int64Value.Builder builderForValue) {
-      if (muteEndDateBuilder_ == null) {
-        muteEndDate_ = builderForValue.build();
-        onChanged();
-      } else {
-        muteEndDateBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value mute_end_date = 5;</code>
-     */
-    public Builder mergeMuteEndDate(com.google.protobuf.Int64Value value) {
-      if (muteEndDateBuilder_ == null) {
-        if (muteEndDate_ != null) {
-          muteEndDate_ =
-            com.google.protobuf.Int64Value.newBuilder(muteEndDate_).mergeFrom(value).buildPartial();
-        } else {
-          muteEndDate_ = value;
-        }
-        onChanged();
-      } else {
-        muteEndDateBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value mute_end_date = 5;</code>
+     * <code>int64 mute_end_date = 5;</code>
+     * @return This builder for chaining.
      */
     public Builder clearMuteEndDate() {
-      if (muteEndDateBuilder_ == null) {
-        muteEndDate_ = null;
-        onChanged();
-      } else {
-        muteEndDate_ = null;
-        muteEndDateBuilder_ = null;
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value mute_end_date = 5;</code>
-     */
-    public com.google.protobuf.Int64Value.Builder getMuteEndDateBuilder() {
-
+      bitField0_ = (bitField0_ & ~0x00000004);
+      muteEndDate_ = 0L;
       onChanged();
-      return getMuteEndDateFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.Int64Value mute_end_date = 5;</code>
-     */
-    public com.google.protobuf.Int64ValueOrBuilder getMuteEndDateOrBuilder() {
-      if (muteEndDateBuilder_ != null) {
-        return muteEndDateBuilder_.getMessageOrBuilder();
-      } else {
-        return muteEndDate_ == null ?
-            com.google.protobuf.Int64Value.getDefaultInstance() : muteEndDate_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.Int64Value mute_end_date = 5;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
-        getMuteEndDateFieldBuilder() {
-      if (muteEndDateBuilder_ == null) {
-        muteEndDateBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>(
-                getMuteEndDate(),
-                getParentForChildren(),
-                isClean());
-        muteEndDate_ = null;
-      }
-      return muteEndDateBuilder_;
+      return this;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

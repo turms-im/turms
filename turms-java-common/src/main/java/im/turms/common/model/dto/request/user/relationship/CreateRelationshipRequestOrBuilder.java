@@ -37,17 +37,13 @@ public interface CreateRelationshipRequestOrBuilder extends
   boolean getBlocked();
 
   /**
-   * <code>.google.protobuf.Int32Value group_index = 3;</code>
+   * <code>int32 group_index = 3;</code>
    * @return Whether the groupIndex field is set.
    */
   boolean hasGroupIndex();
   /**
-   * <code>.google.protobuf.Int32Value group_index = 3;</code>
+   * <code>int32 group_index = 3;</code>
    * @return The groupIndex.
    */
-  com.google.protobuf.Int32Value getGroupIndex();
-  /**
-   * <code>.google.protobuf.Int32Value group_index = 3;</code>
-   */
-  com.google.protobuf.Int32ValueOrBuilder getGroupIndexOrBuilder();
+  int getGroupIndex();
 }

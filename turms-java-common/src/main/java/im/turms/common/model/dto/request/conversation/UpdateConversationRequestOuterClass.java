@@ -46,26 +46,23 @@ public final class UpdateConversationRequestOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n6request/conversation/update_conversati" +
-      "on_request.proto\022\016im.turms.proto\032\036google" +
-      "/protobuf/wrappers.proto\"\215\001\n\031UpdateConve" +
-      "rsationRequest\022.\n\ttarget_id\030\001 \001(\0132\033.goog" +
-      "le.protobuf.Int64Value\022-\n\010group_id\030\002 \001(\013" +
-      "2\033.google.protobuf.Int64Value\022\021\n\tread_da" +
-      "te\030\003 \001(\003B5\n.im.turms.common.model.dto.re" +
-      "quest.conversationP\001\272\002\000b\006proto3"
+      "on_request.proto\022\016im.turms.proto\"x\n\031Upda" +
+      "teConversationRequest\022\026\n\ttarget_id\030\001 \001(\003" +
+      "H\000\210\001\001\022\025\n\010group_id\030\002 \001(\003H\001\210\001\001\022\021\n\tread_dat" +
+      "e\030\003 \001(\003B\014\n\n_target_idB\013\n\t_group_idB5\n.im" +
+      ".turms.common.model.dto.request.conversa" +
+      "tionP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
         });
     internal_static_im_turms_proto_UpdateConversationRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_im_turms_proto_UpdateConversationRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_UpdateConversationRequest_descriptor,
-        new java.lang.String[] { "TargetId", "GroupId", "ReadDate", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "TargetId", "GroupId", "ReadDate", "TargetId", "GroupId", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -46,26 +46,23 @@ public final class UserLocationOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\036model/user/user_location.proto\022\016im.tur" +
-      "ms.proto\032\036google/protobuf/wrappers.proto" +
-      "\"\276\001\n\014UserLocation\022\020\n\010latitude\030\001 \001(\002\022\021\n\tl" +
-      "ongitude\030\002 \001(\002\022*\n\004name\030\003 \001(\0132\034.google.pr" +
-      "otobuf.StringValue\022-\n\007address\030\004 \001(\0132\034.go" +
-      "ogle.protobuf.StringValue\022.\n\ttimestamp\030\005" +
-      " \001(\0132\033.google.protobuf.Int64ValueB$\n\035im." +
-      "turms.common.model.bo.userP\001\272\002\000b\006proto3"
+      "ms.proto\"\227\001\n\014UserLocation\022\020\n\010latitude\030\001 " +
+      "\001(\002\022\021\n\tlongitude\030\002 \001(\002\022\021\n\004name\030\003 \001(\tH\000\210\001" +
+      "\001\022\024\n\007address\030\004 \001(\tH\001\210\001\001\022\026\n\ttimestamp\030\005 \001" +
+      "(\003H\002\210\001\001B\007\n\005_nameB\n\n\010_addressB\014\n\n_timesta" +
+      "mpB$\n\035im.turms.common.model.bo.userP\001\272\002\000" +
+      "b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
         });
     internal_static_im_turms_proto_UserLocation_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_im_turms_proto_UserLocation_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_UserLocation_descriptor,
-        new java.lang.String[] { "Latitude", "Longitude", "Name", "Address", "Timestamp", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "Latitude", "Longitude", "Name", "Address", "Timestamp", "Name", "Address", "Timestamp", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

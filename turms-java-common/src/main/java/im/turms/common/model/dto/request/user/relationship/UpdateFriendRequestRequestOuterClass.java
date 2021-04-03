@@ -47,19 +47,16 @@ public final class UpdateFriendRequestRequestOuterClass {
     java.lang.String[] descriptorData = {
       "\n=request/user/relationship/update_frien" +
       "d_request_request.proto\022\016im.turms.proto\032" +
-      "\036google/protobuf/wrappers.proto\032\036constan" +
-      "t/response_action.proto\"\227\001\n\032UpdateFriend" +
-      "RequestRequest\022\022\n\nrequest_id\030\001 \001(\003\0227\n\017re" +
-      "sponse_action\030\002 \001(\0162\036.im.turms.proto.Res" +
-      "ponseAction\022,\n\006reason\030\003 \001(\0132\034.google.pro" +
-      "tobuf.StringValueB:\n3im.turms.common.mod" +
-      "el.dto.request.user.relationshipP\001\272\002\000b\006p" +
-      "roto3"
+      "\036constant/response_action.proto\"\211\001\n\032Upda" +
+      "teFriendRequestRequest\022\022\n\nrequest_id\030\001 \001" +
+      "(\003\0227\n\017response_action\030\002 \001(\0162\036.im.turms.p" +
+      "roto.ResponseAction\022\023\n\006reason\030\003 \001(\tH\000\210\001\001" +
+      "B\t\n\007_reasonB:\n3im.turms.common.model.dto" +
+      ".request.user.relationshipP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
           im.turms.common.constant.ResponseActionOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_UpdateFriendRequestRequest_descriptor =
@@ -67,8 +64,7 @@ public final class UpdateFriendRequestRequestOuterClass {
     internal_static_im_turms_proto_UpdateFriendRequestRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_UpdateFriendRequestRequest_descriptor,
-        new java.lang.String[] { "RequestId", "ResponseAction", "Reason", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "RequestId", "ResponseAction", "Reason", "Reason", });
     im.turms.common.constant.ResponseActionOuterClass.getDescriptor();
   }
 

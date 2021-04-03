@@ -55,6 +55,7 @@ private static final long serialVersionUID = 0L;
     if (extensionRegistry == null) {
       throw new java.lang.NullPointerException();
     }
+    int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
         com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
@@ -75,30 +76,14 @@ private static final long serialVersionUID = 0L;
             longitude_ = input.readFloat();
             break;
           }
-          case 26: {
-            com.google.protobuf.FloatValue.Builder subBuilder = null;
-            if (distance_ != null) {
-              subBuilder = distance_.toBuilder();
-            }
-            distance_ = input.readMessage(com.google.protobuf.FloatValue.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(distance_);
-              distance_ = subBuilder.buildPartial();
-            }
-
+          case 29: {
+            bitField0_ |= 0x00000001;
+            distance_ = input.readFloat();
             break;
           }
-          case 34: {
-            com.google.protobuf.Int32Value.Builder subBuilder = null;
-            if (maxNumber_ != null) {
-              subBuilder = maxNumber_.toBuilder();
-            }
-            maxNumber_ = input.readMessage(com.google.protobuf.Int32Value.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(maxNumber_);
-              maxNumber_ = subBuilder.buildPartial();
-            }
-
+          case 32: {
+            bitField0_ |= 0x00000002;
+            maxNumber_ = input.readInt32();
             break;
           }
           default: {
@@ -133,6 +118,7 @@ private static final long serialVersionUID = 0L;
             im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest.class, im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest.Builder.class);
   }
 
+  private int bitField0_;
   public static final int LATITUDE_FIELD_NUMBER = 1;
   private float latitude_;
   /**
@@ -156,55 +142,41 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int DISTANCE_FIELD_NUMBER = 3;
-  private com.google.protobuf.FloatValue distance_;
+  private float distance_;
   /**
-   * <code>.google.protobuf.FloatValue distance = 3;</code>
+   * <code>float distance = 3;</code>
    * @return Whether the distance field is set.
    */
   @java.lang.Override
   public boolean hasDistance() {
-    return distance_ != null;
+    return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>.google.protobuf.FloatValue distance = 3;</code>
+   * <code>float distance = 3;</code>
    * @return The distance.
    */
   @java.lang.Override
-  public com.google.protobuf.FloatValue getDistance() {
-    return distance_ == null ? com.google.protobuf.FloatValue.getDefaultInstance() : distance_;
-  }
-  /**
-   * <code>.google.protobuf.FloatValue distance = 3;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.FloatValueOrBuilder getDistanceOrBuilder() {
-    return getDistance();
+  public float getDistance() {
+    return distance_;
   }
 
   public static final int MAX_NUMBER_FIELD_NUMBER = 4;
-  private com.google.protobuf.Int32Value maxNumber_;
+  private int maxNumber_;
   /**
-   * <code>.google.protobuf.Int32Value max_number = 4;</code>
+   * <code>int32 max_number = 4;</code>
    * @return Whether the maxNumber field is set.
    */
   @java.lang.Override
   public boolean hasMaxNumber() {
-    return maxNumber_ != null;
+    return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>.google.protobuf.Int32Value max_number = 4;</code>
+   * <code>int32 max_number = 4;</code>
    * @return The maxNumber.
    */
   @java.lang.Override
-  public com.google.protobuf.Int32Value getMaxNumber() {
-    return maxNumber_ == null ? com.google.protobuf.Int32Value.getDefaultInstance() : maxNumber_;
-  }
-  /**
-   * <code>.google.protobuf.Int32Value max_number = 4;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.Int32ValueOrBuilder getMaxNumberOrBuilder() {
-    return getMaxNumber();
+  public int getMaxNumber() {
+    return maxNumber_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -227,11 +199,11 @@ private static final long serialVersionUID = 0L;
     if (longitude_ != 0F) {
       output.writeFloat(2, longitude_);
     }
-    if (distance_ != null) {
-      output.writeMessage(3, getDistance());
+    if (((bitField0_ & 0x00000001) != 0)) {
+      output.writeFloat(3, distance_);
     }
-    if (maxNumber_ != null) {
-      output.writeMessage(4, getMaxNumber());
+    if (((bitField0_ & 0x00000002) != 0)) {
+      output.writeInt32(4, maxNumber_);
     }
     unknownFields.writeTo(output);
   }
@@ -250,13 +222,13 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeFloatSize(2, longitude_);
     }
-    if (distance_ != null) {
+    if (((bitField0_ & 0x00000001) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(3, getDistance());
+        .computeFloatSize(3, distance_);
     }
-    if (maxNumber_ != null) {
+    if (((bitField0_ & 0x00000002) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(4, getMaxNumber());
+        .computeInt32Size(4, maxNumber_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -281,13 +253,14 @@ private static final long serialVersionUID = 0L;
             other.getLongitude())) return false;
     if (hasDistance() != other.hasDistance()) return false;
     if (hasDistance()) {
-      if (!getDistance()
-          .equals(other.getDistance())) return false;
+      if (java.lang.Float.floatToIntBits(getDistance())
+          != java.lang.Float.floatToIntBits(
+              other.getDistance())) return false;
     }
     if (hasMaxNumber() != other.hasMaxNumber()) return false;
     if (hasMaxNumber()) {
-      if (!getMaxNumber()
-          .equals(other.getMaxNumber())) return false;
+      if (getMaxNumber()
+          != other.getMaxNumber()) return false;
     }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
@@ -308,11 +281,12 @@ private static final long serialVersionUID = 0L;
         getLongitude());
     if (hasDistance()) {
       hash = (37 * hash) + DISTANCE_FIELD_NUMBER;
-      hash = (53 * hash) + getDistance().hashCode();
+      hash = (53 * hash) + java.lang.Float.floatToIntBits(
+          getDistance());
     }
     if (hasMaxNumber()) {
       hash = (37 * hash) + MAX_NUMBER_FIELD_NUMBER;
-      hash = (53 * hash) + getMaxNumber().hashCode();
+      hash = (53 * hash) + getMaxNumber();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -451,18 +425,10 @@ private static final long serialVersionUID = 0L;
 
       longitude_ = 0F;
 
-      if (distanceBuilder_ == null) {
-        distance_ = null;
-      } else {
-        distance_ = null;
-        distanceBuilder_ = null;
-      }
-      if (maxNumberBuilder_ == null) {
-        maxNumber_ = null;
-      } else {
-        maxNumber_ = null;
-        maxNumberBuilder_ = null;
-      }
+      distance_ = 0F;
+      bitField0_ = (bitField0_ & ~0x00000001);
+      maxNumber_ = 0;
+      bitField0_ = (bitField0_ & ~0x00000002);
       return this;
     }
 
@@ -489,18 +455,19 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest buildPartial() {
       im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest result = new im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest(this);
+      int from_bitField0_ = bitField0_;
+      int to_bitField0_ = 0;
       result.latitude_ = latitude_;
       result.longitude_ = longitude_;
-      if (distanceBuilder_ == null) {
+      if (((from_bitField0_ & 0x00000001) != 0)) {
         result.distance_ = distance_;
-      } else {
-        result.distance_ = distanceBuilder_.build();
+        to_bitField0_ |= 0x00000001;
       }
-      if (maxNumberBuilder_ == null) {
+      if (((from_bitField0_ & 0x00000002) != 0)) {
         result.maxNumber_ = maxNumber_;
-      } else {
-        result.maxNumber_ = maxNumberBuilder_.build();
+        to_bitField0_ |= 0x00000002;
       }
+      result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
     }
@@ -556,10 +523,10 @@ private static final long serialVersionUID = 0L;
         setLongitude(other.getLongitude());
       }
       if (other.hasDistance()) {
-        mergeDistance(other.getDistance());
+        setDistance(other.getDistance());
       }
       if (other.hasMaxNumber()) {
-        mergeMaxNumber(other.getMaxNumber());
+        setMaxNumber(other.getMaxNumber());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -589,6 +556,7 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+    private int bitField0_;
 
     private float latitude_ ;
     /**
@@ -652,242 +620,82 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private com.google.protobuf.FloatValue distance_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.FloatValue, com.google.protobuf.FloatValue.Builder, com.google.protobuf.FloatValueOrBuilder> distanceBuilder_;
+    private float distance_ ;
     /**
-     * <code>.google.protobuf.FloatValue distance = 3;</code>
+     * <code>float distance = 3;</code>
      * @return Whether the distance field is set.
      */
+    @java.lang.Override
     public boolean hasDistance() {
-      return distanceBuilder_ != null || distance_ != null;
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>.google.protobuf.FloatValue distance = 3;</code>
+     * <code>float distance = 3;</code>
      * @return The distance.
      */
-    public com.google.protobuf.FloatValue getDistance() {
-      if (distanceBuilder_ == null) {
-        return distance_ == null ? com.google.protobuf.FloatValue.getDefaultInstance() : distance_;
-      } else {
-        return distanceBuilder_.getMessage();
-      }
+    @java.lang.Override
+    public float getDistance() {
+      return distance_;
     }
     /**
-     * <code>.google.protobuf.FloatValue distance = 3;</code>
+     * <code>float distance = 3;</code>
+     * @param value The distance to set.
+     * @return This builder for chaining.
      */
-    public Builder setDistance(com.google.protobuf.FloatValue value) {
-      if (distanceBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        distance_ = value;
-        onChanged();
-      } else {
-        distanceBuilder_.setMessage(value);
-      }
-
+    public Builder setDistance(float value) {
+      bitField0_ |= 0x00000001;
+      distance_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.FloatValue distance = 3;</code>
-     */
-    public Builder setDistance(
-        com.google.protobuf.FloatValue.Builder builderForValue) {
-      if (distanceBuilder_ == null) {
-        distance_ = builderForValue.build();
-        onChanged();
-      } else {
-        distanceBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.FloatValue distance = 3;</code>
-     */
-    public Builder mergeDistance(com.google.protobuf.FloatValue value) {
-      if (distanceBuilder_ == null) {
-        if (distance_ != null) {
-          distance_ =
-            com.google.protobuf.FloatValue.newBuilder(distance_).mergeFrom(value).buildPartial();
-        } else {
-          distance_ = value;
-        }
-        onChanged();
-      } else {
-        distanceBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.FloatValue distance = 3;</code>
+     * <code>float distance = 3;</code>
+     * @return This builder for chaining.
      */
     public Builder clearDistance() {
-      if (distanceBuilder_ == null) {
-        distance_ = null;
-        onChanged();
-      } else {
-        distance_ = null;
-        distanceBuilder_ = null;
-      }
-
+      bitField0_ = (bitField0_ & ~0x00000001);
+      distance_ = 0F;
+      onChanged();
       return this;
     }
-    /**
-     * <code>.google.protobuf.FloatValue distance = 3;</code>
-     */
-    public com.google.protobuf.FloatValue.Builder getDistanceBuilder() {
 
-      onChanged();
-      return getDistanceFieldBuilder().getBuilder();
-    }
+    private int maxNumber_ ;
     /**
-     * <code>.google.protobuf.FloatValue distance = 3;</code>
-     */
-    public com.google.protobuf.FloatValueOrBuilder getDistanceOrBuilder() {
-      if (distanceBuilder_ != null) {
-        return distanceBuilder_.getMessageOrBuilder();
-      } else {
-        return distance_ == null ?
-            com.google.protobuf.FloatValue.getDefaultInstance() : distance_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.FloatValue distance = 3;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.FloatValue, com.google.protobuf.FloatValue.Builder, com.google.protobuf.FloatValueOrBuilder>
-        getDistanceFieldBuilder() {
-      if (distanceBuilder_ == null) {
-        distanceBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.FloatValue, com.google.protobuf.FloatValue.Builder, com.google.protobuf.FloatValueOrBuilder>(
-                getDistance(),
-                getParentForChildren(),
-                isClean());
-        distance_ = null;
-      }
-      return distanceBuilder_;
-    }
-
-    private com.google.protobuf.Int32Value maxNumber_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder> maxNumberBuilder_;
-    /**
-     * <code>.google.protobuf.Int32Value max_number = 4;</code>
+     * <code>int32 max_number = 4;</code>
      * @return Whether the maxNumber field is set.
      */
+    @java.lang.Override
     public boolean hasMaxNumber() {
-      return maxNumberBuilder_ != null || maxNumber_ != null;
+      return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>.google.protobuf.Int32Value max_number = 4;</code>
+     * <code>int32 max_number = 4;</code>
      * @return The maxNumber.
      */
-    public com.google.protobuf.Int32Value getMaxNumber() {
-      if (maxNumberBuilder_ == null) {
-        return maxNumber_ == null ? com.google.protobuf.Int32Value.getDefaultInstance() : maxNumber_;
-      } else {
-        return maxNumberBuilder_.getMessage();
-      }
+    @java.lang.Override
+    public int getMaxNumber() {
+      return maxNumber_;
     }
     /**
-     * <code>.google.protobuf.Int32Value max_number = 4;</code>
+     * <code>int32 max_number = 4;</code>
+     * @param value The maxNumber to set.
+     * @return This builder for chaining.
      */
-    public Builder setMaxNumber(com.google.protobuf.Int32Value value) {
-      if (maxNumberBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        maxNumber_ = value;
-        onChanged();
-      } else {
-        maxNumberBuilder_.setMessage(value);
-      }
-
+    public Builder setMaxNumber(int value) {
+      bitField0_ |= 0x00000002;
+      maxNumber_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.Int32Value max_number = 4;</code>
-     */
-    public Builder setMaxNumber(
-        com.google.protobuf.Int32Value.Builder builderForValue) {
-      if (maxNumberBuilder_ == null) {
-        maxNumber_ = builderForValue.build();
-        onChanged();
-      } else {
-        maxNumberBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int32Value max_number = 4;</code>
-     */
-    public Builder mergeMaxNumber(com.google.protobuf.Int32Value value) {
-      if (maxNumberBuilder_ == null) {
-        if (maxNumber_ != null) {
-          maxNumber_ =
-            com.google.protobuf.Int32Value.newBuilder(maxNumber_).mergeFrom(value).buildPartial();
-        } else {
-          maxNumber_ = value;
-        }
-        onChanged();
-      } else {
-        maxNumberBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int32Value max_number = 4;</code>
+     * <code>int32 max_number = 4;</code>
+     * @return This builder for chaining.
      */
     public Builder clearMaxNumber() {
-      if (maxNumberBuilder_ == null) {
-        maxNumber_ = null;
-        onChanged();
-      } else {
-        maxNumber_ = null;
-        maxNumberBuilder_ = null;
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int32Value max_number = 4;</code>
-     */
-    public com.google.protobuf.Int32Value.Builder getMaxNumberBuilder() {
-
+      bitField0_ = (bitField0_ & ~0x00000002);
+      maxNumber_ = 0;
       onChanged();
-      return getMaxNumberFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.Int32Value max_number = 4;</code>
-     */
-    public com.google.protobuf.Int32ValueOrBuilder getMaxNumberOrBuilder() {
-      if (maxNumberBuilder_ != null) {
-        return maxNumberBuilder_.getMessageOrBuilder();
-      } else {
-        return maxNumber_ == null ?
-            com.google.protobuf.Int32Value.getDefaultInstance() : maxNumber_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.Int32Value max_number = 4;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder>
-        getMaxNumberFieldBuilder() {
-      if (maxNumberBuilder_ == null) {
-        maxNumberBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder>(
-                getMaxNumber(),
-                getParentForChildren(),
-                isClean());
-        maxNumber_ = null;
-      }
-      return maxNumberBuilder_;
+      return this;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

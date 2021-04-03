@@ -46,24 +46,22 @@ public final class CreateSessionRequestOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n)request/user/create_session_request.pr" +
-      "oto\022\016im.turms.proto\032\036google/protobuf/wra" +
-      "ppers.proto\032\032constant/device_type.proto\032" +
-      "\032constant/user_status.proto\032\036model/user/" +
-      "user_location.proto\"\237\002\n\024CreateSessionReq" +
-      "uest\022\017\n\007user_id\030\001 \001(\003\022.\n\010password\030\002 \001(\0132" +
-      "\034.google.protobuf.StringValue\022/\n\013user_st" +
-      "atus\030\003 \001(\0162\032.im.turms.proto.UserStatus\022/" +
-      "\n\013device_type\030\004 \001(\0162\032.im.turms.proto.Dev" +
-      "iceType\0224\n\016device_details\030\005 \001(\0132\034.google" +
-      ".protobuf.StringValue\022.\n\010location\030\006 \001(\0132" +
-      "\034.im.turms.proto.UserLocationB-\n&im.turm" +
-      "s.common.model.dto.request.userP\001\272\002\000b\006pr" +
-      "oto3"
+      "oto\022\016im.turms.proto\032\032constant/device_typ" +
+      "e.proto\032\032constant/user_status.proto\032\036mod" +
+      "el/user/user_location.proto\"\264\002\n\024CreateSe" +
+      "ssionRequest\022\017\n\007user_id\030\001 \001(\003\022\025\n\010passwor" +
+      "d\030\002 \001(\tH\000\210\001\001\0224\n\013user_status\030\003 \001(\0162\032.im.t" +
+      "urms.proto.UserStatusH\001\210\001\001\022/\n\013device_typ" +
+      "e\030\004 \001(\0162\032.im.turms.proto.DeviceType\022\033\n\016d" +
+      "evice_details\030\005 \001(\tH\002\210\001\001\0223\n\010location\030\006 \001" +
+      "(\0132\034.im.turms.proto.UserLocationH\003\210\001\001B\013\n" +
+      "\t_passwordB\016\n\014_user_statusB\021\n\017_device_de" +
+      "tailsB\013\n\t_locationB-\n&im.turms.common.mo" +
+      "del.dto.request.userP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
           im.turms.common.constant.DeviceTypeOuterClass.getDescriptor(),
           im.turms.common.constant.UserStatusOuterClass.getDescriptor(),
           im.turms.common.model.bo.user.UserLocationOuterClass.getDescriptor(),
@@ -73,8 +71,7 @@ public final class CreateSessionRequestOuterClass {
     internal_static_im_turms_proto_CreateSessionRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_CreateSessionRequest_descriptor,
-        new java.lang.String[] { "UserId", "Password", "UserStatus", "DeviceType", "DeviceDetails", "Location", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "UserId", "Password", "UserStatus", "DeviceType", "DeviceDetails", "Location", "Password", "UserStatus", "DeviceDetails", "Location", });
     im.turms.common.constant.DeviceTypeOuterClass.getDescriptor();
     im.turms.common.constant.UserStatusOuterClass.getDescriptor();
     im.turms.common.model.bo.user.UserLocationOuterClass.getDescriptor();

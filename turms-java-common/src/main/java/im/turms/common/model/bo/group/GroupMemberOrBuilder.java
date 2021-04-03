@@ -25,50 +25,49 @@ public interface GroupMemberOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>.google.protobuf.Int64Value group_id = 1;</code>
+   * <code>int64 group_id = 1;</code>
    * @return Whether the groupId field is set.
    */
   boolean hasGroupId();
   /**
-   * <code>.google.protobuf.Int64Value group_id = 1;</code>
+   * <code>int64 group_id = 1;</code>
    * @return The groupId.
    */
-  com.google.protobuf.Int64Value getGroupId();
-  /**
-   * <code>.google.protobuf.Int64Value group_id = 1;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getGroupIdOrBuilder();
+  long getGroupId();
 
   /**
-   * <code>.google.protobuf.Int64Value user_id = 2;</code>
+   * <code>int64 user_id = 2;</code>
    * @return Whether the userId field is set.
    */
   boolean hasUserId();
   /**
-   * <code>.google.protobuf.Int64Value user_id = 2;</code>
+   * <code>int64 user_id = 2;</code>
    * @return The userId.
    */
-  com.google.protobuf.Int64Value getUserId();
-  /**
-   * <code>.google.protobuf.Int64Value user_id = 2;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getUserIdOrBuilder();
+  long getUserId();
 
   /**
-   * <code>.google.protobuf.StringValue name = 3;</code>
+   * <code>string name = 3;</code>
    * @return Whether the name field is set.
    */
   boolean hasName();
   /**
-   * <code>.google.protobuf.StringValue name = 3;</code>
+   * <code>string name = 3;</code>
    * @return The name.
    */
-  com.google.protobuf.StringValue getName();
+  java.lang.String getName();
   /**
-   * <code>.google.protobuf.StringValue name = 3;</code>
+   * <code>string name = 3;</code>
+   * @return The bytes for name.
    */
-  com.google.protobuf.StringValueOrBuilder getNameOrBuilder();
+  com.google.protobuf.ByteString
+      getNameBytes();
 
+  /**
+   * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
+   * @return Whether the role field is set.
+   */
+  boolean hasRole();
   /**
    * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
    * @return The enum numeric value on the wire for role.
@@ -81,35 +80,32 @@ public interface GroupMemberOrBuilder extends
   im.turms.common.constant.GroupMemberRole getRole();
 
   /**
-   * <code>.google.protobuf.Int64Value join_date = 5;</code>
+   * <code>int64 join_date = 5;</code>
    * @return Whether the joinDate field is set.
    */
   boolean hasJoinDate();
   /**
-   * <code>.google.protobuf.Int64Value join_date = 5;</code>
+   * <code>int64 join_date = 5;</code>
    * @return The joinDate.
    */
-  com.google.protobuf.Int64Value getJoinDate();
-  /**
-   * <code>.google.protobuf.Int64Value join_date = 5;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getJoinDateOrBuilder();
+  long getJoinDate();
 
   /**
-   * <code>.google.protobuf.Int64Value mute_end_date = 6;</code>
+   * <code>int64 mute_end_date = 6;</code>
    * @return Whether the muteEndDate field is set.
    */
   boolean hasMuteEndDate();
   /**
-   * <code>.google.protobuf.Int64Value mute_end_date = 6;</code>
+   * <code>int64 mute_end_date = 6;</code>
    * @return The muteEndDate.
    */
-  com.google.protobuf.Int64Value getMuteEndDate();
-  /**
-   * <code>.google.protobuf.Int64Value mute_end_date = 6;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getMuteEndDateOrBuilder();
+  long getMuteEndDate();
 
+  /**
+   * <code>.im.turms.proto.UserStatus user_status = 7;</code>
+   * @return Whether the userStatus field is set.
+   */
+  boolean hasUserStatus();
   /**
    * <code>.im.turms.proto.UserStatus user_status = 7;</code>
    * @return The enum numeric value on the wire for userStatus.

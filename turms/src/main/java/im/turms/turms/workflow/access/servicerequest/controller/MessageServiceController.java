@@ -89,7 +89,7 @@ public class MessageServiceController {
     public ClientRequestHandler handleCreateMessageRequest() {
         return clientRequest -> {
             CreateMessageRequest request = clientRequest.getTurmsRequest().getCreateMessageRequest();
-            if (request.hasIsSystemMessage() && request.getIsSystemMessage().getValue()) {
+            if (request.hasIsSystemMessage() && request.getIsSystemMessage()) {
                 return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "Users cannot send the system message"));
             }
             Mono<Pair<Message, Set<Long>>> messageAndRelatedUserIdsMono;
@@ -98,11 +98,11 @@ public class MessageServiceController {
                 return Mono.error(TurmsBusinessException
                         .get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The recipientId must not be null for private messages"));
             }
-            long targetId = isGroupMessage ? request.getGroupId().getValue() : request.getRecipientId().getValue();
+            long targetId = isGroupMessage ? request.getGroupId() : request.getRecipientId();
             if (request.hasMessageId()) {
                 messageAndRelatedUserIdsMono = messageService.authAndCloneAndSaveMessage(
                         clientRequest.getUserId(),
-                        request.getMessageId().getValue(),
+                        request.getMessageId(),
                         isGroupMessage,
                         false,
                         targetId);
@@ -114,7 +114,7 @@ public class MessageServiceController {
                         records.add(byteString.toByteArray());
                     }
                 }
-                Integer burnAfter = request.hasBurnAfter() ? request.getBurnAfter().getValue() : null;
+                Integer burnAfter = request.hasBurnAfter() ? request.getBurnAfter() : null;
                 Date deliveryDate = new Date(request.getDeliveryDate());
                 messageAndRelatedUserIdsMono = messageService.authAndSaveMessage(
                         null,
@@ -122,7 +122,7 @@ public class MessageServiceController {
                         targetId,
                         isGroupMessage,
                         false,
-                        request.hasText() ? request.getText().getValue() : null,
+                        request.hasText() ? request.getText() : null,
                         records,
                         burnAfter,
                         deliveryDate,
@@ -145,7 +145,7 @@ public class MessageServiceController {
                                 .build();
                     } else {
                         CreateMessageRequest.Builder requestBuilder = request.toBuilder()
-                                .setMessageId(Int64Value.of(messageId));
+                                .setMessageId(messageId);
                         if (messageService.getTimeType() == TimeType.LOCAL_SERVER_TIME) {
                             requestBuilder.setDeliveryDate(message.getDeliveryDate().getTime());
                         }
@@ -181,16 +181,16 @@ public class MessageServiceController {
         return clientRequest -> {
             QueryMessagesRequest request = clientRequest.getTurmsRequest().getQueryMessagesRequest();
             List<Long> idList = request.getIdsCount() > 0 ? request.getIdsList() : null;
-            Boolean areGroupMessages = request.hasAreGroupMessages() ? request.getAreGroupMessages().getValue() : null;
-            Boolean areSystemMessages = request.hasAreSystemMessages() ? request.getAreSystemMessages().getValue() : null;
-            Long fromId = request.hasFromId() ? request.getFromId().getValue() : null;
-            Date deliveryDateAfter = request.hasDeliveryDateAfter() ? new Date(request.getDeliveryDateAfter().getValue()) : null;
+            Boolean areGroupMessages = request.hasAreGroupMessages() ? request.getAreGroupMessages() : null;
+            Boolean areSystemMessages = request.hasAreSystemMessages() ? request.getAreSystemMessages() : null;
+            Long fromId = request.hasFromId() ? request.getFromId() : null;
+            Date deliveryDateAfter = request.hasDeliveryDateAfter() ? new Date(request.getDeliveryDateAfter()) : null;
             Date deliveryDateBefore = request.hasDeliveryDateBefore() && deliveryDateAfter == null ?
-                    new Date(request.getDeliveryDateBefore().getValue()) : null;
+                    new Date(request.getDeliveryDateBefore()) : null;
             boolean withTotal = request.getWithTotal();
             Integer size;
             if (request.hasSize()) {
-                size = pageUtil.getSize(request.getSize().getValue());
+                size = pageUtil.getSize(request.getSize());
             } else {
                 size = withTotal
                         ? node.getSharedProperties().getService().getMessage().getDefaultAvailableMessagesNumberWithTotal()
@@ -283,7 +283,7 @@ public class MessageServiceController {
         return clientRequest -> {
             UpdateMessageRequest request = clientRequest.getTurmsRequest().getUpdateMessageRequest();
             long messageId = request.getMessageId();
-            String text = request.hasText() ? request.getText().getValue() : null;
+            String text = request.hasText() ? request.getText() : null;
             List<byte[]> records = null;
             if (request.getRecordsCount() > 0) {
                 records = new ArrayList<>(request.getRecordsCount());
@@ -291,7 +291,7 @@ public class MessageServiceController {
                     records.add(byteString.toByteArray());
                 }
             }
-            Date recallDate = request.hasRecallDate() ? new Date(request.getRecallDate().getValue()) : null;
+            Date recallDate = request.hasRecallDate() ? new Date(request.getRecallDate()) : null;
             return messageService.authAndUpdateMessage(
                     clientRequest.getUserId(),
                     messageId,

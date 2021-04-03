@@ -25,50 +25,61 @@ public interface UpdateUserRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>.google.protobuf.StringValue password = 1;</code>
+   * <code>string password = 1;</code>
    * @return Whether the password field is set.
    */
   boolean hasPassword();
   /**
-   * <code>.google.protobuf.StringValue password = 1;</code>
+   * <code>string password = 1;</code>
    * @return The password.
    */
-  com.google.protobuf.StringValue getPassword();
+  java.lang.String getPassword();
   /**
-   * <code>.google.protobuf.StringValue password = 1;</code>
+   * <code>string password = 1;</code>
+   * @return The bytes for password.
    */
-  com.google.protobuf.StringValueOrBuilder getPasswordOrBuilder();
+  com.google.protobuf.ByteString
+      getPasswordBytes();
 
   /**
-   * <code>.google.protobuf.StringValue name = 2;</code>
+   * <code>string name = 2;</code>
    * @return Whether the name field is set.
    */
   boolean hasName();
   /**
-   * <code>.google.protobuf.StringValue name = 2;</code>
+   * <code>string name = 2;</code>
    * @return The name.
    */
-  com.google.protobuf.StringValue getName();
+  java.lang.String getName();
   /**
-   * <code>.google.protobuf.StringValue name = 2;</code>
+   * <code>string name = 2;</code>
+   * @return The bytes for name.
    */
-  com.google.protobuf.StringValueOrBuilder getNameOrBuilder();
+  com.google.protobuf.ByteString
+      getNameBytes();
 
   /**
-   * <code>.google.protobuf.StringValue intro = 3;</code>
+   * <code>string intro = 3;</code>
    * @return Whether the intro field is set.
    */
   boolean hasIntro();
   /**
-   * <code>.google.protobuf.StringValue intro = 3;</code>
+   * <code>string intro = 3;</code>
    * @return The intro.
    */
-  com.google.protobuf.StringValue getIntro();
+  java.lang.String getIntro();
   /**
-   * <code>.google.protobuf.StringValue intro = 3;</code>
+   * <code>string intro = 3;</code>
+   * @return The bytes for intro.
    */
-  com.google.protobuf.StringValueOrBuilder getIntroOrBuilder();
+  com.google.protobuf.ByteString
+      getIntroBytes();
 
+  /**
+   * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+   * @return Whether the profileAccessStrategy field is set.
+   */
+  boolean hasProfileAccessStrategy();
   /**
    * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
    * @return The enum numeric value on the wire for profileAccessStrategy.

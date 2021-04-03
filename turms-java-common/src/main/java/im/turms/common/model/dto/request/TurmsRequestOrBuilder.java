@@ -30,7 +30,7 @@ public interface TurmsRequestOrBuilder extends
    * it is used for clients to identify the response of the same request id in a session
    * </pre>
    *
-   * <code>.google.protobuf.Int64Value request_id = 1;</code>
+   * <code>int64 request_id = 1;</code>
    * @return Whether the requestId field is set.
    */
   boolean hasRequestId();
@@ -40,19 +40,10 @@ public interface TurmsRequestOrBuilder extends
    * it is used for clients to identify the response of the same request id in a session
    * </pre>
    *
-   * <code>.google.protobuf.Int64Value request_id = 1;</code>
+   * <code>int64 request_id = 1;</code>
    * @return The requestId.
    */
-  com.google.protobuf.Int64Value getRequestId();
-  /**
-   * <pre>
-   * Note: request_id is allowed to be duplicate because
-   * it is used for clients to identify the response of the same request id in a session
-   * </pre>
-   *
-   * <code>.google.protobuf.Int64Value request_id = 1;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getRequestIdOrBuilder();
+  long getRequestId();
 
   /**
    * <pre>

@@ -46,21 +46,19 @@ public final class UpdateUserRequestOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n&request/user/update_user_request.proto" +
-      "\022\016im.turms.proto\032\036google/protobuf/wrappe" +
-      "rs.proto\032&constant/profile_access_strate" +
-      "gy.proto\"\344\001\n\021UpdateUserRequest\022.\n\010passwo" +
-      "rd\030\001 \001(\0132\034.google.protobuf.StringValue\022*" +
-      "\n\004name\030\002 \001(\0132\034.google.protobuf.StringVal" +
-      "ue\022+\n\005intro\030\003 \001(\0132\034.google.protobuf.Stri" +
-      "ngValue\022F\n\027profile_access_strategy\030\004 \001(\016" +
-      "2%.im.turms.proto.ProfileAccessStrategyB" +
-      "-\n&im.turms.common.model.dto.request.use" +
-      "rP\001\272\002\000b\006proto3"
+      "\022\016im.turms.proto\032&constant/profile_acces" +
+      "s_strategy.proto\"\332\001\n\021UpdateUserRequest\022\025" +
+      "\n\010password\030\001 \001(\tH\000\210\001\001\022\021\n\004name\030\002 \001(\tH\001\210\001\001" +
+      "\022\022\n\005intro\030\003 \001(\tH\002\210\001\001\022K\n\027profile_access_s" +
+      "trategy\030\004 \001(\0162%.im.turms.proto.ProfileAc" +
+      "cessStrategyH\003\210\001\001B\013\n\t_passwordB\007\n\005_nameB" +
+      "\010\n\006_introB\032\n\030_profile_access_strategyB-\n" +
+      "&im.turms.common.model.dto.request.userP" +
+      "\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
           im.turms.common.constant.ProfileAccessStrategyOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_UpdateUserRequest_descriptor =
@@ -68,8 +66,7 @@ public final class UpdateUserRequestOuterClass {
     internal_static_im_turms_proto_UpdateUserRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_UpdateUserRequest_descriptor,
-        new java.lang.String[] { "Password", "Name", "Intro", "ProfileAccessStrategy", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "Password", "Name", "Intro", "ProfileAccessStrategy", "Password", "Name", "Intro", "ProfileAccessStrategy", });
     im.turms.common.constant.ProfileAccessStrategyOuterClass.getDescriptor();
   }
 

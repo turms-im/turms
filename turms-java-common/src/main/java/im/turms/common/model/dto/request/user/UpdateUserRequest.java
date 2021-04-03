@@ -33,6 +33,9 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private UpdateUserRequest() {
+    password_ = "";
+    name_ = "";
+    intro_ = "";
     profileAccessStrategy_ = 0;
   }
 
@@ -56,6 +59,7 @@ private static final long serialVersionUID = 0L;
     if (extensionRegistry == null) {
       throw new java.lang.NullPointerException();
     }
+    int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
         com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
@@ -67,47 +71,26 @@ private static final long serialVersionUID = 0L;
             done = true;
             break;
           case 10: {
-            com.google.protobuf.StringValue.Builder subBuilder = null;
-            if (password_ != null) {
-              subBuilder = password_.toBuilder();
-            }
-            password_ = input.readMessage(com.google.protobuf.StringValue.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(password_);
-              password_ = subBuilder.buildPartial();
-            }
-
+            java.lang.String s = input.readStringRequireUtf8();
+            bitField0_ |= 0x00000001;
+            password_ = s;
             break;
           }
           case 18: {
-            com.google.protobuf.StringValue.Builder subBuilder = null;
-            if (name_ != null) {
-              subBuilder = name_.toBuilder();
-            }
-            name_ = input.readMessage(com.google.protobuf.StringValue.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(name_);
-              name_ = subBuilder.buildPartial();
-            }
-
+            java.lang.String s = input.readStringRequireUtf8();
+            bitField0_ |= 0x00000002;
+            name_ = s;
             break;
           }
           case 26: {
-            com.google.protobuf.StringValue.Builder subBuilder = null;
-            if (intro_ != null) {
-              subBuilder = intro_.toBuilder();
-            }
-            intro_ = input.readMessage(com.google.protobuf.StringValue.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(intro_);
-              intro_ = subBuilder.buildPartial();
-            }
-
+            java.lang.String s = input.readStringRequireUtf8();
+            bitField0_ |= 0x00000004;
+            intro_ = s;
             break;
           }
           case 32: {
             int rawValue = input.readEnum();
-
+            bitField0_ |= 0x00000008;
             profileAccessStrategy_ = rawValue;
             break;
           }
@@ -143,86 +126,154 @@ private static final long serialVersionUID = 0L;
             im.turms.common.model.dto.request.user.UpdateUserRequest.class, im.turms.common.model.dto.request.user.UpdateUserRequest.Builder.class);
   }
 
+  private int bitField0_;
   public static final int PASSWORD_FIELD_NUMBER = 1;
-  private com.google.protobuf.StringValue password_;
+  private volatile java.lang.Object password_;
   /**
-   * <code>.google.protobuf.StringValue password = 1;</code>
+   * <code>string password = 1;</code>
    * @return Whether the password field is set.
    */
   @java.lang.Override
   public boolean hasPassword() {
-    return password_ != null;
+    return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>.google.protobuf.StringValue password = 1;</code>
+   * <code>string password = 1;</code>
    * @return The password.
    */
   @java.lang.Override
-  public com.google.protobuf.StringValue getPassword() {
-    return password_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : password_;
+  public java.lang.String getPassword() {
+    java.lang.Object ref = password_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs =
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      password_ = s;
+      return s;
+    }
   }
   /**
-   * <code>.google.protobuf.StringValue password = 1;</code>
+   * <code>string password = 1;</code>
+   * @return The bytes for password.
    */
   @java.lang.Override
-  public com.google.protobuf.StringValueOrBuilder getPasswordOrBuilder() {
-    return getPassword();
+  public com.google.protobuf.ByteString
+      getPasswordBytes() {
+    java.lang.Object ref = password_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      password_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
   public static final int NAME_FIELD_NUMBER = 2;
-  private com.google.protobuf.StringValue name_;
+  private volatile java.lang.Object name_;
   /**
-   * <code>.google.protobuf.StringValue name = 2;</code>
+   * <code>string name = 2;</code>
    * @return Whether the name field is set.
    */
   @java.lang.Override
   public boolean hasName() {
-    return name_ != null;
+    return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>.google.protobuf.StringValue name = 2;</code>
+   * <code>string name = 2;</code>
    * @return The name.
    */
   @java.lang.Override
-  public com.google.protobuf.StringValue getName() {
-    return name_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : name_;
+  public java.lang.String getName() {
+    java.lang.Object ref = name_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs =
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      name_ = s;
+      return s;
+    }
   }
   /**
-   * <code>.google.protobuf.StringValue name = 2;</code>
+   * <code>string name = 2;</code>
+   * @return The bytes for name.
    */
   @java.lang.Override
-  public com.google.protobuf.StringValueOrBuilder getNameOrBuilder() {
-    return getName();
+  public com.google.protobuf.ByteString
+      getNameBytes() {
+    java.lang.Object ref = name_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      name_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
   public static final int INTRO_FIELD_NUMBER = 3;
-  private com.google.protobuf.StringValue intro_;
+  private volatile java.lang.Object intro_;
   /**
-   * <code>.google.protobuf.StringValue intro = 3;</code>
+   * <code>string intro = 3;</code>
    * @return Whether the intro field is set.
    */
   @java.lang.Override
   public boolean hasIntro() {
-    return intro_ != null;
+    return ((bitField0_ & 0x00000004) != 0);
   }
   /**
-   * <code>.google.protobuf.StringValue intro = 3;</code>
+   * <code>string intro = 3;</code>
    * @return The intro.
    */
   @java.lang.Override
-  public com.google.protobuf.StringValue getIntro() {
-    return intro_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : intro_;
+  public java.lang.String getIntro() {
+    java.lang.Object ref = intro_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs =
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      intro_ = s;
+      return s;
+    }
   }
   /**
-   * <code>.google.protobuf.StringValue intro = 3;</code>
+   * <code>string intro = 3;</code>
+   * @return The bytes for intro.
    */
   @java.lang.Override
-  public com.google.protobuf.StringValueOrBuilder getIntroOrBuilder() {
-    return getIntro();
+  public com.google.protobuf.ByteString
+      getIntroBytes() {
+    java.lang.Object ref = intro_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      intro_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
   public static final int PROFILE_ACCESS_STRATEGY_FIELD_NUMBER = 4;
   private int profileAccessStrategy_;
+  /**
+   * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+   * @return Whether the profileAccessStrategy field is set.
+   */
+  @java.lang.Override public boolean hasProfileAccessStrategy() {
+    return ((bitField0_ & 0x00000008) != 0);
+  }
   /**
    * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
    * @return The enum numeric value on the wire for profileAccessStrategy.
@@ -254,16 +305,16 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (password_ != null) {
-      output.writeMessage(1, getPassword());
+    if (((bitField0_ & 0x00000001) != 0)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, password_);
     }
-    if (name_ != null) {
-      output.writeMessage(2, getName());
+    if (((bitField0_ & 0x00000002) != 0)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, name_);
     }
-    if (intro_ != null) {
-      output.writeMessage(3, getIntro());
+    if (((bitField0_ & 0x00000004) != 0)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, intro_);
     }
-    if (profileAccessStrategy_ != im.turms.common.constant.ProfileAccessStrategy.ALL.getNumber()) {
+    if (((bitField0_ & 0x00000008) != 0)) {
       output.writeEnum(4, profileAccessStrategy_);
     }
     unknownFields.writeTo(output);
@@ -275,19 +326,16 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (password_ != null) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(1, getPassword());
+    if (((bitField0_ & 0x00000001) != 0)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, password_);
     }
-    if (name_ != null) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(2, getName());
+    if (((bitField0_ & 0x00000002) != 0)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, name_);
     }
-    if (intro_ != null) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(3, getIntro());
+    if (((bitField0_ & 0x00000004) != 0)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, intro_);
     }
-    if (profileAccessStrategy_ != im.turms.common.constant.ProfileAccessStrategy.ALL.getNumber()) {
+    if (((bitField0_ & 0x00000008) != 0)) {
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(4, profileAccessStrategy_);
     }
@@ -321,7 +369,10 @@ private static final long serialVersionUID = 0L;
       if (!getIntro()
           .equals(other.getIntro())) return false;
     }
-    if (profileAccessStrategy_ != other.profileAccessStrategy_) return false;
+    if (hasProfileAccessStrategy() != other.hasProfileAccessStrategy()) return false;
+    if (hasProfileAccessStrategy()) {
+      if (profileAccessStrategy_ != other.profileAccessStrategy_) return false;
+    }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -345,8 +396,10 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + INTRO_FIELD_NUMBER;
       hash = (53 * hash) + getIntro().hashCode();
     }
-    hash = (37 * hash) + PROFILE_ACCESS_STRATEGY_FIELD_NUMBER;
-    hash = (53 * hash) + profileAccessStrategy_;
+    if (hasProfileAccessStrategy()) {
+      hash = (37 * hash) + PROFILE_ACCESS_STRATEGY_FIELD_NUMBER;
+      hash = (53 * hash) + profileAccessStrategy_;
+    }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -480,26 +533,14 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      if (passwordBuilder_ == null) {
-        password_ = null;
-      } else {
-        password_ = null;
-        passwordBuilder_ = null;
-      }
-      if (nameBuilder_ == null) {
-        name_ = null;
-      } else {
-        name_ = null;
-        nameBuilder_ = null;
-      }
-      if (introBuilder_ == null) {
-        intro_ = null;
-      } else {
-        intro_ = null;
-        introBuilder_ = null;
-      }
+      password_ = "";
+      bitField0_ = (bitField0_ & ~0x00000001);
+      name_ = "";
+      bitField0_ = (bitField0_ & ~0x00000002);
+      intro_ = "";
+      bitField0_ = (bitField0_ & ~0x00000004);
       profileAccessStrategy_ = 0;
-
+      bitField0_ = (bitField0_ & ~0x00000008);
       return this;
     }
 
@@ -526,22 +567,25 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public im.turms.common.model.dto.request.user.UpdateUserRequest buildPartial() {
       im.turms.common.model.dto.request.user.UpdateUserRequest result = new im.turms.common.model.dto.request.user.UpdateUserRequest(this);
-      if (passwordBuilder_ == null) {
-        result.password_ = password_;
-      } else {
-        result.password_ = passwordBuilder_.build();
+      int from_bitField0_ = bitField0_;
+      int to_bitField0_ = 0;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        to_bitField0_ |= 0x00000001;
       }
-      if (nameBuilder_ == null) {
-        result.name_ = name_;
-      } else {
-        result.name_ = nameBuilder_.build();
+      result.password_ = password_;
+      if (((from_bitField0_ & 0x00000002) != 0)) {
+        to_bitField0_ |= 0x00000002;
       }
-      if (introBuilder_ == null) {
-        result.intro_ = intro_;
-      } else {
-        result.intro_ = introBuilder_.build();
+      result.name_ = name_;
+      if (((from_bitField0_ & 0x00000004) != 0)) {
+        to_bitField0_ |= 0x00000004;
+      }
+      result.intro_ = intro_;
+      if (((from_bitField0_ & 0x00000008) != 0)) {
+        to_bitField0_ |= 0x00000008;
       }
       result.profileAccessStrategy_ = profileAccessStrategy_;
+      result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
     }
@@ -591,16 +635,22 @@ private static final long serialVersionUID = 0L;
     public Builder mergeFrom(im.turms.common.model.dto.request.user.UpdateUserRequest other) {
       if (other == im.turms.common.model.dto.request.user.UpdateUserRequest.getDefaultInstance()) return this;
       if (other.hasPassword()) {
-        mergePassword(other.getPassword());
+        bitField0_ |= 0x00000001;
+        password_ = other.password_;
+        onChanged();
       }
       if (other.hasName()) {
-        mergeName(other.getName());
+        bitField0_ |= 0x00000002;
+        name_ = other.name_;
+        onChanged();
       }
       if (other.hasIntro()) {
-        mergeIntro(other.getIntro());
+        bitField0_ |= 0x00000004;
+        intro_ = other.intro_;
+        onChanged();
       }
-      if (other.profileAccessStrategy_ != 0) {
-        setProfileAccessStrategyValue(other.getProfileAccessStrategyValue());
+      if (other.hasProfileAccessStrategy()) {
+        setProfileAccessStrategy(other.getProfileAccessStrategy());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -630,365 +680,265 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+    private int bitField0_;
 
-    private com.google.protobuf.StringValue password_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> passwordBuilder_;
+    private java.lang.Object password_ = "";
     /**
-     * <code>.google.protobuf.StringValue password = 1;</code>
+     * <code>string password = 1;</code>
      * @return Whether the password field is set.
      */
     public boolean hasPassword() {
-      return passwordBuilder_ != null || password_ != null;
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>.google.protobuf.StringValue password = 1;</code>
+     * <code>string password = 1;</code>
      * @return The password.
      */
-    public com.google.protobuf.StringValue getPassword() {
-      if (passwordBuilder_ == null) {
-        return password_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : password_;
+    public java.lang.String getPassword() {
+      java.lang.Object ref = password_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        password_ = s;
+        return s;
       } else {
-        return passwordBuilder_.getMessage();
+        return (java.lang.String) ref;
       }
     }
     /**
-     * <code>.google.protobuf.StringValue password = 1;</code>
+     * <code>string password = 1;</code>
+     * @return The bytes for password.
      */
-    public Builder setPassword(com.google.protobuf.StringValue value) {
-      if (passwordBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        password_ = value;
-        onChanged();
+    public com.google.protobuf.ByteString
+        getPasswordBytes() {
+      java.lang.Object ref = password_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        password_ = b;
+        return b;
       } else {
-        passwordBuilder_.setMessage(value);
+        return (com.google.protobuf.ByteString) ref;
       }
-
-      return this;
     }
     /**
-     * <code>.google.protobuf.StringValue password = 1;</code>
+     * <code>string password = 1;</code>
+     * @param value The password to set.
+     * @return This builder for chaining.
      */
     public Builder setPassword(
-        com.google.protobuf.StringValue.Builder builderForValue) {
-      if (passwordBuilder_ == null) {
-        password_ = builderForValue.build();
-        onChanged();
-      } else {
-        passwordBuilder_.setMessage(builderForValue.build());
-      }
-
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+      password_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.StringValue password = 1;</code>
-     */
-    public Builder mergePassword(com.google.protobuf.StringValue value) {
-      if (passwordBuilder_ == null) {
-        if (password_ != null) {
-          password_ =
-            com.google.protobuf.StringValue.newBuilder(password_).mergeFrom(value).buildPartial();
-        } else {
-          password_ = value;
-        }
-        onChanged();
-      } else {
-        passwordBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.StringValue password = 1;</code>
+     * <code>string password = 1;</code>
+     * @return This builder for chaining.
      */
     public Builder clearPassword() {
-      if (passwordBuilder_ == null) {
-        password_ = null;
-        onChanged();
-      } else {
-        password_ = null;
-        passwordBuilder_ = null;
-      }
-
+      bitField0_ = (bitField0_ & ~0x00000001);
+      password_ = getDefaultInstance().getPassword();
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.StringValue password = 1;</code>
+     * <code>string password = 1;</code>
+     * @param value The bytes for password to set.
+     * @return This builder for chaining.
      */
-    public com.google.protobuf.StringValue.Builder getPasswordBuilder() {
-
+    public Builder setPasswordBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      bitField0_ |= 0x00000001;
+      password_ = value;
       onChanged();
-      return getPasswordFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.StringValue password = 1;</code>
-     */
-    public com.google.protobuf.StringValueOrBuilder getPasswordOrBuilder() {
-      if (passwordBuilder_ != null) {
-        return passwordBuilder_.getMessageOrBuilder();
-      } else {
-        return password_ == null ?
-            com.google.protobuf.StringValue.getDefaultInstance() : password_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.StringValue password = 1;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>
-        getPasswordFieldBuilder() {
-      if (passwordBuilder_ == null) {
-        passwordBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>(
-                getPassword(),
-                getParentForChildren(),
-                isClean());
-        password_ = null;
-      }
-      return passwordBuilder_;
+      return this;
     }
 
-    private com.google.protobuf.StringValue name_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> nameBuilder_;
+    private java.lang.Object name_ = "";
     /**
-     * <code>.google.protobuf.StringValue name = 2;</code>
+     * <code>string name = 2;</code>
      * @return Whether the name field is set.
      */
     public boolean hasName() {
-      return nameBuilder_ != null || name_ != null;
+      return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>.google.protobuf.StringValue name = 2;</code>
+     * <code>string name = 2;</code>
      * @return The name.
      */
-    public com.google.protobuf.StringValue getName() {
-      if (nameBuilder_ == null) {
-        return name_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : name_;
+    public java.lang.String getName() {
+      java.lang.Object ref = name_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        name_ = s;
+        return s;
       } else {
-        return nameBuilder_.getMessage();
+        return (java.lang.String) ref;
       }
     }
     /**
-     * <code>.google.protobuf.StringValue name = 2;</code>
+     * <code>string name = 2;</code>
+     * @return The bytes for name.
      */
-    public Builder setName(com.google.protobuf.StringValue value) {
-      if (nameBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        name_ = value;
-        onChanged();
+    public com.google.protobuf.ByteString
+        getNameBytes() {
+      java.lang.Object ref = name_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        name_ = b;
+        return b;
       } else {
-        nameBuilder_.setMessage(value);
+        return (com.google.protobuf.ByteString) ref;
       }
-
-      return this;
     }
     /**
-     * <code>.google.protobuf.StringValue name = 2;</code>
+     * <code>string name = 2;</code>
+     * @param value The name to set.
+     * @return This builder for chaining.
      */
     public Builder setName(
-        com.google.protobuf.StringValue.Builder builderForValue) {
-      if (nameBuilder_ == null) {
-        name_ = builderForValue.build();
-        onChanged();
-      } else {
-        nameBuilder_.setMessage(builderForValue.build());
-      }
-
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+      name_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.StringValue name = 2;</code>
-     */
-    public Builder mergeName(com.google.protobuf.StringValue value) {
-      if (nameBuilder_ == null) {
-        if (name_ != null) {
-          name_ =
-            com.google.protobuf.StringValue.newBuilder(name_).mergeFrom(value).buildPartial();
-        } else {
-          name_ = value;
-        }
-        onChanged();
-      } else {
-        nameBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.StringValue name = 2;</code>
+     * <code>string name = 2;</code>
+     * @return This builder for chaining.
      */
     public Builder clearName() {
-      if (nameBuilder_ == null) {
-        name_ = null;
-        onChanged();
-      } else {
-        name_ = null;
-        nameBuilder_ = null;
-      }
-
+      bitField0_ = (bitField0_ & ~0x00000002);
+      name_ = getDefaultInstance().getName();
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.StringValue name = 2;</code>
+     * <code>string name = 2;</code>
+     * @param value The bytes for name to set.
+     * @return This builder for chaining.
      */
-    public com.google.protobuf.StringValue.Builder getNameBuilder() {
-
+    public Builder setNameBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      bitField0_ |= 0x00000002;
+      name_ = value;
       onChanged();
-      return getNameFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.StringValue name = 2;</code>
-     */
-    public com.google.protobuf.StringValueOrBuilder getNameOrBuilder() {
-      if (nameBuilder_ != null) {
-        return nameBuilder_.getMessageOrBuilder();
-      } else {
-        return name_ == null ?
-            com.google.protobuf.StringValue.getDefaultInstance() : name_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.StringValue name = 2;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>
-        getNameFieldBuilder() {
-      if (nameBuilder_ == null) {
-        nameBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>(
-                getName(),
-                getParentForChildren(),
-                isClean());
-        name_ = null;
-      }
-      return nameBuilder_;
+      return this;
     }
 
-    private com.google.protobuf.StringValue intro_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> introBuilder_;
+    private java.lang.Object intro_ = "";
     /**
-     * <code>.google.protobuf.StringValue intro = 3;</code>
+     * <code>string intro = 3;</code>
      * @return Whether the intro field is set.
      */
     public boolean hasIntro() {
-      return introBuilder_ != null || intro_ != null;
+      return ((bitField0_ & 0x00000004) != 0);
     }
     /**
-     * <code>.google.protobuf.StringValue intro = 3;</code>
+     * <code>string intro = 3;</code>
      * @return The intro.
      */
-    public com.google.protobuf.StringValue getIntro() {
-      if (introBuilder_ == null) {
-        return intro_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : intro_;
+    public java.lang.String getIntro() {
+      java.lang.Object ref = intro_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        intro_ = s;
+        return s;
       } else {
-        return introBuilder_.getMessage();
+        return (java.lang.String) ref;
       }
     }
     /**
-     * <code>.google.protobuf.StringValue intro = 3;</code>
+     * <code>string intro = 3;</code>
+     * @return The bytes for intro.
      */
-    public Builder setIntro(com.google.protobuf.StringValue value) {
-      if (introBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        intro_ = value;
-        onChanged();
+    public com.google.protobuf.ByteString
+        getIntroBytes() {
+      java.lang.Object ref = intro_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        intro_ = b;
+        return b;
       } else {
-        introBuilder_.setMessage(value);
+        return (com.google.protobuf.ByteString) ref;
       }
-
-      return this;
     }
     /**
-     * <code>.google.protobuf.StringValue intro = 3;</code>
+     * <code>string intro = 3;</code>
+     * @param value The intro to set.
+     * @return This builder for chaining.
      */
     public Builder setIntro(
-        com.google.protobuf.StringValue.Builder builderForValue) {
-      if (introBuilder_ == null) {
-        intro_ = builderForValue.build();
-        onChanged();
-      } else {
-        introBuilder_.setMessage(builderForValue.build());
-      }
-
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+      intro_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.StringValue intro = 3;</code>
-     */
-    public Builder mergeIntro(com.google.protobuf.StringValue value) {
-      if (introBuilder_ == null) {
-        if (intro_ != null) {
-          intro_ =
-            com.google.protobuf.StringValue.newBuilder(intro_).mergeFrom(value).buildPartial();
-        } else {
-          intro_ = value;
-        }
-        onChanged();
-      } else {
-        introBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.StringValue intro = 3;</code>
+     * <code>string intro = 3;</code>
+     * @return This builder for chaining.
      */
     public Builder clearIntro() {
-      if (introBuilder_ == null) {
-        intro_ = null;
-        onChanged();
-      } else {
-        intro_ = null;
-        introBuilder_ = null;
-      }
-
+      bitField0_ = (bitField0_ & ~0x00000004);
+      intro_ = getDefaultInstance().getIntro();
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.StringValue intro = 3;</code>
+     * <code>string intro = 3;</code>
+     * @param value The bytes for intro to set.
+     * @return This builder for chaining.
      */
-    public com.google.protobuf.StringValue.Builder getIntroBuilder() {
-
+    public Builder setIntroBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      bitField0_ |= 0x00000004;
+      intro_ = value;
       onChanged();
-      return getIntroFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.StringValue intro = 3;</code>
-     */
-    public com.google.protobuf.StringValueOrBuilder getIntroOrBuilder() {
-      if (introBuilder_ != null) {
-        return introBuilder_.getMessageOrBuilder();
-      } else {
-        return intro_ == null ?
-            com.google.protobuf.StringValue.getDefaultInstance() : intro_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.StringValue intro = 3;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>
-        getIntroFieldBuilder() {
-      if (introBuilder_ == null) {
-        introBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>(
-                getIntro(),
-                getParentForChildren(),
-                isClean());
-        intro_ = null;
-      }
-      return introBuilder_;
+      return this;
     }
 
     private int profileAccessStrategy_ = 0;
+    /**
+     * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+     * @return Whether the profileAccessStrategy field is set.
+     */
+    @java.lang.Override public boolean hasProfileAccessStrategy() {
+      return ((bitField0_ & 0x00000008) != 0);
+    }
     /**
      * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
      * @return The enum numeric value on the wire for profileAccessStrategy.
@@ -1002,7 +952,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder setProfileAccessStrategyValue(int value) {
-
+      bitField0_ |= 0x00000008;
       profileAccessStrategy_ = value;
       onChanged();
       return this;
@@ -1026,7 +976,7 @@ private static final long serialVersionUID = 0L;
       if (value == null) {
         throw new NullPointerException();
       }
-
+      bitField0_ |= 0x00000008;
       profileAccessStrategy_ = value.getNumber();
       onChanged();
       return this;
@@ -1036,7 +986,7 @@ private static final long serialVersionUID = 0L;
      * @return This builder for chaining.
      */
     public Builder clearProfileAccessStrategy() {
-
+      bitField0_ = (bitField0_ & ~0x00000008);
       profileAccessStrategy_ = 0;
       onChanged();
       return this;

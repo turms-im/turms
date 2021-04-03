@@ -46,28 +46,25 @@ public final class UpdateRelationshipRequestOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n;request/user/relationship/update_relat" +
-      "ionship_request.proto\022\016im.turms.proto\032\036g" +
-      "oogle/protobuf/wrappers.proto\"\310\001\n\031Update" +
-      "RelationshipRequest\022\017\n\007user_id\030\001 \001(\003\022+\n\007" +
-      "blocked\030\002 \001(\0132\032.google.protobuf.BoolValu" +
-      "e\0224\n\017new_group_index\030\003 \001(\0132\033.google.prot" +
-      "obuf.Int32Value\0227\n\022delete_group_index\030\004 " +
-      "\001(\0132\033.google.protobuf.Int32ValueB:\n3im.t" +
-      "urms.common.model.dto.request.user.relat" +
-      "ionshipP\001\272\002\000b\006proto3"
+      "ionship_request.proto\022\016im.turms.proto\"\270\001" +
+      "\n\031UpdateRelationshipRequest\022\017\n\007user_id\030\001" +
+      " \001(\003\022\024\n\007blocked\030\002 \001(\010H\000\210\001\001\022\034\n\017new_group_" +
+      "index\030\003 \001(\005H\001\210\001\001\022\037\n\022delete_group_index\030\004" +
+      " \001(\005H\002\210\001\001B\n\n\010_blockedB\022\n\020_new_group_inde" +
+      "xB\025\n\023_delete_group_indexB:\n3im.turms.com" +
+      "mon.model.dto.request.user.relationshipP" +
+      "\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
         });
     internal_static_im_turms_proto_UpdateRelationshipRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_im_turms_proto_UpdateRelationshipRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_UpdateRelationshipRequest_descriptor,
-        new java.lang.String[] { "UserId", "Blocked", "NewGroupIndex", "DeleteGroupIndex", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "UserId", "Blocked", "NewGroupIndex", "DeleteGroupIndex", "Blocked", "NewGroupIndex", "DeleteGroupIndex", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

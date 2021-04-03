@@ -19,7 +19,6 @@ package im.turms.gateway.util;
 
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.ExtensionRegistry;
-import com.google.protobuf.Int64Value;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.common.model.dto.request.user.CreateSessionRequest;
 import im.turms.gateway.pojo.dto.SimpleTurmsRequest;
@@ -41,9 +40,9 @@ import static im.turms.common.model.dto.request.TurmsRequest.KindCase.KIND_NOT_S
 public final class TurmsRequestUtil {
 
     /**
-     * {@link im.turms.common.model.dto.request.TurmsRequest:72}
+     * {@link im.turms.common.model.dto.request.TurmsRequest:73}
      */
-    private static final int TURMS_REQUEST_REQUEST_ID_TAG = 10;
+    private static final int TURMS_REQUEST_REQUEST_ID_TAG = 8;
     private static final ExtensionRegistry REGISTRY = ExtensionRegistry.getEmptyRegistry();
     private static final long UNDEFINED_REQUEST_ID = Long.MIN_VALUE;
 
@@ -61,12 +60,7 @@ public final class TurmsRequestUtil {
             while (true) {
                 int tag = stream.readTag();
                 if (tag == TURMS_REQUEST_REQUEST_ID_TAG) {
-                    Int64Value value = stream.readMessage(Int64Value.parser(), REGISTRY);
-                    if (value != null && !value.equals(value.getDefaultInstanceForType())) {
-                        requestId = value.getValue();
-                    } else {
-                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The requestId of TurmsRequest is null");
-                    }
+                    requestId = stream.readInt64();
                 } else {
                     // key = (field_number << 3) | wire_type
                     int kindFieldNumber = tag >>> 3;

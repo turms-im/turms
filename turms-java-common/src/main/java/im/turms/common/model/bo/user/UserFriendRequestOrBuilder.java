@@ -25,50 +25,49 @@ public interface UserFriendRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>.google.protobuf.Int64Value id = 1;</code>
+   * <code>int64 id = 1;</code>
    * @return Whether the id field is set.
    */
   boolean hasId();
   /**
-   * <code>.google.protobuf.Int64Value id = 1;</code>
+   * <code>int64 id = 1;</code>
    * @return The id.
    */
-  com.google.protobuf.Int64Value getId();
-  /**
-   * <code>.google.protobuf.Int64Value id = 1;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getIdOrBuilder();
+  long getId();
 
   /**
-   * <code>.google.protobuf.Int64Value creation_date = 2;</code>
+   * <code>int64 creation_date = 2;</code>
    * @return Whether the creationDate field is set.
    */
   boolean hasCreationDate();
   /**
-   * <code>.google.protobuf.Int64Value creation_date = 2;</code>
+   * <code>int64 creation_date = 2;</code>
    * @return The creationDate.
    */
-  com.google.protobuf.Int64Value getCreationDate();
-  /**
-   * <code>.google.protobuf.Int64Value creation_date = 2;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getCreationDateOrBuilder();
+  long getCreationDate();
 
   /**
-   * <code>.google.protobuf.StringValue content = 3;</code>
+   * <code>string content = 3;</code>
    * @return Whether the content field is set.
    */
   boolean hasContent();
   /**
-   * <code>.google.protobuf.StringValue content = 3;</code>
+   * <code>string content = 3;</code>
    * @return The content.
    */
-  com.google.protobuf.StringValue getContent();
+  java.lang.String getContent();
   /**
-   * <code>.google.protobuf.StringValue content = 3;</code>
+   * <code>string content = 3;</code>
+   * @return The bytes for content.
    */
-  com.google.protobuf.StringValueOrBuilder getContentOrBuilder();
+  com.google.protobuf.ByteString
+      getContentBytes();
 
+  /**
+   * <code>.im.turms.proto.RequestStatus request_status = 4;</code>
+   * @return Whether the requestStatus field is set.
+   */
+  boolean hasRequestStatus();
   /**
    * <code>.im.turms.proto.RequestStatus request_status = 4;</code>
    * @return The enum numeric value on the wire for requestStatus.
@@ -81,62 +80,52 @@ public interface UserFriendRequestOrBuilder extends
   im.turms.common.constant.RequestStatus getRequestStatus();
 
   /**
-   * <code>.google.protobuf.StringValue reason = 5;</code>
+   * <code>string reason = 5;</code>
    * @return Whether the reason field is set.
    */
   boolean hasReason();
   /**
-   * <code>.google.protobuf.StringValue reason = 5;</code>
+   * <code>string reason = 5;</code>
    * @return The reason.
    */
-  com.google.protobuf.StringValue getReason();
+  java.lang.String getReason();
   /**
-   * <code>.google.protobuf.StringValue reason = 5;</code>
+   * <code>string reason = 5;</code>
+   * @return The bytes for reason.
    */
-  com.google.protobuf.StringValueOrBuilder getReasonOrBuilder();
+  com.google.protobuf.ByteString
+      getReasonBytes();
 
   /**
-   * <code>.google.protobuf.Int64Value expiration_date = 6;</code>
+   * <code>int64 expiration_date = 6;</code>
    * @return Whether the expirationDate field is set.
    */
   boolean hasExpirationDate();
   /**
-   * <code>.google.protobuf.Int64Value expiration_date = 6;</code>
+   * <code>int64 expiration_date = 6;</code>
    * @return The expirationDate.
    */
-  com.google.protobuf.Int64Value getExpirationDate();
-  /**
-   * <code>.google.protobuf.Int64Value expiration_date = 6;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getExpirationDateOrBuilder();
+  long getExpirationDate();
 
   /**
-   * <code>.google.protobuf.Int64Value requester_id = 7;</code>
+   * <code>int64 requester_id = 7;</code>
    * @return Whether the requesterId field is set.
    */
   boolean hasRequesterId();
   /**
-   * <code>.google.protobuf.Int64Value requester_id = 7;</code>
+   * <code>int64 requester_id = 7;</code>
    * @return The requesterId.
    */
-  com.google.protobuf.Int64Value getRequesterId();
-  /**
-   * <code>.google.protobuf.Int64Value requester_id = 7;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getRequesterIdOrBuilder();
+  long getRequesterId();
 
   /**
-   * <code>.google.protobuf.Int64Value recipient_id = 8;</code>
+   * <code>int64 recipient_id = 8;</code>
    * @return Whether the recipientId field is set.
    */
   boolean hasRecipientId();
   /**
-   * <code>.google.protobuf.Int64Value recipient_id = 8;</code>
+   * <code>int64 recipient_id = 8;</code>
    * @return The recipientId.
    */
-  com.google.protobuf.Int64Value getRecipientId();
-  /**
-   * <code>.google.protobuf.Int64Value recipient_id = 8;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getRecipientIdOrBuilder();
+  long getRecipientId();
 }

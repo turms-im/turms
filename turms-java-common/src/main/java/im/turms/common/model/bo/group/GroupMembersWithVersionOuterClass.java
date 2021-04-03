@@ -46,18 +46,16 @@ public final class GroupMembersWithVersionOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n,model/group/group_members_with_version" +
-      ".proto\022\016im.turms.proto\032\036google/protobuf/" +
-      "wrappers.proto\032\036model/group/group_member" +
-      ".proto\"\205\001\n\027GroupMembersWithVersion\0222\n\rgr" +
-      "oup_members\030\001 \003(\0132\033.im.turms.proto.Group" +
-      "Member\0226\n\021last_updated_date\030\002 \001(\0132\033.goog" +
-      "le.protobuf.Int64ValueB%\n\036im.turms.commo" +
-      "n.model.bo.groupP\001\272\002\000b\006proto3"
+      ".proto\022\016im.turms.proto\032\036model/group/grou" +
+      "p_member.proto\"\203\001\n\027GroupMembersWithVersi" +
+      "on\0222\n\rgroup_members\030\001 \003(\0132\033.im.turms.pro" +
+      "to.GroupMember\022\036\n\021last_updated_date\030\002 \001(" +
+      "\003H\000\210\001\001B\024\n\022_last_updated_dateB%\n\036im.turms" +
+      ".common.model.bo.groupP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
           im.turms.common.model.bo.group.GroupMemberOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_GroupMembersWithVersion_descriptor =
@@ -65,8 +63,7 @@ public final class GroupMembersWithVersionOuterClass {
     internal_static_im_turms_proto_GroupMembersWithVersion_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_GroupMembersWithVersion_descriptor,
-        new java.lang.String[] { "GroupMembers", "LastUpdatedDate", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "GroupMembers", "LastUpdatedDate", "LastUpdatedDate", });
     im.turms.common.model.bo.group.GroupMemberOuterClass.getDescriptor();
   }
 

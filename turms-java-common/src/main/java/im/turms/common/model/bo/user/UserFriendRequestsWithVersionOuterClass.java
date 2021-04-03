@@ -46,19 +46,17 @@ public final class UserFriendRequestsWithVersionOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n2model/user/user_friend_requests_with_v" +
-      "ersion.proto\022\016im.turms.proto\032\036google/pro" +
-      "tobuf/wrappers.proto\032$model/user/user_fr" +
-      "iend_request.proto\"\230\001\n\035UserFriendRequest" +
-      "sWithVersion\022?\n\024user_friend_requests\030\001 \003" +
-      "(\0132!.im.turms.proto.UserFriendRequest\0226\n" +
-      "\021last_updated_date\030\002 \001(\0132\033.google.protob" +
-      "uf.Int64ValueB$\n\035im.turms.common.model.b" +
-      "o.userP\001\272\002\000b\006proto3"
+      "ersion.proto\022\016im.turms.proto\032$model/user" +
+      "/user_friend_request.proto\"\226\001\n\035UserFrien" +
+      "dRequestsWithVersion\022?\n\024user_friend_requ" +
+      "ests\030\001 \003(\0132!.im.turms.proto.UserFriendRe" +
+      "quest\022\036\n\021last_updated_date\030\002 \001(\003H\000\210\001\001B\024\n" +
+      "\022_last_updated_dateB$\n\035im.turms.common.m" +
+      "odel.bo.userP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
           im.turms.common.model.bo.user.UserFriendRequestOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_UserFriendRequestsWithVersion_descriptor =
@@ -66,8 +64,7 @@ public final class UserFriendRequestsWithVersionOuterClass {
     internal_static_im_turms_proto_UserFriendRequestsWithVersion_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_UserFriendRequestsWithVersion_descriptor,
-        new java.lang.String[] { "UserFriendRequests", "LastUpdatedDate", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "UserFriendRequests", "LastUpdatedDate", "LastUpdatedDate", });
     im.turms.common.model.bo.user.UserFriendRequestOuterClass.getDescriptor();
   }
 

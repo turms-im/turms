@@ -46,34 +46,28 @@ public final class GroupOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\027model/group/group.proto\022\016im.turms.prot" +
-      "o\032\036google/protobuf/wrappers.proto\"\337\003\n\005Gr" +
-      "oup\022\'\n\002id\030\001 \001(\0132\033.google.protobuf.Int64V" +
-      "alue\022,\n\007type_id\030\002 \001(\0132\033.google.protobuf." +
-      "Int64Value\022/\n\ncreator_id\030\003 \001(\0132\033.google." +
-      "protobuf.Int64Value\022-\n\010owner_id\030\004 \001(\0132\033." +
-      "google.protobuf.Int64Value\022*\n\004name\030\005 \001(\013" +
-      "2\034.google.protobuf.StringValue\022+\n\005intro\030" +
-      "\006 \001(\0132\034.google.protobuf.StringValue\0222\n\014a" +
-      "nnouncement\030\007 \001(\0132\034.google.protobuf.Stri" +
-      "ngValue\0222\n\rcreation_date\030\010 \001(\0132\033.google." +
-      "protobuf.Int64Value\0222\n\rmute_end_date\030\t \001" +
-      "(\0132\033.google.protobuf.Int64Value\022*\n\006activ" +
-      "e\030\n \001(\0132\032.google.protobuf.BoolValueB%\n\036i" +
-      "m.turms.common.model.bo.groupP\001\272\002\000b\006prot" +
-      "o3"
+      "o\"\357\002\n\005Group\022\017\n\002id\030\001 \001(\003H\000\210\001\001\022\024\n\007type_id\030" +
+      "\002 \001(\003H\001\210\001\001\022\027\n\ncreator_id\030\003 \001(\003H\002\210\001\001\022\025\n\010o" +
+      "wner_id\030\004 \001(\003H\003\210\001\001\022\021\n\004name\030\005 \001(\tH\004\210\001\001\022\022\n" +
+      "\005intro\030\006 \001(\tH\005\210\001\001\022\031\n\014announcement\030\007 \001(\tH" +
+      "\006\210\001\001\022\032\n\rcreation_date\030\010 \001(\003H\007\210\001\001\022\032\n\rmute" +
+      "_end_date\030\t \001(\003H\010\210\001\001\022\023\n\006active\030\n \001(\010H\t\210\001" +
+      "\001B\005\n\003_idB\n\n\010_type_idB\r\n\013_creator_idB\013\n\t_" +
+      "owner_idB\007\n\005_nameB\010\n\006_introB\017\n\r_announce" +
+      "mentB\020\n\016_creation_dateB\020\n\016_mute_end_date" +
+      "B\t\n\007_activeB%\n\036im.turms.common.model.bo." +
+      "groupP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
         });
     internal_static_im_turms_proto_Group_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_im_turms_proto_Group_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_Group_descriptor,
-        new java.lang.String[] { "Id", "TypeId", "CreatorId", "OwnerId", "Name", "Intro", "Announcement", "CreationDate", "MuteEndDate", "Active", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "Id", "TypeId", "CreatorId", "OwnerId", "Name", "Intro", "Announcement", "CreationDate", "MuteEndDate", "Active", "Id", "TypeId", "CreatorId", "OwnerId", "Name", "Intro", "Announcement", "CreationDate", "MuteEndDate", "Active", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

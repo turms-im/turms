@@ -34,6 +34,7 @@ private static final long serialVersionUID = 0L;
   }
   private DeleteResourceRequest() {
     contentType_ = 0;
+    keyStr_ = "";
   }
 
   @java.lang.Override
@@ -56,6 +57,7 @@ private static final long serialVersionUID = 0L;
     if (extensionRegistry == null) {
       throw new java.lang.NullPointerException();
     }
+    int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
         com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
@@ -73,29 +75,14 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 18: {
-            com.google.protobuf.StringValue.Builder subBuilder = null;
-            if (keyStr_ != null) {
-              subBuilder = keyStr_.toBuilder();
-            }
-            keyStr_ = input.readMessage(com.google.protobuf.StringValue.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(keyStr_);
-              keyStr_ = subBuilder.buildPartial();
-            }
-
+            java.lang.String s = input.readStringRequireUtf8();
+            bitField0_ |= 0x00000001;
+            keyStr_ = s;
             break;
           }
-          case 26: {
-            com.google.protobuf.Int64Value.Builder subBuilder = null;
-            if (keyNum_ != null) {
-              subBuilder = keyNum_.toBuilder();
-            }
-            keyNum_ = input.readMessage(com.google.protobuf.Int64Value.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(keyNum_);
-              keyNum_ = subBuilder.buildPartial();
-            }
-
+          case 24: {
+            bitField0_ |= 0x00000002;
+            keyNum_ = input.readInt64();
             break;
           }
           default: {
@@ -130,6 +117,7 @@ private static final long serialVersionUID = 0L;
             im.turms.common.model.dto.request.storage.DeleteResourceRequest.class, im.turms.common.model.dto.request.storage.DeleteResourceRequest.Builder.class);
   }
 
+  private int bitField0_;
   public static final int CONTENT_TYPE_FIELD_NUMBER = 1;
   private int contentType_;
   /**
@@ -150,55 +138,68 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int KEY_STR_FIELD_NUMBER = 2;
-  private com.google.protobuf.StringValue keyStr_;
+  private volatile java.lang.Object keyStr_;
   /**
-   * <code>.google.protobuf.StringValue key_str = 2;</code>
+   * <code>string key_str = 2;</code>
    * @return Whether the keyStr field is set.
    */
   @java.lang.Override
   public boolean hasKeyStr() {
-    return keyStr_ != null;
+    return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>.google.protobuf.StringValue key_str = 2;</code>
+   * <code>string key_str = 2;</code>
    * @return The keyStr.
    */
   @java.lang.Override
-  public com.google.protobuf.StringValue getKeyStr() {
-    return keyStr_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : keyStr_;
+  public java.lang.String getKeyStr() {
+    java.lang.Object ref = keyStr_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs =
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      keyStr_ = s;
+      return s;
+    }
   }
   /**
-   * <code>.google.protobuf.StringValue key_str = 2;</code>
+   * <code>string key_str = 2;</code>
+   * @return The bytes for keyStr.
    */
   @java.lang.Override
-  public com.google.protobuf.StringValueOrBuilder getKeyStrOrBuilder() {
-    return getKeyStr();
+  public com.google.protobuf.ByteString
+      getKeyStrBytes() {
+    java.lang.Object ref = keyStr_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      keyStr_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
   public static final int KEY_NUM_FIELD_NUMBER = 3;
-  private com.google.protobuf.Int64Value keyNum_;
+  private long keyNum_;
   /**
-   * <code>.google.protobuf.Int64Value key_num = 3;</code>
+   * <code>int64 key_num = 3;</code>
    * @return Whether the keyNum field is set.
    */
   @java.lang.Override
   public boolean hasKeyNum() {
-    return keyNum_ != null;
+    return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>.google.protobuf.Int64Value key_num = 3;</code>
+   * <code>int64 key_num = 3;</code>
    * @return The keyNum.
    */
   @java.lang.Override
-  public com.google.protobuf.Int64Value getKeyNum() {
-    return keyNum_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : keyNum_;
-  }
-  /**
-   * <code>.google.protobuf.Int64Value key_num = 3;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.Int64ValueOrBuilder getKeyNumOrBuilder() {
-    return getKeyNum();
+  public long getKeyNum() {
+    return keyNum_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -218,11 +219,11 @@ private static final long serialVersionUID = 0L;
     if (contentType_ != im.turms.common.constant.ContentType.PROFILE.getNumber()) {
       output.writeEnum(1, contentType_);
     }
-    if (keyStr_ != null) {
-      output.writeMessage(2, getKeyStr());
+    if (((bitField0_ & 0x00000001) != 0)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, keyStr_);
     }
-    if (keyNum_ != null) {
-      output.writeMessage(3, getKeyNum());
+    if (((bitField0_ & 0x00000002) != 0)) {
+      output.writeInt64(3, keyNum_);
     }
     unknownFields.writeTo(output);
   }
@@ -237,13 +238,12 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(1, contentType_);
     }
-    if (keyStr_ != null) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(2, getKeyStr());
+    if (((bitField0_ & 0x00000001) != 0)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, keyStr_);
     }
-    if (keyNum_ != null) {
+    if (((bitField0_ & 0x00000002) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(3, getKeyNum());
+        .computeInt64Size(3, keyNum_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -268,8 +268,8 @@ private static final long serialVersionUID = 0L;
     }
     if (hasKeyNum() != other.hasKeyNum()) return false;
     if (hasKeyNum()) {
-      if (!getKeyNum()
-          .equals(other.getKeyNum())) return false;
+      if (getKeyNum()
+          != other.getKeyNum()) return false;
     }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
@@ -290,7 +290,8 @@ private static final long serialVersionUID = 0L;
     }
     if (hasKeyNum()) {
       hash = (37 * hash) + KEY_NUM_FIELD_NUMBER;
-      hash = (53 * hash) + getKeyNum().hashCode();
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getKeyNum());
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -427,18 +428,10 @@ private static final long serialVersionUID = 0L;
       super.clear();
       contentType_ = 0;
 
-      if (keyStrBuilder_ == null) {
-        keyStr_ = null;
-      } else {
-        keyStr_ = null;
-        keyStrBuilder_ = null;
-      }
-      if (keyNumBuilder_ == null) {
-        keyNum_ = null;
-      } else {
-        keyNum_ = null;
-        keyNumBuilder_ = null;
-      }
+      keyStr_ = "";
+      bitField0_ = (bitField0_ & ~0x00000001);
+      keyNum_ = 0L;
+      bitField0_ = (bitField0_ & ~0x00000002);
       return this;
     }
 
@@ -465,17 +458,18 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public im.turms.common.model.dto.request.storage.DeleteResourceRequest buildPartial() {
       im.turms.common.model.dto.request.storage.DeleteResourceRequest result = new im.turms.common.model.dto.request.storage.DeleteResourceRequest(this);
+      int from_bitField0_ = bitField0_;
+      int to_bitField0_ = 0;
       result.contentType_ = contentType_;
-      if (keyStrBuilder_ == null) {
-        result.keyStr_ = keyStr_;
-      } else {
-        result.keyStr_ = keyStrBuilder_.build();
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        to_bitField0_ |= 0x00000001;
       }
-      if (keyNumBuilder_ == null) {
+      result.keyStr_ = keyStr_;
+      if (((from_bitField0_ & 0x00000002) != 0)) {
         result.keyNum_ = keyNum_;
-      } else {
-        result.keyNum_ = keyNumBuilder_.build();
+        to_bitField0_ |= 0x00000002;
       }
+      result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
     }
@@ -528,10 +522,12 @@ private static final long serialVersionUID = 0L;
         setContentTypeValue(other.getContentTypeValue());
       }
       if (other.hasKeyStr()) {
-        mergeKeyStr(other.getKeyStr());
+        bitField0_ |= 0x00000001;
+        keyStr_ = other.keyStr_;
+        onChanged();
       }
       if (other.hasKeyNum()) {
-        mergeKeyNum(other.getKeyNum());
+        setKeyNum(other.getKeyNum());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -561,6 +557,7 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+    private int bitField0_;
 
     private int contentType_ = 0;
     /**
@@ -616,242 +613,126 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private com.google.protobuf.StringValue keyStr_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> keyStrBuilder_;
+    private java.lang.Object keyStr_ = "";
     /**
-     * <code>.google.protobuf.StringValue key_str = 2;</code>
+     * <code>string key_str = 2;</code>
      * @return Whether the keyStr field is set.
      */
     public boolean hasKeyStr() {
-      return keyStrBuilder_ != null || keyStr_ != null;
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>.google.protobuf.StringValue key_str = 2;</code>
+     * <code>string key_str = 2;</code>
      * @return The keyStr.
      */
-    public com.google.protobuf.StringValue getKeyStr() {
-      if (keyStrBuilder_ == null) {
-        return keyStr_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : keyStr_;
+    public java.lang.String getKeyStr() {
+      java.lang.Object ref = keyStr_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        keyStr_ = s;
+        return s;
       } else {
-        return keyStrBuilder_.getMessage();
+        return (java.lang.String) ref;
       }
     }
     /**
-     * <code>.google.protobuf.StringValue key_str = 2;</code>
+     * <code>string key_str = 2;</code>
+     * @return The bytes for keyStr.
      */
-    public Builder setKeyStr(com.google.protobuf.StringValue value) {
-      if (keyStrBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        keyStr_ = value;
-        onChanged();
+    public com.google.protobuf.ByteString
+        getKeyStrBytes() {
+      java.lang.Object ref = keyStr_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        keyStr_ = b;
+        return b;
       } else {
-        keyStrBuilder_.setMessage(value);
+        return (com.google.protobuf.ByteString) ref;
       }
-
-      return this;
     }
     /**
-     * <code>.google.protobuf.StringValue key_str = 2;</code>
+     * <code>string key_str = 2;</code>
+     * @param value The keyStr to set.
+     * @return This builder for chaining.
      */
     public Builder setKeyStr(
-        com.google.protobuf.StringValue.Builder builderForValue) {
-      if (keyStrBuilder_ == null) {
-        keyStr_ = builderForValue.build();
-        onChanged();
-      } else {
-        keyStrBuilder_.setMessage(builderForValue.build());
-      }
-
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+      keyStr_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.StringValue key_str = 2;</code>
-     */
-    public Builder mergeKeyStr(com.google.protobuf.StringValue value) {
-      if (keyStrBuilder_ == null) {
-        if (keyStr_ != null) {
-          keyStr_ =
-            com.google.protobuf.StringValue.newBuilder(keyStr_).mergeFrom(value).buildPartial();
-        } else {
-          keyStr_ = value;
-        }
-        onChanged();
-      } else {
-        keyStrBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.StringValue key_str = 2;</code>
+     * <code>string key_str = 2;</code>
+     * @return This builder for chaining.
      */
     public Builder clearKeyStr() {
-      if (keyStrBuilder_ == null) {
-        keyStr_ = null;
-        onChanged();
-      } else {
-        keyStr_ = null;
-        keyStrBuilder_ = null;
-      }
-
+      bitField0_ = (bitField0_ & ~0x00000001);
+      keyStr_ = getDefaultInstance().getKeyStr();
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.StringValue key_str = 2;</code>
+     * <code>string key_str = 2;</code>
+     * @param value The bytes for keyStr to set.
+     * @return This builder for chaining.
      */
-    public com.google.protobuf.StringValue.Builder getKeyStrBuilder() {
-
+    public Builder setKeyStrBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      bitField0_ |= 0x00000001;
+      keyStr_ = value;
       onChanged();
-      return getKeyStrFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.StringValue key_str = 2;</code>
-     */
-    public com.google.protobuf.StringValueOrBuilder getKeyStrOrBuilder() {
-      if (keyStrBuilder_ != null) {
-        return keyStrBuilder_.getMessageOrBuilder();
-      } else {
-        return keyStr_ == null ?
-            com.google.protobuf.StringValue.getDefaultInstance() : keyStr_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.StringValue key_str = 2;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>
-        getKeyStrFieldBuilder() {
-      if (keyStrBuilder_ == null) {
-        keyStrBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>(
-                getKeyStr(),
-                getParentForChildren(),
-                isClean());
-        keyStr_ = null;
-      }
-      return keyStrBuilder_;
+      return this;
     }
 
-    private com.google.protobuf.Int64Value keyNum_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> keyNumBuilder_;
+    private long keyNum_ ;
     /**
-     * <code>.google.protobuf.Int64Value key_num = 3;</code>
+     * <code>int64 key_num = 3;</code>
      * @return Whether the keyNum field is set.
      */
+    @java.lang.Override
     public boolean hasKeyNum() {
-      return keyNumBuilder_ != null || keyNum_ != null;
+      return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>.google.protobuf.Int64Value key_num = 3;</code>
+     * <code>int64 key_num = 3;</code>
      * @return The keyNum.
      */
-    public com.google.protobuf.Int64Value getKeyNum() {
-      if (keyNumBuilder_ == null) {
-        return keyNum_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : keyNum_;
-      } else {
-        return keyNumBuilder_.getMessage();
-      }
+    @java.lang.Override
+    public long getKeyNum() {
+      return keyNum_;
     }
     /**
-     * <code>.google.protobuf.Int64Value key_num = 3;</code>
+     * <code>int64 key_num = 3;</code>
+     * @param value The keyNum to set.
+     * @return This builder for chaining.
      */
-    public Builder setKeyNum(com.google.protobuf.Int64Value value) {
-      if (keyNumBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        keyNum_ = value;
-        onChanged();
-      } else {
-        keyNumBuilder_.setMessage(value);
-      }
-
+    public Builder setKeyNum(long value) {
+      bitField0_ |= 0x00000002;
+      keyNum_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value key_num = 3;</code>
-     */
-    public Builder setKeyNum(
-        com.google.protobuf.Int64Value.Builder builderForValue) {
-      if (keyNumBuilder_ == null) {
-        keyNum_ = builderForValue.build();
-        onChanged();
-      } else {
-        keyNumBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value key_num = 3;</code>
-     */
-    public Builder mergeKeyNum(com.google.protobuf.Int64Value value) {
-      if (keyNumBuilder_ == null) {
-        if (keyNum_ != null) {
-          keyNum_ =
-            com.google.protobuf.Int64Value.newBuilder(keyNum_).mergeFrom(value).buildPartial();
-        } else {
-          keyNum_ = value;
-        }
-        onChanged();
-      } else {
-        keyNumBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value key_num = 3;</code>
+     * <code>int64 key_num = 3;</code>
+     * @return This builder for chaining.
      */
     public Builder clearKeyNum() {
-      if (keyNumBuilder_ == null) {
-        keyNum_ = null;
-        onChanged();
-      } else {
-        keyNum_ = null;
-        keyNumBuilder_ = null;
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value key_num = 3;</code>
-     */
-    public com.google.protobuf.Int64Value.Builder getKeyNumBuilder() {
-
+      bitField0_ = (bitField0_ & ~0x00000002);
+      keyNum_ = 0L;
       onChanged();
-      return getKeyNumFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.Int64Value key_num = 3;</code>
-     */
-    public com.google.protobuf.Int64ValueOrBuilder getKeyNumOrBuilder() {
-      if (keyNumBuilder_ != null) {
-        return keyNumBuilder_.getMessageOrBuilder();
-      } else {
-        return keyNum_ == null ?
-            com.google.protobuf.Int64Value.getDefaultInstance() : keyNum_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.Int64Value key_num = 3;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
-        getKeyNumFieldBuilder() {
-      if (keyNumBuilder_ == null) {
-        keyNumBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>(
-                getKeyNum(),
-                getParentForChildren(),
-                isClean());
-        keyNum_ = null;
-      }
-      return keyNumBuilder_;
+      return this;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

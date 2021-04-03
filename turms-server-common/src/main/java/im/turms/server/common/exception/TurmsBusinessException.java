@@ -94,9 +94,9 @@ public final class TurmsBusinessException extends NoStackTraceException {
     }
 
     public static TurmsBusinessException get(TurmsNotification notification) {
-        int code = notification.getCode().getValue();
+        int code = notification.getCode();
         return notification.hasReason()
-                ? TurmsBusinessException.get(code, notification.getReason().getValue())
+                ? TurmsBusinessException.get(code, notification.getReason())
                 : TurmsBusinessException.get(code);
     }
 

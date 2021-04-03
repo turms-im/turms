@@ -46,25 +46,22 @@ public final class QueryUserProfileRequestOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n-request/user/query_user_profile_reques" +
-      "t.proto\022\016im.turms.proto\032\036google/protobuf" +
-      "/wrappers.proto\"b\n\027QueryUserProfileReque" +
-      "st\022\017\n\007user_id\030\001 \001(\003\0226\n\021last_updated_date" +
-      "\030\002 \001(\0132\033.google.protobuf.Int64ValueB-\n&i" +
-      "m.turms.common.model.dto.request.userP\001\272" +
-      "\002\000b\006proto3"
+      "t.proto\022\016im.turms.proto\"`\n\027QueryUserProf" +
+      "ileRequest\022\017\n\007user_id\030\001 \001(\003\022\036\n\021last_upda" +
+      "ted_date\030\002 \001(\003H\000\210\001\001B\024\n\022_last_updated_dat" +
+      "eB-\n&im.turms.common.model.dto.request.u" +
+      "serP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
         });
     internal_static_im_turms_proto_QueryUserProfileRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_im_turms_proto_QueryUserProfileRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_QueryUserProfileRequest_descriptor,
-        new java.lang.String[] { "UserId", "LastUpdatedDate", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "UserId", "LastUpdatedDate", "LastUpdatedDate", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

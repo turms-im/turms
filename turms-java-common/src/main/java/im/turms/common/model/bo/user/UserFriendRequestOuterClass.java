@@ -46,25 +46,22 @@ public final class UserFriendRequestOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n$model/user/user_friend_request.proto\022\016" +
-      "im.turms.proto\032\036google/protobuf/wrappers" +
-      ".proto\032\035constant/request_status.proto\"\240\003" +
-      "\n\021UserFriendRequest\022\'\n\002id\030\001 \001(\0132\033.google" +
-      ".protobuf.Int64Value\0222\n\rcreation_date\030\002 " +
-      "\001(\0132\033.google.protobuf.Int64Value\022-\n\007cont" +
-      "ent\030\003 \001(\0132\034.google.protobuf.StringValue\022" +
-      "5\n\016request_status\030\004 \001(\0162\035.im.turms.proto" +
-      ".RequestStatus\022,\n\006reason\030\005 \001(\0132\034.google." +
-      "protobuf.StringValue\0224\n\017expiration_date\030" +
-      "\006 \001(\0132\033.google.protobuf.Int64Value\0221\n\014re" +
-      "quester_id\030\007 \001(\0132\033.google.protobuf.Int64" +
-      "Value\0221\n\014recipient_id\030\010 \001(\0132\033.google.pro" +
-      "tobuf.Int64ValueB$\n\035im.turms.common.mode" +
-      "l.bo.userP\001\272\002\000b\006proto3"
+      "im.turms.proto\032\035constant/request_status." +
+      "proto\"\364\002\n\021UserFriendRequest\022\017\n\002id\030\001 \001(\003H" +
+      "\000\210\001\001\022\032\n\rcreation_date\030\002 \001(\003H\001\210\001\001\022\024\n\007cont" +
+      "ent\030\003 \001(\tH\002\210\001\001\022:\n\016request_status\030\004 \001(\0162\035" +
+      ".im.turms.proto.RequestStatusH\003\210\001\001\022\023\n\006re" +
+      "ason\030\005 \001(\tH\004\210\001\001\022\034\n\017expiration_date\030\006 \001(\003" +
+      "H\005\210\001\001\022\031\n\014requester_id\030\007 \001(\003H\006\210\001\001\022\031\n\014reci" +
+      "pient_id\030\010 \001(\003H\007\210\001\001B\005\n\003_idB\020\n\016_creation_" +
+      "dateB\n\n\010_contentB\021\n\017_request_statusB\t\n\007_" +
+      "reasonB\022\n\020_expiration_dateB\017\n\r_requester" +
+      "_idB\017\n\r_recipient_idB$\n\035im.turms.common." +
+      "model.bo.userP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
           im.turms.common.constant.RequestStatusOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_UserFriendRequest_descriptor =
@@ -72,8 +69,7 @@ public final class UserFriendRequestOuterClass {
     internal_static_im_turms_proto_UserFriendRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_UserFriendRequest_descriptor,
-        new java.lang.String[] { "Id", "CreationDate", "Content", "RequestStatus", "Reason", "ExpirationDate", "RequesterId", "RecipientId", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "Id", "CreationDate", "Content", "RequestStatus", "Reason", "ExpirationDate", "RequesterId", "RecipientId", "Id", "CreationDate", "Content", "RequestStatus", "Reason", "ExpirationDate", "RequesterId", "RecipientId", });
     im.turms.common.constant.RequestStatusOuterClass.getDescriptor();
   }
 

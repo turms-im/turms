@@ -18,9 +18,7 @@
 package unit.im.turms.server.common.util;
 
 import com.google.protobuf.ByteString;
-import com.google.protobuf.Int64Value;
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.google.protobuf.StringValue;
 import im.turms.common.model.dto.request.message.CreateMessageRequest;
 import im.turms.server.common.util.ProtoUtil;
 import io.netty.buffer.ByteBuf;
@@ -40,8 +38,8 @@ class ProtoUtilTests {
         byte[] record = new byte[] {1, 2, 3, 4, 10, 11};
         CreateMessageRequest request = CreateMessageRequest
                 .newBuilder()
-                .setMessageId(Int64Value.of(messageId))
-                .setText(StringValue.of(text))
+                .setMessageId(messageId)
+                .setText(text)
                 .addRecords(ByteString.copyFrom(record))
                 .build();
         ByteBuf buffer = ProtoUtil.getDirectByteBuffer(request);

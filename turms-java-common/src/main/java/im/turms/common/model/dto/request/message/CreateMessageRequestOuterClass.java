@@ -46,31 +46,28 @@ public final class CreateMessageRequestOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n,request/message/create_message_request" +
-      ".proto\022\016im.turms.proto\032\036google/protobuf/" +
-      "wrappers.proto\"\345\002\n\024CreateMessageRequest\022" +
-      "/\n\nmessage_id\030\001 \001(\0132\033.google.protobuf.In" +
-      "t64Value\0225\n\021is_system_message\030\002 \001(\0132\032.go" +
-      "ogle.protobuf.BoolValue\022-\n\010group_id\030\003 \001(" +
-      "\0132\033.google.protobuf.Int64Value\0221\n\014recipi" +
-      "ent_id\030\004 \001(\0132\033.google.protobuf.Int64Valu" +
-      "e\022\025\n\rdelivery_date\030\005 \001(\003\022*\n\004text\030\006 \001(\0132\034" +
-      ".google.protobuf.StringValue\022\017\n\007records\030" +
-      "\007 \003(\014\022/\n\nburn_after\030\010 \001(\0132\033.google.proto" +
-      "buf.Int32ValueB0\n)im.turms.common.model." +
-      "dto.request.messageP\001\272\002\000b\006proto3"
+      ".proto\022\016im.turms.proto\"\307\002\n\024CreateMessage" +
+      "Request\022\027\n\nmessage_id\030\001 \001(\003H\000\210\001\001\022\036\n\021is_s" +
+      "ystem_message\030\002 \001(\010H\001\210\001\001\022\025\n\010group_id\030\003 \001" +
+      "(\003H\002\210\001\001\022\031\n\014recipient_id\030\004 \001(\003H\003\210\001\001\022\032\n\rde" +
+      "livery_date\030\005 \001(\003H\004\210\001\001\022\021\n\004text\030\006 \001(\tH\005\210\001" +
+      "\001\022\017\n\007records\030\007 \003(\014\022\027\n\nburn_after\030\010 \001(\005H\006" +
+      "\210\001\001B\r\n\013_message_idB\024\n\022_is_system_message" +
+      "B\013\n\t_group_idB\017\n\r_recipient_idB\020\n\016_deliv" +
+      "ery_dateB\007\n\005_textB\r\n\013_burn_afterB0\n)im.t" +
+      "urms.common.model.dto.request.messageP\001\272" +
+      "\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
         });
     internal_static_im_turms_proto_CreateMessageRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_im_turms_proto_CreateMessageRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_CreateMessageRequest_descriptor,
-        new java.lang.String[] { "MessageId", "IsSystemMessage", "GroupId", "RecipientId", "DeliveryDate", "Text", "Records", "BurnAfter", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "MessageId", "IsSystemMessage", "GroupId", "RecipientId", "DeliveryDate", "Text", "Records", "BurnAfter", "MessageId", "IsSystemMessage", "GroupId", "RecipientId", "DeliveryDate", "Text", "BurnAfter", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

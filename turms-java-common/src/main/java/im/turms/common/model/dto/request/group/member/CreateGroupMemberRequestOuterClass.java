@@ -46,21 +46,18 @@ public final class CreateGroupMemberRequestOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n6request/group/member/create_group_memb" +
-      "er_request.proto\022\016im.turms.proto\032\036google" +
-      "/protobuf/wrappers.proto\032 constant/group" +
-      "_member_role.proto\"\314\001\n\030CreateGroupMember" +
-      "Request\022\020\n\010group_id\030\001 \001(\003\022\017\n\007user_id\030\002 \001" +
-      "(\003\022*\n\004name\030\003 \001(\0132\034.google.protobuf.Strin" +
-      "gValue\022-\n\004role\030\004 \001(\0162\037.im.turms.proto.Gr" +
-      "oupMemberRole\0222\n\rmute_end_date\030\005 \001(\0132\033.g" +
-      "oogle.protobuf.Int64ValueB5\n.im.turms.co" +
-      "mmon.model.dto.request.group.memberP\001\272\002\000" +
-      "b\006proto3"
+      "er_request.proto\022\016im.turms.proto\032 consta" +
+      "nt/group_member_role.proto\"\266\001\n\030CreateGro" +
+      "upMemberRequest\022\020\n\010group_id\030\001 \001(\003\022\017\n\007use" +
+      "r_id\030\002 \001(\003\022\021\n\004name\030\003 \001(\tH\000\210\001\001\022-\n\004role\030\004 " +
+      "\001(\0162\037.im.turms.proto.GroupMemberRole\022\032\n\r" +
+      "mute_end_date\030\005 \001(\003H\001\210\001\001B\007\n\005_nameB\020\n\016_mu" +
+      "te_end_dateB5\n.im.turms.common.model.dto" +
+      ".request.group.memberP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
           im.turms.common.constant.GroupMemberRoleOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_CreateGroupMemberRequest_descriptor =
@@ -68,8 +65,7 @@ public final class CreateGroupMemberRequestOuterClass {
     internal_static_im_turms_proto_CreateGroupMemberRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_CreateGroupMemberRequest_descriptor,
-        new java.lang.String[] { "GroupId", "UserId", "Name", "Role", "MuteEndDate", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "GroupId", "UserId", "Name", "Role", "MuteEndDate", "Name", "MuteEndDate", });
     im.turms.common.constant.GroupMemberRoleOuterClass.getDescriptor();
   }
 

@@ -33,6 +33,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private File() {
+    data_ = com.google.protobuf.ByteString.EMPTY;
   }
 
   @java.lang.Override
@@ -55,6 +56,7 @@ private static final long serialVersionUID = 0L;
     if (extensionRegistry == null) {
       throw new java.lang.NullPointerException();
     }
+    int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
         com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
@@ -67,7 +69,7 @@ private static final long serialVersionUID = 0L;
             break;
           case 10: {
             im.turms.common.model.bo.file.File.Description.Builder subBuilder = null;
-            if (description_ != null) {
+            if (((bitField0_ & 0x00000001) != 0)) {
               subBuilder = description_.toBuilder();
             }
             description_ = input.readMessage(im.turms.common.model.bo.file.File.Description.parser(), extensionRegistry);
@@ -75,20 +77,12 @@ private static final long serialVersionUID = 0L;
               subBuilder.mergeFrom(description_);
               description_ = subBuilder.buildPartial();
             }
-
+            bitField0_ |= 0x00000001;
             break;
           }
           case 18: {
-            com.google.protobuf.BytesValue.Builder subBuilder = null;
-            if (data_ != null) {
-              subBuilder = data_.toBuilder();
-            }
-            data_ = input.readMessage(com.google.protobuf.BytesValue.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(data_);
-              data_ = subBuilder.buildPartial();
-            }
-
+            bitField0_ |= 0x00000002;
+            data_ = input.readBytes();
             break;
           }
           default: {
@@ -140,34 +134,32 @@ private static final long serialVersionUID = 0L;
         getUrlBytes();
 
     /**
-     * <code>.google.protobuf.Int32Value size = 2;</code>
+     * <code>int32 size = 2;</code>
      * @return Whether the size field is set.
      */
     boolean hasSize();
     /**
-     * <code>.google.protobuf.Int32Value size = 2;</code>
+     * <code>int32 size = 2;</code>
      * @return The size.
      */
-    com.google.protobuf.Int32Value getSize();
-    /**
-     * <code>.google.protobuf.Int32Value size = 2;</code>
-     */
-    com.google.protobuf.Int32ValueOrBuilder getSizeOrBuilder();
+    int getSize();
 
     /**
-     * <code>.google.protobuf.StringValue format = 3;</code>
+     * <code>string format = 3;</code>
      * @return Whether the format field is set.
      */
     boolean hasFormat();
     /**
-     * <code>.google.protobuf.StringValue format = 3;</code>
+     * <code>string format = 3;</code>
      * @return The format.
      */
-    com.google.protobuf.StringValue getFormat();
+    java.lang.String getFormat();
     /**
-     * <code>.google.protobuf.StringValue format = 3;</code>
+     * <code>string format = 3;</code>
+     * @return The bytes for format.
      */
-    com.google.protobuf.StringValueOrBuilder getFormatOrBuilder();
+    com.google.protobuf.ByteString
+        getFormatBytes();
   }
   /**
    * Protobuf type {@code im.turms.proto.File.Description}
@@ -183,6 +175,7 @@ private static final long serialVersionUID = 0L;
     }
     private Description() {
       url_ = "";
+      format_ = "";
     }
 
     @java.lang.Override
@@ -205,6 +198,7 @@ private static final long serialVersionUID = 0L;
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
+      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -221,30 +215,15 @@ private static final long serialVersionUID = 0L;
               url_ = s;
               break;
             }
-            case 18: {
-              com.google.protobuf.Int32Value.Builder subBuilder = null;
-              if (size_ != null) {
-                subBuilder = size_.toBuilder();
-              }
-              size_ = input.readMessage(com.google.protobuf.Int32Value.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(size_);
-                size_ = subBuilder.buildPartial();
-              }
-
+            case 16: {
+              bitField0_ |= 0x00000001;
+              size_ = input.readInt32();
               break;
             }
             case 26: {
-              com.google.protobuf.StringValue.Builder subBuilder = null;
-              if (format_ != null) {
-                subBuilder = format_.toBuilder();
-              }
-              format_ = input.readMessage(com.google.protobuf.StringValue.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(format_);
-                format_ = subBuilder.buildPartial();
-              }
-
+              java.lang.String s = input.readStringRequireUtf8();
+              bitField0_ |= 0x00000002;
+              format_ = s;
               break;
             }
             default: {
@@ -279,6 +258,7 @@ private static final long serialVersionUID = 0L;
               im.turms.common.model.bo.file.File.Description.class, im.turms.common.model.bo.file.File.Description.Builder.class);
     }
 
+    private int bitField0_;
     public static final int URL_FIELD_NUMBER = 1;
     private volatile java.lang.Object url_;
     /**
@@ -318,55 +298,68 @@ private static final long serialVersionUID = 0L;
     }
 
     public static final int SIZE_FIELD_NUMBER = 2;
-    private com.google.protobuf.Int32Value size_;
+    private int size_;
     /**
-     * <code>.google.protobuf.Int32Value size = 2;</code>
+     * <code>int32 size = 2;</code>
      * @return Whether the size field is set.
      */
     @java.lang.Override
     public boolean hasSize() {
-      return size_ != null;
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>.google.protobuf.Int32Value size = 2;</code>
+     * <code>int32 size = 2;</code>
      * @return The size.
      */
     @java.lang.Override
-    public com.google.protobuf.Int32Value getSize() {
-      return size_ == null ? com.google.protobuf.Int32Value.getDefaultInstance() : size_;
-    }
-    /**
-     * <code>.google.protobuf.Int32Value size = 2;</code>
-     */
-    @java.lang.Override
-    public com.google.protobuf.Int32ValueOrBuilder getSizeOrBuilder() {
-      return getSize();
+    public int getSize() {
+      return size_;
     }
 
     public static final int FORMAT_FIELD_NUMBER = 3;
-    private com.google.protobuf.StringValue format_;
+    private volatile java.lang.Object format_;
     /**
-     * <code>.google.protobuf.StringValue format = 3;</code>
+     * <code>string format = 3;</code>
      * @return Whether the format field is set.
      */
     @java.lang.Override
     public boolean hasFormat() {
-      return format_ != null;
+      return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>.google.protobuf.StringValue format = 3;</code>
+     * <code>string format = 3;</code>
      * @return The format.
      */
     @java.lang.Override
-    public com.google.protobuf.StringValue getFormat() {
-      return format_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : format_;
+    public java.lang.String getFormat() {
+      java.lang.Object ref = format_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        format_ = s;
+        return s;
+      }
     }
     /**
-     * <code>.google.protobuf.StringValue format = 3;</code>
+     * <code>string format = 3;</code>
+     * @return The bytes for format.
      */
     @java.lang.Override
-    public com.google.protobuf.StringValueOrBuilder getFormatOrBuilder() {
-      return getFormat();
+    public com.google.protobuf.ByteString
+        getFormatBytes() {
+      java.lang.Object ref = format_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b =
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        format_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     private byte memoizedIsInitialized = -1;
@@ -386,11 +379,11 @@ private static final long serialVersionUID = 0L;
       if (!getUrlBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, url_);
       }
-      if (size_ != null) {
-        output.writeMessage(2, getSize());
+      if (((bitField0_ & 0x00000001) != 0)) {
+        output.writeInt32(2, size_);
       }
-      if (format_ != null) {
-        output.writeMessage(3, getFormat());
+      if (((bitField0_ & 0x00000002) != 0)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, format_);
       }
       unknownFields.writeTo(output);
     }
@@ -404,13 +397,12 @@ private static final long serialVersionUID = 0L;
       if (!getUrlBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, url_);
       }
-      if (size_ != null) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, getSize());
+          .computeInt32Size(2, size_);
       }
-      if (format_ != null) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, getFormat());
+      if (((bitField0_ & 0x00000002) != 0)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, format_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -431,8 +423,8 @@ private static final long serialVersionUID = 0L;
           .equals(other.getUrl())) return false;
       if (hasSize() != other.hasSize()) return false;
       if (hasSize()) {
-        if (!getSize()
-            .equals(other.getSize())) return false;
+        if (getSize()
+            != other.getSize()) return false;
       }
       if (hasFormat() != other.hasFormat()) return false;
       if (hasFormat()) {
@@ -454,7 +446,7 @@ private static final long serialVersionUID = 0L;
       hash = (53 * hash) + getUrl().hashCode();
       if (hasSize()) {
         hash = (37 * hash) + SIZE_FIELD_NUMBER;
-        hash = (53 * hash) + getSize().hashCode();
+        hash = (53 * hash) + getSize();
       }
       if (hasFormat()) {
         hash = (37 * hash) + FORMAT_FIELD_NUMBER;
@@ -595,18 +587,10 @@ private static final long serialVersionUID = 0L;
         super.clear();
         url_ = "";
 
-        if (sizeBuilder_ == null) {
-          size_ = null;
-        } else {
-          size_ = null;
-          sizeBuilder_ = null;
-        }
-        if (formatBuilder_ == null) {
-          format_ = null;
-        } else {
-          format_ = null;
-          formatBuilder_ = null;
-        }
+        size_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        format_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
 
@@ -633,17 +617,18 @@ private static final long serialVersionUID = 0L;
       @java.lang.Override
       public im.turms.common.model.bo.file.File.Description buildPartial() {
         im.turms.common.model.bo.file.File.Description result = new im.turms.common.model.bo.file.File.Description(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
         result.url_ = url_;
-        if (sizeBuilder_ == null) {
+        if (((from_bitField0_ & 0x00000001) != 0)) {
           result.size_ = size_;
-        } else {
-          result.size_ = sizeBuilder_.build();
+          to_bitField0_ |= 0x00000001;
         }
-        if (formatBuilder_ == null) {
-          result.format_ = format_;
-        } else {
-          result.format_ = formatBuilder_.build();
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          to_bitField0_ |= 0x00000002;
         }
+        result.format_ = format_;
+        result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
@@ -697,10 +682,12 @@ private static final long serialVersionUID = 0L;
           onChanged();
         }
         if (other.hasSize()) {
-          mergeSize(other.getSize());
+          setSize(other.getSize());
         }
         if (other.hasFormat()) {
-          mergeFormat(other.getFormat());
+          bitField0_ |= 0x00000002;
+          format_ = other.format_;
+          onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -730,6 +717,7 @@ private static final long serialVersionUID = 0L;
         }
         return this;
       }
+      private int bitField0_;
 
       private java.lang.Object url_ = "";
       /**
@@ -807,242 +795,126 @@ private static final long serialVersionUID = 0L;
         return this;
       }
 
-      private com.google.protobuf.Int32Value size_;
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder> sizeBuilder_;
+      private int size_ ;
       /**
-       * <code>.google.protobuf.Int32Value size = 2;</code>
+       * <code>int32 size = 2;</code>
        * @return Whether the size field is set.
        */
+      @java.lang.Override
       public boolean hasSize() {
-        return sizeBuilder_ != null || size_ != null;
+        return ((bitField0_ & 0x00000001) != 0);
       }
       /**
-       * <code>.google.protobuf.Int32Value size = 2;</code>
+       * <code>int32 size = 2;</code>
        * @return The size.
        */
-      public com.google.protobuf.Int32Value getSize() {
-        if (sizeBuilder_ == null) {
-          return size_ == null ? com.google.protobuf.Int32Value.getDefaultInstance() : size_;
-        } else {
-          return sizeBuilder_.getMessage();
-        }
+      @java.lang.Override
+      public int getSize() {
+        return size_;
       }
       /**
-       * <code>.google.protobuf.Int32Value size = 2;</code>
+       * <code>int32 size = 2;</code>
+       * @param value The size to set.
+       * @return This builder for chaining.
        */
-      public Builder setSize(com.google.protobuf.Int32Value value) {
-        if (sizeBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          size_ = value;
-          onChanged();
-        } else {
-          sizeBuilder_.setMessage(value);
-        }
-
+      public Builder setSize(int value) {
+        bitField0_ |= 0x00000001;
+        size_ = value;
+        onChanged();
         return this;
       }
       /**
-       * <code>.google.protobuf.Int32Value size = 2;</code>
-       */
-      public Builder setSize(
-          com.google.protobuf.Int32Value.Builder builderForValue) {
-        if (sizeBuilder_ == null) {
-          size_ = builderForValue.build();
-          onChanged();
-        } else {
-          sizeBuilder_.setMessage(builderForValue.build());
-        }
-
-        return this;
-      }
-      /**
-       * <code>.google.protobuf.Int32Value size = 2;</code>
-       */
-      public Builder mergeSize(com.google.protobuf.Int32Value value) {
-        if (sizeBuilder_ == null) {
-          if (size_ != null) {
-            size_ =
-              com.google.protobuf.Int32Value.newBuilder(size_).mergeFrom(value).buildPartial();
-          } else {
-            size_ = value;
-          }
-          onChanged();
-        } else {
-          sizeBuilder_.mergeFrom(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>.google.protobuf.Int32Value size = 2;</code>
+       * <code>int32 size = 2;</code>
+       * @return This builder for chaining.
        */
       public Builder clearSize() {
-        if (sizeBuilder_ == null) {
-          size_ = null;
-          onChanged();
-        } else {
-          size_ = null;
-          sizeBuilder_ = null;
-        }
-
+        bitField0_ = (bitField0_ & ~0x00000001);
+        size_ = 0;
+        onChanged();
         return this;
       }
-      /**
-       * <code>.google.protobuf.Int32Value size = 2;</code>
-       */
-      public com.google.protobuf.Int32Value.Builder getSizeBuilder() {
 
-        onChanged();
-        return getSizeFieldBuilder().getBuilder();
-      }
+      private java.lang.Object format_ = "";
       /**
-       * <code>.google.protobuf.Int32Value size = 2;</code>
-       */
-      public com.google.protobuf.Int32ValueOrBuilder getSizeOrBuilder() {
-        if (sizeBuilder_ != null) {
-          return sizeBuilder_.getMessageOrBuilder();
-        } else {
-          return size_ == null ?
-              com.google.protobuf.Int32Value.getDefaultInstance() : size_;
-        }
-      }
-      /**
-       * <code>.google.protobuf.Int32Value size = 2;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder>
-          getSizeFieldBuilder() {
-        if (sizeBuilder_ == null) {
-          sizeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder>(
-                  getSize(),
-                  getParentForChildren(),
-                  isClean());
-          size_ = null;
-        }
-        return sizeBuilder_;
-      }
-
-      private com.google.protobuf.StringValue format_;
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> formatBuilder_;
-      /**
-       * <code>.google.protobuf.StringValue format = 3;</code>
+       * <code>string format = 3;</code>
        * @return Whether the format field is set.
        */
       public boolean hasFormat() {
-        return formatBuilder_ != null || format_ != null;
+        return ((bitField0_ & 0x00000002) != 0);
       }
       /**
-       * <code>.google.protobuf.StringValue format = 3;</code>
+       * <code>string format = 3;</code>
        * @return The format.
        */
-      public com.google.protobuf.StringValue getFormat() {
-        if (formatBuilder_ == null) {
-          return format_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : format_;
+      public java.lang.String getFormat() {
+        java.lang.Object ref = format_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          format_ = s;
+          return s;
         } else {
-          return formatBuilder_.getMessage();
+          return (java.lang.String) ref;
         }
       }
       /**
-       * <code>.google.protobuf.StringValue format = 3;</code>
+       * <code>string format = 3;</code>
+       * @return The bytes for format.
        */
-      public Builder setFormat(com.google.protobuf.StringValue value) {
-        if (formatBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          format_ = value;
-          onChanged();
+      public com.google.protobuf.ByteString
+          getFormatBytes() {
+        java.lang.Object ref = format_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          format_ = b;
+          return b;
         } else {
-          formatBuilder_.setMessage(value);
+          return (com.google.protobuf.ByteString) ref;
         }
-
-        return this;
       }
       /**
-       * <code>.google.protobuf.StringValue format = 3;</code>
+       * <code>string format = 3;</code>
+       * @param value The format to set.
+       * @return This builder for chaining.
        */
       public Builder setFormat(
-          com.google.protobuf.StringValue.Builder builderForValue) {
-        if (formatBuilder_ == null) {
-          format_ = builderForValue.build();
-          onChanged();
-        } else {
-          formatBuilder_.setMessage(builderForValue.build());
-        }
-
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        format_ = value;
+        onChanged();
         return this;
       }
       /**
-       * <code>.google.protobuf.StringValue format = 3;</code>
-       */
-      public Builder mergeFormat(com.google.protobuf.StringValue value) {
-        if (formatBuilder_ == null) {
-          if (format_ != null) {
-            format_ =
-              com.google.protobuf.StringValue.newBuilder(format_).mergeFrom(value).buildPartial();
-          } else {
-            format_ = value;
-          }
-          onChanged();
-        } else {
-          formatBuilder_.mergeFrom(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>.google.protobuf.StringValue format = 3;</code>
+       * <code>string format = 3;</code>
+       * @return This builder for chaining.
        */
       public Builder clearFormat() {
-        if (formatBuilder_ == null) {
-          format_ = null;
-          onChanged();
-        } else {
-          format_ = null;
-          formatBuilder_ = null;
-        }
-
+        bitField0_ = (bitField0_ & ~0x00000002);
+        format_ = getDefaultInstance().getFormat();
+        onChanged();
         return this;
       }
       /**
-       * <code>.google.protobuf.StringValue format = 3;</code>
+       * <code>string format = 3;</code>
+       * @param value The bytes for format to set.
+       * @return This builder for chaining.
        */
-      public com.google.protobuf.StringValue.Builder getFormatBuilder() {
-
+      public Builder setFormatBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        bitField0_ |= 0x00000002;
+        format_ = value;
         onChanged();
-        return getFormatFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>.google.protobuf.StringValue format = 3;</code>
-       */
-      public com.google.protobuf.StringValueOrBuilder getFormatOrBuilder() {
-        if (formatBuilder_ != null) {
-          return formatBuilder_.getMessageOrBuilder();
-        } else {
-          return format_ == null ?
-              com.google.protobuf.StringValue.getDefaultInstance() : format_;
-        }
-      }
-      /**
-       * <code>.google.protobuf.StringValue format = 3;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>
-          getFormatFieldBuilder() {
-        if (formatBuilder_ == null) {
-          formatBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>(
-                  getFormat(),
-                  getParentForChildren(),
-                  isClean());
-          format_ = null;
-        }
-        return formatBuilder_;
+        return this;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -1097,6 +969,7 @@ private static final long serialVersionUID = 0L;
 
   }
 
+  private int bitField0_;
   public static final int DESCRIPTION_FIELD_NUMBER = 1;
   private im.turms.common.model.bo.file.File.Description description_;
   /**
@@ -1105,7 +978,7 @@ private static final long serialVersionUID = 0L;
    */
   @java.lang.Override
   public boolean hasDescription() {
-    return description_ != null;
+    return ((bitField0_ & 0x00000001) != 0);
   }
   /**
    * <code>.im.turms.proto.File.Description description = 1;</code>
@@ -1120,33 +993,26 @@ private static final long serialVersionUID = 0L;
    */
   @java.lang.Override
   public im.turms.common.model.bo.file.File.DescriptionOrBuilder getDescriptionOrBuilder() {
-    return getDescription();
+    return description_ == null ? im.turms.common.model.bo.file.File.Description.getDefaultInstance() : description_;
   }
 
   public static final int DATA_FIELD_NUMBER = 2;
-  private com.google.protobuf.BytesValue data_;
+  private com.google.protobuf.ByteString data_;
   /**
-   * <code>.google.protobuf.BytesValue data = 2;</code>
+   * <code>bytes data = 2;</code>
    * @return Whether the data field is set.
    */
   @java.lang.Override
   public boolean hasData() {
-    return data_ != null;
+    return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>.google.protobuf.BytesValue data = 2;</code>
+   * <code>bytes data = 2;</code>
    * @return The data.
    */
   @java.lang.Override
-  public com.google.protobuf.BytesValue getData() {
-    return data_ == null ? com.google.protobuf.BytesValue.getDefaultInstance() : data_;
-  }
-  /**
-   * <code>.google.protobuf.BytesValue data = 2;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.BytesValueOrBuilder getDataOrBuilder() {
-    return getData();
+  public com.google.protobuf.ByteString getData() {
+    return data_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -1163,11 +1029,11 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (description_ != null) {
+    if (((bitField0_ & 0x00000001) != 0)) {
       output.writeMessage(1, getDescription());
     }
-    if (data_ != null) {
-      output.writeMessage(2, getData());
+    if (((bitField0_ & 0x00000002) != 0)) {
+      output.writeBytes(2, data_);
     }
     unknownFields.writeTo(output);
   }
@@ -1178,13 +1044,13 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (description_ != null) {
+    if (((bitField0_ & 0x00000001) != 0)) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(1, getDescription());
     }
-    if (data_ != null) {
+    if (((bitField0_ & 0x00000002) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(2, getData());
+        .computeBytesSize(2, data_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -1358,6 +1224,7 @@ private static final long serialVersionUID = 0L;
     private void maybeForceBuilderInitialization() {
       if (com.google.protobuf.GeneratedMessageV3
               .alwaysUseFieldBuilders) {
+        getDescriptionFieldBuilder();
       }
     }
     @java.lang.Override
@@ -1366,15 +1233,11 @@ private static final long serialVersionUID = 0L;
       if (descriptionBuilder_ == null) {
         description_ = null;
       } else {
-        description_ = null;
-        descriptionBuilder_ = null;
+        descriptionBuilder_.clear();
       }
-      if (dataBuilder_ == null) {
-        data_ = null;
-      } else {
-        data_ = null;
-        dataBuilder_ = null;
-      }
+      bitField0_ = (bitField0_ & ~0x00000001);
+      data_ = com.google.protobuf.ByteString.EMPTY;
+      bitField0_ = (bitField0_ & ~0x00000002);
       return this;
     }
 
@@ -1401,16 +1264,21 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public im.turms.common.model.bo.file.File buildPartial() {
       im.turms.common.model.bo.file.File result = new im.turms.common.model.bo.file.File(this);
-      if (descriptionBuilder_ == null) {
-        result.description_ = description_;
-      } else {
-        result.description_ = descriptionBuilder_.build();
+      int from_bitField0_ = bitField0_;
+      int to_bitField0_ = 0;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        if (descriptionBuilder_ == null) {
+          result.description_ = description_;
+        } else {
+          result.description_ = descriptionBuilder_.build();
+        }
+        to_bitField0_ |= 0x00000001;
       }
-      if (dataBuilder_ == null) {
-        result.data_ = data_;
-      } else {
-        result.data_ = dataBuilder_.build();
+      if (((from_bitField0_ & 0x00000002) != 0)) {
+        to_bitField0_ |= 0x00000002;
       }
+      result.data_ = data_;
+      result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
     }
@@ -1463,7 +1331,7 @@ private static final long serialVersionUID = 0L;
         mergeDescription(other.getDescription());
       }
       if (other.hasData()) {
-        mergeData(other.getData());
+        setData(other.getData());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -1493,6 +1361,7 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+    private int bitField0_;
 
     private im.turms.common.model.bo.file.File.Description description_;
     private com.google.protobuf.SingleFieldBuilderV3<
@@ -1502,7 +1371,7 @@ private static final long serialVersionUID = 0L;
      * @return Whether the description field is set.
      */
     public boolean hasDescription() {
-      return descriptionBuilder_ != null || description_ != null;
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
      * <code>.im.turms.proto.File.Description description = 1;</code>
@@ -1528,7 +1397,7 @@ private static final long serialVersionUID = 0L;
       } else {
         descriptionBuilder_.setMessage(value);
       }
-
+      bitField0_ |= 0x00000001;
       return this;
     }
     /**
@@ -1542,7 +1411,7 @@ private static final long serialVersionUID = 0L;
       } else {
         descriptionBuilder_.setMessage(builderForValue.build());
       }
-
+      bitField0_ |= 0x00000001;
       return this;
     }
     /**
@@ -1550,7 +1419,9 @@ private static final long serialVersionUID = 0L;
      */
     public Builder mergeDescription(im.turms.common.model.bo.file.File.Description value) {
       if (descriptionBuilder_ == null) {
-        if (description_ != null) {
+        if (((bitField0_ & 0x00000001) != 0) &&
+            description_ != null &&
+            description_ != im.turms.common.model.bo.file.File.Description.getDefaultInstance()) {
           description_ =
             im.turms.common.model.bo.file.File.Description.newBuilder(description_).mergeFrom(value).buildPartial();
         } else {
@@ -1560,7 +1431,7 @@ private static final long serialVersionUID = 0L;
       } else {
         descriptionBuilder_.mergeFrom(value);
       }
-
+      bitField0_ |= 0x00000001;
       return this;
     }
     /**
@@ -1571,17 +1442,16 @@ private static final long serialVersionUID = 0L;
         description_ = null;
         onChanged();
       } else {
-        description_ = null;
-        descriptionBuilder_ = null;
+        descriptionBuilder_.clear();
       }
-
+      bitField0_ = (bitField0_ & ~0x00000001);
       return this;
     }
     /**
      * <code>.im.turms.proto.File.Description description = 1;</code>
      */
     public im.turms.common.model.bo.file.File.Description.Builder getDescriptionBuilder() {
-
+      bitField0_ |= 0x00000001;
       onChanged();
       return getDescriptionFieldBuilder().getBuilder();
     }
@@ -1613,123 +1483,46 @@ private static final long serialVersionUID = 0L;
       return descriptionBuilder_;
     }
 
-    private com.google.protobuf.BytesValue data_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.BytesValue, com.google.protobuf.BytesValue.Builder, com.google.protobuf.BytesValueOrBuilder> dataBuilder_;
+    private com.google.protobuf.ByteString data_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>.google.protobuf.BytesValue data = 2;</code>
+     * <code>bytes data = 2;</code>
      * @return Whether the data field is set.
      */
+    @java.lang.Override
     public boolean hasData() {
-      return dataBuilder_ != null || data_ != null;
+      return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>.google.protobuf.BytesValue data = 2;</code>
+     * <code>bytes data = 2;</code>
      * @return The data.
      */
-    public com.google.protobuf.BytesValue getData() {
-      if (dataBuilder_ == null) {
-        return data_ == null ? com.google.protobuf.BytesValue.getDefaultInstance() : data_;
-      } else {
-        return dataBuilder_.getMessage();
-      }
+    @java.lang.Override
+    public com.google.protobuf.ByteString getData() {
+      return data_;
     }
     /**
-     * <code>.google.protobuf.BytesValue data = 2;</code>
+     * <code>bytes data = 2;</code>
+     * @param value The data to set.
+     * @return This builder for chaining.
      */
-    public Builder setData(com.google.protobuf.BytesValue value) {
-      if (dataBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        data_ = value;
-        onChanged();
-      } else {
-        dataBuilder_.setMessage(value);
-      }
-
+    public Builder setData(com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+      data_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.BytesValue data = 2;</code>
-     */
-    public Builder setData(
-        com.google.protobuf.BytesValue.Builder builderForValue) {
-      if (dataBuilder_ == null) {
-        data_ = builderForValue.build();
-        onChanged();
-      } else {
-        dataBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.BytesValue data = 2;</code>
-     */
-    public Builder mergeData(com.google.protobuf.BytesValue value) {
-      if (dataBuilder_ == null) {
-        if (data_ != null) {
-          data_ =
-            com.google.protobuf.BytesValue.newBuilder(data_).mergeFrom(value).buildPartial();
-        } else {
-          data_ = value;
-        }
-        onChanged();
-      } else {
-        dataBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.BytesValue data = 2;</code>
+     * <code>bytes data = 2;</code>
+     * @return This builder for chaining.
      */
     public Builder clearData() {
-      if (dataBuilder_ == null) {
-        data_ = null;
-        onChanged();
-      } else {
-        data_ = null;
-        dataBuilder_ = null;
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.BytesValue data = 2;</code>
-     */
-    public com.google.protobuf.BytesValue.Builder getDataBuilder() {
-
+      bitField0_ = (bitField0_ & ~0x00000002);
+      data_ = getDefaultInstance().getData();
       onChanged();
-      return getDataFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.BytesValue data = 2;</code>
-     */
-    public com.google.protobuf.BytesValueOrBuilder getDataOrBuilder() {
-      if (dataBuilder_ != null) {
-        return dataBuilder_.getMessageOrBuilder();
-      } else {
-        return data_ == null ?
-            com.google.protobuf.BytesValue.getDefaultInstance() : data_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.BytesValue data = 2;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.BytesValue, com.google.protobuf.BytesValue.Builder, com.google.protobuf.BytesValueOrBuilder>
-        getDataFieldBuilder() {
-      if (dataBuilder_ == null) {
-        dataBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.BytesValue, com.google.protobuf.BytesValue.Builder, com.google.protobuf.BytesValueOrBuilder>(
-                getData(),
-                getParentForChildren(),
-                isClean());
-        data_ = null;
-      }
-      return dataBuilder_;
+      return this;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

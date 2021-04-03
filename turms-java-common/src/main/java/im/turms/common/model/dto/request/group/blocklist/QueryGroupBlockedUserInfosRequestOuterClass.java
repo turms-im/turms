@@ -47,25 +47,22 @@ public final class QueryGroupBlockedUserInfosRequestOuterClass {
     java.lang.String[] descriptorData = {
       "\nDrequest/group/blocklist/query_group_bl" +
       "ocked_user_infos_request.proto\022\016im.turms" +
-      ".proto\032\036google/protobuf/wrappers.proto\"m" +
-      "\n!QueryGroupBlockedUserInfosRequest\022\020\n\010g" +
-      "roup_id\030\001 \001(\003\0226\n\021last_updated_date\030\002 \001(\013" +
-      "2\033.google.protobuf.Int64ValueB8\n1im.turm" +
-      "s.common.model.dto.request.group.blockli" +
-      "stP\001\272\002\000b\006proto3"
+      ".proto\"k\n!QueryGroupBlockedUserInfosRequ" +
+      "est\022\020\n\010group_id\030\001 \001(\003\022\036\n\021last_updated_da" +
+      "te\030\002 \001(\003H\000\210\001\001B\024\n\022_last_updated_dateB8\n1i" +
+      "m.turms.common.model.dto.request.group.b" +
+      "locklistP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
         });
     internal_static_im_turms_proto_QueryGroupBlockedUserInfosRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_im_turms_proto_QueryGroupBlockedUserInfosRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_QueryGroupBlockedUserInfosRequest_descriptor,
-        new java.lang.String[] { "GroupId", "LastUpdatedDate", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "GroupId", "LastUpdatedDate", "LastUpdatedDate", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

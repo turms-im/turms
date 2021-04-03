@@ -46,22 +46,20 @@ public final class UserInfoOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\032model/user/user_info.proto\022\016im.turms.p" +
-      "roto\032\036google/protobuf/wrappers.proto\032&co" +
-      "nstant/profile_access_strategy.proto\"\270\002\n" +
-      "\010UserInfo\022\'\n\002id\030\001 \001(\0132\033.google.protobuf." +
-      "Int64Value\022*\n\004name\030\002 \001(\0132\034.google.protob" +
-      "uf.StringValue\022+\n\005intro\030\003 \001(\0132\034.google.p" +
-      "rotobuf.StringValue\0226\n\021registration_date" +
-      "\030\004 \001(\0132\033.google.protobuf.Int64Value\022*\n\006a" +
-      "ctive\030\005 \001(\0132\032.google.protobuf.BoolValue\022" +
-      "F\n\027profile_access_strategy\030\006 \001(\0162%.im.tu" +
-      "rms.proto.ProfileAccessStrategyB$\n\035im.tu" +
-      "rms.common.model.bo.userP\001\272\002\000b\006proto3"
+      "roto\032&constant/profile_access_strategy.p" +
+      "roto\"\233\002\n\010UserInfo\022\017\n\002id\030\001 \001(\003H\000\210\001\001\022\021\n\004na" +
+      "me\030\002 \001(\tH\001\210\001\001\022\022\n\005intro\030\003 \001(\tH\002\210\001\001\022\036\n\021reg" +
+      "istration_date\030\004 \001(\003H\003\210\001\001\022\023\n\006active\030\005 \001(" +
+      "\010H\004\210\001\001\022K\n\027profile_access_strategy\030\006 \001(\0162" +
+      "%.im.turms.proto.ProfileAccessStrategyH\005" +
+      "\210\001\001B\005\n\003_idB\007\n\005_nameB\010\n\006_introB\024\n\022_regist" +
+      "ration_dateB\t\n\007_activeB\032\n\030_profile_acces" +
+      "s_strategyB$\n\035im.turms.common.model.bo.u" +
+      "serP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
           im.turms.common.constant.ProfileAccessStrategyOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_UserInfo_descriptor =
@@ -69,8 +67,7 @@ public final class UserInfoOuterClass {
     internal_static_im_turms_proto_UserInfo_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_UserInfo_descriptor,
-        new java.lang.String[] { "Id", "Name", "Intro", "RegistrationDate", "Active", "ProfileAccessStrategy", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "Id", "Name", "Intro", "RegistrationDate", "Active", "ProfileAccessStrategy", "Id", "Name", "Intro", "RegistrationDate", "Active", "ProfileAccessStrategy", });
     im.turms.common.constant.ProfileAccessStrategyOuterClass.getDescriptor();
   }
 

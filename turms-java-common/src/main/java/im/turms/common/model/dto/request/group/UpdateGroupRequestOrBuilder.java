@@ -31,122 +31,108 @@ public interface UpdateGroupRequestOrBuilder extends
   long getGroupId();
 
   /**
-   * <code>.google.protobuf.StringValue group_name = 2;</code>
+   * <code>string group_name = 2;</code>
    * @return Whether the groupName field is set.
    */
   boolean hasGroupName();
   /**
-   * <code>.google.protobuf.StringValue group_name = 2;</code>
+   * <code>string group_name = 2;</code>
    * @return The groupName.
    */
-  com.google.protobuf.StringValue getGroupName();
+  java.lang.String getGroupName();
   /**
-   * <code>.google.protobuf.StringValue group_name = 2;</code>
+   * <code>string group_name = 2;</code>
+   * @return The bytes for groupName.
    */
-  com.google.protobuf.StringValueOrBuilder getGroupNameOrBuilder();
+  com.google.protobuf.ByteString
+      getGroupNameBytes();
 
   /**
-   * <code>.google.protobuf.StringValue intro = 3;</code>
+   * <code>string intro = 3;</code>
    * @return Whether the intro field is set.
    */
   boolean hasIntro();
   /**
-   * <code>.google.protobuf.StringValue intro = 3;</code>
+   * <code>string intro = 3;</code>
    * @return The intro.
    */
-  com.google.protobuf.StringValue getIntro();
+  java.lang.String getIntro();
   /**
-   * <code>.google.protobuf.StringValue intro = 3;</code>
+   * <code>string intro = 3;</code>
+   * @return The bytes for intro.
    */
-  com.google.protobuf.StringValueOrBuilder getIntroOrBuilder();
+  com.google.protobuf.ByteString
+      getIntroBytes();
 
   /**
-   * <code>.google.protobuf.StringValue announcement = 4;</code>
+   * <code>string announcement = 4;</code>
    * @return Whether the announcement field is set.
    */
   boolean hasAnnouncement();
   /**
-   * <code>.google.protobuf.StringValue announcement = 4;</code>
+   * <code>string announcement = 4;</code>
    * @return The announcement.
    */
-  com.google.protobuf.StringValue getAnnouncement();
+  java.lang.String getAnnouncement();
   /**
-   * <code>.google.protobuf.StringValue announcement = 4;</code>
+   * <code>string announcement = 4;</code>
+   * @return The bytes for announcement.
    */
-  com.google.protobuf.StringValueOrBuilder getAnnouncementOrBuilder();
+  com.google.protobuf.ByteString
+      getAnnouncementBytes();
 
   /**
-   * <code>.google.protobuf.Int32Value minimum_score = 5;</code>
+   * <code>int32 minimum_score = 5;</code>
    * @return Whether the minimumScore field is set.
    */
   boolean hasMinimumScore();
   /**
-   * <code>.google.protobuf.Int32Value minimum_score = 5;</code>
+   * <code>int32 minimum_score = 5;</code>
    * @return The minimumScore.
    */
-  com.google.protobuf.Int32Value getMinimumScore();
-  /**
-   * <code>.google.protobuf.Int32Value minimum_score = 5;</code>
-   */
-  com.google.protobuf.Int32ValueOrBuilder getMinimumScoreOrBuilder();
+  int getMinimumScore();
 
   /**
-   * <code>.google.protobuf.Int64Value group_type_id = 6;</code>
+   * <code>int64 group_type_id = 6;</code>
    * @return Whether the groupTypeId field is set.
    */
   boolean hasGroupTypeId();
   /**
-   * <code>.google.protobuf.Int64Value group_type_id = 6;</code>
+   * <code>int64 group_type_id = 6;</code>
    * @return The groupTypeId.
    */
-  com.google.protobuf.Int64Value getGroupTypeId();
-  /**
-   * <code>.google.protobuf.Int64Value group_type_id = 6;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getGroupTypeIdOrBuilder();
+  long getGroupTypeId();
 
   /**
-   * <code>.google.protobuf.Int64Value mute_end_date = 7;</code>
+   * <code>int64 mute_end_date = 7;</code>
    * @return Whether the muteEndDate field is set.
    */
   boolean hasMuteEndDate();
   /**
-   * <code>.google.protobuf.Int64Value mute_end_date = 7;</code>
+   * <code>int64 mute_end_date = 7;</code>
    * @return The muteEndDate.
    */
-  com.google.protobuf.Int64Value getMuteEndDate();
-  /**
-   * <code>.google.protobuf.Int64Value mute_end_date = 7;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getMuteEndDateOrBuilder();
+  long getMuteEndDate();
 
   /**
-   * <code>.google.protobuf.Int64Value successor_id = 8;</code>
+   * <code>int64 successor_id = 8;</code>
    * @return Whether the successorId field is set.
    */
   boolean hasSuccessorId();
   /**
-   * <code>.google.protobuf.Int64Value successor_id = 8;</code>
+   * <code>int64 successor_id = 8;</code>
    * @return The successorId.
    */
-  com.google.protobuf.Int64Value getSuccessorId();
-  /**
-   * <code>.google.protobuf.Int64Value successor_id = 8;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getSuccessorIdOrBuilder();
+  long getSuccessorId();
 
   /**
-   * <code>.google.protobuf.BoolValue quit_after_transfer = 9;</code>
+   * <code>bool quit_after_transfer = 9;</code>
    * @return Whether the quitAfterTransfer field is set.
    */
   boolean hasQuitAfterTransfer();
   /**
-   * <code>.google.protobuf.BoolValue quit_after_transfer = 9;</code>
+   * <code>bool quit_after_transfer = 9;</code>
    * @return The quitAfterTransfer.
    */
-  com.google.protobuf.BoolValue getQuitAfterTransfer();
-  /**
-   * <code>.google.protobuf.BoolValue quit_after_transfer = 9;</code>
-   */
-  com.google.protobuf.BoolValueOrBuilder getQuitAfterTransferOrBuilder();
+  boolean getQuitAfterTransfer();
 }

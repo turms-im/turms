@@ -69,7 +69,7 @@ public class SessionController {
         }
         long userId = createSessionRequest.getUserId();
         String password = createSessionRequest.hasPassword()
-                ? createSessionRequest.getPassword().getValue()
+                ? createSessionRequest.getPassword()
                 : null;
         UserStatus userStatus = createSessionRequest.getUserStatus();
         if (userStatus == UserStatus.UNRECOGNIZED) {
@@ -80,7 +80,7 @@ public class SessionController {
             deviceType = DeviceType.UNKNOWN;
         }
         String deviceDetails = createSessionRequest.hasDeviceDetails()
-                ? createSessionRequest.getDeviceDetails().getValue()
+                ? createSessionRequest.getDeviceDetails()
                 : null;
         Point position = null;
         if (createSessionRequest.hasLocation()) {

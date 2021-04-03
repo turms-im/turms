@@ -55,6 +55,7 @@ private static final long serialVersionUID = 0L;
     if (extensionRegistry == null) {
       throw new java.lang.NullPointerException();
     }
+    int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
         com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
@@ -65,43 +66,19 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
-          case 10: {
-            com.google.protobuf.BoolValue.Builder subBuilder = null;
-            if (blocked_ != null) {
-              subBuilder = blocked_.toBuilder();
-            }
-            blocked_ = input.readMessage(com.google.protobuf.BoolValue.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(blocked_);
-              blocked_ = subBuilder.buildPartial();
-            }
-
+          case 8: {
+            bitField0_ |= 0x00000001;
+            blocked_ = input.readBool();
             break;
           }
-          case 18: {
-            com.google.protobuf.Int32Value.Builder subBuilder = null;
-            if (groupIndex_ != null) {
-              subBuilder = groupIndex_.toBuilder();
-            }
-            groupIndex_ = input.readMessage(com.google.protobuf.Int32Value.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(groupIndex_);
-              groupIndex_ = subBuilder.buildPartial();
-            }
-
+          case 16: {
+            bitField0_ |= 0x00000002;
+            groupIndex_ = input.readInt32();
             break;
           }
-          case 26: {
-            com.google.protobuf.Int64Value.Builder subBuilder = null;
-            if (lastUpdatedDate_ != null) {
-              subBuilder = lastUpdatedDate_.toBuilder();
-            }
-            lastUpdatedDate_ = input.readMessage(com.google.protobuf.Int64Value.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(lastUpdatedDate_);
-              lastUpdatedDate_ = subBuilder.buildPartial();
-            }
-
+          case 24: {
+            bitField0_ |= 0x00000004;
+            lastUpdatedDate_ = input.readInt64();
             break;
           }
           default: {
@@ -136,82 +113,62 @@ private static final long serialVersionUID = 0L;
             im.turms.common.model.dto.request.user.relationship.QueryRelatedUserIdsRequest.class, im.turms.common.model.dto.request.user.relationship.QueryRelatedUserIdsRequest.Builder.class);
   }
 
+  private int bitField0_;
   public static final int BLOCKED_FIELD_NUMBER = 1;
-  private com.google.protobuf.BoolValue blocked_;
+  private boolean blocked_;
   /**
-   * <code>.google.protobuf.BoolValue blocked = 1;</code>
+   * <code>bool blocked = 1;</code>
    * @return Whether the blocked field is set.
    */
   @java.lang.Override
   public boolean hasBlocked() {
-    return blocked_ != null;
+    return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>.google.protobuf.BoolValue blocked = 1;</code>
+   * <code>bool blocked = 1;</code>
    * @return The blocked.
    */
   @java.lang.Override
-  public com.google.protobuf.BoolValue getBlocked() {
-    return blocked_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : blocked_;
-  }
-  /**
-   * <code>.google.protobuf.BoolValue blocked = 1;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.BoolValueOrBuilder getBlockedOrBuilder() {
-    return getBlocked();
+  public boolean getBlocked() {
+    return blocked_;
   }
 
   public static final int GROUP_INDEX_FIELD_NUMBER = 2;
-  private com.google.protobuf.Int32Value groupIndex_;
+  private int groupIndex_;
   /**
-   * <code>.google.protobuf.Int32Value group_index = 2;</code>
+   * <code>int32 group_index = 2;</code>
    * @return Whether the groupIndex field is set.
    */
   @java.lang.Override
   public boolean hasGroupIndex() {
-    return groupIndex_ != null;
+    return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>.google.protobuf.Int32Value group_index = 2;</code>
+   * <code>int32 group_index = 2;</code>
    * @return The groupIndex.
    */
   @java.lang.Override
-  public com.google.protobuf.Int32Value getGroupIndex() {
-    return groupIndex_ == null ? com.google.protobuf.Int32Value.getDefaultInstance() : groupIndex_;
-  }
-  /**
-   * <code>.google.protobuf.Int32Value group_index = 2;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.Int32ValueOrBuilder getGroupIndexOrBuilder() {
-    return getGroupIndex();
+  public int getGroupIndex() {
+    return groupIndex_;
   }
 
   public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 3;
-  private com.google.protobuf.Int64Value lastUpdatedDate_;
+  private long lastUpdatedDate_;
   /**
-   * <code>.google.protobuf.Int64Value last_updated_date = 3;</code>
+   * <code>int64 last_updated_date = 3;</code>
    * @return Whether the lastUpdatedDate field is set.
    */
   @java.lang.Override
   public boolean hasLastUpdatedDate() {
-    return lastUpdatedDate_ != null;
+    return ((bitField0_ & 0x00000004) != 0);
   }
   /**
-   * <code>.google.protobuf.Int64Value last_updated_date = 3;</code>
+   * <code>int64 last_updated_date = 3;</code>
    * @return The lastUpdatedDate.
    */
   @java.lang.Override
-  public com.google.protobuf.Int64Value getLastUpdatedDate() {
-    return lastUpdatedDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : lastUpdatedDate_;
-  }
-  /**
-   * <code>.google.protobuf.Int64Value last_updated_date = 3;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.Int64ValueOrBuilder getLastUpdatedDateOrBuilder() {
-    return getLastUpdatedDate();
+  public long getLastUpdatedDate() {
+    return lastUpdatedDate_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -228,14 +185,14 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (blocked_ != null) {
-      output.writeMessage(1, getBlocked());
+    if (((bitField0_ & 0x00000001) != 0)) {
+      output.writeBool(1, blocked_);
     }
-    if (groupIndex_ != null) {
-      output.writeMessage(2, getGroupIndex());
+    if (((bitField0_ & 0x00000002) != 0)) {
+      output.writeInt32(2, groupIndex_);
     }
-    if (lastUpdatedDate_ != null) {
-      output.writeMessage(3, getLastUpdatedDate());
+    if (((bitField0_ & 0x00000004) != 0)) {
+      output.writeInt64(3, lastUpdatedDate_);
     }
     unknownFields.writeTo(output);
   }
@@ -246,17 +203,17 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (blocked_ != null) {
+    if (((bitField0_ & 0x00000001) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(1, getBlocked());
+        .computeBoolSize(1, blocked_);
     }
-    if (groupIndex_ != null) {
+    if (((bitField0_ & 0x00000002) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(2, getGroupIndex());
+        .computeInt32Size(2, groupIndex_);
     }
-    if (lastUpdatedDate_ != null) {
+    if (((bitField0_ & 0x00000004) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(3, getLastUpdatedDate());
+        .computeInt64Size(3, lastUpdatedDate_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -275,18 +232,18 @@ private static final long serialVersionUID = 0L;
 
     if (hasBlocked() != other.hasBlocked()) return false;
     if (hasBlocked()) {
-      if (!getBlocked()
-          .equals(other.getBlocked())) return false;
+      if (getBlocked()
+          != other.getBlocked()) return false;
     }
     if (hasGroupIndex() != other.hasGroupIndex()) return false;
     if (hasGroupIndex()) {
-      if (!getGroupIndex()
-          .equals(other.getGroupIndex())) return false;
+      if (getGroupIndex()
+          != other.getGroupIndex()) return false;
     }
     if (hasLastUpdatedDate() != other.hasLastUpdatedDate()) return false;
     if (hasLastUpdatedDate()) {
-      if (!getLastUpdatedDate()
-          .equals(other.getLastUpdatedDate())) return false;
+      if (getLastUpdatedDate()
+          != other.getLastUpdatedDate()) return false;
     }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
@@ -301,15 +258,17 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     if (hasBlocked()) {
       hash = (37 * hash) + BLOCKED_FIELD_NUMBER;
-      hash = (53 * hash) + getBlocked().hashCode();
+      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+          getBlocked());
     }
     if (hasGroupIndex()) {
       hash = (37 * hash) + GROUP_INDEX_FIELD_NUMBER;
-      hash = (53 * hash) + getGroupIndex().hashCode();
+      hash = (53 * hash) + getGroupIndex();
     }
     if (hasLastUpdatedDate()) {
       hash = (37 * hash) + LAST_UPDATED_DATE_FIELD_NUMBER;
-      hash = (53 * hash) + getLastUpdatedDate().hashCode();
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getLastUpdatedDate());
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -444,24 +403,12 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
-      if (blockedBuilder_ == null) {
-        blocked_ = null;
-      } else {
-        blocked_ = null;
-        blockedBuilder_ = null;
-      }
-      if (groupIndexBuilder_ == null) {
-        groupIndex_ = null;
-      } else {
-        groupIndex_ = null;
-        groupIndexBuilder_ = null;
-      }
-      if (lastUpdatedDateBuilder_ == null) {
-        lastUpdatedDate_ = null;
-      } else {
-        lastUpdatedDate_ = null;
-        lastUpdatedDateBuilder_ = null;
-      }
+      blocked_ = false;
+      bitField0_ = (bitField0_ & ~0x00000001);
+      groupIndex_ = 0;
+      bitField0_ = (bitField0_ & ~0x00000002);
+      lastUpdatedDate_ = 0L;
+      bitField0_ = (bitField0_ & ~0x00000004);
       return this;
     }
 
@@ -488,21 +435,21 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public im.turms.common.model.dto.request.user.relationship.QueryRelatedUserIdsRequest buildPartial() {
       im.turms.common.model.dto.request.user.relationship.QueryRelatedUserIdsRequest result = new im.turms.common.model.dto.request.user.relationship.QueryRelatedUserIdsRequest(this);
-      if (blockedBuilder_ == null) {
+      int from_bitField0_ = bitField0_;
+      int to_bitField0_ = 0;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
         result.blocked_ = blocked_;
-      } else {
-        result.blocked_ = blockedBuilder_.build();
+        to_bitField0_ |= 0x00000001;
       }
-      if (groupIndexBuilder_ == null) {
+      if (((from_bitField0_ & 0x00000002) != 0)) {
         result.groupIndex_ = groupIndex_;
-      } else {
-        result.groupIndex_ = groupIndexBuilder_.build();
+        to_bitField0_ |= 0x00000002;
       }
-      if (lastUpdatedDateBuilder_ == null) {
+      if (((from_bitField0_ & 0x00000004) != 0)) {
         result.lastUpdatedDate_ = lastUpdatedDate_;
-      } else {
-        result.lastUpdatedDate_ = lastUpdatedDateBuilder_.build();
+        to_bitField0_ |= 0x00000004;
       }
+      result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
     }
@@ -552,13 +499,13 @@ private static final long serialVersionUID = 0L;
     public Builder mergeFrom(im.turms.common.model.dto.request.user.relationship.QueryRelatedUserIdsRequest other) {
       if (other == im.turms.common.model.dto.request.user.relationship.QueryRelatedUserIdsRequest.getDefaultInstance()) return this;
       if (other.hasBlocked()) {
-        mergeBlocked(other.getBlocked());
+        setBlocked(other.getBlocked());
       }
       if (other.hasGroupIndex()) {
-        mergeGroupIndex(other.getGroupIndex());
+        setGroupIndex(other.getGroupIndex());
       }
       if (other.hasLastUpdatedDate()) {
-        mergeLastUpdatedDate(other.getLastUpdatedDate());
+        setLastUpdatedDate(other.getLastUpdatedDate());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -588,362 +535,123 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+    private int bitField0_;
 
-    private com.google.protobuf.BoolValue blocked_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder> blockedBuilder_;
+    private boolean blocked_ ;
     /**
-     * <code>.google.protobuf.BoolValue blocked = 1;</code>
+     * <code>bool blocked = 1;</code>
      * @return Whether the blocked field is set.
      */
+    @java.lang.Override
     public boolean hasBlocked() {
-      return blockedBuilder_ != null || blocked_ != null;
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>.google.protobuf.BoolValue blocked = 1;</code>
+     * <code>bool blocked = 1;</code>
      * @return The blocked.
      */
-    public com.google.protobuf.BoolValue getBlocked() {
-      if (blockedBuilder_ == null) {
-        return blocked_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : blocked_;
-      } else {
-        return blockedBuilder_.getMessage();
-      }
+    @java.lang.Override
+    public boolean getBlocked() {
+      return blocked_;
     }
     /**
-     * <code>.google.protobuf.BoolValue blocked = 1;</code>
+     * <code>bool blocked = 1;</code>
+     * @param value The blocked to set.
+     * @return This builder for chaining.
      */
-    public Builder setBlocked(com.google.protobuf.BoolValue value) {
-      if (blockedBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        blocked_ = value;
-        onChanged();
-      } else {
-        blockedBuilder_.setMessage(value);
-      }
-
+    public Builder setBlocked(boolean value) {
+      bitField0_ |= 0x00000001;
+      blocked_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.BoolValue blocked = 1;</code>
-     */
-    public Builder setBlocked(
-        com.google.protobuf.BoolValue.Builder builderForValue) {
-      if (blockedBuilder_ == null) {
-        blocked_ = builderForValue.build();
-        onChanged();
-      } else {
-        blockedBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.BoolValue blocked = 1;</code>
-     */
-    public Builder mergeBlocked(com.google.protobuf.BoolValue value) {
-      if (blockedBuilder_ == null) {
-        if (blocked_ != null) {
-          blocked_ =
-            com.google.protobuf.BoolValue.newBuilder(blocked_).mergeFrom(value).buildPartial();
-        } else {
-          blocked_ = value;
-        }
-        onChanged();
-      } else {
-        blockedBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.BoolValue blocked = 1;</code>
+     * <code>bool blocked = 1;</code>
+     * @return This builder for chaining.
      */
     public Builder clearBlocked() {
-      if (blockedBuilder_ == null) {
-        blocked_ = null;
-        onChanged();
-      } else {
-        blocked_ = null;
-        blockedBuilder_ = null;
-      }
-
+      bitField0_ = (bitField0_ & ~0x00000001);
+      blocked_ = false;
+      onChanged();
       return this;
     }
-    /**
-     * <code>.google.protobuf.BoolValue blocked = 1;</code>
-     */
-    public com.google.protobuf.BoolValue.Builder getBlockedBuilder() {
 
-      onChanged();
-      return getBlockedFieldBuilder().getBuilder();
-    }
+    private int groupIndex_ ;
     /**
-     * <code>.google.protobuf.BoolValue blocked = 1;</code>
-     */
-    public com.google.protobuf.BoolValueOrBuilder getBlockedOrBuilder() {
-      if (blockedBuilder_ != null) {
-        return blockedBuilder_.getMessageOrBuilder();
-      } else {
-        return blocked_ == null ?
-            com.google.protobuf.BoolValue.getDefaultInstance() : blocked_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.BoolValue blocked = 1;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder>
-        getBlockedFieldBuilder() {
-      if (blockedBuilder_ == null) {
-        blockedBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder>(
-                getBlocked(),
-                getParentForChildren(),
-                isClean());
-        blocked_ = null;
-      }
-      return blockedBuilder_;
-    }
-
-    private com.google.protobuf.Int32Value groupIndex_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder> groupIndexBuilder_;
-    /**
-     * <code>.google.protobuf.Int32Value group_index = 2;</code>
+     * <code>int32 group_index = 2;</code>
      * @return Whether the groupIndex field is set.
      */
+    @java.lang.Override
     public boolean hasGroupIndex() {
-      return groupIndexBuilder_ != null || groupIndex_ != null;
+      return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>.google.protobuf.Int32Value group_index = 2;</code>
+     * <code>int32 group_index = 2;</code>
      * @return The groupIndex.
      */
-    public com.google.protobuf.Int32Value getGroupIndex() {
-      if (groupIndexBuilder_ == null) {
-        return groupIndex_ == null ? com.google.protobuf.Int32Value.getDefaultInstance() : groupIndex_;
-      } else {
-        return groupIndexBuilder_.getMessage();
-      }
+    @java.lang.Override
+    public int getGroupIndex() {
+      return groupIndex_;
     }
     /**
-     * <code>.google.protobuf.Int32Value group_index = 2;</code>
+     * <code>int32 group_index = 2;</code>
+     * @param value The groupIndex to set.
+     * @return This builder for chaining.
      */
-    public Builder setGroupIndex(com.google.protobuf.Int32Value value) {
-      if (groupIndexBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        groupIndex_ = value;
-        onChanged();
-      } else {
-        groupIndexBuilder_.setMessage(value);
-      }
-
+    public Builder setGroupIndex(int value) {
+      bitField0_ |= 0x00000002;
+      groupIndex_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.Int32Value group_index = 2;</code>
-     */
-    public Builder setGroupIndex(
-        com.google.protobuf.Int32Value.Builder builderForValue) {
-      if (groupIndexBuilder_ == null) {
-        groupIndex_ = builderForValue.build();
-        onChanged();
-      } else {
-        groupIndexBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int32Value group_index = 2;</code>
-     */
-    public Builder mergeGroupIndex(com.google.protobuf.Int32Value value) {
-      if (groupIndexBuilder_ == null) {
-        if (groupIndex_ != null) {
-          groupIndex_ =
-            com.google.protobuf.Int32Value.newBuilder(groupIndex_).mergeFrom(value).buildPartial();
-        } else {
-          groupIndex_ = value;
-        }
-        onChanged();
-      } else {
-        groupIndexBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int32Value group_index = 2;</code>
+     * <code>int32 group_index = 2;</code>
+     * @return This builder for chaining.
      */
     public Builder clearGroupIndex() {
-      if (groupIndexBuilder_ == null) {
-        groupIndex_ = null;
-        onChanged();
-      } else {
-        groupIndex_ = null;
-        groupIndexBuilder_ = null;
-      }
-
+      bitField0_ = (bitField0_ & ~0x00000002);
+      groupIndex_ = 0;
+      onChanged();
       return this;
     }
-    /**
-     * <code>.google.protobuf.Int32Value group_index = 2;</code>
-     */
-    public com.google.protobuf.Int32Value.Builder getGroupIndexBuilder() {
 
-      onChanged();
-      return getGroupIndexFieldBuilder().getBuilder();
-    }
+    private long lastUpdatedDate_ ;
     /**
-     * <code>.google.protobuf.Int32Value group_index = 2;</code>
-     */
-    public com.google.protobuf.Int32ValueOrBuilder getGroupIndexOrBuilder() {
-      if (groupIndexBuilder_ != null) {
-        return groupIndexBuilder_.getMessageOrBuilder();
-      } else {
-        return groupIndex_ == null ?
-            com.google.protobuf.Int32Value.getDefaultInstance() : groupIndex_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.Int32Value group_index = 2;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder>
-        getGroupIndexFieldBuilder() {
-      if (groupIndexBuilder_ == null) {
-        groupIndexBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder>(
-                getGroupIndex(),
-                getParentForChildren(),
-                isClean());
-        groupIndex_ = null;
-      }
-      return groupIndexBuilder_;
-    }
-
-    private com.google.protobuf.Int64Value lastUpdatedDate_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder> lastUpdatedDateBuilder_;
-    /**
-     * <code>.google.protobuf.Int64Value last_updated_date = 3;</code>
+     * <code>int64 last_updated_date = 3;</code>
      * @return Whether the lastUpdatedDate field is set.
      */
+    @java.lang.Override
     public boolean hasLastUpdatedDate() {
-      return lastUpdatedDateBuilder_ != null || lastUpdatedDate_ != null;
+      return ((bitField0_ & 0x00000004) != 0);
     }
     /**
-     * <code>.google.protobuf.Int64Value last_updated_date = 3;</code>
+     * <code>int64 last_updated_date = 3;</code>
      * @return The lastUpdatedDate.
      */
-    public com.google.protobuf.Int64Value getLastUpdatedDate() {
-      if (lastUpdatedDateBuilder_ == null) {
-        return lastUpdatedDate_ == null ? com.google.protobuf.Int64Value.getDefaultInstance() : lastUpdatedDate_;
-      } else {
-        return lastUpdatedDateBuilder_.getMessage();
-      }
+    @java.lang.Override
+    public long getLastUpdatedDate() {
+      return lastUpdatedDate_;
     }
     /**
-     * <code>.google.protobuf.Int64Value last_updated_date = 3;</code>
+     * <code>int64 last_updated_date = 3;</code>
+     * @param value The lastUpdatedDate to set.
+     * @return This builder for chaining.
      */
-    public Builder setLastUpdatedDate(com.google.protobuf.Int64Value value) {
-      if (lastUpdatedDateBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        lastUpdatedDate_ = value;
-        onChanged();
-      } else {
-        lastUpdatedDateBuilder_.setMessage(value);
-      }
-
+    public Builder setLastUpdatedDate(long value) {
+      bitField0_ |= 0x00000004;
+      lastUpdatedDate_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.Int64Value last_updated_date = 3;</code>
-     */
-    public Builder setLastUpdatedDate(
-        com.google.protobuf.Int64Value.Builder builderForValue) {
-      if (lastUpdatedDateBuilder_ == null) {
-        lastUpdatedDate_ = builderForValue.build();
-        onChanged();
-      } else {
-        lastUpdatedDateBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value last_updated_date = 3;</code>
-     */
-    public Builder mergeLastUpdatedDate(com.google.protobuf.Int64Value value) {
-      if (lastUpdatedDateBuilder_ == null) {
-        if (lastUpdatedDate_ != null) {
-          lastUpdatedDate_ =
-            com.google.protobuf.Int64Value.newBuilder(lastUpdatedDate_).mergeFrom(value).buildPartial();
-        } else {
-          lastUpdatedDate_ = value;
-        }
-        onChanged();
-      } else {
-        lastUpdatedDateBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value last_updated_date = 3;</code>
+     * <code>int64 last_updated_date = 3;</code>
+     * @return This builder for chaining.
      */
     public Builder clearLastUpdatedDate() {
-      if (lastUpdatedDateBuilder_ == null) {
-        lastUpdatedDate_ = null;
-        onChanged();
-      } else {
-        lastUpdatedDate_ = null;
-        lastUpdatedDateBuilder_ = null;
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.Int64Value last_updated_date = 3;</code>
-     */
-    public com.google.protobuf.Int64Value.Builder getLastUpdatedDateBuilder() {
-
+      bitField0_ = (bitField0_ & ~0x00000004);
+      lastUpdatedDate_ = 0L;
       onChanged();
-      return getLastUpdatedDateFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.Int64Value last_updated_date = 3;</code>
-     */
-    public com.google.protobuf.Int64ValueOrBuilder getLastUpdatedDateOrBuilder() {
-      if (lastUpdatedDateBuilder_ != null) {
-        return lastUpdatedDateBuilder_.getMessageOrBuilder();
-      } else {
-        return lastUpdatedDate_ == null ?
-            com.google.protobuf.Int64Value.getDefaultInstance() : lastUpdatedDate_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.Int64Value last_updated_date = 3;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>
-        getLastUpdatedDateFieldBuilder() {
-      if (lastUpdatedDateBuilder_ == null) {
-        lastUpdatedDateBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.Int64Value, com.google.protobuf.Int64Value.Builder, com.google.protobuf.Int64ValueOrBuilder>(
-                getLastUpdatedDate(),
-                getParentForChildren(),
-                isClean());
-        lastUpdatedDate_ = null;
-      }
-      return lastUpdatedDateBuilder_;
+      return this;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

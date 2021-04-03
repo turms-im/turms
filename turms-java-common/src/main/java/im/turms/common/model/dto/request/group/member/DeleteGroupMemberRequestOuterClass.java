@@ -46,27 +46,24 @@ public final class DeleteGroupMemberRequestOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n6request/group/member/delete_group_memb" +
-      "er_request.proto\022\016im.turms.proto\032\036google" +
-      "/protobuf/wrappers.proto\"\253\001\n\030DeleteGroup" +
-      "MemberRequest\022\020\n\010group_id\030\001 \001(\003\022\021\n\tmembe" +
-      "r_id\030\002 \001(\003\0221\n\014successor_id\030\003 \001(\0132\033.googl" +
-      "e.protobuf.Int64Value\0227\n\023quit_after_tran" +
-      "sfer\030\004 \001(\0132\032.google.protobuf.BoolValueB5" +
-      "\n.im.turms.common.model.dto.request.grou" +
-      "p.memberP\001\272\002\000b\006proto3"
+      "er_request.proto\022\016im.turms.proto\"\245\001\n\030Del" +
+      "eteGroupMemberRequest\022\020\n\010group_id\030\001 \001(\003\022" +
+      "\021\n\tmember_id\030\002 \001(\003\022\031\n\014successor_id\030\003 \001(\003" +
+      "H\000\210\001\001\022 \n\023quit_after_transfer\030\004 \001(\010H\001\210\001\001B" +
+      "\017\n\r_successor_idB\026\n\024_quit_after_transfer" +
+      "B5\n.im.turms.common.model.dto.request.gr" +
+      "oup.memberP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
         });
     internal_static_im_turms_proto_DeleteGroupMemberRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_im_turms_proto_DeleteGroupMemberRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_DeleteGroupMemberRequest_descriptor,
-        new java.lang.String[] { "GroupId", "MemberId", "SuccessorId", "QuitAfterTransfer", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "GroupId", "MemberId", "SuccessorId", "QuitAfterTransfer", "SuccessorId", "QuitAfterTransfer", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

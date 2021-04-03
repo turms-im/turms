@@ -46,17 +46,16 @@ public final class GroupsWithVersionOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n%model/group/groups_with_version.proto\022" +
-      "\016im.turms.proto\032\036google/protobuf/wrapper" +
-      "s.proto\032\027model/group/group.proto\"r\n\021Grou" +
-      "psWithVersion\022%\n\006groups\030\001 \003(\0132\025.im.turms" +
-      ".proto.Group\0226\n\021last_updated_date\030\002 \001(\0132" +
-      "\033.google.protobuf.Int64ValueB%\n\036im.turms" +
-      ".common.model.bo.groupP\001\272\002\000b\006proto3"
+      "\016im.turms.proto\032\027model/group/group.proto" +
+      "\"p\n\021GroupsWithVersion\022%\n\006groups\030\001 \003(\0132\025." +
+      "im.turms.proto.Group\022\036\n\021last_updated_dat" +
+      "e\030\002 \001(\003H\000\210\001\001B\024\n\022_last_updated_dateB%\n\036im" +
+      ".turms.common.model.bo.groupP\001\272\002\000b\006proto" +
+      "3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
           im.turms.common.model.bo.group.GroupOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_GroupsWithVersion_descriptor =
@@ -64,8 +63,7 @@ public final class GroupsWithVersionOuterClass {
     internal_static_im_turms_proto_GroupsWithVersion_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_GroupsWithVersion_descriptor,
-        new java.lang.String[] { "Groups", "LastUpdatedDate", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "Groups", "LastUpdatedDate", "LastUpdatedDate", });
     im.turms.common.model.bo.group.GroupOuterClass.getDescriptor();
   }
 

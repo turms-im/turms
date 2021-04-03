@@ -46,19 +46,17 @@ public final class GroupInvitationsWithVersionOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n0model/group/group_invitations_with_ver" +
-      "sion.proto\022\016im.turms.proto\032\036google/proto" +
-      "buf/wrappers.proto\032\"model/group/group_in" +
-      "vitation.proto\"\221\001\n\033GroupInvitationsWithV" +
-      "ersion\022:\n\021group_invitations\030\001 \003(\0132\037.im.t" +
-      "urms.proto.GroupInvitation\0226\n\021last_updat" +
-      "ed_date\030\002 \001(\0132\033.google.protobuf.Int64Val" +
-      "ueB%\n\036im.turms.common.model.bo.groupP\001\272\002" +
-      "\000b\006proto3"
+      "sion.proto\022\016im.turms.proto\032\"model/group/" +
+      "group_invitation.proto\"\217\001\n\033GroupInvitati" +
+      "onsWithVersion\022:\n\021group_invitations\030\001 \003(" +
+      "\0132\037.im.turms.proto.GroupInvitation\022\036\n\021la" +
+      "st_updated_date\030\002 \001(\003H\000\210\001\001B\024\n\022_last_upda" +
+      "ted_dateB%\n\036im.turms.common.model.bo.gro" +
+      "upP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
           im.turms.common.model.bo.group.GroupInvitationOuterClass.getDescriptor(),
         });
     internal_static_im_turms_proto_GroupInvitationsWithVersion_descriptor =
@@ -66,8 +64,7 @@ public final class GroupInvitationsWithVersionOuterClass {
     internal_static_im_turms_proto_GroupInvitationsWithVersion_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_GroupInvitationsWithVersion_descriptor,
-        new java.lang.String[] { "GroupInvitations", "LastUpdatedDate", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "GroupInvitations", "LastUpdatedDate", "LastUpdatedDate", });
     im.turms.common.model.bo.group.GroupInvitationOuterClass.getDescriptor();
   }
 

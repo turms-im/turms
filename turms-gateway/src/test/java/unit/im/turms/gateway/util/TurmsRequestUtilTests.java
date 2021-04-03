@@ -17,7 +17,6 @@
 
 package unit.im.turms.gateway.util;
 
-import com.google.protobuf.Int64Value;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.common.model.dto.request.message.CreateMessageRequest;
 import im.turms.gateway.pojo.dto.SimpleTurmsRequest;
@@ -66,7 +65,6 @@ class TurmsRequestUtilTests {
     @Test
     void parseSimpleRequest_shouldThrow_forPartialRequestWithNullRequestId() {
         ByteBuffer partialRequestWithNullRequestId = TurmsRequest.newBuilder()
-                .setRequestId(Int64Value.newBuilder().build())
                 .build()
                 .toByteString()
                 .asReadOnlyByteBuffer();
@@ -79,7 +77,7 @@ class TurmsRequestUtilTests {
     void parseSimpleRequest_shouldReturnRequestIdAndType_ifRequestIdExists() {
         long requestId = 1000L;
         ByteBuffer requestWithRequestId = TurmsRequest.newBuilder()
-                .setRequestId(Int64Value.of(requestId))
+                .setRequestId(requestId)
                 .setCreateMessageRequest(CreateMessageRequest.newBuilder().buildPartial())
                 .build()
                 .toByteString()

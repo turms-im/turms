@@ -47,24 +47,21 @@ public final class QueryRelationshipGroupsRequestOuterClass {
     java.lang.String[] descriptorData = {
       "\nArequest/user/relationship/query_relati" +
       "onship_groups_request.proto\022\016im.turms.pr" +
-      "oto\032\036google/protobuf/wrappers.proto\"X\n\036Q" +
-      "ueryRelationshipGroupsRequest\0226\n\021last_up" +
-      "dated_date\030\001 \001(\0132\033.google.protobuf.Int64" +
-      "ValueB:\n3im.turms.common.model.dto.reque" +
-      "st.user.relationshipP\001\272\002\000b\006proto3"
+      "oto\"V\n\036QueryRelationshipGroupsRequest\022\036\n" +
+      "\021last_updated_date\030\001 \001(\003H\000\210\001\001B\024\n\022_last_u" +
+      "pdated_dateB:\n3im.turms.common.model.dto" +
+      ".request.user.relationshipP\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
         });
     internal_static_im_turms_proto_QueryRelationshipGroupsRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_im_turms_proto_QueryRelationshipGroupsRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_QueryRelationshipGroupsRequest_descriptor,
-        new java.lang.String[] { "LastUpdatedDate", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "LastUpdatedDate", "LastUpdatedDate", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

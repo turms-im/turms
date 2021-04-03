@@ -33,6 +33,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private ImageFile() {
+    data_ = com.google.protobuf.ByteString.EMPTY;
   }
 
   @java.lang.Override
@@ -55,6 +56,7 @@ private static final long serialVersionUID = 0L;
     if (extensionRegistry == null) {
       throw new java.lang.NullPointerException();
     }
+    int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
         com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
@@ -67,7 +69,7 @@ private static final long serialVersionUID = 0L;
             break;
           case 10: {
             im.turms.common.model.bo.file.ImageFile.Description.Builder subBuilder = null;
-            if (description_ != null) {
+            if (((bitField0_ & 0x00000001) != 0)) {
               subBuilder = description_.toBuilder();
             }
             description_ = input.readMessage(im.turms.common.model.bo.file.ImageFile.Description.parser(), extensionRegistry);
@@ -75,20 +77,12 @@ private static final long serialVersionUID = 0L;
               subBuilder.mergeFrom(description_);
               description_ = subBuilder.buildPartial();
             }
-
+            bitField0_ |= 0x00000001;
             break;
           }
           case 18: {
-            com.google.protobuf.BytesValue.Builder subBuilder = null;
-            if (data_ != null) {
-              subBuilder = data_.toBuilder();
-            }
-            data_ = input.readMessage(com.google.protobuf.BytesValue.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(data_);
-              data_ = subBuilder.buildPartial();
-            }
-
+            bitField0_ |= 0x00000002;
+            data_ = input.readBytes();
             break;
           }
           default: {
@@ -140,49 +134,37 @@ private static final long serialVersionUID = 0L;
         getUrlBytes();
 
     /**
-     * <code>.google.protobuf.BoolValue original = 2;</code>
+     * <code>bool original = 2;</code>
      * @return Whether the original field is set.
      */
     boolean hasOriginal();
     /**
-     * <code>.google.protobuf.BoolValue original = 2;</code>
+     * <code>bool original = 2;</code>
      * @return The original.
      */
-    com.google.protobuf.BoolValue getOriginal();
-    /**
-     * <code>.google.protobuf.BoolValue original = 2;</code>
-     */
-    com.google.protobuf.BoolValueOrBuilder getOriginalOrBuilder();
+    boolean getOriginal();
 
     /**
-     * <code>.google.protobuf.Int32Value image_size = 3;</code>
+     * <code>int32 image_size = 3;</code>
      * @return Whether the imageSize field is set.
      */
     boolean hasImageSize();
     /**
-     * <code>.google.protobuf.Int32Value image_size = 3;</code>
+     * <code>int32 image_size = 3;</code>
      * @return The imageSize.
      */
-    com.google.protobuf.Int32Value getImageSize();
-    /**
-     * <code>.google.protobuf.Int32Value image_size = 3;</code>
-     */
-    com.google.protobuf.Int32ValueOrBuilder getImageSizeOrBuilder();
+    int getImageSize();
 
     /**
-     * <code>.google.protobuf.Int32Value file_size = 4;</code>
+     * <code>int32 file_size = 4;</code>
      * @return Whether the fileSize field is set.
      */
     boolean hasFileSize();
     /**
-     * <code>.google.protobuf.Int32Value file_size = 4;</code>
+     * <code>int32 file_size = 4;</code>
      * @return The fileSize.
      */
-    com.google.protobuf.Int32Value getFileSize();
-    /**
-     * <code>.google.protobuf.Int32Value file_size = 4;</code>
-     */
-    com.google.protobuf.Int32ValueOrBuilder getFileSizeOrBuilder();
+    int getFileSize();
   }
   /**
    * Protobuf type {@code im.turms.proto.ImageFile.Description}
@@ -220,6 +202,7 @@ private static final long serialVersionUID = 0L;
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
+      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -236,43 +219,19 @@ private static final long serialVersionUID = 0L;
               url_ = s;
               break;
             }
-            case 18: {
-              com.google.protobuf.BoolValue.Builder subBuilder = null;
-              if (original_ != null) {
-                subBuilder = original_.toBuilder();
-              }
-              original_ = input.readMessage(com.google.protobuf.BoolValue.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(original_);
-                original_ = subBuilder.buildPartial();
-              }
-
+            case 16: {
+              bitField0_ |= 0x00000001;
+              original_ = input.readBool();
               break;
             }
-            case 26: {
-              com.google.protobuf.Int32Value.Builder subBuilder = null;
-              if (imageSize_ != null) {
-                subBuilder = imageSize_.toBuilder();
-              }
-              imageSize_ = input.readMessage(com.google.protobuf.Int32Value.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(imageSize_);
-                imageSize_ = subBuilder.buildPartial();
-              }
-
+            case 24: {
+              bitField0_ |= 0x00000002;
+              imageSize_ = input.readInt32();
               break;
             }
-            case 34: {
-              com.google.protobuf.Int32Value.Builder subBuilder = null;
-              if (fileSize_ != null) {
-                subBuilder = fileSize_.toBuilder();
-              }
-              fileSize_ = input.readMessage(com.google.protobuf.Int32Value.parser(), extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(fileSize_);
-                fileSize_ = subBuilder.buildPartial();
-              }
-
+            case 32: {
+              bitField0_ |= 0x00000004;
+              fileSize_ = input.readInt32();
               break;
             }
             default: {
@@ -307,6 +266,7 @@ private static final long serialVersionUID = 0L;
               im.turms.common.model.bo.file.ImageFile.Description.class, im.turms.common.model.bo.file.ImageFile.Description.Builder.class);
     }
 
+    private int bitField0_;
     public static final int URL_FIELD_NUMBER = 1;
     private volatile java.lang.Object url_;
     /**
@@ -346,81 +306,60 @@ private static final long serialVersionUID = 0L;
     }
 
     public static final int ORIGINAL_FIELD_NUMBER = 2;
-    private com.google.protobuf.BoolValue original_;
+    private boolean original_;
     /**
-     * <code>.google.protobuf.BoolValue original = 2;</code>
+     * <code>bool original = 2;</code>
      * @return Whether the original field is set.
      */
     @java.lang.Override
     public boolean hasOriginal() {
-      return original_ != null;
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>.google.protobuf.BoolValue original = 2;</code>
+     * <code>bool original = 2;</code>
      * @return The original.
      */
     @java.lang.Override
-    public com.google.protobuf.BoolValue getOriginal() {
-      return original_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : original_;
-    }
-    /**
-     * <code>.google.protobuf.BoolValue original = 2;</code>
-     */
-    @java.lang.Override
-    public com.google.protobuf.BoolValueOrBuilder getOriginalOrBuilder() {
-      return getOriginal();
+    public boolean getOriginal() {
+      return original_;
     }
 
     public static final int IMAGE_SIZE_FIELD_NUMBER = 3;
-    private com.google.protobuf.Int32Value imageSize_;
+    private int imageSize_;
     /**
-     * <code>.google.protobuf.Int32Value image_size = 3;</code>
+     * <code>int32 image_size = 3;</code>
      * @return Whether the imageSize field is set.
      */
     @java.lang.Override
     public boolean hasImageSize() {
-      return imageSize_ != null;
+      return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>.google.protobuf.Int32Value image_size = 3;</code>
+     * <code>int32 image_size = 3;</code>
      * @return The imageSize.
      */
     @java.lang.Override
-    public com.google.protobuf.Int32Value getImageSize() {
-      return imageSize_ == null ? com.google.protobuf.Int32Value.getDefaultInstance() : imageSize_;
-    }
-    /**
-     * <code>.google.protobuf.Int32Value image_size = 3;</code>
-     */
-    @java.lang.Override
-    public com.google.protobuf.Int32ValueOrBuilder getImageSizeOrBuilder() {
-      return getImageSize();
+    public int getImageSize() {
+      return imageSize_;
     }
 
     public static final int FILE_SIZE_FIELD_NUMBER = 4;
-    private com.google.protobuf.Int32Value fileSize_;
+    private int fileSize_;
     /**
-     * <code>.google.protobuf.Int32Value file_size = 4;</code>
+     * <code>int32 file_size = 4;</code>
      * @return Whether the fileSize field is set.
      */
     @java.lang.Override
     public boolean hasFileSize() {
-      return fileSize_ != null;
+      return ((bitField0_ & 0x00000004) != 0);
     }
     /**
-     * <code>.google.protobuf.Int32Value file_size = 4;</code>
+     * <code>int32 file_size = 4;</code>
      * @return The fileSize.
      */
     @java.lang.Override
-    public com.google.protobuf.Int32Value getFileSize() {
-      return fileSize_ == null ? com.google.protobuf.Int32Value.getDefaultInstance() : fileSize_;
-    }
-    /**
-     * <code>.google.protobuf.Int32Value file_size = 4;</code>
-     */
-    @java.lang.Override
-    public com.google.protobuf.Int32ValueOrBuilder getFileSizeOrBuilder() {
-      return getFileSize();
+    public int getFileSize() {
+      return fileSize_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -440,14 +379,14 @@ private static final long serialVersionUID = 0L;
       if (!getUrlBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, url_);
       }
-      if (original_ != null) {
-        output.writeMessage(2, getOriginal());
+      if (((bitField0_ & 0x00000001) != 0)) {
+        output.writeBool(2, original_);
       }
-      if (imageSize_ != null) {
-        output.writeMessage(3, getImageSize());
+      if (((bitField0_ & 0x00000002) != 0)) {
+        output.writeInt32(3, imageSize_);
       }
-      if (fileSize_ != null) {
-        output.writeMessage(4, getFileSize());
+      if (((bitField0_ & 0x00000004) != 0)) {
+        output.writeInt32(4, fileSize_);
       }
       unknownFields.writeTo(output);
     }
@@ -461,17 +400,17 @@ private static final long serialVersionUID = 0L;
       if (!getUrlBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, url_);
       }
-      if (original_ != null) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(2, getOriginal());
+          .computeBoolSize(2, original_);
       }
-      if (imageSize_ != null) {
+      if (((bitField0_ & 0x00000002) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, getImageSize());
+          .computeInt32Size(3, imageSize_);
       }
-      if (fileSize_ != null) {
+      if (((bitField0_ & 0x00000004) != 0)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, getFileSize());
+          .computeInt32Size(4, fileSize_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -492,18 +431,18 @@ private static final long serialVersionUID = 0L;
           .equals(other.getUrl())) return false;
       if (hasOriginal() != other.hasOriginal()) return false;
       if (hasOriginal()) {
-        if (!getOriginal()
-            .equals(other.getOriginal())) return false;
+        if (getOriginal()
+            != other.getOriginal()) return false;
       }
       if (hasImageSize() != other.hasImageSize()) return false;
       if (hasImageSize()) {
-        if (!getImageSize()
-            .equals(other.getImageSize())) return false;
+        if (getImageSize()
+            != other.getImageSize()) return false;
       }
       if (hasFileSize() != other.hasFileSize()) return false;
       if (hasFileSize()) {
-        if (!getFileSize()
-            .equals(other.getFileSize())) return false;
+        if (getFileSize()
+            != other.getFileSize()) return false;
       }
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
@@ -520,15 +459,16 @@ private static final long serialVersionUID = 0L;
       hash = (53 * hash) + getUrl().hashCode();
       if (hasOriginal()) {
         hash = (37 * hash) + ORIGINAL_FIELD_NUMBER;
-        hash = (53 * hash) + getOriginal().hashCode();
+        hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+            getOriginal());
       }
       if (hasImageSize()) {
         hash = (37 * hash) + IMAGE_SIZE_FIELD_NUMBER;
-        hash = (53 * hash) + getImageSize().hashCode();
+        hash = (53 * hash) + getImageSize();
       }
       if (hasFileSize()) {
         hash = (37 * hash) + FILE_SIZE_FIELD_NUMBER;
-        hash = (53 * hash) + getFileSize().hashCode();
+        hash = (53 * hash) + getFileSize();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -665,24 +605,12 @@ private static final long serialVersionUID = 0L;
         super.clear();
         url_ = "";
 
-        if (originalBuilder_ == null) {
-          original_ = null;
-        } else {
-          original_ = null;
-          originalBuilder_ = null;
-        }
-        if (imageSizeBuilder_ == null) {
-          imageSize_ = null;
-        } else {
-          imageSize_ = null;
-          imageSizeBuilder_ = null;
-        }
-        if (fileSizeBuilder_ == null) {
-          fileSize_ = null;
-        } else {
-          fileSize_ = null;
-          fileSizeBuilder_ = null;
-        }
+        original_ = false;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        imageSize_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        fileSize_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
 
@@ -709,22 +637,22 @@ private static final long serialVersionUID = 0L;
       @java.lang.Override
       public im.turms.common.model.bo.file.ImageFile.Description buildPartial() {
         im.turms.common.model.bo.file.ImageFile.Description result = new im.turms.common.model.bo.file.ImageFile.Description(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
         result.url_ = url_;
-        if (originalBuilder_ == null) {
+        if (((from_bitField0_ & 0x00000001) != 0)) {
           result.original_ = original_;
-        } else {
-          result.original_ = originalBuilder_.build();
+          to_bitField0_ |= 0x00000001;
         }
-        if (imageSizeBuilder_ == null) {
+        if (((from_bitField0_ & 0x00000002) != 0)) {
           result.imageSize_ = imageSize_;
-        } else {
-          result.imageSize_ = imageSizeBuilder_.build();
+          to_bitField0_ |= 0x00000002;
         }
-        if (fileSizeBuilder_ == null) {
+        if (((from_bitField0_ & 0x00000004) != 0)) {
           result.fileSize_ = fileSize_;
-        } else {
-          result.fileSize_ = fileSizeBuilder_.build();
+          to_bitField0_ |= 0x00000004;
         }
+        result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
@@ -778,13 +706,13 @@ private static final long serialVersionUID = 0L;
           onChanged();
         }
         if (other.hasOriginal()) {
-          mergeOriginal(other.getOriginal());
+          setOriginal(other.getOriginal());
         }
         if (other.hasImageSize()) {
-          mergeImageSize(other.getImageSize());
+          setImageSize(other.getImageSize());
         }
         if (other.hasFileSize()) {
-          mergeFileSize(other.getFileSize());
+          setFileSize(other.getFileSize());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -814,6 +742,7 @@ private static final long serialVersionUID = 0L;
         }
         return this;
       }
+      private int bitField0_;
 
       private java.lang.Object url_ = "";
       /**
@@ -891,361 +820,121 @@ private static final long serialVersionUID = 0L;
         return this;
       }
 
-      private com.google.protobuf.BoolValue original_;
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder> originalBuilder_;
+      private boolean original_ ;
       /**
-       * <code>.google.protobuf.BoolValue original = 2;</code>
+       * <code>bool original = 2;</code>
        * @return Whether the original field is set.
        */
+      @java.lang.Override
       public boolean hasOriginal() {
-        return originalBuilder_ != null || original_ != null;
+        return ((bitField0_ & 0x00000001) != 0);
       }
       /**
-       * <code>.google.protobuf.BoolValue original = 2;</code>
+       * <code>bool original = 2;</code>
        * @return The original.
        */
-      public com.google.protobuf.BoolValue getOriginal() {
-        if (originalBuilder_ == null) {
-          return original_ == null ? com.google.protobuf.BoolValue.getDefaultInstance() : original_;
-        } else {
-          return originalBuilder_.getMessage();
-        }
+      @java.lang.Override
+      public boolean getOriginal() {
+        return original_;
       }
       /**
-       * <code>.google.protobuf.BoolValue original = 2;</code>
+       * <code>bool original = 2;</code>
+       * @param value The original to set.
+       * @return This builder for chaining.
        */
-      public Builder setOriginal(com.google.protobuf.BoolValue value) {
-        if (originalBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          original_ = value;
-          onChanged();
-        } else {
-          originalBuilder_.setMessage(value);
-        }
-
+      public Builder setOriginal(boolean value) {
+        bitField0_ |= 0x00000001;
+        original_ = value;
+        onChanged();
         return this;
       }
       /**
-       * <code>.google.protobuf.BoolValue original = 2;</code>
-       */
-      public Builder setOriginal(
-          com.google.protobuf.BoolValue.Builder builderForValue) {
-        if (originalBuilder_ == null) {
-          original_ = builderForValue.build();
-          onChanged();
-        } else {
-          originalBuilder_.setMessage(builderForValue.build());
-        }
-
-        return this;
-      }
-      /**
-       * <code>.google.protobuf.BoolValue original = 2;</code>
-       */
-      public Builder mergeOriginal(com.google.protobuf.BoolValue value) {
-        if (originalBuilder_ == null) {
-          if (original_ != null) {
-            original_ =
-              com.google.protobuf.BoolValue.newBuilder(original_).mergeFrom(value).buildPartial();
-          } else {
-            original_ = value;
-          }
-          onChanged();
-        } else {
-          originalBuilder_.mergeFrom(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>.google.protobuf.BoolValue original = 2;</code>
+       * <code>bool original = 2;</code>
+       * @return This builder for chaining.
        */
       public Builder clearOriginal() {
-        if (originalBuilder_ == null) {
-          original_ = null;
-          onChanged();
-        } else {
-          original_ = null;
-          originalBuilder_ = null;
-        }
-
+        bitField0_ = (bitField0_ & ~0x00000001);
+        original_ = false;
+        onChanged();
         return this;
       }
-      /**
-       * <code>.google.protobuf.BoolValue original = 2;</code>
-       */
-      public com.google.protobuf.BoolValue.Builder getOriginalBuilder() {
 
-        onChanged();
-        return getOriginalFieldBuilder().getBuilder();
-      }
+      private int imageSize_ ;
       /**
-       * <code>.google.protobuf.BoolValue original = 2;</code>
-       */
-      public com.google.protobuf.BoolValueOrBuilder getOriginalOrBuilder() {
-        if (originalBuilder_ != null) {
-          return originalBuilder_.getMessageOrBuilder();
-        } else {
-          return original_ == null ?
-              com.google.protobuf.BoolValue.getDefaultInstance() : original_;
-        }
-      }
-      /**
-       * <code>.google.protobuf.BoolValue original = 2;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder>
-          getOriginalFieldBuilder() {
-        if (originalBuilder_ == null) {
-          originalBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.google.protobuf.BoolValue, com.google.protobuf.BoolValue.Builder, com.google.protobuf.BoolValueOrBuilder>(
-                  getOriginal(),
-                  getParentForChildren(),
-                  isClean());
-          original_ = null;
-        }
-        return originalBuilder_;
-      }
-
-      private com.google.protobuf.Int32Value imageSize_;
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder> imageSizeBuilder_;
-      /**
-       * <code>.google.protobuf.Int32Value image_size = 3;</code>
+       * <code>int32 image_size = 3;</code>
        * @return Whether the imageSize field is set.
        */
+      @java.lang.Override
       public boolean hasImageSize() {
-        return imageSizeBuilder_ != null || imageSize_ != null;
+        return ((bitField0_ & 0x00000002) != 0);
       }
       /**
-       * <code>.google.protobuf.Int32Value image_size = 3;</code>
+       * <code>int32 image_size = 3;</code>
        * @return The imageSize.
        */
-      public com.google.protobuf.Int32Value getImageSize() {
-        if (imageSizeBuilder_ == null) {
-          return imageSize_ == null ? com.google.protobuf.Int32Value.getDefaultInstance() : imageSize_;
-        } else {
-          return imageSizeBuilder_.getMessage();
-        }
+      @java.lang.Override
+      public int getImageSize() {
+        return imageSize_;
       }
       /**
-       * <code>.google.protobuf.Int32Value image_size = 3;</code>
+       * <code>int32 image_size = 3;</code>
+       * @param value The imageSize to set.
+       * @return This builder for chaining.
        */
-      public Builder setImageSize(com.google.protobuf.Int32Value value) {
-        if (imageSizeBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          imageSize_ = value;
-          onChanged();
-        } else {
-          imageSizeBuilder_.setMessage(value);
-        }
-
+      public Builder setImageSize(int value) {
+        bitField0_ |= 0x00000002;
+        imageSize_ = value;
+        onChanged();
         return this;
       }
       /**
-       * <code>.google.protobuf.Int32Value image_size = 3;</code>
-       */
-      public Builder setImageSize(
-          com.google.protobuf.Int32Value.Builder builderForValue) {
-        if (imageSizeBuilder_ == null) {
-          imageSize_ = builderForValue.build();
-          onChanged();
-        } else {
-          imageSizeBuilder_.setMessage(builderForValue.build());
-        }
-
-        return this;
-      }
-      /**
-       * <code>.google.protobuf.Int32Value image_size = 3;</code>
-       */
-      public Builder mergeImageSize(com.google.protobuf.Int32Value value) {
-        if (imageSizeBuilder_ == null) {
-          if (imageSize_ != null) {
-            imageSize_ =
-              com.google.protobuf.Int32Value.newBuilder(imageSize_).mergeFrom(value).buildPartial();
-          } else {
-            imageSize_ = value;
-          }
-          onChanged();
-        } else {
-          imageSizeBuilder_.mergeFrom(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>.google.protobuf.Int32Value image_size = 3;</code>
+       * <code>int32 image_size = 3;</code>
+       * @return This builder for chaining.
        */
       public Builder clearImageSize() {
-        if (imageSizeBuilder_ == null) {
-          imageSize_ = null;
-          onChanged();
-        } else {
-          imageSize_ = null;
-          imageSizeBuilder_ = null;
-        }
-
+        bitField0_ = (bitField0_ & ~0x00000002);
+        imageSize_ = 0;
+        onChanged();
         return this;
       }
-      /**
-       * <code>.google.protobuf.Int32Value image_size = 3;</code>
-       */
-      public com.google.protobuf.Int32Value.Builder getImageSizeBuilder() {
 
-        onChanged();
-        return getImageSizeFieldBuilder().getBuilder();
-      }
+      private int fileSize_ ;
       /**
-       * <code>.google.protobuf.Int32Value image_size = 3;</code>
-       */
-      public com.google.protobuf.Int32ValueOrBuilder getImageSizeOrBuilder() {
-        if (imageSizeBuilder_ != null) {
-          return imageSizeBuilder_.getMessageOrBuilder();
-        } else {
-          return imageSize_ == null ?
-              com.google.protobuf.Int32Value.getDefaultInstance() : imageSize_;
-        }
-      }
-      /**
-       * <code>.google.protobuf.Int32Value image_size = 3;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder>
-          getImageSizeFieldBuilder() {
-        if (imageSizeBuilder_ == null) {
-          imageSizeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder>(
-                  getImageSize(),
-                  getParentForChildren(),
-                  isClean());
-          imageSize_ = null;
-        }
-        return imageSizeBuilder_;
-      }
-
-      private com.google.protobuf.Int32Value fileSize_;
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder> fileSizeBuilder_;
-      /**
-       * <code>.google.protobuf.Int32Value file_size = 4;</code>
+       * <code>int32 file_size = 4;</code>
        * @return Whether the fileSize field is set.
        */
+      @java.lang.Override
       public boolean hasFileSize() {
-        return fileSizeBuilder_ != null || fileSize_ != null;
+        return ((bitField0_ & 0x00000004) != 0);
       }
       /**
-       * <code>.google.protobuf.Int32Value file_size = 4;</code>
+       * <code>int32 file_size = 4;</code>
        * @return The fileSize.
        */
-      public com.google.protobuf.Int32Value getFileSize() {
-        if (fileSizeBuilder_ == null) {
-          return fileSize_ == null ? com.google.protobuf.Int32Value.getDefaultInstance() : fileSize_;
-        } else {
-          return fileSizeBuilder_.getMessage();
-        }
+      @java.lang.Override
+      public int getFileSize() {
+        return fileSize_;
       }
       /**
-       * <code>.google.protobuf.Int32Value file_size = 4;</code>
+       * <code>int32 file_size = 4;</code>
+       * @param value The fileSize to set.
+       * @return This builder for chaining.
        */
-      public Builder setFileSize(com.google.protobuf.Int32Value value) {
-        if (fileSizeBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          fileSize_ = value;
-          onChanged();
-        } else {
-          fileSizeBuilder_.setMessage(value);
-        }
-
+      public Builder setFileSize(int value) {
+        bitField0_ |= 0x00000004;
+        fileSize_ = value;
+        onChanged();
         return this;
       }
       /**
-       * <code>.google.protobuf.Int32Value file_size = 4;</code>
-       */
-      public Builder setFileSize(
-          com.google.protobuf.Int32Value.Builder builderForValue) {
-        if (fileSizeBuilder_ == null) {
-          fileSize_ = builderForValue.build();
-          onChanged();
-        } else {
-          fileSizeBuilder_.setMessage(builderForValue.build());
-        }
-
-        return this;
-      }
-      /**
-       * <code>.google.protobuf.Int32Value file_size = 4;</code>
-       */
-      public Builder mergeFileSize(com.google.protobuf.Int32Value value) {
-        if (fileSizeBuilder_ == null) {
-          if (fileSize_ != null) {
-            fileSize_ =
-              com.google.protobuf.Int32Value.newBuilder(fileSize_).mergeFrom(value).buildPartial();
-          } else {
-            fileSize_ = value;
-          }
-          onChanged();
-        } else {
-          fileSizeBuilder_.mergeFrom(value);
-        }
-
-        return this;
-      }
-      /**
-       * <code>.google.protobuf.Int32Value file_size = 4;</code>
+       * <code>int32 file_size = 4;</code>
+       * @return This builder for chaining.
        */
       public Builder clearFileSize() {
-        if (fileSizeBuilder_ == null) {
-          fileSize_ = null;
-          onChanged();
-        } else {
-          fileSize_ = null;
-          fileSizeBuilder_ = null;
-        }
-
-        return this;
-      }
-      /**
-       * <code>.google.protobuf.Int32Value file_size = 4;</code>
-       */
-      public com.google.protobuf.Int32Value.Builder getFileSizeBuilder() {
-
+        bitField0_ = (bitField0_ & ~0x00000004);
+        fileSize_ = 0;
         onChanged();
-        return getFileSizeFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>.google.protobuf.Int32Value file_size = 4;</code>
-       */
-      public com.google.protobuf.Int32ValueOrBuilder getFileSizeOrBuilder() {
-        if (fileSizeBuilder_ != null) {
-          return fileSizeBuilder_.getMessageOrBuilder();
-        } else {
-          return fileSize_ == null ?
-              com.google.protobuf.Int32Value.getDefaultInstance() : fileSize_;
-        }
-      }
-      /**
-       * <code>.google.protobuf.Int32Value file_size = 4;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilderV3<
-          com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder>
-          getFileSizeFieldBuilder() {
-        if (fileSizeBuilder_ == null) {
-          fileSizeBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              com.google.protobuf.Int32Value, com.google.protobuf.Int32Value.Builder, com.google.protobuf.Int32ValueOrBuilder>(
-                  getFileSize(),
-                  getParentForChildren(),
-                  isClean());
-          fileSize_ = null;
-        }
-        return fileSizeBuilder_;
+        return this;
       }
       @java.lang.Override
       public final Builder setUnknownFields(
@@ -1300,6 +989,7 @@ private static final long serialVersionUID = 0L;
 
   }
 
+  private int bitField0_;
   public static final int DESCRIPTION_FIELD_NUMBER = 1;
   private im.turms.common.model.bo.file.ImageFile.Description description_;
   /**
@@ -1308,7 +998,7 @@ private static final long serialVersionUID = 0L;
    */
   @java.lang.Override
   public boolean hasDescription() {
-    return description_ != null;
+    return ((bitField0_ & 0x00000001) != 0);
   }
   /**
    * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
@@ -1323,33 +1013,26 @@ private static final long serialVersionUID = 0L;
    */
   @java.lang.Override
   public im.turms.common.model.bo.file.ImageFile.DescriptionOrBuilder getDescriptionOrBuilder() {
-    return getDescription();
+    return description_ == null ? im.turms.common.model.bo.file.ImageFile.Description.getDefaultInstance() : description_;
   }
 
   public static final int DATA_FIELD_NUMBER = 2;
-  private com.google.protobuf.BytesValue data_;
+  private com.google.protobuf.ByteString data_;
   /**
-   * <code>.google.protobuf.BytesValue data = 2;</code>
+   * <code>bytes data = 2;</code>
    * @return Whether the data field is set.
    */
   @java.lang.Override
   public boolean hasData() {
-    return data_ != null;
+    return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>.google.protobuf.BytesValue data = 2;</code>
+   * <code>bytes data = 2;</code>
    * @return The data.
    */
   @java.lang.Override
-  public com.google.protobuf.BytesValue getData() {
-    return data_ == null ? com.google.protobuf.BytesValue.getDefaultInstance() : data_;
-  }
-  /**
-   * <code>.google.protobuf.BytesValue data = 2;</code>
-   */
-  @java.lang.Override
-  public com.google.protobuf.BytesValueOrBuilder getDataOrBuilder() {
-    return getData();
+  public com.google.protobuf.ByteString getData() {
+    return data_;
   }
 
   private byte memoizedIsInitialized = -1;
@@ -1366,11 +1049,11 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (description_ != null) {
+    if (((bitField0_ & 0x00000001) != 0)) {
       output.writeMessage(1, getDescription());
     }
-    if (data_ != null) {
-      output.writeMessage(2, getData());
+    if (((bitField0_ & 0x00000002) != 0)) {
+      output.writeBytes(2, data_);
     }
     unknownFields.writeTo(output);
   }
@@ -1381,13 +1064,13 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
-    if (description_ != null) {
+    if (((bitField0_ & 0x00000001) != 0)) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(1, getDescription());
     }
-    if (data_ != null) {
+    if (((bitField0_ & 0x00000002) != 0)) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(2, getData());
+        .computeBytesSize(2, data_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -1561,6 +1244,7 @@ private static final long serialVersionUID = 0L;
     private void maybeForceBuilderInitialization() {
       if (com.google.protobuf.GeneratedMessageV3
               .alwaysUseFieldBuilders) {
+        getDescriptionFieldBuilder();
       }
     }
     @java.lang.Override
@@ -1569,15 +1253,11 @@ private static final long serialVersionUID = 0L;
       if (descriptionBuilder_ == null) {
         description_ = null;
       } else {
-        description_ = null;
-        descriptionBuilder_ = null;
+        descriptionBuilder_.clear();
       }
-      if (dataBuilder_ == null) {
-        data_ = null;
-      } else {
-        data_ = null;
-        dataBuilder_ = null;
-      }
+      bitField0_ = (bitField0_ & ~0x00000001);
+      data_ = com.google.protobuf.ByteString.EMPTY;
+      bitField0_ = (bitField0_ & ~0x00000002);
       return this;
     }
 
@@ -1604,16 +1284,21 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public im.turms.common.model.bo.file.ImageFile buildPartial() {
       im.turms.common.model.bo.file.ImageFile result = new im.turms.common.model.bo.file.ImageFile(this);
-      if (descriptionBuilder_ == null) {
-        result.description_ = description_;
-      } else {
-        result.description_ = descriptionBuilder_.build();
+      int from_bitField0_ = bitField0_;
+      int to_bitField0_ = 0;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        if (descriptionBuilder_ == null) {
+          result.description_ = description_;
+        } else {
+          result.description_ = descriptionBuilder_.build();
+        }
+        to_bitField0_ |= 0x00000001;
       }
-      if (dataBuilder_ == null) {
-        result.data_ = data_;
-      } else {
-        result.data_ = dataBuilder_.build();
+      if (((from_bitField0_ & 0x00000002) != 0)) {
+        to_bitField0_ |= 0x00000002;
       }
+      result.data_ = data_;
+      result.bitField0_ = to_bitField0_;
       onBuilt();
       return result;
     }
@@ -1666,7 +1351,7 @@ private static final long serialVersionUID = 0L;
         mergeDescription(other.getDescription());
       }
       if (other.hasData()) {
-        mergeData(other.getData());
+        setData(other.getData());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -1696,6 +1381,7 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+    private int bitField0_;
 
     private im.turms.common.model.bo.file.ImageFile.Description description_;
     private com.google.protobuf.SingleFieldBuilderV3<
@@ -1705,7 +1391,7 @@ private static final long serialVersionUID = 0L;
      * @return Whether the description field is set.
      */
     public boolean hasDescription() {
-      return descriptionBuilder_ != null || description_ != null;
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
      * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
@@ -1731,7 +1417,7 @@ private static final long serialVersionUID = 0L;
       } else {
         descriptionBuilder_.setMessage(value);
       }
-
+      bitField0_ |= 0x00000001;
       return this;
     }
     /**
@@ -1745,7 +1431,7 @@ private static final long serialVersionUID = 0L;
       } else {
         descriptionBuilder_.setMessage(builderForValue.build());
       }
-
+      bitField0_ |= 0x00000001;
       return this;
     }
     /**
@@ -1753,7 +1439,9 @@ private static final long serialVersionUID = 0L;
      */
     public Builder mergeDescription(im.turms.common.model.bo.file.ImageFile.Description value) {
       if (descriptionBuilder_ == null) {
-        if (description_ != null) {
+        if (((bitField0_ & 0x00000001) != 0) &&
+            description_ != null &&
+            description_ != im.turms.common.model.bo.file.ImageFile.Description.getDefaultInstance()) {
           description_ =
             im.turms.common.model.bo.file.ImageFile.Description.newBuilder(description_).mergeFrom(value).buildPartial();
         } else {
@@ -1763,7 +1451,7 @@ private static final long serialVersionUID = 0L;
       } else {
         descriptionBuilder_.mergeFrom(value);
       }
-
+      bitField0_ |= 0x00000001;
       return this;
     }
     /**
@@ -1774,17 +1462,16 @@ private static final long serialVersionUID = 0L;
         description_ = null;
         onChanged();
       } else {
-        description_ = null;
-        descriptionBuilder_ = null;
+        descriptionBuilder_.clear();
       }
-
+      bitField0_ = (bitField0_ & ~0x00000001);
       return this;
     }
     /**
      * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
      */
     public im.turms.common.model.bo.file.ImageFile.Description.Builder getDescriptionBuilder() {
-
+      bitField0_ |= 0x00000001;
       onChanged();
       return getDescriptionFieldBuilder().getBuilder();
     }
@@ -1816,123 +1503,46 @@ private static final long serialVersionUID = 0L;
       return descriptionBuilder_;
     }
 
-    private com.google.protobuf.BytesValue data_;
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.BytesValue, com.google.protobuf.BytesValue.Builder, com.google.protobuf.BytesValueOrBuilder> dataBuilder_;
+    private com.google.protobuf.ByteString data_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>.google.protobuf.BytesValue data = 2;</code>
+     * <code>bytes data = 2;</code>
      * @return Whether the data field is set.
      */
+    @java.lang.Override
     public boolean hasData() {
-      return dataBuilder_ != null || data_ != null;
+      return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>.google.protobuf.BytesValue data = 2;</code>
+     * <code>bytes data = 2;</code>
      * @return The data.
      */
-    public com.google.protobuf.BytesValue getData() {
-      if (dataBuilder_ == null) {
-        return data_ == null ? com.google.protobuf.BytesValue.getDefaultInstance() : data_;
-      } else {
-        return dataBuilder_.getMessage();
-      }
+    @java.lang.Override
+    public com.google.protobuf.ByteString getData() {
+      return data_;
     }
     /**
-     * <code>.google.protobuf.BytesValue data = 2;</code>
+     * <code>bytes data = 2;</code>
+     * @param value The data to set.
+     * @return This builder for chaining.
      */
-    public Builder setData(com.google.protobuf.BytesValue value) {
-      if (dataBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        data_ = value;
-        onChanged();
-      } else {
-        dataBuilder_.setMessage(value);
-      }
-
+    public Builder setData(com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+      data_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>.google.protobuf.BytesValue data = 2;</code>
-     */
-    public Builder setData(
-        com.google.protobuf.BytesValue.Builder builderForValue) {
-      if (dataBuilder_ == null) {
-        data_ = builderForValue.build();
-        onChanged();
-      } else {
-        dataBuilder_.setMessage(builderForValue.build());
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.BytesValue data = 2;</code>
-     */
-    public Builder mergeData(com.google.protobuf.BytesValue value) {
-      if (dataBuilder_ == null) {
-        if (data_ != null) {
-          data_ =
-            com.google.protobuf.BytesValue.newBuilder(data_).mergeFrom(value).buildPartial();
-        } else {
-          data_ = value;
-        }
-        onChanged();
-      } else {
-        dataBuilder_.mergeFrom(value);
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.BytesValue data = 2;</code>
+     * <code>bytes data = 2;</code>
+     * @return This builder for chaining.
      */
     public Builder clearData() {
-      if (dataBuilder_ == null) {
-        data_ = null;
-        onChanged();
-      } else {
-        data_ = null;
-        dataBuilder_ = null;
-      }
-
-      return this;
-    }
-    /**
-     * <code>.google.protobuf.BytesValue data = 2;</code>
-     */
-    public com.google.protobuf.BytesValue.Builder getDataBuilder() {
-
+      bitField0_ = (bitField0_ & ~0x00000002);
+      data_ = getDefaultInstance().getData();
       onChanged();
-      return getDataFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.google.protobuf.BytesValue data = 2;</code>
-     */
-    public com.google.protobuf.BytesValueOrBuilder getDataOrBuilder() {
-      if (dataBuilder_ != null) {
-        return dataBuilder_.getMessageOrBuilder();
-      } else {
-        return data_ == null ?
-            com.google.protobuf.BytesValue.getDefaultInstance() : data_;
-      }
-    }
-    /**
-     * <code>.google.protobuf.BytesValue data = 2;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        com.google.protobuf.BytesValue, com.google.protobuf.BytesValue.Builder, com.google.protobuf.BytesValueOrBuilder>
-        getDataFieldBuilder() {
-      if (dataBuilder_ == null) {
-        dataBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            com.google.protobuf.BytesValue, com.google.protobuf.BytesValue.Builder, com.google.protobuf.BytesValueOrBuilder>(
-                getData(),
-                getParentForChildren(),
-                isClean());
-        data_ = null;
-      }
-      return dataBuilder_;
+      return this;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

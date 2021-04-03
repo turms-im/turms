@@ -37,19 +37,21 @@ public interface CreateGroupMemberRequestOrBuilder extends
   long getUserId();
 
   /**
-   * <code>.google.protobuf.StringValue name = 3;</code>
+   * <code>string name = 3;</code>
    * @return Whether the name field is set.
    */
   boolean hasName();
   /**
-   * <code>.google.protobuf.StringValue name = 3;</code>
+   * <code>string name = 3;</code>
    * @return The name.
    */
-  com.google.protobuf.StringValue getName();
+  java.lang.String getName();
   /**
-   * <code>.google.protobuf.StringValue name = 3;</code>
+   * <code>string name = 3;</code>
+   * @return The bytes for name.
    */
-  com.google.protobuf.StringValueOrBuilder getNameOrBuilder();
+  com.google.protobuf.ByteString
+      getNameBytes();
 
   /**
    * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
@@ -63,17 +65,13 @@ public interface CreateGroupMemberRequestOrBuilder extends
   im.turms.common.constant.GroupMemberRole getRole();
 
   /**
-   * <code>.google.protobuf.Int64Value mute_end_date = 5;</code>
+   * <code>int64 mute_end_date = 5;</code>
    * @return Whether the muteEndDate field is set.
    */
   boolean hasMuteEndDate();
   /**
-   * <code>.google.protobuf.Int64Value mute_end_date = 5;</code>
+   * <code>int64 mute_end_date = 5;</code>
    * @return The muteEndDate.
    */
-  com.google.protobuf.Int64Value getMuteEndDate();
-  /**
-   * <code>.google.protobuf.Int64Value mute_end_date = 5;</code>
-   */
-  com.google.protobuf.Int64ValueOrBuilder getMuteEndDateOrBuilder();
+  long getMuteEndDate();
 }

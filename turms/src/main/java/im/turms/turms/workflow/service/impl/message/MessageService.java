@@ -20,7 +20,6 @@ package im.turms.turms.workflow.service.impl.message;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.common.primitives.Longs;
-import com.google.protobuf.Int64Value;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
@@ -846,7 +845,7 @@ public class MessageService {
         TurmsNotification notification = TurmsNotification
                 .newBuilder()
                 .setRelayedRequest(request)
-                .setRequestId(Int64Value.of(DaoConstant.ADMIN_REQUEST_ID))
+                .setRequestId(DaoConstant.ADMIN_REQUEST_ID)
                 .build();
         if (node.getSharedProperties().getService().getMessage().isSendMessageToOtherSenderOnlineDevices()) {
             recipientIds.add(message.getSenderId());

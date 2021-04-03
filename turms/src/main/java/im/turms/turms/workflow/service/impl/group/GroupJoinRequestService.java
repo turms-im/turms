@@ -266,7 +266,7 @@ public class GroupJoinRequestService {
                                         builder.addGroupJoinRequests(ProtoUtil.groupJoinRequest2proto(groupJoinRequest).build());
                                     }
                                     return builder
-                                            .setLastUpdatedDate(Int64Value.of(version.getTime()))
+                                            .setLastUpdatedDate(version.getTime())
                                             .build();
                                 });
                     } else {

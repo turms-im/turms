@@ -46,25 +46,22 @@ public final class QueryJoinedGroupInfosRequestOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n4request/group/query_joined_group_infos" +
-      "_request.proto\022\016im.turms.proto\032\036google/p" +
-      "rotobuf/wrappers.proto\"V\n\034QueryJoinedGro" +
-      "upInfosRequest\0226\n\021last_updated_date\030\001 \001(" +
-      "\0132\033.google.protobuf.Int64ValueB.\n\'im.tur" +
-      "ms.common.model.dto.request.groupP\001\272\002\000b\006" +
-      "proto3"
+      "_request.proto\022\016im.turms.proto\"T\n\034QueryJ" +
+      "oinedGroupInfosRequest\022\036\n\021last_updated_d" +
+      "ate\030\001 \001(\003H\000\210\001\001B\024\n\022_last_updated_dateB.\n\'" +
+      "im.turms.common.model.dto.request.groupP" +
+      "\001\272\002\000b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-          com.google.protobuf.WrappersProto.getDescriptor(),
         });
     internal_static_im_turms_proto_QueryJoinedGroupInfosRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_im_turms_proto_QueryJoinedGroupInfosRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_im_turms_proto_QueryJoinedGroupInfosRequest_descriptor,
-        new java.lang.String[] { "LastUpdatedDate", });
-    com.google.protobuf.WrappersProto.getDescriptor();
+        new java.lang.String[] { "LastUpdatedDate", "LastUpdatedDate", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
