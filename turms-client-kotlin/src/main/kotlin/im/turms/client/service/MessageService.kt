@@ -16,7 +16,7 @@
  */
 package im.turms.client.service
 
-import com.google.protobuf.*
+import com.google.protobuf.ByteString
 import im.turms.client.TurmsClient
 import im.turms.client.constant.TurmsStatusCode
 import im.turms.client.exception.TurmsBusinessException
@@ -65,14 +65,14 @@ class MessageService(private val turmsClient: TurmsClient) {
             .send(
                 CreateMessageRequest.newBuilder().apply {
                     if (isGroupMessage) {
-                        this.groupId = Int64Value.of(targetId)
+                        this.groupId = targetId
                     } else {
-                        this.recipientId = Int64Value.of(targetId)
+                        this.recipientId = targetId
                     }
                     this.deliveryDate = deliveryDate.time
-                    text?.let { this.text = StringValue.of(it) }
+                    text?.let { this.text = it }
                     records?.let { this.addAllRecords(it.map { buffer -> ByteString.copyFrom(buffer) }) }
-                    burnAfter?.let { this.burnAfter = Int32Value.of(it) }
+                    burnAfter?.let { this.burnAfter = it }
                 }
             ).data.ids.getValues(0)
     }
@@ -84,11 +84,11 @@ class MessageService(private val turmsClient: TurmsClient) {
     ): Long = turmsClient.driver
         .send(
             CreateMessageRequest.newBuilder().apply {
-                this.messageId = Int64Value.of(messageId)
+                this.messageId = messageId
                 if (isGroupMessage) {
-                    groupId = Int64Value.of(targetId)
+                    groupId = targetId
                 } else {
-                    recipientId = Int64Value.of(targetId)
+                    recipientId = targetId
                 }
             }
         ).data.ids.getValues(0)
@@ -103,7 +103,7 @@ class MessageService(private val turmsClient: TurmsClient) {
                 .send(
                     UpdateMessageRequest.newBuilder().apply {
                         this.messageId = messageId
-                        text?.let { this.text = StringValue.of(it) }
+                        text?.let { this.text = it }
                         records?.let { this.addAllRecords(it.map { buffer -> ByteString.copyFrom(buffer) }) }
                     }
                 ).run {}
@@ -122,12 +122,12 @@ class MessageService(private val turmsClient: TurmsClient) {
         .send(
             QueryMessagesRequest.newBuilder().apply {
                 ids?.let { this.addAllIds(it) }
-                areGroupMessages?.let { this.areGroupMessages = BoolValue.of(it) }
-                areSystemMessages?.let { this.areSystemMessages = BoolValue.of(it) }
-                senderId?.let { this.fromId = Int64Value.of(it) }
-                deliveryDateStart?.let { this.deliveryDateAfter = Int64Value.of(it.time) }
-                deliveryDateEnd?.let { this.deliveryDateBefore = Int64Value.of(it.time) }
-                this.size = Int32Value.of(size)
+                areGroupMessages?.let { this.areGroupMessages = it }
+                areSystemMessages?.let { this.areSystemMessages = it }
+                senderId?.let { this.fromId = it }
+                deliveryDateStart?.let { this.deliveryDateAfter = it.time }
+                deliveryDateEnd?.let { this.deliveryDateBefore = it.time }
+                this.size = size
                 withTotal = false
             }
         ).data.messages.messagesList
@@ -144,12 +144,12 @@ class MessageService(private val turmsClient: TurmsClient) {
         .send(
             QueryMessagesRequest.newBuilder().apply {
                 ids?.let { this.addAllIds(it) }
-                areGroupMessages?.let { this.areGroupMessages = BoolValue.of(it) }
-                areSystemMessages?.let { this.areSystemMessages = BoolValue.of(it) }
-                senderId?.let { this.fromId = Int64Value.of(it) }
-                deliveryDateStart?.let { this.deliveryDateAfter = Int64Value.of(it.time) }
-                deliveryDateEnd?.let { this.deliveryDateBefore = Int64Value.of(it.time) }
-                this.size = Int32Value.of(size)
+                areGroupMessages?.let { this.areGroupMessages = it }
+                areSystemMessages?.let { this.areSystemMessages = it }
+                senderId?.let { this.fromId = it }
+                deliveryDateStart?.let { this.deliveryDateAfter = it.time }
+                deliveryDateEnd?.let { this.deliveryDateBefore = it.time }
+                this.size = size
                 withTotal = true
             }
         ).data.messagesWithTotalList.messagesWithTotalListList
@@ -158,7 +158,7 @@ class MessageService(private val turmsClient: TurmsClient) {
         .send(
             UpdateMessageRequest.newBuilder().apply {
                 this.messageId = messageId
-                this.recallDate = Int64Value.of(recallDate.time)
+                this.recallDate = recallDate.time
             }
         ).run {}
 
@@ -180,7 +180,7 @@ class MessageService(private val turmsClient: TurmsClient) {
         val isMentioned = mentionedUserIds.contains(turmsClient.userService.userInfo?.userId)
         val records = message.recordsList
         var systemMessageType: BuiltinSystemMessageType? = null
-        if (message.isSystemMessage.value && records.isNotEmpty()) {
+        if (message.isSystemMessage && records.isNotEmpty()) {
             val bytes = records[0]
             if (bytes.size() > 0) {
                 systemMessageType = BuiltinSystemMessageType[bytes.byteAt(0).toInt()]
@@ -206,15 +206,15 @@ class MessageService(private val turmsClient: TurmsClient) {
                 if (request.hasMessageId()) {
                     id = request.messageId
                 }
-                isSystemMessage = BoolValue.of(request.isSystemMessage.value)
-                deliveryDate = Int64Value.of(request.deliveryDate)
+                isSystemMessage = request.isSystemMessage
+                deliveryDate = request.deliveryDate
                 if (request.hasText()) {
                     text = request.text
                 }
                 if (request.recordsCount > 0) {
                     addAllRecords(request.recordsList)
                 }
-                senderId = Int64Value.of(requesterId)
+                senderId = requesterId
                 if (request.hasGroupId()) {
                     groupId = request.groupId
                 }
@@ -234,7 +234,7 @@ class MessageService(private val turmsClient: TurmsClient) {
         private val regex = Pattern.compile("@\\{(\\d+?)}")
         private val DEFAULT_MENTIONED_USER_IDS_PARSER: (Message) -> Set<Long> = {
             if (it.hasText()) {
-                val text = it.text.value
+                val text = it.text
                 val matcher = regex.matcher(text)
                 val userIds: MutableSet<Long> = LinkedHashSet()
                 while (matcher.find()) {
@@ -256,8 +256,8 @@ class MessageService(private val turmsClient: TurmsClient) {
         ): ByteBuffer = UserLocation.newBuilder().run {
             setLatitude(latitude)
             setLongitude(longitude)
-            locationName?.let { this.name = StringValue.of(it) }
-            address?.let { this.address = StringValue.of(it) }
+            locationName?.let { this.name = it }
+            address?.let { this.address = it }
             build().toByteString().asReadOnlyByteBuffer()
         }
 
@@ -270,9 +270,9 @@ class MessageService(private val turmsClient: TurmsClient) {
         ): ByteBuffer = AudioFile.newBuilder().run {
             setDescription(AudioFile.Description.newBuilder().apply {
                 this.url = url
-                duration?.let { this.duration = Int32Value.of(it) }
-                format?.let { this.format = StringValue.of(it) }
-                size?.let { this.size = Int32Value.of(it) }
+                duration?.let { this.duration = it }
+                format?.let { this.format = it }
+                size?.let { this.size = it }
             })
                 .build()
                 .toByteString()
@@ -281,11 +281,7 @@ class MessageService(private val turmsClient: TurmsClient) {
 
         @JvmStatic
         fun generateAudioRecordByData(data: ByteArray): ByteBuffer = AudioFile.newBuilder().run {
-            setData(
-                BytesValue.newBuilder()
-                    .setValue(ByteString.copyFrom(data))
-                    .build()
-            )
+            setData(ByteString.copyFrom(data))
                 .build()
                 .toByteString()
                 .asReadOnlyByteBuffer()
@@ -300,9 +296,9 @@ class MessageService(private val turmsClient: TurmsClient) {
         ): ByteBuffer = VideoFile.newBuilder().run {
             setDescription(VideoFile.Description.newBuilder().apply {
                 this.url = url
-                duration?.let { this.duration = Int32Value.of(it) }
-                format?.let { this.format = StringValue.of(it) }
-                size?.let { this.size = Int32Value.of(it) }
+                duration?.let { this.duration = it }
+                format?.let { this.format = it }
+                size?.let { this.size = it }
             })
                 .build()
                 .toByteString()
@@ -311,17 +307,14 @@ class MessageService(private val turmsClient: TurmsClient) {
 
         @JvmStatic
         fun generateVideoRecordByData(data: ByteArray): ByteBuffer = VideoFile.newBuilder()
-            .setData(BytesValue.of(ByteString.copyFrom(data)))
+            .setData(ByteString.copyFrom(data))
             .build()
             .toByteString()
             .asReadOnlyByteBuffer()
 
         @JvmStatic
         fun generateImageRecordByData(data: ByteArray): ByteBuffer = ImageFile.newBuilder()
-            .setData(
-                BytesValue.newBuilder()
-                    .setValue(ByteString.copyFrom(data))
-            )
+            .setData(ByteString.copyFrom(data))
             .build()
             .toByteString()
             .asReadOnlyByteBuffer()
@@ -335,9 +328,9 @@ class MessageService(private val turmsClient: TurmsClient) {
         ): ByteBuffer = ImageFile.newBuilder()
             .setDescription(ImageFile.Description.newBuilder().apply {
                 setUrl(url)
-                fileSize?.let { this.fileSize = Int32Value.of(it) }
-                imageSize?.let { this.imageSize = Int32Value.of(it) }
-                original?.let { this.original = BoolValue.of(it) }
+                fileSize?.let { this.fileSize = it }
+                imageSize?.let { this.imageSize = it }
+                original?.let { this.original = it }
             })
             .build()
             .toByteString()
@@ -345,10 +338,7 @@ class MessageService(private val turmsClient: TurmsClient) {
 
         @JvmStatic
         fun generateFileRecordByDate(data: ByteArray): ByteBuffer = File.newBuilder()
-            .setData(
-                BytesValue.newBuilder()
-                    .setValue(ByteString.copyFrom(data))
-            )
+            .setData(ByteString.copyFrom(data))
             .build()
             .toByteString()
             .asReadOnlyByteBuffer()
@@ -361,8 +351,8 @@ class MessageService(private val turmsClient: TurmsClient) {
         ): ByteBuffer = File.newBuilder()
             .setDescription(File.Description.newBuilder().apply {
                 setUrl(url)
-                format?.let { this.format = StringValue.of(it) }
-                size?.let { this.size = Int32Value.of(it) }
+                format?.let { this.format = it }
+                size?.let { this.size = it }
             })
             .build()
             .toByteString()
@@ -377,7 +367,7 @@ class MessageService(private val turmsClient: TurmsClient) {
                     if (relayedRequest.hasCreateMessageRequest()) {
                         onMessage?.let {
                             val createMessageRequest: CreateMessageRequest = relayedRequest.createMessageRequest
-                            val requesterId: Long = notification.requesterId.value
+                            val requesterId: Long = notification.requesterId
                             val message = createMessageRequest2Message(requesterId, createMessageRequest)
                             val addition: MessageAddition = parseMessageAddition(message)
                             it.invoke(message, addition)

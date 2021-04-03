@@ -16,10 +16,6 @@
  */
 package im.turms.client.service
 
-import com.google.protobuf.BoolValue
-import com.google.protobuf.Int32Value
-import com.google.protobuf.Int64Value
-import com.google.protobuf.StringValue
 import im.turms.client.TurmsClient
 import im.turms.client.annotation.NotEmpty
 import im.turms.client.constant.TurmsStatusCode
@@ -59,11 +55,11 @@ class GroupService(private val turmsClient: TurmsClient) {
         .send(
             CreateGroupRequest.newBuilder().apply {
                 this.name = name
-                intro?.let { this.intro = StringValue.of(it) }
-                announcement?.let { this.announcement = StringValue.of(it) }
-                minimumScore?.let { this.minimumScore = Int32Value.of(it) }
-                muteEndDate?.let { this.muteEndDate = Int64Value.of(it.time) }
-                groupTypeId?.let { this.groupTypeId = Int64Value.of(it) }
+                intro?.let { this.intro = it }
+                announcement?.let { this.announcement = it }
+                minimumScore?.let { this.minimumScore = it }
+                muteEndDate?.let { this.muteEndDate = it.time }
+                groupTypeId?.let { this.groupTypeId = it }
             }
         ).data.ids.getValues(0)
 
@@ -91,14 +87,14 @@ class GroupService(private val turmsClient: TurmsClient) {
         ) turmsClient.driver
             .send(UpdateGroupRequest.newBuilder().apply {
                 this.groupId = groupId
-                groupName?.let { this.groupName = StringValue.of(it) }
-                intro?.let { this.intro = StringValue.of(it) }
-                announcement?.let { this.announcement = StringValue.of(it) }
-                muteEndDate?.let { this.muteEndDate = Int64Value.of(it.time) }
-                minimumScore?.let { this.minimumScore = Int32Value.of(it) }
-                groupTypeId?.let { this.groupTypeId = Int64Value.of(it) }
-                successorId?.let { this.successorId = Int64Value.of(it) }
-                quitAfterTransfer?.let { this.quitAfterTransfer = BoolValue.of(it) }
+                groupName?.let { this.groupName = it }
+                intro?.let { this.intro = it }
+                announcement?.let { this.announcement = it }
+                muteEndDate?.let { this.muteEndDate = it.time }
+                minimumScore?.let { this.minimumScore = it }
+                groupTypeId?.let { this.groupTypeId = it }
+                successorId?.let { this.successorId = it }
+                quitAfterTransfer?.let { this.quitAfterTransfer = it }
             }).run {}
     }
 
@@ -115,7 +111,7 @@ class GroupService(private val turmsClient: TurmsClient) {
             .send(
                 QueryGroupRequest.newBuilder().apply {
                     this.groupId = groupId
-                    lastUpdatedDate?.let { this.lastUpdatedDate = Int64Value.of(it.time) }
+                    lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
                 }
             ).let {
                 GroupWithVersion.from(it)
@@ -125,7 +121,7 @@ class GroupService(private val turmsClient: TurmsClient) {
         turmsClient.driver
             .send(
                 QueryJoinedGroupIdsRequest.newBuilder().apply {
-                    lastUpdatedDate?.let { this.lastUpdatedDate = Int64Value.of(it.time) }
+                    lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
                 })
             .let {
                 val data: TurmsNotification.Data = it.data
@@ -136,7 +132,7 @@ class GroupService(private val turmsClient: TurmsClient) {
         turmsClient.driver
             .send(
                 QueryJoinedGroupInfosRequest.newBuilder().apply {
-                    lastUpdatedDate?.let { this.lastUpdatedDate = Int64Value.of(it.time) }
+                    lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
                 }
             )
             .let {
@@ -178,9 +174,9 @@ class GroupService(private val turmsClient: TurmsClient) {
             return turmsClient.driver.send(
                 UpdateGroupJoinQuestionRequest.newBuilder().apply {
                     this.questionId = questionId
-                    question?.let { this.question = StringValue.of(it) }
+                    question?.let { this.question = it }
                     answers?.let { this.addAllAnswers(it) }
-                    score?.let { this.score = Int32Value.of(it) }
+                    score?.let { this.score = it }
                 }
             ).run {}
         }
@@ -210,7 +206,7 @@ class GroupService(private val turmsClient: TurmsClient) {
         .send(
             QueryGroupBlockedUserIdsRequest.newBuilder().apply {
                 this.groupId = groupId
-                lastUpdatedDate?.let { this.lastUpdatedDate = Int64Value.of(it.time) }
+                lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
             }
         )
         .let {
@@ -225,7 +221,7 @@ class GroupService(private val turmsClient: TurmsClient) {
         .send(
             QueryGroupBlockedUserInfosRequest.newBuilder().apply {
                 this.groupId = groupId
-                lastUpdatedDate?.let { this.lastUpdatedDate = Int64Value.of(it.time) }
+                lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
             }
         ).let {
             val data: TurmsNotification.Data = it.data
@@ -257,8 +253,8 @@ class GroupService(private val turmsClient: TurmsClient) {
         turmsClient.driver
             .send(
                 QueryGroupInvitationsRequest.newBuilder().apply {
-                    this.groupId = Int64Value.of(groupId)
-                    lastUpdatedDate?.let { this.lastUpdatedDate = Int64Value.of(it.time) }
+                    this.groupId = groupId
+                    lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
                 }
             ).let {
                 val data: TurmsNotification.Data = it.data
@@ -269,8 +265,8 @@ class GroupService(private val turmsClient: TurmsClient) {
         turmsClient.driver
             .send(
                 QueryGroupInvitationsRequest.newBuilder().apply {
-                    this.areSentByMe = BoolValue.of(areSentByMe)
-                    lastUpdatedDate?.let { this.lastUpdatedDate = Int64Value.of(it.time) }
+                    this.areSentByMe = areSentByMe
+                    lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
                 }
             ).let {
                 val data: TurmsNotification.Data = it.data
@@ -297,8 +293,8 @@ class GroupService(private val turmsClient: TurmsClient) {
     ): GroupJoinRequestsWithVersion? = turmsClient.driver
         .send(
             QueryGroupJoinRequestsRequest.newBuilder().apply {
-                this.groupId = Int64Value.of(groupId)
-                lastUpdatedDate?.let { this.lastUpdatedDate = Int64Value.of(it.time) }
+                this.groupId = groupId
+                lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
             }
         ).let {
             val data: TurmsNotification.Data = it.data
@@ -309,7 +305,7 @@ class GroupService(private val turmsClient: TurmsClient) {
         turmsClient.driver
             .send(
                 QueryGroupJoinRequestsRequest.newBuilder().apply {
-                    lastUpdatedDate?.let { this.lastUpdatedDate = Int64Value.of(it.time) }
+                    lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
                 }
             ).let {
                 val data: TurmsNotification.Data = it.data
@@ -328,7 +324,7 @@ class GroupService(private val turmsClient: TurmsClient) {
             QueryGroupJoinQuestionsRequest.newBuilder().apply {
                 this.groupId = groupId
                 this.withAnswers = withAnswers
-                lastUpdatedDate?.let { this.lastUpdatedDate = Int64Value.of(it.time) }
+                lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
             }
         ).let {
             val data: TurmsNotification.Data = it.data
@@ -367,9 +363,9 @@ class GroupService(private val turmsClient: TurmsClient) {
             CreateGroupMemberRequest.newBuilder().apply {
                 this.groupId = groupId
                 this.userId = userId
-                name?.let { this.name = StringValue.of(it) }
+                name?.let { this.name = it }
                 role?.let { this.role = it }
-                muteEndDate?.let { this.muteEndDate = Int64Value.of(it.time) }
+                muteEndDate?.let { this.muteEndDate = it.time }
             }
         ).run {}
 
@@ -382,8 +378,8 @@ class GroupService(private val turmsClient: TurmsClient) {
             DeleteGroupMemberRequest.newBuilder().apply {
                 this.groupId = groupId
                 memberId = turmsClient.userService.userInfo!!.userId
-                successorId?.let { this.successorId = Int64Value.of(it) }
-                quitAfterTransfer?.let { this.quitAfterTransfer = BoolValue.of(it) }
+                successorId?.let { this.successorId = it }
+                quitAfterTransfer?.let { this.quitAfterTransfer = it }
             }
         ).run {}
 
@@ -408,9 +404,9 @@ class GroupService(private val turmsClient: TurmsClient) {
                     UpdateGroupMemberRequest.newBuilder().apply {
                         this.groupId = groupId
                         this.memberId = memberId
-                        name?.let { this.name = StringValue.of(it) }
+                        name?.let { this.name = it }
                         role?.let { this.role = it }
-                        muteEndDate?.let { this.muteEndDate = Int64Value.of(it.time) }
+                        muteEndDate?.let { this.muteEndDate = it.time }
                     }
                 ).run {}
         }
@@ -432,8 +428,8 @@ class GroupService(private val turmsClient: TurmsClient) {
         .send(
             QueryGroupMembersRequest.newBuilder().apply {
                 this.groupId = groupId
-                this.withStatus = BoolValue.of(withStatus)
-                lastUpdatedDate?.let { this.lastUpdatedDate = Int64Value.of(it.time) }
+                this.withStatus = withStatus
+                lastUpdatedDate?.let { this.lastUpdatedDate = it.time }
             }
         ).let {
             val data: TurmsNotification.Data = it.data
@@ -451,7 +447,7 @@ class GroupService(private val turmsClient: TurmsClient) {
             QueryGroupMembersRequest.newBuilder().apply {
                 this.groupId = groupId
                 addAllMemberIds(memberIds)
-                this.withStatus = BoolValue.of(withStatus)
+                this.withStatus = withStatus
             }
         ).let {
             val data: TurmsNotification.Data = it.data

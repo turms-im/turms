@@ -36,10 +36,7 @@ class GroupWithVersion {
                     if (groupsWithVersion.groupsCount > 0) {
                         groupWithVersion.group = groupsWithVersion.getGroups(0)
                     }
-                    val lastUpdatedDate = groupsWithVersion.lastUpdatedDate
-                    if (lastUpdatedDate != null) {
-                        groupWithVersion.lastUpdatedDate = lastUpdatedDate.value
-                    }
+                    groupWithVersion.lastUpdatedDate = groupsWithVersion.lastUpdatedDate
                     return groupWithVersion
                 }
             }

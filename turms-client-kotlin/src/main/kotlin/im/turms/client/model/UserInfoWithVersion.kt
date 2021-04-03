@@ -37,10 +37,7 @@ class UserInfoWithVersion {
                     if (usersInfosWithVersion.userInfosCount > 0) {
                         userInfoWithVersion.userInfo = usersInfosWithVersion.getUserInfos(0)
                     }
-                    val lastUpdatedDate = usersInfosWithVersion.lastUpdatedDate
-                    if (lastUpdatedDate != null) {
-                        userInfoWithVersion.lastUpdatedDate = lastUpdatedDate.value
-                    }
+                    userInfoWithVersion.lastUpdatedDate = usersInfosWithVersion.lastUpdatedDate
                     return userInfoWithVersion
                 }
             }

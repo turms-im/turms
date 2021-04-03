@@ -19,7 +19,10 @@ package im.turms.client.driver.service
 import im.turms.client.constant.TurmsStatusCode
 import im.turms.client.driver.StateStore
 import im.turms.client.exception.TurmsBusinessException
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import okio.ByteString
 import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.coroutines.*

@@ -16,7 +16,6 @@
  */
 package im.turms.client.driver.service
 
-import com.google.protobuf.Int64Value
 import im.turms.client.constant.TurmsStatusCode
 import im.turms.client.driver.StateStore
 import im.turms.client.exception.TurmsBusinessException
@@ -84,7 +83,7 @@ class MessageService(
         while (true) {
             val requestId = generateRandomId()
             val request = requestBuilder
-                .setRequestId(Int64Value.newBuilder().setValue(requestId).build())
+                .setRequestId(requestId)
                 .build()
             val currentRequest = TurmsRequestCont(request, cont, null)
             val wasRequestAbsent = requestMap.putIfAbsent(requestId, currentRequest) == null
@@ -112,8 +111,7 @@ class MessageService(
     fun didReceiveNotification(notification: TurmsNotification) {
         val isResponse = !notification.hasRelayedRequest() && notification.hasRequestId()
         if (isResponse) {
-            val requestId = notification.requestId.value
-            requestMap.remove(requestId)?.let {
+            requestMap.remove(notification.requestId)?.let {
                 val cont = it.cont
                 if (notification.hasCode()) {
                     it.timeoutDeferred?.cancel()

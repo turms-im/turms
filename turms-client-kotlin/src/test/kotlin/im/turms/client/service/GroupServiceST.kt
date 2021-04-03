@@ -175,7 +175,7 @@ internal class GroupServiceST {
     @Timeout(5)
     fun queryGroup_shouldReturnGroupWithVersion() = runBlocking {
         val groupWithVersion = client.groupService.queryGroup(groupId)
-        assertEquals(groupId, groupWithVersion!!.group!!.id.value)
+        assertEquals(groupId, groupWithVersion!!.group!!.id)
     }
 
     @Test
@@ -194,7 +194,7 @@ internal class GroupServiceST {
         val groups: List<Group> = groupWithVersion!!.groupsList
         val groupIds: MutableSet<Long?> = HashSet(groups.size)
         for (group in groups) {
-            groupIds.add(group.id.value)
+            groupIds.add(group.id)
         }
         assertTrue(groupIds.contains(groupId))
     }
@@ -212,7 +212,7 @@ internal class GroupServiceST {
     @Timeout(5)
     fun queryBlockedUserInfos_shouldEqualBlockedUserId() = runBlocking {
         val usersInfosWithVersion = client.groupService.queryBlockedUserInfos(groupId)
-        assertEquals(GROUP_BLOCKED_USER_ID, usersInfosWithVersion!!.getUserInfos(0).id.value)
+        assertEquals(GROUP_BLOCKED_USER_ID, usersInfosWithVersion!!.getUserInfos(0).id)
     }
 
     @Test
@@ -222,7 +222,7 @@ internal class GroupServiceST {
         val groupInvitationsWithVersion = client.groupService.queryInvitations(groupId)
         assertEquals(
             groupInvitationId,
-            groupInvitationsWithVersion!!.getGroupInvitations(0).id.value
+            groupInvitationsWithVersion!!.getGroupInvitations(0).id
         )
     }
 
@@ -233,7 +233,7 @@ internal class GroupServiceST {
         val groupJoinRequestsWithVersion = client.groupService.queryJoinRequests(groupId)
         assertEquals(
             groupJoinRequestId,
-            groupJoinRequestsWithVersion!!.getGroupJoinRequests(0).id.value
+            groupJoinRequestsWithVersion!!.getGroupJoinRequests(0).id
         )
     }
 
@@ -244,7 +244,7 @@ internal class GroupServiceST {
         val groupJoinQuestionsWithVersion = client.groupService.queryGroupJoinQuestionsRequest(groupId, true)
         assertEquals(
             groupJoinQuestionId,
-            groupJoinQuestionsWithVersion!!.getGroupJoinQuestions(0).id.value
+            groupJoinQuestionsWithVersion!!.getGroupJoinQuestions(0).id
         )
     }
 
@@ -253,7 +253,7 @@ internal class GroupServiceST {
     @Timeout(5)
     fun queryGroupMembers_shouldEqualNewMemberId() = runBlocking {
         val groupMembersWithVersion = client.groupService.queryGroupMembers(groupId, true)
-        assertEquals(GROUP_MEMBER_ID, groupMembersWithVersion!!.getGroupMembers(1).userId.value)
+        assertEquals(GROUP_MEMBER_ID, groupMembersWithVersion!!.getGroupMembers(1).userId)
     }
 
     @Test
@@ -262,7 +262,7 @@ internal class GroupServiceST {
     fun queryGroupMembersByMemberIds_shouldEqualNewMemberId() = runBlocking {
         val groupMembersWithVersion =
             client.groupService.queryGroupMembersByMemberIds(groupId, setOf(GROUP_MEMBER_ID), true)
-        assertEquals(GROUP_MEMBER_ID, groupMembersWithVersion!!.getGroupMembers(0).userId.value)
+        assertEquals(GROUP_MEMBER_ID, groupMembersWithVersion!!.getGroupMembers(0).userId)
     }
 
     @Test

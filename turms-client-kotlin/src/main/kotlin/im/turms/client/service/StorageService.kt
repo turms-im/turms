@@ -16,8 +16,6 @@
  */
 package im.turms.client.service
 
-import com.google.protobuf.Int64Value
-import com.google.protobuf.StringValue
 import im.turms.client.TurmsClient
 import im.turms.client.constant.TurmsStatusCode
 import im.turms.client.exception.TurmsBusinessException
@@ -110,15 +108,15 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
         val urlBuilder: QuerySignedGetUrlRequest.Builder = QuerySignedGetUrlRequest.newBuilder()
             .setContentType(contentType)
         if (keyStr != null) {
-            urlBuilder.keyStr = StringValue.of(keyStr)
+            urlBuilder.keyStr = keyStr
         }
         if (keyNum != null) {
-            urlBuilder.keyNum = Int64Value.of(keyNum)
+            urlBuilder.keyNum = keyNum
         }
         val urlRequest: QuerySignedGetUrlRequest = urlBuilder.build()
         val builder: TurmsRequest.Builder = TurmsRequest.newBuilder()
             .setQuerySignedGetUrlRequest(urlRequest)
-        return turmsClient.driver.send(builder).data.url.value
+        return turmsClient.driver.send(builder).data.url
     }
 
     private suspend fun getSignedPutUrl(
@@ -131,25 +129,25 @@ class StorageService(private val turmsClient: TurmsClient, storageServerUrl: Str
             .setContentLength(size)
             .setContentType(contentType)
         if (keyStr != null) {
-            urlBuilder.keyStr = StringValue.of(keyStr)
+            urlBuilder.keyStr = keyStr
         }
         if (keyNum != null) {
-            urlBuilder.keyNum = Int64Value.of(keyNum)
+            urlBuilder.keyNum = keyNum
         }
         val urlRequest: QuerySignedPutUrlRequest = urlBuilder.build()
         val builder: TurmsRequest.Builder = TurmsRequest.newBuilder()
             .setQuerySignedPutUrlRequest(urlRequest)
-        return turmsClient.driver.send(builder).data.url.value
+        return turmsClient.driver.send(builder).data.url
     }
 
     private suspend fun deleteResource(contentType: ContentType, keyStr: String? = null, keyNum: Long? = null) {
         val requestBuilder: DeleteResourceRequest.Builder = DeleteResourceRequest.newBuilder()
             .setContentType(contentType)
         if (keyStr != null) {
-            requestBuilder.keyStr = StringValue.newBuilder().setValue(keyStr).build()
+            requestBuilder.keyStr = keyStr
         }
         if (keyNum != null) {
-            requestBuilder.keyNum = Int64Value.newBuilder().setValue(keyNum).build()
+            requestBuilder.keyNum = keyNum
         }
         val request: DeleteResourceRequest = requestBuilder.build()
         val builder: TurmsRequest.Builder = TurmsRequest.newBuilder()

@@ -56,9 +56,9 @@ class TurmsBusinessException internal constructor(
         }
 
         fun get(notification: TurmsNotification): TurmsBusinessException {
-            val code = notification.code.value
+            val code = notification.code
             return if (notification.hasReason())
-                TurmsBusinessException(code, notification.reason.value)
+                TurmsBusinessException(code, notification.reason)
             else
                 TurmsBusinessException(code)
         }

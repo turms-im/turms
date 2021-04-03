@@ -16,7 +16,6 @@
  */
 package im.turms.client.service
 
-import com.google.protobuf.Int64Value
 import im.turms.client.TurmsClient
 import im.turms.common.model.bo.conversation.GroupConversation
 import im.turms.common.model.bo.conversation.PrivateConversation
@@ -50,14 +49,14 @@ class ConversationService(private val turmsClient: TurmsClient) {
     suspend fun updatePrivateConversationReadDate(targetId: Long, readDate: Date? = null) =
         turmsClient.driver
             .send(UpdateConversationRequest.newBuilder().apply {
-                this.targetId = Int64Value.of(targetId)
+                this.targetId = targetId
                 this.readDate = readDate?.time ?: Date().time
             }).run {}
 
     suspend fun updateGroupConversationReadDate(groupId: Long, readDate: Date? = null) =
         turmsClient.driver
             .send(UpdateConversationRequest.newBuilder().apply {
-                this.groupId = Int64Value.of(groupId)
+                this.groupId = groupId
                 this.readDate = readDate?.time ?: Date().time
             }).run {}
 

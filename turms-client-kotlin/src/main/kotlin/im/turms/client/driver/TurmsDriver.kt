@@ -63,7 +63,7 @@ class TurmsDriver(
 
     // Close
 
-    suspend fun close() = coroutineScope() {
+    suspend fun close() = coroutineScope {
         val closeConnectionService = async { connectionService.close() }
         val closeHeartbeatService = async { heartbeatService.close() }
         val closeMessageService = async { messageService.close() }

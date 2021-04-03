@@ -24,7 +24,7 @@ import im.turms.common.model.dto.notification.TurmsNotification
  * @author James Chen
  */
 fun TurmsNotification.isSuccessful(): Boolean =
-    hasCode() && TurmsStatusCode.isSuccessCode(this.code.value)
+    hasCode() && TurmsStatusCode.isSuccessCode(this.code)
 
 fun TurmsNotification.isServerError(): Boolean =
-    hasCode() && TurmsStatusCode.isServerError(this.code.value)
+    hasCode() && TurmsStatusCode.isServerError(this.code)
