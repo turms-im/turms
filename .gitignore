@@ -26,25 +26,35 @@ mvnw
 mvnw.cmd
 .mvn/
 
-### Custom ###
-target/
+### Turms Common ###
 turms-server-common/target/
+turms-java-common/target/
+
+### Turms Servers ###
 turms/target/
 turms/src/docs/
 turms/dist/bin/
+
 turms-gateway/target/
-turms-plugin-demo/target/
+
 turms-admin/cypress/screenshots/
 turms-admin/cypress/videos/
+turms-admin/node_modules/
+
 turms-apm/target/
-turms-docs/node_modules/
-turms-docs/src/.vuepress/dist/
-turms-client-kotlin/target/
-turms-client-js/node_modules/
-turms-client-js/types/src/
-turms-client-js/dist/
-turms-java-common/target/
+
+### Turms Clients ###
 turms-client-js/coverage/
+turms-client-js/dist/
+turms-client-js/node_modules/
+turms-client-js/protoc/
+
+turms-client-kotlin/target/
+
+### Turms Plugins ###
 turms-plugins/turms-plugin-minio/target/
-turms-client-js/types/turms/turms-client-js/tests/
-turms-docs/src/zh/.vuepress/dist/
+turms-plugin-demo/target/
+
+### Turms Docs ###
+turms-docs/src/.vuepress/dist/
+turms-docs/node_modules/
