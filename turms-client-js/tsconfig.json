@@ -1,33 +1,37 @@
+// https://www.typescriptlang.org/tsconfig
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "strictNullChecks": false,
-    "noImplicitAny": false,
-    "module": "es6",
-    "target": "es5",
-    "allowJs": true,
+    // project options
     "declaration": true,
-    "sourceMap": true,
-    "skipLibCheck": true,
-    "removeComments": true,
-    "declarationDir": "types",
-    "outDir": "./dist",
+    "declarationMap": true,
     "lib": [
       "dom",
-      "es5",
-      "es6",
-      "es2015.promise"
-    ]
+      "ES2018"
+    ],
+    // Avoid setting to "CommonJS", or rollup won't be able to tree-shake
+    "module": "ES2015",
+    "outDir": "dist",
+    "removeComments": true,
+    "sourceMap": true,
+    "target": "es5",
+
+    // strict checks
+    "strict": true,
+    "strictNullChecks": false,
+
+    // module resolution
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "moduleResolution": "Node",
+
+    // lint checkers
+    "noImplicitAny": false,
+
+    // advanced
+    "declarationDir": "dist",
+    "skipLibCheck": true
   },
   "include": [
     "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "**/*.test.ts",
-    "**/*.spec.ts",
-    "**/*.d.ts",
-    "./dist/**/*"
   ]
 }

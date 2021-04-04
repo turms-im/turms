@@ -96,21 +96,4 @@ class TurmsClient {
     }
 }
 
-let root;
-if (typeof window !== 'undefined') {
-    root = window;
-} else if (typeof global !== 'undefined') {
-    root = global;
-}
-if (root) {
-    Object.defineProperty(root, 'TurmsClient', {
-        configurable: false,
-        writable: false,
-        enumerable: false,
-        value: TurmsClient
-    });
-} else {
-    console.error('Make sure to run turms-client in either browser or Node.js');
-}
-
 export default TurmsClient;
