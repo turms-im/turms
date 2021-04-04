@@ -18,7 +18,8 @@ export default class ConversationService {
         }
         return this._turmsClient.driver.send({
             queryConversationsRequest: {
-                targetIds
+                targetIds,
+                groupIds: []
             }
         }).then(n => NotificationUtil.transform(n.data?.conversations?.privateConversations) as ParsedModel.PrivateConversation[] || []);
     }
@@ -29,7 +30,8 @@ export default class ConversationService {
         }
         return this._turmsClient.driver.send({
             queryConversationsRequest: {
-                groupIds
+                groupIds,
+                targetIds: []
             }
         }).then(n => {
             const conversations = NotificationUtil.transform(n.data?.conversations?.groupConversations) as any[];
@@ -47,7 +49,7 @@ export default class ConversationService {
         readDate = readDate ?? new Date();
         return this._turmsClient.driver.send({
             updateConversationRequest: {
-                targetId: RequestUtil.wrapValueIfNotNull(targetId),
+                targetId,
                 readDate: '' + readDate.getTime()
             }
         }).then(() => null);
@@ -60,7 +62,7 @@ export default class ConversationService {
         readDate = readDate ?? new Date();
         return this._turmsClient.driver.send({
             updateConversationRequest: {
-                groupId: RequestUtil.wrapValueIfNotNull(groupId),
+                groupId,
                 readDate: '' + readDate.getTime()
             }
         }).then(() => null);

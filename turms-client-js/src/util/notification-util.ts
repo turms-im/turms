@@ -1,9 +1,7 @@
-import {google, im} from '../model/proto-bundle';
 import {ParsedModel} from '../model/parsed-model';
 import TurmsStatusCode from '../model/turms-status-code';
 import TurmsBusinessError from '../model/turms-business-error';
-import TurmsNotification = im.turms.proto.TurmsNotification;
-import IInt64Value = google.protobuf.IInt64Value;
+import {TurmsNotification} from '../model/proto/notification/turms_notification';
 
 export default class NotificationUtil {
     static transform(data?: object | number | string, parentKey?: string): object | number | string | undefined {
@@ -32,18 +30,13 @@ export default class NotificationUtil {
         return data;
     }
 
-    static getFirstVal(notification: im.turms.proto.TurmsNotification, path: string, throwIfUndefined = false): any {
+    static getFirstVal(notification: TurmsNotification, path: string, throwIfUndefined = false): any {
         path += '.values.0';
         const value = this._get(notification, path, undefined);
         if (value === undefined && throwIfUndefined) {
             throw TurmsBusinessError.fromCode(TurmsStatusCode.INVALID_RESPONSE)
         }
         return value;
-    }
-
-    static getVal(notification: TurmsNotification, path: string): any {
-        path += '.value';
-        return this._get(notification, path, undefined);
     }
 
     static getAndTransform(notification: TurmsNotification, path: string): any {
@@ -79,8 +72,8 @@ export default class NotificationUtil {
         }
     }
 
-    static transformDate(date?: IInt64Value): Date | undefined {
-        return date ? new Date(parseInt(date.value)) : undefined;
+    static transformDate(date?: string): Date | undefined {
+        return date ? new Date(parseInt(date)) : undefined;
     }
 
     static transformMapValToDate(map?: [any: number]): [any: Date] | undefined {

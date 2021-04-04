@@ -1,12 +1,11 @@
-import Constants from "../helper/constants";
-import TurmsClient from "../../src/turms-client";
-import {readFileSync} from 'fs';
+import Constants from '../helper/constants';
+import TurmsClient from '../../src/turms-client';
 
 let turmsClient: TurmsClient;
 const USER_ID = '1';
 const GROUP_ID = '1';
 
-const PROFILE_PICTURE: Buffer = readFileSync("tests/resources/profile.webp");
+const PROFILE_PICTURE: Buffer = new Buffer([0, 1, 2, 3]);
 const ATTACHMENT: Buffer = PROFILE_PICTURE;
 let messageId;
 
@@ -15,7 +14,7 @@ beforeAll(async () => {
         wsUrl: Constants.WS_URL,
         storageServerUrl: Constants.STORAGE_SERVER_URL
     });
-    await turmsClient.userService.login(USER_ID, "123");
+    await turmsClient.userService.login(USER_ID, '123');
 });
 
 afterAll(async () => {

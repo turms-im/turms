@@ -1,9 +1,8 @@
 import Constants from '../helper/constants';
 import TurmsClient from '../../src/turms-client';
 import TurmsStatusCode from '../../src/model/turms-status-code'
-import {im} from '../../src/model/proto-bundle';
-import UserStatus = im.turms.proto.UserStatus;
-import ResponseAction = im.turms.proto.ResponseAction;
+import {UserStatus} from '../../src/model/proto/constant/user_status';
+import {ResponseAction} from '../../src/model/proto/constant/response_action';
 
 let turmsClient: TurmsClient;
 let userStatus = UserStatus.AWAY;

@@ -1,5 +1,4 @@
-import {im} from '../model/proto-bundle';
-import DeviceType = im.turms.proto.DeviceType;
+import {DeviceType} from '../model/proto/constant/device_type';
 
 export default class SystemUtil {
 

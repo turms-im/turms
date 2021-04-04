@@ -1,12 +1,9 @@
 import TurmsClient from '../turms-client';
 import TurmsStatusCode from '../model/turms-status-code';
-import {im} from '../model/proto-bundle';
 import TurmsBusinessError from '../model/turms-business-error';
-import RequestUtil from '../util/request-util';
-import NotificationUtil from '../util/notification-util';
 // @ts-ignore
 import unfetch from 'unfetch';
-import ContentType = im.turms.proto.ContentType;
+import {ContentType} from '../model/proto/constant/content_type';
 
 export default class StorageService {
 
@@ -108,10 +105,10 @@ export default class StorageService {
         return this._turmsClient.driver.send({
             querySignedGetUrlRequest: {
                 contentType: contentType,
-                keyStr: RequestUtil.wrapValueIfNotNull(keyStr),
-                keyNum: RequestUtil.wrapValueIfNotNull(keyNum)
+                keyStr,
+                keyNum
             }
-        }).then(n => NotificationUtil.getVal(n, 'url'));
+        }).then(n => n.data.url);
     }
 
     private _getSignedPutUrl(contentType: ContentType, size: number, keyStr?: string, keyNum?: string): Promise<string> {
@@ -119,18 +116,18 @@ export default class StorageService {
             querySignedPutUrlRequest: {
                 contentType: contentType,
                 contentLength: `${size}`,
-                keyStr: RequestUtil.wrapValueIfNotNull(keyStr),
-                keyNum: RequestUtil.wrapValueIfNotNull(keyNum)
+                keyStr,
+                keyNum
             }
-        }).then(n => NotificationUtil.getVal(n, 'url'));
+        }).then(n => n.data.url);
     }
 
     private _deleteResource(contentType: ContentType, keyStr?: string, keyNum?: string): Promise<void> {
         return this._turmsClient.driver.send({
             deleteResourceRequest: {
                 contentType: contentType,
-                keyStr: RequestUtil.wrapValueIfNotNull(keyStr),
-                keyNum: RequestUtil.wrapValueIfNotNull(keyNum)
+                keyStr,
+                keyNum
             }
         }).then(() => null);
     }

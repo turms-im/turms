@@ -1,13 +1,5 @@
-export interface ParsedNotification {
-    requestId?: string;
-    code?: number;
-    reason?: string;
-    data?: any;
-    relayedRequest?: ParsedRelayedRequest; //TODO
-    requesterId?: string;
-    closeStatus?: number;
-}
+import {TurmsNotification} from './proto/notification/turms_notification';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ParsedRelayedRequest {
-}
+/** ParsedNotification represents the notification that all raw data
+ * has been parsed to specific data (e.g. number -> Date) */
+export type ParsedNotification = TurmsNotification

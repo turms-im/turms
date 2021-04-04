@@ -15,14 +15,13 @@
  * limitations under the License.
  */
 
-import {im} from '../model/proto-bundle';
-import {ParsedNotification} from '../model/parsed-notification';
 import MessageService from './service/message-service';
 import HeartbeatService from './service/heartbeat-service';
 import ConnectionService, {ConnectionDisconnectInfo, ConnectOptions} from './service/connection-service';
 import StateStore from './state-store';
-import TurmsNotification = im.turms.proto.TurmsNotification;
-import ITurmsRequest = im.turms.proto.ITurmsRequest;
+import {TurmsNotification} from '../model/proto/notification/turms_notification';
+import {TurmsRequest} from '../model/proto/request/turms_request';
+import {ParsedNotification} from '../model/parsed-notification';
 
 export default class TurmsDriver {
 
@@ -124,7 +123,7 @@ export default class TurmsDriver {
 
     // Message Service
 
-    send(message: ITurmsRequest): Promise<TurmsNotification> {
+    send(message: TurmsRequest): Promise<TurmsNotification> {
         const notification = this._messageService.sendRequest(message);
         if (message.createSessionRequest) {
             notification.then(() => {

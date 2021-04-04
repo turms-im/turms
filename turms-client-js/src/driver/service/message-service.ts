@@ -15,7 +15,6 @@
  * limitations under the License.
  */
 
-import {im} from '../../model/proto-bundle';
 import RequestUtil from '../../util/request-util';
 import TurmsStatusCode from '../../model/turms-status-code';
 import TurmsBusinessError from '../../model/turms-business-error';
@@ -23,8 +22,8 @@ import StateStore from '../state-store';
 import NotificationUtil from '../../util/notification-util';
 import {ParsedNotification} from '../../model/parsed-notification';
 import BaseService from './base-service';
-import TurmsNotification = im.turms.proto.TurmsNotification;
-import TurmsRequest = im.turms.proto.TurmsRequest;
+import {TurmsNotification} from '../../model/proto/notification/turms_notification';
+import {TurmsRequest} from '../../model/proto/request/turms_request';
 
 interface RequestPromiseSeal {
     timeoutId?: number,
@@ -75,7 +74,7 @@ export default class MessageService extends BaseService {
     // Request and notification
 
     sendRequest(
-        message: im.turms.proto.ITurmsRequest): Promise<TurmsNotification> {
+        message: TurmsRequest): Promise<TurmsNotification> {
         return new Promise((resolve, reject) => {
             if (message.createSessionRequest) {
                 if (this._stateStore.isSessionOpen) {
@@ -91,7 +90,7 @@ export default class MessageService extends BaseService {
                 return reject(TurmsBusinessError.fromCode(TurmsStatusCode.CLIENT_REQUESTS_TOO_FREQUENT));
             }
             const requestId = RequestUtil.generateRandomId(this._requestMap);
-            message.requestId = RequestUtil.wrapValueIfNotNull(requestId);
+            message.requestId = '' + requestId;
 
             try {
                 const data = TurmsRequest.encode(message).finish();
@@ -119,7 +118,7 @@ export default class MessageService extends BaseService {
     didReceiveNotification(notification: TurmsNotification): void {
         const isResponse = !notification.relayedRequest && notification.requestId;
         if (isResponse) {
-            const requestId = parseInt(notification.requestId.value);
+            const requestId = parseInt(notification.requestId);
             if (requestId) {
                 const cb = this._requestMap[requestId];
                 if (cb) {
@@ -128,7 +127,7 @@ export default class MessageService extends BaseService {
                     }
                     delete this._requestMap[requestId];
                     if (notification.code) {
-                        if (TurmsStatusCode.isSuccessCode(notification.code.value)) {
+                        if (TurmsStatusCode.isSuccessCode(notification.code)) {
                             cb.resolve(notification);
                         } else {
                             cb.reject(TurmsBusinessError.fromNotification(notification));

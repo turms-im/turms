@@ -1,5 +1,5 @@
-import Constants from "./helper/constants";
-import TurmsClient from "../src/turms-client";
+import Constants from './helper/constants';
+import TurmsClient from '../src/turms-client';
 
 describe('TurmsClient class', () => {
     it('constructor_shouldReturnNotNullClientInstance', () => {

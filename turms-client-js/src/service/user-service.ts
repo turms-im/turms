@@ -1,5 +1,4 @@
 import TurmsClient from '../turms-client';
-import {im} from '../model/proto-bundle';
 import RequestUtil from '../util/request-util';
 import {ParsedModel} from '../model/parsed-model';
 import NotificationUtil from '../util/notification-util';
@@ -10,11 +9,11 @@ import TurmsStatusCode from '../model/turms-status-code';
 import StateStore from '../driver/state-store';
 import {SessionCloseInfo} from '../model/session-close-info';
 import TurmsCloseStatus from '../model/turms-close-status';
-import UserStatus = im.turms.proto.UserStatus;
-import ProfileAccessStrategy = im.turms.proto.ProfileAccessStrategy;
-import ResponseAction = im.turms.proto.ResponseAction;
-import DeviceType = im.turms.proto.DeviceType;
-import UserSessionId = im.turms.proto.UserSessionId;
+import {UserStatus} from '../model/proto/constant/user_status';
+import {DeviceType} from '../model/proto/constant/device_type';
+import {ProfileAccessStrategy} from '../model/proto/constant/profile_access_strategy';
+import {UserSessionId} from '../model/proto/model/user/user_session_id';
+import {ResponseAction} from '../model/proto/constant/response_action';
 
 export interface UserInfo {
     userId?: string;
@@ -91,8 +90,8 @@ export default class UserService {
         return new Promise((resolve, reject) => {
             navigator.geolocation.getCurrentPosition(position => {
                 resolve(position);
-            }, positionError => {
-                reject(positionError);
+            }, e => {
+                reject(e);
             });
         });
     }
@@ -147,23 +146,23 @@ export default class UserService {
             const connect = this._turmsClient.driver.isConnected
                 ? Promise.resolve()
                 : this._turmsClient.driver.connect();
-            return connect
-                .catch(e => reject(e))
+            connect
                 .then(() => {
                     return this._turmsClient.driver.send({
                         createSessionRequest: {
                             userId,
-                            password: RequestUtil.wrapValueIfNotNull(password),
+                            password,
                             deviceType: userInfo.deviceType,
                             userStatus: userInfo.onlineStatus,
                             location: userInfo.location
                         }
-                    }).catch(e => reject(e)).then(() => {
+                    }).then(() => {
                         this._changeToOnline();
                         this._userInfo = userInfo;
                         resolve();
-                    });
-                });
+                    }).catch(e => reject(e));
+                })
+                .catch(e => reject(e));
         });
     }
 
@@ -195,6 +194,7 @@ export default class UserService {
         }
         return this._turmsClient.driver.send({
             updateUserOnlineStatusRequest: {
+                deviceTypes: [],
                 userStatus: onlineStatus
             }
         }).then(() => {
@@ -207,7 +207,6 @@ export default class UserService {
             return TurmsBusinessError.notFalsyPromise('deviceTypes', true);
         }
         try {
-            // @ts-ignore
             deviceTypes = deviceTypes.map((type: string | DeviceType) => UserService._parseDeviceType(type));
         } catch (e) {
             return Promise.reject(e);
@@ -226,7 +225,7 @@ export default class UserService {
         }
         return this._turmsClient.driver.send({
             updateUserRequest: {
-                password: RequestUtil.wrapValueIfNotNull(password)
+                password
             }
         }).then(() => {
             if (this._storePassword) {
@@ -250,9 +249,9 @@ export default class UserService {
         }
         return this._turmsClient.driver.send({
             updateUserRequest: {
-                name: RequestUtil.wrapValueIfNotNull(name),
-                intro: RequestUtil.wrapValueIfNotNull(intro),
-                profileAccessStrategy: profileAccessStrategy
+                name,
+                intro,
+                profileAccessStrategy
             }
         }).then(() => null);
     }
@@ -264,7 +263,7 @@ export default class UserService {
         return this._turmsClient.driver.send({
             queryUserProfileRequest: {
                 userId: userId,
-                lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
+                lastUpdatedDate: RequestUtil.getDateTimeStr(lastUpdatedDate)
             }
         }).then(n => {
             const userInfo = NotificationUtil.getAndTransform(n, 'usersInfosWithVersion.userInfos.0');
@@ -286,10 +285,10 @@ export default class UserService {
         }
         return this._turmsClient.driver.send({
             queryUserIdsNearbyRequest: {
-                latitude: latitude,
-                longitude: longitude,
-                distance: RequestUtil.wrapValueIfNotNull(distance),
-                maxNumber: RequestUtil.wrapValueIfNotNull(maxNumber)
+                latitude,
+                longitude,
+                distance,
+                maxNumber
             }
         }).then(n => NotificationUtil.getArr(n, 'ids.values'));
     }
@@ -303,10 +302,10 @@ export default class UserService {
         }
         return this._turmsClient.driver.send({
             queryUserIdsNearbyRequest: {
-                latitude: latitude,
-                longitude: longitude,
-                distance: RequestUtil.wrapValueIfNotNull(distance),
-                maxNumber: RequestUtil.wrapValueIfNotNull(maxNumber)
+                latitude,
+                longitude,
+                distance,
+                maxNumber
             }
         }).then(n => NotificationUtil.getArr(n, 'userSessionIds.userSessionIds'));
     }
@@ -320,10 +319,10 @@ export default class UserService {
         }
         return this._turmsClient.driver.send({
             queryUserInfosNearbyRequest: {
-                latitude: latitude,
-                longitude: longitude,
-                distance: RequestUtil.wrapValueIfNotNull(distance),
-                maxNumber: RequestUtil.wrapValueIfNotNull(maxNumber)
+                latitude,
+                longitude,
+                distance,
+                maxNumber
             }
         }).then(n => NotificationUtil.getArrAndTransform(n, 'usersInfosWithVersion.userInfos'));
     }
@@ -348,10 +347,10 @@ export default class UserService {
         lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipsWithVersion | undefined> {
         return this._turmsClient.driver.send({
             queryRelationshipsRequest: {
-                userIds: relatedUserIds,
-                blocked: RequestUtil.wrapValueIfNotNull(isBlocked),
-                groupIndex: RequestUtil.wrapValueIfNotNull(groupIndex),
-                lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
+                userIds: relatedUserIds || [],
+                blocked: isBlocked,
+                groupIndex,
+                lastUpdatedDate: RequestUtil.getDateTimeStr(lastUpdatedDate)
             }
         }).then(n => NotificationUtil.getAndTransform(n, 'userRelationshipsWithVersion'));
     }
@@ -362,9 +361,9 @@ export default class UserService {
         lastUpdatedDate?: Date): Promise<ParsedModel.IdsWithVersion | undefined> {
         return this._turmsClient.driver.send({
             queryRelatedUserIdsRequest: {
-                blocked: RequestUtil.wrapValueIfNotNull(isBlocked),
-                groupIndex: RequestUtil.wrapValueIfNotNull(groupIndex),
-                lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
+                blocked: isBlocked,
+                groupIndex,
+                lastUpdatedDate: RequestUtil.getDateTimeStr(lastUpdatedDate)
             }
         }).then(n => NotificationUtil.getIdsWithVer(n));
     }
@@ -388,7 +387,7 @@ export default class UserService {
             createRelationshipRequest: {
                 userId,
                 blocked: isBlocked,
-                groupIndex: RequestUtil.wrapValueIfNotNull(groupIndex)
+                groupIndex
             }
         }).then(() => null);
     }
@@ -401,15 +400,15 @@ export default class UserService {
         return this.createRelationship(userId, true, groupIndex);
     }
 
-    deleteRelationship(relatedUserId: string, deleteGroupIndex?: string, targetGroupIndex?: string): Promise<void> {
+    deleteRelationship(relatedUserId: string, deleteGroupIndex?: number, targetGroupIndex?: number): Promise<void> {
         if (RequestUtil.isFalsy(relatedUserId)) {
             return TurmsBusinessError.notFalsyPromise('relatedUserId');
         }
         return this._turmsClient.driver.send({
             deleteRelationshipRequest: {
                 userId: relatedUserId,
-                groupIndex: RequestUtil.wrapValueIfNotNull(deleteGroupIndex),
-                targetGroupIndex: RequestUtil.wrapValueIfNotNull(targetGroupIndex)
+                groupIndex: deleteGroupIndex,
+                targetGroupIndex
             }
         }).then(() => null);
     }
@@ -424,8 +423,8 @@ export default class UserService {
         return this._turmsClient.driver.send({
             updateRelationshipRequest: {
                 userId: relatedUserId,
-                blocked: RequestUtil.wrapValueIfNotNull(isBlocked),
-                newGroupIndex: RequestUtil.wrapValueIfNotNull(groupIndex)
+                blocked: isBlocked,
+                newGroupIndex: groupIndex
             }
         }).then(() => null);
     }
@@ -462,7 +461,7 @@ export default class UserService {
             updateFriendRequestRequest: {
                 requestId: requestId,
                 responseAction: responseAction,
-                reason: RequestUtil.wrapValueIfNotNull(reason)
+                reason
             }
         }).then(() => null);
     }
@@ -470,8 +469,8 @@ export default class UserService {
     queryFriendRequests(areSentByMe: boolean, lastUpdatedDate?: Date): Promise<ParsedModel.UserFriendRequestsWithVersion | undefined> {
         return this._turmsClient.driver.send({
             queryFriendRequestsRequest: {
-                areSentByMe: areSentByMe,
-                lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
+                areSentByMe,
+                lastUpdatedDate: RequestUtil.getDateTimeStr(lastUpdatedDate)
             }
         }).then(n => NotificationUtil.getAndTransform(n, 'userFriendRequestsWithVersion'));
     }
@@ -494,7 +493,7 @@ export default class UserService {
         return this._turmsClient.driver.send({
             deleteRelationshipGroupRequest: {
                 groupIndex,
-                targetGroupIndex: RequestUtil.wrapValueIfNotNull(targetGroupIndex)
+                targetGroupIndex
             }
         }).then(() => null);
     }
@@ -517,7 +516,7 @@ export default class UserService {
     queryRelationshipGroups(lastUpdatedDate?: Date): Promise<ParsedModel.UserRelationshipGroupsWithVersion | undefined> {
         return this._turmsClient.driver.send({
             queryRelationshipGroupsRequest: {
-                lastUpdatedDate: RequestUtil.wrapTimeIfNotNull(lastUpdatedDate)
+                lastUpdatedDate: RequestUtil.getDateTimeStr(lastUpdatedDate)
             }
         }).then(n => NotificationUtil.getAndTransform(n, 'userRelationshipGroupsWithVersion'));
     }
@@ -532,7 +531,7 @@ export default class UserService {
         return this._turmsClient.driver.send({
             updateRelationshipRequest: {
                 userId: relatedUserId,
-                newGroupIndex: RequestUtil.wrapValueIfNotNull(groupIndex)
+                newGroupIndex: groupIndex
             }
         }).then(() => null);
     }
@@ -554,8 +553,8 @@ export default class UserService {
             updateUserLocationRequest: {
                 latitude,
                 longitude,
-                name: RequestUtil.wrapValueIfNotNull(name),
-                address: RequestUtil.wrapValueIfNotNull(address)
+                name,
+                address
             }
         }).then(() => null);
     }

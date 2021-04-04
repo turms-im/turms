@@ -1,18 +1,16 @@
 import TurmsClient from '../turms-client';
-import {im} from '../model/proto-bundle';
 import RequestUtil from '../util/request-util';
 import {ParsedModel} from '../model/parsed-model';
 import NotificationUtil from '../util/notification-util';
 import MessageAddition from '../model/message/message-addition';
 import TurmsBusinessError from '../model/turms-business-error';
 import BuiltinSystemMessageType from '../model/message/builtin-system-message-type';
-// @ts-ignore
-import {util as ProtoUtil} from 'protobufjs/minimal';
-import File = im.turms.proto.File;
-import AudioFile = im.turms.proto.AudioFile;
-import VideoFile = im.turms.proto.VideoFile;
-import ImageFile = im.turms.proto.ImageFile;
-import Location = im.turms.proto.UserLocation;
+import * as Long from 'long'
+import {UserLocation} from '../model/proto/model/user/user_location';
+import {AudioFile} from '../model/proto/model/file/audio_file';
+import {VideoFile} from '../model/proto/model/file/video_file';
+import {ImageFile} from '../model/proto/model/file/image_file';
+import {File} from '../model/proto/model/file/file';
 
 export default class MessageService {
     /**
@@ -49,7 +47,6 @@ export default class MessageService {
         this._turmsClient.driver
             .addNotificationListener(notification => {
                 if (this._messageListeners.length && notification.relayedRequest) {
-                    // @ts-ignore
                     const request = notification.relayedRequest.createMessageRequest;
                     if (request) {
                         const message = MessageService._createMessageRequest2Message(notification.requesterId, request);
@@ -79,12 +76,12 @@ export default class MessageService {
         }
         return this._turmsClient.driver.send({
             createMessageRequest: {
-                groupId: RequestUtil.wrapValueIfNotNull(isGroupMessage ? targetId : undefined),
-                recipientId: RequestUtil.wrapValueIfNotNull(!isGroupMessage ? targetId : undefined),
-                deliveryDate: '' + deliveryDate.getTime(),
-                text: RequestUtil.wrapValueIfNotNull(text),
-                records: records,
-                burnAfter: RequestUtil.wrapValueIfNotNull(burnAfter)
+                groupId: isGroupMessage ? targetId : undefined,
+                recipientId: !isGroupMessage ? targetId : undefined,
+                deliveryDate: RequestUtil.getDateTimeStr(deliveryDate),
+                text,
+                records: records || [],
+                burnAfter
             }
         }).then(n => NotificationUtil.getFirstVal(n, 'ids', true));
     }
@@ -101,9 +98,10 @@ export default class MessageService {
         }
         return this._turmsClient.driver.send({
             createMessageRequest: {
-                messageId: {value: messageId},
-                groupId: RequestUtil.wrapValueIfNotNull(isGroupMessage ? targetId : undefined),
-                recipientId: RequestUtil.wrapValueIfNotNull(!isGroupMessage ? targetId : undefined),
+                messageId,
+                groupId: isGroupMessage ? targetId : undefined,
+                recipientId: !isGroupMessage ? targetId : undefined,
+                records: []
             }
         }).then(n => NotificationUtil.getFirstVal(n, 'ids', true));
     }
@@ -121,8 +119,8 @@ export default class MessageService {
         return this._turmsClient.driver.send({
             updateMessageRequest: {
                 messageId,
-                text: RequestUtil.wrapValueIfNotNull(text),
-                records
+                text,
+                records: records || []
             }
         }).then(() => null);
     }
@@ -137,13 +135,13 @@ export default class MessageService {
         size = 50): Promise<ParsedModel.Message[]> {
         return this._turmsClient.driver.send({
             queryMessagesRequest: {
-                ids: RequestUtil.wrapValueIfNotNull(ids),
-                areGroupMessages: RequestUtil.wrapValueIfNotNull(areGroupMessages),
-                areSystemMessages: RequestUtil.wrapValueIfNotNull(areSystemMessages),
-                fromId: RequestUtil.wrapValueIfNotNull(fromId),
-                deliveryDateAfter: RequestUtil.wrapTimeIfNotNull(deliveryDateAfter),
-                deliveryDateBefore: RequestUtil.wrapTimeIfNotNull(deliveryDateBefore),
-                size: RequestUtil.wrapValueIfNotNull(size),
+                ids: ids || [],
+                areGroupMessages,
+                areSystemMessages,
+                fromId,
+                deliveryDateAfter: RequestUtil.getDateTimeStr(deliveryDateAfter),
+                deliveryDateBefore: RequestUtil.getDateTimeStr(deliveryDateBefore),
+                size,
                 withTotal: false
             }
         }).then(n => NotificationUtil.getArrAndTransform(n, 'messages.messages'));
@@ -159,13 +157,13 @@ export default class MessageService {
         size = 1): Promise<ParsedModel.MessagesWithTotal[]> {
         return this._turmsClient.driver.send({
             queryMessagesRequest: {
-                ids: RequestUtil.wrapValueIfNotNull(ids),
-                areGroupMessages: RequestUtil.wrapValueIfNotNull(areGroupMessages),
-                areSystemMessages: RequestUtil.wrapValueIfNotNull(areSystemMessages),
-                fromId: RequestUtil.wrapValueIfNotNull(fromId),
-                deliveryDateAfter: RequestUtil.wrapTimeIfNotNull(deliveryDateAfter),
-                deliveryDateBefore: RequestUtil.wrapTimeIfNotNull(deliveryDateBefore),
-                size: RequestUtil.wrapValueIfNotNull(size),
+                ids: ids || [],
+                areGroupMessages,
+                areSystemMessages,
+                fromId,
+                deliveryDateAfter: RequestUtil.getDateTimeStr(deliveryDateAfter),
+                deliveryDateBefore: RequestUtil.getDateTimeStr(deliveryDateBefore),
+                size,
                 withTotal: true
             }
         }).then(n => NotificationUtil.getArrAndTransform(n, 'messagesWithTotalList.messagesWithTotalList'));
@@ -178,7 +176,8 @@ export default class MessageService {
         return this._turmsClient.driver.send({
             updateMessageRequest: {
                 messageId,
-                recallDate: RequestUtil.wrapTimeIfNotNull(recallDate)
+                recallDate: RequestUtil.getDateTimeStr(recallDate),
+                records: []
             }
         }).then(() => null);
     }
@@ -202,11 +201,11 @@ export default class MessageService {
         address?: string
     ): Uint8Array {
         RequestUtil.throwIfAnyFalsy(latitude, longitude);
-        return Location.encode({
+        return UserLocation.encode({
             latitude,
             longitude,
-            address: RequestUtil.wrapValueIfNotNull(address),
-            name: RequestUtil.wrapValueIfNotNull(locationName)
+            address,
+            name: locationName
         }).finish();
     }
 
@@ -215,9 +214,9 @@ export default class MessageService {
         return AudioFile.encode({
             description: {
                 url,
-                duration: RequestUtil.wrapValueIfNotNull(duration),
-                format: RequestUtil.wrapValueIfNotNull(format),
-                size: RequestUtil.wrapValueIfNotNull(size),
+                duration,
+                format,
+                size,
             }
         }).finish();
     }
@@ -225,9 +224,7 @@ export default class MessageService {
     static generateAudioRecordByData(data: ArrayBuffer): Uint8Array {
         RequestUtil.throwIfAnyFalsy(data);
         return AudioFile.encode({
-            data: {
-                value: new Uint8Array(data)
-            }
+            data: new Uint8Array(data)
         }).finish();
     }
 
@@ -236,9 +233,9 @@ export default class MessageService {
         return VideoFile.encode({
             description: {
                 url,
-                duration: RequestUtil.wrapValueIfNotNull(duration),
-                format: RequestUtil.wrapValueIfNotNull(format),
-                size: RequestUtil.wrapValueIfNotNull(size),
+                duration,
+                format,
+                size,
             }
         }).finish();
     }
@@ -246,18 +243,14 @@ export default class MessageService {
     static generateVideoRecordByData(data: ArrayBuffer): Uint8Array {
         RequestUtil.throwIfAnyFalsy(data);
         return VideoFile.encode({
-            data: {
-                value: new Uint8Array(data)
-            }
+            data: new Uint8Array(data)
         }).finish();
     }
 
     public static generateImageRecordByData(data: ArrayBuffer): Uint8Array {
         RequestUtil.throwIfAnyFalsy(data);
         return ImageFile.encode({
-            data: {
-                value: new Uint8Array(data)
-            }
+            data: new Uint8Array(data)
         }).finish();
     }
 
@@ -266,9 +259,9 @@ export default class MessageService {
         return ImageFile.encode({
             description: {
                 url,
-                fileSize: RequestUtil.wrapValueIfNotNull(fileSize),
-                imageSize: RequestUtil.wrapValueIfNotNull(imageSize),
-                original: RequestUtil.wrapValueIfNotNull(original)
+                fileSize,
+                imageSize,
+                original
             }
         }).finish();
     }
@@ -276,9 +269,7 @@ export default class MessageService {
     static generateFileRecordByDate(data: ArrayBuffer): Uint8Array {
         RequestUtil.throwIfAnyFalsy(data);
         return File.encode({
-            data: {
-                value: new Uint8Array(data)
-            }
+            data: new Uint8Array(data)
         }).finish();
     }
 
@@ -287,8 +278,8 @@ export default class MessageService {
         return File.encode({
             description: {
                 url,
-                format: RequestUtil.wrapValueIfNotNull(format),
-                size: RequestUtil.wrapValueIfNotNull(size)
+                format,
+                size
             }
         }).finish();
     }
@@ -297,13 +288,13 @@ export default class MessageService {
         const mentionedUserIds = this._mentionedUserIdsParser
             ? this._mentionedUserIdsParser(message)
             : [];
-        const isMentioned = mentionedUserIds.includes(this._turmsClient.userService.userInfo.userId);
+        const isMentioned = mentionedUserIds.indexOf(this._turmsClient.userService.userInfo.userId) >= 0;
         const systemMessageType = message.isSystemMessage && message.records[0]?.[0];
         const recalledMessageIds = [];
         if (systemMessageType === BuiltinSystemMessageType.RECALL_MESSAGE) {
             const size = message.records.length;
             for (let i = 1; i < size; i++) {
-                const id = ProtoUtil.Long.fromBytes(message.records[i]);
+                const id = Long.fromBytes(message.records[i] as any);
                 recalledMessageIds.push(id);
             }
         }

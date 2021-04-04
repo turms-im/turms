@@ -1,0 +1,53 @@
+/* eslint-disable */
+import Long from "long";
+import _m0 from "protobufjs/minimal";
+
+export const protobufPackage = "im.turms.proto";
+
+export interface UserSession {
+  sessionId: string;
+  serverId: string;
+}
+
+const baseUserSession: object = { sessionId: "", serverId: "" };
+
+export const UserSession = {
+  encode(
+    message: UserSession,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
+    if (message.sessionId !== "") {
+      writer.uint32(10).string(message.sessionId);
+    }
+    if (message.serverId !== "") {
+      writer.uint32(18).string(message.serverId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserSession {
+    const reader = input instanceof Uint8Array ? new _m0.Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseUserSession } as UserSession;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.sessionId = reader.string();
+          break;
+        case 2:
+          message.serverId = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+};
+
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
+}

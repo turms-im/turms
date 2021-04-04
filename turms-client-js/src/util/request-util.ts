@@ -1,12 +1,8 @@
 export default class RequestUtil {
     static ERROR = new Error('Illegal parameters');
 
-    static wrapValueIfNotNull(value: any): any | undefined {
-        return value ? {value} : undefined;
-    }
-
-    static wrapTimeIfNotNull(value: Date): any | undefined {
-        return value ? {value: '' + value.getTime()} : undefined;
+    static getDateTimeStr(value: Date): string | undefined {
+        return value ? '' + value.getTime() : undefined;
     }
 
     public static isFalsy(value: any): boolean {
@@ -19,17 +15,17 @@ export default class RequestUtil {
 
     static throwIfEmpty(value): void {
         if (Object.keys(value).length === 0) {
-            throw this.ERROR;
+            throw RequestUtil.ERROR;
         }
     }
 
     static throwIfAnyFalsy(...values: any[]): void {
         if (this.isFalsy(values)) {
-            throw this.ERROR;
+            throw RequestUtil.ERROR;
         } else {
             for (const value of values) {
                 if (this.isFalsy(value)) {
-                    throw this.ERROR;
+                    throw RequestUtil.ERROR;
                 }
             }
         }
@@ -37,7 +33,7 @@ export default class RequestUtil {
 
     static throwIfAllFalsy(...values: any[]): void {
         if (RequestUtil.areAllFalsy(values)) {
-            throw this.ERROR;
+            throw RequestUtil.ERROR;
         }
     }
 

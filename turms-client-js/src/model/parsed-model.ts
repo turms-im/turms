@@ -1,11 +1,10 @@
-import {im} from './proto-bundle';
+import {RequestStatus} from './proto/constant/request_status';
+import {ProfileAccessStrategy} from './proto/constant/profile_access_strategy';
+import {UserStatus} from './proto/constant/user_status';
+import {DeviceType} from './proto/constant/device_type';
+import {GroupMemberRole} from './proto/constant/group_member_role';
 
 export declare namespace ParsedModel {
-    import ProfileAccessStrategy = im.turms.proto.ProfileAccessStrategy;
-    import RequestStatus = im.turms.proto.RequestStatus;
-    import GroupMemberRole = im.turms.proto.GroupMemberRole;
-    import UserStatus = im.turms.proto.UserStatus;
-    import DeviceType = im.turms.proto.DeviceType;
 
     interface Data {
         data: Uint8Array;

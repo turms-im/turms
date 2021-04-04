@@ -39,6 +39,7 @@ turms-gateway/target/
 
 turms-admin/cypress/screenshots/
 turms-admin/cypress/videos/
+turms-admin/dist/
 turms-admin/node_modules/
 
 turms-apm/target/
@@ -48,6 +49,7 @@ turms-client-js/coverage/
 turms-client-js/dist/
 turms-client-js/node_modules/
 turms-client-js/protoc/
+turms-client-js/stats/
 
 turms-client-kotlin/target/
 

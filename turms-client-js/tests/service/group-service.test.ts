@@ -1,8 +1,7 @@
 import Constants from '../helper/constants';
 import TurmsClient from '../../src/turms-client';
 import TurmsStatusCode from '../../src/model/turms-status-code'
-import {im} from '../../src/model/proto-bundle';
-import GroupMemberRole = im.turms.proto.GroupMemberRole;
+import {GroupMemberRole} from '../../src/model/proto/constant/group_member_role';
 
 const GROUP_MEMBER_ID = '3';
 const GROUP_INVITATION_INVITEE = '4';
@@ -31,19 +30,19 @@ describe('Constructor', () => {
 
 describe('Create', () => {
     it('createGroup_shouldReturnGroupId', async () => {
-        groupId = await turmsClient.groupService.createGroup("name", "intro", "announcement", 10)
+        groupId = await turmsClient.groupService.createGroup('name', 'intro', 'announcement', 10)
         expect(groupId).toBeTruthy();
     });
     it('addGroupJoinQuestion_shouldReturnQuestionId', async () => {
-        groupJoinQuestionId = await turmsClient.groupService.addGroupJoinQuestion(groupId, "question", ["answer1", "answer2"], 10);
+        groupJoinQuestionId = await turmsClient.groupService.addGroupJoinQuestion(groupId, 'question', ['answer1', 'answer2'], 10);
         expect(groupJoinQuestionId).toBeTruthy();
     });
     it('createJoinRequest_shouldReturnJoinRequestId', async () => {
-        groupJoinRequestId = await turmsClient.groupService.createJoinRequest(groupId, "content");
+        groupJoinRequestId = await turmsClient.groupService.createJoinRequest(groupId, 'content');
         expect(groupJoinRequestId).toBeTruthy();
     });
     it('addGroupMember_shouldSucceed', async () => {
-        const result = await turmsClient.groupService.addGroupMember(groupId, GROUP_MEMBER_ID, "name", GroupMemberRole.MEMBER);
+        const result = await turmsClient.groupService.addGroupMember(groupId, GROUP_MEMBER_ID, 'name', GroupMemberRole.MEMBER);
         expect(result).toBeFalsy();
     });
     it('blockUser_shouldSucceed', async () => {
@@ -51,14 +50,14 @@ describe('Create', () => {
         expect(result).toBeFalsy();
     });
     it('createInvitation_shouldReturnInvitationId', async () => {
-        groupInvitationId = await turmsClient.groupService.createInvitation(groupId, GROUP_INVITATION_INVITEE, "content");
+        groupInvitationId = await turmsClient.groupService.createInvitation(groupId, GROUP_INVITATION_INVITEE, 'content');
         expect(groupInvitationId).toBeTruthy();
     });
 });
 
 describe('Update', () => {
     it('updateGroup_shouldSucceed', async () => {
-        const result = await turmsClient.groupService.updateGroup(groupId, "name", "intro", "announcement", 10);
+        const result = await turmsClient.groupService.updateGroup(groupId, 'name', 'intro', 'announcement', 10);
         expect(result).toBeFalsy();
     });
     it('muteGroup_shouldSucceed', async () => {
@@ -70,11 +69,11 @@ describe('Update', () => {
         expect(result).toBeFalsy();
     });
     it('updateGroupJoinQuestion_shouldSucceed', async () => {
-        const result = await turmsClient.groupService.updateGroupJoinQuestion(groupId, "new-question", ["answer"]);
+        const result = await turmsClient.groupService.updateGroupJoinQuestion(groupId, 'new-question', ['answer']);
         expect(result).toBeFalsy();
     });
     it('updateGroupMemberInfo_shouldSucceed', async () => {
-        const result = await turmsClient.groupService.updateGroupMemberInfo(groupId, GROUP_MEMBER_ID, "myname");
+        const result = await turmsClient.groupService.updateGroupMemberInfo(groupId, GROUP_MEMBER_ID, 'myname');
         expect(result).toBeFalsy();
     });
     it('muteGroupMember_shouldSucceed', async () => {
@@ -131,7 +130,7 @@ describe('Query', () => {
     });
     it('answerGroupQuestions_shouldReturnAnswerResult', async () => {
         const idsAndAnswer = {};
-        idsAndAnswer[groupJoinQuestionId] = "answer";
+        idsAndAnswer[groupJoinQuestionId] = 'answer';
         try {
             const answerResult = await turmsClient.groupService.answerGroupQuestions(idsAndAnswer);
             const isCorrect = answerResult.questionIds.indexOf(groupJoinQuestionId) >= 0;

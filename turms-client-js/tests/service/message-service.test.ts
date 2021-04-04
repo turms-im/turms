@@ -1,6 +1,6 @@
-import TurmsClient from "../../src/turms-client";
-import Constants from "../helper/constants";
-import MessageService from "../../src/service/message-service";
+import TurmsClient from '../../src/turms-client';
+import Constants from '../helper/constants';
+import MessageService from '../../src/service/message-service';
 
 let senderClient: TurmsClient;
 let recipientClient: TurmsClient;
@@ -16,9 +16,9 @@ beforeAll(async () => {
     senderClient = new TurmsClient(Constants.WS_URL);
     recipientClient = new TurmsClient(Constants.WS_URL);
     groupMemberClient = new TurmsClient(Constants.WS_URL);
-    await senderClient.userService.login(SENDER_ID, "123");
-    await recipientClient.userService.login(RECIPIENT_ID, "123");
-    await groupMemberClient.userService.login(GROUP_MEMBER_ID, "123");
+    await senderClient.userService.login(SENDER_ID, '123');
+    await recipientClient.userService.login(RECIPIENT_ID, '123');
+    await groupMemberClient.userService.login(GROUP_MEMBER_ID, '123');
 });
 
 afterAll(async () => {
@@ -37,11 +37,11 @@ describe('Constructor', () => {
 
 describe('Create', () => {
     it('sendPrivateMessage_shouldReturnMessageId', async () => {
-        privateMessageId = await senderClient.messageService.sendMessage(false, RECIPIENT_ID, new Date(), "hello");
+        privateMessageId = await senderClient.messageService.sendMessage(false, RECIPIENT_ID, new Date(), 'hello');
         expect(privateMessageId).toBeTruthy();
     });
     it('sendGroupMessage_shouldReturnMessageId', async () => {
-        groupMessageId = await senderClient.messageService.sendMessage(true, TARGET_GROUP_ID, new Date(), "hello");
+        groupMessageId = await senderClient.messageService.sendMessage(true, TARGET_GROUP_ID, new Date(), 'hello');
         expect(privateMessageId).toBeTruthy();
     });
     it('forwardPrivateMessage_shouldReturnForwardedMessageId', async () => {
@@ -60,7 +60,7 @@ describe('Update', () => {
         expect(result).toBeFalsy();
     });
     it('updateSentMessage_shouldSucceed', async () => {
-        const result = await senderClient.messageService.updateSentMessage(privateMessageId, "I have modified the message");
+        const result = await senderClient.messageService.updateSentMessage(privateMessageId, 'I have modified the message');
         expect(result).toBeFalsy();
     });
 });
@@ -78,11 +78,11 @@ describe('Query', () => {
 
 describe('Util', () => {
     it('generateLocationRecord', () => {
-        const data = MessageService.generateLocationRecord(1, 1, "name", "address");
+        const data = MessageService.generateLocationRecord(1, 1, 'name', 'address');
         expect(data).toBeTruthy();
     });
     it('generateAudioRecordByDescription', () => {
-        const data = MessageService.generateAudioRecordByDescription("https://abc.com");
+        const data = MessageService.generateAudioRecordByDescription('https://abc.com');
         expect(data).toBeTruthy();
     });
     it('generateAudioRecordByData', () => {
@@ -91,7 +91,7 @@ describe('Util', () => {
         expect(data).toBeTruthy();
     });
     it('generateVideoRecordByDescription', () => {
-        const data = MessageService.generateVideoRecordByDescription("https://abc.com");
+        const data = MessageService.generateVideoRecordByDescription('https://abc.com');
         expect(data).toBeTruthy();
     });
     it('generateVideoRecordByData', () => {
@@ -110,11 +110,11 @@ describe('Util', () => {
         expect(data).toBeTruthy();
     });
     it('generateImageRecordByDescription', () => {
-        const data = MessageService.generateImageRecordByDescription("https://abc.com");
+        const data = MessageService.generateImageRecordByDescription('https://abc.com');
         expect(data).toBeTruthy();
     });
     it('generateFileRecordByDescription', () => {
-        const data = MessageService.generateFileRecordByDescription("https://abc.com");
+        const data = MessageService.generateFileRecordByDescription('https://abc.com');
         expect(data).toBeTruthy();
     });
 });

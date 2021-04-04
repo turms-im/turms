@@ -1,5 +1,5 @@
-import TurmsClient from "../../src/turms-client";
-import Constants from "../helper/constants";
+import TurmsClient from '../../src/turms-client';
+import Constants from '../helper/constants';
 
 let turmsClient: TurmsClient;
 const USER_ID = '1';
@@ -8,7 +8,7 @@ const GROUP_ID = '1';
 
 beforeAll(async () => {
     turmsClient = new TurmsClient(Constants.WS_URL);
-    await turmsClient.userService.login(USER_ID, "123");
+    await turmsClient.userService.login(USER_ID, '123');
 });
 
 afterAll(async () => {

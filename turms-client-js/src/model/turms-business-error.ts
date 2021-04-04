@@ -1,6 +1,5 @@
-import {im} from './proto-bundle';
 import TurmsStatusCode from './turms-status-code';
-import TurmsNotification = im.turms.proto.TurmsNotification;
+import {TurmsNotification} from './proto/notification/turms_notification';
 
 export default class TurmsBusinessError extends Error {
     private readonly _isTurmsBusinessError = true;
@@ -30,7 +29,7 @@ export default class TurmsBusinessError extends Error {
     }
 
     static fromNotification(notification: TurmsNotification): TurmsBusinessError {
-        return new TurmsBusinessError(notification.code.value, notification.reason?.value);
+        return new TurmsBusinessError(notification.code, notification.reason);
     }
 
     static from(code: number, reason?: string): TurmsBusinessError {
