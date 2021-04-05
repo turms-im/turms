@@ -42,18 +42,18 @@ public class CloseReason {
         return new CloseReason(closeStatus, null, null);
     }
 
-    public static CloseReason get(TurmsStatusCode statusCode, String reason) {
-        return new CloseReason(null, statusCode, reason);
-    }
-
     public static CloseReason get(Throwable throwable) {
         ThrowableInfo info = ThrowableInfo.get(throwable);
-        return get(info.getCode(), info.getReason());
+        TurmsStatusCode code = info.getCode();
+        SessionCloseStatus closeStatus = TurmsStatusCode.isServerError(code.getBusinessCode())
+                ? SessionCloseStatus.SERVER_ERROR
+                : SessionCloseStatus.UNKNOWN_ERROR;
+        return new CloseReason(closeStatus, code, info.getReason());
     }
 
     public boolean isServerError() {
         return (businessStatusCode != null && businessStatusCode.isServerError())
-                || (closeStatus != null && closeStatus.isServerError());
+                || closeStatus.isServerError();
     }
 
 }
