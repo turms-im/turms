@@ -17,7 +17,6 @@
 
 package im.turms.turms.workflow.access.servicerequest.dispatcher;
 
-import com.google.protobuf.Int64Value;
 import com.google.protobuf.InvalidProtocolBufferException;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.notification.TurmsNotification;
@@ -135,6 +134,16 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         return type == CREATE_SESSION_REQUEST || type == DELETE_SESSION_REQUEST;
     }
 
+    @Override
+    public Mono<ServiceResponse> dispatch(ServiceRequest serviceRequest) {
+        try {
+            return dispatch0(serviceRequest);
+        } catch (Exception e) {
+            log.error("Failed to handle the {} request: {}", serviceRequest.getType(), serviceRequest.getRequestId());
+            return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.SERVER_INTERNAL_ERROR, e.getMessage()));
+        }
+    }
+
     /**
      * @implNote 1. Flow Control:
      * turms-gateway is responsible for the flow control of client requests
@@ -144,8 +153,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
      * 2. The method should never return MonoError and it should be considered as a bug if it occurs
      * because the method itself should wrap all kinds of Throwable as a ServiceResponse instance.
      */
-    @Override
-    public Mono<ServiceResponse> dispatch(ServiceRequest serviceRequest) {
+    public Mono<ServiceResponse> dispatch0(ServiceRequest serviceRequest) {
         // 1. Validate ServiceResponse
         Long traceId = serviceRequest.getTraceId();
         Long userId = serviceRequest.getUserId();
