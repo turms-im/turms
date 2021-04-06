@@ -43,9 +43,9 @@ public final class Message {
 
     /**
      * Note that because it's not common for most instant messaging scenarios to
-     * send query requests that depends on ID only, and ID is only used to query
-     * a message when a user forwards (copies) it to another recipient/group currently,
-     * we don't use ID as a part of the shard key.
+     * query messages by ID only. Currently, the only scenario that needs to query
+     * a message by ID is that a user forwards (copies) a message to another recipient/group.
+     * Because it's not frequently used feature, we don't use ID as a part of the shard key.
      */
     @Id
     private final Long id;

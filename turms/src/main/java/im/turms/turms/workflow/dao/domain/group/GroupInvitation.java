@@ -35,7 +35,11 @@ import java.util.Date;
 
 /**
  * @author James Chen
- * @implNote shard by inviteeId and createDate because it's common for users to q
+ * @implNote Sharded by inviteeId and createDate because it's common for users to
+ * query whether they have received any group invitation at application startup.
+ * <p>
+ * Note that the query for the invitations of a group sent by a group admin
+ * isn't targeted query but scatter query with indexes supported.
  */
 @Data
 @AllArgsConstructor

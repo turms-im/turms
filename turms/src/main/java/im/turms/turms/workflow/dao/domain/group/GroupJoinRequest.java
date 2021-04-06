@@ -35,8 +35,14 @@ import java.util.Date;
 
 /**
  * @author James Chen
- * @implNote Don't use the "groupId" and "requesterId" as the key of the document because
+ * @implNote Don't use the "groupId" and "requesterId" as the key because
  * a requester can send multiple requests (not matter it's pending, handled or etc) to the same group.
+ *
+ * Sharded by requesterId and createDate because it's common for users to
+ * query the status of member requests sent by them at application startup.
+ * <p>
+ * Note that the query for the member requests of a group sent by a group admin
+ * isn't targeted query but scatter query with indexes supported.
  */
 @Data
 @AllArgsConstructor
