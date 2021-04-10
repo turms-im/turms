@@ -21,8 +21,6 @@ turms:
         key-store-password: imturms
         key-alias: turms
   gateway:
-    session:
-      enable-authentication: false
     websocket:
       enabled: true
       port: 10510
@@ -52,7 +50,7 @@ turms:
 # Spring configuration
 spring:
   profiles:
-    active: dev
+    active: prod
   autoconfigure:
     exclude:
       - org.springframework.boot.actuate.autoconfigure.metrics.MetricsEndpointAutoConfiguration

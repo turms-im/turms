@@ -69,6 +69,6 @@ public class SessionProperties {
     @Description("Whether to authenticate users when logging in." +
             "Note that user ID is always needed even if enableAuthentication is false; " +
             "If false, turms-gateway won't connect to the MongoDB server for user records")
-    private boolean enableAuthentication = true;
+    private boolean enableAuthentication;
 
 }

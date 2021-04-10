@@ -1,6 +1,9 @@
-# HTTP(S) configuration
+# HTTP(S) configuration for admin APIs + metrics APIs + OpenAPI
 server:
   address: 0.0.0.0
+  error:
+    whitelabel:
+      enabled: false
   port: 8510
   ssl:
     enabled: false # Enable SSL if needed. Make sure to mutate HTTP requests to HTTPS requests, or Netty will throw NotSslRecordException
@@ -12,17 +15,17 @@ spring:
   application:
     name: turms
   jackson:
+    default-property-inclusion: non_null
     deserialization:
       fail-on-unknown-properties: false
       accept-single-value-as-array: true
     serialization:
       fail-on-empty-beans: false
-    default-property-inclusion: non_null
     time-zone: UTC
     mapper:
       propagate-transient-marker: true
   profiles:
-    active: dev
+    active: prod
     group:
       dev:
         - dev
@@ -33,14 +36,6 @@ spring:
       prod:
         - prod
         - prod-latest
-  boot:
-    admin:
-      client:
-        auto-deregistration: true
-        url: http://localhost:9514
-        username: turms
-        password: turms
-        register-once: false
   webflux:
     format:
       date-time: yyyy-MM-dd'T'HH:mm:ssX
@@ -91,6 +86,3 @@ turms:
         key-store-type: PKCS12
         key-store-password: imturms
         key-alias: turms
-#turms-plugin:
-#  mock:
-#    enabled: true
