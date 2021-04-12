@@ -1,7 +1,7 @@
 # Memory
 
--Xms1g
--Xmx1g
+-Xms2g
+-Xmx2g
 -XX:-RestrictContended
 -XX:+UseStringDeduplication
 # Remove this option once we supports primitive objects
@@ -14,6 +14,9 @@
 -XX:+UseG1GC
 
 # Diagnostics
+
+-XshowSettings:vm
+-XX:+PrintFlagsFinal
 
 -XX:+FlightRecorder
 -XX:StartFlightRecording=dumponexit=true,filename=./turms-gateway.jfr,maxsize=128m,settings=profile,delay=60s

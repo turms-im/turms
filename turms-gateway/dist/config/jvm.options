@@ -1,7 +1,11 @@
+# References:
+# hotspot/share/gc/shared/gc_globals.hpp
+# hotspot/os/linux/globals_linux.hpp
+
 # Memory
 
--Xms1g
--Xmx1g
+-XX:MaxRAMPercentage=75
+-XX:InitialRAMPercentage=75
 -XX:-RestrictContended
 -XX:+UseStringDeduplication
 # Remove this option once we supports primitive objects
@@ -16,7 +20,8 @@
 
 # Diagnostics
 
-# -XX:+PrintFlagsFinal
+-XshowSettings:vm
+-XX:+PrintFlagsFinal
 
 -XX:+FlightRecorder
 -XX:StartFlightRecording=dumponexit=true,filename=./turms-gateway.jfr,maxsize=128m,delay=60s

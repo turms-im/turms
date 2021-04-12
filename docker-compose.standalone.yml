@@ -84,6 +84,7 @@ services:
 
         -Dturms.service.redis.session[0].url=redis://redis:6379
         -Dturms.service.redis.location[0].url=redis://redis:6379
+    mem_limit: 2g
     healthcheck:
       test: "curl --fail --silent --user turms:turms turms:8510/actuator/health | grep UP || exit 1"
       interval: 10s
@@ -129,6 +130,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    mem_limit: 2g
     ports:
       - "7610:7610" # RPC
       - "9510:9510" # Metrics APIs

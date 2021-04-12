@@ -1,7 +1,7 @@
 # Memory
 
--Xms1g
--Xmx1g
+-Xms2g
+-Xmx2g
 -XX:-RestrictContended
 
 # GC
