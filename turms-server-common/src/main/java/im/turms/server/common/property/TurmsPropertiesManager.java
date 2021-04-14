@@ -18,7 +18,7 @@
 package im.turms.server.common.property;
 
 import im.turms.server.common.cluster.node.Node;
-import im.turms.server.common.context.ApplicationContext;
+import im.turms.server.common.context.TurmsApplicationContext;
 import im.turms.server.common.util.PropertiesUtil;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
@@ -55,7 +55,7 @@ public class TurmsPropertiesManager {
     /**
      * @param node is lazy because: Node -> TurmsPropertiesManager -> Node
      */
-    public TurmsPropertiesManager(@Lazy Node node, TurmsProperties localTurmsProperties, ApplicationContext context) {
+    public TurmsPropertiesManager(@Lazy Node node, TurmsProperties localTurmsProperties, TurmsApplicationContext context) {
         this.node = node;
         this.localTurmsProperties = localTurmsProperties;
         // Get latestConfigFilePath according to the active profiles

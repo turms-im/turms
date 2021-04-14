@@ -25,6 +25,7 @@ import im.turms.server.common.cluster.service.idgen.IdService;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.cluster.service.rpc.RpcService;
 import im.turms.server.common.cluster.service.serialization.SerializationService;
+import im.turms.server.common.context.TurmsApplicationContext;
 import im.turms.server.common.manager.address.BaseServiceAddressManager;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
@@ -42,7 +43,6 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.boot.info.BuildProperties;
 import org.springframework.boot.web.server.Ssl;
 import org.springframework.context.ApplicationContext;
 import reactor.netty.ChannelBindException;
@@ -96,8 +96,8 @@ public class Node {
      */
     public Node(
             ApplicationContext context,
-            BuildProperties buildProperties,
             NodeType nodeType,
+            TurmsApplicationContext turmsContext,
             TurmsPropertiesManager turmsPropertiesManager,
             BaseServiceAddressManager serviceAddressManager) {
         // Prepare node information
@@ -112,7 +112,7 @@ public class Node {
 
         NodeVersion nodeVersion;
         try {
-            String version = buildProperties.getVersion();
+            String version = turmsContext.getVersion();
             nodeVersion = NodeVersion.parse(version);
             log.info("The local node version is {}", version);
         } catch (Exception e) {

@@ -17,7 +17,7 @@
 
 package im.turms.turms.openapi;
 
-import im.turms.server.common.context.ApplicationContext;
+import im.turms.server.common.context.TurmsApplicationContext;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
@@ -39,7 +39,7 @@ public class OpenApiConfig {
     private static final String PROJECT_NAME = "Turms";
     private final String projectVersion;
 
-    public OpenApiConfig(ApplicationContext context) {
+    public OpenApiConfig(TurmsApplicationContext context) {
         projectVersion = context.getVersion();
     }
 

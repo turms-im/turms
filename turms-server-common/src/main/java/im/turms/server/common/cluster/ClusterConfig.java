@@ -19,10 +19,10 @@ package im.turms.server.common.cluster;
 
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.node.NodeType;
+import im.turms.server.common.context.TurmsApplicationContext;
 import im.turms.server.common.manager.address.BaseServiceAddressManager;
 import im.turms.server.common.mongo.IMongoDataGenerator;
 import im.turms.server.common.property.TurmsPropertiesManager;
-import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,11 +42,11 @@ public class ClusterConfig {
     @Bean
     public Node node(
             ApplicationContext context,
-            BuildProperties buildProperties,
             NodeType nodeType,
+            TurmsApplicationContext turmsContext,
             TurmsPropertiesManager turmsPropertiesManager,
             BaseServiceAddressManager serviceAddressManager) {
-        this.node = new Node(context, buildProperties, nodeType, turmsPropertiesManager, serviceAddressManager);
+        this.node = new Node(context, nodeType, turmsContext, turmsPropertiesManager, serviceAddressManager);
         node.start();
         return node;
     }

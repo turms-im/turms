@@ -27,7 +27,7 @@ import im.turms.common.constant.GroupMemberRole;
 import im.turms.common.constant.GroupUpdateStrategy;
 import im.turms.common.constant.ProfileAccessStrategy;
 import im.turms.common.constant.RequestStatus;
-import im.turms.server.common.context.ApplicationContext;
+import im.turms.server.common.context.TurmsApplicationContext;
 import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.manager.PasswordManager;
 import im.turms.server.common.mongo.IMongoDataGenerator;
@@ -106,7 +106,7 @@ public class MongoDataGenerator implements IMongoDataGenerator {
     private final List<TurmsMongoClient> clients;
 
     private final PasswordManager passwordManager;
-    private final ApplicationContext context;
+    private final TurmsApplicationContext context;
     private final boolean clearAllCollectionsBeforeMocking;
 
     private long currentId = 1L;
@@ -118,8 +118,8 @@ public class MongoDataGenerator implements IMongoDataGenerator {
             TurmsMongoClient conversationMongoClient,
             TurmsMongoClient messageMongoClient,
             PasswordManager passwordManager,
-            TurmsPropertiesManager turmsPropertiesManager,
-            ApplicationContext context) {
+            TurmsApplicationContext context,
+            TurmsPropertiesManager turmsPropertiesManager) {
         this.adminMongoClient = adminMongoClient;
         this.userMongoClient = userMongoClient;
         this.groupMongoClient = groupMongoClient;

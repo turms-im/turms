@@ -18,7 +18,9 @@
 package im.turms.turms.workflow.access.http.dto.response;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import im.turms.server.common.constant.TurmsStatusCode;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
 
@@ -28,6 +30,7 @@ import java.util.Date;
 /**
  * @author James Chen
  */
+@AllArgsConstructor(onConstructor = @__(@JsonCreator))
 @Data
 @FieldNameConstants
 public class ResponseDTO<T> {

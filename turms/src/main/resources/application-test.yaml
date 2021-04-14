@@ -1,7 +1,31 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+logging:
+  level:
+    im:
+      turms: DEBUG
+
 ############################### Turms ###############################
 
 turms:
   service:
-    activity-logging:
-      included-categories:
-        - name: ALL
+    client-api:
+      logging:
+        included-request-categories:
+          - category: all
+        included-response-categories:
+          - category: all
+        included-notification-categories:
+          - category: all
+    message:
+      check-if-target-active-and-not-deleted: false
+    mock:
+      enabled: true
+      clear-all-collections-before-mocking: true
+turms-plugin:
+  minio:
+    retry:
+      enabled: false

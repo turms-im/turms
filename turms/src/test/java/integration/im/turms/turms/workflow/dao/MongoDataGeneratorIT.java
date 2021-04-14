@@ -1,18 +1,28 @@
+/*
+ * Copyright (C) 2019 The Turms Project
+ * https://github.com/turms-im/turms
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package integration.im.turms.turms.workflow.dao;
 
 import com.google.common.base.CaseFormat;
-import im.turms.server.common.context.ApplicationContext;
+import helper.SpringAwareIntegrationTest;
 import im.turms.server.common.dao.domain.User;
-import im.turms.server.common.manager.PasswordManager;
 import im.turms.server.common.mongo.TurmsMongoClient;
-import im.turms.server.common.property.TurmsProperties;
-import im.turms.server.common.property.TurmsPropertiesManager;
-import im.turms.server.common.property.env.service.ServiceProperties;
-import im.turms.server.common.property.env.service.env.MockProperties;
 import im.turms.server.common.property.env.service.env.database.TurmsMongoProperties;
-import im.turms.server.common.testing.BaseIntegrationTest;
 import im.turms.server.common.util.CollectorUtil;
-import im.turms.turms.workflow.dao.MongoDataGenerator;
 import im.turms.turms.workflow.dao.domain.admin.Admin;
 import im.turms.turms.workflow.dao.domain.admin.AdminRole;
 import im.turms.turms.workflow.dao.domain.conversation.GroupConversation;
@@ -41,14 +51,11 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * @author James Chen
  */
-class MongoDataGeneratorIT extends BaseIntegrationTest {
+class MongoDataGeneratorIT extends SpringAwareIntegrationTest {
 
     static final TurmsMongoClient MONGO_CLIENT;
     static final List<Class<?>> MODEL_CLASSES = List.of(
@@ -82,33 +89,6 @@ class MongoDataGeneratorIT extends BaseIntegrationTest {
         TurmsMongoProperties mongoProperties = new TurmsMongoProperties(ENV.getMongoUri("turms-test"));
         MONGO_CLIENT = TurmsMongoClient.of(mongoProperties);
         MONGO_CLIENT.registerEntitiesByClasses(MODEL_CLASSES);
-
-        // Mock
-        PasswordManager passwordManager = mock(PasswordManager.class);
-        when(passwordManager.encodeAdminPassword(anyString())).thenReturn("123");
-        when(passwordManager.encodeUserPassword(anyString())).thenReturn("123");
-
-        TurmsPropertiesManager propertiesManager = mock(TurmsPropertiesManager.class);
-        when(propertiesManager.getLocalProperties()).thenReturn(new TurmsProperties().toBuilder()
-                .service(new ServiceProperties().toBuilder()
-                        .mock(new MockProperties().toBuilder()
-                                .enabled(true)
-                                .build())
-                        .build())
-                .build());
-
-        ApplicationContext context = mock(ApplicationContext.class);
-        when(context.isProduction()).thenReturn(false);
-
-        // init and populate collections
-        new MongoDataGenerator(MONGO_CLIENT,
-                MONGO_CLIENT,
-                MONGO_CLIENT,
-                MONGO_CLIENT,
-                MONGO_CLIENT,
-                passwordManager,
-                propertiesManager,
-                context);
     }
 
     @Test

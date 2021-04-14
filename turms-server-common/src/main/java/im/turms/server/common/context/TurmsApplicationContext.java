@@ -34,7 +34,7 @@ import java.util.List;
 @Component
 @Getter
 @Log4j2
-public class ApplicationContext {
+public class TurmsApplicationContext {
 
     private static final String BUILD_INFO_PROPS_PATH = "classpath:META-INF/build-info.properties";
     private static final String DEFAULT_VERSION = "0.0.0";
@@ -43,8 +43,8 @@ public class ApplicationContext {
     private final String activeProfile;
     private final String version;
 
-    public ApplicationContext(Environment environment,
-                              @Autowired(required = false) BuildProperties buildProperties) {
+    public TurmsApplicationContext(Environment environment,
+                                   @Autowired(required = false) BuildProperties buildProperties) {
         // Prefer isProduction to be true to avoid getting trouble in production environment
         List<String> nonProdEnvs = List.of(
                 "dev", "qa", "stg", "uat",
@@ -76,7 +76,7 @@ public class ApplicationContext {
         } else {
             if (buildProperties == null) {
                 // We allow build-info.properties not exist in non-production
-                // environments better developing experience
+                // environments for a better development experience
                 log.warn("Cannot find " + BUILD_INFO_PROPS_PATH +
                         ", fall back to the default version " + DEFAULT_VERSION +
                         " in non-production environments. " +
