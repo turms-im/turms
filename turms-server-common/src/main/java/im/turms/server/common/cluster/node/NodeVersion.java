@@ -93,46 +93,42 @@ public class NodeVersion implements Comparable<NodeVersion> {
 
     public static NodeVersion parse(String version) {
         Matcher matcher = VERSION_PATTERN.matcher(version);
-        if (matcher.matches()) {
-            int groupCount = matcher.groupCount();
-            if (groupCount < 3) {
-                throw new IllegalArgumentException(WRONG_VERSION_FORMAT_ERROR_MESSAGE);
-            }
-            byte major = 0;
-            byte minor = 0;
-            byte patch = 0;
-            byte qualifier = 0;
-            for (int i = 0; i < groupCount; i++) {
-                String token = matcher.group(i + 1);
-                switch (i) {
-                    case 0:
-                        major = Byte.parseByte(token);
-                        break;
-                    case 1:
-                        minor = Byte.parseByte(token);
-                        break;
-                    case 2:
-                        patch = Byte.parseByte(token);
-                        break;
-                    case 3:
-                        for (Qualifier qualifierValue : Qualifier.values()) {
-                            if (token.endsWith(qualifierValue.name())) {
-                                qualifier = qualifierValue.getId();
-                                break;
-                            }
-                        }
-                        if (qualifier == 0) {
-                            throw new IllegalArgumentException("An unknown qualifier: " + token);
-                        }
-                        break;
-                    default:
-                        throw new IllegalArgumentException(WRONG_VERSION_FORMAT_ERROR_MESSAGE);
-                }
-            }
-            return new NodeVersion(major, minor, patch, qualifier);
-        } else {
+        if (!matcher.matches()) {
             throw new IllegalArgumentException(WRONG_VERSION_FORMAT_ERROR_MESSAGE);
         }
+        byte major = -1;
+        byte minor = -1;
+        byte patch = -1;
+        byte qualifier = Qualifier.RELEASE.getId();
+        int groupCount = matcher.groupCount();
+        for (int i = 0; i < groupCount; i++) {
+            String token = matcher.group(i + 1);
+            if (token == null) {
+                break;
+            }
+            switch (i) {
+                case 0:
+                    major = Byte.parseByte(token);
+                    break;
+                case 1:
+                    minor = Byte.parseByte(token);
+                    break;
+                case 2:
+                    patch = Byte.parseByte(token);
+                    break;
+                case 3:
+                    for (Qualifier qualifierValue : Qualifier.values()) {
+                        if (token.endsWith(qualifierValue.name())) {
+                            qualifier = qualifierValue.getId();
+                            break;
+                        }
+                    }
+                    break;
+                default:
+                    throw new IllegalArgumentException(WRONG_VERSION_FORMAT_ERROR_MESSAGE);
+            }
+        }
+        return new NodeVersion(major, minor, patch, qualifier);
     }
 
     @Getter
