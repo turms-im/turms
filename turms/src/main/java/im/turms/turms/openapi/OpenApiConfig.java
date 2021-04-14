@@ -17,11 +17,11 @@
 
 package im.turms.turms.openapi;
 
+import im.turms.server.common.context.ApplicationContext;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springdoc.core.customizers.OpenApiCustomiser;
-import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -39,8 +39,8 @@ public class OpenApiConfig {
     private static final String PROJECT_NAME = "Turms";
     private final String projectVersion;
 
-    public OpenApiConfig(BuildProperties properties) {
-        projectVersion = properties.getVersion();
+    public OpenApiConfig(ApplicationContext context) {
+        projectVersion = context.getVersion();
     }
 
     @Bean

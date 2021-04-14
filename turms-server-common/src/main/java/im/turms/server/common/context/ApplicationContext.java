@@ -19,6 +19,8 @@ package im.turms.server.common.context;
 
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Hooks;
@@ -34,10 +36,15 @@ import java.util.List;
 @Log4j2
 public class ApplicationContext {
 
+    private static final String BUILD_INFO_PROPS_PATH = "classpath:META-INF/build-info.properties";
+    private static final String DEFAULT_VERSION = "0.0.0";
+
     private final boolean isProduction;
     private final String activeProfile;
+    private final String version;
 
-    public ApplicationContext(Environment environment) {
+    public ApplicationContext(Environment environment,
+                              @Autowired(required = false) BuildProperties buildProperties) {
         // Prefer isProduction to be true to avoid getting trouble in production environment
         List<String> nonProdEnvs = List.of(
                 "dev", "qa", "stg", "uat",
@@ -61,7 +68,28 @@ public class ApplicationContext {
         this.activeProfile = activeProfile;
         this.isProduction = isProduction;
 
-        log.info("Running in a {} environment", isProduction ? "production" : "non-production");
+        if (isProduction) {
+            if (buildProperties == null) {
+                throw new IllegalStateException(BUILD_INFO_PROPS_PATH + " must exist in production");
+            }
+            version = buildProperties.getVersion();
+        } else {
+            if (buildProperties == null) {
+                // We allow build-info.properties not exist in non-production
+                // environments better developing experience
+                log.warn("Cannot find " + BUILD_INFO_PROPS_PATH +
+                        ", fall back to the default version " + DEFAULT_VERSION +
+                        " in non-production environments. " +
+                        " Fix it by running \"mvn compile\"");
+                version = DEFAULT_VERSION;
+            } else {
+                version = buildProperties.getVersion();
+            }
+        }
+
+        log.info("The local node with version {} is running in a {} environment",
+                version,
+                isProduction ? "production" : "non-production");
 
         setupErrorHandlerContext();
     }
