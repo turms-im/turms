@@ -38,6 +38,7 @@ spring:
         - prod-latest
   webflux:
     format:
+      date: yyyy-MM-dd'T'HH:mm:ssX
       date-time: yyyy-MM-dd'T'HH:mm:ssX
   codec:
     max-in-memory-size: 64KB
