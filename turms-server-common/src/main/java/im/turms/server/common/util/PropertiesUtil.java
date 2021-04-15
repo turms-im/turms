@@ -44,6 +44,8 @@ import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -60,9 +62,10 @@ import java.util.stream.Collectors;
  */
 public final class PropertiesUtil {
 
-    private static final String PACKAGE_NAME = TurmsProperties.class.getPackageName();
+    private static final String TURMS_PROPERTIES_PACKAGE_NAME = TurmsProperties.class.getPackageName();
     private static final String FIELD_NAME_DEPRECATED = "deprecated";
     private static final String FIELD_NAME_DESC = "desc";
+    private static final String FIELD_NAME_ELEMENT_TYPE = "elementType";
     private static final String FIELD_NAME_GLOBAL = "global";
     private static final String FIELD_NAME_MUTABLE = "mutable";
     private static final String FIELD_NAME_OPTIONS = "options";
@@ -148,6 +151,17 @@ public final class PropertiesUtil {
     }
 
     private static Map<String, Object> getMetadata(Map<String, Object> outputMetadata, Class<?> clazz, boolean onlyMutable) {
+        List<Field> fieldList = getFields(clazz, onlyMutable);
+        for (Field field : fieldList) {
+            Object fieldMetadata = getFieldMetadata(field, onlyMutable);
+            if (fieldMetadata != null) {
+                outputMetadata.put(field.getName(), fieldMetadata);
+            }
+        }
+        return outputMetadata;
+    }
+
+    private static List<Field> getFields(Class<?> clazz, boolean onlyMutable) {
         List<Field> fieldList;
         if (onlyMutable) {
             fieldList = FieldUtils.getFieldsListWithAnnotation(clazz, JsonView.class)
@@ -157,43 +171,66 @@ public final class PropertiesUtil {
         } else {
             fieldList = FieldUtils.getAllFieldsList(clazz);
         }
-        fieldList = fieldList
+        return fieldList
                 .stream()
                 .filter(field -> !field.isAnnotationPresent(JsonIgnore.class))
                 .collect(Collectors.toList());
-        for (Field field : fieldList) {
-            if (field.getType().getTypeName().startsWith(PACKAGE_NAME)) {
-                if (field.getType().isEnum()) {
-                    HashMap<Object, Object> fieldMap = Maps.newHashMapWithExpectedSize(5);
-                    fieldMap.put(FIELD_NAME_TYPE, "enum");
-                    fieldMap.put(FIELD_NAME_DEPRECATED, field.isAnnotationPresent(Deprecated.class));
-                    fieldMap.put(FIELD_NAME_GLOBAL, field.isAnnotationPresent(GlobalProperty.class));
-                    fieldMap.put(FIELD_NAME_MUTABLE, isMutableProperty(field));
-                    fieldMap.put(FIELD_NAME_OPTIONS, field.getType().getEnumConstants());
-                    if (field.isAnnotationPresent(Description.class)) {
-                        fieldMap.put(FIELD_NAME_DESC, field.getDeclaredAnnotation(Description.class).value());
-                    }
-                    outputMetadata.put(field.getName(), fieldMap);
-                } else {
-                    Object any = getMetadata(new HashMap<>(), field.getType(), onlyMutable);
-                    outputMetadata.put(field.getName(), any);
-                }
-            } else if (!Modifier.isStatic(field.getModifiers())) {
-                String typeName = field.getType().getTypeName();
-                if (typeName.equals(String.class.getTypeName())) {
-                    typeName = "string";
-                }
-                HashMap<Object, Object> fieldMap = Maps.newHashMapWithExpectedSize(4);
-                fieldMap.put(FIELD_NAME_TYPE, typeName);
-                fieldMap.put(FIELD_NAME_DEPRECATED, field.isAnnotationPresent(Deprecated.class));
-                fieldMap.put(FIELD_NAME_MUTABLE, isMutableProperty(field));
-                if (field.isAnnotationPresent(Description.class)) {
-                    fieldMap.put(FIELD_NAME_DESC, field.getDeclaredAnnotation(Description.class).value());
-                }
-                outputMetadata.put(field.getName(), fieldMap);
-            }
+    }
+
+    private static Object getFieldMetadata(Field field, boolean onlyMutable) {
+        Class<?> type = field.getType();
+        String typeName = type.getTypeName();
+        if (Modifier.isStatic(field.getModifiers())) {
+            return null;
         }
-        return outputMetadata;
+        if (typeName.startsWith(TURMS_PROPERTIES_PACKAGE_NAME) && !type.isEnum()) {
+            return getMetadata(new HashMap<>(), type, onlyMutable);
+        }
+        return getFlatFieldMetadata(field);
+    }
+
+    private static Map<String, Object> getFlatFieldMetadata(Field field) {
+        Class<?> type = field.getType();
+        String elementType = null;
+        String typeName = getTypeName(type);
+        Object[] options = type.isEnum() ? type.getEnumConstants() : null;
+        if (Iterable.class.isAssignableFrom(type)) {
+            Type[] types = ((ParameterizedType) field.getGenericType()).getActualTypeArguments();
+            if (types.length == 1) {
+                elementType = getTypeName((Class<?>) types[0]);
+                if (type.isEnum()) {
+                    options = type.getEnumConstants();
+                }
+            }
+        } else if (type.isArray()) {
+            elementType = getTypeName(type.getComponentType());
+        }
+        // Fill in
+        HashMap<String, Object> metadata = Maps.newHashMapWithExpectedSize(7);
+        if (field.isAnnotationPresent(Description.class)) {
+            metadata.put(FIELD_NAME_DESC, field.getDeclaredAnnotation(Description.class).value());
+        }
+        if (elementType != null) {
+            metadata.put(FIELD_NAME_ELEMENT_TYPE, elementType);
+        }
+        metadata.put(FIELD_NAME_TYPE, typeName);
+        metadata.put(FIELD_NAME_DEPRECATED, field.isAnnotationPresent(Deprecated.class));
+        metadata.put(FIELD_NAME_GLOBAL, field.isAnnotationPresent(GlobalProperty.class));
+        metadata.put(FIELD_NAME_MUTABLE, isMutableProperty(field));
+        if (options != null) {
+            metadata.put(FIELD_NAME_OPTIONS, options);
+        }
+        return metadata;
+    }
+
+    private static String getTypeName(Class<?> type) {
+        if (type.isEnum()) {
+            return "enum";
+        }
+        if (String.class.isAssignableFrom(type)) {
+            return "string";
+        }
+        return type.getTypeName();
     }
 
     // Convert
