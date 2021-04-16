@@ -17,13 +17,9 @@
 
 package im.turms.server.common.util;
 
-import io.netty.handler.ssl.SslContextBuilder;
-import org.springframework.boot.web.embedded.netty.SslServerCustomizer;
+import org.springframework.boot.web.embedded.netty.MySslCustomizer;
 import org.springframework.boot.web.server.Ssl;
 import reactor.netty.tcp.SslProvider;
-
-import javax.annotation.Nullable;
-import java.util.Arrays;
 
 /**
  * @author James Chen
@@ -33,54 +29,12 @@ public final class SslUtil {
     private SslUtil() {
     }
 
-    @Nullable
-    public static SslContextBuilder getSslContextBuilder(Ssl ssl, boolean forServer) {
-        if (ssl.isEnabled()) {
-            MySslServerCustomizer sslServerCustomizer = new MySslServerCustomizer(ssl, forServer);
-            return sslServerCustomizer.getContextBuilder();
-        }
-        return null;
-    }
-
     public static void configureSslContextSpec(SslProvider.SslContextSpec sslContextSpec, Ssl ssl, boolean forServer) {
-        SslContextBuilder builder = getSslContextBuilder(ssl, forServer);
-        if (builder != null) {
-            sslContextSpec.sslContext(builder);
+        if (ssl.isEnabled()) {
+            MySslCustomizer customizer = new MySslCustomizer(ssl, forServer);
+            SslProvider.ProtocolSslContextSpec spec = customizer.getSpec();
+            sslContextSpec.sslContext(spec);
         }
-    }
-
-    private static class MySslServerCustomizer extends SslServerCustomizer {
-
-        private final boolean forServer;
-        private final Ssl ssl;
-
-        MySslServerCustomizer(Ssl ssl, boolean forServer) {
-            super(ssl, null, null);
-            this.ssl = ssl;
-            this.forServer = forServer;
-        }
-
-        @Override
-        public SslContextBuilder getContextBuilder() {
-            return forServer
-                    ? super.getContextBuilder()
-                    : getClientContextBuilder();
-        }
-
-        private SslContextBuilder getClientContextBuilder() {
-            SslContextBuilder builder = SslContextBuilder
-                    .forClient()
-                    .keyManager(getKeyManagerFactory(ssl, null))
-                    .trustManager(getTrustManagerFactory(ssl, null));
-            if (ssl.getEnabledProtocols() != null) {
-                builder.protocols(ssl.getEnabledProtocols());
-            }
-            if (ssl.getCiphers() != null) {
-                builder.ciphers(Arrays.asList(ssl.getCiphers()));
-            }
-            return builder;
-        }
-
     }
 
 }

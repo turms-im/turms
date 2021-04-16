@@ -257,7 +257,7 @@ public final class Member {
         private boolean isHealthy;
 
         /**
-         * If a node isn't healthy, it cannot handle client requests.
+         * If a node isn't active, it cannot handle client requests.
          * Developer can update the value via admin API.
          * Useful for blue-green deployment.
          */
