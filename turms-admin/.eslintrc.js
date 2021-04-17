@@ -13,9 +13,9 @@ module.exports = {
         'plugin:vue/recommended'
     ],
     rules: {
-        'quotes': ['error', 'single'],
+        'quotes': ['error', 'single', { 'avoidEscape': true }],
         'semi': ['error', 'always'],
-        'indent': ['error', 4],
+        'indent': ['error', 4, {'SwitchCase': 1}],
         'comma-dangle': ['error', 'never'],
         'prefer-const': ['error'],
         'no-var': ['error'],

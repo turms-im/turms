@@ -49,7 +49,10 @@ class UserService(private val turmsClient: TurmsClient) {
     private val onOnlineListeners: MutableList<(() -> Unit)> = LinkedList()
     private val onOfflineListeners: MutableList<((SessionCloseInfo?) -> Unit)> = LinkedList()
 
-    val isLoggedIn: Boolean get() = turmsClient.driver.stateStore.isSessionOpen
+    val isLoggedIn: Boolean
+        get() = userInfo?.onlineStatus != null
+                && userInfo?.onlineStatus != UserStatus.UNRECOGNIZED
+                && userInfo?.onlineStatus != UserStatus.OFFLINE
 
     init {
         turmsClient.driver.addOnDisconnectedListener { changeToOffline() }

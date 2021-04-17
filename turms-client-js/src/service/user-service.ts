@@ -61,7 +61,7 @@ export default class UserService {
     }
 
     get isLoggedIn(): boolean {
-        return this._stateStore.isSessionOpen;
+        return this._userInfo.onlineStatus >= 0 && this._userInfo.onlineStatus !== UserStatus.OFFLINE;
     }
 
     addOnOnlineListener(listener: () => void): void {
@@ -179,7 +179,6 @@ export default class UserService {
             this._changeToOffline({
                 closeStatus: TurmsCloseStatus.DISCONNECTED_BY_CLIENT
             });
-            return null;
         });
     }
 
