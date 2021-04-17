@@ -104,7 +104,7 @@ export const TurmsNotification = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): TurmsNotification {
-    const reader = input instanceof Uint8Array ? new _m0.Reader(input) : input;
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseTurmsNotification } as TurmsNotification;
     while (reader.pos < end) {
@@ -259,7 +259,7 @@ export const TurmsNotification_Data = {
     input: _m0.Reader | Uint8Array,
     length?: number
   ): TurmsNotification_Data {
-    const reader = input instanceof Uint8Array ? new _m0.Reader(input) : input;
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseTurmsNotification_Data } as TurmsNotification_Data;
     while (reader.pos < end) {

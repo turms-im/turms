@@ -36,7 +36,7 @@ export const ImageFile = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ImageFile {
-    const reader = input instanceof Uint8Array ? new _m0.Reader(input) : input;
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseImageFile } as ImageFile;
     while (reader.pos < end) {
@@ -86,7 +86,7 @@ export const ImageFile_Description = {
     input: _m0.Reader | Uint8Array,
     length?: number
   ): ImageFile_Description {
-    const reader = input instanceof Uint8Array ? new _m0.Reader(input) : input;
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseImageFile_Description } as ImageFile_Description;
     while (reader.pos < end) {

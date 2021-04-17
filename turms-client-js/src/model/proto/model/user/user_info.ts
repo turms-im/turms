@@ -43,7 +43,7 @@ export const UserInfo = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UserInfo {
-    const reader = input instanceof Uint8Array ? new _m0.Reader(input) : input;
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseUserInfo } as UserInfo;
     while (reader.pos < end) {

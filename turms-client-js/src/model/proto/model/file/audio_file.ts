@@ -36,7 +36,7 @@ export const AudioFile = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AudioFile {
-    const reader = input instanceof Uint8Array ? new _m0.Reader(input) : input;
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseAudioFile } as AudioFile;
     while (reader.pos < end) {
@@ -86,7 +86,7 @@ export const AudioFile_Description = {
     input: _m0.Reader | Uint8Array,
     length?: number
   ): AudioFile_Description {
-    const reader = input instanceof Uint8Array ? new _m0.Reader(input) : input;
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseAudioFile_Description } as AudioFile_Description;
     while (reader.pos < end) {

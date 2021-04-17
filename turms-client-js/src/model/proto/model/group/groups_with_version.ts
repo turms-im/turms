@@ -27,7 +27,7 @@ export const GroupsWithVersion = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GroupsWithVersion {
-    const reader = input instanceof Uint8Array ? new _m0.Reader(input) : input;
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseGroupsWithVersion } as GroupsWithVersion;
     message.groups = [];

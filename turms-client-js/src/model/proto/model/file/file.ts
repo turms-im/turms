@@ -32,7 +32,7 @@ export const File = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): File {
-    const reader = input instanceof Uint8Array ? new _m0.Reader(input) : input;
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseFile } as File;
     while (reader.pos < end) {
@@ -76,7 +76,7 @@ export const File_Description = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): File_Description {
-    const reader = input instanceof Uint8Array ? new _m0.Reader(input) : input;
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseFile_Description } as File_Description;
     while (reader.pos < end) {

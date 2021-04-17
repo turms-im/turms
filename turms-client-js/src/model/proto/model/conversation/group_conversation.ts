@@ -34,7 +34,7 @@ export const GroupConversation = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GroupConversation {
-    const reader = input instanceof Uint8Array ? new _m0.Reader(input) : input;
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseGroupConversation } as GroupConversation;
     message.memberIdAndReadDate = {};
@@ -85,7 +85,7 @@ export const GroupConversation_MemberIdAndReadDateEntry = {
     input: _m0.Reader | Uint8Array,
     length?: number
   ): GroupConversation_MemberIdAndReadDateEntry {
-    const reader = input instanceof Uint8Array ? new _m0.Reader(input) : input;
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = {
       ...baseGroupConversation_MemberIdAndReadDateEntry,

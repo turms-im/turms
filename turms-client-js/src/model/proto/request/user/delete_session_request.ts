@@ -20,7 +20,7 @@ export const DeleteSessionRequest = {
     input: _m0.Reader | Uint8Array,
     length?: number
   ): DeleteSessionRequest {
-    const reader = input instanceof Uint8Array ? new _m0.Reader(input) : input;
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseDeleteSessionRequest } as DeleteSessionRequest;
     while (reader.pos < end) {

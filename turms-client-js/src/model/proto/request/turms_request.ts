@@ -481,7 +481,7 @@ export const TurmsRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): TurmsRequest {
-    const reader = input instanceof Uint8Array ? new _m0.Reader(input) : input;
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseTurmsRequest } as TurmsRequest;
     while (reader.pos < end) {
