@@ -116,6 +116,11 @@ export default {
                 title: 'clusterManagement'
             },
             {
+                key: '/terminal',
+                iconType: 'code',
+                title: 'clientTerminal'
+            },
+            {
                 key: '/about',
                 iconType: 'info-circle',
                 title: 'about'

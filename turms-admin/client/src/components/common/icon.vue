@@ -5,6 +5,7 @@
     <check-outlined v-if="type === 'check'" />
     <close-outlined v-if="type === 'close'" />
     <cluster-outlined v-if="type === 'cluster'" />
+    <code-outlined v-if="type === 'code'" />
     <database-outlined v-if="type === 'database'" />
     <info-circle-outlined v-if="type === 'info-circle'" />
     <link-outlined v-if="type === 'link'" />
@@ -28,6 +29,7 @@ import {
     CheckOutlined,
     CloseOutlined,
     ClusterOutlined,
+    CodeOutlined,
     DatabaseOutlined,
     InfoCircleOutlined,
     LinkOutlined,
@@ -52,6 +54,7 @@ export default {
         CheckOutlined,
         CloseOutlined,
         ClusterOutlined,
+        CodeOutlined,
         DatabaseOutlined,
         InfoCircleOutlined,
         LinkOutlined,

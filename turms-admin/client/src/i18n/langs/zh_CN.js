@@ -56,6 +56,7 @@ const zh_CN = {
     'changeConnectedServerUrl': '修改连接服务端URL',
     'changedServerSuccessfully': '成功切换服务端',
     'clearFilters': '清空过滤条件',
+    'clientTerminal': '客户端终端',
     'clusterConfig': '集群配置',
     'clusterManagement': '集群管理',
     'confirmApplyChanges': '确认应用更改？',

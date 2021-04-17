@@ -42,7 +42,7 @@ describe('Home page', () => {
             });
 
             it('should show an error message on a failed submission', () => {
-                cy.intercept(Cypress.env('baseUrl') + Cypress.env('turms').apis.admin, {
+                cy.intercept(Cypress.env('baseUrl') + Cypress.env('turms').apis.admin + '*', {
                     statusCode: 401
                 });
                 cy.get('.ant-message-error', {timeout: 30 * 1000})
@@ -54,7 +54,7 @@ describe('Home page', () => {
             });
 
             it('should disappear on a successful submission', () => {
-                cy.intercept(Cypress.env('baseUrl') + Cypress.env('turms').apis.admin, {
+                cy.intercept(Cypress.env('baseUrl') + Cypress.env('turms').apis.admin + '*', {
                     statusCode: 200,
                     fixture: 'admins'
                 });

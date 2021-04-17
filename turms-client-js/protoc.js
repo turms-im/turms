@@ -30,9 +30,12 @@ function install() {
         fs.mkdirSync(dir);
     }
 
+    const installProtoc = IS_LINUX
+        ? `apt install unzip && unzip ${dir}/protoc.zip -d ${dir} && chmod 755 -R ${dir}`
+        : `tar -xf ${dir}/protoc.zip -C ${dir}`;
     runCmds([
-        `curl -L ${PB_REL}/download/v${PB_VERSION}/${file} -o ${dir}/protoc.zip`,
-        `tar -xf ${dir}/protoc.zip -C ${dir}`
+        `curl --create-dirs -L ${PB_REL}/download/v${PB_VERSION}/${file} -o ${dir}/protoc.zip`,
+        installProtoc
     ]);
 }
 

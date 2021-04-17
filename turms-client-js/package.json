@@ -14,9 +14,10 @@
   ],
   "scripts": {
     "build": "rollup -c",
-    "install": "node protoc.js install",
     "lint": "eslint --fix --ext .ts src",
-    "protoc": "node protoc.js compile",
+    "protoc:compile": "node protoc.js compile",
+    "protoc:install": "node protoc.js install",
+    "quickbuild": "npm i && npm run protoc:install && npm run protoc:compile && npm run build",
     "test": "jest --runInBand --bail"
   },
   "keywords": [

@@ -5,6 +5,7 @@ import ContentConversation from '../components/pages/content/conversation/index'
 import ContentMessage from '../components/pages/content/message/index';
 import AccessControl from '../components/pages/access/index';
 import ClusterManagement from '../components/pages/cluster/config';
+import ClientTerminal from '../components/pages/terminal';
 import About from '../components/pages/about/index';
 
 const routes = [
@@ -53,6 +54,10 @@ const routes = [
     {
         path: '/cluster',
         component: ClusterManagement
+    },
+    {
+        path: '/terminal',
+        component: ClientTerminal
     },
     {
         path: '/about',

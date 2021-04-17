@@ -1,6 +1,6 @@
 describe('Content - User Info Pane', () => {
     beforeEach(() => {
-        cy.intercept(Cypress.env('baseUrl') + Cypress.env('turms').apis.user + '/page?page=0', {
+        cy.intercept(Cypress.env('baseUrl') + Cypress.env('turms').apis.user + '/page?page=0*', {
             statusCode: 200,
             fixture: 'users'
         });
