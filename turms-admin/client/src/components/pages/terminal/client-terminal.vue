@@ -1,6 +1,9 @@
 <template>
     <div class="client-terminal-container">
-        <div ref="inputTerminal" />
+        <div
+            ref="inputTerminal"
+            class="client-terminal-container__input"
+        />
         <div
             ref="notificationTerminal"
             class="client-terminal-container__notification"
@@ -125,9 +128,8 @@ export default {
         },
 
         initInputTerm(options, container) {
-            const term = new Terminal(options);
+            const term = new Terminal(container, options);
             term.onLine = async (cmd) => await this.executeCmd(cmd);
-            term.open(container);
             for (let i = 0; i < ONBOARD_MESSAGES.length; i++) {
                 term.writeMsg({
                     type: 'info',
@@ -141,11 +143,9 @@ export default {
         },
 
         initNotificationTerm(container) {
-            const term = new Terminal({
+            return new Terminal(container, {
                 disableStdin: true
             });
-            term.open(container);
-            return term;
         },
 
         stringify(obj) {
@@ -170,6 +170,12 @@ export default {
     display: flex;
     height: 100%;
     width: 100%;
+
+    &__input,
+    &__notification {
+        flex-grow: 1;
+        max-width: 50%;
+    }
 
     &__notification {
         margin-left: 8px;

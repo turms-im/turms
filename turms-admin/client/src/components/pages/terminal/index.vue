@@ -14,3 +14,8 @@ export default {
     }
 };
 </script>
+<style lang="scss" scoped>
+.client-terminal-pane {
+    height: 100%;
+}
+</style>

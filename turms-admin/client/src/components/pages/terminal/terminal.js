@@ -27,7 +27,7 @@ function findFavoriteFont() {
 }
 
 export default class Terminal extends XTerm {
-    constructor(options = {}) {
+    constructor(container, options = {}) {
         if (!options.fontFamily) {
             options.fontFamily = findFavoriteFont();
         }
@@ -48,6 +48,8 @@ export default class Terminal extends XTerm {
 
         this.fitAddon = new FitAddon();
         this.loadAddon(this.fitAddon);
+
+        this.open(container);
         this.fit();
 
         this.onKey(async (e) => {
@@ -61,13 +63,16 @@ export default class Terminal extends XTerm {
                 this.insertText(key);
             }
         });
-        window.addEventListener('resize', this.fit);
+        this.onWinResize = () => {
+            this.fit();
+        };
+        window.addEventListener('resize', this.onWinResize);
     }
 
     // Lifecycle
 
     dispose() {
-        window.removeEventListener('resize', this.fit);
+        window.removeEventListener('resize', this.onWinResize);
         super.dispose();
     }
 
