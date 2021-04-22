@@ -17,23 +17,16 @@
 
 package im.turms.server.common.constant;
 
-/**
- * Place all cron expressions here so we know what happens at the specific times clearly
- *
- * @author James Chen
- * @see org.springframework.scheduling.support.CronExpression
- */
-public final class CronConstant {
+import java.util.Date;
 
-    private CronConstant() {
+/**
+ * @author James Chen
+ */
+public final class DateConstant {
+
+    private DateConstant() {
     }
 
-    public static final String DEFAULT_ONLINE_USERS_NUMBER_LOGGING_CRON = "0/15 * * * * *";
-
-    public static final String DEFAULT_EXPIRED_USER_FRIEND_REQUESTS_CLEANUP_CRON = "0 0 2 * * *";
-    public static final String DEFAULT_EXPIRED_GROUP_INVITATIONS_CLEANUP_CRON = "0 15 2 * * *";
-    public static final String DEFAULT_EXPIRED_GROUP_JOIN_REQUESTS_CLEANUP_CRON = "0 30 2 * * *";
-
-    public static final String DEFAULT_EXPIRED_MESSAGES_CHECKER_CRON = "0 45 2 * * *";
+    public static final Date EPOCH = new Date(0);
 
 }

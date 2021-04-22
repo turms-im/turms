@@ -115,8 +115,7 @@ public class ConversationService {
         Filter filter = Filter.newBuilder()
                 .eq(DaoConstant.ID_FIELD_NAME, groupId);
         if (!node.getSharedProperties().getService().getConversation().getReadReceipt().isAllowMoveReadDateForward()) {
-            filter.or(Filter.newBuilder().eq(fieldKey, null),
-                    Filter.newBuilder().lt(fieldKey, readDate));
+            filter.ltOrNull(fieldKey, readDate);
         }
         Update update = Update.newBuilder()
                 .set(fieldKey, readDate);
@@ -189,8 +188,7 @@ public class ConversationService {
         Filter filter = Filter.newBuilder()
                 .in(DaoConstant.ID_FIELD_NAME, keys);
         if (!node.getSharedProperties().getService().getConversation().getReadReceipt().isAllowMoveReadDateForward()) {
-            filter.or(Filter.newBuilder().eq(PrivateConversation.Fields.READ_DATE, null),
-                    Filter.newBuilder().lt(PrivateConversation.Fields.READ_DATE, readDate));
+            filter.ltOrNull(PrivateConversation.Fields.READ_DATE, readDate);
         }
         Update update = Update.newBuilder()
                 .set(PrivateConversation.Fields.READ_DATE, readDate);

@@ -19,6 +19,7 @@ package im.turms.turms.workflow.service.util;
 
 import im.turms.common.constant.RequestStatus;
 import im.turms.server.common.mongo.operation.option.Update;
+import im.turms.turms.workflow.dao.domain.Expirable;
 import im.turms.turms.workflow.dao.domain.group.GroupInvitation;
 
 import javax.annotation.Nullable;
@@ -27,17 +28,14 @@ import java.util.Date;
 import java.util.Objects;
 
 /**
+ * Common request status util methods related to GroupInvitation,
+ * GroupJoinRequest, and UserFriendRequest
+ *
  * @author James Chen
  */
 public final class RequestStatusUtil {
 
     private RequestStatusUtil() {
-    }
-
-    private static boolean isProcessedByResponder(@Nullable RequestStatus status) {
-        return status == RequestStatus.ACCEPTED
-                || status == RequestStatus.DECLINED
-                || status == RequestStatus.IGNORED;
     }
 
     public static Date getResponseDateBasedOnStatus(
@@ -54,9 +52,18 @@ public final class RequestStatusUtil {
         }
     }
 
-    public static Update updateResponseDateBasedOnStatus(@NotNull Update update,
-                                                         @Nullable RequestStatus status,
-                                                         @Nullable Date responseDate) {
+    public static <T extends Expirable> T transformExpiredDoc(T request, int expireAfterSeconds) {
+        if (isPendingRequestExpired(request.getStatus(),
+                request.getCreationDate(),
+                expireAfterSeconds)) {
+            request.setStatus(RequestStatus.EXPIRED);
+        }
+        return request;
+    }
+
+    public static void updateResponseDateBasedOnStatus(@NotNull Update update,
+                                                       @Nullable RequestStatus status,
+                                                       @Nullable Date responseDate) {
         if (status != null) {
             if (RequestStatusUtil.isProcessedByResponder(status)) {
                 if (responseDate == null) {
@@ -67,7 +74,24 @@ public final class RequestStatusUtil {
                 update.unset(GroupInvitation.Fields.RESPONSE_DATE);
             }
         }
-        return update;
+    }
+
+    private static boolean isPendingRequestExpired(RequestStatus status,
+                                                   Date creationDate,
+                                                   int expireAfterSeconds) {
+        if (status == RequestStatus.PENDING) {
+            if (expireAfterSeconds <= 0) {
+                return false;
+            }
+            return System.currentTimeMillis() - creationDate.getTime() >= expireAfterSeconds * 1000L;
+        }
+        return false;
+    }
+
+    private static boolean isProcessedByResponder(@Nullable RequestStatus status) {
+        return status == RequestStatus.ACCEPTED
+                || status == RequestStatus.DECLINED
+                || status == RequestStatus.IGNORED;
     }
 
 }

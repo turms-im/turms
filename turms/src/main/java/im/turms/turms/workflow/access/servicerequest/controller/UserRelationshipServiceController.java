@@ -278,7 +278,7 @@ public class UserRelationshipServiceController {
             UpdateFriendRequestRequest request = clientRequest.getTurmsRequest().getUpdateFriendRequestRequest();
             ResponseAction action = request.getResponseAction();
             String reason = request.hasReason() ? request.getReason() : null;
-            return userFriendRequestService.handleFriendRequest(
+            return userFriendRequestService.authAndHandleFriendRequest(
                     request.getRequestId(),
                     clientRequest.getUserId(),
                     action,

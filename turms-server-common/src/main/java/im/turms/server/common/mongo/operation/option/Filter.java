@@ -17,6 +17,7 @@
 
 package im.turms.server.common.mongo.operation.option;
 
+import im.turms.common.constant.RequestStatus;
 import im.turms.server.common.bo.common.DateRange;
 import org.bson.Document;
 
@@ -24,6 +25,7 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * @author James Chen
@@ -89,6 +91,23 @@ public class Filter {
         return this;
     }
 
+    public Filter gtOrNull(String key, Object value) {
+        or(Filter.newBuilder().eq(key, null),
+                Filter.newBuilder().gt(key, value));
+        return this;
+    }
+
+    public Filter gte(String key, Object value) {
+        document.append(key, new Document("$gte", value));
+        return this;
+    }
+
+    public Filter gteOrNull(String key, Object value) {
+        or(Filter.newBuilder().eq(key, null),
+                Filter.newBuilder().gte(key, value));
+        return this;
+    }
+
     public <T> Filter in(String key, T... values) {
         document.append(key, new Document("$in", values));
         return this;
@@ -108,6 +127,12 @@ public class Filter {
 
     public Filter lt(String key, Object value) {
         document.append(key, new Document("$lt", value));
+        return this;
+    }
+
+    public Filter ltOrNull(String key, Object value) {
+        or(Filter.newBuilder().eq(key, null),
+                Filter.newBuilder().lt(key, value));
         return this;
     }
 
@@ -131,4 +156,47 @@ public class Filter {
         document.append("$or", documents);
         return this;
     }
+
+    // Expiration Support
+
+    public Filter isExpired(Set<RequestStatus> statuses,
+                            String creationDateFieldName,
+                            Date expirationDate) {
+        boolean isExpired = statuses != null && statuses.contains(RequestStatus.EXPIRED);
+        if (isExpired) {
+            return isExpired(creationDateFieldName, expirationDate);
+        }
+        return this;
+    }
+
+    public Filter isExpired(String creationDateFieldName,
+                            @Nullable Date expirationDate) {
+        // If never expire
+        if (expirationDate == null) {
+            return this;
+        }
+        lt(creationDateFieldName, expirationDate);
+        return this;
+    }
+
+    public Filter isNotExpired(Set<RequestStatus> statuses,
+                            String creationDateFieldName,
+                            Date expirationDate) {
+        boolean isNotExpired = statuses != null && statuses.contains(RequestStatus.PENDING);
+        if (isNotExpired) {
+            return isNotExpired(creationDateFieldName, expirationDate);
+        }
+        return this;
+    }
+
+    public Filter isNotExpired(String creationDateFieldName,
+                               @Nullable Date expirationDate) {
+        // If never expire
+        if (expirationDate == null) {
+            return this;
+        }
+        gteOrNull(creationDateFieldName, expirationDate);
+        return this;
+    }
+
 }

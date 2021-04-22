@@ -24,9 +24,9 @@ import im.turms.server.common.mongo.entity.annotation.Field;
 import im.turms.server.common.mongo.entity.annotation.Id;
 import im.turms.server.common.mongo.entity.annotation.Indexed;
 import im.turms.server.common.mongo.entity.annotation.Sharded;
+import im.turms.turms.workflow.dao.domain.Expirable;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;
@@ -34,19 +34,19 @@ import java.util.Date;
 /**
  * @author James Chen
  * @implNote In the compound index,
- * the first field is used to query requests according to the recipient ID,
- * the second field is used to limit the date range of data to avoid the linear growth of the amount of target data,
- * the third field is used to check if there already a request when creating a request.
+ * The first field is used to query requests according to the recipient ID;
+ * The second field is used to limit the date range of data to avoid the linear growth of the amount of target data,
+ * especially for the scenario that a user queries his/her requests by the creation date;
+ * The third field is used to check if there already a request when creating a request.
  */
 @Data
 @AllArgsConstructor
-@Builder(toBuilder = true)
 @Document(UserFriendRequest.COLLECTION_NAME)
 @CompoundIndex({UserFriendRequest.Fields.RECIPIENT_ID,
         UserFriendRequest.Fields.CREATION_DATE,
         UserFriendRequest.Fields.REQUESTER_ID})
 @Sharded(shardKey = UserFriendRequest.Fields.RECIPIENT_ID)
-public final class UserFriendRequest {
+public final class UserFriendRequest implements Expirable {
 
     public static final String COLLECTION_NAME = "userFriendRequest";
 
@@ -57,11 +57,11 @@ public final class UserFriendRequest {
     private final String content;
 
     /**
-     * Not indexed because of its low index selectivity.
-     * Not recommend to change it.
+     * @implNote 1. Not indexed because of its low index selectivity.
+     * 2. Not final so that we can change it without using a builder (bad performance)
      */
     @Field(Fields.STATUS)
-    private final RequestStatus status;
+    private RequestStatus status;
 
     @Field(Fields.REASON)
     private final String reason;

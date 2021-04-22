@@ -50,16 +50,16 @@ public class FriendRequestProperties {
     @JsonView(MutablePropertiesView.class)
     private boolean allowResendingRequestAfterDeclinedOrIgnoredOrExpired;
 
-    @Description("A friend request will become expired after the TTL has elapsed. Cannot be infinite for performance reason")
+    @Description("A friend request will become expired after the expireAfter has elapsed")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    @Min(1)
-    private int friendRequestTimeToLiveHours = 30 * 24;
+    @Min(0)
+    private int friendRequestExpireAfterSeconds = 30 * 24 * 3600;
 
-    @Description("Clean or update the expired friend requests when the cron expression is triggered." +
-            " Clean if deleteExpiredRequestsWhenCronTriggered is true and update if deleteExpiredRequestsWhenCronTriggered is false")
+    @Description("Clean expired friend requests when the cron expression is triggered" +
+            " if deleteExpiredRequestsWhenCronTriggered is true")
     @ValidCron
-    private String expiredUserFriendRequestsCheckerCron = CronConstant.DEFAULT_EXPIRED_USER_FRIEND_REQUESTS_CHECKER_CRON;
+    private String expiredUserFriendRequestsCleanupCron = CronConstant.DEFAULT_EXPIRED_USER_FRIEND_REQUESTS_CLEANUP_CRON;
 
     @Description("Whether to delete expired when the cron expression is triggered")
     @GlobalProperty

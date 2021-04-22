@@ -45,11 +45,11 @@ public class GroupProperties {
     @Min(0)
     private int groupInvitationContentLimit = 200;
 
-    @Description("A group invitation will become expired after the TTL has elapsed. Cannot be infinite for performance reason")
+    @Description("A group invitation will become expired after the expireAfter has elapsed")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    @Min(1)
-    private int groupInvitationTimeToLiveHours = 30 * 24;
+    @Min(0)
+    private int groupInvitationExpireAfterSeconds = 30 * 24 * 3600;
 
     @Description("The maximum allowed length for the text of a group join request")
     @GlobalProperty
@@ -57,11 +57,11 @@ public class GroupProperties {
     @Min(0)
     private int groupJoinRequestContentLimit = 200;
 
-    @Description("A group join request will become expired after the TTL has elapsed. Cannot be infinite for performance reason")
+    @Description("A group join request will become expired after the expireAfter has elapsed")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)
-    @Min(1)
-    private int groupJoinRequestTimeToLiveHours = 30 * 24;
+    @Min(0)
+    private int groupJoinRequestExpireAfterSeconds = 30 * 24 * 3600;
 
     @Description("Whether to allow users to recall the join requests sent by themselves")
     @GlobalProperty
@@ -88,16 +88,14 @@ public class GroupProperties {
     @JsonView(MutablePropertiesView.class)
     private boolean deleteExpiredGroupInvitationsWhenCronTriggered;
 
-    @Description("Clean or update the expired group join requests when the cron expression is triggered. " +
-            "Clean if deleteExpiredGroupJoinRequestsWhenCronTriggered is true " +
-            "and update if deleteExpiredGroupJoinRequestsWhenCronTriggered is false")
+    @Description("Clean the expired group join requests when the cron expression is triggered" +
+            " if deleteExpiredGroupJoinRequestsWhenCronTriggered is true")
     @ValidCron
-    private String expiredGroupJoinRequestsCheckerCron = CronConstant.DEFAULT_EXPIRED_GROUP_JOIN_REQUESTS_CHECKER_CRON;
+    private String expiredGroupJoinRequestsCleanupCron = CronConstant.DEFAULT_EXPIRED_GROUP_JOIN_REQUESTS_CLEANUP_CRON;
 
-    @Description("Clean or update the expired group invitations when the cron expression is triggered. " +
-            "Clean if deleteExpiredGroupInvitationsWhenCronTriggered is true " +
-            "and update if deleteExpiredGroupInvitationsWhenCronTriggered is false")
-    private String expiredGroupInvitationsCheckerCron = CronConstant.DEFAULT_EXPIRED_GROUP_INVITATIONS_CHECKER_CRON;
+    @Description("Clean the expired group invitations when the cron expression is triggered" +
+            " if deleteExpiredGroupInvitationsWhenCronTriggered is true")
+    private String expiredGroupInvitationsCheckerCron = CronConstant.DEFAULT_EXPIRED_GROUP_INVITATIONS_CLEANUP_CRON;
 
     @Description("Whether to activate a group when created by default")
     @GlobalProperty

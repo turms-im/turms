@@ -25,10 +25,10 @@ import im.turms.server.common.mongo.entity.annotation.Field;
 import im.turms.server.common.mongo.entity.annotation.Id;
 import im.turms.server.common.mongo.entity.annotation.Indexed;
 import im.turms.server.common.mongo.entity.annotation.Sharded;
+import im.turms.turms.workflow.dao.domain.Expirable;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForColdData;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;
@@ -37,7 +37,7 @@ import java.util.Date;
  * @author James Chen
  * @implNote Don't use the "groupId" and "requesterId" as the key because
  * a requester can send multiple requests (not matter it's pending, handled or etc) to the same group.
- *
+ * <p>
  * Sharded by requesterId and createDate because it's common for users to
  * query the status of member requests sent by them at application startup.
  * <p>
@@ -46,12 +46,11 @@ import java.util.Date;
  */
 @Data
 @AllArgsConstructor
-@Builder(toBuilder = true)
 @Document(GroupJoinRequest.COLLECTION_NAME)
 @CompoundIndex({GroupJoinRequest.Fields.REQUESTER_ID,
         GroupJoinRequest.Fields.CREATION_DATE})
 @Sharded(shardKey = GroupJoinRequest.Fields.REQUESTER_ID)
-public final class GroupJoinRequest {
+public final class GroupJoinRequest implements Expirable {
 
     public static final String COLLECTION_NAME = "groupJoinRequest";
 
@@ -61,8 +60,12 @@ public final class GroupJoinRequest {
     @Field(Fields.CONTENT)
     private final String content;
 
+    /**
+     * @implNote 1. Not indexed because of its low index selectivity.
+     * 2. Not final so that we can change it without using a builder (bad performance)
+     */
     @Field(Fields.STATUS)
-    private final RequestStatus status;
+    private RequestStatus status;
 
     @Field(Fields.CREATION_DATE)
     @OptionalIndexedForExtendedFeature

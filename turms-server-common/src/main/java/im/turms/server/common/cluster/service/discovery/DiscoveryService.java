@@ -574,8 +574,7 @@ public class DiscoveryService implements ClusterService {
         int generation = leader == null ? 1 : leader.getGeneration() + 1;
         Filter filter = Filter.newBuilder()
                 .eq(Leader.Fields.clusterId, clusterId)
-                .or(Filter.newBuilder().eq(Leader.Fields.generation, null),
-                        Filter.newBuilder().lt(Leader.Fields.generation, generation));
+                .ltOrNull(Leader.Fields.generation, generation);
         Date now = new Date();
         Update update = Update.newBuilder()
                 .set(Leader.Fields.nodeId, nodeId)

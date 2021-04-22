@@ -17,7 +17,6 @@
 
 package im.turms.turms.workflow.service.impl.user.relationship;
 
-import com.google.protobuf.Int64Value;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.reactivestreams.client.ClientSession;
@@ -28,6 +27,7 @@ import im.turms.common.util.Validator;
 import im.turms.server.common.bo.common.DateRange;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
+import im.turms.server.common.constant.DateConstant;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.manager.TrivialTaskManager;
@@ -58,13 +58,16 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Set;
 
 /**
  * @author James Chen
+ * @implNote The status of friend requests never become EXPIRED in MongoDB automatically
+ * (admins can specify them to expired manually though) even if there is an expireAfter
+ * property because Turms will not create a cron job to scan and expire requests in
+ * MongoDB. Instead, Turms transforms the status of requests when returning them to users
+ * or admins for less resource consumption and better performance to expire requests.
  */
 @Service
 @DependsOn(IMongoDataGenerator.BEAN_NAME)
@@ -87,91 +90,67 @@ public class UserFriendRequestService {
         this.userVersionService = userVersionService;
         this.userRelationshipService = userRelationshipService;
 
-        // Set up the checker for expired user friend requests
+        // Set up a cron job to remove requests if deleting expired docs is enabled
         taskManager.reschedule(
-                "userFriendRequestsChecker",
+                "userFriendRequestsCleanup",
                 turmsPropertiesManager.getLocalProperties().getService().getUser().getFriendRequest()
-                        .getExpiredUserFriendRequestsCheckerCron(),
+                        .getExpiredUserFriendRequestsCleanupCron(),
                 () -> {
-                    if (node.isLocalNodeLeader()) {
-                        if (node.getSharedProperties().getService().getUser()
-                                .getFriendRequest().isDeleteExpiredRequestsWhenCronTriggered()) {
-                            removeAllExpiredFriendRequests().subscribe();
-                        } else {
-                            updateExpiredRequestsStatus().subscribe();
-                        }
+                    boolean isLocalNodeLeader = node.isLocalNodeLeader();
+                    boolean deleteExpiredRequestsWhenCronTriggered = node.getSharedProperties()
+                            .getService()
+                            .getUser()
+                            .getFriendRequest()
+                            .isDeleteExpiredRequestsWhenCronTriggered();
+                    Date expirationDate = getFriendRequestExpirationDate();
+                    if (isLocalNodeLeader && deleteExpiredRequestsWhenCronTriggered && expirationDate != null) {
+                        removeAllExpiredFriendRequests(expirationDate).subscribe();
                     }
                 });
     }
 
-    public Mono<Void> removeAllExpiredFriendRequests() {
-        Date now = new Date();
+    public Mono<Void> removeAllExpiredFriendRequests(Date expirationDate) {
         Filter filter = Filter.newBuilder()
-                .lt(UserFriendRequest.Fields.EXPIRATION_DATE, now);
+                .isExpired(UserFriendRequest.Fields.CREATION_DATE, expirationDate);
         return mongoClient.deleteMany(UserFriendRequest.class, filter).then();
     }
 
-    /**
-     * Warning: Only use expirationDate to check whether a request is expired.
-     * Because of the excessive resource consumption, the request status of requests
-     * won't be expired immediately when reaching the expiration date.
-     */
-    @UsesNonIndexedData
-    public Mono<UpdateResult> updateExpiredRequestsStatus() {
-        Date now = new Date();
-        Filter filter = Filter.newBuilder()
-                .lt(UserFriendRequest.Fields.EXPIRATION_DATE, now)
-                .eq(UserFriendRequest.Fields.STATUS, RequestStatus.PENDING);
-        Update update = Update.newBuilder()
-                .set(UserFriendRequest.Fields.STATUS, RequestStatus.EXPIRED);
-        return mongoClient.updateMany(UserFriendRequest.class, filter, update);
-    }
-
-    /**
-     * @param creationDateAfter used to limit the amount of data for querying to improve performance
-     */
     public Mono<Boolean> hasPendingFriendRequest(
             @NotNull Long requesterId,
-            @NotNull Long recipientId,
-            @NotNull @PastOrPresent Date creationDateAfter) {
+            @NotNull Long recipientId) {
         try {
             AssertUtil.notNull(requesterId, "requesterId");
             AssertUtil.notNull(recipientId, "recipientId");
-            AssertUtil.notNull(creationDateAfter, "creationDateAfter");
-            AssertUtil.pastOrPresent(creationDateAfter, "creationDateAfter");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Date now = new Date();
+        Date expirationDate = getFriendRequestExpirationDate();
         Filter filter = Filter.newBuilder()
                 .eq(UserFriendRequest.Fields.REQUESTER_ID, requesterId)
                 .eq(UserFriendRequest.Fields.RECIPIENT_ID, recipientId)
                 .eq(UserFriendRequest.Fields.STATUS, RequestStatus.PENDING)
-                .gt(UserFriendRequest.Fields.CREATION_DATE, creationDateAfter)
-                .gt(UserFriendRequest.Fields.EXPIRATION_DATE, now);
+                // creationDate is used to:
+                // 1. Make sure the pending requests are not expired actually
+                // 2. Make full use of the compound index for better performance
+                .isNotExpired(UserFriendRequest.Fields.CREATION_DATE,
+                        expirationDate == null ? DateConstant.EPOCH : expirationDate);
         return mongoClient.exists(UserFriendRequest.class, filter);
     }
 
-    /**
-     * @param creationDateAfter used to limit the amount of data for querying to improve performance
-     */
     private Mono<Boolean> hasPendingOrDeclinedOrIgnoredOrExpiredRequest(
             @NotNull Long requesterId,
-            @NotNull Long recipientId,
-            @NotNull Date creationDateAfter) {
+            @NotNull Long recipientId) {
         try {
             AssertUtil.notNull(requesterId, "requesterId");
             AssertUtil.notNull(recipientId, "recipientId");
-            AssertUtil.notNull(creationDateAfter, "creationDateAfter");
-            AssertUtil.pastOrPresent(creationDateAfter, "creationDateAfter");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
         // Do not need to check expirationDate because both PENDING status or EXPIRED status has been used
         Filter filter = Filter.newBuilder()
+                .gt(UserFriendRequest.Fields.CREATION_DATE, DateConstant.EPOCH)
                 .eq(UserFriendRequest.Fields.REQUESTER_ID, requesterId)
                 .eq(UserFriendRequest.Fields.RECIPIENT_ID, recipientId)
-                .gt(UserFriendRequest.Fields.CREATION_DATE, creationDateAfter)
                 .in(UserFriendRequest.Fields.STATUS,
                         RequestStatus.PENDING, RequestStatus.DECLINED, RequestStatus.IGNORED, RequestStatus.EXPIRED);
         return mongoClient.exists(UserFriendRequest.class, filter);
@@ -208,12 +187,7 @@ public class UserFriendRequestService {
         }
         responseDate = RequestStatusUtil.getResponseDateBasedOnStatus(status, responseDate, now);
         if (expirationDate == null) {
-            int timeToLiveHours = node.getSharedProperties()
-                    .getService()
-                    .getUser()
-                    .getFriendRequest()
-                    .getFriendRequestTimeToLiveHours();
-            expirationDate = Date.from(Instant.now().plus(timeToLiveHours, ChronoUnit.HOURS));
+            expirationDate = getFriendRequestExpirationDate();
         }
         if (status == null) {
             status = RequestStatus.PENDING;
@@ -248,16 +222,10 @@ public class UserFriendRequestService {
                     }
                     // Allow to create a friend request even there is already an accepted request
                     // because the relationships can be deleted and rebuilt
-                    int timeToLiveHours = node.getSharedProperties()
-                            .getService()
-                            .getUser()
-                            .getFriendRequest()
-                            .getFriendRequestTimeToLiveHours();
-                    Date creationDateAfter = Date.from(Instant.now().minus(timeToLiveHours, ChronoUnit.HOURS));
                     Mono<Boolean> requestExistsMono = node.getSharedProperties().getService().getUser().getFriendRequest()
                             .isAllowResendingRequestAfterDeclinedOrIgnoredOrExpired()
-                            ? hasPendingFriendRequest(requesterId, recipientId, creationDateAfter)
-                            : hasPendingOrDeclinedOrIgnoredOrExpiredRequest(requesterId, recipientId, creationDateAfter);
+                            ? hasPendingFriendRequest(requesterId, recipientId)
+                            : hasPendingOrDeclinedOrIgnoredOrExpiredRequest(requesterId, recipientId);
                     return requestExistsMono.flatMap(requestExists -> {
                         String finalContent = content != null ? content : "";
                         return requestExists
@@ -283,10 +251,10 @@ public class UserFriendRequestService {
         }
         Filter filter = Filter.newBuilder()
                 .eq(DaoConstant.ID_FIELD_NAME, requestId)
-                .eq(UserFriendRequest.Fields.STATUS, RequestStatus.PENDING);
+                .eq(UserFriendRequest.Fields.STATUS, RequestStatus.PENDING)
+                .isNotExpired(UserFriendRequest.Fields.CREATION_DATE, getFriendRequestExpirationDate());
         Update update = Update.newBuilder()
                 .set(UserFriendRequest.Fields.STATUS, requestStatus)
-                .unset(UserFriendRequest.Fields.EXPIRATION_DATE)
                 .setIfNotNull(UserFriendRequest.Fields.REASON, reason);
         return mongoClient.updateOne(session, UserFriendRequest.class, filter, update)
                 .flatMap(result -> result.getModifiedCount() > 0
@@ -362,7 +330,7 @@ public class UserFriendRequestService {
         return mongoClient.findOne(UserFriendRequest.class, filter, options);
     }
 
-    public Mono<Void> handleFriendRequest(
+    public Mono<Void> authAndHandleFriendRequest(
             @NotNull Long friendRequestId,
             @NotNull Long requesterId,
             @NotNull @ValidResponseAction ResponseAction action,
@@ -457,19 +425,6 @@ public class UserFriendRequestService {
         return queryExpirableData(filter);
     }
 
-    private Flux<UserFriendRequest> queryExpirableData(Filter filter) {
-        return mongoClient.findMany(UserFriendRequest.class, filter)
-                .map(friendRequest -> {
-                    Date expirationDate = friendRequest.getExpirationDate();
-                    boolean isExpired = expirationDate != null
-                            && friendRequest.getStatus() == RequestStatus.PENDING
-                            && expirationDate.getTime() < System.currentTimeMillis();
-                    return isExpired
-                            ? friendRequest.toBuilder().status(RequestStatus.EXPIRED).build()
-                            : friendRequest;
-                });
-    }
-
     public Mono<DeleteResult> deleteFriendRequests(@Nullable Set<Long> ids) {
         Filter filter = Filter
                 .newBuilder()
@@ -487,6 +442,7 @@ public class UserFriendRequestService {
             @Nullable DateRange expirationDateRange,
             @Nullable Integer page,
             @Nullable Integer size) {
+        Date expirationDate = getFriendRequestExpirationDate();
         Filter filter = Filter.newBuilder()
                 .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
                 .inIfNotNull(UserFriendRequest.Fields.REQUESTER_ID, requesterIds)
@@ -494,10 +450,12 @@ public class UserFriendRequestService {
                 .inIfNotNull(UserFriendRequest.Fields.STATUS, statuses)
                 .addBetweenIfNotNull(UserFriendRequest.Fields.CREATION_DATE, creationDateRange)
                 .addBetweenIfNotNull(UserFriendRequest.Fields.RESPONSE_DATE, responseDateRange)
-                .addBetweenIfNotNull(UserFriendRequest.Fields.EXPIRATION_DATE, expirationDateRange);
+                .addBetweenIfNotNull(UserFriendRequest.Fields.EXPIRATION_DATE, expirationDateRange)
+                .isExpired(statuses, UserFriendRequest.Fields.CREATION_DATE, expirationDate)
+                .isNotExpired(statuses, UserFriendRequest.Fields.CREATION_DATE, expirationDate);
         QueryOptions options = QueryOptions.newBuilder()
                 .paginateIfNotNull(page, size);
-        return mongoClient.findMany(UserFriendRequest.class, filter, options);
+        return queryExpirableData(filter, options);
     }
 
     public Mono<Long> countFriendRequests(
@@ -516,8 +474,39 @@ public class UserFriendRequestService {
                 .inIfNotNull(UserFriendRequest.Fields.STATUS, statuses)
                 .addBetweenIfNotNull(UserFriendRequest.Fields.CREATION_DATE, creationDateRange)
                 .addBetweenIfNotNull(UserFriendRequest.Fields.RESPONSE_DATE, responseDateRange)
-                .addBetweenIfNotNull(UserFriendRequest.Fields.EXPIRATION_DATE, expirationDateRange);
+                .addBetweenIfNotNull(UserFriendRequest.Fields.EXPIRATION_DATE, expirationDateRange)
+                .isExpired(statuses, UserFriendRequest.Fields.CREATION_DATE, getFriendRequestExpirationDate())
+                .isNotExpired(statuses, UserFriendRequest.Fields.CREATION_DATE, getFriendRequestExpirationDate());
         return mongoClient.count(UserFriendRequest.class, filter);
+    }
+
+    // Internal methods
+
+    @Nullable
+    private Date getFriendRequestExpirationDate() {
+        int expireAfterSeconds = getFriendRequestExpireAfterSeconds();
+        if (expireAfterSeconds <= 0) {
+            return null;
+        }
+        return new Date(System.currentTimeMillis() - expireAfterSeconds * 1000L);
+    }
+
+    private int getFriendRequestExpireAfterSeconds() {
+        return node.getSharedProperties()
+                .getService()
+                .getUser()
+                .getFriendRequest()
+                .getFriendRequestExpireAfterSeconds();
+    }
+
+    private Flux<UserFriendRequest> queryExpirableData(Filter filter) {
+        return mongoClient.findMany(UserFriendRequest.class, filter)
+                .map(request -> RequestStatusUtil.transformExpiredDoc(request, getFriendRequestExpireAfterSeconds()));
+    }
+
+    private Flux<UserFriendRequest> queryExpirableData(Filter filter, QueryOptions options) {
+        return mongoClient.findMany(UserFriendRequest.class, filter, options)
+                .map(request -> RequestStatusUtil.transformExpiredDoc(request, getFriendRequestExpireAfterSeconds()));
     }
 
     private void validFriendRequestContentLength(@Nullable String content) {

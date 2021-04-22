@@ -55,8 +55,6 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -65,6 +63,11 @@ import static im.turms.turms.constant.DaoConstant.ID_FIELD_NAME;
 
 /**
  * @author James Chen
+ * @implNote The status of group invitations never become EXPIRED in MongoDB automatically
+ * (admins can specify them to expired manually though) even if there is an expireAfter
+ * property because Turms will not create a cron job to scan and expire requests in
+ * MongoDB. Instead, Turms transforms the status of requests when returning them to users
+ * or admins for less resource consumption and better performance to expire requests.
  */
 @Service
 @DependsOn(IMongoDataGenerator.BEAN_NAME)
@@ -90,42 +93,27 @@ public class GroupInvitationService {
         this.userVersionService = userVersionService;
         this.groupVersionService = groupVersionService;
 
-        // Set up the checker for expired group invitations
+        // Set up a cron job to remove invitations if deleting expired docs is enabled
         taskManager.reschedule(
-                "groupInvitationsChecker",
+                "groupInvitationsCleanup",
                 turmsPropertiesManager.getLocalProperties().getService().getGroup().getExpiredGroupInvitationsCheckerCron(),
                 () -> {
-                    if (node.isLocalNodeLeader()) {
-                        if (node.getSharedProperties().getService().getGroup()
-                                .isDeleteExpiredGroupInvitationsWhenCronTriggered()) {
-                            removeAllExpiredGroupInvitations().subscribe();
-                        } else {
-                            updateExpiredRequestsStatus().subscribe();
-                        }
+                    boolean isLocalNodeLeader = node.isLocalNodeLeader();
+                    boolean deleteExpiredRequestsWhenCronTriggered = node.getSharedProperties()
+                            .getService()
+                            .getGroup()
+                            .isDeleteExpiredGroupInvitationsWhenCronTriggered();
+                    Date expirationDate = getInvitationExpirationDate();
+                    if (isLocalNodeLeader && deleteExpiredRequestsWhenCronTriggered && expirationDate != null) {
+                        removeAllExpiredGroupInvitations(expirationDate).subscribe();
                     }
                 });
     }
 
-    public Mono<Void> removeAllExpiredGroupInvitations() {
-        Date now = new Date();
+    public Mono<Void> removeAllExpiredGroupInvitations(Date expirationDate) {
         Filter filter = Filter.newBuilder()
-                .lt(GroupInvitation.Fields.EXPIRATION_DATE, now);
+                .isExpired(GroupInvitation.Fields.CREATION_DATE, expirationDate);
         return mongoClient.deleteMany(GroupInvitation.class, filter).then();
-    }
-
-    /**
-     * Warning: Only use expirationDate to check whether a request is expired.
-     * Because of the excessive resource consumption, the request status of requests
-     * won't be expiry immediately when reaching the expiration date.
-     */
-    public Mono<Void> updateExpiredRequestsStatus() {
-        Date now = new Date();
-        Filter filter = Filter.newBuilder()
-                .lt(GroupInvitation.Fields.EXPIRATION_DATE, now)
-                .eq(GroupInvitation.Fields.STATUS, RequestStatus.PENDING);
-        Update update = Update.newBuilder()
-                .set(GroupInvitation.Fields.STATUS, RequestStatus.EXPIRED);
-        return mongoClient.updateMany(GroupInvitation.class, filter, update).then();
     }
 
     public Mono<GroupInvitation> authAndCreateGroupInvitation(
@@ -197,10 +185,7 @@ public class GroupInvitationService {
             creationDate = new Date();
         }
         if (expirationDate == null) {
-            int groupInvitationTimeToLiveHours = node.getSharedProperties().getService().getGroup()
-                    .getGroupInvitationTimeToLiveHours();
-            Instant expirationInstant = Instant.now().plus(groupInvitationTimeToLiveHours, ChronoUnit.HOURS);
-            expirationDate = Date.from(expirationInstant);
+            expirationDate = getInvitationExpirationDate();
         }
         if (status == null) {
             status = RequestStatus.PENDING;
@@ -225,14 +210,7 @@ public class GroupInvitationService {
         QueryOptions options = QueryOptions.newBuilder()
                 .include(GroupInvitation.Fields.GROUP_ID, GroupInvitation.Fields.STATUS);
         return mongoClient.findOne(GroupInvitation.class, filter, options)
-                .map(groupInvitation -> {
-                    Date expirationDate = groupInvitation.getExpirationDate();
-                    return expirationDate != null
-                            && groupInvitation.getStatus() == RequestStatus.PENDING
-                            && expirationDate.getTime() < System.currentTimeMillis()
-                            ? groupInvitation.toBuilder().status(RequestStatus.EXPIRED).build()
-                            : groupInvitation;
-                });
+                .map(groupInvitation -> RequestStatusUtil.transformExpiredDoc(groupInvitation, getInvitationExpireAfterSeconds()));
     }
 
     /**
@@ -419,6 +397,7 @@ public class GroupInvitationService {
             @Nullable DateRange expirationDateRange,
             @Nullable Integer page,
             @Nullable Integer size) {
+        Date expirationDate = getInvitationExpirationDate();
         Filter filter = Filter
                 .newBuilder()
                 .inIfNotNull(ID_FIELD_NAME, ids)
@@ -428,10 +407,12 @@ public class GroupInvitationService {
                 .inIfNotNull(GroupInvitation.Fields.STATUS, statuses)
                 .addBetweenIfNotNull(GroupInvitation.Fields.CREATION_DATE, creationDateRange)
                 .addBetweenIfNotNull(GroupInvitation.Fields.RESPONSE_DATE, responseDateRange)
-                .addBetweenIfNotNull(GroupInvitation.Fields.EXPIRATION_DATE, expirationDateRange);
+                .addBetweenIfNotNull(GroupInvitation.Fields.EXPIRATION_DATE, expirationDateRange)
+                .isExpired(statuses, GroupInvitation.Fields.CREATION_DATE, expirationDate)
+                .isNotExpired(statuses, GroupInvitation.Fields.CREATION_DATE, expirationDate);
         QueryOptions options = QueryOptions.newBuilder()
                 .paginateIfNotNull(page, size);
-        return mongoClient.findMany(GroupInvitation.class, filter, options);
+        return queryExpirableData(filter, options);
     }
 
     public Mono<Long> countInvitations(
@@ -443,6 +424,7 @@ public class GroupInvitationService {
             @Nullable DateRange creationDateRange,
             @Nullable DateRange responseDateRange,
             @Nullable DateRange expirationDateRange) {
+        Date expirationDate = getInvitationExpirationDate();
         Filter filter = Filter
                 .newBuilder()
                 .inIfNotNull(ID_FIELD_NAME, ids)
@@ -452,7 +434,9 @@ public class GroupInvitationService {
                 .inIfNotNull(GroupInvitation.Fields.STATUS, statuses)
                 .addBetweenIfNotNull(GroupInvitation.Fields.CREATION_DATE, creationDateRange)
                 .addBetweenIfNotNull(GroupInvitation.Fields.RESPONSE_DATE, responseDateRange)
-                .addBetweenIfNotNull(GroupInvitation.Fields.EXPIRATION_DATE, expirationDateRange);
+                .addBetweenIfNotNull(GroupInvitation.Fields.EXPIRATION_DATE, expirationDateRange)
+                .isExpired(statuses, GroupInvitation.Fields.CREATION_DATE, expirationDate)
+                .isNotExpired(statuses, GroupInvitation.Fields.CREATION_DATE, expirationDate);
         return mongoClient.count(GroupInvitation.class, filter);
     }
 
@@ -497,17 +481,32 @@ public class GroupInvitationService {
         return mongoClient.updateMany(GroupInvitation.class, filter, update);
     }
 
+    // Internal methods
+
+    @Nullable
+    private Date getInvitationExpirationDate() {
+        int expireAfterSeconds = getInvitationExpireAfterSeconds();
+        if (expireAfterSeconds <= 0) {
+            return null;
+        }
+        return new Date(System.currentTimeMillis() - expireAfterSeconds * 1000L);
+    }
+
+    private int getInvitationExpireAfterSeconds() {
+        return node.getSharedProperties()
+                .getService()
+                .getGroup()
+                .getGroupInvitationExpireAfterSeconds();
+    }
+
     private Flux<GroupInvitation> queryExpirableData(Filter filter) {
         return mongoClient.findMany(GroupInvitation.class, filter)
-                .map(groupInvitation -> {
-                    Date expirationDate = groupInvitation.getExpirationDate();
-                    boolean isExpired = expirationDate != null
-                            && groupInvitation.getStatus() == RequestStatus.PENDING
-                            && expirationDate.getTime() < System.currentTimeMillis();
-                    return isExpired
-                            ? groupInvitation.toBuilder().status(RequestStatus.EXPIRED).build()
-                            : groupInvitation;
-                });
+                .map(request -> RequestStatusUtil.transformExpiredDoc(request, getInvitationExpireAfterSeconds()));
+    }
+
+    private Flux<GroupInvitation> queryExpirableData(Filter filter, QueryOptions options) {
+        return mongoClient.findMany(GroupInvitation.class, filter, options)
+                .map(request -> RequestStatusUtil.transformExpiredDoc(request, getInvitationExpireAfterSeconds()));
     }
 
     private void validInvitationContentLength(@Nullable String content) {
