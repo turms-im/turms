@@ -19,6 +19,7 @@ package im.turms.turms.workflow.access.http.controller.group;
 
 import im.turms.common.constant.RequestStatus;
 import im.turms.server.common.bo.common.DateRange;
+import im.turms.turms.workflow.access.http.dto.model.GroupInvitationDTO;
 import im.turms.turms.workflow.access.http.dto.request.group.AddGroupInvitationDTO;
 import im.turms.turms.workflow.access.http.dto.request.group.UpdateGroupInvitationDTO;
 import im.turms.turms.workflow.access.http.dto.response.DeleteResultDTO;
@@ -28,7 +29,6 @@ import im.turms.turms.workflow.access.http.dto.response.ResponseFactory;
 import im.turms.turms.workflow.access.http.dto.response.UpdateResultDTO;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.access.http.util.PageUtil;
-import im.turms.turms.workflow.dao.domain.group.GroupInvitation;
 import im.turms.turms.workflow.service.impl.group.GroupInvitationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -68,8 +68,9 @@ public class GroupInvitationController {
 
     @PostMapping
     @RequiredPermission(GROUP_INVITATION_CREATE)
-    public Mono<ResponseEntity<ResponseDTO<GroupInvitation>>> addGroupInvitation(@RequestBody AddGroupInvitationDTO addGroupInvitationDTO) {
-        Mono<GroupInvitation> createMono = groupInvitationService.createGroupInvitation(
+    public Mono<ResponseEntity<ResponseDTO<GroupInvitationDTO>>> addGroupInvitation(
+            @RequestBody AddGroupInvitationDTO addGroupInvitationDTO) {
+        Mono<GroupInvitationDTO> createMono = groupInvitationService.createGroupInvitation(
                 addGroupInvitationDTO.getId(),
                 addGroupInvitationDTO.getGroupId(),
                 addGroupInvitationDTO.getInviterId(),
@@ -77,14 +78,14 @@ public class GroupInvitationController {
                 addGroupInvitationDTO.getContent(),
                 addGroupInvitationDTO.getStatus(),
                 addGroupInvitationDTO.getCreationDate(),
-                addGroupInvitationDTO.getResponseDate(),
-                addGroupInvitationDTO.getExpirationDate());
+                addGroupInvitationDTO.getResponseDate())
+                .map(invitation -> new GroupInvitationDTO(invitation, groupInvitationService.getModelExpirationDate()));
         return ResponseFactory.okIfTruthy(createMono);
     }
 
     @GetMapping
     @RequiredPermission(GROUP_INVITATION_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<Collection<GroupInvitation>>>> queryGroupInvitations(
+    public Mono<ResponseEntity<ResponseDTO<Collection<GroupInvitationDTO>>>> queryGroupInvitations(
             @RequestParam(required = false) Set<Long> ids,
             @RequestParam(required = false) Set<Long> groupIds,
             @RequestParam(required = false) Set<Long> inviterIds,
@@ -98,7 +99,7 @@ public class GroupInvitationController {
             @RequestParam(required = false) Date expirationDateEnd,
             @RequestParam(required = false) Integer size) {
         size = pageUtil.getSize(size);
-        Flux<GroupInvitation> invitationFlux = groupInvitationService.queryInvitations(
+        Flux<GroupInvitationDTO> invitationFlux = groupInvitationService.queryInvitations(
                 ids,
                 groupIds,
                 inviterIds,
@@ -108,13 +109,14 @@ public class GroupInvitationController {
                 DateRange.of(responseDateStart, responseDateEnd),
                 DateRange.of(expirationDateStart, expirationDateEnd),
                 0,
-                size);
+                size)
+                .map(invitation -> new GroupInvitationDTO(invitation, groupInvitationService.getModelExpirationDate()));
         return ResponseFactory.okIfTruthy(invitationFlux);
     }
 
     @GetMapping("/page")
     @RequiredPermission(GROUP_INVITATION_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<PaginationDTO<GroupInvitation>>>> queryGroupInvitations(
+    public Mono<ResponseEntity<ResponseDTO<PaginationDTO<GroupInvitationDTO>>>> queryGroupInvitations(
             @RequestParam(required = false) Set<Long> ids,
             @RequestParam(required = false) Set<Long> groupIds,
             @RequestParam(required = false) Set<Long> inviterIds,
@@ -138,7 +140,7 @@ public class GroupInvitationController {
                 DateRange.of(creationDateStart, creationDateEnd),
                 DateRange.of(responseDateStart, responseDateEnd),
                 DateRange.of(expirationDateStart, expirationDateEnd));
-        Flux<GroupInvitation> invitationFlux = groupInvitationService.queryInvitations(
+        Flux<GroupInvitationDTO> invitationFlux = groupInvitationService.queryInvitations(
                 ids,
                 groupIds,
                 inviterIds,
@@ -148,7 +150,8 @@ public class GroupInvitationController {
                 DateRange.of(responseDateStart, responseDateEnd),
                 DateRange.of(expirationDateStart, expirationDateEnd),
                 page,
-                size);
+                size)
+                .map(invitation -> new GroupInvitationDTO(invitation, groupInvitationService.getModelExpirationDate()));
         return ResponseFactory.page(count, invitationFlux);
     }
 
@@ -164,8 +167,7 @@ public class GroupInvitationController {
                 updateGroupInvitationDTO.getContent(),
                 updateGroupInvitationDTO.getStatus(),
                 updateGroupInvitationDTO.getCreationDate(),
-                updateGroupInvitationDTO.getResponseDate(),
-                updateGroupInvitationDTO.getExpirationDate())
+                updateGroupInvitationDTO.getResponseDate())
                 .map(UpdateResultDTO::get);
         return ResponseFactory.okIfTruthy(updateMono);
     }

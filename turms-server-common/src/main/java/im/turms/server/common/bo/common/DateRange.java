@@ -19,6 +19,7 @@ package im.turms.server.common.bo.common;
 
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.util.DateUtil;
 import lombok.Data;
 
 import java.util.Date;
@@ -46,6 +47,24 @@ public final class DateRange {
         } else {
             return null;
         }
+    }
+
+    public DateRange intersect(DateRange range) {
+        if (range == null || equals(range)) {
+            return this;
+        }
+        return new DateRange(DateUtil.max(start, range.getStart()),
+                DateUtil.min(end, range.getEnd()));
+    }
+
+    public DateRange move(long millis) {
+        Date newStart = start == null
+                ? null
+                : new Date(start.getTime() + millis);
+        Date newEnd = end == null
+                ? null
+                : new Date(end.getTime() + millis);
+        return new DateRange(newStart, newEnd);
     }
 
 }

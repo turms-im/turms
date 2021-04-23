@@ -40,6 +40,7 @@ import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.constraint.ValidRequestStatus;
 import im.turms.turms.util.ProtoUtil;
 import im.turms.turms.workflow.dao.domain.group.GroupJoinRequest;
+import im.turms.turms.workflow.service.impl.ExpirableService;
 import im.turms.turms.workflow.service.impl.user.UserVersionService;
 import im.turms.turms.workflow.service.util.DomainConstraintUtil;
 import im.turms.turms.workflow.service.util.RequestStatusUtil;
@@ -66,7 +67,7 @@ import java.util.Set;
  */
 @Service
 @DependsOn(IMongoDataGenerator.BEAN_NAME)
-public class GroupJoinRequestService {
+public class GroupJoinRequestService extends ExpirableService<GroupJoinRequest> {
 
     private final Node node;
     private final TurmsMongoClient mongoClient;
@@ -84,6 +85,7 @@ public class GroupJoinRequestService {
             GroupMemberService groupMemberService,
             GroupService groupService,
             UserVersionService userVersionService) {
+        super(mongoClient, GroupJoinRequest.class);
         this.node = node;
         this.mongoClient = mongoClient;
         this.groupVersionService = groupVersionService;
@@ -102,7 +104,7 @@ public class GroupJoinRequestService {
                             .getUser()
                             .getFriendRequest()
                             .isDeleteExpiredRequestsWhenCronTriggered();
-                    Date expirationDate = getGroupJoinRequestExpirationDate();
+                    Date expirationDate = getModelExpirationDate();
                     if (isLocalNodeLeader && deleteExpiredRequestsWhenCronTriggered && expirationDate != null) {
                         removeAllExpiredGroupJoinRequests(expirationDate).subscribe();
                     }
@@ -110,9 +112,8 @@ public class GroupJoinRequestService {
     }
 
     public Mono<Void> removeAllExpiredGroupJoinRequests(Date expirationDate) {
-        Date now = new Date();
         Filter filter = Filter.newBuilder()
-                .lt(GroupJoinRequest.Fields.EXPIRATION_DATE, now);
+                .isExpired(GroupJoinRequest.Fields.CREATION_DATE, expirationDate);
         return mongoClient.deleteMany(GroupJoinRequest.class, filter).then();
     }
 
@@ -143,7 +144,6 @@ public class GroupJoinRequestService {
                             RequestStatus.PENDING,
                             new Date(),
                             null,
-                            getGroupJoinRequestExpirationDate(),
                             groupId,
                             requesterId,
                             null);
@@ -240,8 +240,10 @@ public class GroupJoinRequestService {
                                         throw TurmsBusinessException.get(TurmsStatusCode.NO_CONTENT);
                                     }
                                     GroupJoinRequestsWithVersion.Builder builder = GroupJoinRequestsWithVersion.newBuilder();
+                                    int expireAfterSeconds = getModelExpireAfterSeconds();
                                     for (GroupJoinRequest groupJoinRequest : groupJoinRequests) {
-                                        builder.addGroupJoinRequests(ProtoUtil.groupJoinRequest2proto(groupJoinRequest).build());
+                                        builder.addGroupJoinRequests(
+                                                ProtoUtil.groupJoinRequest2proto(groupJoinRequest, expireAfterSeconds).build());
                                     }
                                     return builder
                                             .setLastUpdatedDate(version.getTime())
@@ -301,7 +303,7 @@ public class GroupJoinRequestService {
             @Nullable DateRange expirationDateRange,
             @Nullable Integer page,
             @Nullable Integer size) {
-        Date expirationDate = getGroupJoinRequestExpirationDate();
+        Date expirationDate = getModelExpirationDate();
         Filter filter = Filter
                 .newBuilder()
                 .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
@@ -309,11 +311,9 @@ public class GroupJoinRequestService {
                 .inIfNotNull(GroupJoinRequest.Fields.REQUESTER_ID, requesterIds)
                 .inIfNotNull(GroupJoinRequest.Fields.RESPONDER_ID, responderIds)
                 .inIfNotNull(GroupJoinRequest.Fields.STATUS, statuses)
-                .addBetweenIfNotNull(GroupJoinRequest.Fields.CREATION_DATE, creationDateRange)
+                .addBetweenIfNotNull(GroupJoinRequest.Fields.CREATION_DATE, getCreationDateRange(creationDateRange, expirationDateRange))
                 .addBetweenIfNotNull(GroupJoinRequest.Fields.RESPONSE_DATE, responseDateRange)
-                .addBetweenIfNotNull(GroupJoinRequest.Fields.EXPIRATION_DATE, expirationDateRange)
-                .isExpired(statuses, GroupJoinRequest.Fields.CREATION_DATE, expirationDate)
-                .isNotExpired(statuses, GroupJoinRequest.Fields.CREATION_DATE, expirationDate);
+                .isExpiredOrNot(statuses, GroupJoinRequest.Fields.CREATION_DATE, expirationDate);
         QueryOptions options = QueryOptions.newBuilder()
                 .paginateIfNotNull(page, size);
         return queryExpirableData(filter, options);
@@ -328,7 +328,7 @@ public class GroupJoinRequestService {
             @Nullable DateRange creationDateRange,
             @Nullable DateRange responseDateRange,
             @Nullable DateRange expirationDateRange) {
-        Date expirationDate = getGroupJoinRequestExpirationDate();
+        Date expirationDate = getModelExpirationDate();
         Filter filter = Filter
                 .newBuilder()
                 .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
@@ -336,11 +336,9 @@ public class GroupJoinRequestService {
                 .inIfNotNull(GroupJoinRequest.Fields.REQUESTER_ID, requesterIds)
                 .inIfNotNull(GroupJoinRequest.Fields.RESPONDER_ID, responderIds)
                 .inIfNotNull(GroupJoinRequest.Fields.STATUS, statuses)
-                .addBetweenIfNotNull(GroupJoinRequest.Fields.CREATION_DATE, creationDateRange)
+                .addBetweenIfNotNull(GroupJoinRequest.Fields.CREATION_DATE, getCreationDateRange(creationDateRange, expirationDateRange))
                 .addBetweenIfNotNull(GroupJoinRequest.Fields.RESPONSE_DATE, responseDateRange)
-                .addBetweenIfNotNull(GroupJoinRequest.Fields.EXPIRATION_DATE, expirationDateRange)
-                .isExpired(statuses, GroupJoinRequest.Fields.CREATION_DATE, expirationDate)
-                .isNotExpired(statuses, GroupJoinRequest.Fields.CREATION_DATE, expirationDate);
+                .isExpiredOrNot(statuses, GroupJoinRequest.Fields.CREATION_DATE, expirationDate);
         return mongoClient.count(GroupJoinRequest.class, filter);
     }
 
@@ -358,8 +356,7 @@ public class GroupJoinRequestService {
             @Nullable String content,
             @Nullable @ValidRequestStatus RequestStatus status,
             @Nullable @PastOrPresent Date creationDate,
-            @Nullable @PastOrPresent Date responseDate,
-            @Nullable Date expirationDate) {
+            @Nullable @PastOrPresent Date responseDate) {
         try {
             AssertUtil.notEmpty(requestIds, "requestIds");
             validJoinRequestContentLength(content);
@@ -369,7 +366,7 @@ public class GroupJoinRequestService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        if (Validator.areAllNull(requesterId, responderId, content, status, creationDate, expirationDate)) {
+        if (Validator.areAllNull(requesterId, responderId, content, status, creationDate)) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
         Filter filter = Filter.newBuilder()
@@ -380,8 +377,7 @@ public class GroupJoinRequestService {
                 .setIfNotNull(GroupJoinRequest.Fields.RESPONDER_ID, responderId)
                 .setIfNotNull(GroupJoinRequest.Fields.CONTENT, content)
                 .setIfNotNull(GroupJoinRequest.Fields.STATUS, status)
-                .setIfNotNull(GroupJoinRequest.Fields.CREATION_DATE, creationDate)
-                .setIfNotNull(GroupJoinRequest.Fields.EXPIRATION_DATE, expirationDate);
+                .setIfNotNull(GroupJoinRequest.Fields.CREATION_DATE, creationDate);
         RequestStatusUtil.updateResponseDateBasedOnStatus(update, status, responseDate);
         return mongoClient.updateMany(GroupJoinRequest.class, filter, update);
     }
@@ -394,8 +390,7 @@ public class GroupJoinRequestService {
             @Nullable String content,
             @Nullable @ValidRequestStatus RequestStatus status,
             @Nullable @PastOrPresent Date creationDate,
-            @Nullable @PastOrPresent Date responseDate,
-            @Nullable Date expirationDate) {
+            @Nullable @PastOrPresent Date responseDate) {
         try {
             AssertUtil.notNull(groupId, "groupId");
             AssertUtil.notNull(requesterId, "requesterId");
@@ -415,15 +410,12 @@ public class GroupJoinRequestService {
         if (creationDate == null) {
             creationDate = now;
         }
-        if (expirationDate == null) {
-            expirationDate = getGroupJoinRequestExpirationDate();
-        }
         if (status == null) {
             status = RequestStatus.PENDING;
         }
         responseDate = RequestStatusUtil.getResponseDateBasedOnStatus(status, responseDate, now);
         GroupJoinRequest groupJoinRequest = new GroupJoinRequest(id, content, status, creationDate, responseDate,
-                expirationDate, groupId, requesterId, responderId);
+                groupId, requesterId, responderId);
         return mongoClient.insert(groupJoinRequest)
                 .flatMap(request -> groupVersionService.updateJoinRequestsVersion(groupId).onErrorResume(t -> Mono.empty())
                         .then(userVersionService.updateSentGroupJoinRequestsVersion(responderId).onErrorResume(t -> Mono.empty()))
@@ -432,30 +424,12 @@ public class GroupJoinRequestService {
 
     // Internal methods
 
-    @Nullable
-    private Date getGroupJoinRequestExpirationDate() {
-        int expireAfterSeconds = getGroupJoinRequestExpireAfterSeconds();
-        if (expireAfterSeconds <= 0) {
-            return null;
-        }
-        return new Date(System.currentTimeMillis() - expireAfterSeconds * 1000L);
-    }
-
-    private int getGroupJoinRequestExpireAfterSeconds() {
+    @Override
+    protected int getModelExpireAfterSeconds() {
         return node.getSharedProperties()
                 .getService()
                 .getGroup()
                 .getGroupJoinRequestExpireAfterSeconds();
-    }
-
-    private Flux<GroupJoinRequest> queryExpirableData(Filter filter) {
-        return mongoClient.findMany(GroupJoinRequest.class, filter)
-                .map(request -> RequestStatusUtil.transformExpiredDoc(request, getGroupJoinRequestExpireAfterSeconds()));
-    }
-
-    private Flux<GroupJoinRequest> queryExpirableData(Filter filter, QueryOptions options) {
-        return mongoClient.findMany(GroupJoinRequest.class, filter, options)
-                .map(request -> RequestStatusUtil.transformExpiredDoc(request, getGroupJoinRequestExpireAfterSeconds()));
     }
 
     private void validJoinRequestContentLength(@Nullable String content) {

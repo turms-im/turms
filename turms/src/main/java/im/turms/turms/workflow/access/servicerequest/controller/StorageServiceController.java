@@ -17,7 +17,6 @@
 
 package im.turms.turms.workflow.access.servicerequest.controller;
 
-import com.google.protobuf.StringValue;
 import im.turms.common.constant.ContentType;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.storage.DeleteResourceRequest;

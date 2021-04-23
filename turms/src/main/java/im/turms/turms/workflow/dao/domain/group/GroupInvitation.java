@@ -26,7 +26,6 @@ import im.turms.server.common.mongo.entity.annotation.Id;
 import im.turms.server.common.mongo.entity.annotation.Indexed;
 import im.turms.server.common.mongo.entity.annotation.Sharded;
 import im.turms.turms.workflow.dao.domain.Expirable;
-import im.turms.turms.workflow.dao.index.OptionalIndexedForColdData;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -46,7 +45,7 @@ import java.util.Date;
 @Document(GroupInvitation.COLLECTION_NAME)
 @CompoundIndex({GroupInvitation.Fields.INVITEE_ID, GroupInvitation.Fields.CREATION_DATE})
 @Sharded(shardKey = GroupInvitation.Fields.INVITEE_ID)
-public final class GroupInvitation implements Expirable {
+public class GroupInvitation implements Expirable {
 
     public static final String COLLECTION_NAME = "groupInvitation";
 
@@ -88,11 +87,6 @@ public final class GroupInvitation implements Expirable {
     @OptionalIndexedForExtendedFeature
     private final Date responseDate;
 
-    @Field(Fields.EXPIRATION_DATE)
-    @OptionalIndexedForColdData
-    @Indexed
-    private final Date expirationDate;
-
     public static final class Fields {
         public static final String GROUP_ID = "gid";
         public static final String INVITER_ID = "irid";
@@ -101,7 +95,6 @@ public final class GroupInvitation implements Expirable {
         public static final String STATUS = "stat";
         public static final String CREATION_DATE = "cd";
         public static final String RESPONSE_DATE = "rd";
-        public static final String EXPIRATION_DATE = "ed";
 
         private Fields() {
         }

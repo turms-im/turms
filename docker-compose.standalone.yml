@@ -10,7 +10,7 @@ version: "3.4"
 services:
   # MongoDB
   mongodb-router:
-    image: "bitnami/mongodb-sharded:4.4-debian-10"
+    image: "bitnami/mongodb-sharded:4.4.4"
     environment:
       - MONGODB_ADVERTISED_HOSTNAME=mongodb-router
       - MONGODB_SHARDING_MODE=mongos
@@ -27,7 +27,7 @@ services:
       - "27017:27017"
 
   mongodb-shard:
-    image: "docker.io/bitnami/mongodb-sharded:4.4-debian-10"
+    image: "bitnami/mongodb-sharded:4.4.4"
     environment:
       - MONGODB_ADVERTISED_HOSTNAME=mongodb-shard
       - MONGODB_SHARDING_MODE=shardsvr
@@ -38,7 +38,7 @@ services:
       - MONGODB_REPLICA_SET_NAME=shard
 
   mongodb-cfg:
-    image: "docker.io/bitnami/mongodb-sharded:4.4-debian-10"
+    image: "bitnami/mongodb-sharded:4.4.4"
     environment:
       - MONGODB_ADVERTISED_HOSTNAME=mongodb-cfg
       - MONGODB_SHARDING_MODE=configsvr

@@ -82,11 +82,6 @@ export default {
                     type: 'DATE-RANGE',
                     model: [],
                     name: 'creationDate'
-                },
-                {
-                    type: 'DATE-RANGE',
-                    model: [],
-                    name: 'expirationDate'
                 }
             ],
             actionGroups: [
@@ -131,10 +126,6 @@ export default {
                         {
                             id: 'responseDate',
                             type: 'DATE'
-                        },
-                        {
-                            id: 'expirationDate',
-                            type: 'DATE'
                         }
                     ]
                 },
@@ -171,10 +162,6 @@ export default {
                         },
                         {
                             id: 'responseDate',
-                            type: 'DATE'
-                        },
-                        {
-                            id: 'expirationDate',
                             type: 'DATE'
                         }
                     ]

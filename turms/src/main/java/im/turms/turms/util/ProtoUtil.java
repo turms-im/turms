@@ -131,14 +131,14 @@ public final class ProtoUtil {
     }
 
     public static UserFriendRequest.Builder friendRequest2proto(
-            @NotNull im.turms.turms.workflow.dao.domain.user.UserFriendRequest userFriendRequest) {
+            @NotNull im.turms.turms.workflow.dao.domain.user.UserFriendRequest userFriendRequest,
+            int expireAfterSeconds) {
         UserFriendRequest.Builder builder = UserFriendRequest.newBuilder();
         Long requestId = userFriendRequest.getId();
         Date creationDate = userFriendRequest.getCreationDate();
         String content = userFriendRequest.getContent();
         RequestStatus status = userFriendRequest.getStatus();
         String reason = userFriendRequest.getReason();
-        Date expirationDate = userFriendRequest.getExpirationDate();
         Long requesterId = userFriendRequest.getRequesterId();
         Long recipientId = userFriendRequest.getRecipientId();
         if (requestId != null) {
@@ -146,6 +146,9 @@ public final class ProtoUtil {
         }
         if (creationDate != null) {
             builder.setCreationDate(creationDate.getTime());
+            if (expireAfterSeconds > 0) {
+                builder.setExpirationDate(creationDate.getTime() + expireAfterSeconds * 1000L);
+            }
         }
         if (content != null) {
             builder.setContent(content);
@@ -155,9 +158,6 @@ public final class ProtoUtil {
         }
         if (reason != null) {
             builder.setReason(reason);
-        }
-        if (expirationDate != null) {
-            builder.setExpirationDate(expirationDate.getTime());
         }
         if (requesterId != null) {
             builder.setRequesterId(requesterId);
@@ -256,13 +256,13 @@ public final class ProtoUtil {
     }
 
     public static GroupInvitation.Builder groupInvitation2proto(
-            @NotNull im.turms.turms.workflow.dao.domain.group.GroupInvitation invitation) {
+            @NotNull im.turms.turms.workflow.dao.domain.group.GroupInvitation invitation,
+            int expireAfterSeconds) {
         GroupInvitation.Builder builder = GroupInvitation.newBuilder();
         Long invitationId = invitation.getId();
         Date creationDate = invitation.getCreationDate();
         String content = invitation.getContent();
         RequestStatus status = invitation.getStatus();
-        Date expirationDate = invitation.getExpirationDate();
         Long groupId = invitation.getGroupId();
         Long inviterId = invitation.getInviterId();
         Long inviteeId = invitation.getInviteeId();
@@ -271,15 +271,15 @@ public final class ProtoUtil {
         }
         if (creationDate != null) {
             builder.setCreationDate(creationDate.getTime());
+            if (expireAfterSeconds > 0) {
+                builder.setExpirationDate(creationDate.getTime() + expireAfterSeconds * 1000L);
+            }
         }
         if (content != null) {
             builder.setContent(content);
         }
         if (status != null) {
             builder.setStatusValue(status.getNumber());
-        }
-        if (expirationDate != null) {
-            builder.setExpirationDate(expirationDate.getTime());
         }
         if (groupId != null) {
             builder.setGroupId(groupId);
@@ -294,13 +294,13 @@ public final class ProtoUtil {
     }
 
     public static GroupJoinRequest.Builder groupJoinRequest2proto(
-            @NotNull im.turms.turms.workflow.dao.domain.group.GroupJoinRequest groupJoinRequest) {
+            @NotNull im.turms.turms.workflow.dao.domain.group.GroupJoinRequest groupJoinRequest,
+            int expireAfterSeconds) {
         GroupJoinRequest.Builder builder = GroupJoinRequest.newBuilder();
         Long requestId = groupJoinRequest.getId();
         Date creationDate = groupJoinRequest.getCreationDate();
         String content = groupJoinRequest.getContent();
         RequestStatus status = groupJoinRequest.getStatus();
-        Date expirationDate = groupJoinRequest.getExpirationDate();
         Long groupId = groupJoinRequest.getGroupId();
         Long requesterId = groupJoinRequest.getRequesterId();
         Long responderId = groupJoinRequest.getResponderId();
@@ -309,15 +309,15 @@ public final class ProtoUtil {
         }
         if (creationDate != null) {
             builder.setCreationDate(creationDate.getTime());
+            if (expireAfterSeconds > 0) {
+                builder.setExpirationDate(creationDate.getTime() + expireAfterSeconds * 1000L);
+            }
         }
         if (content != null) {
             builder.setContent(content);
         }
         if (status != null) {
             builder.setStatus(status);
-        }
-        if (expirationDate != null) {
-            builder.setExpirationDate(expirationDate.getTime());
         }
         if (groupId != null) {
             builder.setGroupId(groupId);

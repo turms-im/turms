@@ -42,6 +42,7 @@ import im.turms.turms.constraint.ValidRequestStatus;
 import im.turms.turms.util.ProtoUtil;
 import im.turms.turms.workflow.dao.domain.group.GroupInvitation;
 import im.turms.turms.workflow.service.documentation.UsesNonIndexedData;
+import im.turms.turms.workflow.service.impl.ExpirableService;
 import im.turms.turms.workflow.service.impl.user.UserVersionService;
 import im.turms.turms.workflow.service.util.DomainConstraintUtil;
 import im.turms.turms.workflow.service.util.RequestStatusUtil;
@@ -71,7 +72,7 @@ import static im.turms.turms.constant.DaoConstant.ID_FIELD_NAME;
  */
 @Service
 @DependsOn(IMongoDataGenerator.BEAN_NAME)
-public class GroupInvitationService {
+public class GroupInvitationService extends ExpirableService<GroupInvitation> {
 
     private final Node node;
     private final TurmsMongoClient mongoClient;
@@ -87,6 +88,7 @@ public class GroupInvitationService {
             UserVersionService userVersionService,
             GroupVersionService groupVersionService,
             TrivialTaskManager taskManager) {
+        super(mongoClient, GroupInvitation.class);
         this.groupMemberService = groupMemberService;
         this.node = node;
         this.mongoClient = mongoClient;
@@ -103,7 +105,7 @@ public class GroupInvitationService {
                             .getService()
                             .getGroup()
                             .isDeleteExpiredGroupInvitationsWhenCronTriggered();
-                    Date expirationDate = getInvitationExpirationDate();
+                    Date expirationDate = getModelExpirationDate();
                     if (isLocalNodeLeader && deleteExpiredRequestsWhenCronTriggered && expirationDate != null) {
                         removeAllExpiredGroupInvitations(expirationDate).subscribe();
                     }
@@ -147,7 +149,7 @@ public class GroupInvitationService {
                                 if (strategy.requiresApproval()) {
                                     String finalContent = content != null ? content : "";
                                     return createGroupInvitation(null, groupId, inviterId, inviteeId, finalContent,
-                                            RequestStatus.PENDING, null, null, null);
+                                            RequestStatus.PENDING, null, null);
                                 } else {
                                     return Mono.error(TurmsBusinessException.get(TurmsStatusCode.REDUNDANT_GROUP_INVITATION,
                                             "The invitation is redundant under the strategy " + strategy));
@@ -164,8 +166,7 @@ public class GroupInvitationService {
             @Nullable String content,
             @Nullable @ValidRequestStatus RequestStatus status,
             @Nullable @PastOrPresent Date creationDate,
-            @Nullable @PastOrPresent Date responseDate,
-            @Nullable Date expirationDate) {
+            @Nullable @PastOrPresent Date responseDate) {
         try {
             AssertUtil.notNull(groupId, "groupId");
             AssertUtil.notNull(inviterId, "inviterId");
@@ -184,14 +185,11 @@ public class GroupInvitationService {
         if (creationDate == null) {
             creationDate = new Date();
         }
-        if (expirationDate == null) {
-            expirationDate = getInvitationExpirationDate();
-        }
         if (status == null) {
             status = RequestStatus.PENDING;
         }
         GroupInvitation groupInvitation =
-                new GroupInvitation(id, groupId, inviterId, inviteeId, content, status, creationDate, responseDate, expirationDate);
+                new GroupInvitation(id, groupId, inviterId, inviteeId, content, status, creationDate, responseDate);
         return mongoClient.insert(groupInvitation)
                 .flatMap(invitation -> groupVersionService.updateGroupInvitationsVersion(groupId).onErrorResume(t -> Mono.empty())
                         .then(userVersionService.updateSentGroupInvitationsVersion(inviterId).onErrorResume(t -> Mono.empty()))
@@ -209,8 +207,8 @@ public class GroupInvitationService {
                 .eq(ID_FIELD_NAME, invitationId);
         QueryOptions options = QueryOptions.newBuilder()
                 .include(GroupInvitation.Fields.GROUP_ID, GroupInvitation.Fields.STATUS);
-        return mongoClient.findOne(GroupInvitation.class, filter, options)
-                .map(groupInvitation -> RequestStatusUtil.transformExpiredDoc(groupInvitation, getInvitationExpireAfterSeconds()));
+        return queryExpirableData(filter, options)
+                .singleOrEmpty();
     }
 
     /**
@@ -319,8 +317,9 @@ public class GroupInvitationService {
                                         throw TurmsBusinessException.get(TurmsStatusCode.NO_CONTENT);
                                     }
                                     GroupInvitationsWithVersion.Builder builder = GroupInvitationsWithVersion.newBuilder();
+                                    int expireAfterSeconds = getModelExpireAfterSeconds();
                                     for (GroupInvitation groupInvitation : groupInvitations) {
-                                        builder.addGroupInvitations(ProtoUtil.groupInvitation2proto(groupInvitation));
+                                        builder.addGroupInvitations(ProtoUtil.groupInvitation2proto(groupInvitation, expireAfterSeconds));
                                     }
                                     return builder
                                             .setLastUpdatedDate(version.getTime())
@@ -359,8 +358,10 @@ public class GroupInvitationService {
                                                 }
                                                 GroupInvitationsWithVersion.Builder builder = GroupInvitationsWithVersion.newBuilder()
                                                         .setLastUpdatedDate(version.getTime());
+                                                int expireAfterSeconds = getModelExpireAfterSeconds();
                                                 for (GroupInvitation invitation : groupInvitations) {
-                                                    builder.addGroupInvitations(ProtoUtil.groupInvitation2proto(invitation).build());
+                                                    builder.addGroupInvitations(
+                                                            ProtoUtil.groupInvitation2proto(invitation, expireAfterSeconds).build());
                                                 }
                                                 return builder.build();
                                             });
@@ -397,7 +398,6 @@ public class GroupInvitationService {
             @Nullable DateRange expirationDateRange,
             @Nullable Integer page,
             @Nullable Integer size) {
-        Date expirationDate = getInvitationExpirationDate();
         Filter filter = Filter
                 .newBuilder()
                 .inIfNotNull(ID_FIELD_NAME, ids)
@@ -405,11 +405,9 @@ public class GroupInvitationService {
                 .inIfNotNull(GroupInvitation.Fields.INVITER_ID, inviterIds)
                 .inIfNotNull(GroupInvitation.Fields.INVITEE_ID, inviteeIds)
                 .inIfNotNull(GroupInvitation.Fields.STATUS, statuses)
-                .addBetweenIfNotNull(GroupInvitation.Fields.CREATION_DATE, creationDateRange)
+                .addBetweenIfNotNull(GroupInvitation.Fields.CREATION_DATE, getCreationDateRange(creationDateRange, expirationDateRange))
                 .addBetweenIfNotNull(GroupInvitation.Fields.RESPONSE_DATE, responseDateRange)
-                .addBetweenIfNotNull(GroupInvitation.Fields.EXPIRATION_DATE, expirationDateRange)
-                .isExpired(statuses, GroupInvitation.Fields.CREATION_DATE, expirationDate)
-                .isNotExpired(statuses, GroupInvitation.Fields.CREATION_DATE, expirationDate);
+                .isExpiredOrNot(statuses, GroupInvitation.Fields.CREATION_DATE, getModelExpirationDate());
         QueryOptions options = QueryOptions.newBuilder()
                 .paginateIfNotNull(page, size);
         return queryExpirableData(filter, options);
@@ -424,7 +422,6 @@ public class GroupInvitationService {
             @Nullable DateRange creationDateRange,
             @Nullable DateRange responseDateRange,
             @Nullable DateRange expirationDateRange) {
-        Date expirationDate = getInvitationExpirationDate();
         Filter filter = Filter
                 .newBuilder()
                 .inIfNotNull(ID_FIELD_NAME, ids)
@@ -432,11 +429,9 @@ public class GroupInvitationService {
                 .inIfNotNull(GroupInvitation.Fields.INVITER_ID, inviterIds)
                 .inIfNotNull(GroupInvitation.Fields.INVITEE_ID, inviteeIds)
                 .inIfNotNull(GroupInvitation.Fields.STATUS, statuses)
-                .addBetweenIfNotNull(GroupInvitation.Fields.CREATION_DATE, creationDateRange)
+                .addBetweenIfNotNull(GroupInvitation.Fields.CREATION_DATE, getCreationDateRange(creationDateRange, expirationDateRange))
                 .addBetweenIfNotNull(GroupInvitation.Fields.RESPONSE_DATE, responseDateRange)
-                .addBetweenIfNotNull(GroupInvitation.Fields.EXPIRATION_DATE, expirationDateRange)
-                .isExpired(statuses, GroupInvitation.Fields.CREATION_DATE, expirationDate)
-                .isNotExpired(statuses, GroupInvitation.Fields.CREATION_DATE, expirationDate);
+                .isExpiredOrNot(statuses, GroupInvitation.Fields.CREATION_DATE, getModelExpirationDate());
         return mongoClient.count(GroupInvitation.class, filter);
     }
 
@@ -453,8 +448,7 @@ public class GroupInvitationService {
             @Nullable String content,
             @Nullable @ValidRequestStatus RequestStatus status,
             @Nullable @PastOrPresent Date creationDate,
-            @Nullable @PastOrPresent Date responseDate,
-            @Nullable Date expirationDate) {
+            @Nullable @PastOrPresent Date responseDate) {
         try {
             AssertUtil.notEmpty(invitationIds, "invitationIds");
             validInvitationContentLength(content);
@@ -464,7 +458,7 @@ public class GroupInvitationService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        if (Validator.areAllNull(inviterId, inviteeId, content, status, creationDate, expirationDate)) {
+        if (Validator.areAllNull(inviterId, inviteeId, content, status, creationDate)) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
         Filter filter = Filter.newBuilder()
@@ -475,38 +469,19 @@ public class GroupInvitationService {
                 .setIfNotNull(GroupInvitation.Fields.INVITEE_ID, inviteeId)
                 .setIfNotNull(GroupInvitation.Fields.CONTENT, content)
                 .setIfNotNull(GroupInvitation.Fields.STATUS, status)
-                .setIfNotNull(GroupInvitation.Fields.CREATION_DATE, creationDate)
-                .setIfNotNull(GroupInvitation.Fields.EXPIRATION_DATE, expirationDate);
+                .setIfNotNull(GroupInvitation.Fields.CREATION_DATE, creationDate);
         RequestStatusUtil.updateResponseDateBasedOnStatus(update, status, responseDate);
         return mongoClient.updateMany(GroupInvitation.class, filter, update);
     }
 
     // Internal methods
 
-    @Nullable
-    private Date getInvitationExpirationDate() {
-        int expireAfterSeconds = getInvitationExpireAfterSeconds();
-        if (expireAfterSeconds <= 0) {
-            return null;
-        }
-        return new Date(System.currentTimeMillis() - expireAfterSeconds * 1000L);
-    }
-
-    private int getInvitationExpireAfterSeconds() {
+    @Override
+    protected int getModelExpireAfterSeconds() {
         return node.getSharedProperties()
                 .getService()
                 .getGroup()
                 .getGroupInvitationExpireAfterSeconds();
-    }
-
-    private Flux<GroupInvitation> queryExpirableData(Filter filter) {
-        return mongoClient.findMany(GroupInvitation.class, filter)
-                .map(request -> RequestStatusUtil.transformExpiredDoc(request, getInvitationExpireAfterSeconds()));
-    }
-
-    private Flux<GroupInvitation> queryExpirableData(Filter filter, QueryOptions options) {
-        return mongoClient.findMany(GroupInvitation.class, filter, options)
-                .map(request -> RequestStatusUtil.transformExpiredDoc(request, getInvitationExpireAfterSeconds()));
     }
 
     private void validInvitationContentLength(@Nullable String content) {

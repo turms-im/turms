@@ -47,7 +47,9 @@ import im.turms.server.common.mongo.exception.MongoExceptionTranslator;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
 import im.turms.server.common.mongo.operation.option.Update;
+import im.turms.server.common.util.CollectorUtil;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import org.bson.BsonDocument;
 import org.bson.BsonDocumentWriter;
 import org.bson.Document;
@@ -367,7 +369,14 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         return Flux.from(source)
                 .then()
                 .doOnError(throwable -> log.error("Failed to index the collection {}", collectionName, throwable))
-                .doOnSuccess(ignored -> log.info("Indexing the collection {} successfully", collectionName));
+                .doOnSuccess(ignored -> {
+                    List<BsonDocument> indexDocs = indexModels
+                            .stream()
+                            .map(indexModel -> indexModel.getKeys().toBsonDocument())
+                            .collect(CollectorUtil.toList(indexModels.size()));
+                    String indexes = StringUtils.join(indexDocs, ", ");
+                    log.info("Indexing the collection {} successfully: [{}]", collectionName, indexes);
+                });
     }
 
     @Override

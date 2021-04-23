@@ -43,8 +43,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static im.turms.turms.workflow.access.http.permission.AdminPermission.CLUSTER_CONFIG_UPDATE;
 import static im.turms.turms.workflow.access.http.permission.AdminPermission.CLUSTER_CONFIG_QUERY;
+import static im.turms.turms.workflow.access.http.permission.AdminPermission.CLUSTER_CONFIG_UPDATE;
 
 /**
  * @author James Chen

@@ -26,7 +26,6 @@ import im.turms.server.common.mongo.entity.annotation.Id;
 import im.turms.server.common.mongo.entity.annotation.Indexed;
 import im.turms.server.common.mongo.entity.annotation.Sharded;
 import im.turms.turms.workflow.dao.domain.Expirable;
-import im.turms.turms.workflow.dao.index.OptionalIndexedForColdData;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -50,7 +49,7 @@ import java.util.Date;
 @CompoundIndex({GroupJoinRequest.Fields.REQUESTER_ID,
         GroupJoinRequest.Fields.CREATION_DATE})
 @Sharded(shardKey = GroupJoinRequest.Fields.REQUESTER_ID)
-public final class GroupJoinRequest implements Expirable {
+public class GroupJoinRequest implements Expirable {
 
     public static final String COLLECTION_NAME = "groupJoinRequest";
 
@@ -75,11 +74,6 @@ public final class GroupJoinRequest implements Expirable {
     @OptionalIndexedForExtendedFeature
     private final Date responseDate;
 
-    @Field(Fields.EXPIRATION_DATE)
-    @OptionalIndexedForColdData
-    @Indexed
-    private final Date expirationDate;
-
     /**
      * Used by queryGroupJoinRequestsByGroupId
      */
@@ -100,7 +94,6 @@ public final class GroupJoinRequest implements Expirable {
         public static final String STATUS = "stat";
         public static final String CREATION_DATE = "cd";
         public static final String RESPONSE_DATE = "rd";
-        public static final String EXPIRATION_DATE = "ed";
         public static final String GROUP_ID = "gid";
         public static final String REQUESTER_ID = "rqid";
         public static final String RESPONDER_ID = "rpid";

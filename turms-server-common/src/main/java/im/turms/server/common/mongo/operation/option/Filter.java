@@ -19,6 +19,7 @@ package im.turms.server.common.mongo.operation.option;
 
 import im.turms.common.constant.RequestStatus;
 import im.turms.server.common.bo.common.DateRange;
+import im.turms.server.common.util.DateUtil;
 import org.bson.Document;
 
 import javax.annotation.Nullable;
@@ -159,31 +160,38 @@ public class Filter {
 
     // Expiration Support
 
-    public Filter isExpired(Set<RequestStatus> statuses,
-                            String creationDateFieldName,
-                            Date expirationDate) {
-        boolean isExpired = statuses != null && statuses.contains(RequestStatus.EXPIRED);
-        if (isExpired) {
-            return isExpired(creationDateFieldName, expirationDate);
-        }
-        return this;
-    }
-
     public Filter isExpired(String creationDateFieldName,
                             @Nullable Date expirationDate) {
         // If never expire
         if (expirationDate == null) {
             return this;
         }
-        lt(creationDateFieldName, expirationDate);
+        Object existingDoc = document.get(creationDateFieldName);
+        if (existingDoc instanceof Document) {
+            Document doc = (Document) existingDoc;
+            Object existingDate = doc.get("$lt");
+            doc.append("$lt", DateUtil.min((Date) existingDate, expirationDate));
+        } else {
+            lt(creationDateFieldName, expirationDate);
+        }
         return this;
     }
 
-    public Filter isNotExpired(Set<RequestStatus> statuses,
-                            String creationDateFieldName,
-                            Date expirationDate) {
-        boolean isNotExpired = statuses != null && statuses.contains(RequestStatus.PENDING);
-        if (isNotExpired) {
+    public Filter isExpiredOrNot(Set<RequestStatus> statuses,
+                                 String creationDateFieldName,
+                                 Date expirationDate) {
+        if (statuses == null) {
+            return this;
+        }
+        boolean includesExpired = statuses.contains(RequestStatus.EXPIRED);
+        boolean includesNotExpired = statuses.contains(RequestStatus.PENDING);
+        if (includesExpired) {
+            if (includesNotExpired) {
+                return this;
+            }
+            return isExpired(creationDateFieldName, expirationDate);
+        }
+        if (includesNotExpired) {
             return isNotExpired(creationDateFieldName, expirationDate);
         }
         return this;
@@ -195,7 +203,22 @@ public class Filter {
         if (expirationDate == null) {
             return this;
         }
-        gteOrNull(creationDateFieldName, expirationDate);
+        Object existingDoc = document.get(creationDateFieldName);
+        if (existingDoc instanceof Document) {
+            Document doc = (Document) existingDoc;
+            Object existingDate = doc.get("$gte");
+            if (existingDate instanceof Date) {
+                doc.append("$gte", DateUtil.max((Date) existingDate, expirationDate));
+            } else {
+                if (doc.isEmpty()) {
+                    gteOrNull(creationDateFieldName, expirationDate);
+                } else {
+                    doc.put("$gte", expirationDate);
+                }
+            }
+        } else {
+            gteOrNull(creationDateFieldName, expirationDate);
+        }
         return this;
     }
 

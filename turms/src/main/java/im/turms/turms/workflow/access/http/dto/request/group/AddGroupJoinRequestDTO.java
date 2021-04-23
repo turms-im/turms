@@ -32,7 +32,6 @@ public final class AddGroupJoinRequestDTO {
     private final RequestStatus status;
     private final Date creationDate;
     private final Date responseDate;
-    private final Date expirationDate;
     private final Long groupId;
     private final Long requesterId;
     private final Long responderId;

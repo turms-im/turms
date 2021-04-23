@@ -22,7 +22,6 @@ import im.turms.server.common.mongo.entity.annotation.CompoundIndex;
 import im.turms.server.common.mongo.entity.annotation.Document;
 import im.turms.server.common.mongo.entity.annotation.Field;
 import im.turms.server.common.mongo.entity.annotation.Id;
-import im.turms.server.common.mongo.entity.annotation.Indexed;
 import im.turms.server.common.mongo.entity.annotation.Sharded;
 import im.turms.turms.workflow.dao.domain.Expirable;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForExtendedFeature;
@@ -46,7 +45,7 @@ import java.util.Date;
         UserFriendRequest.Fields.CREATION_DATE,
         UserFriendRequest.Fields.REQUESTER_ID})
 @Sharded(shardKey = UserFriendRequest.Fields.RECIPIENT_ID)
-public final class UserFriendRequest implements Expirable {
+public class UserFriendRequest implements Expirable {
 
     public static final String COLLECTION_NAME = "userFriendRequest";
 
@@ -69,14 +68,6 @@ public final class UserFriendRequest implements Expirable {
     @Field(Fields.CREATION_DATE)
     private final Date creationDate;
 
-    /**
-     * Indexed so that turms can queries and remove expiry requests regularly.
-     * No need to change it.
-     */
-    @Field(Fields.EXPIRATION_DATE)
-    @Indexed
-    private final Date expirationDate;
-
     @Field(Fields.RESPONSE_DATE)
     @OptionalIndexedForExtendedFeature
     private final Date responseDate;
@@ -97,7 +88,6 @@ public final class UserFriendRequest implements Expirable {
         public static final String STATUS = "stat";
         public static final String REASON = "rsn";
         public static final String CREATION_DATE = "cd";
-        public static final String EXPIRATION_DATE = "ed";
         public static final String RESPONSE_DATE = "adr";
         public static final String REQUESTER_ID = "rrid";
         public static final String RECIPIENT_ID = "rtid";

@@ -277,7 +277,6 @@ public class MongoDataGenerator implements IMongoDataGenerator {
                     "test-content",
                     RequestStatus.PENDING,
                     DateUtils.addDays(now, -i),
-                    null,
                     null);
             groupRelatedObjs.add(groupInvitation);
         }
@@ -294,7 +293,6 @@ public class MongoDataGenerator implements IMongoDataGenerator {
                     "test-content",
                     RequestStatus.PENDING,
                     now,
-                    null,
                     null,
                     1L,
                     (long) i,
@@ -407,7 +405,6 @@ public class MongoDataGenerator implements IMongoDataGenerator {
                     RequestStatus.PENDING,
                     null,
                     now,
-                    null,
                     null,
                     1L,
                     (long) i);

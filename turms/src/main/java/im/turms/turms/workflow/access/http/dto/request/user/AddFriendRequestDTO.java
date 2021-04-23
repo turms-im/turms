@@ -35,5 +35,4 @@ public final class AddFriendRequestDTO {
     private final String reason;
     private final Date creationDate;
     private final Date responseDate;
-    private final Date expirationDate;
 }

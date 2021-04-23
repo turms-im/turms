@@ -45,6 +45,7 @@ import im.turms.turms.constraint.ValidResponseAction;
 import im.turms.turms.util.ProtoUtil;
 import im.turms.turms.workflow.dao.domain.user.UserFriendRequest;
 import im.turms.turms.workflow.service.documentation.UsesNonIndexedData;
+import im.turms.turms.workflow.service.impl.ExpirableService;
 import im.turms.turms.workflow.service.impl.user.UserVersionService;
 import im.turms.turms.workflow.service.util.DomainConstraintUtil;
 import im.turms.turms.workflow.service.util.RequestStatusUtil;
@@ -71,7 +72,7 @@ import java.util.Set;
  */
 @Service
 @DependsOn(IMongoDataGenerator.BEAN_NAME)
-public class UserFriendRequestService {
+public class UserFriendRequestService extends ExpirableService<UserFriendRequest> {
 
     private final Node node;
     private final TurmsMongoClient mongoClient;
@@ -85,6 +86,7 @@ public class UserFriendRequestService {
             UserVersionService userVersionService,
             UserRelationshipService userRelationshipService,
             TrivialTaskManager taskManager) {
+        super(mongoClient, UserFriendRequest.class);
         this.node = node;
         this.mongoClient = mongoClient;
         this.userVersionService = userVersionService;
@@ -102,7 +104,7 @@ public class UserFriendRequestService {
                             .getUser()
                             .getFriendRequest()
                             .isDeleteExpiredRequestsWhenCronTriggered();
-                    Date expirationDate = getFriendRequestExpirationDate();
+                    Date expirationDate = getModelExpirationDate();
                     if (isLocalNodeLeader && deleteExpiredRequestsWhenCronTriggered && expirationDate != null) {
                         removeAllExpiredFriendRequests(expirationDate).subscribe();
                     }
@@ -124,7 +126,7 @@ public class UserFriendRequestService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Date expirationDate = getFriendRequestExpirationDate();
+        Date expirationDate = getModelExpirationDate();
         Filter filter = Filter.newBuilder()
                 .eq(UserFriendRequest.Fields.REQUESTER_ID, requesterId)
                 .eq(UserFriendRequest.Fields.RECIPIENT_ID, recipientId)
@@ -164,7 +166,6 @@ public class UserFriendRequestService {
             @Nullable @ValidRequestStatus RequestStatus status,
             @Nullable @PastOrPresent Date creationDate,
             @Nullable @PastOrPresent Date responseDate,
-            @Nullable Date expirationDate,
             @Nullable String reason) {
         try {
             AssertUtil.notNull(requesterId, "requesterId");
@@ -186,14 +187,11 @@ public class UserFriendRequestService {
             creationDate = creationDate.before(now) ? creationDate : now;
         }
         responseDate = RequestStatusUtil.getResponseDateBasedOnStatus(status, responseDate, now);
-        if (expirationDate == null) {
-            expirationDate = getFriendRequestExpirationDate();
-        }
         if (status == null) {
             status = RequestStatus.PENDING;
         }
-        UserFriendRequest userFriendRequest = new UserFriendRequest(id, content, status, reason, creationDate,
-                expirationDate, responseDate, requesterId, recipientId);
+        UserFriendRequest userFriendRequest = new UserFriendRequest(id, content, status, reason,
+                creationDate, responseDate, requesterId, recipientId);
         return mongoClient.insert(userFriendRequest)
                 .flatMap(unused -> userVersionService.updateReceivedFriendRequestsVersion(recipientId).onErrorResume(t -> Mono.empty())
                         .then(userVersionService.updateSentFriendRequestsVersion(requesterId).onErrorResume(t -> Mono.empty()))
@@ -231,7 +229,7 @@ public class UserFriendRequestService {
                         return requestExists
                                 ? Mono.error(TurmsBusinessException.get(TurmsStatusCode.CREATE_EXISTING_FRIEND_REQUEST))
                                 : createFriendRequest(null, requesterId, recipientId, finalContent,
-                                RequestStatus.PENDING, creationDate, null, null, null);
+                                RequestStatus.PENDING, creationDate, null, null);
                     });
                 });
     }
@@ -252,7 +250,7 @@ public class UserFriendRequestService {
         Filter filter = Filter.newBuilder()
                 .eq(DaoConstant.ID_FIELD_NAME, requestId)
                 .eq(UserFriendRequest.Fields.STATUS, RequestStatus.PENDING)
-                .isNotExpired(UserFriendRequest.Fields.CREATION_DATE, getFriendRequestExpirationDate());
+                .isNotExpired(UserFriendRequest.Fields.CREATION_DATE, getModelExpirationDate());
         Update update = Update.newBuilder()
                 .set(UserFriendRequest.Fields.STATUS, requestStatus)
                 .setIfNotNull(UserFriendRequest.Fields.REASON, reason);
@@ -273,8 +271,7 @@ public class UserFriendRequestService {
             @Nullable @ValidRequestStatus RequestStatus status,
             @Nullable String reason,
             @Nullable @PastOrPresent Date creationDate,
-            @Nullable @PastOrPresent Date responseDate,
-            @Nullable Date expirationDate) {
+            @Nullable @PastOrPresent Date responseDate) {
         try {
             AssertUtil.notEmpty(requestIds, "requestIds");
             validFriendRequestContentLength(content);
@@ -285,7 +282,7 @@ public class UserFriendRequestService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        if (Validator.areAllNull(requesterId, recipientId, content, status, reason, creationDate, responseDate, expirationDate)) {
+        if (Validator.areAllNull(requesterId, recipientId, content, status, reason, creationDate, responseDate)) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
         Filter filter = Filter.newBuilder()
@@ -296,8 +293,7 @@ public class UserFriendRequestService {
                 .setIfNotNull(UserFriendRequest.Fields.RECIPIENT_ID, recipientId)
                 .setIfNotNull(UserFriendRequest.Fields.CONTENT, content)
                 .setIfNotNull(UserFriendRequest.Fields.REASON, reason)
-                .setIfNotNull(UserFriendRequest.Fields.CREATION_DATE, creationDate)
-                .setIfNotNull(UserFriendRequest.Fields.EXPIRATION_DATE, expirationDate);
+                .setIfNotNull(UserFriendRequest.Fields.CREATION_DATE, creationDate);
         RequestStatusUtil.updateResponseDateBasedOnStatus(update, status, new Date());
         return mongoClient.updateMany(UserFriendRequest.class, filter, update);
     }
@@ -388,8 +384,9 @@ public class UserFriendRequestService {
                                         throw TurmsBusinessException.get(TurmsStatusCode.NO_CONTENT);
                                     }
                                     UserFriendRequestsWithVersion.Builder builder = UserFriendRequestsWithVersion.newBuilder();
+                                    int expireAfterSeconds = getModelExpireAfterSeconds();
                                     for (UserFriendRequest request : requests) {
-                                        builder.addUserFriendRequests(ProtoUtil.friendRequest2proto(request));
+                                        builder.addUserFriendRequests(ProtoUtil.friendRequest2proto(request, expireAfterSeconds));
                                     }
                                     return builder
                                             .setLastUpdatedDate(version.getTime())
@@ -442,17 +439,15 @@ public class UserFriendRequestService {
             @Nullable DateRange expirationDateRange,
             @Nullable Integer page,
             @Nullable Integer size) {
-        Date expirationDate = getFriendRequestExpirationDate();
+        Date expirationDate = getModelExpirationDate();
         Filter filter = Filter.newBuilder()
                 .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
                 .inIfNotNull(UserFriendRequest.Fields.REQUESTER_ID, requesterIds)
                 .inIfNotNull(UserFriendRequest.Fields.RECIPIENT_ID, recipientIds)
                 .inIfNotNull(UserFriendRequest.Fields.STATUS, statuses)
-                .addBetweenIfNotNull(UserFriendRequest.Fields.CREATION_DATE, creationDateRange)
+                .addBetweenIfNotNull(UserFriendRequest.Fields.CREATION_DATE, getCreationDateRange(creationDateRange, expirationDateRange))
                 .addBetweenIfNotNull(UserFriendRequest.Fields.RESPONSE_DATE, responseDateRange)
-                .addBetweenIfNotNull(UserFriendRequest.Fields.EXPIRATION_DATE, expirationDateRange)
-                .isExpired(statuses, UserFriendRequest.Fields.CREATION_DATE, expirationDate)
-                .isNotExpired(statuses, UserFriendRequest.Fields.CREATION_DATE, expirationDate);
+                .isExpiredOrNot(statuses, UserFriendRequest.Fields.CREATION_DATE, expirationDate);
         QueryOptions options = QueryOptions.newBuilder()
                 .paginateIfNotNull(page, size);
         return queryExpirableData(filter, options);
@@ -472,41 +467,21 @@ public class UserFriendRequestService {
                 .inIfNotNull(UserFriendRequest.Fields.REQUESTER_ID, requesterIds)
                 .inIfNotNull(UserFriendRequest.Fields.RECIPIENT_ID, recipientIds)
                 .inIfNotNull(UserFriendRequest.Fields.STATUS, statuses)
-                .addBetweenIfNotNull(UserFriendRequest.Fields.CREATION_DATE, creationDateRange)
+                .addBetweenIfNotNull(UserFriendRequest.Fields.CREATION_DATE, getCreationDateRange(creationDateRange, expirationDateRange))
                 .addBetweenIfNotNull(UserFriendRequest.Fields.RESPONSE_DATE, responseDateRange)
-                .addBetweenIfNotNull(UserFriendRequest.Fields.EXPIRATION_DATE, expirationDateRange)
-                .isExpired(statuses, UserFriendRequest.Fields.CREATION_DATE, getFriendRequestExpirationDate())
-                .isNotExpired(statuses, UserFriendRequest.Fields.CREATION_DATE, getFriendRequestExpirationDate());
+                .isExpiredOrNot(statuses, UserFriendRequest.Fields.CREATION_DATE, getModelExpirationDate());
         return mongoClient.count(UserFriendRequest.class, filter);
     }
 
     // Internal methods
 
-    @Nullable
-    private Date getFriendRequestExpirationDate() {
-        int expireAfterSeconds = getFriendRequestExpireAfterSeconds();
-        if (expireAfterSeconds <= 0) {
-            return null;
-        }
-        return new Date(System.currentTimeMillis() - expireAfterSeconds * 1000L);
-    }
-
-    private int getFriendRequestExpireAfterSeconds() {
+    @Override
+    protected int getModelExpireAfterSeconds() {
         return node.getSharedProperties()
                 .getService()
                 .getUser()
                 .getFriendRequest()
                 .getFriendRequestExpireAfterSeconds();
-    }
-
-    private Flux<UserFriendRequest> queryExpirableData(Filter filter) {
-        return mongoClient.findMany(UserFriendRequest.class, filter)
-                .map(request -> RequestStatusUtil.transformExpiredDoc(request, getFriendRequestExpireAfterSeconds()));
-    }
-
-    private Flux<UserFriendRequest> queryExpirableData(Filter filter, QueryOptions options) {
-        return mongoClient.findMany(UserFriendRequest.class, filter, options)
-                .map(request -> RequestStatusUtil.transformExpiredDoc(request, getFriendRequestExpireAfterSeconds()));
     }
 
     private void validFriendRequestContentLength(@Nullable String content) {
