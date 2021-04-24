@@ -45,7 +45,7 @@ module.exports = {
             .plugin('html')
             .tap(args => {
                 args[0].template = `${CLIENT_DIR}/public/index.html`;
-                args[0].favicon = `${CLIENT_DIR}/public/favicon.ico`;
+                args[0].favicon = `${CLIENT_DIR}/public/favicon.svg`;
                 return args;
             });
     }

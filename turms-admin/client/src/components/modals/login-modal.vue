@@ -191,7 +191,7 @@ export default {
 }
 
 .login-modal__logo {
-    height: 54px;
+    height: 84px;
     margin: 0 0 24px 0;
 }
 </style>
