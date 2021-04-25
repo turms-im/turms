@@ -24,7 +24,7 @@ import com.mongodb.reactivestreams.client.ClientSession;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.mongo.IMongoDataGenerator;
+import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.Update;
@@ -57,7 +57,7 @@ import java.util.Set;
  */
 @Log4j2
 @Service
-@DependsOn(IMongoDataGenerator.BEAN_NAME)
+@DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class ConversationService {
 
     private final Node node;

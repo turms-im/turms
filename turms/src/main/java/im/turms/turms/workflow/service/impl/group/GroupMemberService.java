@@ -29,7 +29,7 @@ import im.turms.server.common.bo.session.UserSessionsStatus;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.mongo.IMongoDataGenerator;
+import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
@@ -71,7 +71,7 @@ import static im.turms.server.common.util.MapUtil.getCapability;
  * @author James Chen
  */
 @Service
-@DependsOn(IMongoDataGenerator.BEAN_NAME)
+@DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class GroupMemberService {
 
     private final Node node;

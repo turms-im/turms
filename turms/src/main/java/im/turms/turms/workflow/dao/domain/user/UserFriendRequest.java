@@ -34,7 +34,7 @@ import java.util.Date;
  * @author James Chen
  * @implNote In the compound index,
  * The first field is used to query requests according to the recipient ID;
- * The second field is used to limit the date range of data to avoid the linear growth of the amount of target data,
+ * The second field is used to limit the date range of data because of the ever-growing collection,
  * especially for the scenario that a user queries his/her requests by the creation date;
  * The third field is used to check if there already a request when creating a request.
  */

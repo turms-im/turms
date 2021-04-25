@@ -48,7 +48,6 @@ public final class TurmsMongoClient implements MongoOperationsSupport {
         return new TurmsMongoClient(properties);
     }
 
-
     private TurmsMongoClient(TurmsMongoProperties properties) {
         context = new MongoContext(properties.getUri());
         operations = new TurmsMongoOperations(context);

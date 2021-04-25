@@ -17,9 +17,7 @@
 
 package im.turms.turms.workflow.dao;
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import im.turms.common.constant.GroupInvitationStrategy;
 import im.turms.common.constant.GroupJoinStrategy;
@@ -27,13 +25,9 @@ import im.turms.common.constant.GroupMemberRole;
 import im.turms.common.constant.GroupUpdateStrategy;
 import im.turms.common.constant.ProfileAccessStrategy;
 import im.turms.common.constant.RequestStatus;
-import im.turms.server.common.context.TurmsApplicationContext;
 import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.manager.PasswordManager;
-import im.turms.server.common.mongo.IMongoDataGenerator;
 import im.turms.server.common.mongo.TurmsMongoClient;
-import im.turms.server.common.mongo.entity.MongoEntity;
-import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.service.env.MockProperties;
 import im.turms.server.common.util.MapUtil;
 import im.turms.turms.constant.DaoConstant;
@@ -57,88 +51,75 @@ import im.turms.turms.workflow.dao.domain.user.UserRelationship;
 import im.turms.turms.workflow.dao.domain.user.UserRelationshipGroup;
 import im.turms.turms.workflow.dao.domain.user.UserRelationshipGroupMember;
 import im.turms.turms.workflow.dao.domain.user.UserVersion;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
-import java.time.Duration;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author James Chen
  */
 @Log4j2
-@Component(IMongoDataGenerator.BEAN_NAME)
-public class MongoDataGenerator implements IMongoDataGenerator {
+public final class MongoMockManager {
 
-    public final boolean isMockEnabled;
-    public final int userNumber;
-    public final int step;
-
-    public final int targetUserToBeGroupMemberStart;
-    public final int targetUserToBeGroupMemberEnd;
-    public final int targetUserForGroupJoinRequestStart;
-    public final int targetUserForGroupJoinRequestEnd;
-    public final int targetUserForGroupInvitationStart;
-    public final int targetUserForGroupInvitationEnd;
-    public final int targetUserToBlockInGroupStart;
-    public final int targetUserToBlockInGroupEnd;
-
-    public final int targetUserToRequestFriendRequestStart;
-    public final int targetUserToRequestFriendRequestEnd;
-    public final int targetUserToBeFriendRelationshipStart;
-    public final int targetUserToBeFriendRelationshipEnd;
+    private final PasswordManager passwordManager;
 
     private final TurmsMongoClient adminMongoClient;
     private final TurmsMongoClient userMongoClient;
     private final TurmsMongoClient groupMongoClient;
     private final TurmsMongoClient conversationMongoClient;
     private final TurmsMongoClient messageMongoClient;
-    private final List<TurmsMongoClient> clients;
 
-    private final PasswordManager passwordManager;
-    private final TurmsApplicationContext context;
+    @Getter
+    private final boolean isMockEnabled;
+    private final int userNumber;
+
+    private final int targetUserToBeGroupMemberStart;
+    private final int targetUserToBeGroupMemberEnd;
+    private final int targetUserForGroupJoinRequestStart;
+    private final int targetUserForGroupJoinRequestEnd;
+    private final int targetUserForGroupInvitationStart;
+    private final int targetUserForGroupInvitationEnd;
+    private final int targetUserToBlockInGroupStart;
+    private final int targetUserToBlockInGroupEnd;
+
+    private final int targetUserToRequestFriendRequestStart;
+    private final int targetUserToRequestFriendRequestEnd;
+    private final int targetUserToBeFriendRelationshipStart;
+    private final int targetUserToBeFriendRelationshipEnd;
+
+    @Getter
     private final boolean clearAllCollectionsBeforeMocking;
 
     private long currentId = 1L;
 
-    public MongoDataGenerator(
-            TurmsMongoClient adminMongoClient,
-            TurmsMongoClient userMongoClient,
-            TurmsMongoClient groupMongoClient,
-            TurmsMongoClient conversationMongoClient,
-            TurmsMongoClient messageMongoClient,
-            PasswordManager passwordManager,
-            TurmsApplicationContext context,
-            TurmsPropertiesManager turmsPropertiesManager) {
+    public MongoMockManager(MockProperties properties,
+                            PasswordManager passwordManager,
+                            TurmsMongoClient adminMongoClient,
+                            TurmsMongoClient userMongoClient,
+                            TurmsMongoClient groupMongoClient,
+                            TurmsMongoClient conversationMongoClient,
+                            TurmsMongoClient messageMongoClient) {
+        this.passwordManager = passwordManager;
         this.adminMongoClient = adminMongoClient;
         this.userMongoClient = userMongoClient;
         this.groupMongoClient = groupMongoClient;
         this.conversationMongoClient = conversationMongoClient;
         this.messageMongoClient = messageMongoClient;
-        clients = List.of(adminMongoClient,
-                userMongoClient,
-                groupMongoClient,
-                conversationMongoClient,
-                messageMongoClient);
 
-        this.passwordManager = passwordManager;
-        this.context = context;
-
-        MockProperties mockProperties = turmsPropertiesManager.getLocalProperties().getService().getMock();
-        isMockEnabled = mockProperties.isEnabled();
-        clearAllCollectionsBeforeMocking = mockProperties.isClearAllCollectionsBeforeMocking();
-        userNumber = mockProperties.getUserNumber();
-        step = userNumber / 10;
+        isMockEnabled = properties.isEnabled();
+        clearAllCollectionsBeforeMocking = properties.isClearAllCollectionsBeforeMocking();
+        userNumber = properties.getUserNumber();
+        int step = userNumber / 10;
 
         targetUserToBeGroupMemberStart = 1;
         targetUserToBeGroupMemberEnd = step;
@@ -153,54 +134,9 @@ public class MongoDataGenerator implements IMongoDataGenerator {
         targetUserToBeFriendRelationshipEnd = step;
         targetUserToRequestFriendRequestStart = 1 + step;
         targetUserToRequestFriendRequestEnd = 1 + step * 2;
-
-        initCollections();
     }
 
-    private void initCollections() {
-        Duration timeout = Duration.ofMinutes(1);
-        if (!context.isProduction() && clearAllCollectionsBeforeMocking) {
-            log.info("Start dropping databases...");
-            dropAllDatabases().block(timeout);
-            log.info("All collections are cleared");
-        }
-        log.info("Start creating collections...");
-        createCollectionsIfNotExist()
-                .doOnError(t -> log.error("Failed to create collections", t))
-                .doOnSuccess(ignored -> log.info("All collections are created"))
-                .then(ensureIndexesAndShard()
-                        .doOnError(t -> log.error("Failed to ensure indexes and shard", t))
-                        .then(Mono.defer(() -> !context.isProduction() && isMockEnabled
-                                ? mockData()
-                                : Mono.empty())))
-                .block(timeout);
-    }
-
-    private Mono<Void> dropAllDatabases() {
-        Mono<Void> dropDatabase = Mono.empty();
-        for (TurmsMongoClient client : clients) {
-            dropDatabase = dropDatabase
-                    .then(Mono.defer(client::dropDatabase));
-        }
-        return dropDatabase;
-    }
-
-    private Mono<Void> ensureIndexesAndShard() {
-        Multimap<TurmsMongoClient, MongoEntity<?>> map = HashMultimap.create(clients.size(), 8);
-        for (TurmsMongoClient client : clients) {
-            map.putAll(client, client.getRegisteredEntities());
-        }
-        return Mono.when(map.asMap().entrySet().stream()
-                .map(entry -> entry.getKey().ensureIndexesAndShard(entry.getValue().stream()
-                        .map(MongoEntity::getClazz)
-                        .collect(Collectors.toList())))
-                .collect(Collectors.toList()));
-    }
-
-    /**
-     * Note: Better not to remove all mock data after turms closed
-     */
-    private Mono<Void> mockData() {
+    public Mono<Void> mockData() {
         log.info("Start mocking...");
 
         final int adminCount = 10;
@@ -465,61 +401,6 @@ public class MongoDataGenerator implements IMongoDataGenerator {
                 .then()
                 .doOnSuccess(ignored -> log.info("All data has been mocked"))
                 .doOnError(t -> log.error("Failed to mock data", t));
-    }
-
-    private Mono<Void> createCollectionsIfNotExist() {
-        return Mono.when(
-                createCollectionIfNotExist(Admin.class),
-                createCollectionIfNotExist(AdminRole.class),
-
-                createCollectionIfNotExist(Group.class),
-                createCollectionIfNotExist(GroupBlockedUser.class),
-                createCollectionIfNotExist(GroupInvitation.class),
-                createCollectionIfNotExist(GroupJoinQuestion.class),
-                createCollectionIfNotExist(GroupMember.class),
-                createCollectionIfNotExist(GroupType.class),
-                createCollectionIfNotExist(GroupVersion.class),
-
-                createCollectionIfNotExist(PrivateConversation.class),
-                createCollectionIfNotExist(GroupConversation.class),
-
-                createCollectionIfNotExist(Message.class),
-
-                createCollectionIfNotExist(User.class),
-                createCollectionIfNotExist(UserFriendRequest.class),
-                createCollectionIfNotExist(UserPermissionGroup.class),
-                createCollectionIfNotExist(UserRelationship.class),
-                createCollectionIfNotExist(UserRelationshipGroup.class),
-                createCollectionIfNotExist(UserRelationshipGroupMember.class),
-                createCollectionIfNotExist(UserVersion.class));
-    }
-
-    private <T> Mono<Boolean> createCollectionIfNotExist(Class<T> clazz) {
-        TurmsMongoClient mongoClient;
-        if (clazz == Admin.class || clazz == AdminRole.class) {
-            mongoClient = adminMongoClient;
-        } else if (clazz == User.class || clazz == UserFriendRequest.class
-                || clazz == UserPermissionGroup.class || clazz == UserRelationship.class
-                || clazz == UserRelationshipGroup.class || clazz == UserRelationshipGroupMember.class || clazz == UserVersion.class) {
-            mongoClient = userMongoClient;
-        } else if (clazz == Group.class || clazz == GroupBlockedUser.class || clazz == GroupInvitation.class
-                || clazz == GroupJoinQuestion.class || clazz == GroupJoinRequest.class || clazz == GroupMember.class
-                || clazz == GroupType.class || clazz == GroupVersion.class) {
-            mongoClient = groupMongoClient;
-        } else if (clazz == PrivateConversation.class || clazz == GroupConversation.class) {
-            mongoClient = conversationMongoClient;
-        } else if (clazz == Message.class) {
-            mongoClient = messageMongoClient;
-        } else {
-            return Mono.error(new IllegalArgumentException("Unknown collection=" + clazz.getName()));
-        }
-        return mongoClient.collectionExists(clazz)
-                .flatMap(exists -> exists
-                        ? Mono.just(false)
-                        // Note that we do NOT assign a validator to collections
-                        // because it's very common that business scenarios change over time
-                        // and some new fields need to be added
-                        : mongoClient.createCollection(clazz).thenReturn(true));
     }
 
     private long nextId() {

@@ -31,7 +31,7 @@ import im.turms.server.common.constant.DateConstant;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.manager.TrivialTaskManager;
-import im.turms.server.common.mongo.IMongoDataGenerator;
+import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
@@ -45,7 +45,7 @@ import im.turms.turms.constraint.ValidResponseAction;
 import im.turms.turms.util.ProtoUtil;
 import im.turms.turms.workflow.dao.domain.user.UserFriendRequest;
 import im.turms.turms.workflow.service.documentation.UsesNonIndexedData;
-import im.turms.turms.workflow.service.impl.ExpirableService;
+import im.turms.turms.workflow.service.impl.ExpirableModelService;
 import im.turms.turms.workflow.service.impl.user.UserVersionService;
 import im.turms.turms.workflow.service.util.DomainConstraintUtil;
 import im.turms.turms.workflow.service.util.RequestStatusUtil;
@@ -71,8 +71,8 @@ import java.util.Set;
  * or admins for less resource consumption and better performance to expire requests.
  */
 @Service
-@DependsOn(IMongoDataGenerator.BEAN_NAME)
-public class UserFriendRequestService extends ExpirableService<UserFriendRequest> {
+@DependsOn(IMongoCollectionInitializer.BEAN_NAME)
+public class UserFriendRequestService extends ExpirableModelService<UserFriendRequest> {
 
     private final Node node;
     private final TurmsMongoClient mongoClient;

@@ -31,7 +31,7 @@ import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dao.util.OperationResultUtil;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.mongo.IMongoDataGenerator;
+import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
@@ -82,7 +82,7 @@ import static im.turms.turms.workflow.dao.domain.group.GroupMember.Fields.ID_USE
  * @author James Chen
  */
 @Service
-@DependsOn(IMongoDataGenerator.BEAN_NAME)
+@DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class GroupService {
 
     private final Node node;

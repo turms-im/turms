@@ -25,7 +25,7 @@ import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.log4j.ClientApiLogging;
-import im.turms.server.common.mongo.IMongoDataGenerator;
+import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.ClientApiLoggingProperties;
 import im.turms.server.common.property.env.service.env.clientapi.property.LoggingRequestProperties;
@@ -57,7 +57,7 @@ import java.util.Set;
  */
 @Service
 @Log4j2
-@DependsOn(IMongoDataGenerator.BEAN_NAME)
+@DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class OutboundMessageService {
 
     private final Node node;

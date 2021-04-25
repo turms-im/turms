@@ -386,9 +386,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         return Flux.from(source);
     }
 
-    /**
-     * Shard
-     */
+    // Shard
 
     @Override
     public Mono<Void> enableSharding(MongoDatabase databaseToShard, MongoDatabase adminDatabase) {
@@ -437,7 +435,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
             if (!indexes.isEmpty()) {
                 List<IndexModel> finalIndexes = indexes;
                 ensureIndexes = ensureIndexes
-                        .then(Mono.defer(() -> ensureIndexes(entity.getClazz(), finalIndexes)));
+                        .then(Mono.defer(() -> ensureIndexes(entity.getEntityClass(), finalIndexes)));
             }
         }
         return ensureIndexes
@@ -452,6 +450,31 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
                     return shardEntities;
                 }));
     }
+
+    // Zone
+
+    @Override
+    public Mono<Void> addShardToZone(String shardName, String zoneName) {
+        Document command = new Document("addShardToZone", shardName)
+                .append("zone", zoneName);
+        Publisher<Document> source = context.getAdminDatabase().runCommand(command);
+        return Mono.from(source).then();
+    }
+
+    @Override
+    public Mono<Void> updateZoneKeyRange(String collectionName,
+                                         String zoneName,
+                                         Document minimum,
+                                         Document maximum) {
+        Document command = new Document("updateZoneKeyRange", context.getDatabase().getName() + "." + collectionName)
+                .append("min", minimum)
+                .append("max", maximum)
+                .append("zone", zoneName);
+        Publisher<Document> source = context.getAdminDatabase().runCommand(command);
+        return Mono.from(source).then();
+    }
+
+    // Collection
 
     @Override
     public Mono<Void> createCollection(Class<?> clazz) {
@@ -484,9 +507,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         return Mono.from(publisher).hasElement();
     }
 
-    /**
-     * Transaction
-     */
+    // Transaction
 
     @Override
     public <T> Mono<T> inTransaction(Function<ClientSession, Mono<T>> action) {
@@ -501,9 +522,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
                 ClientSession::commitTransaction);
     }
 
-    /**
-     * Helper
-     */
+    // Helper
 
     private <T> Bson encodeEntityForUpdateOps(T value) {
         Codec<T> codec = (Codec<T>) context.getCodec(value.getClass());

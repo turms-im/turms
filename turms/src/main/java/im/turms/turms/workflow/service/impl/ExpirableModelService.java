@@ -31,12 +31,12 @@ import java.util.Date;
 /**
  * @author James Chen
  */
-public abstract class ExpirableService<T extends Expirable> {
+public abstract class ExpirableModelService<T extends Expirable> {
 
     private final TurmsMongoClient mongoClient;
     private final Class<T> modelClass;
 
-    protected ExpirableService(TurmsMongoClient mongoClient, Class<T> modelClass) {
+    protected ExpirableModelService(TurmsMongoClient mongoClient, Class<T> modelClass) {
         this.mongoClient = mongoClient;
         this.modelClass = modelClass;
     }

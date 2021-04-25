@@ -19,6 +19,8 @@ package im.turms.server.common.mongo;
 
 import org.bson.BsonInt32;
 import org.bson.BsonString;
+import org.bson.types.MaxKey;
+import org.bson.types.MinKey;
 
 /**
  * @author James Chen
@@ -35,5 +37,7 @@ public final class BsonPool {
     public static final BsonInt32 BSON_INT32_NEGATIVE_1 = new BsonInt32(-1);
     public static final BsonString BSON_STRING_HASHED = new BsonString("hashed");
     public static final BsonString BSON_STRING_EMPTY = new BsonString("");
+    public static final MaxKey MAX_KEY = new MaxKey();
+    public static final MinKey MIN_KEY = new MinKey();
 
 }

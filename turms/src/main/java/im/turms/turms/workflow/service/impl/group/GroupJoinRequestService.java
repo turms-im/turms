@@ -28,7 +28,7 @@ import im.turms.server.common.cluster.service.idgen.ServiceType;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.manager.TrivialTaskManager;
-import im.turms.server.common.mongo.IMongoDataGenerator;
+import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
@@ -40,7 +40,7 @@ import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.constraint.ValidRequestStatus;
 import im.turms.turms.util.ProtoUtil;
 import im.turms.turms.workflow.dao.domain.group.GroupJoinRequest;
-import im.turms.turms.workflow.service.impl.ExpirableService;
+import im.turms.turms.workflow.service.impl.ExpirableModelService;
 import im.turms.turms.workflow.service.impl.user.UserVersionService;
 import im.turms.turms.workflow.service.util.DomainConstraintUtil;
 import im.turms.turms.workflow.service.util.RequestStatusUtil;
@@ -66,8 +66,8 @@ import java.util.Set;
  * or admins for less resource consumption and better performance to expire requests.
  */
 @Service
-@DependsOn(IMongoDataGenerator.BEAN_NAME)
-public class GroupJoinRequestService extends ExpirableService<GroupJoinRequest> {
+@DependsOn(IMongoCollectionInitializer.BEAN_NAME)
+public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequest> {
 
     private final Node node;
     private final TurmsMongoClient mongoClient;
@@ -414,12 +414,12 @@ public class GroupJoinRequestService extends ExpirableService<GroupJoinRequest> 
             status = RequestStatus.PENDING;
         }
         responseDate = RequestStatusUtil.getResponseDateBasedOnStatus(status, responseDate, now);
-        GroupJoinRequest groupJoinRequest = new GroupJoinRequest(id, content, status, creationDate, responseDate,
-                groupId, requesterId, responderId);
+        GroupJoinRequest groupJoinRequest = new GroupJoinRequest(id, content, status, creationDate,
+                responseDate, groupId, requesterId, responderId);
         return mongoClient.insert(groupJoinRequest)
                 .flatMap(request -> groupVersionService.updateJoinRequestsVersion(groupId).onErrorResume(t -> Mono.empty())
-                        .then(userVersionService.updateSentGroupJoinRequestsVersion(responderId).onErrorResume(t -> Mono.empty()))
-                ).thenReturn(groupJoinRequest);
+                        .then(userVersionService.updateSentGroupJoinRequestsVersion(responderId).onErrorResume(t -> Mono.empty())))
+                .thenReturn(groupJoinRequest);
     }
 
     // Internal methods

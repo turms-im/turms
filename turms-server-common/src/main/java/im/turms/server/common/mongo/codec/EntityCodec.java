@@ -17,6 +17,7 @@
 
 package im.turms.server.common.mongo.codec;
 
+import im.turms.server.common.mongo.MongoContext;
 import im.turms.server.common.mongo.entity.EntityField;
 import im.turms.server.common.mongo.entity.MongoEntity;
 import lombok.extern.log4j.Log4j2;
@@ -50,7 +51,7 @@ public class EntityCodec<T> implements Codec<T> {
     public EntityCodec(CodecRegistry registry, Class<T> entityClass) {
         this.registry = registry;
         this.entityClass = entityClass;
-        entity = new MongoEntity<>(entityClass);
+        entity = MongoContext.ENTITY_FACTORY.parse(entityClass);
     }
 
     @Override
@@ -67,7 +68,7 @@ public class EntityCodec<T> implements Codec<T> {
                 return ctor.newInstance(ctorValues);
             }
         } catch (Exception e) {
-            throw new RuntimeException("Failed to decode Bson to " + entity.getClazz().getName(), e);
+            throw new RuntimeException("Failed to decode Bson to " + entity.getEntityClass().getName(), e);
         }
     }
 
@@ -95,7 +96,7 @@ public class EntityCodec<T> implements Codec<T> {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException("Failed to encode " + entity.getClazz().getName(), e);
+            throw new RuntimeException("Failed to encode " + entity.getEntityClass().getName(), e);
         }
         writer.writeEndDocument();
     }
@@ -121,14 +122,14 @@ public class EntityCodec<T> implements Codec<T> {
                         value = decode(field, reader, decoderContext);
                     } catch (Exception e) {
                         String message =
-                                String.format("Failed to decode the field %s of the class %s", fieldName, entity.getClazz().getName());
+                                String.format("Failed to decode the field %s of the class %s", fieldName, entity.getEntityClass().getName());
                         throw new IllegalStateException(message, e);
                     }
                 }
                 try {
                     field.set(instance, value);
                 } catch (Exception e) {
-                    String message = String.format("Failed to set the field %s of the class %s", fieldName, entity.getClazz().getName());
+                    String message = String.format("Failed to set the field %s of the class %s", fieldName, entity.getEntityClass().getName());
                     throw new IllegalStateException(message, e);
                 }
             } else {
@@ -157,7 +158,7 @@ public class EntityCodec<T> implements Codec<T> {
                         value = decode(field, reader, decoderContext);
                     } catch (Exception e) {
                         String message =
-                                String.format("Failed to decode the field %s of the class %s", fieldName, entity.getClazz().getName());
+                                String.format("Failed to decode the field %s of the class %s", fieldName, entity.getEntityClass().getName());
                         throw new IllegalStateException(message, e);
                     }
                 }

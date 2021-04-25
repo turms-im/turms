@@ -15,11 +15,21 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.mongo;
+package im.turms.server.common.mongo.entity.annotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author James Chen
+ * @implNote Note that the multi-temperature data also has a monotonic shard key.
+ * In other words, all operations will routed to hot shards instead of all shards evenly distributed.
+ * The imbalance is what we want to support multi-temperature data
  */
-public interface IMongoDataGenerator {
-    String BEAN_NAME = "mongoDataGenerator";
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface WithTemperature {
+    String creationDateFieldName();
 }

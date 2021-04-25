@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * @author James Chen
@@ -16,5 +17,10 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 public class MessageMongoProperties extends TurmsMongoProperties {
+
     private WriteConcern messageWriteConcern = WriteConcern.ACKNOWLEDGED;
+
+    @NestedConfigurationProperty
+    private MultiTemperatureProperties temperature = new MultiTemperatureProperties();
+
 }

@@ -22,7 +22,7 @@ import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constraint.NoWhitespace;
 import im.turms.server.common.constraint.ValidIpAddress;
 import im.turms.server.common.log4j.AdminApiLogging;
-import im.turms.server.common.mongo.IMongoDataGenerator;
+import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.turms.bo.AdminAction;
 import im.turms.turms.plugin.extension.handler.AdminActionHandler;
 import im.turms.turms.plugin.manager.TurmsPluginManager;
@@ -40,7 +40,7 @@ import java.util.Date;
  */
 @Service
 @Log4j2
-@DependsOn(IMongoDataGenerator.BEAN_NAME)
+@DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class AdminActionLogService {
 
     private final Node node;

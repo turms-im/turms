@@ -35,7 +35,7 @@ services:
       - MONGODB_ROOT_PASSWORD=turms
       - MONGODB_REPLICA_SET_MODE=primary
       - MONGODB_REPLICA_SET_KEY=replicasetkey123
-      - MONGODB_REPLICA_SET_NAME=shard
+      - MONGODB_REPLICA_SET_NAME=shard01
 
   mongodb-cfg:
     image: "bitnami/mongodb-sharded:4.4.4"

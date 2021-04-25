@@ -30,7 +30,7 @@ import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.dao.util.OperationResultUtil;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.manager.PasswordManager;
-import im.turms.server.common.mongo.IMongoDataGenerator;
+import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
@@ -68,7 +68,7 @@ import java.util.Set;
  * @author James Chen
  */
 @Component
-@DependsOn(IMongoDataGenerator.BEAN_NAME)
+@DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class UserService {
 
     private final GroupMemberService groupMemberService;

@@ -23,6 +23,7 @@ import im.turms.server.common.mongo.entity.annotation.Field;
 import im.turms.server.common.mongo.entity.annotation.Id;
 import im.turms.server.common.mongo.entity.annotation.Indexed;
 import im.turms.server.common.mongo.entity.annotation.Sharded;
+import im.turms.server.common.mongo.entity.annotation.WithTemperature;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForColdData;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForExtendedFeature;
 import lombok.Data;
@@ -32,11 +33,16 @@ import java.util.List;
 
 /**
  * @author James Chen
+ * @implNote The shard key is DELIVERY_DATE instead of TARGET_ID.
+ * Being Sharded by TARGET_ID is useful for small scale applications,
+ * but Turms is designed for medium and large scale applications,
+ * so we use DELIVERY_DATE as the shard key to support multi-temperature messages.
  */
 @Data
 @Document(Message.COLLECTION_NAME)
-@CompoundIndex({Message.Fields.TARGET_ID, Message.Fields.DELIVERY_DATE})
-@Sharded(shardKey = {Message.Fields.TARGET_ID, Message.Fields.DELIVERY_DATE})
+@CompoundIndex({Message.Fields.DELIVERY_DATE, Message.Fields.TARGET_ID})
+@Sharded(shardKey = Message.Fields.DELIVERY_DATE)
+@WithTemperature(creationDateFieldName = Message.Fields.DELIVERY_DATE)
 public final class Message {
 
     public static final String COLLECTION_NAME = "message";

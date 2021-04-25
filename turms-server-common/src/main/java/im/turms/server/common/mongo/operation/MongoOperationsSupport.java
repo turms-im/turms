@@ -104,6 +104,13 @@ public interface MongoOperationsSupport {
 
     Mono<Void> ensureIndexesAndShard(Collection<Class<?>> classes);
 
+    Mono<Void> addShardToZone(String shardName, String zoneName);
+
+    Mono<Void> updateZoneKeyRange(String collectionName,
+                                  String zoneName,
+                                  Document minimum,
+                                  Document maximum);
+
     Mono<Void> createCollection(Class<?> clazz);
 
     Mono<Boolean> collectionExists(Class<?> clazz);

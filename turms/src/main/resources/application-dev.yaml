@@ -40,6 +40,20 @@ turms:
         uri: mongodb://localhost:27017/turms-dev
       message:
         uri: mongodb://localhost:27017/turms-dev
+        temperature:
+          enabled: true
+          hot:
+            shards:
+              - shard01
+          warm:
+            shards:
+              - shard01
+          cold:
+            shards:
+              - shard01
+          frozen:
+            shards:
+              - shard01
 turms-plugin:
   minio:
     retry:

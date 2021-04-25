@@ -18,7 +18,7 @@
 package im.turms.gateway.dao.config;
 
 import im.turms.server.common.dao.domain.User;
-import im.turms.server.common.mongo.IMongoDataGenerator;
+import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.service.env.database.TurmsMongoProperties;
@@ -55,9 +55,9 @@ public class MongoConfig {
         return userMongoClient;
     }
 
-    @Bean(IMongoDataGenerator.BEAN_NAME)
-    public IMongoDataGenerator mongoDataGenerator() {
-        return new IMongoDataGenerator() {
+    @Bean(IMongoCollectionInitializer.BEAN_NAME)
+    public IMongoCollectionInitializer mongoDataGenerator() {
+        return new IMongoCollectionInitializer() {
         };
     }
 

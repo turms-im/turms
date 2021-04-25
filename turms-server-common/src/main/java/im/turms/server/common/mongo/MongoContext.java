@@ -26,6 +26,7 @@ import com.mongodb.reactivestreams.client.MongoCollection;
 import com.mongodb.reactivestreams.client.MongoDatabase;
 import im.turms.server.common.mongo.codec.MongoCodecProvider;
 import im.turms.server.common.mongo.entity.MongoEntity;
+import im.turms.server.common.mongo.entity.MongoEntityFactory;
 import im.turms.server.common.mongo.operation.MongoCollectionOptions;
 import im.turms.server.common.util.CollectorUtil;
 import lombok.Getter;
@@ -51,6 +52,9 @@ import java.util.Map;
  * @author James Chen
  */
 public class MongoContext {
+
+    public static final MongoEntityFactory ENTITY_FACTORY = new MongoEntityFactory();
+
     @Getter
     private final MongoClient client;
     @Getter
@@ -135,7 +139,7 @@ public class MongoContext {
                 MongoCollection<?> collection = collectionMap.get(clazz);
                 pairs.add(Pair.of(entity, collection));
             } else {
-                entity = new MongoEntity<>(clazz);
+                entity = ENTITY_FACTORY.parse(clazz);
                 MongoCollection<?> collection = database.getCollection(entity.getCollectionName(), clazz)
                         .withWriteConcern(properties.getWriteConcern());
                 entityMap.put(clazz, entity);

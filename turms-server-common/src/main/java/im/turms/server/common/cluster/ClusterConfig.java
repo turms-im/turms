@@ -21,7 +21,7 @@ import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.context.TurmsApplicationContext;
 import im.turms.server.common.manager.address.BaseServiceAddressManager;
-import im.turms.server.common.mongo.IMongoDataGenerator;
+import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -34,7 +34,7 @@ import javax.annotation.PreDestroy;
  * @author James Chen
  */
 @Configuration
-@DependsOn(IMongoDataGenerator.BEAN_NAME)
+@DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class ClusterConfig {
 
     private Node node;
