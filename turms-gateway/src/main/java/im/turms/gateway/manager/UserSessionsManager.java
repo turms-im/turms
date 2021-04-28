@@ -23,10 +23,9 @@ import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.gateway.access.udp.UdpDispatcher;
 import im.turms.gateway.pojo.bo.session.UserSession;
+import im.turms.server.common.collection.ConcurrentEnumMap;
 import im.turms.server.common.constraint.ValidDeviceType;
 import im.turms.server.common.dto.CloseReason;
-import im.turms.server.common.util.DeviceTypeUtil;
-import im.turms.server.common.util.MapUtil;
 import im.turms.server.common.util.ProtoUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.util.HashedWheelTimer;
@@ -38,9 +37,9 @@ import org.springframework.util.Assert;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -50,14 +49,17 @@ import java.util.concurrent.TimeUnit;
 public final class UserSessionsManager {
 
     /**
-     * The count of pending timeouts should be roughly the same as the count of online/connected sessions
+     * The count of pending timeouts should be roughly the same as the count of online sessions
      */
     private static final HashedWheelTimer HEARTBEAT_TIMER = new HashedWheelTimer();
+    private static final EnumMap<DeviceType, UserSession> SESSION_MAP_TEMPLATE = new EnumMap<>(DeviceType.class);
 
     private final Long userId;
     private UserStatus userStatus;
-    private final Map<DeviceType, UserSession> sessionMap =
-            new ConcurrentHashMap<>(MapUtil.getCapability(DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES.length));
+    /**
+     * The online session map of a user
+     */
+    private final Map<DeviceType, UserSession> sessionMap = new ConcurrentEnumMap<>(SESSION_MAP_TEMPLATE);
 
     public UserSessionsManager(
             @NotNull Long userId,
@@ -87,18 +89,17 @@ public final class UserSessionsManager {
                 updateSessionHeartbeatTimeout(loggingInDeviceType, userSession, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
             }
             return userSession;
-        } else {
-            return null;
         }
+        return null;
     }
 
     public void setDeviceOffline(
             @NotNull DeviceType deviceType,
             @NotNull CloseReason closeReason) {
-        sessionMap.computeIfPresent(deviceType, (key, session) -> {
+        UserSession session = sessionMap.remove(deviceType);
+        if (session != null) {
             session.close(closeReason);
-            return null;
-        });
+        }
     }
 
     /**

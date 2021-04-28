@@ -118,10 +118,12 @@ public class InboundRequestService {
 
         // Flow control
         Long requestId = serviceRequest.getRequestId();
-        if (areRequestsTooFrequent(session)) {
+        long now = System.currentTimeMillis();
+        if (areRequestsTooFrequent(now, session)) {
             TurmsNotification notification = getNotificationFromStatusCode(TurmsStatusCode.CLIENT_REQUESTS_TOO_FREQUENT, requestId);
             return Mono.just(notification);
         }
+        session.setLastRequestTimestampMillis(now);
 
         // Update heartbeat and forward request
         TracingContext tracingContext = new TracingContext(serviceRequest.getTraceId());
@@ -172,19 +174,13 @@ public class InboundRequestService {
         return node.getRpcService().requestResponse(request);
     }
 
-    private boolean areRequestsTooFrequent(UserSession session) {
+    private boolean areRequestsTooFrequent(long now, UserSession session) {
         int requestInterval = node.getSharedProperties().getGateway().getClientApi().getMinClientRequestIntervalMillis();
-        if (requestInterval > 0) {
-            long lastRequestTimestamp = session.getLastRequestTimestampMillis();
-            long now = System.currentTimeMillis();
-            boolean areFrequent = now - lastRequestTimestamp < requestInterval;
-            if (!areFrequent) {
-                session.setLastRequestTimestampMillis(now);
-            }
-            return areFrequent;
-        } else {
+        if (requestInterval <= 0) {
             return false;
         }
+        long lastRequestTimestamp = session.getLastRequestTimestampMillis();
+        return now - lastRequestTimestamp < requestInterval;
     }
 
     private TurmsNotification getNotificationFromStatusCode(@NotNull TurmsStatusCode statusCode, @Nullable Long requestId) {

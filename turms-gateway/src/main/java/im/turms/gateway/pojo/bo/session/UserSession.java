@@ -18,6 +18,7 @@
 package im.turms.gateway.pojo.bo.session;
 
 import im.turms.common.constant.DeviceType;
+import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.util.RandomUtil;
 import im.turms.gateway.pojo.bo.session.connection.NetConnection;
 import im.turms.server.common.dto.CloseReason;
@@ -51,7 +52,7 @@ public final class UserSession {
     @Nullable
     private Point loginLocation;
     /**
-     * 1. Use {@link ByteBuf} instead of {@link im.turms.common.model.dto.notification.TurmsNotification}
+     * 1. Use {@link ByteBuf} instead of {@link TurmsNotification}
      * so that turms-gateway can transfer data through zero copy (if SSL is disabled)
      * and don't need to parse it when the data comes from turms.
      * <p>
