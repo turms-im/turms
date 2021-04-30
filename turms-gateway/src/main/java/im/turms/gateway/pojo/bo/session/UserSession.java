@@ -128,8 +128,13 @@ public final class UserSession {
     public boolean tryEmitNextNotification(ByteBuf byteBuf) {
         Sinks.EmitResult result = notificationSink.tryEmitNext(byteBuf);
         boolean isEmitted = result == Sinks.EmitResult.OK;
-        if (!isEmitted && isSessionOpen) {
-            log.warn("Failed to send notifications due to " + result.name());
+        if (!isEmitted) {
+            if (isSessionOpen) {
+                log.warn("Failed to send notifications due to " + result.name());
+            }
+            // Release once because the subscriber of the sink
+            // hasn't released it due to the emitting failure.
+            byteBuf.release();
         }
         return isEmitted;
     }
