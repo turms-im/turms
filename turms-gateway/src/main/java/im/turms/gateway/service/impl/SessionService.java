@@ -433,9 +433,8 @@ public class SessionService implements ISessionService {
                 disconnectionRequests.add(node.getRpcService().requestResponse(nodeId, request));
             }
             return ReactorUtil.areAllTrue(disconnectionRequests);
-        } else {
-            return Mono.just(true);
         }
+        return Mono.just(true);
     }
 
     public void onSessionEstablished(@NotNull UserSessionsManager userSessionsManager,

@@ -19,6 +19,7 @@ package im.turms.server.common.property.env.gateway;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.property.env.common.AddressProperties;
+import im.turms.server.common.property.env.gateway.clientapi.ClientApiProperties;
 import im.turms.server.common.property.env.gateway.redis.TurmsRedisProperties;
 import im.turms.server.common.property.metadata.view.MutablePropertiesView;
 import lombok.AllArgsConstructor;

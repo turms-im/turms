@@ -256,7 +256,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
             TemperatureProperties properties = entry.getValue();
             int days = properties.getDays();
             if (days <= 0) {
-                throw new IllegalArgumentException("The days of temperature properties must be more than or equal to 0");
+                throw new IllegalArgumentException("The days of temperature properties must be more than 0");
             }
             List<String> shards = properties.getShards();
             for (String shard : shards) {

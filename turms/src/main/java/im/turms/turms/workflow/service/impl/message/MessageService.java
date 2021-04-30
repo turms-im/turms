@@ -701,13 +701,9 @@ public class MessageService {
         QueryOptions options = QueryOptions.newBuilder()
                 .include(Message.Fields.TARGET_ID, Message.Fields.IS_GROUP_MESSAGE);
         return mongoClient.findOne(Message.class, filter, options)
-                .flatMapMany(message -> {
-                    if (message.getIsGroupMessage()) {
-                        return groupMemberService.queryGroupMemberIds(message.groupId());
-                    } else {
-                        return Mono.just(message.getTargetId());
-                    }
-                });
+                .flatMapMany(message -> message.getIsGroupMessage()
+                        ? groupMemberService.queryGroupMemberIds(message.groupId())
+                        : Mono.just(message.getTargetId()));
     }
 
     // message - recipientsIds
@@ -744,11 +740,9 @@ public class MessageService {
                     }
                     return recipientIdsMono.flatMap(recipientsIds -> {
                         if (!node.getSharedProperties().getService().getMessage().isMessagePersistent()) {
-                            if (recipientsIds.isEmpty()) {
-                                return Mono.empty();
-                            } else {
-                                return Mono.just(Pair.of(null, recipientsIds));
-                            }
+                            return recipientsIds.isEmpty()
+                                    ? Mono.empty()
+                                    : Mono.just(Pair.of(null, recipientsIds));
                         }
                         Mono<Message> saveMono = saveMessage(messageId, senderId, targetId, isGroupMessage,
                                 isSystemMessage, text, records, burnAfter, deliveryDate, null, referenceId);

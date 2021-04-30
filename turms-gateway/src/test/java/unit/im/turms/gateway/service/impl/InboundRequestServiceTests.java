@@ -15,8 +15,9 @@ import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.manager.ServerStatusManager;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
-import im.turms.server.common.property.env.gateway.ClientApiProperties;
 import im.turms.server.common.property.env.gateway.GatewayProperties;
+import im.turms.server.common.property.env.gateway.clientapi.ClientApiProperties;
+import im.turms.server.common.property.env.gateway.clientapi.RateLimitingProperties;
 import im.turms.server.common.rpc.request.HandleServiceRequest;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -41,7 +42,8 @@ class InboundRequestServiceTests {
 
     @Test
     void constructor_shouldReturnInstance() {
-        InboundRequestService inboundRequestService = new InboundRequestService(null, mockTurmsPropertiesManager(), null, null);
+        Node node = mockNode(false);
+        InboundRequestService inboundRequestService = new InboundRequestService(node, mockTurmsPropertiesManager(), null, null);
 
         assertThat(inboundRequestService).isNotNull();
     }
@@ -148,23 +150,15 @@ class InboundRequestServiceTests {
             boolean updateHeartbeatSuccessfully,
             boolean handleRequestSuccessfully) {
         // Node
-        Node node = mock(Node.class);
-        RpcService rpcService = mock(RpcService.class);
-        if (handleRequestSuccessfully) {
-            when(rpcService.requestResponse(any(HandleServiceRequest.class)))
-                    .thenReturn(Mono.just(responseForSuccess));
-        } else {
-            when(rpcService.requestResponse(any(HandleServiceRequest.class)))
-                    .thenThrow(new IllegalStateException());
-        }
-        when(node.getRpcService())
-                .thenReturn(rpcService);
+        Node node = mockNode(handleRequestSuccessfully);
 
         int minClientRequestInterval = isFrequent ? Integer.MAX_VALUE : 0;
         TurmsProperties properties = new TurmsProperties().toBuilder()
                 .gateway(new GatewayProperties().toBuilder()
                         .clientApi(new ClientApiProperties().toBuilder()
-                                .minClientRequestIntervalMillis(minClientRequestInterval)
+                                .rateLimiting(new RateLimitingProperties().toBuilder()
+                                        .minClientRequestIntervalMillis(minClientRequestInterval)
+                                        .build())
                                 .build())
                         .build())
                 .build();
@@ -184,6 +178,23 @@ class InboundRequestServiceTests {
                 .thenReturn(Mono.just(updateHeartbeatSuccessfully));
 
         return new InboundRequestService(node, mockTurmsPropertiesManager(), serverStatusManager, sessionService);
+    }
+
+    private Node mockNode(boolean handleRequestSuccessfully) {
+        Node node = mock(Node.class);
+        RpcService rpcService = mock(RpcService.class);
+        if (handleRequestSuccessfully) {
+            when(rpcService.requestResponse(any(HandleServiceRequest.class)))
+                    .thenReturn(Mono.just(responseForSuccess));
+        } else {
+            when(rpcService.requestResponse(any(HandleServiceRequest.class)))
+                    .thenThrow(new IllegalStateException());
+        }
+        when(node.getRpcService())
+                .thenReturn(rpcService);
+        when(node.getSharedProperties())
+                .thenReturn(new TurmsProperties());
+        return node;
     }
 
     private TurmsPropertiesManager mockTurmsPropertiesManager() {

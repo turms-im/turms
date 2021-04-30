@@ -25,7 +25,8 @@ import java.lang.annotation.Target;
 /**
  * @author James Chen
  * @implNote Note that the multi-temperature data also has a monotonic shard key.
- * In other words, all operations will routed to hot shards instead of all shards evenly distributed.
+ * In other words, all operations will be routed to hot shards (Note that there
+ * can be multiple shards for hot data) instead of all shards evenly distributed.
  * The imbalance is what we want to support multi-temperature data
  */
 @Retention(RetentionPolicy.RUNTIME)

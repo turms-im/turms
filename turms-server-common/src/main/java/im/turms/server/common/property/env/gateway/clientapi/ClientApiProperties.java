@@ -15,22 +15,17 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.property.env.gateway;
+package im.turms.server.common.property.env.gateway.clientapi;
 
 
-import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.factory.NotificationFactory;
 import im.turms.server.common.property.env.common.ClientApiLoggingProperties;
 import im.turms.server.common.property.metadata.annotation.Description;
-import im.turms.server.common.property.metadata.annotation.GlobalProperty;
-import im.turms.server.common.property.metadata.view.MutablePropertiesView;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
-
-import javax.validation.constraints.Min;
 
 /**
  * @author James Chen
@@ -41,14 +36,6 @@ import javax.validation.constraints.Min;
 @NoArgsConstructor
 public class ClientApiProperties {
 
-    @Description("The minimum allowed interval between client requests. " +
-            "If 0, there is no debounce. " +
-            "It's better set the same value as client's for a better UX.")
-    @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
-    @Min(0)
-    private int minClientRequestIntervalMillis;
-
     @Description("Whether to return the reason for the server error to the client. " +
             "Note: 1. It may reveal sensitive data like the IP of internal servers if true; " +
             "2. turms-gateway never return the information of stack traces no matter it is true or false.")
@@ -56,6 +43,9 @@ public class ClientApiProperties {
 
     @NestedConfigurationProperty
     private ClientApiLoggingProperties logging = new ClientApiLoggingProperties();
+
+    @NestedConfigurationProperty
+    private RateLimitingProperties rateLimiting = new RateLimitingProperties();
 
     public void setReturnReasonForServerError(boolean returnReasonForServerError) {
         this.returnReasonForServerError = returnReasonForServerError;

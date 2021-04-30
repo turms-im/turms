@@ -28,7 +28,7 @@ import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
  */
 public class ConcurrentEnumMap<E extends Enum<E>, V> implements Map<E, V> {
 
-    private static AtomicReferenceFieldUpdater<ConcurrentEnumMap, EnumMap> UPDATER =
+    private static final AtomicReferenceFieldUpdater<ConcurrentEnumMap, EnumMap> UPDATER =
             AtomicReferenceFieldUpdater.newUpdater(ConcurrentEnumMap.class, EnumMap.class, "ref");
     private volatile EnumMap<E, V> ref;
 
@@ -127,7 +127,7 @@ public class ConcurrentEnumMap<E extends Enum<E>, V> implements Map<E, V> {
     }
 
     @Override
-    public Set<java.util.Map.Entry<E, V>> entrySet() {
+    public Set<Entry<E, V>> entrySet() {
         return ref.entrySet();
     }
 

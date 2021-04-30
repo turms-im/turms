@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * @author James Chen
  * @implNote The shard key is DELIVERY_DATE instead of TARGET_ID.
- * Being Sharded by TARGET_ID is useful for small scale applications,
+ * Being Sharded by TARGET_ID, most CRUD operations are efficient for small scale applications,
  * but Turms is designed for medium and large scale applications,
  * so we use DELIVERY_DATE as the shard key to support multi-temperature messages.
  */
@@ -58,7 +58,8 @@ public final class Message {
 
     /**
      * Not indexed because it has a low index selectivity
-     * and the clients cannot/shouldn't just query messages by isGroupMessage (there must come with other conditions)
+     * and the clients cannot/shouldn't just query messages by isGroupMessage
+     * (it must come with other conditions)
      * https://github.com/turms-im/turms/issues/336
      */
     @Field(Fields.IS_GROUP_MESSAGE)

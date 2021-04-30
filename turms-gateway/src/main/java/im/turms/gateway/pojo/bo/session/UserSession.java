@@ -70,6 +70,14 @@ public final class UserSession {
     private volatile long lastHeartbeatTimestampMillis;
     private volatile long lastRequestTimestampMillis;
 
+    // Rate limiting
+    /**
+     * We don't use AtomicInteger for better performance,
+     * and it's acceptable that the count isn't accurate when ++
+     */
+    private volatile int currentProcessedRequestCount;
+    private long firstRequestTimestampMillis;
+
     /**
      * Note that it's acceptable that the session is still open even if the connection is closed
      * because the client can send heartbeats over UDP to keep the session open

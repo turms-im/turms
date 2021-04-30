@@ -21,6 +21,7 @@ import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.gateway.constant.ErrorMessage;
+import im.turms.gateway.manager.RateLimitingManager;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.server.common.cluster.exception.RpcException;
 import im.turms.server.common.cluster.node.Node;
@@ -56,6 +57,7 @@ import java.util.Map;
 public class InboundRequestService {
 
     private final Node node;
+    private final RateLimitingManager rateLimitingManager;
     private final ServerStatusManager serverStatusManager;
     private final SessionService sessionService;
     private final Map<TurmsRequest.KindCase, LoggingRequestProperties> supportedLoggingRequestProperties;
@@ -66,6 +68,7 @@ public class InboundRequestService {
                                  ServerStatusManager serverStatusManager,
                                  SessionService sessionService) {
         this.node = node;
+        rateLimitingManager = new RateLimitingManager(node);
         this.serverStatusManager = serverStatusManager;
         this.sessionService = sessionService;
         ClientApiLoggingProperties loggingProperties = propertiesManager.getLocalProperties().getGateway().getClientApi().getLogging();
@@ -116,14 +119,13 @@ public class InboundRequestService {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SEND_REQUEST_FROM_NON_EXISTING_SESSION));
         }
 
-        // Flow control
+        // Rate limiting
         Long requestId = serviceRequest.getRequestId();
         long now = System.currentTimeMillis();
-        if (areRequestsTooFrequent(now, session)) {
+        if (rateLimitingManager.areRequestsTooFrequent(now, session)) {
             TurmsNotification notification = getNotificationFromStatusCode(TurmsStatusCode.CLIENT_REQUESTS_TOO_FREQUENT, requestId);
             return Mono.just(notification);
         }
-        session.setLastRequestTimestampMillis(now);
 
         // Update heartbeat and forward request
         TracingContext tracingContext = new TracingContext(serviceRequest.getTraceId());
@@ -172,15 +174,6 @@ public class InboundRequestService {
     private Mono<ServiceResponse> sendServiceRequest(ServiceRequest serviceRequest) {
         HandleServiceRequest request = new HandleServiceRequest(serviceRequest);
         return node.getRpcService().requestResponse(request);
-    }
-
-    private boolean areRequestsTooFrequent(long now, UserSession session) {
-        int requestInterval = node.getSharedProperties().getGateway().getClientApi().getMinClientRequestIntervalMillis();
-        if (requestInterval <= 0) {
-            return false;
-        }
-        long lastRequestTimestamp = session.getLastRequestTimestampMillis();
-        return now - lastRequestTimestamp < requestInterval;
     }
 
     private TurmsNotification getNotificationFromStatusCode(@NotNull TurmsStatusCode statusCode, @Nullable Long requestId) {
