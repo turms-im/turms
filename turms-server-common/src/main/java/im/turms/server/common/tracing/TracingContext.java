@@ -19,16 +19,22 @@ package im.turms.server.common.tracing;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldNameConstants;
 import org.apache.logging.log4j.ThreadContext;
+import reactor.core.publisher.Signal;
 import reactor.core.scheduler.Schedulers;
+
+import java.util.function.Consumer;
 
 /**
  * @author James Chen
  */
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @FieldNameConstants
+@ToString(onlyExplicitlyIncluded = true)
 public class TracingContext {
 
     public static final String SCHEDULE_HOOK_NAME = "TRACING";
@@ -57,15 +63,17 @@ public class TracingContext {
         });
     }
 
+    @EqualsAndHashCode.Include
+    @ToString.Include
     private final long traceId;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
     private final String traceIdStr;
+    @Getter
+    private final Consumer<Signal> mdcUpdater;
 
     public TracingContext(Long traceId) {
         this.traceId = traceId;
         traceIdStr = Long.toString(traceId);
+        mdcUpdater = (Signal signal) -> updateMdc();
     }
 
     public void updateMdc() {

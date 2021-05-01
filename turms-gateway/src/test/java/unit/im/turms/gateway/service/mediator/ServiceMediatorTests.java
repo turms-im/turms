@@ -147,11 +147,9 @@ class ServiceMediatorTests {
     @Test
     void processHeartbeatRequest_shouldSucceed() {
         ServiceMediator mediator = newServiceMediator();
-        Mono<TurmsStatusCode> result = mediator.processHeartbeatRequest(userId, deviceType);
+        TurmsStatusCode result = mediator.processHeartbeatRequest(userId, deviceType);
 
-        StepVerifier.create(result)
-                .expectNext(TurmsStatusCode.OK)
-                .verifyComplete();
+        assertThat(result).isEqualTo(TurmsStatusCode.OK);
     }
 
     @Test
@@ -210,7 +208,7 @@ class ServiceMediatorTests {
         when(inboundRequestService.processServiceRequest(any()))
                 .thenReturn(Mono.empty());
         when(inboundRequestService.processHeartbeatRequest(any(), any(DeviceType.class)))
-                .thenReturn(Mono.just(TurmsStatusCode.OK));
+                .thenReturn(TurmsStatusCode.OK);
         return new ServiceMediator(node, pluginManager, userService, sessionService, userSimultaneousLoginService, inboundRequestService);
     }
 

@@ -37,7 +37,6 @@ import im.turms.server.common.property.env.service.env.clientapi.property.Loggin
 import im.turms.server.common.rpc.request.HandleServiceRequest;
 import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.ExceptionUtil;
-import im.turms.server.common.util.LogUtil;
 import im.turms.server.common.util.LoggingRequestUtil;
 import im.turms.server.common.util.ProtoUtil;
 import lombok.extern.log4j.Log4j2;
@@ -87,20 +86,19 @@ public class InboundRequestService {
     /**
      * If the method returns MonoError, the session should be closed by downstream.
      */
-    public Mono<TurmsStatusCode> processHeartbeatRequest(Long userId, DeviceType deviceType) {
+    public TurmsStatusCode processHeartbeatRequest(Long userId, DeviceType deviceType) {
         if (!serverStatusManager.isActive()) {
-            return Mono.just(TurmsStatusCode.SERVER_UNAVAILABLE);
+            return TurmsStatusCode.SERVER_UNAVAILABLE;
         }
-        return sessionService.updateHeartbeatTimestamp(userId, deviceType)
-                .map(sessionExists -> sessionExists
-                        ? TurmsStatusCode.OK
-                        : TurmsStatusCode.UPDATE_NON_EXISTING_SESSION_HEARTBEAT)
-                .onErrorResume(throwable -> {
-                    if (!ExceptionUtil.isClientError(throwable)) {
-                        log.error(ErrorMessage.FAILED_TO_HANDLE_HEARTBEAT_REQUEST, throwable);
-                    }
-                    return Mono.just(TurmsStatusCode.SERVER_INTERNAL_ERROR);
-                });
+        try {
+            sessionService.updateHeartbeatTimestamp(userId, deviceType);
+            return TurmsStatusCode.OK;
+        } catch (Exception e) {
+            if (!ExceptionUtil.isClientError(e)) {
+                log.error(ErrorMessage.FAILED_TO_HANDLE_HEARTBEAT_REQUEST, e);
+            }
+            return TurmsStatusCode.SERVER_INTERNAL_ERROR;
+        }
     }
 
     /**
@@ -108,6 +106,18 @@ public class InboundRequestService {
      * If the method returns MonoError, the session should be closed by downstream.
      */
     public Mono<TurmsNotification> processServiceRequest(ServiceRequest serviceRequest) {
+        try {
+            return processServiceRequest0(serviceRequest);
+        } catch (Exception e) {
+            return Mono.error(e);
+        }
+    }
+
+    private Mono<TurmsNotification> processServiceRequest0(ServiceRequest serviceRequest) {
+        // Update context
+        TracingContext tracingContext = new TracingContext(serviceRequest.getTraceId());
+        tracingContext.updateMdc();
+
         // Validate
         if (!serverStatusManager.isActive()) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_UNAVAILABLE));
@@ -127,48 +137,24 @@ public class InboundRequestService {
             return Mono.just(notification);
         }
 
-        // Update heartbeat and forward request
-        TracingContext tracingContext = new TracingContext(serviceRequest.getTraceId());
-        Context context = Context.of(TracingContext.CTX_KEY_NAME, tracingContext);
-        return sessionService.updateHeartbeatTimestamp(userId, session)
-                .flatMap(wasSuccessful -> {
-                    if (!wasSuccessful) {
-                        LogUtil.error(log, context, "Failed to refresh the heartbeat of the user session: " + session);
-                        return Mono.just(getNotificationFromStatusCode(TurmsStatusCode.SERVER_INTERNAL_ERROR, requestId));
-                    }
-                    tracingContext.updateMdc();
-                    if (LoggingRequestUtil.shouldLog(serviceRequest.getType(), supportedLoggingRequestProperties)) {
-                        ClientApiLogging.log(serviceRequest);
-                    }
-                    Mono<TurmsNotification> notificationMono = sendServiceRequest(serviceRequest)
-                            .onErrorResume(throwable -> {
-                                ServiceResponse serviceResponse;
-                                if (throwable instanceof RpcException) {
-                                    RpcException rpcException = (RpcException) throwable;
-                                    if (rpcException.isServerError()) {
-                                        LogUtil.error(log, context, ErrorMessage.FAILED_TO_HANDLE_SERVICE_REQUEST_WITH_REQUEST,
-                                                serviceRequest, throwable);
-                                    }
-                                    serviceResponse = new ServiceResponse(null, rpcException.getStatusCode(), throwable.getMessage());
-                                } else {
-                                    log.error(ErrorMessage.FAILED_TO_HANDLE_SERVICE_REQUEST_WITH_REQUEST, serviceRequest, throwable);
-                                    serviceResponse =
-                                            new ServiceResponse(null, TurmsStatusCode.SERVER_INTERNAL_ERROR, throwable.getMessage());
-                                }
-                                return Mono.just(serviceResponse);
-                            })
-                            .map(serviceResponse -> getNotificationFromResponse(serviceResponse, requestId))
-                            .switchIfEmpty(Mono.fromCallable(() -> getNotificationFromStatusCode(TurmsStatusCode.NO_CONTENT, requestId)))
-                            .doFinally(signalType -> tracingContext.clearMdc());
-                    if (LoggingRequestUtil.shouldLog(serviceRequest.getType(), supportedLoggingResponseProperties)) {
-                        notificationMono = notificationMono
-                                .doOnSuccess(notification -> ClientApiLogging.log(ProtoUtil.toLogString(notification)));
-                    }
-                    return notificationMono;
-                }).onErrorResume(throwable -> {
-                    LogUtil.error(log, context, "Failed to refresh the heartbeat of the user session: " + session, throwable);
-                    return Mono.just(getNotificationFromStatusCode(TurmsStatusCode.SERVER_INTERNAL_ERROR, requestId));
-                }).contextWrite(context);
+        // Update heartbeat
+        sessionService.updateHeartbeatTimestamp(userId, session);
+
+        // Forward request
+        if (LoggingRequestUtil.shouldLog(serviceRequest.getType(), supportedLoggingRequestProperties)) {
+            ClientApiLogging.log(serviceRequest);
+        }
+        Mono<TurmsNotification> notificationMono = sendServiceRequest(serviceRequest)
+                .doOnEach(tracingContext.getMdcUpdater())
+                .onErrorResume(throwable -> Mono.just(getServiceResponseFromException(throwable, serviceRequest)))
+                .map(serviceResponse -> getNotificationFromResponse(serviceResponse, requestId))
+                .switchIfEmpty(Mono.fromCallable(() -> getNotificationFromStatusCode(TurmsStatusCode.NO_CONTENT, requestId)))
+                .doFinally(signalType -> tracingContext.clearMdc());
+        if (LoggingRequestUtil.shouldLog(serviceRequest.getType(), supportedLoggingResponseProperties)) {
+            notificationMono = notificationMono
+                    .doOnSuccess(notification -> ClientApiLogging.log(ProtoUtil.toLogString(notification)));
+        }
+        return notificationMono.contextWrite(Context.of(TracingContext.CTX_KEY_NAME, tracingContext));
     }
 
     private Mono<ServiceResponse> sendServiceRequest(ServiceRequest serviceRequest) {
@@ -186,6 +172,22 @@ public class InboundRequestService {
         return builder
                 .setCode(codeBusinessCode)
                 .build();
+    }
+
+    private ServiceResponse getServiceResponseFromException(Throwable throwable, ServiceRequest serviceRequest) {
+        ServiceResponse serviceResponse;
+        if (throwable instanceof RpcException) {
+            RpcException rpcException = (RpcException) throwable;
+            if (rpcException.isServerError()) {
+                log.error(ErrorMessage.FAILED_TO_HANDLE_SERVICE_REQUEST_WITH_REQUEST, serviceRequest, throwable);
+            }
+            serviceResponse = new ServiceResponse(null, rpcException.getStatusCode(), throwable.getMessage());
+        } else {
+            log.error(ErrorMessage.FAILED_TO_HANDLE_SERVICE_REQUEST_WITH_REQUEST, serviceRequest, throwable);
+            serviceResponse =
+                    new ServiceResponse(null, TurmsStatusCode.SERVER_INTERNAL_ERROR, throwable.getMessage());
+        }
+        return serviceResponse;
     }
 
     private TurmsNotification getNotificationFromResponse(@NotNull ServiceResponse serviceResponse, long requestId) {

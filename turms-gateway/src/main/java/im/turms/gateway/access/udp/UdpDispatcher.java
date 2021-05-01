@@ -24,6 +24,7 @@ import im.turms.common.model.dto.udpsignal.UdpRequestType;
 import im.turms.common.model.dto.udpsignal.UdpSignalRequest;
 import im.turms.gateway.access.udp.dto.UdpNotification;
 import im.turms.gateway.access.udp.dto.UdpSignalResponseBufferPool;
+import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.service.mediator.ServiceMediator;
 import im.turms.server.common.access.common.resource.LoopResourcesFactory;
 import im.turms.server.common.constant.TurmsStatusCode;
@@ -124,14 +125,13 @@ public class UdpDispatcher {
             int sessionId = signalRequest.getSessionId();
             switch (signalRequest.getType()) {
                 case HEARTBEAT:
-                    return serviceMediator.authAndProcessHeartbeatRequest(userId, deviceType, sessionId)
-                            .map(session -> {
-                                // Update the address because it may has changed
-                                session.getConnection().setAddress(senderAddress);
-                                return TurmsStatusCode.OK;
-                            })
-                            .onErrorReturn(TurmsStatusCode.ILLEGAL_ARGUMENT)
-                            .defaultIfEmpty(TurmsStatusCode.SEND_REQUEST_FROM_NON_EXISTING_SESSION);
+                    UserSession session = serviceMediator.authAndProcessHeartbeatRequest(userId, deviceType, sessionId);
+                    if (session == null) {
+                        return Mono.just(TurmsStatusCode.SEND_REQUEST_FROM_NON_EXISTING_SESSION);
+                    }
+                    // Update the address because it may has changed
+                    session.getConnection().setAddress(senderAddress);
+                    return Mono.just(TurmsStatusCode.OK);
                 case GO_OFFLINE:
                     CloseReason reason = CloseReason.get(SessionCloseStatus.DISCONNECTED_BY_CLIENT);
                     return serviceMediator.authAndSetLocalUserDeviceOffline(userId, deviceType, reason, sessionId)

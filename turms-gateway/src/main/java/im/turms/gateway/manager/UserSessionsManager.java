@@ -19,18 +19,13 @@ package im.turms.gateway.manager;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.UserStatus;
-import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.common.model.dto.notification.TurmsNotification;
-import im.turms.gateway.access.udp.UdpDispatcher;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.server.common.collection.ConcurrentEnumMap;
-import im.turms.server.common.constraint.ValidDeviceType;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.util.ProtoUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.util.HashedWheelTimer;
-import io.netty.util.Timeout;
-import io.netty.util.TimerTask;
 import lombok.Data;
 import org.springframework.data.geo.Point;
 import org.springframework.util.Assert;
@@ -40,7 +35,6 @@ import javax.validation.constraints.NotNull;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author James Chen
@@ -74,9 +68,7 @@ public final class UserSessionsManager {
     public UserSession addSessionIfAbsent(
             @NotNull DeviceType loggingInDeviceType,
             @Nullable Point position,
-            @Nullable Long logId,
-            int closeIdleSessionAfterMillis,
-            int switchProtocolAfterMillis) {
+            @Nullable Long logId) {
         Assert.notNull(loggingInDeviceType, "loggingInDeviceType must not be null");
         UserSession userSession = new UserSession(
                 userId,
@@ -84,13 +76,7 @@ public final class UserSessionsManager {
                 position,
                 logId);
         boolean added = sessionMap.putIfAbsent(loggingInDeviceType, userSession) == null;
-        if (added) {
-            if (closeIdleSessionAfterMillis > 0) {
-                updateSessionHeartbeatTimeout(loggingInDeviceType, userSession, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
-            }
-            return userSession;
-        }
-        return null;
+        return added ? userSession : null;
     }
 
     public void setDeviceOffline(
@@ -132,38 +118,6 @@ public final class UserSessionsManager {
 
     public Set<DeviceType> getLoggedInDeviceTypes() {
         return sessionMap.keySet();
-    }
-
-    /**
-     * @param session Don't remove this parameter by using "getSession(deviceType)"
-     *                because it needs to call hashcode() to find session every time
-     */
-    private void updateSessionHeartbeatTimeout(@NotNull @ValidDeviceType DeviceType deviceType, @NotNull UserSession session,
-                                               int closeIdleSessionAfterMillis, int switchProtocolAfterMillis) {
-        TimerTask checkHeartbeatTask = timeout -> {
-            if (!session.isOpen()) {
-                return;
-            }
-            long now = System.currentTimeMillis();
-            int heartbeatElapsedTime = (int) (now - session.getLastHeartbeatTimestampMillis());
-            if (heartbeatElapsedTime > closeIdleSessionAfterMillis) {
-                CloseReason closeReason = CloseReason.get(SessionCloseStatus.HEARTBEAT_TIMEOUT);
-                setDeviceOffline(deviceType, closeReason);
-            } else {
-                int requestElapsedTime = (int) (now - session.getLastRequestTimestampMillis());
-                if (requestElapsedTime > switchProtocolAfterMillis
-                        && session.isConnected()
-                        && UdpDispatcher.isEnabled()
-                        && deviceType != DeviceType.BROWSER) {
-                    session.getConnection().switchToUdp();
-                }
-                updateSessionHeartbeatTimeout(deviceType, session, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
-            }
-        };
-        Timeout newTimeout = HEARTBEAT_TIMER.newTimeout(checkHeartbeatTask,
-                Math.max(closeIdleSessionAfterMillis / 3000, 1),
-                TimeUnit.SECONDS);
-        session.setHeartbeatTimeout(newTimeout);
     }
 
 }

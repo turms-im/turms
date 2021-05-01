@@ -36,10 +36,11 @@ public class ServerAvailabilityHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) {
-        if (!serverStatusManager.isActive()) {
+        if (serverStatusManager.isActive()) {
+            ctx.fireChannelRegistered();
+        } else {
             ctx.close();
         }
-        ctx.fireChannelRegistered();
     }
 
 }

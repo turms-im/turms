@@ -50,7 +50,7 @@ class InboundRequestServiceTests {
 
     @Test
     void processServiceRequest_shouldThrow_ifNodeIsInactive() {
-        InboundRequestService inboundRequestService = newInboundRequestService(false, null, false, true, true);
+        InboundRequestService inboundRequestService = newInboundRequestService(false, null, false, true);
         ByteBuf buffer = PooledByteBufAllocator.DEFAULT.buffer();
         ServiceRequest request = new ServiceRequest(1L, 1L, DeviceType.ANDROID, 1L, TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, buffer);
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(request);
@@ -64,7 +64,7 @@ class InboundRequestServiceTests {
 
     @Test
     void processServiceRequest_shouldThrow_ifUserIsOffline() {
-        InboundRequestService inboundRequestService = newInboundRequestService(true, null, false, true, true);
+        InboundRequestService inboundRequestService = newInboundRequestService(true, null, false, true);
         ByteBuf buffer = PooledByteBufAllocator.DEFAULT.buffer();
         ServiceRequest request = new ServiceRequest(1L, 1L, DeviceType.ANDROID, 1L, TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, buffer);
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(request);
@@ -82,7 +82,7 @@ class InboundRequestServiceTests {
         when(session.getLastRequestTimestampMillis())
                 .thenReturn(System.currentTimeMillis());
 
-        InboundRequestService inboundRequestService = newInboundRequestService(true, session, true, true, true);
+        InboundRequestService inboundRequestService = newInboundRequestService(true, session, true, true);
         ByteBuf buffer = PooledByteBufAllocator.DEFAULT.buffer();
         ServiceRequest request = new ServiceRequest(1L, 1L, DeviceType.ANDROID, 1L, TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, buffer);
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(request);
@@ -94,29 +94,12 @@ class InboundRequestServiceTests {
     }
 
     @Test
-    void processServiceRequest_shouldReturnError_ifFailedToUpdateHeartbeat() {
-        UserSession session = mock(UserSession.class);
-        when(session.getLastRequestTimestampMillis())
-                .thenReturn(System.currentTimeMillis());
-
-        InboundRequestService inboundRequestService = newInboundRequestService(true, session, false, false, true);
-        ByteBuf buffer = PooledByteBufAllocator.DEFAULT.buffer();
-        ServiceRequest request = new ServiceRequest(1L, 1L, DeviceType.ANDROID, 1L, TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, buffer);
-        Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(request);
-
-        StepVerifier.create(result)
-                .expectNextMatches(
-                        notification -> notification.getCode() == TurmsStatusCode.SERVER_INTERNAL_ERROR.getBusinessCode())
-                .verifyComplete();
-    }
-
-    @Test
     void processServiceRequest_shouldReturnError_ifFailedToHandleRequest() {
         UserSession session = mock(UserSession.class);
         when(session.getLastRequestTimestampMillis())
                 .thenReturn(System.currentTimeMillis());
 
-        InboundRequestService inboundRequestService = newInboundRequestService(true, session, false, false, false);
+        InboundRequestService inboundRequestService = newInboundRequestService(true, session, false, false);
         ByteBuf buffer = PooledByteBufAllocator.DEFAULT.buffer();
         ServiceRequest request = new ServiceRequest(1L, 1L, DeviceType.ANDROID, 1L, TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, buffer);
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(request);
@@ -133,7 +116,7 @@ class InboundRequestServiceTests {
         when(session.getLastRequestTimestampMillis())
                 .thenReturn(System.currentTimeMillis());
 
-        InboundRequestService inboundRequestService = newInboundRequestService(true, session, false, true, true);
+        InboundRequestService inboundRequestService = newInboundRequestService(true, session, false, true);
         ByteBuf buffer = PooledByteBufAllocator.DEFAULT.buffer();
         ServiceRequest request = new ServiceRequest(1L, 1L, DeviceType.ANDROID, 1L, TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, buffer);
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(request);
@@ -147,7 +130,6 @@ class InboundRequestServiceTests {
             boolean isActive,
             UserSession session,
             boolean isFrequent,
-            boolean updateHeartbeatSuccessfully,
             boolean handleRequestSuccessfully) {
         // Node
         Node node = mockNode(handleRequestSuccessfully);
@@ -174,8 +156,6 @@ class InboundRequestServiceTests {
         SessionService sessionService = mock(SessionService.class);
         when(sessionService.getLocalUserSession(any(), any()))
                 .thenReturn(session);
-        when(sessionService.updateHeartbeatTimestamp(any(), any(UserSession.class)))
-                .thenReturn(Mono.just(updateHeartbeatSuccessfully));
 
         return new InboundRequestService(node, mockTurmsPropertiesManager(), serverStatusManager, sessionService);
     }
@@ -188,7 +168,7 @@ class InboundRequestServiceTests {
                     .thenReturn(Mono.just(responseForSuccess));
         } else {
             when(rpcService.requestResponse(any(HandleServiceRequest.class)))
-                    .thenThrow(new IllegalStateException());
+                    .thenReturn(Mono.error(new IllegalStateException()));
         }
         when(node.getRpcService())
                 .thenReturn(rpcService);

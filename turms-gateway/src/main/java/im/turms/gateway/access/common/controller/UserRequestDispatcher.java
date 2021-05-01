@@ -95,18 +95,19 @@ public class UserRequestDispatcher {
 
     private Mono<ByteBuf> handleHeartbeatRequest(UserSessionWrapper sessionWrapper) {
         UserSession session = sessionWrapper.getUserSession();
+        ByteBuf data;
         if (session != null) {
-            return serviceMediator.processHeartbeatRequest(session.getUserId(), session.getDeviceType())
-                    .map(code -> code == TurmsStatusCode.OK
-                            ? HEARTBEAT_RESPONSE
-                            // TODO: check -1
-                            : ProtoUtil.getDirectByteBuffer(getNotificationFromHandlerResult(new RequestHandlerResult(code), -1)));
+            TurmsStatusCode code = serviceMediator.processHeartbeatRequest(session.getUserId(), session.getDeviceType());
+            data = code == TurmsStatusCode.OK
+                    ? HEARTBEAT_RESPONSE
+                    // TODO: check -1
+                    : ProtoUtil.getDirectByteBuffer(getNotificationFromHandlerResult(new RequestHandlerResult(code), -1));
         } else {
             TurmsStatusCode code = TurmsStatusCode.UPDATE_NON_EXISTING_SESSION_HEARTBEAT;
             TurmsNotification notification = getNotificationFromHandlerResult(new RequestHandlerResult(code), -1);
-            ByteBuf data = ProtoUtil.getDirectByteBuffer(notification);
-            return Mono.just(data);
+            data = ProtoUtil.getDirectByteBuffer(notification);
         }
+        return Mono.just(data);
     }
 
     private Mono<TurmsNotification> handleServiceRequest(UserSessionWrapper sessionWrapper, SimpleTurmsRequest request, ByteBuf data) {

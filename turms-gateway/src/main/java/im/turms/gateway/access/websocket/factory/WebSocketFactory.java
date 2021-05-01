@@ -61,6 +61,14 @@ import static io.netty.handler.codec.http.HttpMethod.OPTIONS;
 
 /**
  * @author James Chen
+ * @implNote We don't use spring-reactive-websocket because it always makes
+ * the code abstract and the workflow really complex in non-blocking programming.
+ * People will realize that it's a disaster for a large application to debug
+ * and troubleshoot with spring-reactive-websocket.
+ * <p>
+ * On the other hand, we can just use tens of code to do what
+ * spring-reative-websocket can do for us with really clear code
+ * @see WebSocketFactory#getHttpRequestHandler
  */
 @Log4j2
 public final class WebSocketFactory {
@@ -107,6 +115,8 @@ public final class WebSocketFactory {
      * @see ReactorNettyRequestUpgradeStrategy#upgrade
      */
     private static BiFunction<HttpServerRequest, HttpServerResponse, Publisher<Void>> getHttpRequestHandler(ConnectionHandler handler) {
+        // Return MonoNever to keep the connection alive
+        // Return MonoEmpty to close the connection
         return (request, response) -> {
             // 1. Always respond with OK to CORS preflight requests
             if (isPreFlightRequest(request)) {

@@ -28,5 +28,8 @@ import reactor.netty.NettyOutbound;
  */
 @FunctionalInterface
 public interface ConnectionHandler {
-    Mono<Void> handle(Connection connection, Flux<ByteBuf> in, NettyOutbound out, Mono<Void> onClose);
+    Mono<Void> handle(Connection connection,
+                      Flux<ByteBuf> in,
+                      NettyOutbound out,
+                      Mono<Void> onClose);
 }

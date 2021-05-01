@@ -23,7 +23,6 @@ import im.turms.common.util.RandomUtil;
 import im.turms.gateway.pojo.bo.session.connection.NetConnection;
 import im.turms.server.common.dto.CloseReason;
 import io.netty.buffer.ByteBuf;
-import io.netty.util.Timeout;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -64,11 +63,13 @@ public final class UserSession {
     @Getter(AccessLevel.PRIVATE)
     private final Sinks.Many<ByteBuf> notificationSink = Sinks.many().unicast()
             .onBackpressureBuffer(Queues.<ByteBuf>unbounded(64).get());
-    private Timeout heartbeatTimeout;
     @Nullable
     private Long logId;
-    private volatile long lastHeartbeatTimestampMillis;
+    private volatile long lastHeartbeatRequestTimestampMillis;
     private volatile long lastRequestTimestampMillis;
+    // No need to add volatile because it can only be accessed by one thread
+    // (the thread "heartbeat-update" in HeartbeatManager)
+    private long lastHeartbeatUpdateTimestampMillis;
 
     // Rate limiting
     /**
@@ -98,7 +99,7 @@ public final class UserSession {
         this.loginDate = now;
         this.loginLocation = loginLocation;
         this.logId = logId;
-        this.lastHeartbeatTimestampMillis = now.getTime();
+        this.lastHeartbeatRequestTimestampMillis = now.getTime();
     }
 
     /**
@@ -110,9 +111,6 @@ public final class UserSession {
             // Note that it acceptable to complete/close the following objects multiple times
             // so that it's unnecessary to update isSessionOpen atomically
             notificationSink.tryEmitComplete();
-            if (heartbeatTimeout != null) {
-                heartbeatTimeout.cancel();
-            }
             if (connection != null) {
                 connection.close(closeReason);
             } else {
@@ -127,6 +125,10 @@ public final class UserSession {
 
     public boolean isConnected() {
         return connection != null && connection.isConnected();
+    }
+
+    public boolean supportsSwitchingToUdp() {
+        return deviceType != DeviceType.BROWSER;
     }
 
     public Flux<ByteBuf> getNotificationFlux() {

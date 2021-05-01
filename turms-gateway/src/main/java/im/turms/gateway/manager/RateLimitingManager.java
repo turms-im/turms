@@ -62,11 +62,6 @@ public class RateLimitingManager {
             return false;
         }
         long firstRequestTimestamp = session.getFirstRequestTimestampMillis();
-        if (firstRequestTimestamp == 0) {
-            session.setFirstRequestTimestampMillis(now);
-            session.setCurrentProcessedRequestCount(1);
-            return false;
-        }
         long elapsedTime = now - firstRequestTimestamp;
         if (elapsedTime > perMillis) {
             session.setFirstRequestTimestampMillis(now);

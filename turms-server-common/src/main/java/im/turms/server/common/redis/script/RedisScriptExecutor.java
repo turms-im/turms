@@ -39,21 +39,11 @@ public final class RedisScriptExecutor {
     public static <T> Mono<T> execute(ReactiveScriptingCommands commands,
                                       RedisScript<?> script,
                                       ReturnType returnType,
-                                      Object... keysAndArgs) {
-        ByteBuffer[] buffers = new ByteBuffer[keysAndArgs.length];
-        for (int i = 0; i < keysAndArgs.length; i++) {
-            Object obj = keysAndArgs[i];
-            if (obj instanceof Byte) {
-                buffers[i] = ByteBuffer.wrap(new byte[] {(byte) obj});
-            } else if (obj instanceof Short) {
-                buffers[i] = ByteBuffer.allocate(Short.BYTES).putShort((short) obj).flip();
-            } else if (obj instanceof Integer) {
-                buffers[i] = ByteBuffer.allocate(Integer.BYTES).putInt((int) obj).flip();
-            } else if (obj instanceof Long) {
-                buffers[i] = ByteBuffer.allocate(Long.BYTES).putLong((long) obj).flip();
-            } else if (obj instanceof String) {
-                buffers[i] = ByteBuffer.wrap(((String) obj).getBytes(StandardCharsets.UTF_8));
-            }
+                                      Object... keys) {
+        ByteBuffer[] buffers = new ByteBuffer[keys.length];
+        for (int i = 0; i < keys.length; i++) {
+            Object obj = keys[i];
+            buffers[i] = obj2Buffer(obj);
         }
         return execute(commands, script, returnType, buffers);
     }
@@ -64,16 +54,31 @@ public final class RedisScriptExecutor {
     public static <T> Mono<T> execute(ReactiveScriptingCommands commands,
                                       RedisScript<?> script,
                                       ReturnType returnType,
-                                      ByteBuffer[] keysAndArgs) {
-        return (Mono<T>) commands.evalSha(script.getSha1(), returnType, keysAndArgs.length, keysAndArgs)
+                                      ByteBuffer[] keys) {
+        return (Mono<T>) commands.evalSha(script.getSha1(), returnType, keys.length, keys)
                 .onErrorResume(e -> {
                     if (exceptionContainsNoScriptError(e)) {
                         return commands.eval(ByteBuffer.wrap(script.getScriptAsString().getBytes(StandardCharsets.UTF_8)), returnType,
-                                keysAndArgs.length, keysAndArgs);
+                                keys.length, keys);
                     }
                     return Flux.error(e instanceof RuntimeException ? e : new RedisSystemException(e.getMessage(), e));
                 })
                 .single();
+    }
+
+    public static ByteBuffer obj2Buffer(Object obj) {
+        if (obj instanceof Byte) {
+            return ByteBuffer.wrap(new byte[] {(byte) obj});
+        } else if (obj instanceof Short) {
+            return ByteBuffer.allocate(Short.BYTES).putShort((short) obj).flip();
+        } else if (obj instanceof Integer) {
+            return ByteBuffer.allocate(Integer.BYTES).putInt((int) obj).flip();
+        } else if (obj instanceof Long) {
+            return ByteBuffer.allocate(Long.BYTES).putLong((long) obj).flip();
+        } else if (obj instanceof String) {
+            return ByteBuffer.wrap(((String) obj).getBytes(StandardCharsets.UTF_8));
+        }
+        throw new IllegalArgumentException("Cannot serialize the unknown value: " + obj);
     }
 
     /**

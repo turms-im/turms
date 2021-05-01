@@ -101,9 +101,8 @@ public class UserLoginActionService {
                 monos.add(handler.handleUserLoginActionLog(log));
             }
             return Mono.when(monos);
-        } else {
-            return Mono.empty();
         }
+        return Mono.empty();
     }
 
     private Mono<Void> triggerLogoutHandlers(@NotNull UserLogoutActionLog log) {
@@ -114,9 +113,8 @@ public class UserLoginActionService {
                 monos.add(handler.handleUserLogoutActionLog(log));
             }
             return Mono.when(monos);
-        } else {
-            return Mono.empty();
         }
+        return Mono.empty();
     }
 
 }

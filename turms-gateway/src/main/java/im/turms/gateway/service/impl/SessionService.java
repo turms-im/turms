@@ -22,6 +22,7 @@ import com.google.common.collect.SetMultimap;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.UserStatus;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
+import im.turms.gateway.manager.HeartbeatManager;
 import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.plugin.extension.UserOnlineStatusChangeHandler;
 import im.turms.gateway.plugin.manager.TurmsPluginManager;
@@ -56,7 +57,6 @@ import javax.annotation.Nullable;
 import javax.annotation.PreDestroy;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -77,16 +77,16 @@ public class SessionService implements ISessionService {
     private final Node node;
     private final TurmsPropertiesManager turmsPropertiesManager;
     private final TurmsPluginManager turmsPluginManager;
+    private final HeartbeatManager heartbeatManager;
+
     private final SessionLocationService sessionLocationService;
     private final UserStatusService userStatusService;
     private final UserLoginActionService userLoginActionService;
     private final UserSimultaneousLoginService userSimultaneousLoginService;
+
     private final boolean pluginEnabled;
     private final Map<Long, UserSessionsManager> sessionsManagerByUserId;
-    private int closeIdleSessionAfterMillis;
-    private Duration closeIdleSessionAfterDuration;
-    private int minHeartbeatIntervalMillis;
-    private int switchProtocolAfterMillis;
+    private int closeIdleSessionAfterSeconds;
 
     private final Counter loggedInUsersCounter;
 
@@ -112,16 +112,23 @@ public class SessionService implements ISessionService {
         pluginEnabled = turmsProperties.getPlugin().isEnabled();
 
         SessionProperties sessionProperties = turmsProperties.getGateway().getSession();
-        closeIdleSessionAfterMillis = sessionProperties.getCloseIdleSessionAfterSeconds() * 1000;
-        closeIdleSessionAfterDuration = Duration.ofMillis(closeIdleSessionAfterMillis);
-        minHeartbeatIntervalMillis = sessionProperties.getMinHeartbeatIntervalSeconds() * 1000;
-        switchProtocolAfterMillis = sessionProperties.getSwitchProtocolAfterSeconds() * 1000;
+        closeIdleSessionAfterSeconds = sessionProperties.getCloseIdleSessionAfterSeconds();
+
+        heartbeatManager = new HeartbeatManager(this,
+                userStatusService,
+                sessionsManagerByUserId,
+                sessionProperties.getClientHeartbeatIntervalSeconds(),
+                closeIdleSessionAfterSeconds,
+                sessionProperties.getMinHeartbeatIntervalSeconds(),
+                sessionProperties.getSwitchProtocolAfterSeconds());
+
         node.addPropertiesChangeListener(newProperties -> {
             SessionProperties newSessionProperties = newProperties.getGateway().getSession();
-            closeIdleSessionAfterMillis = newSessionProperties.getCloseIdleSessionAfterSeconds() * 1000;
-            closeIdleSessionAfterDuration = Duration.ofMillis(closeIdleSessionAfterMillis);
-            minHeartbeatIntervalMillis = newSessionProperties.getMinHeartbeatIntervalSeconds() * 1000;
-            switchProtocolAfterMillis = newSessionProperties.getSwitchProtocolAfterSeconds() * 1000;
+            closeIdleSessionAfterSeconds = newSessionProperties.getCloseIdleSessionAfterSeconds();
+            heartbeatManager.setClientHeartbeatIntervalSeconds(newSessionProperties.getClientHeartbeatIntervalSeconds());
+            heartbeatManager.setCloseIdleSessionAfterSeconds(newSessionProperties.getCloseIdleSessionAfterSeconds());
+            heartbeatManager.setMinHeartbeatIntervalMillis(newSessionProperties.getMinHeartbeatIntervalSeconds() * 1000);
+            heartbeatManager.setSwitchProtocolAfterMillis(newSessionProperties.getSwitchProtocolAfterSeconds() * 1000);
         });
 
         MeterRegistry registry = metricsService.getRegistry();
@@ -131,6 +138,7 @@ public class SessionService implements ISessionService {
 
     @PreDestroy
     public void destroy() {
+        heartbeatManager.destroy();
         CloseReason closeReason = CloseReason.get(SessionCloseStatus.SERVER_CLOSED);
         clearAllLocalSessions(new Date(), closeReason)
                 .subscribe();
@@ -203,7 +211,7 @@ public class SessionService implements ISessionService {
         return setLocalSessionOfflineByUserIdAndDeviceTypes0(userId, deviceTypes, closeReason, disconnectionDate, manager);
     }
 
-    public Mono<Boolean> setLocalSessionOfflineByUserIdAndDeviceTypes0(
+    private Mono<Boolean> setLocalSessionOfflineByUserIdAndDeviceTypes0(
             @NotNull Long userId,
             @NotEmpty Set<@ValidDeviceType DeviceType> deviceTypes,
             @NotNull CloseReason closeReason,
@@ -217,7 +225,7 @@ public class SessionService implements ISessionService {
             return Mono.error(e);
         }
         // Don't close the session (connection) first and then remove the session status in Redis
-        // because it will make problem if a client logins again while the session status in Redis hasn't been removed
+        // because it will make trouble if a client logins again while the session status in Redis hasn't been removed
         return userStatusService.removeStatusByUserIdAndDeviceTypes(userId, deviceTypes)
                 .flatMap(ignored -> {
                     // Update the session information in Redis
@@ -267,60 +275,39 @@ public class SessionService implements ISessionService {
         return setLocalSessionOfflineByUserIdAndDeviceTypes(userId, DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET, closeReason, new Date());
     }
 
-    /**
-     * @return true if the session exists and the update operation was successful
-     */
-    public Mono<Boolean> updateHeartbeatTimestamp(
+    public void updateHeartbeatTimestamp(
             @NotNull Long userId,
             @NotNull @ValidDeviceType DeviceType deviceType) {
-        try {
-            AssertUtil.notNull(userId, "userId");
-            AssertUtil.notNull(deviceType, "deviceType");
-            DeviceTypeUtil.validDeviceType(deviceType);
-        } catch (TurmsBusinessException e) {
-            return Mono.error(e);
-        }
+        AssertUtil.notNull(userId, "userId");
+        AssertUtil.notNull(deviceType, "deviceType");
+        DeviceTypeUtil.validDeviceType(deviceType);
         UserSessionsManager userSessionsManager = getUserSessionsManager(userId);
         if (userSessionsManager != null) {
             UserSession session = userSessionsManager.getSession(deviceType);
             if (session != null && !session.getConnection().isConnectionRecovering()) {
-                return updateHeartbeatTimestamp(userId, session);
+                updateHeartbeatTimestamp(userId, session);
             }
         }
-        return Mono.just(false);
     }
 
-    public Mono<Boolean> updateHeartbeatTimestamp(@NotNull Long userId, @NotNull UserSession session) {
-        try {
-            AssertUtil.notNull(userId, "userId");
-            AssertUtil.notNull(session, "session");
-        } catch (TurmsBusinessException e) {
-            return Mono.error(e);
-        }
-        long lastHeartbeatTimestampMillis = session.getLastHeartbeatTimestampMillis();
-        boolean isAllowedToUpdate = System.currentTimeMillis() - lastHeartbeatTimestampMillis > minHeartbeatIntervalMillis;
-        return isAllowedToUpdate
-                ? userStatusService.updateTtl(userId, closeIdleSessionAfterDuration)
-                .doOnNext(exists -> session.setLastHeartbeatTimestampMillis(System.currentTimeMillis()))
-                : Mono.just(true);
+    public void updateHeartbeatTimestamp(@NotNull Long userId, @NotNull UserSession session) {
+        AssertUtil.notNull(userId, "userId");
+        AssertUtil.notNull(session, "session");
+        session.setLastHeartbeatRequestTimestampMillis(System.currentTimeMillis());
     }
 
-    public Mono<UserSession> authAndUpdateHeartbeatTimestamp(long userId, @NotNull @ValidDeviceType DeviceType deviceType, int sessionId) {
-        try {
-            AssertUtil.notNull(deviceType, "deviceType");
-            DeviceTypeUtil.validDeviceType(deviceType);
-        } catch (TurmsBusinessException e) {
-            return Mono.error(e);
-        }
+    public UserSession authAndUpdateHeartbeatTimestamp(long userId, @NotNull @ValidDeviceType DeviceType deviceType, int sessionId) {
+        AssertUtil.notNull(deviceType, "deviceType");
+        DeviceTypeUtil.validDeviceType(deviceType);
         UserSessionsManager userSessionsManager = getUserSessionsManager(userId);
         if (userSessionsManager != null) {
             UserSession session = userSessionsManager.getSession(deviceType);
             if (session != null && session.getId() == sessionId && !session.getConnection().isConnectionRecovering()) {
-                return updateHeartbeatTimestamp(userId, session)
-                        .flatMap(updated -> updated ? Mono.just(session) : Mono.empty());
+                updateHeartbeatTimestamp(userId, session);
+                return session;
             }
         }
-        return Mono.empty();
+        return null;
     }
 
     /**
@@ -454,21 +441,19 @@ public class SessionService implements ISessionService {
             @Nullable String ip,
             @Nullable String deviceDetails) {
         // Try to update the global user status
-        return userStatusService.addOnlineDeviceIfAbsent(userId, deviceType, userStatus, closeIdleSessionAfterDuration)
+        return userStatusService.addOnlineDeviceIfAbsent(userId, deviceType, userStatus, closeIdleSessionAfterSeconds)
                 .flatMap(wasSuccessful -> {
                     if (!wasSuccessful) {
                         return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE));
                     }
                     UserStatus finalUserStatus = userStatus != null ? userStatus : UserStatus.AVAILABLE;
-                    UserSessionsManager manager = sessionsManagerByUserId.computeIfAbsent(userId, key ->
-                            new UserSessionsManager(key, finalUserStatus));
-                    UserSession session =
-                            manager.addSessionIfAbsent(deviceType, position, null, closeIdleSessionAfterMillis, switchProtocolAfterMillis);
+                    UserSessionsManager manager =
+                            sessionsManagerByUserId.computeIfAbsent(userId, key -> new UserSessionsManager(key, finalUserStatus));
+                    UserSession session = manager.addSessionIfAbsent(deviceType, position, null);
                     // This should never happen
                     if (session == null) {
                         manager.setDeviceOffline(deviceType, CloseReason.get(SessionCloseStatus.LOGIN_CONFLICT));
-                        session = manager.addSessionIfAbsent(deviceType, position, null, closeIdleSessionAfterMillis,
-                                switchProtocolAfterMillis);
+                        session = manager.addSessionIfAbsent(deviceType, position, null);
                         if (session == null) {
                             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_INTERNAL_ERROR));
                         }

@@ -19,7 +19,9 @@ package im.turms.server.common.service.session;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ListMultimap;
 import com.google.common.collect.SetMultimap;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.UserStatus;
@@ -47,8 +49,10 @@ import reactor.core.publisher.Mono;
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.nio.ByteBuffer;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
@@ -65,11 +69,14 @@ public class UserStatusService {
     private static final Byte STATUS_KEY_STATUS = 's';
     private static final RedisScript<Boolean> ADD_ONLINE_USER_SCRIPT =
             RedisScript.of(new ClassPathResource("redis/try_add_online_user_with_ttl.lua"));
+    private static final RedisScript<Boolean> UPDATE_USERS_TTL_SCRIPT =
+            RedisScript.of(new ClassPathResource("redis/update_users_ttl.lua"));
 
     private final Node node;
 
     private final ShardingAlgorithm shardingAlgorithmForSession;
     private final List<ReactiveRedisTemplate<Long, String>> sessionRedisTemplates;
+    private final boolean onlyOneSessionRedisTemplate;
     /**
      * <pre>
      * +-------------+-------------------------+-------------------------+
@@ -113,6 +120,7 @@ public class UserStatusService {
         operationTimeout = Duration.ofSeconds(10);
         this.shardingAlgorithmForSession = shardingAlgorithmForSession;
         this.sessionRedisTemplates = sessionRedisTemplates;
+        onlyOneSessionRedisTemplate = sessionRedisTemplates.size() == 1;
         sessionOperationsList = sessionRedisTemplates
                 .stream()
                 .map(ReactiveRedisTemplate::opsForHash)
@@ -229,14 +237,40 @@ public class UserStatusService {
                 .timeout(operationTimeout);
     }
 
-    public Mono<Boolean> updateTtl(@NotNull Long userId, @NotNull Duration timeout) {
+    public Mono<Void> updateOnlineUsersTtl(@NotNull Collection<Long> userIds, @NotNull int timeoutSeconds) {
         try {
-            AssertUtil.notNull(userId, "userId");
-            AssertUtil.notNull(timeout, "timeout");
+            AssertUtil.notNull(userIds, "userIds");
+            AssertUtil.notNull(timeoutSeconds, "timeoutSeconds");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        return getSessionRedisTemplate(userId).expire(userId, timeout).timeout(operationTimeout);
+        if (onlyOneSessionRedisTemplate) {
+            ReactiveScriptingCommands commands =
+                    sessionRedisTemplates.get(0).getConnectionFactory().getReactiveConnection().scriptingCommands();
+            return RedisScriptExecutor.execute(commands,
+                    UPDATE_USERS_TTL_SCRIPT,
+                    ReturnType.BOOLEAN,
+                    serializeUpdateUsersTtlScript(timeoutSeconds, userIds))
+                    .then();
+        }
+        int templateSize = sessionRedisTemplates.size();
+        ListMultimap<ReactiveRedisTemplate, Long> map = ArrayListMultimap.create(templateSize, userIds.size() / templateSize);
+        for (Long userId : userIds) {
+            map.put(getSessionRedisTemplate(userId), userId);
+        }
+        Map<ReactiveRedisTemplate, Collection<Long>> templateAndUserIds = map.asMap();
+        int resultSize = templateAndUserIds.keySet().size();
+        List<Mono<Boolean>> list = new ArrayList<>(resultSize);
+        for (Map.Entry<ReactiveRedisTemplate, Collection<Long>> entry : templateAndUserIds.entrySet()) {
+            ReactiveScriptingCommands commands =
+                    entry.getKey().getConnectionFactory().getReactiveConnection().scriptingCommands();
+            Mono<Boolean> result = RedisScriptExecutor.execute(commands,
+                    UPDATE_USERS_TTL_SCRIPT,
+                    ReturnType.BOOLEAN,
+                    serializeUpdateUsersTtlScript(timeoutSeconds, userIds));
+            list.add(result);
+        }
+        return Mono.when(list);
     }
 
     /**
@@ -327,14 +361,14 @@ public class UserStatusService {
     public Mono<Boolean> addOnlineDeviceIfAbsent(@NotNull Long userId,
                                                  @NotNull @ValidDeviceType DeviceType deviceType,
                                                  @Nullable UserStatus userStatus,
-                                                 @NotNull Duration heartbeatTimeout) {
+                                                 @NotNull int heartbeatSeconds) {
         try {
             AssertUtil.notNull(userId, "userId");
             AssertUtil.notNull(deviceType, "deviceType");
             DeviceTypeUtil.validDeviceType(deviceType);
             AssertUtil.state(userStatus != UserStatus.UNRECOGNIZED, "The user status must not be UNRECOGNIZED");
             AssertUtil.state(userStatus != UserStatus.OFFLINE, "The user status must not be OFFLINE");
-            AssertUtil.notNull(heartbeatTimeout, "heartbeatTimeout");
+            AssertUtil.notNull(heartbeatSeconds, "heartbeatSeconds");
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
@@ -344,7 +378,7 @@ public class UserStatusService {
         args[0] = userId;
         args[1] = (byte) deviceType.getNumber();
         args[2] = node.getLocalMemberId();
-        args[3] = (short) heartbeatTimeout.getSeconds();
+        args[3] = (short) heartbeatSeconds;
         if (userStatus != null) {
             args[4] = (byte) userStatus.getNumber();
         }
@@ -357,6 +391,19 @@ public class UserStatusService {
 
     private ReactiveHashOperations<Long, Object, Object> getSessionOperations(long userId) {
         return sessionOperationsList.get(shardingAlgorithmForSession.doSharding(userId, sessionRedisTemplates.size()));
+    }
+
+    private ByteBuffer[] serializeUpdateUsersTtlScript(int ttl, Collection<Long> userIds) {
+        int userCount = userIds.size();
+        int size = 1 + userCount;
+        ByteBuffer[] buffers = new ByteBuffer[size];
+        buffers[0] = RedisScriptExecutor.obj2Buffer((short) ttl);
+        int i = 1;
+        for (Long userId : userIds) {
+            buffers[i] = RedisScriptExecutor.obj2Buffer(userId);
+            i++;
+        }
+        return buffers;
     }
 
 }

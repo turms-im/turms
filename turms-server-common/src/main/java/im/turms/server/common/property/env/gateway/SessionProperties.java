@@ -61,6 +61,14 @@ public class SessionProperties {
     @Min(0)
     private int minHeartbeatIntervalSeconds = closeIdleSessionAfterSeconds / 10;
 
+    @Description("The client heartbeat interval. " +
+            "Note that the value will NOT change the actual heartbeat behavior of clients, " +
+            "and the value is only used to facilitate related operations of turms-gateway")
+    @GlobalProperty
+    @JsonView(MutablePropertiesView.class)
+    @Min(0)
+    private int clientHeartbeatIntervalSeconds = closeIdleSessionAfterSeconds / 3;
+
     @Description("Whether to notify clients of the session information after connected with the server")
     @GlobalProperty
     @JsonView(MutablePropertiesView.class)

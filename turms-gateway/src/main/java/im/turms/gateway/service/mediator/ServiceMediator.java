@@ -131,11 +131,11 @@ public class ServiceMediator {
         return inboundRequestService.processServiceRequest(serviceRequest);
     }
 
-    public Mono<TurmsStatusCode> processHeartbeatRequest(Long userId, DeviceType deviceType) {
+    public TurmsStatusCode processHeartbeatRequest(Long userId, DeviceType deviceType) {
         return inboundRequestService.processHeartbeatRequest(userId, deviceType);
     }
 
-    public Mono<UserSession> authAndProcessHeartbeatRequest(long userId, DeviceType deviceType, int sessionId) {
+    public UserSession authAndProcessHeartbeatRequest(long userId, DeviceType deviceType, int sessionId) {
         return sessionService.authAndUpdateHeartbeatTimestamp(userId, deviceType, sessionId);
     }
 
