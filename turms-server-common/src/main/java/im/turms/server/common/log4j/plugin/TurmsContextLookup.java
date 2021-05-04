@@ -24,7 +24,7 @@ import im.turms.server.common.log4j.AdminApiLogging;
 import im.turms.server.common.log4j.ClientApiLogging;
 import im.turms.server.common.log4j.LogContextConstant;
 import im.turms.server.common.log4j.UserActivityLogging;
-import im.turms.server.common.util.InvokeUtil;
+import im.turms.server.common.util.ReflectionUtil;
 import lombok.SneakyThrows;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.async.AsyncLogger;
@@ -40,7 +40,7 @@ import java.lang.invoke.MethodHandle;
 @Plugin(name = "myctx", category = StrLookup.CATEGORY)
 public class TurmsContextLookup implements StrLookup {
 
-    private static final MethodHandle GET_LOGGER = InvokeUtil.getGetter(RingBufferLogEvent.class, "asyncLogger");
+    private static final MethodHandle GET_LOGGER = ReflectionUtil.getGetter(RingBufferLogEvent.class, "asyncLogger");
 
     @Override
     public String lookup(String key) {

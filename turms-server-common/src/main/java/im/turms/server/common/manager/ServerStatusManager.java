@@ -19,6 +19,9 @@ package im.turms.server.common.manager;
 
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.monitor.MemoryMonitor;
+import im.turms.server.common.property.TurmsPropertiesManager;
+import im.turms.server.common.property.env.common.MonitorProperties;
+import im.turms.server.common.property.env.common.ServerAvailabilityProperties;
 import org.springframework.stereotype.Component;
 
 /**
@@ -28,15 +31,20 @@ import org.springframework.stereotype.Component;
 public class ServerStatusManager {
 
     private final Node node;
+    private final MemoryMonitor memoryMonitor;
 
-    public ServerStatusManager(Node node) {
+    public ServerStatusManager(Node node, TurmsPropertiesManager propertiesManager) {
         this.node = node;
-        // Load MemoryMonitor class
-        MemoryMonitor.DEFAULT.isExceeded();
+        MonitorProperties monitorProperties = propertiesManager.getLocalProperties().getMonitor();
+        ServerAvailabilityProperties availabilityProperties = propertiesManager.getLocalProperties().getServerAvailability();
+        memoryMonitor = new MemoryMonitor(monitorProperties.getUpdateMemoryIntervalSeconds(),
+                availabilityProperties.getMaxAvailableMemoryPercentage(),
+                availabilityProperties.getMaxAvailableDirectPercentage(),
+                availabilityProperties.getMaxAvailableHeapPercentage());
     }
 
     public boolean isActive() {
-        return node.isActive() && !MemoryMonitor.DEFAULT.isExceeded();
+        return node.isActive() && !memoryMonitor.isExceeded();
     }
 
 }

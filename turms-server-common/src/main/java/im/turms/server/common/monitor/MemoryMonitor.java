@@ -17,34 +17,58 @@
 
 package im.turms.server.common.monitor;
 
+import com.sun.management.OperatingSystemMXBean;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.netty.util.internal.PlatformDependent;
 import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.Level;
 
 import java.lang.management.BufferPoolMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
  * @author James Chen
+ * @implNote JVM Total Memory:
+ * 1. Off-Heap:
+ * a. Mapped files, b. Direct buffers c. Java stacks d. Metaspace (Class meta data: Constant pool, Field & Method data),
+ * e. Native code (JVM internal use only): PC registers, Native method stacks, Code cache,
+ * Structures used & allocated by native libraries(e.g IO libraries), Shared libraries of the JVM, etc.
+ * f. etc
+ * 2. Heap (eden, survivor, old)
+ * <a href="https://www.oracle.com/technetwork/tutorials/tutorials-1876574.html">
+ * Getting Started with the G1 Garbage Collector</a>
  * @see jdk.internal.misc.JavaNioAccess.BufferPool#getMemoryUsed
  * @see io.micrometer.core.instrument.binder.jvm.JvmMemoryMetrics
  */
 @Log4j2
 public final class MemoryMonitor {
 
-    // TODO: make configurable
-    private static final int MEMORY_WATER_MARK = 85;
-    private static final BufferPoolMXBean DIRECT_BUFFER_POOL_BEAN;
-    private static final MemoryMXBean MEMORY_BEAN;
-    private static final long TOTAL_MEMORY;
+    private final long maxManagedMemory;
+    private final long maxDirectMemory;
+    private final long maxHeapMemory;
 
-    static {
+    private final long maxAvailableManagedMemory;
+    private final long maxAvailableDirectMemory;
+    private final long maxAvailableHeapMemory;
+
+    private long usedMemory;
+    private long usedDirectMemory;
+    private long usedHeapMemory;
+
+    private final BufferPoolMXBean directBufferPoolBean;
+    private final MemoryMXBean memoryMXBean;
+
+    public MemoryMonitor(int intervalSeconds,
+                         int maxAvailableMemoryPercentage,
+                         int maxAvailableDirectPercentage,
+                         int maxAvailableHeapPercentage) {
+        // update memory properties
         List<BufferPoolMXBean> poolBeans = ManagementFactory.getPlatformMXBeans(BufferPoolMXBean.class);
         Optional<BufferPoolMXBean> pool = poolBeans
                 .stream()
@@ -59,59 +83,67 @@ public final class MemoryMonitor {
                     + String.join(", ", names);
             throw new IllegalStateException(s);
         }
-        DIRECT_BUFFER_POOL_BEAN = pool.get();
-        MEMORY_BEAN = ManagementFactory.getMemoryMXBean();
-        TOTAL_MEMORY = getTotalMemory();
+        directBufferPoolBean = pool.get();
+        memoryMXBean = ManagementFactory.getMemoryMXBean();
+
+        maxDirectMemory = PlatformDependent.maxDirectMemory();
+        if (maxDirectMemory < 0) {
+            throw new IllegalStateException("Cannot detect the max direct memory: " + maxDirectMemory);
+        }
+        maxHeapMemory = memoryMXBean.getHeapMemoryUsage().getMax();
+        if (maxHeapMemory < 0) {
+            throw new IllegalStateException("Cannot detect the max heap memory: " + maxHeapMemory);
+        }
+        long totalMemory = maxHeapMemory + maxDirectMemory;
+        OperatingSystemMXBean operatingSystemBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
+        long totalPhysicalMemorySize = operatingSystemBean.getTotalPhysicalMemorySize();
+        maxManagedMemory = Math.min(totalMemory, totalPhysicalMemorySize);
+
+        maxAvailableManagedMemory = maxManagedMemory * maxAvailableMemoryPercentage;
+        maxAvailableDirectMemory = maxDirectMemory * maxAvailableDirectPercentage;
+        maxAvailableHeapMemory = maxHeapMemory * maxAvailableHeapPercentage;
+
+        startMonitor(intervalSeconds);
     }
 
-    /**
-     * Note: Make sure DEFAULT is under the static block, or the static block will run
-     * after constructor which will call updateUsedMemory while DIRECT_BUFFER_POOL_BEAN is null
-     */
-    public static final MemoryMonitor DEFAULT = new MemoryMonitor();
+    public boolean isExceeded() {
+        return usedMemory > maxAvailableManagedMemory
+                || usedDirectMemory > maxAvailableDirectMemory
+                || usedHeapMemory > maxAvailableHeapMemory;
+    }
 
-    private long usedMemory;
-    private int memoryPercentage;
-
-    private MemoryMonitor() {
+    private void startMonitor(int intervalSeconds) {
         DefaultThreadFactory threadFactory = new DefaultThreadFactory("memory-monitor", true);
-        Executors.newScheduledThreadPool(1, threadFactory)
+        new ScheduledThreadPoolExecutor(1, threadFactory)
                 .scheduleWithFixedDelay(() -> {
                     updateUsedMemory();
-                    updateMemoryPercentage();
-                    if (log.isDebugEnabled()) {
-                        log.debug("Used memory: {}/{}", asMbString(usedMemory), asMbString(TOTAL_MEMORY));
-                    }
-                }, 0, 15, TimeUnit.SECONDS);
+                    tryLog();
+                }, 0, intervalSeconds, TimeUnit.SECONDS);
     }
 
-    private static long getTotalMemory() {
-        // Don't use MEMORY_BEAN.getNonHeapMemoryUsage().getMax()
-        return PlatformDependent.maxDirectMemory()
-                + MEMORY_BEAN.getHeapMemoryUsage().getMax();
-    }
-
-    /**
-     * Note that the method doesn't count the following arenas:
-     * 1.The memory usage of native code
-     * 2.Mapped memory
-     */
     private void updateUsedMemory() {
-        usedMemory = DIRECT_BUFFER_POOL_BEAN.getMemoryUsed()
-                + MEMORY_BEAN.getHeapMemoryUsage().getUsed()
-                + MEMORY_BEAN.getNonHeapMemoryUsage().getUsed();
+        usedDirectMemory = directBufferPoolBean.getMemoryUsed();
+        usedHeapMemory = memoryMXBean.getHeapMemoryUsage().getUsed();
+        usedMemory = usedDirectMemory + usedHeapMemory;
+    }
+
+    private void tryLog() {
+        Level logLevel = isExceeded()
+                ? Level.WARN
+                : Level.DEBUG;
+        if (log.isEnabled(logLevel)) {
+            log.log(logLevel, "Used managed memory: {}/{}; Used direct memory: {}/{}; Used heap memory: {}/{}",
+                    asMbString(usedMemory),
+                    asMbString(maxManagedMemory),
+                    asMbString(usedDirectMemory),
+                    asMbString(maxDirectMemory),
+                    asMbString(usedHeapMemory),
+                    asMbString(maxHeapMemory));
+        }
     }
 
     private String asMbString(long bytes) {
         return bytes / 1024 / 1024 + "MB";
-    }
-
-    private void updateMemoryPercentage() {
-        memoryPercentage = (int) (100 * usedMemory / TOTAL_MEMORY);
-    }
-
-    public boolean isExceeded() {
-        return memoryPercentage > MEMORY_WATER_MARK;
     }
 
 }

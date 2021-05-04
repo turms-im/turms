@@ -14,10 +14,8 @@ if result > 0 then
         else
             redis.call('hset', user_id, 's', status)
         end
-    else
-        if status ~= nil and previous_status ~= status then
-            redis.call('hset', user_id, 's', status)
-        end
+    elseif status ~= nil and previous_status ~= status then
+        redis.call('hset', user_id, 's', status)
     end
     redis.call('expire', user_id, ttl)
     return true

@@ -28,7 +28,7 @@ import im.turms.server.common.mongo.entity.annotation.Indexed;
 import im.turms.server.common.mongo.entity.annotation.PropertySetter;
 import im.turms.server.common.mongo.entity.annotation.Sharded;
 import im.turms.server.common.mongo.entity.annotation.WithTemperature;
-import im.turms.server.common.util.InvokeUtil;
+import im.turms.server.common.util.ReflectionUtil;
 import lombok.Data;
 import org.bson.BsonDocument;
 import org.bson.BsonValue;
@@ -189,10 +189,10 @@ public final class MongoEntityFactory {
                 entityIndexes.addAll(indexModels);
             }
             // Getter and Setter
-            MethodHandle getter = InvokeUtil.getGetter(field);
+            MethodHandle getter = ReflectionUtil.getGetter(field);
             MethodHandle setter = setterMethods.get(fieldName);
             if (setter == null) {
-                setter = InvokeUtil.getSetter(field);
+                setter = ReflectionUtil.getSetter(field);
             }
             // Constructor
             Integer ctorParamIndex = constructor.isNoArgConstructor()
@@ -218,7 +218,7 @@ public final class MongoEntityFactory {
                     setterMethods = new HashMap<>(8);
                 }
                 String methodName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, method.getName().substring(3));
-                setterMethods.put(methodName, InvokeUtil.method2Handle(method));
+                setterMethods.put(methodName, ReflectionUtil.method2Handle(method));
             }
         }
         if (setterMethods == null) {

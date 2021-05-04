@@ -18,7 +18,7 @@
 package im.turms.server.common.actuator.metrics;
 
 import com.google.common.collect.Sets;
-import im.turms.server.common.util.InvokeUtil;
+import im.turms.server.common.util.ReflectionUtil;
 import io.micrometer.core.instrument.Measurement;
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -49,7 +49,7 @@ import java.util.function.BiFunction;
  */
 public class MetricsPool {
 
-    private static final MethodHandle GET_METER_MAP = InvokeUtil.getGetter(MeterRegistry.class, "meterMap");
+    private static final MethodHandle GET_METER_MAP = ReflectionUtil.getGetter(MeterRegistry.class, "meterMap");
     private final MeterRegistry registry;
 
     public MetricsPool(MeterRegistry registry) {

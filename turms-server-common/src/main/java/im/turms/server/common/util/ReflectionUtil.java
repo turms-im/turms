@@ -25,9 +25,9 @@ import java.lang.reflect.Method;
 /**
  * @author James Chen
  */
-public final class InvokeUtil {
+public final class ReflectionUtil {
 
-    private InvokeUtil() {
+    private ReflectionUtil() {
     }
 
     public static MethodHandle getGetter(Class<?> clazz, String fieldName) {

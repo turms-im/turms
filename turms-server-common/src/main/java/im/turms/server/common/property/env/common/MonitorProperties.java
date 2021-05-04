@@ -15,26 +15,24 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.mongo.exception;
+package im.turms.server.common.property.env.common;
 
-import com.mongodb.ErrorCategory;
-import com.mongodb.MongoWriteException;
-import com.mongodb.WriteError;
-import org.springframework.dao.DuplicateKeyException;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
+ * Convention over configuration
+ *
  * @author James Chen
  */
-public class MongoExceptionTranslator {
+@AllArgsConstructor
+@Builder(toBuilder = true)
+@Data
+@NoArgsConstructor
+public class MonitorProperties {
 
-    public Throwable translate(Throwable e) {
-        if (e instanceof MongoWriteException) {
-            WriteError error = ((MongoWriteException) e).getError();
-            if (error.getCategory().equals(ErrorCategory.DUPLICATE_KEY)) {
-                return new DuplicateKeyException(e.getMessage(), e);
-            }
-        }
-        return e;
-    }
+    private int updateMemoryIntervalSeconds = 15;
 
 }
