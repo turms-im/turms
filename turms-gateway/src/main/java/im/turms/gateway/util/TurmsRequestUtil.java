@@ -66,7 +66,7 @@ public final class TurmsRequestUtil {
                     int kindFieldNumber = tag >>> 3;
                     type = TurmsRequest.KindCase.forNumber(kindFieldNumber);
                     if (type == null || type == KIND_NOT_SET) {
-                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "Not a valid TurmsRequest");
+                        throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "Not a valid TurmsRequest: Unknown request type " + type);
                     }
                     break;
                 }
@@ -78,10 +78,10 @@ public final class TurmsRequestUtil {
                 }
                 return new SimpleTurmsRequest(requestId, type, createSessionRequest);
             } else {
-                throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "Not a valid TurmsRequest");
+                throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "Not a valid TurmsRequest: No request ID");
             }
         } catch (IOException e) {
-            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "Not a valid TurmsRequest");
+            throw TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "Not a valid TurmsRequest: " + e.getMessage());
         }
     }
 
