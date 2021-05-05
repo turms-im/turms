@@ -62,6 +62,7 @@
         <module>turms-plugin-demo</module>
         <module>turms-plugins/turms-plugin-minio</module>
         <module>turms-server-common</module>
+        <module>turms-server-test</module>
         <module>turms-server-test-common</module>
     </modules>
 

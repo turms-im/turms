@@ -46,6 +46,7 @@ turms-apm/target/
 
 ### Turms Server Test ###
 turms-server-test-common/target
+turms-server-test/target
 
 ### Turms Clients ###
 turms-client-js/coverage/
