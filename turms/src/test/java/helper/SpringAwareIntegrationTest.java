@@ -18,7 +18,6 @@
 package helper;
 
 import im.turms.server.common.testing.BaseIntegrationTest;
-import im.turms.server.common.testing.ContainerConfig;
 import im.turms.turms.TurmsApplication;
 import im.turms.turms.workflow.access.http.dto.response.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;

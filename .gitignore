@@ -44,6 +44,9 @@ turms-admin/node_modules/
 
 turms-apm/target/
 
+### Turms Server Test ###
+turms-server-test-common/target
+
 ### Turms Clients ###
 turms-client-js/coverage/
 turms-client-js/dist/

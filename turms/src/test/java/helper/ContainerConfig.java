@@ -15,9 +15,10 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.testing;
+package helper;
 
 import im.turms.server.common.property.TurmsPropertiesManager;
+import im.turms.server.common.testing.BaseIntegrationTest;
 
 /**
  * @author James Chen
@@ -34,7 +35,5 @@ public class ContainerConfig {
         propertiesManager.getLocalProperties().getService().getMongo().getGroup().setUri(uri);
         propertiesManager.getLocalProperties().getService().getMongo().getConversation().setUri(uri);
         propertiesManager.getLocalProperties().getService().getMongo().getMessage().setUri(uri);
-
-        propertiesManager.getLocalProperties().getGateway().getMongo().getUser().setUri(uri);
     }
 }

@@ -10,9 +10,10 @@ import java.time.Duration;
  */
 public abstract class BaseIntegrationTest {
 
-    protected static final Duration DEFAULT_IO_TIMEOUT = Duration.ofSeconds(15);
+    public static final TestingEnvContainer ENV = new TestingEnvContainer(TestingEnvContainerOptions.builder()
+            .build());
 
-    protected static final TestingEnvContainer ENV = new TestingEnvContainer();
+    protected static final Duration DEFAULT_IO_TIMEOUT = Duration.ofSeconds(15);
 
     static {
         ENV.start();

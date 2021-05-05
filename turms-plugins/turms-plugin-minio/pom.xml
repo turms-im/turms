@@ -14,7 +14,7 @@
         <maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
 
         <awssdk.version>2.15.46</awssdk.version>
-        <lombok.version>1.18.16</lombok.version>
+        <lombok.version>1.18.20</lombok.version>
     </properties>
 
     <dependencyManagement>

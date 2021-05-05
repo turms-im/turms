@@ -41,8 +41,8 @@
 
         <!-- Runtime Deps for Testing -->
         <assertj-guava.version>3.4.0</assertj-guava.version>
-        <jmh.version>1.28</jmh.version>
-        <testcontainers.version>1.15.2</testcontainers.version>
+        <jmh.version>1.29</jmh.version>
+        <testcontainers.version>1.15.3</testcontainers.version>
 
         <!-- Maven plugins -->
         <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
@@ -62,6 +62,7 @@
         <module>turms-plugin-demo</module>
         <module>turms-plugins/turms-plugin-minio</module>
         <module>turms-server-common</module>
+        <module>turms-server-test-common</module>
     </modules>
 
     <dependencies>

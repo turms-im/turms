@@ -19,24 +19,26 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-
     <parent>
-        <groupId>im.turms</groupId>
         <artifactId>turms-parent</artifactId>
+        <groupId>im.turms</groupId>
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+    <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>server-common</artifactId>
+    <artifactId>server-test-common</artifactId>
     <version>${revision}</version>
+
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+    </properties>
 
     <dependencies>
         <dependency>
-            <groupId>im.turms</groupId>
-            <artifactId>server-test-common</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
         </dependency>
     </dependencies>
 
@@ -45,24 +47,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
                     <annotationProcessors>
-                        <annotationProcessor>
-                            org.springframework.boot.configurationprocessor.ConfigurationMetadataAnnotationProcessor
-                        </annotationProcessor>
                         <annotationProcessor>lombok.launch.AnnotationProcessorHider$AnnotationProcessor
                         </annotationProcessor>
-                        <annotationProcessor>org.hibernate.validator.ap.ConstraintValidationProcessor
-                        </annotationProcessor>
                     </annotationProcessors>
-                    <compilerArgs>
-                        <arg>--add-exports=java.base/jdk.internal.vm.annotation=ALL-UNNAMED</arg>
-                    </compilerArgs>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
 </project>
