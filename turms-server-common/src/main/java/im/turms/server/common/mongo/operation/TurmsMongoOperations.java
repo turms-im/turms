@@ -40,6 +40,9 @@ import com.mongodb.reactivestreams.client.FindPublisher;
 import com.mongodb.reactivestreams.client.ListIndexesPublisher;
 import com.mongodb.reactivestreams.client.MongoCollection;
 import com.mongodb.reactivestreams.client.MongoDatabase;
+import com.mongodb.reactivestreams.client.internal.MongoCollectionUtil;
+import com.mongodb.reactivestreams.client.internal.MongoOperationPublisher;
+import com.mongodb.reactivestreams.client.internal.TurmsFindPublisherImpl;
 import im.turms.server.common.mongo.BsonPool;
 import im.turms.server.common.mongo.MongoContext;
 import im.turms.server.common.mongo.entity.MongoEntity;
@@ -63,7 +66,9 @@ import reactor.core.publisher.Mono;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -71,8 +76,6 @@ import java.util.stream.Collectors;
  * @author James Chen
  * @implNote We operations in an unsafe way, which means
  * we don't check whether arguments are legal or not and so on
- * TODO: Make sure the FindOptions instance is passed to find operations
- * once MongoCollection exposes the FindOptions parameter
  */
 @Log4j2
 public class TurmsMongoOperations implements MongoOperationsSupport {
@@ -102,6 +105,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
 
     private final MongoContext context;
     private final MongoExceptionTranslator translator = new MongoExceptionTranslator();
+    private final Map<Class<?>, MongoOperationPublisher<?>> publisherMap = new IdentityHashMap<>(32);
 
     public TurmsMongoOperations(MongoContext context) {
         this.context = context;
@@ -114,7 +118,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     @Override
     public <T> Mono<T> findById(Class<T> clazz, Object id) {
         MongoCollection<T> collection = context.getCollection(clazz);
-        FindPublisher<T> source = collection.find(new Document("_id", id), clazz);
+        FindPublisher<T> source = find(collection, new Document("_id", id), null);
         return Mono.from(source);
     }
 
@@ -131,9 +135,10 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     @Override
     public <T> Mono<T> findOne(Class<T> clazz, Filter filter, @Nullable QueryOptions options) {
         MongoCollection<T> collection = context.getCollection(clazz);
-        FindPublisher<T> source = collection.find(filter.asDocument(), clazz);
-        applyQueryOptionsIfExists(options, source);
-        source.limit(1);
+        options = options == null
+                ? QueryOptions.newBuilder().limit(1)
+                : options.limit(1);
+        FindPublisher<T> source = find(collection, filter.asDocument(), options);
         return Mono.from(source);
     }
 
@@ -145,8 +150,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     @Override
     public <T> Flux<T> findMany(Class<T> clazz, Filter filter, @Nullable QueryOptions options) {
         MongoCollection<T> collection = context.getCollection(clazz);
-        FindPublisher<T> source = collection.find(filter.asDocument(), clazz);
-        applyQueryOptionsIfExists(options, source);
+        FindPublisher<T> source = find(collection, filter.asDocument(), options);
         return Flux.from(source);
     }
 
@@ -158,17 +162,17 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     @Override
     public <T> Flux<T> findAll(Class<T> clazz, @Nullable QueryOptions options) {
         MongoCollection<T> collection = context.getCollection(clazz);
-        FindPublisher<T> source = collection.find(FILTER_ALL_DOCUMENT, clazz);
-        applyQueryOptionsIfExists(options, source);
+        FindPublisher<T> source = find(collection, FILTER_ALL_DOCUMENT, options);
         return Flux.from(source);
     }
 
     @Override
     public <T> Mono<Boolean> exists(Class<T> clazz, Filter filter) {
         MongoCollection<T> collection = context.getCollection(clazz);
-        FindPublisher<Document> publisher = collection.find(filter.asDocument(), Document.class)
+        QueryOptions options = QueryOptions.newBuilder()
                 .projection(ID_ONLY)
                 .limit(1);
+        FindPublisher<T> publisher = find(collection, filter.asDocument(), options);
         return Mono.from(publisher).hasElement();
     }
 
@@ -501,10 +505,12 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     @Override
     public Mono<Boolean> validate(Class<?> clazz, String jsonSchema) {
         MongoCollection<?> collection = context.getCollection(clazz);
-        FindPublisher<Document> publisher = collection.find(Document.parse(jsonSchema), Document.class)
+        QueryOptions options = QueryOptions.newBuilder()
                 .projection(ID_ONLY)
                 .limit(1);
-        return Mono.from(publisher).hasElement();
+        FindPublisher<?> publisher = find(collection, Document.parse(jsonSchema), options);
+        return Mono.from(publisher)
+                .hasElement();
     }
 
     // Transaction
@@ -539,12 +545,23 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         return document;
     }
 
-    private void applyQueryOptionsIfExists(QueryOptions options, FindPublisher<?> publisher) {
-        if (options != null) {
-            publisher.limit(options.getLimit());
-            publisher.skip(options.getSkip());
-            publisher.sort(options.getSort());
-            publisher.projection(options.getProjection());
-        }
+    private <T> TurmsFindPublisherImpl<T> find(MongoCollection<T> collection,
+                                               Bson filter,
+                                               @Nullable QueryOptions options) {
+        MongoOperationPublisher<T> publisher = getPublisher(collection);
+        return new TurmsFindPublisherImpl<>(null, publisher, filter, options);
     }
+
+    private <T> MongoOperationPublisher<T> getPublisher(MongoCollection<T> collection) {
+        Class<T> entityClass = collection.getDocumentClass();
+        MongoOperationPublisher<T> publisher = (MongoOperationPublisher<T>) publisherMap.get(entityClass);
+        if (publisher == null) {
+            synchronized (publisherMap) {
+                return (MongoOperationPublisher<T>) publisherMap
+                        .computeIfAbsent(entityClass, clazz -> MongoCollectionUtil.getPublisher(collection));
+            }
+        }
+        return publisher;
+    }
+
 }

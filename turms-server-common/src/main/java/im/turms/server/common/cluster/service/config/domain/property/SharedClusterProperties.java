@@ -87,7 +87,7 @@ public class SharedClusterProperties {
                     commonProperties.getMonitor(),
                     commonProperties.getPlugin(),
                     commonProperties.getSecurity(),
-                    turmsProperties.getServerAvailability(),
+                    commonProperties.getServerAvailability(),
                     commonProperties.getUserStatus(),
                     gatewayProperties,
                     serviceProperties);
