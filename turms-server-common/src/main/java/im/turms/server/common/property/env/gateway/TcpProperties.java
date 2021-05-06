@@ -50,4 +50,6 @@ public class TcpProperties extends BaseServerProperties {
             "to close the TCP connection according to their business requirements")
     private int closeIdleConnectionAfterSeconds = 60 * 5;
 
+    private boolean wiretap;
+
 }

@@ -30,13 +30,11 @@ import reactor.netty.Connection;
  */
 public class TcpHandlerConfig {
 
+    private final ServerAvailabilityHandler serverAvailabilityHandler;
     private final TurmsProtobufEncoder protobufEncoder = new TurmsProtobufEncoder();
-    private ServerAvailabilityHandler serverAvailabilityHandler;
 
     public TcpHandlerConfig(ServerStatusManager serverStatusManager) {
-        if (serverAvailabilityHandler == null) {
-            serverAvailabilityHandler = new ServerAvailabilityHandler(serverStatusManager);
-        }
+        serverAvailabilityHandler = new ServerAvailabilityHandler(serverStatusManager);
     }
 
     public void configureChannel(Channel channel) {

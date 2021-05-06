@@ -60,6 +60,7 @@ public final class TcpServerFactory {
                 .childOption(SO_REUSEADDR, true)
                 .childOption(SO_LINGER, 0)
                 .childOption(TCP_NODELAY, false)
+                .wiretap(tcpProperties.isWiretap())
                 .runOn(LoopResourcesFactory.createForServer("gateway-tcp"))
                 // Note that the elements from "in.receive()" is emitted by FluxReceive,
                 // which will release buffer after "onNext" returns
