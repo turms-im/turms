@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.turms.workflow.access.http.dto.response;
+package im.turms.server.common.access.http.dto.response;
 
 
 import com.fasterxml.jackson.annotation.JsonCreator;

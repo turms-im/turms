@@ -17,30 +17,28 @@
 
 package im.turms.server.common.actuator.metrics;
 
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import im.turms.server.common.util.ReflectionUtil;
 import io.micrometer.core.instrument.Measurement;
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Statistic;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.composite.CompositeMeterRegistry;
-import lombok.SneakyThrows;
 import org.springframework.boot.actuate.endpoint.InvalidEndpointRequestException;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Nullable;
 import java.lang.invoke.MethodHandle;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.function.BiFunction;
 
 /**
  * @author James Chen
@@ -60,19 +58,27 @@ public class MetricsPool {
         return collectNames(registry);
     }
 
+    public Collection<Meter> findAllMeters() {
+        return getMeterMap().values();
+    }
+
     public List<Meter> findFirstMatchingMeters(String name, List<String> tags) {
         return findFirstMatchingMeters(registry, name, parseTags(tags));
     }
 
-    public Map<String, Double> getSamples(Collection<Meter> meters) {
-        Map<String, Double> samples = new LinkedHashMap<>();
-        for (Meter meter : meters) {
-            for (Measurement measurement : meter.measure()) {
-                String tag = measurement.getStatistic().getTagValueRepresentation();
-                samples.merge(tag, measurement.getValue(), mergeFunction(measurement.getStatistic()));
-            }
+    public Map<String, Double> getMeasurements(Meter meter) {
+        Iterable<Measurement> measures = meter.measure();
+        Map<String, Double> measurements;
+        if (measures instanceof Collection) {
+            measurements = Maps.newHashMapWithExpectedSize(((Collection<Measurement>) measures).size());
+        } else {
+            measurements = new HashMap<>(8);
         }
-        return samples;
+        for (Measurement measurement : measures) {
+            String tag = measurement.getStatistic().getTagValueRepresentation();
+            measurements.put(tag, measurement.getValue());
+        }
+        return measurements;
     }
 
     public Map<String, Set<String>> getAvailableTags(Collection<Meter> meters) {
@@ -80,6 +86,7 @@ public class MetricsPool {
         for (Meter meter : meters) {
             for (Tag tag : meter.getId().getTags()) {
                 Set<String> value = Collections.singleton(tag.getValue());
+                // tag.getKey() e.g. "total", "max", "count", "value" etc.
                 availableTags.merge(tag.getKey(), value, Sets::union);
             }
         }
@@ -90,7 +97,6 @@ public class MetricsPool {
      * Internal Implementations
      */
 
-    @SneakyThrows
     private Set<String> collectNames(MeterRegistry registry) {
         Set<String> names = new TreeSet<>();
         if (registry instanceof CompositeMeterRegistry) {
@@ -99,12 +105,20 @@ public class MetricsPool {
                 names.addAll(collectNames(meterRegistry));
             }
         } else {
-            Map<Meter.Id, Meter> meterMap = (Map<Meter.Id, Meter>) GET_METER_MAP.invokeExact(registry);
+            Map<Meter.Id, Meter> meterMap = getMeterMap();
             for (Meter meter : meterMap.values()) {
                 names.add(meter.getId().getName());
             }
         }
         return names;
+    }
+
+    private Map<Meter.Id, Meter> getMeterMap() {
+        try {
+            return (Map<Meter.Id, Meter>) GET_METER_MAP.invokeExact(registry);
+        } catch (Throwable t) {
+            throw new RuntimeException(t);
+        }
     }
 
     private List<Tag> parseTags(List<String> tags) {
@@ -124,19 +138,29 @@ public class MetricsPool {
         return tagList;
     }
 
-    private List<Meter> findFirstMatchingMeters(MeterRegistry registry, String name, List<Tag> tags) {
+    private List<Meter> findFirstMatchingMeters(MeterRegistry registry, String name, @Nullable List<Tag> tags) {
         if (registry instanceof CompositeMeterRegistry) {
             return findFirstMatchingMeters((CompositeMeterRegistry) registry, name, tags);
         }
         List<Meter> list = null;
-        for (Meter meter : registry.getMeters()) {
+        Map<Meter.Id, Meter> meterMap;
+        try {
+            meterMap = (Map<Meter.Id, Meter>) GET_METER_MAP.invokeExact(registry);
+        } catch (Throwable t) {
+            throw new RuntimeException(t);
+        }
+        for (Meter meter : meterMap.values()) {
             Meter.Id id = meter.getId();
-            if (id.getName().equals(name) && (tags == null || id.getTags().containsAll(tags))) {
-                if (list == null) {
-                    list = new LinkedList<>();
-                }
-                list.add(meter);
+            if (!id.getName().equals(name)) {
+                continue;
             }
+            if (tags == null || !id.getTags().containsAll(tags)) {
+                continue;
+            }
+            if (list == null) {
+                list = new LinkedList<>();
+            }
+            list.add(meter);
         }
         return list == null ? Collections.emptyList() : list;
     }
@@ -149,10 +173,6 @@ public class MetricsPool {
             }
         }
         return Collections.emptyList();
-    }
-
-    private BiFunction<Double, Double, Double> mergeFunction(Statistic statistic) {
-        return Statistic.MAX.equals(statistic) ? Double::max : Double::sum;
     }
 
 }

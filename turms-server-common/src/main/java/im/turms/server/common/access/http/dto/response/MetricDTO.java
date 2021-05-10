@@ -15,19 +15,34 @@
  * limitations under the License.
  */
 
-package im.turms.turms.workflow.access.http.dto.response;
+package im.turms.server.common.access.http.dto.response;
 
-import com.mongodb.client.result.DeleteResult;
 import lombok.Data;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author James Chen
  */
 @Data
-public class DeleteResultDTO {
-    private final Long deletedCount;
+public class MetricDTO {
 
-    public static DeleteResultDTO get(DeleteResult result) {
-        return new DeleteResultDTO(result.getDeletedCount());
+    private final String name;
+
+    private final String description;
+
+    private final String baseUnit;
+
+    private final List<MeasurementDTO> measurements;
+
+    private final Map<String, Set<String>> availableTags;
+
+    @Data
+    public static class MeasurementDTO {
+        private final List<String> tags;
+        private final Map<String, Double> measurements;
     }
+
 }

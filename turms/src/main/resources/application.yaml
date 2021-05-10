@@ -50,11 +50,10 @@ spring:
       - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
       - org.springframework.boot.autoconfigure.data.redis.RedisReactiveAutoConfiguration
 management:
-  # https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html
-  # Prometheus is enabled by default. Uncomment the following lines to disable it.
-  #  metrics:
-  #    enable:
-  #      prometheus: false
+  endpoint:
+    metrics:
+      # We use our own implementation
+      enabled: false
   endpoints:
     jmx:
       exposure:

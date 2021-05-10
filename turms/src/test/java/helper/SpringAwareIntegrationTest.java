@@ -19,7 +19,7 @@ package helper;
 
 import im.turms.server.common.testing.BaseIntegrationTest;
 import im.turms.turms.TurmsApplication;
-import im.turms.turms.workflow.access.http.dto.response.ResponseDTO;
+import im.turms.server.common.access.http.dto.response.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.WebTestClient;

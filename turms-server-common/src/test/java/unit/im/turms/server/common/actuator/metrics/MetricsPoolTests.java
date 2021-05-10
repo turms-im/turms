@@ -21,6 +21,7 @@ import im.turms.server.common.actuator.metrics.MetricsPool;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Statistic;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.Test;
@@ -39,8 +40,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 class MetricsPoolTests {
 
     private static final String COUNTER_NAME = "my.counter";
-    private static final int COUNTER1_VALUE = 123;
-    private static final int COUNTER2_VALUE = 456;
+    private static final double COUNTER1_VALUE = 123;
+    private static final double COUNTER2_VALUE = 456;
     private static final Tag COUNTER1_TAG = Tag.of("my.counter.tag.1", "my.counter.value");
     private static final Tag COUNTER2_TAG = Tag.of("my.counter.tag.2", "my.counter.value");
     private static final List<Tag> COUNTER1_TAGS = List.of(COUNTER1_TAG);
@@ -92,20 +93,15 @@ class MetricsPoolTests {
     }
 
     @Test
-    void getSamples() {
+    void getMeasurements() {
         MetricsPool pool = new MetricsPool(registry);
-        Collection<Meter> meters = registry.get(COUNTER_NAME).meters();
-        Map<String, Double> samples = pool.getSamples(meters);
-        String representation = meters.stream()
-                .findFirst()
-                .get()
-                .measure()
-                .iterator()
-                .next()
-                .getStatistic()
-                .getTagValueRepresentation();
-
-        assertThat(456 + (double) 123).isEqualTo(samples.get(representation));
+        Meter meter = registry.get(COUNTER_NAME)
+                .meters()
+                .stream().findFirst()
+                .get();
+        Map<String, Double> measurements = pool.getMeasurements(meter);
+        assertThat(measurements)
+                .containsExactlyEntriesOf(Map.of(Statistic.COUNT.getTagValueRepresentation(), COUNTER1_VALUE));
     }
 
 }

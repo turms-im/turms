@@ -15,29 +15,17 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.actuator.metrics;
+package im.turms.server.common.access.http.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.Collection;
 
 /**
  * @author James Chen
  */
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class MetricResponse {
-
-    private final String name;
-
-    private final String description;
-
-    private final String baseUnit;
-
-    private final Map<String, Double> measurements;
-
-    private final Map<String, Set<String>> availableTags;
-
+public final class PaginationDTO<T> {
+    private final Long total;
+    private final Collection<T> records;
 }

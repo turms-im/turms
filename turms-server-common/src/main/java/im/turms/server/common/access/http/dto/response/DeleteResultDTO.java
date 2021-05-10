@@ -15,16 +15,19 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.actuator.metrics;
+package im.turms.server.common.access.http.dto.response;
 
+import com.mongodb.client.result.DeleteResult;
 import lombok.Data;
-
-import java.util.Set;
 
 /**
  * @author James Chen
  */
 @Data
-public class ListNamesResponse {
-    private final Set<String> names;
+public class DeleteResultDTO {
+    private final Long deletedCount;
+
+    public static DeleteResultDTO get(DeleteResult result) {
+        return new DeleteResultDTO(result.getDeletedCount());
+    }
 }
