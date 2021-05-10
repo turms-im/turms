@@ -95,27 +95,23 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
             Map<String, Object> config = yaml.load(resource);
             Map<String, Object> services = (Map<String, Object>) config.get("services");
             if (options.isSetupTurms()) {
-                List<String> jvmOptions = options.getTurmsJvmOptions();
-                if (jvmOptions != null && jvmOptions.isEmpty()) {
+                String jvmOptions = parseJvmOptions(options.getTurmsJvmOptions());
+                if (!jvmOptions.isBlank()) {
                     Map<String, Object> turms = (Map<String, Object>) services.get("turms");
-                    StringBuilder jvmOpts = new StringBuilder((String) turms.get("TURMS_JVM_OPTS"));
-                    for (String option : jvmOptions) {
-                        jvmOpts.append(" -D").append(option);
-                    }
-                    turms.put("TURMS_JVM_OPTS", jvmOpts.toString());
+                    String turmsJvmOpts = (String) turms.get("TURMS_JVM_OPTS");
+                    turmsJvmOpts += jvmOptions;
+                    turms.put("TURMS_JVM_OPTS", turmsJvmOpts);
                 }
             } else {
                 services.remove("turms");
             }
             if (options.isSetupTurmsGateway()) {
-                List<String> jvmOptions = options.getTurmsGatewayJvmOptions();
-                if (jvmOptions != null && jvmOptions.isEmpty()) {
+                String jvmOptions = parseJvmOptions(options.getTurmsGatewayJvmOptions());
+                if (!jvmOptions.isBlank()) {
                     Map<String, Object> turms = (Map<String, Object>) services.get("turms-gateway");
-                    StringBuilder jvmOpts = new StringBuilder((String) turms.get("TURMS_GATEWAY_JVM_OPTS"));
-                    for (String option : jvmOptions) {
-                        jvmOpts.append(" -D").append(option);
-                    }
-                    turms.put("TURMS_GATEWAY_JVM_OPTS", jvmOpts.toString());
+                    String turmsGatewayJvmOpts = (String) turms.get("TURMS_GATEWAY_JVM_OPTS");
+                    turmsGatewayJvmOpts += jvmOptions;
+                    turms.put("TURMS_GATEWAY_JVM_OPTS", turmsGatewayJvmOpts);
                 }
             } else {
                 services.remove("turms-gateway");
@@ -129,6 +125,22 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static String parseJvmOptions(List<String> jvmOptions) {
+        if (jvmOptions == null || jvmOptions.isEmpty()) {
+            return "";
+        }
+        StringBuilder builder = new StringBuilder();
+        for (String option : jvmOptions) {
+            option = option.trim();
+            if (option.startsWith("-")) {
+                builder.append(" ").append(option);
+            } else {
+                builder.append(" -D").append(option);
+            }
+        }
+        return builder.toString();
     }
 
     // Mongo
