@@ -60,6 +60,8 @@ spring:
       - org.springframework.boot.autoconfigure.data.redis.RedisReactiveAutoConfiguration
 management:
   endpoint:
+    flightrecorder:
+      enabled: true
     metrics:
       # We use our own implementation
       enabled: false
@@ -69,4 +71,4 @@ management:
         exclude: "*"
     web:
       exposure:
-        include: info,health,env,heapdump,threaddump,metrics,prometheus
+        include: info,health,env,heapdump,threaddump,flightrecorder,prometheus

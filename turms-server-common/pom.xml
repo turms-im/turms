@@ -31,7 +31,16 @@
     <artifactId>server-common</artifactId>
     <version>${revision}</version>
 
+    <properties>
+        <flight-recorder-starter.version>2.2.1</flight-recorder-starter.version>
+    </properties>
+
     <dependencies>
+        <dependency>
+            <groupId>de.mirkosertic</groupId>
+            <artifactId>flight-recorder-starter</artifactId>
+            <version>${flight-recorder-starter.version}</version>
+        </dependency>
         <dependency>
             <groupId>im.turms</groupId>
             <artifactId>server-test-common</artifactId>

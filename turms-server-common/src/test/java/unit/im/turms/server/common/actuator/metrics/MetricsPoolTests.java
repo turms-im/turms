@@ -97,7 +97,8 @@ class MetricsPoolTests {
         MetricsPool pool = new MetricsPool(registry);
         Meter meter = registry.get(COUNTER_NAME)
                 .meters()
-                .stream().findFirst()
+                .stream()
+                .findFirst()
                 .get();
         Map<String, Double> measurements = pool.getMeasurements(meter);
         assertThat(measurements)
