@@ -29,11 +29,13 @@ import im.turms.turms.plugin.manager.TurmsPluginManager;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * @author James Chen
@@ -42,6 +44,9 @@ import java.util.Date;
 @Log4j2
 @DependsOn(IMongoCollectionInitializer.BEAN_NAME)
 public class AdminActionLogService {
+
+    private static final Set<String> SENSITIVE_FIELDS = Set.of("password");
+    private static final String SENSITIVE_INFO_PLACEHOLDER = "******";
 
     private final Node node;
     private final TurmsPluginManager turmsPluginManager;
@@ -70,13 +75,23 @@ public class AdminActionLogService {
                     action,
                     params,
                     body);
+            if (triggerHandlers) {
+                Mono<Void> handleAdminAction = Mono.empty();
+                for (AdminActionHandler handler : turmsPluginManager.getAdminActionHandlerList()) {
+                    handleAdminAction = handleAdminAction
+                            .then(Mono.defer(() -> handler.handleAdminAction(adminAction)));
+                }
+                handleAdminAction.subscribe();
+            }
+            if (body != null) {
+                for (String sensitiveField : SENSITIVE_FIELDS) {
+                    if (body.containsField(sensitiveField)) {
+                        body.put(sensitiveField, SENSITIVE_INFO_PLACEHOLDER);
+                    }
+                }
+            }
             if (logAdminAction) {
                 AdminApiLogging.log(adminAction);
-            }
-            if (triggerHandlers) {
-                for (AdminActionHandler handler : turmsPluginManager.getAdminActionHandlerList()) {
-                    handler.handleAdminAction(adminAction);
-                }
             }
         }
     }
