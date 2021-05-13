@@ -251,7 +251,8 @@ public class ControllerFilter implements WebFilter {
             additionalMono = Mono.empty();
         }
         ServerWebExchange finalExchange = exchange;
-        return additionalMono.then(chain.filter(exchange))
+        return additionalMono
+                .then(chain.filter(exchange))
                 .doFinally(signalType -> finalExchange.getAttributes().remove(ATTR_BODY));
     }
 

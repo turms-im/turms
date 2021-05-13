@@ -193,9 +193,9 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
         UserFriendRequest userFriendRequest = new UserFriendRequest(id, content, status, reason,
                 creationDate, responseDate, requesterId, recipientId);
         return mongoClient.insert(userFriendRequest)
-                .flatMap(unused -> userVersionService.updateReceivedFriendRequestsVersion(recipientId).onErrorResume(t -> Mono.empty())
-                        .then(userVersionService.updateSentFriendRequestsVersion(requesterId).onErrorResume(t -> Mono.empty()))
-                ).thenReturn(userFriendRequest);
+                .then(Mono.defer(() -> userVersionService.updateReceivedFriendRequestsVersion(recipientId).onErrorResume(t -> Mono.empty())
+                        .then(userVersionService.updateSentFriendRequestsVersion(requesterId).onErrorResume(t -> Mono.empty()))))
+                .thenReturn(userFriendRequest);
     }
 
     public Mono<UserFriendRequest> authAndCreateFriendRequest(

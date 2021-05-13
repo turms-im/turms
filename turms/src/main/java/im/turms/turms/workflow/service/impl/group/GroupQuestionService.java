@@ -221,9 +221,9 @@ public class GroupQuestionService {
                 answers,
                 score);
         return mongoClient.insert(groupJoinQuestion)
-                .flatMap(unused -> groupVersionService.updateJoinQuestionsVersion(groupId)
-                        .onErrorResume(t -> Mono.empty())
-                ).thenReturn(groupJoinQuestion);
+                .then(Mono.defer(() -> groupVersionService.updateJoinQuestionsVersion(groupId)
+                                .onErrorResume(t -> Mono.empty())))
+                .thenReturn(groupJoinQuestion);
     }
 
     public Mono<Long> queryGroupId(@NotNull Long questionId) {

@@ -191,10 +191,10 @@ public class GroupInvitationService extends ExpirableModelService<GroupInvitatio
         GroupInvitation groupInvitation =
                 new GroupInvitation(id, groupId, inviterId, inviteeId, content, status, creationDate, responseDate);
         return mongoClient.insert(groupInvitation)
-                .flatMap(invitation -> groupVersionService.updateGroupInvitationsVersion(groupId).onErrorResume(t -> Mono.empty())
+                .then(Mono.defer(() -> groupVersionService.updateGroupInvitationsVersion(groupId).onErrorResume(t -> Mono.empty())
                         .then(userVersionService.updateSentGroupInvitationsVersion(inviterId).onErrorResume(t -> Mono.empty()))
-                        .then(userVersionService.updateReceivedGroupInvitationsVersion(inviteeId).onErrorResume(t -> Mono.empty()))
-                ).thenReturn(groupInvitation);
+                        .then(userVersionService.updateReceivedGroupInvitationsVersion(inviteeId).onErrorResume(t -> Mono.empty()))))
+                .thenReturn(groupInvitation);
     }
 
     public Mono<GroupInvitation> queryGroupIdAndStatus(@NotNull Long invitationId) {

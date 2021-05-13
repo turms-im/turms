@@ -152,7 +152,7 @@ public class SharedPropertyService implements ClusterService {
             clusterProperties.setGatewayProperties(null);
         }
         return findAndUpdatePropertiesByNodeType(clusterProperties)
-                .switchIfEmpty(sharedConfigService.insert(clusterProperties))
+                .switchIfEmpty(Mono.defer(() -> sharedConfigService.insert(clusterProperties)))
                 .onErrorResume(DuplicateKeyException.class, e -> findAndUpdatePropertiesByNodeType(clusterProperties))
                 .doOnSuccess(properties -> {
                     sharedClusterProperties = properties;

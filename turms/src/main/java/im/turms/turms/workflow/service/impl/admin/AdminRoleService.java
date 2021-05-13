@@ -165,10 +165,10 @@ public class AdminRoleService {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.UNAUTHORIZED, "The new role ID cannot be the root role ID"));
         }
         return mongoClient.insert(adminRole)
-                .map(id -> {
+                .then(Mono.fromCallable(() -> {
                     roles.put(adminRole.getId(), adminRole);
                     return adminRole;
-                });
+                }));
     }
 
     public Mono<DeleteResult> authAndDeleteAdminRoles(

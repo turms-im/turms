@@ -152,7 +152,7 @@ public class GroupService {
                 .inTransaction(session -> {
                     Date now = new Date();
                     return mongoClient.insert(session, group)
-                            .flatMap(unused -> groupMemberService.addGroupMember(
+                            .then(Mono.defer(() -> groupMemberService.addGroupMember(
                                     group.getId(),
                                     creatorId,
                                     GroupMemberRole.OWNER,
@@ -165,7 +165,7 @@ public class GroupService {
                                         return groupVersionService.upsert(groupId, now)
                                                 .onErrorResume(t -> Mono.empty())
                                                 .thenReturn(group);
-                                    })));
+                                    }))));
                 })
                 .retryWhen(TRANSACTION_RETRY);
     }

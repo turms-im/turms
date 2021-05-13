@@ -148,9 +148,9 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
                             requesterId,
                             null);
                     return mongoClient.insert(groupJoinRequest)
-                            .flatMap(unused -> groupVersionService.updateJoinRequestsVersion(groupId).onErrorResume(t -> Mono.empty())
+                            .then(Mono.defer(() -> groupVersionService.updateJoinRequestsVersion(groupId).onErrorResume(t -> Mono.empty())
                                     .then(userVersionService.updateSentGroupJoinRequestsVersion(requesterId)
-                                            .onErrorResume(t -> Mono.empty())))
+                                            .onErrorResume(t -> Mono.empty()))))
                             .thenReturn(groupJoinRequest);
                 });
     }
@@ -417,8 +417,8 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
         GroupJoinRequest groupJoinRequest = new GroupJoinRequest(id, content, status, creationDate,
                 responseDate, groupId, requesterId, responderId);
         return mongoClient.insert(groupJoinRequest)
-                .flatMap(request -> groupVersionService.updateJoinRequestsVersion(groupId).onErrorResume(t -> Mono.empty())
-                        .then(userVersionService.updateSentGroupJoinRequestsVersion(responderId).onErrorResume(t -> Mono.empty())))
+                .then(Mono.defer(() -> groupVersionService.updateJoinRequestsVersion(groupId).onErrorResume(t -> Mono.empty())
+                        .then(userVersionService.updateSentGroupJoinRequestsVersion(responderId).onErrorResume(t -> Mono.empty()))))
                 .thenReturn(groupJoinRequest);
     }
 

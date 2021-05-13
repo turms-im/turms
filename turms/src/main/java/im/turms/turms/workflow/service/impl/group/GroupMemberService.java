@@ -124,9 +124,9 @@ public class GroupMemberService {
                 joinDate,
                 muteEndDate);
         return mongoClient.insert(session, groupMember)
-                .flatMap(unused -> groupVersionService.updateMembersVersion(groupId)
-                        .onErrorResume(t -> Mono.empty())
-                ).thenReturn(groupMember);
+                .then(Mono.defer(() -> groupVersionService.updateMembersVersion(groupId)
+                        .onErrorResume(t -> Mono.empty())))
+                .thenReturn(groupMember);
     }
 
     public Mono<GroupMember> authAndAddGroupMember(
