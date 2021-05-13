@@ -758,9 +758,7 @@ public class GroupService {
                 .flatMap(userPermissionGroup -> {
                     Integer ownedGroupLimit = userPermissionGroup.getOwnedGroupLimit();
                     if (ownedGroupLimit == Integer.MAX_VALUE) {
-                        String reason =
-                                String.format("The number of groups owned by the requester has reached the limit %d", ownedGroupLimit);
-                        return Mono.just(ServicePermission.get(TurmsStatusCode.OK, reason));
+                        return Mono.just(ServicePermission.get(TurmsStatusCode.OK));
                     } else {
                         return countOwnedGroups(requesterId)
                                 .map(ownedGroupsNumber -> {
