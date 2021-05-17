@@ -65,7 +65,6 @@ public class HeartbeatManager {
 
     @Setter
     private int clientHeartbeatIntervalSeconds;
-    @Setter
     private int closeIdleSessionAfterSeconds;
     private int closeIdleSessionAfterMillis;
     @Setter

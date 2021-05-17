@@ -15,28 +15,27 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.redis.serializer;
+package im.turms.server.common.redis.codec;
 
-import org.springframework.data.redis.serializer.RedisElementReader;
-import org.springframework.data.redis.serializer.RedisElementWriter;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
 
 import java.nio.ByteBuffer;
 
 /**
  * @author James Chen
  */
-public class SessionKeySerializer implements RedisElementWriter<Long>, RedisElementReader<Long> {
+public class GeoUserIdCodec implements TurmsRedisCodec<Long> {
 
     @Override
-    public ByteBuffer write(Long userId) {
-        return ByteBuffer.allocate(Long.BYTES)
-                .putLong(userId)
-                .flip();
+    public ByteBuf encode(Long value) {
+        return PooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES)
+                .writeLong(value);
     }
 
     @Override
-    public Long read(ByteBuffer buffer) {
-        return buffer.getLong();
+    public Long decode(ByteBuffer in) {
+        return in.getLong();
     }
 
 }

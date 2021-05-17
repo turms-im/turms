@@ -31,17 +31,15 @@ import im.turms.server.common.plugin.extension.UserLocationLogHandler;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.LocationProperties;
 import im.turms.server.common.redis.RedisEntryId;
-import im.turms.server.common.redis.RedisSerializationContextPool;
-import im.turms.server.common.redis.sharding.ShardingAlgorithm;
+import im.turms.server.common.redis.TurmsRedisClientManager;
+import im.turms.server.common.redis.codec.context.RedisCodecContext;
+import im.turms.server.common.redis.codec.context.RedisCodecContextPool;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.DeviceTypeUtil;
+import io.lettuce.core.GeoArgs;
+import io.lettuce.core.GeoCoordinates;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.geo.Distance;
 import org.springframework.data.geo.Point;
-import org.springframework.data.redis.connection.RedisGeoCommands;
-import org.springframework.data.redis.core.ReactiveGeoOperations;
-import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -51,7 +49,6 @@ import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author James Chen
@@ -65,35 +62,23 @@ public class SessionLocationService {
     private final boolean locationEnabled;
     @Getter
     private final boolean treatUserIdAndDeviceTypeAsUniqueUser;
-    private final ShardingAlgorithm shardingAlgorithmForLocation;
-    private final List<ReactiveGeoOperations<String, Long>> geoByUserIdOperationsList;
-    private final List<ReactiveGeoOperations<String, UserSessionId>> geoByUserSessionIdOperationsList;
+    private final TurmsRedisClientManager locationRedisClientManager;
 
     public SessionLocationService(
             Node node,
             AbstractTurmsPluginManager turmsPluginManager,
             TurmsPropertiesManager turmsPropertiesManager,
-            ShardingAlgorithm shardingAlgorithmForLocation,
-            @Qualifier("locationRedisTemplates") List<ReactiveRedisTemplate<String, UserSessionId>> locationRedisTemplates) {
+            TurmsRedisClientManager locationRedisClientManager) {
         this.node = node;
         this.turmsPluginManager = turmsPluginManager;
+        this.locationRedisClientManager = locationRedisClientManager;
         LocationProperties locationProperties = turmsPropertiesManager.getLocalProperties().getLocation();
         locationEnabled = locationProperties.isEnabled();
         treatUserIdAndDeviceTypeAsUniqueUser = locationProperties.isTreatUserIdAndDeviceTypeAsUniqueUser();
-        this.shardingAlgorithmForLocation = shardingAlgorithmForLocation;
-        if (treatUserIdAndDeviceTypeAsUniqueUser) {
-            geoByUserSessionIdOperationsList = locationRedisTemplates
-                    .stream()
-                    .map(template -> template.opsForGeo(RedisSerializationContextPool.GEO_USER_SESSION_ID_SERIALIZATION_CONTEXT))
-                    .collect(Collectors.toList());
-            geoByUserIdOperationsList = null;
-        } else {
-            geoByUserIdOperationsList = locationRedisTemplates
-                    .stream()
-                    .map(template -> template.opsForGeo(RedisSerializationContextPool.GEO_USER_ID_SERIALIZATION_CONTEXT))
-                    .collect(Collectors.toList());
-            geoByUserSessionIdOperationsList = null;
-        }
+        RedisCodecContext serializationContext = treatUserIdAndDeviceTypeAsUniqueUser
+                ? RedisCodecContextPool.GEO_USER_SESSION_ID_CODEC_CONTEXT
+                : RedisCodecContextPool.GEO_USER_ID_CODEC_CONTEXT;
+        locationRedisClientManager.setSerializationContext(serializationContext);
     }
 
     /**
@@ -115,14 +100,10 @@ public class SessionLocationService {
         if (!locationEnabled) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.USER_LOCATION_RELATED_FEATURES_ARE_DISABLED));
         }
-        Mono<Long> upsertMono;
-        if (treatUserIdAndDeviceTypeAsUniqueUser) {
-            UserSessionId userSessionId = new UserSessionId(userId, deviceType);
-            upsertMono = getGeoByUserSessionIdOperations(userId).add(RedisEntryId.LOCATION, position, userSessionId);
-        } else {
-            upsertMono = getGeoByUserIdOperations(userId).add(RedisEntryId.LOCATION, position, userId);
-        }
-        return upsertMono
+        Object member = treatUserIdAndDeviceTypeAsUniqueUser
+                ? new UserSessionId(userId, deviceType)
+                : userId;
+        return locationRedisClientManager.geoadd(userId, RedisEntryId.LOCATION_BUFFER, position, member)
                 .doOnSuccess(o -> tryLogLocation(userId, deviceType, position, timestamp))
                 .then();
     }
@@ -138,10 +119,11 @@ public class SessionLocationService {
         if (!locationEnabled) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.USER_LOCATION_RELATED_FEATURES_ARE_DISABLED));
         }
-        Mono<Long> mono = treatUserIdAndDeviceTypeAsUniqueUser
-                ? getGeoByUserSessionIdOperations(userId).remove(RedisEntryId.LOCATION, new UserSessionId(userId, deviceType))
-                : getGeoByUserIdOperations(userId).remove(RedisEntryId.LOCATION, userId);
-        return mono.then();
+        Object member = treatUserIdAndDeviceTypeAsUniqueUser
+                ? new UserSessionId(userId, deviceType)
+                : userId;
+        return locationRedisClientManager.georem(userId, RedisEntryId.LOCATION_BUFFER, member)
+                .then();
     }
 
     public Flux<Long> queryNearestUserIds(
@@ -178,12 +160,13 @@ public class SessionLocationService {
             if (maxDistance > maxDistanceLimitPerQuery) {
                 maxDistance = maxDistanceLimitPerQuery;
             }
-            return getGeoByUserIdOperations(userId).radius(
-                    RedisEntryId.LOCATION,
+            Flux<UserSessionId> flux = locationRedisClientManager.georadiusbymember(userId,
+                    RedisEntryId.LOCATION_BUFFER,
                     userId,
-                    new Distance(maxDistance),
-                    RedisGeoCommands.GeoRadiusCommandArgs.newGeoRadiusArgs().limit(maxPeopleNumber))
-                    .map(geoLocationGeoResult -> geoLocationGeoResult.getContent().getName());
+                    maxDistance,
+                    GeoArgs.Builder.count(maxPeopleNumber));
+            return flux
+                    .map(UserSessionId::getUserId);
         }
     }
 
@@ -202,7 +185,7 @@ public class SessionLocationService {
         if (!locationEnabled) {
             return Flux.error(TurmsBusinessException.get(TurmsStatusCode.USER_LOCATION_RELATED_FEATURES_ARE_DISABLED));
         }
-        if (geoByUserSessionIdOperationsList == null) {
+        if (!treatUserIdAndDeviceTypeAsUniqueUser) {
             return Flux.error(TurmsBusinessException.get(TurmsStatusCode.QUERYING_NEAREST_USERS_BY_SESSION_ID_IS_DISABLED));
         }
         LocationProperties location = node.getSharedProperties().getLocation();
@@ -220,15 +203,14 @@ public class SessionLocationService {
         if (maxDistance > maxDistanceLimitPerQuery) {
             maxDistance = maxDistanceLimitPerQuery;
         }
-        return getGeoByUserSessionIdOperations(userId).radius(
-                RedisEntryId.LOCATION,
+        return locationRedisClientManager.georadiusbymember(userId,
+                RedisEntryId.LOCATION_BUFFER,
                 new UserSessionId(userId, deviceType),
-                new Distance(maxDistance),
-                RedisGeoCommands.GeoRadiusCommandArgs.newGeoRadiusArgs().limit(maxPeopleNumber))
-                .map(geoLocationGeoResult -> geoLocationGeoResult.getContent().getName());
+                maxDistance,
+                GeoArgs.Builder.count(maxPeopleNumber));
     }
 
-    public Mono<Point> getUserLocation(@NotNull Long userId, @NotNull @ValidDeviceType DeviceType deviceType) {
+    public Mono<GeoCoordinates> getUserLocation(@NotNull Long userId, @NotNull @ValidDeviceType DeviceType deviceType) {
         try {
             AssertUtil.notNull(userId, "userId");
             AssertUtil.notNull(deviceType, "deviceType");
@@ -237,9 +219,11 @@ public class SessionLocationService {
             return Mono.error(e);
         }
         if (locationEnabled) {
-            return treatUserIdAndDeviceTypeAsUniqueUser
-                    ? getGeoByUserSessionIdOperations(userId).position(RedisEntryId.LOCATION, new UserSessionId(userId, deviceType))
-                    : getGeoByUserIdOperations(userId).position(RedisEntryId.LOCATION, userId);
+            Object member = treatUserIdAndDeviceTypeAsUniqueUser
+                    ? new UserSessionId(userId, deviceType)
+                    : userId;
+            return locationRedisClientManager.geopos(userId, RedisEntryId.LOCATION_BUFFER, member)
+                    .singleOrEmpty();
         } else {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.USER_LOCATION_RELATED_FEATURES_ARE_DISABLED));
         }
@@ -262,15 +246,6 @@ public class SessionLocationService {
                 Mono.when(monos).subscribe();
             }
         }
-    }
-
-    private ReactiveGeoOperations<String, UserSessionId> getGeoByUserSessionIdOperations(long userId) {
-        return geoByUserSessionIdOperationsList
-                .get(shardingAlgorithmForLocation.doSharding(userId, geoByUserSessionIdOperationsList.size()));
-    }
-
-    private ReactiveGeoOperations<String, Long> getGeoByUserIdOperations(long userId) {
-        return geoByUserIdOperationsList.get(shardingAlgorithmForLocation.doSharding(userId, geoByUserIdOperationsList.size()));
     }
 
 }

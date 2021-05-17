@@ -29,6 +29,7 @@ import im.turms.server.common.cluster.service.config.domain.discovery.Member;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.manager.address.BaseServiceAddressManager;
+import im.turms.server.common.mongo.exception.DuplicateKeyException;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.property.env.common.cluster.DiscoveryProperties;
@@ -38,7 +39,6 @@ import io.rsocket.RSocket;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.bson.BsonValue;
-import org.springframework.dao.DuplicateKeyException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

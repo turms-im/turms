@@ -26,11 +26,11 @@ import im.turms.server.common.cluster.service.config.domain.discovery.Leader;
 import im.turms.server.common.cluster.service.config.domain.discovery.Member;
 import im.turms.server.common.cluster.service.config.domain.property.SharedClusterProperties;
 import im.turms.server.common.mongo.TurmsMongoClient;
+import im.turms.server.common.mongo.exception.DuplicateKeyException;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.property.env.service.env.database.TurmsMongoProperties;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.dao.DuplicateKeyException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

@@ -41,6 +41,7 @@
             <artifactId>flight-recorder-starter</artifactId>
             <version>${flight-recorder-starter.version}</version>
         </dependency>
+        <!-- Testing -->
         <dependency>
             <groupId>im.turms</groupId>
             <artifactId>server-test-common</artifactId>

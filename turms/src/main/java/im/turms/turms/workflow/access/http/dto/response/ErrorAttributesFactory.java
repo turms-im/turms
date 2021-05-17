@@ -19,9 +19,9 @@ package im.turms.turms.workflow.access.http.dto.response;
 
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.mongo.exception.DuplicateKeyException;
 import lombok.Data;
 import org.springframework.core.io.buffer.DataBufferLimitException;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 

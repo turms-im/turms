@@ -18,16 +18,12 @@
 package im.turms.server.common.property.env.gateway.redis;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import im.turms.server.common.property.env.gateway.redis.sharding.RedisShardingProperties;
+import im.turms.server.common.redis.RedisProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.data.annotation.Transient;
-
-import java.util.List;
 
 /**
  * @author James Chen
@@ -38,19 +34,12 @@ import java.util.List;
 @NoArgsConstructor
 public class TurmsRedisProperties {
 
-    private static final List<RedisProperties> REDIS_PROPERTIES_LIST = List.of(new RedisProperties());
-
-    @NestedConfigurationProperty
     @JsonIgnore
     @Transient
-    private RedisShardingProperties shardingProperties = new RedisShardingProperties();
+    private RedisProperties session = new RedisProperties();
 
     @JsonIgnore
     @Transient
-    private List<RedisProperties> session = REDIS_PROPERTIES_LIST;
-
-    @JsonIgnore
-    @Transient
-    private List<RedisProperties> location = REDIS_PROPERTIES_LIST;
+    private RedisProperties location = new RedisProperties();
 
 }

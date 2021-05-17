@@ -23,7 +23,6 @@ import org.bson.BsonBoolean;
 import org.bson.BsonDocument;
 import org.bson.BsonInt32;
 import org.bson.BsonString;
-import org.springframework.data.domain.Sort;
 
 import javax.annotation.Nullable;
 
@@ -89,8 +88,8 @@ public final class QueryOptions {
         return this;
     }
 
-    public QueryOptions sort(Sort.Direction direction, String field) {
-        BsonInt32 value = direction == Sort.Direction.ASC
+    public QueryOptions sort(boolean asc, String field) {
+        BsonInt32 value = asc
                 ? BsonPool.BSON_INT32_1
                 : BsonPool.BSON_INT32_NEGATIVE_1;
         document.put("sort", new BsonDocument(field, value));

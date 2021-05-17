@@ -20,6 +20,8 @@ package im.turms.turms.workflow.access.http.controller.user;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.UserStatus;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
+import im.turms.server.common.access.http.dto.response.ResponseDTO;
+import im.turms.server.common.access.http.dto.response.ResponseFactory;
 import im.turms.server.common.bo.session.UserSessionsStatus;
 import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.service.session.SessionLocationService;
@@ -27,8 +29,6 @@ import im.turms.server.common.service.session.UserStatusService;
 import im.turms.server.common.util.CollectorUtil;
 import im.turms.turms.workflow.access.http.dto.request.user.OnlineUserNumberDTO;
 import im.turms.turms.workflow.access.http.dto.request.user.UpdateOnlineStatusDTO;
-import im.turms.server.common.access.http.dto.response.ResponseDTO;
-import im.turms.server.common.access.http.dto.response.ResponseFactory;
 import im.turms.turms.workflow.access.http.dto.response.UserLocationDTO;
 import im.turms.turms.workflow.access.http.permission.AdminPermission;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
@@ -143,7 +143,7 @@ public class UserOnlineInfoController {
         List<Mono<Pair<Long, Point>>> monos = new ArrayList<>(ids.size());
         for (Long userId : ids) {
             monos.add(sessionLocationService.getUserLocation(userId, deviceType)
-                    .map(point -> Pair.of(userId, point)));
+                    .map(coordinates -> Pair.of(userId, new Point(coordinates.getX().doubleValue(), coordinates.getY().doubleValue()))));
         }
         Mono<List<UserLocationDTO>> resultMono = Flux.merge(monos)
                 .collect(CollectorUtil.toList(monos.size()))

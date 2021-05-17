@@ -60,7 +60,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -295,17 +294,13 @@ public class MessageService {
                 .inIfNotNull(Message.Fields.TARGET_ID, targetIds)
                 .addBetweenIfNotNull(Message.Fields.DELIVERY_DATE, deliveryDateRange)
                 .addBetweenIfNotNull(Message.Fields.DELETION_DATE, deletionDateRange);
-        Sort.Direction direction = null;
-        if (closeToDate) {
-            boolean isAsc = deliveryDateRange != null && deliveryDateRange.getStart() != null;
-            direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        }
-        filter.inIfNotNull(DaoConstant.ID_FIELD_NAME, messageIds);
         QueryOptions options = QueryOptions.newBuilder()
                 .paginateIfNotNull(page, size);
-        if (direction != null) {
-            options.sort(direction, Message.Fields.DELIVERY_DATE);
+        if (closeToDate) {
+            boolean isAsc = deliveryDateRange != null && deliveryDateRange.getStart() != null;
+            options.sort(isAsc, Message.Fields.DELIVERY_DATE);
         }
+        filter.inIfNotNull(DaoConstant.ID_FIELD_NAME, messageIds);
         return mongoClient.findMany(Message.class, filter, options);
     }
 

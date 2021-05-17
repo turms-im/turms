@@ -15,31 +15,36 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.redis.serializer;
+package im.turms.server.common.redis.codec;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.server.common.bo.session.UserSessionId;
-import org.springframework.data.redis.serializer.RedisElementReader;
-import org.springframework.data.redis.serializer.RedisElementWriter;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
 
 import java.nio.ByteBuffer;
 
 /**
  * @author James Chen
  */
-public class GeoUserSessionIdSerializer implements RedisElementWriter<UserSessionId>, RedisElementReader<UserSessionId> {
+public class GeoUserSessionIdCodec implements TurmsRedisCodec<UserSessionId> {
 
     @Override
-    public ByteBuffer write(UserSessionId sessionId) {
-        return ByteBuffer.allocate(Long.BYTES + Byte.BYTES)
-                .putLong(sessionId.getUserId())
-                .put((byte) sessionId.getDeviceType().getNumber())
-                .flip();
+    public ByteBuf encode(UserSessionId sessionId) {
+        return PooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES + Byte.BYTES)
+                .writeLong(sessionId.getUserId())
+                .writeByte(sessionId.getDeviceType().getNumber());
     }
 
     @Override
-    public UserSessionId read(ByteBuffer buffer) {
-        return new UserSessionId(buffer.getLong(), DeviceType.forNumber(buffer.get()));
+    public UserSessionId decode(ByteBuffer in) {
+        long userId = in.getLong();
+        byte value = in.get();
+        DeviceType deviceType = DeviceType.forNumber(value);
+        if (deviceType == null) {
+            throw new IllegalArgumentException("Cannot parse " + value + "to DeviceType");
+        }
+        return new UserSessionId(userId, deviceType);
     }
 
 }

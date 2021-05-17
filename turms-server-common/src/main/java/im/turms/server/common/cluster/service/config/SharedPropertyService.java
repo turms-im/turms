@@ -22,6 +22,7 @@ import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.cluster.service.ClusterService;
 import im.turms.server.common.cluster.service.config.domain.property.CommonProperties;
 import im.turms.server.common.cluster.service.config.domain.property.SharedClusterProperties;
+import im.turms.server.common.mongo.exception.DuplicateKeyException;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.property.TurmsProperties;
@@ -29,7 +30,6 @@ import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.GatewayProperties;
 import im.turms.server.common.property.env.service.ServiceProperties;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.dao.DuplicateKeyException;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;

@@ -8,16 +8,14 @@ import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.UserStatusProperties;
-import im.turms.server.common.redis.RedisTemplateFactory;
-import im.turms.server.common.redis.sharding.ConsistentHashingShardingAlgorithm;
+import im.turms.server.common.redis.RedisProperties;
+import im.turms.server.common.redis.TurmsRedisClientManager;
 import im.turms.server.common.service.session.UserStatusService;
 import im.turms.server.common.testing.BaseIntegrationTest;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
-import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -25,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static im.turms.server.common.redis.RedisSerializationContextPool.USER_SESSIONS_STATUS_SERIALIZATION_CONTEXT;
+import static im.turms.server.common.redis.codec.context.RedisCodecContextPool.USER_SESSIONS_STATUS_CODEC_CONTEXT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 import static org.assertj.guava.api.Assertions.assertThat;
@@ -76,15 +74,14 @@ class UserStatusServiceIT extends BaseIntegrationTest {
                                 .cacheUserSessionsStatus(false)
                                 .build())
                         .build());
-        RedisProperties redisProperties = new RedisProperties();
-        redisProperties.setHost(ENV.getRedisHost());
-        redisProperties.setPort(ENV.getRedisPort());
-        List<ReactiveRedisTemplate<Long, String>> templates =
-                RedisTemplateFactory.getTemplates(List.of(redisProperties), USER_SESSIONS_STATUS_SERIALIZATION_CONTEXT);
+        RedisProperties redisProperties = new RedisProperties()
+                .toBuilder()
+                .uriList(List.of(String.format("redis://%s:%d", ENV.getRedisHost(), ENV.getRedisPort())))
+                .build();
+        TurmsRedisClientManager manager = new TurmsRedisClientManager(redisProperties, USER_SESSIONS_STATUS_CODEC_CONTEXT);
         USER_STATUS_SERVICE = new UserStatusService(node,
                 propertiesManager,
-                new ConsistentHashingShardingAlgorithm(),
-                templates);
+                manager);
     }
 
     @Order(ORDER_ADD_ONLINE_DEVICE_IF_ABSENT)
@@ -203,11 +200,22 @@ class UserStatusServiceIT extends BaseIntegrationTest {
 
     @Order(ORDER_UPDATE_ONLINE_USER_STATUS)
     @Test
-    void updateOnlineUserStatus_shouldReturnNonExistingUserId_forExistingUser() {
+    void updateOnlineUserStatus_shouldReturnTrue_forExistingUser() {
         Mono<Boolean> updateMono = USER_STATUS_SERVICE.updateOnlineUserStatusIfPresent(USER_1_ID, USER_1_STATUS_AFTER_UPDATED);
         StepVerifier
                 .create(updateMono)
                 .expectNext(true)
+                .expectComplete()
+                .verify();
+    }
+
+    @Order(ORDER_UPDATE_ONLINE_USER_STATUS + 1)
+    @Test
+    void updateOnlineUserStatus_shouldReturnFalse_forNonExistingUser() {
+        Mono<Boolean> updateMono = USER_STATUS_SERVICE.updateOnlineUserStatusIfPresent(NON_EXISTING_USER_ID, UserStatus.AVAILABLE);
+        StepVerifier
+                .create(updateMono)
+                .expectNext(false)
                 .expectComplete()
                 .verify();
     }
@@ -220,17 +228,6 @@ class UserStatusServiceIT extends BaseIntegrationTest {
                 .updateOnlineUsersTtl(users, 30);
         StepVerifier
                 .create(updateMono)
-                .expectComplete()
-                .verify();
-    }
-
-    @Order(ORDER_UPDATE_ONLINE_USER_STATUS + 1)
-    @Test
-    void updateOnlineUserStatus_shouldReturnFalse_forNonExistingUser() {
-        Mono<Boolean> updateMono = USER_STATUS_SERVICE.updateOnlineUserStatusIfPresent(NON_EXISTING_USER_ID, UserStatus.AVAILABLE);
-        StepVerifier
-                .create(updateMono)
-                .expectNext(false)
                 .expectComplete()
                 .verify();
     }

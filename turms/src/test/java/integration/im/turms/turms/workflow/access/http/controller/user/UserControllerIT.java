@@ -18,8 +18,8 @@
 package integration.im.turms.turms.workflow.access.http.controller.user;
 
 import helper.SpringAwareIntegrationTest;
-import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.access.http.dto.response.ResponseDTO;
+import im.turms.server.common.dao.domain.User;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;

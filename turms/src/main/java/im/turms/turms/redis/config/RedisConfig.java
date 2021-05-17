@@ -1,21 +1,17 @@
 package im.turms.turms.redis.config;
 
-import im.turms.server.common.bo.session.UserSessionId;
 import im.turms.server.common.property.TurmsPropertiesManager;
-import im.turms.server.common.redis.RedisTemplateFactory;
-import im.turms.server.common.redis.sharding.ShardingAlgorithm;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
+import im.turms.server.common.property.env.service.env.redis.TurmsRedisProperties;
+import im.turms.server.common.redis.TurmsRedisClientManager;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.core.ReactiveRedisTemplate;
-import org.springframework.data.redis.core.RedisHash;
 
 import javax.annotation.PreDestroy;
 import java.util.List;
 
-import static im.turms.server.common.redis.RedisSerializationContextPool.GEO_USER_SESSION_ID_SERIALIZATION_CONTEXT;
-import static im.turms.server.common.redis.RedisSerializationContextPool.USER_SESSIONS_STATUS_SERIALIZATION_CONTEXT;
-import static im.turms.server.common.redis.RedisTemplateFactory.getTemplates;
+import static im.turms.server.common.redis.codec.context.RedisCodecContextPool.GEO_USER_SESSION_ID_CODEC_CONTEXT;
+import static im.turms.server.common.redis.codec.context.RedisCodecContextPool.USER_SESSIONS_STATUS_CODEC_CONTEXT;
 
 /**
  * @author James Chen
@@ -25,40 +21,39 @@ import static im.turms.server.common.redis.RedisTemplateFactory.getTemplates;
  * @see org.springframework.boot.autoconfigure.data.redis.LettuceConnectionConfiguration
  */
 @Configuration
-@RedisHash
+@Log4j2
 public class RedisConfig {
 
-    private final TurmsPropertiesManager turmsPropertiesManager;
+    private final TurmsRedisClientManager sessionRedisClientManager;
+    private final TurmsRedisClientManager locationRedisClientManager;
 
     protected RedisConfig(TurmsPropertiesManager turmsPropertiesManager) {
-        this.turmsPropertiesManager = turmsPropertiesManager;
+        TurmsRedisProperties redisProperties = turmsPropertiesManager.getLocalProperties().getService().getRedis();
+        sessionRedisClientManager = new TurmsRedisClientManager(redisProperties.getSession(),
+                USER_SESSIONS_STATUS_CODEC_CONTEXT);
+        locationRedisClientManager = new TurmsRedisClientManager(redisProperties.getLocation(),
+                GEO_USER_SESSION_ID_CODEC_CONTEXT);
     }
 
     @PreDestroy
     public void destroy() {
-        RedisTemplateFactory.destroy();
+        for (TurmsRedisClientManager manager : List.of(sessionRedisClientManager, locationRedisClientManager)) {
+            try {
+                manager.destroy();
+            } catch (Exception e) {
+                log.error("Failed to destroy a redis client", e);
+            }
+        }
     }
 
     @Bean
-    public ShardingAlgorithm shardingAlgorithmForSession() {
-        return turmsPropertiesManager.getLocalProperties().getService().getRedis().getShardingProperties().getAlgorithmForSession();
+    public TurmsRedisClientManager sessionRedisClientManager() {
+        return sessionRedisClientManager;
     }
 
     @Bean
-    public ShardingAlgorithm shardingAlgorithmForLocation() {
-        return turmsPropertiesManager.getLocalProperties().getService().getRedis().getShardingProperties().getAlgorithmForLocation();
-    }
-
-    @Bean
-    public List<ReactiveRedisTemplate<Long, String>> sessionRedisTemplates() {
-        List<RedisProperties> propertiesList = turmsPropertiesManager.getLocalProperties().getService().getRedis().getSession();
-        return getTemplates(propertiesList, USER_SESSIONS_STATUS_SERIALIZATION_CONTEXT);
-    }
-
-    @Bean
-    public List<ReactiveRedisTemplate<String, UserSessionId>> locationRedisTemplates() {
-        List<RedisProperties> propertiesList = turmsPropertiesManager.getLocalProperties().getService().getRedis().getLocation();
-        return getTemplates(propertiesList, GEO_USER_SESSION_ID_SERIALIZATION_CONTEXT);
+    public TurmsRedisClientManager locationRedisClientManager() {
+        return locationRedisClientManager;
     }
 
 }

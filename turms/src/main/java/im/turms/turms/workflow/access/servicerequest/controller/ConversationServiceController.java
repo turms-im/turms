@@ -151,21 +151,16 @@ public class ConversationServiceController {
                                 targetId,
                                 clientRequest.getTurmsRequest(),
                                 TurmsStatusCode.OK));
-                    } else {
-                        return Mono.just(RequestHandlerResultFactory.OK);
                     }
-                } else {
-                    if (node.getSharedProperties().getService().getNotification()
-                            .isNotifyGroupConversationParticipantsAfterReadDateUpdated()) {
-                        return groupMemberService.queryGroupMemberIds(targetId)
-                                .collect(CollectorUtil.toSet(32))
-                                .map(memberIds -> RequestHandlerResultFactory.get(
-                                        memberIds,
-                                        clientRequest.getTurmsRequest()));
-                    } else {
-                        return Mono.just(RequestHandlerResultFactory.OK);
-                    }
+                } else if (node.getSharedProperties().getService().getNotification()
+                        .isNotifyGroupConversationParticipantsAfterReadDateUpdated()) {
+                    return groupMemberService.queryGroupMemberIds(targetId)
+                            .collect(CollectorUtil.toSet(32))
+                            .map(memberIds -> RequestHandlerResultFactory.get(
+                                    memberIds,
+                                    clientRequest.getTurmsRequest()));
                 }
+                return Mono.just(RequestHandlerResultFactory.OK);
             }));
         };
     }

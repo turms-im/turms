@@ -33,8 +33,10 @@
 
         <!-- Runtime Deps -->
         <commons-collections4.version>4.4</commons-collections4.version>
+        <blockhound.version>1.0.6.RELEASE</blockhound.version>
         <disruptor.version>3.4.2</disruptor.version>
         <guava.version>30.1-jre</guava.version>
+        <lettuce-core.version>6.1.2.RELEASE</lettuce-core.version>
         <mongodb.version>4.2.2</mongodb.version>
         <pf4j.version>3.6.0</pf4j.version>
         <protobuf.version>3.15.6</protobuf.version>
@@ -107,8 +109,13 @@
 
         <!-- Data Access - Redis -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis-reactive</artifactId>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-commons</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.lettuce</groupId>
+            <artifactId>lettuce-core</artifactId>
+            <version>${lettuce-core.version}</version>
         </dependency>
 
         <!-- I/O -->
@@ -155,6 +162,13 @@
         <dependency>
             <groupId>io.projectreactor.addons</groupId>
             <artifactId>reactor-extra</artifactId>
+        </dependency>
+
+        <!-- Diagnostics -->
+        <dependency>
+            <groupId>io.projectreactor.tools</groupId>
+            <artifactId>blockhound</artifactId>
+            <version>${blockhound.version}</version>
         </dependency>
 
         <!-- Observability -->

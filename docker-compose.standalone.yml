@@ -82,8 +82,8 @@ services:
         -Dturms.service.mongo.conversation.uri=mongodb://root:turms@mongodb-router:27017/turms-standalone?authSource=admin
         -Dturms.service.mongo.message.uri=mongodb://root:turms@mongodb-router:27017/turms-standalone?authSource=admin
 
-        -Dturms.service.redis.session[0].url=redis://redis:6379
-        -Dturms.service.redis.location[0].url=redis://redis:6379
+        -Dturms.service.redis.session.uri-list[0]=redis://redis:6379
+        -Dturms.service.redis.location.uri-list[0]=redis://redis:6379
     mem_limit: 2g
     healthcheck:
       test: "curl --fail --silent --user turms:turms turms:8510/actuator/health | grep UP || exit 1"
@@ -123,8 +123,8 @@ services:
         -Dturms.cluster.shared-config.mongo.uri=mongodb://root:turms@mongodb-router:27017/turms-standalone?authSource=admin
         -Dturms.gateway.mongo.user.uri=mongodb://root:turms@mongodb-router:27017/turms-standalone?authSource=admin
 
-        -Dturms.gateway.redis.session[0].url=redis://redis:6379
-        -Dturms.gateway.redis.location[0].url=redis://redis:6379
+        -Dturms.gateway.redis.session.uri-list[0]=redis://redis:6379
+        -Dturms.gateway.redis.location.uri-list[0]=redis://redis:6379
     healthcheck:
       test: "curl --fail --silent --user turms:turms turms-gateway:9510/actuator/health | grep UP || exit 1"
       interval: 10s

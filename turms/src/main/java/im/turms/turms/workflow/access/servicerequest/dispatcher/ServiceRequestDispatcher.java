@@ -153,7 +153,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
      * 2. The method should never return MonoError and it should be considered as a bug if it occurs
      * because the method itself should wrap all kinds of Throwable as a ServiceResponse instance.
      */
-    public Mono<ServiceResponse> dispatch0(ServiceRequest serviceRequest) {
+    private Mono<ServiceResponse> dispatch0(ServiceRequest serviceRequest) {
         // 1. Validate ServiceResponse
         Long traceId = serviceRequest.getTraceId();
         Long userId = serviceRequest.getUserId();

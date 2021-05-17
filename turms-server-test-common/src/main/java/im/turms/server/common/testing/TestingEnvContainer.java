@@ -191,6 +191,10 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
         return getServicePort(REDIS_SERVICE_NAME, REDIS_SERVICE_PORT);
     }
 
+    public String getRedisUri() {
+        return String.format("redis://%s:%d", getRedisHost(), getRedisPort());
+    }
+
     // turms
 
     public String getTurmsAdminHost() {

@@ -17,8 +17,14 @@
 
 package helper;
 
+import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
+import im.turms.server.common.property.env.service.ServiceProperties;
+import im.turms.server.common.property.env.service.env.database.MongoProperties;
+import im.turms.server.common.property.env.service.env.redis.TurmsRedisProperties;
 import im.turms.server.common.testing.BaseIntegrationTest;
+
+import java.util.List;
 
 /**
  * @author James Chen
@@ -26,14 +32,24 @@ import im.turms.server.common.testing.BaseIntegrationTest;
 public class ContainerConfig {
 
     ContainerConfig(TurmsPropertiesManager propertiesManager) {
-        String uri = BaseIntegrationTest.ENV.getMongoUri("turms-test");
+        String mongoUri = BaseIntegrationTest.ENV.getMongoUri("turms-test");
+        String redisUri = BaseIntegrationTest.ENV.getRedisUri();
 
-        propertiesManager.getLocalProperties().getCluster().getSharedConfig().getMongo().setUri(uri);
+        TurmsProperties localProperties = propertiesManager.getLocalProperties();
+        ServiceProperties service = localProperties.getService();
 
-        propertiesManager.getLocalProperties().getService().getMongo().getAdmin().setUri(uri);
-        propertiesManager.getLocalProperties().getService().getMongo().getUser().setUri(uri);
-        propertiesManager.getLocalProperties().getService().getMongo().getGroup().setUri(uri);
-        propertiesManager.getLocalProperties().getService().getMongo().getConversation().setUri(uri);
-        propertiesManager.getLocalProperties().getService().getMongo().getMessage().setUri(uri);
+        localProperties.getCluster().getSharedConfig().getMongo().setUri(mongoUri);
+
+        MongoProperties serviceMongo = service.getMongo();
+        serviceMongo.getAdmin().setUri(mongoUri);
+        serviceMongo.getUser().setUri(mongoUri);
+        serviceMongo.getGroup().setUri(mongoUri);
+        serviceMongo.getConversation().setUri(mongoUri);
+        serviceMongo.getMessage().setUri(mongoUri);
+
+        TurmsRedisProperties redis = service.getRedis();
+        redis.getSession().setUriList(List.of(redisUri));
+        redis.getLocation().setUriList(List.of(redisUri));
     }
+
 }

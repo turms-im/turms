@@ -18,7 +18,7 @@
 package im.turms.turms.constant;
 
 import im.turms.server.common.exception.TurmsBusinessException;
-import org.springframework.dao.DuplicateKeyException;
+import im.turms.server.common.mongo.exception.DuplicateKeyException;
 import reactor.util.retry.Retry;
 
 import java.time.Duration;

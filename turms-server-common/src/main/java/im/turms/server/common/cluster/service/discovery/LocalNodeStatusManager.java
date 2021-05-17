@@ -20,13 +20,13 @@ package im.turms.server.common.cluster.service.discovery;
 import im.turms.server.common.cluster.service.config.SharedConfigService;
 import im.turms.server.common.cluster.service.config.domain.discovery.Leader;
 import im.turms.server.common.cluster.service.config.domain.discovery.Member;
+import im.turms.server.common.mongo.exception.DuplicateKeyException;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.Update;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.dao.DuplicateKeyException;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;

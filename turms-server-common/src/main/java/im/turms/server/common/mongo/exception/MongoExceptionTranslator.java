@@ -20,7 +20,6 @@ package im.turms.server.common.mongo.exception;
 import com.mongodb.ErrorCategory;
 import com.mongodb.MongoWriteException;
 import com.mongodb.WriteError;
-import org.springframework.dao.DuplicateKeyException;
 
 /**
  * @author James Chen

@@ -15,28 +15,15 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.redis.serializer;
-
-import org.springframework.data.redis.serializer.RedisElementReader;
-import org.springframework.data.redis.serializer.RedisElementWriter;
-
-import java.nio.ByteBuffer;
+package im.turms.server.common.mongo.exception;
 
 /**
  * @author James Chen
  */
-public class GeoUserIdSerializer implements RedisElementWriter<Long>, RedisElementReader<Long> {
+public class DuplicateKeyException extends RuntimeException {
 
-    @Override
-    public ByteBuffer write(Long userId) {
-        return ByteBuffer.allocate(Long.BYTES)
-                .putLong(userId)
-                .flip();
-    }
-
-    @Override
-    public Long read(ByteBuffer buffer) {
-        return buffer.getLong();
+    public DuplicateKeyException(String message, Throwable e) {
+        super(message, e);
     }
 
 }

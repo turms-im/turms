@@ -17,6 +17,11 @@
 
 package im.turms.server.common.redis;
 
+import im.turms.server.common.util.ByteBufUtil;
+import io.netty.buffer.ByteBuf;
+
+import java.nio.charset.StandardCharsets;
+
 /**
  * @author James Chen
  */
@@ -26,6 +31,6 @@ public final class RedisEntryId {
     }
 
     public static final byte SESSIONS_STATUS = 's';
-    public static final String LOCATION = "l";
+    public static final ByteBuf LOCATION_BUFFER = ByteBufUtil.getUnreleasableDirectBuffer("l".getBytes(StandardCharsets.US_ASCII));
 
 }

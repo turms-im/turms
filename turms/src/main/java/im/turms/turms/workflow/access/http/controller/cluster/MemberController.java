@@ -17,6 +17,8 @@
 
 package im.turms.turms.workflow.access.http.controller.cluster;
 
+import im.turms.server.common.access.http.dto.response.ResponseDTO;
+import im.turms.server.common.access.http.dto.response.ResponseFactory;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.cluster.node.NodeVersion;
@@ -27,8 +29,6 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.turms.workflow.access.http.dto.request.cluster.AddMemberDTO;
 import im.turms.turms.workflow.access.http.dto.request.cluster.UpdateMemberDTO;
-import im.turms.server.common.access.http.dto.response.ResponseDTO;
-import im.turms.server.common.access.http.dto.response.ResponseFactory;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
