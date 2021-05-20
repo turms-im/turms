@@ -75,6 +75,13 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
     }
 
     @Override
+    public void start() {
+        super.start();
+        log.info("MongoDB server URI: {}:{}", getMongoHost(), getMongoPort());
+        log.info("Redis server URI: {}:{}", getRedisHost(), getRedisPort());
+    }
+
+    @Override
     public void close() {
         stop();
     }

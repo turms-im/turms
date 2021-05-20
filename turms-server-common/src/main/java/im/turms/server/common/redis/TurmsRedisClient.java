@@ -165,9 +165,6 @@ public class TurmsRedisClient {
 
     // Scripting
 
-    /**
-     * @see org.springframework.data.redis.core.script.DefaultReactiveScriptExecutor#eval
-     */
     public <T> Mono<T> eval(RedisScript script, ByteBuf... keys) {
         for (ByteBuf key : keys) {
             key.retain();
