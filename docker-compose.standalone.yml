@@ -7,6 +7,13 @@
 
 version: "3.4"
 
+x-logging: &logging
+  logging:
+    driver: local
+    options:
+      max-size: 100m
+      max-file: 10
+
 services:
   # MongoDB
   mongodb-router:
@@ -25,6 +32,7 @@ services:
       retries: 5
     ports:
       - "27017:27017"
+    <<: *logging
 
   mongodb-shard:
     image: "bitnami/mongodb-sharded:4.4.4"
@@ -36,6 +44,7 @@ services:
       - MONGODB_REPLICA_SET_MODE=primary
       - MONGODB_REPLICA_SET_KEY=replicasetkey123
       - MONGODB_REPLICA_SET_NAME=shard01
+    <<: *logging
 
   mongodb-cfg:
     image: "bitnami/mongodb-sharded:4.4.4"
@@ -46,6 +55,7 @@ services:
       - MONGODB_REPLICA_SET_MODE=primary
       - MONGODB_REPLICA_SET_KEY=replicasetkey123
       - MONGODB_REPLICA_SET_NAME=cfgreplicaset
+    <<: *logging
 
   # Redis
   redis:
@@ -57,6 +67,7 @@ services:
       retries: 5
     ports:
       - "6379:6379"
+    <<: *logging
 
   # turms servers
   turms:
@@ -97,11 +108,13 @@ services:
       nofile:
         soft: 65536
         hard: 65536
+    <<: *logging
 
   turms-admin:
     image: "ghcr.io/turms-im/turms-admin"
     ports:
       - "6510:6510"
+    <<: *logging
 
   turms-gateway:
     image: "ghcr.io/turms-im/turms-gateway"
@@ -141,3 +154,4 @@ services:
       nofile:
         soft: 1024000
         hard: 1024000
+    <<: *logging
