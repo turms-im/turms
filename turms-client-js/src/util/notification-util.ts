@@ -33,8 +33,9 @@ export default class NotificationUtil {
     static getFirstVal(notification: TurmsNotification, path: string, throwIfUndefined = false): any {
         path += '.values.0';
         const value = this._get(notification, path, undefined);
-        if (value === undefined && throwIfUndefined) {
-            throw TurmsBusinessError.fromCode(TurmsStatusCode.INVALID_RESPONSE)
+        if (value == null && throwIfUndefined) {
+            const reason = `Cannot parse the illegal response: ${JSON.stringify(notification)}`;
+            throw TurmsBusinessError.from(TurmsStatusCode.INVALID_RESPONSE, reason)
         }
         return value;
     }
