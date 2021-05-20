@@ -144,7 +144,7 @@ private static final long serialVersionUID = 0L;
   public static final int SUCCESSOR_ID_FIELD_NUMBER = 3;
   private long successorId_;
   /**
-   * <code>int64 successor_id = 3;</code>
+   * <code>optional int64 successor_id = 3;</code>
    * @return Whether the successorId field is set.
    */
   @java.lang.Override
@@ -152,7 +152,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>int64 successor_id = 3;</code>
+   * <code>optional int64 successor_id = 3;</code>
    * @return The successorId.
    */
   @java.lang.Override
@@ -163,7 +163,7 @@ private static final long serialVersionUID = 0L;
   public static final int QUIT_AFTER_TRANSFER_FIELD_NUMBER = 4;
   private boolean quitAfterTransfer_;
   /**
-   * <code>bool quit_after_transfer = 4;</code>
+   * <code>optional bool quit_after_transfer = 4;</code>
    * @return Whether the quitAfterTransfer field is set.
    */
   @java.lang.Override
@@ -171,7 +171,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>bool quit_after_transfer = 4;</code>
+   * <code>optional bool quit_after_transfer = 4;</code>
    * @return The quitAfterTransfer.
    */
   @java.lang.Override
@@ -620,7 +620,7 @@ private static final long serialVersionUID = 0L;
 
     private long successorId_ ;
     /**
-     * <code>int64 successor_id = 3;</code>
+     * <code>optional int64 successor_id = 3;</code>
      * @return Whether the successorId field is set.
      */
     @java.lang.Override
@@ -628,7 +628,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>int64 successor_id = 3;</code>
+     * <code>optional int64 successor_id = 3;</code>
      * @return The successorId.
      */
     @java.lang.Override
@@ -636,7 +636,7 @@ private static final long serialVersionUID = 0L;
       return successorId_;
     }
     /**
-     * <code>int64 successor_id = 3;</code>
+     * <code>optional int64 successor_id = 3;</code>
      * @param value The successorId to set.
      * @return This builder for chaining.
      */
@@ -647,7 +647,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 successor_id = 3;</code>
+     * <code>optional int64 successor_id = 3;</code>
      * @return This builder for chaining.
      */
     public Builder clearSuccessorId() {
@@ -659,7 +659,7 @@ private static final long serialVersionUID = 0L;
 
     private boolean quitAfterTransfer_ ;
     /**
-     * <code>bool quit_after_transfer = 4;</code>
+     * <code>optional bool quit_after_transfer = 4;</code>
      * @return Whether the quitAfterTransfer field is set.
      */
     @java.lang.Override
@@ -667,7 +667,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>bool quit_after_transfer = 4;</code>
+     * <code>optional bool quit_after_transfer = 4;</code>
      * @return The quitAfterTransfer.
      */
     @java.lang.Override
@@ -675,7 +675,7 @@ private static final long serialVersionUID = 0L;
       return quitAfterTransfer_;
     }
     /**
-     * <code>bool quit_after_transfer = 4;</code>
+     * <code>optional bool quit_after_transfer = 4;</code>
      * @param value The quitAfterTransfer to set.
      * @return This builder for chaining.
      */
@@ -686,7 +686,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>bool quit_after_transfer = 4;</code>
+     * <code>optional bool quit_after_transfer = 4;</code>
      * @return This builder for chaining.
      */
     public Builder clearQuitAfterTransfer() {

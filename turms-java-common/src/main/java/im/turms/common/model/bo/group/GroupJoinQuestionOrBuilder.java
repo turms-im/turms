@@ -25,39 +25,39 @@ public interface GroupJoinQuestionOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>int64 id = 1;</code>
+   * <code>optional int64 id = 1;</code>
    * @return Whether the id field is set.
    */
   boolean hasId();
   /**
-   * <code>int64 id = 1;</code>
+   * <code>optional int64 id = 1;</code>
    * @return The id.
    */
   long getId();
 
   /**
-   * <code>int64 group_id = 2;</code>
+   * <code>optional int64 group_id = 2;</code>
    * @return Whether the groupId field is set.
    */
   boolean hasGroupId();
   /**
-   * <code>int64 group_id = 2;</code>
+   * <code>optional int64 group_id = 2;</code>
    * @return The groupId.
    */
   long getGroupId();
 
   /**
-   * <code>string question = 3;</code>
+   * <code>optional string question = 3;</code>
    * @return Whether the question field is set.
    */
   boolean hasQuestion();
   /**
-   * <code>string question = 3;</code>
+   * <code>optional string question = 3;</code>
    * @return The question.
    */
   java.lang.String getQuestion();
   /**
-   * <code>string question = 3;</code>
+   * <code>optional string question = 3;</code>
    * @return The bytes for question.
    */
   com.google.protobuf.ByteString
@@ -89,12 +89,12 @@ public interface GroupJoinQuestionOrBuilder extends
       getAnswersBytes(int index);
 
   /**
-   * <code>int32 score = 5;</code>
+   * <code>optional int32 score = 5;</code>
    * @return Whether the score field is set.
    */
   boolean hasScore();
   /**
-   * <code>int32 score = 5;</code>
+   * <code>optional int32 score = 5;</code>
    * @return The score.
    */
   int getScore();

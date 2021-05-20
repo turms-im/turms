@@ -159,7 +159,7 @@ private static final long serialVersionUID = 0L;
   public static final int PASSWORD_FIELD_NUMBER = 2;
   private volatile java.lang.Object password_;
   /**
-   * <code>string password = 2;</code>
+   * <code>optional string password = 2;</code>
    * @return Whether the password field is set.
    */
   @java.lang.Override
@@ -167,7 +167,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>string password = 2;</code>
+   * <code>optional string password = 2;</code>
    * @return The password.
    */
   @java.lang.Override
@@ -184,7 +184,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string password = 2;</code>
+   * <code>optional string password = 2;</code>
    * @return The bytes for password.
    */
   @java.lang.Override
@@ -205,21 +205,21 @@ private static final long serialVersionUID = 0L;
   public static final int USER_STATUS_FIELD_NUMBER = 3;
   private int userStatus_;
   /**
-   * <code>.im.turms.proto.UserStatus user_status = 3;</code>
+   * <code>optional .im.turms.proto.UserStatus user_status = 3;</code>
    * @return Whether the userStatus field is set.
    */
   @java.lang.Override public boolean hasUserStatus() {
     return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>.im.turms.proto.UserStatus user_status = 3;</code>
+   * <code>optional .im.turms.proto.UserStatus user_status = 3;</code>
    * @return The enum numeric value on the wire for userStatus.
    */
   @java.lang.Override public int getUserStatusValue() {
     return userStatus_;
   }
   /**
-   * <code>.im.turms.proto.UserStatus user_status = 3;</code>
+   * <code>optional .im.turms.proto.UserStatus user_status = 3;</code>
    * @return The userStatus.
    */
   @java.lang.Override public im.turms.common.constant.UserStatus getUserStatus() {
@@ -250,7 +250,7 @@ private static final long serialVersionUID = 0L;
   public static final int DEVICE_DETAILS_FIELD_NUMBER = 5;
   private volatile java.lang.Object deviceDetails_;
   /**
-   * <code>string device_details = 5;</code>
+   * <code>optional string device_details = 5;</code>
    * @return Whether the deviceDetails field is set.
    */
   @java.lang.Override
@@ -258,7 +258,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000004) != 0);
   }
   /**
-   * <code>string device_details = 5;</code>
+   * <code>optional string device_details = 5;</code>
    * @return The deviceDetails.
    */
   @java.lang.Override
@@ -275,7 +275,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string device_details = 5;</code>
+   * <code>optional string device_details = 5;</code>
    * @return The bytes for deviceDetails.
    */
   @java.lang.Override
@@ -296,7 +296,7 @@ private static final long serialVersionUID = 0L;
   public static final int LOCATION_FIELD_NUMBER = 6;
   private im.turms.common.model.bo.user.UserLocation location_;
   /**
-   * <code>.im.turms.proto.UserLocation location = 6;</code>
+   * <code>optional .im.turms.proto.UserLocation location = 6;</code>
    * @return Whether the location field is set.
    */
   @java.lang.Override
@@ -304,7 +304,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000008) != 0);
   }
   /**
-   * <code>.im.turms.proto.UserLocation location = 6;</code>
+   * <code>optional .im.turms.proto.UserLocation location = 6;</code>
    * @return The location.
    */
   @java.lang.Override
@@ -312,7 +312,7 @@ private static final long serialVersionUID = 0L;
     return location_ == null ? im.turms.common.model.bo.user.UserLocation.getDefaultInstance() : location_;
   }
   /**
-   * <code>.im.turms.proto.UserLocation location = 6;</code>
+   * <code>optional .im.turms.proto.UserLocation location = 6;</code>
    */
   @java.lang.Override
   public im.turms.common.model.bo.user.UserLocationOrBuilder getLocationOrBuilder() {
@@ -785,14 +785,14 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object password_ = "";
     /**
-     * <code>string password = 2;</code>
+     * <code>optional string password = 2;</code>
      * @return Whether the password field is set.
      */
     public boolean hasPassword() {
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>string password = 2;</code>
+     * <code>optional string password = 2;</code>
      * @return The password.
      */
     public java.lang.String getPassword() {
@@ -808,7 +808,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string password = 2;</code>
+     * <code>optional string password = 2;</code>
      * @return The bytes for password.
      */
     public com.google.protobuf.ByteString
@@ -825,7 +825,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string password = 2;</code>
+     * <code>optional string password = 2;</code>
      * @param value The password to set.
      * @return This builder for chaining.
      */
@@ -840,7 +840,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string password = 2;</code>
+     * <code>optional string password = 2;</code>
      * @return This builder for chaining.
      */
     public Builder clearPassword() {
@@ -850,7 +850,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string password = 2;</code>
+     * <code>optional string password = 2;</code>
      * @param value The bytes for password to set.
      * @return This builder for chaining.
      */
@@ -868,21 +868,21 @@ private static final long serialVersionUID = 0L;
 
     private int userStatus_ = 0;
     /**
-     * <code>.im.turms.proto.UserStatus user_status = 3;</code>
+     * <code>optional .im.turms.proto.UserStatus user_status = 3;</code>
      * @return Whether the userStatus field is set.
      */
     @java.lang.Override public boolean hasUserStatus() {
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>.im.turms.proto.UserStatus user_status = 3;</code>
+     * <code>optional .im.turms.proto.UserStatus user_status = 3;</code>
      * @return The enum numeric value on the wire for userStatus.
      */
     @java.lang.Override public int getUserStatusValue() {
       return userStatus_;
     }
     /**
-     * <code>.im.turms.proto.UserStatus user_status = 3;</code>
+     * <code>optional .im.turms.proto.UserStatus user_status = 3;</code>
      * @param value The enum numeric value on the wire for userStatus to set.
      * @return This builder for chaining.
      */
@@ -893,7 +893,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.UserStatus user_status = 3;</code>
+     * <code>optional .im.turms.proto.UserStatus user_status = 3;</code>
      * @return The userStatus.
      */
     @java.lang.Override
@@ -903,7 +903,7 @@ private static final long serialVersionUID = 0L;
       return result == null ? im.turms.common.constant.UserStatus.UNRECOGNIZED : result;
     }
     /**
-     * <code>.im.turms.proto.UserStatus user_status = 3;</code>
+     * <code>optional .im.turms.proto.UserStatus user_status = 3;</code>
      * @param value The userStatus to set.
      * @return This builder for chaining.
      */
@@ -917,7 +917,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.UserStatus user_status = 3;</code>
+     * <code>optional .im.turms.proto.UserStatus user_status = 3;</code>
      * @return This builder for chaining.
      */
     public Builder clearUserStatus() {
@@ -983,14 +983,14 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object deviceDetails_ = "";
     /**
-     * <code>string device_details = 5;</code>
+     * <code>optional string device_details = 5;</code>
      * @return Whether the deviceDetails field is set.
      */
     public boolean hasDeviceDetails() {
       return ((bitField0_ & 0x00000004) != 0);
     }
     /**
-     * <code>string device_details = 5;</code>
+     * <code>optional string device_details = 5;</code>
      * @return The deviceDetails.
      */
     public java.lang.String getDeviceDetails() {
@@ -1006,7 +1006,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string device_details = 5;</code>
+     * <code>optional string device_details = 5;</code>
      * @return The bytes for deviceDetails.
      */
     public com.google.protobuf.ByteString
@@ -1023,7 +1023,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string device_details = 5;</code>
+     * <code>optional string device_details = 5;</code>
      * @param value The deviceDetails to set.
      * @return This builder for chaining.
      */
@@ -1038,7 +1038,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string device_details = 5;</code>
+     * <code>optional string device_details = 5;</code>
      * @return This builder for chaining.
      */
     public Builder clearDeviceDetails() {
@@ -1048,7 +1048,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string device_details = 5;</code>
+     * <code>optional string device_details = 5;</code>
      * @param value The bytes for deviceDetails to set.
      * @return This builder for chaining.
      */
@@ -1068,14 +1068,14 @@ private static final long serialVersionUID = 0L;
     private com.google.protobuf.SingleFieldBuilderV3<
         im.turms.common.model.bo.user.UserLocation, im.turms.common.model.bo.user.UserLocation.Builder, im.turms.common.model.bo.user.UserLocationOrBuilder> locationBuilder_;
     /**
-     * <code>.im.turms.proto.UserLocation location = 6;</code>
+     * <code>optional .im.turms.proto.UserLocation location = 6;</code>
      * @return Whether the location field is set.
      */
     public boolean hasLocation() {
       return ((bitField0_ & 0x00000008) != 0);
     }
     /**
-     * <code>.im.turms.proto.UserLocation location = 6;</code>
+     * <code>optional .im.turms.proto.UserLocation location = 6;</code>
      * @return The location.
      */
     public im.turms.common.model.bo.user.UserLocation getLocation() {
@@ -1086,7 +1086,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.im.turms.proto.UserLocation location = 6;</code>
+     * <code>optional .im.turms.proto.UserLocation location = 6;</code>
      */
     public Builder setLocation(im.turms.common.model.bo.user.UserLocation value) {
       if (locationBuilder_ == null) {
@@ -1102,7 +1102,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.UserLocation location = 6;</code>
+     * <code>optional .im.turms.proto.UserLocation location = 6;</code>
      */
     public Builder setLocation(
         im.turms.common.model.bo.user.UserLocation.Builder builderForValue) {
@@ -1116,7 +1116,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.UserLocation location = 6;</code>
+     * <code>optional .im.turms.proto.UserLocation location = 6;</code>
      */
     public Builder mergeLocation(im.turms.common.model.bo.user.UserLocation value) {
       if (locationBuilder_ == null) {
@@ -1136,7 +1136,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.UserLocation location = 6;</code>
+     * <code>optional .im.turms.proto.UserLocation location = 6;</code>
      */
     public Builder clearLocation() {
       if (locationBuilder_ == null) {
@@ -1149,7 +1149,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.UserLocation location = 6;</code>
+     * <code>optional .im.turms.proto.UserLocation location = 6;</code>
      */
     public im.turms.common.model.bo.user.UserLocation.Builder getLocationBuilder() {
       bitField0_ |= 0x00000008;
@@ -1157,7 +1157,7 @@ private static final long serialVersionUID = 0L;
       return getLocationFieldBuilder().getBuilder();
     }
     /**
-     * <code>.im.turms.proto.UserLocation location = 6;</code>
+     * <code>optional .im.turms.proto.UserLocation location = 6;</code>
      */
     public im.turms.common.model.bo.user.UserLocationOrBuilder getLocationOrBuilder() {
       if (locationBuilder_ != null) {
@@ -1168,7 +1168,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.im.turms.proto.UserLocation location = 6;</code>
+     * <code>optional .im.turms.proto.UserLocation location = 6;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         im.turms.common.model.bo.user.UserLocation, im.turms.common.model.bo.user.UserLocation.Builder, im.turms.common.model.bo.user.UserLocationOrBuilder>

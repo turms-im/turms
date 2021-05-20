@@ -130,7 +130,7 @@ private static final long serialVersionUID = 0L;
   public static final int PASSWORD_FIELD_NUMBER = 1;
   private volatile java.lang.Object password_;
   /**
-   * <code>string password = 1;</code>
+   * <code>optional string password = 1;</code>
    * @return Whether the password field is set.
    */
   @java.lang.Override
@@ -138,7 +138,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>string password = 1;</code>
+   * <code>optional string password = 1;</code>
    * @return The password.
    */
   @java.lang.Override
@@ -155,7 +155,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string password = 1;</code>
+   * <code>optional string password = 1;</code>
    * @return The bytes for password.
    */
   @java.lang.Override
@@ -176,7 +176,7 @@ private static final long serialVersionUID = 0L;
   public static final int NAME_FIELD_NUMBER = 2;
   private volatile java.lang.Object name_;
   /**
-   * <code>string name = 2;</code>
+   * <code>optional string name = 2;</code>
    * @return Whether the name field is set.
    */
   @java.lang.Override
@@ -184,7 +184,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>string name = 2;</code>
+   * <code>optional string name = 2;</code>
    * @return The name.
    */
   @java.lang.Override
@@ -201,7 +201,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string name = 2;</code>
+   * <code>optional string name = 2;</code>
    * @return The bytes for name.
    */
   @java.lang.Override
@@ -222,7 +222,7 @@ private static final long serialVersionUID = 0L;
   public static final int INTRO_FIELD_NUMBER = 3;
   private volatile java.lang.Object intro_;
   /**
-   * <code>string intro = 3;</code>
+   * <code>optional string intro = 3;</code>
    * @return Whether the intro field is set.
    */
   @java.lang.Override
@@ -230,7 +230,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000004) != 0);
   }
   /**
-   * <code>string intro = 3;</code>
+   * <code>optional string intro = 3;</code>
    * @return The intro.
    */
   @java.lang.Override
@@ -247,7 +247,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string intro = 3;</code>
+   * <code>optional string intro = 3;</code>
    * @return The bytes for intro.
    */
   @java.lang.Override
@@ -268,21 +268,21 @@ private static final long serialVersionUID = 0L;
   public static final int PROFILE_ACCESS_STRATEGY_FIELD_NUMBER = 4;
   private int profileAccessStrategy_;
   /**
-   * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
    * @return Whether the profileAccessStrategy field is set.
    */
   @java.lang.Override public boolean hasProfileAccessStrategy() {
     return ((bitField0_ & 0x00000008) != 0);
   }
   /**
-   * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
    * @return The enum numeric value on the wire for profileAccessStrategy.
    */
   @java.lang.Override public int getProfileAccessStrategyValue() {
     return profileAccessStrategy_;
   }
   /**
-   * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
    * @return The profileAccessStrategy.
    */
   @java.lang.Override public im.turms.common.constant.ProfileAccessStrategy getProfileAccessStrategy() {
@@ -684,14 +684,14 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object password_ = "";
     /**
-     * <code>string password = 1;</code>
+     * <code>optional string password = 1;</code>
      * @return Whether the password field is set.
      */
     public boolean hasPassword() {
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>string password = 1;</code>
+     * <code>optional string password = 1;</code>
      * @return The password.
      */
     public java.lang.String getPassword() {
@@ -707,7 +707,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string password = 1;</code>
+     * <code>optional string password = 1;</code>
      * @return The bytes for password.
      */
     public com.google.protobuf.ByteString
@@ -724,7 +724,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string password = 1;</code>
+     * <code>optional string password = 1;</code>
      * @param value The password to set.
      * @return This builder for chaining.
      */
@@ -739,7 +739,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string password = 1;</code>
+     * <code>optional string password = 1;</code>
      * @return This builder for chaining.
      */
     public Builder clearPassword() {
@@ -749,7 +749,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string password = 1;</code>
+     * <code>optional string password = 1;</code>
      * @param value The bytes for password to set.
      * @return This builder for chaining.
      */
@@ -767,14 +767,14 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object name_ = "";
     /**
-     * <code>string name = 2;</code>
+     * <code>optional string name = 2;</code>
      * @return Whether the name field is set.
      */
     public boolean hasName() {
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>string name = 2;</code>
+     * <code>optional string name = 2;</code>
      * @return The name.
      */
     public java.lang.String getName() {
@@ -790,7 +790,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string name = 2;</code>
+     * <code>optional string name = 2;</code>
      * @return The bytes for name.
      */
     public com.google.protobuf.ByteString
@@ -807,7 +807,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string name = 2;</code>
+     * <code>optional string name = 2;</code>
      * @param value The name to set.
      * @return This builder for chaining.
      */
@@ -822,7 +822,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string name = 2;</code>
+     * <code>optional string name = 2;</code>
      * @return This builder for chaining.
      */
     public Builder clearName() {
@@ -832,7 +832,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string name = 2;</code>
+     * <code>optional string name = 2;</code>
      * @param value The bytes for name to set.
      * @return This builder for chaining.
      */
@@ -850,14 +850,14 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object intro_ = "";
     /**
-     * <code>string intro = 3;</code>
+     * <code>optional string intro = 3;</code>
      * @return Whether the intro field is set.
      */
     public boolean hasIntro() {
       return ((bitField0_ & 0x00000004) != 0);
     }
     /**
-     * <code>string intro = 3;</code>
+     * <code>optional string intro = 3;</code>
      * @return The intro.
      */
     public java.lang.String getIntro() {
@@ -873,7 +873,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string intro = 3;</code>
+     * <code>optional string intro = 3;</code>
      * @return The bytes for intro.
      */
     public com.google.protobuf.ByteString
@@ -890,7 +890,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string intro = 3;</code>
+     * <code>optional string intro = 3;</code>
      * @param value The intro to set.
      * @return This builder for chaining.
      */
@@ -905,7 +905,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string intro = 3;</code>
+     * <code>optional string intro = 3;</code>
      * @return This builder for chaining.
      */
     public Builder clearIntro() {
@@ -915,7 +915,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string intro = 3;</code>
+     * <code>optional string intro = 3;</code>
      * @param value The bytes for intro to set.
      * @return This builder for chaining.
      */
@@ -933,21 +933,21 @@ private static final long serialVersionUID = 0L;
 
     private int profileAccessStrategy_ = 0;
     /**
-     * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
      * @return Whether the profileAccessStrategy field is set.
      */
     @java.lang.Override public boolean hasProfileAccessStrategy() {
       return ((bitField0_ & 0x00000008) != 0);
     }
     /**
-     * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
      * @return The enum numeric value on the wire for profileAccessStrategy.
      */
     @java.lang.Override public int getProfileAccessStrategyValue() {
       return profileAccessStrategy_;
     }
     /**
-     * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
      * @param value The enum numeric value on the wire for profileAccessStrategy to set.
      * @return This builder for chaining.
      */
@@ -958,7 +958,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
      * @return The profileAccessStrategy.
      */
     @java.lang.Override
@@ -968,7 +968,7 @@ private static final long serialVersionUID = 0L;
       return result == null ? im.turms.common.constant.ProfileAccessStrategy.UNRECOGNIZED : result;
     }
     /**
-     * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
      * @param value The profileAccessStrategy to set.
      * @return This builder for chaining.
      */
@@ -982,7 +982,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+     * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
      * @return This builder for chaining.
      */
     public Builder clearProfileAccessStrategy() {

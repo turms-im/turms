@@ -31,17 +31,17 @@ public interface UpdateGroupJoinQuestionRequestOrBuilder extends
   long getQuestionId();
 
   /**
-   * <code>string question = 2;</code>
+   * <code>optional string question = 2;</code>
    * @return Whether the question field is set.
    */
   boolean hasQuestion();
   /**
-   * <code>string question = 2;</code>
+   * <code>optional string question = 2;</code>
    * @return The question.
    */
   java.lang.String getQuestion();
   /**
-   * <code>string question = 2;</code>
+   * <code>optional string question = 2;</code>
    * @return The bytes for question.
    */
   com.google.protobuf.ByteString
@@ -73,12 +73,12 @@ public interface UpdateGroupJoinQuestionRequestOrBuilder extends
       getAnswersBytes(int index);
 
   /**
-   * <code>int32 score = 4;</code>
+   * <code>optional int32 score = 4;</code>
    * @return Whether the score field is set.
    */
   boolean hasScore();
   /**
-   * <code>int32 score = 4;</code>
+   * <code>optional int32 score = 4;</code>
    * @return The score.
    */
   int getScore();

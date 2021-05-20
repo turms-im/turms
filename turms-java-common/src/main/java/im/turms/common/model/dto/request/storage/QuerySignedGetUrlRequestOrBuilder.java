@@ -36,29 +36,29 @@ public interface QuerySignedGetUrlRequestOrBuilder extends
   im.turms.common.constant.ContentType getContentType();
 
   /**
-   * <code>string key_str = 2;</code>
+   * <code>optional string key_str = 2;</code>
    * @return Whether the keyStr field is set.
    */
   boolean hasKeyStr();
   /**
-   * <code>string key_str = 2;</code>
+   * <code>optional string key_str = 2;</code>
    * @return The keyStr.
    */
   java.lang.String getKeyStr();
   /**
-   * <code>string key_str = 2;</code>
+   * <code>optional string key_str = 2;</code>
    * @return The bytes for keyStr.
    */
   com.google.protobuf.ByteString
       getKeyStrBytes();
 
   /**
-   * <code>int64 key_num = 3;</code>
+   * <code>optional int64 key_num = 3;</code>
    * @return Whether the keyNum field is set.
    */
   boolean hasKeyNum();
   /**
-   * <code>int64 key_num = 3;</code>
+   * <code>optional int64 key_num = 3;</code>
    * @return The keyNum.
    */
   long getKeyNum();

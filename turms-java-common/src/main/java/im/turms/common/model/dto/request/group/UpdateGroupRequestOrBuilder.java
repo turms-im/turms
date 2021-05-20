@@ -31,107 +31,107 @@ public interface UpdateGroupRequestOrBuilder extends
   long getGroupId();
 
   /**
-   * <code>string group_name = 2;</code>
+   * <code>optional string group_name = 2;</code>
    * @return Whether the groupName field is set.
    */
   boolean hasGroupName();
   /**
-   * <code>string group_name = 2;</code>
+   * <code>optional string group_name = 2;</code>
    * @return The groupName.
    */
   java.lang.String getGroupName();
   /**
-   * <code>string group_name = 2;</code>
+   * <code>optional string group_name = 2;</code>
    * @return The bytes for groupName.
    */
   com.google.protobuf.ByteString
       getGroupNameBytes();
 
   /**
-   * <code>string intro = 3;</code>
+   * <code>optional string intro = 3;</code>
    * @return Whether the intro field is set.
    */
   boolean hasIntro();
   /**
-   * <code>string intro = 3;</code>
+   * <code>optional string intro = 3;</code>
    * @return The intro.
    */
   java.lang.String getIntro();
   /**
-   * <code>string intro = 3;</code>
+   * <code>optional string intro = 3;</code>
    * @return The bytes for intro.
    */
   com.google.protobuf.ByteString
       getIntroBytes();
 
   /**
-   * <code>string announcement = 4;</code>
+   * <code>optional string announcement = 4;</code>
    * @return Whether the announcement field is set.
    */
   boolean hasAnnouncement();
   /**
-   * <code>string announcement = 4;</code>
+   * <code>optional string announcement = 4;</code>
    * @return The announcement.
    */
   java.lang.String getAnnouncement();
   /**
-   * <code>string announcement = 4;</code>
+   * <code>optional string announcement = 4;</code>
    * @return The bytes for announcement.
    */
   com.google.protobuf.ByteString
       getAnnouncementBytes();
 
   /**
-   * <code>int32 minimum_score = 5;</code>
+   * <code>optional int32 minimum_score = 5;</code>
    * @return Whether the minimumScore field is set.
    */
   boolean hasMinimumScore();
   /**
-   * <code>int32 minimum_score = 5;</code>
+   * <code>optional int32 minimum_score = 5;</code>
    * @return The minimumScore.
    */
   int getMinimumScore();
 
   /**
-   * <code>int64 group_type_id = 6;</code>
+   * <code>optional int64 group_type_id = 6;</code>
    * @return Whether the groupTypeId field is set.
    */
   boolean hasGroupTypeId();
   /**
-   * <code>int64 group_type_id = 6;</code>
+   * <code>optional int64 group_type_id = 6;</code>
    * @return The groupTypeId.
    */
   long getGroupTypeId();
 
   /**
-   * <code>int64 mute_end_date = 7;</code>
+   * <code>optional int64 mute_end_date = 7;</code>
    * @return Whether the muteEndDate field is set.
    */
   boolean hasMuteEndDate();
   /**
-   * <code>int64 mute_end_date = 7;</code>
+   * <code>optional int64 mute_end_date = 7;</code>
    * @return The muteEndDate.
    */
   long getMuteEndDate();
 
   /**
-   * <code>int64 successor_id = 8;</code>
+   * <code>optional int64 successor_id = 8;</code>
    * @return Whether the successorId field is set.
    */
   boolean hasSuccessorId();
   /**
-   * <code>int64 successor_id = 8;</code>
+   * <code>optional int64 successor_id = 8;</code>
    * @return The successorId.
    */
   long getSuccessorId();
 
   /**
-   * <code>bool quit_after_transfer = 9;</code>
+   * <code>optional bool quit_after_transfer = 9;</code>
    * @return Whether the quitAfterTransfer field is set.
    */
   boolean hasQuitAfterTransfer();
   /**
-   * <code>bool quit_after_transfer = 9;</code>
+   * <code>optional bool quit_after_transfer = 9;</code>
    * @return The quitAfterTransfer.
    */
   boolean getQuitAfterTransfer();

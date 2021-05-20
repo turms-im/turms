@@ -107,7 +107,7 @@ private static final long serialVersionUID = 0L;
   public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 1;
   private long lastUpdatedDate_;
   /**
-   * <code>int64 last_updated_date = 1;</code>
+   * <code>optional int64 last_updated_date = 1;</code>
    * @return Whether the lastUpdatedDate field is set.
    */
   @java.lang.Override
@@ -115,7 +115,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>int64 last_updated_date = 1;</code>
+   * <code>optional int64 last_updated_date = 1;</code>
    * @return The lastUpdatedDate.
    */
   @java.lang.Override
@@ -440,7 +440,7 @@ private static final long serialVersionUID = 0L;
 
     private long lastUpdatedDate_ ;
     /**
-     * <code>int64 last_updated_date = 1;</code>
+     * <code>optional int64 last_updated_date = 1;</code>
      * @return Whether the lastUpdatedDate field is set.
      */
     @java.lang.Override
@@ -448,7 +448,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>int64 last_updated_date = 1;</code>
+     * <code>optional int64 last_updated_date = 1;</code>
      * @return The lastUpdatedDate.
      */
     @java.lang.Override
@@ -456,7 +456,7 @@ private static final long serialVersionUID = 0L;
       return lastUpdatedDate_;
     }
     /**
-     * <code>int64 last_updated_date = 1;</code>
+     * <code>optional int64 last_updated_date = 1;</code>
      * @param value The lastUpdatedDate to set.
      * @return This builder for chaining.
      */
@@ -467,7 +467,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 last_updated_date = 1;</code>
+     * <code>optional int64 last_updated_date = 1;</code>
      * @return This builder for chaining.
      */
     public Builder clearLastUpdatedDate() {

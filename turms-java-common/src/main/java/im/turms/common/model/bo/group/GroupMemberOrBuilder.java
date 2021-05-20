@@ -25,94 +25,94 @@ public interface GroupMemberOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>int64 group_id = 1;</code>
+   * <code>optional int64 group_id = 1;</code>
    * @return Whether the groupId field is set.
    */
   boolean hasGroupId();
   /**
-   * <code>int64 group_id = 1;</code>
+   * <code>optional int64 group_id = 1;</code>
    * @return The groupId.
    */
   long getGroupId();
 
   /**
-   * <code>int64 user_id = 2;</code>
+   * <code>optional int64 user_id = 2;</code>
    * @return Whether the userId field is set.
    */
   boolean hasUserId();
   /**
-   * <code>int64 user_id = 2;</code>
+   * <code>optional int64 user_id = 2;</code>
    * @return The userId.
    */
   long getUserId();
 
   /**
-   * <code>string name = 3;</code>
+   * <code>optional string name = 3;</code>
    * @return Whether the name field is set.
    */
   boolean hasName();
   /**
-   * <code>string name = 3;</code>
+   * <code>optional string name = 3;</code>
    * @return The name.
    */
   java.lang.String getName();
   /**
-   * <code>string name = 3;</code>
+   * <code>optional string name = 3;</code>
    * @return The bytes for name.
    */
   com.google.protobuf.ByteString
       getNameBytes();
 
   /**
-   * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
+   * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
    * @return Whether the role field is set.
    */
   boolean hasRole();
   /**
-   * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
+   * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
    * @return The enum numeric value on the wire for role.
    */
   int getRoleValue();
   /**
-   * <code>.im.turms.proto.GroupMemberRole role = 4;</code>
+   * <code>optional .im.turms.proto.GroupMemberRole role = 4;</code>
    * @return The role.
    */
   im.turms.common.constant.GroupMemberRole getRole();
 
   /**
-   * <code>int64 join_date = 5;</code>
+   * <code>optional int64 join_date = 5;</code>
    * @return Whether the joinDate field is set.
    */
   boolean hasJoinDate();
   /**
-   * <code>int64 join_date = 5;</code>
+   * <code>optional int64 join_date = 5;</code>
    * @return The joinDate.
    */
   long getJoinDate();
 
   /**
-   * <code>int64 mute_end_date = 6;</code>
+   * <code>optional int64 mute_end_date = 6;</code>
    * @return Whether the muteEndDate field is set.
    */
   boolean hasMuteEndDate();
   /**
-   * <code>int64 mute_end_date = 6;</code>
+   * <code>optional int64 mute_end_date = 6;</code>
    * @return The muteEndDate.
    */
   long getMuteEndDate();
 
   /**
-   * <code>.im.turms.proto.UserStatus user_status = 7;</code>
+   * <code>optional .im.turms.proto.UserStatus user_status = 7;</code>
    * @return Whether the userStatus field is set.
    */
   boolean hasUserStatus();
   /**
-   * <code>.im.turms.proto.UserStatus user_status = 7;</code>
+   * <code>optional .im.turms.proto.UserStatus user_status = 7;</code>
    * @return The enum numeric value on the wire for userStatus.
    */
   int getUserStatusValue();
   /**
-   * <code>.im.turms.proto.UserStatus user_status = 7;</code>
+   * <code>optional .im.turms.proto.UserStatus user_status = 7;</code>
    * @return The userStatus.
    */
   im.turms.common.constant.UserStatus getUserStatus();

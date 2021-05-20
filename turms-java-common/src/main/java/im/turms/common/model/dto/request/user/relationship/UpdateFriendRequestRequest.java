@@ -151,7 +151,7 @@ private static final long serialVersionUID = 0L;
   public static final int REASON_FIELD_NUMBER = 3;
   private volatile java.lang.Object reason_;
   /**
-   * <code>string reason = 3;</code>
+   * <code>optional string reason = 3;</code>
    * @return Whether the reason field is set.
    */
   @java.lang.Override
@@ -159,7 +159,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>string reason = 3;</code>
+   * <code>optional string reason = 3;</code>
    * @return The reason.
    */
   @java.lang.Override
@@ -176,7 +176,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string reason = 3;</code>
+   * <code>optional string reason = 3;</code>
    * @return The bytes for reason.
    */
   @java.lang.Override
@@ -630,14 +630,14 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object reason_ = "";
     /**
-     * <code>string reason = 3;</code>
+     * <code>optional string reason = 3;</code>
      * @return Whether the reason field is set.
      */
     public boolean hasReason() {
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>string reason = 3;</code>
+     * <code>optional string reason = 3;</code>
      * @return The reason.
      */
     public java.lang.String getReason() {
@@ -653,7 +653,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string reason = 3;</code>
+     * <code>optional string reason = 3;</code>
      * @return The bytes for reason.
      */
     public com.google.protobuf.ByteString
@@ -670,7 +670,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string reason = 3;</code>
+     * <code>optional string reason = 3;</code>
      * @param value The reason to set.
      * @return This builder for chaining.
      */
@@ -685,7 +685,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string reason = 3;</code>
+     * <code>optional string reason = 3;</code>
      * @return This builder for chaining.
      */
     public Builder clearReason() {
@@ -695,7 +695,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string reason = 3;</code>
+     * <code>optional string reason = 3;</code>
      * @param value The bytes for reason to set.
      * @return This builder for chaining.
      */

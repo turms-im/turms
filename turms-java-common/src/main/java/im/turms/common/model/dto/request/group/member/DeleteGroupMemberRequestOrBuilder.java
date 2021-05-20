@@ -37,23 +37,23 @@ public interface DeleteGroupMemberRequestOrBuilder extends
   long getMemberId();
 
   /**
-   * <code>int64 successor_id = 3;</code>
+   * <code>optional int64 successor_id = 3;</code>
    * @return Whether the successorId field is set.
    */
   boolean hasSuccessorId();
   /**
-   * <code>int64 successor_id = 3;</code>
+   * <code>optional int64 successor_id = 3;</code>
    * @return The successorId.
    */
   long getSuccessorId();
 
   /**
-   * <code>bool quit_after_transfer = 4;</code>
+   * <code>optional bool quit_after_transfer = 4;</code>
    * @return Whether the quitAfterTransfer field is set.
    */
   boolean hasQuitAfterTransfer();
   /**
-   * <code>bool quit_after_transfer = 4;</code>
+   * <code>optional bool quit_after_transfer = 4;</code>
    * @return The quitAfterTransfer.
    */
   boolean getQuitAfterTransfer();

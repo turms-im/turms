@@ -37,12 +37,12 @@ public interface DeleteRelationshipGroupMemberRequestOrBuilder extends
   int getGroupIndex();
 
   /**
-   * <code>int32 target_group_index = 3;</code>
+   * <code>optional int32 target_group_index = 3;</code>
    * @return Whether the targetGroupIndex field is set.
    */
   boolean hasTargetGroupIndex();
   /**
-   * <code>int32 target_group_index = 3;</code>
+   * <code>optional int32 target_group_index = 3;</code>
    * @return The targetGroupIndex.
    */
   int getTargetGroupIndex();

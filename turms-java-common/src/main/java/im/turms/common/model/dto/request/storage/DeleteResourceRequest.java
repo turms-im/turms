@@ -140,7 +140,7 @@ private static final long serialVersionUID = 0L;
   public static final int KEY_STR_FIELD_NUMBER = 2;
   private volatile java.lang.Object keyStr_;
   /**
-   * <code>string key_str = 2;</code>
+   * <code>optional string key_str = 2;</code>
    * @return Whether the keyStr field is set.
    */
   @java.lang.Override
@@ -148,7 +148,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>string key_str = 2;</code>
+   * <code>optional string key_str = 2;</code>
    * @return The keyStr.
    */
   @java.lang.Override
@@ -165,7 +165,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string key_str = 2;</code>
+   * <code>optional string key_str = 2;</code>
    * @return The bytes for keyStr.
    */
   @java.lang.Override
@@ -186,7 +186,7 @@ private static final long serialVersionUID = 0L;
   public static final int KEY_NUM_FIELD_NUMBER = 3;
   private long keyNum_;
   /**
-   * <code>int64 key_num = 3;</code>
+   * <code>optional int64 key_num = 3;</code>
    * @return Whether the keyNum field is set.
    */
   @java.lang.Override
@@ -194,7 +194,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>int64 key_num = 3;</code>
+   * <code>optional int64 key_num = 3;</code>
    * @return The keyNum.
    */
   @java.lang.Override
@@ -615,14 +615,14 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object keyStr_ = "";
     /**
-     * <code>string key_str = 2;</code>
+     * <code>optional string key_str = 2;</code>
      * @return Whether the keyStr field is set.
      */
     public boolean hasKeyStr() {
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>string key_str = 2;</code>
+     * <code>optional string key_str = 2;</code>
      * @return The keyStr.
      */
     public java.lang.String getKeyStr() {
@@ -638,7 +638,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string key_str = 2;</code>
+     * <code>optional string key_str = 2;</code>
      * @return The bytes for keyStr.
      */
     public com.google.protobuf.ByteString
@@ -655,7 +655,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string key_str = 2;</code>
+     * <code>optional string key_str = 2;</code>
      * @param value The keyStr to set.
      * @return This builder for chaining.
      */
@@ -670,7 +670,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string key_str = 2;</code>
+     * <code>optional string key_str = 2;</code>
      * @return This builder for chaining.
      */
     public Builder clearKeyStr() {
@@ -680,7 +680,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string key_str = 2;</code>
+     * <code>optional string key_str = 2;</code>
      * @param value The bytes for keyStr to set.
      * @return This builder for chaining.
      */
@@ -698,7 +698,7 @@ private static final long serialVersionUID = 0L;
 
     private long keyNum_ ;
     /**
-     * <code>int64 key_num = 3;</code>
+     * <code>optional int64 key_num = 3;</code>
      * @return Whether the keyNum field is set.
      */
     @java.lang.Override
@@ -706,7 +706,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>int64 key_num = 3;</code>
+     * <code>optional int64 key_num = 3;</code>
      * @return The keyNum.
      */
     @java.lang.Override
@@ -714,7 +714,7 @@ private static final long serialVersionUID = 0L;
       return keyNum_;
     }
     /**
-     * <code>int64 key_num = 3;</code>
+     * <code>optional int64 key_num = 3;</code>
      * @param value The keyNum to set.
      * @return This builder for chaining.
      */
@@ -725,7 +725,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 key_num = 3;</code>
+     * <code>optional int64 key_num = 3;</code>
      * @return This builder for chaining.
      */
     public Builder clearKeyNum() {

@@ -42,67 +42,67 @@ public interface QueryMessagesRequestOrBuilder extends
   long getIds(int index);
 
   /**
-   * <code>int32 size = 2;</code>
+   * <code>optional int32 size = 2;</code>
    * @return Whether the size field is set.
    */
   boolean hasSize();
   /**
-   * <code>int32 size = 2;</code>
+   * <code>optional int32 size = 2;</code>
    * @return The size.
    */
   int getSize();
 
   /**
-   * <code>bool are_group_messages = 3;</code>
+   * <code>optional bool are_group_messages = 3;</code>
    * @return Whether the areGroupMessages field is set.
    */
   boolean hasAreGroupMessages();
   /**
-   * <code>bool are_group_messages = 3;</code>
+   * <code>optional bool are_group_messages = 3;</code>
    * @return The areGroupMessages.
    */
   boolean getAreGroupMessages();
 
   /**
-   * <code>bool are_system_messages = 4;</code>
+   * <code>optional bool are_system_messages = 4;</code>
    * @return Whether the areSystemMessages field is set.
    */
   boolean hasAreSystemMessages();
   /**
-   * <code>bool are_system_messages = 4;</code>
+   * <code>optional bool are_system_messages = 4;</code>
    * @return The areSystemMessages.
    */
   boolean getAreSystemMessages();
 
   /**
-   * <code>int64 from_id = 5;</code>
+   * <code>optional int64 from_id = 5;</code>
    * @return Whether the fromId field is set.
    */
   boolean hasFromId();
   /**
-   * <code>int64 from_id = 5;</code>
+   * <code>optional int64 from_id = 5;</code>
    * @return The fromId.
    */
   long getFromId();
 
   /**
-   * <code>int64 delivery_date_after = 6;</code>
+   * <code>optional int64 delivery_date_after = 6;</code>
    * @return Whether the deliveryDateAfter field is set.
    */
   boolean hasDeliveryDateAfter();
   /**
-   * <code>int64 delivery_date_after = 6;</code>
+   * <code>optional int64 delivery_date_after = 6;</code>
    * @return The deliveryDateAfter.
    */
   long getDeliveryDateAfter();
 
   /**
-   * <code>int64 delivery_date_before = 7;</code>
+   * <code>optional int64 delivery_date_before = 7;</code>
    * @return Whether the deliveryDateBefore field is set.
    */
   boolean hasDeliveryDateBefore();
   /**
-   * <code>int64 delivery_date_before = 7;</code>
+   * <code>optional int64 delivery_date_before = 7;</code>
    * @return The deliveryDateBefore.
    */
   long getDeliveryDateBefore();

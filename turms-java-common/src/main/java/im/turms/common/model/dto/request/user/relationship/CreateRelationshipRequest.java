@@ -139,7 +139,7 @@ private static final long serialVersionUID = 0L;
   public static final int GROUP_INDEX_FIELD_NUMBER = 3;
   private int groupIndex_;
   /**
-   * <code>int32 group_index = 3;</code>
+   * <code>optional int32 group_index = 3;</code>
    * @return Whether the groupIndex field is set.
    */
   @java.lang.Override
@@ -147,7 +147,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>int32 group_index = 3;</code>
+   * <code>optional int32 group_index = 3;</code>
    * @return The groupIndex.
    */
   @java.lang.Override
@@ -569,7 +569,7 @@ private static final long serialVersionUID = 0L;
 
     private int groupIndex_ ;
     /**
-     * <code>int32 group_index = 3;</code>
+     * <code>optional int32 group_index = 3;</code>
      * @return Whether the groupIndex field is set.
      */
     @java.lang.Override
@@ -577,7 +577,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>int32 group_index = 3;</code>
+     * <code>optional int32 group_index = 3;</code>
      * @return The groupIndex.
      */
     @java.lang.Override
@@ -585,7 +585,7 @@ private static final long serialVersionUID = 0L;
       return groupIndex_;
     }
     /**
-     * <code>int32 group_index = 3;</code>
+     * <code>optional int32 group_index = 3;</code>
      * @param value The groupIndex to set.
      * @return This builder for chaining.
      */
@@ -596,7 +596,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int32 group_index = 3;</code>
+     * <code>optional int32 group_index = 3;</code>
      * @return This builder for chaining.
      */
     public Builder clearGroupIndex() {

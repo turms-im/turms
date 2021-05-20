@@ -144,7 +144,7 @@ private static final long serialVersionUID = 0L;
   public static final int DISTANCE_FIELD_NUMBER = 3;
   private float distance_;
   /**
-   * <code>float distance = 3;</code>
+   * <code>optional float distance = 3;</code>
    * @return Whether the distance field is set.
    */
   @java.lang.Override
@@ -152,7 +152,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>float distance = 3;</code>
+   * <code>optional float distance = 3;</code>
    * @return The distance.
    */
   @java.lang.Override
@@ -163,7 +163,7 @@ private static final long serialVersionUID = 0L;
   public static final int MAX_NUMBER_FIELD_NUMBER = 4;
   private int maxNumber_;
   /**
-   * <code>int32 max_number = 4;</code>
+   * <code>optional int32 max_number = 4;</code>
    * @return Whether the maxNumber field is set.
    */
   @java.lang.Override
@@ -171,7 +171,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>int32 max_number = 4;</code>
+   * <code>optional int32 max_number = 4;</code>
    * @return The maxNumber.
    */
   @java.lang.Override
@@ -622,7 +622,7 @@ private static final long serialVersionUID = 0L;
 
     private float distance_ ;
     /**
-     * <code>float distance = 3;</code>
+     * <code>optional float distance = 3;</code>
      * @return Whether the distance field is set.
      */
     @java.lang.Override
@@ -630,7 +630,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>float distance = 3;</code>
+     * <code>optional float distance = 3;</code>
      * @return The distance.
      */
     @java.lang.Override
@@ -638,7 +638,7 @@ private static final long serialVersionUID = 0L;
       return distance_;
     }
     /**
-     * <code>float distance = 3;</code>
+     * <code>optional float distance = 3;</code>
      * @param value The distance to set.
      * @return This builder for chaining.
      */
@@ -649,7 +649,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>float distance = 3;</code>
+     * <code>optional float distance = 3;</code>
      * @return This builder for chaining.
      */
     public Builder clearDistance() {
@@ -661,7 +661,7 @@ private static final long serialVersionUID = 0L;
 
     private int maxNumber_ ;
     /**
-     * <code>int32 max_number = 4;</code>
+     * <code>optional int32 max_number = 4;</code>
      * @return Whether the maxNumber field is set.
      */
     @java.lang.Override
@@ -669,7 +669,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>int32 max_number = 4;</code>
+     * <code>optional int32 max_number = 4;</code>
      * @return The maxNumber.
      */
     @java.lang.Override
@@ -677,7 +677,7 @@ private static final long serialVersionUID = 0L;
       return maxNumber_;
     }
     /**
-     * <code>int32 max_number = 4;</code>
+     * <code>optional int32 max_number = 4;</code>
      * @param value The maxNumber to set.
      * @return This builder for chaining.
      */
@@ -688,7 +688,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int32 max_number = 4;</code>
+     * <code>optional int32 max_number = 4;</code>
      * @return This builder for chaining.
      */
     public Builder clearMaxNumber() {

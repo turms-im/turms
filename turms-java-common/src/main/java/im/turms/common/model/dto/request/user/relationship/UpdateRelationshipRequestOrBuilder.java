@@ -31,34 +31,34 @@ public interface UpdateRelationshipRequestOrBuilder extends
   long getUserId();
 
   /**
-   * <code>bool blocked = 2;</code>
+   * <code>optional bool blocked = 2;</code>
    * @return Whether the blocked field is set.
    */
   boolean hasBlocked();
   /**
-   * <code>bool blocked = 2;</code>
+   * <code>optional bool blocked = 2;</code>
    * @return The blocked.
    */
   boolean getBlocked();
 
   /**
-   * <code>int32 new_group_index = 3;</code>
+   * <code>optional int32 new_group_index = 3;</code>
    * @return Whether the newGroupIndex field is set.
    */
   boolean hasNewGroupIndex();
   /**
-   * <code>int32 new_group_index = 3;</code>
+   * <code>optional int32 new_group_index = 3;</code>
    * @return The newGroupIndex.
    */
   int getNewGroupIndex();
 
   /**
-   * <code>int32 delete_group_index = 4;</code>
+   * <code>optional int32 delete_group_index = 4;</code>
    * @return Whether the deleteGroupIndex field is set.
    */
   boolean hasDeleteGroupIndex();
   /**
-   * <code>int32 delete_group_index = 4;</code>
+   * <code>optional int32 delete_group_index = 4;</code>
    * @return The deleteGroupIndex.
    */
   int getDeleteGroupIndex();

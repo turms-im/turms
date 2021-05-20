@@ -25,23 +25,23 @@ public interface QueryGroupJoinRequestsRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>int64 group_id = 1;</code>
+   * <code>optional int64 group_id = 1;</code>
    * @return Whether the groupId field is set.
    */
   boolean hasGroupId();
   /**
-   * <code>int64 group_id = 1;</code>
+   * <code>optional int64 group_id = 1;</code>
    * @return The groupId.
    */
   long getGroupId();
 
   /**
-   * <code>int64 last_updated_date = 2;</code>
+   * <code>optional int64 last_updated_date = 2;</code>
    * @return Whether the lastUpdatedDate field is set.
    */
   boolean hasLastUpdatedDate();
   /**
-   * <code>int64 last_updated_date = 2;</code>
+   * <code>optional int64 last_updated_date = 2;</code>
    * @return The lastUpdatedDate.
    */
   long getLastUpdatedDate();

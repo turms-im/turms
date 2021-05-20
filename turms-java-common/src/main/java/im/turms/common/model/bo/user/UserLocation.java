@@ -153,7 +153,7 @@ private static final long serialVersionUID = 0L;
   public static final int NAME_FIELD_NUMBER = 3;
   private volatile java.lang.Object name_;
   /**
-   * <code>string name = 3;</code>
+   * <code>optional string name = 3;</code>
    * @return Whether the name field is set.
    */
   @java.lang.Override
@@ -161,7 +161,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>string name = 3;</code>
+   * <code>optional string name = 3;</code>
    * @return The name.
    */
   @java.lang.Override
@@ -178,7 +178,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string name = 3;</code>
+   * <code>optional string name = 3;</code>
    * @return The bytes for name.
    */
   @java.lang.Override
@@ -199,7 +199,7 @@ private static final long serialVersionUID = 0L;
   public static final int ADDRESS_FIELD_NUMBER = 4;
   private volatile java.lang.Object address_;
   /**
-   * <code>string address = 4;</code>
+   * <code>optional string address = 4;</code>
    * @return Whether the address field is set.
    */
   @java.lang.Override
@@ -207,7 +207,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>string address = 4;</code>
+   * <code>optional string address = 4;</code>
    * @return The address.
    */
   @java.lang.Override
@@ -224,7 +224,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string address = 4;</code>
+   * <code>optional string address = 4;</code>
    * @return The bytes for address.
    */
   @java.lang.Override
@@ -245,7 +245,7 @@ private static final long serialVersionUID = 0L;
   public static final int TIMESTAMP_FIELD_NUMBER = 5;
   private long timestamp_;
   /**
-   * <code>int64 timestamp = 5;</code>
+   * <code>optional int64 timestamp = 5;</code>
    * @return Whether the timestamp field is set.
    */
   @java.lang.Override
@@ -253,7 +253,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000004) != 0);
   }
   /**
-   * <code>int64 timestamp = 5;</code>
+   * <code>optional int64 timestamp = 5;</code>
    * @return The timestamp.
    */
   @java.lang.Override
@@ -730,14 +730,14 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object name_ = "";
     /**
-     * <code>string name = 3;</code>
+     * <code>optional string name = 3;</code>
      * @return Whether the name field is set.
      */
     public boolean hasName() {
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>string name = 3;</code>
+     * <code>optional string name = 3;</code>
      * @return The name.
      */
     public java.lang.String getName() {
@@ -753,7 +753,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string name = 3;</code>
+     * <code>optional string name = 3;</code>
      * @return The bytes for name.
      */
     public com.google.protobuf.ByteString
@@ -770,7 +770,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string name = 3;</code>
+     * <code>optional string name = 3;</code>
      * @param value The name to set.
      * @return This builder for chaining.
      */
@@ -785,7 +785,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string name = 3;</code>
+     * <code>optional string name = 3;</code>
      * @return This builder for chaining.
      */
     public Builder clearName() {
@@ -795,7 +795,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string name = 3;</code>
+     * <code>optional string name = 3;</code>
      * @param value The bytes for name to set.
      * @return This builder for chaining.
      */
@@ -813,14 +813,14 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object address_ = "";
     /**
-     * <code>string address = 4;</code>
+     * <code>optional string address = 4;</code>
      * @return Whether the address field is set.
      */
     public boolean hasAddress() {
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>string address = 4;</code>
+     * <code>optional string address = 4;</code>
      * @return The address.
      */
     public java.lang.String getAddress() {
@@ -836,7 +836,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string address = 4;</code>
+     * <code>optional string address = 4;</code>
      * @return The bytes for address.
      */
     public com.google.protobuf.ByteString
@@ -853,7 +853,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string address = 4;</code>
+     * <code>optional string address = 4;</code>
      * @param value The address to set.
      * @return This builder for chaining.
      */
@@ -868,7 +868,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string address = 4;</code>
+     * <code>optional string address = 4;</code>
      * @return This builder for chaining.
      */
     public Builder clearAddress() {
@@ -878,7 +878,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string address = 4;</code>
+     * <code>optional string address = 4;</code>
      * @param value The bytes for address to set.
      * @return This builder for chaining.
      */
@@ -896,7 +896,7 @@ private static final long serialVersionUID = 0L;
 
     private long timestamp_ ;
     /**
-     * <code>int64 timestamp = 5;</code>
+     * <code>optional int64 timestamp = 5;</code>
      * @return Whether the timestamp field is set.
      */
     @java.lang.Override
@@ -904,7 +904,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000004) != 0);
     }
     /**
-     * <code>int64 timestamp = 5;</code>
+     * <code>optional int64 timestamp = 5;</code>
      * @return The timestamp.
      */
     @java.lang.Override
@@ -912,7 +912,7 @@ private static final long serialVersionUID = 0L;
       return timestamp_;
     }
     /**
-     * <code>int64 timestamp = 5;</code>
+     * <code>optional int64 timestamp = 5;</code>
      * @param value The timestamp to set.
      * @return This builder for chaining.
      */
@@ -923,7 +923,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 timestamp = 5;</code>
+     * <code>optional int64 timestamp = 5;</code>
      * @return This builder for chaining.
      */
     public Builder clearTimestamp() {

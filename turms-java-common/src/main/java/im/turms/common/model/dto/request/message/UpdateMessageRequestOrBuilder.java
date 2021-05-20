@@ -31,17 +31,17 @@ public interface UpdateMessageRequestOrBuilder extends
   long getMessageId();
 
   /**
-   * <code>string text = 2;</code>
+   * <code>optional string text = 2;</code>
    * @return Whether the text field is set.
    */
   boolean hasText();
   /**
-   * <code>string text = 2;</code>
+   * <code>optional string text = 2;</code>
    * @return The text.
    */
   java.lang.String getText();
   /**
-   * <code>string text = 2;</code>
+   * <code>optional string text = 2;</code>
    * @return The bytes for text.
    */
   com.google.protobuf.ByteString
@@ -65,12 +65,12 @@ public interface UpdateMessageRequestOrBuilder extends
   com.google.protobuf.ByteString getRecords(int index);
 
   /**
-   * <code>int64 recall_date = 4;</code>
+   * <code>optional int64 recall_date = 4;</code>
    * @return Whether the recallDate field is set.
    */
   boolean hasRecallDate();
   /**
-   * <code>int64 recall_date = 4;</code>
+   * <code>optional int64 recall_date = 4;</code>
    * @return The recallDate.
    */
   long getRecallDate();

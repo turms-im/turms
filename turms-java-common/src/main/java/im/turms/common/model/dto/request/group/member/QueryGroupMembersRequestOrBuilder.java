@@ -31,12 +31,12 @@ public interface QueryGroupMembersRequestOrBuilder extends
   long getGroupId();
 
   /**
-   * <code>int64 last_updated_date = 2;</code>
+   * <code>optional int64 last_updated_date = 2;</code>
    * @return Whether the lastUpdatedDate field is set.
    */
   boolean hasLastUpdatedDate();
   /**
-   * <code>int64 last_updated_date = 2;</code>
+   * <code>optional int64 last_updated_date = 2;</code>
    * @return The lastUpdatedDate.
    */
   long getLastUpdatedDate();
@@ -59,12 +59,12 @@ public interface QueryGroupMembersRequestOrBuilder extends
   long getMemberIds(int index);
 
   /**
-   * <code>bool with_status = 4;</code>
+   * <code>optional bool with_status = 4;</code>
    * @return Whether the withStatus field is set.
    */
   boolean hasWithStatus();
   /**
-   * <code>bool with_status = 4;</code>
+   * <code>optional bool with_status = 4;</code>
    * @return The withStatus.
    */
   boolean getWithStatus();

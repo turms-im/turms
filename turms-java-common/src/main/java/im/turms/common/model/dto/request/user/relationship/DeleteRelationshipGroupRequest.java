@@ -123,7 +123,7 @@ private static final long serialVersionUID = 0L;
   public static final int TARGET_GROUP_INDEX_FIELD_NUMBER = 2;
   private int targetGroupIndex_;
   /**
-   * <code>int32 target_group_index = 2;</code>
+   * <code>optional int32 target_group_index = 2;</code>
    * @return Whether the targetGroupIndex field is set.
    */
   @java.lang.Override
@@ -131,7 +131,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>int32 target_group_index = 2;</code>
+   * <code>optional int32 target_group_index = 2;</code>
    * @return The targetGroupIndex.
    */
   @java.lang.Override
@@ -503,7 +503,7 @@ private static final long serialVersionUID = 0L;
 
     private int targetGroupIndex_ ;
     /**
-     * <code>int32 target_group_index = 2;</code>
+     * <code>optional int32 target_group_index = 2;</code>
      * @return Whether the targetGroupIndex field is set.
      */
     @java.lang.Override
@@ -511,7 +511,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>int32 target_group_index = 2;</code>
+     * <code>optional int32 target_group_index = 2;</code>
      * @return The targetGroupIndex.
      */
     @java.lang.Override
@@ -519,7 +519,7 @@ private static final long serialVersionUID = 0L;
       return targetGroupIndex_;
     }
     /**
-     * <code>int32 target_group_index = 2;</code>
+     * <code>optional int32 target_group_index = 2;</code>
      * @param value The targetGroupIndex to set.
      * @return This builder for chaining.
      */
@@ -530,7 +530,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int32 target_group_index = 2;</code>
+     * <code>optional int32 target_group_index = 2;</code>
      * @return This builder for chaining.
      */
     public Builder clearTargetGroupIndex() {

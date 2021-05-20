@@ -37,68 +37,68 @@ public interface CreateGroupRequestOrBuilder extends
       getNameBytes();
 
   /**
-   * <code>string intro = 2;</code>
+   * <code>optional string intro = 2;</code>
    * @return Whether the intro field is set.
    */
   boolean hasIntro();
   /**
-   * <code>string intro = 2;</code>
+   * <code>optional string intro = 2;</code>
    * @return The intro.
    */
   java.lang.String getIntro();
   /**
-   * <code>string intro = 2;</code>
+   * <code>optional string intro = 2;</code>
    * @return The bytes for intro.
    */
   com.google.protobuf.ByteString
       getIntroBytes();
 
   /**
-   * <code>string announcement = 3;</code>
+   * <code>optional string announcement = 3;</code>
    * @return Whether the announcement field is set.
    */
   boolean hasAnnouncement();
   /**
-   * <code>string announcement = 3;</code>
+   * <code>optional string announcement = 3;</code>
    * @return The announcement.
    */
   java.lang.String getAnnouncement();
   /**
-   * <code>string announcement = 3;</code>
+   * <code>optional string announcement = 3;</code>
    * @return The bytes for announcement.
    */
   com.google.protobuf.ByteString
       getAnnouncementBytes();
 
   /**
-   * <code>int32 minimum_score = 4;</code>
+   * <code>optional int32 minimum_score = 4;</code>
    * @return Whether the minimumScore field is set.
    */
   boolean hasMinimumScore();
   /**
-   * <code>int32 minimum_score = 4;</code>
+   * <code>optional int32 minimum_score = 4;</code>
    * @return The minimumScore.
    */
   int getMinimumScore();
 
   /**
-   * <code>int64 group_type_id = 5;</code>
+   * <code>optional int64 group_type_id = 5;</code>
    * @return Whether the groupTypeId field is set.
    */
   boolean hasGroupTypeId();
   /**
-   * <code>int64 group_type_id = 5;</code>
+   * <code>optional int64 group_type_id = 5;</code>
    * @return The groupTypeId.
    */
   long getGroupTypeId();
 
   /**
-   * <code>int64 mute_end_date = 6;</code>
+   * <code>optional int64 mute_end_date = 6;</code>
    * @return Whether the muteEndDate field is set.
    */
   boolean hasMuteEndDate();
   /**
-   * <code>int64 mute_end_date = 6;</code>
+   * <code>optional int64 mute_end_date = 6;</code>
    * @return The muteEndDate.
    */
   long getMuteEndDate();

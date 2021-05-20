@@ -31,23 +31,23 @@ public interface DeleteRelationshipRequestOrBuilder extends
   long getUserId();
 
   /**
-   * <code>int32 group_index = 2;</code>
+   * <code>optional int32 group_index = 2;</code>
    * @return Whether the groupIndex field is set.
    */
   boolean hasGroupIndex();
   /**
-   * <code>int32 group_index = 2;</code>
+   * <code>optional int32 group_index = 2;</code>
    * @return The groupIndex.
    */
   int getGroupIndex();
 
   /**
-   * <code>int32 target_group_index = 3;</code>
+   * <code>optional int32 target_group_index = 3;</code>
    * @return Whether the targetGroupIndex field is set.
    */
   boolean hasTargetGroupIndex();
   /**
-   * <code>int32 target_group_index = 3;</code>
+   * <code>optional int32 target_group_index = 3;</code>
    * @return The targetGroupIndex.
    */
   int getTargetGroupIndex();

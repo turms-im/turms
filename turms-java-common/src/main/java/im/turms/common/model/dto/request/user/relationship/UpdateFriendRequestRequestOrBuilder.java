@@ -42,17 +42,17 @@ public interface UpdateFriendRequestRequestOrBuilder extends
   im.turms.common.constant.ResponseAction getResponseAction();
 
   /**
-   * <code>string reason = 3;</code>
+   * <code>optional string reason = 3;</code>
    * @return Whether the reason field is set.
    */
   boolean hasReason();
   /**
-   * <code>string reason = 3;</code>
+   * <code>optional string reason = 3;</code>
    * @return The reason.
    */
   java.lang.String getReason();
   /**
-   * <code>string reason = 3;</code>
+   * <code>optional string reason = 3;</code>
    * @return The bytes for reason.
    */
   com.google.protobuf.ByteString

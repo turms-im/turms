@@ -25,84 +25,84 @@ public interface UserInfoOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>int64 id = 1;</code>
+   * <code>optional int64 id = 1;</code>
    * @return Whether the id field is set.
    */
   boolean hasId();
   /**
-   * <code>int64 id = 1;</code>
+   * <code>optional int64 id = 1;</code>
    * @return The id.
    */
   long getId();
 
   /**
-   * <code>string name = 2;</code>
+   * <code>optional string name = 2;</code>
    * @return Whether the name field is set.
    */
   boolean hasName();
   /**
-   * <code>string name = 2;</code>
+   * <code>optional string name = 2;</code>
    * @return The name.
    */
   java.lang.String getName();
   /**
-   * <code>string name = 2;</code>
+   * <code>optional string name = 2;</code>
    * @return The bytes for name.
    */
   com.google.protobuf.ByteString
       getNameBytes();
 
   /**
-   * <code>string intro = 3;</code>
+   * <code>optional string intro = 3;</code>
    * @return Whether the intro field is set.
    */
   boolean hasIntro();
   /**
-   * <code>string intro = 3;</code>
+   * <code>optional string intro = 3;</code>
    * @return The intro.
    */
   java.lang.String getIntro();
   /**
-   * <code>string intro = 3;</code>
+   * <code>optional string intro = 3;</code>
    * @return The bytes for intro.
    */
   com.google.protobuf.ByteString
       getIntroBytes();
 
   /**
-   * <code>int64 registration_date = 4;</code>
+   * <code>optional int64 registration_date = 4;</code>
    * @return Whether the registrationDate field is set.
    */
   boolean hasRegistrationDate();
   /**
-   * <code>int64 registration_date = 4;</code>
+   * <code>optional int64 registration_date = 4;</code>
    * @return The registrationDate.
    */
   long getRegistrationDate();
 
   /**
-   * <code>bool active = 5;</code>
+   * <code>optional bool active = 5;</code>
    * @return Whether the active field is set.
    */
   boolean hasActive();
   /**
-   * <code>bool active = 5;</code>
+   * <code>optional bool active = 5;</code>
    * @return The active.
    */
   boolean getActive();
 
   /**
-   * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
    * @return Whether the profileAccessStrategy field is set.
    */
   boolean hasProfileAccessStrategy();
   /**
-   * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
    * @return The enum numeric value on the wire for profileAccessStrategy.
    */
   int getProfileAccessStrategyValue();
   /**
-   * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 6;</code>
    * @return The profileAccessStrategy.
    */
   im.turms.common.constant.ProfileAccessStrategy getProfileAccessStrategy();

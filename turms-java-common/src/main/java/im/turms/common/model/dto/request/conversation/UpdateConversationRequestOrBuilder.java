@@ -25,23 +25,23 @@ public interface UpdateConversationRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>int64 target_id = 1;</code>
+   * <code>optional int64 target_id = 1;</code>
    * @return Whether the targetId field is set.
    */
   boolean hasTargetId();
   /**
-   * <code>int64 target_id = 1;</code>
+   * <code>optional int64 target_id = 1;</code>
    * @return The targetId.
    */
   long getTargetId();
 
   /**
-   * <code>int64 group_id = 2;</code>
+   * <code>optional int64 group_id = 2;</code>
    * @return Whether the groupId field is set.
    */
   boolean hasGroupId();
   /**
-   * <code>int64 group_id = 2;</code>
+   * <code>optional int64 group_id = 2;</code>
    * @return The groupId.
    */
   long getGroupId();

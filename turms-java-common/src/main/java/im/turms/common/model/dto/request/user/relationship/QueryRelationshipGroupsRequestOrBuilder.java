@@ -25,12 +25,12 @@ public interface QueryRelationshipGroupsRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>int64 last_updated_date = 1;</code>
+   * <code>optional int64 last_updated_date = 1;</code>
    * @return Whether the lastUpdatedDate field is set.
    */
   boolean hasLastUpdatedDate();
   /**
-   * <code>int64 last_updated_date = 1;</code>
+   * <code>optional int64 last_updated_date = 1;</code>
    * @return The lastUpdatedDate.
    */
   long getLastUpdatedDate();

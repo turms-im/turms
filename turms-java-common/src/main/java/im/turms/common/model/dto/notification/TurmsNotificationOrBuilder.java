@@ -30,7 +30,7 @@ public interface TurmsNotificationOrBuilder extends
    * it is used for clients to identify the response of the same request id in a session
    * </pre>
    *
-   * <code>int64 request_id = 1;</code>
+   * <code>optional int64 request_id = 1;</code>
    * @return Whether the requestId field is set.
    */
   boolean hasRequestId();
@@ -40,34 +40,34 @@ public interface TurmsNotificationOrBuilder extends
    * it is used for clients to identify the response of the same request id in a session
    * </pre>
    *
-   * <code>int64 request_id = 1;</code>
+   * <code>optional int64 request_id = 1;</code>
    * @return The requestId.
    */
   long getRequestId();
 
   /**
-   * <code>int32 code = 2;</code>
+   * <code>optional int32 code = 2;</code>
    * @return Whether the code field is set.
    */
   boolean hasCode();
   /**
-   * <code>int32 code = 2;</code>
+   * <code>optional int32 code = 2;</code>
    * @return The code.
    */
   int getCode();
 
   /**
-   * <code>string reason = 3;</code>
+   * <code>optional string reason = 3;</code>
    * @return Whether the reason field is set.
    */
   boolean hasReason();
   /**
-   * <code>string reason = 3;</code>
+   * <code>optional string reason = 3;</code>
    * @return The reason.
    */
   java.lang.String getReason();
   /**
-   * <code>string reason = 3;</code>
+   * <code>optional string reason = 3;</code>
    * @return The bytes for reason.
    */
   com.google.protobuf.ByteString
@@ -110,7 +110,7 @@ public interface TurmsNotificationOrBuilder extends
    * when recipients need the requester_id.
    * </pre>
    *
-   * <code>int64 requester_id = 6;</code>
+   * <code>optional int64 requester_id = 6;</code>
    * @return Whether the requesterId field is set.
    */
   boolean hasRequesterId();
@@ -121,18 +121,18 @@ public interface TurmsNotificationOrBuilder extends
    * when recipients need the requester_id.
    * </pre>
    *
-   * <code>int64 requester_id = 6;</code>
+   * <code>optional int64 requester_id = 6;</code>
    * @return The requesterId.
    */
   long getRequesterId();
 
   /**
-   * <code>int32 close_status = 7;</code>
+   * <code>optional int32 close_status = 7;</code>
    * @return Whether the closeStatus field is set.
    */
   boolean hasCloseStatus();
   /**
-   * <code>int32 close_status = 7;</code>
+   * <code>optional int32 close_status = 7;</code>
    * @return The closeStatus.
    */
   int getCloseStatus();

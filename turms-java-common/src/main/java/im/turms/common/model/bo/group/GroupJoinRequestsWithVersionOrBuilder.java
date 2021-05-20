@@ -49,12 +49,12 @@ public interface GroupJoinRequestsWithVersionOrBuilder extends
       int index);
 
   /**
-   * <code>int64 last_updated_date = 2;</code>
+   * <code>optional int64 last_updated_date = 2;</code>
    * @return Whether the lastUpdatedDate field is set.
    */
   boolean hasLastUpdatedDate();
   /**
-   * <code>int64 last_updated_date = 2;</code>
+   * <code>optional int64 last_updated_date = 2;</code>
    * @return The lastUpdatedDate.
    */
   long getLastUpdatedDate();

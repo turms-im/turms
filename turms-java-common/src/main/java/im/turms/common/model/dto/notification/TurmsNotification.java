@@ -4968,7 +4968,7 @@ private static final long serialVersionUID = 0L;
    * it is used for clients to identify the response of the same request id in a session
    * </pre>
    *
-   * <code>int64 request_id = 1;</code>
+   * <code>optional int64 request_id = 1;</code>
    * @return Whether the requestId field is set.
    */
   @java.lang.Override
@@ -4981,7 +4981,7 @@ private static final long serialVersionUID = 0L;
    * it is used for clients to identify the response of the same request id in a session
    * </pre>
    *
-   * <code>int64 request_id = 1;</code>
+   * <code>optional int64 request_id = 1;</code>
    * @return The requestId.
    */
   @java.lang.Override
@@ -4992,7 +4992,7 @@ private static final long serialVersionUID = 0L;
   public static final int CODE_FIELD_NUMBER = 2;
   private int code_;
   /**
-   * <code>int32 code = 2;</code>
+   * <code>optional int32 code = 2;</code>
    * @return Whether the code field is set.
    */
   @java.lang.Override
@@ -5000,7 +5000,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>int32 code = 2;</code>
+   * <code>optional int32 code = 2;</code>
    * @return The code.
    */
   @java.lang.Override
@@ -5011,7 +5011,7 @@ private static final long serialVersionUID = 0L;
   public static final int REASON_FIELD_NUMBER = 3;
   private volatile java.lang.Object reason_;
   /**
-   * <code>string reason = 3;</code>
+   * <code>optional string reason = 3;</code>
    * @return Whether the reason field is set.
    */
   @java.lang.Override
@@ -5019,7 +5019,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000004) != 0);
   }
   /**
-   * <code>string reason = 3;</code>
+   * <code>optional string reason = 3;</code>
    * @return The reason.
    */
   @java.lang.Override
@@ -5036,7 +5036,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string reason = 3;</code>
+   * <code>optional string reason = 3;</code>
    * @return The bytes for reason.
    */
   @java.lang.Override
@@ -5115,7 +5115,7 @@ private static final long serialVersionUID = 0L;
    * when recipients need the requester_id.
    * </pre>
    *
-   * <code>int64 requester_id = 6;</code>
+   * <code>optional int64 requester_id = 6;</code>
    * @return Whether the requesterId field is set.
    */
   @java.lang.Override
@@ -5129,7 +5129,7 @@ private static final long serialVersionUID = 0L;
    * when recipients need the requester_id.
    * </pre>
    *
-   * <code>int64 requester_id = 6;</code>
+   * <code>optional int64 requester_id = 6;</code>
    * @return The requesterId.
    */
   @java.lang.Override
@@ -5140,7 +5140,7 @@ private static final long serialVersionUID = 0L;
   public static final int CLOSE_STATUS_FIELD_NUMBER = 7;
   private int closeStatus_;
   /**
-   * <code>int32 close_status = 7;</code>
+   * <code>optional int32 close_status = 7;</code>
    * @return Whether the closeStatus field is set.
    */
   @java.lang.Override
@@ -5148,7 +5148,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000010) != 0);
   }
   /**
-   * <code>int32 close_status = 7;</code>
+   * <code>optional int32 close_status = 7;</code>
    * @return The closeStatus.
    */
   @java.lang.Override
@@ -5640,7 +5640,7 @@ private static final long serialVersionUID = 0L;
      * it is used for clients to identify the response of the same request id in a session
      * </pre>
      *
-     * <code>int64 request_id = 1;</code>
+     * <code>optional int64 request_id = 1;</code>
      * @return Whether the requestId field is set.
      */
     @java.lang.Override
@@ -5653,7 +5653,7 @@ private static final long serialVersionUID = 0L;
      * it is used for clients to identify the response of the same request id in a session
      * </pre>
      *
-     * <code>int64 request_id = 1;</code>
+     * <code>optional int64 request_id = 1;</code>
      * @return The requestId.
      */
     @java.lang.Override
@@ -5666,7 +5666,7 @@ private static final long serialVersionUID = 0L;
      * it is used for clients to identify the response of the same request id in a session
      * </pre>
      *
-     * <code>int64 request_id = 1;</code>
+     * <code>optional int64 request_id = 1;</code>
      * @param value The requestId to set.
      * @return This builder for chaining.
      */
@@ -5682,7 +5682,7 @@ private static final long serialVersionUID = 0L;
      * it is used for clients to identify the response of the same request id in a session
      * </pre>
      *
-     * <code>int64 request_id = 1;</code>
+     * <code>optional int64 request_id = 1;</code>
      * @return This builder for chaining.
      */
     public Builder clearRequestId() {
@@ -5694,7 +5694,7 @@ private static final long serialVersionUID = 0L;
 
     private int code_ ;
     /**
-     * <code>int32 code = 2;</code>
+     * <code>optional int32 code = 2;</code>
      * @return Whether the code field is set.
      */
     @java.lang.Override
@@ -5702,7 +5702,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>int32 code = 2;</code>
+     * <code>optional int32 code = 2;</code>
      * @return The code.
      */
     @java.lang.Override
@@ -5710,7 +5710,7 @@ private static final long serialVersionUID = 0L;
       return code_;
     }
     /**
-     * <code>int32 code = 2;</code>
+     * <code>optional int32 code = 2;</code>
      * @param value The code to set.
      * @return This builder for chaining.
      */
@@ -5721,7 +5721,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int32 code = 2;</code>
+     * <code>optional int32 code = 2;</code>
      * @return This builder for chaining.
      */
     public Builder clearCode() {
@@ -5733,14 +5733,14 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object reason_ = "";
     /**
-     * <code>string reason = 3;</code>
+     * <code>optional string reason = 3;</code>
      * @return Whether the reason field is set.
      */
     public boolean hasReason() {
       return ((bitField0_ & 0x00000004) != 0);
     }
     /**
-     * <code>string reason = 3;</code>
+     * <code>optional string reason = 3;</code>
      * @return The reason.
      */
     public java.lang.String getReason() {
@@ -5756,7 +5756,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string reason = 3;</code>
+     * <code>optional string reason = 3;</code>
      * @return The bytes for reason.
      */
     public com.google.protobuf.ByteString
@@ -5773,7 +5773,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string reason = 3;</code>
+     * <code>optional string reason = 3;</code>
      * @param value The reason to set.
      * @return This builder for chaining.
      */
@@ -5788,7 +5788,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string reason = 3;</code>
+     * <code>optional string reason = 3;</code>
      * @return This builder for chaining.
      */
     public Builder clearReason() {
@@ -5798,7 +5798,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string reason = 3;</code>
+     * <code>optional string reason = 3;</code>
      * @param value The bytes for reason to set.
      * @return This builder for chaining.
      */
@@ -6060,7 +6060,7 @@ private static final long serialVersionUID = 0L;
      * when recipients need the requester_id.
      * </pre>
      *
-     * <code>int64 requester_id = 6;</code>
+     * <code>optional int64 requester_id = 6;</code>
      * @return Whether the requesterId field is set.
      */
     @java.lang.Override
@@ -6074,7 +6074,7 @@ private static final long serialVersionUID = 0L;
      * when recipients need the requester_id.
      * </pre>
      *
-     * <code>int64 requester_id = 6;</code>
+     * <code>optional int64 requester_id = 6;</code>
      * @return The requesterId.
      */
     @java.lang.Override
@@ -6088,7 +6088,7 @@ private static final long serialVersionUID = 0L;
      * when recipients need the requester_id.
      * </pre>
      *
-     * <code>int64 requester_id = 6;</code>
+     * <code>optional int64 requester_id = 6;</code>
      * @param value The requesterId to set.
      * @return This builder for chaining.
      */
@@ -6105,7 +6105,7 @@ private static final long serialVersionUID = 0L;
      * when recipients need the requester_id.
      * </pre>
      *
-     * <code>int64 requester_id = 6;</code>
+     * <code>optional int64 requester_id = 6;</code>
      * @return This builder for chaining.
      */
     public Builder clearRequesterId() {
@@ -6117,7 +6117,7 @@ private static final long serialVersionUID = 0L;
 
     private int closeStatus_ ;
     /**
-     * <code>int32 close_status = 7;</code>
+     * <code>optional int32 close_status = 7;</code>
      * @return Whether the closeStatus field is set.
      */
     @java.lang.Override
@@ -6125,7 +6125,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000010) != 0);
     }
     /**
-     * <code>int32 close_status = 7;</code>
+     * <code>optional int32 close_status = 7;</code>
      * @return The closeStatus.
      */
     @java.lang.Override
@@ -6133,7 +6133,7 @@ private static final long serialVersionUID = 0L;
       return closeStatus_;
     }
     /**
-     * <code>int32 close_status = 7;</code>
+     * <code>optional int32 close_status = 7;</code>
      * @param value The closeStatus to set.
      * @return This builder for chaining.
      */
@@ -6144,7 +6144,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int32 close_status = 7;</code>
+     * <code>optional int32 close_status = 7;</code>
      * @return This builder for chaining.
      */
     public Builder clearCloseStatus() {

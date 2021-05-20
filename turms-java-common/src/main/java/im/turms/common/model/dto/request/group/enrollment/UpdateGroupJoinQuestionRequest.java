@@ -143,7 +143,7 @@ private static final long serialVersionUID = 0L;
   public static final int QUESTION_FIELD_NUMBER = 2;
   private volatile java.lang.Object question_;
   /**
-   * <code>string question = 2;</code>
+   * <code>optional string question = 2;</code>
    * @return Whether the question field is set.
    */
   @java.lang.Override
@@ -151,7 +151,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>string question = 2;</code>
+   * <code>optional string question = 2;</code>
    * @return The question.
    */
   @java.lang.Override
@@ -168,7 +168,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string question = 2;</code>
+   * <code>optional string question = 2;</code>
    * @return The bytes for question.
    */
   @java.lang.Override
@@ -224,7 +224,7 @@ private static final long serialVersionUID = 0L;
   public static final int SCORE_FIELD_NUMBER = 4;
   private int score_;
   /**
-   * <code>int32 score = 4;</code>
+   * <code>optional int32 score = 4;</code>
    * @return Whether the score field is set.
    */
   @java.lang.Override
@@ -232,7 +232,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>int32 score = 4;</code>
+   * <code>optional int32 score = 4;</code>
    * @return The score.
    */
   @java.lang.Override
@@ -665,14 +665,14 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object question_ = "";
     /**
-     * <code>string question = 2;</code>
+     * <code>optional string question = 2;</code>
      * @return Whether the question field is set.
      */
     public boolean hasQuestion() {
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>string question = 2;</code>
+     * <code>optional string question = 2;</code>
      * @return The question.
      */
     public java.lang.String getQuestion() {
@@ -688,7 +688,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string question = 2;</code>
+     * <code>optional string question = 2;</code>
      * @return The bytes for question.
      */
     public com.google.protobuf.ByteString
@@ -705,7 +705,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string question = 2;</code>
+     * <code>optional string question = 2;</code>
      * @param value The question to set.
      * @return This builder for chaining.
      */
@@ -720,7 +720,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string question = 2;</code>
+     * <code>optional string question = 2;</code>
      * @return This builder for chaining.
      */
     public Builder clearQuestion() {
@@ -730,7 +730,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string question = 2;</code>
+     * <code>optional string question = 2;</code>
      * @param value The bytes for question to set.
      * @return This builder for chaining.
      */
@@ -858,7 +858,7 @@ private static final long serialVersionUID = 0L;
 
     private int score_ ;
     /**
-     * <code>int32 score = 4;</code>
+     * <code>optional int32 score = 4;</code>
      * @return Whether the score field is set.
      */
     @java.lang.Override
@@ -866,7 +866,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000004) != 0);
     }
     /**
-     * <code>int32 score = 4;</code>
+     * <code>optional int32 score = 4;</code>
      * @return The score.
      */
     @java.lang.Override
@@ -874,7 +874,7 @@ private static final long serialVersionUID = 0L;
       return score_;
     }
     /**
-     * <code>int32 score = 4;</code>
+     * <code>optional int32 score = 4;</code>
      * @param value The score to set.
      * @return This builder for chaining.
      */
@@ -885,7 +885,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int32 score = 4;</code>
+     * <code>optional int32 score = 4;</code>
      * @return This builder for chaining.
      */
     public Builder clearScore() {

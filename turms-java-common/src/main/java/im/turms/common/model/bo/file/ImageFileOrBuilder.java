@@ -25,27 +25,27 @@ public interface ImageFileOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
+   * <code>optional .im.turms.proto.ImageFile.Description description = 1;</code>
    * @return Whether the description field is set.
    */
   boolean hasDescription();
   /**
-   * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
+   * <code>optional .im.turms.proto.ImageFile.Description description = 1;</code>
    * @return The description.
    */
   im.turms.common.model.bo.file.ImageFile.Description getDescription();
   /**
-   * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
+   * <code>optional .im.turms.proto.ImageFile.Description description = 1;</code>
    */
   im.turms.common.model.bo.file.ImageFile.DescriptionOrBuilder getDescriptionOrBuilder();
 
   /**
-   * <code>bytes data = 2;</code>
+   * <code>optional bytes data = 2;</code>
    * @return Whether the data field is set.
    */
   boolean hasData();
   /**
-   * <code>bytes data = 2;</code>
+   * <code>optional bytes data = 2;</code>
    * @return The data.
    */
   com.google.protobuf.ByteString getData();

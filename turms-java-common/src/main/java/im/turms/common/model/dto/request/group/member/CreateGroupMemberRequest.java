@@ -153,7 +153,7 @@ private static final long serialVersionUID = 0L;
   public static final int NAME_FIELD_NUMBER = 3;
   private volatile java.lang.Object name_;
   /**
-   * <code>string name = 3;</code>
+   * <code>optional string name = 3;</code>
    * @return Whether the name field is set.
    */
   @java.lang.Override
@@ -161,7 +161,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>string name = 3;</code>
+   * <code>optional string name = 3;</code>
    * @return The name.
    */
   @java.lang.Override
@@ -178,7 +178,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string name = 3;</code>
+   * <code>optional string name = 3;</code>
    * @return The bytes for name.
    */
   @java.lang.Override
@@ -218,7 +218,7 @@ private static final long serialVersionUID = 0L;
   public static final int MUTE_END_DATE_FIELD_NUMBER = 5;
   private long muteEndDate_;
   /**
-   * <code>int64 mute_end_date = 5;</code>
+   * <code>optional int64 mute_end_date = 5;</code>
    * @return Whether the muteEndDate field is set.
    */
   @java.lang.Override
@@ -226,7 +226,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>int64 mute_end_date = 5;</code>
+   * <code>optional int64 mute_end_date = 5;</code>
    * @return The muteEndDate.
    */
   @java.lang.Override
@@ -691,14 +691,14 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object name_ = "";
     /**
-     * <code>string name = 3;</code>
+     * <code>optional string name = 3;</code>
      * @return Whether the name field is set.
      */
     public boolean hasName() {
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>string name = 3;</code>
+     * <code>optional string name = 3;</code>
      * @return The name.
      */
     public java.lang.String getName() {
@@ -714,7 +714,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string name = 3;</code>
+     * <code>optional string name = 3;</code>
      * @return The bytes for name.
      */
     public com.google.protobuf.ByteString
@@ -731,7 +731,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string name = 3;</code>
+     * <code>optional string name = 3;</code>
      * @param value The name to set.
      * @return This builder for chaining.
      */
@@ -746,7 +746,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string name = 3;</code>
+     * <code>optional string name = 3;</code>
      * @return This builder for chaining.
      */
     public Builder clearName() {
@@ -756,7 +756,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string name = 3;</code>
+     * <code>optional string name = 3;</code>
      * @param value The bytes for name to set.
      * @return This builder for chaining.
      */
@@ -828,7 +828,7 @@ private static final long serialVersionUID = 0L;
 
     private long muteEndDate_ ;
     /**
-     * <code>int64 mute_end_date = 5;</code>
+     * <code>optional int64 mute_end_date = 5;</code>
      * @return Whether the muteEndDate field is set.
      */
     @java.lang.Override
@@ -836,7 +836,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>int64 mute_end_date = 5;</code>
+     * <code>optional int64 mute_end_date = 5;</code>
      * @return The muteEndDate.
      */
     @java.lang.Override
@@ -844,7 +844,7 @@ private static final long serialVersionUID = 0L;
       return muteEndDate_;
     }
     /**
-     * <code>int64 mute_end_date = 5;</code>
+     * <code>optional int64 mute_end_date = 5;</code>
      * @param value The muteEndDate to set.
      * @return This builder for chaining.
      */
@@ -855,7 +855,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 mute_end_date = 5;</code>
+     * <code>optional int64 mute_end_date = 5;</code>
      * @return This builder for chaining.
      */
     public Builder clearMuteEndDate() {

@@ -25,68 +25,68 @@ public interface UpdateUserRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>string password = 1;</code>
+   * <code>optional string password = 1;</code>
    * @return Whether the password field is set.
    */
   boolean hasPassword();
   /**
-   * <code>string password = 1;</code>
+   * <code>optional string password = 1;</code>
    * @return The password.
    */
   java.lang.String getPassword();
   /**
-   * <code>string password = 1;</code>
+   * <code>optional string password = 1;</code>
    * @return The bytes for password.
    */
   com.google.protobuf.ByteString
       getPasswordBytes();
 
   /**
-   * <code>string name = 2;</code>
+   * <code>optional string name = 2;</code>
    * @return Whether the name field is set.
    */
   boolean hasName();
   /**
-   * <code>string name = 2;</code>
+   * <code>optional string name = 2;</code>
    * @return The name.
    */
   java.lang.String getName();
   /**
-   * <code>string name = 2;</code>
+   * <code>optional string name = 2;</code>
    * @return The bytes for name.
    */
   com.google.protobuf.ByteString
       getNameBytes();
 
   /**
-   * <code>string intro = 3;</code>
+   * <code>optional string intro = 3;</code>
    * @return Whether the intro field is set.
    */
   boolean hasIntro();
   /**
-   * <code>string intro = 3;</code>
+   * <code>optional string intro = 3;</code>
    * @return The intro.
    */
   java.lang.String getIntro();
   /**
-   * <code>string intro = 3;</code>
+   * <code>optional string intro = 3;</code>
    * @return The bytes for intro.
    */
   com.google.protobuf.ByteString
       getIntroBytes();
 
   /**
-   * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
    * @return Whether the profileAccessStrategy field is set.
    */
   boolean hasProfileAccessStrategy();
   /**
-   * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
    * @return The enum numeric value on the wire for profileAccessStrategy.
    */
   int getProfileAccessStrategyValue();
   /**
-   * <code>.im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
+   * <code>optional .im.turms.proto.ProfileAccessStrategy profile_access_strategy = 4;</code>
    * @return The profileAccessStrategy.
    */
   im.turms.common.constant.ProfileAccessStrategy getProfileAccessStrategy();

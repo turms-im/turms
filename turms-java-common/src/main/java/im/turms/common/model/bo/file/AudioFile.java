@@ -134,39 +134,39 @@ private static final long serialVersionUID = 0L;
         getUrlBytes();
 
     /**
-     * <code>int32 duration = 2;</code>
+     * <code>optional int32 duration = 2;</code>
      * @return Whether the duration field is set.
      */
     boolean hasDuration();
     /**
-     * <code>int32 duration = 2;</code>
+     * <code>optional int32 duration = 2;</code>
      * @return The duration.
      */
     int getDuration();
 
     /**
-     * <code>int32 size = 3;</code>
+     * <code>optional int32 size = 3;</code>
      * @return Whether the size field is set.
      */
     boolean hasSize();
     /**
-     * <code>int32 size = 3;</code>
+     * <code>optional int32 size = 3;</code>
      * @return The size.
      */
     int getSize();
 
     /**
-     * <code>string format = 4;</code>
+     * <code>optional string format = 4;</code>
      * @return Whether the format field is set.
      */
     boolean hasFormat();
     /**
-     * <code>string format = 4;</code>
+     * <code>optional string format = 4;</code>
      * @return The format.
      */
     java.lang.String getFormat();
     /**
-     * <code>string format = 4;</code>
+     * <code>optional string format = 4;</code>
      * @return The bytes for format.
      */
     com.google.protobuf.ByteString
@@ -316,7 +316,7 @@ private static final long serialVersionUID = 0L;
     public static final int DURATION_FIELD_NUMBER = 2;
     private int duration_;
     /**
-     * <code>int32 duration = 2;</code>
+     * <code>optional int32 duration = 2;</code>
      * @return Whether the duration field is set.
      */
     @java.lang.Override
@@ -324,7 +324,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>int32 duration = 2;</code>
+     * <code>optional int32 duration = 2;</code>
      * @return The duration.
      */
     @java.lang.Override
@@ -335,7 +335,7 @@ private static final long serialVersionUID = 0L;
     public static final int SIZE_FIELD_NUMBER = 3;
     private int size_;
     /**
-     * <code>int32 size = 3;</code>
+     * <code>optional int32 size = 3;</code>
      * @return Whether the size field is set.
      */
     @java.lang.Override
@@ -343,7 +343,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>int32 size = 3;</code>
+     * <code>optional int32 size = 3;</code>
      * @return The size.
      */
     @java.lang.Override
@@ -354,7 +354,7 @@ private static final long serialVersionUID = 0L;
     public static final int FORMAT_FIELD_NUMBER = 4;
     private volatile java.lang.Object format_;
     /**
-     * <code>string format = 4;</code>
+     * <code>optional string format = 4;</code>
      * @return Whether the format field is set.
      */
     @java.lang.Override
@@ -362,7 +362,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000004) != 0);
     }
     /**
-     * <code>string format = 4;</code>
+     * <code>optional string format = 4;</code>
      * @return The format.
      */
     @java.lang.Override
@@ -379,7 +379,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string format = 4;</code>
+     * <code>optional string format = 4;</code>
      * @return The bytes for format.
      */
     @java.lang.Override
@@ -857,7 +857,7 @@ private static final long serialVersionUID = 0L;
 
       private int duration_ ;
       /**
-       * <code>int32 duration = 2;</code>
+       * <code>optional int32 duration = 2;</code>
        * @return Whether the duration field is set.
        */
       @java.lang.Override
@@ -865,7 +865,7 @@ private static final long serialVersionUID = 0L;
         return ((bitField0_ & 0x00000001) != 0);
       }
       /**
-       * <code>int32 duration = 2;</code>
+       * <code>optional int32 duration = 2;</code>
        * @return The duration.
        */
       @java.lang.Override
@@ -873,7 +873,7 @@ private static final long serialVersionUID = 0L;
         return duration_;
       }
       /**
-       * <code>int32 duration = 2;</code>
+       * <code>optional int32 duration = 2;</code>
        * @param value The duration to set.
        * @return This builder for chaining.
        */
@@ -884,7 +884,7 @@ private static final long serialVersionUID = 0L;
         return this;
       }
       /**
-       * <code>int32 duration = 2;</code>
+       * <code>optional int32 duration = 2;</code>
        * @return This builder for chaining.
        */
       public Builder clearDuration() {
@@ -896,7 +896,7 @@ private static final long serialVersionUID = 0L;
 
       private int size_ ;
       /**
-       * <code>int32 size = 3;</code>
+       * <code>optional int32 size = 3;</code>
        * @return Whether the size field is set.
        */
       @java.lang.Override
@@ -904,7 +904,7 @@ private static final long serialVersionUID = 0L;
         return ((bitField0_ & 0x00000002) != 0);
       }
       /**
-       * <code>int32 size = 3;</code>
+       * <code>optional int32 size = 3;</code>
        * @return The size.
        */
       @java.lang.Override
@@ -912,7 +912,7 @@ private static final long serialVersionUID = 0L;
         return size_;
       }
       /**
-       * <code>int32 size = 3;</code>
+       * <code>optional int32 size = 3;</code>
        * @param value The size to set.
        * @return This builder for chaining.
        */
@@ -923,7 +923,7 @@ private static final long serialVersionUID = 0L;
         return this;
       }
       /**
-       * <code>int32 size = 3;</code>
+       * <code>optional int32 size = 3;</code>
        * @return This builder for chaining.
        */
       public Builder clearSize() {
@@ -935,14 +935,14 @@ private static final long serialVersionUID = 0L;
 
       private java.lang.Object format_ = "";
       /**
-       * <code>string format = 4;</code>
+       * <code>optional string format = 4;</code>
        * @return Whether the format field is set.
        */
       public boolean hasFormat() {
         return ((bitField0_ & 0x00000004) != 0);
       }
       /**
-       * <code>string format = 4;</code>
+       * <code>optional string format = 4;</code>
        * @return The format.
        */
       public java.lang.String getFormat() {
@@ -958,7 +958,7 @@ private static final long serialVersionUID = 0L;
         }
       }
       /**
-       * <code>string format = 4;</code>
+       * <code>optional string format = 4;</code>
        * @return The bytes for format.
        */
       public com.google.protobuf.ByteString
@@ -975,7 +975,7 @@ private static final long serialVersionUID = 0L;
         }
       }
       /**
-       * <code>string format = 4;</code>
+       * <code>optional string format = 4;</code>
        * @param value The format to set.
        * @return This builder for chaining.
        */
@@ -990,7 +990,7 @@ private static final long serialVersionUID = 0L;
         return this;
       }
       /**
-       * <code>string format = 4;</code>
+       * <code>optional string format = 4;</code>
        * @return This builder for chaining.
        */
       public Builder clearFormat() {
@@ -1000,7 +1000,7 @@ private static final long serialVersionUID = 0L;
         return this;
       }
       /**
-       * <code>string format = 4;</code>
+       * <code>optional string format = 4;</code>
        * @param value The bytes for format to set.
        * @return This builder for chaining.
        */
@@ -1072,7 +1072,7 @@ private static final long serialVersionUID = 0L;
   public static final int DESCRIPTION_FIELD_NUMBER = 1;
   private im.turms.common.model.bo.file.AudioFile.Description description_;
   /**
-   * <code>.im.turms.proto.AudioFile.Description description = 1;</code>
+   * <code>optional .im.turms.proto.AudioFile.Description description = 1;</code>
    * @return Whether the description field is set.
    */
   @java.lang.Override
@@ -1080,7 +1080,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>.im.turms.proto.AudioFile.Description description = 1;</code>
+   * <code>optional .im.turms.proto.AudioFile.Description description = 1;</code>
    * @return The description.
    */
   @java.lang.Override
@@ -1088,7 +1088,7 @@ private static final long serialVersionUID = 0L;
     return description_ == null ? im.turms.common.model.bo.file.AudioFile.Description.getDefaultInstance() : description_;
   }
   /**
-   * <code>.im.turms.proto.AudioFile.Description description = 1;</code>
+   * <code>optional .im.turms.proto.AudioFile.Description description = 1;</code>
    */
   @java.lang.Override
   public im.turms.common.model.bo.file.AudioFile.DescriptionOrBuilder getDescriptionOrBuilder() {
@@ -1098,7 +1098,7 @@ private static final long serialVersionUID = 0L;
   public static final int DATA_FIELD_NUMBER = 2;
   private com.google.protobuf.ByteString data_;
   /**
-   * <code>bytes data = 2;</code>
+   * <code>optional bytes data = 2;</code>
    * @return Whether the data field is set.
    */
   @java.lang.Override
@@ -1106,7 +1106,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>bytes data = 2;</code>
+   * <code>optional bytes data = 2;</code>
    * @return The data.
    */
   @java.lang.Override
@@ -1466,14 +1466,14 @@ private static final long serialVersionUID = 0L;
     private com.google.protobuf.SingleFieldBuilderV3<
         im.turms.common.model.bo.file.AudioFile.Description, im.turms.common.model.bo.file.AudioFile.Description.Builder, im.turms.common.model.bo.file.AudioFile.DescriptionOrBuilder> descriptionBuilder_;
     /**
-     * <code>.im.turms.proto.AudioFile.Description description = 1;</code>
+     * <code>optional .im.turms.proto.AudioFile.Description description = 1;</code>
      * @return Whether the description field is set.
      */
     public boolean hasDescription() {
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>.im.turms.proto.AudioFile.Description description = 1;</code>
+     * <code>optional .im.turms.proto.AudioFile.Description description = 1;</code>
      * @return The description.
      */
     public im.turms.common.model.bo.file.AudioFile.Description getDescription() {
@@ -1484,7 +1484,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.im.turms.proto.AudioFile.Description description = 1;</code>
+     * <code>optional .im.turms.proto.AudioFile.Description description = 1;</code>
      */
     public Builder setDescription(im.turms.common.model.bo.file.AudioFile.Description value) {
       if (descriptionBuilder_ == null) {
@@ -1500,7 +1500,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.AudioFile.Description description = 1;</code>
+     * <code>optional .im.turms.proto.AudioFile.Description description = 1;</code>
      */
     public Builder setDescription(
         im.turms.common.model.bo.file.AudioFile.Description.Builder builderForValue) {
@@ -1514,7 +1514,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.AudioFile.Description description = 1;</code>
+     * <code>optional .im.turms.proto.AudioFile.Description description = 1;</code>
      */
     public Builder mergeDescription(im.turms.common.model.bo.file.AudioFile.Description value) {
       if (descriptionBuilder_ == null) {
@@ -1534,7 +1534,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.AudioFile.Description description = 1;</code>
+     * <code>optional .im.turms.proto.AudioFile.Description description = 1;</code>
      */
     public Builder clearDescription() {
       if (descriptionBuilder_ == null) {
@@ -1547,7 +1547,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.AudioFile.Description description = 1;</code>
+     * <code>optional .im.turms.proto.AudioFile.Description description = 1;</code>
      */
     public im.turms.common.model.bo.file.AudioFile.Description.Builder getDescriptionBuilder() {
       bitField0_ |= 0x00000001;
@@ -1555,7 +1555,7 @@ private static final long serialVersionUID = 0L;
       return getDescriptionFieldBuilder().getBuilder();
     }
     /**
-     * <code>.im.turms.proto.AudioFile.Description description = 1;</code>
+     * <code>optional .im.turms.proto.AudioFile.Description description = 1;</code>
      */
     public im.turms.common.model.bo.file.AudioFile.DescriptionOrBuilder getDescriptionOrBuilder() {
       if (descriptionBuilder_ != null) {
@@ -1566,7 +1566,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.im.turms.proto.AudioFile.Description description = 1;</code>
+     * <code>optional .im.turms.proto.AudioFile.Description description = 1;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         im.turms.common.model.bo.file.AudioFile.Description, im.turms.common.model.bo.file.AudioFile.Description.Builder, im.turms.common.model.bo.file.AudioFile.DescriptionOrBuilder>
@@ -1584,7 +1584,7 @@ private static final long serialVersionUID = 0L;
 
     private com.google.protobuf.ByteString data_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>bytes data = 2;</code>
+     * <code>optional bytes data = 2;</code>
      * @return Whether the data field is set.
      */
     @java.lang.Override
@@ -1592,7 +1592,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>bytes data = 2;</code>
+     * <code>optional bytes data = 2;</code>
      * @return The data.
      */
     @java.lang.Override
@@ -1600,7 +1600,7 @@ private static final long serialVersionUID = 0L;
       return data_;
     }
     /**
-     * <code>bytes data = 2;</code>
+     * <code>optional bytes data = 2;</code>
      * @param value The data to set.
      * @return This builder for chaining.
      */
@@ -1614,7 +1614,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>bytes data = 2;</code>
+     * <code>optional bytes data = 2;</code>
      * @return This builder for chaining.
      */
     public Builder clearData() {

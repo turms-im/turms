@@ -25,56 +25,56 @@ public interface UserRelationshipOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>int64 owner_id = 1;</code>
+   * <code>optional int64 owner_id = 1;</code>
    * @return Whether the ownerId field is set.
    */
   boolean hasOwnerId();
   /**
-   * <code>int64 owner_id = 1;</code>
+   * <code>optional int64 owner_id = 1;</code>
    * @return The ownerId.
    */
   long getOwnerId();
 
   /**
-   * <code>int64 related_user_id = 2;</code>
+   * <code>optional int64 related_user_id = 2;</code>
    * @return Whether the relatedUserId field is set.
    */
   boolean hasRelatedUserId();
   /**
-   * <code>int64 related_user_id = 2;</code>
+   * <code>optional int64 related_user_id = 2;</code>
    * @return The relatedUserId.
    */
   long getRelatedUserId();
 
   /**
-   * <code>int64 block_date = 3;</code>
+   * <code>optional int64 block_date = 3;</code>
    * @return Whether the blockDate field is set.
    */
   boolean hasBlockDate();
   /**
-   * <code>int64 block_date = 3;</code>
+   * <code>optional int64 block_date = 3;</code>
    * @return The blockDate.
    */
   long getBlockDate();
 
   /**
-   * <code>int64 group_index = 4;</code>
+   * <code>optional int64 group_index = 4;</code>
    * @return Whether the groupIndex field is set.
    */
   boolean hasGroupIndex();
   /**
-   * <code>int64 group_index = 4;</code>
+   * <code>optional int64 group_index = 4;</code>
    * @return The groupIndex.
    */
   long getGroupIndex();
 
   /**
-   * <code>int64 establishment_date = 5;</code>
+   * <code>optional int64 establishment_date = 5;</code>
    * @return Whether the establishmentDate field is set.
    */
   boolean hasEstablishmentDate();
   /**
-   * <code>int64 establishment_date = 5;</code>
+   * <code>optional int64 establishment_date = 5;</code>
    * @return The establishmentDate.
    */
   long getEstablishmentDate();

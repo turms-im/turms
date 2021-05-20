@@ -25,12 +25,12 @@ public interface CreateMessageRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>int64 message_id = 1;</code>
+   * <code>optional int64 message_id = 1;</code>
    * @return Whether the messageId field is set.
    */
   boolean hasMessageId();
   /**
-   * <code>int64 message_id = 1;</code>
+   * <code>optional int64 message_id = 1;</code>
    * @return The messageId.
    */
   long getMessageId();
@@ -41,7 +41,7 @@ public interface CreateMessageRequestOrBuilder extends
    * or turms server will return an error
    * </pre>
    *
-   * <code>bool is_system_message = 2;</code>
+   * <code>optional bool is_system_message = 2;</code>
    * @return Whether the isSystemMessage field is set.
    */
   boolean hasIsSystemMessage();
@@ -51,56 +51,56 @@ public interface CreateMessageRequestOrBuilder extends
    * or turms server will return an error
    * </pre>
    *
-   * <code>bool is_system_message = 2;</code>
+   * <code>optional bool is_system_message = 2;</code>
    * @return The isSystemMessage.
    */
   boolean getIsSystemMessage();
 
   /**
-   * <code>int64 group_id = 3;</code>
+   * <code>optional int64 group_id = 3;</code>
    * @return Whether the groupId field is set.
    */
   boolean hasGroupId();
   /**
-   * <code>int64 group_id = 3;</code>
+   * <code>optional int64 group_id = 3;</code>
    * @return The groupId.
    */
   long getGroupId();
 
   /**
-   * <code>int64 recipient_id = 4;</code>
+   * <code>optional int64 recipient_id = 4;</code>
    * @return Whether the recipientId field is set.
    */
   boolean hasRecipientId();
   /**
-   * <code>int64 recipient_id = 4;</code>
+   * <code>optional int64 recipient_id = 4;</code>
    * @return The recipientId.
    */
   long getRecipientId();
 
   /**
-   * <code>int64 delivery_date = 5;</code>
+   * <code>optional int64 delivery_date = 5;</code>
    * @return Whether the deliveryDate field is set.
    */
   boolean hasDeliveryDate();
   /**
-   * <code>int64 delivery_date = 5;</code>
+   * <code>optional int64 delivery_date = 5;</code>
    * @return The deliveryDate.
    */
   long getDeliveryDate();
 
   /**
-   * <code>string text = 6;</code>
+   * <code>optional string text = 6;</code>
    * @return Whether the text field is set.
    */
   boolean hasText();
   /**
-   * <code>string text = 6;</code>
+   * <code>optional string text = 6;</code>
    * @return The text.
    */
   java.lang.String getText();
   /**
-   * <code>string text = 6;</code>
+   * <code>optional string text = 6;</code>
    * @return The bytes for text.
    */
   com.google.protobuf.ByteString
@@ -124,12 +124,12 @@ public interface CreateMessageRequestOrBuilder extends
   com.google.protobuf.ByteString getRecords(int index);
 
   /**
-   * <code>int32 burn_after = 8;</code>
+   * <code>optional int32 burn_after = 8;</code>
    * @return Whether the burnAfter field is set.
    */
   boolean hasBurnAfter();
   /**
-   * <code>int32 burn_after = 8;</code>
+   * <code>optional int32 burn_after = 8;</code>
    * @return The burnAfter.
    */
   int getBurnAfter();

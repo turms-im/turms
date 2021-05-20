@@ -37,23 +37,23 @@ public interface QueryUserIdsNearbyRequestOrBuilder extends
   float getLongitude();
 
   /**
-   * <code>float distance = 3;</code>
+   * <code>optional float distance = 3;</code>
    * @return Whether the distance field is set.
    */
   boolean hasDistance();
   /**
-   * <code>float distance = 3;</code>
+   * <code>optional float distance = 3;</code>
    * @return The distance.
    */
   float getDistance();
 
   /**
-   * <code>int32 max_number = 4;</code>
+   * <code>optional int32 max_number = 4;</code>
    * @return Whether the maxNumber field is set.
    */
   boolean hasMaxNumber();
   /**
-   * <code>int32 max_number = 4;</code>
+   * <code>optional int32 max_number = 4;</code>
    * @return The maxNumber.
    */
   int getMaxNumber();

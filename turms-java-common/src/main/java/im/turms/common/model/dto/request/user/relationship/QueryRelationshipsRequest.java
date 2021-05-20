@@ -170,7 +170,7 @@ private static final long serialVersionUID = 0L;
   public static final int BLOCKED_FIELD_NUMBER = 2;
   private boolean blocked_;
   /**
-   * <code>bool blocked = 2;</code>
+   * <code>optional bool blocked = 2;</code>
    * @return Whether the blocked field is set.
    */
   @java.lang.Override
@@ -178,7 +178,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>bool blocked = 2;</code>
+   * <code>optional bool blocked = 2;</code>
    * @return The blocked.
    */
   @java.lang.Override
@@ -189,7 +189,7 @@ private static final long serialVersionUID = 0L;
   public static final int GROUP_INDEX_FIELD_NUMBER = 3;
   private int groupIndex_;
   /**
-   * <code>int32 group_index = 3;</code>
+   * <code>optional int32 group_index = 3;</code>
    * @return Whether the groupIndex field is set.
    */
   @java.lang.Override
@@ -197,7 +197,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>int32 group_index = 3;</code>
+   * <code>optional int32 group_index = 3;</code>
    * @return The groupIndex.
    */
   @java.lang.Override
@@ -208,7 +208,7 @@ private static final long serialVersionUID = 0L;
   public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 4;
   private long lastUpdatedDate_;
   /**
-   * <code>int64 last_updated_date = 4;</code>
+   * <code>optional int64 last_updated_date = 4;</code>
    * @return Whether the lastUpdatedDate field is set.
    */
   @java.lang.Override
@@ -216,7 +216,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000004) != 0);
   }
   /**
-   * <code>int64 last_updated_date = 4;</code>
+   * <code>optional int64 last_updated_date = 4;</code>
    * @return The lastUpdatedDate.
    */
   @java.lang.Override
@@ -716,7 +716,7 @@ private static final long serialVersionUID = 0L;
 
     private boolean blocked_ ;
     /**
-     * <code>bool blocked = 2;</code>
+     * <code>optional bool blocked = 2;</code>
      * @return Whether the blocked field is set.
      */
     @java.lang.Override
@@ -724,7 +724,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>bool blocked = 2;</code>
+     * <code>optional bool blocked = 2;</code>
      * @return The blocked.
      */
     @java.lang.Override
@@ -732,7 +732,7 @@ private static final long serialVersionUID = 0L;
       return blocked_;
     }
     /**
-     * <code>bool blocked = 2;</code>
+     * <code>optional bool blocked = 2;</code>
      * @param value The blocked to set.
      * @return This builder for chaining.
      */
@@ -743,7 +743,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>bool blocked = 2;</code>
+     * <code>optional bool blocked = 2;</code>
      * @return This builder for chaining.
      */
     public Builder clearBlocked() {
@@ -755,7 +755,7 @@ private static final long serialVersionUID = 0L;
 
     private int groupIndex_ ;
     /**
-     * <code>int32 group_index = 3;</code>
+     * <code>optional int32 group_index = 3;</code>
      * @return Whether the groupIndex field is set.
      */
     @java.lang.Override
@@ -763,7 +763,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000004) != 0);
     }
     /**
-     * <code>int32 group_index = 3;</code>
+     * <code>optional int32 group_index = 3;</code>
      * @return The groupIndex.
      */
     @java.lang.Override
@@ -771,7 +771,7 @@ private static final long serialVersionUID = 0L;
       return groupIndex_;
     }
     /**
-     * <code>int32 group_index = 3;</code>
+     * <code>optional int32 group_index = 3;</code>
      * @param value The groupIndex to set.
      * @return This builder for chaining.
      */
@@ -782,7 +782,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int32 group_index = 3;</code>
+     * <code>optional int32 group_index = 3;</code>
      * @return This builder for chaining.
      */
     public Builder clearGroupIndex() {
@@ -794,7 +794,7 @@ private static final long serialVersionUID = 0L;
 
     private long lastUpdatedDate_ ;
     /**
-     * <code>int64 last_updated_date = 4;</code>
+     * <code>optional int64 last_updated_date = 4;</code>
      * @return Whether the lastUpdatedDate field is set.
      */
     @java.lang.Override
@@ -802,7 +802,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000008) != 0);
     }
     /**
-     * <code>int64 last_updated_date = 4;</code>
+     * <code>optional int64 last_updated_date = 4;</code>
      * @return The lastUpdatedDate.
      */
     @java.lang.Override
@@ -810,7 +810,7 @@ private static final long serialVersionUID = 0L;
       return lastUpdatedDate_;
     }
     /**
-     * <code>int64 last_updated_date = 4;</code>
+     * <code>optional int64 last_updated_date = 4;</code>
      * @param value The lastUpdatedDate to set.
      * @return This builder for chaining.
      */
@@ -821,7 +821,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 last_updated_date = 4;</code>
+     * <code>optional int64 last_updated_date = 4;</code>
      * @return This builder for chaining.
      */
     public Builder clearLastUpdatedDate() {

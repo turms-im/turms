@@ -142,7 +142,7 @@ private static final long serialVersionUID = 0L;
   public static final int TEXT_FIELD_NUMBER = 2;
   private volatile java.lang.Object text_;
   /**
-   * <code>string text = 2;</code>
+   * <code>optional string text = 2;</code>
    * @return Whether the text field is set.
    */
   @java.lang.Override
@@ -150,7 +150,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>string text = 2;</code>
+   * <code>optional string text = 2;</code>
    * @return The text.
    */
   @java.lang.Override
@@ -167,7 +167,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string text = 2;</code>
+   * <code>optional string text = 2;</code>
    * @return The bytes for text.
    */
   @java.lang.Override
@@ -215,7 +215,7 @@ private static final long serialVersionUID = 0L;
   public static final int RECALL_DATE_FIELD_NUMBER = 4;
   private long recallDate_;
   /**
-   * <code>int64 recall_date = 4;</code>
+   * <code>optional int64 recall_date = 4;</code>
    * @return Whether the recallDate field is set.
    */
   @java.lang.Override
@@ -223,7 +223,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>int64 recall_date = 4;</code>
+   * <code>optional int64 recall_date = 4;</code>
    * @return The recallDate.
    */
   @java.lang.Override
@@ -658,14 +658,14 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object text_ = "";
     /**
-     * <code>string text = 2;</code>
+     * <code>optional string text = 2;</code>
      * @return Whether the text field is set.
      */
     public boolean hasText() {
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>string text = 2;</code>
+     * <code>optional string text = 2;</code>
      * @return The text.
      */
     public java.lang.String getText() {
@@ -681,7 +681,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string text = 2;</code>
+     * <code>optional string text = 2;</code>
      * @return The bytes for text.
      */
     public com.google.protobuf.ByteString
@@ -698,7 +698,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string text = 2;</code>
+     * <code>optional string text = 2;</code>
      * @param value The text to set.
      * @return This builder for chaining.
      */
@@ -713,7 +713,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string text = 2;</code>
+     * <code>optional string text = 2;</code>
      * @return This builder for chaining.
      */
     public Builder clearText() {
@@ -723,7 +723,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string text = 2;</code>
+     * <code>optional string text = 2;</code>
      * @param value The bytes for text to set.
      * @return This builder for chaining.
      */
@@ -826,7 +826,7 @@ private static final long serialVersionUID = 0L;
 
     private long recallDate_ ;
     /**
-     * <code>int64 recall_date = 4;</code>
+     * <code>optional int64 recall_date = 4;</code>
      * @return Whether the recallDate field is set.
      */
     @java.lang.Override
@@ -834,7 +834,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000004) != 0);
     }
     /**
-     * <code>int64 recall_date = 4;</code>
+     * <code>optional int64 recall_date = 4;</code>
      * @return The recallDate.
      */
     @java.lang.Override
@@ -842,7 +842,7 @@ private static final long serialVersionUID = 0L;
       return recallDate_;
     }
     /**
-     * <code>int64 recall_date = 4;</code>
+     * <code>optional int64 recall_date = 4;</code>
      * @param value The recallDate to set.
      * @return This builder for chaining.
      */
@@ -853,7 +853,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 recall_date = 4;</code>
+     * <code>optional int64 recall_date = 4;</code>
      * @return This builder for chaining.
      */
     public Builder clearRecallDate() {

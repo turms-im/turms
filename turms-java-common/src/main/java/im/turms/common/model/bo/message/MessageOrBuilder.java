@@ -25,95 +25,95 @@ public interface MessageOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>int64 id = 1;</code>
+   * <code>optional int64 id = 1;</code>
    * @return Whether the id field is set.
    */
   boolean hasId();
   /**
-   * <code>int64 id = 1;</code>
+   * <code>optional int64 id = 1;</code>
    * @return The id.
    */
   long getId();
 
   /**
-   * <code>int64 delivery_date = 2;</code>
+   * <code>optional int64 delivery_date = 2;</code>
    * @return Whether the deliveryDate field is set.
    */
   boolean hasDeliveryDate();
   /**
-   * <code>int64 delivery_date = 2;</code>
+   * <code>optional int64 delivery_date = 2;</code>
    * @return The deliveryDate.
    */
   long getDeliveryDate();
 
   /**
-   * <code>int64 modification_date = 3;</code>
+   * <code>optional int64 modification_date = 3;</code>
    * @return Whether the modificationDate field is set.
    */
   boolean hasModificationDate();
   /**
-   * <code>int64 modification_date = 3;</code>
+   * <code>optional int64 modification_date = 3;</code>
    * @return The modificationDate.
    */
   long getModificationDate();
 
   /**
-   * <code>string text = 4;</code>
+   * <code>optional string text = 4;</code>
    * @return Whether the text field is set.
    */
   boolean hasText();
   /**
-   * <code>string text = 4;</code>
+   * <code>optional string text = 4;</code>
    * @return The text.
    */
   java.lang.String getText();
   /**
-   * <code>string text = 4;</code>
+   * <code>optional string text = 4;</code>
    * @return The bytes for text.
    */
   com.google.protobuf.ByteString
       getTextBytes();
 
   /**
-   * <code>int64 sender_id = 5;</code>
+   * <code>optional int64 sender_id = 5;</code>
    * @return Whether the senderId field is set.
    */
   boolean hasSenderId();
   /**
-   * <code>int64 sender_id = 5;</code>
+   * <code>optional int64 sender_id = 5;</code>
    * @return The senderId.
    */
   long getSenderId();
 
   /**
-   * <code>int64 group_id = 6;</code>
+   * <code>optional int64 group_id = 6;</code>
    * @return Whether the groupId field is set.
    */
   boolean hasGroupId();
   /**
-   * <code>int64 group_id = 6;</code>
+   * <code>optional int64 group_id = 6;</code>
    * @return The groupId.
    */
   long getGroupId();
 
   /**
-   * <code>bool is_system_message = 7;</code>
+   * <code>optional bool is_system_message = 7;</code>
    * @return Whether the isSystemMessage field is set.
    */
   boolean hasIsSystemMessage();
   /**
-   * <code>bool is_system_message = 7;</code>
+   * <code>optional bool is_system_message = 7;</code>
    * @return The isSystemMessage.
    */
   boolean getIsSystemMessage();
 
   /**
-   * <code>int64 recipient_id = 8;</code>
+   * <code>optional int64 recipient_id = 8;</code>
    * @return Whether the recipientId field is set.
    */
   boolean hasRecipientId();
   /**
-   * <code>int64 recipient_id = 8;</code>
+   * <code>optional int64 recipient_id = 8;</code>
    * @return The recipientId.
    */
   long getRecipientId();

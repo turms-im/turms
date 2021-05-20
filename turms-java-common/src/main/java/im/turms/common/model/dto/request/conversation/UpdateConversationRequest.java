@@ -117,7 +117,7 @@ private static final long serialVersionUID = 0L;
   public static final int TARGET_ID_FIELD_NUMBER = 1;
   private long targetId_;
   /**
-   * <code>int64 target_id = 1;</code>
+   * <code>optional int64 target_id = 1;</code>
    * @return Whether the targetId field is set.
    */
   @java.lang.Override
@@ -125,7 +125,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>int64 target_id = 1;</code>
+   * <code>optional int64 target_id = 1;</code>
    * @return The targetId.
    */
   @java.lang.Override
@@ -136,7 +136,7 @@ private static final long serialVersionUID = 0L;
   public static final int GROUP_ID_FIELD_NUMBER = 2;
   private long groupId_;
   /**
-   * <code>int64 group_id = 2;</code>
+   * <code>optional int64 group_id = 2;</code>
    * @return Whether the groupId field is set.
    */
   @java.lang.Override
@@ -144,7 +144,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>int64 group_id = 2;</code>
+   * <code>optional int64 group_id = 2;</code>
    * @return The groupId.
    */
   @java.lang.Override
@@ -524,7 +524,7 @@ private static final long serialVersionUID = 0L;
 
     private long targetId_ ;
     /**
-     * <code>int64 target_id = 1;</code>
+     * <code>optional int64 target_id = 1;</code>
      * @return Whether the targetId field is set.
      */
     @java.lang.Override
@@ -532,7 +532,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>int64 target_id = 1;</code>
+     * <code>optional int64 target_id = 1;</code>
      * @return The targetId.
      */
     @java.lang.Override
@@ -540,7 +540,7 @@ private static final long serialVersionUID = 0L;
       return targetId_;
     }
     /**
-     * <code>int64 target_id = 1;</code>
+     * <code>optional int64 target_id = 1;</code>
      * @param value The targetId to set.
      * @return This builder for chaining.
      */
@@ -551,7 +551,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 target_id = 1;</code>
+     * <code>optional int64 target_id = 1;</code>
      * @return This builder for chaining.
      */
     public Builder clearTargetId() {
@@ -563,7 +563,7 @@ private static final long serialVersionUID = 0L;
 
     private long groupId_ ;
     /**
-     * <code>int64 group_id = 2;</code>
+     * <code>optional int64 group_id = 2;</code>
      * @return Whether the groupId field is set.
      */
     @java.lang.Override
@@ -571,7 +571,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>int64 group_id = 2;</code>
+     * <code>optional int64 group_id = 2;</code>
      * @return The groupId.
      */
     @java.lang.Override
@@ -579,7 +579,7 @@ private static final long serialVersionUID = 0L;
       return groupId_;
     }
     /**
-     * <code>int64 group_id = 2;</code>
+     * <code>optional int64 group_id = 2;</code>
      * @param value The groupId to set.
      * @return This builder for chaining.
      */
@@ -590,7 +590,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 group_id = 2;</code>
+     * <code>optional int64 group_id = 2;</code>
      * @return This builder for chaining.
      */
     public Builder clearGroupId() {

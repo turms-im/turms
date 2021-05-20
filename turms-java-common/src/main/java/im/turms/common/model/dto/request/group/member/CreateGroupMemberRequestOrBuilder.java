@@ -37,17 +37,17 @@ public interface CreateGroupMemberRequestOrBuilder extends
   long getUserId();
 
   /**
-   * <code>string name = 3;</code>
+   * <code>optional string name = 3;</code>
    * @return Whether the name field is set.
    */
   boolean hasName();
   /**
-   * <code>string name = 3;</code>
+   * <code>optional string name = 3;</code>
    * @return The name.
    */
   java.lang.String getName();
   /**
-   * <code>string name = 3;</code>
+   * <code>optional string name = 3;</code>
    * @return The bytes for name.
    */
   com.google.protobuf.ByteString
@@ -65,12 +65,12 @@ public interface CreateGroupMemberRequestOrBuilder extends
   im.turms.common.constant.GroupMemberRole getRole();
 
   /**
-   * <code>int64 mute_end_date = 5;</code>
+   * <code>optional int64 mute_end_date = 5;</code>
    * @return Whether the muteEndDate field is set.
    */
   boolean hasMuteEndDate();
   /**
-   * <code>int64 mute_end_date = 5;</code>
+   * <code>optional int64 mute_end_date = 5;</code>
    * @return The muteEndDate.
    */
   long getMuteEndDate();

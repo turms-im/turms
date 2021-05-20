@@ -146,7 +146,7 @@ private static final long serialVersionUID = 0L;
   public static final int ID_FIELD_NUMBER = 1;
   private long id_;
   /**
-   * <code>int64 id = 1;</code>
+   * <code>optional int64 id = 1;</code>
    * @return Whether the id field is set.
    */
   @java.lang.Override
@@ -154,7 +154,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>int64 id = 1;</code>
+   * <code>optional int64 id = 1;</code>
    * @return The id.
    */
   @java.lang.Override
@@ -165,7 +165,7 @@ private static final long serialVersionUID = 0L;
   public static final int CREATION_DATE_FIELD_NUMBER = 2;
   private long creationDate_;
   /**
-   * <code>int64 creation_date = 2;</code>
+   * <code>optional int64 creation_date = 2;</code>
    * @return Whether the creationDate field is set.
    */
   @java.lang.Override
@@ -173,7 +173,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>int64 creation_date = 2;</code>
+   * <code>optional int64 creation_date = 2;</code>
    * @return The creationDate.
    */
   @java.lang.Override
@@ -184,7 +184,7 @@ private static final long serialVersionUID = 0L;
   public static final int CONTENT_FIELD_NUMBER = 3;
   private volatile java.lang.Object content_;
   /**
-   * <code>string content = 3;</code>
+   * <code>optional string content = 3;</code>
    * @return Whether the content field is set.
    */
   @java.lang.Override
@@ -192,7 +192,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000004) != 0);
   }
   /**
-   * <code>string content = 3;</code>
+   * <code>optional string content = 3;</code>
    * @return The content.
    */
   @java.lang.Override
@@ -209,7 +209,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string content = 3;</code>
+   * <code>optional string content = 3;</code>
    * @return The bytes for content.
    */
   @java.lang.Override
@@ -230,21 +230,21 @@ private static final long serialVersionUID = 0L;
   public static final int STATUS_FIELD_NUMBER = 4;
   private int status_;
   /**
-   * <code>.im.turms.proto.RequestStatus status = 4;</code>
+   * <code>optional .im.turms.proto.RequestStatus status = 4;</code>
    * @return Whether the status field is set.
    */
   @java.lang.Override public boolean hasStatus() {
     return ((bitField0_ & 0x00000008) != 0);
   }
   /**
-   * <code>.im.turms.proto.RequestStatus status = 4;</code>
+   * <code>optional .im.turms.proto.RequestStatus status = 4;</code>
    * @return The enum numeric value on the wire for status.
    */
   @java.lang.Override public int getStatusValue() {
     return status_;
   }
   /**
-   * <code>.im.turms.proto.RequestStatus status = 4;</code>
+   * <code>optional .im.turms.proto.RequestStatus status = 4;</code>
    * @return The status.
    */
   @java.lang.Override public im.turms.common.constant.RequestStatus getStatus() {
@@ -256,7 +256,7 @@ private static final long serialVersionUID = 0L;
   public static final int EXPIRATION_DATE_FIELD_NUMBER = 5;
   private long expirationDate_;
   /**
-   * <code>int64 expiration_date = 5;</code>
+   * <code>optional int64 expiration_date = 5;</code>
    * @return Whether the expirationDate field is set.
    */
   @java.lang.Override
@@ -264,7 +264,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000010) != 0);
   }
   /**
-   * <code>int64 expiration_date = 5;</code>
+   * <code>optional int64 expiration_date = 5;</code>
    * @return The expirationDate.
    */
   @java.lang.Override
@@ -275,7 +275,7 @@ private static final long serialVersionUID = 0L;
   public static final int GROUP_ID_FIELD_NUMBER = 6;
   private long groupId_;
   /**
-   * <code>int64 group_id = 6;</code>
+   * <code>optional int64 group_id = 6;</code>
    * @return Whether the groupId field is set.
    */
   @java.lang.Override
@@ -283,7 +283,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000020) != 0);
   }
   /**
-   * <code>int64 group_id = 6;</code>
+   * <code>optional int64 group_id = 6;</code>
    * @return The groupId.
    */
   @java.lang.Override
@@ -294,7 +294,7 @@ private static final long serialVersionUID = 0L;
   public static final int REQUESTER_ID_FIELD_NUMBER = 7;
   private long requesterId_;
   /**
-   * <code>int64 requester_id = 7;</code>
+   * <code>optional int64 requester_id = 7;</code>
    * @return Whether the requesterId field is set.
    */
   @java.lang.Override
@@ -302,7 +302,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000040) != 0);
   }
   /**
-   * <code>int64 requester_id = 7;</code>
+   * <code>optional int64 requester_id = 7;</code>
    * @return The requesterId.
    */
   @java.lang.Override
@@ -313,7 +313,7 @@ private static final long serialVersionUID = 0L;
   public static final int RESPONDER_ID_FIELD_NUMBER = 8;
   private long responderId_;
   /**
-   * <code>int64 responder_id = 8;</code>
+   * <code>optional int64 responder_id = 8;</code>
    * @return Whether the responderId field is set.
    */
   @java.lang.Override
@@ -321,7 +321,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000080) != 0);
   }
   /**
-   * <code>int64 responder_id = 8;</code>
+   * <code>optional int64 responder_id = 8;</code>
    * @return The responderId.
    */
   @java.lang.Override
@@ -826,7 +826,7 @@ private static final long serialVersionUID = 0L;
 
     private long id_ ;
     /**
-     * <code>int64 id = 1;</code>
+     * <code>optional int64 id = 1;</code>
      * @return Whether the id field is set.
      */
     @java.lang.Override
@@ -834,7 +834,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>int64 id = 1;</code>
+     * <code>optional int64 id = 1;</code>
      * @return The id.
      */
     @java.lang.Override
@@ -842,7 +842,7 @@ private static final long serialVersionUID = 0L;
       return id_;
     }
     /**
-     * <code>int64 id = 1;</code>
+     * <code>optional int64 id = 1;</code>
      * @param value The id to set.
      * @return This builder for chaining.
      */
@@ -853,7 +853,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 id = 1;</code>
+     * <code>optional int64 id = 1;</code>
      * @return This builder for chaining.
      */
     public Builder clearId() {
@@ -865,7 +865,7 @@ private static final long serialVersionUID = 0L;
 
     private long creationDate_ ;
     /**
-     * <code>int64 creation_date = 2;</code>
+     * <code>optional int64 creation_date = 2;</code>
      * @return Whether the creationDate field is set.
      */
     @java.lang.Override
@@ -873,7 +873,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>int64 creation_date = 2;</code>
+     * <code>optional int64 creation_date = 2;</code>
      * @return The creationDate.
      */
     @java.lang.Override
@@ -881,7 +881,7 @@ private static final long serialVersionUID = 0L;
       return creationDate_;
     }
     /**
-     * <code>int64 creation_date = 2;</code>
+     * <code>optional int64 creation_date = 2;</code>
      * @param value The creationDate to set.
      * @return This builder for chaining.
      */
@@ -892,7 +892,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 creation_date = 2;</code>
+     * <code>optional int64 creation_date = 2;</code>
      * @return This builder for chaining.
      */
     public Builder clearCreationDate() {
@@ -904,14 +904,14 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object content_ = "";
     /**
-     * <code>string content = 3;</code>
+     * <code>optional string content = 3;</code>
      * @return Whether the content field is set.
      */
     public boolean hasContent() {
       return ((bitField0_ & 0x00000004) != 0);
     }
     /**
-     * <code>string content = 3;</code>
+     * <code>optional string content = 3;</code>
      * @return The content.
      */
     public java.lang.String getContent() {
@@ -927,7 +927,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string content = 3;</code>
+     * <code>optional string content = 3;</code>
      * @return The bytes for content.
      */
     public com.google.protobuf.ByteString
@@ -944,7 +944,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string content = 3;</code>
+     * <code>optional string content = 3;</code>
      * @param value The content to set.
      * @return This builder for chaining.
      */
@@ -959,7 +959,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string content = 3;</code>
+     * <code>optional string content = 3;</code>
      * @return This builder for chaining.
      */
     public Builder clearContent() {
@@ -969,7 +969,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string content = 3;</code>
+     * <code>optional string content = 3;</code>
      * @param value The bytes for content to set.
      * @return This builder for chaining.
      */
@@ -987,21 +987,21 @@ private static final long serialVersionUID = 0L;
 
     private int status_ = 0;
     /**
-     * <code>.im.turms.proto.RequestStatus status = 4;</code>
+     * <code>optional .im.turms.proto.RequestStatus status = 4;</code>
      * @return Whether the status field is set.
      */
     @java.lang.Override public boolean hasStatus() {
       return ((bitField0_ & 0x00000008) != 0);
     }
     /**
-     * <code>.im.turms.proto.RequestStatus status = 4;</code>
+     * <code>optional .im.turms.proto.RequestStatus status = 4;</code>
      * @return The enum numeric value on the wire for status.
      */
     @java.lang.Override public int getStatusValue() {
       return status_;
     }
     /**
-     * <code>.im.turms.proto.RequestStatus status = 4;</code>
+     * <code>optional .im.turms.proto.RequestStatus status = 4;</code>
      * @param value The enum numeric value on the wire for status to set.
      * @return This builder for chaining.
      */
@@ -1012,7 +1012,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.RequestStatus status = 4;</code>
+     * <code>optional .im.turms.proto.RequestStatus status = 4;</code>
      * @return The status.
      */
     @java.lang.Override
@@ -1022,7 +1022,7 @@ private static final long serialVersionUID = 0L;
       return result == null ? im.turms.common.constant.RequestStatus.UNRECOGNIZED : result;
     }
     /**
-     * <code>.im.turms.proto.RequestStatus status = 4;</code>
+     * <code>optional .im.turms.proto.RequestStatus status = 4;</code>
      * @param value The status to set.
      * @return This builder for chaining.
      */
@@ -1036,7 +1036,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.RequestStatus status = 4;</code>
+     * <code>optional .im.turms.proto.RequestStatus status = 4;</code>
      * @return This builder for chaining.
      */
     public Builder clearStatus() {
@@ -1048,7 +1048,7 @@ private static final long serialVersionUID = 0L;
 
     private long expirationDate_ ;
     /**
-     * <code>int64 expiration_date = 5;</code>
+     * <code>optional int64 expiration_date = 5;</code>
      * @return Whether the expirationDate field is set.
      */
     @java.lang.Override
@@ -1056,7 +1056,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000010) != 0);
     }
     /**
-     * <code>int64 expiration_date = 5;</code>
+     * <code>optional int64 expiration_date = 5;</code>
      * @return The expirationDate.
      */
     @java.lang.Override
@@ -1064,7 +1064,7 @@ private static final long serialVersionUID = 0L;
       return expirationDate_;
     }
     /**
-     * <code>int64 expiration_date = 5;</code>
+     * <code>optional int64 expiration_date = 5;</code>
      * @param value The expirationDate to set.
      * @return This builder for chaining.
      */
@@ -1075,7 +1075,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 expiration_date = 5;</code>
+     * <code>optional int64 expiration_date = 5;</code>
      * @return This builder for chaining.
      */
     public Builder clearExpirationDate() {
@@ -1087,7 +1087,7 @@ private static final long serialVersionUID = 0L;
 
     private long groupId_ ;
     /**
-     * <code>int64 group_id = 6;</code>
+     * <code>optional int64 group_id = 6;</code>
      * @return Whether the groupId field is set.
      */
     @java.lang.Override
@@ -1095,7 +1095,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000020) != 0);
     }
     /**
-     * <code>int64 group_id = 6;</code>
+     * <code>optional int64 group_id = 6;</code>
      * @return The groupId.
      */
     @java.lang.Override
@@ -1103,7 +1103,7 @@ private static final long serialVersionUID = 0L;
       return groupId_;
     }
     /**
-     * <code>int64 group_id = 6;</code>
+     * <code>optional int64 group_id = 6;</code>
      * @param value The groupId to set.
      * @return This builder for chaining.
      */
@@ -1114,7 +1114,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 group_id = 6;</code>
+     * <code>optional int64 group_id = 6;</code>
      * @return This builder for chaining.
      */
     public Builder clearGroupId() {
@@ -1126,7 +1126,7 @@ private static final long serialVersionUID = 0L;
 
     private long requesterId_ ;
     /**
-     * <code>int64 requester_id = 7;</code>
+     * <code>optional int64 requester_id = 7;</code>
      * @return Whether the requesterId field is set.
      */
     @java.lang.Override
@@ -1134,7 +1134,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000040) != 0);
     }
     /**
-     * <code>int64 requester_id = 7;</code>
+     * <code>optional int64 requester_id = 7;</code>
      * @return The requesterId.
      */
     @java.lang.Override
@@ -1142,7 +1142,7 @@ private static final long serialVersionUID = 0L;
       return requesterId_;
     }
     /**
-     * <code>int64 requester_id = 7;</code>
+     * <code>optional int64 requester_id = 7;</code>
      * @param value The requesterId to set.
      * @return This builder for chaining.
      */
@@ -1153,7 +1153,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 requester_id = 7;</code>
+     * <code>optional int64 requester_id = 7;</code>
      * @return This builder for chaining.
      */
     public Builder clearRequesterId() {
@@ -1165,7 +1165,7 @@ private static final long serialVersionUID = 0L;
 
     private long responderId_ ;
     /**
-     * <code>int64 responder_id = 8;</code>
+     * <code>optional int64 responder_id = 8;</code>
      * @return Whether the responderId field is set.
      */
     @java.lang.Override
@@ -1173,7 +1173,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000080) != 0);
     }
     /**
-     * <code>int64 responder_id = 8;</code>
+     * <code>optional int64 responder_id = 8;</code>
      * @return The responderId.
      */
     @java.lang.Override
@@ -1181,7 +1181,7 @@ private static final long serialVersionUID = 0L;
       return responderId_;
     }
     /**
-     * <code>int64 responder_id = 8;</code>
+     * <code>optional int64 responder_id = 8;</code>
      * @param value The responderId to set.
      * @return This builder for chaining.
      */
@@ -1192,7 +1192,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 responder_id = 8;</code>
+     * <code>optional int64 responder_id = 8;</code>
      * @return This builder for chaining.
      */
     public Builder clearResponderId() {

@@ -31,34 +31,34 @@ public interface CreateSessionRequestOrBuilder extends
   long getUserId();
 
   /**
-   * <code>string password = 2;</code>
+   * <code>optional string password = 2;</code>
    * @return Whether the password field is set.
    */
   boolean hasPassword();
   /**
-   * <code>string password = 2;</code>
+   * <code>optional string password = 2;</code>
    * @return The password.
    */
   java.lang.String getPassword();
   /**
-   * <code>string password = 2;</code>
+   * <code>optional string password = 2;</code>
    * @return The bytes for password.
    */
   com.google.protobuf.ByteString
       getPasswordBytes();
 
   /**
-   * <code>.im.turms.proto.UserStatus user_status = 3;</code>
+   * <code>optional .im.turms.proto.UserStatus user_status = 3;</code>
    * @return Whether the userStatus field is set.
    */
   boolean hasUserStatus();
   /**
-   * <code>.im.turms.proto.UserStatus user_status = 3;</code>
+   * <code>optional .im.turms.proto.UserStatus user_status = 3;</code>
    * @return The enum numeric value on the wire for userStatus.
    */
   int getUserStatusValue();
   /**
-   * <code>.im.turms.proto.UserStatus user_status = 3;</code>
+   * <code>optional .im.turms.proto.UserStatus user_status = 3;</code>
    * @return The userStatus.
    */
   im.turms.common.constant.UserStatus getUserStatus();
@@ -75,34 +75,34 @@ public interface CreateSessionRequestOrBuilder extends
   im.turms.common.constant.DeviceType getDeviceType();
 
   /**
-   * <code>string device_details = 5;</code>
+   * <code>optional string device_details = 5;</code>
    * @return Whether the deviceDetails field is set.
    */
   boolean hasDeviceDetails();
   /**
-   * <code>string device_details = 5;</code>
+   * <code>optional string device_details = 5;</code>
    * @return The deviceDetails.
    */
   java.lang.String getDeviceDetails();
   /**
-   * <code>string device_details = 5;</code>
+   * <code>optional string device_details = 5;</code>
    * @return The bytes for deviceDetails.
    */
   com.google.protobuf.ByteString
       getDeviceDetailsBytes();
 
   /**
-   * <code>.im.turms.proto.UserLocation location = 6;</code>
+   * <code>optional .im.turms.proto.UserLocation location = 6;</code>
    * @return Whether the location field is set.
    */
   boolean hasLocation();
   /**
-   * <code>.im.turms.proto.UserLocation location = 6;</code>
+   * <code>optional .im.turms.proto.UserLocation location = 6;</code>
    * @return The location.
    */
   im.turms.common.model.bo.user.UserLocation getLocation();
   /**
-   * <code>.im.turms.proto.UserLocation location = 6;</code>
+   * <code>optional .im.turms.proto.UserLocation location = 6;</code>
    */
   im.turms.common.model.bo.user.UserLocationOrBuilder getLocationOrBuilder();
 }

@@ -37,12 +37,12 @@ public interface QueryGroupJoinQuestionsRequestOrBuilder extends
   boolean getWithAnswers();
 
   /**
-   * <code>int64 last_updated_date = 3;</code>
+   * <code>optional int64 last_updated_date = 3;</code>
    * @return Whether the lastUpdatedDate field is set.
    */
   boolean hasLastUpdatedDate();
   /**
-   * <code>int64 last_updated_date = 3;</code>
+   * <code>optional int64 last_updated_date = 3;</code>
    * @return The lastUpdatedDate.
    */
   long getLastUpdatedDate();

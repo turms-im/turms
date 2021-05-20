@@ -25,106 +25,106 @@ public interface UserFriendRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>int64 id = 1;</code>
+   * <code>optional int64 id = 1;</code>
    * @return Whether the id field is set.
    */
   boolean hasId();
   /**
-   * <code>int64 id = 1;</code>
+   * <code>optional int64 id = 1;</code>
    * @return The id.
    */
   long getId();
 
   /**
-   * <code>int64 creation_date = 2;</code>
+   * <code>optional int64 creation_date = 2;</code>
    * @return Whether the creationDate field is set.
    */
   boolean hasCreationDate();
   /**
-   * <code>int64 creation_date = 2;</code>
+   * <code>optional int64 creation_date = 2;</code>
    * @return The creationDate.
    */
   long getCreationDate();
 
   /**
-   * <code>string content = 3;</code>
+   * <code>optional string content = 3;</code>
    * @return Whether the content field is set.
    */
   boolean hasContent();
   /**
-   * <code>string content = 3;</code>
+   * <code>optional string content = 3;</code>
    * @return The content.
    */
   java.lang.String getContent();
   /**
-   * <code>string content = 3;</code>
+   * <code>optional string content = 3;</code>
    * @return The bytes for content.
    */
   com.google.protobuf.ByteString
       getContentBytes();
 
   /**
-   * <code>.im.turms.proto.RequestStatus request_status = 4;</code>
+   * <code>optional .im.turms.proto.RequestStatus request_status = 4;</code>
    * @return Whether the requestStatus field is set.
    */
   boolean hasRequestStatus();
   /**
-   * <code>.im.turms.proto.RequestStatus request_status = 4;</code>
+   * <code>optional .im.turms.proto.RequestStatus request_status = 4;</code>
    * @return The enum numeric value on the wire for requestStatus.
    */
   int getRequestStatusValue();
   /**
-   * <code>.im.turms.proto.RequestStatus request_status = 4;</code>
+   * <code>optional .im.turms.proto.RequestStatus request_status = 4;</code>
    * @return The requestStatus.
    */
   im.turms.common.constant.RequestStatus getRequestStatus();
 
   /**
-   * <code>string reason = 5;</code>
+   * <code>optional string reason = 5;</code>
    * @return Whether the reason field is set.
    */
   boolean hasReason();
   /**
-   * <code>string reason = 5;</code>
+   * <code>optional string reason = 5;</code>
    * @return The reason.
    */
   java.lang.String getReason();
   /**
-   * <code>string reason = 5;</code>
+   * <code>optional string reason = 5;</code>
    * @return The bytes for reason.
    */
   com.google.protobuf.ByteString
       getReasonBytes();
 
   /**
-   * <code>int64 expiration_date = 6;</code>
+   * <code>optional int64 expiration_date = 6;</code>
    * @return Whether the expirationDate field is set.
    */
   boolean hasExpirationDate();
   /**
-   * <code>int64 expiration_date = 6;</code>
+   * <code>optional int64 expiration_date = 6;</code>
    * @return The expirationDate.
    */
   long getExpirationDate();
 
   /**
-   * <code>int64 requester_id = 7;</code>
+   * <code>optional int64 requester_id = 7;</code>
    * @return Whether the requesterId field is set.
    */
   boolean hasRequesterId();
   /**
-   * <code>int64 requester_id = 7;</code>
+   * <code>optional int64 requester_id = 7;</code>
    * @return The requesterId.
    */
   long getRequesterId();
 
   /**
-   * <code>int64 recipient_id = 8;</code>
+   * <code>optional int64 recipient_id = 8;</code>
    * @return Whether the recipientId field is set.
    */
   boolean hasRecipientId();
   /**
-   * <code>int64 recipient_id = 8;</code>
+   * <code>optional int64 recipient_id = 8;</code>
    * @return The recipientId.
    */
   long getRecipientId();

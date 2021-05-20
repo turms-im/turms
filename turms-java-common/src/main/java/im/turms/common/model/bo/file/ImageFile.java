@@ -134,34 +134,34 @@ private static final long serialVersionUID = 0L;
         getUrlBytes();
 
     /**
-     * <code>bool original = 2;</code>
+     * <code>optional bool original = 2;</code>
      * @return Whether the original field is set.
      */
     boolean hasOriginal();
     /**
-     * <code>bool original = 2;</code>
+     * <code>optional bool original = 2;</code>
      * @return The original.
      */
     boolean getOriginal();
 
     /**
-     * <code>int32 image_size = 3;</code>
+     * <code>optional int32 image_size = 3;</code>
      * @return Whether the imageSize field is set.
      */
     boolean hasImageSize();
     /**
-     * <code>int32 image_size = 3;</code>
+     * <code>optional int32 image_size = 3;</code>
      * @return The imageSize.
      */
     int getImageSize();
 
     /**
-     * <code>int32 file_size = 4;</code>
+     * <code>optional int32 file_size = 4;</code>
      * @return Whether the fileSize field is set.
      */
     boolean hasFileSize();
     /**
-     * <code>int32 file_size = 4;</code>
+     * <code>optional int32 file_size = 4;</code>
      * @return The fileSize.
      */
     int getFileSize();
@@ -308,7 +308,7 @@ private static final long serialVersionUID = 0L;
     public static final int ORIGINAL_FIELD_NUMBER = 2;
     private boolean original_;
     /**
-     * <code>bool original = 2;</code>
+     * <code>optional bool original = 2;</code>
      * @return Whether the original field is set.
      */
     @java.lang.Override
@@ -316,7 +316,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>bool original = 2;</code>
+     * <code>optional bool original = 2;</code>
      * @return The original.
      */
     @java.lang.Override
@@ -327,7 +327,7 @@ private static final long serialVersionUID = 0L;
     public static final int IMAGE_SIZE_FIELD_NUMBER = 3;
     private int imageSize_;
     /**
-     * <code>int32 image_size = 3;</code>
+     * <code>optional int32 image_size = 3;</code>
      * @return Whether the imageSize field is set.
      */
     @java.lang.Override
@@ -335,7 +335,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>int32 image_size = 3;</code>
+     * <code>optional int32 image_size = 3;</code>
      * @return The imageSize.
      */
     @java.lang.Override
@@ -346,7 +346,7 @@ private static final long serialVersionUID = 0L;
     public static final int FILE_SIZE_FIELD_NUMBER = 4;
     private int fileSize_;
     /**
-     * <code>int32 file_size = 4;</code>
+     * <code>optional int32 file_size = 4;</code>
      * @return Whether the fileSize field is set.
      */
     @java.lang.Override
@@ -354,7 +354,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000004) != 0);
     }
     /**
-     * <code>int32 file_size = 4;</code>
+     * <code>optional int32 file_size = 4;</code>
      * @return The fileSize.
      */
     @java.lang.Override
@@ -822,7 +822,7 @@ private static final long serialVersionUID = 0L;
 
       private boolean original_ ;
       /**
-       * <code>bool original = 2;</code>
+       * <code>optional bool original = 2;</code>
        * @return Whether the original field is set.
        */
       @java.lang.Override
@@ -830,7 +830,7 @@ private static final long serialVersionUID = 0L;
         return ((bitField0_ & 0x00000001) != 0);
       }
       /**
-       * <code>bool original = 2;</code>
+       * <code>optional bool original = 2;</code>
        * @return The original.
        */
       @java.lang.Override
@@ -838,7 +838,7 @@ private static final long serialVersionUID = 0L;
         return original_;
       }
       /**
-       * <code>bool original = 2;</code>
+       * <code>optional bool original = 2;</code>
        * @param value The original to set.
        * @return This builder for chaining.
        */
@@ -849,7 +849,7 @@ private static final long serialVersionUID = 0L;
         return this;
       }
       /**
-       * <code>bool original = 2;</code>
+       * <code>optional bool original = 2;</code>
        * @return This builder for chaining.
        */
       public Builder clearOriginal() {
@@ -861,7 +861,7 @@ private static final long serialVersionUID = 0L;
 
       private int imageSize_ ;
       /**
-       * <code>int32 image_size = 3;</code>
+       * <code>optional int32 image_size = 3;</code>
        * @return Whether the imageSize field is set.
        */
       @java.lang.Override
@@ -869,7 +869,7 @@ private static final long serialVersionUID = 0L;
         return ((bitField0_ & 0x00000002) != 0);
       }
       /**
-       * <code>int32 image_size = 3;</code>
+       * <code>optional int32 image_size = 3;</code>
        * @return The imageSize.
        */
       @java.lang.Override
@@ -877,7 +877,7 @@ private static final long serialVersionUID = 0L;
         return imageSize_;
       }
       /**
-       * <code>int32 image_size = 3;</code>
+       * <code>optional int32 image_size = 3;</code>
        * @param value The imageSize to set.
        * @return This builder for chaining.
        */
@@ -888,7 +888,7 @@ private static final long serialVersionUID = 0L;
         return this;
       }
       /**
-       * <code>int32 image_size = 3;</code>
+       * <code>optional int32 image_size = 3;</code>
        * @return This builder for chaining.
        */
       public Builder clearImageSize() {
@@ -900,7 +900,7 @@ private static final long serialVersionUID = 0L;
 
       private int fileSize_ ;
       /**
-       * <code>int32 file_size = 4;</code>
+       * <code>optional int32 file_size = 4;</code>
        * @return Whether the fileSize field is set.
        */
       @java.lang.Override
@@ -908,7 +908,7 @@ private static final long serialVersionUID = 0L;
         return ((bitField0_ & 0x00000004) != 0);
       }
       /**
-       * <code>int32 file_size = 4;</code>
+       * <code>optional int32 file_size = 4;</code>
        * @return The fileSize.
        */
       @java.lang.Override
@@ -916,7 +916,7 @@ private static final long serialVersionUID = 0L;
         return fileSize_;
       }
       /**
-       * <code>int32 file_size = 4;</code>
+       * <code>optional int32 file_size = 4;</code>
        * @param value The fileSize to set.
        * @return This builder for chaining.
        */
@@ -927,7 +927,7 @@ private static final long serialVersionUID = 0L;
         return this;
       }
       /**
-       * <code>int32 file_size = 4;</code>
+       * <code>optional int32 file_size = 4;</code>
        * @return This builder for chaining.
        */
       public Builder clearFileSize() {
@@ -993,7 +993,7 @@ private static final long serialVersionUID = 0L;
   public static final int DESCRIPTION_FIELD_NUMBER = 1;
   private im.turms.common.model.bo.file.ImageFile.Description description_;
   /**
-   * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
+   * <code>optional .im.turms.proto.ImageFile.Description description = 1;</code>
    * @return Whether the description field is set.
    */
   @java.lang.Override
@@ -1001,7 +1001,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
+   * <code>optional .im.turms.proto.ImageFile.Description description = 1;</code>
    * @return The description.
    */
   @java.lang.Override
@@ -1009,7 +1009,7 @@ private static final long serialVersionUID = 0L;
     return description_ == null ? im.turms.common.model.bo.file.ImageFile.Description.getDefaultInstance() : description_;
   }
   /**
-   * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
+   * <code>optional .im.turms.proto.ImageFile.Description description = 1;</code>
    */
   @java.lang.Override
   public im.turms.common.model.bo.file.ImageFile.DescriptionOrBuilder getDescriptionOrBuilder() {
@@ -1019,7 +1019,7 @@ private static final long serialVersionUID = 0L;
   public static final int DATA_FIELD_NUMBER = 2;
   private com.google.protobuf.ByteString data_;
   /**
-   * <code>bytes data = 2;</code>
+   * <code>optional bytes data = 2;</code>
    * @return Whether the data field is set.
    */
   @java.lang.Override
@@ -1027,7 +1027,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>bytes data = 2;</code>
+   * <code>optional bytes data = 2;</code>
    * @return The data.
    */
   @java.lang.Override
@@ -1387,14 +1387,14 @@ private static final long serialVersionUID = 0L;
     private com.google.protobuf.SingleFieldBuilderV3<
         im.turms.common.model.bo.file.ImageFile.Description, im.turms.common.model.bo.file.ImageFile.Description.Builder, im.turms.common.model.bo.file.ImageFile.DescriptionOrBuilder> descriptionBuilder_;
     /**
-     * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
+     * <code>optional .im.turms.proto.ImageFile.Description description = 1;</code>
      * @return Whether the description field is set.
      */
     public boolean hasDescription() {
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
+     * <code>optional .im.turms.proto.ImageFile.Description description = 1;</code>
      * @return The description.
      */
     public im.turms.common.model.bo.file.ImageFile.Description getDescription() {
@@ -1405,7 +1405,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
+     * <code>optional .im.turms.proto.ImageFile.Description description = 1;</code>
      */
     public Builder setDescription(im.turms.common.model.bo.file.ImageFile.Description value) {
       if (descriptionBuilder_ == null) {
@@ -1421,7 +1421,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
+     * <code>optional .im.turms.proto.ImageFile.Description description = 1;</code>
      */
     public Builder setDescription(
         im.turms.common.model.bo.file.ImageFile.Description.Builder builderForValue) {
@@ -1435,7 +1435,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
+     * <code>optional .im.turms.proto.ImageFile.Description description = 1;</code>
      */
     public Builder mergeDescription(im.turms.common.model.bo.file.ImageFile.Description value) {
       if (descriptionBuilder_ == null) {
@@ -1455,7 +1455,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
+     * <code>optional .im.turms.proto.ImageFile.Description description = 1;</code>
      */
     public Builder clearDescription() {
       if (descriptionBuilder_ == null) {
@@ -1468,7 +1468,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
+     * <code>optional .im.turms.proto.ImageFile.Description description = 1;</code>
      */
     public im.turms.common.model.bo.file.ImageFile.Description.Builder getDescriptionBuilder() {
       bitField0_ |= 0x00000001;
@@ -1476,7 +1476,7 @@ private static final long serialVersionUID = 0L;
       return getDescriptionFieldBuilder().getBuilder();
     }
     /**
-     * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
+     * <code>optional .im.turms.proto.ImageFile.Description description = 1;</code>
      */
     public im.turms.common.model.bo.file.ImageFile.DescriptionOrBuilder getDescriptionOrBuilder() {
       if (descriptionBuilder_ != null) {
@@ -1487,7 +1487,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>.im.turms.proto.ImageFile.Description description = 1;</code>
+     * <code>optional .im.turms.proto.ImageFile.Description description = 1;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         im.turms.common.model.bo.file.ImageFile.Description, im.turms.common.model.bo.file.ImageFile.Description.Builder, im.turms.common.model.bo.file.ImageFile.DescriptionOrBuilder>
@@ -1505,7 +1505,7 @@ private static final long serialVersionUID = 0L;
 
     private com.google.protobuf.ByteString data_ = com.google.protobuf.ByteString.EMPTY;
     /**
-     * <code>bytes data = 2;</code>
+     * <code>optional bytes data = 2;</code>
      * @return Whether the data field is set.
      */
     @java.lang.Override
@@ -1513,7 +1513,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>bytes data = 2;</code>
+     * <code>optional bytes data = 2;</code>
      * @return The data.
      */
     @java.lang.Override
@@ -1521,7 +1521,7 @@ private static final long serialVersionUID = 0L;
       return data_;
     }
     /**
-     * <code>bytes data = 2;</code>
+     * <code>optional bytes data = 2;</code>
      * @param value The data to set.
      * @return This builder for chaining.
      */
@@ -1535,7 +1535,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>bytes data = 2;</code>
+     * <code>optional bytes data = 2;</code>
      * @return This builder for chaining.
      */
     public Builder clearData() {

@@ -37,12 +37,12 @@ public interface CreateRelationshipRequestOrBuilder extends
   boolean getBlocked();
 
   /**
-   * <code>int32 group_index = 3;</code>
+   * <code>optional int32 group_index = 3;</code>
    * @return Whether the groupIndex field is set.
    */
   boolean hasGroupIndex();
   /**
-   * <code>int32 group_index = 3;</code>
+   * <code>optional int32 group_index = 3;</code>
    * @return The groupIndex.
    */
   int getGroupIndex();

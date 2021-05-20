@@ -127,7 +127,7 @@ private static final long serialVersionUID = 0L;
   public static final int OWNER_ID_FIELD_NUMBER = 1;
   private long ownerId_;
   /**
-   * <code>int64 owner_id = 1;</code>
+   * <code>optional int64 owner_id = 1;</code>
    * @return Whether the ownerId field is set.
    */
   @java.lang.Override
@@ -135,7 +135,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>int64 owner_id = 1;</code>
+   * <code>optional int64 owner_id = 1;</code>
    * @return The ownerId.
    */
   @java.lang.Override
@@ -146,7 +146,7 @@ private static final long serialVersionUID = 0L;
   public static final int RELATED_USER_ID_FIELD_NUMBER = 2;
   private long relatedUserId_;
   /**
-   * <code>int64 related_user_id = 2;</code>
+   * <code>optional int64 related_user_id = 2;</code>
    * @return Whether the relatedUserId field is set.
    */
   @java.lang.Override
@@ -154,7 +154,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>int64 related_user_id = 2;</code>
+   * <code>optional int64 related_user_id = 2;</code>
    * @return The relatedUserId.
    */
   @java.lang.Override
@@ -165,7 +165,7 @@ private static final long serialVersionUID = 0L;
   public static final int BLOCK_DATE_FIELD_NUMBER = 3;
   private long blockDate_;
   /**
-   * <code>int64 block_date = 3;</code>
+   * <code>optional int64 block_date = 3;</code>
    * @return Whether the blockDate field is set.
    */
   @java.lang.Override
@@ -173,7 +173,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000004) != 0);
   }
   /**
-   * <code>int64 block_date = 3;</code>
+   * <code>optional int64 block_date = 3;</code>
    * @return The blockDate.
    */
   @java.lang.Override
@@ -184,7 +184,7 @@ private static final long serialVersionUID = 0L;
   public static final int GROUP_INDEX_FIELD_NUMBER = 4;
   private long groupIndex_;
   /**
-   * <code>int64 group_index = 4;</code>
+   * <code>optional int64 group_index = 4;</code>
    * @return Whether the groupIndex field is set.
    */
   @java.lang.Override
@@ -192,7 +192,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000008) != 0);
   }
   /**
-   * <code>int64 group_index = 4;</code>
+   * <code>optional int64 group_index = 4;</code>
    * @return The groupIndex.
    */
   @java.lang.Override
@@ -203,7 +203,7 @@ private static final long serialVersionUID = 0L;
   public static final int ESTABLISHMENT_DATE_FIELD_NUMBER = 5;
   private long establishmentDate_;
   /**
-   * <code>int64 establishment_date = 5;</code>
+   * <code>optional int64 establishment_date = 5;</code>
    * @return Whether the establishmentDate field is set.
    */
   @java.lang.Override
@@ -211,7 +211,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000010) != 0);
   }
   /**
-   * <code>int64 establishment_date = 5;</code>
+   * <code>optional int64 establishment_date = 5;</code>
    * @return The establishmentDate.
    */
   @java.lang.Override
@@ -640,7 +640,7 @@ private static final long serialVersionUID = 0L;
 
     private long ownerId_ ;
     /**
-     * <code>int64 owner_id = 1;</code>
+     * <code>optional int64 owner_id = 1;</code>
      * @return Whether the ownerId field is set.
      */
     @java.lang.Override
@@ -648,7 +648,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>int64 owner_id = 1;</code>
+     * <code>optional int64 owner_id = 1;</code>
      * @return The ownerId.
      */
     @java.lang.Override
@@ -656,7 +656,7 @@ private static final long serialVersionUID = 0L;
       return ownerId_;
     }
     /**
-     * <code>int64 owner_id = 1;</code>
+     * <code>optional int64 owner_id = 1;</code>
      * @param value The ownerId to set.
      * @return This builder for chaining.
      */
@@ -667,7 +667,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 owner_id = 1;</code>
+     * <code>optional int64 owner_id = 1;</code>
      * @return This builder for chaining.
      */
     public Builder clearOwnerId() {
@@ -679,7 +679,7 @@ private static final long serialVersionUID = 0L;
 
     private long relatedUserId_ ;
     /**
-     * <code>int64 related_user_id = 2;</code>
+     * <code>optional int64 related_user_id = 2;</code>
      * @return Whether the relatedUserId field is set.
      */
     @java.lang.Override
@@ -687,7 +687,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>int64 related_user_id = 2;</code>
+     * <code>optional int64 related_user_id = 2;</code>
      * @return The relatedUserId.
      */
     @java.lang.Override
@@ -695,7 +695,7 @@ private static final long serialVersionUID = 0L;
       return relatedUserId_;
     }
     /**
-     * <code>int64 related_user_id = 2;</code>
+     * <code>optional int64 related_user_id = 2;</code>
      * @param value The relatedUserId to set.
      * @return This builder for chaining.
      */
@@ -706,7 +706,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 related_user_id = 2;</code>
+     * <code>optional int64 related_user_id = 2;</code>
      * @return This builder for chaining.
      */
     public Builder clearRelatedUserId() {
@@ -718,7 +718,7 @@ private static final long serialVersionUID = 0L;
 
     private long blockDate_ ;
     /**
-     * <code>int64 block_date = 3;</code>
+     * <code>optional int64 block_date = 3;</code>
      * @return Whether the blockDate field is set.
      */
     @java.lang.Override
@@ -726,7 +726,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000004) != 0);
     }
     /**
-     * <code>int64 block_date = 3;</code>
+     * <code>optional int64 block_date = 3;</code>
      * @return The blockDate.
      */
     @java.lang.Override
@@ -734,7 +734,7 @@ private static final long serialVersionUID = 0L;
       return blockDate_;
     }
     /**
-     * <code>int64 block_date = 3;</code>
+     * <code>optional int64 block_date = 3;</code>
      * @param value The blockDate to set.
      * @return This builder for chaining.
      */
@@ -745,7 +745,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 block_date = 3;</code>
+     * <code>optional int64 block_date = 3;</code>
      * @return This builder for chaining.
      */
     public Builder clearBlockDate() {
@@ -757,7 +757,7 @@ private static final long serialVersionUID = 0L;
 
     private long groupIndex_ ;
     /**
-     * <code>int64 group_index = 4;</code>
+     * <code>optional int64 group_index = 4;</code>
      * @return Whether the groupIndex field is set.
      */
     @java.lang.Override
@@ -765,7 +765,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000008) != 0);
     }
     /**
-     * <code>int64 group_index = 4;</code>
+     * <code>optional int64 group_index = 4;</code>
      * @return The groupIndex.
      */
     @java.lang.Override
@@ -773,7 +773,7 @@ private static final long serialVersionUID = 0L;
       return groupIndex_;
     }
     /**
-     * <code>int64 group_index = 4;</code>
+     * <code>optional int64 group_index = 4;</code>
      * @param value The groupIndex to set.
      * @return This builder for chaining.
      */
@@ -784,7 +784,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 group_index = 4;</code>
+     * <code>optional int64 group_index = 4;</code>
      * @return This builder for chaining.
      */
     public Builder clearGroupIndex() {
@@ -796,7 +796,7 @@ private static final long serialVersionUID = 0L;
 
     private long establishmentDate_ ;
     /**
-     * <code>int64 establishment_date = 5;</code>
+     * <code>optional int64 establishment_date = 5;</code>
      * @return Whether the establishmentDate field is set.
      */
     @java.lang.Override
@@ -804,7 +804,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000010) != 0);
     }
     /**
-     * <code>int64 establishment_date = 5;</code>
+     * <code>optional int64 establishment_date = 5;</code>
      * @return The establishmentDate.
      */
     @java.lang.Override
@@ -812,7 +812,7 @@ private static final long serialVersionUID = 0L;
       return establishmentDate_;
     }
     /**
-     * <code>int64 establishment_date = 5;</code>
+     * <code>optional int64 establishment_date = 5;</code>
      * @param value The establishmentDate to set.
      * @return This builder for chaining.
      */
@@ -823,7 +823,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 establishment_date = 5;</code>
+     * <code>optional int64 establishment_date = 5;</code>
      * @return This builder for chaining.
      */
     public Builder clearEstablishmentDate() {

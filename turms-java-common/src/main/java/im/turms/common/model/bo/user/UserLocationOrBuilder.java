@@ -37,46 +37,46 @@ public interface UserLocationOrBuilder extends
   float getLongitude();
 
   /**
-   * <code>string name = 3;</code>
+   * <code>optional string name = 3;</code>
    * @return Whether the name field is set.
    */
   boolean hasName();
   /**
-   * <code>string name = 3;</code>
+   * <code>optional string name = 3;</code>
    * @return The name.
    */
   java.lang.String getName();
   /**
-   * <code>string name = 3;</code>
+   * <code>optional string name = 3;</code>
    * @return The bytes for name.
    */
   com.google.protobuf.ByteString
       getNameBytes();
 
   /**
-   * <code>string address = 4;</code>
+   * <code>optional string address = 4;</code>
    * @return Whether the address field is set.
    */
   boolean hasAddress();
   /**
-   * <code>string address = 4;</code>
+   * <code>optional string address = 4;</code>
    * @return The address.
    */
   java.lang.String getAddress();
   /**
-   * <code>string address = 4;</code>
+   * <code>optional string address = 4;</code>
    * @return The bytes for address.
    */
   com.google.protobuf.ByteString
       getAddressBytes();
 
   /**
-   * <code>int64 timestamp = 5;</code>
+   * <code>optional int64 timestamp = 5;</code>
    * @return Whether the timestamp field is set.
    */
   boolean hasTimestamp();
   /**
-   * <code>int64 timestamp = 5;</code>
+   * <code>optional int64 timestamp = 5;</code>
    * @return The timestamp.
    */
   long getTimestamp();

@@ -25,34 +25,34 @@ public interface QueryRelatedUserIdsRequestOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>bool blocked = 1;</code>
+   * <code>optional bool blocked = 1;</code>
    * @return Whether the blocked field is set.
    */
   boolean hasBlocked();
   /**
-   * <code>bool blocked = 1;</code>
+   * <code>optional bool blocked = 1;</code>
    * @return The blocked.
    */
   boolean getBlocked();
 
   /**
-   * <code>int32 group_index = 2;</code>
+   * <code>optional int32 group_index = 2;</code>
    * @return Whether the groupIndex field is set.
    */
   boolean hasGroupIndex();
   /**
-   * <code>int32 group_index = 2;</code>
+   * <code>optional int32 group_index = 2;</code>
    * @return The groupIndex.
    */
   int getGroupIndex();
 
   /**
-   * <code>int64 last_updated_date = 3;</code>
+   * <code>optional int64 last_updated_date = 3;</code>
    * @return Whether the lastUpdatedDate field is set.
    */
   boolean hasLastUpdatedDate();
   /**
-   * <code>int64 last_updated_date = 3;</code>
+   * <code>optional int64 last_updated_date = 3;</code>
    * @return The lastUpdatedDate.
    */
   long getLastUpdatedDate();

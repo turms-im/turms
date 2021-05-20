@@ -153,7 +153,7 @@ private static final long serialVersionUID = 0L;
   public static final int LAST_UPDATED_DATE_FIELD_NUMBER = 2;
   private long lastUpdatedDate_;
   /**
-   * <code>int64 last_updated_date = 2;</code>
+   * <code>optional int64 last_updated_date = 2;</code>
    * @return Whether the lastUpdatedDate field is set.
    */
   @java.lang.Override
@@ -161,7 +161,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>int64 last_updated_date = 2;</code>
+   * <code>optional int64 last_updated_date = 2;</code>
    * @return The lastUpdatedDate.
    */
   @java.lang.Override
@@ -200,7 +200,7 @@ private static final long serialVersionUID = 0L;
   public static final int WITH_STATUS_FIELD_NUMBER = 4;
   private boolean withStatus_;
   /**
-   * <code>bool with_status = 4;</code>
+   * <code>optional bool with_status = 4;</code>
    * @return Whether the withStatus field is set.
    */
   @java.lang.Override
@@ -208,7 +208,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>bool with_status = 4;</code>
+   * <code>optional bool with_status = 4;</code>
    * @return The withStatus.
    */
   @java.lang.Override
@@ -653,7 +653,7 @@ private static final long serialVersionUID = 0L;
 
     private long lastUpdatedDate_ ;
     /**
-     * <code>int64 last_updated_date = 2;</code>
+     * <code>optional int64 last_updated_date = 2;</code>
      * @return Whether the lastUpdatedDate field is set.
      */
     @java.lang.Override
@@ -661,7 +661,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>int64 last_updated_date = 2;</code>
+     * <code>optional int64 last_updated_date = 2;</code>
      * @return The lastUpdatedDate.
      */
     @java.lang.Override
@@ -669,7 +669,7 @@ private static final long serialVersionUID = 0L;
       return lastUpdatedDate_;
     }
     /**
-     * <code>int64 last_updated_date = 2;</code>
+     * <code>optional int64 last_updated_date = 2;</code>
      * @param value The lastUpdatedDate to set.
      * @return This builder for chaining.
      */
@@ -680,7 +680,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 last_updated_date = 2;</code>
+     * <code>optional int64 last_updated_date = 2;</code>
      * @return This builder for chaining.
      */
     public Builder clearLastUpdatedDate() {
@@ -771,7 +771,7 @@ private static final long serialVersionUID = 0L;
 
     private boolean withStatus_ ;
     /**
-     * <code>bool with_status = 4;</code>
+     * <code>optional bool with_status = 4;</code>
      * @return Whether the withStatus field is set.
      */
     @java.lang.Override
@@ -779,7 +779,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000004) != 0);
     }
     /**
-     * <code>bool with_status = 4;</code>
+     * <code>optional bool with_status = 4;</code>
      * @return The withStatus.
      */
     @java.lang.Override
@@ -787,7 +787,7 @@ private static final long serialVersionUID = 0L;
       return withStatus_;
     }
     /**
-     * <code>bool with_status = 4;</code>
+     * <code>optional bool with_status = 4;</code>
      * @param value The withStatus to set.
      * @return This builder for chaining.
      */
@@ -798,7 +798,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>bool with_status = 4;</code>
+     * <code>optional bool with_status = 4;</code>
      * @return This builder for chaining.
      */
     public Builder clearWithStatus() {

@@ -158,7 +158,7 @@ private static final long serialVersionUID = 0L;
   public static final int ID_FIELD_NUMBER = 1;
   private long id_;
   /**
-   * <code>int64 id = 1;</code>
+   * <code>optional int64 id = 1;</code>
    * @return Whether the id field is set.
    */
   @java.lang.Override
@@ -166,7 +166,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000001) != 0);
   }
   /**
-   * <code>int64 id = 1;</code>
+   * <code>optional int64 id = 1;</code>
    * @return The id.
    */
   @java.lang.Override
@@ -177,7 +177,7 @@ private static final long serialVersionUID = 0L;
   public static final int TYPE_ID_FIELD_NUMBER = 2;
   private long typeId_;
   /**
-   * <code>int64 type_id = 2;</code>
+   * <code>optional int64 type_id = 2;</code>
    * @return Whether the typeId field is set.
    */
   @java.lang.Override
@@ -185,7 +185,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000002) != 0);
   }
   /**
-   * <code>int64 type_id = 2;</code>
+   * <code>optional int64 type_id = 2;</code>
    * @return The typeId.
    */
   @java.lang.Override
@@ -196,7 +196,7 @@ private static final long serialVersionUID = 0L;
   public static final int CREATOR_ID_FIELD_NUMBER = 3;
   private long creatorId_;
   /**
-   * <code>int64 creator_id = 3;</code>
+   * <code>optional int64 creator_id = 3;</code>
    * @return Whether the creatorId field is set.
    */
   @java.lang.Override
@@ -204,7 +204,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000004) != 0);
   }
   /**
-   * <code>int64 creator_id = 3;</code>
+   * <code>optional int64 creator_id = 3;</code>
    * @return The creatorId.
    */
   @java.lang.Override
@@ -215,7 +215,7 @@ private static final long serialVersionUID = 0L;
   public static final int OWNER_ID_FIELD_NUMBER = 4;
   private long ownerId_;
   /**
-   * <code>int64 owner_id = 4;</code>
+   * <code>optional int64 owner_id = 4;</code>
    * @return Whether the ownerId field is set.
    */
   @java.lang.Override
@@ -223,7 +223,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000008) != 0);
   }
   /**
-   * <code>int64 owner_id = 4;</code>
+   * <code>optional int64 owner_id = 4;</code>
    * @return The ownerId.
    */
   @java.lang.Override
@@ -234,7 +234,7 @@ private static final long serialVersionUID = 0L;
   public static final int NAME_FIELD_NUMBER = 5;
   private volatile java.lang.Object name_;
   /**
-   * <code>string name = 5;</code>
+   * <code>optional string name = 5;</code>
    * @return Whether the name field is set.
    */
   @java.lang.Override
@@ -242,7 +242,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000010) != 0);
   }
   /**
-   * <code>string name = 5;</code>
+   * <code>optional string name = 5;</code>
    * @return The name.
    */
   @java.lang.Override
@@ -259,7 +259,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string name = 5;</code>
+   * <code>optional string name = 5;</code>
    * @return The bytes for name.
    */
   @java.lang.Override
@@ -280,7 +280,7 @@ private static final long serialVersionUID = 0L;
   public static final int INTRO_FIELD_NUMBER = 6;
   private volatile java.lang.Object intro_;
   /**
-   * <code>string intro = 6;</code>
+   * <code>optional string intro = 6;</code>
    * @return Whether the intro field is set.
    */
   @java.lang.Override
@@ -288,7 +288,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000020) != 0);
   }
   /**
-   * <code>string intro = 6;</code>
+   * <code>optional string intro = 6;</code>
    * @return The intro.
    */
   @java.lang.Override
@@ -305,7 +305,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string intro = 6;</code>
+   * <code>optional string intro = 6;</code>
    * @return The bytes for intro.
    */
   @java.lang.Override
@@ -326,7 +326,7 @@ private static final long serialVersionUID = 0L;
   public static final int ANNOUNCEMENT_FIELD_NUMBER = 7;
   private volatile java.lang.Object announcement_;
   /**
-   * <code>string announcement = 7;</code>
+   * <code>optional string announcement = 7;</code>
    * @return Whether the announcement field is set.
    */
   @java.lang.Override
@@ -334,7 +334,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000040) != 0);
   }
   /**
-   * <code>string announcement = 7;</code>
+   * <code>optional string announcement = 7;</code>
    * @return The announcement.
    */
   @java.lang.Override
@@ -351,7 +351,7 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <code>string announcement = 7;</code>
+   * <code>optional string announcement = 7;</code>
    * @return The bytes for announcement.
    */
   @java.lang.Override
@@ -372,7 +372,7 @@ private static final long serialVersionUID = 0L;
   public static final int CREATION_DATE_FIELD_NUMBER = 8;
   private long creationDate_;
   /**
-   * <code>int64 creation_date = 8;</code>
+   * <code>optional int64 creation_date = 8;</code>
    * @return Whether the creationDate field is set.
    */
   @java.lang.Override
@@ -380,7 +380,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000080) != 0);
   }
   /**
-   * <code>int64 creation_date = 8;</code>
+   * <code>optional int64 creation_date = 8;</code>
    * @return The creationDate.
    */
   @java.lang.Override
@@ -391,7 +391,7 @@ private static final long serialVersionUID = 0L;
   public static final int MUTE_END_DATE_FIELD_NUMBER = 9;
   private long muteEndDate_;
   /**
-   * <code>int64 mute_end_date = 9;</code>
+   * <code>optional int64 mute_end_date = 9;</code>
    * @return Whether the muteEndDate field is set.
    */
   @java.lang.Override
@@ -399,7 +399,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000100) != 0);
   }
   /**
-   * <code>int64 mute_end_date = 9;</code>
+   * <code>optional int64 mute_end_date = 9;</code>
    * @return The muteEndDate.
    */
   @java.lang.Override
@@ -410,7 +410,7 @@ private static final long serialVersionUID = 0L;
   public static final int ACTIVE_FIELD_NUMBER = 10;
   private boolean active_;
   /**
-   * <code>bool active = 10;</code>
+   * <code>optional bool active = 10;</code>
    * @return Whether the active field is set.
    */
   @java.lang.Override
@@ -418,7 +418,7 @@ private static final long serialVersionUID = 0L;
     return ((bitField0_ & 0x00000200) != 0);
   }
   /**
-   * <code>bool active = 10;</code>
+   * <code>optional bool active = 10;</code>
    * @return The active.
    */
   @java.lang.Override
@@ -977,7 +977,7 @@ private static final long serialVersionUID = 0L;
 
     private long id_ ;
     /**
-     * <code>int64 id = 1;</code>
+     * <code>optional int64 id = 1;</code>
      * @return Whether the id field is set.
      */
     @java.lang.Override
@@ -985,7 +985,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
-     * <code>int64 id = 1;</code>
+     * <code>optional int64 id = 1;</code>
      * @return The id.
      */
     @java.lang.Override
@@ -993,7 +993,7 @@ private static final long serialVersionUID = 0L;
       return id_;
     }
     /**
-     * <code>int64 id = 1;</code>
+     * <code>optional int64 id = 1;</code>
      * @param value The id to set.
      * @return This builder for chaining.
      */
@@ -1004,7 +1004,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 id = 1;</code>
+     * <code>optional int64 id = 1;</code>
      * @return This builder for chaining.
      */
     public Builder clearId() {
@@ -1016,7 +1016,7 @@ private static final long serialVersionUID = 0L;
 
     private long typeId_ ;
     /**
-     * <code>int64 type_id = 2;</code>
+     * <code>optional int64 type_id = 2;</code>
      * @return Whether the typeId field is set.
      */
     @java.lang.Override
@@ -1024,7 +1024,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
-     * <code>int64 type_id = 2;</code>
+     * <code>optional int64 type_id = 2;</code>
      * @return The typeId.
      */
     @java.lang.Override
@@ -1032,7 +1032,7 @@ private static final long serialVersionUID = 0L;
       return typeId_;
     }
     /**
-     * <code>int64 type_id = 2;</code>
+     * <code>optional int64 type_id = 2;</code>
      * @param value The typeId to set.
      * @return This builder for chaining.
      */
@@ -1043,7 +1043,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 type_id = 2;</code>
+     * <code>optional int64 type_id = 2;</code>
      * @return This builder for chaining.
      */
     public Builder clearTypeId() {
@@ -1055,7 +1055,7 @@ private static final long serialVersionUID = 0L;
 
     private long creatorId_ ;
     /**
-     * <code>int64 creator_id = 3;</code>
+     * <code>optional int64 creator_id = 3;</code>
      * @return Whether the creatorId field is set.
      */
     @java.lang.Override
@@ -1063,7 +1063,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000004) != 0);
     }
     /**
-     * <code>int64 creator_id = 3;</code>
+     * <code>optional int64 creator_id = 3;</code>
      * @return The creatorId.
      */
     @java.lang.Override
@@ -1071,7 +1071,7 @@ private static final long serialVersionUID = 0L;
       return creatorId_;
     }
     /**
-     * <code>int64 creator_id = 3;</code>
+     * <code>optional int64 creator_id = 3;</code>
      * @param value The creatorId to set.
      * @return This builder for chaining.
      */
@@ -1082,7 +1082,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 creator_id = 3;</code>
+     * <code>optional int64 creator_id = 3;</code>
      * @return This builder for chaining.
      */
     public Builder clearCreatorId() {
@@ -1094,7 +1094,7 @@ private static final long serialVersionUID = 0L;
 
     private long ownerId_ ;
     /**
-     * <code>int64 owner_id = 4;</code>
+     * <code>optional int64 owner_id = 4;</code>
      * @return Whether the ownerId field is set.
      */
     @java.lang.Override
@@ -1102,7 +1102,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000008) != 0);
     }
     /**
-     * <code>int64 owner_id = 4;</code>
+     * <code>optional int64 owner_id = 4;</code>
      * @return The ownerId.
      */
     @java.lang.Override
@@ -1110,7 +1110,7 @@ private static final long serialVersionUID = 0L;
       return ownerId_;
     }
     /**
-     * <code>int64 owner_id = 4;</code>
+     * <code>optional int64 owner_id = 4;</code>
      * @param value The ownerId to set.
      * @return This builder for chaining.
      */
@@ -1121,7 +1121,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 owner_id = 4;</code>
+     * <code>optional int64 owner_id = 4;</code>
      * @return This builder for chaining.
      */
     public Builder clearOwnerId() {
@@ -1133,14 +1133,14 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object name_ = "";
     /**
-     * <code>string name = 5;</code>
+     * <code>optional string name = 5;</code>
      * @return Whether the name field is set.
      */
     public boolean hasName() {
       return ((bitField0_ & 0x00000010) != 0);
     }
     /**
-     * <code>string name = 5;</code>
+     * <code>optional string name = 5;</code>
      * @return The name.
      */
     public java.lang.String getName() {
@@ -1156,7 +1156,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string name = 5;</code>
+     * <code>optional string name = 5;</code>
      * @return The bytes for name.
      */
     public com.google.protobuf.ByteString
@@ -1173,7 +1173,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string name = 5;</code>
+     * <code>optional string name = 5;</code>
      * @param value The name to set.
      * @return This builder for chaining.
      */
@@ -1188,7 +1188,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string name = 5;</code>
+     * <code>optional string name = 5;</code>
      * @return This builder for chaining.
      */
     public Builder clearName() {
@@ -1198,7 +1198,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string name = 5;</code>
+     * <code>optional string name = 5;</code>
      * @param value The bytes for name to set.
      * @return This builder for chaining.
      */
@@ -1216,14 +1216,14 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object intro_ = "";
     /**
-     * <code>string intro = 6;</code>
+     * <code>optional string intro = 6;</code>
      * @return Whether the intro field is set.
      */
     public boolean hasIntro() {
       return ((bitField0_ & 0x00000020) != 0);
     }
     /**
-     * <code>string intro = 6;</code>
+     * <code>optional string intro = 6;</code>
      * @return The intro.
      */
     public java.lang.String getIntro() {
@@ -1239,7 +1239,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string intro = 6;</code>
+     * <code>optional string intro = 6;</code>
      * @return The bytes for intro.
      */
     public com.google.protobuf.ByteString
@@ -1256,7 +1256,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string intro = 6;</code>
+     * <code>optional string intro = 6;</code>
      * @param value The intro to set.
      * @return This builder for chaining.
      */
@@ -1271,7 +1271,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string intro = 6;</code>
+     * <code>optional string intro = 6;</code>
      * @return This builder for chaining.
      */
     public Builder clearIntro() {
@@ -1281,7 +1281,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string intro = 6;</code>
+     * <code>optional string intro = 6;</code>
      * @param value The bytes for intro to set.
      * @return This builder for chaining.
      */
@@ -1299,14 +1299,14 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object announcement_ = "";
     /**
-     * <code>string announcement = 7;</code>
+     * <code>optional string announcement = 7;</code>
      * @return Whether the announcement field is set.
      */
     public boolean hasAnnouncement() {
       return ((bitField0_ & 0x00000040) != 0);
     }
     /**
-     * <code>string announcement = 7;</code>
+     * <code>optional string announcement = 7;</code>
      * @return The announcement.
      */
     public java.lang.String getAnnouncement() {
@@ -1322,7 +1322,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string announcement = 7;</code>
+     * <code>optional string announcement = 7;</code>
      * @return The bytes for announcement.
      */
     public com.google.protobuf.ByteString
@@ -1339,7 +1339,7 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <code>string announcement = 7;</code>
+     * <code>optional string announcement = 7;</code>
      * @param value The announcement to set.
      * @return This builder for chaining.
      */
@@ -1354,7 +1354,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string announcement = 7;</code>
+     * <code>optional string announcement = 7;</code>
      * @return This builder for chaining.
      */
     public Builder clearAnnouncement() {
@@ -1364,7 +1364,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>string announcement = 7;</code>
+     * <code>optional string announcement = 7;</code>
      * @param value The bytes for announcement to set.
      * @return This builder for chaining.
      */
@@ -1382,7 +1382,7 @@ private static final long serialVersionUID = 0L;
 
     private long creationDate_ ;
     /**
-     * <code>int64 creation_date = 8;</code>
+     * <code>optional int64 creation_date = 8;</code>
      * @return Whether the creationDate field is set.
      */
     @java.lang.Override
@@ -1390,7 +1390,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000080) != 0);
     }
     /**
-     * <code>int64 creation_date = 8;</code>
+     * <code>optional int64 creation_date = 8;</code>
      * @return The creationDate.
      */
     @java.lang.Override
@@ -1398,7 +1398,7 @@ private static final long serialVersionUID = 0L;
       return creationDate_;
     }
     /**
-     * <code>int64 creation_date = 8;</code>
+     * <code>optional int64 creation_date = 8;</code>
      * @param value The creationDate to set.
      * @return This builder for chaining.
      */
@@ -1409,7 +1409,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 creation_date = 8;</code>
+     * <code>optional int64 creation_date = 8;</code>
      * @return This builder for chaining.
      */
     public Builder clearCreationDate() {
@@ -1421,7 +1421,7 @@ private static final long serialVersionUID = 0L;
 
     private long muteEndDate_ ;
     /**
-     * <code>int64 mute_end_date = 9;</code>
+     * <code>optional int64 mute_end_date = 9;</code>
      * @return Whether the muteEndDate field is set.
      */
     @java.lang.Override
@@ -1429,7 +1429,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000100) != 0);
     }
     /**
-     * <code>int64 mute_end_date = 9;</code>
+     * <code>optional int64 mute_end_date = 9;</code>
      * @return The muteEndDate.
      */
     @java.lang.Override
@@ -1437,7 +1437,7 @@ private static final long serialVersionUID = 0L;
       return muteEndDate_;
     }
     /**
-     * <code>int64 mute_end_date = 9;</code>
+     * <code>optional int64 mute_end_date = 9;</code>
      * @param value The muteEndDate to set.
      * @return This builder for chaining.
      */
@@ -1448,7 +1448,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>int64 mute_end_date = 9;</code>
+     * <code>optional int64 mute_end_date = 9;</code>
      * @return This builder for chaining.
      */
     public Builder clearMuteEndDate() {
@@ -1460,7 +1460,7 @@ private static final long serialVersionUID = 0L;
 
     private boolean active_ ;
     /**
-     * <code>bool active = 10;</code>
+     * <code>optional bool active = 10;</code>
      * @return Whether the active field is set.
      */
     @java.lang.Override
@@ -1468,7 +1468,7 @@ private static final long serialVersionUID = 0L;
       return ((bitField0_ & 0x00000200) != 0);
     }
     /**
-     * <code>bool active = 10;</code>
+     * <code>optional bool active = 10;</code>
      * @return The active.
      */
     @java.lang.Override
@@ -1476,7 +1476,7 @@ private static final long serialVersionUID = 0L;
       return active_;
     }
     /**
-     * <code>bool active = 10;</code>
+     * <code>optional bool active = 10;</code>
      * @param value The active to set.
      * @return This builder for chaining.
      */
@@ -1487,7 +1487,7 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>bool active = 10;</code>
+     * <code>optional bool active = 10;</code>
      * @return This builder for chaining.
      */
     public Builder clearActive() {
