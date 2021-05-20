@@ -40,58 +40,78 @@ public class TurmsApplicationContext {
     private static final String DEFAULT_VERSION = "0.0.0";
 
     private final boolean isProduction;
+    private final boolean isDevOrLocalTest;
     private final String activeProfile;
     private final String version;
 
     public TurmsApplicationContext(Environment environment,
                                    @Autowired(required = false) BuildProperties buildProperties) {
-        // Prefer isProduction to be true to avoid getting trouble in production environment
-        List<String> nonProdEnvs = List.of(
-                "dev", "qa", "stg", "uat",
-                "development", "quality", "staging",
-                "demo", "test", "local");
-        String activeProfile = null;
-        boolean isProduction = true;
-        for (String profile : environment.getActiveProfiles()) {
-            if (!profile.endsWith("-latest")) {
-                activeProfile = profile;
-            }
-            if (isProduction) {
-                for (String nonProdEnv : nonProdEnvs) {
-                    if (profile.equalsIgnoreCase(nonProdEnv)) {
-                        isProduction = false;
-                        break;
-                    }
-                }
-            }
-        }
-        this.activeProfile = activeProfile;
-        this.isProduction = isProduction;
+        List<String> devEnvs = List.of("dev", "development",
+                "local");
+        List<String> localTestEnvs = List.of("test", "testing");
+        List<String> testEnvs = List.of("qa", "stg", "uat",
+                "quality", "staging",
+                "demo");
+        List<String> prodEnvs = List.of("prod", "production");
+        String[] activeProfiles = environment.getActiveProfiles();
 
-        if (isProduction) {
-            if (buildProperties == null) {
-                throw new IllegalStateException(BUILD_INFO_PROPS_PATH + " must exist in production");
-            }
-            version = buildProperties.getVersion();
-        } else {
-            if (buildProperties == null) {
-                // We allow build-info.properties not exist in non-production
-                // environments for a better development experience
-                log.warn("Cannot find " + BUILD_INFO_PROPS_PATH +
-                        ", fall back to the default version " + DEFAULT_VERSION +
-                        " in non-production environments. " +
-                        " Fix it by running \"mvn compile\"");
-                version = DEFAULT_VERSION;
-            } else {
-                version = buildProperties.getVersion();
-            }
-        }
+        activeProfile = getActiveProfile(activeProfiles, devEnvs, localTestEnvs, testEnvs, prodEnvs);
+        isDevOrLocalTest = isInProfiles(devEnvs, activeProfiles) || isInProfiles(localTestEnvs, activeProfiles);
+        // Prefer isProduction to be true to avoid getting trouble in production environment
+        isProduction = !isDevOrLocalTest && !isInProfiles(testEnvs, activeProfiles);
+        version = getVersion(isProduction, buildProperties);
 
         log.info("The local node with version {} is running in a {} environment",
                 version,
                 isProduction ? "production" : "non-production");
 
         setupErrorHandlerContext();
+    }
+
+    private String getActiveProfile(String[] activeProfiles, List<String>... knownEnvProfiles) {
+        for (String profile : activeProfiles) {
+            if (profile.endsWith("-latest")) {
+                continue;
+            }
+            for (List<String> envProfiles : knownEnvProfiles) {
+                for (String envProfile : envProfiles) {
+                    if (profile.equalsIgnoreCase(envProfile)) {
+                        return envProfile.toLowerCase();
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private boolean isInProfiles(List<String> profiles, String[] activeProfiles) {
+        for (String profile : profiles) {
+            for (String activeProfile : activeProfiles) {
+                if (profile.equalsIgnoreCase(activeProfile)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private String getVersion(boolean isProduction, BuildProperties buildProperties) {
+        if (isProduction) {
+            if (buildProperties == null) {
+                throw new IllegalStateException(BUILD_INFO_PROPS_PATH + " must exist in production");
+            }
+            return buildProperties.getVersion();
+        }
+        if (buildProperties == null) {
+            // We allow build-info.properties not exist in non-production
+            // environments for a better development experience
+            log.warn("Cannot find " + BUILD_INFO_PROPS_PATH +
+                    ", fall back to the default version " + DEFAULT_VERSION +
+                    " in non-production environments. " +
+                    " Fix it by running \"mvn compile\"");
+            return DEFAULT_VERSION;
+        }
+        return buildProperties.getVersion();
     }
 
     private void setupErrorHandlerContext() {
