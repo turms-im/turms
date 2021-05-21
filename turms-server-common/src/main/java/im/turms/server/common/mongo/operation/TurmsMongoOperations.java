@@ -74,7 +74,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author James Chen
- * @implNote 1. We operations in an unsafe way, which means
+ * @implNote 1. We operates in an unsafe way, which means
  * we don't check whether arguments are legal or not and so on
  * 2. The publishers of mongo-java-driver are cold
  * and the publishers of TurmsMongoOperations are also cold

@@ -1,6 +1,5 @@
 package com.mydomain;
 
-import com.google.protobuf.StringValue;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.common.model.dto.request.message.CreateMessageRequest;
 import im.turms.server.common.plugin.base.TurmsPlugin;
