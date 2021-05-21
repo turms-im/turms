@@ -58,6 +58,16 @@ spring:
       - org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration
       - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
       - org.springframework.boot.autoconfigure.data.redis.RedisReactiveAutoConfiguration
+  jackson:
+    default-property-inclusion: non_null
+    deserialization:
+      fail-on-unknown-properties: false
+      accept-single-value-as-array: true
+    serialization:
+      fail-on-empty-beans: false
+    time-zone: UTC
+    mapper:
+      propagate-transient-marker: true
 management:
   endpoint:
     flightrecorder:
