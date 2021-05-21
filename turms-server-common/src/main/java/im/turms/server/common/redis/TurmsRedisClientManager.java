@@ -25,6 +25,7 @@ import im.turms.server.common.redis.sharding.ShardingAlgorithm;
 import im.turms.server.common.util.ByteBufUtil;
 import io.lettuce.core.GeoArgs;
 import io.lettuce.core.GeoCoordinates;
+import io.lettuce.core.GeoWithin;
 import io.netty.buffer.ByteBuf;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.geo.Point;
@@ -92,8 +93,12 @@ public class TurmsRedisClientManager {
         return getClient(shardKey).geopos(key, members);
     }
 
-    public <T> Flux<T> georadiusbymember(Long shardKey, Object key, Object member, double distance, GeoArgs args) {
-        return getClient(shardKey).georadiusbymember(key, member, distance, args);
+    public <T> Flux<GeoWithin<T>> georadiusbymember(Long shardKey,
+                                                    Object key,
+                                                    Object member,
+                                                    double distanceMeters,
+                                                    GeoArgs args) {
+        return getClient(shardKey).georadiusbymember(key, member, distanceMeters, args);
     }
 
     public Mono<Long> georem(Long shardKey, Object key, Object... members) {

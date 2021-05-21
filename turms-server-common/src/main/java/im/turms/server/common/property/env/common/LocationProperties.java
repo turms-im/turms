@@ -61,8 +61,8 @@ public class LocationProperties {
     private short maxAvailableUsersNearbyNumberLimitPerQuery = 100;
 
     @JsonView(MutablePropertiesView.class)
-    @Description("The maximum allowed distance per query request")
+    @Description("The maximum distance limit in meters")
     @DecimalMin("0")
-    private double maxDistanceLimitPerQuery = 0.1;
+    private double maxDistanceMeters = 10_000;
 
 }

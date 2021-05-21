@@ -151,22 +151,24 @@ public class SessionLocationService {
             }
             short maxAvailableUsersNearbyNumberLimitPerQuery = location.getMaxAvailableUsersNearbyNumberLimitPerQuery();
             if (maxPeopleNumber > maxAvailableUsersNearbyNumberLimitPerQuery) {
-                maxPeopleNumber = maxAvailableUsersNearbyNumberLimitPerQuery;
+                String reason = "The maximum available users nearby number number is " + maxAvailableUsersNearbyNumberLimitPerQuery;
+                return Flux.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, reason));
             }
             if (maxDistance == null) {
                 maxDistance = location.getDefaultMaxDistancePerQuery();
             }
-            double maxDistanceLimitPerQuery = location.getMaxDistanceLimitPerQuery();
-            if (maxDistance > maxDistanceLimitPerQuery) {
-                maxDistance = maxDistanceLimitPerQuery;
+            double maxDistanceMeters = location.getMaxDistanceMeters();
+            if (maxDistance > maxDistanceMeters) {
+                String reason = "The maximum allowed distance in meters is " + maxDistanceMeters;
+                return Flux.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, reason));
             }
-            Flux<UserSessionId> flux = locationRedisClientManager.georadiusbymember(userId,
+            return locationRedisClientManager.georadiusbymember(userId,
                     RedisEntryId.LOCATION_BUFFER,
                     userId,
                     maxDistance,
-                    GeoArgs.Builder.count(maxPeopleNumber));
-            return flux
-                    .map(UserSessionId::getUserId);
+                    GeoArgs.Builder.count(maxPeopleNumber))
+                    .map(geo -> ((UserSessionId) geo.getMember()).getUserId())
+                    .filter(uid -> !uid.equals(userId));
         }
     }
 
@@ -194,20 +196,26 @@ public class SessionLocationService {
         }
         short maxAvailableUsersNearbyNumberLimitPerQuery = location.getMaxAvailableUsersNearbyNumberLimitPerQuery();
         if (maxPeopleNumber > maxAvailableUsersNearbyNumberLimitPerQuery) {
-            maxPeopleNumber = maxAvailableUsersNearbyNumberLimitPerQuery;
+            String reason = "The maximum available users nearby number number is " + maxAvailableUsersNearbyNumberLimitPerQuery;
+            return Flux.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, reason));
         }
         if (maxDistance == null) {
             maxDistance = location.getDefaultMaxDistancePerQuery();
         }
-        double maxDistanceLimitPerQuery = location.getMaxDistanceLimitPerQuery();
-        if (maxDistance > maxDistanceLimitPerQuery) {
-            maxDistance = maxDistanceLimitPerQuery;
+        double maxDistanceMeters = location.getMaxDistanceMeters();
+        if (maxDistance > maxDistanceMeters) {
+            String reason = "The maximum allowed distance in meters is " + maxDistanceMeters;
+            return Flux.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, reason));
         }
-        return locationRedisClientManager.georadiusbymember(userId,
+        UserSessionId currentUserSessionId = new UserSessionId(userId, deviceType);
+        Flux<UserSessionId> georadiusbymember = locationRedisClientManager.georadiusbymember(userId,
                 RedisEntryId.LOCATION_BUFFER,
-                new UserSessionId(userId, deviceType),
+                currentUserSessionId,
                 maxDistance,
-                GeoArgs.Builder.count(maxPeopleNumber));
+                GeoArgs.Builder.count(maxPeopleNumber))
+                .map(geo -> (UserSessionId) geo.getMember());
+        return georadiusbymember
+                .filter(geo -> !geo.equals(currentUserSessionId));
     }
 
     public Mono<GeoCoordinates> getUserLocation(@NotNull Long userId, @NotNull @ValidDeviceType DeviceType deviceType) {

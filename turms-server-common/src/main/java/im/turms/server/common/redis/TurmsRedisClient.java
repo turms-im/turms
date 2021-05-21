@@ -24,8 +24,10 @@ import im.turms.server.common.redis.script.RedisScript;
 import io.lettuce.core.AbstractRedisReactiveCommands;
 import io.lettuce.core.GeoArgs;
 import io.lettuce.core.GeoCoordinates;
+import io.lettuce.core.GeoWithin;
 import io.lettuce.core.KeyValue;
 import io.lettuce.core.RedisClient;
+import io.lettuce.core.RedisCommandExecutionException;
 import io.lettuce.core.RedisNoScriptException;
 import io.lettuce.core.RedisReactiveCommandsImpl;
 import io.lettuce.core.TurmsRedisCommandBuilder;
@@ -150,11 +152,15 @@ public class TurmsRedisClient {
                 .flatMap(value -> value.isEmpty() ? Mono.empty() : Mono.just(value.getValue()));
     }
 
-    public <T> Flux<T> georadiusbymember(Object key, Object member, double distance, GeoArgs geoArgs) {
+    public <T> Flux<GeoWithin<T>> georadiusbymember(Object key, Object member, double distanceMeters, GeoArgs geoArgs) {
         ByteBuf keyBuffer = serializationContext.encodeGeoKey(key);
         ByteBuf memberBuffer = serializationContext.encodeGeoMember(member);
-        return commands.createDissolvingFlux(() -> commandBuilder
-                .georadiusbymember(GEORADIUSBYMEMBER, keyBuffer, memberBuffer, distance, GeoArgs.Unit.m.name(), geoArgs));
+        Flux<GeoWithin<T>> flux = commands.createDissolvingFlux(() -> commandBuilder
+                .georadiusbymember(GEORADIUSBYMEMBER, keyBuffer, memberBuffer, distanceMeters, GeoArgs.Unit.m.name(), geoArgs));
+        return flux
+                .onErrorResume(RedisCommandExecutionException.class, e -> e.getMessage().endsWith("could not decode requested zset member")
+                        ? Flux.empty()
+                        : Flux.error(e));
     }
 
     public Mono<Long> georem(Object key, Object... members) {
