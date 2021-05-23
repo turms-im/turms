@@ -30,13 +30,13 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
 
 @TestMethodOrder(OrderAnnotation::class)
-internal class ConversationServiceST {
+internal class ConversationServiceET {
 
     /** Constructor */
 
     @Test
     @Order(ORDER_FIRST)
-    fun constructor_shouldReturnNotNullMessageServiceInstance() {
+    fun constructor_shouldReturnNotNullConversationServiceInstance() {
         assertNotNull(client.conversationService)
     }
 

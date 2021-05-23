@@ -361,6 +361,7 @@
                     </argLine>
                     <includes>
                         <include>**/*IT.java</include>
+                        <include>**/*ST.java</include>
                     </includes>
                     <skipITs>${skipITs}</skipITs>
                 </configuration>

@@ -20,8 +20,10 @@ package helper;
 import im.turms.server.common.access.http.dto.response.ResponseDTO;
 import im.turms.server.common.testing.BaseIntegrationTest;
 import im.turms.turms.TurmsApplication;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.Base64Utils;
 
@@ -36,6 +38,10 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 public abstract class SpringAwareIntegrationTest extends BaseIntegrationTest {
 
     private static final String BASIC_AUTH = "Basic " + Base64Utils.encodeToString("turms:turms".getBytes());
+
+    @Autowired
+    @Getter
+    private ApplicationContext context;
 
     @Autowired
     public WebTestClient webClient;

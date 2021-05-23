@@ -19,6 +19,10 @@ public abstract class BaseIntegrationTest {
         ENV.start();
     }
 
+    protected static String getMongoUri() {
+        return ENV.getMongoUri("turms-test");
+    }
+
     protected String readText(String path) {
         InputStream resource = BaseIntegrationTest.class.getClassLoader().getResourceAsStream(path);
         if (resource == null) {

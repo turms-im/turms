@@ -122,7 +122,7 @@ public class ConversationServiceController {
     }
 
     @ServiceRequestMapping(UPDATE_CONVERSATION_REQUEST)
-    private ClientRequestHandler handleUpdateConversationRequest() {
+    public ClientRequestHandler handleUpdateConversationRequest() {
         return clientRequest -> {
             UpdateConversationRequest request = clientRequest.getTurmsRequest()
                     .getUpdateConversationRequest();

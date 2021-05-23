@@ -37,7 +37,7 @@ import java.util.concurrent.ExecutionException
 import kotlin.properties.Delegates
 
 @TestMethodOrder(OrderAnnotation::class)
-internal class UserServiceST {
+internal class UserServiceET {
 
     /** Constructor */
 

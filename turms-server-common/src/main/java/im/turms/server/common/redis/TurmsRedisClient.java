@@ -158,9 +158,13 @@ public class TurmsRedisClient {
         Flux<GeoWithin<T>> flux = commands.createDissolvingFlux(() -> commandBuilder
                 .georadiusbymember(GEORADIUSBYMEMBER, keyBuffer, memberBuffer, distanceMeters, GeoArgs.Unit.m.name(), geoArgs));
         return flux
-                .onErrorResume(RedisCommandExecutionException.class, e -> e.getMessage().endsWith("could not decode requested zset member")
-                        ? Flux.empty()
-                        : Flux.error(e));
+                .onErrorResume(RedisCommandExecutionException.class, e -> {
+                    String message = e.getMessage();
+                    if (message != null && message.endsWith("could not decode requested zset member")) {
+                        return Flux.empty();
+                    }
+                    return Flux.error(e);
+                });
     }
 
     public Mono<Long> georem(Object key, Object... members) {

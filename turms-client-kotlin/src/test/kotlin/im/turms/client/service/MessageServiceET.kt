@@ -41,7 +41,7 @@ import java.util.*
 import kotlin.properties.Delegates
 
 @TestMethodOrder(OrderAnnotation::class)
-internal class MessageServiceST {
+internal class MessageServiceET {
 
     /** Constructor */
 

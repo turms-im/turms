@@ -51,8 +51,8 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
     static final DeviceType USER_3_DEVICE = DeviceType.ANDROID;
     static final Point USER_3_LOCATION = new Point(10, 40);
 
-    static final long NONSEXIST_USER_ID = 99999;
-    static final DeviceType NONSEXIST_USER_DEVICE = DeviceType.ANDROID;
+    static final long NONEXISTENT_USER_ID = 99999;
+    static final DeviceType NONEXISTENT_USER_DEVICE = DeviceType.ANDROID;
 
     static {
         Node node = mock(Node.class);
@@ -135,7 +135,7 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
     @Order(11)
     @Test
     void getUserLocation_shouldComplete_ifNotExists() {
-        Mono<GeoCoordinates> getUserLocation = SESSION_LOCATION_SERVICE.getUserLocation(NONSEXIST_USER_ID, NONSEXIST_USER_DEVICE);
+        Mono<GeoCoordinates> getUserLocation = SESSION_LOCATION_SERVICE.getUserLocation(NONEXISTENT_USER_ID, NONEXISTENT_USER_DEVICE);
         StepVerifier
                 .create(getUserLocation)
                 .expectComplete()
@@ -164,9 +164,9 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
                 .verify(DEFAULT_IO_TIMEOUT);
         StepVerifier
                 .create(SESSION_LOCATION_SERVICE
-                        .queryNearestUserSessionIds(NONSEXIST_USER_ID, NONSEXIST_USER_DEVICE, (short) 100,
+                        .queryNearestUserSessionIds(NONEXISTENT_USER_ID, NONEXISTENT_USER_DEVICE, (short) 100,
                                 15.0 * METERS_PER_LATITUDE_DEGREE))
-                .as("Test queryNearestUserSessionIds for user " + NONSEXIST_USER_ID)
+                .as("Test queryNearestUserSessionIds for user " + NONEXISTENT_USER_ID)
                 .expectComplete()
                 .verify(DEFAULT_IO_TIMEOUT);
     }
@@ -186,7 +186,7 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
     void removeUserLocation_shouldSucceed_ifNotExists() {
         StepVerifier
                 .create(SESSION_LOCATION_SERVICE
-                        .removeUserLocation(NONSEXIST_USER_ID, NONSEXIST_USER_DEVICE))
+                        .removeUserLocation(NONEXISTENT_USER_ID, NONEXISTENT_USER_DEVICE))
                 .expectComplete()
                 .verify(DEFAULT_IO_TIMEOUT);
     }

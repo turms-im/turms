@@ -86,7 +86,7 @@ class MongoDataGeneratorIT extends SpringAwareIntegrationTest {
             UserVersion.class);
 
     static {
-        TurmsMongoProperties mongoProperties = new TurmsMongoProperties(ENV.getMongoUri("turms-test"));
+        TurmsMongoProperties mongoProperties = new TurmsMongoProperties(getMongoUri());
         MONGO_CLIENT = TurmsMongoClient.of(mongoProperties);
         MONGO_CLIENT.registerEntitiesByClasses(MODEL_CLASSES);
     }

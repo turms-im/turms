@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package integration.im.turms.turms.workflow.access.http.controller.user;
+package system.im.turms.turms.workflow.access.http.controller.user;
 
 import helper.SpringAwareIntegrationTest;
 import im.turms.server.common.access.http.dto.response.ResponseDTO;
@@ -27,7 +27,7 @@ import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class UserControllerIT extends SpringAwareIntegrationTest {
+class UserControllerST extends SpringAwareIntegrationTest {
 
     @Test
     void queryUsers_shouldReturnNotEmptyData() {

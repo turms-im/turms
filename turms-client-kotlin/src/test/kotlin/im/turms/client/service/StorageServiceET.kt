@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation
 
 @TestMethodOrder(OrderAnnotation::class)
-internal class StorageServiceST {
+internal class StorageServiceET {
 
     /** Create */
 

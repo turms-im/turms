@@ -43,7 +43,7 @@ public class TracingContext {
     static {
         Schedulers.onScheduleHook(SCHEDULE_HOOK_NAME, task -> {
             String traceId = ThreadContext.get(Fields.traceId);
-            // Make sure the traceId is remove on the current thread
+            // Make sure the traceId is removed on the current thread
             // because the traceId will be misused if the current thread is scheduled to handle other requests
             if (traceId != null) {
                 ThreadContext.remove(Fields.traceId);
