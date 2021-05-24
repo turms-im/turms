@@ -79,18 +79,16 @@ public class SharedPropertyService implements ClusterService {
                             : ChangeStreamUtil.getIdAsString(event.getDocumentKey());
                     if (changeClusterId.equals(clusterId)) {
                         switch (event.getOperationType()) {
-                            case INSERT:
-                            case REPLACE:
-                            case UPDATE:
+                            case INSERT, REPLACE, UPDATE -> {
                                 sharedClusterProperties = changedProperties;
                                 notifyListeners(sharedClusterProperties.getTurmsProperties());
-                                break;
-                            case INVALIDATE:
+                            }
+                            case INVALIDATE -> {
                                 log.warn("The shared properties has been removed from database unexpectedly");
                                 initializeSharedProperties().subscribe();
-                                break;
-                            default:
-                                break;
+                            }
+                            default -> {
+                            }
                         }
                     }
                 })

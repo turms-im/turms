@@ -126,11 +126,10 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
     private static <T> SingleResultCallback<T> exceptionTransformingCallback(final SingleResultCallback<T> callback) {
         return (result, t) -> {
             if (t != null) {
-                if (t instanceof MongoCommandException) {
-                    MongoCommandException commandException = (MongoCommandException) t;
-                    callback.onResult(result, new MongoQueryException(commandException.getServerAddress(),
-                            commandException.getErrorCode(),
-                            commandException.getErrorMessage()));
+                if (t instanceof MongoCommandException e) {
+                    callback.onResult(result, new MongoQueryException(e.getServerAddress(),
+                            e.getErrorCode(),
+                            e.getErrorMessage()));
                 } else {
                     callback.onResult(result, t);
                 }

@@ -137,8 +137,8 @@ public final class RpcException extends NoStackTraceException {
     }
 
     public static boolean isErrorCode(Throwable throwable, RpcErrorCode code) {
-        if (throwable instanceof RpcException) {
-            return ((RpcException) throwable).getErrorCode().equals(code);
+        if (throwable instanceof RpcException e) {
+            return e.getErrorCode().equals(code);
         }
         return false;
     }

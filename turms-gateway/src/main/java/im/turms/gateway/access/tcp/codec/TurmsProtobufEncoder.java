@@ -37,8 +37,8 @@ public class TurmsProtobufEncoder extends MessageToMessageEncoder<MessageLiteOrB
 
     @Override
     protected void encode(ChannelHandlerContext ctx, MessageLiteOrBuilder messageLiteOrBuilder, List<Object> out) {
-        MessageLite message = messageLiteOrBuilder instanceof MessageLite.Builder
-                ? ((MessageLite.Builder) messageLiteOrBuilder).build()
+        MessageLite message = messageLiteOrBuilder instanceof MessageLite.Builder builder
+                ? builder.build()
                 : (MessageLite) messageLiteOrBuilder;
         out.add(ProtoUtil.getDirectByteBuffer(message));
     }

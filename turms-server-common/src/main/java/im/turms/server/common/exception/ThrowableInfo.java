@@ -27,8 +27,7 @@ public final class ThrowableInfo {
     private final String reason;
 
     private ThrowableInfo(Throwable throwable) {
-        if (throwable instanceof TurmsBusinessException) {
-            TurmsBusinessException exception = (TurmsBusinessException) throwable;
+        if (throwable instanceof TurmsBusinessException exception) {
             code = exception.getCode();
             reason = exception.getReason();
         } else {

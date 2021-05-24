@@ -379,9 +379,9 @@ public class RpcService implements ClusterService {
     }
 
     private Throwable translateThrowable(Throwable throwable) {
-        if (throwable instanceof ApplicationErrorException) {
+        if (throwable instanceof ApplicationErrorException e) {
             try {
-                return RpcException.parse((ApplicationErrorException) throwable);
+                return RpcException.parse(e);
             } catch (Exception exception) {
                 log.error(exception);
                 return throwable;
@@ -391,8 +391,8 @@ public class RpcService implements ClusterService {
     }
 
     private boolean isServerError(Throwable throwable) {
-        if (throwable instanceof RpcException) {
-            return ((RpcException) throwable).isServerError();
+        if (throwable instanceof RpcException e) {
+            return e.isServerError();
         } else {
             // e.g. ClosedChannelException
             return true;

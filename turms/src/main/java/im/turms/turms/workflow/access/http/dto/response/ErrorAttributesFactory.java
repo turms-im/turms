@@ -38,10 +38,10 @@ public final class ErrorAttributesFactory {
 
     public static ErrorAttributes parse(Throwable throwable) {
         SimpleErrorAttributes attributes;
-        if (throwable instanceof ResponseStatusException) {
-            attributes = SimpleErrorAttributes.fromResponseStatusException((ResponseStatusException) throwable);
-        } else if (throwable instanceof TurmsBusinessException) {
-            attributes = SimpleErrorAttributes.fromTurmsBusinessException((TurmsBusinessException) throwable);
+        if (throwable instanceof ResponseStatusException e) {
+            attributes = SimpleErrorAttributes.fromResponseStatusException(e);
+        } else if (throwable instanceof TurmsBusinessException e) {
+            attributes = SimpleErrorAttributes.fromTurmsBusinessException(e);
         } else {
             attributes = SimpleErrorAttributes.fromTrivialException(throwable);
         }

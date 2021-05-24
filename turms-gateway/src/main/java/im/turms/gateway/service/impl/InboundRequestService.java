@@ -176,8 +176,7 @@ public class InboundRequestService {
 
     private ServiceResponse getServiceResponseFromException(Throwable throwable, ServiceRequest serviceRequest) {
         ServiceResponse serviceResponse;
-        if (throwable instanceof RpcException) {
-            RpcException rpcException = (RpcException) throwable;
+        if (throwable instanceof RpcException rpcException) {
             if (rpcException.isServerError()) {
                 log.error(ErrorMessage.FAILED_TO_HANDLE_SERVICE_REQUEST_WITH_REQUEST, serviceRequest, throwable);
             }

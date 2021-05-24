@@ -38,9 +38,9 @@ public final class MapUtil {
             K key = entry.getKey();
             V existingValue = baseMap.get(key);
             V valueToMerge = entry.getValue();
-            if (existingValue instanceof Collection && valueToMerge instanceof Collection) {
-                if (!((Collection) existingValue).containsAll((Collection) valueToMerge)) {
-                    ((Collection) existingValue).addAll((Collection) valueToMerge);
+            if (existingValue instanceof Collection existingValues && valueToMerge instanceof Collection valuesToMerge) {
+                if (!existingValues.containsAll(valuesToMerge)) {
+                    existingValues.addAll(valuesToMerge);
                 }
             } else if (existingValue instanceof Map && valueToMerge instanceof Map) {
                 deepMerge((Map) existingValue, (Map) valueToMerge);

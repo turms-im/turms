@@ -60,21 +60,21 @@ public final class CommandArgsUtil {
             return;
         }
         for (CommandArgs.SingularArgument arg : args.singularArguments) {
-            if (arg instanceof CommandArgs.IntegerArgument) {
-                writeStringArg(out, Long.toString(((CommandArgs.IntegerArgument) arg).val));
-            } else if (arg instanceof CommandArgs.KeyArgument) {
-                ByteBuf key = (ByteBuf) ((CommandArgs.KeyArgument<?, ?>) arg).key;
+            if (arg instanceof CommandArgs.IntegerArgument argument) {
+                writeStringArg(out, Long.toString(argument.val));
+            } else if (arg instanceof CommandArgs.KeyArgument<?, ?> argument) {
+                ByteBuf key = (ByteBuf) argument.key;
                 writeByteBuf(out, key);
-            } else if (arg instanceof CommandArgs.DoubleArgument) {
-                writeStringArg(out, Double.toString(((CommandArgs.DoubleArgument) arg).val));
-            } else if (arg instanceof CommandArgs.CharArrayArgument) {
-                writeCharsArg(out, ((CommandArgs.CharArrayArgument) arg).val);
-            } else if (arg instanceof CommandArgs.BytesArgument) {
-                writeBytesArg(out, ((CommandArgs.BytesArgument) arg).val);
-            } else if (arg instanceof CommandArgs.StringArgument) {
-                writeStringArg(out, ((CommandArgs.StringArgument) arg).val);
-            } else if (arg instanceof CommandArgs.ValueArgument) {
-                ByteBuf val = (ByteBuf) ((CommandArgs.ValueArgument<?, ?>) arg).val;
+            } else if (arg instanceof CommandArgs.DoubleArgument argument) {
+                writeStringArg(out, Double.toString(argument.val));
+            } else if (arg instanceof CommandArgs.CharArrayArgument argument) {
+                writeCharsArg(out, argument.val);
+            } else if (arg instanceof CommandArgs.BytesArgument argument) {
+                writeBytesArg(out, argument.val);
+            } else if (arg instanceof CommandArgs.StringArgument argument) {
+                writeStringArg(out, argument.val);
+            } else if (arg instanceof CommandArgs.ValueArgument<?, ?> argument) {
+                ByteBuf val = (ByteBuf) argument.val;
                 writeByteBuf(out, val);
             }
         }

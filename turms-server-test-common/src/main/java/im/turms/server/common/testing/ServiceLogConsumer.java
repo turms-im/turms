@@ -19,16 +19,10 @@ public class ServiceLogConsumer extends BaseConsumer<ServiceLogConsumer> {
     @Override
     public void accept(OutputFrame frame) {
         switch (frame.getType()) {
-            case STDOUT:
-                log.info("[" + serviceName + "]: " + frame.getUtf8String());
-                break;
-            case STDERR:
-                log.error("[" + serviceName + "]: " + frame.getUtf8String());
-                break;
-            case END:
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + frame.getType());
+            case STDOUT -> log.info("[" + serviceName + "]: " + frame.getUtf8String());
+            case STDERR -> log.error("[" + serviceName + "]: " + frame.getUtf8String());
+            case END -> {
+            }
         }
     }
 

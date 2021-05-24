@@ -69,8 +69,8 @@ public class MetricsPool {
     public Map<String, Double> getMeasurements(Meter meter) {
         Iterable<Measurement> measures = meter.measure();
         Map<String, Double> measurements;
-        if (measures instanceof Collection) {
-            measurements = Maps.newHashMapWithExpectedSize(((Collection<Measurement>) measures).size());
+        if (measures instanceof Collection<Measurement> measurementCollection) {
+            measurements = Maps.newHashMapWithExpectedSize(measurementCollection.size());
         } else {
             measurements = new HashMap<>(8);
         }
@@ -99,8 +99,7 @@ public class MetricsPool {
 
     private Set<String> collectNames(MeterRegistry registry) {
         Set<String> names = new TreeSet<>();
-        if (registry instanceof CompositeMeterRegistry) {
-            CompositeMeterRegistry compositeMeterRegistry = (CompositeMeterRegistry) registry;
+        if (registry instanceof CompositeMeterRegistry compositeMeterRegistry) {
             for (MeterRegistry meterRegistry : compositeMeterRegistry.getRegistries()) {
                 names.addAll(collectNames(meterRegistry));
             }
@@ -139,8 +138,8 @@ public class MetricsPool {
     }
 
     private List<Meter> findFirstMatchingMeters(MeterRegistry registry, String name, @Nullable List<Tag> tags) {
-        if (registry instanceof CompositeMeterRegistry) {
-            return findFirstMatchingMeters((CompositeMeterRegistry) registry, name, tags);
+        if (registry instanceof CompositeMeterRegistry meterRegistry) {
+            return findFirstMatchingMeters(meterRegistry, name, tags);
         }
         List<Meter> list = null;
         Map<Meter.Id, Meter> meterMap;

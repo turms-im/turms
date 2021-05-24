@@ -28,7 +28,7 @@
 
     <properties>
         <!-- Project -->
-        <java.version>11</java.version>
+        <java.version>16</java.version>
         <revision>0.10.0-SNAPSHOT</revision>
 
         <!-- Runtime Deps -->

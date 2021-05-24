@@ -68,20 +68,13 @@ public class UserRequestDispatcher {
         }
         SimpleTurmsRequest request = TurmsRequestUtil.parseSimpleRequest(data.nioBuffer());
         TurmsRequest.KindCase requestType = request.getType();
-        Mono<TurmsNotification> notificationMono;
-        switch (requestType) {
-            case CREATE_SESSION_REQUEST:
-                notificationMono = sessionController.handleCreateSessionRequest(sessionWrapper,
-                        request.getCreateSessionRequest())
-                        .map(result -> getNotificationFromHandlerResult(result, request.getRequestId()));
-                break;
-            case DELETE_SESSION_REQUEST:
-                notificationMono = sessionController.handleDeleteSessionRequest(sessionWrapper);
-                break;
-            default:
-                notificationMono = handleServiceRequest(sessionWrapper, request, data);
-                break;
-        }
+        Mono<TurmsNotification> notificationMono = switch (requestType) {
+            case CREATE_SESSION_REQUEST -> sessionController
+                    .handleCreateSessionRequest(sessionWrapper, request.getCreateSessionRequest())
+                    .map(result -> getNotificationFromHandlerResult(result, request.getRequestId()));
+            case DELETE_SESSION_REQUEST -> sessionController.handleDeleteSessionRequest(sessionWrapper);
+            default -> handleServiceRequest(sessionWrapper, request, data);
+        };
         return notificationMono
                 .onErrorResume(throwable -> {
                     ThrowableInfo info = ThrowableInfo.get(throwable);

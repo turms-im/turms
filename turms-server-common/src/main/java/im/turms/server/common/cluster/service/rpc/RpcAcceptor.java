@@ -113,8 +113,8 @@ public class RpcAcceptor implements RSocket {
             initialCapacity = initialCapacity > -1
                     ? initialCapacity + Short.BYTES
                     : 256 + Short.BYTES;
-            ByteBuf outputBuffer = PooledByteBufAllocator.DEFAULT.directBuffer(initialCapacity);
-            outputBuffer.writeShort(serializerId);
+            ByteBuf outputBuffer = PooledByteBufAllocator.DEFAULT.directBuffer(initialCapacity)
+                    .writeShort(serializerId);
             returnValueSerializer.write(outputBuffer, returnValue);
             ByteBuf byteBufToComposite = returnValueSerializer.byteBufToComposite(returnValue);
             if (byteBufToComposite != null) {

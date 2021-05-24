@@ -50,8 +50,7 @@ public class TurmsCommandEncoder extends ChannelOutboundHandlerAdapter {
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
         CompositeByteBuf out;
-        if (msg instanceof RedisCommand) {
-            RedisCommand<?, ?, ?> command = (RedisCommand<?, ?, ?>) msg;
+        if (msg instanceof RedisCommand command) {
             CommandArgs<?, ?> args = command.getArgs();
             int componentCount = COMMAND_BYTEBUF_COMPONENT_COUNT
                     + (args == null ? 0 : args.count()) * CommandArgsUtil.ARG_BYTEBUF_COMPONENT_COUNT;

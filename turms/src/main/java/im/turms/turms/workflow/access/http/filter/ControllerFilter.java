@@ -101,8 +101,8 @@ public class ControllerFilter implements WebFilter {
         return requestMappingHandlerMapping.getHandler(exchange)
                 .switchIfEmpty(Mono.defer(() -> filterUnhandledRequest(exchange, chain)))
                 .flatMap(o -> {
-                    if (o instanceof HandlerMethod) {
-                        return filterHandlerMethod((HandlerMethod) o, exchange, chain);
+                    if (o instanceof HandlerMethod method) {
+                        return filterHandlerMethod(method, exchange, chain);
                     }
                     return filterUnhandledRequest(exchange, chain);
                 });

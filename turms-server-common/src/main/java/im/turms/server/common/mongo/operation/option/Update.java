@@ -51,8 +51,8 @@ public final class Update {
 
     public Update setIfNotNull(@NotNull String field, @Nullable Object value) {
         if (value != null) {
-            if (value instanceof Collection) {
-                if (!((Collection<?>) value).isEmpty()) {
+            if (value instanceof Collection<?> collection) {
+                if (!collection.isEmpty()) {
                     appendSet(field, value);
                 }
             } else {

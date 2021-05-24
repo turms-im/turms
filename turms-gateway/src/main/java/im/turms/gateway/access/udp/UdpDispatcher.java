@@ -119,34 +119,32 @@ public class UdpDispatcher {
         UdpSignalRequest signalRequest = parseRequest(content);
         content.release();
         InetSocketAddress senderAddress = packet.sender();
-        if (signalRequest != null) {
-            long userId = signalRequest.getUserId();
-            DeviceType deviceType = signalRequest.getDeviceType();
-            int sessionId = signalRequest.getSessionId();
-            switch (signalRequest.getType()) {
-                case HEARTBEAT:
-                    UserSession session = serviceMediator.authAndProcessHeartbeatRequest(userId, deviceType, sessionId);
-                    if (session == null) {
-                        return Mono.just(TurmsStatusCode.SEND_REQUEST_FROM_NON_EXISTING_SESSION);
-                    }
-                    // Update the address because it may has changed
-                    session.getConnection().setAddress(senderAddress);
-                    return Mono.just(TurmsStatusCode.OK);
-                case GO_OFFLINE:
-                    CloseReason reason = CloseReason.get(SessionCloseStatus.DISCONNECTED_BY_CLIENT);
-                    return serviceMediator.authAndSetLocalUserDeviceOffline(userId, deviceType, reason, sessionId)
-                            .thenReturn(TurmsStatusCode.OK);
-                default:
-                    throw new IllegalStateException("Unexpected value: " + signalRequest.getType());
-            }
-        } else {
+        if (signalRequest == null) {
             return Mono.just(TurmsStatusCode.INVALID_REQUEST);
         }
+        long userId = signalRequest.getUserId();
+        DeviceType deviceType = signalRequest.getDeviceType();
+        int sessionId = signalRequest.getSessionId();
+        return switch (signalRequest.getType()) {
+            case HEARTBEAT -> {
+                UserSession session = serviceMediator.authAndProcessHeartbeatRequest(userId, deviceType, sessionId);
+                if (session == null) {
+                    yield Mono.just(TurmsStatusCode.SEND_REQUEST_FROM_NON_EXISTING_SESSION);
+                }
+                // Update the address because it may has changed
+                session.getConnection().setAddress(senderAddress);
+                yield Mono.just(TurmsStatusCode.OK);
+            }
+            case GO_OFFLINE -> {
+                CloseReason reason = CloseReason.get(SessionCloseStatus.DISCONNECTED_BY_CLIENT);
+                yield serviceMediator.authAndSetLocalUserDeviceOffline(userId, deviceType, reason, sessionId)
+                        .thenReturn(TurmsStatusCode.OK);
+            }
+        };
     }
 
     private TurmsStatusCode handleExceptionForIncomingPacket(Throwable throwable) {
-        if (throwable instanceof TurmsBusinessException) {
-            TurmsBusinessException exception = (TurmsBusinessException) throwable;
+        if (throwable instanceof TurmsBusinessException exception) {
             TurmsStatusCode code = exception.getCode();
             if (code.isServerError()) {
                 log.error("Failed to handle incoming package", throwable);

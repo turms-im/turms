@@ -233,12 +233,8 @@ public class DiscoveryService implements ClusterService {
                             : ChangeStreamUtil.getIdAsString(event.getDocumentKey());
                     if (clusterId.equals(localNodeStatusManager.getLocalMember().getClusterId())) {
                         switch (event.getOperationType()) {
-                            case INSERT:
-                            case REPLACE:
-                            case UPDATE:
-                                leader = changedLeader;
-                                break;
-                            case INVALIDATE:
+                            case INSERT, REPLACE, UPDATE -> leader = changedLeader;
+                            case INVALIDATE -> {
                                 leader = null;
                                 int delay = (int) (5 * ThreadLocalRandom.current().nextFloat());
                                 Mono.delay(Duration.ofSeconds(delay))
@@ -247,7 +243,7 @@ public class DiscoveryService implements ClusterService {
                                                 localNodeStatusManager.tryBecomeFirstLeader().subscribe();
                                             }
                                         });
-                                break;
+                            }
                         }
                     }
                 })
@@ -267,14 +263,9 @@ public class DiscoveryService implements ClusterService {
                     String nodeId = ChangeStreamUtil.getStringFromId(event.getDocumentKey(), Member.Key.Fields.nodeId);
                     if (clusterId.equals(localNodeStatusManager.getLocalMember().getClusterId())) {
                         switch (event.getOperationType()) {
-                            case INSERT:
-                            case REPLACE:
-                                onMemberAddedOrReplaced(changedMember);
-                                break;
-                            case UPDATE:
-                                onMemberUpdated(nodeId, event.getUpdateDescription());
-                                break;
-                            case DELETE:
+                            case INSERT, REPLACE -> onMemberAddedOrReplaced(changedMember);
+                            case UPDATE -> onMemberUpdated(nodeId, event.getUpdateDescription());
+                            case DELETE -> {
                                 Member deletedMember = allKnownMembers.remove(nodeId);
                                 updateOtherActiveConnectedMemberList(false, deletedMember, null);
                                 // Note that we assume that there is no the case:
@@ -291,7 +282,7 @@ public class DiscoveryService implements ClusterService {
                                                 .subscribe();
                                     }
                                 }
-                                break;
+                            }
                         }
                         updateActiveMembers(allKnownMembers.values());
                         connectionManager.updateHasConnectedToAllMembers(allKnownMembers.keySet());

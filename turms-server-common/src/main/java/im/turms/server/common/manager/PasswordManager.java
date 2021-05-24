@@ -51,15 +51,11 @@ public class PasswordManager {
     }
 
     public String encodePassword(PasswordEncodingAlgorithm strategy, String rawPassword) {
-        switch (strategy) {
-            case BCRYPT:
-                return BCRYPT_PASSWORD_ENCODER.encode(rawPassword);
-            case SALTED_SHA256:
-                return MESSAGE_DIGEST_PASSWORD_ENCODER.encode(rawPassword);
-            case NOOP:
-            default:
-                return rawPassword;
-        }
+        return switch (strategy) {
+            case BCRYPT -> BCRYPT_PASSWORD_ENCODER.encode(rawPassword);
+            case SALTED_SHA256 -> MESSAGE_DIGEST_PASSWORD_ENCODER.encode(rawPassword);
+            case NOOP -> rawPassword;
+        };
     }
 
     public String encodeAdminPassword(@NotNull String rawPassword) {
@@ -93,16 +89,11 @@ public class PasswordManager {
         } else if (rawPassword == null) {
             return false;
         }
-        switch (strategy) {
-            case BCRYPT:
-                return BCRYPT_PASSWORD_ENCODER.matches(rawPassword, encodedPassword);
-            case SALTED_SHA256:
-                return MESSAGE_DIGEST_PASSWORD_ENCODER.matches(rawPassword, encodedPassword);
-            case NOOP:
-                return rawPassword.equals(encodedPassword);
-            default:
-                return false;
-        }
+        return switch (strategy) {
+            case BCRYPT -> BCRYPT_PASSWORD_ENCODER.matches(rawPassword, encodedPassword);
+            case SALTED_SHA256 -> MESSAGE_DIGEST_PASSWORD_ENCODER.matches(rawPassword, encodedPassword);
+            case NOOP -> rawPassword.equals(encodedPassword);
+        };
     }
 
 }

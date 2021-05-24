@@ -59,17 +59,12 @@ public class DateTimeUtil {
             @Nullable Integer maxMonthRanges) {
         Date startDate = dateRange.getStart();
         Date endDate = dateRange.getStart();
-        switch (divideBy) {
-            case HOUR:
-                return maxHourRanges == null || getRangesNumber(startDate, endDate, divideBy) <= maxHourRanges;
-            case DAY:
-                return maxDayRanges == null || getRangesNumber(startDate, endDate, divideBy) <= maxDayRanges;
-            case MONTH:
-                return maxMonthRanges == null || getRangesNumber(startDate, endDate, divideBy) <= maxMonthRanges;
-            case NOOP:
-            default:
-                return true;
-        }
+        return switch (divideBy) {
+            case HOUR -> maxHourRanges == null || getRangesNumber(startDate, endDate, divideBy) <= maxHourRanges;
+            case DAY -> maxDayRanges == null || getRangesNumber(startDate, endDate, divideBy) <= maxDayRanges;
+            case MONTH -> maxMonthRanges == null || getRangesNumber(startDate, endDate, divideBy) <= maxMonthRanges;
+            case NOOP -> true;
+        };
     }
 
     public Integer getRangesNumber(
@@ -77,17 +72,12 @@ public class DateTimeUtil {
             @NotNull Date endDate,
             @NotNull DivideBy divideBy) {
         long differenceMillis = endDate.getTime() - startDate.getTime();
-        switch (divideBy) {
-            case HOUR:
-                return (int) Math.ceil((double) differenceMillis / 3600000);
-            case DAY:
-                return (int) Math.ceil((double) differenceMillis / 86400000);
-            case MONTH:
-                return (int) Math.ceil((double) differenceMillis / 2629746000L);
-            case NOOP:
-            default:
-                return 1;
-        }
+        return switch (divideBy) {
+            case HOUR -> (int) Math.ceil((double) differenceMillis / 3600000);
+            case DAY -> (int) Math.ceil((double) differenceMillis / 86400000);
+            case MONTH -> (int) Math.ceil((double) differenceMillis / 2629746000L);
+            case NOOP -> 1;
+        };
     }
 
     public List<Pair<Date, Date>> divide(
@@ -100,20 +90,12 @@ public class DateTimeUtil {
             if (startDate.getTime() == endDate.getTime()) {
                 return Collections.emptyList();
             } else {
-                int unit;
-                switch (divideBy) {
-                    case HOUR:
-                        unit = Calendar.HOUR_OF_DAY;
-                        break;
-                    case DAY:
-                        unit = Calendar.DAY_OF_YEAR;
-                        break;
-                    case MONTH:
-                        unit = Calendar.MONTH;
-                        break;
-                    default:
-                        throw new IllegalStateException("Unexpected value: " + divideBy);
-                }
+                int unit = switch (divideBy) {
+                    case HOUR -> Calendar.HOUR_OF_DAY;
+                    case DAY -> Calendar.DAY_OF_YEAR;
+                    case MONTH -> Calendar.MONTH;
+                    default -> throw new IllegalStateException("Unexpected value: " + divideBy);
+                };
                 List<Pair<Date, Date>> lists = new LinkedList<>();
                 while (true) {
                     // Note: Do not use Instant because it doesn't support plussing months

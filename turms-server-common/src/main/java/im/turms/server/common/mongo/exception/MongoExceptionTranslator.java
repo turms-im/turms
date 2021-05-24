@@ -26,14 +26,14 @@ import com.mongodb.WriteError;
  */
 public class MongoExceptionTranslator {
 
-    public Throwable translate(Throwable e) {
-        if (e instanceof MongoWriteException) {
-            WriteError error = ((MongoWriteException) e).getError();
+    public Throwable translate(Throwable t) {
+        if (t instanceof MongoWriteException e) {
+            WriteError error = e.getError();
             if (error.getCategory().equals(ErrorCategory.DUPLICATE_KEY)) {
-                return new DuplicateKeyException(e.getMessage(), e);
+                return new DuplicateKeyException(t.getMessage(), t);
             }
         }
-        return e;
+        return t;
     }
 
 }

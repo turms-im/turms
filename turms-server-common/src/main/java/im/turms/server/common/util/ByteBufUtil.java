@@ -72,36 +72,36 @@ public final class ByteBufUtil {
     }
 
     public static ByteBuf obj2Buffer(Object obj) {
-        if (obj instanceof ByteBuf) {
-            return (ByteBuf) obj;
+        if (obj instanceof ByteBuf element) {
+            return element;
         }
-        if (obj instanceof Byte) {
-            return getByteBuffer(((Byte) obj).intValue());
+        if (obj instanceof Byte element) {
+            return getByteBuffer(element.intValue());
         }
-        if (obj instanceof Short) {
-            return PooledByteBufAllocator.DEFAULT.directBuffer(Short.BYTES).writeShort((short) obj);
+        if (obj instanceof Short element) {
+            return PooledByteBufAllocator.DEFAULT.directBuffer(Short.BYTES).writeShort(element);
         }
-        if (obj instanceof Integer) {
-            return getIntegerBuffer((int) obj);
+        if (obj instanceof Integer element) {
+            return getIntegerBuffer(element);
         }
-        if (obj instanceof Long) {
-            return PooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES).writeLong((long) obj);
+        if (obj instanceof Long element) {
+            return PooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES).writeLong(element);
         }
-        if (obj instanceof String) {
-            byte[] bytes = ((String) obj).getBytes(StandardCharsets.UTF_8);
+        if (obj instanceof String element) {
+            byte[] bytes = element.getBytes(StandardCharsets.UTF_8);
             return PooledByteBufAllocator.DEFAULT.directBuffer(bytes.length).writeBytes(bytes);
         }
-        if (obj instanceof Float) {
-            return PooledByteBufAllocator.DEFAULT.directBuffer(Float.BYTES).writeFloat((float) obj);
+        if (obj instanceof Float element) {
+            return PooledByteBufAllocator.DEFAULT.directBuffer(Float.BYTES).writeFloat(element);
         }
-        if (obj instanceof Double) {
-            return PooledByteBufAllocator.DEFAULT.directBuffer(Double.BYTES).writeDouble((double) obj);
+        if (obj instanceof Double element) {
+            return PooledByteBufAllocator.DEFAULT.directBuffer(Double.BYTES).writeDouble(element);
         }
-        if (obj instanceof Character) {
-            return PooledByteBufAllocator.DEFAULT.directBuffer(Character.BYTES).writeChar((char) obj);
+        if (obj instanceof Character element) {
+            return PooledByteBufAllocator.DEFAULT.directBuffer(Character.BYTES).writeChar(element);
         }
-        if (obj instanceof Boolean) {
-            return getByteBuffer(((boolean) obj) ? 1 : 0);
+        if (obj instanceof Boolean element) {
+            return getByteBuffer(element ? 1 : 0);
         }
         throw new IllegalArgumentException("Cannot serialize the unknown value: " + obj);
     }

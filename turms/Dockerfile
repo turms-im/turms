@@ -3,14 +3,14 @@
 ####################################################################
 # Stage 0 : BUILD JAR
 ####################################################################
-FROM maven:3-adoptopenjdk-11 AS maven-builder
+FROM maven:3-adoptopenjdk-16 AS maven-builder
 COPY . ./
 RUN mvn clean package -am -B -DskipUTs -DskipITs -P artifact-fat-jar -pl turms --no-transfer-progress
 
 ####################################################################
 # Stage 1: BUILD LAYERS
 ####################################################################
-FROM adoptopenjdk/openjdk11:jre AS layers-builder
+FROM adoptopenjdk/openjdk16:jre AS layers-builder
 WORKDIR /build/
 COPY --from=maven-builder /turms/target/*.jar ./app.jar
 RUN ["mkdir", "dependencies", "snapshot-dependencies", "spring-boot-loader", "application"]
@@ -19,7 +19,7 @@ RUN java -Djarmode=layertools -jar app.jar extract
 ####################################################################
 # Stage 2: BUILD IMAGE
 ####################################################################
-FROM adoptopenjdk/openjdk11:jre
+FROM adoptopenjdk/openjdk16:jre
 
 ENV TURMS_HOME=/opt/turms/turms
 WORKDIR ${TURMS_HOME}

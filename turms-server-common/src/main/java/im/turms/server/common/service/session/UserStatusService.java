@@ -188,18 +188,17 @@ public class UserStatusService {
             return Mono.error(e);
         }
         int size = userIds.size();
-        switch (size) {
-            case 0:
-                return Mono.just(true);
-            case 1:
-                return updateOnlineUserStatusIfPresent(userIds.iterator().next(), userStatus);
-            default:
+        return switch (size) {
+            case 0 -> Mono.just(true);
+            case 1 -> updateOnlineUserStatusIfPresent(userIds.iterator().next(), userStatus);
+            default -> {
                 List<Mono<Boolean>> monos = new ArrayList<>(userIds.size());
                 for (Long userId : userIds) {
                     monos.add(updateOnlineUserStatusIfPresent(userId, userStatus));
                 }
-                return Flux.merge(monos).all(value -> value);
-        }
+                yield Flux.merge(monos).all(value -> value);
+            }
+        };
     }
 
     /**

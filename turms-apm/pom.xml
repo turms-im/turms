@@ -16,7 +16,7 @@
     <description>turms-apm</description>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>16</java.version>
         <spring-boot-admin.version>2.3.1</spring-boot-admin.version>
     </properties>
 

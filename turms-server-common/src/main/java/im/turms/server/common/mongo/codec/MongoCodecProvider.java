@@ -60,8 +60,7 @@ public class MongoCodecProvider implements CodecProvider {
     private synchronized <T> Codec<T> registerClass(Class<T> clazz) {
         return (Codec<T>) codes.computeIfAbsent(clazz, key -> {
             Codec<T> codec = (Codec<T>) createCodec(key);
-            if (codec instanceof MongoCodec) {
-                MongoCodec mongoCodec = (MongoCodec) codec;
+            if (codec instanceof MongoCodec mongoCodec) {
                 mongoCodec.setRegistry(registry);
             }
             codes.put(key, codec);

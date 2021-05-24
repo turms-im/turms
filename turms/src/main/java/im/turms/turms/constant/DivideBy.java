@@ -17,6 +17,9 @@
 
 package im.turms.turms.constant;
 
+/**
+ * @author James Chen
+ */
 public enum DivideBy {
     HOUR,
     DAY,

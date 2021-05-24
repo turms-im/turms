@@ -167,8 +167,7 @@ public class Filter {
             return this;
         }
         Object existingDoc = document.get(creationDateFieldName);
-        if (existingDoc instanceof Document) {
-            Document doc = (Document) existingDoc;
+        if (existingDoc instanceof Document doc) {
             Object existingDate = doc.get("$lt");
             doc.append("$lt", DateUtil.min((Date) existingDate, expirationDate));
         } else {
@@ -204,11 +203,10 @@ public class Filter {
             return this;
         }
         Object existingDoc = document.get(creationDateFieldName);
-        if (existingDoc instanceof Document) {
-            Document doc = (Document) existingDoc;
+        if (existingDoc instanceof Document doc) {
             Object existingDate = doc.get("$gte");
-            if (existingDate instanceof Date) {
-                doc.append("$gte", DateUtil.max((Date) existingDate, expirationDate));
+            if (existingDate instanceof Date date) {
+                doc.append("$gte", DateUtil.max(date, expirationDate));
             } else {
                 if (doc.isEmpty()) {
                     gteOrNull(creationDateFieldName, expirationDate);

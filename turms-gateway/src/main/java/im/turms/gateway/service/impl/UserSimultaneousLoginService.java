@@ -90,36 +90,34 @@ public class UserSimultaneousLoginService {
             newExclusiveDeviceTypes.put(deviceType, deviceType);
         }
         switch (strategy) {
-            case ALLOW_ONE_DEVICE_OF_EACH_DEVICE_TYPE_ONLINE:
-                break;
-            case ALLOW_ONE_DEVICE_FOR_ALL_DEVICE_TYPES_ONLINE:
+            case ALLOW_ONE_DEVICE_OF_EACH_DEVICE_TYPE_ONLINE -> {
+            }
+            case ALLOW_ONE_DEVICE_FOR_ALL_DEVICE_TYPES_ONLINE -> {
                 for (DeviceType type : DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES) {
                     addDeviceTypeConflictedWithAllTypes(newExclusiveDeviceTypes, type);
                 }
-                break;
-            case ALLOW_ONE_DEVICE_OF_DESKTOP_AND_ONE_DEVICE_OF_MOBILE_ONLINE:
-            case ALLOW_ONE_DEVICE_OF_DESKTOP_AND_ONE_DEVICE_OF_BROWSER_AND_ONE_DEVICE_OF_MOBILE_ONLINE:
+            }
+            case ALLOW_ONE_DEVICE_OF_DESKTOP_AND_ONE_DEVICE_OF_MOBILE_ONLINE,
+                    ALLOW_ONE_DEVICE_OF_DESKTOP_AND_ONE_DEVICE_OF_BROWSER_AND_ONE_DEVICE_OF_MOBILE_ONLINE -> {
                 addConflictedDeviceTypes(newExclusiveDeviceTypes, DeviceType.ANDROID, DeviceType.IOS);
-                break;
-            case ALLOW_ONE_DEVICE_OF_DESKTOP_OR_BROWSER_AND_ONE_DEVICE_OF_MOBILE_ONLINE:
+            }
+            case ALLOW_ONE_DEVICE_OF_DESKTOP_OR_BROWSER_AND_ONE_DEVICE_OF_MOBILE_ONLINE -> {
                 addConflictedDeviceTypes(newExclusiveDeviceTypes, DeviceType.DESKTOP, DeviceType.BROWSER);
                 addConflictedDeviceTypes(newExclusiveDeviceTypes, DeviceType.ANDROID, DeviceType.IOS);
-                break;
-            case ALLOW_ONE_DEVICE_OF_DESKTOP_OR_MOBILE_ONLINE:
+            }
+            case ALLOW_ONE_DEVICE_OF_DESKTOP_OR_MOBILE_ONLINE -> {
                 addConflictedDeviceTypes(newExclusiveDeviceTypes, DeviceType.DESKTOP, DeviceType.ANDROID);
                 addConflictedDeviceTypes(newExclusiveDeviceTypes, DeviceType.DESKTOP, DeviceType.IOS);
                 addConflictedDeviceTypes(newExclusiveDeviceTypes, DeviceType.ANDROID, DeviceType.IOS);
-                break;
-            case ALLOW_ONE_DEVICE_OF_DESKTOP_OR_BROWSER_OR_MOBILE_ONLINE:
+            }
+            case ALLOW_ONE_DEVICE_OF_DESKTOP_OR_BROWSER_OR_MOBILE_ONLINE -> {
                 addConflictedDeviceTypes(newExclusiveDeviceTypes, DeviceType.DESKTOP, DeviceType.BROWSER);
                 addConflictedDeviceTypes(newExclusiveDeviceTypes, DeviceType.DESKTOP, DeviceType.ANDROID);
                 addConflictedDeviceTypes(newExclusiveDeviceTypes, DeviceType.DESKTOP, DeviceType.IOS);
                 addConflictedDeviceTypes(newExclusiveDeviceTypes, DeviceType.BROWSER, DeviceType.ANDROID);
                 addConflictedDeviceTypes(newExclusiveDeviceTypes, DeviceType.BROWSER, DeviceType.IOS);
                 addConflictedDeviceTypes(newExclusiveDeviceTypes, DeviceType.ANDROID, DeviceType.IOS);
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + strategy);
+            }
         }
         return newExclusiveDeviceTypes;
     }
@@ -127,18 +125,14 @@ public class UserSimultaneousLoginService {
     private Set<DeviceType> newForbiddenDeviceTypesFromStrategy(SimultaneousLoginStrategy strategy) {
         Set<DeviceType> newForbiddenDeviceTypes = EnumSet.noneOf(DeviceType.class);
         switch (strategy) {
-            case ALLOW_ONE_DEVICE_OF_DESKTOP_AND_ONE_DEVICE_OF_MOBILE_ONLINE:
-            case ALLOW_ONE_DEVICE_OF_DESKTOP_OR_MOBILE_ONLINE:
-                newForbiddenDeviceTypes.add(DeviceType.BROWSER);
-                break;
-            case ALLOW_ONE_DEVICE_OF_EACH_DEVICE_TYPE_ONLINE:
-            case ALLOW_ONE_DEVICE_FOR_ALL_DEVICE_TYPES_ONLINE:
-            case ALLOW_ONE_DEVICE_OF_DESKTOP_OR_BROWSER_AND_ONE_DEVICE_OF_MOBILE_ONLINE:
-            case ALLOW_ONE_DEVICE_OF_DESKTOP_AND_ONE_DEVICE_OF_BROWSER_AND_ONE_DEVICE_OF_MOBILE_ONLINE:
-            case ALLOW_ONE_DEVICE_OF_DESKTOP_OR_BROWSER_OR_MOBILE_ONLINE:
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + strategy);
+            case ALLOW_ONE_DEVICE_OF_DESKTOP_AND_ONE_DEVICE_OF_MOBILE_ONLINE,
+                    ALLOW_ONE_DEVICE_OF_DESKTOP_OR_MOBILE_ONLINE -> newForbiddenDeviceTypes.add(DeviceType.BROWSER);
+            case ALLOW_ONE_DEVICE_OF_EACH_DEVICE_TYPE_ONLINE,
+                    ALLOW_ONE_DEVICE_FOR_ALL_DEVICE_TYPES_ONLINE,
+                    ALLOW_ONE_DEVICE_OF_DESKTOP_OR_BROWSER_AND_ONE_DEVICE_OF_MOBILE_ONLINE,
+                    ALLOW_ONE_DEVICE_OF_DESKTOP_AND_ONE_DEVICE_OF_BROWSER_AND_ONE_DEVICE_OF_MOBILE_ONLINE,
+                    ALLOW_ONE_DEVICE_OF_DESKTOP_OR_BROWSER_OR_MOBILE_ONLINE -> {
+            }
         }
         if (!node.getSharedProperties().getGateway().getSimultaneousLogin().isAllowDeviceTypeUnknownLogin()) {
             newForbiddenDeviceTypes.add(DeviceType.UNKNOWN);

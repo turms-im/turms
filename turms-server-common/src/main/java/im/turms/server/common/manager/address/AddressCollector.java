@@ -75,29 +75,20 @@ public class AddressCollector {
     }
 
     private String queryHost() throws UnknownHostException {
-        String host;
-        switch (advertiseStrategy) {
-            case ADVERTISE_ADDRESS:
-                host = advertiseHost;
-                break;
-            case BIND_ADDRESS:
-                host = bindHost;
-                break;
-            case LOCAL_ADDRESS:
+        return switch (advertiseStrategy) {
+            case ADVERTISE_ADDRESS -> advertiseHost;
+            case BIND_ADDRESS -> bindHost;
+            case LOCAL_ADDRESS -> {
                 try (DatagramSocket socket = new DatagramSocket()) {
                     socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
-                    host = socket.getLocalAddress().getHostAddress();
+                    yield socket.getLocalAddress().getHostAddress();
                 } catch (SocketException e) {
                     throw new IllegalStateException(e);
                 }
-                break;
-            case PUBLIC_ADDRESS:
-                host = publicIpManager.getPublicIp().block(IP_DETECTION_TIMEOUT);
-                break;
-            default:
-                throw new IllegalArgumentException("Unexpected value: " + advertiseStrategy.name());
-        }
-        return host;
+            }
+            case PUBLIC_ADDRESS -> publicIpManager.getPublicIp().block(IP_DETECTION_TIMEOUT);
+            default -> throw new IllegalArgumentException("Unexpected value: " + advertiseStrategy.name());
+        };
     }
 
     private AddressGroup queryAddressGroup() throws UnknownHostException {

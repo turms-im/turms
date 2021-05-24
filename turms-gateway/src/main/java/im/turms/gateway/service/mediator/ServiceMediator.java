@@ -146,18 +146,17 @@ public class ServiceMediator {
         List<UserOnlineStatusChangeHandler> handlers = turmsPluginManager.getUserOnlineStatusChangeHandlerList();
         if (enabled) {
             int size = handlers.size();
-            switch (size) {
-                case 0:
-                    return Mono.empty();
-                case 1:
-                    return handlers.get(0).goOnline(userSessionsManager, userSession);
-                default:
+            return switch (size) {
+                case 0 -> Mono.empty();
+                case 1 -> handlers.get(0).goOnline(userSessionsManager, userSession);
+                default -> {
                     List<Mono<Void>> monos = new ArrayList<>(size);
                     for (UserOnlineStatusChangeHandler handler : handlers) {
                         monos.add(handler.goOnline(userSessionsManager, userSession));
                     }
-                    return Mono.when(monos);
-            }
+                    yield Mono.when(monos);
+                }
+            };
         } else {
             return Mono.empty();
         }

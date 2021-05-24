@@ -56,9 +56,8 @@ class InboundRequestServiceTests {
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(request);
 
         StepVerifier.create(result)
-                .expectErrorMatches(throwable ->
-                        throwable instanceof TurmsBusinessException &&
-                                ((TurmsBusinessException) throwable).getCode().equals(TurmsStatusCode.SERVER_UNAVAILABLE))
+                .expectErrorMatches(throwable -> throwable instanceof TurmsBusinessException e
+                        && e.getCode().equals(TurmsStatusCode.SERVER_UNAVAILABLE))
                 .verify();
     }
 
@@ -70,9 +69,8 @@ class InboundRequestServiceTests {
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(request);
 
         StepVerifier.create(result)
-                .expectErrorMatches(throwable ->
-                        throwable instanceof TurmsBusinessException && ((TurmsBusinessException) throwable).getCode()
-                                .equals(TurmsStatusCode.SEND_REQUEST_FROM_NON_EXISTING_SESSION))
+                .expectErrorMatches(throwable -> throwable instanceof TurmsBusinessException e
+                                && e.getCode().equals(TurmsStatusCode.SEND_REQUEST_FROM_NON_EXISTING_SESSION))
                 .verify();
     }
 

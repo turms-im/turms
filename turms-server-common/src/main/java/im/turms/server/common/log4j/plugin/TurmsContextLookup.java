@@ -53,41 +53,38 @@ public class TurmsContextLookup implements StrLookup {
     @SneakyThrows
     @Override
     public String lookup(LogEvent event, String key) {
-        if (!(event instanceof RingBufferLogEvent)) {
+        if (!(event instanceof RingBufferLogEvent logEvent)) {
             return null;
         }
-        RingBufferLogEvent logEvent = (RingBufferLogEvent) event;
-        switch (key) {
-            case LogContextConstant.LOG_TYPE:
+        return switch (key) {
+            case LogContextConstant.LOG_TYPE -> {
                 AsyncLogger logger = (AsyncLogger) GET_LOGGER.invokeExact(logEvent);
                 if (logger == ClientApiLogging.logger) {
-                    return LogContextConstant.LogType.CLIENT_API;
+                    yield LogContextConstant.LogType.CLIENT_API;
                 } else if (logger == UserActivityLogging.logger) {
-                    return LogContextConstant.LogType.USER_ACTIVITY;
+                    yield LogContextConstant.LogType.USER_ACTIVITY;
                 } else if (logger == AdminApiLogging.logger) {
-                    return LogContextConstant.LogType.ADMIN_API;
+                    yield LogContextConstant.LogType.ADMIN_API;
                 } else {
-                    return null;
+                    yield null;
                 }
-            case LogContextConstant.NODE_TYPE:
+            }
+            case LogContextConstant.NODE_TYPE -> {
                 NodeType nodeType = Node.getNodeType();
                 if (nodeType == null) {
-                    return "";
+                    yield "";
                 }
-                switch (nodeType) {
-                    case SERVICE:
-                        return LogContextConstant.NodeType.SERVICE;
-                    case GATEWAY:
-                        return LogContextConstant.NodeType.GATEWAY;
-                    default:
-                        throw new IllegalStateException("Unexpected value: " + Node.getNodeType());
-                }
-            case LogContextConstant.NODE_ID:
+                yield switch (nodeType) {
+                    case SERVICE -> LogContextConstant.NodeType.SERVICE;
+                    case GATEWAY -> LogContextConstant.NodeType.GATEWAY;
+                };
+            }
+            case LogContextConstant.NODE_ID -> {
                 String nodeId = Node.getNodeId();
-                return nodeId == null ? "" : nodeId;
-            default:
-                return null;
-        }
+                yield nodeId == null ? "" : nodeId;
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + key);
+        };
     }
 
 }

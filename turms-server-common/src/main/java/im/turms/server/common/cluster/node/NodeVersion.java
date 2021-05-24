@@ -107,25 +107,18 @@ public class NodeVersion implements Comparable<NodeVersion> {
                 break;
             }
             switch (i) {
-                case 0:
-                    major = Byte.parseByte(token);
-                    break;
-                case 1:
-                    minor = Byte.parseByte(token);
-                    break;
-                case 2:
-                    patch = Byte.parseByte(token);
-                    break;
-                case 3:
+                case 0 -> major = Byte.parseByte(token);
+                case 1 -> minor = Byte.parseByte(token);
+                case 2 -> patch = Byte.parseByte(token);
+                case 3 -> {
                     for (Qualifier qualifierValue : Qualifier.values()) {
                         if (token.endsWith(qualifierValue.name())) {
                             qualifier = qualifierValue.getId();
                             break;
                         }
                     }
-                    break;
-                default:
-                    throw new IllegalArgumentException(WRONG_VERSION_FORMAT_ERROR_MESSAGE);
+                }
+                default -> throw new IllegalArgumentException(WRONG_VERSION_FORMAT_ERROR_MESSAGE);
             }
         }
         return new NodeVersion(major, minor, patch, qualifier);

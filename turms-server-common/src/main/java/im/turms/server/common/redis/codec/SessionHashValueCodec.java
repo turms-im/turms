@@ -34,13 +34,13 @@ public class SessionHashValueCodec implements TurmsRedisCodec<Object> {
     @Override
     public ByteBuf encode(Object element) {
         ByteBuf buffer;
-        if (element instanceof UserStatus) {
+        if (element instanceof UserStatus status) {
             // Note that we use the negative number for user status so that we can know
             // the type of the value from the first byte when deserializing
-            int userStatus = ((UserStatus) element).getNumber();
+            int userStatus = status.getNumber();
             buffer = ByteBufUtil.getByteBuffer(userStatus);
-        } else if (element instanceof String) {
-            byte[] nodeIdBytes = ((String) element).getBytes(StandardCharsets.UTF_8);
+        } else if (element instanceof String nodeId) {
+            byte[] nodeIdBytes = nodeId.getBytes(StandardCharsets.UTF_8);
             if (nodeIdBytes.length == 0 || nodeIdBytes.length > NodeProperties.NODE_ID_MAX_LENGTH) {
                 throw new IllegalArgumentException(
                         "The length of node ID must be greater than 0 and less than or equals to " + NodeProperties.NODE_ID_MAX_LENGTH);
