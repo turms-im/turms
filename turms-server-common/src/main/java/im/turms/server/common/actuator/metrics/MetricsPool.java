@@ -29,7 +29,7 @@ import org.springframework.boot.actuate.endpoint.InvalidEndpointRequestException
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Nullable;
-import java.lang.invoke.MethodHandle;
+import java.lang.invoke.VarHandle;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -47,7 +47,7 @@ import java.util.TreeSet;
  */
 public class MetricsPool {
 
-    private static final MethodHandle GET_METER_MAP = ReflectionUtil.getGetter(MeterRegistry.class, "meterMap");
+    private static final VarHandle METER_MAP = ReflectionUtil.getVarHandle(MeterRegistry.class, "meterMap");
     private final MeterRegistry registry;
 
     public MetricsPool(MeterRegistry registry) {
@@ -114,7 +114,7 @@ public class MetricsPool {
 
     private Map<Meter.Id, Meter> getMeterMap() {
         try {
-            return (Map<Meter.Id, Meter>) GET_METER_MAP.invokeExact(registry);
+            return (Map<Meter.Id, Meter>) METER_MAP.get(registry);
         } catch (Throwable t) {
             throw new RuntimeException(t);
         }
@@ -144,7 +144,7 @@ public class MetricsPool {
         List<Meter> list = null;
         Map<Meter.Id, Meter> meterMap;
         try {
-            meterMap = (Map<Meter.Id, Meter>) GET_METER_MAP.invokeExact(registry);
+            meterMap = (Map<Meter.Id, Meter>) METER_MAP.get(registry);
         } catch (Throwable t) {
             throw new RuntimeException(t);
         }

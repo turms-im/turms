@@ -32,7 +32,7 @@ import org.apache.logging.log4j.core.async.RingBufferLogEvent;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.lookup.StrLookup;
 
-import java.lang.invoke.MethodHandle;
+import java.lang.invoke.VarHandle;
 
 /**
  * @author James Chen
@@ -40,7 +40,7 @@ import java.lang.invoke.MethodHandle;
 @Plugin(name = "myctx", category = StrLookup.CATEGORY)
 public class TurmsContextLookup implements StrLookup {
 
-    private static final MethodHandle GET_LOGGER = ReflectionUtil.getGetter(RingBufferLogEvent.class, "asyncLogger");
+    private static final VarHandle LOGGER = ReflectionUtil.getVarHandle(RingBufferLogEvent.class, "asyncLogger");
 
     @Override
     public String lookup(String key) {
@@ -58,7 +58,7 @@ public class TurmsContextLookup implements StrLookup {
         }
         return switch (key) {
             case LogContextConstant.LOG_TYPE -> {
-                AsyncLogger logger = (AsyncLogger) GET_LOGGER.invokeExact(logEvent);
+                AsyncLogger logger = (AsyncLogger) LOGGER.get(logEvent);
                 if (logger == ClientApiLogging.logger) {
                     yield LogContextConstant.LogType.CLIENT_API;
                 } else if (logger == UserActivityLogging.logger) {

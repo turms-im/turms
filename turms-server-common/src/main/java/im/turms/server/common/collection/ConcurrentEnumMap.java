@@ -17,19 +17,21 @@
 
 package im.turms.server.common.collection;
 
+import im.turms.server.common.util.ReflectionUtil;
+
+import java.lang.invoke.VarHandle;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 
 /**
  * @author James Chen
  */
 public class ConcurrentEnumMap<E extends Enum<E>, V> implements Map<E, V> {
 
-    private static final AtomicReferenceFieldUpdater<ConcurrentEnumMap, EnumMap> UPDATER =
-            AtomicReferenceFieldUpdater.newUpdater(ConcurrentEnumMap.class, EnumMap.class, "ref");
+    private static final VarHandle REF = ReflectionUtil.getVarHandle(ConcurrentEnumMap.class, "ref");
+
     private volatile EnumMap<E, V> ref;
 
     public ConcurrentEnumMap(EnumMap<E, V> map) {
@@ -69,7 +71,7 @@ public class ConcurrentEnumMap<E extends Enum<E>, V> implements Map<E, V> {
         do {
             map = new EnumMap<>(ref);
             added = map.put(key, value);
-        } while (!UPDATER.compareAndSet(this, ref, map));
+        } while (!REF.compareAndSet(this, ref, map));
 
         return added;
     }
@@ -86,7 +88,7 @@ public class ConcurrentEnumMap<E extends Enum<E>, V> implements Map<E, V> {
             }
             map = new EnumMap<>(expected);
             map.put(key, value);
-        } while (!UPDATER.compareAndSet(this, expected, map));
+        } while (!REF.compareAndSet(this, expected, map));
         return null;
     }
 
@@ -97,7 +99,7 @@ public class ConcurrentEnumMap<E extends Enum<E>, V> implements Map<E, V> {
         do {
             map = new EnumMap<>(ref);
             removed = map.remove(key);
-        } while (!UPDATER.compareAndSet(this, ref, map));
+        } while (!REF.compareAndSet(this, ref, map));
 
         return removed;
     }
@@ -108,7 +110,7 @@ public class ConcurrentEnumMap<E extends Enum<E>, V> implements Map<E, V> {
         do {
             map = new EnumMap<>(ref);
             map.putAll(m);
-        } while (!UPDATER.compareAndSet(this, ref, map));
+        } while (!REF.compareAndSet(this, ref, map));
     }
 
     @Override
