@@ -68,6 +68,8 @@ spring:
     time-zone: UTC
     mapper:
       propagate-transient-marker: true
+  main:
+    banner-mode: log
 management:
   endpoint:
     flightrecorder:

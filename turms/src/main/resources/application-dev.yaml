@@ -15,6 +15,8 @@ turms:
     shared-config:
       mongo:
         uri: mongodb://localhost:27017/turms-config-dev
+  logging:
+    enable-console-appender: true
   service:
     client-api:
       logging:

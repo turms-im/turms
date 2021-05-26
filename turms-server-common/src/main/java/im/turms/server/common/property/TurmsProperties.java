@@ -20,6 +20,7 @@ package im.turms.server.common.property;
 import com.fasterxml.jackson.annotation.JsonView;
 import im.turms.server.common.property.env.common.IpProperties;
 import im.turms.server.common.property.env.common.LocationProperties;
+import im.turms.server.common.property.env.common.LoggingProperties;
 import im.turms.server.common.property.env.common.MonitorProperties;
 import im.turms.server.common.property.env.common.PluginProperties;
 import im.turms.server.common.property.env.common.SecurityProperties;
@@ -65,6 +66,10 @@ public class TurmsProperties {
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private LocationProperties location = new LocationProperties();
+
+    @JsonView(MutablePropertiesView.class)
+    @NestedConfigurationProperty
+    private LoggingProperties logging = new LoggingProperties();
 
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty

@@ -15,23 +15,27 @@
  * limitations under the License.
  */
 
-package im.turms.turms;
+package im.turms.server.common.property.env.common;
 
-import im.turms.server.common.BaseTurmsApplication;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author James Chen
  */
-@SpringBootApplication(
-        scanBasePackages = {"im.turms.turms", "im.turms.server.common"},
-        proxyBeanMethods = false)
-@Log4j2
-public class TurmsApplication extends BaseTurmsApplication {
+@AllArgsConstructor
+@Builder(toBuilder = true)
+@Data
+@NoArgsConstructor
+public class LoggingProperties {
 
-    public static void main(String[] args) {
-        bootstrap(TurmsApplication.class, args);
-    }
+    public static final boolean ENABLE_CONSOLE_APPENDER_DEFAULT_VALUE = false;
+    public static final boolean ENABLE_FILE_APPENDER_DEFAULT_VALUE = true;
+
+    private boolean enableConsoleAppender = ENABLE_CONSOLE_APPENDER_DEFAULT_VALUE;
+
+    private boolean enableFileAppender = ENABLE_FILE_APPENDER_DEFAULT_VALUE;
 
 }

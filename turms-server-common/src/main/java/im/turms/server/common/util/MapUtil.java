@@ -20,6 +20,7 @@ package im.turms.server.common.util;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author James Chen
@@ -52,8 +53,9 @@ public final class MapUtil {
     }
 
     public static Map addValueKeyToAllLeaves(Object properties) {
-        if (properties instanceof Map) {
-            for (Map.Entry<String, Object> entry : ((Map<String, Object>) properties).entrySet()) {
+        if (properties instanceof Map propertyMap) {
+            Set<Map.Entry> entries = propertyMap.entrySet();
+            for (Map.Entry entry : entries) {
                 Object value = entry.getValue();
                 entry.setValue(addValueKeyToAllLeaves(value));
             }

@@ -21,3 +21,5 @@ turms:
     mongo:
       user:
         uri: mongodb://localhost:27017/turms-dev
+  logging:
+    enable-console-appender: true

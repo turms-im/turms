@@ -19,6 +19,7 @@ package im.turms.server.common.cluster.service.config.domain.property;
 
 import im.turms.server.common.property.env.common.IpProperties;
 import im.turms.server.common.property.env.common.LocationProperties;
+import im.turms.server.common.property.env.common.LoggingProperties;
 import im.turms.server.common.property.env.common.MonitorProperties;
 import im.turms.server.common.property.env.common.PluginProperties;
 import im.turms.server.common.property.env.common.SecurityProperties;
@@ -40,6 +41,8 @@ public class CommonProperties {
     private IpProperties ip;
 
     private LocationProperties location;
+
+    private LoggingProperties logging;
 
     private MonitorProperties monitor;
 

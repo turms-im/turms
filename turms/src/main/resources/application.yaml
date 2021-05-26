@@ -24,6 +24,8 @@ spring:
     time-zone: UTC
     mapper:
       propagate-transient-marker: true
+  main:
+    banner-mode: log
   profiles:
     active: prod
     group:

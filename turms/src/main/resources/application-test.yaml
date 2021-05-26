@@ -11,6 +11,8 @@ logging:
 ############################### Turms ###############################
 
 turms:
+  logging:
+    enable-console-appender: true
   service:
     client-api:
       logging:

@@ -1,0 +1,1 @@
+org.springframework.context.ApplicationListener=im.turms.server.common.context.ApplicationEnvironmentEventListener

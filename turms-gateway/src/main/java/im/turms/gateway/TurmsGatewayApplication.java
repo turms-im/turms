@@ -17,12 +17,9 @@
 
 package im.turms.gateway;
 
+import im.turms.server.common.BaseTurmsApplication;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.core.async.AsyncLogger;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * Responsibilities:
@@ -39,22 +36,10 @@ import java.util.concurrent.TimeUnit;
         scanBasePackages = {"im.turms.gateway", "im.turms.server.common"},
         proxyBeanMethods = false)
 @Log4j2
-public class TurmsGatewayApplication {
+public class TurmsGatewayApplication extends BaseTurmsApplication {
 
     public static void main(String[] args) {
-        try {
-            SpringApplication.run(TurmsGatewayApplication.class, args);
-        } catch (Exception e) {
-            // Make sure turms can exit if SpringApplication failed to bootstrap (e.g. PortInUseException)
-            // because there are still some non-daemon threads running after the context has been closed
-
-            log.error(e);
-            // Flush
-            AsyncLogger logger = (AsyncLogger) log;
-            logger.getContext().stop(1, TimeUnit.MINUTES);
-
-            System.exit(1);
-        }
+        bootstrap(TurmsGatewayApplication.class, args);
     }
 
 }
