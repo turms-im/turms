@@ -25,7 +25,7 @@ import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.constraint.ValidDeviceType;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.log4j.UserActivityLogging;
+import im.turms.server.common.logging.UserActivityLogging;
 import im.turms.server.common.plugin.base.AbstractTurmsPluginManager;
 import im.turms.server.common.plugin.extension.UserLocationLogHandler;
 import im.turms.server.common.property.TurmsPropertiesManager;

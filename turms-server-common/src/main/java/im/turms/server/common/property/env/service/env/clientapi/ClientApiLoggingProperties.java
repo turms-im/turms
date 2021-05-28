@@ -15,23 +15,20 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.log4j;
+package im.turms.server.common.property.env.service.env.clientapi;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import im.turms.server.common.property.env.common.clientapi.CommonClientApiLoggingProperties;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * @author James Chen
  */
-public final class AdminApiLogging {
-
-    public static final Logger logger = LogManager.getLogger(AdminApiLogging.class);
-
-    private AdminApiLogging() {
-    }
-
-    public static void log(Object info) {
-        logger.info(info);
-    }
-
+@Builder(toBuilder = true)
+@Data
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+public class ClientApiLoggingProperties extends CommonClientApiLoggingProperties {
 }

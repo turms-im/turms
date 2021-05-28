@@ -18,7 +18,6 @@
 package im.turms.server.common.property.env.service.env.clientapi;
 
 import im.turms.common.model.dto.request.TurmsRequest;
-import im.turms.server.common.property.env.common.ClientApiLoggingProperties;
 import im.turms.server.common.property.metadata.annotation.Description;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

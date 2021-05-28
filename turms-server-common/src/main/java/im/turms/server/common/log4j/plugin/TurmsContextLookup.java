@@ -20,10 +20,10 @@ package im.turms.server.common.log4j.plugin;
 
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.node.NodeType;
-import im.turms.server.common.log4j.AdminApiLogging;
-import im.turms.server.common.log4j.ClientApiLogging;
 import im.turms.server.common.log4j.LogContextConstant;
-import im.turms.server.common.log4j.UserActivityLogging;
+import im.turms.server.common.logging.AdminApiLogging;
+import im.turms.server.common.logging.ClientApiLogging;
+import im.turms.server.common.logging.UserActivityLogging;
 import im.turms.server.common.util.ReflectionUtil;
 import lombok.SneakyThrows;
 import org.apache.logging.log4j.core.LogEvent;

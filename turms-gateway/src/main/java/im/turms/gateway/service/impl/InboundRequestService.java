@@ -29,15 +29,15 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.log4j.ClientApiLogging;
+import im.turms.server.common.logging.ClientApiLogging;
+import im.turms.server.common.logging.LoggingRequestUtil;
 import im.turms.server.common.manager.ServerStatusManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
-import im.turms.server.common.property.env.common.ClientApiLoggingProperties;
+import im.turms.server.common.property.env.gateway.clientapi.ClientApiLoggingProperties;
 import im.turms.server.common.property.env.service.env.clientapi.property.LoggingRequestProperties;
 import im.turms.server.common.rpc.request.HandleServiceRequest;
 import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.ExceptionUtil;
-import im.turms.server.common.util.LoggingRequestUtil;
 import im.turms.server.common.util.ProtoUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -60,7 +60,6 @@ public class InboundRequestService {
     private final ServerStatusManager serverStatusManager;
     private final SessionService sessionService;
     private final Map<TurmsRequest.KindCase, LoggingRequestProperties> supportedLoggingRequestProperties;
-    private final Map<TurmsRequest.KindCase, LoggingRequestProperties> supportedLoggingResponseProperties;
 
     public InboundRequestService(Node node,
                                  TurmsPropertiesManager propertiesManager,
@@ -76,11 +75,6 @@ public class InboundRequestService {
                 loggingProperties.getIncludedRequests(),
                 loggingProperties.getExcludedRequestCategories(),
                 loggingProperties.getExcludedRequestTypes());
-        supportedLoggingResponseProperties = LoggingRequestUtil.getSupportedLoggingRequestProperties(
-                loggingProperties.getIncludedResponseCategories(),
-                loggingProperties.getIncludedResponses(),
-                loggingProperties.getExcludedResponseCategories(),
-                loggingProperties.getExcludedResponseTypes());
     }
 
     /**
@@ -141,7 +135,8 @@ public class InboundRequestService {
         sessionService.updateHeartbeatTimestamp(userId, session);
 
         // Forward request
-        if (LoggingRequestUtil.shouldLog(serviceRequest.getType(), supportedLoggingRequestProperties)) {
+        boolean shouldLog = LoggingRequestUtil.shouldLog(serviceRequest.getType(), supportedLoggingRequestProperties);
+        if (shouldLog) {
             ClientApiLogging.log(serviceRequest);
         }
         Mono<TurmsNotification> notificationMono = sendServiceRequest(serviceRequest)
@@ -150,7 +145,7 @@ public class InboundRequestService {
                 .map(serviceResponse -> getNotificationFromResponse(serviceResponse, requestId))
                 .switchIfEmpty(Mono.fromCallable(() -> getNotificationFromStatusCode(TurmsStatusCode.NO_CONTENT, requestId)))
                 .doFinally(signalType -> tracingContext.clearMdc());
-        if (LoggingRequestUtil.shouldLog(serviceRequest.getType(), supportedLoggingResponseProperties)) {
+        if (shouldLog) {
             notificationMono = notificationMono
                     .doOnSuccess(notification -> ClientApiLogging.log(ProtoUtil.toLogString(notification)));
         }

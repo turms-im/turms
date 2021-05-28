@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.util;
+package im.turms.server.common.logging;
 
 import com.google.common.collect.Sets;
 import im.turms.common.model.dto.request.TurmsRequest;

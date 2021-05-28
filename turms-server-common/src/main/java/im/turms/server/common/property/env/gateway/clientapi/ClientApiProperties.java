@@ -19,7 +19,6 @@ package im.turms.server.common.property.env.gateway.clientapi;
 
 
 import im.turms.server.common.factory.NotificationFactory;
-import im.turms.server.common.property.env.common.ClientApiLoggingProperties;
 import im.turms.server.common.property.metadata.annotation.Description;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

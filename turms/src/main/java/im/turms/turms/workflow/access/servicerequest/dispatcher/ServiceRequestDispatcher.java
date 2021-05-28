@@ -26,14 +26,14 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.exception.ThrowableInfo;
-import im.turms.server.common.log4j.ClientApiLogging;
+import im.turms.server.common.logging.ClientApiLogging;
+import im.turms.server.common.logging.LoggingRequestUtil;
 import im.turms.server.common.manager.ServerStatusManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
-import im.turms.server.common.property.env.common.ClientApiLoggingProperties;
+import im.turms.server.common.property.env.service.env.clientapi.ClientApiLoggingProperties;
 import im.turms.server.common.property.env.service.env.clientapi.property.LoggingRequestProperties;
 import im.turms.server.common.rpc.service.IServiceRequestDispatcher;
 import im.turms.server.common.tracing.TracingContext;
-import im.turms.server.common.util.LoggingRequestUtil;
 import im.turms.server.common.util.ProtoUtil;
 import im.turms.turms.plugin.manager.TurmsPluginManager;
 import im.turms.turms.workflow.access.servicerequest.dto.ClientRequest;
@@ -76,7 +76,6 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
     private final Map<TurmsRequest.KindCase, ClientRequestHandler> router;
     private final boolean pluginEnabled;
     private final Map<TurmsRequest.KindCase, LoggingRequestProperties> supportedLoggingRequestProperties;
-    private final Map<TurmsRequest.KindCase, LoggingRequestProperties> supportedLoggingResponseProperties;
 
     public ServiceRequestDispatcher(ApplicationContext context,
                                     Node node,
@@ -102,11 +101,6 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                 loggingProperties.getIncludedRequests(),
                 loggingProperties.getExcludedRequestCategories(),
                 loggingProperties.getExcludedRequestTypes());
-        supportedLoggingResponseProperties = LoggingRequestUtil.getSupportedLoggingRequestProperties(
-                loggingProperties.getIncludedResponseCategories(),
-                loggingProperties.getIncludedResponses(),
-                loggingProperties.getExcludedResponseCategories(),
-                loggingProperties.getExcludedResponseTypes());
     }
 
     private Map<TurmsRequest.KindCase, ClientRequestHandler> getMappings(ConfigurableApplicationContext context,
@@ -196,7 +190,8 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                 turmsPluginManager.getClientRequestHandlerList();
         if (pluginEnabled) {
             for (im.turms.turms.plugin.extension.handler.ClientRequestHandler clientRequestHandler : clientClientRequestHandlerList) {
-                clientRequestMono = clientRequestMono.flatMap(clientRequestHandler::transform);
+                clientRequestMono = clientRequestMono
+                        .flatMap(req -> Mono.defer(() -> clientRequestHandler.transform(req)));
             }
         }
         return clientRequestMono.flatMap(lastClientRequest -> {
@@ -216,8 +211,9 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                 return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The request type is unsupported"));
             }
             // 4. Log
-            if (LoggingRequestUtil.shouldLog(requestType, supportedLoggingRequestProperties)) {
-                ClientApiLogging.log(lastClientRequest);
+            boolean shouldLog = LoggingRequestUtil.shouldLog(requestType, supportedLoggingRequestProperties);
+            if (shouldLog) {
+                ClientApiLogging.log(request);
             }
             // 5. Pass the request to the controller and get a response
             Mono<RequestHandlerResult> result;
@@ -225,9 +221,9 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                 Mono<RequestHandlerResult> requestResultMono = Mono.empty();
                 for (im.turms.turms.plugin.extension.handler.ClientRequestHandler clientRequestHandler : clientClientRequestHandlerList) {
                     requestResultMono = requestResultMono
-                            .switchIfEmpty(clientRequestHandler.handleClientRequest(lastClientRequest));
+                            .switchIfEmpty(Mono.defer(() -> clientRequestHandler.handleClientRequest(lastClientRequest)));
                 }
-                result = requestResultMono.switchIfEmpty(handler.handle(lastClientRequest));
+                result = requestResultMono.switchIfEmpty(Mono.defer(() -> handler.handle(lastClientRequest)));
             } else {
                 result = handler.handle(lastClientRequest);
             }
@@ -255,7 +251,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                                 handlerResult.getDataForRequester(),
                                 handlerResult.getCode(),
                                 handlerResult.getReason());
-                        if (LoggingRequestUtil.shouldLog(requestType, supportedLoggingResponseProperties)) {
+                        if (shouldLog) {
                             ClientApiLogging.log(response);
                         }
                         tracingContext.clearMdc();

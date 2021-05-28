@@ -24,7 +24,7 @@ import im.turms.gateway.plugin.manager.TurmsPluginManager;
 import im.turms.server.common.bo.log.UserLoginActionLog;
 import im.turms.server.common.bo.log.UserLogoutActionLog;
 import im.turms.server.common.cluster.node.Node;
-import im.turms.server.common.log4j.UserActivityLogging;
+import im.turms.server.common.logging.UserActivityLogging;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;

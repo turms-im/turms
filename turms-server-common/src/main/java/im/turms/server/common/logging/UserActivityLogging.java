@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.log4j;
+package im.turms.server.common.logging;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,11 +23,11 @@ import org.apache.logging.log4j.Logger;
 /**
  * @author James Chen
  */
-public final class ClientApiLogging {
+public final class UserActivityLogging {
 
-    public static final Logger logger = LogManager.getLogger(ClientApiLogging.class);
+    public static final Logger logger = LogManager.getLogger(UserActivityLogging.class);
 
-    private ClientApiLogging() {
+    private UserActivityLogging() {
     }
 
     public static void log(Object message) {

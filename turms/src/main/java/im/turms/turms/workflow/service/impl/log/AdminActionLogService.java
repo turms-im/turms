@@ -21,7 +21,7 @@ import com.mongodb.DBObject;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constraint.NoWhitespace;
 import im.turms.server.common.constraint.ValidIpAddress;
-import im.turms.server.common.log4j.AdminApiLogging;
+import im.turms.server.common.logging.AdminApiLogging;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.turms.bo.AdminAction;
 import im.turms.turms.plugin.extension.handler.AdminActionHandler;
