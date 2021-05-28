@@ -18,6 +18,9 @@
 package im.turms.server.common.util;
 
 import im.turms.common.constant.DeviceType;
+import org.eclipse.collections.api.map.primitive.ByteObjectMap;
+import org.eclipse.collections.api.map.primitive.MutableByteObjectMap;
+import org.eclipse.collections.impl.factory.primitive.ByteObjectMaps;
 
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -35,20 +38,24 @@ public final class DeviceTypeUtil {
             .toArray(DeviceType[]::new);
     public static final Set<DeviceType> ALL_AVAILABLE_DEVICE_TYPES_SET = Arrays.stream(ALL_AVAILABLE_DEVICE_TYPES)
             .collect(Collectors.toSet());
-    public static final Set<DeviceType> BROWSER_SET = Set.of(DeviceType.BROWSER);
 
     private static final int DEVICE_TYPE_COUNT = ALL_DEVICE_TYPES.length;
+
+    // No need to use volatile or CAS
+    private static ByteObjectMap<Set<DeviceType>> deviceTypesByteMap = ByteObjectMaps.immutable.empty();
 
     private DeviceTypeUtil() {
     }
 
     public static Set<DeviceType> byte2DeviceTypes(byte deviceTypesByte) {
-        Set<DeviceType> deviceTypes = EnumSet.noneOf(DeviceType.class);
-        for (int i = 0; i < DEVICE_TYPE_COUNT; i++) {
-            if (BitUtil.isBitSet(deviceTypesByte, i)) {
-                deviceTypes.add(ALL_DEVICE_TYPES[i]);
-            }
+        Set<DeviceType> deviceTypes = deviceTypesByteMap.get(deviceTypesByte);
+        if (deviceTypes != null) {
+            return deviceTypes;
         }
+        deviceTypes = byte2DeviceTypes0(deviceTypesByte);
+        MutableByteObjectMap<Set<DeviceType>> map = ByteObjectMaps.mutable.withAll(deviceTypesByteMap);
+        map.put(deviceTypesByte, deviceTypes);
+        deviceTypesByteMap = map;
         return deviceTypes;
     }
 
@@ -72,6 +79,16 @@ public final class DeviceTypeUtil {
         if (deviceType == DeviceType.UNRECOGNIZED) {
             throw new IllegalArgumentException("The device type must not be UNRECOGNIZED");
         }
+    }
+
+    private static Set<DeviceType> byte2DeviceTypes0(byte deviceTypesByte) {
+        Set<DeviceType> deviceTypes = EnumSet.noneOf(DeviceType.class);
+        for (int i = 0; i < DEVICE_TYPE_COUNT; i++) {
+            if (BitUtil.isBitSet(deviceTypesByte, i)) {
+                deviceTypes.add(ALL_DEVICE_TYPES[i]);
+            }
+        }
+        return deviceTypes;
     }
 
 }

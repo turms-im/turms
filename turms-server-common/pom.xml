@@ -32,10 +32,21 @@
     <version>${revision}</version>
 
     <properties>
+        <eclipse-collections.version>10.4.0</eclipse-collections.version>
         <flight-recorder-starter.version>2.2.1</flight-recorder-starter.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.eclipse.collections</groupId>
+            <artifactId>eclipse-collections-api</artifactId>
+            <version>${eclipse-collections.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.collections</groupId>
+            <artifactId>eclipse-collections</artifactId>
+            <version>${eclipse-collections.version}</version>
+        </dependency>
         <dependency>
             <groupId>de.mirkosertic</groupId>
             <artifactId>flight-recorder-starter</artifactId>
