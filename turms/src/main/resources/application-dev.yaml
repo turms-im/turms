@@ -22,10 +22,6 @@ turms:
       logging:
         included-request-categories:
           - category: all
-        included-response-categories:
-          - category: all
-        included-notification-categories:
-          - category: all
     message:
       check-if-target-active-and-not-deleted: false
     mock:

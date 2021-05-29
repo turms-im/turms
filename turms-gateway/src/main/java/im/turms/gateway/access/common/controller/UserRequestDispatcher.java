@@ -108,9 +108,11 @@ public class UserRequestDispatcher {
         if (session == null || !session.isOpen()) {
             return Mono.just(TurmsNotificationUtil.sessionClosed(request.getRequestId()));
         }
-        ServiceRequest serviceRequest = new ServiceRequest(RandomUtil.nextPositiveLong(),
+        ServiceRequest serviceRequest = new ServiceRequest(
+                sessionWrapper.getIp().getAddress().getAddress(),
                 session.getUserId(),
                 session.getDeviceType(),
+                RandomUtil.nextPositiveLong(),
                 request.getRequestId(),
                 request.getType(),
                 data);

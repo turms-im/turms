@@ -26,7 +26,6 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.exception.ThrowableInfo;
-import im.turms.server.common.logging.ClientApiLogging;
 import im.turms.server.common.logging.LoggingRequestUtil;
 import im.turms.server.common.manager.ServerStatusManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
@@ -35,6 +34,7 @@ import im.turms.server.common.property.env.service.env.clientapi.property.Loggin
 import im.turms.server.common.rpc.service.IServiceRequestDispatcher;
 import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.ProtoUtil;
+import im.turms.turms.logging.ClientApiLogging;
 import im.turms.turms.plugin.manager.TurmsPluginManager;
 import im.turms.turms.workflow.access.servicerequest.dto.ClientRequest;
 import im.turms.turms.workflow.access.servicerequest.dto.RequestHandlerResult;
@@ -148,6 +148,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
      * because the method itself should wrap all kinds of Throwable as a ServiceResponse instance.
      */
     private Mono<ServiceResponse> dispatch0(ServiceRequest serviceRequest) {
+        long requestTime = System.currentTimeMillis();
         // 1. Validate ServiceResponse
         Long traceId = serviceRequest.getTraceId();
         Long userId = serviceRequest.getUserId();
@@ -168,11 +169,12 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.SERVER_UNAVAILABLE));
         }
         TurmsRequest request;
+        int requestSize = serviceRequest.getTurmsRequestBuffer().readableBytes();
         try {
             // Note that "parseFrom" won't block because the buffer is fully read
             request = TurmsRequest.parseFrom(serviceRequest.getTurmsRequestBuffer().nioBuffer());
         } catch (InvalidProtocolBufferException e) {
-            return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.INVALID_REQUEST));
+            return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.INVALID_REQUEST, e.getMessage()));
         }
 
         TracingContext tracingContext = new TracingContext(traceId);
@@ -210,12 +212,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             if (handler == null) {
                 return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The request type is unsupported"));
             }
-            // 4. Log
-            boolean shouldLog = LoggingRequestUtil.shouldLog(requestType, supportedLoggingRequestProperties);
-            if (shouldLog) {
-                ClientApiLogging.log(request);
-            }
-            // 5. Pass the request to the controller and get a response
+            // 4. Pass the request to the controller and get a response
             Mono<RequestHandlerResult> result;
             if (pluginEnabled && !clientClientRequestHandlerList.isEmpty()) {
                 Mono<RequestHandlerResult> requestResultMono = Mono.empty();
@@ -227,7 +224,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             } else {
                 result = handler.handle(lastClientRequest);
             }
-            // 6. Metrics and transform to ServiceResponse
+            // 5. Metrics and transform to ServiceResponse
             return result
                     .name(CLIENT_REQUEST_NAME)
                     .tag(CLIENT_REQUEST_TAG_TYPE, requestType.name())
@@ -251,8 +248,15 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                                 handlerResult.getDataForRequester(),
                                 handlerResult.getCode(),
                                 handlerResult.getReason());
-                        if (shouldLog) {
-                            ClientApiLogging.log(response);
+                        // 6. Log
+                        if (LoggingRequestUtil.shouldLog(requestType, supportedLoggingRequestProperties)) {
+                            ClientApiLogging
+                                    .log(lastClientRequest,
+                                            serviceRequest,
+                                            requestSize,
+                                            requestTime,
+                                            response,
+                                            System.currentTimeMillis() - requestTime);
                         }
                         tracingContext.clearMdc();
                         return response;

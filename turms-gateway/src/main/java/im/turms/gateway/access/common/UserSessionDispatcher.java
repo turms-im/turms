@@ -38,6 +38,7 @@ import reactor.netty.NettyOutbound;
 import reactor.netty.http.websocket.WebsocketOutbound;
 
 import javax.annotation.Nullable;
+import java.net.Inet6Address;
 import java.net.InetSocketAddress;
 
 /**
@@ -60,8 +61,7 @@ public abstract class UserSessionDispatcher {
 
     protected ConnectionHandler bindConnectionWithSessionWrapper() {
         return (connection, in, out, onClose) -> {
-            InetSocketAddress address = (InetSocketAddress) connection.address();
-            String ip = address.getHostString();
+            InetSocketAddress ip = (InetSocketAddress) connection.address();
             NetConnection netConnection = NetConnection.create(connection);
             UserSessionWrapper sessionWrapper = new UserSessionWrapper(netConnection, ip, closeIdleConnectionAfterSeconds, userSession -> {
                 Flux<ByteBuf> notifications = userSession.getNotificationFlux()

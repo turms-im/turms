@@ -23,15 +23,12 @@ import org.apache.logging.log4j.Logger;
 /**
  * @author James Chen
  */
-public final class ClientApiLogging {
+public final class CommonClientApiLogging {
 
-    public static final Logger logger = LogManager.getLogger(ClientApiLogging.class);
+    public static final byte LOG_FIELD_DELIMITER = '|';
+    public static final Logger logger = LogManager.getLogger(CommonClientApiLogging.class);
 
-    private ClientApiLogging() {
-    }
-
-    public static void log(Object message) {
-        logger.info(message);
+    private CommonClientApiLogging() {
     }
 
 }

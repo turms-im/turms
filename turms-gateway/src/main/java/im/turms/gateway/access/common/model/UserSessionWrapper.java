@@ -25,6 +25,7 @@ import io.netty.util.HashedWheelTimer;
 import io.netty.util.Timeout;
 import lombok.Data;
 
+import java.net.InetSocketAddress;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -35,13 +36,13 @@ import java.util.function.Consumer;
 public class UserSessionWrapper {
 
     private static final HashedWheelTimer IDLE_CONNECTION_TIMEOUT_TIMER = new HashedWheelTimer();
-    private final String ip;
+    private final InetSocketAddress ip;
     private final Timeout connectionTimeoutTask;
     private final Consumer<UserSession> onSessionEstablished;
     private NetConnection connection;
     private UserSession userSession;
 
-    public UserSessionWrapper(NetConnection connection, String ip, int closeAfter, Consumer<UserSession> onSessionEstablished) {
+    public UserSessionWrapper(NetConnection connection, InetSocketAddress ip, int closeAfter, Consumer<UserSession> onSessionEstablished) {
         this.connection = connection;
         this.ip = ip;
         this.onSessionEstablished = onSessionEstablished;

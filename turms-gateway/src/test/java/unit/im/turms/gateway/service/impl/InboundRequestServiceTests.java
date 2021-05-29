@@ -1,5 +1,6 @@
 package unit.im.turms.gateway.service.impl;
 
+import com.google.common.net.InetAddresses;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
@@ -35,6 +36,8 @@ import static org.mockito.Mockito.when;
  */
 class InboundRequestServiceTests {
 
+    private static final byte[] IP_ADDRESS = InetAddresses.forString("127.0.0.1").getAddress();
+
     private final ServiceResponse responseForSuccess = new ServiceResponse(
             TurmsNotification.Data.newBuilder().buildPartial(),
             TurmsStatusCode.OK,
@@ -51,9 +54,7 @@ class InboundRequestServiceTests {
     @Test
     void processServiceRequest_shouldThrow_ifNodeIsInactive() {
         InboundRequestService inboundRequestService = newInboundRequestService(false, null, false, true);
-        ByteBuf buffer = PooledByteBufAllocator.DEFAULT.buffer();
-        ServiceRequest request = new ServiceRequest(1L, 1L, DeviceType.ANDROID, 1L, TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, buffer);
-        Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(request);
+        Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(newServiceRequest());
 
         StepVerifier.create(result)
                 .expectErrorMatches(throwable -> throwable instanceof TurmsBusinessException e
@@ -64,13 +65,11 @@ class InboundRequestServiceTests {
     @Test
     void processServiceRequest_shouldThrow_ifUserIsOffline() {
         InboundRequestService inboundRequestService = newInboundRequestService(true, null, false, true);
-        ByteBuf buffer = PooledByteBufAllocator.DEFAULT.buffer();
-        ServiceRequest request = new ServiceRequest(1L, 1L, DeviceType.ANDROID, 1L, TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, buffer);
-        Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(request);
+        Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(newServiceRequest());
 
         StepVerifier.create(result)
                 .expectErrorMatches(throwable -> throwable instanceof TurmsBusinessException e
-                                && e.getCode().equals(TurmsStatusCode.SEND_REQUEST_FROM_NON_EXISTING_SESSION))
+                        && e.getCode().equals(TurmsStatusCode.SEND_REQUEST_FROM_NON_EXISTING_SESSION))
                 .verify();
     }
 
@@ -81,9 +80,7 @@ class InboundRequestServiceTests {
                 .thenReturn(System.currentTimeMillis());
 
         InboundRequestService inboundRequestService = newInboundRequestService(true, session, true, true);
-        ByteBuf buffer = PooledByteBufAllocator.DEFAULT.buffer();
-        ServiceRequest request = new ServiceRequest(1L, 1L, DeviceType.ANDROID, 1L, TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, buffer);
-        Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(request);
+        Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(newServiceRequest());
 
         StepVerifier.create(result)
                 .expectNextMatches(
@@ -98,9 +95,7 @@ class InboundRequestServiceTests {
                 .thenReturn(System.currentTimeMillis());
 
         InboundRequestService inboundRequestService = newInboundRequestService(true, session, false, false);
-        ByteBuf buffer = PooledByteBufAllocator.DEFAULT.buffer();
-        ServiceRequest request = new ServiceRequest(1L, 1L, DeviceType.ANDROID, 1L, TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, buffer);
-        Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(request);
+        Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(newServiceRequest());
 
         StepVerifier.create(result)
                 .expectNextMatches(
@@ -115,9 +110,7 @@ class InboundRequestServiceTests {
                 .thenReturn(System.currentTimeMillis());
 
         InboundRequestService inboundRequestService = newInboundRequestService(true, session, false, true);
-        ByteBuf buffer = PooledByteBufAllocator.DEFAULT.buffer();
-        ServiceRequest request = new ServiceRequest(1L, 1L, DeviceType.ANDROID, 1L, TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, buffer);
-        Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(request);
+        Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(newServiceRequest());
 
         StepVerifier.create(result)
                 .expectNextMatches(notification -> notification.getCode() == responseForSuccess.getCode().getBusinessCode())
@@ -156,6 +149,11 @@ class InboundRequestServiceTests {
                 .thenReturn(session);
 
         return new InboundRequestService(node, mockTurmsPropertiesManager(), serverStatusManager, sessionService);
+    }
+
+    private ServiceRequest newServiceRequest() {
+        ByteBuf buffer = PooledByteBufAllocator.DEFAULT.buffer();
+        return new ServiceRequest(IP_ADDRESS, 1L, DeviceType.ANDROID, 1L, 1L, TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, buffer);
     }
 
     private Node mockNode(boolean handleRequestSuccessfully) {

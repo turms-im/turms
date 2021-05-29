@@ -15,7 +15,7 @@ turms:
       logging:
         included-request-categories:
           - category: all
-        included-response-categories:
+        included-notification-categories:
           - category: all
       return-reason-for-server-error: true
     mongo:

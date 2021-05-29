@@ -28,9 +28,13 @@ import lombok.Data;
 @Data
 public final class ServiceRequest {
 
-    private final Long traceId;
+    // client information
+    private final byte[] ip;
+    // user information
     private final Long userId;
     private final DeviceType deviceType;
+    // request information
+    private final Long traceId;
     private final Long requestId;
     private final TurmsRequest.KindCase type;
 
@@ -39,5 +43,36 @@ public final class ServiceRequest {
      * and turms services should validate it by themselves
      */
     private final ByteBuf turmsRequestBuffer;
+    private String ipStr;
+
+    public ServiceRequest(byte[] ip,
+                          Long userId,
+                          DeviceType deviceType,
+                          Long traceId,
+                          Long requestId,
+                          TurmsRequest.KindCase type,
+                          ByteBuf turmsRequestBuffer) {
+        this.ip = ip;
+        this.userId = userId;
+        this.deviceType = deviceType;
+        this.traceId = traceId;
+        this.requestId = requestId;
+        this.type = type;
+        this.turmsRequestBuffer = turmsRequestBuffer;
+    }
+
+    public String getIpStr() {
+        if (ipStr == null) {
+            StringBuilder ipStrBuilder = new StringBuilder();
+            for (int i = 0; i < ip.length; i++) {
+                ipStrBuilder.append(ip[i] & 0xFF);
+                if (i != ip.length - 1) {
+                    ipStrBuilder.append('.');
+                }
+            }
+            ipStr = ipStrBuilder.toString();
+        }
+        return ipStr;
+    }
 
 }

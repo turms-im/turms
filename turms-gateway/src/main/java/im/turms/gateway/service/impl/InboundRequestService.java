@@ -21,6 +21,7 @@ import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.gateway.constant.ErrorMessage;
+import im.turms.gateway.logging.ClientApiLogging;
 import im.turms.gateway.manager.RateLimitingManager;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.server.common.cluster.exception.RpcException;
@@ -29,7 +30,6 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.logging.ClientApiLogging;
 import im.turms.server.common.logging.LoggingRequestUtil;
 import im.turms.server.common.manager.ServerStatusManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
@@ -38,7 +38,6 @@ import im.turms.server.common.property.env.service.env.clientapi.property.Loggin
 import im.turms.server.common.rpc.request.HandleServiceRequest;
 import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.ExceptionUtil;
-import im.turms.server.common.util.ProtoUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -54,6 +53,8 @@ import java.util.Map;
 @Service
 @Log4j2
 public class InboundRequestService {
+
+    private static final ServiceResponse REQUEST_RESPONSE_NO_CONTENT = new ServiceResponse(null, TurmsStatusCode.NO_CONTENT, null);
 
     private final Node node;
     private final RateLimitingManager rateLimitingManager;
@@ -108,6 +109,7 @@ public class InboundRequestService {
     }
 
     private Mono<TurmsNotification> processServiceRequest0(ServiceRequest serviceRequest) {
+        long requestTime = System.currentTimeMillis();
         // Update context
         TracingContext tracingContext = new TracingContext(serviceRequest.getTraceId());
         tracingContext.updateMdc();
@@ -135,20 +137,24 @@ public class InboundRequestService {
         sessionService.updateHeartbeatTimestamp(userId, session);
 
         // Forward request
-        boolean shouldLog = LoggingRequestUtil.shouldLog(serviceRequest.getType(), supportedLoggingRequestProperties);
-        if (shouldLog) {
-            ClientApiLogging.log(serviceRequest);
-        }
+        int requestSize = serviceRequest.getTurmsRequestBuffer().readableBytes();
         Mono<TurmsNotification> notificationMono = sendServiceRequest(serviceRequest)
                 .doOnEach(tracingContext.getMdcUpdater())
+                .defaultIfEmpty(REQUEST_RESPONSE_NO_CONTENT)
                 .onErrorResume(throwable -> Mono.just(getServiceResponseFromException(throwable, serviceRequest)))
-                .map(serviceResponse -> getNotificationFromResponse(serviceResponse, requestId))
-                .switchIfEmpty(Mono.fromCallable(() -> getNotificationFromStatusCode(TurmsStatusCode.NO_CONTENT, requestId)))
-                .doFinally(signalType -> tracingContext.clearMdc());
-        if (shouldLog) {
-            notificationMono = notificationMono
-                    .doOnSuccess(notification -> ClientApiLogging.log(ProtoUtil.toLogString(notification)));
-        }
+                .map(response -> {
+                    TurmsNotification responseNotification = getNotificationFromResponse(response, requestId);
+                    // Log
+                    if (LoggingRequestUtil.shouldLog(serviceRequest.getType(), supportedLoggingRequestProperties)) {
+                        ClientApiLogging.log(serviceRequest,
+                                requestSize,
+                                requestTime,
+                                responseNotification,
+                                System.currentTimeMillis() - requestTime);
+                    }
+                    tracingContext.clearMdc();
+                    return responseNotification;
+                });
         return notificationMono.contextWrite(Context.of(TracingContext.CTX_KEY_NAME, tracingContext));
     }
 
