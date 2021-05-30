@@ -72,14 +72,6 @@ public final class ExceptionUtil {
         return false;
     }
 
-    public static boolean isClientError(Throwable throwable) {
-        if (throwable instanceof TurmsBusinessException e) {
-            return e.getCode().isServerError();
-        } else {
-            return false;
-        }
-    }
-
     public static boolean isStatusCode(Throwable throwable, TurmsStatusCode statusCode) {
         if (throwable instanceof TurmsBusinessException e) {
             return e.getCode() == statusCode;

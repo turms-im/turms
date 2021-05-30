@@ -29,7 +29,6 @@ import im.turms.gateway.manager.UserSessionsManager;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.service.mediator.ServiceMediator;
 import im.turms.server.common.constant.TurmsStatusCode;
-import im.turms.server.common.manager.ServerStatusManager;
 import io.netty.util.Timeout;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Controller;
@@ -41,11 +40,9 @@ import reactor.core.publisher.Mono;
 @Controller
 public class SessionController {
 
-    private final ServerStatusManager serverStatusManager;
     private final ServiceMediator serviceMediator;
 
-    public SessionController(ServerStatusManager serverStatusManager, ServiceMediator serviceMediator) {
-        this.serverStatusManager = serverStatusManager;
+    public SessionController(ServiceMediator serviceMediator) {
         this.serviceMediator = serviceMediator;
     }
 
@@ -63,9 +60,6 @@ public class SessionController {
                                                                  CreateSessionRequest createSessionRequest) {
         if (sessionWrapper.hasUserSession()) {
             return Mono.just(new RequestHandlerResult(TurmsStatusCode.CREATE_EXISTING_SESSION));
-        }
-        if (!serverStatusManager.isActive()) {
-            return Mono.just(new RequestHandlerResult(TurmsStatusCode.SERVER_UNAVAILABLE));
         }
         long userId = createSessionRequest.getUserId();
         String password = createSessionRequest.hasPassword()

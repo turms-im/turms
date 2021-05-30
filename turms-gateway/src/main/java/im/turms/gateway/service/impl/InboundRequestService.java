@@ -20,7 +20,6 @@ package im.turms.gateway.service.impl;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
-import im.turms.gateway.constant.ErrorMessage;
 import im.turms.gateway.logging.ClientApiLogging;
 import im.turms.gateway.manager.RateLimitingManager;
 import im.turms.gateway.pojo.bo.session.UserSession;
@@ -31,13 +30,11 @@ import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.logging.LoggingRequestUtil;
-import im.turms.server.common.manager.ServerStatusManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.clientapi.ClientApiLoggingProperties;
 import im.turms.server.common.property.env.service.env.clientapi.property.LoggingRequestProperties;
 import im.turms.server.common.rpc.request.HandleServiceRequest;
 import im.turms.server.common.tracing.TracingContext;
-import im.turms.server.common.util.ExceptionUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -58,17 +55,14 @@ public class InboundRequestService {
 
     private final Node node;
     private final RateLimitingManager rateLimitingManager;
-    private final ServerStatusManager serverStatusManager;
     private final SessionService sessionService;
     private final Map<TurmsRequest.KindCase, LoggingRequestProperties> supportedLoggingRequestProperties;
 
     public InboundRequestService(Node node,
                                  TurmsPropertiesManager propertiesManager,
-                                 ServerStatusManager serverStatusManager,
                                  SessionService sessionService) {
         this.node = node;
         rateLimitingManager = new RateLimitingManager(node);
-        this.serverStatusManager = serverStatusManager;
         this.sessionService = sessionService;
         ClientApiLoggingProperties loggingProperties = propertiesManager.getLocalProperties().getGateway().getClientApi().getLogging();
         supportedLoggingRequestProperties = LoggingRequestUtil.getSupportedLoggingRequestProperties(
@@ -78,22 +72,8 @@ public class InboundRequestService {
                 loggingProperties.getExcludedRequestTypes());
     }
 
-    /**
-     * If the method returns MonoError, the session should be closed by downstream.
-     */
-    public TurmsStatusCode processHeartbeatRequest(Long userId, DeviceType deviceType) {
-        if (!serverStatusManager.isActive()) {
-            return TurmsStatusCode.SERVER_UNAVAILABLE;
-        }
-        try {
-            sessionService.updateHeartbeatTimestamp(userId, deviceType);
-            return TurmsStatusCode.OK;
-        } catch (Exception e) {
-            if (!ExceptionUtil.isClientError(e)) {
-                log.error(ErrorMessage.FAILED_TO_HANDLE_HEARTBEAT_REQUEST, e);
-            }
-            return TurmsStatusCode.SERVER_INTERNAL_ERROR;
-        }
+    public void processHeartbeatRequest(UserSession session) {
+        sessionService.updateHeartbeatTimestamp(session);
     }
 
     /**
@@ -115,9 +95,6 @@ public class InboundRequestService {
         tracingContext.updateMdc();
 
         // Validate
-        if (!serverStatusManager.isActive()) {
-            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_UNAVAILABLE));
-        }
         Long userId = serviceRequest.getUserId();
         DeviceType deviceType = serviceRequest.getDeviceType();
         UserSession session = sessionService.getLocalUserSession(userId, deviceType);
@@ -134,14 +111,14 @@ public class InboundRequestService {
         }
 
         // Update heartbeat
-        sessionService.updateHeartbeatTimestamp(userId, session);
+        sessionService.updateHeartbeatTimestamp(session);
 
         // Forward request
         int requestSize = serviceRequest.getTurmsRequestBuffer().readableBytes();
         Mono<TurmsNotification> notificationMono = sendServiceRequest(serviceRequest)
                 .doOnEach(tracingContext.getMdcUpdater())
                 .defaultIfEmpty(REQUEST_RESPONSE_NO_CONTENT)
-                .onErrorResume(throwable -> Mono.just(getServiceResponseFromException(throwable, serviceRequest)))
+                .onErrorResume(throwable -> Mono.just(getServiceResponseFromException(throwable)))
                 .map(response -> {
                     TurmsNotification responseNotification = getNotificationFromResponse(response, requestId);
                     // Log
@@ -175,33 +152,23 @@ public class InboundRequestService {
                 .build();
     }
 
-    private ServiceResponse getServiceResponseFromException(Throwable throwable, ServiceRequest serviceRequest) {
-        ServiceResponse serviceResponse;
-        if (throwable instanceof RpcException rpcException) {
-            if (rpcException.isServerError()) {
-                log.error(ErrorMessage.FAILED_TO_HANDLE_SERVICE_REQUEST_WITH_REQUEST, serviceRequest, throwable);
-            }
-            serviceResponse = new ServiceResponse(null, rpcException.getStatusCode(), throwable.getMessage());
-        } else {
-            log.error(ErrorMessage.FAILED_TO_HANDLE_SERVICE_REQUEST_WITH_REQUEST, serviceRequest, throwable);
-            serviceResponse =
-                    new ServiceResponse(null, TurmsStatusCode.SERVER_INTERNAL_ERROR, throwable.getMessage());
-        }
-        return serviceResponse;
+    private ServiceResponse getServiceResponseFromException(Throwable throwable) {
+        return throwable instanceof RpcException rpcException ?
+                new ServiceResponse(null, rpcException.getStatusCode(), throwable.getMessage()) :
+                new ServiceResponse(null, TurmsStatusCode.SERVER_INTERNAL_ERROR, throwable.getMessage());
     }
 
-    private TurmsNotification getNotificationFromResponse(@NotNull ServiceResponse serviceResponse, long requestId) {
-        TurmsStatusCode code = serviceResponse.getCode();
+    private TurmsNotification getNotificationFromResponse(@NotNull ServiceResponse response, long requestId) {
+        TurmsStatusCode code = response.getCode();
         if (code == null) {
-            log.error("The business code is null in the service response: " + serviceResponse);
-            code = TurmsStatusCode.SERVER_INTERNAL_ERROR;
+            throw new IllegalArgumentException("The business code should not be null in the service response: " + response);
         }
         TurmsNotification.Builder builder = TurmsNotification.newBuilder();
-        String reason = serviceResponse.getReason();
+        String reason = response.getReason();
         if (reason != null) {
             builder.setReason(reason);
         }
-        TurmsNotification.Data dataForRequester = serviceResponse.getDataForRequester();
+        TurmsNotification.Data dataForRequester = response.getDataForRequester();
         if (dataForRequester != null) {
             builder.setData(dataForRequester);
         }

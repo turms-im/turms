@@ -48,21 +48,29 @@ public class RpcAcceptor implements RSocket {
      * Make sure we only throw RpcException in the application layer.
      * No need to release the payload here because "handleFrame" should do the job.
      *
+     * @implNote We log if an error happens because the downstream (RSocket) won't log
      * @see io.rsocket.core.RSocketResponder#handleFrame(io.netty.buffer.ByteBuf)
      */
     @Override
     public Mono<Payload> requestResponse(Payload payload) {
         ByteBuf buffer = payload.sliceData();
+        RpcCallable<?> rpcRequest = null;
         try {
-            RpcCallable<?> rpcRequest = parseRpcRequest(buffer);
+            rpcRequest = parseRpcRequest(buffer);
+            RpcCallable<?> finalRpcRequest = rpcRequest;
             return runRpcRequest(rpcRequest)
                     .map(this::serializeReturnValue)
-                    .onErrorMap(e -> e instanceof RpcException
-                            ? e
-                            : RpcException.get(RpcErrorCode.UNKNOWN_ERROR, TurmsStatusCode.SERVER_INTERNAL_ERROR, e.toString()));
+                    .onErrorMap(e -> {
+                        log.error("Failed to handle request: " + finalRpcRequest, e);
+                        return e instanceof RpcException
+                                ? e
+                                : RpcException.get(RpcErrorCode.UNKNOWN_ERROR, TurmsStatusCode.SERVER_INTERNAL_ERROR, e.toString());
+                    });
         } catch (RpcException e) {
+            log.error("Failed to handle request: " + rpcRequest, e);
             return Mono.error(e);
         } catch (Exception e) {
+            log.error("Failed to handle request: " + rpcRequest, e);
             return Mono.error(RpcException.get(RpcErrorCode.UNKNOWN_ERROR, TurmsStatusCode.SERVER_INTERNAL_ERROR, e.toString()));
         }
     }
@@ -81,11 +89,11 @@ public class RpcAcceptor implements RSocket {
         try {
             return (RpcCallable<?>) serializer.read(buffer);
         } catch (Exception e) {
-            log.error("Failed to deserialize RPC by serializer: {}({})",
-                    serializer.getClass().getName(),
-                    serializer.getSerializerId(),
-                    e);
-            throw RpcException.get(RpcErrorCode.SERIALIZER_FAILED_TO_DESERIALIZE, TurmsStatusCode.SERVER_INTERNAL_ERROR);
+            String desc = "Failed to deserialize RPC by serializer: "
+                    + serializer.getClass().getName()
+                    + ":" + serializer.getSerializerId()
+                    + ":" + e;
+            throw RpcException.get(RpcErrorCode.SERIALIZER_FAILED_TO_DESERIALIZE, TurmsStatusCode.SERVER_INTERNAL_ERROR, desc);
         }
     }
 

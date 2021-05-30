@@ -43,6 +43,7 @@ import reactor.test.StepVerifier;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -147,9 +148,8 @@ class ServiceMediatorTests {
     @Test
     void processHeartbeatRequest_shouldSucceed() {
         ServiceMediator mediator = newServiceMediator();
-        TurmsStatusCode result = mediator.processHeartbeatRequest(userId, deviceType);
-
-        assertThat(result).isEqualTo(TurmsStatusCode.OK);
+        assertThatNoException().isThrownBy(() ->
+                mediator.processHeartbeatRequest(new UserSession(userId, deviceType, null, null)));
     }
 
     @Test
@@ -207,8 +207,6 @@ class ServiceMediatorTests {
         InboundRequestService inboundRequestService = mock(InboundRequestService.class);
         when(inboundRequestService.processServiceRequest(any()))
                 .thenReturn(Mono.empty());
-        when(inboundRequestService.processHeartbeatRequest(any(), any(DeviceType.class)))
-                .thenReturn(TurmsStatusCode.OK);
         return new ServiceMediator(node, pluginManager, userService, sessionService, userSimultaneousLoginService, inboundRequestService);
     }
 

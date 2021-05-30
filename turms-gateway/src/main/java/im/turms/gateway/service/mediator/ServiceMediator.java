@@ -131,8 +131,8 @@ public class ServiceMediator {
         return inboundRequestService.processServiceRequest(serviceRequest);
     }
 
-    public TurmsStatusCode processHeartbeatRequest(Long userId, DeviceType deviceType) {
-        return inboundRequestService.processHeartbeatRequest(userId, deviceType);
+    public void processHeartbeatRequest(UserSession session) {
+        inboundRequestService.processHeartbeatRequest(session);
     }
 
     public UserSession authAndProcessHeartbeatRequest(long userId, DeviceType deviceType, int sessionId) {

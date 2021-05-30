@@ -62,33 +62,33 @@ public final class RpcException extends NoStackTraceException {
     @Nullable
     private final String description;
 
-    private RpcException(RpcErrorCode errorCode, TurmsStatusCode statusCode) {
-        super((errorCode.getErrorCode() + ":" + statusCode.getBusinessCode()).intern());
-        this.errorCode = errorCode;
-        this.statusCode = statusCode;
-        description = null;
-    }
-
     private RpcException(RpcErrorCode errorCode, TurmsStatusCode statusCode, @Nullable String description) {
         // FIXME: This is a terrible implementation to use getMessage() for both serialization and logging
         //  (RSocket uses getMessage() of Throwable to serialize the throwable instance,
         //  see io.rsocket.frame.ErrorFrameCodec.encode(io.netty.buffer.ByteBufAllocator, int, java.lang.Throwable))
         //  but getMessage() is also used to log throwable instances.
         //  So we should use a custom encoder once the issue https://github.com/rsocket/rsocket-java/issues/741 has been fixed.
-        super(errorCode.getErrorCode() + ":" + statusCode.getBusinessCode() + description);
+        super(getErrorMessage(errorCode, statusCode, description));
         this.errorCode = errorCode;
         this.statusCode = statusCode;
         this.description = description;
     }
 
     public static RpcException get(RpcErrorCode errorCode, TurmsStatusCode statusCode) {
-        return EXCEPTION_POOL.computeIfAbsent(Pair.of(errorCode, statusCode), key -> new RpcException(errorCode, statusCode));
+        return EXCEPTION_POOL.computeIfAbsent(Pair.of(errorCode, statusCode), key -> new RpcException(errorCode, statusCode, null));
     }
 
-    public static RpcException get(RpcErrorCode errorCode, TurmsStatusCode statusCode, String message) {
-        return message != null
-                ? new RpcException(errorCode, statusCode, message)
-                : EXCEPTION_POOL.computeIfAbsent(Pair.of(errorCode, statusCode), key -> new RpcException(errorCode, statusCode));
+    public static RpcException get(RpcErrorCode errorCode, TurmsStatusCode statusCode, String description) {
+        return description != null
+                ? new RpcException(errorCode, statusCode, description)
+                : EXCEPTION_POOL.computeIfAbsent(Pair.of(errorCode, statusCode), key -> new RpcException(errorCode, statusCode, null));
+    }
+
+    public static boolean isErrorCode(Throwable throwable, RpcErrorCode code) {
+        if (throwable instanceof RpcException e) {
+            return e.getErrorCode().equals(code);
+        }
+        return false;
     }
 
     public static RpcException parse(ApplicationErrorException exception) {
@@ -102,6 +102,11 @@ public final class RpcException extends NoStackTraceException {
                 ? exceptionMessage.substring(CODE_STRING_LENGTH)
                 : null;
         return new RpcException(errorCode, statusCode, message);
+    }
+
+    private static String getErrorMessage(RpcErrorCode errorCode, TurmsStatusCode statusCode, @Nullable String description) {
+        String base = (errorCode.getErrorCode() + ":" + statusCode.getBusinessCode()).intern();
+        return description == null ? base : base + description;
     }
 
     private static RpcErrorCode parseErrorCode(String exceptionMessage) {
@@ -130,17 +135,6 @@ public final class RpcException extends NoStackTraceException {
             throw new IllegalArgumentException("Failed to parse status code for message: " + exceptionMessage);
         }
         return turmsStatusCode;
-    }
-
-    public boolean isServerError() {
-        return errorCode != RpcErrorCode.FAILED_TO_RUN_RPC || statusCode.isServerError();
-    }
-
-    public static boolean isErrorCode(Throwable throwable, RpcErrorCode code) {
-        if (throwable instanceof RpcException e) {
-            return e.getErrorCode().equals(code);
-        }
-        return false;
     }
 
 }

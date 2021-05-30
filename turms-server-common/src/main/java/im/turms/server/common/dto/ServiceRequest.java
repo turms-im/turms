@@ -39,8 +39,11 @@ public final class ServiceRequest {
     private final TurmsRequest.KindCase type;
 
     /**
-     * Note that turms-gateway doesn't parse and validate the request for better performance (zero copy)
-     * and turms services should validate it by themselves
+     * @implNote Note that turms-gateway doesn't parse and validate the request because
+     * 1. For better performance (zero copy)
+     * 2. Decouple the business logic so that turms servers can change the structure of DTOs
+     * without the need to upgrade and restart turms-gateway servers
+     * turms servers should validate it by themselves
      */
     private final ByteBuf turmsRequestBuffer;
     private String ipStr;

@@ -275,24 +275,7 @@ public class SessionService implements ISessionService {
         return setLocalSessionOfflineByUserIdAndDeviceTypes(userId, DeviceTypeUtil.ALL_AVAILABLE_DEVICE_TYPES_SET, closeReason, new Date());
     }
 
-    public void updateHeartbeatTimestamp(
-            @NotNull Long userId,
-            @NotNull @ValidDeviceType DeviceType deviceType) {
-        AssertUtil.notNull(userId, "userId");
-        AssertUtil.notNull(deviceType, "deviceType");
-        DeviceTypeUtil.validDeviceType(deviceType);
-        UserSessionsManager userSessionsManager = getUserSessionsManager(userId);
-        if (userSessionsManager != null) {
-            UserSession session = userSessionsManager.getSession(deviceType);
-            if (session != null && !session.getConnection().isConnectionRecovering()) {
-                updateHeartbeatTimestamp(userId, session);
-            }
-        }
-    }
-
-    public void updateHeartbeatTimestamp(@NotNull Long userId, @NotNull UserSession session) {
-        AssertUtil.notNull(userId, "userId");
-        AssertUtil.notNull(session, "session");
+    public void updateHeartbeatTimestamp(UserSession session) {
         session.setLastHeartbeatRequestTimestampMillis(System.currentTimeMillis());
     }
 
@@ -303,7 +286,7 @@ public class SessionService implements ISessionService {
         if (userSessionsManager != null) {
             UserSession session = userSessionsManager.getSession(deviceType);
             if (session != null && session.getId() == sessionId && !session.getConnection().isConnectionRecovering()) {
-                updateHeartbeatTimestamp(userId, session);
+                session.setLastHeartbeatRequestTimestampMillis(System.currentTimeMillis());
                 return session;
             }
         }

@@ -70,8 +70,14 @@ public final class ClientApiLogging {
                         + LOG_FIELD_DELIMITER
                         + response.getCode()
                         + LOG_FIELD_DELIMITER
-                        + responseType;
-        CommonClientApiLogging.logger.info(message);
+                        + responseType
+                        + LOG_FIELD_DELIMITER
+                        + response.getReason();
+        if (response.getCode().isServerError()) {
+            CommonClientApiLogging.logger.error(message);
+        } else {
+            CommonClientApiLogging.logger.info(message);
+        }
     }
 
     public static void log(boolean sent, TurmsNotification notification) {

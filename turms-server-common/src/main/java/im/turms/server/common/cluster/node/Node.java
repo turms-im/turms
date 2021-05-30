@@ -18,6 +18,7 @@
 package im.turms.server.common.cluster.node;
 
 import im.turms.server.common.access.common.resource.LoopResourcesFactory;
+import im.turms.server.common.cluster.service.ClusterService;
 import im.turms.server.common.cluster.service.config.SharedConfigService;
 import im.turms.server.common.cluster.service.config.SharedPropertyService;
 import im.turms.server.common.cluster.service.discovery.DiscoveryService;
@@ -49,6 +50,7 @@ import reactor.netty.ChannelBindException;
 import reactor.netty.tcp.TcpServer;
 
 import java.net.InetSocketAddress;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -182,37 +184,17 @@ public class Node {
         } catch (Exception e) {
             log.error("Failed to stop the local server", e);
         }
-        try {
-            // Note that discoveryService should be stopped before sharedConfigService
-            // because discoveryService needs to unregister the local member info in the shared config
-            discoveryService.stop();
-        } catch (Exception e) {
-            log.error("Failed to stop DiscoveryService", e);
-        }
-        try {
-            sharedConfigService.stop();
-        } catch (Exception e) {
-            log.error("Failed to stop SharedConfigService", e);
-        }
-        try {
-            sharedPropertyService.stop();
-        } catch (Exception e) {
-            log.error("Failed to stop SharedPropertyService", e);
-        }
-        try {
-            serializationService.stop();
-        } catch (Exception e) {
-            log.error("Failed to stop SerializationService", e);
-        }
-        try {
-            rpcService.stop();
-        } catch (Exception e) {
-            log.error("Failed to stop RpcService", e);
-        }
-        try {
-            idService.stop();
-        } catch (Exception e) {
-            log.error("Failed to stop IdService", e);
+        List<ClusterService> services = List.of(
+                // Note that discoveryService should be stopped before sharedConfigService
+                // because discoveryService needs to unregister the local member info in the shared config
+                discoveryService,
+                sharedConfigService,
+                sharedPropertyService,
+                serializationService,
+                rpcService,
+                idService);
+        for (ClusterService service : services) {
+            shutdownService(service);
         }
     }
 
@@ -279,6 +261,14 @@ public class Node {
                     throw e;
                 }
             }
+        }
+    }
+
+    private void shutdownService(ClusterService service) {
+        try {
+            service.stop();
+        } catch (Exception e) {
+            log.error("Failed to stop {}", service.getClass().getName(), e);
         }
     }
 

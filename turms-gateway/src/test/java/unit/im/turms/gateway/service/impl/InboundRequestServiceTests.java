@@ -13,7 +13,6 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.manager.ServerStatusManager;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.GatewayProperties;
@@ -46,25 +45,14 @@ class InboundRequestServiceTests {
     @Test
     void constructor_shouldReturnInstance() {
         Node node = mockNode(false);
-        InboundRequestService inboundRequestService = new InboundRequestService(node, mockTurmsPropertiesManager(), null, null);
+        InboundRequestService inboundRequestService = new InboundRequestService(node, mockTurmsPropertiesManager(), null);
 
         assertThat(inboundRequestService).isNotNull();
     }
 
     @Test
-    void processServiceRequest_shouldThrow_ifNodeIsInactive() {
-        InboundRequestService inboundRequestService = newInboundRequestService(false, null, false, true);
-        Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(newServiceRequest());
-
-        StepVerifier.create(result)
-                .expectErrorMatches(throwable -> throwable instanceof TurmsBusinessException e
-                        && e.getCode().equals(TurmsStatusCode.SERVER_UNAVAILABLE))
-                .verify();
-    }
-
-    @Test
     void processServiceRequest_shouldThrow_ifUserIsOffline() {
-        InboundRequestService inboundRequestService = newInboundRequestService(true, null, false, true);
+        InboundRequestService inboundRequestService = newInboundRequestService(null, false, true);
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(newServiceRequest());
 
         StepVerifier.create(result)
@@ -79,7 +67,7 @@ class InboundRequestServiceTests {
         when(session.getLastRequestTimestampMillis())
                 .thenReturn(System.currentTimeMillis());
 
-        InboundRequestService inboundRequestService = newInboundRequestService(true, session, true, true);
+        InboundRequestService inboundRequestService = newInboundRequestService(session, true, true);
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(newServiceRequest());
 
         StepVerifier.create(result)
@@ -94,7 +82,7 @@ class InboundRequestServiceTests {
         when(session.getLastRequestTimestampMillis())
                 .thenReturn(System.currentTimeMillis());
 
-        InboundRequestService inboundRequestService = newInboundRequestService(true, session, false, false);
+        InboundRequestService inboundRequestService = newInboundRequestService(session, false, false);
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(newServiceRequest());
 
         StepVerifier.create(result)
@@ -109,7 +97,7 @@ class InboundRequestServiceTests {
         when(session.getLastRequestTimestampMillis())
                 .thenReturn(System.currentTimeMillis());
 
-        InboundRequestService inboundRequestService = newInboundRequestService(true, session, false, true);
+        InboundRequestService inboundRequestService = newInboundRequestService(session, false, true);
         Mono<TurmsNotification> result = inboundRequestService.processServiceRequest(newServiceRequest());
 
         StepVerifier.create(result)
@@ -118,7 +106,6 @@ class InboundRequestServiceTests {
     }
 
     private InboundRequestService newInboundRequestService(
-            boolean isActive,
             UserSession session,
             boolean isFrequent,
             boolean handleRequestSuccessfully) {
@@ -138,17 +125,12 @@ class InboundRequestServiceTests {
         when(node.getSharedProperties())
                 .thenReturn(properties);
 
-        // ServerStatusManager
-        ServerStatusManager serverStatusManager = mock(ServerStatusManager.class);
-        when(serverStatusManager.isActive())
-                .thenReturn(isActive);
-
         // SessionService
         SessionService sessionService = mock(SessionService.class);
         when(sessionService.getLocalUserSession(any(), any()))
                 .thenReturn(session);
 
-        return new InboundRequestService(node, mockTurmsPropertiesManager(), serverStatusManager, sessionService);
+        return new InboundRequestService(node, mockTurmsPropertiesManager(), sessionService);
     }
 
     private ServiceRequest newServiceRequest() {

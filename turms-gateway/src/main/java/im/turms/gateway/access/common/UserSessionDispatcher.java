@@ -38,7 +38,6 @@ import reactor.netty.NettyOutbound;
 import reactor.netty.http.websocket.WebsocketOutbound;
 
 import javax.annotation.Nullable;
-import java.net.Inet6Address;
 import java.net.InetSocketAddress;
 
 /**
@@ -91,30 +90,31 @@ public abstract class UserSessionDispatcher {
                                            UserSessionWrapper sessionWrapper) {
         return in
                 .doOnNext(requestData -> {
-                    if (!connection.isDisposed()) {
-                        // Retain one so that it won't be released by FluxReceive
-                        // before we finish handling the buffer.
-                        // And it should be 2 after retained
-                        requestData.retain();
-                        // Note that handleRequestData should never return MonoError
-                        Mono<ByteBuf> response = userRequestDispatcher.handleRequest(sessionWrapper, requestData)
-                                .doOnError(throwable -> handleNotificationError(throwable, sessionWrapper.getUserSession()));
-                        sendNotifications(out, response, sessionWrapper.getConnection(), sessionWrapper.getUserSession())
-                                .doFinally(signalType -> {
-                                    // Because the buffer will be merged into a RPC request if it's a service request
-                                    // in HandleServiceRequestSerializer.byteBufToComposite) if no error occurs,
-                                    // requestData.refCnt() should be:
-                                    // 0 if it has been released by FluxReceive and RpcService
-                                    // 1 if it is released by FluxReceive but RpcService doesn't release it (because error occurs)
-                                    // or it's not a service request
-                                    // 2 if FluxReceive hasn't released and RpcService doesn't release it (because error occurs)
-                                    // or it's not a service request
-                                    if (requestData.refCnt() > 0) {
-                                        requestData.release();
-                                    }
-                                })
-                                .subscribe();
+                    if (connection.isDisposed()) {
+                        return;
                     }
+                    // Retain one so that it won't be released by FluxReceive
+                    // before we finish handling the buffer.
+                    // And it should be 2 after retained
+                    requestData.retain();
+                    // Note that handleRequestData should never return MonoError
+                    Mono<ByteBuf> response = userRequestDispatcher.handleRequest(sessionWrapper, requestData)
+                            .doOnError(throwable -> handleNotificationError(throwable, sessionWrapper.getUserSession()));
+                    sendNotifications(out, response, sessionWrapper.getConnection(), sessionWrapper.getUserSession())
+                            .doFinally(signalType -> {
+                                // Because the buffer will be merged into a RPC request if it's a service request
+                                // in HandleServiceRequestSerializer.byteBufToComposite) if no error occurs,
+                                // requestData.refCnt() should be:
+                                // 0 if it has been released by FluxReceive and RpcService
+                                // 1 if it is released by FluxReceive but RpcService doesn't release it (because error occurs)
+                                // or it's not a service request
+                                // 2 if FluxReceive hasn't released and RpcService doesn't release it (because error occurs)
+                                // or it's not a service request
+                                if (requestData.refCnt() > 0) {
+                                    requestData.release();
+                                }
+                            })
+                            .subscribe();
                 })
                 .then()
                 .onErrorResume(
@@ -142,9 +142,7 @@ public abstract class UserSessionDispatcher {
                 });
     }
 
-    /**
-     * Error handling
-     */
+    // Error handling
 
     private Mono<Void> handleConnectionError(Throwable throwable, NetConnection connection, @Nullable UserSession userSession) {
         if (!ExceptionUtil.isDisconnectedClientError(throwable)) {

@@ -23,7 +23,6 @@ import im.turms.common.util.RandomUtil;
 import im.turms.gateway.access.common.model.UserSessionWrapper;
 import im.turms.gateway.access.tcp.dto.RequestHandlerResult;
 import im.turms.gateway.access.tcp.util.TurmsNotificationUtil;
-import im.turms.gateway.constant.ErrorMessage;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.pojo.dto.SimpleTurmsRequest;
 import im.turms.gateway.service.mediator.ServiceMediator;
@@ -31,7 +30,9 @@ import im.turms.gateway.util.TurmsRequestUtil;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.exception.ThrowableInfo;
+import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.factory.NotificationFactory;
+import im.turms.server.common.manager.ServerStatusManager;
 import im.turms.server.common.util.ProtoUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.EmptyByteBuf;
@@ -51,18 +52,25 @@ public class UserRequestDispatcher {
 
     private final SessionController sessionController;
     private final ServiceMediator serviceMediator;
+    private final ServerStatusManager serverStatusManager;
 
-    public UserRequestDispatcher(SessionController sessionController, ServiceMediator serviceMediator) {
+    public UserRequestDispatcher(SessionController sessionController,
+                                 ServiceMediator serviceMediator,
+                                 ServerStatusManager serverStatusManager) {
         this.sessionController = sessionController;
         this.serviceMediator = serviceMediator;
+        this.serverStatusManager = serverStatusManager;
     }
 
     /**
-     * @implNote If a throwable instance is thrown for failing to handle the client request,
+     * @implNote If a throwable instance is thrown due to the failure of handling the client request,
      * the method should recover it to TurmsNotification.
-     * So the method should never return MonoError and it should be considered as a bug if it occurs.
+     * In other words, the method should never return MonoError and it should be considered as a bug if it occurs.
      */
     public Mono<ByteBuf> handleRequest(UserSessionWrapper sessionWrapper, ByteBuf data) {
+        if (!serverStatusManager.isActive()) {
+            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_UNAVAILABLE));
+        }
         if (!data.isReadable()) {
             return handleHeartbeatRequest(sessionWrapper);
         }
@@ -76,10 +84,15 @@ public class UserRequestDispatcher {
             default -> handleServiceRequest(sessionWrapper, request, data);
         };
         return notificationMono
+                .doOnNext(notification -> {
+                    if (TurmsStatusCode.isServerError(notification.getCode())) {
+                        log.error("Got a response with a server error code: {} to the request: {}", notification, request);
+                    }
+                })
                 .onErrorResume(throwable -> {
                     ThrowableInfo info = ThrowableInfo.get(throwable);
                     if (info.getCode().isServerError()) {
-                        log.error(ErrorMessage.FAILED_TO_HANDLE_SERVICE_REQUEST_WITH_REQUEST, request, throwable);
+                        log.error("Failed to handle the service request: {}", request, throwable);
                     }
                     return Mono.just(NotificationFactory.fromThrowable(info, request.getRequestId()));
                 })
@@ -90,14 +103,12 @@ public class UserRequestDispatcher {
         UserSession session = sessionWrapper.getUserSession();
         ByteBuf data;
         if (session != null) {
-            TurmsStatusCode code = serviceMediator.processHeartbeatRequest(session.getUserId(), session.getDeviceType());
-            data = code == TurmsStatusCode.OK
-                    ? HEARTBEAT_RESPONSE
-                    // TODO: check -1
-                    : ProtoUtil.getDirectByteBuffer(getNotificationFromHandlerResult(new RequestHandlerResult(code), -1));
+            serviceMediator.processHeartbeatRequest(session);
+            data = HEARTBEAT_RESPONSE;
         } else {
-            TurmsStatusCode code = TurmsStatusCode.UPDATE_NON_EXISTING_SESSION_HEARTBEAT;
-            TurmsNotification notification = getNotificationFromHandlerResult(new RequestHandlerResult(code), -1);
+            RequestHandlerResult result = new RequestHandlerResult(TurmsStatusCode.UPDATE_NON_EXISTING_SESSION_HEARTBEAT);
+            // TODO: check -1
+            TurmsNotification notification = getNotificationFromHandlerResult(result, -1);
             data = ProtoUtil.getDirectByteBuffer(notification);
         }
         return Mono.just(data);

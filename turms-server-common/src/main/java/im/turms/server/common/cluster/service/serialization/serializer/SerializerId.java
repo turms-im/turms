@@ -24,7 +24,7 @@ import lombok.Getter;
  *
  * @author James Chen
  * @implNote Note that the ID value is integer for better performance and convenience in JVM
- * but they are converted to signed short when transferring across servers.
+ * but they are converted to signed short when serializing.
  */
 public enum SerializerId {
 

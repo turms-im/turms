@@ -36,7 +36,6 @@ import io.rsocket.RSocket;
 import io.rsocket.exceptions.ApplicationErrorException;
 import io.rsocket.util.ByteBufPayload;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.util.Pair;
 import reactor.core.publisher.Flux;
@@ -45,7 +44,6 @@ import reactor.core.publisher.Mono;
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -56,7 +54,6 @@ import java.util.Map;
  *
  * @author James Chen
  */
-@Log4j2
 public class RpcService implements ClusterService {
 
     private static final String METRICS_NAME_RPC_REQUEST = "rpc.request";
@@ -262,7 +259,7 @@ public class RpcService implements ClusterService {
         return (Mono<T>) mono
                 .metrics()
                 .flatMap(this::parsePayload)
-                .onErrorMap(throwable -> tryLogAndTranslateThrowable(throwable, memberNodeId));
+                .onErrorMap(this::translateThrowable);
     }
 
     public <T> Flux<T> requestResponsesFromOtherMembers(List<MemberInfoWithConnection> members,
@@ -296,7 +293,7 @@ public class RpcService implements ClusterService {
         return (Flux<T>) flux
                 .timeout(timeout)
                 .flatMap(this::parsePayload)
-                .onErrorMap(throwable -> tryLogAndTranslateThrowable(throwable, members))
+                .onErrorMap(this::translateThrowable)
                 .doOnTerminate(requestPayload::release);
     }
 
@@ -339,7 +336,7 @@ public class RpcService implements ClusterService {
                     Object data = getReturnValueFromRpc(payload.sliceData());
                     return (T) data;
                 }, CollectorUtil.toMap(MapUtil.getCapability(size)))
-                .onErrorMap(throwable -> tryLogAndTranslateThrowable(throwable, members))
+                .onErrorMap(this::translateThrowable)
                 .doOnTerminate(requestPayload::release);
     }
 
@@ -362,41 +359,16 @@ public class RpcService implements ClusterService {
         }
     }
 
-    private Throwable tryLogAndTranslateThrowable(Throwable throwable, @NotNull String memberNodeId) {
-        Throwable translatedThrowable = translateThrowable(throwable);
-        if (isServerError(translatedThrowable)) {
-            log.error("Failed to request response from member: " + memberNodeId, throwable);
-        }
-        return translatedThrowable;
-    }
-
-    private Throwable tryLogAndTranslateThrowable(Throwable throwable, @NotNull Collection<MemberInfoWithConnection> members) {
-        Throwable translatedThrowable = translateThrowable(throwable);
-        if (isServerError(translatedThrowable)) {
-            log.error("Failed to request response from members: " + members, throwable);
-        }
-        return translatedThrowable;
-    }
-
     private Throwable translateThrowable(Throwable throwable) {
         if (throwable instanceof ApplicationErrorException e) {
             try {
                 return RpcException.parse(e);
             } catch (Exception exception) {
-                log.error(exception);
-                return throwable;
+                return new IllegalStateException("Failed to parse ApplicationErrorException", throwable);
             }
         }
+        // e.g. ClosedChannelException
         return throwable;
-    }
-
-    private boolean isServerError(Throwable throwable) {
-        if (throwable instanceof RpcException e) {
-            return e.isServerError();
-        } else {
-            // e.g. ClosedChannelException
-            return true;
-        }
     }
 
 }

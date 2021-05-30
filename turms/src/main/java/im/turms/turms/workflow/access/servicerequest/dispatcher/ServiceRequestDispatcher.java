@@ -133,8 +133,8 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         try {
             return dispatch0(serviceRequest);
         } catch (Exception e) {
-            log.error("Failed to handle the {} request: {}", serviceRequest.getType(), serviceRequest.getRequestId());
-            return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.SERVER_INTERNAL_ERROR, e.getMessage()));
+            log.error("Failed to handle the {} request: {}", serviceRequest.getType(), serviceRequest.getRequestId(), e);
+            return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.SERVER_INTERNAL_ERROR, e.toString()));
         }
     }
 
@@ -201,7 +201,6 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             TurmsRequest lastRequest = lastClientRequest.getTurmsRequest();
             if (lastRequest == null) {
                 String message = "The TurmsRequest instance is null in the client request: " + lastClientRequest;
-                log.error(message);
                 return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.SERVER_INTERNAL_ERROR, message));
             }
             TurmsRequest.KindCase requestType = lastRequest.getKindCase();
@@ -233,14 +232,12 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                     .doOnSuccess(requestResult -> {
                         if (requestResult.getCode() == TurmsStatusCode.OK) {
                             notifyRelatedUsersOfAction(requestResult, userId, deviceType)
+                                    .doOnError(t -> log.error("Failed to notify related users of the action", t))
                                     .subscribe();
                         }
                     })
                     .onErrorResume(throwable -> {
                         ThrowableInfo info = ThrowableInfo.get(throwable);
-                        if (info.getCode().isServerError()) {
-                            log.error("Failed to handle the client request: {}", lastClientRequest, throwable);
-                        }
                         return Mono.just(RequestHandlerResultFactory.get(info.getCode(), info.getReason()));
                     })
                     .map(handlerResult -> {
@@ -249,7 +246,8 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                                 handlerResult.getCode(),
                                 handlerResult.getReason());
                         // 6. Log
-                        if (LoggingRequestUtil.shouldLog(requestType, supportedLoggingRequestProperties)) {
+                        if (response.getCode().isServerError()
+                                || LoggingRequestUtil.shouldLog(requestType, supportedLoggingRequestProperties)) {
                             ClientApiLogging
                                     .log(lastClientRequest,
                                             serviceRequest,
