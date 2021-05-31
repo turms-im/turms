@@ -64,12 +64,9 @@ public class ConfigController {
 
     @GetMapping
     @RequiredPermission(CLUSTER_CONFIG_QUERY)
-    public ResponseEntity<ResponseDTO<Map<String, Object>>> queryClusterConfig(@RequestParam(defaultValue = "false") Boolean onlyMutable) {
-        try {
-            return ResponseFactory.okIfTruthy(PropertiesUtil.getPropertyValueMap(node.getSharedProperties(), onlyMutable));
-        } catch (IOException e) {
-            throw TurmsBusinessException.get(TurmsStatusCode.SERVER_INTERNAL_ERROR);
-        }
+    public ResponseEntity<ResponseDTO<Map<String, Object>>> queryClusterConfig(@RequestParam(defaultValue = "false") Boolean onlyMutable)
+            throws IOException {
+        return ResponseFactory.okIfTruthy(PropertiesUtil.getPropertyValueMap(node.getSharedProperties(), onlyMutable));
     }
 
     /**

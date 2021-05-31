@@ -18,7 +18,6 @@
 package im.turms.server.common.rpc.serializer.request;
 
 import im.turms.common.constant.DeviceType;
-import im.turms.server.common.cluster.service.serialization.serializer.Serializer;
 import im.turms.server.common.cluster.service.serialization.serializer.SerializerId;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.rpc.request.HandleServiceRequest;
@@ -27,7 +26,7 @@ import io.netty.buffer.ByteBuf;
 /**
  * @author James Chen
  */
-public class HandleServiceRequestSerializer implements Serializer<HandleServiceRequest> {
+public class HandleServiceRequestSerializer extends RpcCallableSerializer<HandleServiceRequest> {
 
     private static final int IPV4_BYTE_LENGTH = 4;
     private static final int IPV6_BYTE_LENGTH = 16;
@@ -36,17 +35,21 @@ public class HandleServiceRequestSerializer implements Serializer<HandleServiceR
     private static final int IS_IPV4_FLAG = 0;
 
     @Override
-    public void write(ByteBuf output, HandleServiceRequest data) {
+    public SerializerId getSerializerId() {
+        return SerializerId.RPC_HANDLE_SERVICE_REQUEST;
+    }
+
+    @Override
+    public void writeRequestData(ByteBuf output, HandleServiceRequest data) {
         ServiceRequest request = data.getServiceRequest();
         output.writeByte(IS_IPV4_FLAG);
         output.writeBytes(request.getIp());
         output.writeLong(request.getUserId());
         output.writeByte(request.getDeviceType().getNumber());
-        output.writeLong(request.getTraceId());
     }
 
     @Override
-    public HandleServiceRequest read(ByteBuf input) {
+    public HandleServiceRequest readRequestData(ByteBuf input) {
         boolean isIpV4 = input.readByte() == IS_IPV4_FLAG;
         int ipByteLength = isIpV4 ? IPV4_BYTE_LENGTH : IPV6_BYTE_LENGTH;
         int length = FIXED_FIELDS_LENGTH + ipByteLength;
@@ -56,26 +59,20 @@ public class HandleServiceRequestSerializer implements Serializer<HandleServiceR
         firstByteBuf.readBytes(ip);
         long userId = firstByteBuf.readLong();
         DeviceType deviceType = DeviceType.forNumber(firstByteBuf.readByte());
-        long traceId = firstByteBuf.readLong();
 
         ByteBuf turmsRequestBuffer = input.slice();
-        ServiceRequest serviceRequest = new ServiceRequest(ip, userId, deviceType, traceId, null, null, turmsRequestBuffer);
+        ServiceRequest serviceRequest = new ServiceRequest(ip, userId, deviceType, null, null, turmsRequestBuffer);
         return new HandleServiceRequest(serviceRequest);
     }
 
     @Override
-    public int initialCapacity(HandleServiceRequest data) {
+    public int initialCapacityForRequest(HandleServiceRequest data) {
         return FIXED_FIELDS_LENGTH + data.getServiceRequest().getIp().length;
     }
 
     @Override
     public ByteBuf byteBufToComposite(HandleServiceRequest data) {
         return data.getServiceRequest().getTurmsRequestBuffer();
-    }
-
-    @Override
-    public SerializerId getSerializerId() {
-        return SerializerId.RPC_HANDLE_SERVICE_REQUEST;
     }
 
 }

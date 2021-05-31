@@ -17,6 +17,9 @@
 
 package im.turms.turms.workflow.access.http.config;
 
+import im.turms.server.common.logging.RequestLoggingContext;
+import im.turms.server.common.tracing.TracingCloseableContext;
+import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.ExceptionUtil;
 import im.turms.turms.workflow.access.http.dto.response.ErrorAttributes;
 import im.turms.turms.workflow.access.http.dto.response.ErrorAttributesFactory;
@@ -90,8 +93,14 @@ public class TurmsErrorWebExceptionHandler implements ErrorWebExceptionHandler {
         return responseMono.flatMap(response -> {
             if (status == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
                 ServerRequest request = ServerRequest.create(exchange, this.messageReaders);
-                log.error(LogMessage.of(() -> String.format("%s 500 Server Error for %s",
-                        request.exchange().getLogPrefix(), formatRequest(request))), throwable);
+                RequestLoggingContext loggingContext = exchange.getAttribute(RequestLoggingContext.CTX_KEY_NAME);
+                TracingContext tracingContext = loggingContext == null
+                        ? TracingContext.NOOP
+                        : loggingContext.getTracingContext();
+                try (TracingCloseableContext ctx = tracingContext.asCloseable()) {
+                    log.error(LogMessage.of(() -> String.format("%s 500 Server Error for %s",
+                            request.exchange().getLogPrefix(), formatRequest(request))), throwable);
+                }
             }
             // force content-type since writeTo won't overwrite response header values
             exchange.getResponse().getHeaders().setContentType(response.headers().getContentType());

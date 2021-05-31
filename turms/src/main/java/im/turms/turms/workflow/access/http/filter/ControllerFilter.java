@@ -20,6 +20,9 @@ package im.turms.turms.workflow.access.http.filter;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import im.turms.server.common.cluster.node.Node;
+import im.turms.server.common.logging.RequestLoggingContext;
+import im.turms.server.common.tracing.TracingCloseableContext;
+import im.turms.server.common.tracing.TracingContext;
 import im.turms.turms.plugin.manager.TurmsPluginManager;
 import im.turms.turms.workflow.access.http.permission.AdminPermission;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
@@ -251,8 +254,18 @@ public class ControllerFilter implements WebFilter {
             additionalMono = Mono.empty();
         }
         ServerWebExchange finalExchange = exchange;
+        TracingContext tracingContext = new TracingContext();
         return additionalMono
-                .then(chain.filter(exchange))
+                .then(Mono.defer(() -> {
+                    try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
+                        return chain.filter(finalExchange);
+                    }
+                }))
+                .contextWrite(context -> {
+                    RequestLoggingContext loggingContext = new RequestLoggingContext(tracingContext);
+                    finalExchange.getAttributes().put(RequestLoggingContext.CTX_KEY_NAME, loggingContext);
+                    return context.put(RequestLoggingContext.CTX_KEY_NAME, loggingContext);
+                })
                 .doFinally(signalType -> finalExchange.getAttributes().remove(ATTR_BODY));
     }
 

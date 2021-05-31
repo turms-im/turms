@@ -17,6 +17,7 @@
 
 package im.turms.server.common.cluster.service.rpc;
 
+import im.turms.common.util.RandomUtil;
 import im.turms.server.common.cluster.exception.RpcException;
 import im.turms.server.common.cluster.service.ClusterService;
 import im.turms.server.common.cluster.service.discovery.DiscoveryService;
@@ -25,7 +26,9 @@ import im.turms.server.common.cluster.service.serialization.SerializationService
 import im.turms.server.common.cluster.service.serialization.serializer.Serializer;
 import im.turms.server.common.cluster.service.serialization.serializer.SerializerPool;
 import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.logging.RequestLoggingContext;
 import im.turms.server.common.property.env.common.cluster.RpcProperties;
+import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.CollectorUtil;
 import im.turms.server.common.util.ExceptionUtil;
 import im.turms.server.common.util.MapUtil;
@@ -36,10 +39,10 @@ import io.rsocket.RSocket;
 import io.rsocket.exceptions.ApplicationErrorException;
 import io.rsocket.util.ByteBufPayload;
 import lombok.Getter;
-import org.springframework.context.ApplicationContext;
 import org.springframework.data.util.Pair;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.context.ContextView;
 
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
@@ -244,10 +247,16 @@ public class RpcService implements ClusterService {
 
     // Internal implementations
 
-    private <T> Mono<T> requestResponse0(String memberNodeId, RSocket connection, RpcCallable<T> request, Duration timeout) {
+    private <T> Mono<T> requestResponse0(String memberNodeId,
+                                         RSocket connection,
+                                         RpcCallable<T> request,
+                                         Duration timeout) {
         ByteBuf buffer = serializationService.serialize(request);
         Payload requestPayload = ByteBufPayload.create(buffer);
-        Mono<Payload> mono = connection.requestResponse(requestPayload)
+        Mono<Payload> mono = Mono.deferContextual(context -> {
+            addTraceIdToRequestFromContext(context, request);
+            return connection.requestResponse(requestPayload);
+        })
                 .timeout(timeout)
                 .name(METRICS_NAME_RPC_REQUEST)
                 .tag(METRICS_TAG_REQUEST_NAME, request.name())
@@ -256,9 +265,10 @@ public class RpcService implements ClusterService {
         if (tag != null) {
             mono = mono.tag(tag.getKey(), tag.getValue());
         }
-        return (Mono<T>) mono
+        Mono<T> responseMono = mono
                 .metrics()
-                .flatMap(this::parsePayload)
+                .flatMap(this::parsePayload);
+        return responseMono
                 .onErrorMap(this::translateThrowable);
     }
 
@@ -273,28 +283,32 @@ public class RpcService implements ClusterService {
             return Flux.error(RpcException
                     .get(RpcErrorCode.CONNECTION_NOT_FOUND, TurmsStatusCode.SERVER_UNAVAILABLE, "Not all connections are established"));
         }
-        ByteBuf buffer = serializationService.serialize(request);
-        Payload requestPayload = ByteBufPayload.create(buffer);
-        List<Mono<Payload>> results = new ArrayList<>(members.size());
-        for (MemberInfoWithConnection info : members) {
-            requestPayload.retain();
-            Mono<Payload> mono = info.getConnection().requestResponse(requestPayload)
-                    .name(METRICS_NAME_RPC_REQUEST)
-                    .tag(METRICS_TAG_REQUEST_NAME, request.name())
-                    .tag(METRICS_TAG_REQUEST_TARGET_NODE_ID, info.getMember().getNodeId())
-                    .metrics();
-            results.add(mono);
-        }
-        Flux<Payload> flux = Flux.merge(results);
-        Tag tag = request.tag();
-        if (tag != null) {
-            flux = flux.tag(tag.getKey(), tag.getValue());
-        }
-        return (Flux<T>) flux
-                .timeout(timeout)
-                .flatMap(this::parsePayload)
-                .onErrorMap(this::translateThrowable)
-                .doOnTerminate(requestPayload::release);
+        return Flux.deferContextual(context -> {
+            addTraceIdToRequestFromContext(context, request);
+            ByteBuf buffer = serializationService.serialize(request);
+            Payload requestPayload = ByteBufPayload.create(buffer);
+            List<Mono<Payload>> results = new ArrayList<>(members.size());
+            for (MemberInfoWithConnection info : members) {
+                requestPayload.retain();
+                Mono<Payload> responseMono = info.getConnection().requestResponse(requestPayload)
+                        .name(METRICS_NAME_RPC_REQUEST)
+                        .tag(METRICS_TAG_REQUEST_NAME, request.name())
+                        .tag(METRICS_TAG_REQUEST_TARGET_NODE_ID, info.getMember().getNodeId())
+                        .metrics();
+                results.add(responseMono);
+            }
+            Flux<Payload> responsePayloadFlux = Flux.merge(results);
+            Tag tag = request.tag();
+            if (tag != null) {
+                responsePayloadFlux = responsePayloadFlux.tag(tag.getKey(), tag.getValue());
+            }
+            Flux<T> responseFlux = responsePayloadFlux
+                    .timeout(timeout)
+                    .flatMap(this::parsePayload);
+            return responseFlux
+                    .onErrorMap(this::translateThrowable)
+                    .doOnTerminate(requestPayload::release);
+        });
     }
 
     private <T> Mono<Map<String, T>> requestResponsesAsMap(List<MemberInfoWithConnection> members,
@@ -308,36 +322,50 @@ public class RpcService implements ClusterService {
             return Mono.error(RpcException
                     .get(RpcErrorCode.CONNECTION_NOT_FOUND, TurmsStatusCode.SERVER_UNAVAILABLE, "Not all connections are established"));
         }
-        ByteBuf buffer = serializationService.serialize(request);
-        Payload requestPayload = ByteBufPayload.create(buffer);
-        int size = members.size();
-        List<Mono<Pair<String, Payload>>> results = new ArrayList<>(size);
-        for (MemberInfoWithConnection info : members) {
-            requestPayload.retain();
-            String memberId = info.getMember().getNodeId();
-            RSocket connection = info.getConnection();
-            Mono<Pair<String, Payload>> mono = connection.requestResponse(requestPayload)
-                    .name(METRICS_NAME_RPC_REQUEST)
-                    .tag(METRICS_TAG_REQUEST_NAME, request.name())
-                    .tag(METRICS_TAG_REQUEST_TARGET_NODE_ID, memberId)
-                    .metrics()
-                    .map(payload -> Pair.of(memberId, payload));
-            results.add(mono);
+        return Mono.deferContextual(context -> {
+            addTraceIdToRequestFromContext(context, request);
+            ByteBuf buffer = serializationService.serialize(request);
+            Payload requestPayload = ByteBufPayload.create(buffer);
+            int size = members.size();
+            List<Mono<Pair<String, Payload>>> results = new ArrayList<>(size);
+            for (MemberInfoWithConnection info : members) {
+                requestPayload.retain();
+                String memberId = info.getMember().getNodeId();
+                RSocket connection = info.getConnection();
+                Mono<Pair<String, Payload>> responseMono = connection.requestResponse(requestPayload)
+                        .name(METRICS_NAME_RPC_REQUEST)
+                        .tag(METRICS_TAG_REQUEST_NAME, request.name())
+                        .tag(METRICS_TAG_REQUEST_TARGET_NODE_ID, memberId)
+                        .metrics()
+                        .map(payload -> Pair.of(memberId, payload));
+                results.add(responseMono);
+            }
+            Flux<Pair<String, Payload>> flux = Flux.merge(results);
+            Tag tag = request.tag();
+            if (tag != null) {
+                flux = flux.tag(tag.getKey(), tag.getValue());
+            }
+            return flux
+                    .timeout(timeout)
+                    .collectMap(Pair::getFirst, pair -> {
+                        Payload payload = pair.getSecond();
+                        Object data = getReturnValueFromRpc(payload.sliceData());
+                        return (T) data;
+                    }, CollectorUtil.toMap(MapUtil.getCapability(size)))
+                    .onErrorMap(this::translateThrowable)
+                    .doOnTerminate(requestPayload::release);
+        });
+    }
+
+    private void addTraceIdToRequestFromContext(ContextView contextView, RpcCallable<?> request) {
+        if (request.getTracingContext().hasTraceId()) {
+            return;
         }
-        Flux<Pair<String, Payload>> flux = Flux.merge(results);
-        Tag tag = request.tag();
-        if (tag != null) {
-            flux = flux.tag(tag.getKey(), tag.getValue());
+        Long traceId = RequestLoggingContext.readTraceIdFromContext(contextView);
+        if (traceId == null) {
+            traceId = RandomUtil.nextPositiveLong();
         }
-        return flux
-                .timeout(timeout)
-                .collectMap(Pair::getFirst, pair -> {
-                    Payload payload = pair.getSecond();
-                    Object data = getReturnValueFromRpc(payload.sliceData());
-                    return (T) data;
-                }, CollectorUtil.toMap(MapUtil.getCapability(size)))
-                .onErrorMap(this::translateThrowable)
-                .doOnTerminate(requestPayload::release);
+        request.setTracingContext(new TracingContext(traceId));
     }
 
     private <T> Mono<T> parsePayload(Payload payload) {
@@ -352,11 +380,10 @@ public class RpcService implements ClusterService {
     private <T> T getReturnValueFromRpc(ByteBuf buffer) {
         int returnValueType = buffer.readShort();
         Serializer<Object> serializer = SerializerPool.getSerializer(returnValueType);
-        if (serializer != null) {
-            return (T) serializer.read(buffer);
-        } else {
+        if (serializer == null) {
             throw RpcException.get(RpcErrorCode.SERIALIZER_FOR_RETURN_VALUE_NOT_FOUND, TurmsStatusCode.SERVER_INTERNAL_ERROR);
         }
+        return (T) serializer.read(buffer);
     }
 
     private Throwable translateThrowable(Throwable throwable) {

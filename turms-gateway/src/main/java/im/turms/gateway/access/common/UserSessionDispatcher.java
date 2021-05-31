@@ -26,6 +26,7 @@ import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.pojo.bo.session.connection.NetConnection;
 import im.turms.gateway.service.mediator.ServiceMediator;
 import im.turms.server.common.dto.CloseReason;
+import im.turms.server.common.logging.RequestLoggingContext;
 import im.turms.server.common.util.ExceptionUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
@@ -63,8 +64,11 @@ public abstract class UserSessionDispatcher {
             InetSocketAddress ip = (InetSocketAddress) connection.address();
             NetConnection netConnection = NetConnection.create(connection);
             UserSessionWrapper sessionWrapper = new UserSessionWrapper(netConnection, ip, closeIdleConnectionAfterSeconds, userSession -> {
+                RequestLoggingContext loggingContext = new RequestLoggingContext();
                 Flux<ByteBuf> notifications = userSession.getNotificationFlux()
-                        .doOnError(throwable -> handleNotificationError(throwable, userSession));
+                        .doOnError(throwable -> handleNotificationError(throwable, userSession))
+                        .contextWrite(context -> context.put(RequestLoggingContext.CTX_KEY_NAME, loggingContext))
+                        .doFinally(signal -> loggingContext.clearMdc());
                 sendNotifications(out, notifications, netConnection, userSession).subscribe();
             });
             respondWithRequests(connection, in, out, sessionWrapper).subscribe();
@@ -97,9 +101,17 @@ public abstract class UserSessionDispatcher {
                     // before we finish handling the buffer.
                     // And it should be 2 after retained
                     requestData.retain();
-                    // Note that handleRequestData should never return MonoError
+
+                    // Note that handleRequest should never return MonoError
+                    RequestLoggingContext loggingContext = new RequestLoggingContext();
                     Mono<ByteBuf> response = userRequestDispatcher.handleRequest(sessionWrapper, requestData)
-                            .doOnError(throwable -> handleNotificationError(throwable, sessionWrapper.getUserSession()));
+                            .doOnError(throwable -> {
+                                loggingContext.updateMdc();
+                                handleNotificationError(throwable, sessionWrapper.getUserSession());
+                            })
+                            .contextWrite(context -> context.put(RequestLoggingContext.CTX_KEY_NAME, loggingContext))
+                            .doFinally(signal -> loggingContext.clearMdc());
+
                     sendNotifications(out, response, sessionWrapper.getConnection(), sessionWrapper.getUserSession())
                             .doFinally(signalType -> {
                                 // Because the buffer will be merged into a RPC request if it's a service request
@@ -167,7 +179,7 @@ public abstract class UserSessionDispatcher {
         }
         CloseReason closeReason = CloseReason.get(throwable);
         if (closeReason.isServerError()) {
-            log.error("Failed to send outbound notification", throwable);
+            log.error("Failed to send outbound notification to the session: " + userSession, throwable);
         }
         Long userId = userSession.getUserId();
         DeviceType deviceType = userSession.getDeviceType();

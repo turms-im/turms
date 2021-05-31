@@ -104,6 +104,7 @@ public final class UserSessionsManager {
                 .setData(TurmsNotification.Data.newBuilder().setUserSession(session))
                 .build();
         ByteBuf byteBuffer = ProtoUtil.getDirectByteBuffer(notification);
+        // TODO: handle failure (though it seems never happen)
         userSession.tryEmitNextNotification(byteBuffer);
         return true;
     }

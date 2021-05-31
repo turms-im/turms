@@ -22,6 +22,7 @@ import im.turms.server.common.cluster.service.serialization.serializer.Serialize
 import im.turms.server.common.cluster.service.serialization.serializer.SerializerPool;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.tracing.TracingContext;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.rsocket.Payload;
@@ -55,23 +56,33 @@ public class RpcAcceptor implements RSocket {
     public Mono<Payload> requestResponse(Payload payload) {
         ByteBuf buffer = payload.sliceData();
         RpcCallable<?> rpcRequest = null;
+        TracingContext tracingContext = null;
         try {
             rpcRequest = parseRpcRequest(buffer);
+            tracingContext = rpcRequest.getTracingContext();
+            tracingContext.updateMdc();
             RpcCallable<?> finalRpcRequest = rpcRequest;
+            TracingContext finalTracingContext = tracingContext;
             return runRpcRequest(rpcRequest)
                     .map(this::serializeReturnValue)
                     .onErrorMap(e -> {
+                        finalTracingContext.updateMdc();
                         log.error("Failed to handle request: " + finalRpcRequest, e);
                         return e instanceof RpcException
                                 ? e
                                 : RpcException.get(RpcErrorCode.UNKNOWN_ERROR, TurmsStatusCode.SERVER_INTERNAL_ERROR, e.toString());
-                    });
+                    })
+                    .doFinally(signalType -> finalTracingContext.clearMdc());
         } catch (RpcException e) {
             log.error("Failed to handle request: " + rpcRequest, e);
             return Mono.error(e);
         } catch (Exception e) {
             log.error("Failed to handle request: " + rpcRequest, e);
             return Mono.error(RpcException.get(RpcErrorCode.UNKNOWN_ERROR, TurmsStatusCode.SERVER_INTERNAL_ERROR, e.toString()));
+        } finally {
+            if (tracingContext != null) {
+                tracingContext.clearMdc();
+            }
         }
     }
 

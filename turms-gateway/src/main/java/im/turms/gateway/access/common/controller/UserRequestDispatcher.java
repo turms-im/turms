@@ -19,7 +19,6 @@ package im.turms.gateway.access.common.controller;
 
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
-import im.turms.common.util.RandomUtil;
 import im.turms.gateway.access.common.model.UserSessionWrapper;
 import im.turms.gateway.access.tcp.dto.RequestHandlerResult;
 import im.turms.gateway.access.tcp.util.TurmsNotificationUtil;
@@ -30,16 +29,21 @@ import im.turms.gateway.util.TurmsRequestUtil;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.exception.ThrowableInfo;
-import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.factory.NotificationFactory;
+import im.turms.server.common.logging.RequestLoggingContext;
 import im.turms.server.common.manager.ServerStatusManager;
+import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.ProtoUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.EmptyByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.buffer.UnpooledByteBufAllocator;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
+
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.CREATE_SESSION_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.DELETE_SESSION_REQUEST;
 
 /**
  * @author James Chen
@@ -48,7 +52,20 @@ import reactor.core.publisher.Mono;
 @Log4j2
 public class UserRequestDispatcher {
 
-    private static final ByteBuf HEARTBEAT_RESPONSE = new EmptyByteBuf(UnpooledByteBufAllocator.DEFAULT);
+    private static final ByteBuf HEARTBEAT_RESPONSE_SUCCESS = new EmptyByteBuf(UnpooledByteBufAllocator.DEFAULT);
+    private static final ByteBuf HEARTBEAT_RESPONSE_UPDATE_NON_EXISTING_SESSION_HEARTBEAT;
+    private static final ByteBuf HEARTBEAT_RESPONSE_SERVER_UNAVAILABLE;
+
+    static {
+        // TODO: support using -1 as the error response to heartbeat request
+        //  in the implementation of turms clients
+        TurmsNotification notification = NotificationFactory
+                .fromCode(TurmsStatusCode.UPDATE_NON_EXISTING_SESSION_HEARTBEAT, -1);
+        HEARTBEAT_RESPONSE_UPDATE_NON_EXISTING_SESSION_HEARTBEAT = Unpooled.unreleasableBuffer(ProtoUtil.getDirectByteBuffer(notification));
+        notification = NotificationFactory
+                .fromCode(TurmsStatusCode.SERVER_UNAVAILABLE, -1);
+        HEARTBEAT_RESPONSE_SERVER_UNAVAILABLE = Unpooled.unreleasableBuffer(ProtoUtil.getDirectByteBuffer(notification));
+    }
 
     private final SessionController sessionController;
     private final ServiceMediator serviceMediator;
@@ -68,35 +85,57 @@ public class UserRequestDispatcher {
      * In other words, the method should never return MonoError and it should be considered as a bug if it occurs.
      */
     public Mono<ByteBuf> handleRequest(UserSessionWrapper sessionWrapper, ByteBuf data) {
-        if (!serverStatusManager.isActive()) {
-            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_UNAVAILABLE));
-        }
         if (!data.isReadable()) {
+            if (!serverStatusManager.isActive()) {
+                return Mono.just(HEARTBEAT_RESPONSE_SERVER_UNAVAILABLE);
+            }
             return handleHeartbeatRequest(sessionWrapper);
         }
         SimpleTurmsRequest request = TurmsRequestUtil.parseSimpleRequest(data.nioBuffer());
+        if (!serverStatusManager.isActive()) {
+            TurmsNotification notification = NotificationFactory
+                    .fromCode(TurmsStatusCode.SERVER_UNAVAILABLE, request.getRequestId());
+            return Mono.just(ProtoUtil.getDirectByteBuffer(notification));
+        }
         TurmsRequest.KindCase requestType = request.getType();
-        Mono<TurmsNotification> notificationMono = switch (requestType) {
-            case CREATE_SESSION_REQUEST -> sessionController
-                    .handleCreateSessionRequest(sessionWrapper, request.getCreateSessionRequest())
-                    .map(result -> getNotificationFromHandlerResult(result, request.getRequestId()));
-            case DELETE_SESSION_REQUEST -> sessionController.handleDeleteSessionRequest(sessionWrapper);
-            default -> handleServiceRequest(sessionWrapper, request, data);
-        };
-        return notificationMono
-                .doOnNext(notification -> {
-                    if (TurmsStatusCode.isServerError(notification.getCode())) {
-                        log.error("Got a response with a server error code: {} to the request: {}", notification, request);
-                    }
-                })
-                .onErrorResume(throwable -> {
-                    ThrowableInfo info = ThrowableInfo.get(throwable);
-                    if (info.getCode().isServerError()) {
-                        log.error("Failed to handle the service request: {}", request, throwable);
-                    }
-                    return Mono.just(NotificationFactory.fromThrowable(info, request.getRequestId()));
-                })
-                .map(ProtoUtil::getDirectByteBuffer);
+        TracingContext tracingContext = supportsTracing(requestType) ? new TracingContext() : TracingContext.NOOP;
+        try {
+            tracingContext.updateMdc();
+            Mono<TurmsNotification> notificationMono = switch (requestType) {
+                case CREATE_SESSION_REQUEST -> sessionController
+                        .handleCreateSessionRequest(sessionWrapper, request.getCreateSessionRequest())
+                        .map(result -> getNotificationFromHandlerResult(result, request.getRequestId()));
+                case DELETE_SESSION_REQUEST -> sessionController.handleDeleteSessionRequest(sessionWrapper);
+                default -> handleServiceRequest(sessionWrapper, request, data);
+            };
+            return notificationMono
+                    .doOnNext(notification -> {
+                        if (TurmsStatusCode.isServerError(notification.getCode())) {
+                            tracingContext.updateMdc();
+                            log.error("Got a response with a server error code: {} to the request: {}", notification, request);
+                        }
+                    })
+                    .onErrorResume(throwable -> {
+                        ThrowableInfo info = ThrowableInfo.get(throwable);
+                        if (info.getCode().isServerError()) {
+                            tracingContext.updateMdc();
+                            log.error("Failed to handle the service request: {}", request, throwable);
+                        }
+                        return Mono.just(NotificationFactory.fromThrowable(info, request.getRequestId()));
+                    })
+                    .map(ProtoUtil::getDirectByteBuffer)
+                    .contextWrite(context -> {
+                        RequestLoggingContext loggingContext = context.get(RequestLoggingContext.CTX_KEY_NAME);
+                        loggingContext.setTracingContext(tracingContext);
+                        return context;
+                    });
+        } catch (Exception e) {
+            TurmsNotification notification = NotificationFactory
+                    .fromThrowable(ThrowableInfo.get(e), request.getRequestId());
+            return Mono.just(ProtoUtil.getDirectByteBuffer(notification));
+        } finally {
+            tracingContext.clearMdc();
+        }
     }
 
     private Mono<ByteBuf> handleHeartbeatRequest(UserSessionWrapper sessionWrapper) {
@@ -104,17 +143,16 @@ public class UserRequestDispatcher {
         ByteBuf data;
         if (session != null) {
             serviceMediator.processHeartbeatRequest(session);
-            data = HEARTBEAT_RESPONSE;
+            data = HEARTBEAT_RESPONSE_SUCCESS;
         } else {
-            RequestHandlerResult result = new RequestHandlerResult(TurmsStatusCode.UPDATE_NON_EXISTING_SESSION_HEARTBEAT);
-            // TODO: check -1
-            TurmsNotification notification = getNotificationFromHandlerResult(result, -1);
-            data = ProtoUtil.getDirectByteBuffer(notification);
+            data = HEARTBEAT_RESPONSE_UPDATE_NON_EXISTING_SESSION_HEARTBEAT;
         }
         return Mono.just(data);
     }
 
-    private Mono<TurmsNotification> handleServiceRequest(UserSessionWrapper sessionWrapper, SimpleTurmsRequest request, ByteBuf data) {
+    private Mono<TurmsNotification> handleServiceRequest(UserSessionWrapper sessionWrapper,
+                                                         SimpleTurmsRequest request,
+                                                         ByteBuf data) {
         UserSession session = sessionWrapper.getUserSession();
         if (session == null || !session.isOpen()) {
             return Mono.just(TurmsNotificationUtil.sessionClosed(request.getRequestId()));
@@ -123,7 +161,6 @@ public class UserRequestDispatcher {
                 sessionWrapper.getIp().getAddress().getAddress(),
                 session.getUserId(),
                 session.getDeviceType(),
-                RandomUtil.nextPositiveLong(),
                 request.getRequestId(),
                 request.getType(),
                 data);
@@ -139,6 +176,15 @@ public class UserRequestDispatcher {
             builder.setReason(reason);
         }
         return builder.build();
+    }
+
+    /**
+     * @implNote Though the requests for gateway don't need trace currently,
+     * but we may need tracing in the future so we use a mechanism to support
+     * tracing any requests if we want
+     */
+    private boolean supportsTracing(TurmsRequest.KindCase requestType) {
+        return requestType != CREATE_SESSION_REQUEST && requestType != DELETE_SESSION_REQUEST;
     }
 
 }

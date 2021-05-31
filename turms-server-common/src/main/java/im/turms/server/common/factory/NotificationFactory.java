@@ -33,6 +33,16 @@ public final class NotificationFactory {
     private NotificationFactory() {
     }
 
+    public static TurmsNotification fromCode(TurmsStatusCode code, long requestId) {
+        TurmsNotification.Builder builder = TurmsNotification
+                .newBuilder()
+                .setRequestId(requestId)
+                .setCode(code.getBusinessCode());
+        String reason = code.getReason();
+        trySetReason(builder, reason, code);
+        return builder.build();
+    }
+
     public static TurmsNotification fromThrowable(ThrowableInfo info, long requestId) {
         TurmsStatusCode code = info.getCode();
         TurmsNotification.Builder builder = TurmsNotification

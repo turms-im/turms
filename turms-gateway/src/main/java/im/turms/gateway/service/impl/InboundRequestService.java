@@ -30,15 +30,14 @@ import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.logging.LoggingRequestUtil;
+import im.turms.server.common.logging.RequestLoggingContext;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.clientapi.ClientApiLoggingProperties;
 import im.turms.server.common.property.env.service.env.clientapi.property.LoggingRequestProperties;
 import im.turms.server.common.rpc.request.HandleServiceRequest;
-import im.turms.server.common.tracing.TracingContext;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import reactor.util.context.Context;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -90,9 +89,6 @@ public class InboundRequestService {
 
     private Mono<TurmsNotification> processServiceRequest0(ServiceRequest serviceRequest) {
         long requestTime = System.currentTimeMillis();
-        // Update context
-        TracingContext tracingContext = new TracingContext(serviceRequest.getTraceId());
-        tracingContext.updateMdc();
 
         // Validate
         Long userId = serviceRequest.getUserId();
@@ -115,24 +111,24 @@ public class InboundRequestService {
 
         // Forward request
         int requestSize = serviceRequest.getTurmsRequestBuffer().readableBytes();
-        Mono<TurmsNotification> notificationMono = sendServiceRequest(serviceRequest)
-                .doOnEach(tracingContext.getMdcUpdater())
+        return sendServiceRequest(serviceRequest)
                 .defaultIfEmpty(REQUEST_RESPONSE_NO_CONTENT)
                 .onErrorResume(throwable -> Mono.just(getServiceResponseFromException(throwable)))
-                .map(response -> {
+                .flatMap(response -> Mono.deferContextual(context -> {
                     TurmsNotification responseNotification = getNotificationFromResponse(response, requestId);
                     // Log
                     if (LoggingRequestUtil.shouldLog(serviceRequest.getType(), supportedLoggingRequestProperties)) {
+                        if (!RequestLoggingContext.updateMdcFromContext(context)) {
+                            log.warn("Failed to update MDC context for the request: " + serviceRequest);
+                        }
                         ClientApiLogging.log(serviceRequest,
                                 requestSize,
                                 requestTime,
                                 responseNotification,
                                 System.currentTimeMillis() - requestTime);
                     }
-                    tracingContext.clearMdc();
-                    return responseNotification;
-                });
-        return notificationMono.contextWrite(Context.of(TracingContext.CTX_KEY_NAME, tracingContext));
+                    return Mono.just(responseNotification);
+                }));
     }
 
     private Mono<ServiceResponse> sendServiceRequest(ServiceRequest serviceRequest) {
@@ -153,9 +149,9 @@ public class InboundRequestService {
     }
 
     private ServiceResponse getServiceResponseFromException(Throwable throwable) {
-        return throwable instanceof RpcException rpcException ?
-                new ServiceResponse(null, rpcException.getStatusCode(), throwable.getMessage()) :
-                new ServiceResponse(null, TurmsStatusCode.SERVER_INTERNAL_ERROR, throwable.getMessage());
+        return throwable instanceof RpcException rpcException
+                ? new ServiceResponse(null, rpcException.getStatusCode(), throwable.getMessage())
+                : new ServiceResponse(null, TurmsStatusCode.SERVER_INTERNAL_ERROR, throwable.getMessage());
     }
 
     private TurmsNotification getNotificationFromResponse(@NotNull ServiceResponse response, long requestId) {

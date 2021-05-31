@@ -34,7 +34,6 @@ public final class ServiceRequest {
     private final Long userId;
     private final DeviceType deviceType;
     // request information
-    private final Long traceId;
     private final Long requestId;
     private final TurmsRequest.KindCase type;
 
@@ -51,14 +50,12 @@ public final class ServiceRequest {
     public ServiceRequest(byte[] ip,
                           Long userId,
                           DeviceType deviceType,
-                          Long traceId,
                           Long requestId,
                           TurmsRequest.KindCase type,
                           ByteBuf turmsRequestBuffer) {
         this.ip = ip;
         this.userId = userId;
         this.deviceType = deviceType;
-        this.traceId = traceId;
         this.requestId = requestId;
         this.type = type;
         this.turmsRequestBuffer = turmsRequestBuffer;

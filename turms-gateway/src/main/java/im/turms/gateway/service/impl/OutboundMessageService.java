@@ -38,6 +38,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static reactor.core.publisher.Sinks.EmitResult;
+
 /**
  * @author James Chen
  */
@@ -91,7 +93,10 @@ public class OutboundMessageService implements IOutboundMessageService {
                     // It's the responsibility for the downstream to decrease the reference count of the notification by 1
                     // no matter the notification is queued successfully or not.
                     // Otherwise, there is a potential memory leak
-                    userSession.tryEmitNextNotification(wrappedNotificationData);
+                    EmitResult emitResult = userSession.tryEmitNextNotification(wrappedNotificationData);
+                    if (emitResult != EmitResult.OK && userSession.isSessionOpen()) {
+                        log.warn("Failed to send notifications to the session: {} due to {}", userSession, emitResult);
+                    }
                     // Keep the logic easy, and we don't care about whether the notification is really flushed
                     hasForwardedMessageToOneRecipient = true;
                     userSession.getConnection().tryNotifyClientToRecover();
@@ -131,7 +136,8 @@ public class OutboundMessageService implements IOutboundMessageService {
             int size = handlerList.size();
             if (size > 0) {
                 if (size == 1) {
-                    handlerList.iterator().next().handle(notification, recipientIds, offlineRecipientIds)
+                    handlerList.get(0)
+                            .handle(notification, recipientIds, offlineRecipientIds)
                             .doOnError(log::error)
                             .subscribe();
                 } else {

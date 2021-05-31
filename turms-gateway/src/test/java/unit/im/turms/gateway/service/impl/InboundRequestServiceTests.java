@@ -135,7 +135,7 @@ class InboundRequestServiceTests {
 
     private ServiceRequest newServiceRequest() {
         ByteBuf buffer = PooledByteBufAllocator.DEFAULT.buffer();
-        return new ServiceRequest(IP_ADDRESS, 1L, DeviceType.ANDROID, 1L, 1L, TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, buffer);
+        return new ServiceRequest(IP_ADDRESS, 1L, DeviceType.ANDROID, 1L, TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, buffer);
     }
 
     private Node mockNode(boolean handleRequestSuccessfully) {

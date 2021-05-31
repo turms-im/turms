@@ -52,13 +52,15 @@ public final class UserSession {
     private Point loginLocation;
     /**
      * 1. Use {@link ByteBuf} instead of {@link TurmsNotification}
-     * so that turms-gateway can transfer data through zero copy (if SSL is disabled)
-     * and don't need to parse it when the data comes from turms.
+     * so that turms-gateway can:
+     * a. Transfer data through zero copy without parsing (if SSL is disabled)
+     * b. Decouple business logic from turms servers
      * <p>
      * 2. Although we can forward the same WebSocketMessage when there are different recipients connecting to the local turms-gateway,
      * we still use ByteBuf for code clarity and extensibility (we will integrate UDP in the future)
      * and ByteBuf won't be copied in the scenario so it's acceptable.
      * Note that the ByteBuf (TurmsNotification) comes from turms servers in most scenarios.
+     * 3. We never emit an error in the sink
      */
     @Getter(AccessLevel.PRIVATE)
     private final Sinks.Many<ByteBuf> notificationSink = Sinks.many().unicast()
@@ -135,18 +137,14 @@ public final class UserSession {
         return notificationSink.asFlux();
     }
 
-    public boolean tryEmitNextNotification(ByteBuf byteBuf) {
-        Sinks.EmitResult result = notificationSink.tryEmitNext(byteBuf);
-        boolean isEmitted = result == Sinks.EmitResult.OK;
-        if (!isEmitted) {
-            if (isSessionOpen) {
-                log.warn("Failed to send notifications due to " + result.name());
-            }
+    public Sinks.EmitResult tryEmitNextNotification(ByteBuf byteBuf) {
+        Sinks.EmitResult result = this.notificationSink.tryEmitNext(byteBuf);
+        if (result != Sinks.EmitResult.OK) {
             // Release once because the subscriber of the sink
             // hasn't released it due to the emitting failure.
             byteBuf.release();
         }
-        return isEmitted;
+        return result;
     }
 
     @Override

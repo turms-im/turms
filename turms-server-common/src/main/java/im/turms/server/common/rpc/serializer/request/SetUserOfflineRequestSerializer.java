@@ -19,7 +19,6 @@ package im.turms.server.common.rpc.serializer.request;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
-import im.turms.server.common.cluster.service.serialization.serializer.Serializer;
 import im.turms.server.common.cluster.service.serialization.serializer.SerializerId;
 import im.turms.server.common.rpc.request.SetUserOfflineRequest;
 import im.turms.server.common.util.DeviceTypeUtil;
@@ -30,10 +29,15 @@ import java.util.Set;
 /**
  * @author James Chen
  */
-public class SetUserOfflineRequestSerializer implements Serializer<SetUserOfflineRequest> {
+public class SetUserOfflineRequestSerializer extends RpcCallableSerializer<SetUserOfflineRequest> {
 
     @Override
-    public void write(ByteBuf output, SetUserOfflineRequest data) {
+    public SerializerId getSerializerId() {
+        return SerializerId.RPC_SET_USER_OFFLINE;
+    }
+
+    @Override
+    public void writeRequestData(ByteBuf output, SetUserOfflineRequest data) {
         output.writeLong(data.getUserId());
         SessionCloseStatus closeStatus = data.getCloseStatus();
         int code = closeStatus.getCode();
@@ -46,7 +50,7 @@ public class SetUserOfflineRequestSerializer implements Serializer<SetUserOfflin
     }
 
     @Override
-    public SetUserOfflineRequest read(ByteBuf input) {
+    public SetUserOfflineRequest readRequestData(ByteBuf input) {
         long userId = input.readLong();
         int code = input.readShort();
         SessionCloseStatus statusCode = SessionCloseStatus.get(code);
@@ -59,14 +63,9 @@ public class SetUserOfflineRequestSerializer implements Serializer<SetUserOfflin
     }
 
     @Override
-    public int initialCapacity(SetUserOfflineRequest data) {
+    public int initialCapacityForRequest(SetUserOfflineRequest data) {
         int capacityForDeviceTypes = data.getDeviceTypes().isEmpty() ? 0 : 1;
         return Long.BYTES + Short.BYTES + capacityForDeviceTypes;
-    }
-
-    @Override
-    public SerializerId getSerializerId() {
-        return SerializerId.RPC_SET_USER_OFFLINE;
     }
 
 }

@@ -18,35 +18,39 @@
 package im.turms.server.common.cluster.service.rpc;
 
 import im.turms.server.common.cluster.node.NodeType;
+import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.ExceptionUtil;
 import io.micrometer.core.instrument.Tag;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import reactor.core.publisher.Mono;
 
 /**
  * @author James Chen
  */
-public abstract class RpcCallable<T> implements ApplicationContextAware {
+public abstract class RpcCallable<T> {
 
     @Getter
-    private ApplicationContext context;
+    private final long requestTime = System.currentTimeMillis();
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        this.context = applicationContext;
-    }
+    @Getter
+    @Setter
+    private ApplicationContext applicationContext;
+
+    @Getter
+    @Setter
+    private TracingContext tracingContext = TracingContext.NOOP;
 
     public <Bean> Bean getBean(Class<Bean> clazz) {
-        if (context == null) {
+        if (applicationContext == null) {
             throw new IllegalStateException("Failed to get the bean because the context is null");
         }
         try {
-            return context.getBean(clazz);
+            return applicationContext.getBean(clazz);
         } catch (NoSuchBeanDefinitionException e) {
-            NodeType nodeType = ExceptionUtil.suppress(() -> context.getBean(NodeType.class));
+            NodeType nodeType = ExceptionUtil.suppress(() -> applicationContext.getBean(NodeType.class));
             String message =
                     String.format("Failed to get the bean. The request type %s may be sent to the wrong server %s", name(), nodeType);
             throw new IllegalStateException(message, e);

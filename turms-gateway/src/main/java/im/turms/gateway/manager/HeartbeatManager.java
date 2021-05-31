@@ -161,6 +161,8 @@ public class HeartbeatManager {
                     session.getUserId(),
                     session.getDeviceType(),
                     closeReason)
+                    .doOnError(t -> log.error("Caught an error when disconnecting the local session: {} with the close reason: {}",
+                            session, closeReason))
                     .subscribe();
         }
         session.setLastHeartbeatUpdateTimestampMillis(now);

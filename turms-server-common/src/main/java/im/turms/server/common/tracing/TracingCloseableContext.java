@@ -15,18 +15,25 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.rpc.service;
+package im.turms.server.common.tracing;
 
-import im.turms.server.common.dto.ServiceRequest;
-import im.turms.server.common.dto.ServiceResponse;
-import im.turms.server.common.tracing.TracingContext;
-import reactor.core.publisher.Mono;
+import java.io.Closeable;
 
 /**
  * @author James Chen
  */
-public interface IServiceRequestDispatcher {
+public class TracingCloseableContext implements Closeable {
 
-    Mono<ServiceResponse> dispatch(TracingContext tracingContext, ServiceRequest serviceRequest);
+    private final TracingContext tracingContext;
+
+    TracingCloseableContext(TracingContext tracingContext) {
+        this.tracingContext = tracingContext;
+        tracingContext.updateMdc();
+    }
+
+    @Override
+    public void close() {
+        tracingContext.clearMdc();
+    }
 
 }

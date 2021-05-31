@@ -17,19 +17,18 @@
 
 package im.turms.server.common.rpc.serializer.request;
 
-import im.turms.server.common.cluster.service.serialization.serializer.Serializer;
 import im.turms.server.common.cluster.service.serialization.serializer.SerializerId;
 import im.turms.server.common.rpc.request.SendNotificationRequest;
 import im.turms.server.common.util.MapUtil;
 import io.netty.buffer.ByteBuf;
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
  * @author James Chen
  */
-public class SendNotificationRequestSerializer implements Serializer<SendNotificationRequest> {
+public class SendNotificationRequestSerializer extends RpcCallableSerializer<SendNotificationRequest> {
 
     @Override
     public SerializerId getSerializerId() {
@@ -37,7 +36,7 @@ public class SendNotificationRequestSerializer implements Serializer<SendNotific
     }
 
     @Override
-    public void write(ByteBuf output, SendNotificationRequest data) {
+    public void writeRequestData(ByteBuf output, SendNotificationRequest data) {
         short recipientsNumber = (short) data.getRecipientIds().size();
         if (recipientsNumber == 0) {
             throw new IllegalArgumentException("The number of recipients must be greater than 0");
@@ -49,9 +48,9 @@ public class SendNotificationRequestSerializer implements Serializer<SendNotific
     }
 
     @Override
-    public SendNotificationRequest read(ByteBuf input) {
+    public SendNotificationRequest readRequestData(ByteBuf input) {
         int recipientsNumber = input.readShort();
-        Set<Long> recipientIds = new HashSet<>(MapUtil.getCapability(recipientsNumber));
+        Set<Long> recipientIds = UnifiedSet.newSet(MapUtil.getCapability(recipientsNumber));
         for (int i = 0; i < recipientsNumber; i++) {
             recipientIds.add(input.readLong());
         }
@@ -60,7 +59,7 @@ public class SendNotificationRequestSerializer implements Serializer<SendNotific
     }
 
     @Override
-    public int initialCapacity(SendNotificationRequest data) {
+    public int initialCapacityForRequest(SendNotificationRequest data) {
         int size = data.getRecipientIds().size();
         return Short.BYTES + size * Long.BYTES;
     }

@@ -37,7 +37,8 @@ import java.util.Map;
 
 /**
  * @author James Chen
- * @implNote We don't use MessageToByteEncoder or enCODER because they will release the input buffer
+ * @implNote We don't use MessageToByteEncoder because they will release the input buffer
+ * while we need to reuse the input buffer to compose a composite buffer.
  * @see CommandEncoder
  * @see CommandArgsUtil
  */

@@ -17,7 +17,6 @@
 
 package im.turms.server.common.rpc.serializer.request;
 
-import im.turms.server.common.cluster.service.serialization.serializer.Serializer;
 import im.turms.server.common.cluster.service.serialization.serializer.SerializerId;
 import im.turms.server.common.rpc.request.CountOnlineUsersRequest;
 import io.netty.buffer.ByteBuf;
@@ -25,25 +24,16 @@ import io.netty.buffer.ByteBuf;
 /**
  * @author James Chen
  */
-public class CountOnlineUsersRequestSerializer implements Serializer<CountOnlineUsersRequest> {
-
-    @Override
-    public void write(ByteBuf output, CountOnlineUsersRequest data) {
-    }
-
-    @Override
-    public CountOnlineUsersRequest read(ByteBuf input) {
-        return new CountOnlineUsersRequest();
-    }
-
-    @Override
-    public int initialCapacity(CountOnlineUsersRequest data) {
-        return 0;
-    }
+public class CountOnlineUsersRequestSerializer extends RpcCallableSerializer<CountOnlineUsersRequest> {
 
     @Override
     public SerializerId getSerializerId() {
         return SerializerId.RPC_COUNT_ONLINE_USERS;
+    }
+
+    @Override
+    public CountOnlineUsersRequest readRequestData(ByteBuf input) {
+        return new CountOnlineUsersRequest();
     }
 
 }

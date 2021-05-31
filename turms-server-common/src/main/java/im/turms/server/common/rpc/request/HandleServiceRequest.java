@@ -70,7 +70,7 @@ public class HandleServiceRequest extends RpcCallable<ServiceResponse> {
 
     @Override
     public Mono<ServiceResponse> callAsync() {
-        return dispatcher.dispatch(serviceRequest);
+        return dispatcher.dispatch(getTracingContext(), serviceRequest);
     }
 
 }

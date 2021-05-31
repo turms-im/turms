@@ -32,6 +32,7 @@ import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.service.env.clientapi.ClientApiLoggingProperties;
 import im.turms.server.common.property.env.service.env.clientapi.property.LoggingRequestProperties;
 import im.turms.server.common.rpc.service.IServiceRequestDispatcher;
+import im.turms.server.common.tracing.TracingCloseableContext;
 import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.ProtoUtil;
 import im.turms.turms.logging.ClientApiLogging;
@@ -129,9 +130,9 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
     }
 
     @Override
-    public Mono<ServiceResponse> dispatch(ServiceRequest serviceRequest) {
+    public Mono<ServiceResponse> dispatch(TracingContext tracingContext, ServiceRequest serviceRequest) {
         try {
-            return dispatch0(serviceRequest);
+            return dispatch0(tracingContext, serviceRequest);
         } catch (Exception e) {
             log.error("Failed to handle the {} request: {}", serviceRequest.getType(), serviceRequest.getRequestId(), e);
             return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.SERVER_INTERNAL_ERROR, e.toString()));
@@ -147,16 +148,11 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
      * 2. The method should never return MonoError and it should be considered as a bug if it occurs
      * because the method itself should wrap all kinds of Throwable as a ServiceResponse instance.
      */
-    private Mono<ServiceResponse> dispatch0(ServiceRequest serviceRequest) {
+    private Mono<ServiceResponse> dispatch0(TracingContext tracingContext, ServiceRequest serviceRequest) {
         long requestTime = System.currentTimeMillis();
         // 1. Validate ServiceResponse
-        Long traceId = serviceRequest.getTraceId();
         Long userId = serviceRequest.getUserId();
         DeviceType deviceType = serviceRequest.getDeviceType();
-        if (traceId == null) {
-            String message = "The trace ID is missing for the request: " + serviceRequest;
-            return Mono.just(new ServiceResponse(null, TurmsStatusCode.SERVER_INTERNAL_ERROR, message));
-        }
         if (userId == null) {
             String message = "The user ID is missing for the request: " + serviceRequest;
             return Mono.just(new ServiceResponse(null, TurmsStatusCode.SERVER_INTERNAL_ERROR, message));
@@ -176,9 +172,6 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         } catch (InvalidProtocolBufferException e) {
             return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.INVALID_REQUEST, e.getMessage()));
         }
-
-        TracingContext tracingContext = new TracingContext(traceId);
-        tracingContext.updateMdc();
 
         // 2. Transform and handle the request
         ClientRequest clientRequest = new ClientRequest(
@@ -232,7 +225,11 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                     .doOnSuccess(requestResult -> {
                         if (requestResult.getCode() == TurmsStatusCode.OK) {
                             notifyRelatedUsersOfAction(requestResult, userId, deviceType)
-                                    .doOnError(t -> log.error("Failed to notify related users of the action", t))
+                                    .doOnError(t -> {
+                                        try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
+                                            log.error("Failed to notify related users of the action", t);
+                                        }
+                                    })
                                     .subscribe();
                         }
                     })
@@ -248,6 +245,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                         // 6. Log
                         if (response.getCode().isServerError()
                                 || LoggingRequestUtil.shouldLog(requestType, supportedLoggingRequestProperties)) {
+                            tracingContext.updateMdc();
                             ClientApiLogging
                                     .log(lastClientRequest,
                                             serviceRequest,
@@ -256,7 +254,6 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                                             response,
                                             System.currentTimeMillis() - requestTime);
                         }
-                        tracingContext.clearMdc();
                         return response;
                     });
         });
