@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.rpc.serializer.dto;
+package im.turms.server.common.rpc.serializer.response;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import im.turms.common.model.dto.notification.TurmsNotification;

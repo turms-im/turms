@@ -22,6 +22,8 @@ import im.turms.common.model.dto.request.TurmsRequest;
 import io.netty.buffer.ByteBuf;
 import lombok.Data;
 
+import javax.annotation.Nullable;
+
 /**
  * @author James Chen
  */
@@ -34,7 +36,9 @@ public final class ServiceRequest {
     private final Long userId;
     private final DeviceType deviceType;
     // request information
+    @Nullable
     private final Long requestId;
+    @Nullable
     private final TurmsRequest.KindCase type;
 
     /**
@@ -45,6 +49,8 @@ public final class ServiceRequest {
      * turms servers should validate it by themselves
      */
     private final ByteBuf turmsRequestBuffer;
+
+    // computed properties
     private String ipStr;
 
     public ServiceRequest(byte[] ip,
@@ -73,6 +79,18 @@ public final class ServiceRequest {
             ipStr = ipStrBuilder.toString();
         }
         return ipStr;
+    }
+
+    @Override
+    public String toString() {
+        return "ServiceRequest{" +
+                "ip=" + getIpStr() +
+                ", userId=" + userId +
+                ", deviceType=" + deviceType +
+                ", requestId=" + requestId +
+                ", type=" + type +
+                ", turmsRequestBuffer=" + turmsRequestBuffer +
+                '}';
     }
 
 }

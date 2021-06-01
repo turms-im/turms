@@ -27,7 +27,7 @@ import im.turms.server.common.cluster.service.serialization.serializer.impl.List
 import im.turms.server.common.cluster.service.serialization.serializer.impl.LongSerializer;
 import im.turms.server.common.cluster.service.serialization.serializer.impl.ShortSerializer;
 import im.turms.server.common.cluster.service.serialization.serializer.impl.StringSerializer;
-import im.turms.server.common.rpc.serializer.dto.ServiceResponseSerializer;
+import im.turms.server.common.rpc.serializer.response.ServiceResponseSerializer;
 import im.turms.server.common.rpc.serializer.request.CountOnlineUsersRequestSerializer;
 import im.turms.server.common.rpc.serializer.request.HandleServiceRequestSerializer;
 import im.turms.server.common.rpc.serializer.request.SendNotificationRequestSerializer;

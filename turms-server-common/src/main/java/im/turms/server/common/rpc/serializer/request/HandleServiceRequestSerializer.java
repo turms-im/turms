@@ -31,7 +31,7 @@ public class HandleServiceRequestSerializer extends RpcCallableSerializer<Handle
     private static final int IPV4_BYTE_LENGTH = 4;
     private static final int IPV6_BYTE_LENGTH = 16;
 
-    private static final int FIXED_FIELDS_LENGTH = Byte.BYTES * 2 + Long.BYTES * 2;
+    private static final int FIXED_FIELDS_LENGTH = Byte.BYTES * 2 + Long.BYTES;
     private static final int IS_IPV4_FLAG = 0;
 
     @Override
@@ -52,8 +52,7 @@ public class HandleServiceRequestSerializer extends RpcCallableSerializer<Handle
     public HandleServiceRequest readRequestData(ByteBuf input) {
         boolean isIpV4 = input.readByte() == IS_IPV4_FLAG;
         int ipByteLength = isIpV4 ? IPV4_BYTE_LENGTH : IPV6_BYTE_LENGTH;
-        int length = FIXED_FIELDS_LENGTH + ipByteLength;
-        ByteBuf firstByteBuf = input.readSlice(length);
+        ByteBuf firstByteBuf = input.readSlice(FIXED_FIELDS_LENGTH - Byte.BYTES + ipByteLength);
 
         byte[] ip = new byte[ipByteLength];
         firstByteBuf.readBytes(ip);

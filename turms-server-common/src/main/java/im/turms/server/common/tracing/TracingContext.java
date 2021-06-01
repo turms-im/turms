@@ -17,6 +17,7 @@
 
 package im.turms.server.common.tracing;
 
+import im.turms.common.util.RandomUtil;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -85,6 +86,11 @@ public class TracingContext {
 
     public TracingContext(long traceId) {
         this.traceId = traceId;
+    }
+
+    public TracingContext() {
+        // TODO: use a global unique trace ID
+        this.traceId = RandomUtil.nextPositiveLong();
     }
 
     public String getTraceIdStr() {

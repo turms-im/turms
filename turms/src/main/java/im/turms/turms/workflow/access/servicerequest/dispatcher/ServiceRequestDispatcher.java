@@ -134,7 +134,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         try {
             return dispatch0(tracingContext, serviceRequest);
         } catch (Exception e) {
-            log.error("Failed to handle the {} request: {}", serviceRequest.getType(), serviceRequest.getRequestId(), e);
+            log.error("Failed to handle the request: {}", serviceRequest, e);
             return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.SERVER_INTERNAL_ERROR, e.toString()));
         }
     }
