@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import im.turms.server.common.property.TurmsProperties;
@@ -72,10 +73,12 @@ public final class PropertiesUtil {
     private static final String FIELD_NAME_TYPE = "type";
 
     public static final ObjectWriter MUTABLE_PROPERTIES_WRITER = new ObjectMapper()
-            .setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
             .disable(MapperFeature.DEFAULT_VIEW_INCLUSION)
+            .registerModule(new JavaTimeModule())
+            .setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
             .writerWithView(MutablePropertiesView.class);
     public static final ObjectMapper MAPPER = new ObjectMapper()
+            .registerModule(new JavaTimeModule())
             .setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
     public static final TypeReference<HashMap<String, Object>> TYPE_REF_MAP = new TypeReference<>() {
     };
