@@ -26,6 +26,7 @@ import im.turms.server.common.cluster.service.config.ChangeStreamUtil;
 import im.turms.server.common.cluster.service.config.SharedConfigService;
 import im.turms.server.common.cluster.service.config.domain.discovery.Leader;
 import im.turms.server.common.cluster.service.config.domain.discovery.Member;
+import im.turms.server.common.cluster.service.rpc.RpcService;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.manager.address.BaseServiceAddressManager;
@@ -122,7 +123,8 @@ public class DiscoveryService implements ClusterService {
             int memberBindPort,
             DiscoveryProperties discoveryProperties,
             BaseServiceAddressManager serviceAddressManager,
-            SharedConfigService sharedConfigService) {
+            SharedConfigService sharedConfigService,
+            RpcService rpcService) {
         Date now = new Date();
         Member localMember = new Member(clusterId,
                 nodeId,
@@ -165,7 +167,7 @@ public class DiscoveryService implements ClusterService {
                     .setIfNotNull(Member.Fields.udpAddress, udpAddress);
             localNodeStatusManager.upsertLocalNodeInfo(update).subscribe();
         });
-        this.connectionManager = new ConnectionManager(this, discoveryProperties);
+        this.connectionManager = new ConnectionManager(this, rpcService, discoveryProperties);
         connectionManager.addMemberConnectionChangeListener(new MemberConnectionChangeListener() {
             @Override
             public void onMemberConnectionAdded(Member member, RSocket connection) {

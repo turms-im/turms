@@ -24,6 +24,7 @@ import im.turms.server.common.cluster.service.config.SharedPropertyService;
 import im.turms.server.common.cluster.service.discovery.DiscoveryService;
 import im.turms.server.common.cluster.service.idgen.IdService;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
+import im.turms.server.common.cluster.service.rpc.RpcAcceptor;
 import im.turms.server.common.cluster.service.rpc.RpcService;
 import im.turms.server.common.cluster.service.serialization.SerializationService;
 import im.turms.server.common.context.TurmsApplicationContext;
@@ -123,8 +124,9 @@ public class Node {
         }
 
         // Set up the local server
-        RpcService.initRpcAcceptor(context);
-        serverChannel = setupLocalDiscoveryServer(networkProperties.getHost(),
+        RpcAcceptor rpcAcceptor = new RpcAcceptor(context);
+        serverChannel = setupLocalDiscoveryServer(rpcAcceptor,
+                networkProperties.getHost(),
                 networkProperties.getPort(),
                 networkProperties.isAutoIncrement(),
                 networkProperties.getPortCount(),
@@ -152,6 +154,8 @@ public class Node {
         // pass the properties one by one rather than passing the node instance
         // to know their dependency relationships explicitly.
         sharedConfigService = new SharedConfigService(sharedConfigProperties.getMongo());
+        serializationService = new SerializationService();
+        rpcService = new RpcService(clusterProperties.getRpc(), rpcAcceptor, serializationService);
         discoveryService = new DiscoveryService(clusterId,
                 nodeId,
                 nodeType,
@@ -161,12 +165,21 @@ public class Node {
                 address.getPort(),
                 discoveryProperties,
                 serviceAddressManager,
-                sharedConfigService);
-
+                sharedConfigService,
+                rpcService);
         sharedPropertyService = new SharedPropertyService(clusterId, nodeType, turmsPropertiesManager, sharedConfigService);
-        serializationService = new SerializationService();
-        rpcService = new RpcService(clusterProperties.getRpc(), serializationService, discoveryService);
         idService = new IdService(discoveryService);
+
+        List<ClusterService> allServices = List.of(
+                discoveryService,
+                sharedConfigService,
+                sharedPropertyService,
+                serializationService,
+                rpcService,
+                idService);
+        for (ClusterService service : allServices) {
+            service.lazyInit(discoveryService, idService, rpcService, serializationService, sharedConfigService);
+        }
     }
 
     public void start() {
@@ -230,7 +243,8 @@ public class Node {
 
     // Private
 
-    private CloseableChannel setupLocalDiscoveryServer(String host,
+    private CloseableChannel setupLocalDiscoveryServer(RpcAcceptor rpcAcceptor,
+                                                       String host,
                                                        int port,
                                                        boolean autoIncrement,
                                                        int portCount,
@@ -249,7 +263,7 @@ public class Node {
                 }
                 TcpServerTransport transport = TcpServerTransport.create(tcpServer);
                 CloseableChannel channel = RSocketServer
-                        .create(SocketAcceptor.with(RpcService.getRpcAcceptor()))
+                        .create(SocketAcceptor.with(rpcAcceptor))
                         .bindNow(transport);
                 log.info("The local server {}:{} has been set up", host, currentPort);
                 return channel;

@@ -20,8 +20,10 @@ package im.turms.server.common.cluster.service.rpc;
 import im.turms.common.util.RandomUtil;
 import im.turms.server.common.cluster.exception.RpcException;
 import im.turms.server.common.cluster.service.ClusterService;
+import im.turms.server.common.cluster.service.config.SharedConfigService;
 import im.turms.server.common.cluster.service.discovery.DiscoveryService;
 import im.turms.server.common.cluster.service.discovery.MemberInfoWithConnection;
+import im.turms.server.common.cluster.service.idgen.IdService;
 import im.turms.server.common.cluster.service.serialization.SerializationService;
 import im.turms.server.common.cluster.service.serialization.serializer.Serializer;
 import im.turms.server.common.cluster.service.serialization.serializer.SerializerPool;
@@ -39,6 +41,7 @@ import io.rsocket.RSocket;
 import io.rsocket.exceptions.ApplicationErrorException;
 import io.rsocket.util.ByteBufPayload;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.util.Pair;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -64,22 +67,25 @@ public class RpcService implements ClusterService {
     private static final String METRICS_TAG_REQUEST_TARGET_NODE_ID = "node";
 
     @Getter
-    private static RpcAcceptor rpcAcceptor;
-
+    private final RpcAcceptor rpcAcceptor;
     private final SerializationService serializationService;
-    private final DiscoveryService discoveryService;
     private final Duration timeoutDuration;
 
-    public RpcService(RpcProperties rpcProperties, SerializationService serializationService, DiscoveryService discoveryService) {
+    @Setter
+    private DiscoveryService discoveryService;
+
+    public RpcService(RpcProperties rpcProperties,
+                      RpcAcceptor rpcAcceptor,
+                      SerializationService serializationService) {
+        this.rpcAcceptor = rpcAcceptor;
         this.serializationService = serializationService;
-        this.discoveryService = discoveryService;
         timeoutDuration = Duration.ofMillis(rpcProperties.getTimeoutInMillis());
     }
 
-    public static void initRpcAcceptor(ApplicationContext context) {
-        if (rpcAcceptor == null) {
-            rpcAcceptor = new RpcAcceptor(context);
-        }
+    @Override
+    public void lazyInit(DiscoveryService discoveryService, IdService idService, RpcService rpcService,
+                         SerializationService serializationService, SharedConfigService sharedConfigService) {
+        this.discoveryService = discoveryService;
     }
 
     /**

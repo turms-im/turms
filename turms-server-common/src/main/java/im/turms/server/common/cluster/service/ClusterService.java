@@ -17,12 +17,28 @@
 
 package im.turms.server.common.cluster.service;
 
+import im.turms.server.common.cluster.service.config.SharedConfigService;
+import im.turms.server.common.cluster.service.discovery.DiscoveryService;
+import im.turms.server.common.cluster.service.idgen.IdService;
+import im.turms.server.common.cluster.service.rpc.RpcService;
+import im.turms.server.common.cluster.service.serialization.SerializationService;
+
+/**
+ * @author James Chen
+ */
 public interface ClusterService {
 
     default void start() {
     }
 
     default void stop() {
+    }
+
+    default void lazyInit(DiscoveryService discoveryService,
+                          IdService idService,
+                          RpcService rpcService,
+                          SerializationService serializationService,
+                          SharedConfigService sharedConfigService) {
     }
 
 }

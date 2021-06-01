@@ -59,6 +59,9 @@ public class ConnectionManager {
     private final Duration reconnectInterval;
     private final NioEventLoopGroup eventLoopGroup;
 
+    private final DiscoveryService discoveryService;
+    private final RpcService rpcService;
+
     /**
      * Note that it is acceptable if a socket is connected to non-member turms servers
      */
@@ -70,15 +73,15 @@ public class ConnectionManager {
      * Never stop reconnecting until the member is removed from cluster
      */
     private final Map<Member, Integer> failedConnectionMemberMap = new HashMap<>();
-    private final DiscoveryService discoveryService;
     private final List<MemberConnectionChangeListener> memberConnectionChangeListeners = new LinkedList<>();
 
     @Getter
     @Contended
     private boolean hasConnectedToAllMembers;
 
-    public ConnectionManager(DiscoveryService discoveryService, DiscoveryProperties discoveryProperties) {
+    public ConnectionManager(DiscoveryService discoveryService, RpcService rpcService, DiscoveryProperties discoveryProperties) {
         this.discoveryService = discoveryService;
+        this.rpcService = rpcService;
         clientSsl = discoveryProperties.getClientSsl();
         keepaliveInterval = Duration.ofSeconds(discoveryProperties.getHeartbeatIntervalInSeconds());
         keepaliveTimeout = Duration.ofSeconds(discoveryProperties.getHeartbeatTimeoutInSeconds());
@@ -187,7 +190,7 @@ public class ConnectionManager {
                     registry.forResponder(interactionInterceptor);
                 })
                 .keepAlive(keepaliveInterval, keepaliveTimeout)
-                .acceptor(SocketAcceptor.with(RpcService.getRpcAcceptor()))
+                .acceptor(SocketAcceptor.with(rpcService.getRpcAcceptor()))
                 .connect(transport);
     }
 
