@@ -11,6 +11,8 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.VarHandle;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.charset.StandardCharsets;
@@ -40,13 +42,16 @@ public class TestingEnvContainer extends DockerComposeContainer<TestingEnvContai
 
     static {
         try {
-            // FIXME: Remove once DockerComposeContainer supports using a custom version of docker-compose
+            // FIXME: Remove the hacky code once DockerComposeContainer supports
+            //  using a custom version of docker-compose
+            // https://github.com/testcontainers/testcontainers-java/issues/4164
             Class<?> compose = Class.forName("org.testcontainers.containers.ContainerisedDockerCompose");
             Field field = compose.getDeclaredField("DEFAULT_IMAGE_NAME");
             field.setAccessible(true);
-            Field modifiersField = Field.class.getDeclaredField("modifiers");
-            modifiersField.setAccessible(true);
-            modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+            VarHandle modifiersHandle = MethodHandles
+                    .privateLookupIn(Field.class, MethodHandles.lookup())
+                    .findVarHandle(Field.class, "modifiers", int.class);
+            modifiersHandle.set(field, field.getModifiers() & ~Modifier.FINAL);
             field.set(null, DockerImageName.parse("docker/compose:1.29.1"));
         } catch (Exception e) {
             log.error("Cannot change the version of docker-compose", e);
