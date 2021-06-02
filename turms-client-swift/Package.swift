@@ -4,6 +4,10 @@ import PackageDescription
 
 let package = Package(
     name: "TurmsClient",
+    platforms: [
+        .macOS(.v10_14),
+        .iOS(.v12)
+    ],
     products: [
         .library(
             name: "TurmsClient",
@@ -28,7 +32,8 @@ let package = Package(
         .testTarget(
             name: "TurmsClientTests",
             dependencies: ["TurmsClient", "Starscream", "SwiftProtobuf"]),
-    ]
+    ],
+    swiftLanguageVersions: [.v5]
 )
 
 #if canImport(PackageConfig)
