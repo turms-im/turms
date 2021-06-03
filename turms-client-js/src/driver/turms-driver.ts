@@ -103,7 +103,7 @@ export default class TurmsDriver {
         return this._stateStore.isConnected;
     }
 
-    // Listeners
+    // Connection Listeners
 
     addOnConnectedListener(listener: () => void): void {
         this._connectionService.addOnConnectedListener(listener);

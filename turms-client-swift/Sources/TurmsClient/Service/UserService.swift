@@ -3,50 +3,88 @@ import PromiseKit
 
 public class UserService {
     private weak var turmsClient: TurmsClient!
-    var userId: Int64?
-    var password: String?
-    var location: Position?
-    var userOnlineStatus: UserStatus?
-    var deviceType: DeviceType?
+    public var userInfo: User?
+    private var storePassword = false
+
+    private var onOnlineListeners: [() -> ()] = []
+    private var onOfflineListeners: [(SessionCloseInfo?) -> ()] = []
+
+    var isLoggedIn: Bool {
+        get {
+            guard let status = userInfo?.onlineStatus else {
+                return false
+            }
+            return status != .offline && UserStatus.allCases.contains(status)
+        }
+    }
 
     init(_ turmsClient: TurmsClient) {
         self.turmsClient = turmsClient
+        turmsClient.driver.addOnDisconnectedListener { [weak self] _ in
+            self?.changeToOffline()
+        }
+        turmsClient.driver.addOnNotificationListener { [weak self] n in
+            if n.hasCloseStatus && self?.isLoggedIn == true {
+                let info = SessionCloseInfo(closeStatus: n.closeStatus, businessStatus: n.hasCode ? n.code : nil, reason: n.hasReason ? n.reason : nil)
+                self?.changeToOffline(info)
+            }
+        }
     }
 
     public func login(
         userId: Int64,
-        password: String,
+        password: String? = nil,
         deviceType: DeviceType? = nil,
-        userOnlineStatus: UserStatus? = .available,
-        location: Position? = nil) -> Promise<Void> {
-        self.userId = userId
-        self.password = password
-        self.userOnlineStatus = userOnlineStatus!
-        self.deviceType = deviceType ?? .ios
-        self.location = location
-        return turmsClient.driver.connect(
-            userId: userId,
-            password: password,
-            deviceType: deviceType,
-            userOnlineStatus: userOnlineStatus,
-            location: location)
-    }
-
-    public func relogin() -> Promise<Void> {
-        if userId == nil || password == nil {
-            return Promise(error: TurmsBusinessError(TurmsStatusCode.reloginShouldBeCalledAfterLogin))
-        } else {
-            return login(
-                userId: userId!,
-                password: password!,
-                deviceType: deviceType,
-                userOnlineStatus: userOnlineStatus,
-                location: location)
+        onlineStatus: UserStatus? = nil,
+        location: Location? = nil,
+        storePassword: Bool = false) -> Promise<Void> {
+        var user = User(userId: userId)
+        if storePassword {
+            user.password = password
+        }
+        user.onlineStatus = onlineStatus ?? .available
+        user.deviceType = deviceType ?? .ios
+        user.location = location
+        let connect = turmsClient.driver.isConnected
+            ? Promise.value(())
+            : turmsClient.driver.connect()
+        return connect.then {
+            return self.turmsClient.driver.send {
+                $0.createSessionRequest = .with {
+                    $0.userID = userId
+                    if let v = password {
+                        $0.password = v
+                    }
+                    if let v = deviceType {
+                        $0.deviceType = v
+                    }
+                    if let v = onlineStatus {
+                        $0.userStatus = v
+                    }
+                    if let v = location {
+                        $0.location = .with {
+                            $0.longitude = v.longitude
+                            $0.latitude = v.latitude
+                        }
+                    }
+                }
+            }.done { _ in
+                self.userInfo = user
+                self.storePassword = storePassword
+                self.changeToOnline()
+            }
         }
     }
 
-    public func logout() -> Promise<Void> {
-        return turmsClient.driver.disconnect()
+    public func logout(disconnect: Bool = true) -> Promise<Void> {
+        let d = disconnect
+            ? turmsClient.driver.disconnect()
+            : turmsClient.driver.send {
+            $0.deleteSessionRequest = DeleteSessionRequest()
+        }.asVoid()
+        return d.done {
+            self.changeToOffline(SessionCloseInfo(closeStatus: Int32(TurmsCloseStatus.disconnectedByClient.rawValue), businessStatus: nil, reason: nil))
+        }
     }
 
     public func updateUserOnlineStatus(_ onlineStatus: UserStatus) -> Promise<Void> {
@@ -54,28 +92,31 @@ public class UserService {
             return Promise(error: TurmsBusinessError(TurmsStatusCode.illegalArgument, "The online status must not be OFFLINE"))
         }
         return turmsClient.driver
-            .send { $0
-                .request("updateUserOnlineStatusRequest")
-                .field("userStatus", onlineStatus)
+            .send {
+                $0.updateUserOnlineStatusRequest = .with {
+                    $0.userStatus = onlineStatus
+                }
             }
             .asVoid()
     }
 
     public func disconnectOnlineDevices(_ deviceTypes: [DeviceType]) -> Promise<Void> {
         return turmsClient.driver
-            .send { $0
-                .request("updateUserOnlineStatusRequest")
-                .field("userStatus", UserStatus.offline)
-                .field("deviceTypes", deviceTypes)
+            .send {
+                $0.updateUserOnlineStatusRequest = .with {
+                    $0.userStatus = UserStatus.offline
+                    $0.deviceTypes = deviceTypes
+                }
             }
             .asVoid()
     }
 
     public func updatePassword(_ password: String) -> Promise<Void> {
         return turmsClient.driver
-            .send { $0
-                .request("updateUserRequest")
-                .field("password", password)
+            .send {
+                $0.updateUserRequest = .with {
+                    $0.password = password
+                }
             }
             .asVoid()
     }
@@ -88,68 +129,104 @@ public class UserService {
             return Promise.value(())
         }
         return turmsClient.driver
-            .send { $0
-                .request("updateUserRequest")
-                .field("name", name)
-                .field("intro", intro)
-                .field("profileAccessStrategy", profileAccessStrategy)
+            .send {
+                $0.updateUserRequest = .with {
+                    if let v = name {
+                        $0.name = v
+                    }
+                    if let v = intro {
+                        $0.intro = v
+                    }
+                    if let v = profileAccessStrategy {
+                        $0.profileAccessStrategy = v
+                    }
+                }
             }
             .asVoid()
     }
 
     public func queryUserProfile(userId: Int64, lastUpdatedDate: Date? = nil) -> Promise<UserInfoWithVersion?> {
         return turmsClient.driver
-            .send { $0
-                .request("queryUserProfileRequest")
-                .field("userId", userId)
-                .field("lastUpdatedDate", lastUpdatedDate)
+            .send {
+                $0.queryUserProfileRequest = .with {
+                    $0.userID = userId
+                    if let v = lastUpdatedDate {
+                        $0.lastUpdatedDate = v.toMillis()
+                    }
+                }
             }
-            .map { try UserInfoWithVersion.from($0) }
+            .map {
+                try UserInfoWithVersion.from($0)
+            }
     }
 
     public func queryUserIdsNearby(latitude: Float, longitude: Float, distance: Int32? = nil, maxNumber: Int32? = nil) -> Promise<[Int64]> {
         return turmsClient.driver
-            .send { $0
-                .request("queryUserIdsNearbyRequest")
-                .field("latitude", latitude)
-                .field("longitude", longitude)
-                .field("distance", distance)
-                .field("maxNumber", maxNumber)
+            .send {
+                $0.queryUserIdsNearbyRequest = .with {
+                    $0.latitude = latitude
+                    $0.longitude = longitude
+                    if let v = distance {
+                        $0.distance = Float(v)
+                    }
+                    if let v = maxNumber {
+                        $0.maxNumber = v
+                    }
+                }
             }
-            .map { $0.data.ids.values }
+            .map {
+                $0.data.ids.values
+            }
     }
 
     public func queryUserSessionIdsNearby(latitude: Float, longitude: Float, distance: Int32? = nil, maxNumber: Int32? = nil) -> Promise<[UserSessionId]> {
         return turmsClient.driver
-            .send { $0
-                .request("queryUserIdsNearbyRequest")
-                .field("latitude", latitude)
-                .field("longitude", longitude)
-                .field("distance", distance)
-                .field("maxNumber", maxNumber)
+            .send {
+                $0.queryUserIdsNearbyRequest = .with {
+                    $0.latitude = latitude
+                    $0.longitude = longitude
+                    if let v = distance {
+                        $0.distance = Float(v)
+                    }
+                    if let v = maxNumber {
+                        $0.maxNumber = v
+                    }
+                }
             }
-            .map { $0.data.userSessionIds.userSessionIds }
+            .map {
+                $0.data.userSessionIds.userSessionIds
+            }
     }
 
     public func queryUserInfosNearby(latitude: Float, longitude: Float, distance: Int32? = nil, maxNumber: Int32? = nil) -> Promise<[UserInfo]> {
         return turmsClient.driver
-            .send { $0
-                .request("queryUserInfosNearbyRequest")
-                .field("latitude", latitude)
-                .field("longitude", longitude)
-                .field("distance", distance)
-                .field("maxNumber", maxNumber)
+            .send {
+                $0.queryUserInfosNearbyRequest = .with {
+                    $0.latitude = latitude
+                    $0.longitude = longitude
+                    if let v = distance {
+                        $0.distance = Float(v)
+                    }
+                    if let v = maxNumber {
+                        $0.maxNumber = v
+                    }
+                }
             }
-            .map { $0.data.usersInfosWithVersion.userInfos }
+            .map {
+                $0.data.usersInfosWithVersion.userInfos
+            }
     }
 
     public func queryUserOnlineStatusesRequest(_ userIds: [Int64]) -> Promise<[UserStatusDetail]> {
         return turmsClient.driver
-            .send { $0
-                .request("queryUserOnlineStatusesRequest")
-                .field("userIds", userIds)
+            .send {
+                $0.queryUserOnlineStatusesRequest = .with {
+                    $0.userIds = userIds
+                }
             }
-            .map { $0.data.usersOnlineStatuses.userStatuses }
+            .map {
+                $0.data.usersOnlineStatuses.userStatuses
+            }
     }
 
     // Relationship
@@ -160,25 +237,45 @@ public class UserService {
         groupIndex: Int32? = nil,
         lastUpdatedDate: Date? = nil) -> Promise<UserRelationshipsWithVersion?> {
         return turmsClient.driver
-            .send { $0
-                .request("queryRelationshipsRequest")
-                .field("userIds", relatedUserIds)
-                .field("blocked", isBlocked)
-                .field("groupIndex", groupIndex)
-                .field("lastUpdatedDate", lastUpdatedDate)
+            .send {
+                $0.queryRelationshipsRequest = .with {
+                    if let v = relatedUserIds {
+                        $0.userIds = v
+                    }
+                    if let v = isBlocked {
+                        $0.blocked = v
+                    }
+                    if let v = groupIndex {
+                        $0.groupIndex = v
+                    }
+                    if let v = lastUpdatedDate {
+                        $0.lastUpdatedDate = v.toMillis()
+                    }
+                }
             }
-            .map { try $0.data.kind?.getKindData(UserRelationshipsWithVersion.self) }
+            .map {
+                try $0.data.kind?.getKindData(UserRelationshipsWithVersion.self)
+            }
     }
 
     public func queryRelatedUserIds(isBlocked: Bool? = nil, groupIndex: Int32? = nil, lastUpdatedDate: Date? = nil) -> Promise<Int64ValuesWithVersion?> {
         return turmsClient.driver
-            .send { $0
-                .request("queryRelatedUserIdsRequest")
-                .field("blocked", isBlocked)
-                .field("groupIndex", groupIndex)
-                .field("lastUpdatedDate", lastUpdatedDate)
+            .send {
+                $0.queryRelatedUserIdsRequest = .with {
+                    if let v = isBlocked {
+                        $0.blocked = v
+                    }
+                    if let v = groupIndex {
+                        $0.groupIndex = v
+                    }
+                    if let v = lastUpdatedDate {
+                        $0.lastUpdatedDate = v.toMillis()
+                    }
+                }
             }
-            .map { try $0.data.kind?.getKindData(Int64ValuesWithVersion.self) }
+            .map {
+                try $0.data.kind?.getKindData(Int64ValuesWithVersion.self)
+            }
     }
 
     public func queryFriends(groupIndex: Int32? = nil, lastUpdatedDate: Date? = nil) -> Promise<UserRelationshipsWithVersion?> {
@@ -197,11 +294,14 @@ public class UserService {
 
     public func createRelationship(userId: Int64, isBlocked: Bool, groupIndex: Int32? = nil) -> Promise<Void> {
         return turmsClient.driver
-            .send { $0
-                .request("createRelationshipRequest")
-                .field("userId", userId)
-                .field("blocked", isBlocked)
-                .field("groupIndex", groupIndex)
+            .send {
+                $0.createRelationshipRequest = .with {
+                    $0.userID = userId
+                    $0.blocked = isBlocked
+                    if let v = groupIndex {
+                        $0.groupIndex = v
+                    }
+                }
             }
             .asVoid()
     }
@@ -222,11 +322,16 @@ public class UserService {
 
     public func deleteRelationship(relatedUserId: Int64, deleteGroupIndex: Int32? = nil, targetGroupIndex: Int32? = nil) -> Promise<Void> {
         return turmsClient.driver
-            .send { $0
-                .request("deleteRelationshipRequest")
-                .field("userId", relatedUserId)
-                .field("groupIndex", deleteGroupIndex)
-                .field("targetGroupIndex", targetGroupIndex)
+            .send {
+                $0.deleteRelationshipRequest = .with {
+                    $0.userID = relatedUserId
+                    if let v = deleteGroupIndex {
+                        $0.groupIndex = v
+                    }
+                    if let v = targetGroupIndex {
+                        $0.targetGroupIndex = v
+                    }
+                }
             }
             .asVoid()
     }
@@ -236,90 +341,119 @@ public class UserService {
             return Promise.value(())
         }
         return turmsClient.driver
-            .send { $0
-                .request("updateRelationshipRequest")
-                .field("userId", relatedUserId)
-                .field("blocked", isBlocked)
-                .field("newGroupIndex", groupIndex)
+            .send {
+                $0.updateRelationshipRequest = .with {
+                    $0.userID = relatedUserId
+                    if let v = isBlocked {
+                        $0.blocked = v
+                    }
+                    if let v = groupIndex {
+                        $0.newGroupIndex = v
+                    }
+                }
             }
             .asVoid()
     }
 
     public func sendFriendRequest(recipientId: Int64, content: String) -> Promise<Int64> {
         return turmsClient.driver
-            .send { $0
-                .request("createFriendRequestRequest")
-                .field("recipientId", recipientId)
-                .field("content", content)
+            .send {
+                $0.createFriendRequestRequest = .with {
+                    $0.recipientID = recipientId
+                    $0.content = content
+                }
             }
-            .map { try NotificationUtil.getFirstId($0) }
+            .map {
+                try $0.getFirstId()
+            }
     }
 
     public func replyFriendRequest(requestId: Int64, responseAction: ResponseAction, reason: String? = nil) -> Promise<Void> {
         return turmsClient.driver
-            .send { $0
-                .request("updateFriendRequestRequest")
-                .field("requestId", requestId)
-                .field("responseAction", responseAction)
-                .field("reason", reason)
+            .send {
+                $0.updateFriendRequestRequest = .with {
+                    $0.requestID = requestId
+                    $0.responseAction = responseAction
+                    if let v = reason {
+                        $0.reason = v
+                    }
+                }
             }
             .asVoid()
     }
 
     public func queryFriendRequests(_ areSentByMe: Bool, lastUpdatedDate: Date? = nil) -> Promise<UserFriendRequestsWithVersion?> {
         return turmsClient.driver
-            .send { $0
-                .request("queryFriendRequestsRequest")
-                .field("areSentByMe", areSentByMe)
-                .field("lastUpdatedDate", lastUpdatedDate)
+            .send {
+                $0.queryFriendRequestsRequest = .with {
+                    $0.areSentByMe = areSentByMe
+                    if let v = lastUpdatedDate {
+                        $0.lastUpdatedDate = v.toMillis()
+                    }
+                }
             }
-            .map { try $0.data.kind?.getKindData(UserFriendRequestsWithVersion.self) }
+            .map {
+                try $0.data.kind?.getKindData(UserFriendRequestsWithVersion.self)
+            }
     }
 
     public func createRelationshipGroup(_ name: String) -> Promise<Int32> {
         return turmsClient.driver
-            .send { $0
-                .request("createRelationshipGroupRequest")
-                .field("name", name)
+            .send {
+                $0.createRelationshipGroupRequest = .with {
+                    $0.name = name
+                }
             }
-            .map { try Int32(NotificationUtil.getFirstId($0)) }
+            .map {
+                try Int32($0.getFirstId())
+            }
     }
 
     public func deleteRelationshipGroups(groupIndex: Int32, targetGroupIndex: Int32? = nil) -> Promise<Void> {
         return turmsClient.driver
-            .send { $0
-                .request("deleteRelationshipGroupRequest")
-                .field("groupIndex", groupIndex)
-                .field("targetGroupIndex", targetGroupIndex)
+            .send {
+                $0.deleteRelationshipGroupRequest = .with {
+                    $0.groupIndex = groupIndex
+                    if let v = targetGroupIndex {
+                        $0.targetGroupIndex = v
+                    }
+                }
             }
             .asVoid()
     }
 
     public func updateRelationshipGroup(groupIndex: Int32, newName: String) -> Promise<Void> {
         return turmsClient.driver
-            .send { $0
-                .request("updateRelationshipGroupRequest")
-                .field("groupIndex", groupIndex)
-                .field("newName", newName)
+            .send {
+                $0.updateRelationshipGroupRequest = .with {
+                    $0.groupIndex = groupIndex
+                    $0.newName = newName
+                }
             }
             .asVoid()
     }
 
     public func queryRelationshipGroups(_ lastUpdatedDate: Date? = nil) -> Promise<UserRelationshipGroupsWithVersion?> {
         return turmsClient.driver
-            .send { $0
-                .request("queryRelationshipGroupsRequest")
-                .field("lastUpdatedDate", lastUpdatedDate)
+            .send {
+                $0.queryRelationshipGroupsRequest = .with {
+                    if let v = lastUpdatedDate {
+                        $0.lastUpdatedDate = v.toMillis()
+                    }
+                }
             }
-            .map { try $0.data.kind?.getKindData(UserRelationshipGroupsWithVersion.self) }
+            .map {
+                try $0.data.kind?.getKindData(UserRelationshipGroupsWithVersion.self)
+            }
     }
 
     public func moveRelatedUserToGroup(relatedUserId: Int64, groupIndex: Int32) -> Promise<Void> {
         return turmsClient.driver
-            .send { $0
-                .request("updateRelationshipRequest")
-                .field("userId", relatedUserId)
-                .field("newGroupIndex", groupIndex)
+            .send {
+                $0.updateRelationshipRequest = .with {
+                    $0.userID = relatedUserId
+                    $0.newGroupIndex = groupIndex
+                }
             }
             .asVoid()
     }
@@ -331,13 +465,38 @@ public class UserService {
      */
     public func updateLocation(latitude: Float, longitude: Float, name: String? = nil, address: String? = nil) -> Promise<Void> {
         return turmsClient.driver
-            .send { $0
-                .request("updateUserLocationRequest")
-                .field("latitude", latitude)
-                .field("longitude", longitude)
-                .field("name", name)
-                .field("address", address)
+            .send {
+                $0.updateUserLocationRequest = .with {
+                    $0.latitude = latitude
+                    $0.longitude = longitude
+                    if let v = name {
+                        $0.name = v
+                    }
+                    if let v = address {
+                        $0.address = v
+                    }
+                }
             }
             .asVoid()
     }
+
+    private func changeToOnline() {
+        if !isLoggedIn {
+            turmsClient.driver.stateStore.isSessionOpen = true
+            onOnlineListeners.forEach {
+                $0()
+            }
+        }
+    }
+
+    private func changeToOffline(_ sessionCloseInfo: SessionCloseInfo? = nil) {
+        if isLoggedIn {
+            userInfo?.onlineStatus = .offline
+            turmsClient.driver.stateStore.isSessionOpen = false
+            onOfflineListeners.forEach {
+                $0(sessionCloseInfo)
+            }
+        }
+    }
+
 }

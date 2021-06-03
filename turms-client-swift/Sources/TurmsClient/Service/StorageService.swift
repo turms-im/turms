@@ -24,11 +24,13 @@ public class StorageService {
 
     public func queryProfilePicture(_ userId: Int64) -> Promise<Data> {
         return queryProfilePictureUrlForAccess(userId)
-            .then { self.getBytesFromGetUrl($0) }
+            .then {
+                self.getBytesFromGetUrl($0)
+            }
     }
 
     public func queryProfilePictureUrlForUpload(_ pictureSize: Int) -> Promise<String> {
-        if let userId = turmsClient.userService.userId {
+        if let userId = turmsClient.userService.userInfo?.userId {
             return getSignedPutUrl(contentType: .profile, size: Int64(pictureSize), keyNum: userId)
         } else {
             return Promise(error: TurmsBusinessError(TurmsStatusCode.queryProfileUrlToUpdateBeforeLogin))
@@ -37,7 +39,9 @@ public class StorageService {
 
     public func uploadProfilePicture(_ data: Data) -> Promise<String> {
         return queryProfilePictureUrlForUpload(data.count)
-            .then { self.upload(url: $0, data: data) }
+            .then {
+                self.upload(url: $0, data: data)
+            }
     }
 
     public func deleteProfile() -> Promise<Void> {
@@ -58,7 +62,9 @@ public class StorageService {
 
     public func queryGroupProfilePicture(_ groupId: Int64) -> Promise<Data> {
         return queryGroupProfilePictureUrlForAccess(groupId)
-            .then { self.getBytesFromGetUrl($0) }
+            .then {
+                self.getBytesFromGetUrl($0)
+            }
     }
 
     public func queryGroupProfilePictureUrlForUpload(pictureSize: Int, groupId: Int64) -> Promise<String> {
@@ -67,7 +73,9 @@ public class StorageService {
 
     public func uploadGroupProfilePicture(data: Data, groupId: Int64) -> Promise<String> {
         return queryGroupProfilePictureUrlForUpload(pictureSize: data.count, groupId: groupId)
-            .then { self.upload(url: $0, data: data) }
+            .then {
+                self.upload(url: $0, data: data)
+            }
     }
 
     public func deleteGroupProfile(_ groupId: Int64) -> Promise<Void> {
@@ -82,7 +90,9 @@ public class StorageService {
 
     public func queryAttachment(messageId: Int64, name: String? = nil) -> Promise<Data> {
         return queryAttachmentUrlForAccess(messageId: messageId, name: name)
-            .then { self.getBytesFromGetUrl($0) }
+            .then {
+                self.getBytesFromGetUrl($0)
+            }
     }
 
     public func queryAttachmentUrlForUpload(messageId: Int64, attachmentSize: Int64) -> Promise<String> {
@@ -91,41 +101,62 @@ public class StorageService {
 
     public func uploadAttachment(messageId: Int64, data: Data) -> Promise<String> {
         return queryAttachmentUrlForUpload(messageId: messageId, attachmentSize: Int64(data.count))
-            .then { self.upload(url: $0, data: data) }
+            .then {
+                self.upload(url: $0, data: data)
+            }
     }
 
     // Base
 
     private func getSignedGetUrl(contentType: ContentType, keyStr: String? = nil, keyNum: Int64? = nil) -> Promise<String> {
         return turmsClient.driver
-            .send { $0
-                .request("querySignedGetUrlRequest")
-                .field("contentType", contentType)
-                .field("keyStr", keyStr)
-                .field("keyNum", keyNum)
+            .send {
+                $0.querySignedGetURLRequest = .with {
+                    $0.contentType = contentType
+                    if let v = keyStr {
+                        $0.keyStr = v
+                    }
+                    if let v = keyNum {
+                        $0.keyNum = v
+                    }
+                }
             }
-            .map { $0.data.url.value }
+            .map {
+                $0.data.url
+            }
     }
 
     private func getSignedPutUrl(contentType: ContentType, size: Int64, keyStr: String? = nil, keyNum: Int64? = nil) -> Promise<String> {
         return turmsClient.driver
-            .send { $0
-                .request("querySignedPutUrlRequest")
-                .field("contentType", contentType)
-                .field("contentLength", size)
-                .field("keyStr", keyStr)
-                .field("keyNum", keyNum)
+            .send {
+                $0.querySignedPutURLRequest = .with {
+                    $0.contentType = contentType
+                    $0.contentLength = size
+                    if let v = keyStr {
+                        $0.keyStr = v
+                    }
+                    if let v = keyNum {
+                        $0.keyNum = v
+                    }
+                }
             }
-            .map { $0.data.url.value }
+            .map {
+                $0.data.url
+            }
     }
 
     private func deleteResource(contentType: ContentType, keyStr: String? = nil, keyNum: Int64? = nil) -> Promise<Void> {
         return turmsClient.driver
-            .send { $0
-                .request("deleteResourceRequest")
-                .field("contentType", contentType)
-                .field("keyStr", keyStr)
-                .field("keyNum", keyNum)
+            .send {
+                $0.deleteResourceRequest = .with {
+                    $0.contentType = contentType
+                    if let v = keyStr {
+                        $0.keyStr = v
+                    }
+                    if let v = keyNum {
+                        $0.keyNum = v
+                    }
+                }
             }
             .asVoid()
     }
@@ -185,6 +216,6 @@ public class StorageService {
             default:
                 let reason = "Unknown content type \(contentType)"
                 throw TurmsBusinessError(TurmsStatusCode.illegalArgument, reason)
-        }
+            }
     }
 }

@@ -35,8 +35,6 @@ interface RequestPromiseSeal {
  * Handle TurmsRequest and TurnsNotification
  */
 export default class MessageService extends BaseService {
-    private static readonly DEFAULT_REQUEST_TIMEOUT = 60 * 1000;
-
     private readonly _requestTimeout: number;
     private readonly _minRequestInterval?: number;
     private _notificationListeners: ((notification: ParsedNotification) => void)[] = [];
@@ -45,7 +43,7 @@ export default class MessageService extends BaseService {
     constructor(stateStore: StateStore, requestTimeout?: number, minRequestInterval?: number) {
         super(stateStore);
         this._requestTimeout = isNaN(requestTimeout) || requestTimeout <= 0
-            ? MessageService.DEFAULT_REQUEST_TIMEOUT
+            ? 60 * 1000
             : requestTimeout;
         this._minRequestInterval = minRequestInterval;
     }

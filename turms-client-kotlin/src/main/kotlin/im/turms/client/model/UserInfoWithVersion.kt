@@ -29,19 +29,21 @@ class UserInfoWithVersion {
     companion object {
         @JvmStatic
         fun from(notification: TurmsNotification?): UserInfoWithVersion? {
-            if (notification != null && notification.hasData()) {
-                val data = notification.data
-                if (data.hasUsersInfosWithVersion()) {
-                    val usersInfosWithVersion = data.usersInfosWithVersion
-                    val userInfoWithVersion = UserInfoWithVersion()
-                    if (usersInfosWithVersion.userInfosCount > 0) {
-                        userInfoWithVersion.userInfo = usersInfosWithVersion.getUserInfos(0)
-                    }
-                    userInfoWithVersion.lastUpdatedDate = usersInfosWithVersion.lastUpdatedDate
-                    return userInfoWithVersion
-                }
+            if (notification == null || !notification.hasData()) {
+                return null
             }
-            return null
+            val data = notification.data
+            if (!data.hasUsersInfosWithVersion()) {
+                return null
+            }
+            val usersInfosWithVersion = data.usersInfosWithVersion
+            val userInfoWithVersion = UserInfoWithVersion()
+            if (usersInfosWithVersion.userInfosCount > 0) {
+                userInfoWithVersion.userInfo = usersInfosWithVersion.getUserInfos(0)
+            }
+            userInfoWithVersion.lastUpdatedDate = usersInfosWithVersion.lastUpdatedDate
+            return userInfoWithVersion
         }
     }
+
 }

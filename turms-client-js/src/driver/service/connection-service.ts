@@ -48,7 +48,7 @@ export default class ConnectionService extends BaseService {
         super(stateStore);
         this._initialWsUrl = wsUrl || 'ws://localhost:10510';
         this._initialConnectTimeout = isNaN(connectTimeout) || connectTimeout <= 0
-            ? 60 * 1000
+            ? 30 * 1000
             : connectTimeout;
         this._closeConnectionBeforeUnload();
     }
@@ -169,14 +169,13 @@ export default class ConnectionService extends BaseService {
 
     disconnect(): Promise<void> {
         const ws = this._stateStore.websocket;
-        if (this._stateStore.isConnected || (ws?.readyState === WebSocket.CONNECTING)) {
+        if (this._stateStore.isConnected || ws?.readyState === WebSocket.CONNECTING) {
             return new Promise(resolve => {
                 this._disconnectPromises.push(resolve);
                 ws.close(1000);
             });
-        } else {
-            return Promise.resolve();
         }
+        return Promise.resolve();
     }
 
     // Lifecycle hooks

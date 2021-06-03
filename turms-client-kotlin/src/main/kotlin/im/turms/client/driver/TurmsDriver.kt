@@ -95,7 +95,7 @@ class TurmsDriver(
     val isConnected: Boolean
         get() = stateStore.isConnected
 
-    // Listeners
+    // Connection Listeners
 
     fun addOnConnectedListener(listener: () -> Unit) =
         connectionService.addOnConnectedListener(listener)

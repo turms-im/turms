@@ -28,19 +28,20 @@ class GroupWithVersion {
 
     companion object {
         fun from(notification: TurmsNotification?): GroupWithVersion? {
-            if (notification != null) {
-                val data = notification.data
-                if (notification.hasData() && data.hasGroupsWithVersion()) {
-                    val groupsWithVersion = data.groupsWithVersion
-                    val groupWithVersion = GroupWithVersion()
-                    if (groupsWithVersion.groupsCount > 0) {
-                        groupWithVersion.group = groupsWithVersion.getGroups(0)
-                    }
-                    groupWithVersion.lastUpdatedDate = groupsWithVersion.lastUpdatedDate
-                    return groupWithVersion
-                }
+            if (notification == null) {
+                return null
             }
-            return null
+            val data = notification.data
+            if (!notification.hasData() || !data.hasGroupsWithVersion()) {
+                return null
+            }
+            val groupsWithVersion = data.groupsWithVersion
+            val groupWithVersion = GroupWithVersion()
+            if (groupsWithVersion.groupsCount > 0) {
+                groupWithVersion.group = groupsWithVersion.getGroups(0)
+            }
+            groupWithVersion.lastUpdatedDate = groupsWithVersion.lastUpdatedDate
+            return groupWithVersion
         }
     }
 }

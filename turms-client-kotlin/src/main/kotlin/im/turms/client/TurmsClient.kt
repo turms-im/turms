@@ -39,4 +39,8 @@ class TurmsClient constructor(
     val storageService: StorageService = StorageService(this, storageServerUrl)
     val notificationService: NotificationService = NotificationService(this)
 
+    suspend fun close() {
+        return this.driver.close();
+    }
+
 }

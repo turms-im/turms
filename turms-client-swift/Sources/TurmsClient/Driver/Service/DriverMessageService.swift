@@ -1,82 +1,79 @@
 import Foundation
 import PromiseKit
 
-class DriverMessageService {
-    private static let DEFAULT_REQUEST_TIMEOUT: TimeInterval = 30
-
-    private let stateStore: StateStore
-
+class DriverMessageService: BaseService {
     private let requestTimeout: TimeInterval
     private let minRequestInterval: TimeInterval?
-    private var onNotificationListeners: [(TurmsNotification) -> ()] = []
+    private var notificationListeners: [(TurmsNotification) -> ()] = []
     private var requestMap: [Int64: Resolver<TurmsNotification>] = [:]
     private var lastRequestDate = Date(timeIntervalSince1970: 0)
 
-    init(stateStore: StateStore, requestTimeout: TimeInterval?, minRequestInterval: TimeInterval?) {
-        self.stateStore = stateStore
-        self.requestTimeout = requestTimeout ?? DriverMessageService.DEFAULT_REQUEST_TIMEOUT
-        self.minRequestInterval = minRequestInterval
+    init(stateStore: StateStore, requestTimeout: TimeInterval? = nil, minRequestInterval: TimeInterval? = nil) {
+        self.requestTimeout = requestTimeout ?? 60
+        self.minRequestInterval = minRequestInterval ?? 0
+        super.init(stateStore)
     }
 
     // Listeners
 
     func addOnNotificationListener(_ listener: @escaping (TurmsNotification) -> ()) {
-        onNotificationListeners.append(listener)
+        notificationListeners.append(listener)
     }
 
     func notifyOnNotificationListener(_ notification: TurmsNotification) {
-        onNotificationListeners.forEach {
+        notificationListeners.forEach {
             $0(notification)
         }
     }
 
     // Request and notification
 
-    func send(_ populator: (inout RequestBuilder) -> ()) -> Promise<TurmsNotification> {
-        var builder = RequestBuilder()
-        populator(&builder)
-        let request = builder
-            .id(generateRandomId())
-            .build()
-        return send(request)
+    func sendRequest(_ populator: (inout TurmsRequest) -> ()) -> Promise<TurmsNotification> {
+        var request = TurmsRequest()
+        populator(&request)
+        return sendRequest(&request)
     }
 
-    func send(_ request: TurmsRequest) -> Promise<TurmsNotification> {
+    func sendRequest(_ request: inout TurmsRequest) -> Promise<TurmsNotification> {
         return Promise { seal in
-            if stateStore.isConnected {
-                let now = Date()
-                let isFrequent = minRequestInterval != nil && now.timeIntervalSince1970 - lastRequestDate.timeIntervalSince1970 <= minRequestInterval!
-                if isFrequent {
-                    seal.reject(TurmsBusinessError(.clientRequestsTooFrequent))
-                } else {
-                    if requestTimeout > 0 {
-                        after(.seconds(Int(requestTimeout))).done {
-                            seal.reject(TurmsBusinessError(TurmsStatusCode.requestTimeout))
-                        }
-                    }
-                    let data = try! request.serializedData()
-                    requestMap.updateValue(seal, forKey: request.requestID.value)
-                    stateStore.lastRequestDate = now
-                    stateStore.websocket!.write(data: data)
+            if case .createSessionRequest = request.kind {
+                if stateStore.isSessionOpen {
+                    return seal.reject(TurmsBusinessError(.clientSessionAlreadyEstablished))
                 }
-            } else {
-                seal.reject(TurmsBusinessError(.clientSessionHasBeenClosed))
+            } else if !stateStore.isConnected || !stateStore.isSessionOpen {
+                return seal.reject(TurmsBusinessError(.clientSessionHasBeenClosed))
             }
+            let now = Date()
+            let difference = now.timeIntervalSince1970 - lastRequestDate.timeIntervalSince1970
+            let isFrequent = minRequestInterval != nil && minRequestInterval! > 0 && difference <= minRequestInterval!
+            if isFrequent {
+                return seal.reject(TurmsBusinessError(.clientRequestsTooFrequent))
+            }
+            request.requestID = generateRandomId()
+            if requestTimeout > 0 {
+                after(.seconds(Int(requestTimeout))).done {
+                    seal.reject(TurmsBusinessError(TurmsStatusCode.requestTimeout))
+                }
+            }
+            let data = try request.serializedData()
+            requestMap.updateValue(seal, forKey: request.requestID)
+            stateStore.lastRequestDate = now
+            stateStore.websocket!.write(data: data)
         }
     }
 
     func didReceiveNotification(_ notification: TurmsNotification) {
         let isResponse = !notification.hasRelayedRequest && notification.hasRequestID
         if isResponse {
-            let requestId = notification.requestID.value
+            let requestId = notification.requestID
             let handler = requestMap[requestId]
             if notification.hasCode {
-                let code = Int(notification.code.value)
+                let code = Int(notification.code)
                 if TurmsStatusCode.isSuccessCode(code) {
                     handler?.fulfill(notification)
                 } else {
                     if notification.hasReason {
-                        handler?.reject(TurmsBusinessError(code, notification.reason.value))
+                        handler?.reject(TurmsBusinessError(code, notification.reason))
                     } else {
                         handler?.reject(TurmsBusinessError(code))
                     }

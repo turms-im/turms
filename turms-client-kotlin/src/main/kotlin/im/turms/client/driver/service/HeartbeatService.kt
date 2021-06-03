@@ -41,25 +41,26 @@ class HeartbeatService(
     private var heartbeatTimerDeferred: Deferred<*>? = null
     private val heartbeatContinuationQueue = ConcurrentLinkedQueue<Continuation<Unit>>()
 
+    val isRunning: Boolean get() = heartbeatTimerDeferred?.isActive == true
+
     @Synchronized
     fun start() {
-        if (!isRunning) {
-            heartbeatTimerDeferred = async {
-                while (isActive) {
-                    val now = System.currentTimeMillis()
-                    val difference = (now - stateStore.lastRequestDate)
-                        .coerceAtMost(now - lastHeartbeatRequestDate)
-                    if (difference > heartbeatInterval) {
-                        send()
-                        lastHeartbeatRequestDate = now
-                    }
-                    delay(heartbeatTimerInterval)
+        if (isRunning) {
+            return
+        }
+        heartbeatTimerDeferred = async {
+            while (isActive) {
+                val now = System.currentTimeMillis()
+                val difference = (now - stateStore.lastRequestDate)
+                    .coerceAtMost(now - lastHeartbeatRequestDate)
+                if (difference > heartbeatInterval) {
+                    send()
+                    lastHeartbeatRequestDate = now
                 }
+                delay(heartbeatTimerInterval)
             }
         }
     }
-
-    val isRunning: Boolean get() = heartbeatTimerDeferred?.isCompleted == false
 
     fun stop() {
         heartbeatTimerDeferred?.cancel()

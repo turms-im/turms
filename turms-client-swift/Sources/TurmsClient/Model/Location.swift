@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Position {
+public struct Location {
     public var longitude: Float
     public var latitude: Float
 

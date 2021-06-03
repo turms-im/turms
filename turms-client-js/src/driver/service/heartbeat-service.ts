@@ -44,19 +44,20 @@ export default class HeartbeatService extends BaseService {
     }
 
     start(): void {
-        if (!this.isRunning) {
-            this._heartbeatTimer = new Timer((): void => {
-                const now = new Date().getTime();
-                const difference = Math.min(
-                    now - this._stateStore.lastRequestDate.getTime(),
-                    now - this._lastHeartbeatRequestDate);
-                if (difference > this._heartbeatInterval) {
-                    this.send().then(() => null);
-                    this._lastHeartbeatRequestDate = now;
-                }
-            }, this._heartbeatTimerInterval);
-            this._heartbeatTimer.start();
+        if (this.isRunning) {
+            return;
         }
+        this._heartbeatTimer = new Timer((): void => {
+            const now = new Date().getTime();
+            const difference = Math.min(
+                now - this._stateStore.lastRequestDate.getTime(),
+                now - this._lastHeartbeatRequestDate);
+            if (difference > this._heartbeatInterval) {
+                this.send().then(() => null);
+                this._lastHeartbeatRequestDate = now;
+            }
+        }, this._heartbeatTimerInterval);
+        this._heartbeatTimer.start();
     }
 
     stop(): void {

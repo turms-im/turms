@@ -4,84 +4,66 @@ import Starscream
 
 public class TurmsDriver {
     private var _onSessionConnected: (() -> ())?
-    private var _onSessionDisconnected: ((SessionDisconnectInfo) -> ())?
-    private var _onSessionClosed: ((SessionDisconnectInfo) -> ())?
+    private var _onSessionDisconnected: ((ConnectionDisconnectInfo) -> ())?
+    private var _onSessionClosed: ((ConnectionDisconnectInfo) -> ())?
 
     public var onSessionConnected: (() -> ())? {
-        get { return _onSessionConnected }
-        set { _onSessionConnected = newValue }
+        get {
+            return _onSessionConnected
+        }
+        set {
+            _onSessionConnected = newValue
+        }
     }
 
-    public var onSessionDisconnected: ((SessionDisconnectInfo) -> ())? {
-        get { return _onSessionDisconnected }
-        set { _onSessionDisconnected = newValue }
+    public var onSessionDisconnected: ((ConnectionDisconnectInfo) -> ())? {
+        get {
+            return _onSessionDisconnected
+        }
+        set {
+            _onSessionDisconnected = newValue
+        }
     }
 
-    public var onSessionClosed: ((SessionDisconnectInfo) -> ())? {
-        get { return _onSessionClosed }
-        set { _onSessionClosed = newValue }
+    public var onSessionClosed: ((ConnectionDisconnectInfo) -> ())? {
+        get {
+            return _onSessionClosed
+        }
+        set {
+            _onSessionClosed = newValue
+        }
     }
 
-    private let stateStore: StateStore
+    let stateStore: StateStore
 
     private let connectionService: ConnectionService
     private let heartbeatService: HeartbeatService
     private let messageService: DriverMessageService
-    private let sessionService: SessionService
 
-    public init(wsUrl: String? = nil, connectTimeout: TimeInterval? = nil, requestTimeout: TimeInterval? = nil, minRequestInterval: TimeInterval? = nil, heartbeatInterval: TimeInterval? = nil, storePassword: Bool? = nil) {
+    public init(wsUrl: String? = nil, connectTimeout: TimeInterval? = nil, requestTimeout: TimeInterval? = nil, minRequestInterval: TimeInterval? = nil, heartbeatInterval: TimeInterval? = nil) {
         self.stateStore = StateStore()
 
-        self.connectionService = ConnectionService(stateStore: stateStore, wsUrl: wsUrl, connectTimeout: connectTimeout, storePassword: storePassword)
-        self.heartbeatService = HeartbeatService(stateStore: stateStore, minRequestInterval: minRequestInterval, heartbeatInterval: heartbeatInterval)
+        self.connectionService = ConnectionService(stateStore: stateStore, wsUrl: wsUrl, connectTimeout: connectTimeout)
+        self.heartbeatService = HeartbeatService(stateStore: stateStore, heartbeatInterval: heartbeatInterval)
         self.messageService = DriverMessageService(stateStore: stateStore, requestTimeout: requestTimeout, minRequestInterval: minRequestInterval)
-        self.sessionService = SessionService(stateStore: stateStore)
 
         initConnectionService()
-        initSessionService()
     }
 
-    // Initializers
+    // Lifecycle Hook
 
     private func initConnectionService() {
-        connectionService.addOnConnectedListener { [weak self] in
-            self?.onConnectionConnected()
-        }
-        connectionService.addOnDisconnectedListener { [weak self] in
-            self?.onConnectionDisconnected($0)
-        }
-        connectionService.addOnClosedListener { [weak self] in
-            self?.onConnectionClosed($0)
+        connectionService.addOnDisconnectedListener { [weak self] info in
+            self?.onConnectionDisconnected()
         }
         connectionService.addOnMessageListener { [weak self] in
             self?.onMessage($0)
         }
     }
 
-    private func initSessionService() {
-        sessionService.addOnSessionConnectedListener { [weak self] in
-            self?.onSessionConnected?()
-        }
-        sessionService.addOnSessionDisconnectedListener { [weak self] in
-            self?.onSessionDisconnected?($0)
-        }
-        sessionService.addOnSessionClosedListener { [weak self] in
-            self?.onSessionClosed?($0)
-        }
-    }
-
-    // Session Service
-
-    public var currentStatus: SessionStatus {
-        return sessionService.currentStatus
-    }
-
-    public var isConnected: Bool {
-        return sessionService.isConnected
-    }
-
-    public var isClosed: Bool {
-        return sessionService.isClosed
+    public func close() -> Promise<()> {
+        return when(resolved: connectionService.close(), heartbeatService.close(), messageService.close())
+            .asVoid()
     }
 
     // Heartbeat Service
@@ -98,28 +80,48 @@ public class TurmsDriver {
         return heartbeatService.send()
     }
 
-    public func resetHeartbeat() {
-        heartbeatService.reset()
+    public var isHeartbeatRunning: Bool {
+        get {
+            return heartbeatService.isRunning
+        }
     }
 
     // Connection Service
+
+    public func connect(wsUrl: String? = nil, connectTimeout: TimeInterval? = nil) -> Promise<()> {
+        return connectionService.connect(wsUrl: wsUrl, connectTimeout: connectTimeout)
+    }
 
     public func disconnect() -> Promise<()> {
         return connectionService.disconnect()
     }
 
-    public func connect(userId: Int64, password: String, deviceType: DeviceType? = nil, userOnlineStatus: UserStatus? = nil, location: Position? = nil) -> Promise<()> {
-        return connectionService.connect(userId: userId, password: password, deviceType: deviceType, userOnlineStatus: userOnlineStatus, location: location)
+    public var isConnected: Bool {
+        return stateStore.isConnected
+    }
+
+    // Connection Listeners
+
+    public func addOnConnectedListener(_ listener: @escaping () -> ()) {
+        self.connectionService.addOnConnectedListener(listener)
+    }
+
+    public func addOnDisconnectedListener(listener: @escaping (ConnectionDisconnectInfo) -> ()) {
+        self.connectionService.addOnDisconnectedListener(listener);
     }
 
     // Message Service
 
-    public func send(_ populator: (inout RequestBuilder) -> ()) -> Promise<TurmsNotification> {
-        return messageService.send(populator)
-    }
-
-    public func send(_ request: TurmsRequest) -> Promise<TurmsNotification> {
-        return messageService.send(request)
+    public func send(_ populator: (inout TurmsRequest) -> ()) -> Promise<TurmsNotification> {
+        var request = TurmsRequest()
+        populator(&request)
+        let notification = messageService.sendRequest(&request)
+        if case .createSessionRequest = request.kind {
+            notification.done { _ -> Void in
+                self.heartbeatService.start()
+            }
+        }
+        return notification
     }
 
     public func addOnNotificationListener(_ listener: @escaping (TurmsNotification) -> ()) {
@@ -128,18 +130,10 @@ public class TurmsDriver {
 
     // Intermediary functions as a mediator between services
 
-    private func onConnectionConnected() {
-        heartbeatService.start()
-        sessionService.notifyOnSessionConnectedListeners()
-    }
-
-    private func onConnectionDisconnected(_ info: SessionDisconnectInfo) {
-        heartbeatService.stop()
-        heartbeatService.rejectHeartbeatPromises(TurmsBusinessError(.clientSessionHasBeenClosed))
-    }
-
-    private func onConnectionClosed(_ info: SessionDisconnectInfo) {
-        sessionService.notifyOnSessionClosedListeners(info)
+    private func onConnectionDisconnected() {
+        stateStore.reset()
+        heartbeatService.onDisconnected()
+        messageService.onDisconnected()
     }
 
     private func onMessage(_ message: Data) {
@@ -154,7 +148,10 @@ public class TurmsDriver {
                 return
             }
             if notification.hasData, case .userSession = notification.data.kind! {
-                sessionService.sessionId = notification.data.userSession.sessionID
+                stateStore.sessionId = notification.data.userSession.sessionID
+                stateStore.serverId = notification.data.userSession.serverID
+            } else if notification.hasCloseStatus {
+                stateStore.isSessionOpen = false
             }
             messageService.didReceiveNotification(notification)
         }

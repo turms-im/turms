@@ -1,6 +1,6 @@
 public class GroupWithVersion {
-    var group: Group
-    var lastUpdatedDate: Int64
+    public var group: Group
+    public var lastUpdatedDate: Int64
 
     init(group: Group, lastUpdatedDate: Int64) {
         self.group = group
@@ -8,12 +8,12 @@ public class GroupWithVersion {
     }
 
     public static func from(_ notification: TurmsNotification) throws -> GroupWithVersion? {
-        if notification.data.groupsWithVersion.groups.count > 0 {
-            return GroupWithVersion(
-                group: notification.data.groupsWithVersion.groups[0],
-                lastUpdatedDate: notification.data.groupsWithVersion.lastUpdatedDate.value
-            )
+        if notification.data.groupsWithVersion.groups.count <= 0 {
+            return nil
         }
-        return nil
+        return GroupWithVersion(
+            group: notification.data.groupsWithVersion.groups[0],
+            lastUpdatedDate: notification.data.groupsWithVersion.lastUpdatedDate
+        )
     }
 }

@@ -2,7 +2,7 @@ import SwiftProtobuf
 
 extension TurmsNotification.DataMessage.OneOf_Kind {
     public func getKindData<T>(_ messageType: T.Type) throws -> T? {
-        var message: SwiftProtobuf.Message?
+        var message: Any
         switch self {
         case .ids(let v):
             message = v
@@ -10,15 +10,15 @@ extension TurmsNotification.DataMessage.OneOf_Kind {
             message = v
         case .url(let v):
             message = v
-            
+
         case .conversations(let v):
             message = v
-            
+
         case .messages(let v):
             message = v
         case .messagesWithTotalList(let v):
             message = v
-            
+
         case .userSession(let v):
             message = v
         case .usersInfosWithVersion(let v):
@@ -33,7 +33,7 @@ extension TurmsNotification.DataMessage.OneOf_Kind {
             message = v
         case .userSessionIds(let v):
             message = v
-            
+
         case .groupInvitationsWithVersion(let v):
             message = v
         case .groupJoinQuestionAnswerResult(let v):

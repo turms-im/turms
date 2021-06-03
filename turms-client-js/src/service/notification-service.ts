@@ -2,17 +2,9 @@ import TurmsClient from '../turms-client';
 import {ParsedRelayedRequest} from '../model/parsed-relayed-request';
 
 export default class NotificationService {
+
     private _turmsClient: TurmsClient;
     private _notificationListeners: ((notification: ParsedRelayedRequest) => void)[] = [];
-
-    addNotificationListener(listener: (notification: ParsedRelayedRequest) => void): void {
-        this._notificationListeners.push(listener);
-    }
-
-    removeNotificationListener(listener: (notification: ParsedRelayedRequest) => void): void {
-        this._notificationListeners = this._notificationListeners
-            .filter(cur => cur !== listener);
-    }
 
     constructor(turmsClient: TurmsClient) {
         this._turmsClient = turmsClient;
@@ -26,4 +18,14 @@ export default class NotificationService {
                 }
             });
     }
+
+    addNotificationListener(listener: (notification: ParsedRelayedRequest) => void): void {
+        this._notificationListeners.push(listener);
+    }
+
+    removeNotificationListener(listener: (notification: ParsedRelayedRequest) => void): void {
+        this._notificationListeners = this._notificationListeners
+            .filter(cur => cur !== listener);
+    }
+
 }

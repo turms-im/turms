@@ -1,34 +1,40 @@
 import Foundation
 import PromiseKit
 
-class HeartbeatService {
-    private static let DEFAULT_HEARTBEAT_INTERVAL: TimeInterval = 120
+class HeartbeatService: BaseService {
     private static let HEARTBEAT_REQUEST = Data()
 
-    private let stateStore: StateStore
     private let createQueue = DispatchQueue(label: "im.turms.turmsclient.heartbeatservice.createqueue")
 
     private let heartbeatInterval: TimeInterval
-    private let minRequestInterval: TimeInterval
+    private let heartbeatTimerInterval: TimeInterval
+    private var lastHeartbeatRequestDate: TimeInterval = 0
     private var heartbeatTimer: Timer?
-    private var heartbeatPromises: [Resolver<Void>] = []
+    private var heartbeatPromises: [Resolver<()>] = []
 
-    public init(stateStore: StateStore, minRequestInterval: TimeInterval?, heartbeatInterval: TimeInterval? = nil) {
-        self.stateStore = stateStore
-        self.minRequestInterval = minRequestInterval ?? 0
-        self.heartbeatInterval = heartbeatInterval ?? HeartbeatService.DEFAULT_HEARTBEAT_INTERVAL
+    init(stateStore: StateStore, heartbeatInterval: TimeInterval? = nil) {
+        self.heartbeatInterval = heartbeatInterval ?? 120
+        self.heartbeatTimerInterval = max(1, self.heartbeatInterval / 10)
+        super.init(stateStore)
+    }
+
+    var isRunning: Bool {
+        get {
+            return heartbeatTimer?.isValid == true
+        }
     }
 
     func start() {
         createQueue.sync {
-            if heartbeatTimer == nil || !heartbeatTimer!.isValid {
-                heartbeatTimer = Timer.scheduledTimer(
-                    timeInterval: heartbeatInterval,
-                    target: self,
-                    selector: #selector(checkAndSendHeartbeat),
-                    userInfo: nil,
-                    repeats: true)
+            if isRunning {
+                return
             }
+            heartbeatTimer = Timer.scheduledTimer(
+                timeInterval: heartbeatInterval,
+                target: self,
+                selector: #selector(checkAndSendHeartbeat),
+                userInfo: nil,
+                repeats: true)
         }
     }
 
@@ -38,19 +44,14 @@ class HeartbeatService {
 
     func send() -> Promise<Void> {
         return Promise { seal in
-            if stateStore.isConnected {
-                stateStore.websocket?.write(data: HeartbeatService.HEARTBEAT_REQUEST) {
-                    self.heartbeatPromises.append(seal)
-                }
-            } else {
-                seal.reject(TurmsBusinessError(.clientSessionAlreadyEstablished))
+            if !stateStore.isConnected || !stateStore.isSessionOpen {
+                seal.reject(TurmsBusinessError(.clientSessionHasBeenClosed))
+                return
+            }
+            stateStore.websocket?.write(data: HeartbeatService.HEARTBEAT_REQUEST) {
+                self.heartbeatPromises.append(seal)
             }
         }
-    }
-
-    func reset() {
-        stop()
-        start()
     }
 
     func fulfillHeartbeatPromises() {
@@ -66,9 +67,23 @@ class HeartbeatService {
     }
 
     @objc func checkAndSendHeartbeat() {
-        let difference = Date().timeIntervalSince1970 - stateStore.lastRequestDate.timeIntervalSince1970
-        if difference > minRequestInterval {
+        let now = Date().timeIntervalSince1970
+        let difference = min(now - stateStore.lastRequestDate.timeIntervalSince1970,
+            now - lastHeartbeatRequestDate)
+        if difference > heartbeatInterval {
             send()
+            lastHeartbeatRequestDate = now
         }
     }
+
+    override func close() -> Promise<()> {
+        onDisconnected()
+        return Promise.value(())
+    }
+
+    override func onDisconnected() {
+        stop();
+        rejectHeartbeatPromises(TurmsBusinessError(.clientSessionHasBeenClosed));
+    }
+
 }

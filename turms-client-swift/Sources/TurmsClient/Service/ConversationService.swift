@@ -10,58 +10,68 @@ public class ConversationService {
 
     public func queryPrivateConversations(_ targetIds: [Int64]) -> Promise<[PrivateConversation]> {
         return turmsClient.driver
-            .send { $0
-                .request("queryConversationsRequest")
-                .field("targetIds", targetIds)
+            .send {
+                $0.queryConversationsRequest = .with {
+                    $0.targetIds = targetIds
+                }
             }
-            .map { $0.data.conversations.privateConversations }
+            .map {
+                $0.data.conversations.privateConversations
+            }
     }
 
     public func queryGroupConversations(_ groupIds: [Int64]) -> Promise<[GroupConversation]> {
         return turmsClient.driver
-            .send { $0
-                .request("queryConversationsRequest")
-                .field("groupIds", groupIds)
+            .send {
+                $0.queryConversationsRequest = .with {
+                    $0.groupIds = groupIds
+                }
             }
-            .map { $0.data.conversations.groupConversations }
+            .map {
+                $0.data.conversations.groupConversations
+            }
     }
 
     public func updatePrivateConversationReadDate(_ targetId: Int64, readDate: Date = Date()) -> Promise<Void> {
         return turmsClient.driver
-            .send { $0
-                .request("updateConversationRequest")
-                .field("targetId", targetId)
-                .field("readDate", readDate)
+            .send {
+                $0.updateConversationRequest = .with {
+                    $0.targetID = targetId
+                    $0.readDate = readDate.toMillis()
+                }
             }
             .asVoid()
     }
 
     public func updateGroupConversationReadDate(_ groupId: Int64, readDate: Date = Date()) -> Promise<Void> {
         return turmsClient.driver
-            .send { $0
-                .request("updateConversationRequest")
-                .field("groupId", groupId)
-                .field("readDate", readDate)
+            .send {
+                $0.updateConversationRequest = .with {
+                    $0.groupID = groupId
+                    $0.readDate = readDate.toMillis()
+                }
             }
             .asVoid()
     }
 
     public func updatePrivateConversationTypingStatus(_ targetId: Int64) -> Promise<Void> {
         return turmsClient.driver
-            .send { $0
-                .request("updateTypingStatusRequest")
-                .field("toId", targetId)
-                .field("isGroupMessage", false)
+            .send {
+                $0.updateTypingStatusRequest = .with {
+                    $0.toID = targetId
+                    $0.isGroupMessage = false
+                }
             }
             .asVoid()
     }
 
     public func updateGroupConversationTypingStatus(_ groupId: Int64) -> Promise<Void> {
         return turmsClient.driver
-            .send { $0
-                .request("updateTypingStatusRequest")
-                .field("toId", groupId)
-                .field("isGroupMessage", true)
+            .send {
+                $0.updateTypingStatusRequest = .with {
+                    $0.toID = groupId
+                    $0.isGroupMessage = true
+                }
             }
             .asVoid()
     }

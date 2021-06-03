@@ -43,7 +43,7 @@ class MessageService(
     requestTimeout: Int?,
     minRequestInterval: Int?
 ) : BaseService(coroutineContext, stateStore) {
-    private val requestTimeout = requestTimeout ?: DEFAULT_REQUEST_TIMEOUT
+    private val requestTimeout = requestTimeout ?: 60 * 1000
     private val minRequestInterval = minRequestInterval ?: 0
     private val notificationListeners: MutableList<(TurmsNotification) -> Unit> = LinkedList()
     private val requestMap = ConcurrentHashMap<Long, TurmsRequestCont>(256)
@@ -152,10 +152,6 @@ class MessageService(
 
     override fun onDisconnected() =
         rejectRequests(TurmsBusinessException(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED))
-
-    companion object {
-        private const val DEFAULT_REQUEST_TIMEOUT = 60 * 1000
-    }
 
     private data class TurmsRequestCont(
         val request: TurmsRequest,

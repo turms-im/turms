@@ -11,7 +11,7 @@ class MessageServiceTests: XCTestCase {
     var recipientClient: TurmsClient!
     var groupMemberClient: TurmsClient!
 
-    func test_system() {
+    func test_e2e() {
         var privateMessageId: Int64?
         var groupMessageId: Int64?
 
@@ -20,36 +20,38 @@ class MessageServiceTests: XCTestCase {
         senderClient = TurmsClient(Config.WS_URL)
         recipientClient = TurmsClient(Config.WS_URL)
         groupMemberClient = TurmsClient(Config.WS_URL)
-        TestUtil.wait(senderClient.driver.connect(userId: MessageServiceTests.SENDER_ID, password: "123"))
-        TestUtil.wait(recipientClient.driver.connect(userId: MessageServiceTests.RECIPIENT_ID, password: "123"))
-        TestUtil.wait(groupMemberClient.driver.connect(userId: MessageServiceTests.GROUP_MEMBER_ID, password: "123"))
+        wait(senderClient.userService.login(userId: MessageServiceTests.SENDER_ID, password: "123"))
+        wait(recipientClient.userService.login(userId: MessageServiceTests.RECIPIENT_ID, password: "123"))
+        wait(groupMemberClient.userService.login(userId: MessageServiceTests.GROUP_MEMBER_ID, password: "123"))
+
+        let service = senderClient.messageService!
 
         // Create
-        TestUtil.assertCompleted("sendPrivateMessage_shouldReturnMessageId", senderClient.messageService.sendMessage(isGroupMessage: false, targetId: MessageServiceTests.RECIPIENT_ID, deliveryDate: Date(), text: "hello").done {
+        assertCompleted("sendPrivateMessage_shouldReturnMessageId", service.sendMessage(isGroupMessage: false, targetId: MessageServiceTests.RECIPIENT_ID, deliveryDate: Date(), text: "hello").done {
             privateMessageId = $0
         })
-        TestUtil.assertCompleted("sendGroupMessage_shouldReturnMessageId", senderClient.messageService.sendMessage(isGroupMessage: true, targetId: MessageServiceTests.TARGET_GROUP_ID, deliveryDate: Date(), text: "hello").done {
+        assertCompleted("sendGroupMessage_shouldReturnMessageId", service.sendMessage(isGroupMessage: true, targetId: MessageServiceTests.TARGET_GROUP_ID, deliveryDate: Date(), text: "hello").done {
             groupMessageId = $0
         })
-        TestUtil.assertCompleted("forwardPrivateMessage_shouldReturnForwardedMessageId", senderClient.messageService.forwardMessage(messageId: privateMessageId!, isGroupMessage: false, targetId: MessageServiceTests.RECIPIENT_ID))
-        TestUtil.assertCompleted("forwardGroupMessage_shouldReturnForwardedMessageId", senderClient.messageService.forwardMessage(messageId: groupMessageId!, isGroupMessage: true, targetId: MessageServiceTests.TARGET_GROUP_ID))
+        assertCompleted("forwardPrivateMessage_shouldReturnForwardedMessageId", service.forwardMessage(messageId: privateMessageId!, isGroupMessage: false, targetId: MessageServiceTests.RECIPIENT_ID))
+        assertCompleted("forwardGroupMessage_shouldReturnForwardedMessageId", service.forwardMessage(messageId: groupMessageId!, isGroupMessage: true, targetId: MessageServiceTests.TARGET_GROUP_ID))
 
         // Update
-        TestUtil.assertCompleted("recallMessage_shouldSucceed", senderClient.messageService.recallMessage(messageId: groupMessageId!))
-        TestUtil.assertCompleted("updateSentMessage_shouldSucceed", senderClient.messageService.updateSentMessage(messageId: privateMessageId!, text: "I have modified the message"))
+        assertCompleted("recallMessage_shouldSucceed", service.recallMessage(messageId: groupMessageId!))
+        assertCompleted("updateSentMessage_shouldSucceed", service.updateSentMessage(messageId: privateMessageId!, text: "I have modified the message"))
 
         // Query
-        TestUtil.assertCompleted("queryMessages_shouldReturnNotEmptyMessages", recipientClient.messageService.queryMessages(areGroupMessages: false, fromId: MessageServiceTests.SENDER_ID, size: 10).done {
+        assertCompleted("queryMessages_shouldReturnNotEmptyMessages", recipientClient.messageService.queryMessages(areGroupMessages: false, fromId: MessageServiceTests.SENDER_ID, size: 10).done {
             XCTAssertFalse($0.isEmpty)
         })
-        TestUtil.assertCompleted("queryMessagesWithTotal_shouldReturnNotEmptyMessagesWithTotal", senderClient.messageService.queryMessagesWithTotal(areGroupMessages: false, fromId: MessageServiceTests.SENDER_ID, size: 1).done {
+        assertCompleted("queryMessagesWithTotal_shouldReturnNotEmptyMessagesWithTotal", service.queryMessagesWithTotal(areGroupMessages: false, fromId: MessageServiceTests.SENDER_ID, size: 1).done {
             XCTAssertFalse($0.isEmpty)
         })
 
         // Tear down
-        TestUtil.wait(senderClient.driver.disconnect())
-        TestUtil.wait(recipientClient.driver.disconnect())
-        TestUtil.wait(groupMemberClient.driver.disconnect())
+        wait(senderClient.driver.disconnect())
+        wait(recipientClient.driver.disconnect())
+        wait(groupMemberClient.driver.disconnect())
     }
 
     // Util

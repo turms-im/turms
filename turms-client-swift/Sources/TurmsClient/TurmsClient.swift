@@ -1,4 +1,5 @@
 import Foundation
+import PromiseKit
 
 public class TurmsClient {
     public private(set) var driver: TurmsDriver
@@ -9,14 +10,13 @@ public class TurmsClient {
     public private(set) var storageService: StorageService!
     public private(set) var notificationService: NotificationService!
 
-    public init(_ wsUrl: String? = nil, connectTimeout: TimeInterval? = nil, requestTimeout: TimeInterval? = nil, minRequestInterval: TimeInterval? = nil, heartbeatInterval: TimeInterval? = nil, storageServerUrl: String? = nil, storePassword: Bool? = nil) {
+    public init(_ wsUrl: String? = nil, connectTimeout: TimeInterval? = nil, requestTimeout: TimeInterval? = nil, minRequestInterval: TimeInterval? = nil, heartbeatInterval: TimeInterval? = nil, storageServerUrl: String? = nil) {
         driver = TurmsDriver(
             wsUrl: wsUrl,
             connectTimeout: connectTimeout,
             requestTimeout: requestTimeout,
             minRequestInterval: minRequestInterval,
-            heartbeatInterval: heartbeatInterval,
-            storePassword: storePassword)
+            heartbeatInterval: heartbeatInterval)
         userService = UserService(self)
         groupService = GroupService(self)
         conversationService = ConversationService(self)
@@ -24,4 +24,9 @@ public class TurmsClient {
         storageService = StorageService(self, storageServerUrl: storageServerUrl)
         notificationService = NotificationService(self)
     }
+
+    public func close() -> Promise<()> {
+        return driver.close();
+    }
+
 }

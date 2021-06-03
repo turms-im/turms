@@ -9,7 +9,7 @@ public class MessageService {
     private static let DEFAULT_MENTIONED_USER_IDS_REGEX = try! NSRegularExpression(pattern: "@\\{(\\d+?)\\}", options: [])
     private static let DEFAULT_MENTIONED_USER_IDS_PARSER: (_ message: Message) -> [Int64] = {
         if $0.hasText {
-            let text = $0.text.value
+            let text = $0.text
             let results = DEFAULT_MENTIONED_USER_IDS_REGEX.matches(in: text, range: NSRange(text.startIndex..., in: text))
             return results.map {
                 Int64(String(text[Range($0.range(at: 1), in: text)!]))!
@@ -26,14 +26,14 @@ public class MessageService {
         self.turmsClient = turmsClient
         self.turmsClient.driver
             .addOnNotificationListener {
-                if self.onMessage != nil, $0.hasRelayedRequest {
-                    if case .createMessageRequest(let request) = $0.relayedRequest.kind {
-                        let message = MessageService.createMessage2Message($0.requesterID.value, request)
-                        let addition = self.parseMessageAddition(message)
-                        self.onMessage!(message, addition)
-                    }
+            if self.onMessage != nil, $0.hasRelayedRequest {
+                if case .createMessageRequest(let request) = $0.relayedRequest.kind {
+                    let message = MessageService.createMessage2Message($0.requesterID, request)
+                    let addition = self.parseMessageAddition(message)
+                    self.onMessage!(message, addition)
                 }
             }
+        }
     }
 
     public func sendMessage(
@@ -41,22 +41,36 @@ public class MessageService {
         targetId: Int64,
         deliveryDate: Date? = nil,
         text: String? = nil,
-        records: [[UInt8]]? = nil,
+        records: [Data]? = nil,
         burnAfter: Int32? = nil) -> Promise<Int64> {
         if Validator.areAllNil(text, records) {
             return Promise(error: TurmsBusinessError(TurmsStatusCode.illegalArgument, "text and records must not all be null"))
         }
         return turmsClient.driver
-            .send { $0
-                .request("createMessageRequest")
-                .field("groupId", isGroupMessage ? targetId : nil)
-                .field("recipientId", !isGroupMessage ? targetId : nil)
-                .field("deliveryDate", deliveryDate ?? Date())
-                .field("text", text)
-                .field("records", records)
-                .field("burnAfter", burnAfter)
+            .send {
+                $0.createMessageRequest = .with {
+                    if isGroupMessage {
+                        $0.groupID = targetId
+                    } else {
+                        $0.recipientID = targetId
+                    }
+                    if let v = deliveryDate {
+                        $0.deliveryDate = v.toMillis()
+                    }
+                    if let v = text {
+                        $0.text = v
+                    }
+                    if let v = records {
+                        $0.records = v
+                    }
+                    if let v = burnAfter {
+                        $0.burnAfter = v
+                    }
+                }
             }
-            .map { try NotificationUtil.getFirstId($0) }
+            .map {
+                try $0.getFirstId()
+            }
     }
 
     public func forwardMessage(
@@ -64,28 +78,39 @@ public class MessageService {
         isGroupMessage: Bool,
         targetId: Int64) -> Promise<Int64> {
         return turmsClient.driver
-            .send { $0
-                .request("createMessageRequest")
-                .field("messageId", messageId)
-                .field("groupId", isGroupMessage ? targetId : nil)
-                .field("recipientId", !isGroupMessage ? targetId : nil)
+            .send {
+                $0.createMessageRequest = .with {
+                    $0.messageID = messageId
+                    if isGroupMessage {
+                        $0.groupID = targetId
+                    } else {
+                        $0.recipientID = targetId
+                    }
+                }
             }
-            .map { try NotificationUtil.getFirstId($0) }
+            .map {
+                try $0.getFirstId()
+            }
     }
 
     public func updateSentMessage(
         messageId: Int64,
         text: String? = nil,
-        records: [[UInt8]]? = nil) -> Promise<Void> {
+        records: [Data]? = nil) -> Promise<Void> {
         if Validator.areAllNil(text, records) {
             return Promise.value(())
         }
         return turmsClient.driver
-            .send { $0
-                .request("updateMessageRequest")
-                .field("messageId", messageId)
-                .field("text", text)
-                .field("records", records)
+            .send {
+                $0.updateMessageRequest = .with {
+                    $0.messageID = messageId
+                    if let v = text {
+                        $0.text = v
+                    }
+                    if let v = records {
+                        $0.records = v
+                    }
+                }
             }
             .asVoid()
     }
@@ -99,18 +124,33 @@ public class MessageService {
         deliveryDateBefore: Date? = nil,
         size: Int32 = 50) -> Promise<[Message]> {
         return turmsClient.driver
-            .send { $0
-                .request("queryMessagesRequest")
-                .field("ids", ids)
-                .field("areGroupMessages", areGroupMessages)
-                .field("areSystemMessages", areSystemMessages)
-                .field("fromId", fromId)
-                .field("deliveryDateAfter", deliveryDateAfter)
-                .field("deliveryDateBefore", deliveryDateBefore)
-                .field("size", size)
-                .field("withTotal", false)
+            .send {
+                $0.queryMessagesRequest = .with {
+                    if let v = ids {
+                        $0.ids = v
+                    }
+                    if let v = areGroupMessages {
+                        $0.areGroupMessages = v
+                    }
+                    if let v = areSystemMessages {
+                        $0.areSystemMessages = v
+                    }
+                    if let v = fromId {
+                        $0.fromID = v
+                    }
+                    if let v = deliveryDateAfter {
+                        $0.deliveryDateAfter = v.toMillis()
+                    }
+                    if let v = deliveryDateBefore {
+                        $0.deliveryDateBefore = v.toMillis()
+                    }
+                    $0.size = size
+                    $0.withTotal = false
+                }
             }
-            .map { $0.data.messages.messages }
+            .map {
+                $0.data.messages.messages
+            }
     }
 
     public func queryMessagesWithTotal(
@@ -122,26 +162,42 @@ public class MessageService {
         deliveryDateBefore: Date? = nil,
         size: Int32 = 1) -> Promise<[MessagesWithTotal]> {
         return turmsClient.driver
-            .send { $0
-                .request("queryMessagesRequest")
-                .field("ids", ids)
-                .field("areGroupMessages", areGroupMessages)
-                .field("areSystemMessages", areSystemMessages)
-                .field("fromId", fromId)
-                .field("deliveryDateAfter", deliveryDateAfter)
-                .field("deliveryDateBefore", deliveryDateBefore)
-                .field("size", size)
-                .field("withTotal", true)
+            .send {
+                $0.queryMessagesRequest = .with {
+                    if let v = ids {
+                        $0.ids = v
+                    }
+                    if let v = areGroupMessages {
+                        $0.areGroupMessages = v
+                    }
+                    if let v = areSystemMessages {
+                        $0.areSystemMessages = v
+                    }
+                    if let v = fromId {
+                        $0.fromID = v
+                    }
+                    if let v = deliveryDateAfter {
+                        $0.deliveryDateAfter = v.toMillis()
+                    }
+                    if let v = deliveryDateBefore {
+                        $0.deliveryDateBefore = v.toMillis()
+                    }
+                    $0.size = size
+                    $0.withTotal = true
+                }
             }
-            .map { $0.data.messagesWithTotalList.messagesWithTotalList }
+            .map {
+                $0.data.messagesWithTotalList.messagesWithTotalList
+            }
     }
 
     public func recallMessage(messageId: Int64, recallDate: Date = Date()) -> Promise<Void> {
         return turmsClient.driver
-            .send { $0
-                .request("updateMessageRequest")
-                .field("messageId", messageId)
-                .field("recallDate", recallDate)
+            .send {
+                $0.updateMessageRequest = .with {
+                    $0.messageID = messageId
+                    $0.recallDate = recallDate.toMillis()
+                }
             }
             .asVoid()
     }
@@ -163,10 +219,10 @@ public class MessageService {
             $0.latitude = latitude
             $0.longitude = longitude
             if locationName != nil {
-                $0.name.value = locationName!
+                $0.name = locationName!
             }
             if address != nil {
-                $0.address.value = address!
+                $0.address = address!
             }
         }.serializedData()
     }
@@ -175,20 +231,20 @@ public class MessageService {
         return try! AudioFile.with {
             $0.description_p.url = url
             if duration != nil {
-                $0.description_p.duration.value = duration!
+                $0.description_p.duration = duration!
             }
             if format != nil {
-                $0.description_p.format.value = format!
+                $0.description_p.format = format!
             }
             if size != nil {
-                $0.description_p.size.value = size!
+                $0.description_p.size = size!
             }
         }.serializedData()
     }
 
     public static func generateAudioRecordByData(_ data: Data) -> Data {
         return try! AudioFile.with {
-            $0.data.value = data
+            $0.data = data
         }.serializedData()
     }
 
@@ -196,26 +252,26 @@ public class MessageService {
         return try! VideoFile.with {
             $0.description_p.url = url
             if duration != nil {
-                $0.description_p.duration.value = duration!
+                $0.description_p.duration = duration!
             }
             if format != nil {
-                $0.description_p.format.value = format!
+                $0.description_p.format = format!
             }
             if size != nil {
-                $0.description_p.size.value = size!
+                $0.description_p.size = size!
             }
         }.serializedData()
     }
 
     public static func generateVideoRecordByData(_ data: Data) -> Data {
         return try! VideoFile.with {
-            $0.data.value = data
+            $0.data = data
         }.serializedData()
     }
 
     public static func generateImageRecordByData(_ data: Data) -> Data {
         return try! ImageFile.with {
-            $0.data.value = data
+            $0.data = data
         }.serializedData()
     }
 
@@ -223,20 +279,20 @@ public class MessageService {
         return try! ImageFile.with {
             $0.description_p.url = url
             if fileSize != nil {
-                $0.description_p.fileSize.value = fileSize!
+                $0.description_p.fileSize = fileSize!
             }
             if imageSize != nil {
-                $0.description_p.imageSize.value = imageSize!
+                $0.description_p.imageSize = imageSize!
             }
             if original != nil {
-                $0.description_p.original.value = original!
+                $0.description_p.original = original!
             }
         }.serializedData()
     }
 
     public static func generateFileRecordByDate(_ data: Data) -> Data {
         return try! File.with {
-            $0.data.value = data
+            $0.data = data
         }.serializedData()
     }
 
@@ -244,20 +300,21 @@ public class MessageService {
         return try! File.with {
             $0.description_p.url = url
             if format != nil {
-                $0.description_p.format.value = format!
+                $0.description_p.format = format!
             }
             if size != nil {
-                $0.description_p.size.value = size!
+                $0.description_p.size = size!
             }
         }.serializedData()
     }
 
     private func parseMessageAddition(_ message: Message) -> MessageAddition {
         let mentionedUserIds = mentionedUserIdsParser?(message) ?? []
-        let isMentioned = turmsClient.userService.userId != nil ? mentionedUserIds.contains(turmsClient.userService.userId!) : false
+        let userId = turmsClient.userService.userInfo?.userId
+        let isMentioned = userId != nil ? mentionedUserIds.contains(userId!) : false
         let records = message.records
         var systemMessageType: BuiltinSystemMessageType?
-        if message.isSystemMessage.value, !records.isEmpty {
+        if message.isSystemMessage, !records.isEmpty {
             let data = records[0]
             if !data.isEmpty {
                 systemMessageType = BuiltinSystemMessageType(rawValue: Int(data[0]))
@@ -282,14 +339,14 @@ public class MessageService {
                 $0.id = request.messageID
             }
             $0.isSystemMessage = request.isSystemMessage
-            $0.deliveryDate.value = request.deliveryDate
+            $0.deliveryDate = request.deliveryDate
             if request.hasText {
                 $0.text = request.text
             }
             if request.records.count > 0 {
                 $0.records = request.records
             }
-            $0.senderID.value = requesterId
+            $0.senderID = requesterId
             if request.hasGroupID {
                 $0.groupID = request.groupID
             }

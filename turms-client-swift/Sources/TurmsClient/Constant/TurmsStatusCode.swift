@@ -25,7 +25,6 @@ public enum TurmsStatusCode: Int {
     // User
     case clientSessionAlreadyEstablished = 300
     case clientSessionHasBeenClosed
-    case reloginShouldBeCalledAfterLogin
 
     // Message
     case messageIsRejected = 400
@@ -57,7 +56,6 @@ public enum TurmsStatusCode: Int {
     // Server
     case serverInternalError = 1200
     case serverUnavailable
-    case disabledFunction
 
     //**********************************************************
     //* For business error
@@ -66,20 +64,17 @@ public enum TurmsStatusCode: Int {
     // User
 
     // User - Login
-    case loginUserIdNotNumber = 2000
+    case loginTimeout = 2000
     case loginAuthenticationFailed
     case loggingInUserNotActive
     case loginFromForbiddenDeviceType
-    case forbiddenDeviceTypeForLoginFailureReason
-    case loginFailureReasonCacheIsDisabled
 
     // User - Session
     case sessionSimultaneousConflictsDecline = 2100
     case sessionSimultaneousConflictsNotify
     case sessionSimultaneousConflictsOffline
     case createExistingSession
-    case forbiddenDeviceTypeForSessionDisconnectionReason
-    case sessionDisconnectionReasonCacheIsDisabled
+    case updateNonExistingSessionHeartbeat
 
     // User - Location
     case userLocationRelatedFeaturesAreDisabled = 2200
@@ -204,7 +199,13 @@ public enum TurmsStatusCode: Int {
 }
 
 extension TurmsStatusCode {
+
     public static func isSuccessCode(_ code: Int) -> Bool {
         return 1000 <= code && code < 1100
     }
+
+    public static func isServerError(_ code: Int) -> Bool {
+        return (1200...1299).contains(code) || (200...299).contains(code)
+    }
+
 }

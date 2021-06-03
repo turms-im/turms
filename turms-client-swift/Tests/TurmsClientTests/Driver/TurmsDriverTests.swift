@@ -3,15 +3,16 @@ import XCTest
 
 class TurmsDriverTests: XCTestCase {
     func test_system() {
-        let turmsDriver: TurmsDriver = TurmsClient(Config.WS_URL).driver
-        TestUtil.assertCompleted("connect_shouldSucceed", turmsDriver.connect(userId: 1, password: "123"))
-        TestUtil.assertCompleted("sendHeartbeat_shouldSucceed", turmsDriver.sendHeartbeat())
-        TestUtil.assertCompleted("sendTurmsRequest_shouldSucceed", turmsDriver.send(.with {
-            $0.requestID.value = 1000
+        let client = TurmsClient(Config.WS_URL)
+        let driver = client.driver
+        assertCompleted("connect_shouldSucceed", driver.connect())
+        assertCompleted("login_shouldSucceed", client.userService.login(userId: 1, password: "123"))
+        assertCompleted("sendHeartbeat_shouldSucceed", driver.sendHeartbeat())
+        assertCompleted("sendTurmsRequest_shouldSucceed", driver.send {
             $0.queryUserProfileRequest = QueryUserProfileRequest.with {
                 $0.userID = 1
             }
-        }))
-        TestUtil.assertCompleted("disconnect_shouldSucceed", turmsDriver.disconnect())
+        })
+        assertCompleted("disconnect_shouldSucceed", driver.disconnect())
     }
 }

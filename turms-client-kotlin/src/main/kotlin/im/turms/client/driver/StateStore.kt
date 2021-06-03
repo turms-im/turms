@@ -22,19 +22,19 @@ import okhttp3.internal.ws.RealWebSocket
  * @author James Chen
  */
 class StateStore {
-    /** Connection **/
+    // Connection
     var websocket: RealWebSocket? = null
 
     @Volatile
     var isConnected = false
 
-    /** Session **/
+    // Session
     @Volatile
     var isSessionOpen = false
     var sessionId: String? = null
     var serverId: String? = null
 
-    /** Request **/
+    // Request
     var lastRequestDate = 0L
 
     fun reset() {

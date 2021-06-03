@@ -24,13 +24,8 @@ import java.util.*
  * @author James Chen
  */
 class NotificationService(turmsClient: TurmsClient) {
+
     private var notificationListeners: MutableList<((TurmsRequest) -> Unit)> = LinkedList()
-
-    fun addNotificationListener(listener: ((TurmsRequest) -> Unit)) =
-        this.notificationListeners.add(listener)
-
-    fun removeNotificationListener(listener: ((TurmsRequest) -> Unit)) =
-        this.notificationListeners.removeIf { it == listener }
 
     init {
         turmsClient.driver
@@ -43,4 +38,11 @@ class NotificationService(turmsClient: TurmsClient) {
                 }
             }
     }
+
+    fun addNotificationListener(listener: ((TurmsRequest) -> Unit)) =
+        this.notificationListeners.add(listener)
+
+    fun removeNotificationListener(listener: ((TurmsRequest) -> Unit)) =
+        this.notificationListeners.removeIf { it == listener }
+
 }

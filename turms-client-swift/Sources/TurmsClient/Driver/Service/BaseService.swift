@@ -1,0 +1,19 @@
+import Foundation
+import PromiseKit
+
+public class BaseService {
+
+    let stateStore: StateStore
+
+    init(_ stateStore: StateStore) {
+        self.stateStore = stateStore
+    }
+
+    func close() -> Promise<()> {
+        return Promise.value(())
+    }
+
+    func onDisconnected() {
+    }
+
+}

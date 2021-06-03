@@ -8,27 +8,28 @@ class ConversationServiceTests: XCTestCase {
     static let GROUP_ID: Int64 = 1
     var turmsClient: TurmsClient!
 
-    func test_system() {
+    func test_e2e() {
         // Set up
         continueAfterFailure = false
         turmsClient = TurmsClient(Config.WS_URL)
-        TestUtil.wait(turmsClient.driver.connect(userId: ConversationServiceTests.USER_ID, password: "123"))
+        wait(turmsClient.userService.login(userId: ConversationServiceTests.USER_ID, password: "123"))
 
         // Update
-        TestUtil.assertCompleted("updatePrivateConversationReadDate_shouldSucceed", turmsClient.conversationService.updatePrivateConversationReadDate(ConversationServiceTests.RELATED_USER_ID))
-        TestUtil.assertCompleted("updateGroupConversationReadDate_shouldSucceed", turmsClient.conversationService.updateGroupConversationReadDate(ConversationServiceTests.GROUP_ID))
-        TestUtil.assertCompleted("updatePrivateConversationTypingStatus_shouldSucceed", turmsClient.conversationService.updatePrivateConversationTypingStatus(ConversationServiceTests.RELATED_USER_ID))
-        TestUtil.assertCompleted("updateGroupConversationTypingStatus_shouldSucceed", turmsClient.conversationService.updateGroupConversationTypingStatus(ConversationServiceTests.GROUP_ID))
+        let service = turmsClient.conversationService!
+        assertCompleted("updatePrivateConversationReadDate_shouldSucceed", service.updatePrivateConversationReadDate(ConversationServiceTests.RELATED_USER_ID))
+        assertCompleted("updateGroupConversationReadDate_shouldSucceed", service.updateGroupConversationReadDate(ConversationServiceTests.GROUP_ID))
+        assertCompleted("updatePrivateConversationTypingStatus_shouldSucceed", service.updatePrivateConversationTypingStatus(ConversationServiceTests.RELATED_USER_ID))
+        assertCompleted("updateGroupConversationTypingStatus_shouldSucceed", service.updateGroupConversationTypingStatus(ConversationServiceTests.GROUP_ID))
 
         // Query
-        TestUtil.assertCompleted("queryPrivateConversations_shouldReturnNotEmptyConversations", turmsClient.conversationService.queryPrivateConversations([ConversationServiceTests.RELATED_USER_ID]).done {
+        assertCompleted("queryPrivateConversations_shouldReturnNotEmptyConversations", service.queryPrivateConversations([ConversationServiceTests.RELATED_USER_ID]).done {
             XCTAssertFalse($0.isEmpty)
-            })
-        TestUtil.assertCompleted("queryGroupConversations_shouldReturnNotEmptyConversations", turmsClient.conversationService.queryGroupConversations([ConversationServiceTests.GROUP_ID]).done {
+        })
+        assertCompleted("queryGroupConversations_shouldReturnNotEmptyConversations", service.queryGroupConversations([ConversationServiceTests.GROUP_ID]).done {
             XCTAssertFalse($0.isEmpty)
         })
 
         // Tear down
-        TestUtil.wait(turmsClient.driver.disconnect())
+        wait(turmsClient.driver.disconnect())
     }
 }
