@@ -88,7 +88,7 @@ class DriverMessageService: BaseService {
     private func generateRandomId() -> Int64 {
         var id: Int64
         repeat {
-            id = Int64.random(in: 1..<16384)
+            id = Int64.random(in: 1...Int64.max)
         } while requestMap.keys.contains(id)
         return id
     }
