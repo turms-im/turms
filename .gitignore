@@ -39,6 +39,7 @@ turms-gateway/target/
 
 turms-admin/cypress/screenshots/
 turms-admin/cypress/videos/
+turms-admin/data/
 turms-admin/dist/
 turms-admin/node_modules/
 
@@ -56,6 +57,8 @@ turms-client-js/protoc/
 turms-client-js/stats/
 
 turms-client-kotlin/target/
+
+turms-client-swift/.build/
 
 ### Turms Plugins ###
 turms-plugins/turms-plugin-minio/target/
