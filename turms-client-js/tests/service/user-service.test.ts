@@ -114,13 +114,8 @@ describe('Query', () => {
         const result = await turmsClient.userService.queryUserProfile('1');
         expect(result).toBeTruthy();
     });
-    it('queryUsersNearby_shouldReturnUserIdsOrSessionIds', async () => {
-        const userIds = await turmsClient.userService.queryUserIdsNearby(1, 1);
-        const sessionIds = await turmsClient.userService.queryUserSessionIdsNearby(1, 1);
-        expect(userIds || sessionIds).toBeTruthy();
-    });
-    it('queryUserInfosNearby_shouldReturnUsersInfos', async () => {
-        const result = await turmsClient.userService.queryUserInfosNearby(1, 1);
+    it('queryNearbyUsers_shouldReturnUsersInfos', async () => {
+        const result = await turmsClient.userService.queryNearbyUsers(1, 1);
         expect(result).toBeTruthy();
     });
     it('queryOnlineStatusesRequest_shouldUsersOnlineStatus', async () => {

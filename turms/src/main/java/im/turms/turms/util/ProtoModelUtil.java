@@ -19,6 +19,7 @@ package im.turms.turms.util;
 
 import com.google.common.collect.Maps;
 import com.google.protobuf.ByteString;
+import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.GroupMemberRole;
 import im.turms.common.constant.ProfileAccessStrategy;
 import im.turms.common.constant.RequestStatus;
@@ -30,15 +31,19 @@ import im.turms.common.model.bo.group.GroupInvitation;
 import im.turms.common.model.bo.group.GroupJoinQuestion;
 import im.turms.common.model.bo.group.GroupJoinRequest;
 import im.turms.common.model.bo.group.GroupMember;
+import im.turms.common.model.bo.user.NearbyUser;
 import im.turms.common.model.bo.user.UserFriendRequest;
 import im.turms.common.model.bo.user.UserInfo;
+import im.turms.common.model.bo.user.UserLocation;
 import im.turms.common.model.bo.user.UserRelationship;
 import im.turms.common.model.bo.user.UserRelationshipGroup;
 import im.turms.common.model.bo.user.UserStatusDetail;
 import im.turms.common.model.dto.request.message.CreateMessageRequest;
+import im.turms.server.common.bo.session.UserSessionId;
 import im.turms.server.common.bo.session.UserSessionsStatus;
 import im.turms.server.common.dao.domain.User;
 import im.turms.turms.workflow.dao.domain.message.Message;
+import io.lettuce.core.GeoCoordinates;
 import lombok.extern.log4j.Log4j2;
 
 import javax.annotation.Nullable;
@@ -51,9 +56,9 @@ import java.util.Map;
  * @author James Chen
  */
 @Log4j2
-public final class ProtoUtil {
+public final class ProtoModelUtil {
 
-    private ProtoUtil() {
+    private ProtoModelUtil() {
     }
 
     // Transformation
@@ -126,6 +131,67 @@ public final class ProtoUtil {
         }
         if (profileAccess != null) {
             builder.setProfileAccessStrategy(profileAccess);
+        }
+        return builder;
+    }
+
+    public static UserStatusDetail.Builder userOnlineInfo2userStatus(
+            @NotNull Long userId,
+            @Nullable UserSessionsStatus userSessionsStatus,
+            boolean convertInvisibleToOffline) {
+        UserStatusDetail.Builder builder = UserStatusDetail.newBuilder()
+                .setUserId(userId);
+        if (userSessionsStatus == null) {
+            builder.setUserStatus(UserStatus.OFFLINE);
+        } else {
+            builder.setUserStatus(userSessionsStatus.getUserStatus(convertInvisibleToOffline));
+            builder.addAllUsingDeviceTypes(userSessionsStatus.getLoggedInDeviceTypes());
+        }
+        return builder;
+    }
+
+    public static GroupMember.Builder userOnlineInfo2groupMember(
+            @NotNull Long userId,
+            @Nullable UserSessionsStatus userSessionsStatus,
+            boolean convertInvisibleToOffline) {
+        GroupMember.Builder builder = GroupMember
+                .newBuilder()
+                .setUserId(userId);
+        if (userSessionsStatus == null) {
+            builder.setUserStatus(UserStatus.OFFLINE);
+        } else {
+            builder.setUserStatus(userSessionsStatus.getUserStatus(convertInvisibleToOffline));
+            builder.addAllUsingDeviceTypes(userSessionsStatus.getLoggedInDeviceTypes());
+        }
+        return builder;
+    }
+
+    public static NearbyUser.Builder nearbyUser2proto(@NotNull im.turms.server.common.bo.location.NearbyUser nearbyUser) {
+        NearbyUser.Builder builder = NearbyUser
+                .newBuilder();
+        UserSessionId sessionId = nearbyUser.getSessionId();
+        Long userId = sessionId.getUserId();
+        DeviceType deviceType = sessionId.getDeviceType();
+        GeoCoordinates coordinates = nearbyUser.getCoordinates();
+        Integer distance = nearbyUser.getDistance();
+        User info = nearbyUser.getInfo();
+        if (userId != null) {
+            builder.setUserId(userId);
+        }
+        if (deviceType != null) {
+            builder.setDeviceType(deviceType);
+        }
+        if (coordinates != null) {
+            builder.setLocation(UserLocation.newBuilder()
+                    .setLongitude(coordinates.getX().floatValue())
+                    .setLatitude(coordinates.getY().floatValue())
+                    .build());
+        }
+        if (distance != null) {
+            builder.setDistance(distance);
+        }
+        if (info != null) {
+            builder.setInfo(userProfile2proto(info));
         }
         return builder;
     }
@@ -458,37 +524,6 @@ public final class ProtoUtil {
         }
         if (burnAfter != null) {
             builder.setBurnAfter(burnAfter);
-        }
-        return builder;
-    }
-
-    public static UserStatusDetail.Builder userOnlineInfo2userStatus(
-            @NotNull Long userId,
-            @Nullable UserSessionsStatus userSessionsStatus,
-            boolean convertInvisibleToOffline) {
-        UserStatusDetail.Builder builder = UserStatusDetail.newBuilder()
-                .setUserId(userId);
-        if (userSessionsStatus == null) {
-            builder.setUserStatus(UserStatus.OFFLINE);
-        } else {
-            builder.setUserStatus(userSessionsStatus.getUserStatus(convertInvisibleToOffline));
-            builder.addAllUsingDeviceTypes(userSessionsStatus.getLoggedInDeviceTypes());
-        }
-        return builder;
-    }
-
-    public static GroupMember.Builder userOnlineInfo2groupMember(
-            @NotNull Long userId,
-            @Nullable UserSessionsStatus userSessionsStatus,
-            boolean convertInvisibleToOffline) {
-        GroupMember.Builder builder = GroupMember
-                .newBuilder()
-                .setUserId(userId);
-        if (userSessionsStatus == null) {
-            builder.setUserStatus(UserStatus.OFFLINE);
-        } else {
-            builder.setUserStatus(userSessionsStatus.getUserStatus(convertInvisibleToOffline));
-            builder.addAllUsingDeviceTypes(userSessionsStatus.getLoggedInDeviceTypes());
         }
         return builder;
     }

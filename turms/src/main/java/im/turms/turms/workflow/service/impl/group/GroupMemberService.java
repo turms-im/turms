@@ -36,12 +36,12 @@ import im.turms.server.common.mongo.operation.option.QueryOptions;
 import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.service.session.UserStatusService;
 import im.turms.server.common.util.AssertUtil;
-import im.turms.server.common.util.MapUtil;
+import im.turms.server.common.util.CollectionUtil;
 import im.turms.turms.bo.ServicePermission;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.constraint.ValidGroupMemberRole;
-import im.turms.turms.util.ProtoUtil;
+import im.turms.turms.util.ProtoModelUtil;
 import im.turms.turms.workflow.dao.domain.group.GroupBlockedUser;
 import im.turms.turms.workflow.dao.domain.group.GroupMember;
 import im.turms.turms.workflow.service.util.DomainConstraintUtil;
@@ -60,12 +60,9 @@ import javax.validation.constraints.PastOrPresent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static im.turms.server.common.util.MapUtil.getCapability;
 
 /**
  * @author James Chen
@@ -215,7 +212,7 @@ public class GroupMemberService {
         Set<Long> groupIds;
         try {
             AssertUtil.notEmpty(keys, "keys");
-            groupIds = new HashSet<>(getCapability(keys.size()));
+            groupIds = CollectionUtil.newSetWithExpectedSize(keys.size());
             for (GroupMember.Key key : keys) {
                 DomainConstraintUtil.validGroupMemberKey(key);
                 groupIds.add(key.getGroupId());
@@ -288,7 +285,7 @@ public class GroupMemberService {
                             Long groupId = keys.iterator().next().getGroupId();
                             updateMono = groupVersionService.updateMembersVersion(groupId);
                         } else {
-                            Set<Long> groupIds = new HashSet<>(MapUtil.getCapability(size));
+                            Set<Long> groupIds = CollectionUtil.newSetWithExpectedSize(size);
                             updateMono = groupVersionService.updateMembersVersion(groupIds);
                         }
                         return updateMono.onErrorResume(t -> Mono.empty()).thenReturn(result);
@@ -313,7 +310,7 @@ public class GroupMemberService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Set<GroupMember.Key> keys = new HashSet<>(MapUtil.getCapability(memberIds.size()));
+        Set<GroupMember.Key> keys = CollectionUtil.newSetWithExpectedSize(memberIds.size());
         for (Long memberId : memberIds) {
             keys.add(new GroupMember.Key(groupId, memberId));
         }
@@ -672,7 +669,7 @@ public class GroupMemberService {
                         return fillMembersBuilderWithStatus(members, builder);
                     } else {
                         for (GroupMember member : members) {
-                            im.turms.common.model.bo.group.GroupMember groupMember = ProtoUtil
+                            im.turms.common.model.bo.group.GroupMember groupMember = ProtoModelUtil
                                     .groupMember2proto(member).build();
                             builder.addGroupMembers(groupMember);
                         }
@@ -703,7 +700,7 @@ public class GroupMemberService {
                                         return fillMembersBuilderWithStatus(members, builder);
                                     } else {
                                         for (GroupMember member : members) {
-                                            im.turms.common.model.bo.group.GroupMember groupMember = ProtoUtil
+                                            im.turms.common.model.bo.group.GroupMember groupMember = ProtoModelUtil
                                                     .groupMember2proto(member).build();
                                             builder.addGroupMembers(groupMember);
                                         }
@@ -795,7 +792,7 @@ public class GroupMemberService {
                     for (int i = 0; i < memberNumber; i++) {
                         GroupMember member = members.get(i);
                         UserSessionsStatus info = (UserSessionsStatus) results[i];
-                        im.turms.common.model.bo.group.GroupMember groupMember = ProtoUtil
+                        im.turms.common.model.bo.group.GroupMember groupMember = ProtoModelUtil
                                 .userOnlineInfo2groupMember(
                                         member.getKey().getUserId(),
                                         info,

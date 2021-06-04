@@ -27,11 +27,11 @@ import im.turms.server.common.cluster.service.serialization.serializer.impl.List
 import im.turms.server.common.cluster.service.serialization.serializer.impl.LongSerializer;
 import im.turms.server.common.cluster.service.serialization.serializer.impl.ShortSerializer;
 import im.turms.server.common.cluster.service.serialization.serializer.impl.StringSerializer;
-import im.turms.server.common.rpc.serializer.response.ServiceResponseSerializer;
 import im.turms.server.common.rpc.serializer.request.CountOnlineUsersRequestSerializer;
 import im.turms.server.common.rpc.serializer.request.HandleServiceRequestSerializer;
 import im.turms.server.common.rpc.serializer.request.SendNotificationRequestSerializer;
 import im.turms.server.common.rpc.serializer.request.SetUserOfflineRequestSerializer;
+import im.turms.server.common.rpc.serializer.response.ServiceResponseSerializer;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.GenericTypeResolver;
 

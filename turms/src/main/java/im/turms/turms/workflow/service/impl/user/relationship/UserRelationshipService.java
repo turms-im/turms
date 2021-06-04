@@ -33,11 +33,11 @@ import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
 import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.util.AssertUtil;
-import im.turms.server.common.util.MapUtil;
+import im.turms.server.common.util.CollectionUtil;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.constraint.ValidUserRelationshipKey;
-import im.turms.turms.util.ProtoUtil;
+import im.turms.turms.util.ProtoModelUtil;
 import im.turms.turms.workflow.dao.domain.user.UserRelationship;
 import im.turms.turms.workflow.dao.domain.user.UserRelationshipGroupMember;
 import im.turms.turms.workflow.dao.domain.user.UserVersion;
@@ -55,7 +55,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -123,7 +122,7 @@ public class UserRelationshipService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Set<Long> ownerIds = new HashSet<>(MapUtil.getCapability(keys.size()));
+        Set<Long> ownerIds = CollectionUtil.newSetWithExpectedSize(keys.size());
         for (UserRelationship.Key key : keys) {
             ownerIds.add(key.getOwnerId());
         }
@@ -256,7 +255,7 @@ public class UserRelationshipService {
                                             .setLastUpdatedDate(date.getTime());
                                     for (UserRelationship relationship : relationships) {
                                         im.turms.common.model.bo.user.UserRelationship userRelationship =
-                                                ProtoUtil.relationship2proto(relationship).build();
+                                                ProtoModelUtil.relationship2proto(relationship).build();
                                         builder.addUserRelationships(userRelationship);
                                     }
                                     return builder.build();
@@ -529,7 +528,7 @@ public class UserRelationshipService {
         Set<Long> ownerIds;
         try {
             AssertUtil.notEmpty(keys, "keys");
-            ownerIds = new HashSet<>(MapUtil.getCapability(keys.size()));
+            ownerIds = CollectionUtil.newSetWithExpectedSize(keys.size());
             for (UserRelationship.Key key : keys) {
                 DomainConstraintUtil.validRelationshipKey(key);
                 ownerIds.add(key.getOwnerId());

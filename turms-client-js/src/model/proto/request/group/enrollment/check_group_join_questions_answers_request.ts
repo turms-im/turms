@@ -43,10 +43,11 @@ export const CheckGroupJoinQuestionsAnswersRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          const entry1 = CheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry.decode(
-            reader,
-            reader.uint32()
-          );
+          const entry1 =
+            CheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry.decode(
+              reader,
+              reader.uint32()
+            );
           if (entry1.value !== undefined) {
             message.questionIdAndAnswer[entry1.key] = entry1.value;
           }
@@ -60,10 +61,8 @@ export const CheckGroupJoinQuestionsAnswersRequest = {
   },
 };
 
-const baseCheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry: object = {
-  key: "0",
-  value: "",
-};
+const baseCheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry: object =
+  { key: "0", value: "" };
 
 export const CheckGroupJoinQuestionsAnswersRequest_QuestionIdAndAnswerEntry = {
   encode(

@@ -23,6 +23,7 @@ import im.turms.server.common.access.http.dto.response.ResponseDTO;
 import im.turms.server.common.access.http.dto.response.ResponseFactory;
 import im.turms.server.common.access.http.dto.response.UpdateResultDTO;
 import im.turms.server.common.bo.common.DateRange;
+import im.turms.server.common.util.CollectionUtil;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.workflow.access.http.dto.request.user.AddRelationshipDTO;
 import im.turms.turms.workflow.access.http.dto.request.user.UpdateRelationshipDTO;
@@ -46,7 +47,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -133,7 +133,7 @@ public class UserRelationshipController {
             UserRelationship.KeyList keys,
             @RequestBody UpdateRelationshipDTO updateRelationshipDTO) {
         Mono<UpdateResultDTO> updateMono = userRelationshipService.updateUserOneSidedRelationships(
-                new HashSet<>(keys.getKeys()),
+                CollectionUtil.newSet(keys.getKeys()),
                 updateRelationshipDTO.getBlockDate(),
                 updateRelationshipDTO.getEstablishmentDate())
                 .map(UpdateResultDTO::get);
@@ -145,7 +145,7 @@ public class UserRelationshipController {
     public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteRelationships(
             UserRelationship.KeyList keys) {
         Mono<DeleteResultDTO> deleteMono = userRelationshipService
-                .deleteOneSidedRelationships(new HashSet<>(keys.getKeys()))
+                .deleteOneSidedRelationships(CollectionUtil.newSet(keys.getKeys()))
                 .map(DeleteResultDTO::get);
         return ResponseFactory.okIfTruthy(deleteMono);
     }

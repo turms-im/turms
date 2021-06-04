@@ -258,36 +258,22 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 810: {
-            im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest.Builder subBuilder = null;
+            im.turms.common.model.dto.request.user.QueryNearbyUsersRequest.Builder subBuilder = null;
             if (kindCase_ == 101) {
-              subBuilder = ((im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest) kind_).toBuilder();
+              subBuilder = ((im.turms.common.model.dto.request.user.QueryNearbyUsersRequest) kind_).toBuilder();
             }
             kind_ =
-                input.readMessage(im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest.parser(), extensionRegistry);
+                input.readMessage(im.turms.common.model.dto.request.user.QueryNearbyUsersRequest.parser(), extensionRegistry);
             if (subBuilder != null) {
-              subBuilder.mergeFrom((im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest) kind_);
+              subBuilder.mergeFrom((im.turms.common.model.dto.request.user.QueryNearbyUsersRequest) kind_);
               kind_ = subBuilder.buildPartial();
             }
             kindCase_ = 101;
             break;
           }
           case 818: {
-            im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest.Builder subBuilder = null;
-            if (kindCase_ == 102) {
-              subBuilder = ((im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest) kind_).toBuilder();
-            }
-            kind_ =
-                input.readMessage(im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom((im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest) kind_);
-              kind_ = subBuilder.buildPartial();
-            }
-            kindCase_ = 102;
-            break;
-          }
-          case 826: {
             im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest.Builder subBuilder = null;
-            if (kindCase_ == 103) {
+            if (kindCase_ == 102) {
               subBuilder = ((im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest) kind_).toBuilder();
             }
             kind_ =
@@ -296,12 +282,12 @@ private static final long serialVersionUID = 0L;
               subBuilder.mergeFrom((im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest) kind_);
               kind_ = subBuilder.buildPartial();
             }
-            kindCase_ = 103;
+            kindCase_ = 102;
             break;
           }
-          case 834: {
+          case 826: {
             im.turms.common.model.dto.request.user.UpdateUserLocationRequest.Builder subBuilder = null;
-            if (kindCase_ == 104) {
+            if (kindCase_ == 103) {
               subBuilder = ((im.turms.common.model.dto.request.user.UpdateUserLocationRequest) kind_).toBuilder();
             }
             kind_ =
@@ -310,12 +296,12 @@ private static final long serialVersionUID = 0L;
               subBuilder.mergeFrom((im.turms.common.model.dto.request.user.UpdateUserLocationRequest) kind_);
               kind_ = subBuilder.buildPartial();
             }
-            kindCase_ = 104;
+            kindCase_ = 103;
             break;
           }
-          case 842: {
+          case 834: {
             im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest.Builder subBuilder = null;
-            if (kindCase_ == 105) {
+            if (kindCase_ == 104) {
               subBuilder = ((im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest) kind_).toBuilder();
             }
             kind_ =
@@ -324,12 +310,12 @@ private static final long serialVersionUID = 0L;
               subBuilder.mergeFrom((im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest) kind_);
               kind_ = subBuilder.buildPartial();
             }
-            kindCase_ = 105;
+            kindCase_ = 104;
             break;
           }
-          case 850: {
+          case 842: {
             im.turms.common.model.dto.request.user.UpdateUserRequest.Builder subBuilder = null;
-            if (kindCase_ == 106) {
+            if (kindCase_ == 105) {
               subBuilder = ((im.turms.common.model.dto.request.user.UpdateUserRequest) kind_).toBuilder();
             }
             kind_ =
@@ -338,7 +324,7 @@ private static final long serialVersionUID = 0L;
               subBuilder.mergeFrom((im.turms.common.model.dto.request.user.UpdateUserRequest) kind_);
               kind_ = subBuilder.buildPartial();
             }
-            kindCase_ = 106;
+            kindCase_ = 105;
             break;
           }
           case 1602: {
@@ -896,12 +882,11 @@ private static final long serialVersionUID = 0L;
     QUERY_GROUP_MEMBERS_REQUEST(13),
     UPDATE_GROUP_MEMBER_REQUEST(14),
     QUERY_USER_PROFILE_REQUEST(100),
-    QUERY_USER_IDS_NEARBY_REQUEST(101),
-    QUERY_USER_INFOS_NEARBY_REQUEST(102),
-    QUERY_USER_ONLINE_STATUSES_REQUEST(103),
-    UPDATE_USER_LOCATION_REQUEST(104),
-    UPDATE_USER_ONLINE_STATUS_REQUEST(105),
-    UPDATE_USER_REQUEST(106),
+    QUERY_NEARBY_USERS_REQUEST(101),
+    QUERY_USER_ONLINE_STATUSES_REQUEST(102),
+    UPDATE_USER_LOCATION_REQUEST(103),
+    UPDATE_USER_ONLINE_STATUS_REQUEST(104),
+    UPDATE_USER_REQUEST(105),
     CREATE_FRIEND_REQUEST_REQUEST(200),
     CREATE_RELATIONSHIP_GROUP_REQUEST(201),
     CREATE_RELATIONSHIP_REQUEST(202),
@@ -968,12 +953,11 @@ private static final long serialVersionUID = 0L;
         case 13: return QUERY_GROUP_MEMBERS_REQUEST;
         case 14: return UPDATE_GROUP_MEMBER_REQUEST;
         case 100: return QUERY_USER_PROFILE_REQUEST;
-        case 101: return QUERY_USER_IDS_NEARBY_REQUEST;
-        case 102: return QUERY_USER_INFOS_NEARBY_REQUEST;
-        case 103: return QUERY_USER_ONLINE_STATUSES_REQUEST;
-        case 104: return UPDATE_USER_LOCATION_REQUEST;
-        case 105: return UPDATE_USER_ONLINE_STATUS_REQUEST;
-        case 106: return UPDATE_USER_REQUEST;
+        case 101: return QUERY_NEARBY_USERS_REQUEST;
+        case 102: return QUERY_USER_ONLINE_STATUSES_REQUEST;
+        case 103: return UPDATE_USER_LOCATION_REQUEST;
+        case 104: return UPDATE_USER_ONLINE_STATUS_REQUEST;
+        case 105: return UPDATE_USER_REQUEST;
         case 200: return CREATE_FRIEND_REQUEST_REQUEST;
         case 201: return CREATE_RELATIONSHIP_GROUP_REQUEST;
         case 202: return CREATE_RELATIONSHIP_REQUEST;
@@ -1517,187 +1501,156 @@ private static final long serialVersionUID = 0L;
     return im.turms.common.model.dto.request.user.QueryUserProfileRequest.getDefaultInstance();
   }
 
-  public static final int QUERY_USER_IDS_NEARBY_REQUEST_FIELD_NUMBER = 101;
+  public static final int QUERY_NEARBY_USERS_REQUEST_FIELD_NUMBER = 101;
   /**
-   * <code>.im.turms.proto.QueryUserIdsNearbyRequest query_user_ids_nearby_request = 101;</code>
-   * @return Whether the queryUserIdsNearbyRequest field is set.
+   * <code>.im.turms.proto.QueryNearbyUsersRequest query_nearby_users_request = 101;</code>
+   * @return Whether the queryNearbyUsersRequest field is set.
    */
   @java.lang.Override
-  public boolean hasQueryUserIdsNearbyRequest() {
+  public boolean hasQueryNearbyUsersRequest() {
     return kindCase_ == 101;
   }
   /**
-   * <code>.im.turms.proto.QueryUserIdsNearbyRequest query_user_ids_nearby_request = 101;</code>
-   * @return The queryUserIdsNearbyRequest.
+   * <code>.im.turms.proto.QueryNearbyUsersRequest query_nearby_users_request = 101;</code>
+   * @return The queryNearbyUsersRequest.
    */
   @java.lang.Override
-  public im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest getQueryUserIdsNearbyRequest() {
+  public im.turms.common.model.dto.request.user.QueryNearbyUsersRequest getQueryNearbyUsersRequest() {
     if (kindCase_ == 101) {
-       return (im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest) kind_;
+       return (im.turms.common.model.dto.request.user.QueryNearbyUsersRequest) kind_;
     }
-    return im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest.getDefaultInstance();
+    return im.turms.common.model.dto.request.user.QueryNearbyUsersRequest.getDefaultInstance();
   }
   /**
-   * <code>.im.turms.proto.QueryUserIdsNearbyRequest query_user_ids_nearby_request = 101;</code>
+   * <code>.im.turms.proto.QueryNearbyUsersRequest query_nearby_users_request = 101;</code>
    */
   @java.lang.Override
-  public im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequestOrBuilder getQueryUserIdsNearbyRequestOrBuilder() {
+  public im.turms.common.model.dto.request.user.QueryNearbyUsersRequestOrBuilder getQueryNearbyUsersRequestOrBuilder() {
     if (kindCase_ == 101) {
-       return (im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest) kind_;
+       return (im.turms.common.model.dto.request.user.QueryNearbyUsersRequest) kind_;
     }
-    return im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest.getDefaultInstance();
+    return im.turms.common.model.dto.request.user.QueryNearbyUsersRequest.getDefaultInstance();
   }
 
-  public static final int QUERY_USER_INFOS_NEARBY_REQUEST_FIELD_NUMBER = 102;
+  public static final int QUERY_USER_ONLINE_STATUSES_REQUEST_FIELD_NUMBER = 102;
   /**
-   * <code>.im.turms.proto.QueryUserInfosNearbyRequest query_user_infos_nearby_request = 102;</code>
-   * @return Whether the queryUserInfosNearbyRequest field is set.
-   */
-  @java.lang.Override
-  public boolean hasQueryUserInfosNearbyRequest() {
-    return kindCase_ == 102;
-  }
-  /**
-   * <code>.im.turms.proto.QueryUserInfosNearbyRequest query_user_infos_nearby_request = 102;</code>
-   * @return The queryUserInfosNearbyRequest.
-   */
-  @java.lang.Override
-  public im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest getQueryUserInfosNearbyRequest() {
-    if (kindCase_ == 102) {
-       return (im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest) kind_;
-    }
-    return im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest.getDefaultInstance();
-  }
-  /**
-   * <code>.im.turms.proto.QueryUserInfosNearbyRequest query_user_infos_nearby_request = 102;</code>
-   */
-  @java.lang.Override
-  public im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequestOrBuilder getQueryUserInfosNearbyRequestOrBuilder() {
-    if (kindCase_ == 102) {
-       return (im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest) kind_;
-    }
-    return im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest.getDefaultInstance();
-  }
-
-  public static final int QUERY_USER_ONLINE_STATUSES_REQUEST_FIELD_NUMBER = 103;
-  /**
-   * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 103;</code>
+   * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 102;</code>
    * @return Whether the queryUserOnlineStatusesRequest field is set.
    */
   @java.lang.Override
   public boolean hasQueryUserOnlineStatusesRequest() {
-    return kindCase_ == 103;
+    return kindCase_ == 102;
   }
   /**
-   * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 103;</code>
+   * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 102;</code>
    * @return The queryUserOnlineStatusesRequest.
    */
   @java.lang.Override
   public im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest getQueryUserOnlineStatusesRequest() {
-    if (kindCase_ == 103) {
+    if (kindCase_ == 102) {
        return (im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest) kind_;
     }
     return im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest.getDefaultInstance();
   }
   /**
-   * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 103;</code>
+   * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 102;</code>
    */
   @java.lang.Override
   public im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequestOrBuilder getQueryUserOnlineStatusesRequestOrBuilder() {
-    if (kindCase_ == 103) {
+    if (kindCase_ == 102) {
        return (im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest) kind_;
     }
     return im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest.getDefaultInstance();
   }
 
-  public static final int UPDATE_USER_LOCATION_REQUEST_FIELD_NUMBER = 104;
+  public static final int UPDATE_USER_LOCATION_REQUEST_FIELD_NUMBER = 103;
   /**
-   * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 104;</code>
+   * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 103;</code>
    * @return Whether the updateUserLocationRequest field is set.
    */
   @java.lang.Override
   public boolean hasUpdateUserLocationRequest() {
-    return kindCase_ == 104;
+    return kindCase_ == 103;
   }
   /**
-   * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 104;</code>
+   * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 103;</code>
    * @return The updateUserLocationRequest.
    */
   @java.lang.Override
   public im.turms.common.model.dto.request.user.UpdateUserLocationRequest getUpdateUserLocationRequest() {
-    if (kindCase_ == 104) {
+    if (kindCase_ == 103) {
        return (im.turms.common.model.dto.request.user.UpdateUserLocationRequest) kind_;
     }
     return im.turms.common.model.dto.request.user.UpdateUserLocationRequest.getDefaultInstance();
   }
   /**
-   * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 104;</code>
+   * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 103;</code>
    */
   @java.lang.Override
   public im.turms.common.model.dto.request.user.UpdateUserLocationRequestOrBuilder getUpdateUserLocationRequestOrBuilder() {
-    if (kindCase_ == 104) {
+    if (kindCase_ == 103) {
        return (im.turms.common.model.dto.request.user.UpdateUserLocationRequest) kind_;
     }
     return im.turms.common.model.dto.request.user.UpdateUserLocationRequest.getDefaultInstance();
   }
 
-  public static final int UPDATE_USER_ONLINE_STATUS_REQUEST_FIELD_NUMBER = 105;
+  public static final int UPDATE_USER_ONLINE_STATUS_REQUEST_FIELD_NUMBER = 104;
   /**
-   * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 105;</code>
+   * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 104;</code>
    * @return Whether the updateUserOnlineStatusRequest field is set.
    */
   @java.lang.Override
   public boolean hasUpdateUserOnlineStatusRequest() {
-    return kindCase_ == 105;
+    return kindCase_ == 104;
   }
   /**
-   * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 105;</code>
+   * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 104;</code>
    * @return The updateUserOnlineStatusRequest.
    */
   @java.lang.Override
   public im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest getUpdateUserOnlineStatusRequest() {
-    if (kindCase_ == 105) {
+    if (kindCase_ == 104) {
        return (im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest) kind_;
     }
     return im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest.getDefaultInstance();
   }
   /**
-   * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 105;</code>
+   * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 104;</code>
    */
   @java.lang.Override
   public im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequestOrBuilder getUpdateUserOnlineStatusRequestOrBuilder() {
-    if (kindCase_ == 105) {
+    if (kindCase_ == 104) {
        return (im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest) kind_;
     }
     return im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest.getDefaultInstance();
   }
 
-  public static final int UPDATE_USER_REQUEST_FIELD_NUMBER = 106;
+  public static final int UPDATE_USER_REQUEST_FIELD_NUMBER = 105;
   /**
-   * <code>.im.turms.proto.UpdateUserRequest update_user_request = 106;</code>
+   * <code>.im.turms.proto.UpdateUserRequest update_user_request = 105;</code>
    * @return Whether the updateUserRequest field is set.
    */
   @java.lang.Override
   public boolean hasUpdateUserRequest() {
-    return kindCase_ == 106;
+    return kindCase_ == 105;
   }
   /**
-   * <code>.im.turms.proto.UpdateUserRequest update_user_request = 106;</code>
+   * <code>.im.turms.proto.UpdateUserRequest update_user_request = 105;</code>
    * @return The updateUserRequest.
    */
   @java.lang.Override
   public im.turms.common.model.dto.request.user.UpdateUserRequest getUpdateUserRequest() {
-    if (kindCase_ == 106) {
+    if (kindCase_ == 105) {
        return (im.turms.common.model.dto.request.user.UpdateUserRequest) kind_;
     }
     return im.turms.common.model.dto.request.user.UpdateUserRequest.getDefaultInstance();
   }
   /**
-   * <code>.im.turms.proto.UpdateUserRequest update_user_request = 106;</code>
+   * <code>.im.turms.proto.UpdateUserRequest update_user_request = 105;</code>
    */
   @java.lang.Override
   public im.turms.common.model.dto.request.user.UpdateUserRequestOrBuilder getUpdateUserRequestOrBuilder() {
-    if (kindCase_ == 106) {
+    if (kindCase_ == 105) {
        return (im.turms.common.model.dto.request.user.UpdateUserRequest) kind_;
     }
     return im.turms.common.model.dto.request.user.UpdateUserRequest.getDefaultInstance();
@@ -2936,22 +2889,19 @@ private static final long serialVersionUID = 0L;
       output.writeMessage(100, (im.turms.common.model.dto.request.user.QueryUserProfileRequest) kind_);
     }
     if (kindCase_ == 101) {
-      output.writeMessage(101, (im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest) kind_);
+      output.writeMessage(101, (im.turms.common.model.dto.request.user.QueryNearbyUsersRequest) kind_);
     }
     if (kindCase_ == 102) {
-      output.writeMessage(102, (im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest) kind_);
+      output.writeMessage(102, (im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest) kind_);
     }
     if (kindCase_ == 103) {
-      output.writeMessage(103, (im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest) kind_);
+      output.writeMessage(103, (im.turms.common.model.dto.request.user.UpdateUserLocationRequest) kind_);
     }
     if (kindCase_ == 104) {
-      output.writeMessage(104, (im.turms.common.model.dto.request.user.UpdateUserLocationRequest) kind_);
+      output.writeMessage(104, (im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest) kind_);
     }
     if (kindCase_ == 105) {
-      output.writeMessage(105, (im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest) kind_);
-    }
-    if (kindCase_ == 106) {
-      output.writeMessage(106, (im.turms.common.model.dto.request.user.UpdateUserRequest) kind_);
+      output.writeMessage(105, (im.turms.common.model.dto.request.user.UpdateUserRequest) kind_);
     }
     if (kindCase_ == 200) {
       output.writeMessage(200, (im.turms.common.model.dto.request.user.relationship.CreateFriendRequestRequest) kind_);
@@ -3128,27 +3078,23 @@ private static final long serialVersionUID = 0L;
     }
     if (kindCase_ == 101) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(101, (im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest) kind_);
+        .computeMessageSize(101, (im.turms.common.model.dto.request.user.QueryNearbyUsersRequest) kind_);
     }
     if (kindCase_ == 102) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(102, (im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest) kind_);
+        .computeMessageSize(102, (im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest) kind_);
     }
     if (kindCase_ == 103) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(103, (im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest) kind_);
+        .computeMessageSize(103, (im.turms.common.model.dto.request.user.UpdateUserLocationRequest) kind_);
     }
     if (kindCase_ == 104) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(104, (im.turms.common.model.dto.request.user.UpdateUserLocationRequest) kind_);
+        .computeMessageSize(104, (im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest) kind_);
     }
     if (kindCase_ == 105) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(105, (im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest) kind_);
-    }
-    if (kindCase_ == 106) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(106, (im.turms.common.model.dto.request.user.UpdateUserRequest) kind_);
+        .computeMessageSize(105, (im.turms.common.model.dto.request.user.UpdateUserRequest) kind_);
     }
     if (kindCase_ == 200) {
       size += com.google.protobuf.CodedOutputStream
@@ -3369,26 +3315,22 @@ private static final long serialVersionUID = 0L;
             .equals(other.getQueryUserProfileRequest())) return false;
         break;
       case 101:
-        if (!getQueryUserIdsNearbyRequest()
-            .equals(other.getQueryUserIdsNearbyRequest())) return false;
+        if (!getQueryNearbyUsersRequest()
+            .equals(other.getQueryNearbyUsersRequest())) return false;
         break;
       case 102:
-        if (!getQueryUserInfosNearbyRequest()
-            .equals(other.getQueryUserInfosNearbyRequest())) return false;
-        break;
-      case 103:
         if (!getQueryUserOnlineStatusesRequest()
             .equals(other.getQueryUserOnlineStatusesRequest())) return false;
         break;
-      case 104:
+      case 103:
         if (!getUpdateUserLocationRequest()
             .equals(other.getUpdateUserLocationRequest())) return false;
         break;
-      case 105:
+      case 104:
         if (!getUpdateUserOnlineStatusRequest()
             .equals(other.getUpdateUserOnlineStatusRequest())) return false;
         break;
-      case 106:
+      case 105:
         if (!getUpdateUserRequest()
             .equals(other.getUpdateUserRequest())) return false;
         break;
@@ -3609,26 +3551,22 @@ private static final long serialVersionUID = 0L;
         hash = (53 * hash) + getQueryUserProfileRequest().hashCode();
         break;
       case 101:
-        hash = (37 * hash) + QUERY_USER_IDS_NEARBY_REQUEST_FIELD_NUMBER;
-        hash = (53 * hash) + getQueryUserIdsNearbyRequest().hashCode();
+        hash = (37 * hash) + QUERY_NEARBY_USERS_REQUEST_FIELD_NUMBER;
+        hash = (53 * hash) + getQueryNearbyUsersRequest().hashCode();
         break;
       case 102:
-        hash = (37 * hash) + QUERY_USER_INFOS_NEARBY_REQUEST_FIELD_NUMBER;
-        hash = (53 * hash) + getQueryUserInfosNearbyRequest().hashCode();
-        break;
-      case 103:
         hash = (37 * hash) + QUERY_USER_ONLINE_STATUSES_REQUEST_FIELD_NUMBER;
         hash = (53 * hash) + getQueryUserOnlineStatusesRequest().hashCode();
         break;
-      case 104:
+      case 103:
         hash = (37 * hash) + UPDATE_USER_LOCATION_REQUEST_FIELD_NUMBER;
         hash = (53 * hash) + getUpdateUserLocationRequest().hashCode();
         break;
-      case 105:
+      case 104:
         hash = (37 * hash) + UPDATE_USER_ONLINE_STATUS_REQUEST_FIELD_NUMBER;
         hash = (53 * hash) + getUpdateUserOnlineStatusRequest().hashCode();
         break;
-      case 106:
+      case 105:
         hash = (37 * hash) + UPDATE_USER_REQUEST_FIELD_NUMBER;
         hash = (53 * hash) + getUpdateUserRequest().hashCode();
         break;
@@ -4044,41 +3982,34 @@ private static final long serialVersionUID = 0L;
         }
       }
       if (kindCase_ == 101) {
-        if (queryUserIdsNearbyRequestBuilder_ == null) {
+        if (queryNearbyUsersRequestBuilder_ == null) {
           result.kind_ = kind_;
         } else {
-          result.kind_ = queryUserIdsNearbyRequestBuilder_.build();
+          result.kind_ = queryNearbyUsersRequestBuilder_.build();
         }
       }
       if (kindCase_ == 102) {
-        if (queryUserInfosNearbyRequestBuilder_ == null) {
-          result.kind_ = kind_;
-        } else {
-          result.kind_ = queryUserInfosNearbyRequestBuilder_.build();
-        }
-      }
-      if (kindCase_ == 103) {
         if (queryUserOnlineStatusesRequestBuilder_ == null) {
           result.kind_ = kind_;
         } else {
           result.kind_ = queryUserOnlineStatusesRequestBuilder_.build();
         }
       }
-      if (kindCase_ == 104) {
+      if (kindCase_ == 103) {
         if (updateUserLocationRequestBuilder_ == null) {
           result.kind_ = kind_;
         } else {
           result.kind_ = updateUserLocationRequestBuilder_.build();
         }
       }
-      if (kindCase_ == 105) {
+      if (kindCase_ == 104) {
         if (updateUserOnlineStatusRequestBuilder_ == null) {
           result.kind_ = kind_;
         } else {
           result.kind_ = updateUserOnlineStatusRequestBuilder_.build();
         }
       }
-      if (kindCase_ == 106) {
+      if (kindCase_ == 105) {
         if (updateUserRequestBuilder_ == null) {
           result.kind_ = kind_;
         } else {
@@ -4443,12 +4374,8 @@ private static final long serialVersionUID = 0L;
           mergeQueryUserProfileRequest(other.getQueryUserProfileRequest());
           break;
         }
-        case QUERY_USER_IDS_NEARBY_REQUEST: {
-          mergeQueryUserIdsNearbyRequest(other.getQueryUserIdsNearbyRequest());
-          break;
-        }
-        case QUERY_USER_INFOS_NEARBY_REQUEST: {
-          mergeQueryUserInfosNearbyRequest(other.getQueryUserInfosNearbyRequest());
+        case QUERY_NEARBY_USERS_REQUEST: {
+          mergeQueryNearbyUsersRequest(other.getQueryNearbyUsersRequest());
           break;
         }
         case QUERY_USER_ONLINE_STATUSES_REQUEST: {
@@ -6733,71 +6660,71 @@ private static final long serialVersionUID = 0L;
     }
 
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest, im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest.Builder, im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequestOrBuilder> queryUserIdsNearbyRequestBuilder_;
+        im.turms.common.model.dto.request.user.QueryNearbyUsersRequest, im.turms.common.model.dto.request.user.QueryNearbyUsersRequest.Builder, im.turms.common.model.dto.request.user.QueryNearbyUsersRequestOrBuilder> queryNearbyUsersRequestBuilder_;
     /**
-     * <code>.im.turms.proto.QueryUserIdsNearbyRequest query_user_ids_nearby_request = 101;</code>
-     * @return Whether the queryUserIdsNearbyRequest field is set.
+     * <code>.im.turms.proto.QueryNearbyUsersRequest query_nearby_users_request = 101;</code>
+     * @return Whether the queryNearbyUsersRequest field is set.
      */
     @java.lang.Override
-    public boolean hasQueryUserIdsNearbyRequest() {
+    public boolean hasQueryNearbyUsersRequest() {
       return kindCase_ == 101;
     }
     /**
-     * <code>.im.turms.proto.QueryUserIdsNearbyRequest query_user_ids_nearby_request = 101;</code>
-     * @return The queryUserIdsNearbyRequest.
+     * <code>.im.turms.proto.QueryNearbyUsersRequest query_nearby_users_request = 101;</code>
+     * @return The queryNearbyUsersRequest.
      */
     @java.lang.Override
-    public im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest getQueryUserIdsNearbyRequest() {
-      if (queryUserIdsNearbyRequestBuilder_ == null) {
+    public im.turms.common.model.dto.request.user.QueryNearbyUsersRequest getQueryNearbyUsersRequest() {
+      if (queryNearbyUsersRequestBuilder_ == null) {
         if (kindCase_ == 101) {
-          return (im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest) kind_;
+          return (im.turms.common.model.dto.request.user.QueryNearbyUsersRequest) kind_;
         }
-        return im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest.getDefaultInstance();
+        return im.turms.common.model.dto.request.user.QueryNearbyUsersRequest.getDefaultInstance();
       } else {
         if (kindCase_ == 101) {
-          return queryUserIdsNearbyRequestBuilder_.getMessage();
+          return queryNearbyUsersRequestBuilder_.getMessage();
         }
-        return im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest.getDefaultInstance();
+        return im.turms.common.model.dto.request.user.QueryNearbyUsersRequest.getDefaultInstance();
       }
     }
     /**
-     * <code>.im.turms.proto.QueryUserIdsNearbyRequest query_user_ids_nearby_request = 101;</code>
+     * <code>.im.turms.proto.QueryNearbyUsersRequest query_nearby_users_request = 101;</code>
      */
-    public Builder setQueryUserIdsNearbyRequest(im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest value) {
-      if (queryUserIdsNearbyRequestBuilder_ == null) {
+    public Builder setQueryNearbyUsersRequest(im.turms.common.model.dto.request.user.QueryNearbyUsersRequest value) {
+      if (queryNearbyUsersRequestBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
         kind_ = value;
         onChanged();
       } else {
-        queryUserIdsNearbyRequestBuilder_.setMessage(value);
+        queryNearbyUsersRequestBuilder_.setMessage(value);
       }
       kindCase_ = 101;
       return this;
     }
     /**
-     * <code>.im.turms.proto.QueryUserIdsNearbyRequest query_user_ids_nearby_request = 101;</code>
+     * <code>.im.turms.proto.QueryNearbyUsersRequest query_nearby_users_request = 101;</code>
      */
-    public Builder setQueryUserIdsNearbyRequest(
-        im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest.Builder builderForValue) {
-      if (queryUserIdsNearbyRequestBuilder_ == null) {
+    public Builder setQueryNearbyUsersRequest(
+        im.turms.common.model.dto.request.user.QueryNearbyUsersRequest.Builder builderForValue) {
+      if (queryNearbyUsersRequestBuilder_ == null) {
         kind_ = builderForValue.build();
         onChanged();
       } else {
-        queryUserIdsNearbyRequestBuilder_.setMessage(builderForValue.build());
+        queryNearbyUsersRequestBuilder_.setMessage(builderForValue.build());
       }
       kindCase_ = 101;
       return this;
     }
     /**
-     * <code>.im.turms.proto.QueryUserIdsNearbyRequest query_user_ids_nearby_request = 101;</code>
+     * <code>.im.turms.proto.QueryNearbyUsersRequest query_nearby_users_request = 101;</code>
      */
-    public Builder mergeQueryUserIdsNearbyRequest(im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest value) {
-      if (queryUserIdsNearbyRequestBuilder_ == null) {
+    public Builder mergeQueryNearbyUsersRequest(im.turms.common.model.dto.request.user.QueryNearbyUsersRequest value) {
+      if (queryNearbyUsersRequestBuilder_ == null) {
         if (kindCase_ == 101 &&
-            kind_ != im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest.getDefaultInstance()) {
-          kind_ = im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest.newBuilder((im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest) kind_)
+            kind_ != im.turms.common.model.dto.request.user.QueryNearbyUsersRequest.getDefaultInstance()) {
+          kind_ = im.turms.common.model.dto.request.user.QueryNearbyUsersRequest.newBuilder((im.turms.common.model.dto.request.user.QueryNearbyUsersRequest) kind_)
               .mergeFrom(value).buildPartial();
         } else {
           kind_ = value;
@@ -6805,18 +6732,18 @@ private static final long serialVersionUID = 0L;
         onChanged();
       } else {
         if (kindCase_ == 101) {
-          queryUserIdsNearbyRequestBuilder_.mergeFrom(value);
+          queryNearbyUsersRequestBuilder_.mergeFrom(value);
         }
-        queryUserIdsNearbyRequestBuilder_.setMessage(value);
+        queryNearbyUsersRequestBuilder_.setMessage(value);
       }
       kindCase_ = 101;
       return this;
     }
     /**
-     * <code>.im.turms.proto.QueryUserIdsNearbyRequest query_user_ids_nearby_request = 101;</code>
+     * <code>.im.turms.proto.QueryNearbyUsersRequest query_nearby_users_request = 101;</code>
      */
-    public Builder clearQueryUserIdsNearbyRequest() {
-      if (queryUserIdsNearbyRequestBuilder_ == null) {
+    public Builder clearQueryNearbyUsersRequest() {
+      if (queryNearbyUsersRequestBuilder_ == null) {
         if (kindCase_ == 101) {
           kindCase_ = 0;
           kind_ = null;
@@ -6827,223 +6754,82 @@ private static final long serialVersionUID = 0L;
           kindCase_ = 0;
           kind_ = null;
         }
-        queryUserIdsNearbyRequestBuilder_.clear();
+        queryNearbyUsersRequestBuilder_.clear();
       }
       return this;
     }
     /**
-     * <code>.im.turms.proto.QueryUserIdsNearbyRequest query_user_ids_nearby_request = 101;</code>
+     * <code>.im.turms.proto.QueryNearbyUsersRequest query_nearby_users_request = 101;</code>
      */
-    public im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest.Builder getQueryUserIdsNearbyRequestBuilder() {
-      return getQueryUserIdsNearbyRequestFieldBuilder().getBuilder();
+    public im.turms.common.model.dto.request.user.QueryNearbyUsersRequest.Builder getQueryNearbyUsersRequestBuilder() {
+      return getQueryNearbyUsersRequestFieldBuilder().getBuilder();
     }
     /**
-     * <code>.im.turms.proto.QueryUserIdsNearbyRequest query_user_ids_nearby_request = 101;</code>
+     * <code>.im.turms.proto.QueryNearbyUsersRequest query_nearby_users_request = 101;</code>
      */
     @java.lang.Override
-    public im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequestOrBuilder getQueryUserIdsNearbyRequestOrBuilder() {
-      if ((kindCase_ == 101) && (queryUserIdsNearbyRequestBuilder_ != null)) {
-        return queryUserIdsNearbyRequestBuilder_.getMessageOrBuilder();
+    public im.turms.common.model.dto.request.user.QueryNearbyUsersRequestOrBuilder getQueryNearbyUsersRequestOrBuilder() {
+      if ((kindCase_ == 101) && (queryNearbyUsersRequestBuilder_ != null)) {
+        return queryNearbyUsersRequestBuilder_.getMessageOrBuilder();
       } else {
         if (kindCase_ == 101) {
-          return (im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest) kind_;
+          return (im.turms.common.model.dto.request.user.QueryNearbyUsersRequest) kind_;
         }
-        return im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest.getDefaultInstance();
+        return im.turms.common.model.dto.request.user.QueryNearbyUsersRequest.getDefaultInstance();
       }
     }
     /**
-     * <code>.im.turms.proto.QueryUserIdsNearbyRequest query_user_ids_nearby_request = 101;</code>
+     * <code>.im.turms.proto.QueryNearbyUsersRequest query_nearby_users_request = 101;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest, im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest.Builder, im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequestOrBuilder>
-        getQueryUserIdsNearbyRequestFieldBuilder() {
-      if (queryUserIdsNearbyRequestBuilder_ == null) {
+        im.turms.common.model.dto.request.user.QueryNearbyUsersRequest, im.turms.common.model.dto.request.user.QueryNearbyUsersRequest.Builder, im.turms.common.model.dto.request.user.QueryNearbyUsersRequestOrBuilder>
+        getQueryNearbyUsersRequestFieldBuilder() {
+      if (queryNearbyUsersRequestBuilder_ == null) {
         if (!(kindCase_ == 101)) {
-          kind_ = im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest.getDefaultInstance();
+          kind_ = im.turms.common.model.dto.request.user.QueryNearbyUsersRequest.getDefaultInstance();
         }
-        queryUserIdsNearbyRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest, im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest.Builder, im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequestOrBuilder>(
-                (im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest) kind_,
+        queryNearbyUsersRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+            im.turms.common.model.dto.request.user.QueryNearbyUsersRequest, im.turms.common.model.dto.request.user.QueryNearbyUsersRequest.Builder, im.turms.common.model.dto.request.user.QueryNearbyUsersRequestOrBuilder>(
+                (im.turms.common.model.dto.request.user.QueryNearbyUsersRequest) kind_,
                 getParentForChildren(),
                 isClean());
         kind_ = null;
       }
       kindCase_ = 101;
       onChanged();;
-      return queryUserIdsNearbyRequestBuilder_;
-    }
-
-    private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest, im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest.Builder, im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequestOrBuilder> queryUserInfosNearbyRequestBuilder_;
-    /**
-     * <code>.im.turms.proto.QueryUserInfosNearbyRequest query_user_infos_nearby_request = 102;</code>
-     * @return Whether the queryUserInfosNearbyRequest field is set.
-     */
-    @java.lang.Override
-    public boolean hasQueryUserInfosNearbyRequest() {
-      return kindCase_ == 102;
-    }
-    /**
-     * <code>.im.turms.proto.QueryUserInfosNearbyRequest query_user_infos_nearby_request = 102;</code>
-     * @return The queryUserInfosNearbyRequest.
-     */
-    @java.lang.Override
-    public im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest getQueryUserInfosNearbyRequest() {
-      if (queryUserInfosNearbyRequestBuilder_ == null) {
-        if (kindCase_ == 102) {
-          return (im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest) kind_;
-        }
-        return im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest.getDefaultInstance();
-      } else {
-        if (kindCase_ == 102) {
-          return queryUserInfosNearbyRequestBuilder_.getMessage();
-        }
-        return im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest.getDefaultInstance();
-      }
-    }
-    /**
-     * <code>.im.turms.proto.QueryUserInfosNearbyRequest query_user_infos_nearby_request = 102;</code>
-     */
-    public Builder setQueryUserInfosNearbyRequest(im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest value) {
-      if (queryUserInfosNearbyRequestBuilder_ == null) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        kind_ = value;
-        onChanged();
-      } else {
-        queryUserInfosNearbyRequestBuilder_.setMessage(value);
-      }
-      kindCase_ = 102;
-      return this;
-    }
-    /**
-     * <code>.im.turms.proto.QueryUserInfosNearbyRequest query_user_infos_nearby_request = 102;</code>
-     */
-    public Builder setQueryUserInfosNearbyRequest(
-        im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest.Builder builderForValue) {
-      if (queryUserInfosNearbyRequestBuilder_ == null) {
-        kind_ = builderForValue.build();
-        onChanged();
-      } else {
-        queryUserInfosNearbyRequestBuilder_.setMessage(builderForValue.build());
-      }
-      kindCase_ = 102;
-      return this;
-    }
-    /**
-     * <code>.im.turms.proto.QueryUserInfosNearbyRequest query_user_infos_nearby_request = 102;</code>
-     */
-    public Builder mergeQueryUserInfosNearbyRequest(im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest value) {
-      if (queryUserInfosNearbyRequestBuilder_ == null) {
-        if (kindCase_ == 102 &&
-            kind_ != im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest.getDefaultInstance()) {
-          kind_ = im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest.newBuilder((im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest) kind_)
-              .mergeFrom(value).buildPartial();
-        } else {
-          kind_ = value;
-        }
-        onChanged();
-      } else {
-        if (kindCase_ == 102) {
-          queryUserInfosNearbyRequestBuilder_.mergeFrom(value);
-        }
-        queryUserInfosNearbyRequestBuilder_.setMessage(value);
-      }
-      kindCase_ = 102;
-      return this;
-    }
-    /**
-     * <code>.im.turms.proto.QueryUserInfosNearbyRequest query_user_infos_nearby_request = 102;</code>
-     */
-    public Builder clearQueryUserInfosNearbyRequest() {
-      if (queryUserInfosNearbyRequestBuilder_ == null) {
-        if (kindCase_ == 102) {
-          kindCase_ = 0;
-          kind_ = null;
-          onChanged();
-        }
-      } else {
-        if (kindCase_ == 102) {
-          kindCase_ = 0;
-          kind_ = null;
-        }
-        queryUserInfosNearbyRequestBuilder_.clear();
-      }
-      return this;
-    }
-    /**
-     * <code>.im.turms.proto.QueryUserInfosNearbyRequest query_user_infos_nearby_request = 102;</code>
-     */
-    public im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest.Builder getQueryUserInfosNearbyRequestBuilder() {
-      return getQueryUserInfosNearbyRequestFieldBuilder().getBuilder();
-    }
-    /**
-     * <code>.im.turms.proto.QueryUserInfosNearbyRequest query_user_infos_nearby_request = 102;</code>
-     */
-    @java.lang.Override
-    public im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequestOrBuilder getQueryUserInfosNearbyRequestOrBuilder() {
-      if ((kindCase_ == 102) && (queryUserInfosNearbyRequestBuilder_ != null)) {
-        return queryUserInfosNearbyRequestBuilder_.getMessageOrBuilder();
-      } else {
-        if (kindCase_ == 102) {
-          return (im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest) kind_;
-        }
-        return im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest.getDefaultInstance();
-      }
-    }
-    /**
-     * <code>.im.turms.proto.QueryUserInfosNearbyRequest query_user_infos_nearby_request = 102;</code>
-     */
-    private com.google.protobuf.SingleFieldBuilderV3<
-        im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest, im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest.Builder, im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequestOrBuilder>
-        getQueryUserInfosNearbyRequestFieldBuilder() {
-      if (queryUserInfosNearbyRequestBuilder_ == null) {
-        if (!(kindCase_ == 102)) {
-          kind_ = im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest.getDefaultInstance();
-        }
-        queryUserInfosNearbyRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-            im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest, im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest.Builder, im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequestOrBuilder>(
-                (im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest) kind_,
-                getParentForChildren(),
-                isClean());
-        kind_ = null;
-      }
-      kindCase_ = 102;
-      onChanged();;
-      return queryUserInfosNearbyRequestBuilder_;
+      return queryNearbyUsersRequestBuilder_;
     }
 
     private com.google.protobuf.SingleFieldBuilderV3<
         im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest, im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest.Builder, im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequestOrBuilder> queryUserOnlineStatusesRequestBuilder_;
     /**
-     * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 103;</code>
+     * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 102;</code>
      * @return Whether the queryUserOnlineStatusesRequest field is set.
      */
     @java.lang.Override
     public boolean hasQueryUserOnlineStatusesRequest() {
-      return kindCase_ == 103;
+      return kindCase_ == 102;
     }
     /**
-     * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 103;</code>
+     * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 102;</code>
      * @return The queryUserOnlineStatusesRequest.
      */
     @java.lang.Override
     public im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest getQueryUserOnlineStatusesRequest() {
       if (queryUserOnlineStatusesRequestBuilder_ == null) {
-        if (kindCase_ == 103) {
+        if (kindCase_ == 102) {
           return (im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest) kind_;
         }
         return im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest.getDefaultInstance();
       } else {
-        if (kindCase_ == 103) {
+        if (kindCase_ == 102) {
           return queryUserOnlineStatusesRequestBuilder_.getMessage();
         }
         return im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest.getDefaultInstance();
       }
     }
     /**
-     * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 103;</code>
+     * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 102;</code>
      */
     public Builder setQueryUserOnlineStatusesRequest(im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest value) {
       if (queryUserOnlineStatusesRequestBuilder_ == null) {
@@ -7055,11 +6841,11 @@ private static final long serialVersionUID = 0L;
       } else {
         queryUserOnlineStatusesRequestBuilder_.setMessage(value);
       }
-      kindCase_ = 103;
+      kindCase_ = 102;
       return this;
     }
     /**
-     * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 103;</code>
+     * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 102;</code>
      */
     public Builder setQueryUserOnlineStatusesRequest(
         im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest.Builder builderForValue) {
@@ -7069,15 +6855,15 @@ private static final long serialVersionUID = 0L;
       } else {
         queryUserOnlineStatusesRequestBuilder_.setMessage(builderForValue.build());
       }
-      kindCase_ = 103;
+      kindCase_ = 102;
       return this;
     }
     /**
-     * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 103;</code>
+     * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 102;</code>
      */
     public Builder mergeQueryUserOnlineStatusesRequest(im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest value) {
       if (queryUserOnlineStatusesRequestBuilder_ == null) {
-        if (kindCase_ == 103 &&
+        if (kindCase_ == 102 &&
             kind_ != im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest.getDefaultInstance()) {
           kind_ = im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest.newBuilder((im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest) kind_)
               .mergeFrom(value).buildPartial();
@@ -7086,26 +6872,26 @@ private static final long serialVersionUID = 0L;
         }
         onChanged();
       } else {
-        if (kindCase_ == 103) {
+        if (kindCase_ == 102) {
           queryUserOnlineStatusesRequestBuilder_.mergeFrom(value);
         }
         queryUserOnlineStatusesRequestBuilder_.setMessage(value);
       }
-      kindCase_ = 103;
+      kindCase_ = 102;
       return this;
     }
     /**
-     * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 103;</code>
+     * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 102;</code>
      */
     public Builder clearQueryUserOnlineStatusesRequest() {
       if (queryUserOnlineStatusesRequestBuilder_ == null) {
-        if (kindCase_ == 103) {
+        if (kindCase_ == 102) {
           kindCase_ = 0;
           kind_ = null;
           onChanged();
         }
       } else {
-        if (kindCase_ == 103) {
+        if (kindCase_ == 102) {
           kindCase_ = 0;
           kind_ = null;
         }
@@ -7114,33 +6900,33 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 103;</code>
+     * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 102;</code>
      */
     public im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest.Builder getQueryUserOnlineStatusesRequestBuilder() {
       return getQueryUserOnlineStatusesRequestFieldBuilder().getBuilder();
     }
     /**
-     * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 103;</code>
+     * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 102;</code>
      */
     @java.lang.Override
     public im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequestOrBuilder getQueryUserOnlineStatusesRequestOrBuilder() {
-      if ((kindCase_ == 103) && (queryUserOnlineStatusesRequestBuilder_ != null)) {
+      if ((kindCase_ == 102) && (queryUserOnlineStatusesRequestBuilder_ != null)) {
         return queryUserOnlineStatusesRequestBuilder_.getMessageOrBuilder();
       } else {
-        if (kindCase_ == 103) {
+        if (kindCase_ == 102) {
           return (im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest) kind_;
         }
         return im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest.getDefaultInstance();
       }
     }
     /**
-     * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 103;</code>
+     * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 102;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest, im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest.Builder, im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequestOrBuilder>
         getQueryUserOnlineStatusesRequestFieldBuilder() {
       if (queryUserOnlineStatusesRequestBuilder_ == null) {
-        if (!(kindCase_ == 103)) {
+        if (!(kindCase_ == 102)) {
           kind_ = im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest.getDefaultInstance();
         }
         queryUserOnlineStatusesRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -7150,7 +6936,7 @@ private static final long serialVersionUID = 0L;
                 isClean());
         kind_ = null;
       }
-      kindCase_ = 103;
+      kindCase_ = 102;
       onChanged();;
       return queryUserOnlineStatusesRequestBuilder_;
     }
@@ -7158,33 +6944,33 @@ private static final long serialVersionUID = 0L;
     private com.google.protobuf.SingleFieldBuilderV3<
         im.turms.common.model.dto.request.user.UpdateUserLocationRequest, im.turms.common.model.dto.request.user.UpdateUserLocationRequest.Builder, im.turms.common.model.dto.request.user.UpdateUserLocationRequestOrBuilder> updateUserLocationRequestBuilder_;
     /**
-     * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 104;</code>
+     * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 103;</code>
      * @return Whether the updateUserLocationRequest field is set.
      */
     @java.lang.Override
     public boolean hasUpdateUserLocationRequest() {
-      return kindCase_ == 104;
+      return kindCase_ == 103;
     }
     /**
-     * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 104;</code>
+     * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 103;</code>
      * @return The updateUserLocationRequest.
      */
     @java.lang.Override
     public im.turms.common.model.dto.request.user.UpdateUserLocationRequest getUpdateUserLocationRequest() {
       if (updateUserLocationRequestBuilder_ == null) {
-        if (kindCase_ == 104) {
+        if (kindCase_ == 103) {
           return (im.turms.common.model.dto.request.user.UpdateUserLocationRequest) kind_;
         }
         return im.turms.common.model.dto.request.user.UpdateUserLocationRequest.getDefaultInstance();
       } else {
-        if (kindCase_ == 104) {
+        if (kindCase_ == 103) {
           return updateUserLocationRequestBuilder_.getMessage();
         }
         return im.turms.common.model.dto.request.user.UpdateUserLocationRequest.getDefaultInstance();
       }
     }
     /**
-     * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 104;</code>
+     * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 103;</code>
      */
     public Builder setUpdateUserLocationRequest(im.turms.common.model.dto.request.user.UpdateUserLocationRequest value) {
       if (updateUserLocationRequestBuilder_ == null) {
@@ -7196,11 +6982,11 @@ private static final long serialVersionUID = 0L;
       } else {
         updateUserLocationRequestBuilder_.setMessage(value);
       }
-      kindCase_ = 104;
+      kindCase_ = 103;
       return this;
     }
     /**
-     * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 104;</code>
+     * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 103;</code>
      */
     public Builder setUpdateUserLocationRequest(
         im.turms.common.model.dto.request.user.UpdateUserLocationRequest.Builder builderForValue) {
@@ -7210,15 +6996,15 @@ private static final long serialVersionUID = 0L;
       } else {
         updateUserLocationRequestBuilder_.setMessage(builderForValue.build());
       }
-      kindCase_ = 104;
+      kindCase_ = 103;
       return this;
     }
     /**
-     * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 104;</code>
+     * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 103;</code>
      */
     public Builder mergeUpdateUserLocationRequest(im.turms.common.model.dto.request.user.UpdateUserLocationRequest value) {
       if (updateUserLocationRequestBuilder_ == null) {
-        if (kindCase_ == 104 &&
+        if (kindCase_ == 103 &&
             kind_ != im.turms.common.model.dto.request.user.UpdateUserLocationRequest.getDefaultInstance()) {
           kind_ = im.turms.common.model.dto.request.user.UpdateUserLocationRequest.newBuilder((im.turms.common.model.dto.request.user.UpdateUserLocationRequest) kind_)
               .mergeFrom(value).buildPartial();
@@ -7227,26 +7013,26 @@ private static final long serialVersionUID = 0L;
         }
         onChanged();
       } else {
-        if (kindCase_ == 104) {
+        if (kindCase_ == 103) {
           updateUserLocationRequestBuilder_.mergeFrom(value);
         }
         updateUserLocationRequestBuilder_.setMessage(value);
       }
-      kindCase_ = 104;
+      kindCase_ = 103;
       return this;
     }
     /**
-     * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 104;</code>
+     * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 103;</code>
      */
     public Builder clearUpdateUserLocationRequest() {
       if (updateUserLocationRequestBuilder_ == null) {
-        if (kindCase_ == 104) {
+        if (kindCase_ == 103) {
           kindCase_ = 0;
           kind_ = null;
           onChanged();
         }
       } else {
-        if (kindCase_ == 104) {
+        if (kindCase_ == 103) {
           kindCase_ = 0;
           kind_ = null;
         }
@@ -7255,33 +7041,33 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 104;</code>
+     * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 103;</code>
      */
     public im.turms.common.model.dto.request.user.UpdateUserLocationRequest.Builder getUpdateUserLocationRequestBuilder() {
       return getUpdateUserLocationRequestFieldBuilder().getBuilder();
     }
     /**
-     * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 104;</code>
+     * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 103;</code>
      */
     @java.lang.Override
     public im.turms.common.model.dto.request.user.UpdateUserLocationRequestOrBuilder getUpdateUserLocationRequestOrBuilder() {
-      if ((kindCase_ == 104) && (updateUserLocationRequestBuilder_ != null)) {
+      if ((kindCase_ == 103) && (updateUserLocationRequestBuilder_ != null)) {
         return updateUserLocationRequestBuilder_.getMessageOrBuilder();
       } else {
-        if (kindCase_ == 104) {
+        if (kindCase_ == 103) {
           return (im.turms.common.model.dto.request.user.UpdateUserLocationRequest) kind_;
         }
         return im.turms.common.model.dto.request.user.UpdateUserLocationRequest.getDefaultInstance();
       }
     }
     /**
-     * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 104;</code>
+     * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 103;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         im.turms.common.model.dto.request.user.UpdateUserLocationRequest, im.turms.common.model.dto.request.user.UpdateUserLocationRequest.Builder, im.turms.common.model.dto.request.user.UpdateUserLocationRequestOrBuilder>
         getUpdateUserLocationRequestFieldBuilder() {
       if (updateUserLocationRequestBuilder_ == null) {
-        if (!(kindCase_ == 104)) {
+        if (!(kindCase_ == 103)) {
           kind_ = im.turms.common.model.dto.request.user.UpdateUserLocationRequest.getDefaultInstance();
         }
         updateUserLocationRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -7291,7 +7077,7 @@ private static final long serialVersionUID = 0L;
                 isClean());
         kind_ = null;
       }
-      kindCase_ = 104;
+      kindCase_ = 103;
       onChanged();;
       return updateUserLocationRequestBuilder_;
     }
@@ -7299,33 +7085,33 @@ private static final long serialVersionUID = 0L;
     private com.google.protobuf.SingleFieldBuilderV3<
         im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest, im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest.Builder, im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequestOrBuilder> updateUserOnlineStatusRequestBuilder_;
     /**
-     * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 105;</code>
+     * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 104;</code>
      * @return Whether the updateUserOnlineStatusRequest field is set.
      */
     @java.lang.Override
     public boolean hasUpdateUserOnlineStatusRequest() {
-      return kindCase_ == 105;
+      return kindCase_ == 104;
     }
     /**
-     * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 105;</code>
+     * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 104;</code>
      * @return The updateUserOnlineStatusRequest.
      */
     @java.lang.Override
     public im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest getUpdateUserOnlineStatusRequest() {
       if (updateUserOnlineStatusRequestBuilder_ == null) {
-        if (kindCase_ == 105) {
+        if (kindCase_ == 104) {
           return (im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest) kind_;
         }
         return im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest.getDefaultInstance();
       } else {
-        if (kindCase_ == 105) {
+        if (kindCase_ == 104) {
           return updateUserOnlineStatusRequestBuilder_.getMessage();
         }
         return im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest.getDefaultInstance();
       }
     }
     /**
-     * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 105;</code>
+     * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 104;</code>
      */
     public Builder setUpdateUserOnlineStatusRequest(im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest value) {
       if (updateUserOnlineStatusRequestBuilder_ == null) {
@@ -7337,11 +7123,11 @@ private static final long serialVersionUID = 0L;
       } else {
         updateUserOnlineStatusRequestBuilder_.setMessage(value);
       }
-      kindCase_ = 105;
+      kindCase_ = 104;
       return this;
     }
     /**
-     * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 105;</code>
+     * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 104;</code>
      */
     public Builder setUpdateUserOnlineStatusRequest(
         im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest.Builder builderForValue) {
@@ -7351,15 +7137,15 @@ private static final long serialVersionUID = 0L;
       } else {
         updateUserOnlineStatusRequestBuilder_.setMessage(builderForValue.build());
       }
-      kindCase_ = 105;
+      kindCase_ = 104;
       return this;
     }
     /**
-     * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 105;</code>
+     * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 104;</code>
      */
     public Builder mergeUpdateUserOnlineStatusRequest(im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest value) {
       if (updateUserOnlineStatusRequestBuilder_ == null) {
-        if (kindCase_ == 105 &&
+        if (kindCase_ == 104 &&
             kind_ != im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest.getDefaultInstance()) {
           kind_ = im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest.newBuilder((im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest) kind_)
               .mergeFrom(value).buildPartial();
@@ -7368,26 +7154,26 @@ private static final long serialVersionUID = 0L;
         }
         onChanged();
       } else {
-        if (kindCase_ == 105) {
+        if (kindCase_ == 104) {
           updateUserOnlineStatusRequestBuilder_.mergeFrom(value);
         }
         updateUserOnlineStatusRequestBuilder_.setMessage(value);
       }
-      kindCase_ = 105;
+      kindCase_ = 104;
       return this;
     }
     /**
-     * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 105;</code>
+     * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 104;</code>
      */
     public Builder clearUpdateUserOnlineStatusRequest() {
       if (updateUserOnlineStatusRequestBuilder_ == null) {
-        if (kindCase_ == 105) {
+        if (kindCase_ == 104) {
           kindCase_ = 0;
           kind_ = null;
           onChanged();
         }
       } else {
-        if (kindCase_ == 105) {
+        if (kindCase_ == 104) {
           kindCase_ = 0;
           kind_ = null;
         }
@@ -7396,33 +7182,33 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 105;</code>
+     * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 104;</code>
      */
     public im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest.Builder getUpdateUserOnlineStatusRequestBuilder() {
       return getUpdateUserOnlineStatusRequestFieldBuilder().getBuilder();
     }
     /**
-     * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 105;</code>
+     * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 104;</code>
      */
     @java.lang.Override
     public im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequestOrBuilder getUpdateUserOnlineStatusRequestOrBuilder() {
-      if ((kindCase_ == 105) && (updateUserOnlineStatusRequestBuilder_ != null)) {
+      if ((kindCase_ == 104) && (updateUserOnlineStatusRequestBuilder_ != null)) {
         return updateUserOnlineStatusRequestBuilder_.getMessageOrBuilder();
       } else {
-        if (kindCase_ == 105) {
+        if (kindCase_ == 104) {
           return (im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest) kind_;
         }
         return im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest.getDefaultInstance();
       }
     }
     /**
-     * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 105;</code>
+     * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 104;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest, im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest.Builder, im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequestOrBuilder>
         getUpdateUserOnlineStatusRequestFieldBuilder() {
       if (updateUserOnlineStatusRequestBuilder_ == null) {
-        if (!(kindCase_ == 105)) {
+        if (!(kindCase_ == 104)) {
           kind_ = im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest.getDefaultInstance();
         }
         updateUserOnlineStatusRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -7432,7 +7218,7 @@ private static final long serialVersionUID = 0L;
                 isClean());
         kind_ = null;
       }
-      kindCase_ = 105;
+      kindCase_ = 104;
       onChanged();;
       return updateUserOnlineStatusRequestBuilder_;
     }
@@ -7440,33 +7226,33 @@ private static final long serialVersionUID = 0L;
     private com.google.protobuf.SingleFieldBuilderV3<
         im.turms.common.model.dto.request.user.UpdateUserRequest, im.turms.common.model.dto.request.user.UpdateUserRequest.Builder, im.turms.common.model.dto.request.user.UpdateUserRequestOrBuilder> updateUserRequestBuilder_;
     /**
-     * <code>.im.turms.proto.UpdateUserRequest update_user_request = 106;</code>
+     * <code>.im.turms.proto.UpdateUserRequest update_user_request = 105;</code>
      * @return Whether the updateUserRequest field is set.
      */
     @java.lang.Override
     public boolean hasUpdateUserRequest() {
-      return kindCase_ == 106;
+      return kindCase_ == 105;
     }
     /**
-     * <code>.im.turms.proto.UpdateUserRequest update_user_request = 106;</code>
+     * <code>.im.turms.proto.UpdateUserRequest update_user_request = 105;</code>
      * @return The updateUserRequest.
      */
     @java.lang.Override
     public im.turms.common.model.dto.request.user.UpdateUserRequest getUpdateUserRequest() {
       if (updateUserRequestBuilder_ == null) {
-        if (kindCase_ == 106) {
+        if (kindCase_ == 105) {
           return (im.turms.common.model.dto.request.user.UpdateUserRequest) kind_;
         }
         return im.turms.common.model.dto.request.user.UpdateUserRequest.getDefaultInstance();
       } else {
-        if (kindCase_ == 106) {
+        if (kindCase_ == 105) {
           return updateUserRequestBuilder_.getMessage();
         }
         return im.turms.common.model.dto.request.user.UpdateUserRequest.getDefaultInstance();
       }
     }
     /**
-     * <code>.im.turms.proto.UpdateUserRequest update_user_request = 106;</code>
+     * <code>.im.turms.proto.UpdateUserRequest update_user_request = 105;</code>
      */
     public Builder setUpdateUserRequest(im.turms.common.model.dto.request.user.UpdateUserRequest value) {
       if (updateUserRequestBuilder_ == null) {
@@ -7478,11 +7264,11 @@ private static final long serialVersionUID = 0L;
       } else {
         updateUserRequestBuilder_.setMessage(value);
       }
-      kindCase_ = 106;
+      kindCase_ = 105;
       return this;
     }
     /**
-     * <code>.im.turms.proto.UpdateUserRequest update_user_request = 106;</code>
+     * <code>.im.turms.proto.UpdateUserRequest update_user_request = 105;</code>
      */
     public Builder setUpdateUserRequest(
         im.turms.common.model.dto.request.user.UpdateUserRequest.Builder builderForValue) {
@@ -7492,15 +7278,15 @@ private static final long serialVersionUID = 0L;
       } else {
         updateUserRequestBuilder_.setMessage(builderForValue.build());
       }
-      kindCase_ = 106;
+      kindCase_ = 105;
       return this;
     }
     /**
-     * <code>.im.turms.proto.UpdateUserRequest update_user_request = 106;</code>
+     * <code>.im.turms.proto.UpdateUserRequest update_user_request = 105;</code>
      */
     public Builder mergeUpdateUserRequest(im.turms.common.model.dto.request.user.UpdateUserRequest value) {
       if (updateUserRequestBuilder_ == null) {
-        if (kindCase_ == 106 &&
+        if (kindCase_ == 105 &&
             kind_ != im.turms.common.model.dto.request.user.UpdateUserRequest.getDefaultInstance()) {
           kind_ = im.turms.common.model.dto.request.user.UpdateUserRequest.newBuilder((im.turms.common.model.dto.request.user.UpdateUserRequest) kind_)
               .mergeFrom(value).buildPartial();
@@ -7509,26 +7295,26 @@ private static final long serialVersionUID = 0L;
         }
         onChanged();
       } else {
-        if (kindCase_ == 106) {
+        if (kindCase_ == 105) {
           updateUserRequestBuilder_.mergeFrom(value);
         }
         updateUserRequestBuilder_.setMessage(value);
       }
-      kindCase_ = 106;
+      kindCase_ = 105;
       return this;
     }
     /**
-     * <code>.im.turms.proto.UpdateUserRequest update_user_request = 106;</code>
+     * <code>.im.turms.proto.UpdateUserRequest update_user_request = 105;</code>
      */
     public Builder clearUpdateUserRequest() {
       if (updateUserRequestBuilder_ == null) {
-        if (kindCase_ == 106) {
+        if (kindCase_ == 105) {
           kindCase_ = 0;
           kind_ = null;
           onChanged();
         }
       } else {
-        if (kindCase_ == 106) {
+        if (kindCase_ == 105) {
           kindCase_ = 0;
           kind_ = null;
         }
@@ -7537,33 +7323,33 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <code>.im.turms.proto.UpdateUserRequest update_user_request = 106;</code>
+     * <code>.im.turms.proto.UpdateUserRequest update_user_request = 105;</code>
      */
     public im.turms.common.model.dto.request.user.UpdateUserRequest.Builder getUpdateUserRequestBuilder() {
       return getUpdateUserRequestFieldBuilder().getBuilder();
     }
     /**
-     * <code>.im.turms.proto.UpdateUserRequest update_user_request = 106;</code>
+     * <code>.im.turms.proto.UpdateUserRequest update_user_request = 105;</code>
      */
     @java.lang.Override
     public im.turms.common.model.dto.request.user.UpdateUserRequestOrBuilder getUpdateUserRequestOrBuilder() {
-      if ((kindCase_ == 106) && (updateUserRequestBuilder_ != null)) {
+      if ((kindCase_ == 105) && (updateUserRequestBuilder_ != null)) {
         return updateUserRequestBuilder_.getMessageOrBuilder();
       } else {
-        if (kindCase_ == 106) {
+        if (kindCase_ == 105) {
           return (im.turms.common.model.dto.request.user.UpdateUserRequest) kind_;
         }
         return im.turms.common.model.dto.request.user.UpdateUserRequest.getDefaultInstance();
       }
     }
     /**
-     * <code>.im.turms.proto.UpdateUserRequest update_user_request = 106;</code>
+     * <code>.im.turms.proto.UpdateUserRequest update_user_request = 105;</code>
      */
     private com.google.protobuf.SingleFieldBuilderV3<
         im.turms.common.model.dto.request.user.UpdateUserRequest, im.turms.common.model.dto.request.user.UpdateUserRequest.Builder, im.turms.common.model.dto.request.user.UpdateUserRequestOrBuilder>
         getUpdateUserRequestFieldBuilder() {
       if (updateUserRequestBuilder_ == null) {
-        if (!(kindCase_ == 106)) {
+        if (!(kindCase_ == 105)) {
           kind_ = im.turms.common.model.dto.request.user.UpdateUserRequest.getDefaultInstance();
         }
         updateUserRequestBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
@@ -7573,7 +7359,7 @@ private static final long serialVersionUID = 0L;
                 isClean());
         kind_ = null;
       }
-      kindCase_ = 106;
+      kindCase_ = 105;
       onChanged();;
       return updateUserRequestBuilder_;
     }

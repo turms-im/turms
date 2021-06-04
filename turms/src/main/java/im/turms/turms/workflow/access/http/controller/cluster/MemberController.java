@@ -27,6 +27,7 @@ import im.turms.server.common.cluster.service.config.domain.discovery.Member;
 import im.turms.server.common.cluster.service.discovery.DiscoveryService;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
+import im.turms.server.common.util.CollectionUtil;
 import im.turms.turms.workflow.access.http.dto.request.cluster.AddMemberDTO;
 import im.turms.turms.workflow.access.http.dto.request.cluster.UpdateMemberDTO;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
@@ -42,7 +43,6 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
 import static im.turms.turms.workflow.access.http.permission.AdminPermission.CLUSTER_LEADER_QUERY;
@@ -75,7 +75,7 @@ public class MemberController {
     @DeleteMapping
     @RequiredPermission(CLUSTER_MEMBERS_DELETE)
     public Mono<ResponseEntity<ResponseDTO<Void>>> removeMembers(@RequestParam List<String> ids) {
-        Mono<Void> unregisterMembers = node.getDiscoveryService().unregisterMembers(new HashSet<>(ids));
+        Mono<Void> unregisterMembers = node.getDiscoveryService().unregisterMembers(CollectionUtil.newSet(ids));
         return unregisterMembers.thenReturn(ResponseFactory.OK);
     }
 

@@ -25,7 +25,7 @@ import im.turms.common.model.dto.request.conversation.UpdateTypingStatusRequest;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.util.CollectorUtil;
-import im.turms.turms.util.ProtoUtil;
+import im.turms.turms.util.ProtoModelUtil;
 import im.turms.turms.workflow.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.turms.workflow.access.servicerequest.dispatcher.ServiceRequestMapping;
 import im.turms.turms.workflow.access.servicerequest.dto.RequestHandlerResultFactory;
@@ -69,7 +69,7 @@ public class ConversationServiceController {
             Mono<TurmsNotification.Data> dataFlux;
             if (!targetIds.isEmpty()) {
                 dataFlux = conversationService.queryPrivateConversations(clientRequest.getUserId(), targetIds)
-                        .map(conversation -> ProtoUtil.privateConversation2proto(conversation).build())
+                        .map(conversation -> ProtoModelUtil.privateConversation2proto(conversation).build())
                         .collect(CollectorUtil.toList(targetIds.size()))
                         .map(conversations -> TurmsNotification.Data
                                 .newBuilder()
@@ -83,7 +83,7 @@ public class ConversationServiceController {
                     return Mono.just(RequestHandlerResultFactory.NO_CONTENT);
                 } else {
                     dataFlux = conversationService.queryGroupConversations(groupIds)
-                            .map(conversation -> ProtoUtil.groupConversations2proto(conversation).build())
+                            .map(conversation -> ProtoModelUtil.groupConversations2proto(conversation).build())
                             .collect(CollectorUtil.toList(targetIds.size()))
                             .map(conversations -> TurmsNotification.Data
                                     .newBuilder()
@@ -155,7 +155,7 @@ public class ConversationServiceController {
                 } else if (node.getSharedProperties().getService().getNotification()
                         .isNotifyGroupConversationParticipantsAfterReadDateUpdated()) {
                     return groupMemberService.queryGroupMemberIds(targetId)
-                            .collect(CollectorUtil.toSet(32))
+                            .collect(CollectorUtil.toSet(50))
                             .map(memberIds -> RequestHandlerResultFactory.get(
                                     memberIds,
                                     clientRequest.getTurmsRequest()));

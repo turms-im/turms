@@ -30,7 +30,7 @@ import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.property.env.service.business.conversation.ReadReceiptProperties;
 import im.turms.server.common.util.AssertUtil;
-import im.turms.server.common.util.MapUtil;
+import im.turms.server.common.util.CollectionUtil;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.workflow.dao.domain.conversation.GroupConversation;
 import im.turms.turms.workflow.dao.domain.conversation.PrivateConversation;
@@ -47,7 +47,6 @@ import javax.validation.constraints.PastOrPresent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -237,7 +236,7 @@ public class ConversationService {
         if (size == 0) {
             return Flux.empty();
         }
-        Set<PrivateConversation.Key> keys = new HashSet<>(MapUtil.getCapability(size));
+        Set<PrivateConversation.Key> keys = CollectionUtil.newSetWithExpectedSize(size);
         for (Long targetId : targetIds) {
             keys.add(new PrivateConversation.Key(ownerId, targetId));
         }

@@ -22,8 +22,8 @@ import im.turms.common.constant.UserStatus;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.server.common.access.http.dto.response.ResponseDTO;
 import im.turms.server.common.access.http.dto.response.ResponseFactory;
+import im.turms.server.common.bo.location.NearbyUser;
 import im.turms.server.common.bo.session.UserSessionsStatus;
-import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.service.session.SessionLocationService;
 import im.turms.server.common.service.session.UserStatusService;
 import im.turms.server.common.util.CollectorUtil;
@@ -124,14 +124,18 @@ public class UserOnlineInfoController {
         return ResponseFactory.okIfTruthy(Flux.merge(userSessionStatusMonos));
     }
 
-    @GetMapping("/users-nearby")
+    @GetMapping("/nearby-users")
     @RequiredPermission(AdminPermission.USER_ONLINE_INFO_QUERY)
-    public Mono<ResponseEntity<ResponseDTO<Collection<User>>>> queryUsersNearby(
+    public Mono<ResponseEntity<ResponseDTO<Collection<NearbyUser>>>> queryUsersNearby(
             @RequestParam Long userId,
             @RequestParam(required = false) DeviceType deviceType,
-            @RequestParam(required = false) Short maxPeopleNumber,
-            @RequestParam(required = false) Double maxDistance) {
-        Flux<User> usersNearby = usersNearbyService.queryUsersProfilesNearby(userId, deviceType, maxPeopleNumber, maxDistance);
+            @RequestParam(required = false) Short maxNumber,
+            @RequestParam(required = false) Integer maxDistance,
+            @RequestParam(defaultValue = "false") Boolean withCoordinates,
+            @RequestParam(defaultValue = "false") Boolean withDistance,
+            @RequestParam(defaultValue = "false") Boolean withUserInfo) {
+        Mono<Collection<NearbyUser>> usersNearby = usersNearbyService
+                .queryNearbyUsers(userId, deviceType, null, maxNumber, maxDistance, withCoordinates, withDistance, withUserInfo);
         return ResponseFactory.okIfTruthy(usersNearby);
     }
 

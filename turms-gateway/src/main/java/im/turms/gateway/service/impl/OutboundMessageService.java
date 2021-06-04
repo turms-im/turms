@@ -25,6 +25,7 @@ import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.rpc.service.IOutboundMessageService;
 import im.turms.server.common.util.AssertUtil;
+import im.turms.server.common.util.CollectionUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.RefCntAwareByteBuf;
 import lombok.extern.log4j.Log4j2;
@@ -34,7 +35,6 @@ import reactor.core.publisher.Mono;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -65,7 +65,8 @@ public class OutboundMessageService implements IOutboundMessageService {
      * @return true if the notification has forwarded to one recipient at least
      */
     @Override
-    public boolean sendNotificationToLocalClients(ByteBuf notificationData, Set<Long> recipientIds) {
+    public boolean sendNotificationToLocalClients(ByteBuf notificationData,
+                                                  Set<Long> recipientIds) {
         AssertUtil.notNull(notificationData, "notificationData");
         AssertUtil.notEmpty(recipientIds, "recipientIds");
         // Prepare data
@@ -73,7 +74,7 @@ public class OutboundMessageService implements IOutboundMessageService {
         boolean triggerHandlers = node.getSharedProperties().getPlugin().isEnabled()
                 && !turmsPluginManager.getNotificationHandlerList().isEmpty();
         Set<Long> offlineRecipientIds = triggerHandlers
-                ? new HashSet<>(Math.max(1, recipientIds.size() / 2))
+                ? CollectionUtil.newSetWithExpectedSize(Math.max(1, recipientIds.size() / 2))
                 : Collections.emptySet();
 
         notificationData.retain(); // To avoid being released by the caller

@@ -177,50 +177,26 @@ class UserService(private val turmsClient: TurmsClient) {
             }
         ).let { UserInfoWithVersion.from(it) }
 
-    suspend fun queryUserIdsNearby(
+    suspend fun queryNearbyUsers(
         latitude: Float,
         longitude: Float,
-        distance: Float? = null,
-        maxNumber: Int? = null
-    ): List<Long> = turmsClient.driver
+        distance: Int? = null,
+        maxNumber: Int? = null,
+        withCoordinates: Boolean? = null,
+        withDistance: Boolean? = null,
+        withInfo: Boolean? = null,
+    ): List<NearbyUser> = turmsClient.driver
         .send(
-            QueryUserIdsNearbyRequest.newBuilder().apply {
+            QueryNearbyUsersRequest.newBuilder().apply {
                 this.latitude = latitude
                 this.longitude = longitude
                 distance?.let { this.distance = it }
                 maxNumber?.let { this.maxNumber = it }
+                withCoordinates?.let { this.withCoordinates = it }
+                withDistance?.let { this.withDistance = it }
+                withInfo?.let { this.withInfo = it }
             }
-        ).data.idsWithVersion.valuesList
-
-    suspend fun queryUserSessionIdsNearby(
-        latitude: Float,
-        longitude: Float,
-        distance: Float? = null,
-        maxNumber: Int? = null
-    ): List<UserSessionId> = turmsClient.driver
-        .send(
-            QueryUserIdsNearbyRequest.newBuilder().apply {
-                this.latitude = latitude
-                this.longitude = longitude
-                distance?.let { this.distance = it }
-                maxNumber?.let { this.maxNumber = it }
-            }
-        ).data.userSessionIds.userSessionIdsList
-
-    suspend fun queryUserInfosNearby(
-        latitude: Float,
-        longitude: Float,
-        distance: Float? = null,
-        maxNumber: Int? = null
-    ): List<UserInfo> = turmsClient.driver
-        .send(
-            QueryUserIdsNearbyRequest.newBuilder().apply {
-                this.latitude = latitude
-                this.longitude = longitude
-                distance?.let { this.distance = it }
-                maxNumber?.let { this.maxNumber = it }
-            }
-        ).data.usersInfosWithVersion.userInfosList
+        ).data.nearbyUsers.nearbyUsersList
 
     suspend fun queryOnlineStatusesRequest(@NotEmpty userIds: Set<Long>): List<UserStatusDetail> =
         if (userIds.isEmpty()) {

@@ -46,7 +46,7 @@ import im.turms.common.model.dto.request.group.member.QueryGroupMembersRequest;
 import im.turms.common.model.dto.request.group.member.UpdateGroupMemberRequest;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
-import im.turms.server.common.util.MapUtil;
+import im.turms.server.common.util.CollectionUtil;
 import im.turms.turms.bo.GroupQuestionIdAndAnswer;
 import im.turms.turms.workflow.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.turms.workflow.access.servicerequest.dispatcher.ServiceRequestMapping;
@@ -61,7 +61,6 @@ import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Mono;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -335,7 +334,8 @@ public class GroupServiceController {
         return clientRequest -> {
             CheckGroupJoinQuestionsAnswersRequest request = clientRequest.getTurmsRequest()
                     .getCheckGroupJoinQuestionsAnswersRequest();
-            Set<GroupQuestionIdAndAnswer> idAndAnswers = new HashSet<>(MapUtil.getCapability(request.getQuestionIdAndAnswerCount()));
+            Set<GroupQuestionIdAndAnswer> idAndAnswers =
+                    CollectionUtil.newSetWithExpectedSize(request.getQuestionIdAndAnswerCount());
             for (Map.Entry<Long, String> entry : request.getQuestionIdAndAnswerMap().entrySet()) {
                 idAndAnswers.add(new GroupQuestionIdAndAnswer(entry.getKey(), entry.getValue()));
             }
@@ -393,7 +393,7 @@ public class GroupServiceController {
             if (request.getAnswersCount() == 0) {
                 return Mono.just(RequestHandlerResultFactory.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The answers must not be empty"));
             } else {
-                Set<String> answers = new HashSet<>(request.getAnswersList());
+                Set<String> answers = CollectionUtil.newSet(request.getAnswersList());
                 int score = request.getScore();
                 return score >= 0
                         ? groupQuestionService
@@ -526,7 +526,7 @@ public class GroupServiceController {
             UpdateGroupJoinQuestionRequest request = clientRequest.getTurmsRequest()
                     .getUpdateGroupJoinQuestionRequest();
             Set<String> answers = request.getAnswersList().isEmpty() ?
-                    null : new HashSet<>(request.getAnswersList());
+                    null : CollectionUtil.newSet(request.getAnswersList());
             String question = request.hasQuestion() ? request.getQuestion() : null;
             Integer score = request.hasScore() ? request.getScore() : null;
             return groupQuestionService.authAndUpdateGroupJoinQuestion(
@@ -593,7 +593,7 @@ public class GroupServiceController {
             QueryGroupMembersRequest request = clientRequest.getTurmsRequest().getQueryGroupMembersRequest();
             Date lastUpdatedDate = request.hasLastUpdatedDate() ? new Date(request.getLastUpdatedDate()) : null;
             Set<Long> memberIds = request.getMemberIdsCount() != 0 ?
-                    new HashSet<>(request.getMemberIdsList()) : null;
+                    CollectionUtil.newSet(request.getMemberIdsList()) : null;
             boolean withStatus = request.hasWithStatus() && request.getWithStatus();
             if (request.getMemberIdsCount() > 0) {
                 return groupMemberService.authAndQueryGroupMembers(

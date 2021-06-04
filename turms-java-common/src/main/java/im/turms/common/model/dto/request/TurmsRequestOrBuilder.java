@@ -301,92 +301,77 @@ public interface TurmsRequestOrBuilder extends
   im.turms.common.model.dto.request.user.QueryUserProfileRequestOrBuilder getQueryUserProfileRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.QueryUserIdsNearbyRequest query_user_ids_nearby_request = 101;</code>
-   * @return Whether the queryUserIdsNearbyRequest field is set.
+   * <code>.im.turms.proto.QueryNearbyUsersRequest query_nearby_users_request = 101;</code>
+   * @return Whether the queryNearbyUsersRequest field is set.
    */
-  boolean hasQueryUserIdsNearbyRequest();
+  boolean hasQueryNearbyUsersRequest();
   /**
-   * <code>.im.turms.proto.QueryUserIdsNearbyRequest query_user_ids_nearby_request = 101;</code>
-   * @return The queryUserIdsNearbyRequest.
+   * <code>.im.turms.proto.QueryNearbyUsersRequest query_nearby_users_request = 101;</code>
+   * @return The queryNearbyUsersRequest.
    */
-  im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest getQueryUserIdsNearbyRequest();
+  im.turms.common.model.dto.request.user.QueryNearbyUsersRequest getQueryNearbyUsersRequest();
   /**
-   * <code>.im.turms.proto.QueryUserIdsNearbyRequest query_user_ids_nearby_request = 101;</code>
+   * <code>.im.turms.proto.QueryNearbyUsersRequest query_nearby_users_request = 101;</code>
    */
-  im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequestOrBuilder getQueryUserIdsNearbyRequestOrBuilder();
+  im.turms.common.model.dto.request.user.QueryNearbyUsersRequestOrBuilder getQueryNearbyUsersRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.QueryUserInfosNearbyRequest query_user_infos_nearby_request = 102;</code>
-   * @return Whether the queryUserInfosNearbyRequest field is set.
-   */
-  boolean hasQueryUserInfosNearbyRequest();
-  /**
-   * <code>.im.turms.proto.QueryUserInfosNearbyRequest query_user_infos_nearby_request = 102;</code>
-   * @return The queryUserInfosNearbyRequest.
-   */
-  im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest getQueryUserInfosNearbyRequest();
-  /**
-   * <code>.im.turms.proto.QueryUserInfosNearbyRequest query_user_infos_nearby_request = 102;</code>
-   */
-  im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequestOrBuilder getQueryUserInfosNearbyRequestOrBuilder();
-
-  /**
-   * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 103;</code>
+   * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 102;</code>
    * @return Whether the queryUserOnlineStatusesRequest field is set.
    */
   boolean hasQueryUserOnlineStatusesRequest();
   /**
-   * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 103;</code>
+   * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 102;</code>
    * @return The queryUserOnlineStatusesRequest.
    */
   im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest getQueryUserOnlineStatusesRequest();
   /**
-   * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 103;</code>
+   * <code>.im.turms.proto.QueryUserOnlineStatusesRequest query_user_online_statuses_request = 102;</code>
    */
   im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequestOrBuilder getQueryUserOnlineStatusesRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 104;</code>
+   * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 103;</code>
    * @return Whether the updateUserLocationRequest field is set.
    */
   boolean hasUpdateUserLocationRequest();
   /**
-   * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 104;</code>
+   * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 103;</code>
    * @return The updateUserLocationRequest.
    */
   im.turms.common.model.dto.request.user.UpdateUserLocationRequest getUpdateUserLocationRequest();
   /**
-   * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 104;</code>
+   * <code>.im.turms.proto.UpdateUserLocationRequest update_user_location_request = 103;</code>
    */
   im.turms.common.model.dto.request.user.UpdateUserLocationRequestOrBuilder getUpdateUserLocationRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 105;</code>
+   * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 104;</code>
    * @return Whether the updateUserOnlineStatusRequest field is set.
    */
   boolean hasUpdateUserOnlineStatusRequest();
   /**
-   * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 105;</code>
+   * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 104;</code>
    * @return The updateUserOnlineStatusRequest.
    */
   im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest getUpdateUserOnlineStatusRequest();
   /**
-   * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 105;</code>
+   * <code>.im.turms.proto.UpdateUserOnlineStatusRequest update_user_online_status_request = 104;</code>
    */
   im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequestOrBuilder getUpdateUserOnlineStatusRequestOrBuilder();
 
   /**
-   * <code>.im.turms.proto.UpdateUserRequest update_user_request = 106;</code>
+   * <code>.im.turms.proto.UpdateUserRequest update_user_request = 105;</code>
    * @return Whether the updateUserRequest field is set.
    */
   boolean hasUpdateUserRequest();
   /**
-   * <code>.im.turms.proto.UpdateUserRequest update_user_request = 106;</code>
+   * <code>.im.turms.proto.UpdateUserRequest update_user_request = 105;</code>
    * @return The updateUserRequest.
    */
   im.turms.common.model.dto.request.user.UpdateUserRequest getUpdateUserRequest();
   /**
-   * <code>.im.turms.proto.UpdateUserRequest update_user_request = 106;</code>
+   * <code>.im.turms.proto.UpdateUserRequest update_user_request = 105;</code>
    */
   im.turms.common.model.dto.request.user.UpdateUserRequestOrBuilder getUpdateUserRequestOrBuilder();
 

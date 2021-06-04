@@ -22,14 +22,11 @@ import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.ProfileAccessStrategy;
 import im.turms.common.constant.UserStatus;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
-import im.turms.common.model.bo.common.Int64Values;
-import im.turms.common.model.bo.user.UserSessionId;
-import im.turms.common.model.bo.user.UserSessionIds;
+import im.turms.common.model.bo.user.NearbyUsers;
 import im.turms.common.model.bo.user.UsersInfosWithVersion;
 import im.turms.common.model.bo.user.UsersOnlineStatuses;
 import im.turms.common.model.dto.notification.TurmsNotification;
-import im.turms.common.model.dto.request.user.QueryUserIdsNearbyRequest;
-import im.turms.common.model.dto.request.user.QueryUserInfosNearbyRequest;
+import im.turms.common.model.dto.request.user.QueryNearbyUsersRequest;
 import im.turms.common.model.dto.request.user.QueryUserOnlineStatusesRequest;
 import im.turms.common.model.dto.request.user.QueryUserProfileRequest;
 import im.turms.common.model.dto.request.user.UpdateUserLocationRequest;
@@ -38,10 +35,9 @@ import im.turms.common.model.dto.request.user.UpdateUserRequest;
 import im.turms.server.common.bo.session.UserSessionsStatus;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
-import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.service.session.SessionLocationService;
 import im.turms.server.common.service.session.UserStatusService;
-import im.turms.turms.util.ProtoUtil;
+import im.turms.turms.util.ProtoModelUtil;
 import im.turms.turms.workflow.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.turms.workflow.access.servicerequest.dispatcher.ServiceRequestMapping;
 import im.turms.turms.workflow.access.servicerequest.dto.RequestHandlerResultFactory;
@@ -63,8 +59,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_USER_IDS_NEARBY_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_USER_INFOS_NEARBY_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_NEARBY_USERS_REQUEST;
 import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_USER_ONLINE_STATUSES_REQUEST;
 import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_USER_PROFILE_REQUEST;
 import static im.turms.common.model.dto.request.TurmsRequest.KindCase.UPDATE_USER_LOCATION_REQUEST;
@@ -116,7 +111,7 @@ public class UserServiceController {
                     .map(user -> {
                         UsersInfosWithVersion.Builder userBuilder = UsersInfosWithVersion
                                 .newBuilder()
-                                .addUserInfos(ProtoUtil.userProfile2proto(user).build());
+                                .addUserInfos(ProtoModelUtil.userProfile2proto(user).build());
                         return RequestHandlerResultFactory.get(TurmsNotification.Data
                                 .newBuilder()
                                 .setUsersInfosWithVersion(userBuilder)
@@ -125,88 +120,34 @@ public class UserServiceController {
         };
     }
 
-    @ServiceRequestMapping(QUERY_USER_IDS_NEARBY_REQUEST)
-    public ClientRequestHandler handleQueryUserIdsNearbyRequest() {
+    @ServiceRequestMapping(QUERY_NEARBY_USERS_REQUEST)
+    public ClientRequestHandler handleQueryNearbyUsersRequest() {
         return clientRequest -> {
-            QueryUserIdsNearbyRequest request = clientRequest.getTurmsRequest().getQueryUserIdsNearbyRequest();
-            Double distance = request.hasDistance() ? (double) request.getDistance() : null;
+            QueryNearbyUsersRequest request = clientRequest.getTurmsRequest().getQueryNearbyUsersRequest();
+            Integer distance = request.hasDistance() ? (int) request.getDistance() : null;
             Short maxNumber = request.hasMaxNumber() ? (short) request.getMaxNumber() : null;
-            Mono<Void> upsertMono = sessionLocationService.upsertUserLocation(
+            return usersNearbyService.queryNearbyUsers(
                     clientRequest.getUserId(),
                     clientRequest.getDeviceType(),
                     new Point(request.getLongitude(), request.getLatitude()),
-                    new Date());
-            if (sessionLocationService.isTreatUserIdAndDeviceTypeAsUniqueUser()) {
-                return upsertMono.then(sessionLocationService.queryNearestUserSessionIds(
-                        clientRequest.getUserId(),
-                        clientRequest.getDeviceType(),
-                        maxNumber,
-                        distance)
-                        .collectList()
-                        .map(userSessionIds -> {
-                            if (userSessionIds.isEmpty()) {
-                                return RequestHandlerResultFactory.NO_CONTENT;
-                            }
-                            UserSessionIds.Builder builder = UserSessionIds.newBuilder();
-                            for (im.turms.server.common.bo.session.UserSessionId userSessionId : userSessionIds) {
-                                UserSessionId sessionId = UserSessionId.newBuilder()
-                                        .setUserId(userSessionId.getUserId())
-                                        .setDeviceType(userSessionId.getDeviceType())
-                                        .build();
-                                builder.addUserSessionIds(sessionId);
-                            }
-                            return RequestHandlerResultFactory.get(TurmsNotification.Data
-                                    .newBuilder()
-                                    .setUserSessionIds(builder.build())
-                                    .build());
-                        }));
-            } else {
-                return upsertMono.then(sessionLocationService.queryNearestUserIds(
-                        clientRequest.getUserId(),
-                        clientRequest.getDeviceType(),
-                        maxNumber,
-                        distance)
-                        .collectList()
-                        .map(userIds -> userIds.isEmpty()
-                                ? RequestHandlerResultFactory.NO_CONTENT
-                                : RequestHandlerResultFactory.get(TurmsNotification.Data
-                                .newBuilder()
-                                .setIds(Int64Values.newBuilder().addAllValues(userIds))
-                                .build())));
-            }
-        };
-    }
-
-    @ServiceRequestMapping(QUERY_USER_INFOS_NEARBY_REQUEST)
-    public ClientRequestHandler handleQueryUsersInfosNearbyRequest() {
-        return clientRequest -> {
-            QueryUserInfosNearbyRequest request = clientRequest.getTurmsRequest().getQueryUserInfosNearbyRequest();
-            Double distance = request.hasDistance() ? (double) request.getDistance() : null;
-            Short maxNumber = request.hasMaxNumber() ? (short) request.getMaxNumber() : null;
-            Mono<Void> upsertMono = sessionLocationService.upsertUserLocation(
-                    clientRequest.getUserId(),
-                    clientRequest.getDeviceType(),
-                    new Point(request.getLongitude(), request.getLatitude()),
-                    new Date());
-            return upsertMono.then(usersNearbyService.queryUsersProfilesNearby(
-                    clientRequest.getUserId(),
-                    clientRequest.getDeviceType(),
                     maxNumber,
-                    distance)
-                    .collectList()
-                    .map(users -> {
-                        if (users.isEmpty()) {
+                    distance,
+                    request.getWithCoordinates(),
+                    request.getWithDistance(),
+                    request.getWithInfo())
+                    .map(nearbyUsers -> {
+                        if (nearbyUsers.isEmpty()) {
                             return RequestHandlerResultFactory.NO_CONTENT;
                         }
-                        UsersInfosWithVersion.Builder builder = UsersInfosWithVersion.newBuilder();
-                        for (User user : users) {
-                            builder.addUserInfos(ProtoUtil.userProfile2proto(user));
+                        NearbyUsers.Builder builder = NearbyUsers.newBuilder();
+                        for (im.turms.server.common.bo.location.NearbyUser nearbyUser : nearbyUsers) {
+                            builder.addNearbyUsers(ProtoModelUtil.nearbyUser2proto(nearbyUser));
                         }
                         return RequestHandlerResultFactory.get(TurmsNotification.Data
                                 .newBuilder()
-                                .setUsersInfosWithVersion(builder)
+                                .setNearbyUsers(builder.build())
                                 .build());
-                    }));
+                    });
         };
     }
 
@@ -229,7 +170,7 @@ public class UserServiceController {
                     .collectList()
                     .map(userIdAndSessionsStatusList -> {
                         for (Pair<Long, UserSessionsStatus> userIdAndSessionsStatus : userIdAndSessionsStatusList) {
-                            statusesBuilder.addUserStatuses(ProtoUtil
+                            statusesBuilder.addUserStatuses(ProtoModelUtil
                                     .userOnlineInfo2userStatus(
                                             userIdAndSessionsStatus.getFirst(),
                                             userIdAndSessionsStatus.getSecond(),

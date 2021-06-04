@@ -27,13 +27,13 @@ import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -234,7 +234,7 @@ public class LocalNodeStatusManager {
         } else if (knownMembersSize == availableMembersSize) {
             return updateFollowersToAvailable(availableMemberNodeIds);
         } else {
-            Set<String> unavailableMemberIds = new HashSet<>(discoveryService.getAllKnownMembers().keySet());
+            Set<String> unavailableMemberIds = UnifiedSet.newSet(discoveryService.getAllKnownMembers().keySet());
             for (String availableMemberNodeId : availableMemberNodeIds) {
                 unavailableMemberIds.remove(availableMemberNodeId);
             }

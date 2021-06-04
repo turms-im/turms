@@ -275,7 +275,7 @@ public class UserService {
                 });
     }
 
-    public Flux<User> queryUsersProfiles(@NotEmpty Set<Long> userIds, boolean queryDeletedRecords) {
+    public Flux<User> queryUsersProfiles(@NotEmpty Collection<Long> userIds, boolean queryDeletedRecords) {
         try {
             AssertUtil.notEmpty(userIds, "userIds");
         } catch (TurmsBusinessException e) {

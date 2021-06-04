@@ -1,39 +1,37 @@
 /* eslint-disable */
 import Long from "long";
 import _m0 from "protobufjs/minimal";
-import { UserSessionId } from "../../model/user/user_session_id";
+import { NearbyUser } from "../../model/user/nearby_user";
 
 export const protobufPackage = "im.turms.proto";
 
-export interface UserSessionIds {
-  userSessionIds: UserSessionId[];
+export interface NearbyUsers {
+  nearbyUsers: NearbyUser[];
 }
 
-const baseUserSessionIds: object = {};
+const baseNearbyUsers: object = {};
 
-export const UserSessionIds = {
+export const NearbyUsers = {
   encode(
-    message: UserSessionIds,
+    message: NearbyUsers,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
-    for (const v of message.userSessionIds) {
-      UserSessionId.encode(v!, writer.uint32(10).fork()).ldelim();
+    for (const v of message.nearbyUsers) {
+      NearbyUser.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserSessionIds {
+  decode(input: _m0.Reader | Uint8Array, length?: number): NearbyUsers {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseUserSessionIds } as UserSessionIds;
-    message.userSessionIds = [];
+    const message = { ...baseNearbyUsers } as NearbyUsers;
+    message.nearbyUsers = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.userSessionIds.push(
-            UserSessionId.decode(reader, reader.uint32())
-          );
+          message.nearbyUsers.push(NearbyUser.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);

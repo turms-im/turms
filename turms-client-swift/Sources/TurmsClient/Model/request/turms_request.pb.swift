@@ -148,20 +148,12 @@ public struct TurmsRequest {
     set {kind = .queryUserProfileRequest(newValue)}
   }
 
-  public var queryUserIdsNearbyRequest: QueryUserIdsNearbyRequest {
+  public var queryNearbyUsersRequest: QueryNearbyUsersRequest {
     get {
-      if case .queryUserIdsNearbyRequest(let v)? = kind {return v}
-      return QueryUserIdsNearbyRequest()
+      if case .queryNearbyUsersRequest(let v)? = kind {return v}
+      return QueryNearbyUsersRequest()
     }
-    set {kind = .queryUserIdsNearbyRequest(newValue)}
-  }
-
-  public var queryUserInfosNearbyRequest: QueryUserInfosNearbyRequest {
-    get {
-      if case .queryUserInfosNearbyRequest(let v)? = kind {return v}
-      return QueryUserInfosNearbyRequest()
-    }
-    set {kind = .queryUserInfosNearbyRequest(newValue)}
+    set {kind = .queryNearbyUsersRequest(newValue)}
   }
 
   public var queryUserOnlineStatusesRequest: QueryUserOnlineStatusesRequest {
@@ -510,8 +502,7 @@ public struct TurmsRequest {
     case updateGroupMemberRequest(UpdateGroupMemberRequest)
     /// User
     case queryUserProfileRequest(QueryUserProfileRequest)
-    case queryUserIdsNearbyRequest(QueryUserIdsNearbyRequest)
-    case queryUserInfosNearbyRequest(QueryUserInfosNearbyRequest)
+    case queryNearbyUsersRequest(QueryNearbyUsersRequest)
     case queryUserOnlineStatusesRequest(QueryUserOnlineStatusesRequest)
     case updateUserLocationRequest(UpdateUserLocationRequest)
     case updateUserOnlineStatusRequest(UpdateUserOnlineStatusRequest)
@@ -616,12 +607,8 @@ public struct TurmsRequest {
         guard case .queryUserProfileRequest(let l) = lhs, case .queryUserProfileRequest(let r) = rhs else { preconditionFailure() }
         return l == r
       }()
-      case (.queryUserIdsNearbyRequest, .queryUserIdsNearbyRequest): return {
-        guard case .queryUserIdsNearbyRequest(let l) = lhs, case .queryUserIdsNearbyRequest(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.queryUserInfosNearbyRequest, .queryUserInfosNearbyRequest): return {
-        guard case .queryUserInfosNearbyRequest(let l) = lhs, case .queryUserInfosNearbyRequest(let r) = rhs else { preconditionFailure() }
+      case (.queryNearbyUsersRequest, .queryNearbyUsersRequest): return {
+        guard case .queryNearbyUsersRequest(let l) = lhs, case .queryNearbyUsersRequest(let r) = rhs else { preconditionFailure() }
         return l == r
       }()
       case (.queryUserOnlineStatusesRequest, .queryUserOnlineStatusesRequest): return {
@@ -816,12 +803,11 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
     13: .standard(proto: "query_group_members_request"),
     14: .standard(proto: "update_group_member_request"),
     100: .standard(proto: "query_user_profile_request"),
-    101: .standard(proto: "query_user_ids_nearby_request"),
-    102: .standard(proto: "query_user_infos_nearby_request"),
-    103: .standard(proto: "query_user_online_statuses_request"),
-    104: .standard(proto: "update_user_location_request"),
-    105: .standard(proto: "update_user_online_status_request"),
-    106: .standard(proto: "update_user_request"),
+    101: .standard(proto: "query_nearby_users_request"),
+    102: .standard(proto: "query_user_online_statuses_request"),
+    103: .standard(proto: "update_user_location_request"),
+    104: .standard(proto: "update_user_online_status_request"),
+    105: .standard(proto: "update_user_request"),
     200: .standard(proto: "create_friend_request_request"),
     201: .standard(proto: "create_relationship_group_request"),
     202: .standard(proto: "create_relationship_request"),
@@ -1037,32 +1023,19 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
         }
       }()
       case 101: try {
-        var v: QueryUserIdsNearbyRequest?
+        var v: QueryNearbyUsersRequest?
         var hadOneofValue = false
         if let current = self.kind {
           hadOneofValue = true
-          if case .queryUserIdsNearbyRequest(let m) = current {v = m}
+          if case .queryNearbyUsersRequest(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
         if let v = v {
           if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .queryUserIdsNearbyRequest(v)
+          self.kind = .queryNearbyUsersRequest(v)
         }
       }()
       case 102: try {
-        var v: QueryUserInfosNearbyRequest?
-        var hadOneofValue = false
-        if let current = self.kind {
-          hadOneofValue = true
-          if case .queryUserInfosNearbyRequest(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .queryUserInfosNearbyRequest(v)
-        }
-      }()
-      case 103: try {
         var v: QueryUserOnlineStatusesRequest?
         var hadOneofValue = false
         if let current = self.kind {
@@ -1075,7 +1048,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
           self.kind = .queryUserOnlineStatusesRequest(v)
         }
       }()
-      case 104: try {
+      case 103: try {
         var v: UpdateUserLocationRequest?
         var hadOneofValue = false
         if let current = self.kind {
@@ -1088,7 +1061,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
           self.kind = .updateUserLocationRequest(v)
         }
       }()
-      case 105: try {
+      case 104: try {
         var v: UpdateUserOnlineStatusRequest?
         var hadOneofValue = false
         if let current = self.kind {
@@ -1101,7 +1074,7 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
           self.kind = .updateUserOnlineStatusRequest(v)
         }
       }()
-      case 106: try {
+      case 105: try {
         var v: UpdateUserRequest?
         var hadOneofValue = false
         if let current = self.kind {
@@ -1647,29 +1620,25 @@ extension TurmsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
       guard case .queryUserProfileRequest(let v)? = self.kind else { preconditionFailure() }
       try visitor.visitSingularMessageField(value: v, fieldNumber: 100)
     }()
-    case .queryUserIdsNearbyRequest?: try {
-      guard case .queryUserIdsNearbyRequest(let v)? = self.kind else { preconditionFailure() }
+    case .queryNearbyUsersRequest?: try {
+      guard case .queryNearbyUsersRequest(let v)? = self.kind else { preconditionFailure() }
       try visitor.visitSingularMessageField(value: v, fieldNumber: 101)
-    }()
-    case .queryUserInfosNearbyRequest?: try {
-      guard case .queryUserInfosNearbyRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 102)
     }()
     case .queryUserOnlineStatusesRequest?: try {
       guard case .queryUserOnlineStatusesRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 103)
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 102)
     }()
     case .updateUserLocationRequest?: try {
       guard case .updateUserLocationRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 104)
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 103)
     }()
     case .updateUserOnlineStatusRequest?: try {
       guard case .updateUserOnlineStatusRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 105)
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 104)
     }()
     case .updateUserRequest?: try {
       guard case .updateUserRequest(let v)? = self.kind else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 106)
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 105)
     }()
     case .createFriendRequestRequest?: try {
       guard case .createFriendRequestRequest(let v)? = self.kind else { preconditionFailure() }

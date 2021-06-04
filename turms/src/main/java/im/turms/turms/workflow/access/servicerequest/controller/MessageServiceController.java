@@ -36,7 +36,7 @@ import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.property.constant.TimeType;
 import im.turms.server.common.util.CollectorUtil;
 import im.turms.turms.bo.MessageFromKey;
-import im.turms.turms.util.ProtoUtil;
+import im.turms.turms.util.ProtoModelUtil;
 import im.turms.turms.workflow.access.http.util.PageUtil;
 import im.turms.turms.workflow.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.turms.workflow.access.servicerequest.dispatcher.ServiceRequestMapping;
@@ -140,7 +140,7 @@ public class MessageServiceController {
                     if (request.hasMessageId()) {
                         dataForRecipients = clientRequest.getTurmsRequest()
                                 .toBuilder()
-                                .setCreateMessageRequest(ProtoUtil.cloneAndFillMessageRequest(request, message))
+                                .setCreateMessageRequest(ProtoModelUtil.cloneAndFillMessageRequest(request, message))
                                 .build();
                     } else {
                         CreateMessageRequest.Builder requestBuilder = request.toBuilder()
@@ -238,7 +238,7 @@ public class MessageServiceController {
                                                 .setTotal(total.intValue())
                                                 .setIsGroupMessage(senderKey.isGroupMessage())
                                                 .setFromId(senderKey.getFromId())
-                                                .addAllMessages(Collections2.transform(messages, m -> ProtoUtil.message2proto(m).build()))
+                                                .addAllMessages(Collections2.transform(messages, m -> ProtoModelUtil.message2proto(m).build()))
                                                 .build());
                                 messagesWithTotalMonos.add(messsagesWithTotalMono);
                             }
@@ -253,7 +253,7 @@ public class MessageServiceController {
                         } else {
                             Messages messagesList = Messages
                                     .newBuilder()
-                                    .addAllMessages(Collections2.transform(messages, m -> ProtoUtil.message2proto(m).build()))
+                                    .addAllMessages(Collections2.transform(messages, m -> ProtoModelUtil.message2proto(m).build()))
                                     .build();
                             TurmsNotification.Data data = TurmsNotification.Data.newBuilder()
                                     .setMessages(messagesList)

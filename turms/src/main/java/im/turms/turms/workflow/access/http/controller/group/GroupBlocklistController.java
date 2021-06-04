@@ -23,6 +23,7 @@ import im.turms.server.common.access.http.dto.response.ResponseDTO;
 import im.turms.server.common.access.http.dto.response.ResponseFactory;
 import im.turms.server.common.access.http.dto.response.UpdateResultDTO;
 import im.turms.server.common.bo.common.DateRange;
+import im.turms.server.common.util.CollectionUtil;
 import im.turms.turms.workflow.access.http.dto.request.group.AddGroupBlockedUserDTO;
 import im.turms.turms.workflow.access.http.dto.request.group.UpdateGroupBlockedUserDTO;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
@@ -43,7 +44,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 import static im.turms.turms.workflow.access.http.permission.AdminPermission.GROUP_BLOCKLIST_CREATE;
@@ -129,7 +129,7 @@ public class GroupBlocklistController {
             GroupBlockedUser.KeyList keys,
             @RequestBody UpdateGroupBlockedUserDTO updateGroupBlockedUserDTO) {
         Mono<UpdateResultDTO> updateMono = groupBlocklistService.updateBlockedUsers(
-                new HashSet<>(keys.getKeys()),
+                CollectionUtil.newSet(keys.getKeys()),
                 updateGroupBlockedUserDTO.getBlockDate(),
                 updateGroupBlockedUserDTO.getRequesterId())
                 .map(UpdateResultDTO::get);
@@ -141,7 +141,7 @@ public class GroupBlocklistController {
     public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteGroupBlockedUsers(
             GroupBlockedUser.KeyList keys) {
         Mono<DeleteResultDTO> deleteMono = groupBlocklistService
-                .deleteBlockedUsers(new HashSet<>(keys.getKeys()))
+                .deleteBlockedUsers(CollectionUtil.newSet(keys.getKeys()))
                 .map(DeleteResultDTO::get);
         return ResponseFactory.okIfTruthy(deleteMono);
     }

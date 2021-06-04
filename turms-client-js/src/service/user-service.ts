@@ -12,7 +12,6 @@ import TurmsCloseStatus from '../model/turms-close-status';
 import {UserStatus} from '../model/proto/constant/user_status';
 import {DeviceType} from '../model/proto/constant/device_type';
 import {ProfileAccessStrategy} from '../model/proto/constant/profile_access_strategy';
-import {UserSessionId} from '../model/proto/model/user/user_session_id';
 import {ResponseAction} from '../model/proto/constant/response_action';
 
 export interface UserInfo {
@@ -275,7 +274,13 @@ export default class UserService {
         });
     }
 
-    queryUserIdsNearby(latitude: number, longitude: number, distance?: number, maxNumber?: number): Promise<string[]> {
+    queryNearbyUsers(latitude: number,
+                     longitude: number,
+                     distance?: number,
+                     maxNumber?: number,
+                     withCoordinates?: boolean,
+                     withDistance?: boolean,
+                     withInfo?: boolean): Promise<ParsedModel.NearbyUser[]> {
         if (RequestUtil.isFalsy(latitude)) {
             return TurmsBusinessError.notFalsyPromise('latitude');
         }
@@ -283,47 +288,16 @@ export default class UserService {
             return TurmsBusinessError.notFalsyPromise('longitude');
         }
         return this._turmsClient.driver.send({
-            queryUserIdsNearbyRequest: {
+            queryNearbyUsersRequest: {
                 latitude,
                 longitude,
                 distance,
-                maxNumber
+                maxNumber,
+                withCoordinates,
+                withDistance,
+                withInfo
             }
-        }).then(n => NotificationUtil.getArr(n, 'ids.values'));
-    }
-
-    queryUserSessionIdsNearby(latitude: number, longitude: number, distance?: number, maxNumber?: number): Promise<UserSessionId[]> {
-        if (RequestUtil.isFalsy(latitude)) {
-            return TurmsBusinessError.notFalsyPromise('latitude');
-        }
-        if (RequestUtil.isFalsy(longitude)) {
-            return TurmsBusinessError.notFalsyPromise('longitude');
-        }
-        return this._turmsClient.driver.send({
-            queryUserIdsNearbyRequest: {
-                latitude,
-                longitude,
-                distance,
-                maxNumber
-            }
-        }).then(n => NotificationUtil.getArr(n, 'userSessionIds.userSessionIds'));
-    }
-
-    queryUserInfosNearby(latitude: number, longitude: number, distance?: number, maxNumber?: number): Promise<ParsedModel.UserInfo[]> {
-        if (RequestUtil.isFalsy(latitude)) {
-            return TurmsBusinessError.notFalsyPromise('latitude');
-        }
-        if (RequestUtil.isFalsy(longitude)) {
-            return TurmsBusinessError.notFalsyPromise('longitude');
-        }
-        return this._turmsClient.driver.send({
-            queryUserInfosNearbyRequest: {
-                latitude,
-                longitude,
-                distance,
-                maxNumber
-            }
-        }).then(n => NotificationUtil.getArrAndTransform(n, 'usersInfosWithVersion.userInfos'));
+        }).then(n => NotificationUtil.getArrAndTransform(n, 'nearbyUsers.nearbyUsers'));
     }
 
     queryOnlineStatusesRequest(userIds: string[]): Promise<ParsedModel.UserStatusDetail[]> {

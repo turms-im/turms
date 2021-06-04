@@ -206,18 +206,9 @@ internal class UserServiceET {
     @Test
     @Order(ORDER_LOW_PRIORITY)
     @Timeout(5)
-    fun queryUsersNearby_shouldReturnUserIdsOrSessionIds() = runBlocking {
-        val userIds = turmsClient.userService.queryUserIdsNearby(1f, 1f)
-        val sessionIds = turmsClient.userService.queryUserSessionIdsNearby(1f, 1f)
-        assertTrue(true)
-    }
-
-    @Test
-    @Order(ORDER_LOW_PRIORITY)
-    @Timeout(5)
-    fun queryUserInfosNearby_shouldReturnUsersInfos() = runBlocking {
-        val result = turmsClient.userService.queryUserInfosNearby(1f, 1f)
-        assertNotNull(result)
+    fun queryNearbyUsers_shouldReturnNearbyUsers() = runBlocking {
+        val nearbyUsers = turmsClient.userService.queryNearbyUsers(1f, 1f)
+        assertNotNull(nearbyUsers)
     }
 
     @Test

@@ -14,8 +14,7 @@ import { DeleteGroupMemberRequest } from "../request/group/member/delete_group_m
 import { QueryGroupMembersRequest } from "../request/group/member/query_group_members_request";
 import { UpdateGroupMemberRequest } from "../request/group/member/update_group_member_request";
 import { QueryUserProfileRequest } from "../request/user/query_user_profile_request";
-import { QueryUserIdsNearbyRequest } from "../request/user/query_user_ids_nearby_request";
-import { QueryUserInfosNearbyRequest } from "../request/user/query_user_infos_nearby_request";
+import { QueryNearbyUsersRequest } from "../request/user/query_nearby_users_request";
 import { QueryUserOnlineStatusesRequest } from "../request/user/query_user_online_statuses_request";
 import { UpdateUserLocationRequest } from "../request/user/update_user_location_request";
 import { UpdateUserOnlineStatusRequest } from "../request/user/update_user_online_status_request";
@@ -84,8 +83,7 @@ export interface TurmsRequest {
   updateGroupMemberRequest?: UpdateGroupMemberRequest | undefined;
   /** User */
   queryUserProfileRequest?: QueryUserProfileRequest | undefined;
-  queryUserIdsNearbyRequest?: QueryUserIdsNearbyRequest | undefined;
-  queryUserInfosNearbyRequest?: QueryUserInfosNearbyRequest | undefined;
+  queryNearbyUsersRequest?: QueryNearbyUsersRequest | undefined;
   queryUserOnlineStatusesRequest?: QueryUserOnlineStatusesRequest | undefined;
   updateUserLocationRequest?: UpdateUserLocationRequest | undefined;
   updateUserOnlineStatusRequest?: UpdateUserOnlineStatusRequest | undefined;
@@ -225,40 +223,34 @@ export const TurmsRequest = {
         writer.uint32(802).fork()
       ).ldelim();
     }
-    if (message.queryUserIdsNearbyRequest !== undefined) {
-      QueryUserIdsNearbyRequest.encode(
-        message.queryUserIdsNearbyRequest,
+    if (message.queryNearbyUsersRequest !== undefined) {
+      QueryNearbyUsersRequest.encode(
+        message.queryNearbyUsersRequest,
         writer.uint32(810).fork()
-      ).ldelim();
-    }
-    if (message.queryUserInfosNearbyRequest !== undefined) {
-      QueryUserInfosNearbyRequest.encode(
-        message.queryUserInfosNearbyRequest,
-        writer.uint32(818).fork()
       ).ldelim();
     }
     if (message.queryUserOnlineStatusesRequest !== undefined) {
       QueryUserOnlineStatusesRequest.encode(
         message.queryUserOnlineStatusesRequest,
-        writer.uint32(826).fork()
+        writer.uint32(818).fork()
       ).ldelim();
     }
     if (message.updateUserLocationRequest !== undefined) {
       UpdateUserLocationRequest.encode(
         message.updateUserLocationRequest,
-        writer.uint32(834).fork()
+        writer.uint32(826).fork()
       ).ldelim();
     }
     if (message.updateUserOnlineStatusRequest !== undefined) {
       UpdateUserOnlineStatusRequest.encode(
         message.updateUserOnlineStatusRequest,
-        writer.uint32(842).fork()
+        writer.uint32(834).fork()
       ).ldelim();
     }
     if (message.updateUserRequest !== undefined) {
       UpdateUserRequest.encode(
         message.updateUserRequest,
-        writer.uint32(850).fork()
+        writer.uint32(842).fork()
       ).ldelim();
     }
     if (message.createFriendRequestRequest !== undefined) {
@@ -569,52 +561,38 @@ export const TurmsRequest = {
           );
           break;
         case 101:
-          message.queryUserIdsNearbyRequest = QueryUserIdsNearbyRequest.decode(
+          message.queryNearbyUsersRequest = QueryNearbyUsersRequest.decode(
             reader,
             reader.uint32()
           );
           break;
         case 102:
-          message.queryUserInfosNearbyRequest = QueryUserInfosNearbyRequest.decode(
-            reader,
-            reader.uint32()
-          );
+          message.queryUserOnlineStatusesRequest =
+            QueryUserOnlineStatusesRequest.decode(reader, reader.uint32());
           break;
         case 103:
-          message.queryUserOnlineStatusesRequest = QueryUserOnlineStatusesRequest.decode(
-            reader,
-            reader.uint32()
-          );
-          break;
-        case 104:
           message.updateUserLocationRequest = UpdateUserLocationRequest.decode(
             reader,
             reader.uint32()
           );
           break;
-        case 105:
-          message.updateUserOnlineStatusRequest = UpdateUserOnlineStatusRequest.decode(
-            reader,
-            reader.uint32()
-          );
+        case 104:
+          message.updateUserOnlineStatusRequest =
+            UpdateUserOnlineStatusRequest.decode(reader, reader.uint32());
           break;
-        case 106:
+        case 105:
           message.updateUserRequest = UpdateUserRequest.decode(
             reader,
             reader.uint32()
           );
           break;
         case 200:
-          message.createFriendRequestRequest = CreateFriendRequestRequest.decode(
-            reader,
-            reader.uint32()
-          );
+          message.createFriendRequestRequest =
+            CreateFriendRequestRequest.decode(reader, reader.uint32());
           break;
         case 201:
-          message.createRelationshipGroupRequest = CreateRelationshipGroupRequest.decode(
-            reader,
-            reader.uint32()
-          );
+          message.createRelationshipGroupRequest =
+            CreateRelationshipGroupRequest.decode(reader, reader.uint32());
           break;
         case 202:
           message.createRelationshipRequest = CreateRelationshipRequest.decode(
@@ -623,10 +601,8 @@ export const TurmsRequest = {
           );
           break;
         case 203:
-          message.deleteRelationshipGroupRequest = DeleteRelationshipGroupRequest.decode(
-            reader,
-            reader.uint32()
-          );
+          message.deleteRelationshipGroupRequest =
+            DeleteRelationshipGroupRequest.decode(reader, reader.uint32());
           break;
         case 204:
           message.deleteRelationshipRequest = DeleteRelationshipRequest.decode(
@@ -635,22 +611,16 @@ export const TurmsRequest = {
           );
           break;
         case 205:
-          message.queryFriendRequestsRequest = QueryFriendRequestsRequest.decode(
-            reader,
-            reader.uint32()
-          );
+          message.queryFriendRequestsRequest =
+            QueryFriendRequestsRequest.decode(reader, reader.uint32());
           break;
         case 206:
-          message.queryRelatedUserIdsRequest = QueryRelatedUserIdsRequest.decode(
-            reader,
-            reader.uint32()
-          );
+          message.queryRelatedUserIdsRequest =
+            QueryRelatedUserIdsRequest.decode(reader, reader.uint32());
           break;
         case 207:
-          message.queryRelationshipGroupsRequest = QueryRelationshipGroupsRequest.decode(
-            reader,
-            reader.uint32()
-          );
+          message.queryRelationshipGroupsRequest =
+            QueryRelationshipGroupsRequest.decode(reader, reader.uint32());
           break;
         case 208:
           message.queryRelationshipsRequest = QueryRelationshipsRequest.decode(
@@ -659,16 +629,12 @@ export const TurmsRequest = {
           );
           break;
         case 209:
-          message.updateFriendRequestRequest = UpdateFriendRequestRequest.decode(
-            reader,
-            reader.uint32()
-          );
+          message.updateFriendRequestRequest =
+            UpdateFriendRequestRequest.decode(reader, reader.uint32());
           break;
         case 210:
-          message.updateRelationshipGroupRequest = UpdateRelationshipGroupRequest.decode(
-            reader,
-            reader.uint32()
-          );
+          message.updateRelationshipGroupRequest =
+            UpdateRelationshipGroupRequest.decode(reader, reader.uint32());
           break;
         case 211:
           message.updateRelationshipRequest = UpdateRelationshipRequest.decode(
@@ -695,16 +661,12 @@ export const TurmsRequest = {
           );
           break;
         case 303:
-          message.queryJoinedGroupIdsRequest = QueryJoinedGroupIdsRequest.decode(
-            reader,
-            reader.uint32()
-          );
+          message.queryJoinedGroupIdsRequest =
+            QueryJoinedGroupIdsRequest.decode(reader, reader.uint32());
           break;
         case 304:
-          message.queryJoinedGroupInfosRequest = QueryJoinedGroupInfosRequest.decode(
-            reader,
-            reader.uint32()
-          );
+          message.queryJoinedGroupInfosRequest =
+            QueryJoinedGroupInfosRequest.decode(reader, reader.uint32());
           break;
         case 305:
           message.updateGroupRequest = UpdateGroupRequest.decode(
@@ -713,94 +675,67 @@ export const TurmsRequest = {
           );
           break;
         case 400:
-          message.createGroupBlockedUserRequest = CreateGroupBlockedUserRequest.decode(
-            reader,
-            reader.uint32()
-          );
+          message.createGroupBlockedUserRequest =
+            CreateGroupBlockedUserRequest.decode(reader, reader.uint32());
           break;
         case 401:
-          message.deleteGroupBlockedUserRequest = DeleteGroupBlockedUserRequest.decode(
-            reader,
-            reader.uint32()
-          );
+          message.deleteGroupBlockedUserRequest =
+            DeleteGroupBlockedUserRequest.decode(reader, reader.uint32());
           break;
         case 402:
-          message.queryGroupBlockedUserIdsRequest = QueryGroupBlockedUserIdsRequest.decode(
-            reader,
-            reader.uint32()
-          );
+          message.queryGroupBlockedUserIdsRequest =
+            QueryGroupBlockedUserIdsRequest.decode(reader, reader.uint32());
           break;
         case 403:
-          message.queryGroupBlockedUserInfosRequest = QueryGroupBlockedUserInfosRequest.decode(
-            reader,
-            reader.uint32()
-          );
+          message.queryGroupBlockedUserInfosRequest =
+            QueryGroupBlockedUserInfosRequest.decode(reader, reader.uint32());
           break;
         case 500:
-          message.checkGroupJoinQuestionsAnswersRequest = CheckGroupJoinQuestionsAnswersRequest.decode(
-            reader,
-            reader.uint32()
-          );
+          message.checkGroupJoinQuestionsAnswersRequest =
+            CheckGroupJoinQuestionsAnswersRequest.decode(
+              reader,
+              reader.uint32()
+            );
           break;
         case 501:
-          message.createGroupInvitationRequest = CreateGroupInvitationRequest.decode(
-            reader,
-            reader.uint32()
-          );
+          message.createGroupInvitationRequest =
+            CreateGroupInvitationRequest.decode(reader, reader.uint32());
           break;
         case 502:
-          message.createGroupJoinRequestRequest = CreateGroupJoinRequestRequest.decode(
-            reader,
-            reader.uint32()
-          );
+          message.createGroupJoinRequestRequest =
+            CreateGroupJoinRequestRequest.decode(reader, reader.uint32());
           break;
         case 503:
-          message.createGroupJoinQuestionRequest = CreateGroupJoinQuestionRequest.decode(
-            reader,
-            reader.uint32()
-          );
+          message.createGroupJoinQuestionRequest =
+            CreateGroupJoinQuestionRequest.decode(reader, reader.uint32());
           break;
         case 504:
-          message.deleteGroupInvitationRequest = DeleteGroupInvitationRequest.decode(
-            reader,
-            reader.uint32()
-          );
+          message.deleteGroupInvitationRequest =
+            DeleteGroupInvitationRequest.decode(reader, reader.uint32());
           break;
         case 505:
-          message.deleteGroupJoinRequestRequest = DeleteGroupJoinRequestRequest.decode(
-            reader,
-            reader.uint32()
-          );
+          message.deleteGroupJoinRequestRequest =
+            DeleteGroupJoinRequestRequest.decode(reader, reader.uint32());
           break;
         case 506:
-          message.deleteGroupJoinQuestionRequest = DeleteGroupJoinQuestionRequest.decode(
-            reader,
-            reader.uint32()
-          );
+          message.deleteGroupJoinQuestionRequest =
+            DeleteGroupJoinQuestionRequest.decode(reader, reader.uint32());
           break;
         case 507:
-          message.queryGroupInvitationsRequest = QueryGroupInvitationsRequest.decode(
-            reader,
-            reader.uint32()
-          );
+          message.queryGroupInvitationsRequest =
+            QueryGroupInvitationsRequest.decode(reader, reader.uint32());
           break;
         case 508:
-          message.queryGroupJoinRequestsRequest = QueryGroupJoinRequestsRequest.decode(
-            reader,
-            reader.uint32()
-          );
+          message.queryGroupJoinRequestsRequest =
+            QueryGroupJoinRequestsRequest.decode(reader, reader.uint32());
           break;
         case 509:
-          message.queryGroupJoinQuestionsRequest = QueryGroupJoinQuestionsRequest.decode(
-            reader,
-            reader.uint32()
-          );
+          message.queryGroupJoinQuestionsRequest =
+            QueryGroupJoinQuestionsRequest.decode(reader, reader.uint32());
           break;
         case 510:
-          message.updateGroupJoinQuestionRequest = UpdateGroupJoinQuestionRequest.decode(
-            reader,
-            reader.uint32()
-          );
+          message.updateGroupJoinQuestionRequest =
+            UpdateGroupJoinQuestionRequest.decode(reader, reader.uint32());
           break;
         case 1000:
           message.deleteResourceRequest = DeleteResourceRequest.decode(

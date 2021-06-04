@@ -102,7 +102,7 @@ public abstract class UserSessionDispatcher {
                     // And it should be 2 after retained
                     requestData.retain();
 
-                    // Note that handleRequest should never return MonoError
+                    // Note that handleRequest() should never return MonoError
                     RequestLoggingContext loggingContext = new RequestLoggingContext();
                     Mono<ByteBuf> response = userRequestDispatcher.handleRequest(sessionWrapper, requestData)
                             .doOnError(throwable -> {

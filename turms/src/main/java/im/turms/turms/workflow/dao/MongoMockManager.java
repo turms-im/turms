@@ -29,7 +29,7 @@ import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.manager.PasswordManager;
 import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.property.env.service.env.MockProperties;
-import im.turms.server.common.util.MapUtil;
+import im.turms.server.common.util.CollectionUtil;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.workflow.access.http.permission.AdminPermission;
 import im.turms.turms.workflow.dao.domain.admin.Admin;
@@ -59,7 +59,6 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -235,7 +234,7 @@ public final class MongoMockManager {
                     null);
             groupRelatedObjs.add(groupJoinRequest);
         }
-        Set<Long> groupMemberIds = new HashSet<>(MapUtil.getCapability(targetUserToBeGroupMemberEnd - targetUserToBeGroupMemberStart));
+        Set<Long> groupMemberIds = CollectionUtil.newSetWithExpectedSize(targetUserToBeGroupMemberEnd - targetUserToBeGroupMemberStart);
         for (int i = targetUserToBeGroupMemberStart; i <= targetUserToBeGroupMemberEnd; i++) {
             long groupMemberId = i;
             groupMemberIds.add(groupMemberId);
@@ -263,7 +262,7 @@ public final class MongoMockManager {
 
         // Message
         long senderId = 1L;
-        Set<Long> targetIds = new HashSet<>();
+        Set<Long> targetIds = CollectionUtil.newSetWithExpectedSize(100);
         for (int i = 1; i <= 100; i++) {
             long id = nextId();
             long targetId = (long) 2 + (i % 9);

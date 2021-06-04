@@ -19,38 +19,36 @@ package im.turms.server.common.util;
 
 import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.Collection;
 import java.util.Set;
-import java.util.function.Supplier;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 /**
  * @author James Chen
  */
-public final class CollectorUtil {
+public final class CollectionUtil {
 
-    private CollectorUtil() {
+    private CollectionUtil() {
     }
 
-    public static <T> Collector<T, ?, List<T>> toList() {
-        return Collectors.toCollection(LinkedList::new);
+    public static <T> Set<T> intersection(Set<T> c1, Collection<T> c2) {
+        Set<T> result = UnifiedSet.newSet(MapUtil.getCapability(Math.min(c1.size(), c2.size())));
+        for (T value : c2) {
+            if (c1.contains(value)) {
+                result.add(value);
+            }
+        }
+        return result;
     }
 
-    public static <T> Collector<T, ?, List<T>> toList(int size) {
-        return Collectors.toCollection(() -> new ArrayList<>(size));
+    public static <T> Set<T> newSetWithExpectedSize(int expectedSize) {
+        return UnifiedSet.newSet(expectedSize);
     }
 
-    public static <T> Collector<T, ?, Set<T>> toSet(int expectedSize) {
-        return Collectors.toCollection(() -> UnifiedSet.newSet(expectedSize));
-    }
-
-    public static <K, V> Supplier<Map<K, V>> toMap(int size) {
-        return () -> new HashMap<>(size);
+    public static <T> Set<T> newSet(Collection<T> keys) {
+        if (keys instanceof Set) {
+            return (Set<T>) keys;
+        }
+        return UnifiedSet.newSet(keys);
     }
 
 }

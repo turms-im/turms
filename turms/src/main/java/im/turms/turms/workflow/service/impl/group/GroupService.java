@@ -40,7 +40,7 @@ import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.ExceptionUtil;
 import im.turms.turms.bo.ServicePermission;
 import im.turms.turms.constant.OperationResultConstant;
-import im.turms.turms.util.ProtoUtil;
+import im.turms.turms.util.ProtoModelUtil;
 import im.turms.turms.workflow.dao.domain.group.Group;
 import im.turms.turms.workflow.dao.domain.group.GroupMember;
 import im.turms.turms.workflow.dao.domain.group.GroupType;
@@ -629,7 +629,7 @@ public class GroupService {
                 .flatMap(version -> lastUpdatedDate == null || lastUpdatedDate.before(version)
                         ? mongoClient.findById(Group.class, groupId)
                         .map(group -> GroupsWithVersion.newBuilder()
-                                .addGroups(ProtoUtil.group2proto(group))
+                                .addGroups(ProtoModelUtil.group2proto(group))
                                 .setLastUpdatedDate(version.getTime())
                                 .build())
                         : Mono.error(TurmsBusinessException.get(TurmsStatusCode.ALREADY_UP_TO_DATE)))
@@ -711,7 +711,7 @@ public class GroupService {
                                     }
                                     GroupsWithVersion.Builder builder = GroupsWithVersion.newBuilder();
                                     for (Group group : groups) {
-                                        builder.addGroups(ProtoUtil.group2proto(group));
+                                        builder.addGroups(ProtoModelUtil.group2proto(group));
                                     }
                                     return builder
                                             .setLastUpdatedDate(version.getTime())

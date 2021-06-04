@@ -31,7 +31,7 @@ extension TurmsNotification.DataMessage.OneOf_Kind {
             message = v
         case .userRelationshipsWithVersion(let v):
             message = v
-        case .userSessionIds(let v):
+        case .nearbyUsers(let v):
             message = v
 
         case .groupInvitationsWithVersion(let v):

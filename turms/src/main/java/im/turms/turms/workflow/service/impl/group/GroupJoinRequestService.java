@@ -38,7 +38,7 @@ import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.constraint.ValidRequestStatus;
-import im.turms.turms.util.ProtoUtil;
+import im.turms.turms.util.ProtoModelUtil;
 import im.turms.turms.workflow.dao.domain.group.GroupJoinRequest;
 import im.turms.turms.workflow.service.impl.ExpirableModelService;
 import im.turms.turms.workflow.service.impl.user.UserVersionService;
@@ -243,7 +243,7 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
                                     int expireAfterSeconds = getModelExpireAfterSeconds();
                                     for (GroupJoinRequest groupJoinRequest : groupJoinRequests) {
                                         builder.addGroupJoinRequests(
-                                                ProtoUtil.groupJoinRequest2proto(groupJoinRequest, expireAfterSeconds).build());
+                                                ProtoModelUtil.groupJoinRequest2proto(groupJoinRequest, expireAfterSeconds).build());
                                     }
                                     return builder
                                             .setLastUpdatedDate(version.getTime())

@@ -23,10 +23,10 @@ import org.bson.BsonWriter;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
+import org.eclipse.collections.impl.set.mutable.UnifiedSet;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -51,7 +51,7 @@ public class TurmsIterableCodec extends MongoCodec<Iterable> {
         if (Set.class.isAssignableFrom(iterableClass)) {
             collection = LinkedHashSet.class.isAssignableFrom(iterableClass)
                     ? new LinkedHashSet<>()
-                    : new HashSet<>(8);
+                    : UnifiedSet.newSet(8);
         } else {
             collection = new ArrayList<>(8);
         }

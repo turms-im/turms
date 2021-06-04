@@ -62,6 +62,7 @@ class MessageService(
     }
 
     // Request and notification
+
     suspend fun sendRequest(requestBuilder: TurmsRequest.Builder): TurmsNotification = suspendCoroutine { cont ->
         if (requestBuilder.hasCreateSessionRequest()) {
             if (stateStore.isSessionOpen) {

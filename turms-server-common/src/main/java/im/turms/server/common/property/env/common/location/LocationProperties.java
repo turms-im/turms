@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.property.env.common;
+package im.turms.server.common.property.env.common.location;
 
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -25,9 +25,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Min;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * @author James Chen
@@ -46,23 +44,7 @@ public class LocationProperties {
     private boolean treatUserIdAndDeviceTypeAsUniqueUser;
 
     @JsonView(MutablePropertiesView.class)
-    @Description("The default maximum available number of users nearby records per query request")
-    @Min(0)
-    private short defaultMaxAvailableUsersNearbyNumberPerQuery = 20;
-
-    @JsonView(MutablePropertiesView.class)
-    @Description("The default maximum distance per query request")
-    @DecimalMin("0")
-    private double defaultMaxDistancePerQuery = 0.01;
-
-    @JsonView(MutablePropertiesView.class)
-    @Description("The maximum allowed available number of users nearby records per query request")
-    @Min(0)
-    private short maxAvailableUsersNearbyNumberLimitPerQuery = 100;
-
-    @JsonView(MutablePropertiesView.class)
-    @Description("The maximum distance limit in meters")
-    @DecimalMin("0")
-    private double maxDistanceMeters = 10_000;
+    @NestedConfigurationProperty
+    private UsersNearbyRequestProperties usersNearbyRequest = new UsersNearbyRequestProperties();
 
 }

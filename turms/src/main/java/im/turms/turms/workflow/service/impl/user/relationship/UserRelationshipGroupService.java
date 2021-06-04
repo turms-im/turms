@@ -32,13 +32,13 @@ import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
 import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.util.AssertUtil;
+import im.turms.server.common.util.CollectionUtil;
 import im.turms.server.common.util.CollectorUtil;
-import im.turms.server.common.util.MapUtil;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.constraint.ValidUserRelationshipGroupKey;
 import im.turms.turms.constraint.ValidUserRelationshipKey;
-import im.turms.turms.util.ProtoUtil;
+import im.turms.turms.util.ProtoModelUtil;
 import im.turms.turms.workflow.dao.domain.user.UserRelationship;
 import im.turms.turms.workflow.dao.domain.user.UserRelationshipGroup;
 import im.turms.turms.workflow.dao.domain.user.UserRelationshipGroupMember;
@@ -57,7 +57,6 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -142,7 +141,7 @@ public class UserRelationshipGroupService {
                                 .collect(CollectorUtil.toList())
                                 .map(groups -> {
                                     for (UserRelationshipGroup group : groups) {
-                                        builder.addUserRelationshipGroups(ProtoUtil.relationshipGroup2proto(group));
+                                        builder.addUserRelationshipGroups(ProtoModelUtil.relationshipGroup2proto(group));
                                     }
                                     return builder.build();
                                 });
@@ -350,7 +349,7 @@ public class UserRelationshipGroupService {
         if (updateRelationshipGroupsMembersVersion) {
             return mongoClient.deleteMany(session, UserRelationshipGroupMember.class, filter)
                     .flatMap(result -> {
-                        Set<Long> ownerIds = new HashSet<>(MapUtil.getCapability(keys.size()));
+                        Set<Long> ownerIds = CollectionUtil.newSetWithExpectedSize(keys.size());
                         for (UserRelationship.Key key : keys) {
                             ownerIds.add(key.getOwnerId());
                         }

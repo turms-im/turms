@@ -119,18 +119,18 @@ public class HeartbeatManager {
     private List<Long> collectOnlineUsersAndUpdateStatus(Set<Map.Entry<Long, UserSessionsManager>> entries, long now) {
         int onlineUserCount = entries.size();
         int userCount = (int) (UPDATE_HEARTBEAT_INTERVAL_FACTOR * onlineUserCount / clientHeartbeatIntervalSeconds);
-        List<Long> sessionIdToUpdateHeartbeat = new ArrayList<>(userCount);
+        List<Long> userIdToUpdateHeartbeat = new ArrayList<>(userCount);
         for (Map.Entry<Long, UserSessionsManager> entry : entries) {
             Map<DeviceType, UserSession> sessionMap = entry.getValue().getSessionMap();
             for (Map.Entry<DeviceType, UserSession> sessionEntry : sessionMap.entrySet()) {
                 Long userId = handleSession(sessionEntry.getValue(), now);
                 if (userId != null) {
-                    sessionIdToUpdateHeartbeat.add(userId);
+                    userIdToUpdateHeartbeat.add(userId);
                     break;
                 }
             }
         }
-        return sessionIdToUpdateHeartbeat;
+        return userIdToUpdateHeartbeat;
     }
 
     private Long handleSession(UserSession session, long now) {

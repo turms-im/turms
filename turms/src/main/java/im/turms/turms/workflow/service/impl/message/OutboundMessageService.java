@@ -31,8 +31,8 @@ import im.turms.server.common.property.env.gateway.clientapi.ClientApiLoggingPro
 import im.turms.server.common.property.env.service.env.clientapi.property.LoggingRequestProperties;
 import im.turms.server.common.rpc.request.SendNotificationRequest;
 import im.turms.server.common.service.session.UserStatusService;
+import im.turms.server.common.util.CollectionUtil;
 import im.turms.server.common.util.CollectorUtil;
-import im.turms.server.common.util.MapUtil;
 import im.turms.server.common.util.ProtoUtil;
 import im.turms.server.common.util.ReactorUtil;
 import im.turms.turms.logging.ClientApiLogging;
@@ -47,7 +47,6 @@ import reactor.core.publisher.Mono;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -110,7 +109,7 @@ public class OutboundMessageService {
             @NotNull DeviceType excludedDeviceType) {
         return userStatusService.getDeviceAndNodeIdMapByUserId(recipientId)
                 .flatMap(deviceTypeAndNodeIdMap -> {
-                    Set<String> nodeIds = new HashSet<>(MapUtil.getCapability(deviceTypeAndNodeIdMap.size()));
+                    Set<String> nodeIds = CollectionUtil.newSetWithExpectedSize(deviceTypeAndNodeIdMap.size());
                     for (Map.Entry<DeviceType, String> entry : deviceTypeAndNodeIdMap.entrySet()) {
                         DeviceType deviceType = entry.getKey();
                         if (deviceType != excludedDeviceType) {
@@ -169,7 +168,7 @@ public class OutboundMessageService {
             @NotNull Long recipientId) {
         return userStatusService.getDeviceAndNodeIdMapByUserId(recipientId)
                 .flatMap(deviceTypeAndNodeIdMap -> {
-                    Set<String> nodeIds = new HashSet<>(deviceTypeAndNodeIdMap.values());
+                    Set<String> nodeIds = CollectionUtil.newSet(deviceTypeAndNodeIdMap.values());
                     if (nodeIds.isEmpty()) {
                         return Mono.just(false);
                     }

@@ -22,6 +22,7 @@ import im.turms.server.common.access.http.dto.response.DeleteResultDTO;
 import im.turms.server.common.access.http.dto.response.ResponseDTO;
 import im.turms.server.common.access.http.dto.response.ResponseFactory;
 import im.turms.server.common.dao.util.OperationResultUtil;
+import im.turms.server.common.util.CollectionUtil;
 import im.turms.server.common.util.CollectorUtil;
 import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.workflow.access.http.dto.request.conversation.UpdateConversationDTO;
@@ -43,7 +44,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -72,7 +72,7 @@ public class ConversationController {
             privateConversationsFlux = Flux.empty();
         } else {
             List<PrivateConversation.Key> keys = privateConversationKeys.getPrivateConversationKeys();
-            privateConversationsFlux = conversationService.queryPrivateConversations(new HashSet<>(keys));
+            privateConversationsFlux = conversationService.queryPrivateConversations(CollectionUtil.newSet(keys));
             privateConversationsSize += keys.size();
         }
         if (ownerIds != null && !ownerIds.isEmpty()) {
@@ -99,7 +99,7 @@ public class ConversationController {
             @RequestParam(required = false) Set<Long> groupIds) {
         Mono<DeleteResult> resultMono = isEmptyPrivateConversationKeys(privateConversationKeys)
                 ? Mono.just(OperationResultConstant.ACKNOWLEDGED_DELETE_RESULT)
-                : conversationService.deletePrivateConversations(new HashSet<>(privateConversationKeys.getPrivateConversationKeys()));
+                : conversationService.deletePrivateConversations(CollectionUtil.newSet(privateConversationKeys.getPrivateConversationKeys()));
         if (ownerIds != null && !ownerIds.isEmpty()) {
             resultMono = resultMono.zipWith(conversationService.deletePrivateConversations(ownerIds, null))
                     .map(tuple -> OperationResultUtil.merge(tuple.getT1(), tuple.getT2()));
@@ -120,12 +120,12 @@ public class ConversationController {
         Mono<Void> updatePrivateConversions = isEmptyPrivateConversationKeys(privateConversationKeys)
                 ? Mono.empty()
                 : conversationService
-                .upsertPrivateConversationsReadDate(new HashSet<>(privateConversationKeys.getPrivateConversationKeys()),
+                .upsertPrivateConversationsReadDate(CollectionUtil.newSet(privateConversationKeys.getPrivateConversationKeys()),
                         updateConversationDTO.getReadDate());
         Mono<Void> updateGroupConversationsMono = isEmptyGroupConversationKeys(groupConversationMemberKeys)
                 ? Mono.empty()
                 : conversationService
-                .upsertGroupConversationsReadDate(new HashSet<>(groupConversationMemberKeys.getGroupConversationMemberKeys()),
+                .upsertGroupConversationsReadDate(CollectionUtil.newSet(groupConversationMemberKeys.getGroupConversationMemberKeys()),
                         updateConversationDTO.getReadDate());
         return Mono.when(updatePrivateConversions, updateGroupConversationsMono)
                 .thenReturn(ResponseFactory.OK);

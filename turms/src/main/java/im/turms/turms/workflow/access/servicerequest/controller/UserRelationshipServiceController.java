@@ -32,6 +32,7 @@ import im.turms.common.model.dto.request.user.relationship.UpdateFriendRequestRe
 import im.turms.common.model.dto.request.user.relationship.UpdateRelationshipGroupRequest;
 import im.turms.common.model.dto.request.user.relationship.UpdateRelationshipRequest;
 import im.turms.server.common.cluster.node.Node;
+import im.turms.server.common.util.CollectionUtil;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.workflow.access.servicerequest.dispatcher.ClientRequestHandler;
 import im.turms.turms.workflow.access.servicerequest.dispatcher.ServiceRequestMapping;
@@ -43,7 +44,6 @@ import org.springframework.stereotype.Controller;
 import reactor.core.publisher.Mono;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -253,7 +253,7 @@ public class UserRelationshipServiceController {
             QueryRelationshipsRequest request = clientRequest.getTurmsRequest()
                     .getQueryRelationshipsRequest();
             Set<Long> ids = request.getUserIdsCount() != 0 ?
-                    new HashSet<>(request.getUserIdsList()) : null;
+                    CollectionUtil.newSet(request.getUserIdsList()) : null;
             int groupIndex = request.hasGroupIndex() ? request.getGroupIndex() : DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX;
             Boolean isBlocked = request.hasBlocked() ? request.getBlocked() : null;
             Date lastUpdatedDate = request.hasLastUpdatedDate() ?

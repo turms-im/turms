@@ -13,7 +13,7 @@ import { UsersOnlineStatuses } from "../model/user/users_online_statuses";
 import { UserFriendRequestsWithVersion } from "../model/user/user_friend_requests_with_version";
 import { UserRelationshipGroupsWithVersion } from "../model/user/user_relationship_groups_with_version";
 import { UserRelationshipsWithVersion } from "../model/user/user_relationships_with_version";
-import { UserSessionIds } from "../model/user/user_session_ids";
+import { NearbyUsers } from "../model/user/nearby_users";
 import { GroupInvitationsWithVersion } from "../model/group/group_invitations_with_version";
 import { GroupJoinQuestionsAnswerResult } from "../model/group/group_join_questions_answer_result";
 import { GroupJoinRequestsWithVersion } from "../model/group/group_join_requests_with_version";
@@ -57,7 +57,7 @@ export interface TurmsNotification_Data {
     | UserRelationshipGroupsWithVersion
     | undefined;
   userRelationshipsWithVersion?: UserRelationshipsWithVersion | undefined;
-  userSessionIds?: UserSessionIds | undefined;
+  nearbyUsers?: NearbyUsers | undefined;
   groupInvitationsWithVersion?: GroupInvitationsWithVersion | undefined;
   groupJoinQuestionAnswerResult?: GroupJoinQuestionsAnswerResult | undefined;
   groupJoinRequestsWithVersion?: GroupJoinRequestsWithVersion | undefined;
@@ -210,9 +210,9 @@ export const TurmsNotification_Data = {
         writer.uint32(98).fork()
       ).ldelim();
     }
-    if (message.userSessionIds !== undefined) {
-      UserSessionIds.encode(
-        message.userSessionIds,
+    if (message.nearbyUsers !== undefined) {
+      NearbyUsers.encode(
+        message.nearbyUsers,
         writer.uint32(106).fork()
       ).ldelim();
     }
@@ -305,52 +305,35 @@ export const TurmsNotification_Data = {
           );
           break;
         case 10:
-          message.userFriendRequestsWithVersion = UserFriendRequestsWithVersion.decode(
-            reader,
-            reader.uint32()
-          );
+          message.userFriendRequestsWithVersion =
+            UserFriendRequestsWithVersion.decode(reader, reader.uint32());
           break;
         case 11:
-          message.userRelationshipGroupsWithVersion = UserRelationshipGroupsWithVersion.decode(
-            reader,
-            reader.uint32()
-          );
+          message.userRelationshipGroupsWithVersion =
+            UserRelationshipGroupsWithVersion.decode(reader, reader.uint32());
           break;
         case 12:
-          message.userRelationshipsWithVersion = UserRelationshipsWithVersion.decode(
-            reader,
-            reader.uint32()
-          );
+          message.userRelationshipsWithVersion =
+            UserRelationshipsWithVersion.decode(reader, reader.uint32());
           break;
         case 13:
-          message.userSessionIds = UserSessionIds.decode(
-            reader,
-            reader.uint32()
-          );
+          message.nearbyUsers = NearbyUsers.decode(reader, reader.uint32());
           break;
         case 14:
-          message.groupInvitationsWithVersion = GroupInvitationsWithVersion.decode(
-            reader,
-            reader.uint32()
-          );
+          message.groupInvitationsWithVersion =
+            GroupInvitationsWithVersion.decode(reader, reader.uint32());
           break;
         case 15:
-          message.groupJoinQuestionAnswerResult = GroupJoinQuestionsAnswerResult.decode(
-            reader,
-            reader.uint32()
-          );
+          message.groupJoinQuestionAnswerResult =
+            GroupJoinQuestionsAnswerResult.decode(reader, reader.uint32());
           break;
         case 16:
-          message.groupJoinRequestsWithVersion = GroupJoinRequestsWithVersion.decode(
-            reader,
-            reader.uint32()
-          );
+          message.groupJoinRequestsWithVersion =
+            GroupJoinRequestsWithVersion.decode(reader, reader.uint32());
           break;
         case 17:
-          message.groupJoinQuestionsWithVersion = GroupJoinQuestionsWithVersion.decode(
-            reader,
-            reader.uint32()
-          );
+          message.groupJoinQuestionsWithVersion =
+            GroupJoinQuestionsWithVersion.decode(reader, reader.uint32());
           break;
         case 18:
           message.groupMembersWithVersion = GroupMembersWithVersion.decode(

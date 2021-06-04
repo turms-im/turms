@@ -6,7 +6,8 @@ import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.plugin.base.AbstractTurmsPluginManager;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.TurmsPropertiesManager;
-import im.turms.server.common.property.env.common.LocationProperties;
+import im.turms.server.common.property.env.common.location.LocationProperties;
+import im.turms.server.common.property.env.common.location.UsersNearbyRequestProperties;
 import im.turms.server.common.redis.RedisProperties;
 import im.turms.server.common.redis.TurmsRedisClientManager;
 import im.turms.server.common.redis.codec.context.RedisCodecContextPool;
@@ -58,7 +59,10 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
         Node node = mock(Node.class);
         when(node.getSharedProperties()).thenReturn(new TurmsProperties().toBuilder()
                 .location(new LocationProperties().toBuilder()
-                        .maxDistanceMeters(Double.MAX_VALUE)
+                        .usersNearbyRequest(new UsersNearbyRequestProperties()
+                                .toBuilder()
+                                .maxDistanceMeters(Integer.MAX_VALUE)
+                                .build())
                         .build())
                 .build());
 
@@ -144,28 +148,28 @@ class SessionLocationServiceIT extends BaseIntegrationTest {
 
     @Order(20)
     @Test
-    void queryNearestUserSessionIds_shouldGetNearbyUsers() {
+    void queryNearbyUsers_shouldGetNearbyUsers() {
         StepVerifier
                 .create(SESSION_LOCATION_SERVICE
-                        .queryNearestUserSessionIds(USER_1_ID, USER_1_DEVICE, (short) 100, 15.0 * METERS_PER_LATITUDE_DEGREE))
-                .expectNext(new UserSessionId(USER_2_ID, USER_2_DEVICE))
+                        .queryNearbyUsers(USER_1_ID, USER_1_DEVICE, (short) 100, 15 * METERS_PER_LATITUDE_DEGREE, true, true))
+                .expectNextMatches(geo -> geo.getMember().equals(new UserSessionId(USER_2_ID, USER_2_DEVICE)))
                 .as("Test queryNearestUserSessionIds for user " + USER_1_ID)
                 .expectComplete()
                 .verify(DEFAULT_IO_TIMEOUT);
         StepVerifier
                 .create(SESSION_LOCATION_SERVICE
-                        .queryNearestUserSessionIds(USER_2_ID, USER_2_DEVICE, (short) 100, 15.0 * METERS_PER_LATITUDE_DEGREE))
-                .expectNextMatches(id -> List.of(new UserSessionId(USER_1_ID, USER_1_DEVICE), new UserSessionId(USER_3_ID, USER_3_DEVICE))
-                        .contains(id))
-                .expectNextMatches(id -> List.of(new UserSessionId(USER_1_ID, USER_1_DEVICE), new UserSessionId(USER_3_ID, USER_3_DEVICE))
-                        .contains(id))
+                        .queryNearbyUsers(USER_2_ID, USER_2_DEVICE, (short) 100, 15 * METERS_PER_LATITUDE_DEGREE, true, true))
+                .expectNextMatches(geo -> List.of(new UserSessionId(USER_1_ID, USER_1_DEVICE), new UserSessionId(USER_3_ID, USER_3_DEVICE))
+                        .contains(geo.getMember()))
+                .expectNextMatches(geo -> List.of(new UserSessionId(USER_1_ID, USER_1_DEVICE), new UserSessionId(USER_3_ID, USER_3_DEVICE))
+                        .contains(geo.getMember()))
                 .as("Test queryNearestUserSessionIds for user " + USER_2_ID)
                 .expectComplete()
                 .verify(DEFAULT_IO_TIMEOUT);
         StepVerifier
                 .create(SESSION_LOCATION_SERVICE
-                        .queryNearestUserSessionIds(NONEXISTENT_USER_ID, NONEXISTENT_USER_DEVICE, (short) 100,
-                                15.0 * METERS_PER_LATITUDE_DEGREE))
+                        .queryNearbyUsers(NONEXISTENT_USER_ID, NONEXISTENT_USER_DEVICE, (short) 100,
+                                15 * METERS_PER_LATITUDE_DEGREE, true, true))
                 .as("Test queryNearestUserSessionIds for user " + NONEXISTENT_USER_ID)
                 .expectComplete()
                 .verify(DEFAULT_IO_TIMEOUT);

@@ -25,6 +25,7 @@ import im.turms.server.common.access.http.dto.response.ResponseDTO;
 import im.turms.server.common.access.http.dto.response.ResponseFactory;
 import im.turms.server.common.access.http.dto.response.UpdateResultDTO;
 import im.turms.server.common.bo.common.DateRange;
+import im.turms.server.common.util.CollectionUtil;
 import im.turms.turms.workflow.access.http.dto.request.group.AddGroupMemberDTO;
 import im.turms.turms.workflow.access.http.dto.request.group.UpdateGroupMemberDTO;
 import im.turms.turms.workflow.access.http.permission.AdminPermission;
@@ -46,7 +47,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -137,7 +137,7 @@ public class GroupMemberController {
             GroupMember.KeyList keys,
             @RequestBody UpdateGroupMemberDTO updateGroupMemberDTO) {
         Mono<UpdateResultDTO> updateMono = groupMemberService.updateGroupMembers(
-                new HashSet<>(keys.getKeys()),
+                CollectionUtil.newSet(keys.getKeys()),
                 updateGroupMemberDTO.getName(),
                 updateGroupMemberDTO.getRole(),
                 updateGroupMemberDTO.getJoinDate(),
@@ -153,7 +153,7 @@ public class GroupMemberController {
     public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteGroupMembers(
             GroupMember.KeyList keys) {
         Mono<DeleteResult> deleteMono = keys != null && !keys.getKeys().isEmpty()
-                ? groupMemberService.deleteGroupMembers(new HashSet<>(keys.getKeys()), null, true)
+                ? groupMemberService.deleteGroupMembers(CollectionUtil.newSet(keys.getKeys()), null, true)
                 : groupMemberService.deleteGroupMembers(true);
         Mono<DeleteResultDTO> mono = deleteMono.map(DeleteResultDTO::get);
         return ResponseFactory.okIfTruthy(mono);

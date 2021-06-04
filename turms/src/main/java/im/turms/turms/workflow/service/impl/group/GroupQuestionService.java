@@ -38,7 +38,7 @@ import im.turms.turms.bo.GroupQuestionIdAndAnswer;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.constraint.ValidGroupQuestionIdAndAnswer;
-import im.turms.turms.util.ProtoUtil;
+import im.turms.turms.util.ProtoModelUtil;
 import im.turms.turms.workflow.dao.domain.group.GroupJoinQuestion;
 import im.turms.turms.workflow.service.util.DomainConstraintUtil;
 import org.apache.commons.lang3.tuple.Pair;
@@ -327,7 +327,7 @@ public class GroupQuestionService {
                                     builder.setLastUpdatedDate(version.getTime());
                                     for (GroupJoinQuestion question : groupJoinQuestions) {
                                         im.turms.common.model.bo.group.GroupJoinQuestion.Builder questionBuilder =
-                                                ProtoUtil.groupJoinQuestion2proto(question);
+                                                ProtoModelUtil.groupJoinQuestion2proto(question);
                                         builder.addGroupJoinQuestions(questionBuilder.build());
                                     }
                                     return builder.build();

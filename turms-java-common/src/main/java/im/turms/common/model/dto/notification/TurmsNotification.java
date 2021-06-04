@@ -338,19 +338,19 @@ private static final long serialVersionUID = 0L;
     im.turms.common.model.bo.user.UserRelationshipsWithVersionOrBuilder getUserRelationshipsWithVersionOrBuilder();
 
     /**
-     * <code>.im.turms.proto.UserSessionIds user_session_ids = 13;</code>
-     * @return Whether the userSessionIds field is set.
+     * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
+     * @return Whether the nearbyUsers field is set.
      */
-    boolean hasUserSessionIds();
+    boolean hasNearbyUsers();
     /**
-     * <code>.im.turms.proto.UserSessionIds user_session_ids = 13;</code>
-     * @return The userSessionIds.
+     * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
+     * @return The nearbyUsers.
      */
-    im.turms.common.model.bo.user.UserSessionIds getUserSessionIds();
+    im.turms.common.model.bo.user.NearbyUsers getNearbyUsers();
     /**
-     * <code>.im.turms.proto.UserSessionIds user_session_ids = 13;</code>
+     * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
      */
-    im.turms.common.model.bo.user.UserSessionIdsOrBuilder getUserSessionIdsOrBuilder();
+    im.turms.common.model.bo.user.NearbyUsersOrBuilder getNearbyUsersOrBuilder();
 
     /**
      * <code>.im.turms.proto.GroupInvitationsWithVersion group_invitations_with_version = 14;</code>
@@ -650,14 +650,14 @@ private static final long serialVersionUID = 0L;
               break;
             }
             case 106: {
-              im.turms.common.model.bo.user.UserSessionIds.Builder subBuilder = null;
+              im.turms.common.model.bo.user.NearbyUsers.Builder subBuilder = null;
               if (kindCase_ == 13) {
-                subBuilder = ((im.turms.common.model.bo.user.UserSessionIds) kind_).toBuilder();
+                subBuilder = ((im.turms.common.model.bo.user.NearbyUsers) kind_).toBuilder();
               }
               kind_ =
-                  input.readMessage(im.turms.common.model.bo.user.UserSessionIds.parser(), extensionRegistry);
+                  input.readMessage(im.turms.common.model.bo.user.NearbyUsers.parser(), extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom((im.turms.common.model.bo.user.UserSessionIds) kind_);
+                subBuilder.mergeFrom((im.turms.common.model.bo.user.NearbyUsers) kind_);
                 kind_ = subBuilder.buildPartial();
               }
               kindCase_ = 13;
@@ -796,7 +796,7 @@ private static final long serialVersionUID = 0L;
       USER_FRIEND_REQUESTS_WITH_VERSION(10),
       USER_RELATIONSHIP_GROUPS_WITH_VERSION(11),
       USER_RELATIONSHIPS_WITH_VERSION(12),
-      USER_SESSION_IDS(13),
+      NEARBY_USERS(13),
       GROUP_INVITATIONS_WITH_VERSION(14),
       GROUP_JOIN_QUESTION_ANSWER_RESULT(15),
       GROUP_JOIN_REQUESTS_WITH_VERSION(16),
@@ -832,7 +832,7 @@ private static final long serialVersionUID = 0L;
           case 10: return USER_FRIEND_REQUESTS_WITH_VERSION;
           case 11: return USER_RELATIONSHIP_GROUPS_WITH_VERSION;
           case 12: return USER_RELATIONSHIPS_WITH_VERSION;
-          case 13: return USER_SESSION_IDS;
+          case 13: return NEARBY_USERS;
           case 14: return GROUP_INVITATIONS_WITH_VERSION;
           case 15: return GROUP_JOIN_QUESTION_ANSWER_RESULT;
           case 16: return GROUP_JOIN_REQUESTS_WITH_VERSION;
@@ -1247,35 +1247,35 @@ private static final long serialVersionUID = 0L;
       return im.turms.common.model.bo.user.UserRelationshipsWithVersion.getDefaultInstance();
     }
 
-    public static final int USER_SESSION_IDS_FIELD_NUMBER = 13;
+    public static final int NEARBY_USERS_FIELD_NUMBER = 13;
     /**
-     * <code>.im.turms.proto.UserSessionIds user_session_ids = 13;</code>
-     * @return Whether the userSessionIds field is set.
+     * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
+     * @return Whether the nearbyUsers field is set.
      */
     @java.lang.Override
-    public boolean hasUserSessionIds() {
+    public boolean hasNearbyUsers() {
       return kindCase_ == 13;
     }
     /**
-     * <code>.im.turms.proto.UserSessionIds user_session_ids = 13;</code>
-     * @return The userSessionIds.
+     * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
+     * @return The nearbyUsers.
      */
     @java.lang.Override
-    public im.turms.common.model.bo.user.UserSessionIds getUserSessionIds() {
+    public im.turms.common.model.bo.user.NearbyUsers getNearbyUsers() {
       if (kindCase_ == 13) {
-         return (im.turms.common.model.bo.user.UserSessionIds) kind_;
+         return (im.turms.common.model.bo.user.NearbyUsers) kind_;
       }
-      return im.turms.common.model.bo.user.UserSessionIds.getDefaultInstance();
+      return im.turms.common.model.bo.user.NearbyUsers.getDefaultInstance();
     }
     /**
-     * <code>.im.turms.proto.UserSessionIds user_session_ids = 13;</code>
+     * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
      */
     @java.lang.Override
-    public im.turms.common.model.bo.user.UserSessionIdsOrBuilder getUserSessionIdsOrBuilder() {
+    public im.turms.common.model.bo.user.NearbyUsersOrBuilder getNearbyUsersOrBuilder() {
       if (kindCase_ == 13) {
-         return (im.turms.common.model.bo.user.UserSessionIds) kind_;
+         return (im.turms.common.model.bo.user.NearbyUsers) kind_;
       }
-      return im.turms.common.model.bo.user.UserSessionIds.getDefaultInstance();
+      return im.turms.common.model.bo.user.NearbyUsers.getDefaultInstance();
     }
 
     public static final int GROUP_INVITATIONS_WITH_VERSION_FIELD_NUMBER = 14;
@@ -1515,7 +1515,7 @@ private static final long serialVersionUID = 0L;
         output.writeMessage(12, (im.turms.common.model.bo.user.UserRelationshipsWithVersion) kind_);
       }
       if (kindCase_ == 13) {
-        output.writeMessage(13, (im.turms.common.model.bo.user.UserSessionIds) kind_);
+        output.writeMessage(13, (im.turms.common.model.bo.user.NearbyUsers) kind_);
       }
       if (kindCase_ == 14) {
         output.writeMessage(14, (im.turms.common.model.bo.group.GroupInvitationsWithVersion) kind_);
@@ -1593,7 +1593,7 @@ private static final long serialVersionUID = 0L;
       }
       if (kindCase_ == 13) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(13, (im.turms.common.model.bo.user.UserSessionIds) kind_);
+          .computeMessageSize(13, (im.turms.common.model.bo.user.NearbyUsers) kind_);
       }
       if (kindCase_ == 14) {
         size += com.google.protobuf.CodedOutputStream
@@ -1685,8 +1685,8 @@ private static final long serialVersionUID = 0L;
               .equals(other.getUserRelationshipsWithVersion())) return false;
           break;
         case 13:
-          if (!getUserSessionIds()
-              .equals(other.getUserSessionIds())) return false;
+          if (!getNearbyUsers()
+              .equals(other.getNearbyUsers())) return false;
           break;
         case 14:
           if (!getGroupInvitationsWithVersion()
@@ -1776,8 +1776,8 @@ private static final long serialVersionUID = 0L;
           hash = (53 * hash) + getUserRelationshipsWithVersion().hashCode();
           break;
         case 13:
-          hash = (37 * hash) + USER_SESSION_IDS_FIELD_NUMBER;
-          hash = (53 * hash) + getUserSessionIds().hashCode();
+          hash = (37 * hash) + NEARBY_USERS_FIELD_NUMBER;
+          hash = (53 * hash) + getNearbyUsers().hashCode();
           break;
         case 14:
           hash = (37 * hash) + GROUP_INVITATIONS_WITH_VERSION_FIELD_NUMBER;
@@ -2048,10 +2048,10 @@ private static final long serialVersionUID = 0L;
           }
         }
         if (kindCase_ == 13) {
-          if (userSessionIdsBuilder_ == null) {
+          if (nearbyUsersBuilder_ == null) {
             result.kind_ = kind_;
           } else {
-            result.kind_ = userSessionIdsBuilder_.build();
+            result.kind_ = nearbyUsersBuilder_.build();
           }
         }
         if (kindCase_ == 14) {
@@ -2196,8 +2196,8 @@ private static final long serialVersionUID = 0L;
             mergeUserRelationshipsWithVersion(other.getUserRelationshipsWithVersion());
             break;
           }
-          case USER_SESSION_IDS: {
-            mergeUserSessionIds(other.getUserSessionIds());
+          case NEARBY_USERS: {
+            mergeNearbyUsers(other.getNearbyUsers());
             break;
           }
           case GROUP_INVITATIONS_WITH_VERSION: {
@@ -3921,71 +3921,71 @@ private static final long serialVersionUID = 0L;
       }
 
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.user.UserSessionIds, im.turms.common.model.bo.user.UserSessionIds.Builder, im.turms.common.model.bo.user.UserSessionIdsOrBuilder> userSessionIdsBuilder_;
+          im.turms.common.model.bo.user.NearbyUsers, im.turms.common.model.bo.user.NearbyUsers.Builder, im.turms.common.model.bo.user.NearbyUsersOrBuilder> nearbyUsersBuilder_;
       /**
-       * <code>.im.turms.proto.UserSessionIds user_session_ids = 13;</code>
-       * @return Whether the userSessionIds field is set.
+       * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
+       * @return Whether the nearbyUsers field is set.
        */
       @java.lang.Override
-      public boolean hasUserSessionIds() {
+      public boolean hasNearbyUsers() {
         return kindCase_ == 13;
       }
       /**
-       * <code>.im.turms.proto.UserSessionIds user_session_ids = 13;</code>
-       * @return The userSessionIds.
+       * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
+       * @return The nearbyUsers.
        */
       @java.lang.Override
-      public im.turms.common.model.bo.user.UserSessionIds getUserSessionIds() {
-        if (userSessionIdsBuilder_ == null) {
+      public im.turms.common.model.bo.user.NearbyUsers getNearbyUsers() {
+        if (nearbyUsersBuilder_ == null) {
           if (kindCase_ == 13) {
-            return (im.turms.common.model.bo.user.UserSessionIds) kind_;
+            return (im.turms.common.model.bo.user.NearbyUsers) kind_;
           }
-          return im.turms.common.model.bo.user.UserSessionIds.getDefaultInstance();
+          return im.turms.common.model.bo.user.NearbyUsers.getDefaultInstance();
         } else {
           if (kindCase_ == 13) {
-            return userSessionIdsBuilder_.getMessage();
+            return nearbyUsersBuilder_.getMessage();
           }
-          return im.turms.common.model.bo.user.UserSessionIds.getDefaultInstance();
+          return im.turms.common.model.bo.user.NearbyUsers.getDefaultInstance();
         }
       }
       /**
-       * <code>.im.turms.proto.UserSessionIds user_session_ids = 13;</code>
+       * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
        */
-      public Builder setUserSessionIds(im.turms.common.model.bo.user.UserSessionIds value) {
-        if (userSessionIdsBuilder_ == null) {
+      public Builder setNearbyUsers(im.turms.common.model.bo.user.NearbyUsers value) {
+        if (nearbyUsersBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
           kind_ = value;
           onChanged();
         } else {
-          userSessionIdsBuilder_.setMessage(value);
+          nearbyUsersBuilder_.setMessage(value);
         }
         kindCase_ = 13;
         return this;
       }
       /**
-       * <code>.im.turms.proto.UserSessionIds user_session_ids = 13;</code>
+       * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
        */
-      public Builder setUserSessionIds(
-          im.turms.common.model.bo.user.UserSessionIds.Builder builderForValue) {
-        if (userSessionIdsBuilder_ == null) {
+      public Builder setNearbyUsers(
+          im.turms.common.model.bo.user.NearbyUsers.Builder builderForValue) {
+        if (nearbyUsersBuilder_ == null) {
           kind_ = builderForValue.build();
           onChanged();
         } else {
-          userSessionIdsBuilder_.setMessage(builderForValue.build());
+          nearbyUsersBuilder_.setMessage(builderForValue.build());
         }
         kindCase_ = 13;
         return this;
       }
       /**
-       * <code>.im.turms.proto.UserSessionIds user_session_ids = 13;</code>
+       * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
        */
-      public Builder mergeUserSessionIds(im.turms.common.model.bo.user.UserSessionIds value) {
-        if (userSessionIdsBuilder_ == null) {
+      public Builder mergeNearbyUsers(im.turms.common.model.bo.user.NearbyUsers value) {
+        if (nearbyUsersBuilder_ == null) {
           if (kindCase_ == 13 &&
-              kind_ != im.turms.common.model.bo.user.UserSessionIds.getDefaultInstance()) {
-            kind_ = im.turms.common.model.bo.user.UserSessionIds.newBuilder((im.turms.common.model.bo.user.UserSessionIds) kind_)
+              kind_ != im.turms.common.model.bo.user.NearbyUsers.getDefaultInstance()) {
+            kind_ = im.turms.common.model.bo.user.NearbyUsers.newBuilder((im.turms.common.model.bo.user.NearbyUsers) kind_)
                 .mergeFrom(value).buildPartial();
           } else {
             kind_ = value;
@@ -3993,18 +3993,18 @@ private static final long serialVersionUID = 0L;
           onChanged();
         } else {
           if (kindCase_ == 13) {
-            userSessionIdsBuilder_.mergeFrom(value);
+            nearbyUsersBuilder_.mergeFrom(value);
           }
-          userSessionIdsBuilder_.setMessage(value);
+          nearbyUsersBuilder_.setMessage(value);
         }
         kindCase_ = 13;
         return this;
       }
       /**
-       * <code>.im.turms.proto.UserSessionIds user_session_ids = 13;</code>
+       * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
        */
-      public Builder clearUserSessionIds() {
-        if (userSessionIdsBuilder_ == null) {
+      public Builder clearNearbyUsers() {
+        if (nearbyUsersBuilder_ == null) {
           if (kindCase_ == 13) {
             kindCase_ = 0;
             kind_ = null;
@@ -4015,50 +4015,50 @@ private static final long serialVersionUID = 0L;
             kindCase_ = 0;
             kind_ = null;
           }
-          userSessionIdsBuilder_.clear();
+          nearbyUsersBuilder_.clear();
         }
         return this;
       }
       /**
-       * <code>.im.turms.proto.UserSessionIds user_session_ids = 13;</code>
+       * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
        */
-      public im.turms.common.model.bo.user.UserSessionIds.Builder getUserSessionIdsBuilder() {
-        return getUserSessionIdsFieldBuilder().getBuilder();
+      public im.turms.common.model.bo.user.NearbyUsers.Builder getNearbyUsersBuilder() {
+        return getNearbyUsersFieldBuilder().getBuilder();
       }
       /**
-       * <code>.im.turms.proto.UserSessionIds user_session_ids = 13;</code>
+       * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
        */
       @java.lang.Override
-      public im.turms.common.model.bo.user.UserSessionIdsOrBuilder getUserSessionIdsOrBuilder() {
-        if ((kindCase_ == 13) && (userSessionIdsBuilder_ != null)) {
-          return userSessionIdsBuilder_.getMessageOrBuilder();
+      public im.turms.common.model.bo.user.NearbyUsersOrBuilder getNearbyUsersOrBuilder() {
+        if ((kindCase_ == 13) && (nearbyUsersBuilder_ != null)) {
+          return nearbyUsersBuilder_.getMessageOrBuilder();
         } else {
           if (kindCase_ == 13) {
-            return (im.turms.common.model.bo.user.UserSessionIds) kind_;
+            return (im.turms.common.model.bo.user.NearbyUsers) kind_;
           }
-          return im.turms.common.model.bo.user.UserSessionIds.getDefaultInstance();
+          return im.turms.common.model.bo.user.NearbyUsers.getDefaultInstance();
         }
       }
       /**
-       * <code>.im.turms.proto.UserSessionIds user_session_ids = 13;</code>
+       * <code>.im.turms.proto.NearbyUsers nearby_users = 13;</code>
        */
       private com.google.protobuf.SingleFieldBuilderV3<
-          im.turms.common.model.bo.user.UserSessionIds, im.turms.common.model.bo.user.UserSessionIds.Builder, im.turms.common.model.bo.user.UserSessionIdsOrBuilder>
-          getUserSessionIdsFieldBuilder() {
-        if (userSessionIdsBuilder_ == null) {
+          im.turms.common.model.bo.user.NearbyUsers, im.turms.common.model.bo.user.NearbyUsers.Builder, im.turms.common.model.bo.user.NearbyUsersOrBuilder>
+          getNearbyUsersFieldBuilder() {
+        if (nearbyUsersBuilder_ == null) {
           if (!(kindCase_ == 13)) {
-            kind_ = im.turms.common.model.bo.user.UserSessionIds.getDefaultInstance();
+            kind_ = im.turms.common.model.bo.user.NearbyUsers.getDefaultInstance();
           }
-          userSessionIdsBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
-              im.turms.common.model.bo.user.UserSessionIds, im.turms.common.model.bo.user.UserSessionIds.Builder, im.turms.common.model.bo.user.UserSessionIdsOrBuilder>(
-                  (im.turms.common.model.bo.user.UserSessionIds) kind_,
+          nearbyUsersBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              im.turms.common.model.bo.user.NearbyUsers, im.turms.common.model.bo.user.NearbyUsers.Builder, im.turms.common.model.bo.user.NearbyUsersOrBuilder>(
+                  (im.turms.common.model.bo.user.NearbyUsers) kind_,
                   getParentForChildren(),
                   isClean());
           kind_ = null;
         }
         kindCase_ = 13;
         onChanged();;
-        return userSessionIdsBuilder_;
+        return nearbyUsersBuilder_;
       }
 
       private com.google.protobuf.SingleFieldBuilderV3<

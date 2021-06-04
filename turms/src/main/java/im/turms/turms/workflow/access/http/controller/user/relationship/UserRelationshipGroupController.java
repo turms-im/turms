@@ -24,6 +24,7 @@ import im.turms.server.common.access.http.dto.response.ResponseDTO;
 import im.turms.server.common.access.http.dto.response.ResponseFactory;
 import im.turms.server.common.access.http.dto.response.UpdateResultDTO;
 import im.turms.server.common.bo.common.DateRange;
+import im.turms.server.common.util.CollectionUtil;
 import im.turms.turms.workflow.access.http.dto.request.user.AddRelationshipGroupDTO;
 import im.turms.turms.workflow.access.http.dto.request.user.UpdateRelationshipGroupDTO;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
@@ -44,7 +45,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 import static im.turms.turms.workflow.access.http.permission.AdminPermission.USER_RELATIONSHIP_GROUP_CREATE;
@@ -84,7 +84,7 @@ public class UserRelationshipGroupController {
     public Mono<ResponseEntity<ResponseDTO<DeleteResultDTO>>> deleteRelationshipGroups(
             UserRelationshipGroup.KeyList keys) {
         Mono<DeleteResult> deleteMono = keys != null && !keys.getKeys().isEmpty()
-                ? userRelationshipGroupService.deleteRelationshipGroups(new HashSet<>(keys.getKeys()))
+                ? userRelationshipGroupService.deleteRelationshipGroups(CollectionUtil.newSet(keys.getKeys()))
                 : userRelationshipGroupService.deleteRelationshipGroups();
         return ResponseFactory.okIfTruthy(deleteMono.map(DeleteResultDTO::get));
     }
@@ -95,7 +95,7 @@ public class UserRelationshipGroupController {
             UserRelationshipGroup.KeyList keys,
             @RequestBody UpdateRelationshipGroupDTO updateRelationshipGroupDTO) {
         Mono<UpdateResultDTO> updateMono = userRelationshipGroupService.updateRelationshipGroups(
-                new HashSet<>(keys.getKeys()),
+                CollectionUtil.newSet(keys.getKeys()),
                 updateRelationshipGroupDTO.getName(),
                 updateRelationshipGroupDTO.getCreationDate())
                 .map(UpdateResultDTO::get);

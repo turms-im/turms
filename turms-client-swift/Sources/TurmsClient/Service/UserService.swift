@@ -160,60 +160,31 @@ public class UserService {
             }
     }
 
-    public func queryUserIdsNearby(latitude: Float, longitude: Float, distance: Int32? = nil, maxNumber: Int32? = nil) -> Promise<[Int64]> {
+    public func queryNearbyUsers(latitude: Float, longitude: Float, distance: Int32? = nil, maxNumber: Int32? = nil, withCoordinates: Bool? = nil, withDistance: Bool? = nil, withInfo: Bool? = nil) -> Promise<[NearbyUser]> {
         return turmsClient.driver
             .send {
-                $0.queryUserIdsNearbyRequest = .with {
+                $0.queryNearbyUsersRequest = .with {
                     $0.latitude = latitude
                     $0.longitude = longitude
                     if let v = distance {
-                        $0.distance = Float(v)
+                        $0.distance = v
                     }
                     if let v = maxNumber {
                         $0.maxNumber = v
                     }
-                }
-            }
-            .map {
-                $0.data.ids.values
-            }
-    }
-
-    public func queryUserSessionIdsNearby(latitude: Float, longitude: Float, distance: Int32? = nil, maxNumber: Int32? = nil) -> Promise<[UserSessionId]> {
-        return turmsClient.driver
-            .send {
-                $0.queryUserIdsNearbyRequest = .with {
-                    $0.latitude = latitude
-                    $0.longitude = longitude
-                    if let v = distance {
-                        $0.distance = Float(v)
+                    if let v = withCoordinates {
+                        $0.withCoordinates = v
                     }
-                    if let v = maxNumber {
-                        $0.maxNumber = v
+                    if let v = withDistance {
+                        $0.withDistance = v
+                    }
+                    if let v = withInfo {
+                        $0.withInfo = v
                     }
                 }
             }
             .map {
-                $0.data.userSessionIds.userSessionIds
-            }
-    }
-
-    public func queryUserInfosNearby(latitude: Float, longitude: Float, distance: Int32? = nil, maxNumber: Int32? = nil) -> Promise<[UserInfo]> {
-        return turmsClient.driver
-            .send {
-                $0.queryUserInfosNearbyRequest = .with {
-                    $0.latitude = latitude
-                    $0.longitude = longitude
-                    if let v = distance {
-                        $0.distance = Float(v)
-                    }
-                    if let v = maxNumber {
-                        $0.maxNumber = v
-                    }
-                }
-            }
-            .map {
-                $0.data.usersInfosWithVersion.userInfos
+                $0.data.nearbyUsers.nearbyUsers
             }
     }
 

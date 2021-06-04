@@ -25,9 +25,9 @@ import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.rpc.request.SetUserOfflineRequest;
 import im.turms.server.common.service.session.UserStatusService;
 import im.turms.server.common.util.AssertUtil;
+import im.turms.server.common.util.CollectionUtil;
 import im.turms.server.common.util.ReactorUtil;
 import im.turms.turms.workflow.service.util.DomainConstraintUtil;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -35,7 +35,6 @@ import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -106,7 +105,7 @@ public class SessionService {
                         Set<Map.Entry<String, Collection<DeviceType>>> entries = nodeIdAndDeviceTypeMap.asMap().entrySet();
                         List<Mono<Boolean>> monos = new ArrayList<>(entries.size());
                         for (Map.Entry<String, Collection<DeviceType>> entry : entries) {
-                            HashSet<DeviceType> types = new HashSet<>(CollectionUtils.intersection(deviceTypes, entry.getValue()));
+                            Set<DeviceType> types = CollectionUtil.intersection(deviceTypes, entry.getValue());
                             if (!types.isEmpty()) {
                                 SetUserOfflineRequest request = new SetUserOfflineRequest(userId, types, closeStatus);
                                 monos.add(node.getRpcService().requestResponse(entry.getKey(), request));

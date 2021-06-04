@@ -198,12 +198,12 @@ public struct TurmsNotification {
       set {kind = .userRelationshipsWithVersion(newValue)}
     }
 
-    public var userSessionIds: UserSessionIds {
+    public var nearbyUsers: NearbyUsers {
       get {
-        if case .userSessionIds(let v)? = kind {return v}
-        return UserSessionIds()
+        if case .nearbyUsers(let v)? = kind {return v}
+        return NearbyUsers()
       }
-      set {kind = .userSessionIds(newValue)}
+      set {kind = .nearbyUsers(newValue)}
     }
 
     public var groupInvitationsWithVersion: GroupInvitationsWithVersion {
@@ -269,7 +269,7 @@ public struct TurmsNotification {
       case userFriendRequestsWithVersion(UserFriendRequestsWithVersion)
       case userRelationshipGroupsWithVersion(UserRelationshipGroupsWithVersion)
       case userRelationshipsWithVersion(UserRelationshipsWithVersion)
-      case userSessionIds(UserSessionIds)
+      case nearbyUsers(NearbyUsers)
       case groupInvitationsWithVersion(GroupInvitationsWithVersion)
       case groupJoinQuestionAnswerResult(GroupJoinQuestionsAnswerResult)
       case groupJoinRequestsWithVersion(GroupJoinRequestsWithVersion)
@@ -331,8 +331,8 @@ public struct TurmsNotification {
           guard case .userRelationshipsWithVersion(let l) = lhs, case .userRelationshipsWithVersion(let r) = rhs else { preconditionFailure() }
           return l == r
         }()
-        case (.userSessionIds, .userSessionIds): return {
-          guard case .userSessionIds(let l) = lhs, case .userSessionIds(let r) = rhs else { preconditionFailure() }
+        case (.nearbyUsers, .nearbyUsers): return {
+          guard case .nearbyUsers(let l) = lhs, case .nearbyUsers(let r) = rhs else { preconditionFailure() }
           return l == r
         }()
         case (.groupInvitationsWithVersion, .groupInvitationsWithVersion): return {
@@ -504,7 +504,7 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
     10: .standard(proto: "user_friend_requests_with_version"),
     11: .standard(proto: "user_relationship_groups_with_version"),
     12: .standard(proto: "user_relationships_with_version"),
-    13: .standard(proto: "user_session_ids"),
+    13: .standard(proto: "nearby_users"),
     14: .standard(proto: "group_invitations_with_version"),
     15: .standard(proto: "group_join_question_answer_result"),
     16: .standard(proto: "group_join_requests_with_version"),
@@ -671,16 +671,16 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
         }
       }()
       case 13: try {
-        var v: UserSessionIds?
+        var v: NearbyUsers?
         var hadOneofValue = false
         if let current = self.kind {
           hadOneofValue = true
-          if case .userSessionIds(let m) = current {v = m}
+          if case .nearbyUsers(let m) = current {v = m}
         }
         try decoder.decodeSingularMessageField(value: &v)
         if let v = v {
           if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.kind = .userSessionIds(v)
+          self.kind = .nearbyUsers(v)
         }
       }()
       case 14: try {
@@ -819,8 +819,8 @@ extension TurmsNotification.DataMessage: SwiftProtobuf.Message, SwiftProtobuf._M
       guard case .userRelationshipsWithVersion(let v)? = self.kind else { preconditionFailure() }
       try visitor.visitSingularMessageField(value: v, fieldNumber: 12)
     }()
-    case .userSessionIds?: try {
-      guard case .userSessionIds(let v)? = self.kind else { preconditionFailure() }
+    case .nearbyUsers?: try {
+      guard case .nearbyUsers(let v)? = self.kind else { preconditionFailure() }
       try visitor.visitSingularMessageField(value: v, fieldNumber: 13)
     }()
     case .groupInvitationsWithVersion?: try {

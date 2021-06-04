@@ -18,15 +18,23 @@
 package im.turms.turms.workflow.service.impl.user.onlineuser;
 
 import im.turms.common.constant.DeviceType;
+import im.turms.server.common.bo.location.NearbyUser;
+import im.turms.server.common.bo.session.UserSessionId;
 import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.service.session.SessionLocationService;
 import im.turms.turms.workflow.service.impl.user.UserService;
+import io.lettuce.core.GeoWithin;
+import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author James Chen
@@ -44,16 +52,75 @@ public class UsersNearbyService {
         this.userService = userService;
     }
 
-    public Flux<User> queryUsersProfilesNearby(
+    public Mono<Collection<NearbyUser>> queryNearbyUsers(
             @NotNull Long userId,
             @NotNull DeviceType deviceType,
-            @Nullable Short maxPeopleNumber,
-            @Nullable Double maxDistance) {
-        return sessionLocationService.queryNearestUserIds(userId, deviceType, maxPeopleNumber, maxDistance)
-                .collect(Collectors.toSet())
-                .flatMapMany(ids -> ids.isEmpty()
-                        ? Flux.empty()
-                        : userService.queryUsersProfiles(ids, false));
+            @Nullable Point coordinates,
+            @Nullable Short maxNumber,
+            @Nullable Integer maxDistance,
+            boolean withCoordinates,
+            boolean withDistance,
+            boolean withUserInfo) {
+        Mono<Void> upsertMono = coordinates == null
+                ? Mono.empty()
+                : sessionLocationService.upsertUserLocation(
+                userId,
+                deviceType,
+                coordinates,
+                new Date());
+        Flux<GeoWithin<Object>> nearbyUserFlux = sessionLocationService.queryNearbyUsers(
+                userId,
+                deviceType,
+                maxNumber,
+                maxDistance,
+                withCoordinates,
+                withDistance);
+        Mono<Collection<NearbyUser>> resultMono;
+        if (withUserInfo) {
+            resultMono = nearbyUserFlux
+                    .collectMap(geo -> {
+                        if (geo.getMember() instanceof UserSessionId sessionId) {
+                            return sessionId.getUserId();
+                        }
+                        return (Long) geo.getMember();
+                    }, geo -> geo)
+                    .flatMap(geoMap -> {
+                        if (geoMap.isEmpty()) {
+                            return Mono.empty();
+                        }
+                        return userService.queryUsersProfiles(geoMap.keySet(), false)
+                                .collectList()
+                                .map(users -> {
+                                    List<NearbyUser> nearbyUsers = new ArrayList<>(users.size());
+                                    for (User user : users) {
+                                        GeoWithin<Object> geo = geoMap.get(user.getId());
+                                        if (geo == null) {
+                                            continue;
+                                        }
+                                        NearbyUser nearbyUser = new NearbyUser(getUserSessionId(geo.getMember()),
+                                                geo.getCoordinates(),
+                                                geo.getDistance().intValue(), user);
+                                        nearbyUsers.add(nearbyUser);
+                                    }
+                                    return nearbyUsers;
+                                });
+                    });
+        } else {
+            resultMono = nearbyUserFlux
+                    .map(geo -> new NearbyUser(getUserSessionId(geo.getMember()),
+                            geo.getCoordinates(),
+                            geo.getDistance().intValue(),
+                            null))
+                    .collectList()
+                    .map(users -> users);
+        }
+        return upsertMono.then(resultMono);
+    }
+
+    private UserSessionId getUserSessionId(Object value) {
+        return value instanceof UserSessionId sessionId
+                ? sessionId
+                : new UserSessionId((Long) value, null);
     }
 
 }

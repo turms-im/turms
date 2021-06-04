@@ -47,7 +47,7 @@ import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.constant.OperationResultConstant;
 import im.turms.turms.plugin.extension.handler.ExpiredMessageAutoDeletionNotificationHandler;
 import im.turms.turms.plugin.manager.TurmsPluginManager;
-import im.turms.turms.util.ProtoUtil;
+import im.turms.turms.util.ProtoModelUtil;
 import im.turms.turms.workflow.dao.domain.message.Message;
 import im.turms.turms.workflow.service.impl.conversation.ConversationService;
 import im.turms.turms.workflow.service.impl.group.GroupMemberService;
@@ -829,7 +829,7 @@ public class MessageService {
     private Mono<Boolean> sendMessage(@NotNull Message message, @NotNull Set<Long> recipientIds) {
         TurmsRequest request = TurmsRequest
                 .newBuilder()
-                .setCreateMessageRequest(ProtoUtil.message2createMessageRequest(message))
+                .setCreateMessageRequest(ProtoModelUtil.message2createMessageRequest(message))
                 .build();
         TurmsNotification notification = TurmsNotification
                 .newBuilder()

@@ -58,13 +58,12 @@ import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_GROU
 import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_JOINED_GROUP_IDS_REQUEST;
 import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_JOINED_GROUP_INFOS_REQUEST;
 import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_MESSAGES_REQUEST;
+import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_NEARBY_USERS_REQUEST;
 import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_RELATED_USER_IDS_REQUEST;
 import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_RELATIONSHIPS_REQUEST;
 import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_RELATIONSHIP_GROUPS_REQUEST;
 import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_SIGNED_GET_URL_REQUEST;
 import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_SIGNED_PUT_URL_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_USER_IDS_NEARBY_REQUEST;
-import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_USER_INFOS_NEARBY_REQUEST;
 import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_USER_ONLINE_STATUSES_REQUEST;
 import static im.turms.common.model.dto.request.TurmsRequest.KindCase.QUERY_USER_PROFILE_REQUEST;
 import static im.turms.common.model.dto.request.TurmsRequest.KindCase.UPDATE_CONVERSATION_REQUEST;
@@ -157,9 +156,8 @@ public enum LoggingRequestCategory {
                 QUERY_SIGNED_PUT_URL_REQUEST,
                 QUERY_CONVERSATIONS_REQUEST,
                 QUERY_MESSAGES_REQUEST,
+                QUERY_NEARBY_USERS_REQUEST,
                 QUERY_USER_PROFILE_REQUEST,
-                QUERY_USER_IDS_NEARBY_REQUEST,
-                QUERY_USER_INFOS_NEARBY_REQUEST,
                 QUERY_USER_ONLINE_STATUSES_REQUEST,
                 QUERY_FRIEND_REQUESTS_REQUEST,
                 QUERY_RELATED_USER_IDS_REQUEST,
@@ -188,8 +186,7 @@ public enum LoggingRequestCategory {
                 UPDATE_MESSAGE_REQUEST);
 
         private static final Set<TurmsRequest.KindCase> USER = Set.of(QUERY_USER_PROFILE_REQUEST,
-                QUERY_USER_IDS_NEARBY_REQUEST,
-                QUERY_USER_INFOS_NEARBY_REQUEST,
+                QUERY_NEARBY_USERS_REQUEST,
                 QUERY_USER_ONLINE_STATUSES_REQUEST,
                 UPDATE_USER_LOCATION_REQUEST,
                 UPDATE_USER_ONLINE_STATUS_REQUEST,

@@ -3,6 +3,8 @@ import {ProfileAccessStrategy} from './proto/constant/profile_access_strategy';
 import {UserStatus} from './proto/constant/user_status';
 import {DeviceType} from './proto/constant/device_type';
 import {GroupMemberRole} from './proto/constant/group_member_role';
+import {UserInfo} from "./proto/model/user/user_info";
+import {UserLocation} from "./proto/model/user/user_location";
 
 export declare namespace ParsedModel {
 
@@ -46,6 +48,14 @@ export declare namespace ParsedModel {
         lastUpdatedDate?: Date;
     }
 
+    interface NearbyUser {
+        userId: string;
+        deviceType?: DeviceType;
+        info?: UserInfo;
+        distance?: number;
+        location?: UserLocation;
+    }
+
     interface PrivateConversation {
         ownerId: string;
         targetId: string;
@@ -61,7 +71,6 @@ export declare namespace ParsedModel {
         id?: string;
         isSystemMessage?: boolean;
         deliveryDate?: Date;
-        deletionDate?: Date;
         text?: string;
         senderId?: string;
         groupId?: string;
@@ -99,7 +108,6 @@ export declare namespace ParsedModel {
         name?: string;
         intro?: string;
         registrationDate?: Date;
-        deletionDate?: Date;
         active?: boolean;
         profileAccessStrategy?: ProfileAccessStrategy;
     }
@@ -190,7 +198,6 @@ export declare namespace ParsedModel {
         intro?: string;
         announcement?: string;
         creationDate?: Date;
-        deletionDate?: Date;
         muteEndDate?: Date;
         active?: boolean;
     }

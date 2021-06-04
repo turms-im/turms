@@ -17,15 +17,15 @@
 
 export default class StateStore {
 
-    /** Connection **/
+    // Connection
     private _websocket?: WebSocket;
 
-    /** Session **/
+    // Session
     private _isSessionOpen = false;
     private _sessionId?: string;
     private _serverId?: string;
 
-    /** Request **/
+    // Request
     private _lastRequestDate = new Date(0);
 
     get websocket(): WebSocket {
