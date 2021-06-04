@@ -57,16 +57,9 @@ public class HeartbeatManager {
     private final UserStatusService userStatusService;
     private final Map<Long, UserSessionsManager> sessionsManagerByUserId;
     private final Thread workerThread;
-
-    public void setCloseIdleSessionAfterSeconds(int closeIdleSessionAfterSeconds) {
-        this.closeIdleSessionAfterSeconds = closeIdleSessionAfterSeconds;
-        closeIdleSessionAfterMillis = closeIdleSessionAfterSeconds * 1000;
-    }
-
-    @Setter
-    private int clientHeartbeatIntervalSeconds;
     private int closeIdleSessionAfterSeconds;
     private int closeIdleSessionAfterMillis;
+    private int expectedFractionPerSecond;
     @Setter
     private int minHeartbeatIntervalMillis;
     @Setter
@@ -82,7 +75,7 @@ public class HeartbeatManager {
         this.sessionService = sessionService;
         this.userStatusService = userStatusService;
         this.sessionsManagerByUserId = sessionsManagerByUserId;
-        this.clientHeartbeatIntervalSeconds = clientHeartbeatIntervalSeconds;
+        setClientHeartbeatIntervalSeconds(clientHeartbeatIntervalSeconds);
         setCloseIdleSessionAfterSeconds(closeIdleSessionAfterSeconds);
         this.minHeartbeatIntervalMillis = minHeartbeatIntervalSeconds * 1000;
         this.switchProtocolAfterMillis = switchProtocolAfterSeconds * 1000;
@@ -104,6 +97,17 @@ public class HeartbeatManager {
         workerThread.start();
     }
 
+    public void setCloseIdleSessionAfterSeconds(int closeIdleSessionAfterSeconds) {
+        this.closeIdleSessionAfterSeconds = closeIdleSessionAfterSeconds;
+        closeIdleSessionAfterMillis = closeIdleSessionAfterSeconds * 1000;
+    }
+
+    public void setClientHeartbeatIntervalSeconds(int clientHeartbeatIntervalSeconds) {
+        expectedFractionPerSecond = clientHeartbeatIntervalSeconds > 0
+                ? clientHeartbeatIntervalSeconds
+                : 30;
+    }
+
     public void destroy() {
         workerThread.interrupt();
     }
@@ -118,8 +122,8 @@ public class HeartbeatManager {
 
     private List<Long> collectOnlineUsersAndUpdateStatus(Set<Map.Entry<Long, UserSessionsManager>> entries, long now) {
         int onlineUserCount = entries.size();
-        int userCount = (int) (UPDATE_HEARTBEAT_INTERVAL_FACTOR * onlineUserCount / clientHeartbeatIntervalSeconds);
-        List<Long> userIdToUpdateHeartbeat = new ArrayList<>(userCount);
+        int expectedUserCountToRefreshPerInterval = (int) (UPDATE_HEARTBEAT_INTERVAL_FACTOR * onlineUserCount / expectedFractionPerSecond);
+        List<Long> userIdToUpdateHeartbeat = new ArrayList<>(expectedUserCountToRefreshPerInterval);
         for (Map.Entry<Long, UserSessionsManager> entry : entries) {
             Map<DeviceType, UserSession> sessionMap = entry.getValue().getSessionMap();
             for (Map.Entry<DeviceType, UserSession> sessionEntry : sessionMap.entrySet()) {

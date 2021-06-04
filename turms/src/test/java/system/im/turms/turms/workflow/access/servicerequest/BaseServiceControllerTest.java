@@ -24,6 +24,7 @@ import im.turms.turms.workflow.access.servicerequest.dto.RequestHandlerResult;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.ParameterizedType;
 import java.util.function.Consumer;
 
@@ -42,8 +43,8 @@ public class BaseServiceControllerTest<T> extends SpringAwareIntegrationTest {
     }
 
     protected void assertResult(Mono<RequestHandlerResult> resultMono,
-                                Consumer<RequestHandlerResult> resultConsumer,
-                                TurmsStatusCode... expectedCodes) {
+                                @Nullable Consumer<RequestHandlerResult> resultConsumer,
+                                @Nullable TurmsStatusCode... expectedCodes) {
         Mono<?> mono = resultMono
                 .switchIfEmpty(Mono.error(new IllegalStateException("No result")))
                 .onErrorResume(TurmsBusinessException.class, e -> {
@@ -51,7 +52,9 @@ public class BaseServiceControllerTest<T> extends SpringAwareIntegrationTest {
                     return Mono.empty();
                 })
                 .flatMap(result -> {
-                    assertThat(result.getCode()).isIn((Object[]) expectedCodes);
+                    if (expectedCodes != null && expectedCodes.length > 0) {
+                        assertThat(result.getCode()).isIn((Object[]) expectedCodes);
+                    }
                     if (resultConsumer != null) {
                         resultConsumer.accept(result);
                     }
@@ -66,26 +69,29 @@ public class BaseServiceControllerTest<T> extends SpringAwareIntegrationTest {
         assertResult(resultMono, null, expectedCodes);
     }
 
-    protected void assertResultIsOk(Mono<RequestHandlerResult> resultMono, Consumer<RequestHandlerResult> resultConsumer) {
-        StepVerifier
-                .create(resultMono)
-                .expectNextMatches(result -> {
-                    assertThat(result.getCode())
-                            .as("The status code must be " + TurmsStatusCode.OK)
-                            .isEqualTo(TurmsStatusCode.OK);
-                    resultConsumer.accept(result);
-                    return true;
-                })
-                .verifyComplete();
+    protected void assertResultIsOk(Mono<RequestHandlerResult> resultMono, @Nullable Consumer<RequestHandlerResult> resultConsumer) {
+        assertResult(resultMono, resultConsumer);
     }
 
     protected void assertResultIsOk(Mono<RequestHandlerResult> resultMono) {
+        assertResult(resultMono, null, TurmsStatusCode.OK);
+    }
+
+    protected void assertResultIsOkAndRecipients(Mono<RequestHandlerResult> resultMono,
+                                                 @Nullable Consumer<RequestHandlerResult> resultConsumer,
+                                                 @Nullable Long... recipients) {
         StepVerifier
                 .create(resultMono)
                 .expectNextMatches(result -> {
                     assertThat(result.getCode())
-                            .as("The status code must be " + TurmsStatusCode.OK)
+                            .as("The status code should be " + TurmsStatusCode.OK)
                             .isEqualTo(TurmsStatusCode.OK);
+                    if (resultConsumer != null) {
+                        resultConsumer.accept(result);
+                    }
+                    if (recipients != null && recipients.length > 0) {
+                        assertThat(result.getRecipients()).containsExactlyInAnyOrder(recipients);
+                    }
                     return true;
                 })
                 .verifyComplete();

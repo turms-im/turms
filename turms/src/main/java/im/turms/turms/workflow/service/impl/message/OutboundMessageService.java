@@ -146,9 +146,15 @@ public class OutboundMessageService {
         return Flux.merge(monos)
                 .collect(CollectorUtil.toList(recipientIdsSize))
                 .flatMap(pairs -> {
-                    int expectedMembersCount =
-                            Math.min(node.getDiscoveryService().getActiveSortedGatewayMemberList().size(), recipientIdsSize);
-                    int expectedRecipientCountPerMember = Math.min(1, recipientIdsSize / expectedMembersCount);
+                    if (pairs.isEmpty()) {
+                        return Mono.just(false);
+                    }
+                    int gatewayMemberCount = node.getDiscoveryService().getActiveSortedGatewayMemberList().size();
+                    if (gatewayMemberCount == 0) {
+                        return Mono.just(false);
+                    }
+                    int expectedMembersCount = Math.min(gatewayMemberCount, recipientIdsSize);
+                    int expectedRecipientCountPerMember = Math.max(1, recipientIdsSize / expectedMembersCount);
                     SetMultimap<String, Long> userIdsByNodeId =
                             HashMultimap.create(expectedMembersCount, expectedRecipientCountPerMember);
                     for (RecipientAndNodeIds pair : pairs) {

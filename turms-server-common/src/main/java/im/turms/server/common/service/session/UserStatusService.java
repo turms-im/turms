@@ -143,6 +143,9 @@ public class UserStatusService {
                 });
     }
 
+    /**
+     * @return MonoEmpty if the user is offline
+     */
     public Mono<Map<DeviceType, String>> getDeviceAndNodeIdMapByUserId(@NotNull Long userId) {
         try {
             AssertUtil.notNull(userId, "userId");
