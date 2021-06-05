@@ -2,6 +2,7 @@ import Foundation
 import PromiseKit
 
 class HeartbeatService: BaseService {
+    private static let HEARTBEAT_FAILURE_REQUEST_ID: Int64 = -100
     private static let HEARTBEAT_REQUEST = Data()
 
     private let createQueue = DispatchQueue(label: "im.turms.turmsclient.heartbeatservice.createqueue")
@@ -58,6 +59,14 @@ class HeartbeatService: BaseService {
         repeat {
             heartbeatPromises.popLast()?.fulfill(())
         } while !heartbeatPromises.isEmpty
+    }
+
+    func rejectHeartbeatPromisesIfFail(_ notification: TurmsNotification) -> Bool {
+        if notification.hasRequestID, notification.requestID == HEARTBEAT_FAILURE_REQUEST_ID {
+            rejectHeartbeatPromises(TurmsBusinessError(notification))
+            return true
+        }
+        return false
     }
 
     func rejectHeartbeatPromises(_ error: Error) {

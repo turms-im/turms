@@ -56,14 +56,14 @@ public class UserRequestDispatcher {
     private static final ByteBuf HEARTBEAT_RESPONSE_UPDATE_NON_EXISTING_SESSION_HEARTBEAT;
     private static final ByteBuf HEARTBEAT_RESPONSE_SERVER_UNAVAILABLE;
 
+    private static final long HEARTBEAT_FAILURE_REQUEST_ID = -100;
+
     static {
-        // TODO: support using -1 as the error response to heartbeat request
-        //  in the implementation of turms clients
         TurmsNotification notification = NotificationFactory
-                .fromCode(TurmsStatusCode.UPDATE_NON_EXISTING_SESSION_HEARTBEAT, -1);
+                .fromCode(TurmsStatusCode.UPDATE_NON_EXISTING_SESSION_HEARTBEAT, HEARTBEAT_FAILURE_REQUEST_ID);
         HEARTBEAT_RESPONSE_UPDATE_NON_EXISTING_SESSION_HEARTBEAT = Unpooled.unreleasableBuffer(ProtoUtil.getDirectByteBuffer(notification));
         notification = NotificationFactory
-                .fromCode(TurmsStatusCode.SERVER_UNAVAILABLE, -1);
+                .fromCode(TurmsStatusCode.SERVER_UNAVAILABLE, HEARTBEAT_FAILURE_REQUEST_ID);
         HEARTBEAT_RESPONSE_SERVER_UNAVAILABLE = Unpooled.unreleasableBuffer(ProtoUtil.getDirectByteBuffer(notification));
     }
 

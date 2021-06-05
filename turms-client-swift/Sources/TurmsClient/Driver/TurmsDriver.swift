@@ -147,6 +147,9 @@ public class TurmsDriver {
                 Logger.error("Failed to parse TurmsNotification: %@", String(describing: error))
                 return
             }
+            if heartbeatService.rejectHeartbeatPromisesIfFail(notification) {
+                return
+            }
             if notification.hasData, case .userSession = notification.data.kind! {
                 stateStore.sessionId = notification.data.userSession.sessionID
                 stateStore.serverId = notification.data.userSession.serverID

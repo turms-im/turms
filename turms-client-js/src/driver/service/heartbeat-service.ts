@@ -21,10 +21,12 @@ import TurmsStatusCode from '../../model/turms-status-code';
 import StateStore from '../state-store';
 import PromiseSeal from '../../model/promise-seal';
 import BaseService from './base-service';
+import {TurmsNotification} from '../../model/proto/notification/turms_notification';
 
 export default class HeartbeatService extends BaseService {
 
     private static readonly DEFAULT_HEARTBEAT_INTERVAL = 120 * 1000;
+    private static readonly HEARTBEAT_FAILURE_REQUEST_ID = -100;
     private static readonly HEARTBEAT_REQUEST = new Uint8Array(0);
 
     private readonly _heartbeatInterval: number;
@@ -84,6 +86,13 @@ export default class HeartbeatService extends BaseService {
         this._heartbeatPromises = [];
     }
 
+    rejectHeartbeatPromisesIfFail(notification: TurmsNotification): boolean {
+        if (HeartbeatService.HEARTBEAT_FAILURE_REQUEST_ID === parseInt(notification.requestId)) {
+            this._rejectHeartbeatPromises(TurmsBusinessError.fromNotification(notification));
+            return true;
+        }
+    }
+
     private _rejectHeartbeatPromises(error: TurmsBusinessError): void {
         for (const cb of this._heartbeatPromises) {
             cb.reject(error);
@@ -103,5 +112,4 @@ export default class HeartbeatService extends BaseService {
         const error = TurmsBusinessError.from(TurmsStatusCode.CLIENT_SESSION_HAS_BEEN_CLOSED);
         this._rejectHeartbeatPromises(error);
     }
-
 }

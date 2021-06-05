@@ -151,6 +151,9 @@ class TurmsDriver(
                 LOGGER.log(Level.SEVERE, "Failed to parse TurmsNotification", e)
                 return
             }
+            if (heartbeatService.rejectHeartbeatPromisesIfFail(notification)) {
+                return
+            }
             val isSessionInfo = notification.hasData() && notification.data.hasUserSession()
             if (isSessionInfo) {
                 stateStore.sessionId = notification.data.userSession.sessionId

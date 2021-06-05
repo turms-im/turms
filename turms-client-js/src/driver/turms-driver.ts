@@ -22,6 +22,7 @@ import StateStore from './state-store';
 import {TurmsNotification} from '../model/proto/notification/turms_notification';
 import {TurmsRequest} from '../model/proto/request/turms_request';
 import {ParsedNotification} from '../model/parsed-notification';
+import TurmsBusinessError from '../model/turms-business-error';
 
 export default class TurmsDriver {
 
@@ -151,17 +152,20 @@ export default class TurmsDriver {
 
     private _onMessage(message: ArrayBuffer): void {
         if (message.byteLength) {
-            let notification;
+            let notification: TurmsNotification;
             try {
                 notification = TurmsNotification.decode(new Uint8Array(message));
             } catch (e) {
                 console.error('Failed to parse TurmsNotification', e);
                 return;
             }
-            const isSessionInfo = notification.data?.session;
-            if (isSessionInfo) {
-                this._stateStore.sessionId = notification.data.session.sessionId;
-                this._stateStore.serverId = notification.data.session.serverId;
+            if (this._heartbeatService.rejectHeartbeatPromisesIfFail(notification)) {
+                return;
+            }
+            const session = notification.data?.userSession;
+            if (session) {
+                this._stateStore.sessionId = session.sessionId;
+                this._stateStore.serverId = session.serverId;
             } else if (notification.closeStatus) {
                 this._stateStore.isSessionOpen = false;
             }

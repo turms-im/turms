@@ -35,6 +35,7 @@ interface RequestPromiseSeal {
  * Handle TurmsRequest and TurnsNotification
  */
 export default class MessageService extends BaseService {
+
     private readonly _requestTimeout: number;
     private readonly _minRequestInterval?: number;
     private _notificationListeners: ((notification: ParsedNotification) => void)[] = [];
