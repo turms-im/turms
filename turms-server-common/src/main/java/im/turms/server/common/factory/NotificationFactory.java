@@ -33,7 +33,7 @@ public final class NotificationFactory {
     private NotificationFactory() {
     }
 
-    public static TurmsNotification fromCode(TurmsStatusCode code, long requestId) {
+    public static TurmsNotification create(TurmsStatusCode code, long requestId) {
         TurmsNotification.Builder builder = TurmsNotification
                 .newBuilder()
                 .setRequestId(requestId)
@@ -43,7 +43,17 @@ public final class NotificationFactory {
         return builder.build();
     }
 
-    public static TurmsNotification fromThrowable(ThrowableInfo info, long requestId) {
+    public static TurmsNotification create(TurmsStatusCode code, String reason, long requestId) {
+        TurmsNotification.Builder builder = TurmsNotification
+                .newBuilder()
+                .setRequestId(requestId)
+                .setCode(code.getBusinessCode());
+        reason = reason == null ? code.getReason() : reason;
+        trySetReason(builder, reason, code);
+        return builder.build();
+    }
+
+    public static TurmsNotification create(ThrowableInfo info, long requestId) {
         TurmsStatusCode code = info.getCode();
         TurmsNotification.Builder builder = TurmsNotification
                 .newBuilder()
@@ -54,7 +64,7 @@ public final class NotificationFactory {
         return builder.build();
     }
 
-    public static TurmsNotification fromReason(CloseReason closeReason) {
+    public static TurmsNotification create(CloseReason closeReason) {
         TurmsStatusCode statusCode = closeReason.getBusinessStatusCode();
         SessionCloseStatus closeStatus = closeReason.getCloseStatus();
         String reason = closeReason.getReason();

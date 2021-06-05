@@ -60,10 +60,9 @@ public class UserRequestDispatcher {
 
     static {
         TurmsNotification notification = NotificationFactory
-                .fromCode(TurmsStatusCode.UPDATE_NON_EXISTING_SESSION_HEARTBEAT, HEARTBEAT_FAILURE_REQUEST_ID);
+                .create(TurmsStatusCode.UPDATE_NON_EXISTING_SESSION_HEARTBEAT, HEARTBEAT_FAILURE_REQUEST_ID);
         HEARTBEAT_RESPONSE_UPDATE_NON_EXISTING_SESSION_HEARTBEAT = Unpooled.unreleasableBuffer(ProtoUtil.getDirectByteBuffer(notification));
-        notification = NotificationFactory
-                .fromCode(TurmsStatusCode.SERVER_UNAVAILABLE, HEARTBEAT_FAILURE_REQUEST_ID);
+        notification = NotificationFactory.create(TurmsStatusCode.SERVER_UNAVAILABLE, HEARTBEAT_FAILURE_REQUEST_ID);
         HEARTBEAT_RESPONSE_SERVER_UNAVAILABLE = Unpooled.unreleasableBuffer(ProtoUtil.getDirectByteBuffer(notification));
     }
 
@@ -92,9 +91,15 @@ public class UserRequestDispatcher {
             return handleHeartbeatRequest(sessionWrapper);
         }
         SimpleTurmsRequest request = TurmsRequestUtil.parseSimpleRequest(data.nioBuffer());
+        long requestId = request.getRequestId();
+        if (requestId <= 0) {
+            TurmsNotification notification = NotificationFactory.create(TurmsStatusCode.INVALID_REQUEST,
+                    "The request ID must be greater than 0",
+                    requestId);
+            return Mono.just(ProtoUtil.getDirectByteBuffer(notification));
+        }
         if (!serverStatusManager.isActive()) {
-            TurmsNotification notification = NotificationFactory
-                    .fromCode(TurmsStatusCode.SERVER_UNAVAILABLE, request.getRequestId());
+            TurmsNotification notification = NotificationFactory.create(TurmsStatusCode.SERVER_UNAVAILABLE, requestId);
             return Mono.just(ProtoUtil.getDirectByteBuffer(notification));
         }
         TurmsRequest.KindCase requestType = request.getType();
@@ -121,7 +126,7 @@ public class UserRequestDispatcher {
                             tracingContext.updateMdc();
                             log.error("Failed to handle the service request: {}", request, throwable);
                         }
-                        return Mono.just(NotificationFactory.fromThrowable(info, request.getRequestId()));
+                        return Mono.just(NotificationFactory.create(info, request.getRequestId()));
                     })
                     .map(ProtoUtil::getDirectByteBuffer)
                     .contextWrite(context -> {
@@ -131,7 +136,7 @@ public class UserRequestDispatcher {
                     });
         } catch (Exception e) {
             TurmsNotification notification = NotificationFactory
-                    .fromThrowable(ThrowableInfo.get(e), request.getRequestId());
+                    .create(ThrowableInfo.get(e), request.getRequestId());
             return Mono.just(ProtoUtil.getDirectByteBuffer(notification));
         } finally {
             tracingContext.clearMdc();

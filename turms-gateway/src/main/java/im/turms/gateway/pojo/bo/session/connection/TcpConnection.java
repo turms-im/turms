@@ -45,7 +45,7 @@ public class TcpConnection extends NetConnection {
     public void close(CloseReason closeReason) {
         if (isConnected() && !connection.isDisposed()) {
             super.close(closeReason);
-            TurmsNotification closeNotification = NotificationFactory.fromReason(closeReason);
+            TurmsNotification closeNotification = NotificationFactory.create(closeReason);
             connection
                     .outbound()
                     .sendObject(closeNotification)

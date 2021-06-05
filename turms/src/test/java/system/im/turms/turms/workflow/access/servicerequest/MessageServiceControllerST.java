@@ -72,7 +72,7 @@ class MessageServiceControllerST extends BaseServiceControllerTest<MessageServic
     void handleCreateMessageRequest_sendGroupMessage_shouldReturnMessageId() {
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setCreateMessageRequest(CreateMessageRequest.newBuilder()
-                        .setRecipientId(TARGET_GROUP_ID)
+                        .setGroupId(TARGET_GROUP_ID)
                         .setDeliveryDate(System.currentTimeMillis())
                         .setText("hello"))
                 .build();

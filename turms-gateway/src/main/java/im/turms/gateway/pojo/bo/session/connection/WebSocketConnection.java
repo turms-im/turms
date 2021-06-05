@@ -52,7 +52,7 @@ public class WebSocketConnection extends NetConnection {
     public void close(CloseReason closeReason) {
         if (isConnected() && !connection.isDisposed()) {
             super.close(closeReason);
-            TurmsNotification closeNotification = NotificationFactory.fromReason(closeReason);
+            TurmsNotification closeNotification = NotificationFactory.create(closeReason);
             ByteBuf message = ProtoUtil.getDirectByteBuffer(closeNotification);
             out.sendObject(Mono.just(new BinaryWebSocketFrame(message)), byteBuf -> true)
                     .then()
