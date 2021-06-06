@@ -17,6 +17,7 @@
 
 package im.turms.server.common.access.http.controller;
 
+import com.google.common.io.CharStreams;
 import im.turms.server.common.access.http.dto.response.MetricDTO;
 import im.turms.server.common.access.http.dto.response.ResponseDTO;
 import im.turms.server.common.access.http.dto.response.ResponseFactory;
@@ -25,8 +26,10 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.util.CollectorUtil;
 import io.micrometer.core.instrument.Meter;
-import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
+import io.micrometer.core.instrument.composite.CompositeMeterRegistry;
+import io.micrometer.prometheus.PrometheusMeterRegistry;
+import io.prometheus.client.exporter.common.TextFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +37,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -55,9 +60,17 @@ import java.util.stream.Collectors;
 public class MetricsController {
 
     private final MetricsPool pool;
+    private final PrometheusMeterRegistry prometheusMeterRegistry;
 
-    public MetricsController(MeterRegistry registry) {
+    private int prometheusStringSize = 8 * 1024;
+
+    public MetricsController(CompositeMeterRegistry registry) {
         pool = new MetricsPool(registry);
+        prometheusMeterRegistry = (PrometheusMeterRegistry) registry.getRegistries()
+                .stream()
+                .filter(register -> register instanceof PrometheusMeterRegistry)
+                .findFirst()
+                .get();
     }
 
     @GetMapping
@@ -101,6 +114,21 @@ public class MetricsController {
     public ResponseEntity<ResponseDTO<Collection<String>>> getNames() {
         Set<String> names = pool.collectNames();
         return ResponseFactory.okIfTruthy(names);
+    }
+
+    @GetMapping(value = "/prometheus")
+    public ResponseEntity<ResponseDTO<String>> scrape(@RequestParam(required = false) Set<String> names) throws IOException {
+        StringBuilder builder = new StringBuilder(prometheusStringSize);
+        Writer writer = CharStreams.asWriter(builder);
+        prometheusMeterRegistry.scrape(writer, TextFormat.CONTENT_TYPE_OPENMETRICS_100, names);
+        String data = builder.toString();
+        int actualLength = data.length();
+        if (actualLength > prometheusStringSize) {
+            prometheusStringSize = actualLength + 100;
+        } else if (actualLength < (prometheusStringSize / 2)) {
+            prometheusStringSize /= 2;
+        }
+        return ResponseFactory.okIfTruthy(data);
     }
 
     private MetricDTO meters2Dto(String name, Collection<Meter> meters, boolean returnDescription, boolean returnAvailableTags) {

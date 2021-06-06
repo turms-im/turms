@@ -18,7 +18,6 @@
 package im.turms.turms.workflow.service.impl.statistics;
 
 import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Metrics;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -26,12 +25,15 @@ import org.springframework.stereotype.Service;
 /**
  * @author James Chen
  */
-
 @Service
 @Log4j2
 public class MetricsService {
 
     @Getter
-    private final MeterRegistry registry = Metrics.globalRegistry;
+    private final MeterRegistry registry;
+
+    public MetricsService(MeterRegistry registry) {
+        this.registry = registry;
+    }
 
 }

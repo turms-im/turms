@@ -41,7 +41,7 @@ public class TurmsApplicationContext {
 
     private final boolean isProduction;
     private final boolean isDevOrLocalTest;
-    private final String activeProfile;
+    private final String activeEnvProfile;
     private final String version;
 
     public TurmsApplicationContext(Environment environment,
@@ -55,7 +55,7 @@ public class TurmsApplicationContext {
         List<String> prodEnvs = List.of("prod", "production");
         String[] activeProfiles = environment.getActiveProfiles();
 
-        activeProfile = getActiveProfile(activeProfiles, devEnvs, localTestEnvs, testEnvs, prodEnvs);
+        activeEnvProfile = getActiveEnvProfile(activeProfiles, devEnvs, localTestEnvs, testEnvs, prodEnvs);
         isDevOrLocalTest = isInProfiles(devEnvs, activeProfiles) || isInProfiles(localTestEnvs, activeProfiles);
         // Prefer isProduction to be true to avoid getting trouble in production environment
         isProduction = !isDevOrLocalTest && !isInProfiles(testEnvs, activeProfiles);
@@ -68,7 +68,7 @@ public class TurmsApplicationContext {
         setupErrorHandlerContext();
     }
 
-    private String getActiveProfile(String[] activeProfiles, List<String>... knownEnvProfiles) {
+    private String getActiveEnvProfile(String[] activeProfiles, List<String>... knownEnvProfiles) {
         for (String profile : activeProfiles) {
             if (profile.endsWith("-latest")) {
                 continue;

@@ -110,18 +110,18 @@ public class ServiceAddressManager extends BaseServiceAddressManager {
         gatewayApiDiscoveryProperties = properties.getGateway().getServiceDiscovery();
         metricsApiAddress = adminApiAddressesCollector.getHttpAddress() + "/actuator";
         wsAddress = webSocketProperties.isEnabled()
-                ? geGatewayApiAddressCollector(webSocketProperties, gatewayApiDiscoveryProperties).getWsAddress()
+                ? getGatewayApiAddressCollector(webSocketProperties, gatewayApiDiscoveryProperties).getWsAddress()
                 : null;
         tcpAddress = tcpProperties.isEnabled()
-                ? geGatewayApiAddressCollector(tcpProperties, gatewayApiDiscoveryProperties).getAddress()
+                ? getGatewayApiAddressCollector(tcpProperties, gatewayApiDiscoveryProperties).getAddress()
                 : null;
         udpAddress = udpProperties.isEnabled()
-                ? geGatewayApiAddressCollector(udpProperties, gatewayApiDiscoveryProperties).getAddress()
+                ? getGatewayApiAddressCollector(udpProperties, gatewayApiDiscoveryProperties).getAddress()
                 : null;
     }
 
-    private AddressCollector geGatewayApiAddressCollector(BaseServerProperties serverProperties,
-                                                          DiscoveryProperties gatewayApiDiscoveryProperties) throws UnknownHostException {
+    private AddressCollector getGatewayApiAddressCollector(BaseServerProperties serverProperties,
+                                                           DiscoveryProperties gatewayApiDiscoveryProperties) throws UnknownHostException {
         AdvertiseStrategy advertiseStrategy = gatewayApiDiscoveryProperties.getAdvertiseStrategy();
         String advertiseHost = gatewayApiDiscoveryProperties.getAdvertiseHost();
         boolean attachPortToHost = gatewayApiDiscoveryProperties.isAttachPortToHost();
