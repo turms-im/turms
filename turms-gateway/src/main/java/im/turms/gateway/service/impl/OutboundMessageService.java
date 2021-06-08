@@ -61,8 +61,9 @@ public class OutboundMessageService implements IOutboundMessageService {
     }
 
     /**
-     * @param notificationData should be a data serialized from TurmsNotification
-     * @return true if the notification has forwarded to one recipient at least
+     * @param notificationData should be a buffer of TurmsNotification
+     * @return true if the notification is ready to forward (queued) or has forwarded
+     * to one recipient at least
      */
     @Override
     public boolean sendNotificationToLocalClients(ByteBuf notificationData,
@@ -77,8 +78,10 @@ public class OutboundMessageService implements IOutboundMessageService {
                 ? CollectionUtil.newSetWithExpectedSize(Math.max(1, recipientIds.size() / 2))
                 : Collections.emptySet();
 
-        notificationData.retain(); // To avoid being released by the caller
         int initialRefCnt = notificationData.refCnt();
+        notificationData.retain(); // To avoid being released by the caller
+        // RefCntAwareByteBuf is used to release the buffer to 0
+        // because when the method returns, Netty may not flush the buffer to recipients
         RefCntAwareByteBuf wrappedNotificationData = new RefCntAwareByteBuf(notificationData, refCnt -> {
             if (refCnt == initialRefCnt) {
                 notificationData.release();
@@ -92,8 +95,8 @@ public class OutboundMessageService implements IOutboundMessageService {
                 for (UserSession userSession : userSessionsManager.getSessionMap().values()) {
                     wrappedNotificationData.retain();
                     // It's the responsibility for the downstream to decrease the reference count of the notification by 1
-                    // no matter the notification is queued successfully or not.
-                    // Otherwise, there is a potential memory leak
+                    // when the notification is queued successfully and released by Netty, or fails to be queued.
+                    // Otherwise, there is a memory leak
                     EmitResult emitResult = userSession.tryEmitNextNotification(wrappedNotificationData);
                     if (emitResult != EmitResult.OK && userSession.isSessionOpen()) {
                         log.warn("Failed to send notifications to the session: {} due to {}", userSession, emitResult);

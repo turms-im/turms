@@ -138,7 +138,7 @@ public final class UserSession {
     }
 
     public Sinks.EmitResult tryEmitNextNotification(ByteBuf byteBuf) {
-        Sinks.EmitResult result = this.notificationSink.tryEmitNext(byteBuf);
+        Sinks.EmitResult result = notificationSink.tryEmitNext(byteBuf);
         if (result != Sinks.EmitResult.OK) {
             // Release once because the subscriber of the sink
             // hasn't released it due to the emitting failure.

@@ -33,7 +33,9 @@ import io.netty.channel.unix.PreferredDirectByteBufAllocator;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.geo.Point;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -55,11 +57,19 @@ class OutboundMessageServiceTests {
     }
 
     @Test
-    void sendNotificationToLocalClients_shouldReturnTrue_ifRecipientsAreOnline() {
+    void sendNotificationToLocalClients_shouldReleaseAndReturnTrue_ifRecipientsAreOnline() {
         UserSessionsManager sessionsManager = mock(UserSessionsManager.class);
         TcpConnection connection = mock(TcpConnection.class);
         UserSession session = new UserSession(1L, DeviceType.ANDROID, new Point(1F, 1F), null);
         session.setConnection(connection);
+        Mono<ByteBuf> result = session.getNotificationFlux()
+                .flatMap(byteBuf -> Mono
+                        // Wait to simulate the async process
+                        .delay(Duration.ofSeconds(1))
+                        .then(Mono.fromRunnable(byteBuf::release))
+                        .thenReturn(byteBuf))
+                .take(1)
+                .single();
         when(sessionsManager.getSessionMap())
                 .thenReturn(Map.of(DeviceType.ANDROID, session));
         OutboundMessageService outboundMessageService = newOutboundMessageService(sessionsManager);
@@ -67,19 +77,35 @@ class OutboundMessageServiceTests {
         ByteBuf byteBuf = PreferredDirectByteBufAllocator.DEFAULT.directBuffer();
         Set<Long> recipientIds = Set.of(1L);
         boolean sent = outboundMessageService.sendNotificationToLocalClients(byteBuf, recipientIds);
+        byteBuf.release();
 
-        assertThat(sent).isTrue();
+        assertThat(byteBuf.refCnt())
+                .as("Buffer should not be released if the notification hasn't been sent")
+                .isPositive();
+        StepVerifier.create(result)
+                .expectNextMatches(buf -> buf.refCnt() == 0)
+                .as("Buffer should be released if the notification is sent")
+                .verifyComplete();
+        assertThat(sent)
+                .as("Notification is sent or queued")
+                .isTrue();
     }
 
     @Test
-    void sendNotificationToLocalClients_shouldReturnFalse_ifRecipientsAreOffline() {
+    void sendNotificationToLocalClients_shouldReleaseAndReturnFalse_ifRecipientsAreOffline() {
         OutboundMessageService outboundMessageService = newOutboundMessageService(null);
 
         ByteBuf byteBuf = PreferredDirectByteBufAllocator.DEFAULT.directBuffer();
         Set<Long> recipientIds = Set.of(1L);
         boolean sent = outboundMessageService.sendNotificationToLocalClients(byteBuf, recipientIds);
+        byteBuf.release();
 
-        assertThat(sent).isFalse();
+        assertThat(byteBuf.refCnt())
+                .as("Buffer should be released if recipients are offline")
+                .isZero();
+        assertThat(sent)
+                .as("Notification isn't sent or queued")
+                .isFalse();
     }
 
     private OutboundMessageService newOutboundMessageService(UserSessionsManager userSessionsManager) {
