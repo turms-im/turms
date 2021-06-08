@@ -6,7 +6,7 @@ export default class RequestUtil {
     }
 
     public static isFalsy(value: any): boolean {
-        return typeof value == null || value === [];
+        return value == null || value === [];
     }
 
     public static isTruthy(value: any): boolean {
@@ -14,7 +14,7 @@ export default class RequestUtil {
     }
 
     static throwIfEmpty(value): void {
-        if (Object.keys(value).length === 0) {
+        if (!Object.keys(value).length) {
             throw RequestUtil.ERROR;
         }
     }

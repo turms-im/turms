@@ -4,7 +4,8 @@ import TurmsBusinessError from '../model/turms-business-error';
 import {TurmsNotification} from '../model/proto/notification/turms_notification';
 
 export default class NotificationUtil {
-    static transform(data?: object | number | string, parentKey?: string): object | number | string | undefined {
+
+    static transform(data?: object | number | string, parentKey?: string): any {
         // Note that data can be 0 or ''
         if (data != null) {
             const isDateType = typeof parentKey === 'string'
@@ -30,74 +31,45 @@ export default class NotificationUtil {
         return data;
     }
 
-    static getFirstVal(notification: TurmsNotification, path: string, throwIfUndefined = false): any {
-        path += '.values.0';
-        const value = this._get(notification, path, undefined);
-        if (value == null && throwIfUndefined) {
-            const reason = `Cannot parse the illegal response: ${JSON.stringify(notification)}`;
+    static transformDate(date?: string): Date | undefined {
+        return date ? new Date(parseInt(date)) : undefined;
+    }
+
+    static transformOrEmpty(data: any[]): any[] {
+        return this.transform(data) || [];
+    }
+
+    static transformMapValToDate(record?: Record<string, string>): Record<string, Date> | undefined {
+        if (!record) {
+            return;
+        }
+        const newMap = {};
+        for (const key in record) {
+            if (Object.prototype.hasOwnProperty.call(record, key)) {
+                newMap[key] = new Date(parseInt(record[key]));
+            }
+        }
+        return newMap;
+    }
+
+    static getFirstIdOrThrow(notification: TurmsNotification): any {
+        const value = notification.data?.ids?.values?.[0];
+        if (value == null) {
+            const reason = `Cannot get ID from the illegal response: ${JSON.stringify(notification)}`;
             throw TurmsBusinessError.from(TurmsStatusCode.INVALID_RESPONSE, reason)
         }
         return value;
     }
 
-    static getAndTransform(notification: TurmsNotification, path: string): any {
-        return this.transform(this.get(notification, path));
-    }
-
-    static getArrAndTransform(notification: TurmsNotification, path: string): any {
-        return this.transform(this.getArr(notification, path));
-    }
-
-    static get(notification: TurmsNotification, path: string): any {
-        return this._get(notification, path, undefined);
-    }
-
-    static getArr(notification: TurmsNotification, path: string): any[] {
-        return this._get(notification, path, []);
-    }
-
-    private static _get(notification: TurmsNotification, path: string, defaultValue: any): any {
-        path = 'data.' + path;
-        if (notification.code === TurmsStatusCode.NO_CONTENT) {
-            return defaultValue;
-        } else {
-            const keys = path.split('.');
-            let object = notification;
-            for (const key of keys) {
-                object = object[key];
-                if (!object) {
-                    return defaultValue;
-                }
-            }
-            return object;
-        }
-    }
-
-    static transformDate(date?: string): Date | undefined {
-        return date ? new Date(parseInt(date)) : undefined;
-    }
-
-    static transformMapValToDate(map?: [any: number]): [any: Date] | undefined {
-        if (map) {
-            Object.keys(map).forEach(key => map[key] = new Date(parseInt(map[key])));
-        }
-        return map as any;
-    }
-
     static getIdsWithVer(n: TurmsNotification): ParsedModel.IdsWithVersion | undefined {
-        const arr = this.getArr(n, 'idsWithVersion.values');
-        if (arr.length) {
-            let date = this.get(n, 'idsWithVersion.lastUpdatedDate');
-            date = this.transformDate(date);
+        const idsWithVersion = n.data?.idsWithVersion;
+        const arr = idsWithVersion?.values;
+        if (arr && arr.length) {
             return {
                 ids: arr,
-                lastUpdatedDate: date
+                lastUpdatedDate: this.transformDate(idsWithVersion.lastUpdatedDate)
             };
         }
     }
 
-    static getVerDate(n: TurmsNotification, path: string): Date | undefined {
-        path += '.lastUpdatedDate';
-        return NotificationUtil.getAndTransform(n, path);
-    }
 }

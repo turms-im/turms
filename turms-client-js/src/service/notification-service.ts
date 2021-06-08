@@ -11,7 +11,7 @@ export default class NotificationService {
         this._turmsClient.driver
             .addNotificationListener(notification => {
                 const isBusinessNotification = notification.relayedRequest
-                    && !notification.relayedRequest['createMessageRequest']
+                    && !notification.relayedRequest.createMessageRequest
                     && !notification.closeStatus;
                 if (isBusinessNotification) {
                     this._notificationListeners.forEach(listener => listener(notification.relayedRequest));

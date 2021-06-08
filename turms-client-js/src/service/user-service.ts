@@ -141,6 +141,7 @@ export default class UserService {
             const position = location as GeolocationPosition;
             userInfo.location = new UserLocation(position.coords.longitude, position.coords.latitude);
         }
+        this._storePassword = storePassword
         return new Promise((resolve, reject) => {
             const connect = this._turmsClient.driver.isConnected
                 ? Promise.resolve()
@@ -264,11 +265,12 @@ export default class UserService {
                 lastUpdatedDate: RequestUtil.getDateTimeStr(lastUpdatedDate)
             }
         }).then(n => {
-            const userInfo = NotificationUtil.getAndTransform(n, 'usersInfosWithVersion.userInfos.0');
+            const usersInfosWithVersion = n.data?.usersInfosWithVersion;
+            const userInfo = NotificationUtil.transform(usersInfosWithVersion?.userInfos?.[0]);
             if (userInfo) {
                 return {
                     userInfo,
-                    lastUpdatedDate: NotificationUtil.transformDate(n.data.usersInfosWithVersion.lastUpdatedDate)
+                    lastUpdatedDate: NotificationUtil.transformDate(usersInfosWithVersion.lastUpdatedDate)
                 }
             }
         });
@@ -297,7 +299,7 @@ export default class UserService {
                 withDistance,
                 withInfo
             }
-        }).then(n => NotificationUtil.getArrAndTransform(n, 'nearbyUsers.nearbyUsers'));
+        }).then(n => NotificationUtil.transformOrEmpty(n.data?.nearbyUsers?.nearbyUsers));
     }
 
     queryOnlineStatusesRequest(userIds: string[]): Promise<ParsedModel.UserStatusDetail[]> {
@@ -308,7 +310,7 @@ export default class UserService {
             queryUserOnlineStatusesRequest: {
                 userIds
             }
-        }).then(n => NotificationUtil.getArrAndTransform(n, 'usersOnlineStatuses.userStatuses'));
+        }).then(n => NotificationUtil.transformOrEmpty(n.data?.usersOnlineStatuses?.userStatuses));
     }
 
     // Relationship
@@ -325,7 +327,7 @@ export default class UserService {
                 groupIndex,
                 lastUpdatedDate: RequestUtil.getDateTimeStr(lastUpdatedDate)
             }
-        }).then(n => NotificationUtil.getAndTransform(n, 'userRelationshipsWithVersion'));
+        }).then(n => NotificationUtil.transform(n.data?.userRelationshipsWithVersion));
     }
 
     queryRelatedUserIds(
@@ -414,7 +416,7 @@ export default class UserService {
                 recipientId,
                 content
             }
-        }).then(n => NotificationUtil.getFirstVal(n, 'ids', true));
+        }).then(n => NotificationUtil.getFirstIdOrThrow(n));
     }
 
     replyFriendRequest(requestId: string, responseAction: string | ResponseAction, reason?: string): Promise<void> {
@@ -445,7 +447,7 @@ export default class UserService {
                 areSentByMe,
                 lastUpdatedDate: RequestUtil.getDateTimeStr(lastUpdatedDate)
             }
-        }).then(n => NotificationUtil.getAndTransform(n, 'userFriendRequestsWithVersion'));
+        }).then(n => NotificationUtil.transform(n.data?.userFriendRequestsWithVersion));
     }
 
     createRelationshipGroup(name: string): Promise<string> {
@@ -456,7 +458,7 @@ export default class UserService {
             createRelationshipGroupRequest: {
                 name
             }
-        }).then(n => NotificationUtil.getFirstVal(n, 'ids', true));
+        }).then(n => NotificationUtil.getFirstIdOrThrow(n));
     }
 
     deleteRelationshipGroups(groupIndex: number, targetGroupIndex?: number): Promise<void> {
@@ -491,7 +493,7 @@ export default class UserService {
             queryRelationshipGroupsRequest: {
                 lastUpdatedDate: RequestUtil.getDateTimeStr(lastUpdatedDate)
             }
-        }).then(n => NotificationUtil.getAndTransform(n, 'userRelationshipGroupsWithVersion'));
+        }).then(n => NotificationUtil.transform(n.data?.userRelationshipGroupsWithVersion));
     }
 
     moveRelatedUserToGroup(relatedUserId: string, groupIndex: number): Promise<void> {

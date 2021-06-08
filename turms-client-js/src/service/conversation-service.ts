@@ -21,7 +21,7 @@ export default class ConversationService {
                 targetIds,
                 groupIds: []
             }
-        }).then(n => NotificationUtil.transform(n.data?.conversations?.privateConversations) as ParsedModel.PrivateConversation[] || []);
+        }).then(n => NotificationUtil.transformOrEmpty(n.data?.conversations?.privateConversations));
     }
 
     queryGroupConversations(groupIds: string[]): Promise<ParsedModel.GroupConversation[]> {
@@ -33,13 +33,10 @@ export default class ConversationService {
                 groupIds,
                 targetIds: []
             }
-        }).then(n => {
-            const conversations = NotificationUtil.transform(n.data?.conversations?.groupConversations) as any[];
-            if (conversations) {
-                conversations.forEach(c => c.memberIdAndReadDate = NotificationUtil.transformMapValToDate(c.memberIdAndReadDate))
-            }
-            return conversations as ParsedModel.GroupConversation[] || []
-        });
+        }).then(n => NotificationUtil.transform(n.data?.conversations?.groupConversations)?.map(c => ({
+            groupId: c.groupId,
+            memberIdAndReadDate: NotificationUtil.transformMapValToDate(c.memberIdAndReadDate)
+        })) || []);
     }
 
     updatePrivateConversationReadDate(targetId: string, readDate?: Date): Promise<void> {

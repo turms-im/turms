@@ -33,7 +33,7 @@ export default class GroupService {
                 muteEndDate: RequestUtil.getDateTimeStr(muteEndDate),
                 groupTypeId
             }
-        }).then(n => NotificationUtil.getFirstVal(n, 'ids', true));
+        }).then(n => NotificationUtil.getFirstIdOrThrow(n));
     }
 
     deleteGroup(groupId: string): Promise<void> {
@@ -113,11 +113,12 @@ export default class GroupService {
                 lastUpdatedDate: RequestUtil.getDateTimeStr(lastUpdatedDate)
             }
         }).then(n => {
-            const group = NotificationUtil.getAndTransform(n, 'groupsWithVersion.groups.0');
+            const groupsWithVersion = n.data?.groupsWithVersion;
+            const group = NotificationUtil.transform(groupsWithVersion?.groups?.[0]);
             if (group) {
                 return {
                     group,
-                    lastUpdatedDate: NotificationUtil.getVerDate(n, 'groupsWithVersion')
+                    lastUpdatedDate: NotificationUtil.transformDate(groupsWithVersion.lastUpdatedDate)
                 };
             }
         });
@@ -136,7 +137,7 @@ export default class GroupService {
             queryJoinedGroupInfosRequest: {
                 lastUpdatedDate: RequestUtil.getDateTimeStr(lastUpdatedDate)
             }
-        }).then(n => NotificationUtil.getAndTransform(n, 'groupsWithVersion'));
+        }).then(n => NotificationUtil.transform(n.data?.groupsWithVersion));
     }
 
     addGroupJoinQuestion(groupId: string, question: string, answers: string[], score: number): Promise<string> {
@@ -159,7 +160,7 @@ export default class GroupService {
                 answers: answers || [],
                 score
             }
-        }).then(n => NotificationUtil.getFirstVal(n, 'ids', true));
+        }).then(n => NotificationUtil.getFirstIdOrThrow(n));
     }
 
     deleteGroupJoinQuestion(questionId: string): Promise<void> {
@@ -246,7 +247,7 @@ export default class GroupService {
                 groupId,
                 lastUpdatedDate: RequestUtil.getDateTimeStr(lastUpdatedDate)
             }
-        }).then(n => NotificationUtil.getAndTransform(n, 'usersInfosWithVersion'));
+        }).then(n => NotificationUtil.transform(n.data?.usersInfosWithVersion));
     }
 
     // Group Enrollment
@@ -266,7 +267,7 @@ export default class GroupService {
                 inviteeId,
                 content
             }
-        }).then(n => NotificationUtil.getFirstVal(n, 'ids', true));
+        }).then(n => NotificationUtil.getFirstIdOrThrow(n));
     }
 
     deleteInvitation(invitationId: string): Promise<void> {
@@ -289,7 +290,7 @@ export default class GroupService {
                 groupId,
                 lastUpdatedDate: RequestUtil.getDateTimeStr(lastUpdatedDate)
             }
-        }).then(n => NotificationUtil.getAndTransform(n, 'groupInvitationsWithVersion'));
+        }).then(n => NotificationUtil.transform(n.data?.groupInvitationsWithVersion));
     }
 
     queryInvitations(areSentByMe: boolean, lastUpdatedDate?: Date): Promise<ParsedModel.GroupInvitationsWithVersion | undefined> {
@@ -301,7 +302,7 @@ export default class GroupService {
                 areSentByMe,
                 lastUpdatedDate: RequestUtil.getDateTimeStr(lastUpdatedDate)
             }
-        }).then(n => NotificationUtil.getAndTransform(n, 'groupInvitationsWithVersion'));
+        }).then(n => NotificationUtil.transform(n.data?.groupInvitationsWithVersion));
     }
 
     createJoinRequest(groupId: string, content: string): Promise<string> {
@@ -316,7 +317,7 @@ export default class GroupService {
                 groupId,
                 content
             }
-        }).then(n => NotificationUtil.getFirstVal(n, 'ids', true));
+        }).then(n => NotificationUtil.getFirstIdOrThrow(n));
     }
 
     deleteJoinRequest(requestId: string): Promise<void> {
@@ -339,7 +340,7 @@ export default class GroupService {
                 groupId,
                 lastUpdatedDate: RequestUtil.getDateTimeStr(lastUpdatedDate)
             }
-        }).then(n => NotificationUtil.getAndTransform(n, 'groupJoinRequestsWithVersion'));
+        }).then(n => NotificationUtil.transform(n.data?.groupJoinRequestsWithVersion));
     }
 
     querySentJoinRequests(lastUpdatedDate?: Date): Promise<ParsedModel.GroupJoinRequestsWithVersion | undefined> {
@@ -347,7 +348,7 @@ export default class GroupService {
             queryGroupJoinRequestsRequest: {
                 lastUpdatedDate: RequestUtil.getDateTimeStr(lastUpdatedDate)
             }
-        }).then(n => NotificationUtil.getAndTransform(n, 'groupJoinRequestsWithVersion'));
+        }).then(n => NotificationUtil.transform(n.data?.groupJoinRequestsWithVersion));
     }
 
     /**
@@ -366,7 +367,7 @@ export default class GroupService {
                 withAnswers,
                 lastUpdatedDate: RequestUtil.getDateTimeStr(lastUpdatedDate)
             }
-        }).then(n => NotificationUtil.getAndTransform(n, 'groupJoinQuestionsWithVersion'));
+        }).then(n => NotificationUtil.transform(n.data?.groupJoinQuestionsWithVersion));
     }
 
     answerGroupQuestions(questionIdsAndAnswers: { [k: string]: string }): Promise<GroupJoinQuestionsAnswerResult | undefined> {
@@ -378,7 +379,7 @@ export default class GroupService {
                 questionIdAndAnswer: questionIdsAndAnswers
             }
         }).then(n => {
-            const result = NotificationUtil.get(n, 'groupJoinQuestionsAnswerResult');
+            const result = NotificationUtil.transform(n.data?.groupJoinQuestionAnswerResult);
             if (result) {
                 return result;
             } else {
@@ -506,7 +507,7 @@ export default class GroupService {
                 withStatus,
                 memberIds: []
             }
-        }).then(n => NotificationUtil.getAndTransform(n, 'groupMembersWithVersion'));
+        }).then(n => NotificationUtil.transform(n.data?.groupMembersWithVersion));
     }
 
     queryGroupMembersByMemberIds(groupId: string, memberIds: string[], withStatus = false): Promise<ParsedModel.GroupMembersWithVersion | undefined> {
@@ -522,6 +523,6 @@ export default class GroupService {
                 memberIds,
                 withStatus
             }
-        }).then(n => NotificationUtil.getAndTransform(n, 'groupMembersWithVersion'));
+        }).then(n => NotificationUtil.transform(n.data?.groupMembersWithVersion));
     }
 }

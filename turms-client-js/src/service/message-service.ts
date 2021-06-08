@@ -83,7 +83,7 @@ export default class MessageService {
                 records: records || [],
                 burnAfter
             }
-        }).then(n => NotificationUtil.getFirstVal(n, 'ids', true));
+        }).then(n => NotificationUtil.getFirstIdOrThrow(n));
     }
 
     forwardMessage(
@@ -103,7 +103,7 @@ export default class MessageService {
                 recipientId: !isGroupMessage ? targetId : undefined,
                 records: []
             }
-        }).then(n => NotificationUtil.getFirstVal(n, 'ids', true));
+        }).then(n => NotificationUtil.getFirstIdOrThrow(n));
     }
 
     updateSentMessage(
@@ -144,7 +144,7 @@ export default class MessageService {
                 size,
                 withTotal: false
             }
-        }).then(n => NotificationUtil.getArrAndTransform(n, 'messages.messages'));
+        }).then(n => NotificationUtil.transformOrEmpty(n.data?.messages?.messages));
     }
 
     queryMessagesWithTotal(
@@ -166,7 +166,7 @@ export default class MessageService {
                 size,
                 withTotal: true
             }
-        }).then(n => NotificationUtil.getArrAndTransform(n, 'messagesWithTotalList.messagesWithTotalList'));
+        }).then(n => NotificationUtil.transformOrEmpty(n.data?.messagesWithTotalList?.messagesWithTotalList));
     }
 
     recallMessage(messageId: string, recallDate = new Date()): Promise<void> {
