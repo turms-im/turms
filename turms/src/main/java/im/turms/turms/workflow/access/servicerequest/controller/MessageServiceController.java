@@ -301,9 +301,9 @@ public class MessageServiceController {
                         if (node.getSharedProperties().getService().getNotification().isNotifyRecipientsAfterMessageUpdatedBySender()) {
                             return messageService.queryMessageRecipients(messageId)
                                     .collect(Collectors.toSet())
-                                    .map(recipientsIds -> recipientsIds.isEmpty()
+                                    .map(recipientIds -> recipientIds.isEmpty()
                                             ? RequestHandlerResultFactory.OK
-                                            : RequestHandlerResultFactory.get(recipientsIds, clientRequest.getTurmsRequest()));
+                                            : RequestHandlerResultFactory.get(recipientIds, clientRequest.getTurmsRequest()));
                         } else {
                             return Mono.just(RequestHandlerResultFactory.OK);
                         }

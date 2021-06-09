@@ -15,29 +15,19 @@
  * limitations under the License.
  */
 
-package im.turms.turms.constant;
+package im.turms.server.common.constant;
 
 /**
  * @author James Chen
  */
-public final class MetricsConstant {
+public final class CommonMetricsConstant {
 
-    private MetricsConstant() {
+    private CommonMetricsConstant() {
     }
 
-    // User
+    // Client requests
 
-    public static final String REGISTERED_USERS_COUNTER_NAME = "user.registered";
-    public static final String DELETED_USERS_COUNTER_NAME = "user.deleted";
-
-    // Group
-
-    public static final String CREATED_GROUPS_COUNTER_NAME = "group.created";
-    public static final String DELETED_GROUPS_COUNTER_NAME = "group.deleted";
-
-    // Message
-
-    public static final String ACKNOWLEDGED_MESSAGES_COUNTER_NAME = "msg.acknowledged";
-    public static final String SENT_MESSAGES_COUNTER_NAME = "msg.sent";
+    public static final String CLIENT_REQUEST_NAME = "client.request";
+    public static final String CLIENT_REQUEST_TAG_TYPE = "type";
 
 }

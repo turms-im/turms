@@ -19,21 +19,13 @@ package im.turms.gateway.service.impl;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.notification.TurmsNotification;
-import im.turms.common.model.dto.request.TurmsRequest;
-import im.turms.gateway.logging.ClientApiLogging;
 import im.turms.gateway.manager.RateLimitingManager;
 import im.turms.gateway.pojo.bo.session.UserSession;
-import im.turms.server.common.cluster.exception.RpcException;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.logging.LoggingRequestUtil;
-import im.turms.server.common.logging.RequestLoggingContext;
-import im.turms.server.common.property.TurmsPropertiesManager;
-import im.turms.server.common.property.env.gateway.clientapi.ClientApiLoggingProperties;
-import im.turms.server.common.property.env.service.env.clientapi.property.LoggingRequestProperties;
 import im.turms.server.common.rpc.request.HandleServiceRequest;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -41,7 +33,6 @@ import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
-import java.util.Map;
 
 /**
  * @author James Chen
@@ -55,20 +46,12 @@ public class InboundRequestService {
     private final Node node;
     private final RateLimitingManager rateLimitingManager;
     private final SessionService sessionService;
-    private final Map<TurmsRequest.KindCase, LoggingRequestProperties> supportedLoggingRequestProperties;
 
     public InboundRequestService(Node node,
-                                 TurmsPropertiesManager propertiesManager,
                                  SessionService sessionService) {
         this.node = node;
         rateLimitingManager = new RateLimitingManager(node);
         this.sessionService = sessionService;
-        ClientApiLoggingProperties loggingProperties = propertiesManager.getLocalProperties().getGateway().getClientApi().getLogging();
-        supportedLoggingRequestProperties = LoggingRequestUtil.getSupportedLoggingRequestProperties(
-                loggingProperties.getIncludedRequestCategories(),
-                loggingProperties.getIncludedRequests(),
-                loggingProperties.getExcludedRequestCategories(),
-                loggingProperties.getExcludedRequestTypes());
     }
 
     public void processHeartbeatRequest(UserSession session) {
@@ -88,8 +71,6 @@ public class InboundRequestService {
     }
 
     private Mono<TurmsNotification> processServiceRequest0(ServiceRequest serviceRequest) {
-        long requestTime = System.currentTimeMillis();
-
         // Validate
         Long userId = serviceRequest.getUserId();
         DeviceType deviceType = serviceRequest.getDeviceType();
@@ -110,25 +91,9 @@ public class InboundRequestService {
         sessionService.updateHeartbeatTimestamp(session);
 
         // Forward request
-        int requestSize = serviceRequest.getTurmsRequestBuffer().readableBytes();
         return sendServiceRequest(serviceRequest)
                 .defaultIfEmpty(REQUEST_RESPONSE_NO_CONTENT)
-                .onErrorResume(throwable -> Mono.just(getServiceResponseFromException(throwable)))
-                .flatMap(response -> Mono.deferContextual(context -> {
-                    TurmsNotification responseNotification = getNotificationFromResponse(response, requestId);
-                    // Log
-                    if (LoggingRequestUtil.shouldLog(serviceRequest.getType(), supportedLoggingRequestProperties)) {
-                        if (!RequestLoggingContext.updateMdcFromContext(context)) {
-                            log.warn("Failed to update MDC context for the request: " + serviceRequest);
-                        }
-                        ClientApiLogging.log(serviceRequest,
-                                requestSize,
-                                requestTime,
-                                responseNotification,
-                                System.currentTimeMillis() - requestTime);
-                    }
-                    return Mono.just(responseNotification);
-                }));
+                .map(response -> getNotificationFromResponse(response, requestId));
     }
 
     private Mono<ServiceResponse> sendServiceRequest(ServiceRequest serviceRequest) {
@@ -146,12 +111,6 @@ public class InboundRequestService {
         return builder
                 .setCode(codeBusinessCode)
                 .build();
-    }
-
-    private ServiceResponse getServiceResponseFromException(Throwable throwable) {
-        return throwable instanceof RpcException rpcException
-                ? new ServiceResponse(null, rpcException.getStatusCode(), throwable.getMessage())
-                : new ServiceResponse(null, TurmsStatusCode.SERVER_INTERNAL_ERROR, throwable.getMessage());
     }
 
     private TurmsNotification getNotificationFromResponse(@NotNull ServiceResponse response, long requestId) {

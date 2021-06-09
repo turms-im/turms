@@ -22,6 +22,7 @@ import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.gateway.access.common.model.UserSessionWrapper;
 import im.turms.gateway.access.tcp.dto.RequestHandlerResult;
 import im.turms.gateway.access.tcp.util.TurmsNotificationUtil;
+import im.turms.gateway.logging.ClientApiLogging;
 import im.turms.gateway.pojo.bo.session.UserSession;
 import im.turms.gateway.pojo.dto.SimpleTurmsRequest;
 import im.turms.gateway.service.mediator.ServiceMediator;
@@ -30,8 +31,13 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.exception.ThrowableInfo;
 import im.turms.server.common.factory.NotificationFactory;
+import im.turms.server.common.logging.LoggingRequestUtil;
 import im.turms.server.common.logging.RequestLoggingContext;
 import im.turms.server.common.manager.ServerStatusManager;
+import im.turms.server.common.property.TurmsPropertiesManager;
+import im.turms.server.common.property.env.gateway.clientapi.ClientApiLoggingProperties;
+import im.turms.server.common.property.env.service.env.clientapi.property.LoggingRequestProperties;
+import im.turms.server.common.tracing.TracingCloseableContext;
 import im.turms.server.common.tracing.TracingContext;
 import im.turms.server.common.util.ProtoUtil;
 import io.netty.buffer.ByteBuf;
@@ -42,8 +48,12 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
+import java.util.Map;
+
 import static im.turms.common.model.dto.request.TurmsRequest.KindCase.CREATE_SESSION_REQUEST;
 import static im.turms.common.model.dto.request.TurmsRequest.KindCase.DELETE_SESSION_REQUEST;
+import static im.turms.server.common.constant.CommonMetricsConstant.CLIENT_REQUEST_NAME;
+import static im.turms.server.common.constant.CommonMetricsConstant.CLIENT_REQUEST_TAG_TYPE;
 
 /**
  * @author James Chen
@@ -69,13 +79,21 @@ public class UserRequestDispatcher {
     private final SessionController sessionController;
     private final ServiceMediator serviceMediator;
     private final ServerStatusManager serverStatusManager;
+    private final Map<TurmsRequest.KindCase, LoggingRequestProperties> supportedLoggingRequestProperties;
 
     public UserRequestDispatcher(SessionController sessionController,
                                  ServiceMediator serviceMediator,
-                                 ServerStatusManager serverStatusManager) {
+                                 ServerStatusManager serverStatusManager,
+                                 TurmsPropertiesManager propertiesManager) {
         this.sessionController = sessionController;
         this.serviceMediator = serviceMediator;
         this.serverStatusManager = serverStatusManager;
+        ClientApiLoggingProperties loggingProperties = propertiesManager.getLocalProperties().getGateway().getClientApi().getLogging();
+        supportedLoggingRequestProperties = LoggingRequestUtil.getSupportedLoggingRequestProperties(
+                loggingProperties.getIncludedRequestCategories(),
+                loggingProperties.getIncludedRequests(),
+                loggingProperties.getExcludedRequestCategories(),
+                loggingProperties.getExcludedRequestTypes());
     }
 
     /**
@@ -83,61 +101,94 @@ public class UserRequestDispatcher {
      * the method should recover it to TurmsNotification.
      * In other words, the method should never return MonoError and it should be considered as a bug if it occurs.
      */
-    public Mono<ByteBuf> handleRequest(UserSessionWrapper sessionWrapper, ByteBuf data) {
-        if (!data.isReadable()) {
+    public Mono<ByteBuf> handleRequest(UserSessionWrapper sessionWrapper, ByteBuf serviceRequestBuffer) {
+        // Check if it's a heartbeat request
+        if (!serviceRequestBuffer.isReadable()) {
             if (!serverStatusManager.isActive()) {
                 return Mono.just(HEARTBEAT_RESPONSE_SERVER_UNAVAILABLE);
             }
             return handleHeartbeatRequest(sessionWrapper);
         }
-        SimpleTurmsRequest request = TurmsRequestUtil.parseSimpleRequest(data.nioBuffer());
-        long requestId = request.getRequestId();
-        if (requestId <= 0) {
-            TurmsNotification notification = NotificationFactory.create(TurmsStatusCode.INVALID_REQUEST,
-                    "The request ID must be greater than 0",
-                    requestId);
-            return Mono.just(ProtoUtil.getDirectByteBuffer(notification));
-        }
-        if (!serverStatusManager.isActive()) {
-            TurmsNotification notification = NotificationFactory.create(TurmsStatusCode.SERVER_UNAVAILABLE, requestId);
-            return Mono.just(ProtoUtil.getDirectByteBuffer(notification));
-        }
+        // Parse and handle service requests
+        long requestTime = System.currentTimeMillis();
+        int requestSize = serviceRequestBuffer.readableBytes();
+        SimpleTurmsRequest request = TurmsRequestUtil.parseSimpleRequest(serviceRequestBuffer.nioBuffer());
         TurmsRequest.KindCase requestType = request.getType();
         TracingContext tracingContext = supportsTracing(requestType) ? new TracingContext() : TracingContext.NOOP;
+        return handleServiceRequest(sessionWrapper, request, serviceRequestBuffer, tracingContext)
+                // Metrics and logging
+                .name(CLIENT_REQUEST_NAME)
+                .tag(CLIENT_REQUEST_TAG_TYPE, requestType.name())
+                .metrics()
+                .onErrorResume(throwable -> {
+                    ThrowableInfo info = ThrowableInfo.get(throwable);
+                    if (info.getCode().isServerError()) {
+                        tracingContext.updateMdc();
+                        log.error("Failed to handle the service request: {}", request, throwable);
+                    }
+                    return Mono.just(NotificationFactory.create(info, request.getRequestId()));
+                })
+                .map(notification -> {
+                    TurmsRequest.KindCase type = request.getType();
+                    // TODO: exclude the error because the server is inactive
+                    if (TurmsStatusCode.isServerError(notification.getCode())
+                            || LoggingRequestUtil.shouldLog(type, supportedLoggingRequestProperties)) {
+                        try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
+                            UserSession userSession = sessionWrapper.getUserSession();
+                            ClientApiLogging.log(sessionWrapper.getIp().getAddress().getHostAddress(),
+                                    userSession.getUserId(),
+                                    userSession.getDeviceType(),
+                                    request.getRequestId(),
+                                    type,
+                                    requestSize,
+                                    requestTime,
+                                    notification,
+                                    System.currentTimeMillis() - requestTime);
+                        }
+                    }
+                    return ProtoUtil.getDirectByteBuffer(notification);
+                })
+                .contextWrite(context -> {
+                    RequestLoggingContext loggingContext = context.get(RequestLoggingContext.CTX_KEY_NAME);
+                    loggingContext.setTracingContext(tracingContext);
+                    return context;
+                });
+
+    }
+
+    public Mono<TurmsNotification> handleServiceRequest(UserSessionWrapper sessionWrapper,
+                                                        SimpleTurmsRequest request,
+                                                        ByteBuf serviceRequestBuffer,
+                                                        TracingContext tracingContext) {
         try {
+            // Validate
+            long requestId = request.getRequestId();
+            if (requestId <= 0) {
+                TurmsNotification notification = NotificationFactory.create(TurmsStatusCode.INVALID_REQUEST,
+                        "The request ID must be greater than 0",
+                        requestId);
+                return Mono.just(notification);
+            }
+            // Check server status
+            if (!serverStatusManager.isActive()) {
+                TurmsNotification notification = NotificationFactory.create(TurmsStatusCode.SERVER_UNAVAILABLE, requestId);
+                return Mono.just(notification);
+            }
+            // Handle the request to get a response
+            TurmsRequest.KindCase requestType = request.getType();
             tracingContext.updateMdc();
             Mono<TurmsNotification> notificationMono = switch (requestType) {
                 case CREATE_SESSION_REQUEST -> sessionController
                         .handleCreateSessionRequest(sessionWrapper, request.getCreateSessionRequest())
                         .map(result -> getNotificationFromHandlerResult(result, request.getRequestId()));
                 case DELETE_SESSION_REQUEST -> sessionController.handleDeleteSessionRequest(sessionWrapper);
-                default -> handleServiceRequest(sessionWrapper, request, data);
+                default -> handleServiceRequestForTurms(sessionWrapper, request, serviceRequestBuffer);
             };
-            return notificationMono
-                    .doOnNext(notification -> {
-                        if (TurmsStatusCode.isServerError(notification.getCode())) {
-                            tracingContext.updateMdc();
-                            log.error("Got a response with a server error code: {} to the request: {}", notification, request);
-                        }
-                    })
-                    .onErrorResume(throwable -> {
-                        ThrowableInfo info = ThrowableInfo.get(throwable);
-                        if (info.getCode().isServerError()) {
-                            tracingContext.updateMdc();
-                            log.error("Failed to handle the service request: {}", request, throwable);
-                        }
-                        return Mono.just(NotificationFactory.create(info, request.getRequestId()));
-                    })
-                    .map(ProtoUtil::getDirectByteBuffer)
-                    .contextWrite(context -> {
-                        RequestLoggingContext loggingContext = context.get(RequestLoggingContext.CTX_KEY_NAME);
-                        loggingContext.setTracingContext(tracingContext);
-                        return context;
-                    });
+            return notificationMono;
         } catch (Exception e) {
             TurmsNotification notification = NotificationFactory
                     .create(ThrowableInfo.get(e), request.getRequestId());
-            return Mono.just(ProtoUtil.getDirectByteBuffer(notification));
+            return Mono.just(notification);
         } finally {
             tracingContext.clearMdc();
         }
@@ -155,9 +206,9 @@ public class UserRequestDispatcher {
         return Mono.just(data);
     }
 
-    private Mono<TurmsNotification> handleServiceRequest(UserSessionWrapper sessionWrapper,
-                                                         SimpleTurmsRequest request,
-                                                         ByteBuf data) {
+    private Mono<TurmsNotification> handleServiceRequestForTurms(UserSessionWrapper sessionWrapper,
+                                                                 SimpleTurmsRequest request,
+                                                                 ByteBuf serviceRequestBuffer) {
         UserSession session = sessionWrapper.getUserSession();
         if (session == null || !session.isOpen()) {
             return Mono.just(TurmsNotificationUtil.sessionClosed(request.getRequestId()));
@@ -168,7 +219,7 @@ public class UserRequestDispatcher {
                 session.getDeviceType(),
                 request.getRequestId(),
                 request.getType(),
-                data);
+                serviceRequestBuffer);
         return serviceMediator.processServiceRequest(serviceRequest);
     }
 

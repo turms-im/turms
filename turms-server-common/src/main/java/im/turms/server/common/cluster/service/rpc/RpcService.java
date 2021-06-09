@@ -259,10 +259,11 @@ public class RpcService implements ClusterService {
                                          Duration timeout) {
         ByteBuf buffer = serializationService.serialize(request);
         Payload requestPayload = ByteBufPayload.create(buffer);
-        Mono<Payload> mono = Mono.deferContextual(context -> {
-            addTraceIdToRequestFromContext(context, request);
-            return connection.requestResponse(requestPayload);
-        })
+        Mono<Payload> mono = Mono
+                .deferContextual(context -> {
+                    addTraceIdToRequestFromContext(context, request);
+                    return connection.requestResponse(requestPayload);
+                })
                 .timeout(timeout)
                 .name(METRICS_NAME_RPC_REQUEST)
                 .tag(METRICS_TAG_REQUEST_NAME, request.name())

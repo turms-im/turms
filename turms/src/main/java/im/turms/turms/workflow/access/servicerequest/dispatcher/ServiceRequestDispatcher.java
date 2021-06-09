@@ -60,8 +60,8 @@ import java.util.Set;
 import static im.turms.common.model.dto.request.TurmsRequest.KindCase.CREATE_SESSION_REQUEST;
 import static im.turms.common.model.dto.request.TurmsRequest.KindCase.DELETE_SESSION_REQUEST;
 import static im.turms.common.model.dto.request.TurmsRequest.KindCase.KIND_NOT_SET;
-import static im.turms.turms.constant.MetricsConstant.CLIENT_REQUEST_NAME;
-import static im.turms.turms.constant.MetricsConstant.CLIENT_REQUEST_TAG_TYPE;
+import static im.turms.server.common.constant.CommonMetricsConstant.CLIENT_REQUEST_NAME;
+import static im.turms.server.common.constant.CommonMetricsConstant.CLIENT_REQUEST_TAG_TYPE;
 
 /**
  * @author James Chen

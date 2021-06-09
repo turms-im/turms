@@ -17,8 +17,9 @@
 
 package im.turms.gateway.logging;
 
+import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.notification.TurmsNotification;
-import im.turms.server.common.dto.ServiceRequest;
+import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.server.common.logging.CommonClientApiLogging;
 
 import static im.turms.server.common.logging.CommonClientApiLogging.LOG_FIELD_DELIMITER;
@@ -37,24 +38,28 @@ public final class ClientApiLogging {
      * 2. We use the common log pattern (including the trace ID) so that our
      * users don't need to write different parsers for them.
      */
-    public static void log(ServiceRequest request,
+    public static void log(String ip,
+                           Long userId,
+                           DeviceType deviceType,
+                           long requestId,
+                           TurmsRequest.KindCase requestType,
                            int requestSize,
                            long requestTime,
                            TurmsNotification response,
                            long processingTime) {
         String message =
                 // client information
-                request.getIpStr()
+                ip
                         + LOG_FIELD_DELIMITER
                         // user information
-                        + request.getUserId()
+                        + userId
                         + LOG_FIELD_DELIMITER
-                        + request.getDeviceType()
+                        + deviceType
                         + LOG_FIELD_DELIMITER
                         // request information
-                        + request.getRequestId()
+                        + requestId
                         + LOG_FIELD_DELIMITER
-                        + request.getType()
+                        + requestType
                         + LOG_FIELD_DELIMITER
                         + requestTime
                         + LOG_FIELD_DELIMITER
