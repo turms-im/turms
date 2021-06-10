@@ -18,7 +18,10 @@
 package im.turms.server.common.mongo.operation.option;
 
 import im.turms.server.common.mongo.BsonPool;
-import org.bson.Document;
+import im.turms.server.common.mongo.util.SerializationUtil;
+import org.bson.BsonDocument;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.conversions.Bson;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
@@ -28,11 +31,16 @@ import java.util.Date;
 /**
  * @author James Chen
  */
-public final class Update {
+public final class Update implements Bson {
 
-    private final Document document = new Document();
-    private Document set;
-    private Document unset;
+    /**
+     * Use org.bson.BsonDocument instead of org.bson.Document
+     * because Document will be converted to BsonDocument by mongo-java-driver finally,
+     * which is a huge waste of system resources because both documents are heavy
+     */
+    private final BsonDocument document = new BsonDocument();
+    private BsonDocument set;
+    private BsonDocument unset;
 
     private Update() {
     }
@@ -41,7 +49,8 @@ public final class Update {
         return new Update();
     }
 
-    public Document asDocument() {
+    @Override
+    public <TDocument> BsonDocument toBsonDocument(Class<TDocument> tDocumentClass, CodecRegistry codecRegistry) {
         return document;
     }
 
@@ -86,16 +95,16 @@ public final class Update {
 
     private Update appendSet(String key, Object value) {
         if (set == null) {
-            set = new Document();
+            set = new BsonDocument();
             document.append("$set", set);
         }
-        set.put(key, value);
+        set.put(key, SerializationUtil.encodeValue(value));
         return this;
     }
 
     private Update appendUnset(String field) {
         if (unset == null) {
-            unset = new Document();
+            unset = new BsonDocument();
             document.append("$unset", unset);
         }
         unset.put(field, BsonPool.BSON_STRING_EMPTY);

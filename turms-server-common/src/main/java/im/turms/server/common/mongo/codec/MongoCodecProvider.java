@@ -30,7 +30,6 @@ import java.util.Map;
  */
 public class MongoCodecProvider implements CodecProvider {
 
-    //TODO: check size
     private final Map<Class<?>, Codec<?>> codes = new IdentityHashMap<>(64);
     private final EntityCodecProvider entityCodecProvider = new EntityCodecProvider();
     @Setter

@@ -527,8 +527,8 @@ public class MessageService {
         Filter builder = Filter.newBuilder()
                 .eqIfNotNull(Message.Fields.IS_GROUP_MESSAGE, areGroupMessages)
                 .eqIfNotNull(Message.Fields.IS_SYSTEM_MESSAGE, areSystemMessages)
-                .eqIfNotNull(Message.Fields.SENDER_ID, senderIds)
-                .eqIfNotNull(Message.Fields.TARGET_ID, targetIds)
+                .inIfNotNull(Message.Fields.SENDER_ID, senderIds)
+                .inIfNotNull(Message.Fields.TARGET_ID, targetIds)
                 .addBetweenIfNotNull(Message.Fields.DELIVERY_DATE, deliveryDateRange)
                 .addBetweenIfNotNull(Message.Fields.DELETION_DATE, deletionDateRange);
         Filter filter = builder.inIfNotNull(DaoConstant.ID_FIELD_NAME, messageIds);

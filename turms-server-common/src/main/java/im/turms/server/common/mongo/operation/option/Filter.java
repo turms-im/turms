@@ -19,21 +19,34 @@ package im.turms.server.common.mongo.operation.option;
 
 import im.turms.common.constant.RequestStatus;
 import im.turms.server.common.bo.common.DateRange;
-import im.turms.server.common.util.DateUtil;
-import org.bson.Document;
+import im.turms.server.common.mongo.util.SerializationUtil;
+import org.bson.BsonArray;
+import org.bson.BsonDateTime;
+import org.bson.BsonDocument;
+import org.bson.BsonNull;
+import org.bson.BsonValue;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.conversions.Bson;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 /**
  * @author James Chen
  */
-public class Filter {
+public class Filter implements Bson {
 
-    private final Document document = new Document();
+    /**
+     * Use org.bson.BsonDocument instead of org.bson.Document
+     * because Document will be converted to BsonDocument by mongo-java-driver finally,
+     * which is a huge waste of system resources because both documents are heavy
+     */
+    private final BsonDocument document = new BsonDocument();
 
     Filter() {
     }
@@ -42,7 +55,8 @@ public class Filter {
         return new Filter();
     }
 
-    public Document asDocument() {
+    @Override
+    public <TDocument> BsonDocument toBsonDocument(Class<TDocument> tDocumentClass, CodecRegistry codecRegistry) {
         return document;
     }
 
@@ -56,39 +70,39 @@ public class Filter {
             Date start = dateRange.getStart();
             Date end = dateRange.getEnd();
             if (start != null && end == null) {
-                document.append(key, new Document("$gte", start));
+                document.append(key, new BsonDocument("$gte", new BsonDateTime(start.getTime())));
             } else if (start == null && end != null) {
-                document.append(key, new Document("$lt", end));
+                document.append(key, new BsonDocument("$lt", new BsonDateTime(end.getTime())));
             } else if (start != null) {
-                document.append(key, new Document()
-                        .append("$gte", start)
-                        .append("$lt", end));
+                document.append(key, new BsonDocument()
+                        .append("$gte", new BsonDateTime(start.getTime()))
+                        .append("$lt", new BsonDateTime(end.getTime())));
             }
         }
         return this;
     }
 
     public Filter eq(String key, Object value) {
-        document.append(key, value);
+        document.append(key, SerializationUtil.encodeSingleValue(value));
         return this;
     }
 
     public Filter eqIfFalse(@NotNull String key, @Nullable Object obj, boolean condition) {
         if (!condition) {
-            document.append(key, new Document("$eq", obj));
+            document.append(key, new BsonDocument("$eq", SerializationUtil.encodeSingleValue(obj)));
         }
         return this;
     }
 
     public Filter eqIfNotNull(@NotNull String key, @Nullable Object obj) {
         if (obj != null) {
-            document.append(key, new Document("$eq", obj));
+            document.append(key, new BsonDocument("$eq", SerializationUtil.encodeSingleValue(obj)));
         }
         return this;
     }
 
     public Filter gt(String key, Object value) {
-        document.append(key, new Document("$gt", value));
+        document.append(key, new BsonDocument("$gt", SerializationUtil.encodeSingleValue(value)));
         return this;
     }
 
@@ -99,7 +113,7 @@ public class Filter {
     }
 
     public Filter gte(String key, Object value) {
-        document.append(key, new Document("$gte", value));
+        document.append(key, new BsonDocument("$gte", SerializationUtil.encodeSingleValue(value)));
         return this;
     }
 
@@ -110,24 +124,24 @@ public class Filter {
     }
 
     public <T> Filter in(String key, T... values) {
-        document.append(key, new Document("$in", values));
+        document.append(key, new BsonDocument("$in", SerializationUtil.encodeValue(values)));
         return this;
     }
 
     public <T> Filter in(String key, Collection<T> collection) {
-        document.append(key, new Document("$in", collection));
+        document.append(key, new BsonDocument("$in", SerializationUtil.encodeValue(collection)));
         return this;
     }
 
     public Filter inIfNotNull(@NotNull String key, @Nullable Collection<?> collection) {
         if (collection != null && !collection.isEmpty()) {
-            document.append(key, new Document("$in", collection));
+            document.append(key, new BsonDocument("$in", SerializationUtil.encodeValue(collection)));
         }
         return this;
     }
 
     public Filter lt(String key, Object value) {
-        document.append(key, new Document("$lt", value));
+        document.append(key, new BsonDocument("$lt", SerializationUtil.encodeSingleValue(value)));
         return this;
     }
 
@@ -138,23 +152,24 @@ public class Filter {
     }
 
     public Filter ne(String key, Object value) {
-        document.append(key, new Document("$ne", value));
+        document.append(key, new BsonDocument("$ne", SerializationUtil.encodeSingleValue(value)));
         return this;
     }
 
     public Filter neNullIfNotNull(@NotNull String key, @Nullable Object obj) {
         if (obj != null) {
-            document.append(key, new Document("$ne", null));
+            document.append(key, new BsonDocument("$ne", BsonNull.VALUE));
         }
         return this;
     }
 
     public Filter or(Filter... filters) {
-        Document[] documents = new Document[filters.length];
-        for (int i = 0; i < filters.length; i++) {
-            documents[i] = filters[i].asDocument();
+        List<BsonValue> values = new ArrayList<>(filters.length);
+        for (Filter filter : filters) {
+            values.add(filter.document);
         }
-        document.append("$or", documents);
+        // TODO: avoid the copy of List<BsonValue>
+        document.append("$or", new BsonArray(values));
         return this;
     }
 
@@ -166,10 +181,12 @@ public class Filter {
         if (expirationDate == null) {
             return this;
         }
-        Object existingDoc = document.get(creationDateFieldName);
-        if (existingDoc instanceof Document doc) {
-            Object existingDate = doc.get("$lt");
-            doc.append("$lt", DateUtil.min((Date) existingDate, expirationDate));
+        BsonValue existingDoc = document.get(creationDateFieldName);
+        if (existingDoc instanceof BsonDocument doc) {
+            BsonDateTime existingDate = doc.getDateTime("$lt");
+            if (expirationDate.getTime() < existingDate.getValue()) {
+                doc.append("$lt", new BsonDateTime(expirationDate.getTime()));
+            }
         } else {
             lt(creationDateFieldName, expirationDate);
         }
@@ -202,16 +219,18 @@ public class Filter {
         if (expirationDate == null) {
             return this;
         }
-        Object existingDoc = document.get(creationDateFieldName);
-        if (existingDoc instanceof Document doc) {
-            Object existingDate = doc.get("$gte");
-            if (existingDate instanceof Date date) {
-                doc.append("$gte", DateUtil.max(date, expirationDate));
+        BsonValue existingDoc = document.get(creationDateFieldName);
+        if (existingDoc instanceof BsonDocument doc) {
+            BsonValue existingDate = doc.get("$gte");
+            if (existingDate instanceof BsonDateTime date) {
+                if (expirationDate.getTime() > date.getValue()) {
+                    doc.append("$gte", new BsonDateTime(expirationDate.getTime()));
+                }
             } else {
                 if (doc.isEmpty()) {
                     gteOrNull(creationDateFieldName, expirationDate);
                 } else {
-                    doc.put("$gte", expirationDate);
+                    doc.append("$gte", new BsonDateTime(expirationDate.getTime()));
                 }
             }
         } else {

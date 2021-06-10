@@ -140,7 +140,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         options = options == null
                 ? QueryOptions.newBuilder().limit(1)
                 : options.limit(1);
-        FindPublisher<T> source = find(collection, filter.asDocument(), options);
+        FindPublisher<T> source = find(collection, filter, options);
         return Mono.from(source);
     }
 
@@ -152,7 +152,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     @Override
     public <T> Flux<T> findMany(Class<T> clazz, Filter filter, @Nullable QueryOptions options) {
         MongoCollection<T> collection = context.getCollection(clazz);
-        FindPublisher<T> source = find(collection, filter.asDocument(), options);
+        FindPublisher<T> source = find(collection, filter, options);
         return Flux.from(source);
     }
 
@@ -174,7 +174,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         QueryOptions options = QueryOptions.newBuilder()
                 .projection(ID_ONLY)
                 .limit(1);
-        FindPublisher<T> publisher = find(collection, filter.asDocument(), options);
+        FindPublisher<T> publisher = find(collection, filter, options);
         return Mono.from(publisher).hasElement();
     }
 
@@ -185,7 +185,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     @Override
     public <T> Mono<Long> count(Class<T> clazz, Filter filter) {
         MongoCollection<T> collection = context.getCollection(clazz);
-        Publisher<Long> source = collection.countDocuments(filter.asDocument(), DEFAULT_COUNT_OPTIONS);
+        Publisher<Long> source = collection.countDocuments(filter, DEFAULT_COUNT_OPTIONS);
         return Mono.from(source);
     }
 
@@ -224,7 +224,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     @Override
     public <T> Mono<Void> upsert(Class<T> clazz, Filter filter, Update update) {
         MongoCollection<T> collection = context.getCollection(clazz);
-        Publisher<UpdateResult> source = collection.updateOne(filter.asDocument(), update.asDocument(), DEFAULT_UPSERT_OPTIONS);
+        Publisher<UpdateResult> source = collection.updateOne(filter, update, DEFAULT_UPSERT_OPTIONS);
         return Mono.from(source).then();
     }
 
@@ -283,8 +283,8 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     public <T> Mono<UpdateResult> updateOne(ClientSession session, Class<T> clazz, Filter filter, Update update) {
         MongoCollection<T> collection = context.getCollection(clazz);
         Publisher<UpdateResult> source = session == null
-                ? collection.updateOne(filter.asDocument(), update.asDocument(), DEFAULT_UPDATE_OPTIONS)
-                : collection.updateOne(session, filter.asDocument(), update.asDocument(), DEFAULT_UPDATE_OPTIONS);
+                ? collection.updateOne(filter, update, DEFAULT_UPDATE_OPTIONS)
+                : collection.updateOne(session, filter, update, DEFAULT_UPDATE_OPTIONS);
         return Mono.from(source);
     }
 
@@ -297,8 +297,8 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     public <T> Mono<UpdateResult> updateMany(ClientSession session, Class<T> clazz, Filter filter, Update update) {
         MongoCollection<T> collection = context.getCollection(clazz);
         Publisher<UpdateResult> source = session == null
-                ? collection.updateMany(filter.asDocument(), update.asDocument(), DEFAULT_UPDATE_OPTIONS)
-                : collection.updateMany(session, filter.asDocument(), update.asDocument(), DEFAULT_UPDATE_OPTIONS);
+                ? collection.updateMany(filter, update, DEFAULT_UPDATE_OPTIONS)
+                : collection.updateMany(session, filter, update, DEFAULT_UPDATE_OPTIONS);
         return Mono.from(source);
     }
 
@@ -310,8 +310,8 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     public <T> Mono<DeleteResult> deleteMany(ClientSession session, Class<T> clazz, Filter filter) {
         MongoCollection<T> collection = context.getCollection(clazz);
         Publisher<DeleteResult> source = session == null
-                ? collection.deleteMany(filter.asDocument(), DEFAULT_DELETE_OPTIONS)
-                : collection.deleteMany(session, filter.asDocument(), DEFAULT_DELETE_OPTIONS);
+                ? collection.deleteMany(filter, DEFAULT_DELETE_OPTIONS)
+                : collection.deleteMany(session, filter, DEFAULT_DELETE_OPTIONS);
         return Mono.from(source);
     }
 
@@ -349,7 +349,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
                                         String groupByFieldName) {
         MongoCollection<?> collection = context.getCollection(clazz);
         List<Bson> pipeline = List.of(
-                Aggregates.match(filter.asDocument()),
+                Aggregates.match(filter),
                 Aggregates.project(Projections.fields(
                         Projections.excludeId(),
                         Projections.include(groupByFieldName))),

@@ -28,6 +28,7 @@ import im.turms.server.common.mongo.codec.MongoCodecProvider;
 import im.turms.server.common.mongo.entity.MongoEntity;
 import im.turms.server.common.mongo.entity.MongoEntityFactory;
 import im.turms.server.common.mongo.operation.MongoCollectionOptions;
+import im.turms.server.common.mongo.util.SerializationUtil;
 import im.turms.server.common.util.CollectorUtil;
 import lombok.Getter;
 import org.bson.codecs.BsonCodecProvider;
@@ -91,6 +92,8 @@ public class MongoContext {
         client = MongoClients.create(settings);
         database = client.getDatabase(connectionSettings.getDatabase());
         adminDatabase = client.getDatabase("admin");
+
+        SerializationUtil.codecRegistry = codecRegistry;
     }
 
     public void destroy() {
