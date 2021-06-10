@@ -34,6 +34,6 @@ public final class CronConstant {
     public static final String DEFAULT_EXPIRED_GROUP_INVITATIONS_CLEANUP_CRON = "0 15 2 * * *";
     public static final String DEFAULT_EXPIRED_GROUP_JOIN_REQUESTS_CLEANUP_CRON = "0 30 2 * * *";
 
-    public static final String DEFAULT_EXPIRED_MESSAGES_CHECKER_CRON = "0 45 2 * * *";
+    public static final String DEFAULT_EXPIRED_MESSAGES_CLEANUP_CRON = "0 45 2 * * *";
 
 }

@@ -74,14 +74,14 @@ public class MessageProperties {
     private boolean recordsPersistent;
 
     @JsonView(MutablePropertiesView.class)
-    @Description("A message will become expired after the TTL has elapsed. Cannot be infinite for performance reason")
-    @Min(1)
-    private int messageTimeToLiveHours = 30 * 24;
+    @Description("A message will become expired after the TTL has elapsed")
+    @Min(0)
+    private int messageExpireAfterHours;
 
     @Description("Clean the expired messages when the cron expression is triggered")
     @GlobalProperty
     @ValidCron
-    private String expiredMessagesCheckerCron = CronConstant.DEFAULT_EXPIRED_MESSAGES_CHECKER_CRON;
+    private String expiredMessagesCleanupCron = CronConstant.DEFAULT_EXPIRED_MESSAGES_CLEANUP_CRON;
 
     @Description("Whether to delete messages logically by default")
     @GlobalProperty

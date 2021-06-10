@@ -177,14 +177,13 @@ public class UserRequestDispatcher {
             // Handle the request to get a response
             TurmsRequest.KindCase requestType = request.getType();
             tracingContext.updateMdc();
-            Mono<TurmsNotification> notificationMono = switch (requestType) {
+            return switch (requestType) {
                 case CREATE_SESSION_REQUEST -> sessionController
                         .handleCreateSessionRequest(sessionWrapper, request.getCreateSessionRequest())
                         .map(result -> getNotificationFromHandlerResult(result, request.getRequestId()));
                 case DELETE_SESSION_REQUEST -> sessionController.handleDeleteSessionRequest(sessionWrapper);
                 default -> handleServiceRequestForTurms(sessionWrapper, request, serviceRequestBuffer);
             };
-            return notificationMono;
         } catch (Exception e) {
             TurmsNotification notification = NotificationFactory
                     .create(ThrowableInfo.get(e), request.getRequestId());

@@ -95,7 +95,7 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
 
         // Set up a cron job to remove requests if deleting expired docs is enabled
         taskManager.reschedule(
-                "groupJoinRequestsCleanup",
+                "expiredGroupJoinRequestsCleanup",
                 turmsPropertiesManager.getLocalProperties().getService().getGroup().getExpiredGroupJoinRequestsCleanupCron(),
                 () -> {
                     boolean isLocalNodeLeader = node.isLocalNodeLeader();

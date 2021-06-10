@@ -94,7 +94,7 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
 
         // Set up a cron job to remove requests if deleting expired docs is enabled
         taskManager.reschedule(
-                "userFriendRequestsCleanup",
+                "expiredUserFriendRequestsCleanup",
                 turmsPropertiesManager.getLocalProperties().getService().getUser().getFriendRequest()
                         .getExpiredUserFriendRequestsCleanupCron(),
                 () -> {

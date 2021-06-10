@@ -147,15 +147,17 @@ public class MessageService {
         node.addPropertiesChangeListener(properties -> timeType = properties.getService().getMessage().getTimeType());
         // Set up the checker for expired messages join requests
         taskManager.reschedule(
-                "messagesChecker",
-                turmsPropertiesManager.getLocalProperties().getService().getMessage().getExpiredMessagesCheckerCron(),
+                "expiredMessagesCleanup",
+                turmsPropertiesManager.getLocalProperties().getService().getMessage().getExpiredMessagesCleanupCron(),
                 () -> {
                     if (node.isLocalNodeLeader()) {
-                        int messagesTimeToLiveHours = node.getSharedProperties()
+                        int expireAfterHours = node.getSharedProperties()
                                 .getService()
                                 .getMessage()
-                                .getMessageTimeToLiveHours();
-                        deleteExpiredMessagesAndStatuses(messagesTimeToLiveHours).subscribe();
+                                .getMessageExpireAfterHours();
+                        if (expireAfterHours > 0) {
+                            deleteExpiredMessagesAndStatuses(expireAfterHours).subscribe();
+                        }
                     }
                 });
     }

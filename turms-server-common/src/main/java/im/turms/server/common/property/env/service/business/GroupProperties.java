@@ -95,7 +95,7 @@ public class GroupProperties {
 
     @Description("Clean the expired group invitations when the cron expression is triggered" +
             " if deleteExpiredGroupInvitationsWhenCronTriggered is true")
-    private String expiredGroupInvitationsCheckerCron = CronConstant.DEFAULT_EXPIRED_GROUP_INVITATIONS_CLEANUP_CRON;
+    private String expiredGroupInvitationsCleanupCron = CronConstant.DEFAULT_EXPIRED_GROUP_INVITATIONS_CLEANUP_CRON;
 
     @Description("Whether to activate a group when created by default")
     @GlobalProperty

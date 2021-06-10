@@ -97,8 +97,8 @@ public class GroupInvitationService extends ExpirableModelService<GroupInvitatio
 
         // Set up a cron job to remove invitations if deleting expired docs is enabled
         taskManager.reschedule(
-                "groupInvitationsCleanup",
-                turmsPropertiesManager.getLocalProperties().getService().getGroup().getExpiredGroupInvitationsCheckerCron(),
+                "expiredGroupInvitationsCleanup",
+                turmsPropertiesManager.getLocalProperties().getService().getGroup().getExpiredGroupInvitationsCleanupCron(),
                 () -> {
                     boolean isLocalNodeLeader = node.isLocalNodeLeader();
                     boolean deleteExpiredRequestsWhenCronTriggered = node.getSharedProperties()
