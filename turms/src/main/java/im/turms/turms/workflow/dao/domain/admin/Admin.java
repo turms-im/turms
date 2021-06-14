@@ -20,6 +20,7 @@ package im.turms.turms.workflow.dao.domain.admin;
 import im.turms.server.common.mongo.entity.annotation.Document;
 import im.turms.server.common.mongo.entity.annotation.Field;
 import im.turms.server.common.mongo.entity.annotation.Id;
+import im.turms.server.common.property.env.common.security.SecurityProperties;
 import im.turms.turms.workflow.dao.index.OptionalIndexedForDifferentAmount;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,7 +44,7 @@ public final class Admin {
     private final String account;
 
     /**
-     * @see im.turms.server.common.property.env.common.SecurityProperties#adminPasswordEncodingAlgorithm
+     * @see SecurityProperties#adminPasswordEncodingAlgorithm
      */
     @Field(Fields.PASSWORD)
     private final String password;

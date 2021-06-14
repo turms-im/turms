@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package im.turms.server.common.property.env.common;
+package im.turms.server.common.property.env.common.security;
 
 
 import im.turms.server.common.property.constant.PasswordEncodingAlgorithm;
@@ -33,7 +33,10 @@ import lombok.NoArgsConstructor;
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class SecurityProperties {
+public class PasswordProperties {
+
+    @Description("The initial password of the root user")
+    private String initialRootPassword = "turms";
 
     @ImmutableOnceApplied
     @Description("The password encoding algorithm for users")

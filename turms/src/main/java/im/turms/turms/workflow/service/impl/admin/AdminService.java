@@ -32,6 +32,7 @@ import im.turms.server.common.mongo.TurmsMongoClient;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
 import im.turms.server.common.mongo.operation.option.Update;
+import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.turms.bo.AdminInfo;
 import im.turms.turms.constant.DaoConstant;
@@ -73,7 +74,6 @@ public class AdminService {
      * Use the hard-coded account because it's immutable.
      */
     public static final String ROOT_ADMIN_ACCOUNT = "turms";
-    public static final String ROOT_ADMIN_PASSWORD = "turms";
     private static final int MIN_ACCOUNT_LIMIT = 1;
     private static final int MIN_PASSWORD_LIMIT = 1;
     private static final int MIN_NAME_LIMIT = 1;
@@ -92,15 +92,16 @@ public class AdminService {
     public AdminService(
             PasswordManager passwordManager,
             @Qualifier("adminMongoClient") TurmsMongoClient mongoClient,
+            TurmsPropertiesManager turmsPropertiesManager,
             AdminRoleService adminRoleService) {
         this.passwordManager = passwordManager;
         this.mongoClient = mongoClient;
         this.adminRoleService = adminRoleService;
 
-        listenAndLoadAdmins();
+        listenAndLoadAdmins(turmsPropertiesManager.getLocalProperties().getSecurity().getPassword().getInitialRootPassword());
     }
 
-    public void listenAndLoadAdmins() {
+    public void listenAndLoadAdmins(String initialRootPassword) {
         // Listen
         mongoClient.watch(Admin.class, FullDocument.UPDATE_LOOKUP)
                 .doOnNext(event -> {
@@ -138,14 +139,11 @@ public class AdminService {
                     }
                     if (!rootAdminExists) {
                         addAdmin(ROOT_ADMIN_ACCOUNT,
-                                ROOT_ADMIN_PASSWORD,
+                                initialRootPassword,
                                 DaoConstant.ADMIN_ROLE_ROOT_ID,
                                 ROOT_ADMIN_ACCOUNT,
                                 new Date(),
                                 false)
-                                .doOnNext(admin -> log.warn("A root admin has been generated: {}", Map.of(
-                                        "Account", ROOT_ADMIN_ACCOUNT,
-                                        "Raw Password", ROOT_ADMIN_PASSWORD)))
                                 .subscribe();
                     }
                 })

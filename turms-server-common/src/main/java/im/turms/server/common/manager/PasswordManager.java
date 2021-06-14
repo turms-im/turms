@@ -46,8 +46,8 @@ public class PasswordManager {
 
     public PasswordManager(TurmsPropertiesManager turmsPropertiesManager) {
         TurmsProperties turmsProperties = turmsPropertiesManager.getLocalProperties();
-        adminPasswordEncodingAlgorithm = turmsProperties.getSecurity().getAdminPasswordEncodingAlgorithm();
-        userPasswordEncodingAlgorithm = turmsProperties.getSecurity().getUserPasswordEncodingAlgorithm();
+        adminPasswordEncodingAlgorithm = turmsProperties.getSecurity().getPassword().getAdminPasswordEncodingAlgorithm();
+        userPasswordEncodingAlgorithm = turmsProperties.getSecurity().getPassword().getUserPasswordEncodingAlgorithm();
     }
 
     public String encodePassword(PasswordEncodingAlgorithm strategy, String rawPassword) {
