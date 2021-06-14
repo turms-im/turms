@@ -5,7 +5,7 @@
 # Unix: ENV=dev docker-compose -f docker-compose.standalone.yml up --force-recreate
 #
 
-version: "3.4"
+version: "3.9"
 
 x-logging: &logging
   logging:
@@ -155,3 +155,58 @@ services:
         soft: 1024000
         hard: 1024000
     <<: *logging
+
+  # optional services for observability - metrics
+
+  grafana:
+    image: grafana/grafana:8.0.2
+    depends_on:
+      - prometheus
+    ports:
+      - 3000:3000
+    profiles:
+      - monitoring
+    environment:
+      - GF_SECURITY_ADMIN_USER=turms
+      - GF_SECURITY_ADMIN_PASSWORD=turms
+    restart: unless-stopped
+    volumes:
+      - ./ops/grafana/provisioning/:/etc/grafana/provisioning/
+
+  prometheus:
+    image: prom/prometheus:v2.27.1
+    ports:
+      - 9090:9090
+    profiles:
+      - monitoring
+    restart: unless-stopped
+    volumes:
+      - ./ops/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  node-exporter:
+    image: prom/node-exporter:v1.1.2
+    ports:
+      - 9100:9100
+    profiles:
+      - monitoring
+
+  cadvisor:
+    image: google/cadvisor:v0.33.0
+    ports:
+      - 8080:8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+
+  redis-exporter:
+    image: oliver006/redis_exporter:v1.24.0
+    depends_on:
+      - redis
+    environment:
+      - REDIS_ADDR=redis://redis:6379
+    ports:
+      - 9121:9121
+    profiles:
+      - monitoring
