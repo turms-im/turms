@@ -67,7 +67,7 @@ management:
         exclude: "*"
     web:
       exposure:
-        include: info,health,env,heapdump,threaddump,flightrecorder,prometheus
+        include: info,health,env,heapdump,threaddump,flightrecorder
 springdoc:
   show-actuator: true
   swagger-ui:

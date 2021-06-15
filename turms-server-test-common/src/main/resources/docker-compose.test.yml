@@ -93,6 +93,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      turms:
+        condition: service_healthy
     environment:
       TURMS_GATEWAY_JVM_OPTS: >
         -Dspring.profiles.active=test

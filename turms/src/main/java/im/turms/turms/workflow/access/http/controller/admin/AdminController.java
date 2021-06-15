@@ -52,7 +52,6 @@ import static im.turms.turms.workflow.access.http.permission.AdminPermission.ADM
 import static im.turms.turms.workflow.access.http.permission.AdminPermission.ADMIN_DELETE;
 import static im.turms.turms.workflow.access.http.permission.AdminPermission.ADMIN_QUERY;
 import static im.turms.turms.workflow.access.http.permission.AdminPermission.ADMIN_UPDATE;
-import static im.turms.turms.workflow.access.http.permission.AdminPermission.NONE;
 
 /**
  * @author James Chen
@@ -70,7 +69,6 @@ public class AdminController {
     }
 
     @RequestMapping(method = RequestMethod.HEAD)
-    @RequiredPermission(NONE)
     public ResponseEntity<Void> checkAccountAndPassword() {
         return ResponseEntity.ok().build();
     }

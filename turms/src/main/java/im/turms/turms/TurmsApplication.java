@@ -18,7 +18,6 @@
 package im.turms.turms;
 
 import im.turms.server.common.BaseTurmsApplication;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
@@ -27,7 +26,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication(
         scanBasePackages = {"im.turms.turms", "im.turms.server.common"},
         proxyBeanMethods = false)
-@Log4j2
 public class TurmsApplication extends BaseTurmsApplication {
 
     public static void main(String[] args) {

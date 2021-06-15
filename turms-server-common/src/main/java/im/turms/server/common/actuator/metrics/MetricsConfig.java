@@ -17,7 +17,6 @@
 
 package im.turms.server.common.actuator.metrics;
 
-import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Metrics;
 import io.micrometer.core.instrument.binder.MeterBinder;
 import io.micrometer.core.instrument.binder.jvm.ClassLoaderMetrics;
@@ -50,7 +49,7 @@ public class MetricsConfig {
     }
 
     @Bean
-    public MeterRegistry meterRegistry() {
+    public CompositeMeterRegistry meterRegistry() {
         CompositeMeterRegistry registry = Metrics.globalRegistry;
         registry.add(new PrometheusMeterRegistry(new PrometheusConfig() {
             @Override

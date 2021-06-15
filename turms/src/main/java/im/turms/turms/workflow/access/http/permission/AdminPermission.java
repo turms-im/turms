@@ -23,8 +23,6 @@ import java.util.Set;
  * @author James Chen
  */
 public enum AdminPermission {
-    NONE,
-
     STATISTICS_USER_QUERY,
     STATISTICS_GROUP_QUERY,
     STATISTICS_MESSAGE_QUERY,

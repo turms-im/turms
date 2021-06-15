@@ -24,7 +24,6 @@ import im.turms.server.common.logging.RequestLoggingContext;
 import im.turms.server.common.tracing.TracingCloseableContext;
 import im.turms.server.common.tracing.TracingContext;
 import im.turms.turms.plugin.manager.TurmsPluginManager;
-import im.turms.turms.workflow.access.http.permission.AdminPermission;
 import im.turms.turms.workflow.access.http.permission.RequiredPermission;
 import im.turms.turms.workflow.service.impl.admin.AdminService;
 import im.turms.turms.workflow.service.impl.log.AdminActionLogService;
@@ -116,7 +115,7 @@ public class ControllerFilter implements WebFilter {
             return chain.filter(exchange);
         }
         RequiredPermission requiredPermission = handlerMethod.getMethodAnnotation(RequiredPermission.class);
-        if (requiredPermission != null && requiredPermission.value().equals(AdminPermission.NONE)) {
+        if (requiredPermission == null) {
             return chain.filter(exchange);
         }
         if (!enableAdminApi) {
@@ -137,19 +136,15 @@ public class ControllerFilter implements WebFilter {
                         exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                         return Mono.empty();
                     }
-                    if (requiredPermission != null) {
-                        return adminService.isAdminAuthorized(exchange, account, requiredPermission.value())
-                                .flatMap(authorized -> {
-                                    if (authorized != null && authorized) {
-                                        return tryPersistAndPass(account, exchange, chain, handlerMethod);
-                                    } else {
-                                        exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-                                        return Mono.empty();
-                                    }
-                                });
-                    } else {
-                        return tryPersistAndPass(account, exchange, chain, handlerMethod);
-                    }
+                    return adminService.isAdminAuthorized(exchange, account, requiredPermission.value())
+                            .flatMap(authorized -> {
+                                if (authorized != null && authorized) {
+                                    return tryPersistAndPass(account, exchange, chain, handlerMethod);
+                                } else {
+                                    exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+                                    return Mono.empty();
+                                }
+                            });
                 });
     }
 

@@ -117,7 +117,7 @@ public class MetricsController {
     }
 
     @GetMapping(value = "/prometheus")
-    public ResponseEntity<ResponseDTO<String>> scrape(@RequestParam(required = false) Set<String> names) throws IOException {
+    public String scrape(@RequestParam(required = false) Set<String> names) throws IOException {
         StringBuilder builder = new StringBuilder(prometheusStringSize);
         Writer writer = CharStreams.asWriter(builder);
         prometheusMeterRegistry.scrape(writer, TextFormat.CONTENT_TYPE_OPENMETRICS_100, names);
@@ -128,7 +128,7 @@ public class MetricsController {
         } else if (actualLength < (prometheusStringSize / 2)) {
             prometheusStringSize /= 2;
         }
-        return ResponseFactory.okIfTruthy(data);
+        return data;
     }
 
     private MetricDTO meters2Dto(String name, Collection<Meter> meters, boolean returnDescription, boolean returnAvailableTags) {

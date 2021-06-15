@@ -4,6 +4,9 @@
 # Powershell: $env:ENV="dev";docker-compose -f docker-compose.standalone.yml up --force-recreate
 # Unix: ENV=dev docker-compose -f docker-compose.standalone.yml up --force-recreate
 #
+# Run with optional monitoring services (Prometheus+Grafana+Loki)
+# Run with "--profile monitoring": docker-compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate
+#
 
 version: "3.9"
 
@@ -123,6 +126,9 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      # Wait for turms to ensure turms-gateway can fetch data from DB safely after turms has inited collections
+      turms:
+        condition: service_healthy
     environment:
       TURMS_GATEWAY_JVM_OPTS: >
         -Dspring.profiles.active=${ENV}
@@ -194,6 +200,8 @@ services:
     image: google/cadvisor:v0.33.0
     ports:
       - 8080:8080
+    profiles:
+      - monitoring
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:rw
