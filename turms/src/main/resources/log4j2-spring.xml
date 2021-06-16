@@ -23,8 +23,8 @@
             <Routes pattern="$${myctx:TYPE}">
                 <Route key="$${myctx:TYPE}">
                     <RollingFile name="File"
-                                 fileName="../logs/turms.log"
-                                 filePattern="../logs/$${date:yyyy-MM}/turms-%d{yyyy-MM-dd-HH}-%i.log.gz">
+                                 fileName="${env:TURMS_HOME:-.}/log/turms.log"
+                                 filePattern="${env:TURMS_HOME:-.}/log/$${date:yyyy-MM}/turms-%d{yyyy-MM-dd-HH}-%i.log.gz">
                         <PatternLayout pattern="${sys:FILE_LOG_PATTERN}"
                                        charset="UTF-8"/>
                         <Policies>
@@ -34,8 +34,8 @@
                 </Route>
                 <Route key="USER_ACTIVITY">
                     <RollingFile name="File"
-                                 fileName="../logs/turms-user-activity.log"
-                                 filePattern="../logs/$${date:yyyy-MM}/turms-user-activity-%d{yyyy-MM-dd-HH}-%i.log.gz">
+                                 fileName="${env:TURMS_HOME:-.}/log/turms-user-activity.log"
+                                 filePattern="${env:TURMS_HOME:-.}/log/$${date:yyyy-MM}/turms-user-activity-%d{yyyy-MM-dd-HH}-%i.log.gz">
                         <PatternLayout pattern="${sys:FILE_LOG_PATTERN}"
                                        charset="UTF-8"/>
                         <Policies>
@@ -45,8 +45,8 @@
                 </Route>
                 <Route key="CLIENT_API">
                     <RollingFile name="File"
-                                 fileName="../logs/turms-client-api.log"
-                                 filePattern="../logs/$${date:yyyy-MM}/turms-client-api-%d{yyyy-MM-dd-HH}-%i.log.gz">
+                                 fileName="${env:TURMS_HOME:-.}/log/turms-client-api.log"
+                                 filePattern="${env:TURMS_HOME:-.}/log/$${date:yyyy-MM}/turms-client-api-%d{yyyy-MM-dd-HH}-%i.log.gz">
                         <PatternLayout pattern="${sys:FILE_LOG_PATTERN}"
                                        charset="UTF-8"/>
                         <Policies>
@@ -56,8 +56,8 @@
                 </Route>
                 <Route key="ADMIN_API">
                     <RollingFile name="File"
-                                 fileName="../logs/turms-admin-api.log"
-                                 filePattern="../logs/$${date:yyyy-MM}/turms-admin-api-%d{yyyy-MM-dd-HH}-%i.log.gz">
+                                 fileName="${env:TURMS_HOME:-.}/log/turms-admin-api.log"
+                                 filePattern="${env:TURMS_HOME:-.}/log/$${date:yyyy-MM}/turms-admin-api-%d{yyyy-MM-dd-HH}-%i.log.gz">
                         <PatternLayout pattern="${sys:FILE_LOG_PATTERN}"
                                        charset="UTF-8"/>
                         <Policies>

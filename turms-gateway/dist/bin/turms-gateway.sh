@@ -3,17 +3,20 @@
 # turms-gateway.sh runs in the foreground with a thin jar of turms-gateway by default.
 # To run with the fat jar in background, use "./turms-gateway.sh -f -d"
 #
-# Distribution Structure:
+# Home Directory Structure:
 #
 # ├─bin
 # │  └─turms-gateway.sh
 # ├─config
 # │  ├─application.yaml
 # │  └─jvm.options
+# ├─hprof (generated)
 # ├─jdk (optional)
-# └─lib (for deps and plugins)
-#    ├─turms-gateway.jar
-#    └─....jar
+# │─jfr (generated)
+# │─lib (for deps and plugins)
+# │  ├─turms-gateway.jar
+# │  └─....jar
+# └─log (generated)
 
 set -e -o pipefail
 
@@ -107,7 +110,14 @@ for option in "$@"; do
   esac
 done
 
-JVM_OPTIONS="$(tr -d "\r" < "$TURMS_GATEWAY_JVM_CONF" | grep -v "^#" | tr "\n" " " | tr -s " ")"
+# Filter -> Replace CRLF with whitespace -> Trim redundant whitespaces -> Expand vars
+JVM_OPTIONS="$( \
+  tr -d "\r" < "${TURMS_GATEWAY_JVM_CONF}" \
+  | grep -v "^#" \
+  | tr "\n" " " \
+  | tr -s " " \
+  | sed "s@\${TURMS_GATEWAY_HOME}@${TURMS_GATEWAY_HOME}@g" \
+)"
 JVM_OPTIONS+=" -Dspring.config.location=classpath:/,$TURMS_GATEWAY_APP_CONF"
 JVM_OPTIONS+=" ${TURMS_GATEWAY_JVM_OPTS}"
 

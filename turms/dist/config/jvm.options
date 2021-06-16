@@ -24,13 +24,13 @@
 -XX:+PrintFlagsFinal
 
 -XX:+FlightRecorder
--XX:StartFlightRecording=dumponexit=true,filename=./turms.jfr,maxsize=128m,delay=60s
+-XX:StartFlightRecording=dumponexit=true,filename=${TURMS_HOME}/jfr/turms.jfr,maxsize=128m,delay=60s
 
 # Diagnostics - Memory
 
 -XX:+HeapDumpOnOutOfMemoryError
--XX:HeapDumpPath=./turms_pid%p.hprof
+-XX:HeapDumpPath=${TURMS_HOME}/hprof/turms_pid%p.hprof
 
 # Diagnostics - GC
 
--Xlog:gc*,gc+age=trace,safepoint:file=./turms-gc.log:utctime,pid,tags:filecount=32,filesize=32m
+-Xlog:gc*,gc+age=trace,safepoint:file=${TURMS_HOME}/log/turms-gc.log:utctime,pid,tags:filecount=32,filesize=32m

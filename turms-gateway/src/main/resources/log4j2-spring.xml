@@ -23,8 +23,8 @@
             <Routes pattern="$${myctx:TYPE}">
                 <Route key="$${myctx:TYPE}">
                     <RollingFile name="File"
-                                 fileName="../logs/turms-gateway.log"
-                                 filePattern="../logs/$${date:yyyy-MM}/turms-gateway-%d{yyyy-MM-dd-HH}-%i.log.gz">
+                                 fileName="${env:TURMS_GATEWAY_HOME:-.}/log/turms-gateway.log"
+                                 filePattern="${env:TURMS_GATEWAY_HOME:-.}/log/$${date:yyyy-MM}/turms-gateway-%d{yyyy-MM-dd-HH}-%i.log.gz">
                         <PatternLayout pattern="${sys:FILE_LOG_PATTERN}"
                                        charset="UTF-8"/>
                         <Policies>
@@ -34,8 +34,8 @@
                 </Route>
                 <Route key="CLIENT_API">
                     <RollingFile name="File"
-                                 fileName="../logs/turms-gateway-client-api.log"
-                                 filePattern="../logs/$${date:yyyy-MM}/turms-gateway-client-api-%d{yyyy-MM-dd-HH}-%i.log.gz">
+                                 fileName="${env:TURMS_GATEWAY_HOME:-.}/log/turms-gateway-client-api.log"
+                                 filePattern="${env:TURMS_GATEWAY_HOME:-.}/log/$${date:yyyy-MM}/turms-gateway-client-api-%d{yyyy-MM-dd-HH}-%i.log.gz">
                         <PatternLayout pattern="${sys:FILE_LOG_PATTERN}"
                                        charset="UTF-8"/>
                         <Policies>
