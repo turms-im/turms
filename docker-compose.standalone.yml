@@ -1,10 +1,15 @@
+# Prerequisites:
+# Make sure the loki driver is installed:
+# docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
+#
+# Ways to Run:
 # docker-compose -f docker-compose.standalone.yml up --force-recreate
 #
 # Run in a specific environment (e.g. "dev"):
 # Powershell: $env:ENV="dev";docker-compose -f docker-compose.standalone.yml up --force-recreate
 # Unix: ENV=dev docker-compose -f docker-compose.standalone.yml up --force-recreate
 #
-# Run with optional monitoring services (Prometheus+Grafana+Loki)
+# Run with optional monitoring services (Prometheus+Grafana)
 # Run with "--profile monitoring": docker-compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate
 #
 
@@ -12,15 +17,31 @@ version: "3.9"
 
 x-logging: &logging
   logging:
-    driver: local
+    driver: loki
     options:
-      max-size: 100m
-      max-file: 10
+      loki-url: "http://host.docker.internal:3100/loki/api/v1/push"
+
+x-logging-mongo: &logging-mongo
+  logging:
+    driver: loki
+    options:
+      loki-url: "http://host.docker.internal:3100/loki/api/v1/push"
+      # See https://docs.mongodb.com/manual/reference/log-messages
+      loki-pipeline-stages: |
+        - json:
+            expressions:
+              time: t."$date"
+        - timestamp:
+            format: RFC3339
+            source: time
+
 
 services:
   # MongoDB
   mongodb-router:
     image: "bitnami/mongodb-sharded:4.4.4"
+    depends_on:
+      - loki
     environment:
       - MONGODB_ADVERTISED_HOSTNAME=mongodb-router
       - MONGODB_SHARDING_MODE=mongos
@@ -35,10 +56,12 @@ services:
       retries: 5
     ports:
       - "27017:27017"
-    <<: *logging
+    <<: *logging-mongo
 
   mongodb-shard:
     image: "bitnami/mongodb-sharded:4.4.4"
+    depends_on:
+      - loki
     environment:
       - MONGODB_ADVERTISED_HOSTNAME=mongodb-shard
       - MONGODB_SHARDING_MODE=shardsvr
@@ -47,10 +70,12 @@ services:
       - MONGODB_REPLICA_SET_MODE=primary
       - MONGODB_REPLICA_SET_KEY=replicasetkey123
       - MONGODB_REPLICA_SET_NAME=shard01
-    <<: *logging
+    <<: *logging-mongo
 
   mongodb-cfg:
     image: "bitnami/mongodb-sharded:4.4.4"
+    depends_on:
+      - loki
     environment:
       - MONGODB_ADVERTISED_HOSTNAME=mongodb-cfg
       - MONGODB_SHARDING_MODE=configsvr
@@ -58,11 +83,13 @@ services:
       - MONGODB_REPLICA_SET_MODE=primary
       - MONGODB_REPLICA_SET_KEY=replicasetkey123
       - MONGODB_REPLICA_SET_NAME=cfgreplicaset
-    <<: *logging
+    <<: *logging-mongo
 
   # Redis
   redis:
     image: redis:6.2-alpine
+    depends_on:
+      - loki
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
       interval: 10s
@@ -76,6 +103,8 @@ services:
   turms:
     image: "ghcr.io/turms-im/turms"
     depends_on:
+      loki:
+        condition: service_started
       mongodb-router:
         condition: service_healthy
       redis:
@@ -122,6 +151,8 @@ services:
   turms-gateway:
     image: "ghcr.io/turms-im/turms-gateway"
     depends_on:
+      loki:
+        condition: service_started
       mongodb-router:
         condition: service_healthy
       redis:
@@ -218,3 +249,12 @@ services:
       - 9121:9121
     profiles:
       - monitoring
+
+  # Services for observability - logging
+
+  loki:
+    image: grafana/loki:2.2.1
+    ports:
+      - 3100:3100
+    command: -config.file=/etc/loki/local-config.yaml
+
