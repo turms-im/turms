@@ -5,6 +5,13 @@
 ####################################################################
 FROM maven:3-adoptopenjdk-16 AS maven-builder
 COPY . ./
+#RUN sed -i '/<mirrors>/a                                       \
+#<mirror>                                                       \
+#    <id>aliyunmaven</id>                                       \
+#    <mirrorOf>*</mirrorOf>                                     \
+#    <name>Aliyun Repository</name>                             \
+#    <url>https://maven.aliyun.com/repository/public</url>      \
+#</mirror>' /usr/share/maven/conf/settings.xml
 RUN mvn clean package -am -B -DskipUTs -DskipITs -P artifact-fat-jar -pl turms --no-transfer-progress
 
 ####################################################################
