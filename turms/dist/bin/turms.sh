@@ -126,6 +126,11 @@ if [ "$USE_FAT_JAR" = true ]; then
   MAIN_CLASS="org.springframework.boot.loader.JarLauncher"
 fi
 
+# Create necessary dirs
+[ ! -d "${TURMS_HOME}/hprof" ] && mkdir "${TURMS_HOME}/hprof"
+[ ! -d "${TURMS_HOME}/jfr" ] && mkdir "${TURMS_HOME}/jfr"
+[ ! -d "${TURMS_HOME}/log" ] && mkdir "${TURMS_HOME}/log"
+
 # Run
 if [ "$DAEMONIZE" = true ]; then
   set -x
