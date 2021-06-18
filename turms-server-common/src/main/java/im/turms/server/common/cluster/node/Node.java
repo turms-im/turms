@@ -69,8 +69,6 @@ public class Node {
      * to access, we use static.
      */
     @Getter
-    private static NodeType nodeType;
-    @Getter
     private static String nodeId;
 
     /**
@@ -105,7 +103,6 @@ public class Node {
             BaseServiceAddressManager serviceAddressManager) {
         // Prepare node information
         this.context = context;
-        Node.nodeType = nodeType;
         TurmsProperties turmsProperties = turmsPropertiesManager.getLocalProperties();
         ClusterProperties clusterProperties = turmsProperties.getCluster();
         NodeProperties nodeProperties = clusterProperties.getNode();
@@ -133,22 +130,7 @@ public class Node {
                 discoveryProperties.getServerSsl());
         InetSocketAddress address = serverChannel.address();
         String clusterId = clusterProperties.getId();
-        String tempNodeId = nodeProperties.getId();
-        if (StringUtils.isBlank(nodeId)) {
-            tempNodeId = RandomStringUtils.randomAlphanumeric(8).toLowerCase();
-            log.warn("A random node ID {} has been used. You should better set a node ID manually in the production environment",
-                    tempNodeId);
-        } else {
-            if (tempNodeId.length() > NodeProperties.NODE_ID_MAX_LENGTH) {
-                throw new IllegalArgumentException(
-                        "The length of node ID must be less than or equals to " + NodeProperties.NODE_ID_MAX_LENGTH);
-            }
-            if (!tempNodeId.matches("^[a-zA-Z_]\\w*$")) {
-                throw new IllegalArgumentException("The node ID must start with a letter or underscore, " +
-                        "and matches zero or more of characters [a-zA-Z0-9_] after the beginning");
-            }
-        }
-        nodeId = tempNodeId;
+        nodeId = initNodeId(nodeProperties.getId());
 
         // Init services
         // pass the properties one by one rather than passing the node instance
@@ -180,6 +162,28 @@ public class Node {
         for (ClusterService service : allServices) {
             service.lazyInit(discoveryService, idService, rpcService, serializationService, sharedConfigService);
         }
+    }
+
+    public static synchronized String initNodeId(String id) {
+        if (nodeId != null) {
+            return nodeId;
+        }
+        if (StringUtils.isBlank(id)) {
+            id = RandomStringUtils.randomAlphabetic(8).toLowerCase();
+            log.warn("A random node ID {} has been used. You should better set a node ID manually in the production environment",
+                    id);
+        } else {
+            if (id.length() > NodeProperties.NODE_ID_MAX_LENGTH) {
+                throw new IllegalArgumentException(
+                        "The length of node ID must be less than or equals to " + NodeProperties.NODE_ID_MAX_LENGTH);
+            }
+            if (!id.matches("^[a-zA-Z_]\\w*$")) {
+                throw new IllegalArgumentException("The node ID must start with a letter or underscore, " +
+                        "and matches zero or more of characters [a-zA-Z0-9_] after the beginning");
+            }
+        }
+        nodeId = id;
+        return nodeId;
     }
 
     public void start() {

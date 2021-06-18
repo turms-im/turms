@@ -17,6 +17,9 @@
 
 package im.turms.server.common.context;
 
+import im.turms.server.common.cluster.node.Node;
+import im.turms.server.common.cluster.node.NodeType;
+import im.turms.server.common.log4j.plugin.TurmsContextLookup;
 import im.turms.server.common.property.env.common.LoggingProperties;
 import org.apache.logging.log4j.core.async.AsyncLoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
@@ -35,9 +38,26 @@ import static org.apache.logging.log4j.LogManager.getContext;
 @Order(LoggingApplicationListener.DEFAULT_ORDER + 1)
 public class ApplicationEnvironmentEventListener implements ApplicationListener<ApplicationEnvironmentPreparedEvent> {
 
+    /**
+     * @implNote We don't use ApplicationContextInitializedEvent because it's still too late for logging
+     */
     @Override
     public void onApplicationEvent(ApplicationEnvironmentPreparedEvent event) {
+        configContextForLogging(event);
+    }
+
+    private void configContextForLogging(ApplicationEnvironmentPreparedEvent event) {
         ConfigurableEnvironment env = event.getEnvironment();
+
+        // Though it's more reasonable to init the node type/ID in im.turms.server.common.cluster.node.Node,
+        // we need to ensure the local node info is logged even if the local node hasn't been inited.
+        // So we init the node info here
+        String applicationClassName = event.getSpringApplication().getMainApplicationClass().getSimpleName();
+        TurmsContextLookup.setNodeType(applicationClassName.equals("TurmsGatewayApplication")
+                ? NodeType.GATEWAY
+                : NodeType.SERVICE);
+        Node.initNodeId(env.getProperty("turms.cluster.node.id", String.class));
+
         boolean enableConsoleAppender = env.getProperty("turms.logging.enable-console-appender",
                 Boolean.class,
                 LoggingProperties.ENABLE_CONSOLE_APPENDER_DEFAULT_VALUE);
@@ -59,7 +79,6 @@ public class ApplicationEnvironmentEventListener implements ApplicationListener<
             context.updateLoggers();
         }
     }
-
 
     private void removeAppender(LoggerConfig loggerConfig, String appenderName) {
         if (loggerConfig.getAppenders().containsKey(appenderName)) {

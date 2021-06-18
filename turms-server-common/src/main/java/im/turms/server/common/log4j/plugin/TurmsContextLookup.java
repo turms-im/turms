@@ -25,6 +25,7 @@ import im.turms.server.common.logging.AdminApiLogging;
 import im.turms.server.common.logging.CommonClientApiLogging;
 import im.turms.server.common.logging.UserActivityLogging;
 import im.turms.server.common.util.ReflectionUtil;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.async.AsyncLogger;
@@ -41,6 +42,9 @@ import java.lang.invoke.VarHandle;
 public class TurmsContextLookup implements StrLookup {
 
     private static final VarHandle LOGGER = ReflectionUtil.getVarHandle(RingBufferLogEvent.class, "asyncLogger");
+
+    @Setter
+    private static NodeType nodeType;
 
     @Override
     public String lookup(String key) {
@@ -70,7 +74,6 @@ public class TurmsContextLookup implements StrLookup {
                 }
             }
             case LogContextConstant.NODE_TYPE -> {
-                NodeType nodeType = Node.getNodeType();
                 if (nodeType == null) {
                     yield "";
                 }
