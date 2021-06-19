@@ -70,11 +70,11 @@ public class Node {
      */
     @Getter
     private static String nodeId;
+    private final NodeType nodeType;
 
     /**
      * Context
      */
-    @Getter
     private final ApplicationContext context;
 
     /**
@@ -103,6 +103,7 @@ public class Node {
             BaseServiceAddressManager serviceAddressManager) {
         // Prepare node information
         this.context = context;
+        this.nodeType = nodeType;
         TurmsProperties turmsProperties = turmsPropertiesManager.getLocalProperties();
         ClusterProperties clusterProperties = turmsProperties.getCluster();
         NodeProperties nodeProperties = clusterProperties.getNode();

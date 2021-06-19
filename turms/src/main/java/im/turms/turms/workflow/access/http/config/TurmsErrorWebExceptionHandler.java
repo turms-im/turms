@@ -17,6 +17,7 @@
 
 package im.turms.turms.workflow.access.http.config;
 
+import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.logging.RequestLoggingContext;
 import im.turms.server.common.tracing.TracingCloseableContext;
 import im.turms.server.common.tracing.TracingContext;
@@ -46,6 +47,8 @@ import reactor.core.publisher.Mono;
 import java.util.Collections;
 import java.util.List;
 
+import static org.springframework.http.HttpHeaders.WWW_AUTHENTICATE;
+
 /**
  * Use ErrorWebExceptionHandler instead of DefaultErrorAttributes
  * for better performance, code clarity and fine-grained control
@@ -63,8 +66,9 @@ public class TurmsErrorWebExceptionHandler implements ErrorWebExceptionHandler {
 
     private final ServerResponse.Context context;
     private final List<HttpMessageReader<?>> messageReaders;
+    private final NodeType nodeType;
 
-    public TurmsErrorWebExceptionHandler(ServerCodecConfigurer serverCodecConfigurer) {
+    public TurmsErrorWebExceptionHandler(ServerCodecConfigurer serverCodecConfigurer, NodeType nodeType) {
         messageReaders = serverCodecConfigurer.getReaders();
         context = new ServerResponse.Context() {
             @Override
@@ -77,6 +81,7 @@ public class TurmsErrorWebExceptionHandler implements ErrorWebExceptionHandler {
                 return Collections.emptyList();
             }
         };
+        this.nodeType = nodeType;
     }
 
     @Override
@@ -86,10 +91,13 @@ public class TurmsErrorWebExceptionHandler implements ErrorWebExceptionHandler {
         }
         ErrorAttributes errorAttributes = ErrorAttributesFactory.parse(throwable);
         int status = errorAttributes.getStatus();
-        Mono<ServerResponse> responseMono = ServerResponse
+        ServerResponse.BodyBuilder builder = ServerResponse
                 .status(status)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromValue(errorAttributes));
+                .contentType(MediaType.APPLICATION_JSON);
+        if (status == HttpStatus.UNAUTHORIZED.value()) {
+            builder.header(WWW_AUTHENTICATE, "Basic realm=" + nodeType.getDisplayName());
+        }
+        Mono<ServerResponse> responseMono = builder.body(BodyInserters.fromValue(errorAttributes));
         return responseMono.flatMap(response -> {
             if (status == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
                 ServerRequest request = ServerRequest.create(exchange, this.messageReaders);

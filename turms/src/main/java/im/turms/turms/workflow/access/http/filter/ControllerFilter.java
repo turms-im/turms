@@ -57,6 +57,8 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.Objects;
 
+import static org.springframework.http.HttpHeaders.WWW_AUTHENTICATE;
+
 /**
  * @author James Chen
  */
@@ -124,8 +126,7 @@ public class ControllerFilter implements WebFilter {
         }
         String[] credentials = parseAccountAndPassword(exchange);
         if (credentials == null) {
-            exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-            return Mono.empty();
+            return respondWith401(exchange.getResponse());
         }
         String account = credentials[0];
         String password = credentials[1];
@@ -133,18 +134,12 @@ public class ControllerFilter implements WebFilter {
         return adminService.authenticate(account, password)
                 .flatMap(authenticated -> {
                     if (authenticated == null || !authenticated) {
-                        exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-                        return Mono.empty();
+                        return respondWith401(exchange.getResponse());
                     }
                     return adminService.isAdminAuthorized(exchange, account, requiredPermission.value())
-                            .flatMap(authorized -> {
-                                if (authorized != null && authorized) {
-                                    return tryPersistAndPass(account, exchange, chain, handlerMethod);
-                                } else {
-                                    exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-                                    return Mono.empty();
-                                }
-                            });
+                            .flatMap(authorized -> authorized
+                                    ? tryPersistAndPass(account, exchange, chain, handlerMethod)
+                                    : respondWith401(exchange.getResponse()));
                 });
     }
 
@@ -166,21 +161,15 @@ public class ControllerFilter implements WebFilter {
         }
         String[] credentials = parseAccountAndPassword(exchange);
         if (credentials == null) {
-            response.setStatusCode(HttpStatus.UNAUTHORIZED);
-            return Mono.empty();
+            return respondWith401(response);
         }
         String account = credentials[0];
         String password = credentials[1];
         exchange.getAttributes().put(ATTRIBUTES_ACCOUNT, account);
         return adminService.authenticate(account, password)
-                .flatMap(authenticated -> {
-                    if (authenticated) {
-                        return chain.filter(exchange);
-                    } else {
-                        response.setStatusCode(HttpStatus.UNAUTHORIZED);
-                        return Mono.empty();
-                    }
-                });
+                .flatMap(authenticated -> authenticated
+                        ? chain.filter(exchange)
+                        : respondWith401(response));
     }
 
     /**
@@ -194,6 +183,12 @@ public class ControllerFilter implements WebFilter {
         headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "*");
         headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "*");
         headers.set(HttpHeaders.ACCESS_CONTROL_MAX_AGE, "7200");
+    }
+
+    private Mono<Void> respondWith401(ServerHttpResponse response) {
+        response.getHeaders().set(WWW_AUTHENTICATE, "Basic realm=" + node.getNodeType().getDisplayName());
+        response.setStatusCode(HttpStatus.UNAUTHORIZED);
+        return Mono.empty();
     }
 
     private String[] parseAccountAndPassword(@NotNull ServerWebExchange exchange) {
