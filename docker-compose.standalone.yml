@@ -129,6 +129,14 @@ services:
         condition: service_healthy
     environment:
       TURMS_JVM_OPTS: >
+        -Dcom.sun.management.jmxremote=true
+        -Dcom.sun.management.jmxremote.authenticate=false
+        -Dcom.sun.management.jmxremote.local.only=false
+        -Dcom.sun.management.jmxremote.port=8839
+        -Dcom.sun.management.jmxremote.rmi.port=8839
+        -Dcom.sun.management.jmxremote.ssl=false
+        -Djava.rmi.server.hostname=localhost
+
         -Dspring.profiles.active=${ENV}
 
         -Dturms.cluster.node.network.auto-increment=false
@@ -154,6 +162,7 @@ services:
     ports:
       - "7510:7510" # RPC
       - "8510:8510" # Metrics APIs + Admin APIs
+      - "8839:8839" # JMX
     ulimits:
       nofile:
         soft: 65536
@@ -185,6 +194,14 @@ services:
         condition: service_healthy
     environment:
       TURMS_GATEWAY_JVM_OPTS: >
+        -Dcom.sun.management.jmxremote=true
+        -Dcom.sun.management.jmxremote.authenticate=false
+        -Dcom.sun.management.jmxremote.local.only=false
+        -Dcom.sun.management.jmxremote.port=8849
+        -Dcom.sun.management.jmxremote.rmi.port=8849
+        -Dcom.sun.management.jmxremote.ssl=false
+        -Djava.rmi.server.hostname=localhost
+
         -Dspring.profiles.active=${ENV}
 
         -Dturms.cluster.node.network.auto-increment=false
@@ -206,6 +223,7 @@ services:
     mem_limit: 2g
     ports:
       - "7610:7610" # RPC
+      - "8849:8849" # JMX
       - "9510:9510" # Metrics APIs
       - "10510:10510" # WebSocket
       - "11510:11510" # TCP

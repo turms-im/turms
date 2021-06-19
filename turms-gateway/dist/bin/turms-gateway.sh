@@ -97,26 +97,26 @@ echo "TURMS_GATEWAY_LIB: $TURMS_GATEWAY_LIB"
 
 # Parse options
 
-USE_FAT_JAR=false
 DAEMONIZE=false
+USE_FAT_JAR=false
 for option in "$@"; do
   case "$option" in
-  -f | --fat)
-    USE_FAT_JAR=true
-    ;;
   -d | --daemonize)
     DAEMONIZE=true
+    ;;
+  -f | --fat)
+    USE_FAT_JAR=true
     ;;
   esac
 done
 
 # Filter -> Replace CRLF with whitespace -> Trim redundant whitespaces -> Expand vars
-JVM_OPTIONS="$( \
-  tr -d "\r" < "${TURMS_GATEWAY_JVM_CONF}" \
-  | grep -v "^#" \
-  | tr "\n" " " \
-  | tr -s " " \
-  | sed "s@\${TURMS_GATEWAY_HOME}@${TURMS_GATEWAY_HOME}@g" \
+JVM_OPTIONS="$(
+  tr -d "\r" <"${TURMS_GATEWAY_JVM_CONF}" |
+    grep -v "^#" |
+    tr "\n" " " |
+    tr -s " " |
+    sed "s@\${TURMS_GATEWAY_HOME}@${TURMS_GATEWAY_HOME}@g"
 )"
 JVM_OPTIONS+=" -Dspring.config.location=classpath:/,$TURMS_GATEWAY_APP_CONF"
 JVM_OPTIONS+=" ${TURMS_GATEWAY_JVM_OPTS}"
