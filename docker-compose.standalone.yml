@@ -35,6 +35,24 @@ x-logging-mongo: &logging-mongo
             format: RFC3339
             source: time
 
+x-logging-turms: &logging-turms
+  logging:
+    driver: loki
+    options:
+      loki-url: "http://host.docker.internal:3100/loki/api/v1/push"
+      # The regex has been optimized:
+      # it takes about 50 steps to parse a single log line
+      loki-pipeline-stages: |
+        - multiline:
+            firstline: '^\d{4}-\d{2}-\d{2}\s\d{1,2}\:'
+        - regex:
+            expression: '(?P<time>\d{4}-\d{2}-\d{2}\s\d{1,2}\:\d{2}\:\d{2}\.\d{3})\s+(?P<level>[A-Z]{4,5})\s+(?P<node_type>[A-Z])\s+(?P<node_id>\S*)\s+\[(?P<trace_id>.{19})\]\s+(?P<thread>\S*)\s+(?P<class>\S*)\s+:\s(?P<msg>.*)'
+        - labels:
+            node_type:
+            node_id:
+        - timestamp:
+            format: '2006-01-02 15:04:05.000'
+            source: time
 
 services:
   # MongoDB
@@ -140,7 +158,7 @@ services:
       nofile:
         soft: 65536
         hard: 65536
-    <<: *logging
+    <<: *logging-turms
 
   turms-admin:
     image: "ghcr.io/turms-im/turms-admin"
@@ -191,21 +209,21 @@ services:
       nofile:
         soft: 1024000
         hard: 1024000
-    <<: *logging
+    <<: *logging-turms
 
   # optional services for observability - metrics
 
   grafana:
-    image: grafana/grafana:8.0.2
+    image: grafana/grafana:8.0.3
     depends_on:
       - prometheus
+    environment:
+      - GF_SECURITY_ADMIN_USER=turms
+      - GF_SECURITY_ADMIN_PASSWORD=turms
     ports:
       - 3000:3000
     profiles:
       - monitoring
-    environment:
-      - GF_SECURITY_ADMIN_USER=turms
-      - GF_SECURITY_ADMIN_PASSWORD=turms
     restart: unless-stopped
     volumes:
       - ./ops/grafana/provisioning/:/etc/grafana/provisioning/
