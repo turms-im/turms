@@ -158,6 +158,11 @@ services:
       nofile:
         soft: 65536
         hard: 65536
+#    volumes:
+#      - "./container/turms/hprof:/opt/turms/turms/hprof"
+#      - "./container/turms/jfr:/opt/turms/turms/jfr"
+#      - "./container/turms/log:/opt/turms/turms/log"
+#      - "./container/turms/config:/opt/turms/turms/config" # Includes "application.yaml" and "jvm.options"
     <<: *logging-turms
 
   turms-admin:
@@ -209,6 +214,11 @@ services:
       nofile:
         soft: 1024000
         hard: 1024000
+#    volumes:
+#      - "./container/turms-gateway/hprof:/opt/turms/turms-gateway/hprof"
+#      - "./container/turms-gateway/jfr:/opt/turms/turms-gateway/jfr"
+#      - "./container/turms-gateway/log:/opt/turms/turms-gateway/log"
+#      - "./container/turms-gateway/config:/opt/turms/turms-gateway/config" # Includes "application.yaml" and "jvm.options"
     <<: *logging-turms
 
   # optional services for observability - metrics
