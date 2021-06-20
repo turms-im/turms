@@ -21,5 +21,10 @@ turms:
     mongo:
       user:
         uri: mongodb://localhost:27017/turms-dev
+    fake:
+      enabled: true
+    tcp:
+      # For testing purposes
+      enabled: true
   logging:
     enable-console-appender: true

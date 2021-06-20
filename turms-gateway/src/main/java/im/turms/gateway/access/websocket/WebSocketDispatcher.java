@@ -55,7 +55,7 @@ public class WebSocketDispatcher extends UserSessionDispatcher {
                     webSocketProperties,
                     serverStatusManager,
                     bindConnectionWithSessionWrapper());
-            log.info(String.format("WebSocket server started on %s:%d", server.host(), server.port()));
+            log.info("WebSocket server started on {}:{}", server.host(), server.port());
         } else {
             server = null;
         }

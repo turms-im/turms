@@ -32,16 +32,16 @@ import javax.validation.constraints.Min;
 @Builder(toBuilder = true)
 @Data
 @NoArgsConstructor
-public class MockProperties {
+public class FakeProperties {
 
-    @Description("Whether to mock data. Note that mocking only works in non-production environments")
+    @Description("Whether to fake data. Note that faking only works in non-production environments")
     private boolean enabled;
 
-    @Description("The user number to mock")
+    @Description("the total number of users to fake")
     @Min(0)
-    private int userNumber = 1000;
+    private int userCount = 1000;
 
-    @Description("Whether to clear all collections before mocking at startup")
-    private boolean clearAllCollectionsBeforeMocking;
+    @Description("Whether to clear all collections before faking at startup")
+    private boolean clearAllCollectionsBeforeFaking;
 
 }

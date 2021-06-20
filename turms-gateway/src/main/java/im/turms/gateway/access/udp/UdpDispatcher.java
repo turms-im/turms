@@ -94,7 +94,7 @@ public class UdpDispatcher {
                     })
                     .bind()
                     .block();
-            log.info(String.format("UDP server started on %s:%d", host, port));
+            log.info("UDP server started on {}:{}", host, port);
         } else {
             notificationSink = null;
             connection = null;

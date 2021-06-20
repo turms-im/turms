@@ -31,7 +31,7 @@ import reactor.netty.Connection;
 public class TcpHandlerConfig {
 
     private final ServerAvailabilityHandler serverAvailabilityHandler;
-    private final TurmsProtobufEncoder protobufEncoder = new TurmsProtobufEncoder();
+    private final TurmsProtobufEncoder turmsProtobufEncoder = new TurmsProtobufEncoder();
 
     public TcpHandlerConfig(ServerStatusManager serverStatusManager) {
         serverAvailabilityHandler = new ServerAvailabilityHandler(serverStatusManager);
@@ -47,7 +47,7 @@ public class TcpHandlerConfig {
 
         // Outbound
         connection.addHandlerLast("protobufFrameEncoder", new ProtobufVarint32LengthFieldPrepender());
-        connection.addHandlerLast("protobufEncoder", protobufEncoder);
+        connection.addHandlerLast("turmsProtobufEncoder", turmsProtobufEncoder);
     }
 
 }

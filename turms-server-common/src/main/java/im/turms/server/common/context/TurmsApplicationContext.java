@@ -107,7 +107,7 @@ public class TurmsApplicationContext {
             // environments for a better development experience
             log.warn("Cannot find " + BUILD_INFO_PROPS_PATH +
                     ", fall back to the default version " + DEFAULT_VERSION +
-                    " in non-production environments. " +
+                    " in non-production environments." +
                     " Fix it by running \"mvn compile\"");
             return DEFAULT_VERSION;
         }

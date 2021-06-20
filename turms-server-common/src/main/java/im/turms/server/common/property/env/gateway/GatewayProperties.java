@@ -37,13 +37,7 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 @NoArgsConstructor
 public class GatewayProperties {
 
-    @JsonView(MutablePropertiesView.class)
-    @NestedConfigurationProperty
-    private MongoProperties mongo = new MongoProperties();
-
-    @JsonView(MutablePropertiesView.class)
-    @NestedConfigurationProperty
-    private DiscoveryProperties serviceDiscovery = new DiscoveryProperties();
+    // API
 
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
@@ -53,13 +47,7 @@ public class GatewayProperties {
     @NestedConfigurationProperty
     private ClientApiProperties clientApi = new ClientApiProperties();
 
-    @JsonView(MutablePropertiesView.class)
-    @NestedConfigurationProperty
-    private LogProperties log = new LogProperties();
-
-    @JsonView(MutablePropertiesView.class)
-    @NestedConfigurationProperty
-    private SimultaneousLoginProperties simultaneousLogin = new SimultaneousLoginProperties();
+    // Business Behavior
 
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
@@ -67,7 +55,31 @@ public class GatewayProperties {
 
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
+    private SimultaneousLoginProperties simultaneousLogin = new SimultaneousLoginProperties();
+
+    // Cluster
+
+    @JsonView(MutablePropertiesView.class)
+    @NestedConfigurationProperty
+    private DiscoveryProperties serviceDiscovery = new DiscoveryProperties();
+
+    // Data Store
+
+    @JsonView(MutablePropertiesView.class)
+    @NestedConfigurationProperty
+    private MongoProperties mongo = new MongoProperties();
+
+    @JsonView(MutablePropertiesView.class)
+    @NestedConfigurationProperty
     private TurmsRedisProperties redis = new TurmsRedisProperties();
+
+    // Faking
+
+    @JsonView(MutablePropertiesView.class)
+    @NestedConfigurationProperty
+    private FakeProperties fake = new FakeProperties();
+
+    // Network Access Layer
 
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
@@ -80,5 +92,11 @@ public class GatewayProperties {
     @JsonView(MutablePropertiesView.class)
     @NestedConfigurationProperty
     private WebSocketProperties websocket = new WebSocketProperties();
+
+    // Observability
+
+    @JsonView(MutablePropertiesView.class)
+    @NestedConfigurationProperty
+    private LogProperties log = new LogProperties();
 
 }

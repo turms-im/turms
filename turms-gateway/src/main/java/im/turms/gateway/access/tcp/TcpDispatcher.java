@@ -24,6 +24,7 @@ import im.turms.gateway.service.mediator.ServiceMediator;
 import im.turms.server.common.manager.ServerStatusManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.TcpProperties;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import reactor.netty.DisposableServer;
@@ -38,6 +39,10 @@ import javax.annotation.PreDestroy;
 public class TcpDispatcher extends UserSessionDispatcher {
 
     private final DisposableServer server;
+    @Getter
+    private final boolean enabled;
+    private final String host;
+    private final int port;
 
     public TcpDispatcher(TurmsPropertiesManager propertiesManager,
                          ServiceMediator serviceMediator,
@@ -46,14 +51,19 @@ public class TcpDispatcher extends UserSessionDispatcher {
         super(serviceMediator, userRequestDispatcher,
                 propertiesManager.getLocalProperties().getGateway().getTcp().getCloseIdleConnectionAfterSeconds());
         TcpProperties tcpProperties = propertiesManager.getLocalProperties().getGateway().getTcp();
-        if (tcpProperties.isEnabled()) {
+        enabled = tcpProperties.isEnabled();
+        if (enabled) {
             server = TcpServerFactory.create(
                     tcpProperties,
                     serverStatusManager,
                     bindConnectionWithSessionWrapper());
-            log.info(String.format("TCP server started on %s:%d", server.host(), server.port()));
+            host = server.host();
+            port = server.port();
+            log.info("TCP server started on {}:{}", host, port);
         } else {
             server = null;
+            host = null;
+            port = -1;
         }
     }
 
@@ -63,6 +73,20 @@ public class TcpDispatcher extends UserSessionDispatcher {
             log.info("Closing TCP server");
             server.dispose();
         }
+    }
+
+    public String getHost() {
+        if (server == null) {
+            throw new IllegalStateException("TCP server is disabled");
+        }
+        return host;
+    }
+
+    public int getPort() {
+        if (server == null) {
+            throw new IllegalStateException("TCP server is disabled");
+        }
+        return port;
     }
 
 }

@@ -35,7 +35,7 @@ import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 import reactor.netty.http.websocket.WebsocketInbound;
 import reactor.netty.http.websocket.WebsocketOutbound;
-import reactor.netty.resources.ConnectionProvider;
+import reactor.netty.resources.LoopResources;
 
 import java.io.IOException;
 import java.util.List;
@@ -86,13 +86,13 @@ class WebSocketAccessST extends BasePerformanceTest {
 
             // Note that we do not close the clients on the client side
             // until the test succeeds or fails
+            LoopResources loopResources = LoopResources.create("turms-ws-client");
             for (int i = 0; i < CONCURRENT_CLIENT_COUNT; i++) {
                 long userId = i;
                 AtomicBoolean isCurrentClientHandled = new AtomicBoolean();
                 HttpClient
-                        .create(ConnectionProvider.builder("turms")
-                                .pendingAcquireMaxCount(-1)
-                                .build())
+                        .newConnection()
+                        .runOn(loopResources)
                         .websocket()
                         .uri(container.getTurmsGatewayWebSocketServerUri())
                         .connect()

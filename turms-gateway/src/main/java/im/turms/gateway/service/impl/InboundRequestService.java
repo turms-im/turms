@@ -60,7 +60,6 @@ public class InboundRequestService {
 
     /**
      * @return a response to the request.
-     * If the method returns MonoError, the session should be closed by downstream.
      */
     public Mono<TurmsNotification> processServiceRequest(ServiceRequest serviceRequest) {
         try {

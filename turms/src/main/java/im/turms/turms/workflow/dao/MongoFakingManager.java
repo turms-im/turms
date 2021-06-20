@@ -28,7 +28,7 @@ import im.turms.common.constant.RequestStatus;
 import im.turms.server.common.dao.domain.User;
 import im.turms.server.common.manager.PasswordManager;
 import im.turms.server.common.mongo.TurmsMongoClient;
-import im.turms.server.common.property.env.service.env.MockProperties;
+import im.turms.server.common.property.env.service.env.FakeProperties;
 import im.turms.server.common.util.CollectionUtil;
 import im.turms.turms.constant.DaoConstant;
 import im.turms.turms.workflow.access.http.permission.AdminPermission;
@@ -68,7 +68,7 @@ import java.util.Set;
  * @author James Chen
  */
 @Log4j2
-public final class MongoMockManager {
+public final class MongoFakingManager {
 
     private final PasswordManager passwordManager;
 
@@ -79,8 +79,8 @@ public final class MongoMockManager {
     private final TurmsMongoClient messageMongoClient;
 
     @Getter
-    private final boolean isMockEnabled;
-    private final int userNumber;
+    private final boolean isFakingEnabled;
+    private final int userCount;
 
     private final int targetUserToBeGroupMemberStart;
     private final int targetUserToBeGroupMemberEnd;
@@ -97,17 +97,17 @@ public final class MongoMockManager {
     private final int targetUserToBeFriendRelationshipEnd;
 
     @Getter
-    private final boolean clearAllCollectionsBeforeMocking;
+    private final boolean clearAllCollectionsBeforeFaking;
 
     private long currentId = 1L;
 
-    public MongoMockManager(MockProperties properties,
-                            PasswordManager passwordManager,
-                            TurmsMongoClient adminMongoClient,
-                            TurmsMongoClient userMongoClient,
-                            TurmsMongoClient groupMongoClient,
-                            TurmsMongoClient conversationMongoClient,
-                            TurmsMongoClient messageMongoClient) {
+    public MongoFakingManager(FakeProperties properties,
+                              PasswordManager passwordManager,
+                              TurmsMongoClient adminMongoClient,
+                              TurmsMongoClient userMongoClient,
+                              TurmsMongoClient groupMongoClient,
+                              TurmsMongoClient conversationMongoClient,
+                              TurmsMongoClient messageMongoClient) {
         this.passwordManager = passwordManager;
         this.adminMongoClient = adminMongoClient;
         this.userMongoClient = userMongoClient;
@@ -115,10 +115,10 @@ public final class MongoMockManager {
         this.conversationMongoClient = conversationMongoClient;
         this.messageMongoClient = messageMongoClient;
 
-        isMockEnabled = properties.isEnabled();
-        clearAllCollectionsBeforeMocking = properties.isClearAllCollectionsBeforeMocking();
-        userNumber = properties.getUserNumber();
-        int step = userNumber / 10;
+        isFakingEnabled = properties.isEnabled();
+        clearAllCollectionsBeforeFaking = properties.isClearAllCollectionsBeforeFaking();
+        userCount = properties.getUserCount();
+        int step = userCount / 10;
 
         targetUserToBeGroupMemberStart = 1;
         targetUserToBeGroupMemberEnd = step;
@@ -135,8 +135,8 @@ public final class MongoMockManager {
         targetUserToRequestFriendRequestEnd = 1 + step * 2;
     }
 
-    public Mono<Void> mockData() {
-        log.info("Start mocking...");
+    public Mono<Void> fakeData() {
+        log.info("Start faking...");
 
         final int adminCount = 10;
 
@@ -244,7 +244,7 @@ public final class MongoMockManager {
                     "test-name",
                     i == 1 ? GroupMemberRole.OWNER : GroupMemberRole.MEMBER,
                     now,
-                    i > userNumber / 10 / 2 ? new Date(9999999999999L) : null);
+                    i > userCount / 10 / 2 ? new Date(9999999999999L) : null);
             groupRelatedObjs.add(groupMember);
         }
 
@@ -311,7 +311,7 @@ public final class MongoMockManager {
         conversationRelatedObjs.add(groupConversation);
 
         // User
-        for (int i = 1; i <= userNumber; i++) {
+        for (int i = 1; i <= userCount; i++) {
             Date userDate = DateUtils.addDays(now, -i);
             User user = new User(
                     (long) i,
@@ -372,34 +372,34 @@ public final class MongoMockManager {
         // but it won't block when running in non-debug mode
         // and there is no blocking method after reviewing the workflow of TurmsMongoClient#insertAll
         Mono<Void> adminMono = adminMongoClient.insertAll(adminRelatedObjs)
-                .doOnSubscribe(s -> log.info("Start mocking admin-related data"))
-                .doOnError(error -> log.error("Failed to mock admin-related data", error))
-                .doOnSuccess(unused -> log.info("Admin-related data has been mocked"))
+                .doOnSubscribe(s -> log.info("Start faking admin-related data"))
+                .doOnError(error -> log.error("Failed to fake admin-related data", error))
+                .doOnSuccess(unused -> log.info("Admin-related data has been faked"))
                 .subscribeOn(Schedulers.boundedElastic());
         Mono<Void> userMono = userMongoClient.insertAll(userRelatedObjs)
-                .doOnSubscribe(s -> log.info("Start mocking user-related data"))
-                .doOnError(error -> log.error("Failed to mock user-related data", error))
-                .doOnSuccess(unused -> log.info("User-related data has been mocked"))
+                .doOnSubscribe(s -> log.info("Start faking user-related data"))
+                .doOnError(error -> log.error("Failed to fake user-related data", error))
+                .doOnSuccess(unused -> log.info("User-related data has been faked"))
                 .subscribeOn(Schedulers.boundedElastic());
         Mono<Void> groupMono = groupMongoClient.insertAll(groupRelatedObjs)
-                .doOnSubscribe(s -> log.info("Start mocking group-related data"))
-                .doOnError(error -> log.error("Failed to mock group-related data", error))
-                .doOnSuccess(unused -> log.info("Group-related data has been mocked"))
+                .doOnSubscribe(s -> log.info("Start faking group-related data"))
+                .doOnError(error -> log.error("Failed to fake group-related data", error))
+                .doOnSuccess(unused -> log.info("Group-related data has been faked"))
                 .subscribeOn(Schedulers.boundedElastic());
         Mono<Void> conversationMono = conversationMongoClient.insertAll(conversationRelatedObjs)
-                .doOnSubscribe(s -> log.info("Start mocking conversation-related data"))
-                .doOnError(error -> log.error("Failed to mock conversation-related data", error))
-                .doOnSuccess(unused -> log.info("Conversation-related data has been mocked"))
+                .doOnSubscribe(s -> log.info("Start faking conversation-related data"))
+                .doOnError(error -> log.error("Failed to fake conversation-related data", error))
+                .doOnSuccess(unused -> log.info("Conversation-related data has been faked"))
                 .subscribeOn(Schedulers.boundedElastic());
         Mono<Void> messageMono = messageMongoClient.insertAll(messageRelatedObjs)
-                .doOnSubscribe(s -> log.info("Start mocking message-related data"))
-                .doOnError(error -> log.error("Failed to mock message-related data", error))
-                .doOnSuccess(unused -> log.info("Message-related data has been mocked"))
+                .doOnSubscribe(s -> log.info("Start faking message-related data"))
+                .doOnError(error -> log.error("Failed to fake message-related data", error))
+                .doOnSuccess(unused -> log.info("Message-related data has been faked"))
                 .subscribeOn(Schedulers.boundedElastic());
         return Mono.when(adminMono, userMono, groupMono, conversationMono, messageMono)
                 .then()
-                .doOnSuccess(ignored -> log.info("All data has been mocked"))
-                .doOnError(t -> log.error("Failed to mock data", t));
+                .doOnSuccess(ignored -> log.info("All data has been faked"))
+                .doOnError(t -> log.error("Failed to fake data", t));
     }
 
     private long nextId() {

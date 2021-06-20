@@ -79,7 +79,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
     private final List<TurmsMongoClient> clients;
 
     private final TurmsApplicationContext context;
-    private final MongoMockManager mockManager;
+    private final MongoFakingManager fakingManager;
     private final MultiTemperatureProperties messageTemperatureProperties;
 
     public MongoCollectionInitializer(
@@ -102,7 +102,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                 conversationMongoClient,
                 messageMongoClient);
         this.context = context;
-        mockManager = new MongoMockManager(turmsPropertiesManager.getLocalProperties().getService().getMock(),
+        fakingManager = new MongoFakingManager(turmsPropertiesManager.getLocalProperties().getService().getFake(),
                 passwordManager,
                 adminMongoClient,
                 userMongoClient,
@@ -120,7 +120,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
 
     private void initCollections() {
         Duration timeout = Duration.ofMinutes(1);
-        if (!context.isProduction() && mockManager.isClearAllCollectionsBeforeMocking()) {
+        if (!context.isProduction() && fakingManager.isClearAllCollectionsBeforeFaking()) {
             log.info("Start dropping databases...");
             dropAllDatabases().block(timeout);
             log.info("All collections are cleared");
@@ -132,8 +132,8 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                 .then(Mono.defer(() -> ensureZones()
                         .then(Mono.defer(this::ensureIndexesAndShard)
                                 .doOnError(t -> log.error("Failed to ensure indexes and shard", t)))
-                        .then(Mono.defer(() -> !context.isProduction() && mockManager.isMockEnabled()
-                                ? mockManager.mockData()
+                        .then(Mono.defer(() -> !context.isProduction() && fakingManager.isFakingEnabled()
+                                ? fakingManager.fakeData()
                                 : Mono.empty()))))
                 .block(timeout);
     }

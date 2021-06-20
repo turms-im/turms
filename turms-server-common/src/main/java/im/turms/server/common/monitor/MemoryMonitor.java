@@ -96,7 +96,7 @@ public final class MemoryMonitor {
         }
         long totalMemory = maxHeapMemory + maxDirectMemory;
         OperatingSystemMXBean operatingSystemBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
-        long totalPhysicalMemorySize = operatingSystemBean.getTotalPhysicalMemorySize();
+        long totalPhysicalMemorySize = operatingSystemBean.getTotalMemorySize();
         maxManagedMemory = Math.min(totalMemory, totalPhysicalMemorySize);
 
         maxAvailableManagedMemory = maxManagedMemory * maxAvailableMemoryPercentage;
