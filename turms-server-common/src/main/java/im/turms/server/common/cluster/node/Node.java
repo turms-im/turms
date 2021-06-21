@@ -138,7 +138,7 @@ public class Node {
         // to know their dependency relationships explicitly.
         sharedConfigService = new SharedConfigService(sharedConfigProperties.getMongo());
         serializationService = new SerializationService();
-        rpcService = new RpcService(clusterProperties.getRpc(), rpcAcceptor, serializationService);
+        rpcService = new RpcService(nodeType, clusterProperties.getRpc(), rpcAcceptor, serializationService);
         discoveryService = new DiscoveryService(clusterId,
                 nodeId,
                 nodeType,

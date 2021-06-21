@@ -17,41 +17,11 @@
 
 package im.turms.server.common.cluster.service.rpc;
 
-import lombok.Getter;
-
 /**
  * @author James Chen
  */
-public enum RpcErrorCode {
-
-    UNKNOWN_ERROR(0),
-
-    FAILED_TO_RUN_RPC(1),
-
-    MEMBER_NOT_FOUND(2),
-    CONNECTION_NOT_FOUND(3),
-
-    INVALID_BUFFER_TYPE(5),
-    SERIALIZER_FOR_REQUEST_NOT_FOUND(6),
-    SERIALIZER_FOR_RETURN_VALUE_NOT_FOUND(7),
-    SERIALIZER_FAILED_TO_DESERIALIZE(8);
-
-    public static final int ERROR_CODE_LENGTH = 1;
-
-    @Getter
-    private final int errorCode;
-
-    RpcErrorCode(int errorCode) {
-        this.errorCode = errorCode;
-    }
-
-    public static RpcErrorCode from(int errorCode) {
-        for (RpcErrorCode code : RpcErrorCode.values()) {
-            if (code.errorCode == errorCode) {
-                return code;
-            }
-        }
-        return null;
-    }
-
+public enum NodeTypeToHandleRpc {
+    BOTH,
+    GATEWAY,
+    SERVICE
 }

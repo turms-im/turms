@@ -19,6 +19,7 @@ package im.turms.server.common.rpc.request;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
+import im.turms.server.common.cluster.service.rpc.NodeTypeToHandleRpc;
 import im.turms.server.common.cluster.service.rpc.RpcCallable;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.rpc.service.ISessionService;
@@ -31,9 +32,6 @@ import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 /**
- * The server type to request: Turms Service + Turms Gateway
- * The server type to respond: Turms Gateway
- *
  * @author James Chen
  */
 @Data
@@ -58,6 +56,16 @@ public class SetUserOfflineRequest extends RpcCallable<Boolean> {
     @Override
     public String name() {
         return NAME;
+    }
+
+    @Override
+    public NodeTypeToHandleRpc nodeTypeToRequest() {
+        return NodeTypeToHandleRpc.BOTH;
+    }
+
+    @Override
+    public NodeTypeToHandleRpc nodeTypeToRespond() {
+        return NodeTypeToHandleRpc.GATEWAY;
     }
 
     @Override

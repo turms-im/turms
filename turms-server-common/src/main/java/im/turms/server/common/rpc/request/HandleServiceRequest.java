@@ -17,6 +17,7 @@
 
 package im.turms.server.common.rpc.request;
 
+import im.turms.server.common.cluster.service.rpc.NodeTypeToHandleRpc;
 import im.turms.server.common.cluster.service.rpc.RpcCallable;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
@@ -27,9 +28,6 @@ import org.springframework.context.ApplicationContext;
 import reactor.core.publisher.Mono;
 
 /**
- * The server type to request: Turms Gateway
- * The server type to respond: Turms Service
- *
  * @author James Chen
  */
 @Data
@@ -48,6 +46,16 @@ public class HandleServiceRequest extends RpcCallable<ServiceResponse> {
     @Override
     public String name() {
         return NAME;
+    }
+
+    @Override
+    public NodeTypeToHandleRpc nodeTypeToRequest() {
+        return NodeTypeToHandleRpc.GATEWAY;
+    }
+
+    @Override
+    public NodeTypeToHandleRpc nodeTypeToRespond() {
+        return NodeTypeToHandleRpc.SERVICE;
     }
 
     @Override

@@ -69,15 +69,15 @@ public class StatisticsService {
      */
     public Mono<Map<String, Integer>> countOnlineUsersByNodes() {
         CountOnlineUsersRequest request = new CountOnlineUsersRequest();
-        return node.getRpcService().requestResponsesAsMapFromOtherGateways(request, false)
-                .onErrorResume(throwable -> RpcException.isErrorCode(throwable, RpcErrorCode.SERVICE_NOT_FOUND),
+        return node.getRpcService().requestResponsesAsMapFromOtherMembers(request, false)
+                .onErrorResume(throwable -> RpcException.isErrorCode(throwable, RpcErrorCode.MEMBER_NOT_FOUND),
                         throwable -> Mono.just(Collections.emptyMap()));
     }
 
     public Mono<Integer> countOnlineUsers() {
         CountOnlineUsersRequest request = new CountOnlineUsersRequest();
-        Flux<Integer> responses = node.getRpcService().requestResponsesFromOtherGateways(request, true)
-                .onErrorResume(throwable -> RpcException.isErrorCode(throwable, RpcErrorCode.SERVICE_NOT_FOUND),
+        Flux<Integer> responses = node.getRpcService().requestResponsesFromOtherMembers(request, true)
+                .onErrorResume(throwable -> RpcException.isErrorCode(throwable, RpcErrorCode.MEMBER_NOT_FOUND),
                         throwable -> Mono.just(0));
         return MathFlux.sumInt(responses);
     }

@@ -59,6 +59,16 @@ public abstract class RpcCallable<T> {
 
     public abstract String name();
 
+    /**
+     * Used to ensure we won't send requests from unexpected servers
+     */
+    public abstract NodeTypeToHandleRpc nodeTypeToRequest();
+
+    /**
+     * Used to ensure we won't send requests to unexpected servers
+     */
+    public abstract NodeTypeToHandleRpc nodeTypeToRespond();
+
     public Tag tag() {
         return null;
     }

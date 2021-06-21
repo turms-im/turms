@@ -17,6 +17,7 @@
 
 package im.turms.server.common.rpc.request;
 
+import im.turms.server.common.cluster.service.rpc.NodeTypeToHandleRpc;
 import im.turms.server.common.cluster.service.rpc.RpcCallable;
 import im.turms.server.common.rpc.service.IOutboundMessageService;
 import io.netty.buffer.ByteBuf;
@@ -28,9 +29,6 @@ import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 /**
- * The server type to request: Turms Service
- * The server type to respond: Turms Gateway
- *
  * @author James Chen
  */
 @Data
@@ -53,6 +51,16 @@ public class SendNotificationRequest extends RpcCallable<Boolean> {
     @Override
     public String name() {
         return NAME;
+    }
+
+    @Override
+    public NodeTypeToHandleRpc nodeTypeToRequest() {
+        return NodeTypeToHandleRpc.SERVICE;
+    }
+
+    @Override
+    public NodeTypeToHandleRpc nodeTypeToRespond() {
+        return NodeTypeToHandleRpc.GATEWAY;
     }
 
     @Override
