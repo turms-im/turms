@@ -257,11 +257,11 @@ public class RpcService implements ClusterService {
                                          RSocket connection,
                                          RpcCallable<T> request,
                                          Duration timeout) {
-        ByteBuf buffer = serializationService.serialize(request);
-        Payload requestPayload = ByteBufPayload.create(buffer);
         Mono<Payload> mono = Mono
                 .deferContextual(context -> {
                     addTraceIdToRequestFromContext(context, request);
+                    ByteBuf buffer = serializationService.serialize(request);
+                    Payload requestPayload = ByteBufPayload.create(buffer);
                     return connection.requestResponse(requestPayload);
                 })
                 .timeout(timeout)

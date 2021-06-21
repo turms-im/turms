@@ -36,7 +36,11 @@ public abstract class RpcCallableSerializer<T extends RpcCallable<?>> implements
 
     @Override
     public void write(ByteBuf output, T data) {
-        output.writeLong(data.getTracingContext().getTraceId());
+        TracingContext tracingContext = data.getTracingContext();
+        if (!tracingContext.hasTraceId()) {
+            throw new IllegalArgumentException("Cannot get the trace ID in the request: " + data.name());
+        }
+        output.writeLong(tracingContext.getTraceId());
         writeRequestData(output, data);
     }
 
