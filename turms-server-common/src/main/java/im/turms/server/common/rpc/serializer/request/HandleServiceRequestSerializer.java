@@ -23,6 +23,8 @@ import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.rpc.request.HandleServiceRequest;
 import io.netty.buffer.ByteBuf;
 
+import java.util.Arrays;
+
 /**
  * @author James Chen
  */
@@ -33,6 +35,7 @@ public class HandleServiceRequestSerializer extends RpcCallableSerializer<Handle
 
     private static final int FIXED_FIELDS_LENGTH = Byte.BYTES * 2 + Long.BYTES;
     private static final int IS_IPV4_FLAG = 0;
+    private static final int IS_IPV6_FLAG = 1;
 
     @Override
     public SerializerId getSerializerId() {
@@ -42,7 +45,13 @@ public class HandleServiceRequestSerializer extends RpcCallableSerializer<Handle
     @Override
     public void writeRequestData(ByteBuf output, HandleServiceRequest data) {
         ServiceRequest request = data.getServiceRequest();
-        output.writeByte(IS_IPV4_FLAG);
+        byte[] ip = request.getIp();
+        int ipFormatFlag = switch (ip.length) {
+            case IPV4_BYTE_LENGTH -> IS_IPV4_FLAG;
+            case IPV6_BYTE_LENGTH -> IS_IPV6_FLAG;
+            default -> throw new IllegalArgumentException("Unknown IP format: " + Arrays.toString(ip));
+        };
+        output.writeByte(ipFormatFlag);
         output.writeBytes(request.getIp());
         output.writeLong(request.getUserId());
         output.writeByte(request.getDeviceType().getNumber());
@@ -52,12 +61,12 @@ public class HandleServiceRequestSerializer extends RpcCallableSerializer<Handle
     public HandleServiceRequest readRequestData(ByteBuf input) {
         boolean isIpV4 = input.readByte() == IS_IPV4_FLAG;
         int ipByteLength = isIpV4 ? IPV4_BYTE_LENGTH : IPV6_BYTE_LENGTH;
-        ByteBuf firstByteBuf = input.readSlice(FIXED_FIELDS_LENGTH - Byte.BYTES + ipByteLength);
+        ByteBuf byteBufForBasicInfo = input.readSlice(FIXED_FIELDS_LENGTH - Byte.BYTES + ipByteLength);
 
         byte[] ip = new byte[ipByteLength];
-        firstByteBuf.readBytes(ip);
-        long userId = firstByteBuf.readLong();
-        DeviceType deviceType = DeviceType.forNumber(firstByteBuf.readByte());
+        byteBufForBasicInfo.readBytes(ip);
+        long userId = byteBufForBasicInfo.readLong();
+        DeviceType deviceType = DeviceType.forNumber(byteBufForBasicInfo.readByte());
 
         ByteBuf turmsRequestBuffer = input.slice();
         ServiceRequest serviceRequest = new ServiceRequest(ip, userId, deviceType, null, null, turmsRequestBuffer);
