@@ -25,7 +25,7 @@ import org.apache.logging.log4j.Logger;
  */
 public final class CommonClientApiLogging {
 
-    public static final byte LOG_FIELD_DELIMITER = '|';
+    public static final String LOG_FIELD_DELIMITER = "|";
     public static final Logger logger = LogManager.getLogger(CommonClientApiLogging.class);
 
     private CommonClientApiLogging() {
