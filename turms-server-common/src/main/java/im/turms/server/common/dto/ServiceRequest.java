@@ -19,10 +19,13 @@ package im.turms.server.common.dto;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.request.TurmsRequest;
+import im.turms.server.common.util.IpUtil;
 import io.netty.buffer.ByteBuf;
+import io.netty.util.NetUtil;
 import lombok.Data;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 
 /**
  * @author James Chen
@@ -59,6 +62,9 @@ public final class ServiceRequest {
                           Long requestId,
                           TurmsRequest.KindCase type,
                           ByteBuf turmsRequestBuffer) {
+        if (!IpUtil.isIpV4OrV6(ip)) {
+            throw new IllegalArgumentException("Illegal IP: " + Arrays.toString(ip));
+        }
         this.ip = ip;
         this.userId = userId;
         this.deviceType = deviceType;
@@ -69,14 +75,7 @@ public final class ServiceRequest {
 
     public String getIpStr() {
         if (ipStr == null) {
-            StringBuilder ipStrBuilder = new StringBuilder();
-            for (int i = 0; i < ip.length; i++) {
-                ipStrBuilder.append(ip[i] & 0xFF);
-                if (i != ip.length - 1) {
-                    ipStrBuilder.append('.');
-                }
-            }
-            ipStr = ipStrBuilder.toString();
+            ipStr = NetUtil.bytesToIpAddress(ip);
         }
         return ipStr;
     }

@@ -25,13 +25,13 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.Arrays;
 
+import static im.turms.server.common.util.IpUtil.IPV4_BYTE_LENGTH;
+import static im.turms.server.common.util.IpUtil.IPV6_BYTE_LENGTH;
+
 /**
  * @author James Chen
  */
 public class HandleServiceRequestSerializer extends RpcCallableSerializer<HandleServiceRequest> {
-
-    private static final int IPV4_BYTE_LENGTH = 4;
-    private static final int IPV6_BYTE_LENGTH = 16;
 
     private static final int FIXED_FIELDS_LENGTH = Byte.BYTES * 2 + Long.BYTES;
     private static final int IS_IPV4_FLAG = 0;
