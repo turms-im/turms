@@ -56,12 +56,6 @@ public class TurmsRedisClientManager {
         }
     }
 
-    public void setSerializationContext(RedisCodecContext serializationContext) {
-        for (TurmsRedisClient client : clients) {
-            client.setSerializationContext(serializationContext);
-        }
-    }
-
     public void destroy() {
         for (TurmsRedisClient client : clients) {
             try {

@@ -30,8 +30,6 @@ import im.turms.server.common.property.env.common.location.LocationProperties;
 import im.turms.server.common.property.env.common.location.UsersNearbyRequestProperties;
 import im.turms.server.common.redis.RedisEntryId;
 import im.turms.server.common.redis.TurmsRedisClientManager;
-import im.turms.server.common.redis.codec.context.RedisCodecContext;
-import im.turms.server.common.redis.codec.context.RedisCodecContextPool;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.DeviceTypeUtil;
 import io.lettuce.core.GeoArgs;
@@ -45,9 +43,7 @@ import reactor.core.publisher.Mono;
 
 import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author James Chen
@@ -74,10 +70,6 @@ public class SessionLocationService {
         LocationProperties locationProperties = turmsPropertiesManager.getLocalProperties().getLocation();
         locationEnabled = locationProperties.isEnabled();
         treatUserIdAndDeviceTypeAsUniqueUser = locationProperties.isTreatUserIdAndDeviceTypeAsUniqueUser();
-        RedisCodecContext serializationContext = treatUserIdAndDeviceTypeAsUniqueUser
-                ? RedisCodecContextPool.GEO_USER_SESSION_ID_CODEC_CONTEXT
-                : RedisCodecContextPool.GEO_USER_ID_CODEC_CONTEXT;
-        locationRedisClientManager.setSerializationContext(serializationContext);
     }
 
     /**
@@ -103,7 +95,6 @@ public class SessionLocationService {
                 ? new UserSessionId(userId, deviceType)
                 : userId;
         return locationRedisClientManager.geoadd(userId, RedisEntryId.LOCATION_BUFFER, position, member)
-                .doOnSuccess(o -> tryLogLocation(userId, deviceType, position, timestamp))
                 .then();
     }
 

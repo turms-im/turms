@@ -43,7 +43,6 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.Data;
-import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.geo.Point;
 import reactor.core.publisher.Flux;
@@ -72,8 +71,7 @@ public class TurmsRedisClient {
 
     private final TurmsRedisCommandBuilder commandBuilder;
 
-    @Setter
-    private RedisCodecContext serializationContext;
+    private final RedisCodecContext serializationContext;
 
     public TurmsRedisClient(String uri,
                             RedisCodecContext serializationContext) {
