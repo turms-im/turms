@@ -18,7 +18,6 @@
 package im.turms.turms.plugin.manager;
 
 import im.turms.server.common.plugin.base.AbstractTurmsPluginManager;
-import im.turms.server.common.plugin.extension.UserLocationLogHandler;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.turms.plugin.extension.handler.AdminActionHandler;
 import im.turms.turms.plugin.extension.handler.ClientRequestHandler;
@@ -40,7 +39,6 @@ import java.util.List;
 public class TurmsPluginManager extends AbstractTurmsPluginManager {
 
     private List<AdminActionHandler> adminActionHandlerList;
-    private List<UserLocationLogHandler> userLocationLogHandlerList;
     private List<ClientRequestHandler> clientRequestHandlerList;
     private List<ExpiredMessageAutoDeletionNotificationHandler> expiredMessageAutoDeletionNotificationHandlerList;
     private StorageServiceProvider storageServiceProvider;
@@ -52,7 +50,6 @@ public class TurmsPluginManager extends AbstractTurmsPluginManager {
     @Override
     protected void initPlugins() {
         adminActionHandlerList = getAndInitExtensions(AdminActionHandler.class);
-        userLocationLogHandlerList = getAndInitExtensions(UserLocationLogHandler.class);
         clientRequestHandlerList = getAndInitExtensions(ClientRequestHandler.class);
         expiredMessageAutoDeletionNotificationHandlerList = getAndInitExtensions(ExpiredMessageAutoDeletionNotificationHandler.class);
         storageServiceProvider = getAndInitExtension(StorageServiceProvider.class);

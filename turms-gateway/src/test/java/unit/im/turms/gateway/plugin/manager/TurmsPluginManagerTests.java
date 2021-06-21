@@ -49,7 +49,6 @@ class TurmsPluginManagerTests {
         TurmsPluginManager turmsPluginManager = new TurmsPluginManager(context, propertiesManager);
 
         assertThat(turmsPluginManager.getUserLoginActionLogHandlerList()).isNotNull();
-        assertThat(turmsPluginManager.getUserLocationLogHandlerList()).isNotNull();
         assertThat(turmsPluginManager.getNotificationHandlerList()).isNotNull();
         assertThat(turmsPluginManager.getUserAuthenticatorList()).isNotNull();
         assertThat(turmsPluginManager.getUserOnlineStatusChangeHandlerList()).isNotNull();

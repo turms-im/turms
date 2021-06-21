@@ -19,15 +19,12 @@ package im.turms.server.common.service.session;
 
 
 import im.turms.common.constant.DeviceType;
-import im.turms.server.common.bo.log.UserLocationLog;
 import im.turms.server.common.bo.session.UserSessionId;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.constraint.ValidDeviceType;
 import im.turms.server.common.exception.TurmsBusinessException;
-import im.turms.server.common.logging.UserActivityLogging;
 import im.turms.server.common.plugin.base.AbstractTurmsPluginManager;
-import im.turms.server.common.plugin.extension.UserLocationLogHandler;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.location.LocationProperties;
 import im.turms.server.common.property.env.common.location.UsersNearbyRequestProperties;
@@ -200,25 +197,6 @@ public class SessionLocationService {
                     .singleOrEmpty();
         } else {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.USER_LOCATION_RELATED_FEATURES_ARE_DISABLED));
-        }
-    }
-
-    private void tryLogLocation(Long userId, DeviceType deviceType, Point coordinates, Date timestamp) {
-        boolean logUserLocation = node.getSharedProperties().getService().getLog().isLogUserLocation();
-        List<UserLocationLogHandler> handlerList = turmsPluginManager.getUserLocationLogHandlerList();
-        boolean triggerHandlers = turmsPluginManager.isEnabled() && !handlerList.isEmpty();
-        if (logUserLocation || triggerHandlers) {
-            UserLocationLog userLocationLog = new UserLocationLog(userId, deviceType, coordinates, timestamp);
-            if (logUserLocation) {
-                UserActivityLogging.log(userLocationLog);
-            }
-            if (triggerHandlers) {
-                List<Mono<Void>> monos = new ArrayList<>(handlerList.size());
-                for (UserLocationLogHandler handler : handlerList) {
-                    monos.add(handler.handleUserLocationLog(userLocationLog));
-                }
-                Mono.when(monos).subscribe();
-            }
         }
     }
 

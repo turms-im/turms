@@ -17,7 +17,6 @@
 
 package im.turms.server.common.plugin.base;
 
-import im.turms.server.common.plugin.extension.UserLocationLogHandler;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.env.common.PluginProperties;
 import lombok.Getter;
@@ -66,8 +65,6 @@ public abstract class AbstractTurmsPluginManager {
     }
 
     protected abstract void initPlugins();
-
-    public abstract List<UserLocationLogHandler> getUserLocationLogHandlerList();
 
     protected <T extends TurmsExtension> T getAndInitExtension(Class<T> clazz) {
         List<T> extensions = pluginManager.getExtensions(clazz);

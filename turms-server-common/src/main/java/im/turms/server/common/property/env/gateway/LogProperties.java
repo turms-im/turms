@@ -47,9 +47,4 @@ public class LogProperties {
     @JsonView(MutablePropertiesView.class)
     private boolean logUserLogoutAction = true;
 
-    @Description("Whether to log user location")
-    @GlobalProperty
-    @JsonView(MutablePropertiesView.class)
-    private boolean logUserLocation = true;
-
 }
