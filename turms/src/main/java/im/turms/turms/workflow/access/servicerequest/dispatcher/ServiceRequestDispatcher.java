@@ -233,8 +233,12 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                                     .subscribe();
                         }
                     })
-                    .onErrorResume(throwable -> {
-                        ThrowableInfo info = ThrowableInfo.get(throwable);
+                    .onErrorResume(t -> {
+                        ThrowableInfo info = ThrowableInfo.get(t);
+                        if (info.getCode().isServerError()) {
+                            tracingContext.updateMdc();
+                            log.error("Caught an internal server error when handling the request " + lastRequest.getRequestId(), t);
+                        }
                         return Mono.just(RequestHandlerResultFactory.get(info.getCode(), info.getReason()));
                     })
                     .map(handlerResult -> {
