@@ -18,12 +18,16 @@
 package im.turms.gateway.fake;
 
 import com.google.common.collect.Iterators;
+import com.google.common.collect.Range;
 import im.turms.common.constant.DeviceType;
+import im.turms.common.constant.UserStatus;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
+import im.turms.common.model.dto.request.user.UpdateUserOnlineStatusRequest;
 import im.turms.gateway.access.tcp.TcpDispatcher;
 import im.turms.server.common.client.TurmsClient;
 import im.turms.server.common.context.TurmsApplicationContext;
+import im.turms.server.common.fake.RandomProtobufGenerator;
 import im.turms.server.common.fake.RandomRequestFactory;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.gateway.FakeProperties;
@@ -42,6 +46,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author James Chen
@@ -79,6 +84,8 @@ public class ClientFakingManager {
     private void init() {
         log.info("Start sending random requests from clients");
         startSendingRandomRequests(clients,
+                fakeProperties.getFirstUserId(),
+                fakeProperties.getUserCount(),
                 fakeProperties.getRequestIntervalMillis(),
                 fakeProperties.getRequestCountPerInterval());
     }
@@ -104,20 +111,37 @@ public class ClientFakingManager {
     }
 
     private void startSendingRandomRequests(List<TurmsClient> clients,
+                                            long firstUserId,
+                                            int userCount,
                                             int requestIntervalMillis,
                                             int requestCountPerInterval) {
         if (clients.isEmpty() || thread != null) {
             return;
         }
+        Range<Long> userIdRange = Range.closedOpen(firstUserId, firstUserId + userCount);
+        int jitter = userCount / 10;
+        Range<Long> fakedNumberRange =
+                Range.closedOpen(Math.max(0, userIdRange.lowerEndpoint() - jitter), userIdRange.upperEndpoint() + jitter);
         DefaultThreadFactory threadFactory = new DefaultThreadFactory("turms-client-manager", true);
         thread = threadFactory.newThread(() -> {
             Iterator<TurmsClient> clientIterator = Iterators.cycle(clients);
+            Set<String> excludedRequestNames = Set.of(RandomRequestFactory.CREATE_SESSION_REQUEST_FILED_NAME,
+                    RandomRequestFactory.DELETE_SESSION_REQUEST_FILED_NAME);
             while (!Thread.currentThread().isInterrupted()) {
                 int sentRequestCount = 0;
                 while (sentRequestCount < requestCountPerInterval) {
                     TurmsClient client = clientIterator.next();
                     try {
-                        TurmsRequest.Builder builder = RandomRequestFactory.create();
+                        RandomProtobufGenerator.GeneratorOptions options = new RandomProtobufGenerator
+                                .GeneratorOptions(1, 1, fakedNumberRange);
+                        TurmsRequest.Builder builder = RandomRequestFactory.create(excludedRequestNames, options);
+                        if (builder.hasUpdateUserOnlineStatusRequest()) {
+                            UpdateUserOnlineStatusRequest updateStatusRequest = builder.getUpdateUserOnlineStatusRequest();
+                            if (updateStatusRequest.getUserStatus() == UserStatus.OFFLINE) {
+                                builder.setUpdateUserOnlineStatusRequest(updateStatusRequest.toBuilder()
+                                        .setUserStatus(UserStatus.INVISIBLE));
+                            }
+                        }
                         client.sendRequest(builder)
                                 .onErrorResume(t -> {
                                     log.error("Caught an internal error when sending request: {}",
