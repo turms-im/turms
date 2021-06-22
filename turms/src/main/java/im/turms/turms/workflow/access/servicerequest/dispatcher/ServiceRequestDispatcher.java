@@ -279,11 +279,11 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                 .build();
         ByteBuf notificationByteBuf = ProtoUtil.getDirectByteBuffer(notificationForRecipients);
         if (result.isForwardDataForRecipientsToOtherSenderOnlineDevices()) {
-            notificationByteBuf.retain();
+            notificationByteBuf.retain(2);
             Mono<Boolean> notifyRequesterMono = outboundMessageService
                     .forwardNotification(notificationForRecipients, notificationByteBuf, requesterId, requesterDevice);
-            Mono<Boolean> notifyRecipientsMono =
-                    outboundMessageService.forwardNotification(notificationForRecipients, notificationByteBuf, recipients);
+            Mono<Boolean> notifyRecipientsMono = outboundMessageService
+                    .forwardNotification(notificationForRecipients, notificationByteBuf, recipients);
             return Mono.when(notifyRequesterMono, notifyRecipientsMono)
                     .doOnTerminate(notificationByteBuf::release);
         } else {

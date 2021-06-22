@@ -53,6 +53,8 @@ import java.util.Set;
 
 /**
  * @author James Chen
+ * @implNote All operations that send the outbound message buffer to other servers
+ * need to ensure that the buffer will be released by 1
  */
 @Service
 @Log4j2
@@ -91,6 +93,7 @@ public class OutboundMessageService {
             @NotNull ByteBuf notificationData,
             @NotNull Set<Long> recipientIds) {
         if (recipientIds.isEmpty()) {
+            notificationData.release();
             return Mono.just(true);
         }
         Mono<Boolean> mono = recipientIds.size() == 1
@@ -108,6 +111,7 @@ public class OutboundMessageService {
             @NotNull Long recipientId,
             @NotNull DeviceType excludedDeviceType) {
         return userStatusService.getDeviceAndNodeIdMapByUserId(recipientId)
+                .doOnError(t -> notificationData.release())
                 .flatMap(deviceTypeAndNodeIdMap -> {
                     Set<String> nodeIds = CollectionUtil.newSetWithExpectedSize(deviceTypeAndNodeIdMap.size());
                     for (Map.Entry<DeviceType, String> entry : deviceTypeAndNodeIdMap.entrySet()) {
@@ -117,12 +121,16 @@ public class OutboundMessageService {
                         }
                     }
                     if (nodeIds.isEmpty()) {
+                        notificationData.release();
                         return Mono.just(false);
                     }
                     Mono<Boolean> mono = forwardClientMessageToNodes(notificationData, nodeIds, recipientId);
                     return tryLogNotification(mono, notificationForLogging);
                 })
-                .defaultIfEmpty(false);
+                .switchIfEmpty(Mono.fromCallable(() -> {
+                    notificationData.release();
+                    return false;
+                }));
     }
 
     /**
@@ -132,6 +140,7 @@ public class OutboundMessageService {
             @NotNull ByteBuf messageData,
             @NotNull Set<Long> recipientIds) {
         if (recipientIds.isEmpty()) {
+            messageData.release();
             return Mono.just(true);
         }
         int recipientIdsSize = recipientIds.size();
@@ -144,13 +153,16 @@ public class OutboundMessageService {
                     .map(map -> new RecipientAndNodeIds(recipientId, map.values())));
         }
         return Flux.merge(monos)
+                .doOnError(t -> messageData.release())
                 .collect(CollectorUtil.toList(recipientIdsSize))
                 .flatMap(pairs -> {
                     if (pairs.isEmpty()) {
+                        messageData.release();
                         return Mono.just(false);
                     }
                     int gatewayMemberCount = node.getDiscoveryService().getActiveSortedGatewayMemberList().size();
                     if (gatewayMemberCount == 0) {
+                        messageData.release();
                         return Mono.just(false);
                     }
                     int expectedMembersCount = Math.min(gatewayMemberCount, recipientIdsSize);
@@ -173,14 +185,19 @@ public class OutboundMessageService {
             @NotNull ByteBuf notificationData,
             @NotNull Long recipientId) {
         return userStatusService.getDeviceAndNodeIdMapByUserId(recipientId)
+                .doOnError(t -> notificationData.release())
                 .flatMap(deviceTypeAndNodeIdMap -> {
                     Set<String> nodeIds = CollectionUtil.newSet(deviceTypeAndNodeIdMap.values());
                     if (nodeIds.isEmpty()) {
+                        notificationData.release();
                         return Mono.just(false);
                     }
                     return forwardClientMessageToNodes(notificationData, nodeIds, recipientId);
                 })
-                .defaultIfEmpty(false);
+                .switchIfEmpty(Mono.fromCallable(() -> {
+                    notificationData.release();
+                    return false;
+                }));
     }
 
     // Network transmission methods
@@ -189,6 +206,7 @@ public class OutboundMessageService {
         Multiset<String> nodeIds = recipientIdsByNodeId.keys();
         int size = nodeIds.size();
         if (size == 0) {
+            messageData.release();
             return Mono.just(false);
         }
         if (size == 1) {
@@ -202,7 +220,7 @@ public class OutboundMessageService {
             monos.add(forwardClientMessageToNode(messageData, nodeId, recipientIds));
         }
         return ReactorUtil.atLeastOneTrue(monos)
-                .doFinally(ignored -> messageData.release());
+                .doOnTerminate(messageData::release);
 
     }
 
@@ -212,6 +230,7 @@ public class OutboundMessageService {
             @NotNull Long recipientId) {
         int size = nodeIds.size();
         if (size == 0) {
+            messageData.release();
             return Mono.just(false);
         }
         if (size == 1) {
@@ -226,7 +245,7 @@ public class OutboundMessageService {
             monos.add(node.getRpcService().requestResponse(nodeId, request));
         }
         return ReactorUtil.atLeastOneTrue(monos)
-                .doFinally(ignored -> messageData.release());
+                .doOnTerminate(messageData::release);
     }
 
     private Mono<Boolean> forwardClientMessageToNode(
@@ -235,6 +254,7 @@ public class OutboundMessageService {
             @NotNull Set<Long> recipients) {
         int size = recipients.size();
         if (size == 0) {
+            messageData.release();
             return Mono.just(false);
         }
         SendNotificationRequest request = new SendNotificationRequest(
