@@ -21,6 +21,7 @@ import im.turms.server.common.redis.codec.TurmsRedisCodecAdapter;
 import im.turms.server.common.redis.codec.context.RedisCodecContext;
 import im.turms.server.common.redis.command.TurmsCommandEncoder;
 import im.turms.server.common.redis.script.RedisScript;
+import im.turms.server.common.util.ByteBufUtil;
 import io.lettuce.core.AbstractRedisReactiveCommands;
 import io.lettuce.core.GeoArgs;
 import io.lettuce.core.GeoCoordinates;
@@ -55,6 +56,9 @@ import static io.lettuce.core.protocol.CommandType.GEORADIUSBYMEMBER;
 
 /**
  * @author James Chen
+ * @implNote For Redis commands, release the key/val buffers to ensure that
+ * if a command is cancelled or encounters an error, the buffers can be released
+ * (In these cases, it won't be released by Lettuce because it haven't flushed the buffers),
  * @see AbstractRedisReactiveCommands
  */
 @Log4j2
@@ -120,19 +124,25 @@ public class TurmsRedisClient {
     public Mono<Long> hdel(Object key, Object... fields) {
         ByteBuf keyBuffer = serializationContext.encodeHashKey(key);
         ByteBuf[] fieldBuffers = serializationContext.encodeHashFields(fields);
-        return commands.hdel(keyBuffer, fieldBuffers);
+        return commands.hdel(keyBuffer, fieldBuffers)
+                .doOnTerminate(() -> {
+                    ByteBufUtil.ensureReleased(keyBuffer);
+                    ByteBufUtil.ensureReleased(fieldBuffers);
+                });
     }
 
     public <K, V> Flux<Map.Entry<K, V>> hgetall(K key) {
         ByteBuf keyBuffer = serializationContext.encodeHashKey(key);
         Flux<KeyValue<K, V>> flux = commands.createDissolvingFlux(() -> commandBuilder.hgetall(keyBuffer));
-        return flux
+        Flux<Map.Entry<K, V>> entryFlux = flux
                 .flatMap(entry -> {
                     if (entry.isEmpty()) {
                         return Mono.empty();
                     }
                     return Mono.just(new AbstractMap.SimpleEntry<>(entry.getKey(), entry.getValue()));
                 });
+        return entryFlux
+                .doOnTerminate(() -> ByteBufUtil.ensureReleased(keyBuffer));
     }
 
     // Geo
@@ -140,14 +150,22 @@ public class TurmsRedisClient {
     public Mono<Long> geoadd(Object key, Point coordinates, Object member) {
         ByteBuf keyBuffer = serializationContext.encodeGeoKey(key);
         ByteBuf memberBuffer = serializationContext.encodeGeoMember(member);
-        return commands.geoadd(keyBuffer, coordinates.getX(), coordinates.getY(), memberBuffer);
+        return commands.geoadd(keyBuffer, coordinates.getX(), coordinates.getY(), memberBuffer)
+                .doOnTerminate(() -> {
+                    ByteBufUtil.ensureReleased(keyBuffer);
+                    ByteBufUtil.ensureReleased(memberBuffer);
+                });
     }
 
     public Flux<GeoCoordinates> geopos(Object key, Object... members) {
         ByteBuf keyBuffer = serializationContext.encodeGeoKey(key);
         ByteBuf[] memberBuffers = serializationContext.encodeGeoMembers(members);
         return commands.geopos(keyBuffer, memberBuffers)
-                .flatMap(value -> value.isEmpty() ? Mono.empty() : Mono.just(value.getValue()));
+                .flatMap(value -> value.isEmpty() ? Mono.empty() : Mono.just(value.getValue()))
+                .doOnTerminate(() -> {
+                    ByteBufUtil.ensureReleased(keyBuffer);
+                    ByteBufUtil.ensureReleased(memberBuffers);
+                });
     }
 
     public <T> Flux<GeoWithin<T>> georadiusbymember(Object key, Object member, double distanceMeters, GeoArgs geoArgs) {
@@ -162,13 +180,21 @@ public class TurmsRedisClient {
                         return Flux.empty();
                     }
                     return Flux.error(e);
+                })
+                .doOnTerminate(() -> {
+                    ByteBufUtil.ensureReleased(keyBuffer);
+                    ByteBufUtil.ensureReleased(memberBuffer);
                 });
     }
 
     public Mono<Long> georem(Object key, Object... members) {
         ByteBuf keyBuffer = serializationContext.encodeGeoKey(key);
         ByteBuf[] memberBuffers = serializationContext.encodeGeoMembers(members);
-        return commands.zrem(keyBuffer, memberBuffers);
+        return commands.zrem(keyBuffer, memberBuffers)
+                .doOnTerminate(() -> {
+                    ByteBufUtil.ensureReleased(keyBuffer);
+                    ByteBufUtil.ensureReleased(memberBuffers);
+                });
     }
 
     // Scripting
@@ -186,7 +212,7 @@ public class TurmsRedisClient {
                     }
                     return Flux.error(e);
                 })
-                .doFinally(type -> {
+                .doOnTerminate(() -> {
                     for (ByteBuf key : keys) {
                         if (key.refCnt() > 0) {
                             key.release();

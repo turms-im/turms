@@ -114,4 +114,18 @@ public final class ByteBufUtil {
         return buffers;
     }
 
+
+    public static void ensureReleased(ByteBuf buffer) {
+        int refCnt = buffer.refCnt();
+        if (refCnt > 0) {
+            buffer.release(refCnt);
+        }
+    }
+
+    public static void ensureReleased(ByteBuf[] buffers) {
+        for (ByteBuf buffer : buffers) {
+            ensureReleased(buffer);
+        }
+    }
+
 }

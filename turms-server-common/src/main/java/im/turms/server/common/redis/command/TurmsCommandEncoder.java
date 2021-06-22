@@ -92,7 +92,8 @@ public class TurmsCommandEncoder extends ChannelOutboundHandlerAdapter {
         } catch (RuntimeException e) {
             out.resetWriterIndex();
             command.completeExceptionally(new EncoderException(
-                    "Cannot encode command. Please close the connection as the connection state may be out of sync.", e));
+                    "Cannot encode command " + command +
+                            ". Please close the connection as the connection state may be out of sync.", e));
         }
     }
 
