@@ -44,6 +44,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -69,7 +70,7 @@ public class ClientFakingManager {
                 .getGateway()
                 .getFake();
         if (!fakeProperties.isEnabled() || context.isProduction()) {
-            clients = null;
+            clients = Collections.emptyList();
             return;
         }
         if (!tcpDispatcher.isEnabled()) {
