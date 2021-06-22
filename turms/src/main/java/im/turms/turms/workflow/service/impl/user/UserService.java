@@ -483,7 +483,7 @@ public class UserService {
                 .setIfNotNull(User.Fields.IS_ACTIVE, isActive)
                 .setIfNotNull(User.Fields.LAST_UPDATED_DATE, new Date());
         return mongoClient.updateMany(User.class, filter, update)
-                .flatMap(result -> result.getModifiedCount() > 0
+                .flatMap(result -> Boolean.FALSE.equals(isActive) && result.getModifiedCount() > 0
                         ? Mono.just(sessionService.disconnect(userIds, SessionCloseStatus.USER_IS_DELETED_OR_INACTIVATED))
                         .onErrorResume(t -> Mono.empty()).thenReturn(result)
                         : Mono.just(result));
