@@ -3,10 +3,15 @@ management:
     web:
       exposure:
         include: "*"
+
 logging:
   level:
     im:
       turms: DEBUG
+
+spring:
+  netty:
+    leak-detection: advanced
 
 ############################### Turms ###############################
 

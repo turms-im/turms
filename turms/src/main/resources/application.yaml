@@ -26,6 +26,8 @@ spring:
       propagate-transient-marker: true
   main:
     banner-mode: log
+  netty:
+    leak-detection: simple
   profiles:
     active: prod
     group:

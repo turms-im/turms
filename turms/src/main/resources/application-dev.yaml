@@ -8,6 +8,10 @@ logging:
     im:
       turms: DEBUG
 
+spring:
+  netty:
+    leak-detection: advanced
+
 ############################### Turms ###############################
 
 turms:
