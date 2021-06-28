@@ -17,6 +17,7 @@
 
 package im.turms.gateway.access.common.controller;
 
+import im.turms.common.constant.DeviceType;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.gateway.access.common.model.UserSessionWrapper;
@@ -135,9 +136,15 @@ public class UserRequestDispatcher {
                             || LoggingRequestUtil.shouldLog(type, supportedLoggingRequestProperties)) {
                         try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
                             UserSession userSession = sessionWrapper.getUserSession();
+                            Long userId = null;
+                            DeviceType deviceType = null;
+                            if (userSession != null) {
+                                userId = userSession.getUserId();
+                                deviceType = userSession.getDeviceType();
+                            }
                             ClientApiLogging.log(sessionWrapper.getIp().getAddress().getHostAddress(),
-                                    userSession.getUserId(),
-                                    userSession.getDeviceType(),
+                                    userId,
+                                    deviceType,
                                     request.getRequestId(),
                                     type,
                                     requestSize,
@@ -153,7 +160,6 @@ public class UserRequestDispatcher {
                     loggingContext.setTracingContext(tracingContext);
                     return context;
                 });
-
     }
 
     public Mono<TurmsNotification> handleServiceRequest(UserSessionWrapper sessionWrapper,
