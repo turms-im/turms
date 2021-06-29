@@ -97,7 +97,7 @@ public final class WebSocketFactory {
                 .option(SO_BACKLOG, webSocketProperties.getBacklog())
                 .childOption(SO_REUSEADDR, true)
                 .childOption(SO_LINGER, 0)
-                .childOption(TCP_NODELAY, false)
+                .childOption(TCP_NODELAY, true)
                 .runOn(LoopResourcesFactory.createForServer("gateway-ws"))
                 .handle(getHttpRequestHandler(handler))
                 .doOnChannelInit((connectionObserver, channel, remoteAddress) ->

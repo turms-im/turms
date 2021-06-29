@@ -42,7 +42,7 @@ public class NettyServerConfig implements NettyServerCustomizer {
                 .option(SO_REUSEADDR, true)
                 .childOption(SO_REUSEADDR, true)
                 .childOption(SO_LINGER, 0)
-                .childOption(TCP_NODELAY, false);
+                .childOption(TCP_NODELAY, true);
     }
 
 }
