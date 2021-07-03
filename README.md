@@ -12,15 +12,15 @@ Please refer to [Turms Documentation](https://turms-im.github.io/docs) (no Engli
 ## Playground
 (Version of demo servers: ghcr.io/turms-im/turms:latest, ghcr.io/turms-im/turms-gateway:latest, ghcr.io/turms-im/turms-admin:latest)
 
-* turms-admin: http://120.24.57.206:6510
+* turms-admin: http://playground.turms.im:6510
 
   Both the account and the password are: guest. (The account is allowed to query and add data, but is not allowed to update and delete data.)
 
-* turms (Admin API in dev environment with mock data supported): http://120.24.57.206:8510
+* turms (Admin API in dev environment with fake data supported): http://playground.turms.im:8510
 
   (Note that if you open the link (API) directly in the browser, it will get a response with 401 (no permission))
 
-* turms-gateway: http://120.24.57.206:10510 (port for WebSocket access) and http://120.24.57.206:11510 (port for TCP access)
+* turms-gateway: http://playground.turms.im:10510 (port for WebSocket access) and http://playground.turms.im:11510 (port for TCP access)
 
   You can use any turms-client-(java/js/swift) implementation to send requests to turms-gateway and interact with other users.
 
@@ -33,7 +33,7 @@ git clone --depth 1 https://github.com/turms-im/turms.git
 cd turms
 docker-compose -f docker-compose.standalone.yml up --force-recreate
 ```
-After the cluster is set up, you can visit turms-admin at http://localhost:6510, and enter the account and password ("guest" by default). If you have logged in successfully, it will indicate that turms has been setup successfully.
+After the cluster is set up, you can visit turms-admin at http://localhost:6510, and enter the account and password ("turms" by default). If you have logged in successfully, it will indicate that turms has been setup successfully.
 
 ## Intro
 
@@ -108,7 +108,7 @@ The architecture design of Turms is derived from commercial instant messaging ar
 | --------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | Application scenarios | Team communications                                          | General medium to large scale IM scenarios (Making Turms possible for redevelopment) |
 | Advantages            | 1. The client implementation is cross-platform and out-of-the-box for users<br/>2. Support a complete and unified UI suite<br/>3. Support rich advanced instant messaging features, such as audio and video conference, file sharing, screen sharing <br/>4. Provide commercial users with technical support | The advantages are the features described above              |
-| Disadvantages         | 1. Only suitable for small-scale applications<br/>2. Narrow application scenarios and hard to customize | 1. Only meets the general instant messaging needs, and does not provide some advanced features (for example, no support for audio and video conferencing)<br/>2. The admin system does not provide advanced operation features currently <br/>3. No support for specific business logic and UI<br />4. Low coverage of integration/unit testing<br />5. Servers are reactive, which is challenging for some developers |
+| Disadvantages         | 1. Only suitable for small-scale applications<br/>2. Narrow application scenarios and hard to customize | 1. Only meets the general instant messaging needs, and does not provide some advanced features (for example, no support for audio and video conferencing)<br/>2. The admin system does not provide advanced operation features currently <br/>3. No support for specific business logic and UI<br />4. Servers are reactive, which is challenging for some developers |
 | Comment               | It is highly recommended to use Rocket.Chat for team communications | Although both are open source IM projects, they have completely different application scenarios. Turms is a general instant messaging engine for medium to large scale instant messaging applications. You cannot just hand Turms to your customers (just as most products don't let customers write SQL statements to query business data in the database). <br/>However, based on Turms, you can implement all the open-source instant messaging projects on GitHub more efficiently, comprehensively, and extensively |
 ## Demo with Specific Business Implementation
 
