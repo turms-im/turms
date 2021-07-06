@@ -68,4 +68,11 @@ public final class MapUtil {
         }
     }
 
+    public static <K, V> Map<K, V> merge(Map<K, V> map1, Map<K, V> map2) {
+        Map<K, V> result = new HashMap<>(getCapability(map1.size() + map2.size()));
+        result.putAll(map1);
+        result.putAll(map2);
+        return result;
+    }
+
 }

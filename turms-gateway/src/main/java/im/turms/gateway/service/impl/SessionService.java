@@ -18,6 +18,7 @@
 package im.turms.gateway.service.impl;
 
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Maps;
 import com.google.common.collect.SetMultimap;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.UserStatus;
@@ -44,6 +45,7 @@ import im.turms.server.common.service.session.SessionLocationService;
 import im.turms.server.common.service.session.UserStatusService;
 import im.turms.server.common.util.AssertUtil;
 import im.turms.server.common.util.DeviceTypeUtil;
+import im.turms.server.common.util.MapUtil;
 import im.turms.server.common.util.ReactorUtil;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -316,41 +318,49 @@ public class SessionService implements ISessionService {
         // Must fetch the latest status instead of the status in the cache
         return userStatusService.fetchUserSessionsStatus(userId)
                 .flatMap(sessionsStatus -> {
+                    // getSessionStatusFromSharedAndLocalInfo() is used to handle the following edge
+                    // cases to avoid bugs when the session info in local node is inconsistent with the one in Redis.
+
+                    // Cases: The session exists in the local node, but:
+                    // 1. Though the local node works well, Redis crashes and restart,
+                    // so all session info was lost in Redis, but sessions still exist indeed.
+                    // 2. The local node lost the connection to Redis, which causes
+                    // the local node failed to refresh the heartbeat info of users in Redis.
+                    sessionsStatus = getSessionStatusFromSharedAndLocalInfo(userId, sessionsStatus);
                     // Check the current sessions status
                     UserStatus existingUserStatus = sessionsStatus.getUserStatus();
                     if (existingUserStatus == UserStatus.OFFLINE) {
                         return addOnlineDeviceIfAbsent(userId, deviceType, userStatus, position, ip, deviceDetails);
-                    } else {
-                        boolean conflicts = sessionsStatus.getLoggedInDeviceTypes().contains(deviceType);
-                        if (conflicts) {
-                            UserSession session = getLocalUserSession(userId, deviceType);
-                            boolean isDisconnectedSessionOnLocal = session != null
-                                    && session.getConnection() != null
-                                    && !session.getConnection().isConnected();
-                            if (isDisconnectedSessionOnLocal) {
-                                // Note that the downstream should replace the disconnected connection
-                                // with the connected TCP/WebSocket connection
-                                Mono<Void> updateSessionInfoMono = userStatus == null || existingUserStatus == userStatus
-                                        ? Mono.empty()
-                                        : userStatusService.updateOnlineUserStatusIfPresent(userId, userStatus)
-                                        .then()
-                                        .onErrorResume(throwable -> Mono.empty());
-                                if (position != null) {
-                                    updateSessionInfoMono = updateSessionInfoMono
-                                            .flatMap(unused -> sessionLocationService
-                                                    .upsertUserLocation(userId, deviceType, position, new Date())
-                                                    .onErrorResume(throwable -> Mono.empty()));
-                                }
-                                return updateSessionInfoMono.thenReturn(session);
-                            } else if (userSimultaneousLoginService.shouldDisconnectLoggingInDeviceIfConflicts()) {
-                                return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE));
-                            }
-                        }
-                        return disconnectConflictedDeviceTypes(userId, deviceType, sessionsStatus)
-                                .flatMap(wasSuccessful -> wasSuccessful
-                                        ? addOnlineDeviceIfAbsent(userId, deviceType, userStatus, position, ip, deviceDetails)
-                                        : Mono.error(TurmsBusinessException.get(TurmsStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE)));
                     }
+                    boolean conflicts = sessionsStatus.getLoggedInDeviceTypes().contains(deviceType);
+                    if (conflicts) {
+                        UserSession session = getLocalUserSession(userId, deviceType);
+                        boolean isDisconnectedSessionOnLocal = session != null
+                                && session.getConnection() != null
+                                && !session.getConnection().isConnected();
+                        if (isDisconnectedSessionOnLocal) {
+                            // Note that the downstream should replace the disconnected connection
+                            // with the connected TCP/WebSocket connection
+                            Mono<Void> updateSessionInfoMono = userStatus == null || existingUserStatus == userStatus
+                                    ? Mono.empty()
+                                    : userStatusService.updateOnlineUserStatusIfPresent(userId, userStatus)
+                                    .then()
+                                    .onErrorResume(throwable -> Mono.empty());
+                            if (position != null) {
+                                updateSessionInfoMono = updateSessionInfoMono
+                                        .flatMap(unused -> sessionLocationService
+                                                .upsertUserLocation(userId, deviceType, position, new Date())
+                                                .onErrorResume(throwable -> Mono.empty()));
+                            }
+                            return updateSessionInfoMono.thenReturn(session);
+                        } else if (userSimultaneousLoginService.shouldDisconnectLoggingInDeviceIfConflicts()) {
+                            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE));
+                        }
+                    }
+                    return disconnectConflictedDeviceTypes(userId, deviceType, sessionsStatus)
+                            .flatMap(wasSuccessful -> wasSuccessful
+                                    ? addOnlineDeviceIfAbsent(userId, deviceType, userStatus, position, ip, deviceDetails)
+                                    : Mono.error(TurmsBusinessException.get(TurmsStatusCode.SESSION_SIMULTANEOUS_CONFLICTS_DECLINE)));
                 });
     }
 
@@ -473,6 +483,27 @@ public class SessionService implements ISessionService {
                 }
             }
         }
+    }
+
+    private UserSessionsStatus getSessionStatusFromSharedAndLocalInfo(@NotNull Long userId,
+                                                                      @NotNull UserSessionsStatus sharedSessionsStatus) {
+        UserSessionsManager manager = sessionsManagerByUserId.get(userId);
+        if (manager == null) {
+            return sharedSessionsStatus;
+        }
+        Map<DeviceType, String> sharedOnlineDeviceTypeAndNodeIdMap = sharedSessionsStatus.getOnlineDeviceTypeAndNodeIdMap();
+        for (Map.Entry<DeviceType, UserSession> entry : manager.getSessionMap().entrySet()) {
+            // Don't just merge two maps for convenience to avoiding creating a new map
+            if (!sharedOnlineDeviceTypeAndNodeIdMap.containsKey(entry.getKey())) {
+                Map<DeviceType, String> onlineDeviceTypeAndNodeIdMap = MapUtil.merge(sharedOnlineDeviceTypeAndNodeIdMap,
+                        Maps.transformValues(manager.getSessionMap(), ignored -> Node.getNodeId()));
+                return sharedSessionsStatus.toBuilder()
+                        .userStatus(manager.getUserStatus())
+                        .onlineDeviceTypeAndNodeIdMap(onlineDeviceTypeAndNodeIdMap)
+                        .build();
+            }
+        }
+        return sharedSessionsStatus;
     }
 
 }

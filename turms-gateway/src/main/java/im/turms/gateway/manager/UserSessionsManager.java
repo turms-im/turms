@@ -64,6 +64,9 @@ public final class UserSessionsManager {
         this.userStatus = userStatus;
     }
 
+    /**
+     * @return new session if added
+     */
     @Nullable
     public UserSession addSessionIfAbsent(
             @NotNull DeviceType loggingInDeviceType,
