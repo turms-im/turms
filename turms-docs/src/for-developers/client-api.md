@@ -16,12 +16,14 @@ Turms客户端目前支持JavaScript、Kotlin与Swift这三种语言，对外暴
 
 Turms客户端对版本的最低要求，主要是根据：平台全球市场占有率、平台TLSv1.2最低支持版本与代码实现的优雅程度，三个因素来考量。另外，Turms不提供对TLSv1与TLSv1.1等被时代淘汰协议的官方支持。
 
-* Android平台：支持16+。turms-client-kotlin采用SSLContext实现TLS，其在Android API 16+提供了对TLSv1.2的支持（参考资料[SSLContext](https://developer.android.com/reference/javax/net/ssl/SSLContext)）
-* iOS设备：支持12.0+。考虑到[iOS 12.0+在全球的市场占有率](https://developer.apple.com/support/app-store/)以及苹果产品用户的习惯，turms-client-swift采用NWConnection实现TCP协议，因此设备版本的要求等同于支持NWConnection设备的版本要求。另外，turms-client-swift不会考虑用古老的CFStreamCreatePairWithSocketToHost来实现TCP协议。
-* 浏览器环境：[支持WebSocket协议的浏览器](https://caniuse.com/?search=websocket)均支持。另外，对于IE系列浏览器，turms-client-js仅对IE 11提供官方支持。
-* 桌面端：如果您采用turms-client-kotlin实现，则要求JDK版本为8(+)，因为JDK 8+默认提供对TLSv1.2的支持。如果您采用turms-client-js实现，则Turms提供对Node.js 8+的官方支持。另外，Turms之后还会提供C++实现的turms-client-cpp客户端。
+| 平台    | 支持的最低版本                                               | 原因                                                         |      |
+| ------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ---- |
+| Android | 16+                                                          | turms-client-kotlin采用SSLContext实现TLS，其在Android API 16+提供了对TLSv1.2的支持（参考资料[SSLContext](https://developer.android.com/reference/javax/net/ssl/SSLContext)） |      |
+| iOS     | 12.0+                                                        | 考虑到[iOS 12.0+在全球的市场占有率](https://developer.apple.com/support/app-store/)以及苹果产品用户的习惯，turms-client-swift采用NWConnection实现TCP协议，因此设备版本的要求等同于支持NWConnection设备的版本要求。<br />另外，turms-client-swift不会考虑用古老的CFStreamCreatePairWithSocketToHost来实现TCP协议。 |      |
+| 浏览器  | [支持WebSocket协议的浏览器](https://caniuse.com/?search=websocket) | 对于IE系列浏览器，turms-client-js仅对IE 11提供官方支持。<br />另外，turms-client-js不会将WebSocket降级为轮询机制 |      |
+| 桌面端  | turms-client-kotlin(JDK8+)<br />turms-client-js(Node.js 8+)  | 如果您采用turms-client-kotlin实现，则要求JDK版本为8(+)，因为JDK 8+默认提供对TLSv1.2的支持。<br />如果您采用turms-client-js实现，则Turms提供对Node.js 8+的官方支持 |      |
 
-TODO：Turms客户端为快速迭代，目前均采用WebSocket协议。但近期会将turms-client-kotlin/swift的WebSocket协议替换成纯TCP协议实现。此变动不会影响上述的版本要求。
+补充：Turms客户端为快速迭代，目前均采用WebSocket协议。但未来会将turms-client-kotlin/swift的WebSocket协议替换成纯TCP协议实现。此变动不会影响上述的版本要求。
 
 ## 客户端的对外逻辑结构
 
@@ -37,7 +39,7 @@ TODO：Turms客户端为快速迭代，目前均采用WebSocket协议。但近�
   - notificationService：通知相关服务。负责接受与响应业务层面上的通知（即：其他用户向该用户发送好友请求、群组成员上下线等通知）。
     提醒：消息（message）不算做业务层面上的“通知”（notification），因此notificationService不会处理用户消息，用户消息仅由messageService进行处理。而driver中TurmsNotification的“通知”概念指的是网络层面上的Turms服务端给Turms客户端的通知，因此notificationService也不会处理底层的TurmsNotification数据。
     
-    补充：关于通知功能的开启与关闭，您可以在turms服务端im.turms.server.common.property.env.service.business.NotificationProperties处，实时地进行修改。
+    补充：关于通知功能的开启与关闭，您可以在turms服务端`im.turms.server.common.property.env.service.business.NotificationProperties`处，实时地进行修改。
     
   - storageService：存储相关服务（可选拓展）。负责用户头像、群组头像与消息附件的上传与下载操作。补充：该服务为turms的拓展服务，因此若您希望使用该功能，您需要将turms-plugin-minio或您自行实现的存储插件集成到turms服务端当中。
 
@@ -75,46 +77,18 @@ TODO：Turms客户端为快速迭代，目前均采用WebSocket协议。但近�
 
 ## 会话的生命周期
 
-客户端的会话生命周期如下图所示：
+Turms客户端的会话生命周期比较容易理解，具体而言：先通过`driver.connect()`进行网络层的连接，而后通过`userService.login()`进行业务层面上的登录操作，在登录成功后，对应的会话就建立了。最后再通过`userService.logout()`方法向服务端发送会话关闭通知，同时也会关闭网络层连接。
 
-```mermaid
-graph TD
-c((Closed)):::status --> lc(Login/Connect):::action
-lc --> ls{Login Successfully?}:::decision
-ls -- Yes --> co((Connected)):::status
-ls -- No --> rs{Due to redirect signal?}:::decision
-co --> osco[onSessionConnected]:::callback
-osco --> d(Disconnect):::action
-d --> dd((Disconnected)):::status
-dd --> osd[onSessionDisconnected]:::callback
-rs -- No --> cc((Closed)):::status
-rs -- Yes --> r(Reconnect):::action
-r --> ls
-osd --> rs
-cc --> osc[onSessionClosed]:::callback
-
-classDef action fill:#8CEF92,stroke-width:0px;
-classDef decision fill:#FFFF8B,stroke-width:0px;
-classDef status fill:#FFAABF,stroke-width:0px;
-classDef callback fill:#C3E8FF,stroke-width:0px;
-```
+为了保持逻辑简单，也方便上层开发者自行组合各种逻辑。Turms不提供诸如自动重连、自动路由跳转等操作，一方面开发者可以很容易地实现该类逻辑，另一方面，这类“隐藏”的内部逻辑会使得上层开发者难以把控底层驱动行为，在一些时候反而会成为绊脚石。
 
 ### 生命周期回调钩子
 
-您可以通过turmsClient.driver.onSessionConnected/onSessionDisconnected/onSessionClosed来监听生命回调钩子
-
-* onSessionConnected：当会话建立时（网络层连接建立时），onSessionConnected将被调用。
-
-  提醒：由于客户端的登录接口driver.connect与userService.login都返回的是异步模型，因此通常您并不需要监听onSessionConnected事件，而是将您的回调函数赋给异步模型onSucccess的回调函数。
-
-* onSessionDisconnected：当会话断开时（网络层连接断开时），onSessionDisconnected将被调用。同时，Turms客户端会确认服务端发来的断开信令中，是否带有重定向指令。如果有，则客户端将根据服务端发来的重定向地址，进行自动重连操作，重连的逻辑跟登录逻辑一致。否则，会话转入Closed状态，onSessionClosed将被调用。
-
-  提醒：onSessionDisconnected被调用时，会话的生命周期并没有结束。
-
-* onSessionClosed：在一个会话中，当最后一次onSessionDisconnected函数被调用之后（即不再进行重连操作），onSessionClosed将被调用。
-  关于业务层面的“在线”与“离线”状态判定。
-
-早期Turms客户端的生命周期钩子采用贴近上层业务层的命名方式：onOnline与onOffline。但由于：1. 该概念无法表达上述onSessionClosed的含义；2. 大部分开发者更愿意通过名称来得知具体底层发生的事情；3. 在极端网络环境下“Online”与“Offline”的说法具有一定的误导性。因为当客户端感知到连接的断开时，onOffline将被触发。但对应的服务端不一定能感知到了连接的断开，因此客户端仍有可能处于“Online”状态。因此不再采用这种命名方式。
+| 层次       | 名称                             | 调用时机              | 提醒                                                         |
+| ---------- | -------------------------------- | --------------------- | ------------------------------------------------------------ |
+| 网络层     | driver.addOnConnectedListener    | 当网络层连接建立时    | 通常您并不需要通过`addOnConnectedListener`来添加连接监听事件，<br />而是将您的回调函数赋给`driver.connect()`返回的异步成功回调onSucccess/then |
+| 网络层     | driver.addOnDisconnectedListener | 当网络层连接断开时    |                                                              |
+| 业务逻辑层 | userService.addOnOnlineListener  | 当会话建立/用户上线时 | 通常您并不需要通过`addOnOnlineListener`来添加上线监听事件，<br />而是将您的回调函数赋给`userService.login()`返回的异步成功回调onSucccess/then |
+| 业务逻辑层 | userService.addOnOfflineListener | 当会话断开/用户下线时 |                                                              |
 
 ## 业务逻辑的认证与授权
 
@@ -123,14 +97,6 @@ classDef callback fill:#C3E8FF,stroke-width:0px;
 以“修改已发送消息”功能为例，该行为会触发一系列判定逻辑。Turms会先判断目标消息是否确实是由该用户发出的，再根据您在Turms服务端配置的allowEditingMessageBySender（默认为true），来判断是否允许用户修改已发送消息，若您设置其为false，则在客户端处会捕获到一个TurmsBusinessException（Java）或TurmsBusinessError（JavaScript/Swift）对象，而它由业务状态码模型TurmsStatusCode表示（由code与reason描述信息组成）。
 
 再比如对于一个“简单”的“发送消息”请求，Turms服务端就会判断该消息发送用户是否处于激活状态、是否设置了“允许发送消息给陌生人（非关系人）”、消息发送者是否在黑名单中。如果接收方是群组，那么消息发送者是否是群成员，并且是否处于禁言状态等等逻辑判断。而您仅仅只需调用一个sendMessage接口即可。
-
-## 关于turms-client-js的特别说明
-
-由于浏览器自身的限制繁多，因此针对浏览器运行环境，有以下三点需要注意：
-
-1. 由于现代浏览器不允许非服务端环境（如本地文件环境file://）传送cookie数据，而turms-client-js需要通过cookie来传送用户登录信息，因此您必须在HTTP(S)服务端环境执行turms-client-js接口，例如：http://localhost:63342/turms-client-js/demo/demo.html（补充：可通过Intellij Idea来“Run”一个HTML页面，该HTML页面会自动运行在Idea提供的HTTP服务器上），否则turms-client-js将无法执行客户端的登陆操作。
-2. 服务降级（由turms引擎实现，您无需自行实现，了解即可）。在现代浏览器中，如果WebSocket在HTTP握手阶段被拒绝Upgrade（对应着登录失败的情况），以及WebSocket已建立的连接被断开（对应着业务会话中断），二者被拒绝或断开的真实状态码与原因都无法通过浏览器接口获得。因此Turms提供了服务降级机制，默认turms-client-js会通过HTTP(S)请求向turms-gateway查询其真实状态码。（具体实现可查阅：im.turms.gateway.accecss.http.controller.ReasonController）
-3. turms-client-js不进行类似于socket.io提供的WebSocket服务降级处理操作，因此turms-client-js不会降级为轮询机制。
 
 ## 具体示例
 
@@ -143,7 +109,7 @@ classDef callback fill:#C3E8FF,stroke-width:0px;
    2. 将“turms.service.message.allow-sending-messages-to-stranger”也设置为true（允许没有用户关系的用户互相发送消息）
 * 方案二：使用自带“dev” profile配置。因为Turms提供的“dev” profile已做了上述配置。默认情况下，Turms发布包中的application.yaml的profile字段为空，即默认的profile不是“dev”，需要您手动配置为“dev”。
 
-提醒：以下客户端API为最新版本示例，而目前Playground上的Turms服务端（ http://120.24.57.206:9510 ）为老版本，因此如果您直接连接Playground的服务端，可以会出现数据不一致的问题。
+提醒：以下客户端API为最新版本示例，而目前Playground上的Turms服务端（ http://playground.turms.im:9510 ）为老版本，因此如果您直接连接Playground的服务端，可以会出现数据不一致的问题。
 
 ### turms-client-js版本
 
