@@ -445,7 +445,7 @@ public class SessionService implements ISessionService {
                     UserSession session = manager.addSessionIfAbsent(deviceType, position, null);
                     // This should never happen
                     if (session == null) {
-                        manager.setDeviceOffline(deviceType, CloseReason.get(SessionCloseStatus.LOGIN_CONFLICT));
+                        manager.setDeviceOffline(deviceType, CloseReason.get(SessionCloseStatus.DISCONNECTED_BY_OTHER_DEVICE));
                         session = manager.addSessionIfAbsent(deviceType, position, null);
                         if (session == null) {
                             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SERVER_INTERNAL_ERROR));

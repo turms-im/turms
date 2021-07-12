@@ -22,27 +22,45 @@ import java.util.Map;
 
 /**
  * @author James Chen
- * @see <a href="https://tools.ietf.org/html/rfc6455#page-47">Reserved Status Code Ranges</a>
  */
 public enum SessionCloseStatus {
-    SWITCH(300),
 
-    ILLEGAL_REQUEST(400),
-    HEARTBEAT_TIMEOUT(401),
-    DISCONNECTED_BY_CLIENT(402),
-    DISCONNECTED_BY_OTHER_DEVICE(403),
+    //**********************************************************
+    //* Closed due to client misbehavior
+    //**********************************************************
+    ILLEGAL_REQUEST(100),
+    // Closed due to the timeout of user operations
+    SWITCH(110),
+    HEARTBEAT_TIMEOUT(111),
+    LOGIN_TIMEOUT(112),
 
-    SERVER_ERROR(500),
-    SERVER_CLOSED(501),
-    SERVER_UNAVAILABLE(502),
+    //**********************************************************
+    //* Closed due to server behavior
+    //**********************************************************
+    SERVER_ERROR(200),
+    SERVER_CLOSED(201),
+    SERVER_UNAVAILABLE(202), //TODO: reserved
 
-    LOGIN_CONFLICT(600),
-    LOGIN_TIMEOUT(601),
+    //**********************************************************
+    //* Closed due to unknown error
+    //**********************************************************
+    UNKNOWN_ERROR(300),
 
-    DISCONNECTED_BY_ADMIN(700),
-    USER_IS_DELETED_OR_INACTIVATED(701),
+    //**********************************************************
+    //* Closed by user actively
+    //**********************************************************
+    DISCONNECTED_BY_CLIENT(400),
+    DISCONNECTED_BY_OTHER_DEVICE(401),
 
-    UNKNOWN_ERROR(900);
+    //**********************************************************
+    //* Closed by admin actively
+    //**********************************************************
+    DISCONNECTED_BY_ADMIN(500),
+
+    //**********************************************************
+    //* Closed due to the change of user status
+    //**********************************************************
+    USER_IS_DELETED_OR_INACTIVATED(600);
 
     private static final Map<Integer, SessionCloseStatus> CODE_POOL = new HashMap<>((int) (SessionCloseStatus.values().length / 0.5));
 
@@ -71,7 +89,7 @@ public enum SessionCloseStatus {
     }
 
     public boolean isServerError() {
-        return 500 <= code && code < 600;
+        return 200 <= code && code < 300;
     }
 
 }
