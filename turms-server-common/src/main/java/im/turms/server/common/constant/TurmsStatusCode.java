@@ -231,6 +231,11 @@ public enum TurmsStatusCode {
         return CODE_POOL.get(businessCode);
     }
 
+    public static boolean isCodeClientIllegalRequest(int businessCode) {
+        return businessCode == INVALID_REQUEST.businessCode
+                || businessCode == ILLEGAL_ARGUMENT.businessCode;
+    }
+
     public static boolean isSuccessCode(int businessCode) {
         return 1000 <= businessCode && businessCode < 1100;
     }

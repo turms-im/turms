@@ -45,9 +45,18 @@ public class CloseReason {
     public static CloseReason get(Throwable throwable) {
         ThrowableInfo info = ThrowableInfo.get(throwable);
         TurmsStatusCode code = info.getCode();
-        SessionCloseStatus closeStatus = TurmsStatusCode.isServerError(code.getBusinessCode())
-                ? SessionCloseStatus.SERVER_ERROR
-                : SessionCloseStatus.UNKNOWN_ERROR;
+        SessionCloseStatus closeStatus;
+        if (TurmsStatusCode.isServerError(code.getBusinessCode())) {
+            closeStatus = SessionCloseStatus.SERVER_ERROR;
+        } else {
+            if (TurmsStatusCode.isCodeClientIllegalRequest(code.getBusinessCode())) {
+                closeStatus = SessionCloseStatus.ILLEGAL_REQUEST;
+            } else if (code == TurmsStatusCode.SERVER_UNAVAILABLE) {
+                closeStatus = SessionCloseStatus.SERVER_UNAVAILABLE;
+            } else {
+                closeStatus = SessionCloseStatus.UNKNOWN_ERROR;
+            }
+        }
         return new CloseReason(closeStatus, code, info.getReason());
     }
 
