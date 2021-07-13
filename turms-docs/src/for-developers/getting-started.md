@@ -1,20 +1,33 @@
-# Quick Start
+# 搭建与启动
 
-若您网络畅通，第一次完成以下全部操作大概需要花费10~30分钟。当您熟练之后，可在1~3分钟完成各种集群的部署工作。
+## 云服务环境自动搭建与启动
 
-## 全自动搭建步骤
+适用场景：有容灾、弹性扩展、跨地域部署与负载均衡等需求。该方案提供的各种能力直接与搭建成本挂钩，因此您通常需要修改默认提供的Terraform module配置，以保证配置既能满足您的需求，同时搭建与运维成本最低。
+
+TODO
+
+## 单机环境自动搭建与启动
+
+适用场景：搭建方式方便快捷，但运维人员无容灾、弹性扩展与负载均衡等需求，主要用于搭建Demo环境来展示。
 
 通过以下命令，可以全自动地搭建一套完整的Turms最小集群（包含turms、turms-gateway与turms-admin）及其依赖服务端（MongoDB分片集群与Redis）
 
 ```bash
 git clone --depth 1 https://github.com/turms-im/turms.git
 cd turms
+docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
 docker-compose -f docker-compose.standalone.yml up --force-recreate
 ```
 
 等集群完成搭建后，可以通过“http://localhost:6510”访问turms-admin后台管理系统，并输入账号密码（默认均为“turms”）。如果登录成功，则说明turms服务端也已经成功启动。
 
-## 手动搭建步骤
+补充：可使用`--profile monitoring`（`docker-compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate`）来自动搭建Prometheus与Grafana服务端。
+
+## 手动搭建与启动
+
+适用场景：通用，无特别限制场景。但一般只适用于小规模手动部署。
+
+若您网络畅通，第一次完成以下全部操作大概需要花费10~30分钟。当您熟练之后，可在1~3分钟完成各种集群的部署工作。
 
 1. MongoDB集群搭建（用于业务数据存储、服务发现、配置管理）
 
@@ -41,7 +54,7 @@ docker-compose -f docker-compose.standalone.yml up --force-recreate
      
      请确保运行正常，否则Turms会抛出MongoSocketOpenException异常。
    
-  2. 下载、安装并启动Redis服务端（用于实现用户状态管理、“附近的用户”，以及turms-client-js服务降级中登录失败与会话失联原因的查询）。以RHEL/CentOS为例：
+  2. 下载、安装并启动Redis服务端（用于实现用户状态管理以及“附近的用户”）。以RHEL/CentOS为例：
 
      ```bash
      yum install epel-release

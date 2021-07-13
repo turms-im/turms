@@ -34,7 +34,8 @@ export default defineUserConfig<DefaultThemeOptions>({
             {
                 text: '开发者文档',
                 children: [
-                    '/for-developers/quick-start.md',
+                    '/for-developers/getting-started.md',
+                    '/for-developers/distribution.md',
                     '/for-developers/architecture.md',
                     '/for-developers/config.md',
                     '/for-developers/admin-api.md',
