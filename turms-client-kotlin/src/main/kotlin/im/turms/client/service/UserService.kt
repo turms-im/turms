@@ -47,7 +47,7 @@ class UserService(private val turmsClient: TurmsClient) {
     private var storePassword = false
 
     private val onOnlineListeners: MutableList<(() -> Unit)> = LinkedList()
-    private val onOfflineListeners: MutableList<((SessionCloseInfo?) -> Unit)> = LinkedList()
+    private val onOfflineListeners: MutableList<((SessionCloseInfo) -> Unit)> = LinkedList()
 
     val isLoggedIn: Boolean
         get() = userInfo?.onlineStatus != null
@@ -55,7 +55,7 @@ class UserService(private val turmsClient: TurmsClient) {
                 && userInfo?.onlineStatus != UserStatus.OFFLINE
 
     init {
-        turmsClient.driver.addOnDisconnectedListener { changeToOffline() }
+        turmsClient.driver.addOnDisconnectedListener { changeToOffline(SessionCloseInfo(SessionCloseStatus.CONNECTION_CLOSED.code)) }
         turmsClient.driver.addNotificationListener {
             if (it.hasCloseStatus() && isLoggedIn) {
                 val info = SessionCloseInfo(
@@ -424,7 +424,7 @@ class UserService(private val turmsClient: TurmsClient) {
         }
     }
 
-    private fun changeToOffline(sessionCloseInfo: SessionCloseInfo? = null) {
+    private fun changeToOffline(sessionCloseInfo: SessionCloseInfo) {
         if (isLoggedIn) {
             userInfo?.onlineStatus = UserStatus.OFFLINE
             turmsClient.driver.stateStore.isSessionOpen = false

@@ -38,12 +38,14 @@ export default class UserService {
     private _storePassword = false;
 
     private _onOnlineListeners: (() => void)[] = [];
-    private _onOfflineListeners: ((sessionCloseInfo?: SessionCloseInfo) => void)[] = [];
+    private _onOfflineListeners: ((sessionCloseInfo: SessionCloseInfo) => void)[] = [];
 
     constructor(turmsClient: TurmsClient) {
         this._turmsClient = turmsClient;
         this._stateStore = turmsClient.driver.stateStore();
-        turmsClient.driver.addOnDisconnectedListener(() => this._changeToOffline());
+        turmsClient.driver.addOnDisconnectedListener(() => this._changeToOffline({
+            closeStatus: TurmsCloseStatus.CONNECTION_CLOSED
+        }));
         turmsClient.driver.addNotificationListener(notification => {
             if (notification.closeStatus && this.isLoggedIn) {
                 this._changeToOffline({
@@ -67,7 +69,7 @@ export default class UserService {
         this._onOnlineListeners.push(listener);
     }
 
-    addOnOfflineListener(listener: (sessionCloseInfo?: SessionCloseInfo) => void): void {
+    addOnOfflineListener(listener: (sessionCloseInfo: SessionCloseInfo) => void): void {
         this._onOfflineListeners.push(listener);
     }
 
@@ -572,7 +574,7 @@ export default class UserService {
         }
     }
 
-    private _changeToOffline(sessionCloseInfo?: SessionCloseInfo): void {
+    private _changeToOffline(sessionCloseInfo: SessionCloseInfo): void {
         if (this.isLoggedIn) {
             this._userInfo.onlineStatus = UserStatus.OFFLINE;
             this._stateStore.isSessionOpen = false;

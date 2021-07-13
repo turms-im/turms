@@ -7,7 +7,7 @@ public class UserService {
     private var storePassword = false
 
     private var onOnlineListeners: [() -> ()] = []
-    private var onOfflineListeners: [(SessionCloseInfo?) -> ()] = []
+    private var onOfflineListeners: [(SessionCloseInfo) -> ()] = []
 
     var isLoggedIn: Bool {
         get {
@@ -21,7 +21,7 @@ public class UserService {
     init(_ turmsClient: TurmsClient) {
         self.turmsClient = turmsClient
         turmsClient.driver.addOnDisconnectedListener { [weak self] _ in
-            self?.changeToOffline()
+            self?.changeToOffline(SessionCloseInfo(closeStatus: Int32(TurmsCloseStatus.connectionClosed.rawValue), businessStatus: nil, reason: nil))
         }
         turmsClient.driver.addOnNotificationListener { [weak self] n in
             if n.hasCloseStatus && self?.isLoggedIn == true {
@@ -460,7 +460,7 @@ public class UserService {
         }
     }
 
-    private func changeToOffline(_ sessionCloseInfo: SessionCloseInfo? = nil) {
+    private func changeToOffline(_ sessionCloseInfo: SessionCloseInfo) {
         if isLoggedIn {
             userInfo?.onlineStatus = .offline
             turmsClient.driver.stateStore.isSessionOpen = false

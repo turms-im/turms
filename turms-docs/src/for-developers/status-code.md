@@ -139,14 +139,15 @@ SessionCloseStatus表明会话关闭的原因。
 | 原因类别       | 名称                           | 状态码 | 含义                                              |
 | -------------- | ------------------------------ | ------ | ------------------------------------------------- |
 | 客户端非法行为 | ILLEGAL_REQUEST                | 100    | 非法请求                                          |
-|                | SWITCH                         | 110    | 会话超时，TCP或WebSocket切换为UDP进入休眠保活状态 |
-|                | HEARTBEAT_TIMEOUT              | 111    | 心跳超时                                          |
-|                | LOGIN_TIMEOUT                  | 112    | 登录超时                                          |
+|                | HEARTBEAT_TIMEOUT              | 110    | 心跳超时                                          |
+|                | LOGIN_TIMEOUT                  | 111    | 登录超时                                          |
+|                | SWITCH                         | 112    | 会话超时，TCP或WebSocket切换为UDP进入休眠保活状态 |
 | 服务端行为     | SERVER_ERROR                   | 200    | 服务端异常错误                                    |
-|                | SERVER_UNAVAILABLE             | 201    | 服务不可用                                        |
-|                | SERVER_CLOSED                  | 202    | 服务端进入停机状态                                |
-| 未知错误       | UNKNOWN_ERROR                  | 300    | 未知错误                                          |
-| 用户主动关闭   | DISCONNECTED_BY_CLIENT         | 400    | 当前用户主动请求关闭会话                          |
-|                | DISCONNECTED_BY_OTHER_DEVICE   | 401    | 由于当前用户的其他设备上线，导致当前会话关闭      |
-| 管理员主动关闭 | DISCONNECTED_BY_ADMIN          | 500    | 管理员通过API主动关闭会话                         |
-| 用户状态变更   | USER_IS_DELETED_OR_INACTIVATED | 600    | 用户账号被删除或进入未激活状态                    |
+|                | SERVER_CLOSED                  | 201    | 服务端进入停机状态                                |
+|                | SERVER_UNAVAILABLE             | 202    | 服务不可用                                        |
+| 网络层错误     | CONNECTION_CLOSED              | 300    | 未收到关闭帧，网络层连接被强制关闭                |
+| 未知错误       | UNKNOWN_ERROR                  | 400    | 未知的服务端或客户端行为错误                      |
+| 用户主动关闭   | DISCONNECTED_BY_CLIENT         | 500    | 当前用户主动请求关闭会话                          |
+|                | DISCONNECTED_BY_OTHER_DEVICE   | 501    | 由于当前用户的其他设备上线，导致当前会话关闭      |
+| 管理员主动关闭 | DISCONNECTED_BY_ADMIN          | 600    | 管理员通过API主动关闭会话                         |
+| 用户状态变更   | USER_IS_DELETED_OR_INACTIVATED | 700    | 用户账号被删除或进入未激活状态                    |

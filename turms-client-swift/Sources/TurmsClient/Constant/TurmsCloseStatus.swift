@@ -1,22 +1,24 @@
 import Foundation
 
 public enum TurmsCloseStatus: Int {
-    case switchProtocol = 300
 
-    case illegalRequest = 400
-    case heartbeatTimeout
-    case disconnectedByClient
-    case disconnectedByOtherDevice
+    case illegalRequest = 100
+    case heartbeatTimeout = 110
+    case loginTimeout
+    case switchProtocol
 
-    case serverError = 500
+    case serverError = 200
     case serverClosed
     case serverUnavailable
 
-    case loginConflict = 600
-    case loginTimeout
+    case connectionClosed = 300
 
-    case disconnectedByAdmin = 700
-    case userIsDeletedOrInactivated
+    case unknownError = 400
 
-    case unknownError = 900
+    case disconnectedByClient = 500
+    case disconnectedByOtherDevice
+
+    case disconnectedByAdmin = 600
+
+    case userIsDeletedOrInactivated = 700
 }
