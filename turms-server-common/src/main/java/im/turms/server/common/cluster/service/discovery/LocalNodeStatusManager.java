@@ -80,7 +80,7 @@ public class LocalNodeStatusManager {
 
     public Mono<Void> upsertLocalNodeInfo(Update update) {
         String nodeId = localMember.getNodeId();
-        Filter memberFilter = Filter.newBuilder()
+        Filter memberFilter = Filter.newBuilder(2)
                 .eq(Member.ID_CLUSTER_ID, localMember.getClusterId())
                 .eq(Member.ID_NODE_ID, nodeId);
         return sharedConfigService.upsert(memberFilter, update, localMember)
@@ -122,7 +122,7 @@ public class LocalNodeStatusManager {
     }
 
     private Mono<Void> unregisterLocalMemberLeadership() {
-        Filter query = Filter.newBuilder()
+        Filter query = Filter.newBuilder(2)
                 .eq("_id", localMember.getClusterId())
                 .eq(Leader.Fields.nodeId, localMember.getNodeId());
         return sharedConfigService.remove(Leader.class, query).then();
@@ -194,11 +194,11 @@ public class LocalNodeStatusManager {
         if (leader == null) {
             return Mono.just(false);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(3)
                 .eq("_id", localMember.getClusterId())
                 .eq(Leader.Fields.nodeId, localMember.getNodeId())
                 .eq(Leader.Fields.generation, leader.getGeneration());
-        Update update = Update.newBuilder()
+        Update update = Update.newBuilder(1)
                 .set(Leader.Fields.renewDate, renewDate);
         return sharedConfigService.updateOne(Leader.class, filter, update)
                 .flatMap(updateResult -> {
@@ -245,19 +245,19 @@ public class LocalNodeStatusManager {
     }
 
     private Mono<Void> updateFollowersToUnavailable(Collection<String> unavailableMemberNodeIds) {
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(2)
                 .in(Member.ID_NODE_ID, unavailableMemberNodeIds)
                 .eq(Member.ID_CLUSTER_ID, localMember.getClusterId());
-        Update update = Update.newBuilder()
+        Update update = Update.newBuilder(1)
                 .set(Member.STATUS_IS_HEALTHY, false);
         return sharedConfigService.updateMany(Member.class, filter, update).then();
     }
 
     private Mono<Void> updateFollowersToAvailable(Collection<String> availableMemberNodeIds) {
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(2)
                 .in(Member.ID_NODE_ID, availableMemberNodeIds)
                 .eq(Member.ID_CLUSTER_ID, localMember.getClusterId());
-        Update update = Update.newBuilder()
+        Update update = Update.newBuilder(1)
                 .set(Member.STATUS_IS_HEALTHY, true);
         return sharedConfigService.updateMany(Member.class, filter, update).then();
     }

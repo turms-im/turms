@@ -126,7 +126,7 @@ public class GroupTypeService {
     public Flux<GroupType> queryGroupTypes(
             @Nullable Integer page,
             @Nullable Integer size) {
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .paginateIfNotNull(page, size);
         return mongoTemplate.findAll(GroupType.class, options)
                 // TODO: respect page and size
@@ -208,9 +208,9 @@ public class GroupTypeService {
                 messageEditable)) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .in(DaoConstant.ID_FIELD_NAME, ids);
-        Update update = Update.newBuilder()
+        Update update = Update.newBuilder(10)
                 .setIfNotNull(GroupType.Fields.NAME, name)
                 .setIfNotNull(GroupType.Fields.GROUP_SIZE_LIMIT, groupSizeLimit)
                 .setIfNotNull(GroupType.Fields.INVITATION_STRATEGY, groupInvitationStrategy)
@@ -228,8 +228,7 @@ public class GroupTypeService {
         if (groupTypeIds != null && groupTypeIds.contains(DaoConstant.DEFAULT_GROUP_TYPE_ID)) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The default group type cannot be deleted"));
         }
-        Filter filter = Filter
-                .newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .inIfNotNull(DaoConstant.ID_FIELD_NAME, groupTypeIds);
         return mongoTemplate.deleteMany(GroupType.class, filter)
                 .doOnNext(result -> {

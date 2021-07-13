@@ -63,9 +63,9 @@ public class UserVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(ID_FIELD_NAME, userId);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .include(UserVersion.Fields.RELATIONSHIPS);
         return mongoClient.findOne(UserVersion.class, filter, options)
                 .map(UserVersion::getRelationships);
@@ -77,9 +77,9 @@ public class UserVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(ID_FIELD_NAME, userId);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .include(UserVersion.Fields.SENT_GROUP_INVITATIONS);
         return mongoClient.findOne(UserVersion.class, filter, options)
                 .map(UserVersion::getSentGroupInvitations);
@@ -91,9 +91,9 @@ public class UserVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(ID_FIELD_NAME, userId);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .include(UserVersion.Fields.RECEIVED_GROUP_INVITATIONS);
         return mongoClient.findOne(UserVersion.class, filter, options)
                 .map(UserVersion::getReceivedGroupInvitations);
@@ -105,9 +105,9 @@ public class UserVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(ID_FIELD_NAME, userId);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .include(UserVersion.Fields.GROUP_JOIN_REQUESTS);
         return mongoClient.findOne(UserVersion.class, filter, options)
                 .map(UserVersion::getGroupJoinRequests);
@@ -119,9 +119,9 @@ public class UserVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(ID_FIELD_NAME, userId);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .include(UserVersion.Fields.RELATIONSHIP_GROUPS);
         return mongoClient.findOne(UserVersion.class, filter, options)
                 .map(UserVersion::getRelationshipGroups);
@@ -133,8 +133,10 @@ public class UserVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder().eq(ID_FIELD_NAME, userId);
-        QueryOptions options = QueryOptions.newBuilder().include(UserVersion.Fields.JOINED_GROUPS);
+        Filter filter = Filter.newBuilder(1)
+                .eq(ID_FIELD_NAME, userId);
+        QueryOptions options = QueryOptions.newBuilder(2)
+                .include(UserVersion.Fields.JOINED_GROUPS);
         return mongoClient.findOne(UserVersion.class, filter, options)
                 .map(UserVersion::getJoinedGroups);
     }
@@ -145,9 +147,9 @@ public class UserVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(ID_FIELD_NAME, userId);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .include(UserVersion.Fields.SENT_FRIEND_REQUESTS);
         return mongoClient.findOne(UserVersion.class, filter, options)
                 .map(UserVersion::getSentFriendRequests);
@@ -159,9 +161,9 @@ public class UserVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(ID_FIELD_NAME, userId);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .include(UserVersion.Fields.RECEIVED_FRIEND_REQUESTS);
         return mongoClient.findOne(UserVersion.class, filter, options)
                 .map(UserVersion::getReceivedFriendRequests);
@@ -248,10 +250,10 @@ public class UserVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .in(ID_FIELD_NAME, userIds);
         Date now = new Date();
-        Update update = Update.newBuilder();
+        Update update = Update.newBuilder(fields.length);
         for (String field : fields) {
             update.set(field, now);
         }
@@ -268,7 +270,7 @@ public class UserVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .in(ID_FIELD_NAME, userIds);
         return mongoClient.deleteMany(session, UserVersion.class, filter);
     }

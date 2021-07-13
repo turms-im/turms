@@ -147,7 +147,7 @@ public class GroupBlocklistService {
                 .flatMap(authenticated -> {
                     if (authenticated) {
                         GroupBlockedUser.Key key = new GroupBlockedUser.Key(groupId, userIdToUnblock);
-                        Filter filter = Filter.newBuilder()
+                        Filter filter = Filter.newBuilder(1)
                                 .eq(DaoConstant.ID_FIELD_NAME, key);
                         Mono<DeleteResult> removeMono = mongoClient.deleteMany(session, GroupBlockedUser.class, filter);
                         if (updateBlocklistVersion) {
@@ -168,8 +168,9 @@ public class GroupBlocklistService {
         } catch (TurmsBusinessException e) {
             return Flux.error(e);
         }
-        Filter filter = Filter.newBuilder().eq(GroupBlockedUser.Fields.ID_GROUP_ID, groupId);
-        QueryOptions options = QueryOptions.newBuilder()
+        Filter filter = Filter.newBuilder(1)
+                .eq(GroupBlockedUser.Fields.ID_GROUP_ID, groupId);
+        QueryOptions options = QueryOptions.newBuilder(1)
                 .include(GroupBlockedUser.Fields.ID_USER_ID);
         return mongoClient
                 .findMany(GroupBlockedUser.class, filter, options)
@@ -183,13 +184,12 @@ public class GroupBlocklistService {
             @Nullable Set<Long> requesterIds,
             @Nullable Integer page,
             @Nullable Integer size) {
-        Filter filter = Filter
-                .newBuilder()
+        Filter filter = Filter.newBuilder(5)
                 .inIfNotNull(GroupBlockedUser.Fields.ID_USER_ID, userIds)
                 .inIfNotNull(GroupBlockedUser.Fields.ID_GROUP_ID, groupIds)
                 .inIfNotNull(GroupBlockedUser.Fields.REQUESTER_ID, requesterIds)
                 .addBetweenIfNotNull(GroupBlockedUser.Fields.BLOCK_DATE, blockDateRange);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .paginateIfNotNull(page, size);
         return mongoClient.findMany(GroupBlockedUser.class, filter, options);
     }
@@ -199,8 +199,7 @@ public class GroupBlocklistService {
             @Nullable Set<Long> userIds,
             @Nullable DateRange blockDateRange,
             @Nullable Set<Long> requesterIds) {
-        Filter filter = Filter
-                .newBuilder()
+        Filter filter = Filter.newBuilder(5)
                 .inIfNotNull(GroupBlockedUser.Fields.ID_USER_ID, userIds)
                 .inIfNotNull(GroupBlockedUser.Fields.ID_GROUP_ID, groupIds)
                 .inIfNotNull(GroupBlockedUser.Fields.REQUESTER_ID, requesterIds)
@@ -316,10 +315,10 @@ public class GroupBlocklistService {
         if (Validator.areAllNull(blockDate, requesterId)) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .in(DaoConstant.ID_FIELD_NAME, keys);
         Update update = Update
-                .newBuilder()
+                .newBuilder(2)
                 .setIfNotNull(GroupBlockedUser.Fields.BLOCK_DATE, blockDate)
                 .setIfNotNull(GroupBlockedUser.Fields.REQUESTER_ID, requesterId);
         return mongoClient.updateMany(GroupBlockedUser.class, filter, update);
@@ -334,7 +333,7 @@ public class GroupBlocklistService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .in(DaoConstant.ID_FIELD_NAME, keys);
         return mongoClient.deleteMany(GroupBlockedUser.class, filter);
     }

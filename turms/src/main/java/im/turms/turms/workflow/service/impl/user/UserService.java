@@ -226,10 +226,10 @@ public class UserService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(2)
                 .eq(DaoConstant.ID_FIELD_NAME, targetUserId)
                 .eq(User.Fields.DELETION_DATE, null);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .include(User.Fields.PROFILE_ACCESS);
         return mongoClient.findOne(User.class, filter, options)
                 .flatMap(user -> {
@@ -281,10 +281,10 @@ public class UserService {
         } catch (TurmsBusinessException e) {
             return Flux.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(2)
                 .in(DaoConstant.ID_FIELD_NAME, userIds)
                 .eqIfFalse(User.Fields.DELETION_DATE, null, queryDeletedRecords);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(1)
                 .include(DaoConstant.ID_FIELD_NAME,
                         User.Fields.NAME,
                         User.Fields.INTRO,
@@ -301,9 +301,9 @@ public class UserService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(DaoConstant.ID_FIELD_NAME, userId);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .include(User.Fields.PERMISSION_GROUP_ID);
         return mongoClient.findOne(User.class, filter, options)
                 .map(User::getPermissionGroupId);
@@ -317,7 +317,7 @@ public class UserService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .in(DaoConstant.ID_FIELD_NAME, userIds);
         Mono<DeleteResult> deleteOrUpdateMono;
         if (deleteLogically == null) {
@@ -325,7 +325,7 @@ public class UserService {
         }
         if (deleteLogically) {
             Date now = new Date();
-            Update update = Update.newBuilder()
+            Update update = Update.newBuilder(2)
                     .set(User.Fields.DELETION_DATE, now)
                     .set(User.Fields.LAST_UPDATED_DATE, now);
             deleteOrUpdateMono = mongoClient.updateMany(User.class, filter, update)
@@ -355,8 +355,7 @@ public class UserService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter
-                .newBuilder()
+        Filter filter = Filter.newBuilder(2)
                 .eq(DaoConstant.ID_FIELD_NAME, userId)
                 .eqIfFalse(User.Fields.DELETION_DATE, null, queryDeletedRecords);
         return mongoClient.exists(User.class, filter);
@@ -397,34 +396,32 @@ public class UserService {
             @Nullable Integer page,
             @Nullable Integer size,
             boolean queryDeletedRecords) {
-        Filter filter = Filter
-                .newBuilder()
+        Filter filter = Filter.newBuilder(7)
                 .inIfNotNull(DaoConstant.ID_FIELD_NAME, userIds)
                 .addBetweenIfNotNull(User.Fields.REGISTRATION_DATE, registrationDateRange)
                 .addBetweenIfNotNull(User.Fields.DELETION_DATE, deletionDateRange)
                 .eqIfNotNull(User.Fields.IS_ACTIVE, isActive)
                 .eqIfFalse(User.Fields.DELETION_DATE, null, queryDeletedRecords);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .paginateIfNotNull(page, size);
         return mongoClient.findMany(User.class, filter, options);
     }
 
     public Mono<Long> countRegisteredUsers(@Nullable DateRange dateRange, boolean queryDeletedRecords) {
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(3)
                 .addBetweenIfNotNull(User.Fields.REGISTRATION_DATE, dateRange)
                 .eqIfFalse(User.Fields.DELETION_DATE, null, queryDeletedRecords);
         return mongoClient.count(User.class, filter);
     }
 
     public Mono<Long> countDeletedUsers(@Nullable DateRange dateRange) {
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(2)
                 .addBetweenIfNotNull(User.Fields.DELETION_DATE, dateRange);
         return mongoClient.count(User.class, filter);
     }
 
     public Mono<Long> countUsers(boolean queryDeletedRecords) {
-        Filter filter = Filter
-                .newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eqIfFalse(User.Fields.DELETION_DATE, null, queryDeletedRecords);
         return mongoClient.count(User.class, filter);
     }
@@ -434,8 +431,7 @@ public class UserService {
             @Nullable DateRange registrationDateRange,
             @Nullable DateRange deletionDateRange,
             @Nullable Boolean isActive) {
-        Filter filter = Filter
-                .newBuilder()
+        Filter filter = Filter.newBuilder(6)
                 .inIfNotNull(DaoConstant.ID_FIELD_NAME, userIds)
                 .addBetweenIfNotNull(User.Fields.REGISTRATION_DATE, registrationDateRange)
                 .addBetweenIfNotNull(User.Fields.DELETION_DATE, deletionDateRange)
@@ -471,9 +467,9 @@ public class UserService {
         if (rawPassword != null && !rawPassword.isEmpty()) {
             password = passwordManager.encodeUserPassword(rawPassword);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .in(DaoConstant.ID_FIELD_NAME, userIds);
-        Update update = Update.newBuilder()
+        Update update = Update.newBuilder(8)
                 .setIfNotNull(User.Fields.PASSWORD, password)
                 .setIfNotNull(User.Fields.NAME, name)
                 .setIfNotNull(User.Fields.INTRO, intro)
@@ -490,7 +486,7 @@ public class UserService {
     }
 
     private Mono<Boolean> isActiveAndNotDeleted(@NotNull Long userId) {
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(3)
                 .eq(DaoConstant.ID_FIELD_NAME, userId)
                 .eq(User.Fields.IS_ACTIVE, true)
                 .eq(User.Fields.DELETION_DATE, null);

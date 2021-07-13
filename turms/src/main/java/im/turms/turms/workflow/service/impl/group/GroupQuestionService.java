@@ -94,11 +94,11 @@ public class GroupQuestionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(3)
                 .eq(DaoConstant.ID_FIELD_NAME, questionId)
                 .in(GroupJoinQuestion.Fields.ANSWERS, answer)
                 .eqIfNotNull(GroupJoinQuestion.Fields.GROUP_ID, groupId);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .include(GroupJoinQuestion.Fields.SCORE);
         return mongoClient.findOne(GroupJoinQuestion.class, filter, options)
                 .map(GroupJoinQuestion::getScore);
@@ -232,9 +232,9 @@ public class GroupQuestionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(DaoConstant.ID_FIELD_NAME, questionId);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .include(GroupJoinQuestion.Fields.GROUP_ID);
         return mongoClient.findOne(GroupJoinQuestion.class, filter, options)
                 .map(GroupJoinQuestion::getGroupId);
@@ -252,7 +252,7 @@ public class GroupQuestionService {
                 .flatMap(groupId -> groupMemberService.isOwnerOrManager(requesterId, groupId)
                         .flatMap(authenticated -> {
                             if (authenticated != null && authenticated) {
-                                Filter filter = Filter.newBuilder()
+                                Filter filter = Filter.newBuilder(1)
                                         .eq(DaoConstant.ID_FIELD_NAME, questionId);
                                 return mongoClient.deleteMany(GroupJoinQuestion.class, filter)
                                         .flatMap(result -> groupVersionService.updateJoinQuestionsVersion(groupId)
@@ -271,11 +271,10 @@ public class GroupQuestionService {
             @Nullable Integer page,
             @Nullable Integer size,
             boolean withAnswers) {
-        Filter filter = Filter
-                .newBuilder()
+        Filter filter = Filter.newBuilder(2)
                 .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
                 .inIfNotNull(GroupJoinQuestion.Fields.GROUP_ID, groupIds);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(withAnswers ? 2 : 3)
                 .paginateIfNotNull(page, size);
         if (!withAnswers) {
             options.exclude(GroupJoinQuestion.Fields.ANSWERS);
@@ -284,16 +283,14 @@ public class GroupQuestionService {
     }
 
     public Mono<Long> countGroupJoinQuestions(@Nullable Set<Long> ids, @Nullable Set<Long> groupIds) {
-        Filter filter = Filter
-                .newBuilder()
+        Filter filter = Filter.newBuilder(2)
                 .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
                 .inIfNotNull(GroupJoinQuestion.Fields.GROUP_ID, groupIds);
         return mongoClient.count(GroupJoinQuestion.class, filter);
     }
 
     public Mono<DeleteResult> deleteGroupJoinQuestions(@Nullable Set<Long> ids) {
-        Filter filter = Filter
-                .newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids);
         return mongoClient.deleteMany(GroupJoinQuestion.class, filter);
     }
@@ -359,9 +356,9 @@ public class GroupQuestionService {
                 .flatMap(groupId -> groupMemberService.isOwnerOrManager(requesterId, groupId)
                         .flatMap(authenticated -> {
                             if (authenticated != null && authenticated) {
-                                Filter filter = Filter.newBuilder()
+                                Filter filter = Filter.newBuilder(1)
                                         .eq(DaoConstant.ID_FIELD_NAME, questionId);
-                                Update update = Update.newBuilder()
+                                Update update = Update.newBuilder(3)
                                         .setIfNotNull(GroupJoinQuestion.Fields.QUESTION, question)
                                         .setIfNotNull(GroupJoinQuestion.Fields.ANSWERS, answers)
                                         .setIfNotNull(GroupJoinQuestion.Fields.SCORE, score);
@@ -391,9 +388,9 @@ public class GroupQuestionService {
         if (Validator.areAllFalsy(groupId, question, answers, score)) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .in(DaoConstant.ID_FIELD_NAME, ids);
-        Update update = Update.newBuilder()
+        Update update = Update.newBuilder(4)
                 .setIfNotNull(GroupJoinQuestion.Fields.GROUP_ID, groupId)
                 .setIfNotNull(GroupJoinQuestion.Fields.QUESTION, question)
                 .setIfNotNull(GroupJoinQuestion.Fields.ANSWERS, answers)

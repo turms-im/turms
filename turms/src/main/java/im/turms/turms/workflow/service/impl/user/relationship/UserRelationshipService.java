@@ -92,9 +92,9 @@ public class UserRelationshipService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
-                .or(Filter.newBuilder().in(UserRelationship.Fields.ID_OWNER_ID, userIds),
-                        Filter.newBuilder().in(UserRelationship.Fields.ID_RELATED_USER_ID, userIds));
+        Filter filter = Filter.newBuilder(1)
+                .or(Filter.newBuilder(1).in(UserRelationship.Fields.ID_OWNER_ID, userIds),
+                        Filter.newBuilder(1).in(UserRelationship.Fields.ID_RELATED_USER_ID, userIds));
         if (updateRelationshipsVersion) {
             if (session != null) {
                 return mongoClient.deleteMany(session, UserRelationship.class, filter)
@@ -127,7 +127,7 @@ public class UserRelationshipService {
             ownerIds.add(key.getOwnerId());
         }
         return mongoClient.inTransaction(session -> {
-            Filter filter = Filter.newBuilder()
+            Filter filter = Filter.newBuilder(1)
                     .in(DaoConstant.ID_FIELD_NAME, keys);
             return mongoClient.deleteMany(session, UserRelationship.class, filter)
                     .flatMap(result -> userRelationshipGroupService.deleteRelatedUsersFromAllRelationshipGroups(keys, session, true)
@@ -149,7 +149,7 @@ public class UserRelationshipService {
         }
         if (session != null) {
             UserRelationship.Key key = new UserRelationship.Key(ownerId, relatedUserId);
-            Filter filter = Filter.newBuilder()
+            Filter filter = Filter.newBuilder(1)
                     .eq(DaoConstant.ID_FIELD_NAME, key);
             return mongoClient.deleteMany(UserRelationship.class, filter)
                     .then(userRelationshipGroupService.deleteRelatedUserFromAllRelationshipGroups(
@@ -187,11 +187,10 @@ public class UserRelationshipService {
             @Nullable Set<Integer> groupIndexes,
             @Nullable Integer page,
             @Nullable Integer size) {
-        Filter filter = Filter
-                .newBuilder()
+        Filter filter = Filter.newBuilder(2)
                 .inIfNotNull(UserRelationship.Fields.ID_OWNER_ID, ownerIds)
                 .inIfNotNull(ID_GROUP_INDEX, groupIndexes);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(3)
                 .paginateIfNotNull(page, size)
                 .include(UserRelationship.Fields.ID_RELATED_USER_ID);
         return mongoClient.findMany(UserRelationshipGroupMember.class, filter, options)
@@ -270,10 +269,10 @@ public class UserRelationshipService {
     public Flux<Long> queryRelatedUserIds(
             @Nullable Set<Long> ownerIds,
             @Nullable Boolean isBlocked) {
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(2)
                 .inIfNotNull(UserRelationship.Fields.ID_OWNER_ID, ownerIds)
                 .neNullIfNotNull(UserRelationship.Fields.BLOCK_DATE, isBlocked);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(1)
                 .include(UserRelationship.Fields.ID_RELATED_USER_ID);
         return mongoClient.findMany(UserRelationship.class, filter, options)
                 .map(userRelationship -> userRelationship.getKey().getRelatedUserId());
@@ -307,12 +306,12 @@ public class UserRelationshipService {
             @Nullable DateRange establishmentDateRange,
             @Nullable Integer page,
             @Nullable Integer size) {
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(5)
                 .inIfNotNull(UserRelationship.Fields.ID_OWNER_ID, ownerIds)
                 .inIfNotNull(UserRelationship.Fields.ID_RELATED_USER_ID, relatedUserIds)
                 .addBetweenIfNotNull(UserRelationship.Fields.ESTABLISHMENT_DATE, establishmentDateRange)
                 .neNullIfNotNull(UserRelationship.Fields.BLOCK_DATE, isBlocked);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .paginateIfNotNull(page, size);
         return mongoClient.findMany(UserRelationship.class, filter, options);
     }
@@ -357,11 +356,10 @@ public class UserRelationshipService {
                     if (relatedUserIds.isEmpty()) {
                         return Flux.empty();
                     }
-                    Filter filter = Filter
-                            .newBuilder()
+                    Filter filter = Filter.newBuilder(2)
                             .inIfNotNull(UserRelationship.Fields.ID_OWNER_ID, ownerIds)
                             .inIfNotNull(UserRelationship.Fields.ID_RELATED_USER_ID, relatedUserIds);
-                    QueryOptions options = QueryOptions.newBuilder()
+                    QueryOptions options = QueryOptions.newBuilder(2)
                             .paginateIfNotNull(page, size);
                     return mongoClient.findMany(UserRelationship.class, filter, options);
                 });
@@ -397,7 +395,7 @@ public class UserRelationshipService {
             @Nullable Set<Long> ownerIds,
             @Nullable Set<Integer> groupIndexes) {
         Filter filter = Filter
-                .newBuilder()
+                .newBuilder(2)
                 .inIfNotNull(UserRelationship.Fields.ID_OWNER_ID, ownerIds)
                 .inIfNotNull(ID_GROUP_INDEX, groupIndexes);
         return mongoClient.count(UserRelationshipGroupMember.class, filter);
@@ -408,7 +406,7 @@ public class UserRelationshipService {
             @Nullable Set<Long> relatedUserIds,
             @Nullable Boolean isBlocked) {
         Filter filter = Filter
-                .newBuilder()
+                .newBuilder(3)
                 .inIfNotNull(UserRelationship.Fields.ID_OWNER_ID, ownerIds)
                 .inIfNotNull(UserRelationship.Fields.ID_RELATED_USER_ID, relatedUserIds)
                 .neNullIfNotNull(UserRelationship.Fields.BLOCK_DATE, isBlocked);
@@ -496,7 +494,7 @@ public class UserRelationshipService {
             return Mono.error(e);
         }
         UserRelationship.Key key = new UserRelationship.Key(ownerId, relatedUserId);
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(2)
                 .eq(DaoConstant.ID_FIELD_NAME, key)
                 .ne(UserRelationship.Fields.BLOCK_DATE, null);
         return mongoClient.exists(UserRelationship.class, filter);
@@ -515,7 +513,7 @@ public class UserRelationshipService {
             return Mono.error(e);
         }
         UserRelationship.Key key = new UserRelationship.Key(ownerId, relatedUserId);
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(2)
                 .eq(DaoConstant.ID_FIELD_NAME, key)
                 .eq(UserRelationship.Fields.BLOCK_DATE, null);
         return mongoClient.exists(UserRelationship.class, filter);
@@ -541,9 +539,9 @@ public class UserRelationshipService {
         if (Validator.areAllNull(blockDate, establishmentDate)) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .in(DaoConstant.ID_FIELD_NAME, keys);
-        Update update = Update.newBuilder()
+        Update update = Update.newBuilder(2)
                 .setIfNotNull(UserRelationship.Fields.ESTABLISHMENT_DATE, establishmentDate)
                 .setOrUnsetDate(UserRelationship.Fields.BLOCK_DATE, blockDate);
         Set<Long> finalOwnerIds = ownerIds;
@@ -568,7 +566,7 @@ public class UserRelationshipService {
             return Mono.error(e);
         }
         UserRelationship.Key key = new UserRelationship.Key(ownerId, relatedUserId);
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(DaoConstant.ID_FIELD_NAME, key);
         return mongoClient.exists(UserRelationship.class, filter);
     }

@@ -112,7 +112,7 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
     }
 
     public Mono<Void> removeAllExpiredGroupJoinRequests(Date expirationDate) {
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .isExpired(GroupJoinRequest.Fields.CREATION_DATE, expirationDate);
         return mongoClient.deleteMany(GroupJoinRequest.class, filter).then();
     }
@@ -161,9 +161,9 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(DaoConstant.ID_FIELD_NAME, requestId);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(1)
                 .include(GroupJoinRequest.Fields.REQUESTER_ID,
                         GroupJoinRequest.Fields.STATUS,
                         GroupJoinRequest.Fields.GROUP_ID);
@@ -194,9 +194,9 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
                     if (!request.getRequesterId().equals(requesterId)) {
                         return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_JOIN_REQUEST_SENDER_TO_RECALL_REQUEST));
                     }
-                    Filter filter = Filter.newBuilder()
+                    Filter filter = Filter.newBuilder(1)
                             .eq(DaoConstant.ID_FIELD_NAME, requestId);
-                    Update update = Update.newBuilder()
+                    Update update = Update.newBuilder(2)
                             .set(GroupJoinRequest.Fields.STATUS, RequestStatus.CANCELED)
                             .set(GroupJoinRequest.Fields.RESPONDER_ID, requesterId);
                     return mongoClient.updateOne(GroupJoinRequest.class, filter, update)
@@ -262,7 +262,7 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
         } catch (TurmsBusinessException e) {
             return Flux.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(GroupJoinRequest.Fields.GROUP_ID, groupId);
         return queryExpirableData(filter);
     }
@@ -273,7 +273,7 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
         } catch (TurmsBusinessException e) {
             return Flux.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(GroupJoinRequest.Fields.REQUESTER_ID, requesterId);
         return queryExpirableData(filter);
     }
@@ -284,9 +284,9 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(DaoConstant.ID_FIELD_NAME, requestId);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .include(GroupJoinRequest.Fields.GROUP_ID);
         return mongoClient.findOne(GroupJoinRequest.class, filter, options)
                 .map(GroupJoinRequest::getGroupId);
@@ -304,8 +304,7 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
             @Nullable Integer page,
             @Nullable Integer size) {
         Date expirationDate = getModelExpirationDate();
-        Filter filter = Filter
-                .newBuilder()
+        Filter filter = Filter.newBuilder(10)
                 .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
                 .inIfNotNull(GroupJoinRequest.Fields.GROUP_ID, groupIds)
                 .inIfNotNull(GroupJoinRequest.Fields.REQUESTER_ID, requesterIds)
@@ -314,7 +313,7 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
                 .addBetweenIfNotNull(GroupJoinRequest.Fields.CREATION_DATE, getCreationDateRange(creationDateRange, expirationDateRange))
                 .addBetweenIfNotNull(GroupJoinRequest.Fields.RESPONSE_DATE, responseDateRange)
                 .isExpiredOrNot(statuses, GroupJoinRequest.Fields.CREATION_DATE, expirationDate);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .paginateIfNotNull(page, size);
         return queryExpirableData(filter, options);
     }
@@ -329,8 +328,7 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
             @Nullable DateRange responseDateRange,
             @Nullable DateRange expirationDateRange) {
         Date expirationDate = getModelExpirationDate();
-        Filter filter = Filter
-                .newBuilder()
+        Filter filter = Filter.newBuilder(10)
                 .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
                 .inIfNotNull(GroupJoinRequest.Fields.GROUP_ID, groupIds)
                 .inIfNotNull(GroupJoinRequest.Fields.REQUESTER_ID, requesterIds)
@@ -343,8 +341,7 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
     }
 
     public Mono<DeleteResult> deleteJoinRequests(@Nullable Set<Long> ids) {
-        Filter filter = Filter
-                .newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids);
         return mongoClient.deleteMany(GroupJoinRequest.class, filter);
     }
@@ -369,10 +366,10 @@ public class GroupJoinRequestService extends ExpirableModelService<GroupJoinRequ
         if (Validator.areAllNull(requesterId, responderId, content, status, creationDate)) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .in(DaoConstant.ID_FIELD_NAME, requestIds);
         Update update = Update
-                .newBuilder()
+                .newBuilder(5)
                 .setIfNotNull(GroupJoinRequest.Fields.REQUESTER_ID, requesterId)
                 .setIfNotNull(GroupJoinRequest.Fields.RESPONDER_ID, responderId)
                 .setIfNotNull(GroupJoinRequest.Fields.CONTENT, content)

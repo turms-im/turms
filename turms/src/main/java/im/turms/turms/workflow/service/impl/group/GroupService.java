@@ -248,12 +248,11 @@ public class GroupService {
         }
         boolean finalShouldDeleteLogically = deleteLogically;
         return mongoClient.inTransaction(session -> {
-            Filter filter = Filter
-                    .newBuilder()
+            Filter filter = Filter.newBuilder(1)
                     .inIfNotNull(ID_FIELD_NAME, groupIds);
             Mono<DeleteResult> updateOrRemoveMono;
             if (finalShouldDeleteLogically) {
-                Update update = Update.newBuilder()
+                Update update = Update.newBuilder(1)
                         .set(Group.Fields.DELETION_DATE, new Date());
                 updateOrRemoveMono = mongoClient.updateMany(session, Group.class, filter, update)
                         .map(OperationResultUtil::update2delete);
@@ -289,8 +288,7 @@ public class GroupService {
         return getGroupIdsFromGroupIdsAndMemberIds(ids, memberIds)
                 .defaultIfEmpty(Collections.emptySet())
                 .flatMapMany(groupIds -> {
-                    Filter filter = Filter
-                            .newBuilder()
+                    Filter filter = Filter.newBuilder(11)
                             .inIfNotNull(ID_FIELD_NAME, groupIds)
                             .inIfNotNull(Group.Fields.TYPE_ID, typeIds)
                             .inIfNotNull(Group.Fields.CREATOR_ID, creatorIds)
@@ -299,7 +297,7 @@ public class GroupService {
                             .addBetweenIfNotNull(Group.Fields.CREATION_DATE, creationDateRange)
                             .addBetweenIfNotNull(Group.Fields.DELETION_DATE, deletionDateRange)
                             .addBetweenIfNotNull(Group.Fields.MUTE_END_DATE, muteEndDateRange);
-                    QueryOptions options = QueryOptions.newBuilder()
+                    QueryOptions options = QueryOptions.newBuilder(2)
                             .paginateIfNotNull(page, size);
                     return mongoClient.findMany(Group.class, filter, options);
                 });
@@ -311,9 +309,9 @@ public class GroupService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(ID_FIELD_NAME, groupId);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .include(Group.Fields.TYPE_ID);
         return mongoClient.findOne(Group.class, filter, options)
                 .map(Group::getTypeId);
@@ -325,9 +323,9 @@ public class GroupService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(ID_FIELD_NAME, groupId);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .include(Group.Fields.MINIMUM_SCORE);
         return mongoClient.findOne(Group.class, filter, options)
                 .map(Group::getMinimumScore);
@@ -357,9 +355,9 @@ public class GroupService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(ID_FIELD_NAME, groupId);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .include(Group.Fields.OWNER_ID);
         return mongoClient.findOne(Group.class, filter, options)
                 .map(Group::getOwnerId);
@@ -467,9 +465,9 @@ public class GroupService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(ID_FIELD_NAME, groupId);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .include(Group.Fields.TYPE_ID);
         return mongoClient.findOne(Group.class, filter, options)
                 .flatMap(group -> groupTypeService.queryGroupType(group.getTypeId()));
@@ -537,9 +535,9 @@ public class GroupService {
                 minimumScore, isActive, creationDate, deletionDate, muteEndDate)) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .in(ID_FIELD_NAME, groupIds);
-        Update update = Update.newBuilder()
+        Update update = Update.newBuilder(11)
                 .setIfNotNull(Group.Fields.TYPE_ID, typeId)
                 .setIfNotNull(Group.Fields.CREATOR_ID, creatorId)
                 .setIfNotNull(Group.Fields.OWNER_ID, ownerId)
@@ -642,7 +640,7 @@ public class GroupService {
         } catch (TurmsBusinessException e) {
             return Flux.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .in(ID_FIELD_NAME, groupIds);
         return mongoClient.findMany(Group.class, filter);
     }
@@ -653,9 +651,9 @@ public class GroupService {
         } catch (TurmsBusinessException e) {
             return Flux.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(ID_USER_ID, memberId);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(1)
                 .include(ID_GROUP_ID);
         return mongoClient
                 .findMany(GroupMember.class, filter, options)
@@ -827,7 +825,7 @@ public class GroupService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(Group.Fields.OWNER_ID, ownerId);
         return mongoClient.count(Group.class, filter);
     }
@@ -841,14 +839,14 @@ public class GroupService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(2)
                 .eq(Group.Fields.OWNER_ID, ownerId)
                 .eq(Group.Fields.TYPE_ID, groupTypeId);
         return mongoClient.count(Group.class, filter);
     }
 
     public Mono<Long> countCreatedGroups(@Nullable DateRange dateRange) {
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(3)
                 .addBetweenIfNotNull(Group.Fields.CREATION_DATE, dateRange)
                 .eq(Group.Fields.DELETION_DATE, null);
         return mongoClient.count(Group.class, filter);
@@ -867,8 +865,7 @@ public class GroupService {
         return getGroupIdsFromGroupIdsAndMemberIds(ids, memberIds)
                 .defaultIfEmpty(Collections.emptySet())
                 .flatMap(groupIds -> {
-                    Filter filter = Filter
-                            .newBuilder()
+                    Filter filter = Filter.newBuilder(11)
                             .inIfNotNull(ID_FIELD_NAME, groupIds)
                             .inIfNotNull(Group.Fields.TYPE_ID, typeIds)
                             .inIfNotNull(Group.Fields.CREATOR_ID, creatorIds)
@@ -882,7 +879,7 @@ public class GroupService {
     }
 
     public Mono<Long> countDeletedGroups(@Nullable DateRange dateRange) {
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(2)
                 .addBetweenIfNotNull(Group.Fields.DELETION_DATE, dateRange);
         return mongoClient.count(Group.class, filter);
     }
@@ -897,9 +894,9 @@ public class GroupService {
         } catch (TurmsBusinessException e) {
             return Flux.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(ID_GROUP_ID, groupId);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(1)
                 .include(ID_USER_ID);
         return mongoClient.findMany(GroupMember.class, filter, options)
                 .map(member -> member.getKey().getUserId());
@@ -911,7 +908,7 @@ public class GroupService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(2)
                 .eq(ID_FIELD_NAME, groupId)
                 .gt(Group.Fields.MUTE_END_DATE, new Date());
         return mongoClient.exists(Group.class, filter);
@@ -923,7 +920,7 @@ public class GroupService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(3)
                 .eq(ID_FIELD_NAME, groupId)
                 .eq(Group.Fields.IS_ACTIVE, true)
                 .eq(Group.Fields.DELETION_DATE, null);

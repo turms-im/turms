@@ -198,7 +198,7 @@ public class AdminRoleService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .in(DaoConstant.ID_FIELD_NAME, roleIds);
         return mongoClient.deleteMany(AdminRole.class, filter)
                 .map(result -> {
@@ -261,9 +261,9 @@ public class AdminRoleService {
         if (Validator.areAllFalsy(newName, permissions, rank)) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .in(DaoConstant.ID_FIELD_NAME, roleIds);
-        Update update = Update.newBuilder()
+        Update update = Update.newBuilder(3)
                 .setIfNotNull(AdminRole.Fields.NAME, newName)
                 .setIfNotNull(AdminRole.Fields.PERMISSIONS, permissions)
                 .setIfNotNull(AdminRole.Fields.RANK, rank);
@@ -282,12 +282,12 @@ public class AdminRoleService {
             @Nullable Integer page,
             @Nullable Integer size) {
         Filter filter = Filter
-                .newBuilder()
+                .newBuilder(4)
                 .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
                 .inIfNotNull(AdminRole.Fields.NAME, names)
                 .inIfNotNull(AdminRole.Fields.PERMISSIONS, includedPermissions)
                 .inIfNotNull(AdminRole.Fields.RANK, ranks);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .paginateIfNotNull(page, size);
         Flux<AdminRole> roleFlux = mongoClient.findMany(AdminRole.class, filter, options);
         if (isRootRoleQualified(ids, names, includedPermissions, ranks)) {
@@ -302,8 +302,7 @@ public class AdminRoleService {
             @Nullable Set<String> names,
             @Nullable Set<AdminPermission> includedPermissions,
             @Nullable Set<Integer> ranks) {
-        Filter filter = Filter
-                .newBuilder()
+        Filter filter = Filter.newBuilder(4)
                 .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
                 .inIfNotNull(AdminRole.Fields.NAME, names)
                 .inIfNotNull(AdminRole.Fields.PERMISSIONS, includedPermissions)
@@ -343,9 +342,9 @@ public class AdminRoleService {
         if (roleId.equals(DaoConstant.ADMIN_ROLE_ROOT_ID)) {
             return Mono.just(getRootRole().getRank());
         } else {
-            Filter filter = Filter.newBuilder()
+            Filter filter = Filter.newBuilder(1)
                     .eq(DaoConstant.ID_FIELD_NAME, roleId);
-            QueryOptions options = QueryOptions.newBuilder()
+            QueryOptions options = QueryOptions.newBuilder(2)
                     .include(AdminRole.Fields.RANK);
             return mongoClient.findOne(AdminRole.class, filter, options)
                     .map(AdminRole::getRank);
@@ -362,9 +361,9 @@ public class AdminRoleService {
         if (containsRoot && roleIds.size() == 1) {
             return Flux.just(getRootRole().getRank());
         } else {
-            Filter query = Filter.newBuilder()
+            Filter query = Filter.newBuilder(1)
                     .in(DaoConstant.ID_FIELD_NAME, roleIds);
-            QueryOptions options = QueryOptions.newBuilder()
+            QueryOptions options = QueryOptions.newBuilder(1)
                     .include(AdminRole.Fields.RANK);
             Flux<AdminRole> roleFlux = mongoClient.findMany(AdminRole.class, query, options);
             if (containsRoot) {

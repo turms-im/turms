@@ -19,6 +19,7 @@ package im.turms.server.common.mongo.operation.option;
 
 import im.turms.server.common.mongo.BsonPool;
 import im.turms.server.common.mongo.util.SerializationUtil;
+import im.turms.server.common.util.MapUtil;
 import org.bson.BsonDocument;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.conversions.Bson;
@@ -38,15 +39,20 @@ public final class Update implements Bson {
      * because Document will be converted to BsonDocument by mongo-java-driver finally,
      * which is a huge waste of system resources because both documents are heavy
      */
-    private final BsonDocument document = new BsonDocument();
+    private final BsonDocument document;
     private BsonDocument set;
     private BsonDocument unset;
 
-    private Update() {
+    private Update(int expectedSize) {
+        document = new BsonDocument(MapUtil.getCapability(expectedSize));
     }
 
     public static Update newBuilder() {
-        return new Update();
+        return new Update(4);
+    }
+
+    public static Update newBuilder(int expectedSize) {
+        return new Update(expectedSize);
     }
 
     @Override

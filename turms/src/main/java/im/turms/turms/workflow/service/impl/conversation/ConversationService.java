@@ -111,12 +111,14 @@ public class ConversationService {
             readDate = new Date();
         }
         String fieldKey = GroupConversation.Fields.MEMBER_ID_AND_READ_DATE + "." + memberId;
-        Filter filter = Filter.newBuilder()
+        boolean allowMoveReadDateForward =
+                node.getSharedProperties().getService().getConversation().getReadReceipt().isAllowMoveReadDateForward();
+        Filter filter = Filter.newBuilder(allowMoveReadDateForward ? 1 : 2)
                 .eq(DaoConstant.ID_FIELD_NAME, groupId);
-        if (!node.getSharedProperties().getService().getConversation().getReadReceipt().isAllowMoveReadDateForward()) {
+        if (!allowMoveReadDateForward) {
             filter.ltOrNull(fieldKey, readDate);
         }
-        Update update = Update.newBuilder()
+        Update update = Update.newBuilder(1)
                 .set(fieldKey, readDate);
         return mongoClient.upsert(GroupConversation.class, filter, update);
     }
@@ -144,9 +146,9 @@ public class ConversationService {
         for (Map.Entry<Long, Collection<Long>> entry : entries) {
             Long groupId = entry.getKey();
             Collection<Long> memberIds = entry.getValue();
-            Filter filter = Filter.newBuilder()
+            Filter filter = Filter.newBuilder(1)
                     .eq(DaoConstant.ID_FIELD_NAME, groupId);
-            Update update = Update.newBuilder();
+            Update update = Update.newBuilder(memberIds.size());
             for (Long memberId : memberIds) {
                 String fieldKey = GroupConversation.Fields.MEMBER_ID_AND_READ_DATE + "." + memberId;
                 // Ignore isAllowMoveReadDateForward()
@@ -184,12 +186,14 @@ public class ConversationService {
         if (readDate == null) {
             readDate = new Date();
         }
-        Filter filter = Filter.newBuilder()
+        boolean allowMoveReadDateForward =
+                node.getSharedProperties().getService().getConversation().getReadReceipt().isAllowMoveReadDateForward();
+        Filter filter = Filter.newBuilder(allowMoveReadDateForward ? 1 : 2)
                 .in(DaoConstant.ID_FIELD_NAME, keys);
-        if (!node.getSharedProperties().getService().getConversation().getReadReceipt().isAllowMoveReadDateForward()) {
+        if (!allowMoveReadDateForward) {
             filter.ltOrNull(PrivateConversation.Fields.READ_DATE, readDate);
         }
-        Update update = Update.newBuilder()
+        Update update = Update.newBuilder(1)
                 .set(PrivateConversation.Fields.READ_DATE, readDate);
         return mongoClient.upsert(PrivateConversation.class, filter, update);
     }
@@ -203,7 +207,7 @@ public class ConversationService {
         if (groupIds.isEmpty()) {
             return Flux.empty();
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .in(DaoConstant.ID_FIELD_NAME, groupIds);
         return mongoClient.findMany(GroupConversation.class, filter);
     }
@@ -218,7 +222,7 @@ public class ConversationService {
         if (ownerIds.isEmpty()) {
             return Flux.empty();
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .in(PrivateConversation.Fields.ID_OWNER_ID, ownerIds);
         return mongoClient.findMany(PrivateConversation.class, filter);
     }
@@ -249,7 +253,7 @@ public class ConversationService {
         } catch (TurmsBusinessException e) {
             return Flux.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .in(DaoConstant.ID_FIELD_NAME, keys);
         return mongoClient.findMany(PrivateConversation.class, filter);
     }
@@ -260,7 +264,7 @@ public class ConversationService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .in(DaoConstant.ID_FIELD_NAME, keys);
         return mongoClient.deleteMany(PrivateConversation.class, filter);
     }
@@ -271,7 +275,7 @@ public class ConversationService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .in(PrivateConversation.Fields.ID_OWNER_ID, userIds);
         return mongoClient.deleteMany(session, PrivateConversation.class, filter);
     }
@@ -282,7 +286,7 @@ public class ConversationService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .in(DaoConstant.ID_FIELD_NAME, groupIds);
         return mongoClient.deleteMany(session, GroupConversation.class, filter);
     }

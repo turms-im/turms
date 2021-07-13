@@ -106,10 +106,10 @@ public class SharedPropertyService implements ClusterService {
         log.info("Share new turms properties to all members");
         SharedClusterProperties clusterProperties = getClusterProperties(sharedClusterProperties, turmsProperties);
         Date now = new Date();
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(2)
                 .eq("_id", clusterId)
                 .lt(SharedClusterProperties.Fields.lastUpdatedTime, now);
-        Update update = Update.newBuilder()
+        Update update = Update.newBuilder(3)
                 .set(SharedClusterProperties.Fields.commonProperties, clusterProperties.getCommonProperties());
         if (clusterProperties.getGatewayProperties() != null) {
             update.set(SharedClusterProperties.Fields.gatewayProperties, clusterProperties.getGatewayProperties());
@@ -159,7 +159,7 @@ public class SharedPropertyService implements ClusterService {
     }
 
     private Mono<SharedClusterProperties> findAndUpdatePropertiesByNodeType(SharedClusterProperties clusterProperties) {
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(2)
                 .eq("_id", clusterId);
         return sharedConfigService.findOne(SharedClusterProperties.class, filter)
                 .flatMap(properties -> {

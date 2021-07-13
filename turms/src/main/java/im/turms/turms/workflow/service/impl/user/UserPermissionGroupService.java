@@ -115,7 +115,7 @@ public class UserPermissionGroupService {
     public Flux<UserPermissionGroup> queryUserPermissionGroups(
             @Nullable Integer page,
             @Nullable Integer size) {
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .paginateIfNotNull(page, size);
         return mongoTemplate.findAll(UserPermissionGroup.class, options)
                 .concatWithValues(getDefaultUserPermissionGroup());
@@ -167,9 +167,9 @@ public class UserPermissionGroupService {
                 groupTypeLimitMap)) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .in(DaoConstant.ID_FIELD_NAME, groupIds);
-        Update update = Update.newBuilder()
+        Update update = Update.newBuilder(4)
                 .setIfNotNull(UserPermissionGroup.Fields.CREATABLE_GROUP_TYPE_IDS, creatableGroupTypeIds)
                 .setIfNotNull(UserPermissionGroup.Fields.OWNED_GROUP_LIMIT, ownedGroupLimit)
                 .setIfNotNull(UserPermissionGroup.Fields.OWNED_GROUP_LIMIT_FOR_EACH_GROUP_TYPE, ownedGroupLimitForEachGroupType)
@@ -182,8 +182,7 @@ public class UserPermissionGroupService {
             return Mono.error(TurmsBusinessException
                     .get(TurmsStatusCode.ILLEGAL_ARGUMENT, "The default user permission group cannot be deleted"));
         }
-        Filter filter = Filter
-                .newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .inIfNotNull(DaoConstant.ID_FIELD_NAME, groupIds);
         return mongoTemplate.deleteMany(UserPermissionGroup.class, filter)
                 .doOnNext(result -> {

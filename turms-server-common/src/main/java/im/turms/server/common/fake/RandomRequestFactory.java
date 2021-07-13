@@ -37,8 +37,8 @@ public final class RandomRequestFactory {
     public static final String CREATE_SESSION_REQUEST_FILED_NAME = "create_session_request";
     public static final String DELETE_SESSION_REQUEST_FILED_NAME = "delete_session_request";
 
-    private static final String REQUEST_TYPE_FILED_NAME = "kind";
     private static final Random RANDOM = new Random();
+    private static final String REQUEST_TYPE_FILED_NAME = "kind";
     private static final OneofDescriptor REQUEST_TYPE_DESC = TurmsRequest.getDefaultInstance()
             .getDescriptorForType()
             .getRealOneofs()

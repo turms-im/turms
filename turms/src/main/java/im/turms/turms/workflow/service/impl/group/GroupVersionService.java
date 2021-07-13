@@ -58,9 +58,9 @@ public class GroupVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(DaoConstant.ID_FIELD_NAME, groupId);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .include(GroupVersion.Fields.INFO);
         return mongoClient.findOne(GroupVersion.class, filter, options)
                 .map(GroupVersion::getInfo);
@@ -72,9 +72,9 @@ public class GroupVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(DaoConstant.ID_FIELD_NAME, groupId);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .include(GroupVersion.Fields.MEMBERS);
         return mongoClient.findOne(GroupVersion.class, filter, options)
                 .map(GroupVersion::getMembers);
@@ -86,9 +86,9 @@ public class GroupVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(DaoConstant.ID_FIELD_NAME, groupId);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .include(GroupVersion.Fields.BLOCKLIST);
         return mongoClient.findOne(GroupVersion.class, filter, options)
                 .map(GroupVersion::getBlocklist);
@@ -100,9 +100,9 @@ public class GroupVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(DaoConstant.ID_FIELD_NAME, groupId);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .include(GroupVersion.Fields.JOIN_REQUESTS);
         return mongoClient.findOne(GroupVersion.class, filter, options)
                 .map(GroupVersion::getJoinRequests);
@@ -114,9 +114,9 @@ public class GroupVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(DaoConstant.ID_FIELD_NAME, groupId);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .include(GroupVersion.Fields.JOIN_QUESTIONS);
         return mongoClient.findOne(GroupVersion.class, filter, options)
                 .map(GroupVersion::getJoinQuestions);
@@ -128,9 +128,9 @@ public class GroupVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(DaoConstant.ID_FIELD_NAME, groupId);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .include(GroupVersion.Fields.INVITATIONS);
         return mongoClient.findOne(GroupVersion.class, filter, options)
                 .map(GroupVersion::getInvitations);
@@ -148,10 +148,10 @@ public class GroupVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(DaoConstant.ID_FIELD_NAME, groupId);
         Date now = new Date();
-        Update update = Update.newBuilder()
+        Update update = Update.newBuilder(5)
                 .setIfTrue(GroupVersion.Fields.INFO, now, updateInfo)
                 .setIfTrue(GroupVersion.Fields.MEMBERS, now, updateMembers)
                 .setIfTrue(GroupVersion.Fields.BLOCKLIST, now, updateBlocklist)
@@ -200,9 +200,9 @@ public class GroupVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(DaoConstant.ID_FIELD_NAME, groupId);
-        Update update = Update.newBuilder()
+        Update update = Update.newBuilder(1)
                 .set(field, new Date());
         return mongoClient.updateOne(GroupVersion.class, filter, update)
                 .map(result -> result.getModifiedCount() > 0);
@@ -214,9 +214,9 @@ public class GroupVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Update update = Update.newBuilder()
+        Update update = Update.newBuilder(1)
                 .set(field, new Date());
-        return mongoClient.updateMany(GroupVersion.class, Filter.newBuilder(), update);
+        return mongoClient.updateMany(GroupVersion.class, Filter.newBuilder(0), update);
     }
 
     public Mono<UpdateResult> updateSpecificVersion(@Nullable Set<Long> groupIds, @NotNull String field) {
@@ -225,9 +225,9 @@ public class GroupVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .inIfNotNull(DaoConstant.ID_FIELD_NAME, groupIds);
-        Update update = Update.newBuilder()
+        Update update = Update.newBuilder(1)
                 .set(field, new Date());
         return mongoClient.updateMany(GroupVersion.class, filter, update);
     }
@@ -250,7 +250,7 @@ public class GroupVersionService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .in(DaoConstant.ID_FIELD_NAME, groupIds);
         return mongoClient.deleteMany(session, GroupVersion.class, filter);
     }

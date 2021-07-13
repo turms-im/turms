@@ -18,6 +18,7 @@
 package im.turms.server.common.mongo.operation.option;
 
 import im.turms.server.common.mongo.BsonPool;
+import im.turms.server.common.util.MapUtil;
 import lombok.Getter;
 import org.bson.BsonBoolean;
 import org.bson.BsonDocument;
@@ -38,13 +39,17 @@ public final class QueryOptions {
 
     private final BsonDocument document;
 
-    public static QueryOptions newBuilder() {
-        return new QueryOptions();
+    private QueryOptions(int expectedSize) {
+        document = new BsonDocument(MapUtil.getCapability(expectedSize));
+        document.put("find", COLLECTION_NAME_PLACEHOLDER);
     }
 
-    private QueryOptions() {
-        super();
-        document = new BsonDocument("find", COLLECTION_NAME_PLACEHOLDER);
+    public static QueryOptions newBuilder() {
+        return new QueryOptions(4);
+    }
+
+    public static QueryOptions newBuilder(int expectedSize) {
+        return new QueryOptions(expectedSize);
     }
 
     /**

@@ -85,7 +85,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     private static final EncoderContext DEFAULT_ENCODER_CONTEXT = EncoderContext.builder().build();
 
     private static final BsonDocument ID_ONLY = new BsonDocument("_id", BsonPool.BSON_INT32_1);
-    private static final Filter FILTER_ALL = Filter.newBuilder();
+    private static final Filter FILTER_ALL = Filter.newBuilder(0);
     private static final BsonDocument EMPTY_FILTER = new BsonDocument();
     private static final BsonDocument FILTER_ALL_DOCUMENT = EMPTY_FILTER;
 
@@ -138,7 +138,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     public <T> Mono<T> findOne(Class<T> clazz, Filter filter, @Nullable QueryOptions options) {
         MongoCollection<T> collection = context.getCollection(clazz);
         options = options == null
-                ? QueryOptions.newBuilder().limit(1)
+                ? QueryOptions.newBuilder(1).limit(1)
                 : options.limit(1);
         FindPublisher<T> source = find(collection, filter, options);
         return Mono.from(source);
@@ -171,7 +171,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     @Override
     public <T> Mono<Boolean> exists(Class<T> clazz, Filter filter) {
         MongoCollection<T> collection = context.getCollection(clazz);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .projection(ID_ONLY)
                 .limit(1);
         FindPublisher<T> publisher = find(collection, filter, options);
@@ -507,7 +507,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
     @Override
     public Mono<Boolean> validate(Class<?> clazz, String jsonSchema) {
         MongoCollection<?> collection = context.getCollection(clazz);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .projection(ID_ONLY)
                 .limit(1);
         FindPublisher<?> publisher = find(collection, Document.parse(jsonSchema), options);

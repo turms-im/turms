@@ -333,12 +333,12 @@ public class AdminService {
             @Nullable Set<Long> roleIds,
             @Nullable Integer page,
             @Nullable Integer size) {
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(2)
                 .inIfNotNull(DaoConstant.ID_FIELD_NAME, accounts)
                 .inIfNotNull(Admin.Fields.ROLE_ID, roleIds);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .paginateIfNotNull(page, size);
-        return mongoClient.findMany(Admin.class, filter);
+        return mongoClient.findMany(Admin.class, filter, options);
     }
 
     public Mono<DeleteResult> authAndDeleteAdmins(
@@ -363,7 +363,7 @@ public class AdminService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .in(DaoConstant.ID_FIELD_NAME, accounts);
         return mongoClient.deleteMany(Admin.class, filter)
                 .map(result -> {
@@ -438,13 +438,12 @@ public class AdminService {
         if (Validator.areAllNull(rawPassword, name, roleId)) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .in(DaoConstant.ID_FIELD_NAME, targetAccounts);
         String password = rawPassword != null
                 ? passwordManager.encodeAdminPassword(rawPassword)
                 : null;
-        Update update = Update
-                .newBuilder()
+        Update update = Update.newBuilder(3)
                 .setIfNotNull(Admin.Fields.PASSWORD, password)
                 .setIfNotNull(Admin.Fields.NAME, name)
                 .setIfNotNull(Admin.Fields.ROLE_ID, roleId);
@@ -463,7 +462,7 @@ public class AdminService {
     }
 
     public Mono<Long> countAdmins(@Nullable Set<String> accounts, @Nullable Set<Long> roleIds) {
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(2)
                 .inIfNotNull(DaoConstant.ID_FIELD_NAME, accounts)
                 .inIfNotNull(Admin.Fields.ROLE_ID, roleIds);
         return mongoClient.count(Admin.class, filter);

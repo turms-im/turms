@@ -20,6 +20,7 @@ package im.turms.server.common.mongo.operation.option;
 import im.turms.common.constant.RequestStatus;
 import im.turms.server.common.bo.common.DateRange;
 import im.turms.server.common.mongo.util.SerializationUtil;
+import im.turms.server.common.util.MapUtil;
 import org.bson.BsonArray;
 import org.bson.BsonDateTime;
 import org.bson.BsonDocument;
@@ -46,13 +47,18 @@ public class Filter implements Bson {
      * because Document will be converted to BsonDocument by mongo-java-driver finally,
      * which is a huge waste of system resources because both documents are heavy
      */
-    private final BsonDocument document = new BsonDocument();
+    private final BsonDocument document;
 
-    Filter() {
+    Filter(int expectedSize) {
+        document = new BsonDocument(MapUtil.getCapability(expectedSize));
     }
 
     public static Filter newBuilder() {
-        return new Filter();
+        return new Filter(4);
+    }
+
+    public static Filter newBuilder(int expectedSize) {
+        return new Filter(expectedSize);
     }
 
     @Override
@@ -107,8 +113,8 @@ public class Filter implements Bson {
     }
 
     public Filter gtOrNull(String key, Object value) {
-        or(Filter.newBuilder().eq(key, null),
-                Filter.newBuilder().gt(key, value));
+        or(Filter.newBuilder(1).eq(key, null),
+                Filter.newBuilder(1).gt(key, value));
         return this;
     }
 
@@ -118,8 +124,8 @@ public class Filter implements Bson {
     }
 
     public Filter gteOrNull(String key, Object value) {
-        or(Filter.newBuilder().eq(key, null),
-                Filter.newBuilder().gte(key, value));
+        or(Filter.newBuilder(1).eq(key, null),
+                Filter.newBuilder(1).gte(key, value));
         return this;
     }
 
@@ -146,8 +152,8 @@ public class Filter implements Bson {
     }
 
     public Filter ltOrNull(String key, Object value) {
-        or(Filter.newBuilder().eq(key, null),
-                Filter.newBuilder().lt(key, value));
+        or(Filter.newBuilder(1).eq(key, null),
+                Filter.newBuilder(1).lt(key, value));
         return this;
     }
 

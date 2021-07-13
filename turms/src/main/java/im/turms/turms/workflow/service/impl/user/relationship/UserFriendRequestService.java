@@ -112,7 +112,7 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
     }
 
     public Mono<Void> removeAllExpiredFriendRequests(Date expirationDate) {
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .isExpired(UserFriendRequest.Fields.CREATION_DATE, expirationDate);
         return mongoClient.deleteMany(UserFriendRequest.class, filter).then();
     }
@@ -127,7 +127,7 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
             return Mono.error(e);
         }
         Date expirationDate = getModelExpirationDate();
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(4)
                 .eq(UserFriendRequest.Fields.REQUESTER_ID, requesterId)
                 .eq(UserFriendRequest.Fields.RECIPIENT_ID, recipientId)
                 .eq(UserFriendRequest.Fields.STATUS, RequestStatus.PENDING)
@@ -149,7 +149,7 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
             return Mono.error(e);
         }
         // Do not need to check expirationDate because both PENDING status or EXPIRED status has been used
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(4)
                 .gt(UserFriendRequest.Fields.CREATION_DATE, DateConstant.EPOCH)
                 .eq(UserFriendRequest.Fields.REQUESTER_ID, requesterId)
                 .eq(UserFriendRequest.Fields.RECIPIENT_ID, recipientId)
@@ -247,11 +247,11 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(3)
                 .eq(DaoConstant.ID_FIELD_NAME, requestId)
                 .eq(UserFriendRequest.Fields.STATUS, RequestStatus.PENDING)
                 .isNotExpired(UserFriendRequest.Fields.CREATION_DATE, getModelExpirationDate());
-        Update update = Update.newBuilder()
+        Update update = Update.newBuilder(2)
                 .set(UserFriendRequest.Fields.STATUS, requestStatus)
                 .setIfNotNull(UserFriendRequest.Fields.REASON, reason);
         return mongoClient.updateOne(session, UserFriendRequest.class, filter, update)
@@ -285,10 +285,10 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
         if (Validator.areAllNull(requesterId, recipientId, content, status, reason, creationDate, responseDate)) {
             return Mono.just(OperationResultConstant.ACKNOWLEDGED_UPDATE_RESULT);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .in(DaoConstant.ID_FIELD_NAME, requestIds);
         Update update = Update
-                .newBuilder()
+                .newBuilder(5)
                 .setIfNotNull(UserFriendRequest.Fields.REQUESTER_ID, requesterId)
                 .setIfNotNull(UserFriendRequest.Fields.RECIPIENT_ID, recipientId)
                 .setIfNotNull(UserFriendRequest.Fields.CONTENT, content)
@@ -304,9 +304,9 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(DaoConstant.ID_FIELD_NAME, requestId);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .include(UserFriendRequest.Fields.RECIPIENT_ID);
         return mongoClient.findOne(UserFriendRequest.class, filter, options)
                 .map(UserFriendRequest::getRecipientId);
@@ -318,9 +318,9 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(DaoConstant.ID_FIELD_NAME, requestId);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(1)
                 .include(UserFriendRequest.Fields.REQUESTER_ID,
                         UserFriendRequest.Fields.RECIPIENT_ID);
         return mongoClient.findOne(UserFriendRequest.class, filter, options);
@@ -405,7 +405,7 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
         } catch (TurmsBusinessException e) {
             return Flux.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(UserFriendRequest.Fields.RECIPIENT_ID, recipientId);
         return queryExpirableData(filter);
     }
@@ -417,14 +417,13 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
         } catch (TurmsBusinessException e) {
             return Flux.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(UserFriendRequest.Fields.REQUESTER_ID, requesterId);
         return queryExpirableData(filter);
     }
 
     public Mono<DeleteResult> deleteFriendRequests(@Nullable Set<Long> ids) {
-        Filter filter = Filter
-                .newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids);
         return mongoClient.deleteMany(UserFriendRequest.class, filter);
     }
@@ -440,7 +439,7 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
             @Nullable Integer page,
             @Nullable Integer size) {
         Date expirationDate = getModelExpirationDate();
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(9)
                 .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
                 .inIfNotNull(UserFriendRequest.Fields.REQUESTER_ID, requesterIds)
                 .inIfNotNull(UserFriendRequest.Fields.RECIPIENT_ID, recipientIds)
@@ -448,7 +447,7 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
                 .addBetweenIfNotNull(UserFriendRequest.Fields.CREATION_DATE, getCreationDateRange(creationDateRange, expirationDateRange))
                 .addBetweenIfNotNull(UserFriendRequest.Fields.RESPONSE_DATE, responseDateRange)
                 .isExpiredOrNot(statuses, UserFriendRequest.Fields.CREATION_DATE, expirationDate);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .paginateIfNotNull(page, size);
         return queryExpirableData(filter, options);
     }
@@ -461,8 +460,7 @@ public class UserFriendRequestService extends ExpirableModelService<UserFriendRe
             @Nullable DateRange creationDateRange,
             @Nullable DateRange responseDateRange,
             @Nullable DateRange expirationDateRange) {
-        Filter filter = Filter
-                .newBuilder()
+        Filter filter = Filter.newBuilder(9)
                 .inIfNotNull(DaoConstant.ID_FIELD_NAME, ids)
                 .inIfNotNull(UserFriendRequest.Fields.REQUESTER_ID, requesterIds)
                 .inIfNotNull(UserFriendRequest.Fields.RECIPIENT_ID, recipientIds)

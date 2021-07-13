@@ -221,7 +221,7 @@ public class DiscoveryService implements ClusterService {
     }
 
     private Flux<Member> queryMembers() {
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(Member.ID_CLUSTER_ID, localNodeStatusManager.getLocalMember().getClusterId());
         return sharedConfigService.find(Member.class, filter);
     }
@@ -479,7 +479,7 @@ public class DiscoveryService implements ClusterService {
     }
 
     public Mono<Void> unregisterMembers(Set<String> nodeIds) {
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(2)
                 .eq(Member.ID_CLUSTER_ID, getLocalMember().getClusterId())
                 .in(Member.ID_NODE_ID, nodeIds);
         return sharedConfigService.remove(Member.class, filter).then();
@@ -494,10 +494,10 @@ public class DiscoveryService implements ClusterService {
         if (member == null) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NO_CONTENT));
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(2)
                 .eq(Member.ID_CLUSTER_ID, getLocalMember().getClusterId())
                 .eq(Member.ID_NODE_ID, id);
-        Update update = Update.newBuilder()
+        Update update = Update.newBuilder(4)
                 .setIfNotNull(Member.Fields.isSeed, isSeed)
                 .setIfNotNull(Member.Fields.isLeaderEligible, isLeaderEligible)
                 .setIfNotNull(Member.STATUS_IS_ACTIVE, isActive)
@@ -565,11 +565,11 @@ public class DiscoveryService implements ClusterService {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.NOT_QUALIFIED_MEMBER_TO_BE_LEADER));
         }
         int generation = leader == null ? 1 : leader.getGeneration() + 1;
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(2)
                 .eq(Leader.Fields.clusterId, clusterId)
                 .ltOrNull(Leader.Fields.generation, generation);
         Date now = new Date();
-        Update update = Update.newBuilder()
+        Update update = Update.newBuilder(2)
                 .set(Leader.Fields.nodeId, nodeId)
                 .set(Leader.Fields.renewDate, now);
         Leader localLeader = new Leader(clusterId, nodeId, now, generation);

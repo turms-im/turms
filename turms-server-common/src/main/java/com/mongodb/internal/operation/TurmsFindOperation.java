@@ -44,6 +44,7 @@ import static com.mongodb.internal.operation.OperationHelper.cursorDocumentToQue
 import static com.mongodb.internal.operation.OperationHelper.withAsyncReadConnection;
 import static com.mongodb.internal.operation.OperationHelper.withReadConnectionSource;
 import static com.mongodb.internal.operation.OperationReadConcernHelper.appendReadConcernToCommand;
+import static com.mongodb.internal.operation.ServerVersionHelper.MIN_WIRE_VERSION;
 
 /**
  * @author James Chen
@@ -142,7 +143,7 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
     @Override
     public <R> ReadOperation<R> asExplainableOperation(@Nullable final ExplainVerbosity verbosity,
                                                        final Decoder<R> resultDecoder) {
-        appendReadConcernToCommand(NoOpSessionContext.INSTANCE, command);
+        appendReadConcernToCommand(NoOpSessionContext.INSTANCE, MIN_WIRE_VERSION, command);
         return new CommandReadOperation<>(getNamespace().getDatabaseName(),
                 asExplainCommand(command, verbosity),
                 resultDecoder);
@@ -151,7 +152,7 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
     @Override
     public <R> AsyncReadOperation<R> asAsyncExplainableOperation(@Nullable final ExplainVerbosity verbosity,
                                                                  final Decoder<R> resultDecoder) {
-        appendReadConcernToCommand(NoOpSessionContext.INSTANCE, command);
+        appendReadConcernToCommand(NoOpSessionContext.INSTANCE, MIN_WIRE_VERSION, command);
         return new CommandReadOperation<>(getNamespace().getDatabaseName(),
                 asExplainCommand(command, verbosity),
                 resultDecoder);
@@ -160,7 +161,7 @@ public class TurmsFindOperation<T> implements AsyncExplainableReadOperation<Asyn
 
     private CommandOperationHelper.CommandCreator getCommandCreator(final SessionContext sessionContext) {
         return (serverDescription, connectionDescription) -> {
-            appendReadConcernToCommand(sessionContext, command);
+            appendReadConcernToCommand(sessionContext, connectionDescription.getMaxWireVersion(), command);
             return command;
         };
     }

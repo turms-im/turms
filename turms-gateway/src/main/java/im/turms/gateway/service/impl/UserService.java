@@ -60,9 +60,9 @@ public class UserService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(1)
                 .eq(DomainFieldName.ID_FIELD_NAME, userId);
-        QueryOptions options = QueryOptions.newBuilder()
+        QueryOptions options = QueryOptions.newBuilder(2)
                 .include(User.Fields.PASSWORD);
         return mongoClient.findOne(User.class, filter, options)
                 .map(user -> passwordManager.matchesUserPassword(rawPassword, user.getPassword()))
@@ -75,7 +75,7 @@ public class UserService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        Filter filter = Filter.newBuilder()
+        Filter filter = Filter.newBuilder(3)
                 .eq(DomainFieldName.ID_FIELD_NAME, userId)
                 .eq(User.Fields.IS_ACTIVE, true)
                 .eq(User.Fields.DELETION_DATE, null);
