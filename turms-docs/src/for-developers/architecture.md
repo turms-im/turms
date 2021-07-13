@@ -55,8 +55,3 @@
 * 对于响应，turms-gateway会将响应直接透传给用户。对于通知，turms-gateway会先查询通知所涉及到的用户，再通过Redis查询该批用户各自所连接的turms-gateway地址，并触发NotificationHandler插件方法以协助开发者实现自定义逻辑（如：实现离线用户的消息推送功能）。之后，turms-gateway会将通知转发给在线用户所连接的turms-gateway，而收到通知的turms-gateway会将该通知转发给自身所连接的对应用户。
 
   （值得一提的是，以上所有RPC、数据库调用均是异步非阻塞的）
-
-## Roadmap
-
-1. 支持Turms独有的微服务架构
-2. 基于RSocket实现RPC背压

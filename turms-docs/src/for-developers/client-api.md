@@ -107,8 +107,8 @@ Turms客户端的会话生命周期比较容易理解，具体而言：先通过
 ### 体验实例的准备工作
 
 * 方案一：在application.yaml配置文件中更新以下配置：
-   1. 将“turms.gateway.session.enable-authentication”设置为false（取消用户登录认证）
-   2. 将“turms.service.message.allow-sending-messages-to-stranger”也设置为true（允许没有用户关系的用户互相发送消息）
+   1. 将`turms.gateway.session.enable-authentication`设置为false（取消用户登录认证）
+   2. 将`turms.service.message.allow-sending-messages-to-stranger`也设置为true（允许没有用户关系的用户互相发送消息）
 * 方案二：使用自带“dev” profile配置。因为Turms提供的“dev” profile已做了上述配置。默认情况下，Turms发布包中的application.yaml的profile字段为空，即默认的profile不是“dev”，需要您手动配置为“dev”。
 
 提醒：以下客户端API为最新版本示例，而目前Playground上的Turms服务端（ http://playground.turms.im:9510 ）为老版本，因此如果您直接连接Playground的服务端，可以会出现数据不一致的问题。
@@ -119,168 +119,153 @@ Turms客户端的会话生命周期比较容易理解，具体而言：先通过
 // Initialize client
 const client = new TurmsClient(); // new TurmsClient('ws://any-turms-gateway-server.com');
 
-// Listen to the disconnect event
-client.driver.onSessionDisconnected = (info) => {
-    console.info(`onSessionDisconnected: ${info.closeStatus}:${info.webSocketStatusCode}:${info.webSocketReason}:${info.error}`);
-};
+// Listen to the offline event
+client.userService.addOnOfflineListener(info => {
+    console.info(`onOffline: ${info.closeStatus}:${info.businessStatus}:${info.reason}`);
+});
 
 // Listen to inbound notifications
-client.notificationService.onNotification = (notification) => {
+client.notificationService.addNotificationListener(notification => {
     console.info(`onNotification: Receive a notification from other users or server: ${JSON.stringify(notification)}`);
-};
+});
 
 // Listen to inbound messages
-client.messageService.onMessage = (message) => {
+client.messageService.addMessageListener(message => {
     console.info(`onMessage: Receive a message from other users or server: ${JSON.stringify(message)}`);
-};
+});
 
 client.userService.login('1', '123')
     .then(() => {
-    	client.userService.queryUserIdsNearby(
+        client.userService.queryNearbyUsers(
             139.667651,
             35.792657,
-        	100,
-        	10)
-        	.then(ids => {
-        		console.log(`user ids: ${ids}`);
-    		});
-    	client.messageService.sendMessage(
-        	false,
-        	1,
-        	new Date(),
-        	'Hello Turms',
-        	null,
-        	30)
-        	.then(id => {
-            	console.log(`message ${id} has been sent`);
-        	});
-    	client.groupService.createGroup(
+            100,
+            10)
+            .then(users => {
+                console.log(`nearby users: ${JSON.stringify(users)}`);
+            });
+        client.messageService.sendMessage(
+            false,
+            '1',
+            new Date(),
+            'Hello Turms',
+            null,
+            30)
+            .then(id => {
+                console.log(`message ${id} has been sent`);
+            });
+        client.groupService.createGroup(
             'Turms Developers Group',
             'This is a group for the developers who are interested in Turms',
             'nope')
             .then(id => {
-            	console.log(`group ${id} has been created`);
-        	});
-	})
+                console.log(`group ${id} has been created`);
+            });
+    })
     .catch(reason => {
-    	console.error(reason);
-	});
+        console.error(reason);
+    });
 ```
 
-### turms-client-kotlin版本（TODO：尚未更新。以下示例仍是turms-client-java的版本）
+### turms-client-kotlin版本
 
-```java
+```kotlin
 // Initialize client
-TurmsClient client = new TurmsClient(); // new TurmsClient("ws://any-turms-gateway-server.com");
+val client = TurmsClient() // new TurmsClient("ws://any-turms-gateway-server.com");
 
-// Listen to the disconnect event
-client.getDriver().onSessionDisconnected(info -> {
-    SessionCloseStatus closeStatus = info.getCloseStatus();
-    Throwable error = info.getError();
-    System.out.printf("onSessionDisconnected: %d:%d:%s:%s%n",
-            closeStatus != null ? closeStatus.getCode() : null,
-            info.getWebSocketStatus(),
-            info.getWebSocketReason(),
-            error != null ? error.getMessage() : null);
-});
+// Listen to the offline event
+client.userService.addOnOfflineListener { info ->
+    println("onOffline: ${info.closeStatus}:${info.businessStatus}:${info.reason}")
+}
 
 // Listen to inbound notifications
-client.getNotificationService().setOnNotification(notification -> {
-    System.out.printf("onNotification: Receive a notification from other users or server: %s%n",
-            notification.toString());
-});
+client.notificationService.addNotificationListener { notification ->
+    println("onNotification: Receive a notification from other users or server: $notification")
+}
 
 // Listen to inbound messages
-client.getMessageService().setOnMessage((message, messageAddition) -> {
-    System.out.printf("onMessage: Receive a message from other users or server: %s%n",
-            message.toString());
-});
+client.messageService.addMessageListener { message, _ ->
+    println("onMessage: Receive a message from other users or server: $message")
+}
 
-client.getUserService().login(1, "123")
-        .thenAccept(ignored -> {
-            client.getUserService().queryUserIdsNearby(
-                    139.667651f,
-                    35.792657f,
-                    100,
-                    10)
-                    .thenAccept(ids -> System.out.printf("user ids: %s%n", ids.toString()));
-            client.getMessageService().sendMessage(
-                    false,
-                    1,
-                    new Date(),
-                    "Hello Turms",
-                    null,
-                    30)
-                    .thenAccept(id -> System.out.printf("message %d has been sent%n", id));
-            client.getGroupService().createGroup(
-                    "Turms Developers Group",
-                    "This is a group for the developers who are interested in Turms",
-                    "nope",
-                    null,
-                    null,
-                    null)
-                    .thenAccept(id -> System.out.printf("group %d has been created%n", id));
-        })
-        .exceptionally(throwable -> {
-            throwable.printStackTrace();
-            return null;
-        });
+try {
+    client.userService.login(1, "123")
+} catch (e: Exception) {
+    e.printStackTrace()
+}
+
+val users = client.userService.queryNearbyUsers(
+    139.667651f,
+    35.792657f,
+    100,
+    10
+)
+println("nearby users: [${users.joinToString(", ")}]")
+
+val msgId = client.messageService.sendMessage(
+    false,
+    1,
+    Date(),
+    "Hello Turms",
+    null,
+    30
+)
+println("message $msgId has been sent")
+
+val groupId = client.groupService.createGroup(
+    "Turms Developers Group",
+    "This is a group for the developers who are interested in Turms",
+    "nope"
+)
+println("group $groupId has been created")
 ```
 
 ### turms-client-swift版本
 
 ```swift
+
 // Initialize client
 let client = TurmsClient() // TurmsClient("ws://any-turms-gateway-server.com")
 
-// Listen to the disconnect event
-client.driver.onSessionDisconnected = { (info: SessionDisconnectInfo) -> () in
-    var closeStatusStr = ""
-    if let status = info.closeStatus {
-        closeStatusStr = String(status.rawValue)
-    }
-    var statusCodeStr = ""
-    if let code = info.webSocketStatusCode {
-        statusCodeStr = String(code)
-    }
-    print("onSessionDisconnected: \(closeStatusStr):\(statusCodeStr):\(info.webSocketReason ??
-""):\(info.error?.localizedDescription ?? "")")
+// Listen to the offline event
+client.userService.addOfflineListener { (info: SessionCloseInfo) -> () in
+    print("onSessionDisconnected: \(info.closeStatus):\(info.businessStatus ?? ""):\(info.reason ?? "")")
 }
 
 // Listen to inbound notifications
-client.notificationService.onNotification = { (notification: TurmsRequest) -> Void in
+client.notificationService.addNotificationListener { (notification: TurmsRequest) -> () in
     print("onNotification: Receive a notification from other users or server: \(try! notification.jsonString())")
 }
 
 // Listen to inbound messages
-client.messageService.onMessage = { (message: Message, _: MessageAddition) -> Void in
+client.messageService.addMessageListener{ (message: Message, _: MessageAddition) -> () in
     print("onMessage: Receive a message from other users or server: \(try! message.jsonString())")
 }
 
 client.userService.login(userId: 1, password: "123")
     .done {
-        client.userService.queryUserIdsNearby(
-            latitude: 139.667651,
-            longitude: 35.792657,
-            distance: 100,
-            maxNumber: 10)
+        client.userService.queryNearbyUsers(
+                latitude: 139.667651,
+                longitude: 35.792657,
+                distance: 100,
+                maxNumber: 10)
             .done {
-                print("user ids: \($0)")
+                print("nearby users: \($0)")
             }
         client.messageService.sendMessage(
-            isGroupMessage: false,
-            toId: 1,
-            deliveryDate: Date(),
-            text: "Hello Turms",
-            records: nil,
-            burnAfter: 30)
+                isGroupMessage: false,
+                toId: 1,
+                deliveryDate: Date(),
+                text: "Hello Turms",
+                records: nil,
+                burnAfter: 30)
             .done {
                 print("message \($0) has been sent")
             }
         client.groupService.createGroup(
-            name: "Turms Developers Group",
-            intro: "This is a group for the developers who are interested in Turms",
-            announcement: "nope")
+                name: "Turms Developers Group",
+                intro: "This is a group for the developers who are interested in Turms",
+                announcement: "nope")
             .done {
                 print("group \($0) has been created")
             }

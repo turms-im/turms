@@ -34,16 +34,20 @@ export default defineUserConfig<DefaultThemeOptions>({
             {
                 text: '开发者文档',
                 children: [
+                    // Practical knowledge
                     '/for-developers/getting-started.md',
                     '/for-developers/distribution.md',
-                    '/for-developers/architecture.md',
                     '/for-developers/config.md',
+                    // Manual
                     '/for-developers/admin-api.md',
                     '/for-developers/client-api.md',
                     '/for-developers/status-code.md',
-                    '/for-developers/status-aware.md',
+                    // Redevelopment
                     '/for-developers/custom-plugin.md',
+                    // Theory
+                    '/for-developers/architecture.md',
                     '/for-developers/schema.md',
+                    '/for-developers/status-aware.md',
                     '/for-developers/data-analytics.md'
                 ]
             }
