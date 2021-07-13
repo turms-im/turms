@@ -7,7 +7,6 @@
   * UserAuthenticator：用户登陆认证。当客户端向turms-gateway请求登录时，turms-gateway会调用该插件以实现自定义的登录认证逻辑。
   * UserLoginActionLogHandler。用户登录行为日志Handler。当用户登录成功或下线时，turms-gateway会调用该Handler。
   * UserOnlineStatusChangeHandler： 用户在线状态变更Handler。当任意一位用户进入上线或离线状态时，turms-gateway会调用该接口。
-  * UserLocationLogHandler：用户坐标日志Handler。当客户端更新自身所在坐标时，turms-gateway（当用户在登陆的同时更新坐标时）或turms（当用户已处理登录状态通过业务请求更新坐标时）会调用该Handler。
 * ### 请求类
   
   * ClientRequestHandler：客户端业务请求处理器。用于修改请求参数（甚至可以转变成其他业务请求）与自定义请求实现。当turms收到客户端业务请求时会调用该Handler。
