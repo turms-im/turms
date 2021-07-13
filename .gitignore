@@ -32,8 +32,6 @@ turms-java-common/target/
 
 ### Turms Servers ###
 turms/target/
-turms/src/docs/
-turms/dist/bin/
 
 turms-gateway/target/
 

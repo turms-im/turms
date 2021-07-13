@@ -42,5 +42,5 @@ EXPOSE 7510
 # Metrics APIs + Admin APIs
 EXPOSE 8510
 
-RUN ["chmod", "+x", "./bin/turms.sh"]
-ENTRYPOINT ["./bin/turms.sh", "-f"]
+RUN ["chmod", "+x", "./bin/run.sh"]
+ENTRYPOINT ["./bin/run.sh", "-f"]

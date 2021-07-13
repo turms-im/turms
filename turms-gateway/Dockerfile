@@ -48,5 +48,5 @@ EXPOSE 11510
 # UDP
 EXPOSE 12510
 
-RUN ["chmod", "+x", "./bin/turms-gateway.sh"]
-ENTRYPOINT ["./bin/turms-gateway.sh", "-f"]
+RUN ["chmod", "+x", "./bin/run.sh"]
+ENTRYPOINT ["./bin/run.sh", "-f"]

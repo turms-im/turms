@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# turms.sh runs in the foreground with a thin jar of turms by default.
-# To run with the fat jar in background, use "./turms.sh -f -d"
+# run.sh runs in the foreground with a thin jar of turms by default.
+# To run with the fat jar in background, use "./run.sh -f -d"
 #
 # Home Directory Structure:
 #
 # ├─bin
-# │  └─turms.sh
+# │  └─run.sh
 # ├─config
 # │  ├─application.yaml
 # │  └─jvm.options
