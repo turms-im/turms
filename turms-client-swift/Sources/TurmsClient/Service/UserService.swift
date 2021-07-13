@@ -23,12 +23,20 @@ public class UserService {
         turmsClient.driver.addOnDisconnectedListener { [weak self] _ in
             self?.changeToOffline(SessionCloseInfo(closeStatus: Int32(TurmsCloseStatus.connectionClosed.rawValue), businessStatus: nil, reason: nil))
         }
-        turmsClient.driver.addOnNotificationListener { [weak self] n in
+        turmsClient.driver.addNotificationListener { [weak self] n in
             if n.hasCloseStatus && self?.isLoggedIn == true {
                 let info = SessionCloseInfo(closeStatus: n.closeStatus, businessStatus: n.hasCode ? n.code : nil, reason: n.hasReason ? n.reason : nil)
                 self?.changeToOffline(info)
             }
         }
+    }
+
+    public func addOnlineListener(_ listener: @escaping () -> ()) {
+        onOnlineListeners.append(listener)
+    }
+
+    public func addOfflineListener(listener: @escaping (SessionCloseInfo) -> ()) {
+        onOfflineListeners.append(listener)
     }
 
     public func login(

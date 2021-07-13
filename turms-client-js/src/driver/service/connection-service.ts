@@ -112,7 +112,7 @@ export default class ConnectionService extends BaseService {
         this._onDisconnectedListeners.forEach(listener => listener.call(this, info));
     }
 
-    private _notifyOnMessageListeners(message: ArrayBuffer): void {
+    private _notifyMessageListeners(message: ArrayBuffer): void {
         this._messageListeners.forEach(listener => listener.call(this, message));
     }
 
@@ -163,7 +163,7 @@ export default class ConnectionService extends BaseService {
                 this._onWebSocketOpen();
                 resolve();
             });
-            ws.onmessage = (event): void => this._notifyOnMessageListeners(event.data);
+            ws.onmessage = (event): void => this._notifyMessageListeners(event.data);
         });
     }
 

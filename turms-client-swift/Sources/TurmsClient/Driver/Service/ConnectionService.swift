@@ -11,7 +11,7 @@ public class ConnectionService: BaseService {
 
     private var onConnectedListeners: [() -> ()] = []
     private var onDisconnectedListeners: [(ConnectionDisconnectInfo) -> ()] = []
-    private var onMessageListeners: [(Data) -> ()] = []
+    private var messageListeners: [(Data) -> ()] = []
 
     init(stateStore: StateStore, wsUrl: String? = nil, connectTimeout: TimeInterval? = nil) {
         self.initialWsUrl = wsUrl ?? "ws://localhost:10510"
@@ -33,8 +33,8 @@ public class ConnectionService: BaseService {
         onDisconnectedListeners.append(listener)
     }
 
-    func addOnMessageListener(_ listener: @escaping (Data) -> ()) {
-        onMessageListeners.append(listener)
+    func addMessageListener(_ listener: @escaping (Data) -> ()) {
+        messageListeners.append(listener)
     }
 
     private func notifyOnConnectedListeners() {
@@ -49,8 +49,8 @@ public class ConnectionService: BaseService {
         }
     }
 
-    private func notifyOnMessageListeners(_ message: Data) {
-        onMessageListeners.forEach {
+    private func notifyMessageListeners(_ message: Data) {
+        messageListeners.forEach {
             $0(message)
         }
     }
@@ -77,7 +77,7 @@ public class ConnectionService: BaseService {
             websocket.onEvent = { [weak self] event in
                 switch event {
                 case .binary(let data):
-                    self?.notifyOnMessageListeners(data)
+                    self?.notifyMessageListeners(data)
                 case .connected:
                     self?.onWebSocketOpen()
                     seal.fulfill(())

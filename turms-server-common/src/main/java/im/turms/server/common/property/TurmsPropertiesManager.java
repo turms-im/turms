@@ -60,7 +60,7 @@ public class TurmsPropertiesManager {
         this.localTurmsProperties = localTurmsProperties;
         // Get latestConfigFilePath according to the active profiles
         String activeProfile = context.getActiveEnvProfile();
-        // The property should be passed from turms.cmd or turms.sh
+        // The property should be passed from "bin/run.sh"
         String configDir = System.getProperty("spring.config.location");
         if (configDir == null || configDir.isBlank()) {
             log.warn("The property \"spring.config.location\" is empty");

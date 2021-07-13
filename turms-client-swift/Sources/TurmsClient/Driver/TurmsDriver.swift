@@ -3,36 +3,6 @@ import PromiseKit
 import Starscream
 
 public class TurmsDriver {
-    private var _onSessionConnected: (() -> ())?
-    private var _onSessionDisconnected: ((ConnectionDisconnectInfo) -> ())?
-    private var _onSessionClosed: ((ConnectionDisconnectInfo) -> ())?
-
-    public var onSessionConnected: (() -> ())? {
-        get {
-            return _onSessionConnected
-        }
-        set {
-            _onSessionConnected = newValue
-        }
-    }
-
-    public var onSessionDisconnected: ((ConnectionDisconnectInfo) -> ())? {
-        get {
-            return _onSessionDisconnected
-        }
-        set {
-            _onSessionDisconnected = newValue
-        }
-    }
-
-    public var onSessionClosed: ((ConnectionDisconnectInfo) -> ())? {
-        get {
-            return _onSessionClosed
-        }
-        set {
-            _onSessionClosed = newValue
-        }
-    }
 
     let stateStore: StateStore
 
@@ -124,8 +94,8 @@ public class TurmsDriver {
         return notification
     }
 
-    public func addOnNotificationListener(_ listener: @escaping (TurmsNotification) -> ()) {
-        messageService.addOnNotificationListener(listener)
+    public func addNotificationListener(_ listener: @escaping (TurmsNotification) -> ()) {
+        messageService.addNotificationListener(listener)
     }
 
     // Intermediary functions as a mediator between services

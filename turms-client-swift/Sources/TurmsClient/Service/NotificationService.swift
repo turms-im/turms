@@ -8,7 +8,7 @@ public class NotificationService {
     init(_ turmsClient: TurmsClient) {
         self.turmsClient = turmsClient
         self.turmsClient.driver
-            .addOnNotificationListener { [weak self] n in
+            .addNotificationListener { [weak self] n in
             guard n.hasRelayedRequest, !n.hasCloseStatus else {
                 return
             }

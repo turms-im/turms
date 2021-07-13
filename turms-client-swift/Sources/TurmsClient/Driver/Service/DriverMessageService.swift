@@ -16,11 +16,11 @@ class DriverMessageService: BaseService {
 
     // Listeners
 
-    func addOnNotificationListener(_ listener: @escaping (TurmsNotification) -> ()) {
+    func addNotificationListener(_ listener: @escaping (TurmsNotification) -> ()) {
         notificationListeners.append(listener)
     }
 
-    func notifyOnNotificationListener(_ notification: TurmsNotification) {
+    func notifyNotificationListener(_ notification: TurmsNotification) {
         notificationListeners.forEach {
             $0(notification)
         }
@@ -82,7 +82,7 @@ class DriverMessageService: BaseService {
                 handler?.reject(TurmsBusinessError(TurmsStatusCode.invalidNotification, "The code is missing"))
             }
         }
-        notifyOnNotificationListener(notification)
+        notifyNotificationListener(notification)
     }
 
     private func generateRandomId() -> Int64 {

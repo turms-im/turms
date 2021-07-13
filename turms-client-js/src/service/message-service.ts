@@ -34,14 +34,6 @@ export default class MessageService {
     private _mentionedUserIdsParser?: (message: ParsedModel.Message) => string[];
     private _messageListeners: ((message: ParsedModel.Message, messageAddition: MessageAddition) => void)[] = [];
 
-    addMessageListener(listener: (message: ParsedModel.Message, messageAddition: MessageAddition) => void): void {
-        this._messageListeners.push(listener);
-    }
-
-    removeMessageListener(listener: (message: ParsedModel.Message, messageAddition: MessageAddition) => void): void {
-        this._messageListeners = this._messageListeners.filter(cur => cur !== listener);
-    }
-
     constructor(turmsClient: TurmsClient) {
         this._turmsClient = turmsClient;
         this._turmsClient.driver
@@ -56,6 +48,14 @@ export default class MessageService {
                 }
                 return null;
             });
+    }
+
+    addMessageListener(listener: (message: ParsedModel.Message, messageAddition: MessageAddition) => void): void {
+        this._messageListeners.push(listener);
+    }
+
+    removeMessageListener(listener: (message: ParsedModel.Message, messageAddition: MessageAddition) => void): void {
+        this._messageListeners = this._messageListeners.filter(cur => cur !== listener);
     }
 
     sendMessage(

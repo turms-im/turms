@@ -44,11 +44,11 @@ import java.util.regex.Pattern
  */
 class MessageService(private val turmsClient: TurmsClient) {
     private var mentionedUserIdsParser: ((Message) -> Set<Long>)? = null
-    private var onMessage: ((Message, MessageAddition) -> Unit)? = null
+    private var messageListeners: MutableList<(Message, MessageAddition) -> Unit> = LinkedList()
 
-    fun setOnMessage(onMessage: (Message, MessageAddition) -> Unit) {
-        this.onMessage = onMessage
-    }
+    fun addMessageListener(listener: (Message, MessageAddition) -> Unit) = messageListeners.add(listener)
+
+    fun removeMessageListener(listener: () -> Unit) = messageListeners.removeIf { it == listener }
 
     suspend fun sendMessage(
         isGroupMessage: Boolean,
@@ -365,13 +365,11 @@ class MessageService(private val turmsClient: TurmsClient) {
                 if (notification.hasRelayedRequest()) {
                     val relayedRequest: TurmsRequest = notification.relayedRequest
                     if (relayedRequest.hasCreateMessageRequest()) {
-                        onMessage?.let {
-                            val createMessageRequest: CreateMessageRequest = relayedRequest.createMessageRequest
-                            val requesterId: Long = notification.requesterId
-                            val message = createMessageRequest2Message(requesterId, createMessageRequest)
-                            val addition: MessageAddition = parseMessageAddition(message)
-                            it.invoke(message, addition)
-                        }
+                        val createMessageRequest: CreateMessageRequest = relayedRequest.createMessageRequest
+                        val requesterId: Long = notification.requesterId
+                        val message = createMessageRequest2Message(requesterId, createMessageRequest)
+                        val addition: MessageAddition = parseMessageAddition(message)
+                        messageListeners.forEach { listener -> listener(message, addition) }
                     }
                 }
             }

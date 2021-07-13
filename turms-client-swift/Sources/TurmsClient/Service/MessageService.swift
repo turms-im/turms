@@ -20,20 +20,22 @@ public class MessageService {
 
     private weak var turmsClient: TurmsClient!
     private var mentionedUserIdsParser: ((Message) -> [Int64])?
-    public var onMessage: ((Message, MessageAddition) -> Void)?
+    public var messageListeners: [(Message, MessageAddition) -> Void] = []
 
     init(_ turmsClient: TurmsClient) {
         self.turmsClient = turmsClient
         self.turmsClient.driver
-            .addOnNotificationListener {
-            if self.onMessage != nil, $0.hasRelayedRequest {
-                if case .createMessageRequest(let request) = $0.relayedRequest.kind {
-                    let message = MessageService.createMessage2Message($0.requesterID, request)
-                    let addition = self.parseMessageAddition(message)
-                    self.onMessage!(message, addition)
-                }
+            .addNotificationListener {
+            if $0.hasRelayedRequest, case .createMessageRequest(let request) = $0.relayedRequest.kind {
+                let message = MessageService.createMessage2Message($0.requesterID, request)
+                let addition = self.parseMessageAddition(message)
+                self.messageListeners.forEach { listener in listener(message, addition) }
             }
         }
+    }
+
+    func addMessageListener(_ listener: @escaping (Message, MessageAddition) -> ()) {
+        messageListeners.append(listener)
     }
 
     public func sendMessage(

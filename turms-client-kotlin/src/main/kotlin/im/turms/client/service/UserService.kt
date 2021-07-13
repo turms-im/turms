@@ -68,6 +68,14 @@ class UserService(private val turmsClient: TurmsClient) {
         }
     }
 
+    fun addOnOnlineListener(listener: () -> Unit) = onOnlineListeners.add(listener)
+
+    fun addOnOfflineListener(listener: (SessionCloseInfo) -> Unit) = onOfflineListeners.add(listener)
+
+    fun removeOnOnlineListener(listener: () -> Unit) = onOnlineListeners.removeIf { it == listener }
+
+    fun removeOnOfflineListener(listener: (SessionCloseInfo) -> Unit) = onOfflineListeners.removeIf { it == listener }
+
     suspend fun login(
         userId: Long,
         password: String? = null,
