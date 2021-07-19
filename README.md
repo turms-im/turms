@@ -10,11 +10,11 @@ Turms is the most advanced open-source instant messaging engine for 100K~10M con
 Please refer to [Turms Documentation](https://turms-im.github.io/docs) (no English version for now) for details.
 
 ## Playground
-(Version of demo servers: ghcr.io/turms-im/turms:latest, ghcr.io/turms-im/turms-gateway:latest, ghcr.io/turms-im/turms-admin:latest)
+(Version of demo servers: `ghcr.io/turms-im/turms:latest`, `ghcr.io/turms-im/turms-gateway:latest`, `ghcr.io/turms-im/turms-admin:latest`)
 
 * turms-admin: http://playground.turms.im:6510
 
-  Both the account and the password are: guest. (The account is allowed to query and add data, but is not allowed to update and delete data.)
+  Both the account and the password are: `guest`. (The account is allowed to query and add data, but is not allowed to update and delete data.)
 
 * turms (Admin API in dev environment with fake data supported): http://playground.turms.im:8510
 
@@ -31,9 +31,10 @@ Running the following commands to setup a minimum viable cluster (including turm
 ```sh
 git clone --depth 1 https://github.com/turms-im/turms.git
 cd turms
+docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
 docker-compose -f docker-compose.standalone.yml up --force-recreate
 ```
-After the cluster is set up, you can visit turms-admin at http://localhost:6510, and enter the account and password ("turms" by default). If you have logged in successfully, it will indicate that turms has been setup successfully.
+After the cluster is set up, you can visit turms-admin at http://localhost:6510, and enter the account and password (`turms` by default). If you log in successfully, it means that turms has been setup successfully.
 
 ## Intro
 
@@ -70,7 +71,6 @@ In addition, architecture design is an art of trade-off. Some IM products take r
    * Metrics (for aggregable data). It reflects the real-time status of the system and business data
    
    * Tracing
-     
    
    Note that the turms server will provide more monitoring features that can be implemented efficiently as much as possible, but will not provide some common features that have a great impact on performance (such as DAU). For this kind of extended feature, you can implement them by offline or real-time analysis of the logs or metrics of turms servers.
 2. Extreme performance
@@ -95,7 +95,6 @@ In addition, architecture design is an art of trade-off. Some IM products take r
 | <span style="white-space:nowrap;"> turms-plugin </span> | When events (such as user going online/offline, message receiving and forwarding, etc) are fired, turms and turms-gateway will trigger corresponding custom plugins to facilitate developers to implement custom features |
 | <span style="white-space:nowrap;"> turms-plugin-minio</span> |A plugin based on turms-plugin for the storage service, and is used to interact with MinIO server|
 | <span style="white-space:nowrap;"> turms-data (TODO)</span> | Not yet published. An independent data analysis system based on Flink ecosystem is responsible for business data analysis, and provides underlying data support for the statistics APIs of turms for admins and operational reports of turms-admin |
-| <span style="white-space:nowrap;"> turms-client-cpp (TODO)</span> | Not yet published |
 ## Reference Architecture
 
 The architecture design of Turms is derived from commercial instant messaging architectures. The following figure shows the reference architecture of Turms. The services framed by dotted lines are optional services, while the services framed by solid lines are required services. Please refer to [Turms Architecture Design](https://turms-im.github.io/docs/for-developers/architecture.html) for details.

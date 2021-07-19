@@ -12,14 +12,16 @@ Turms是一套全球范围内最为先进的、为同时在线用户数为100K~1
 
 ## Playground
 
-（当前Demo的服务端版本：ghcr.io/turms-im/turms:latest、ghcr.io/turms-im/turms-gateway:latest、ghcr.io/turms-im/turms-admin:latest）
+（当前Demo的服务端版本：`ghcr.io/turms-im/turms:latest`、`ghcr.io/turms-im/turms-gateway:latest`、`ghcr.io/turms-im/turms-admin:latest`）
 
 * turms-admin服务端地址：http://playground.turms.im:6510
 
-  登录账号与密码均为：guest（该账号有查询与增加领域模型的权限，无更新与删除领域模型的权限）
+  登录账号与密码均为：`guest`（该账号有查询与增加领域模型的权限，无更新与删除领域模型的权限）
+
 * turms服务端的管理员API地址（DEV配置，带Mock数据）：http://playground.turms.im:8510
 
   （提醒：如果您直接打开该页面，会提示401无权限”）
+
 * turms-gateway服务端地址：http://playground.turms.im:10510 （WebSocket端口）、http://playground.turms.im:11510 （TCP端口）
 
 您可以使用任意turms-client-(java/js/swift)客户端，向turms-gateway服务端发送请求，并与其他用户进行交互。
@@ -28,15 +30,29 @@ Turms是一套全球范围内最为先进的、为同时在线用户数为100K~1
 
 ## Quick Start
 
-通过以下命令，可以全自动地搭建一套完整的Turms最小集群（包含turms、turms-gateway与turms-admin）及其依赖服务端（MongoDB分片集群与Redis）
+通过以下命令，可以在本地全自动地搭建一套完整的Turms最小集群（包含turms、turms-gateway与turms-admin）及其依赖服务端（MongoDB分片集群与Redis）
 
 ```sh
 git clone --depth 1 https://github.com/turms-im/turms.git
 cd turms
+docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
 docker-compose -f docker-compose.standalone.yml up --force-recreate
 ```
 
-等集群完成搭建后，可以通过 http://localhost:6510 访问turms-admin后台管理系统，并输入账号密码（默认均为“turms”）。如果登录成功，则说明turms服务端也已经成功启动。
+等集群完成搭建后，可以通过 http://localhost:6510 访问turms-admin后台管理系统，并输入账号密码（默认均为`turms`）。如果登录成功，则说明turms服务端也已经成功启动。
+
+另外您也可以通过Turms提供的Terraform module，来快速购买/搭建云环境（默认使用抢占式实例）并在服务器上搭建Turms集群与依赖服务端。在`terraform apply`命令执行完毕后，等待约3~15分钟（阿里云ECS拉取ghcr镜像很慢），然后再访问`http://公网IP:6510`，如果可以显示turms-admin后台管理系统界面，则表明搭建成功：
+
+**（特别注意：以下命令会自动购买云服务，并在您账号中扣除相应费用）**
+
+```sh
+git clone --depth 1 https://github.com/turms-im/turms.git
+cd turms/terraform/alicloud/playground
+export ALICLOUD_ACCESS_KEY=<your_access_key>
+export ALICLOUD_SECRET_KEY=<your_secret_key>
+terraform init
+terraform apply
+```
 
 ## 简介
 
@@ -58,8 +74,8 @@ Turms基于读扩散消息模型进行架构设计，对业务数据变化感知
 3. （可部署性）支持容器化部署，方便与云服务对接，以实现全自动化部署与运维
 4. （可观察性）具备相对完善的可观察性体系设计，为业务统计与错误排查提供可能
 5. （可拓展性）能同时支持中大型即时通讯场景，即便用户体量由小变大也无需重构（当然，对于大型运用场景还有很多优化的工作需要做，但当前架构不影响后期的无痛升级）
-7. （简单性）核心架构“轻量”，方便学习与二次开发（原因请查阅 [Turms架构设计](https://turms-im.github.io/docs/for-developers/architecture.html)）
-8. Turms使用MongoDB分片副本架构，以支持请求路由（如读写分离），为大规模部署提供实际操作的可能
+6. （简单性）核心架构“轻量”，方便学习与二次开发（原因请查阅 [Turms架构设计](https://turms-im.github.io/docs/for-developers/architecture.html)）
+7. Turms使用MongoDB分片副本架构，以支持请求路由（如读写分离），为大规模部署提供实际操作的可能
 
 ### IM架构特性（TODO）
 
@@ -98,7 +114,6 @@ Turms基于读扩散消息模型进行架构设计，对业务数据变化感知
 | <span style="white-space:nowrap;">turms-plugin</span>        | 当指定事件（如用户上下线、消息接收与转发等）被触发时，turms和turms-gateway会调用对应的自定义插件以方便开发者实现各种各样定制化功能 |
 | <span style="white-space:nowrap;">turms-plugin-minio</span>  | 基于turms-plugin实现的存储服务插件。用于与MinIO服务端进行交互 |
 | <span style="white-space:nowrap;">turms-data（TODO）</span>  | 尚未发布。基于Flink生态的独立数据分析系统，负责业务数据统计与分析，为turms的管理员统计API与turms-admin运营报表提供底层数据支持 |
-| <span style="white-space:nowrap;">turms-client-cpp（TODO）</span> | 尚未发布。                                                   |
 
 ## 参考架构
 

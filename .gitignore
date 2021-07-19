@@ -26,6 +26,9 @@ mvnw
 mvnw.cmd
 .mvn/
 
+### Terraform ###
+terraform/alicloud/playground/.terraform/
+
 ### Turms Common ###
 turms-server-common/target/
 turms-java-common/target/
@@ -63,5 +66,7 @@ turms-plugins/turms-plugin-minio/target/
 turms-plugin-demo/target/
 
 ### Turms Docs ###
+turms-docs/src/.vuepress/.temp/
+turms-docs/src/.vuepress/.cache/
 turms-docs/src/.vuepress/dist/
 turms-docs/node_modules/
