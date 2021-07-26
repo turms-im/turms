@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.5.2</version>
+        <version>2.5.3</version>
     </parent>
 
     <groupId>im.turms</groupId>
@@ -43,7 +43,7 @@
         <!-- Runtime Deps for Testing -->
         <assertj-guava.version>3.4.0</assertj-guava.version>
         <jmh.version>1.32</jmh.version>
-        <testcontainers.version>1.15.3</testcontainers.version>
+        <testcontainers.version>1.16.0</testcontainers.version>
 
         <!-- Maven plugins -->
         <checkstyle.version>8.44</checkstyle.version>

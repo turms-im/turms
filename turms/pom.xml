@@ -32,7 +32,7 @@
     <version>${revision}</version>
 
     <properties>
-        <commons-io.version>2.10.0</commons-io.version>
+        <commons-io.version>2.11.0</commons-io.version>
         <springdoc.version>1.5.9</springdoc.version>
 
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>

@@ -29,10 +29,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <kotlin.code.style>official</kotlin.code.style>
-        <kotlin.version>1.4.21</kotlin.version>
-        <kotlinx-coroutines.version>1.4.2</kotlinx-coroutines.version>
-        <okhttp.version>4.9.0</okhttp.version>
-        <junit.version>5.7.0</junit.version>
+        <kotlin.version>1.5.21</kotlin.version>
+        <kotlinx-coroutines.version>1.5.1</kotlinx-coroutines.version>
+        <okhttp.version>4.9.1</okhttp.version>
+        <junit.version>5.7.2</junit.version>
     </properties>
 
     <build>
