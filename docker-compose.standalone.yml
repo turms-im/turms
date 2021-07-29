@@ -13,6 +13,9 @@
 # Run with "--profile monitoring": docker-compose -f docker-compose.standalone.yml --profile monitoring up --force-recreate
 #
 
+# Note:
+# 1. "mem_limit" is mentioned removed in v3 but still can work in fact if running with compose-v1.29.2
+
 version: "3.9"
 
 x-logging: &logging
@@ -249,7 +252,7 @@ services:
       - GF_SECURITY_ADMIN_USER=turms
       - GF_SECURITY_ADMIN_PASSWORD=turms
     ports:
-      - 3000:3000
+      - "3000:3000"
     profiles:
       - monitoring
     restart: unless-stopped
@@ -259,7 +262,7 @@ services:
   prometheus:
     image: prom/prometheus:v2.27.1
     ports:
-      - 9090:9090
+      - "9090:9090"
     profiles:
       - monitoring
     restart: unless-stopped
@@ -269,14 +272,14 @@ services:
   node-exporter:
     image: prom/node-exporter:v1.1.2
     ports:
-      - 9100:9100
+      - "9100:9100"
     profiles:
       - monitoring
 
   cadvisor:
     image: google/cadvisor:v0.33.0
     ports:
-      - 8080:8080
+      - "8080:8080"
     profiles:
       - monitoring
     volumes:
@@ -292,7 +295,7 @@ services:
     environment:
       - REDIS_ADDR=redis://redis:6379
     ports:
-      - 9121:9121
+      - "9121:9121"
     profiles:
       - monitoring
 
@@ -301,6 +304,6 @@ services:
   loki:
     image: grafana/loki:2.2.1
     ports:
-      - 3100:3100
+      - "3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
 
