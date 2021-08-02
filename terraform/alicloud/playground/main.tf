@@ -1,17 +1,18 @@
 terraform {
-  required_version = ">= 0.13"
+  required_version = ">= 1.00"
   required_providers {
     alicloud = {
       source  = "aliyun/alicloud"
-      version = "~> 1.127.0"
+      version = "~> 1.129.0"
     }
   }
 }
 
+#https://github.com/aliyun/terraform-provider-alicloud/blob/master/website/docs/index.html.markdown
 provider "alicloud" {
-  region = var.zone
-  #access_key = var.access_key
-  #secret_key = var.secret_key
+  region     = var.zone
+  access_key = var.access_key
+  secret_key = var.secret_key
 }
 
 locals {
@@ -34,7 +35,7 @@ locals {
     "12510/12510"]
 }
 
-# Network
+#=============== Network
 
 data "alicloud_zones" "default" {
   available_instance_type     = var.instance_type
@@ -53,7 +54,7 @@ resource "alicloud_vswitch" "playground" {
   zone_id      = data.alicloud_zones.default.zones[0].id
 }
 
-# Security
+#=============== Security
 
 resource "alicloud_security_group" "playground" {
   vpc_id              = alicloud_vpc.playground.id
@@ -81,7 +82,7 @@ resource "alicloud_security_group_rule" "udp" {
   port_range        = local.open_udp_ports[count.index]
 }
 
-# Instance
+#=============== Instance
 
 data "alicloud_images" "default" {
   most_recent = true
@@ -111,7 +112,7 @@ resource "alicloud_instance" "standalone" {
   auto_release_time = var.auto_release_time
 
   user_data = templatefile("${path.module}/../../common/playground/tpl/user-data.sh", {
-    ENV: var.env,
+    ENV: var.env
     USE_CHINA_MIRROR: var.use_china_mirror
   })
 

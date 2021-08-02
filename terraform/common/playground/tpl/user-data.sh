@@ -22,7 +22,7 @@ systemctl enable docker
 
 # Install docker-compose
 DOCKER_COMPOSE_URL="https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)"
-if [ "$USE_CHINA_MIRROR" == "true" ]; then
+if [ "${USE_CHINA_MIRROR}" == "true" ]; then
   DOCKER_COMPOSE_URL="https://get.daocloud.io/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)"
 fi
 curl -L "$DOCKER_COMPOSE_URL" -o /usr/local/bin/docker-compose

@@ -1,15 +1,15 @@
 # Credentials
 
-#variable "access_key" {
-#  # https://ram.console.aliyun.com/manage/ak
-#  type    = string
-#  default = ""
-#}
-#
-#variable "secret_key" {
-#  type    = string
-#  default = ""
-#}
+variable "access_key" {
+  # https://ram.console.aliyun.com/manage/ak
+  type    = string
+  default = null
+}
+
+variable "secret_key" {
+  type    = string
+  default = null
+}
 
 # Instance
 
