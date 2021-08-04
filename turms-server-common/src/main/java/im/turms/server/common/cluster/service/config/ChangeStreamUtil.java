@@ -29,24 +29,20 @@ public final class ChangeStreamUtil {
 
     public static String getStringFromId(BsonDocument key, String keyField) {
         return key
-                .get("_id")
-                .asDocument()
-                .get(keyField)
-                .asString()
+                .getDocument("_id")
+                .getString(keyField)
                 .getValue();
     }
 
     public static long getIdAsLong(BsonDocument key) {
         return key
-                .get("_id")
-                .asInt64()
+                .getInt64("_id")
                 .getValue();
     }
 
     public static String getIdAsString(BsonDocument key) {
         return key
-                .get("_id")
-                .asString()
+                .getString("_id")
                 .getValue();
     }
 

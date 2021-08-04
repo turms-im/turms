@@ -17,9 +17,9 @@
 
 package im.turms.turms.workflow.service.impl.statistics;
 
-import im.turms.server.common.cluster.exception.RpcException;
 import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.cluster.service.rpc.RpcErrorCode;
+import im.turms.server.common.cluster.service.rpc.exception.RpcException;
 import im.turms.server.common.manager.TrivialTaskManager;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.rpc.request.CountOnlineUsersRequest;
@@ -57,6 +57,10 @@ public class StatisticsService {
                     if (node.isLocalNodeLeader() &&
                             node.getSharedProperties().getService().getActivityLogging().getStatistics().isLogOnlineUsersNumber()) {
                         countOnlineUsers()
+                                .onErrorResume(t -> {
+                                    log.error("Failed to count online users", t);
+                                    return Mono.empty();
+                                })
                                 .doOnNext(count -> log.info(ONLINE_USERS_NUMBER_LOGGING_FORMAT, count))
                                 .subscribe();
                     }

@@ -118,6 +118,7 @@ public class UserSimultaneousLoginService {
                 addConflictedDeviceTypes(newExclusiveDeviceTypes, DeviceType.BROWSER, DeviceType.IOS);
                 addConflictedDeviceTypes(newExclusiveDeviceTypes, DeviceType.ANDROID, DeviceType.IOS);
             }
+            default -> throw new IllegalStateException("Unexpected value: " + strategy);
         }
         return newExclusiveDeviceTypes;
     }
@@ -133,6 +134,7 @@ public class UserSimultaneousLoginService {
                     ALLOW_ONE_DEVICE_OF_DESKTOP_AND_ONE_DEVICE_OF_BROWSER_AND_ONE_DEVICE_OF_MOBILE_ONLINE,
                     ALLOW_ONE_DEVICE_OF_DESKTOP_OR_BROWSER_OR_MOBILE_ONLINE -> {
             }
+            default -> throw new IllegalStateException("Unexpected value: " + strategy);
         }
         if (!node.getSharedProperties().getGateway().getSimultaneousLogin().isAllowDeviceTypeUnknownLogin()) {
             newForbiddenDeviceTypes.add(DeviceType.UNKNOWN);

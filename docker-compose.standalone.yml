@@ -142,7 +142,7 @@ services:
 
         -Dspring.profiles.active=${ENV}
 
-        -Dturms.cluster.node.network.auto-increment=false
+        -Dturms.cluster.connection.server.port-auto-increment=false
 
         -Dturms.cluster.discovery.address.advertise-strategy=advertise_address
         -Dturms.cluster.discovery.address.advertise-host=turms
@@ -207,8 +207,8 @@ services:
 
         -Dspring.profiles.active=${ENV}
 
-        -Dturms.cluster.node.network.auto-increment=false
-        -Dturms.cluster.node.network.port=7610
+        -Dturms.cluster.connection.server.port=7610
+        -Dturms.cluster.connection.server.port-auto-increment=false
 
         -Dturms.cluster.discovery.address.advertise-strategy=advertise_address
         -Dturms.cluster.discovery.address.advertise-host=turms-gateway

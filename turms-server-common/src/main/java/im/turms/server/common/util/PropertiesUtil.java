@@ -56,7 +56,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author James Chen
@@ -170,14 +169,14 @@ public final class PropertiesUtil {
             fieldList = FieldUtils.getFieldsListWithAnnotation(clazz, JsonView.class)
                     .stream()
                     .filter(PropertiesUtil::isMutableProperty)
-                    .collect(Collectors.toList());
+                    .toList();
         } else {
             fieldList = FieldUtils.getAllFieldsList(clazz);
         }
         return fieldList
                 .stream()
                 .filter(field -> !field.isAnnotationPresent(JsonIgnore.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static Object getFieldMetadata(Field field, boolean onlyMutable) {

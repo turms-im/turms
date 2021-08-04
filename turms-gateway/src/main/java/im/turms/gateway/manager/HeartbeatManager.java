@@ -27,6 +27,7 @@ import im.turms.server.common.service.session.UserStatusService;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -165,8 +166,11 @@ public class HeartbeatManager {
                     session.getUserId(),
                     session.getDeviceType(),
                     closeReason)
-                    .doOnError(t -> log.error("Caught an error when disconnecting the local session: {} with the close reason: {}",
-                            session, closeReason))
+                    .onErrorResume(t -> {
+                        log.error("Caught an error when disconnecting the local session: {} with the close reason: {}",
+                                session, closeReason);
+                        return Mono.empty();
+                    })
                     .subscribe();
         }
         session.setLastHeartbeatUpdateTimestampMillis(now);

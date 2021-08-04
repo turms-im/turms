@@ -17,7 +17,7 @@
 
 package im.turms.server.common.exception;
 
-import im.turms.common.exception.NoStackTraceException;
+import im.turms.common.exception.StacklessException;
 import im.turms.common.model.dto.notification.TurmsNotification;
 import im.turms.server.common.constant.TurmsStatusCode;
 import lombok.Data;
@@ -33,7 +33,7 @@ import java.util.Map;
  */
 @EqualsAndHashCode(callSuper = false)
 @Data
-public final class TurmsBusinessException extends NoStackTraceException {
+public final class TurmsBusinessException extends StacklessException {
 
     private static final Map<TurmsStatusCode, TurmsBusinessException> EXCEPTION_POOL = new EnumMap<>(TurmsStatusCode.class);
 

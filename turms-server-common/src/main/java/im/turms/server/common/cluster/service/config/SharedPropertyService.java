@@ -20,8 +20,13 @@ package im.turms.server.common.cluster.service.config;
 import com.mongodb.client.model.changestream.FullDocument;
 import im.turms.server.common.cluster.node.NodeType;
 import im.turms.server.common.cluster.service.ClusterService;
+import im.turms.server.common.cluster.service.codec.CodecService;
 import im.turms.server.common.cluster.service.config.domain.property.CommonProperties;
 import im.turms.server.common.cluster.service.config.domain.property.SharedClusterProperties;
+import im.turms.server.common.cluster.service.connection.ConnectionService;
+import im.turms.server.common.cluster.service.discovery.DiscoveryService;
+import im.turms.server.common.cluster.service.idgen.IdService;
+import im.turms.server.common.cluster.service.rpc.RpcService;
 import im.turms.server.common.mongo.exception.DuplicateKeyException;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.Update;
@@ -46,27 +51,35 @@ import static im.turms.server.common.cluster.service.config.domain.property.Shar
 @Log4j2
 public class SharedPropertyService implements ClusterService {
 
-    private final SharedConfigService sharedConfigService;
     private final String clusterId;
     private final NodeType nodeType;
 
     private final TurmsPropertiesManager turmsPropertiesManager;
     private SharedClusterProperties sharedClusterProperties;
+    private SharedConfigService sharedConfigService;
 
     private final List<Consumer<TurmsProperties>> propertiesChangeListeners = new LinkedList<>();
 
     public SharedPropertyService(String clusterId,
                                  NodeType nodeType,
-                                 TurmsPropertiesManager turmsPropertiesManager,
-                                 SharedConfigService sharedConfigService) {
+                                 TurmsPropertiesManager turmsPropertiesManager) {
         this.clusterId = clusterId;
         this.nodeType = nodeType;
         this.turmsPropertiesManager = turmsPropertiesManager;
-        this.sharedConfigService = sharedConfigService;
     }
 
     public TurmsProperties getSharedProperties() {
         return sharedClusterProperties.getTurmsProperties();
+    }
+
+    @Override
+    public void lazyInit(CodecService codecService,
+                         ConnectionService connectionService,
+                         DiscoveryService discoveryService,
+                         IdService idService,
+                         RpcService rpcService,
+                         SharedConfigService sharedConfigService) {
+        this.sharedConfigService = sharedConfigService;
     }
 
     @Override

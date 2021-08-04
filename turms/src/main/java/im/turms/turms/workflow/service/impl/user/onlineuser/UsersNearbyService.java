@@ -97,9 +97,10 @@ public class UsersNearbyService {
                                         if (geo == null) {
                                             continue;
                                         }
+                                        Double distance = geo.getDistance();
+                                        Integer dis = distance == null ? null : distance.intValue();
                                         NearbyUser nearbyUser = new NearbyUser(getUserSessionId(geo.getMember()),
-                                                geo.getCoordinates(),
-                                                geo.getDistance().intValue(), user);
+                                                geo.getCoordinates(), dis, user);
                                         nearbyUsers.add(nearbyUser);
                                     }
                                     return nearbyUsers;

@@ -160,7 +160,7 @@ public class OutboundMessageService {
                         messageData.release();
                         return Mono.just(false);
                     }
-                    int gatewayMemberCount = node.getDiscoveryService().getActiveSortedGatewayMemberList().size();
+                    int gatewayMemberCount = node.getDiscoveryService().getActiveSortedGatewayMembers().size();
                     if (gatewayMemberCount == 0) {
                         messageData.release();
                         return Mono.just(false);

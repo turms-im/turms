@@ -100,8 +100,8 @@ public class SnowflakeIdGenerator {
             // Don't let timestamp go backwards at least while this JVM is running.
             long nonBackwardsTimestamp = Math.max(lastTs, System.currentTimeMillis());
             if (sequenceId == 0) {
-                // Always force the clock to increment whenever sequence number is 0, in case we have a long
-                // time-slip backwards
+                // Always force the clock to increment whenever sequence number is 0,
+                // in case we have a long time-slip backwards
                 nonBackwardsTimestamp++;
             }
             return nonBackwardsTimestamp;
@@ -121,8 +121,8 @@ public class SnowflakeIdGenerator {
             // Don't let timestamp go backwards at least while this JVM is running.
             long nonBackwardsTimestamp = Math.max(now, System.currentTimeMillis());
             if (sequenceId == 0) {
-                // Always force the clock to increment whenever sequence number is 0, in case we have a long
-                // time-slip backwards
+                // Always force the clock to increment whenever sequence number is 0,
+                // in case we have a long time-slip backwards
                 nonBackwardsTimestamp++;
             }
             return nonBackwardsTimestamp;

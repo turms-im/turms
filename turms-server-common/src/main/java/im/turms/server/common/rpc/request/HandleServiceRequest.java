@@ -17,8 +17,9 @@
 
 package im.turms.server.common.rpc.request;
 
+import im.turms.common.model.dto.request.TurmsRequest;
 import im.turms.server.common.cluster.service.rpc.NodeTypeToHandleRpc;
-import im.turms.server.common.cluster.service.rpc.RpcCallable;
+import im.turms.server.common.cluster.service.rpc.dto.RpcRequest;
 import im.turms.server.common.dto.ServiceRequest;
 import im.turms.server.common.dto.ServiceResponse;
 import im.turms.server.common.rpc.service.IServiceRequestDispatcher;
@@ -31,7 +32,7 @@ import reactor.core.publisher.Mono;
  * @author James Chen
  */
 @Data
-public class HandleServiceRequest extends RpcCallable<ServiceResponse> {
+public class HandleServiceRequest extends RpcRequest<ServiceResponse> {
 
     private static final String NAME = "handleServiceRequest";
     private static final String METRICS_TAG_CLIENT_REQUEST_TYPE = "type";
@@ -41,6 +42,17 @@ public class HandleServiceRequest extends RpcCallable<ServiceResponse> {
 
     public HandleServiceRequest(ServiceRequest serviceRequest) {
         this.serviceRequest = serviceRequest;
+    }
+
+    @Override
+    public String toString() {
+        return "HandleServiceRequest{" +
+                "name='" + name() + "'" +
+                ", tag=" + tag() +
+                ", requestTime=" + getRequestTime() +
+                ", tracingContext=" + getTracingContext() +
+                ", serviceRequest=" + serviceRequest +
+                '}';
     }
 
     @Override
@@ -60,7 +72,11 @@ public class HandleServiceRequest extends RpcCallable<ServiceResponse> {
 
     @Override
     public Tag tag() {
-        return Tag.of(METRICS_TAG_CLIENT_REQUEST_TYPE, serviceRequest.getType().name());
+        TurmsRequest.KindCase type = serviceRequest.getType();
+        if (type == null) {
+            return null;
+        }
+        return Tag.of(METRICS_TAG_CLIENT_REQUEST_TYPE, type.name());
     }
 
     @Override

@@ -46,7 +46,7 @@ public abstract class BaseServiceAddressManager {
 
     protected BaseServiceAddressManager(PublicIpManager publicIpManager, TurmsProperties propertiesForMemberBindHost) {
         this.publicIpManager = publicIpManager;
-        memberBindHost = propertiesForMemberBindHost.getCluster().getNode().getNetwork().getHost();
+        memberBindHost = propertiesForMemberBindHost.getCluster().getConnection().getServer().getHost();
         updateMemberHostIfChanged(propertiesForMemberBindHost);
     }
 

@@ -1,11 +1,8 @@
 package unit.im.turms.server.common.cluster.service.idgen;
 
 import im.turms.server.common.cluster.service.idgen.SnowflakeIdGenerator;
-import im.turms.server.common.util.MapUtil;
+import org.eclipse.collections.impl.set.mutable.primitive.LongHashSet;
 import org.junit.jupiter.api.Test;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -15,7 +12,7 @@ class SnowflakeIdGeneratorTests {
     void nextIncreasingId_shouldGeneratePositiveAndUniqueAndIncrementingId() {
         SnowflakeIdGenerator generator = new SnowflakeIdGenerator(0, 0);
         int number = 100_000;
-        Set<Long> ids = new HashSet<>(MapUtil.getCapability(number));
+        LongHashSet ids = new LongHashSet(number);
         long previousId = -1;
         for (int i = 0; i < number; i++) {
             long newId = generator.nextIncreasingId();
@@ -37,7 +34,7 @@ class SnowflakeIdGeneratorTests {
     void nextRandomId_shouldGeneratePositiveAndUniqueAndRandomId() {
         SnowflakeIdGenerator generator = new SnowflakeIdGenerator(0, 0);
         int number = 100_000;
-        Set<Long> ids = new HashSet<>(MapUtil.getCapability(number));
+        LongHashSet ids = new LongHashSet(number);
         long previousId = -1;
         boolean isMonotonicallyIncreasing = true;
         for (int i = 0; i < number; i++) {

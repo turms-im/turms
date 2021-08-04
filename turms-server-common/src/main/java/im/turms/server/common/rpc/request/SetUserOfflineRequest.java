@@ -20,7 +20,7 @@ package im.turms.server.common.rpc.request;
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
 import im.turms.server.common.cluster.service.rpc.NodeTypeToHandleRpc;
-import im.turms.server.common.cluster.service.rpc.RpcCallable;
+import im.turms.server.common.cluster.service.rpc.dto.RpcRequest;
 import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.rpc.service.ISessionService;
 import lombok.Data;
@@ -35,7 +35,7 @@ import java.util.Set;
  * @author James Chen
  */
 @Data
-public class SetUserOfflineRequest extends RpcCallable<Boolean> {
+public class SetUserOfflineRequest extends RpcRequest<Boolean> {
 
     private static final String NAME = "setUserOffline";
     private static ISessionService sessionService;

@@ -24,6 +24,7 @@ import im.turms.server.common.dto.CloseReason;
 import im.turms.server.common.util.ExceptionUtil;
 import lombok.Data;
 import reactor.netty.Connection;
+import reactor.netty.channel.ChannelOperations;
 import reactor.netty.http.HttpOperations;
 import reactor.util.retry.Retry;
 import reactor.util.retry.RetryBackoffSpec;
@@ -53,7 +54,7 @@ public abstract class NetConnection {
         if (connection instanceof HttpOperations) {
             return new WebSocketConnection(connection, true);
         } else {
-            return new TcpConnection(connection, true);
+            return new TcpConnection((ChannelOperations<?, ?>) connection, true);
         }
     }
 

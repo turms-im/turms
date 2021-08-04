@@ -18,7 +18,7 @@
 package im.turms.server.common.rpc.request;
 
 import im.turms.server.common.cluster.service.rpc.NodeTypeToHandleRpc;
-import im.turms.server.common.cluster.service.rpc.RpcCallable;
+import im.turms.server.common.cluster.service.rpc.dto.RpcRequest;
 import im.turms.server.common.rpc.service.IOutboundMessageService;
 import io.netty.buffer.ByteBuf;
 import lombok.Data;
@@ -32,7 +32,7 @@ import java.util.Set;
  * @author James Chen
  */
 @Data
-public class SendNotificationRequest extends RpcCallable<Boolean> {
+public class SendNotificationRequest extends RpcRequest<Boolean> {
 
     private static final String NAME = "sendNotification";
     private static IOutboundMessageService outboundMessageService;

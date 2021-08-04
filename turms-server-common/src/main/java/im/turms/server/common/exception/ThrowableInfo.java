@@ -17,7 +17,7 @@
 
 package im.turms.server.common.exception;
 
-import im.turms.server.common.cluster.exception.RpcException;
+import im.turms.server.common.cluster.service.rpc.exception.RpcException;
 import im.turms.server.common.constant.TurmsStatusCode;
 import lombok.Data;
 
@@ -28,12 +28,12 @@ public final class ThrowableInfo {
     private final String reason;
 
     private ThrowableInfo(Throwable throwable) {
-        if (throwable instanceof TurmsBusinessException exception) {
-            code = exception.getCode();
-            reason = exception.getReason();
-        } else if (throwable instanceof RpcException exception) {
-            code = exception.getStatusCode();
-            reason = exception.getMessage();
+        if (throwable instanceof TurmsBusinessException e) {
+            code = e.getCode();
+            reason = e.getReason();
+        } else if (throwable instanceof RpcException e) {
+            code = e.getStatusCode();
+            reason = e.getMessage();
         } else {
             code = TurmsStatusCode.SERVER_INTERNAL_ERROR;
             reason = throwable.getMessage();

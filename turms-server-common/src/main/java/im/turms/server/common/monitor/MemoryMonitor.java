@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * @author James Chen
@@ -78,7 +77,7 @@ public final class MemoryMonitor {
             List<String> names = poolBeans
                     .stream()
                     .map(BufferPoolMXBean::getName)
-                    .collect(Collectors.toList());
+                    .toList();
             String s = "Cannot find the direct buffer pool management bean from the pool beans: "
                     + String.join(", ", names);
             throw new IllegalStateException(s);

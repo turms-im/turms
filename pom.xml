@@ -117,12 +117,6 @@
             <artifactId>lettuce-core</artifactId>
         </dependency>
 
-        <!-- I/O -->
-        <dependency>
-            <groupId>io.rsocket</groupId>
-            <artifactId>rsocket-transport-netty</artifactId>
-        </dependency>
-
         <!-- Logging -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -178,10 +172,6 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.rsocket</groupId>
-            <artifactId>rsocket-micrometer</artifactId>
         </dependency>
 
         <!-- Processor -->
@@ -258,15 +248,6 @@
         </dependency>
 
         <!-- Validation -->
-        <dependency>
-            <groupId>org.hibernate.validator</groupId>
-            <artifactId>hibernate-validator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate.validator</groupId>
-            <artifactId>hibernate-validator-annotation-processor</artifactId>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>

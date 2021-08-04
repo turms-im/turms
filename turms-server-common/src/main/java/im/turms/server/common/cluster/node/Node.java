@@ -17,16 +17,15 @@
 
 package im.turms.server.common.cluster.node;
 
-import im.turms.server.common.access.common.resource.LoopResourcesFactory;
 import im.turms.server.common.cluster.service.ClusterService;
+import im.turms.server.common.cluster.service.codec.CodecService;
 import im.turms.server.common.cluster.service.config.SharedConfigService;
 import im.turms.server.common.cluster.service.config.SharedPropertyService;
+import im.turms.server.common.cluster.service.connection.ConnectionService;
 import im.turms.server.common.cluster.service.discovery.DiscoveryService;
 import im.turms.server.common.cluster.service.idgen.IdService;
 import im.turms.server.common.cluster.service.idgen.ServiceType;
-import im.turms.server.common.cluster.service.rpc.RpcAcceptor;
 import im.turms.server.common.cluster.service.rpc.RpcService;
-import im.turms.server.common.cluster.service.serialization.SerializationService;
 import im.turms.server.common.context.TurmsApplicationContext;
 import im.turms.server.common.manager.address.BaseServiceAddressManager;
 import im.turms.server.common.property.TurmsProperties;
@@ -34,23 +33,15 @@ import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.common.cluster.ClusterProperties;
 import im.turms.server.common.property.env.common.cluster.DiscoveryProperties;
 import im.turms.server.common.property.env.common.cluster.NodeProperties;
-import im.turms.server.common.property.env.common.cluster.NodeProperties.NetworkProperties;
+import im.turms.server.common.property.env.common.cluster.RpcProperties;
 import im.turms.server.common.property.env.common.cluster.SharedConfigProperties;
-import im.turms.server.common.util.SslUtil;
-import io.rsocket.SocketAcceptor;
-import io.rsocket.core.RSocketServer;
-import io.rsocket.transport.netty.server.CloseableChannel;
-import io.rsocket.transport.netty.server.TcpServerTransport;
+import im.turms.server.common.property.env.common.cluster.connection.ConnectionProperties;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.boot.web.server.Ssl;
 import org.springframework.context.ApplicationContext;
-import reactor.netty.ChannelBindException;
-import reactor.netty.tcp.TcpServer;
 
-import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -78,17 +69,13 @@ public class Node {
     private final ApplicationContext context;
 
     /**
-     * Transport
-     */
-    private final CloseableChannel serverChannel;
-
-    /**
      * Services
      */
     private final SharedConfigService sharedConfigService;
     private final SharedPropertyService sharedPropertyService;
+    private final CodecService codecService;
+    private final ConnectionService connectionService;
     private final DiscoveryService discoveryService;
-    private final SerializationService serializationService;
     private final RpcService rpcService;
     private final IdService idService;
 
@@ -106,10 +93,11 @@ public class Node {
         this.nodeType = nodeType;
         TurmsProperties turmsProperties = turmsPropertiesManager.getLocalProperties();
         ClusterProperties clusterProperties = turmsProperties.getCluster();
-        NodeProperties nodeProperties = clusterProperties.getNode();
         SharedConfigProperties sharedConfigProperties = clusterProperties.getSharedConfig();
+        NodeProperties nodeProperties = clusterProperties.getNode();
+        ConnectionProperties connectionProperties = clusterProperties.getConnection();
         DiscoveryProperties discoveryProperties = clusterProperties.getDiscovery();
-        NetworkProperties networkProperties = nodeProperties.getNetwork();
+        RpcProperties rpcProperties = clusterProperties.getRpc();
 
         NodeVersion nodeVersion;
         try {
@@ -121,47 +109,44 @@ public class Node {
             throw e;
         }
 
-        // Set up the local server
-        RpcAcceptor rpcAcceptor = new RpcAcceptor(context);
-        serverChannel = setupLocalDiscoveryServer(rpcAcceptor,
-                networkProperties.getHost(),
-                networkProperties.getPort(),
-                networkProperties.isAutoIncrement(),
-                networkProperties.getPortCount(),
-                discoveryProperties.getServerSsl());
-        InetSocketAddress address = serverChannel.address();
         String clusterId = clusterProperties.getId();
         nodeId = initNodeId(nodeProperties.getId());
 
         // Init services
         // pass the properties one by one rather than passing the node instance
         // to know their dependency relationships explicitly.
+        codecService = new CodecService();
+        connectionService = new ConnectionService(connectionProperties);
+        rpcService = new RpcService(context, nodeType, rpcProperties);
         sharedConfigService = new SharedConfigService(sharedConfigProperties.getMongo());
-        serializationService = new SerializationService();
-        rpcService = new RpcService(nodeType, clusterProperties.getRpc(), rpcAcceptor, serializationService);
         discoveryService = new DiscoveryService(clusterId,
                 nodeId,
                 nodeType,
                 nodeVersion,
                 nodeType == NodeType.SERVICE && nodeProperties.isLeaderEligible(),
                 nodeProperties.isActiveByDefault(),
-                address.getPort(),
+                connectionService.getServer().getPort(),
                 discoveryProperties,
                 serviceAddressManager,
-                sharedConfigService,
-                rpcService);
-        sharedPropertyService = new SharedPropertyService(clusterId, nodeType, turmsPropertiesManager, sharedConfigService);
+                sharedConfigService);
+        sharedPropertyService = new SharedPropertyService(clusterId, nodeType, turmsPropertiesManager);
         idService = new IdService(discoveryService);
 
         List<ClusterService> allServices = List.of(
+                connectionService,
                 discoveryService,
                 sharedConfigService,
                 sharedPropertyService,
-                serializationService,
+                codecService,
                 rpcService,
                 idService);
         for (ClusterService service : allServices) {
-            service.lazyInit(discoveryService, idService, rpcService, serializationService, sharedConfigService);
+            service.lazyInit(codecService,
+                    connectionService,
+                    discoveryService,
+                    idService,
+                    rpcService,
+                    sharedConfigService);
         }
     }
 
@@ -191,26 +176,23 @@ public class Node {
         sharedConfigService.start();
         sharedPropertyService.start();
         discoveryService.start();
-        serializationService.start();
+        codecService.start();
+        connectionService.start();
         rpcService.start();
         idService.start();
     }
 
     public void stop() {
-        try {
-            serverChannel.dispose();
-        } catch (Exception e) {
-            log.error("Failed to stop the local server", e);
-        }
         List<ClusterService> services = List.of(
                 // Note that discoveryService should be stopped before sharedConfigService
                 // because discoveryService needs to unregister the local member info in the shared config
                 discoveryService,
                 sharedConfigService,
                 sharedPropertyService,
-                serializationService,
+                codecService,
                 rpcService,
-                idService);
+                idService,
+                connectionService);
         for (ClusterService service : services) {
             shutdownService(service);
         }
@@ -247,41 +229,6 @@ public class Node {
     }
 
     // Private
-
-    private CloseableChannel setupLocalDiscoveryServer(RpcAcceptor rpcAcceptor,
-                                                       String host,
-                                                       int port,
-                                                       boolean autoIncrement,
-                                                       int portCount,
-                                                       Ssl serverSsl) {
-        int currentPort = port;
-
-        // Loop until the server is set up, or an exception occurs
-        while (true) {
-            try {
-                InetSocketAddress inetSocketAddress = new InetSocketAddress(host, currentPort);
-                TcpServer tcpServer = TcpServer.create()
-                        .runOn(LoopResourcesFactory.createForServer("connection-server"))
-                        .bindAddress(() -> inetSocketAddress);
-                if (serverSsl.isEnabled()) {
-                    tcpServer.secure(spec -> SslUtil.configureSslContextSpec(spec, serverSsl, true));
-                }
-                TcpServerTransport transport = TcpServerTransport.create(tcpServer);
-                CloseableChannel channel = RSocketServer
-                        .create(SocketAcceptor.with(rpcAcceptor))
-                        .bindNow(transport);
-                log.info("The local server {}:{} has been set up", host, currentPort);
-                return channel;
-            } catch (Exception e) { // e.g. port in use
-                if (e instanceof ChannelBindException && autoIncrement && currentPort <= port + portCount) {
-                    log.warn("Failed to bind on the port {}. Trying to bind on the next port {}", currentPort++, currentPort);
-                } else {
-                    log.error("Failed to set up the local discovery server", e);
-                    throw e;
-                }
-            }
-        }
-    }
 
     private void shutdownService(ClusterService service) {
         try {

@@ -44,4 +44,7 @@ public class FakeProperties {
     @Description("Whether to clear all collections before faking at startup")
     private boolean clearAllCollectionsBeforeFaking;
 
+    @Description("Whether to fake data even if the collection has already existed")
+    private boolean fakeIfCollectionExists;
+
 }

@@ -111,7 +111,7 @@ class ServiceMediatorTests {
     @Test
     void setLocalUserDeviceOffline_shouldSucceed() {
         ServiceMediator mediator = newServiceMediator();
-        Mono<Boolean> result = mediator.setLocalUserDeviceOffline(userId, deviceType, SessionCloseStatus.UNKNOWN_ERROR);
+        Mono<Boolean> result = mediator.setLocalUserDeviceOffline(userId, deviceType, SessionCloseStatus.SERVER_ERROR);
 
         StepVerifier.create(result)
                 .expectNext(true)

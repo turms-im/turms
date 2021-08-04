@@ -16,7 +16,7 @@
  */
 package im.turms.client.exception
 
-import im.turms.common.exception.NoStackTraceException
+import im.turms.common.exception.StacklessException
 import im.turms.common.model.dto.notification.TurmsNotification
 import java.util.*
 
@@ -27,7 +27,7 @@ class TurmsBusinessException internal constructor(
     val code: Int,
     reason: String? = null,
     cause: Throwable? = null
-) : NoStackTraceException(formatMessage(code, reason), cause) {
+) : StacklessException(formatMessage(code, reason), cause) {
 
     override val message: String? = reason
 

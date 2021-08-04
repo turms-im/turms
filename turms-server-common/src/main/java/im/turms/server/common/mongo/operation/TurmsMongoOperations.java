@@ -266,7 +266,7 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
                             .onErrorMap(translator::translate)
                             .then();
                 })
-                .collect(Collectors.toList());
+                .toList();
         return Mono.when(sources);
     }
 

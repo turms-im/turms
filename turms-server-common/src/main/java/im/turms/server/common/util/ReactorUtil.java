@@ -31,6 +31,22 @@ public final class ReactorUtil {
     private ReactorUtil() {
     }
 
+    public static Mono<Boolean> areAllTrue(Mono<Boolean>... monos) {
+        if (monos.length == 0) {
+            return Mono.just(false);
+        }
+        return Flux.merge(monos)
+                .collect(CollectorUtil.toList(monos.length))
+                .map(results -> {
+                    for (boolean result : results) {
+                        if (!result) {
+                            return false;
+                        }
+                    }
+                    return true;
+                });
+    }
+
     public static Mono<Boolean> areAllTrue(@NotNull List<Mono<Boolean>> monos) {
         if (monos.isEmpty()) {
             return Mono.just(false);

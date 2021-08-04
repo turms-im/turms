@@ -11,6 +11,9 @@ spring:
 
 turms:
   cluster:
+    connection:
+      server:
+        port-auto-increment: true
     shared-config:
       mongo:
         uri: mongodb://localhost:27017/turms-config-dev

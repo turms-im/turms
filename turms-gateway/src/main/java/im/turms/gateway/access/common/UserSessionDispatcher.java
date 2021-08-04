@@ -66,7 +66,10 @@ public abstract class UserSessionDispatcher {
             UserSessionWrapper sessionWrapper = new UserSessionWrapper(netConnection, ip, closeIdleConnectionAfterSeconds, userSession -> {
                 RequestLoggingContext loggingContext = new RequestLoggingContext();
                 Flux<ByteBuf> notifications = userSession.getNotificationFlux()
-                        .doOnError(throwable -> handleNotificationError(throwable, userSession))
+                        .onErrorResume(throwable -> {
+                            handleNotificationError(throwable, userSession);
+                            return Mono.empty();
+                        })
                         .contextWrite(context -> context.put(RequestLoggingContext.CTX_KEY_NAME, loggingContext))
                         .doFinally(signal -> loggingContext.clearMdc());
                 sendNotifications(out, notifications, netConnection, userSession).subscribe();
@@ -97,7 +100,7 @@ public abstract class UserSessionDispatcher {
                     if (connection.isDisposed()) {
                         return;
                     }
-                    // Retain one so that it won't be released by FluxReceive
+                    // Retain by 1 so that it won't be released by FluxReceive
                     // before we finish handling the buffer.
                     // And it should be 2 after retained
                     requestData.retain();
@@ -105,18 +108,19 @@ public abstract class UserSessionDispatcher {
                     // Note that handleRequest() should never return MonoError
                     RequestLoggingContext loggingContext = new RequestLoggingContext();
                     Mono<ByteBuf> response = userRequestDispatcher.handleRequest(sessionWrapper, requestData)
-                            .doOnError(throwable -> {
+                            .onErrorResume(throwable -> {
                                 loggingContext.updateMdc();
                                 handleNotificationError(throwable, sessionWrapper.getUserSession());
+                                return Mono.empty();
                             })
                             .contextWrite(context -> context.put(RequestLoggingContext.CTX_KEY_NAME, loggingContext))
-                            .doFinally(signal -> loggingContext.clearMdc());
+                            .doOnTerminate(loggingContext::clearMdc);
 
                     sendNotifications(out, response, sessionWrapper.getConnection(), sessionWrapper.getUserSession())
-                            .doFinally(signalType -> {
-                                // Because the buffer will be merged into a RPC request if it's a service request
-                                // in HandleServiceRequestSerializer.byteBufToComposite) if no error occurs,
-                                // requestData.refCnt() should be:
+                            .doOnTerminate(() -> {
+                                // Because the buffer will be merged into an RPC request
+                                // in HandleServiceRequestCodec.byteBufToComposite() if it's a service request,
+                                // if no error occurs, requestData.refCnt() should be:
                                 // 0 if it has been released by FluxReceive and RpcService
                                 // 1 if it is released by FluxReceive but RpcService doesn't release it (because error occurs)
                                 // or it's not a service request

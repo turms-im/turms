@@ -132,9 +132,11 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
     @Override
     public Mono<ServiceResponse> dispatch(TracingContext tracingContext, ServiceRequest serviceRequest) {
         try {
-            return dispatch0(tracingContext, serviceRequest);
+            return dispatch0(tracingContext, serviceRequest)
+                    .doOnTerminate(() -> serviceRequest.getTurmsRequestBuffer().release());
         } catch (Exception e) {
             log.error("Failed to handle the request: {}", serviceRequest, e);
+            serviceRequest.getTurmsRequestBuffer().release();
             return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.SERVER_INTERNAL_ERROR, e.toString()));
         }
     }
@@ -225,10 +227,11 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                     .doOnSuccess(requestResult -> {
                         if (requestResult.getCode() == TurmsStatusCode.OK) {
                             notifyRelatedUsersOfAction(requestResult, userId, deviceType)
-                                    .doOnError(t -> {
+                                    .onErrorResume(t -> {
                                         try (TracingCloseableContext ignored = tracingContext.asCloseable()) {
                                             log.error("Failed to notify related users of the action", t);
                                         }
+                                        return Mono.empty();
                                     })
                                     .subscribe();
                         }

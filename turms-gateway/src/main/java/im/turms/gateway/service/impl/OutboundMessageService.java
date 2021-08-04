@@ -135,26 +135,31 @@ public class OutboundMessageService implements IOutboundMessageService {
         } catch (Exception e) {
             log.error("Failed to parse TurmsNotification", e);
         }
-        if (notification != null) {
-            List<NotificationHandler> handlerList = turmsPluginManager.getNotificationHandlerList();
-            int size = handlerList.size();
-            if (size > 0) {
-                if (size == 1) {
-                    handlerList.get(0)
-                            .handle(notification, recipientIds, offlineRecipientIds)
-                            .doOnError(log::error)
-                            .subscribe();
-                } else {
-                    List<Mono<Void>> monos = new ArrayList<>(size);
-                    for (NotificationHandler handler : handlerList) {
-                        monos.add(handler.handle(notification, recipientIds, offlineRecipientIds));
-                    }
-                    Mono.when(monos)
-                            .doOnError(log::error)
-                            .subscribe();
-                }
-            }
+        if (notification == null) {
+            return;
         }
+        List<NotificationHandler> handlerList = turmsPluginManager.getNotificationHandlerList();
+        int size = handlerList.size();
+        if (size <= 0) {
+            return;
+        }
+        Mono<Void> resultMono;
+        if (size == 1) {
+            resultMono = handlerList.get(0)
+                    .handle(notification, recipientIds, offlineRecipientIds);
+        } else {
+            List<Mono<Void>> monos = new ArrayList<>(size);
+            for (NotificationHandler handler : handlerList) {
+                monos.add(handler.handle(notification, recipientIds, offlineRecipientIds));
+            }
+            resultMono = Mono.when(monos);
+        }
+        resultMono
+                .onErrorResume(t -> {
+                    log.error("Plugins failed to handle", t);
+                    return Mono.empty();
+                })
+                .subscribe();
     }
 
 }

@@ -42,7 +42,7 @@ import static com.mongodb.assertions.Assertions.notNull;
 
 /**
  * @author James Chen
- * @implNote What heavy objects we eliminate:
+ * @implNote The heavy objects that we have eliminated:
  * 1. FindOptions
  * 2. FindOperation
  * 3. A lot of intermediate operations

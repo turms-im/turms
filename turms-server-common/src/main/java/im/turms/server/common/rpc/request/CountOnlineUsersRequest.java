@@ -18,7 +18,7 @@
 package im.turms.server.common.rpc.request;
 
 import im.turms.server.common.cluster.service.rpc.NodeTypeToHandleRpc;
-import im.turms.server.common.cluster.service.rpc.RpcCallable;
+import im.turms.server.common.cluster.service.rpc.dto.RpcRequest;
 import im.turms.server.common.rpc.service.IStatisticsService;
 import lombok.Data;
 import org.springframework.context.ApplicationContext;
@@ -27,7 +27,7 @@ import org.springframework.context.ApplicationContext;
  * @author James Chen
  */
 @Data
-public class CountOnlineUsersRequest extends RpcCallable<Integer> {
+public class CountOnlineUsersRequest extends RpcRequest<Integer> {
 
     private static final String NAME = "countOnlineUsers";
     private static IStatisticsService statisticsService;

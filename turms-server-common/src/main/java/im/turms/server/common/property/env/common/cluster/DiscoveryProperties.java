@@ -20,12 +20,12 @@ package im.turms.server.common.property.env.common.cluster;
 
 import im.turms.server.common.cluster.service.config.SharedConfigService;
 import im.turms.server.common.property.env.common.AddressProperties;
+import im.turms.server.common.property.metadata.annotation.Description;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
-import org.springframework.boot.web.server.Ssl;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -41,24 +41,14 @@ public class DiscoveryProperties {
 
     @Min(0)
     @Max(SharedConfigService.EXPIRABLE_RECORD_TTL)
-    private int heartbeatTimeoutInSeconds = 30;
+    private int heartbeatTimeoutSeconds = 30;
 
     @Min(0)
-    @Max(SharedConfigService.EXPIRABLE_RECORD_TTL)
-    private int heartbeatIntervalInSeconds = 10;
+    private int heartbeatIntervalSeconds = 10;
 
+    @Description("Delay to notify listeners on members change. Waits for seconds to avoid thundering herd")
     @Min(0)
-    @Max(SharedConfigService.EXPIRABLE_RECORD_TTL)
-    private int reconnectIntervalInSeconds = 15;
-
-    @Min(0)
-    private int jitterInSeconds = 5;
-
-    @NestedConfigurationProperty
-    private Ssl clientSsl = new Ssl();
-
-    @NestedConfigurationProperty
-    private Ssl serverSsl = new Ssl();
+    private int delayToNotifyMembersChangeSeconds = 3;
 
     @NestedConfigurationProperty
     private AddressProperties address = new AddressProperties();

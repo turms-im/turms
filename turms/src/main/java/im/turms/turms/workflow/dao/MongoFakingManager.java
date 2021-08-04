@@ -98,6 +98,8 @@ public final class MongoFakingManager {
 
     @Getter
     private final boolean clearAllCollectionsBeforeFaking;
+    @Getter
+    private final boolean fakeIfCollectionExists;
 
     private long currentId = 1L;
 
@@ -117,6 +119,7 @@ public final class MongoFakingManager {
 
         isFakingEnabled = properties.isEnabled();
         clearAllCollectionsBeforeFaking = properties.isClearAllCollectionsBeforeFaking();
+        fakeIfCollectionExists = properties.isFakeIfCollectionExists();
         userCount = properties.getUserCount();
         int step = userCount / 10;
 

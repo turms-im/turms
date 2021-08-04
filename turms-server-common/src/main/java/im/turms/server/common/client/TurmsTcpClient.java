@@ -32,8 +32,9 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.MessageToMessageEncoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
 import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
+import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Mono;
-import reactor.netty.Connection;
+import reactor.netty.channel.ChannelOperations;
 import reactor.netty.resources.LoopResources;
 import reactor.netty.tcp.TcpClient;
 
@@ -45,9 +46,10 @@ import static im.turms.server.common.util.ProtoUtil.getDirectByteBuffer;
 /**
  * @author James Chen
  */
+@Log4j2
 public class TurmsTcpClient extends TurmsClient {
 
-    private Connection connection;
+    private ChannelOperations<?, ?> connection;
 
     @Override
     public Mono<Void> connect(String host, int port, LoopResources loopResources) {
@@ -57,20 +59,25 @@ public class TurmsTcpClient extends TurmsClient {
                 .runOn(loopResources)
                 .connect()
                 .doOnNext(conn -> {
-                    // Inbound
-                    conn.addHandlerLast("protobufFrameDecoder", new ProtobufVarint32FrameDecoder());
-                    conn.addHandlerLast("turmsProtobufDecoder", new TurmsProtobufDecoder());
-                    // Outbound
-                    conn.addHandlerFirst("turmsProtobufEncoder", new TurmsProtobufEncoder());
-                    conn.addHandlerFirst("protobufFrameEncoder", new ProtobufVarint32LengthFieldPrepender());
+                    connection = (ChannelOperations<?, ?>) conn;
 
-                    conn.inbound()
+                    connection
+                            // Inbound
+                            .addHandlerLast("protobufFrameDecoder", new ProtobufVarint32FrameDecoder())
+                            .addHandlerLast("turmsProtobufDecoder", new TurmsProtobufDecoder())
+                            // Outbound
+                            .addHandlerFirst("turmsProtobufEncoder", new TurmsProtobufEncoder())
+                            .addHandlerFirst("protobufFrameEncoder", new ProtobufVarint32LengthFieldPrepender());
+
+                    connection
                             .receiveObject()
+                            .onErrorResume(t -> {
+                                log.error("The turms client is closed unexpectedly", t);
+                                return Mono.empty();
+                            })
                             .cast(TurmsNotification.class)
                             .doOnNext(this::handleResponse)
                             .subscribe();
-
-                    connection = conn;
                 })
                 .then();
     }
@@ -111,7 +118,7 @@ public class TurmsTcpClient extends TurmsClient {
             requestBuilder.setRequestId(RandomUtil.nextPositiveLong());
         }
         TurmsRequest request = requestBuilder.build();
-        return connection.outbound()
+        return connection
                 .sendObject(request)
                 .then()
                 .then(Mono.defer(() -> waitForResponse(request)));

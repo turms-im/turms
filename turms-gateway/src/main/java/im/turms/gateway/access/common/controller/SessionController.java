@@ -86,6 +86,7 @@ public class SessionController {
                 deviceType,
                 userStatus,
                 position,
+                // Note that don't use getHostString() to avoid getting a hostname
                 sessionWrapper.getIp().getAddress().getHostAddress(),
                 deviceDetails);
         Timeout idleConnectionTimeout = sessionWrapper.getConnectionTimeoutTask();

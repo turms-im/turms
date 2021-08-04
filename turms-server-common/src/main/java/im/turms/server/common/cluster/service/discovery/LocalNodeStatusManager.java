@@ -58,9 +58,9 @@ public class LocalNodeStatusManager {
     @Getter
     @Setter
     private volatile boolean isClosing;
-    private final long heartbeatTimeoutInMillis;
+    private final long heartbeatTimeoutMillis;
     private final Duration heartbeatInterval;
-    private final long heartbeatIntervalInMillis;
+    private final long heartbeatIntervalMillis;
     private ScheduledFuture<?> heartbeatFuture;
     private final ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1, new DefaultThreadFactory("discovery-heartbeat"));
 
@@ -68,14 +68,14 @@ public class LocalNodeStatusManager {
             DiscoveryService discoveryService,
             SharedConfigService sharedConfigService,
             Member localMember,
-            int heartbeatTimeoutInSeconds,
-            int heartbeatIntervalInSeconds) {
+            int heartbeatTimeoutSeconds,
+            int heartbeatIntervalSeconds) {
         this.discoveryService = discoveryService;
         this.sharedConfigService = sharedConfigService;
         this.localMember = localMember;
-        this.heartbeatTimeoutInMillis = heartbeatTimeoutInSeconds * 1000L;
-        this.heartbeatInterval = Duration.ofSeconds(heartbeatIntervalInSeconds);
-        this.heartbeatIntervalInMillis = heartbeatInterval.toMillis();
+        this.heartbeatTimeoutMillis = heartbeatTimeoutSeconds * 1000L;
+        this.heartbeatInterval = Duration.ofSeconds(heartbeatIntervalSeconds);
+        this.heartbeatIntervalMillis = heartbeatInterval.toMillis();
     }
 
     public Mono<Void> upsertLocalNodeInfo(Update update) {
@@ -128,6 +128,10 @@ public class LocalNodeStatusManager {
         return sharedConfigService.remove(Leader.class, query).then();
     }
 
+    public boolean isLocalNodeId(String nodeId) {
+        return localMember.getNodeId().equals(nodeId);
+    }
+
     public boolean isLocalNodeLeader() {
         Leader leader = discoveryService.getLeader();
         return leader != null
@@ -147,19 +151,21 @@ public class LocalNodeStatusManager {
                     monos.add(upsertLocalNodeInfo(Update.newBuilder()
                             .set(Member.STATUS_LAST_HEARTBEAT_DATE, now)));
                     if (isLocalNodeLeader()) {
-                        monos.add(renewLocalLeader(now).flatMap(isLeader -> {
-                            return isLeader ? updateMembersStatus(now) : Mono.empty();
-                        }));
+                        monos.add(renewLocalLeader(now)
+                                .flatMap(isLeader -> isLeader ? updateMembersStatus(now) : Mono.empty()));
                     }
                     Mono.when(monos)
                             .timeout(heartbeatInterval)
                             .doOnSuccess(ignored -> localMember.getStatus().setLastHeartbeatDate(now))
-                            .doOnError(e -> log.error("Failed to send heartbeat request", e))
+                            .onErrorResume(e -> {
+                                log.error("Failed to send heartbeat request", e);
+                                return Mono.empty();
+                            })
                             .subscribe();
                 } catch (Exception e) {
                     log.error("Failed to send heartbeat request", e);
                 }
-            }, heartbeatIntervalInMillis, heartbeatIntervalInMillis, TimeUnit.MILLISECONDS);
+            }, heartbeatIntervalMillis, heartbeatIntervalMillis, TimeUnit.MILLISECONDS);
         }
     }
 
@@ -223,7 +229,7 @@ public class LocalNodeStatusManager {
         long lastHeartbeatTime = lastHeartbeatDate.getTime();
         for (Member knownMember : knownMembers) {
             Date memberHeartbeat = knownMember.getStatus().getLastHeartbeatDate();
-            boolean isAvailable = memberHeartbeat != null && (lastHeartbeatTime - memberHeartbeat.getTime()) < heartbeatTimeoutInMillis;
+            boolean isAvailable = memberHeartbeat != null && (lastHeartbeatTime - memberHeartbeat.getTime()) < heartbeatTimeoutMillis;
             if (isAvailable) {
                 availableMemberNodeIds.add(knownMember.getNodeId());
                 availableMembersSize++;

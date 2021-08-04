@@ -17,10 +17,9 @@
 
 package unit.im.turms.server.common.cluster.exception;
 
-import im.turms.server.common.cluster.exception.RpcException;
 import im.turms.server.common.cluster.service.rpc.RpcErrorCode;
+import im.turms.server.common.cluster.service.rpc.exception.RpcException;
 import im.turms.server.common.constant.TurmsStatusCode;
-import io.rsocket.exceptions.ApplicationErrorException;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,17 +39,6 @@ class RpcExceptionTests {
         assertThat(errorCode).isEqualTo(exception.getErrorCode());
         assertThat(statusCode).isEqualTo(exception.getStatusCode());
         assertThat(message).isEqualTo(exception.getDescription());
-    }
-
-    @Test
-    void parse_shouldEqual_ifParamsAreSame() {
-        RpcErrorCode errorCode = RpcErrorCode.UNKNOWN_ERROR;
-        TurmsStatusCode statusCode = TurmsStatusCode.SERVER_INTERNAL_ERROR;
-        String description = "My error message";
-        RpcException exception = RpcException.get(errorCode, statusCode, description);
-
-        RpcException parsedException = RpcException.parse(new ApplicationErrorException(exception.getMessage()));
-        assertThat(parsedException).isEqualTo(exception);
     }
 
 }

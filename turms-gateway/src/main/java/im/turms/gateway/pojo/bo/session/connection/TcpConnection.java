@@ -23,7 +23,7 @@ import im.turms.server.common.factory.NotificationFactory;
 import im.turms.server.common.util.ExceptionUtil;
 import lombok.extern.log4j.Log4j2;
 import reactor.core.publisher.Mono;
-import reactor.netty.Connection;
+import reactor.netty.channel.ChannelOperations;
 
 /**
  * @author James Chen
@@ -31,9 +31,9 @@ import reactor.netty.Connection;
 @Log4j2
 public class TcpConnection extends NetConnection {
 
-    private final Connection connection;
+    private final ChannelOperations<?, ?> connection;
 
-    protected TcpConnection(Connection connection, boolean isConnected) {
+    protected TcpConnection(ChannelOperations<?, ?> connection, boolean isConnected) {
         super(isConnected);
         this.connection = connection;
     }
@@ -47,7 +47,6 @@ public class TcpConnection extends NetConnection {
             super.close(closeReason);
             TurmsNotification closeNotification = NotificationFactory.create(closeReason);
             connection
-                    .outbound()
                     .sendObject(closeNotification)
                     .then()
                     .doOnError(throwable -> {

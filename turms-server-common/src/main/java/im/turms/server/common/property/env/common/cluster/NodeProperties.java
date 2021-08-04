@@ -22,7 +22,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * @author James Chen
@@ -40,20 +39,9 @@ public class NodeProperties {
             "e.g. \"turms001\", \"turms_002\"")
     private String id = "";
 
-    @NestedConfigurationProperty
-    private NetworkProperties network = new NetworkProperties();
-
     private boolean activeByDefault = true;
 
     @Description("Only works when it's a service node")
     private boolean leaderEligible = true;
-
-    @Data
-    public static class NetworkProperties {
-        private String host = "0.0.0.0";
-        private int port = 7510;
-        private boolean autoIncrement = true;
-        private int portCount = 100;
-    }
 
 }

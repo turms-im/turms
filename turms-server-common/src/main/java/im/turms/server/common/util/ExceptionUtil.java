@@ -20,8 +20,6 @@ package im.turms.server.common.util;
 import com.mongodb.internal.connection.tlschannel.impl.TlsChannelImpl;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
-import io.rsocket.exceptions.ConnectionCloseException;
-import io.rsocket.exceptions.ConnectionErrorException;
 import reactor.netty.channel.AbortedException;
 
 import java.io.EOFException;
@@ -39,9 +37,7 @@ public final class ExceptionUtil {
             AbortedException.class,
             ClosedChannelException.class,
             EOFException.class,
-            TlsChannelImpl.EofException.class,
-            ConnectionErrorException.class,
-            ConnectionCloseException.class
+            TlsChannelImpl.EofException.class
     );
 
     private ExceptionUtil() {

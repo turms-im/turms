@@ -29,6 +29,7 @@ import im.turms.server.common.mongo.entity.MongoEntity;
 import im.turms.server.common.mongo.entity.Zone;
 import im.turms.server.common.property.TurmsPropertiesManager;
 import im.turms.server.common.property.env.service.env.database.MultiTemperatureProperties;
+import im.turms.server.common.util.ReactorUtil;
 import im.turms.turms.workflow.dao.domain.admin.Admin;
 import im.turms.turms.workflow.dao.domain.admin.AdminRole;
 import im.turms.turms.workflow.dao.domain.conversation.GroupConversation;
@@ -129,17 +130,25 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
         createCollectionsIfNotExist()
                 .doOnError(t -> log.error("Failed to create collections", t))
                 .doOnSuccess(ignored -> log.info("All collections are created"))
-                .then(Mono.defer(() -> ensureZones()
-                        .then(Mono.defer(this::ensureIndexesAndShard)
-                                .doOnError(t -> log.error("Failed to ensure indexes and shard", t)))
-                        .then(Mono.defer(() -> !context.isProduction() && fakingManager.isFakingEnabled()
-                                ? fakingManager.fakeData()
-                                : Mono.empty()))))
+                .flatMap(exists -> {
+                    if (exists && !fakingManager.isFakeIfCollectionExists()) {
+                        return Mono.empty();
+                    }
+                    return Mono.defer(() -> ensureZones()
+                            .then(Mono.defer(this::ensureIndexesAndShard)
+                                    .doOnError(t -> log.error("Failed to ensure indexes and shard", t)))
+                            .then(Mono.defer(() -> !context.isProduction() && fakingManager.isFakingEnabled()
+                                    ? fakingManager.fakeData()
+                                    : Mono.empty())));
+                })
                 .block(timeout);
     }
 
-    private Mono<Void> createCollectionsIfNotExist() {
-        return Mono.when(
+    /**
+     * @return True if all collections have existed
+     */
+    private Mono<Boolean> createCollectionsIfNotExist() {
+        return ReactorUtil.areAllTrue(
                 createCollectionIfNotExist(Admin.class),
                 createCollectionIfNotExist(AdminRole.class),
 
@@ -165,6 +174,9 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                 createCollectionIfNotExist(UserVersion.class));
     }
 
+    /**
+     * @return whether the collection has already existed
+     */
     private <T> Mono<Boolean> createCollectionIfNotExist(Class<T> clazz) {
         TurmsMongoClient mongoClient;
         if (clazz == Admin.class || clazz == AdminRole.class) {
@@ -182,15 +194,15 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
         } else if (clazz == Message.class) {
             mongoClient = messageMongoClient;
         } else {
-            return Mono.error(new IllegalArgumentException("Unknown collection=" + clazz.getName()));
+            return Mono.error(new IllegalArgumentException("Unknown collection " + clazz.getName()));
         }
         return mongoClient.collectionExists(clazz)
                 .flatMap(exists -> exists
-                        ? Mono.just(false)
+                        ? Mono.just(exists)
                         // Note that we do NOT assign a validator to collections
                         // because it's very common that business scenarios change over time
                         // and some new fields need to be added
-                        : mongoClient.createCollection(clazz).thenReturn(true));
+                        : mongoClient.createCollection(clazz).thenReturn(exists));
     }
 
     private Mono<Void> dropAllDatabases() {
@@ -211,7 +223,7 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                 .map(entry -> entry.getKey().ensureIndexesAndShard(entry.getValue().stream()
                         .map(MongoEntity::getEntityClass)
                         .collect(Collectors.toList())))
-                .collect(Collectors.toList()));
+                .toList());
     }
 
     private Mono<Void> ensureZones() {
@@ -271,16 +283,16 @@ public class MongoCollectionInitializer implements IMongoCollectionInitializer {
                         : DateUtils.addDays(startDate, -currentDay);
                 ensureZones = ensureZones
                         .then(Mono.defer(() -> mongoClient.addShardToZone(shard, zoneName)
-                                .doOnError(t -> log.error("Failed to add a shard {} to the zone {}", shard, zoneName, t)))
+                                        .doOnError(t -> log.error("Failed to add a shard {} to the zone {}", shard, zoneName, t)))
                                 .doOnSuccess(unused -> log.info("Added a shard {} to the zone {}", shard, zoneName)))
                         .then(Mono.defer(() -> {
                             // TODO: support the shard key consisting of multiple fields
                             Document minimum = new Document(creationDateFieldName, min);
                             Document maximum = new Document(creationDateFieldName, max);
                             return mongoClient.updateZoneKeyRange(collectionName,
-                                    zoneName,
-                                    minimum,
-                                    maximum)
+                                            zoneName,
+                                            minimum,
+                                            maximum)
                                     .doOnError(t -> log.error("Failed to update the zone {} with the key ranges: {} -->> {}",
                                             zoneName,
                                             minimum.toJson(),
