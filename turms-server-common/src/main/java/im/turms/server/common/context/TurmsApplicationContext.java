@@ -46,6 +46,9 @@ public class TurmsApplicationContext {
 
     public TurmsApplicationContext(Environment environment,
                                    @Autowired(required = false) BuildProperties buildProperties) {
+        // Don't allow developers to configure it because it's a bad practice to use other zone
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+
         List<String> devEnvs = List.of("dev", "development",
                 "local");
         List<String> localTestEnvs = List.of("test", "testing");
