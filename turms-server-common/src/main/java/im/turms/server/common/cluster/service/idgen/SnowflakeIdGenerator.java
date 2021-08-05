@@ -22,24 +22,30 @@ import im.turms.common.util.RandomUtil;
 import jdk.internal.vm.annotation.Contended;
 import lombok.extern.log4j.Log4j2;
 
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * The flake ID is designed for turms.
+ * ID size: 64 bits.
  * <p>
- * 64 bits:
- * <p>
- * 1 bit for positive ID.
+ * 1 bit for the sign of ID.
+ * The most significant bit is always 0 to represent a positive number.
  * Reference: https://stackoverflow.com/questions/8927761/why-is-negative-id-or-zero-considered-a-bad-practice
  * <p>
  * 41 bits for timestamp (69 years)
  * <p>
- * 3 bits for data center ID (8). Reserved for future.
+ * 4 bits for data center ID (16).
+ * A data center usually represents a region in cloud.
+ * Reserved for future.
  * <p>
- * 8 bits for memberId (256)
+ * 8 bits for member ID (256).
+ * Note turms-gateway also works as a load balancer to route traffic to turms servers so the number
+ * of turms servers is better more than or equals to the number of turms-gateway servers in practice.
+ * In other words, the max number that can be represented by the bits for memberId should be better
+ * more than the number of turms-gateway servers that you will deploy
  * <p>
- * 11 bits for sequenceNumber (2,048)
+ * 10 bits for sequenceNumber (1,024).
+ * It can represent up to 1024*1000 sequence numbers per seconds.
  *
  * @author James Chen
  */
@@ -52,9 +58,9 @@ public class SnowflakeIdGenerator {
     private static final long EPOCH = 1602547200000L;
 
     private static final int TIMESTAMP_BITS = 41;
-    private static final int DATA_CENTER_ID_BITS = 3;
+    private static final int DATA_CENTER_ID_BITS = 4;
     private static final int MEMBER_ID_BITS = 8;
-    private static final int SEQUENCE_NUMBER_BITS = 11;
+    private static final int SEQUENCE_NUMBER_BITS = 10;
 
     private static final long TIMESTAMP_LEFT_SHIFT = SEQUENCE_NUMBER_BITS + MEMBER_ID_BITS + DATA_CENTER_ID_BITS;
     private static final long DATA_CENTER_ID_SHIFT = SEQUENCE_NUMBER_BITS + MEMBER_ID_BITS;
@@ -67,7 +73,7 @@ public class SnowflakeIdGenerator {
 
     // Because it's vulnerable if turms restarts after the clock goes backwards,
     // we randomize the sequenceNumber on init to decrease chance of collision
-    private final AtomicInteger sequenceNumber = new AtomicInteger(RandomUtil.nextPositiveInt());
+    private final AtomicLong sequenceNumber = new AtomicLong(RandomUtil.nextPositiveInt());
 
     @Contended("nodeInfo")
     private long dataCenterId;
