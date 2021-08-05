@@ -599,13 +599,9 @@ public class MessageService {
                         return Mono.just(0L);
                     } else {
                         return countUsersWhoSentMessage(dateRange, areGroupMessages, areSystemMessages)
-                                .map(totalUsers -> {
-                                    if (totalUsers == 0) {
-                                        return Long.MAX_VALUE;
-                                    } else {
-                                        return totalDeliveredMessages / totalUsers;
-                                    }
-                                });
+                                .map(totalUsers -> totalUsers == 0
+                                        ? Long.MAX_VALUE
+                                        : totalDeliveredMessages / totalUsers);
                     }
                 });
     }
@@ -671,18 +667,9 @@ public class MessageService {
                     if (!isSentByUser) {
                         return Mono.error(TurmsBusinessException.get(NOT_SENDER_TO_UPDATE_MESSAGE));
                     }
-                    if (recallDate != null) {
-                        return isMessageRecallable(messageId)
-                                .flatMap(permission -> {
-                                    TurmsStatusCode code = permission.getCode();
-                                    if (code != OK) {
-                                        return Mono.error(TurmsBusinessException.get(code, permission.getReason()));
-                                    }
-                                    return updateMessage(messageId, null, text, records, null, recallDate, null);
-                                });
-                    } else {
-                        return updateMessage(messageId, null, text, records, null, null, null);
-                    }
+                    return recallDate == null
+                            ? updateMessage(messageId, null, text, records, null, null, null)
+                            : updateMessageRecallDate(messageId, text, records, recallDate);
                 });
     }
 
@@ -775,10 +762,7 @@ public class MessageService {
                         referenceId));
     }
 
-    /**
-     * @return true if no recipient, or at least one recipient has received the notification
-     */
-    public Mono<Boolean> authAndSaveAndSendMessage(
+    public Mono<Void> authAndSaveAndSendMessage(
             boolean send,
             @Nullable Long messageId,
             @NotNull Boolean isGroupMessage,
@@ -808,23 +792,27 @@ public class MessageService {
             }
         }
         Date deliveryDate = new Date();
-        Mono<Pair<Message, Set<Long>>> saveMono = referenceId != null
-                ? authAndCloneAndSaveMessage(senderId, referenceId, isGroupMessage, isSystemMessage, targetId)
-                : authAndSaveMessage(messageId, senderId, targetId, isGroupMessage, isSystemMessage, text, records, burnAfter, deliveryDate,
-                null);
+        Mono<Pair<Message, Set<Long>>> saveMono = referenceId == null
+                ? authAndSaveMessage(messageId, senderId, targetId, isGroupMessage, isSystemMessage, text, records, burnAfter, deliveryDate,
+                null)
+                : authAndCloneAndSaveMessage(senderId, referenceId, isGroupMessage, isSystemMessage, targetId);
         return saveMono
-                .flatMap(pair -> {
+                .doOnNext(pair -> {
                     Message message = pair.getLeft();
                     sentMessageCounter.increment();
                     if (message != null && message.getId() != null && sentMessageCache != null) {
                         cacheSentMessage(message);
                     }
                     if (send) {
-                        return sendMessage(message, pair.getRight());
-                    } else {
-                        return Mono.just(true);
+                        sendMessage(message, pair.getRight())
+                                .onErrorResume(t -> {
+                                    log.error("Failed to send message", t);
+                                    return Mono.empty();
+                                })
+                                .subscribe();
                     }
-                });
+                })
+                .then();
     }
 
     private Mono<Boolean> sendMessage(@NotNull Message message, @NotNull Set<Long> recipientIds) {
@@ -860,6 +848,20 @@ public class MessageService {
                 null,
                 null,
                 null));
+    }
+
+    private Mono<UpdateResult> updateMessageRecallDate(@NotNull Long messageId,
+                                                       String text,
+                                                       List<byte[]> records,
+                                                       @PastOrPresent Date recallDate) {
+        return isMessageRecallable(messageId)
+                .flatMap(permission -> {
+                    TurmsStatusCode code = permission.getCode();
+                    if (code != OK) {
+                        return Mono.error(TurmsBusinessException.get(code, permission.getReason()));
+                    }
+                    return updateMessage(messageId, null, text, records, null, recallDate, null);
+                });
     }
 
     private void validRecordsLength(List<byte[]> records) {

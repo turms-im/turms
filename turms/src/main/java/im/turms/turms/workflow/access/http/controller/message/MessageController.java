@@ -77,7 +77,7 @@ public class MessageController {
     public Mono<ResponseEntity<ResponseDTO<Void>>> createMessages(
             @RequestParam(defaultValue = "true") Boolean send,
             @RequestBody CreateMessageDTO createMessageDTO) {
-        Mono<Boolean> sendMono = messageService.authAndSaveAndSendMessage(
+        Mono<Void> sendMono = messageService.authAndSaveAndSendMessage(
                 send,
                 createMessageDTO.getId(),
                 createMessageDTO.getIsGroupMessage(),
