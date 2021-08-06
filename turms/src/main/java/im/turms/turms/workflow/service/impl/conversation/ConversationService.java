@@ -26,6 +26,7 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
+import im.turms.server.common.mongo.exception.DuplicateKeyException;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.property.env.service.business.conversation.ReadReceiptProperties;
@@ -107,20 +108,23 @@ public class ConversationService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        if (readDate == null) {
-            readDate = new Date();
-        }
+        Date finalReadDate = readDate == null ? new Date() : readDate;
         String fieldKey = GroupConversation.Fields.MEMBER_ID_AND_READ_DATE + "." + memberId;
         boolean allowMoveReadDateForward =
                 node.getSharedProperties().getService().getConversation().getReadReceipt().isAllowMoveReadDateForward();
         Filter filter = Filter.newBuilder(allowMoveReadDateForward ? 1 : 2)
                 .eq(DaoConstant.ID_FIELD_NAME, groupId);
         if (!allowMoveReadDateForward) {
-            filter.ltOrNull(fieldKey, readDate);
+            // Only update if no existing date or the existing date is before readDate
+            filter.ltOrNull(fieldKey, finalReadDate);
         }
         Update update = Update.newBuilder(1)
-                .set(fieldKey, readDate);
-        return mongoClient.upsert(GroupConversation.class, filter, update);
+                .set(fieldKey, finalReadDate);
+        return mongoClient.upsert(GroupConversation.class, filter, update)
+                .onErrorResume(DuplicateKeyException.class,
+                        e -> readDate == null
+                                ? Mono.empty()
+                                : Mono.error(TurmsBusinessException.get(TurmsStatusCode.MOVING_READ_DATE_FORWARD_IS_DISABLED)));
     }
 
     public Mono<Void> upsertGroupConversationsReadDate(@NotNull Set<GroupConversation.GroupConversionMemberKey> keys,
@@ -183,19 +187,22 @@ public class ConversationService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        if (readDate == null) {
-            readDate = new Date();
-        }
+        Date finalReadDate = readDate == null ? new Date() : readDate;
         boolean allowMoveReadDateForward =
                 node.getSharedProperties().getService().getConversation().getReadReceipt().isAllowMoveReadDateForward();
         Filter filter = Filter.newBuilder(allowMoveReadDateForward ? 1 : 2)
                 .in(DaoConstant.ID_FIELD_NAME, keys);
         if (!allowMoveReadDateForward) {
-            filter.ltOrNull(PrivateConversation.Fields.READ_DATE, readDate);
+            // Only update if no existing date or the existing date is before readDate
+            filter.ltOrNull(PrivateConversation.Fields.READ_DATE, finalReadDate);
         }
         Update update = Update.newBuilder(1)
-                .set(PrivateConversation.Fields.READ_DATE, readDate);
-        return mongoClient.upsert(PrivateConversation.class, filter, update);
+                .set(PrivateConversation.Fields.READ_DATE, finalReadDate);
+        return mongoClient.upsert(PrivateConversation.class, filter, update)
+                .onErrorResume(DuplicateKeyException.class,
+                        e -> readDate == null
+                                ? Mono.empty()
+                                : Mono.error(TurmsBusinessException.get(TurmsStatusCode.MOVING_READ_DATE_FORWARD_IS_DISABLED)));
     }
 
     public Flux<GroupConversation> queryGroupConversations(@NotNull Collection<Long> groupIds) {

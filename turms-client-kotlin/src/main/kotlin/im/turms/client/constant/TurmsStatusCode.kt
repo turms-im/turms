@@ -186,6 +186,7 @@ object TurmsStatusCode {
     // Conversation
     const val UPDATING_TYPING_STATUS_IS_DISABLED = 4000
     const val UPDATING_READ_DATE_IS_DISABLED = 4001
+    const val MOVING_READ_DATE_FORWARD_IS_DISABLED = 4002
 
     // Message
 

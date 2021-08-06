@@ -171,8 +171,9 @@ public enum TurmsStatusCode {
     RECALL_NOT_PENDING_GROUP_INVITATION(3710, "Cannot recall not pending group invitations", 403),
 
     // Conversation
-    UPDATING_TYPING_STATUS_IS_DISABLED(4000, "The feature to update typing status is disabled", 510),
-    UPDATING_READ_DATE_IS_DISABLED(4001, "The feature to update read data is disabled", 510),
+    UPDATING_TYPING_STATUS_IS_DISABLED(4000, "The feature to update the typing status is disabled", 510),
+    UPDATING_READ_DATE_IS_DISABLED(4001, "The feature to update the read data is disabled", 510),
+    MOVING_READ_DATE_FORWARD_IS_DISABLED(4002, "The feature to move the read data forward is disabled", 510),
 
     // Message
 
