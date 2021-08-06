@@ -19,6 +19,7 @@ package im.turms.server.common.exception;
 
 import im.turms.server.common.cluster.service.rpc.exception.RpcException;
 import im.turms.server.common.constant.TurmsStatusCode;
+import im.turms.server.common.mongo.exception.DuplicateKeyException;
 import lombok.Data;
 
 @Data
@@ -33,6 +34,13 @@ public final class ThrowableInfo {
             reason = e.getReason();
         } else if (throwable instanceof RpcException e) {
             code = e.getStatusCode();
+            reason = e.getMessage();
+        } else if (throwable instanceof DuplicateKeyException e) {
+            // We consider DuplicateKeyException as a client error here,
+            // because if it's indeed an exception caused by the illegal args provided
+            // by the server, it should recover in the upstream rather than
+            // passing down DuplicateKeyException
+            code = TurmsStatusCode.RECORD_CONTAINS_DUPLICATE_KEY;
             reason = e.getMessage();
         } else {
             code = TurmsStatusCode.SERVER_INTERNAL_ERROR;

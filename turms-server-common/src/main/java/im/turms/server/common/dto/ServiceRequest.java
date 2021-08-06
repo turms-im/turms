@@ -40,12 +40,12 @@ public final class ServiceRequest {
     private final DeviceType deviceType;
     // request information
     /**
-     * Not null in turms but null in turms-gateway
+     * Null in turms but not null in turms-gateway
      */
     @Nullable
     private final Long requestId;
     /**
-     * Not null in turms but null in turms-gateway
+     * Null in turms but not null in turms-gateway
      */
     @Nullable
     private final TurmsRequest.KindCase type;
