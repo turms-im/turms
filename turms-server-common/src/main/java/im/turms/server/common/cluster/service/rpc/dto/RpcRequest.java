@@ -131,4 +131,14 @@ public abstract class RpcRequest<T> {
     public Mono<T> callAsync() {
         throw new UnsupportedOperationException();
     }
+
+    public void retainBoundBuffer() {
+    }
+
+    public void releaseBoundBuffer() {
+    }
+
+    public void touchBuffer(Object hint) {
+    }
+
 }

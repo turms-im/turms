@@ -804,6 +804,7 @@ public class MessageService {
                         cacheSentMessage(message);
                     }
                     if (send) {
+                        // No need to let the client wait to send notifications to recipients
                         sendMessage(message, pair.getRight())
                                 .onErrorResume(t -> {
                                     log.error("Failed to send message", t);

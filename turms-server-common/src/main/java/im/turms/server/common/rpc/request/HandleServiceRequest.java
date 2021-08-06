@@ -97,4 +97,19 @@ public class HandleServiceRequest extends RpcRequest<ServiceResponse> {
         return dispatcher.dispatch(getTracingContext(), serviceRequest);
     }
 
+    @Override
+    public void retainBoundBuffer() {
+        serviceRequest.getTurmsRequestBuffer().retain();
+    }
+
+    @Override
+    public void releaseBoundBuffer() {
+        serviceRequest.getTurmsRequestBuffer().release();
+    }
+
+    @Override
+    public void touchBuffer(Object hint) {
+        serviceRequest.getTurmsRequestBuffer().touch(hint);
+    }
+
 }

@@ -19,7 +19,7 @@ import im.turms.server.common.property.env.gateway.clientapi.ClientApiProperties
 import im.turms.server.common.property.env.gateway.clientapi.RateLimitingProperties;
 import im.turms.server.common.rpc.request.HandleServiceRequest;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.buffer.UnpooledByteBufAllocator;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -133,7 +133,7 @@ class InboundRequestServiceTests {
     }
 
     private ServiceRequest newServiceRequest() {
-        ByteBuf buffer = PooledByteBufAllocator.DEFAULT.buffer();
+        ByteBuf buffer = UnpooledByteBufAllocator.DEFAULT.buffer();
         return new ServiceRequest(IP_ADDRESS, 1L, DeviceType.ANDROID, 1L, TurmsRequest.KindCase.CREATE_MESSAGE_REQUEST, buffer);
     }
 

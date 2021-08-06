@@ -29,7 +29,7 @@ import im.turms.server.common.cluster.node.Node;
 import im.turms.server.common.property.TurmsProperties;
 import im.turms.server.common.property.env.common.PluginProperties;
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.unix.PreferredDirectByteBufAllocator;
+import io.netty.buffer.UnpooledByteBufAllocator;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.geo.Point;
 import reactor.core.publisher.Mono;
@@ -74,10 +74,9 @@ class OutboundMessageServiceTests {
                 .thenReturn(Map.of(DeviceType.ANDROID, session));
         OutboundMessageService outboundMessageService = newOutboundMessageService(sessionsManager);
 
-        ByteBuf byteBuf = PreferredDirectByteBufAllocator.DEFAULT.directBuffer();
+        ByteBuf byteBuf = UnpooledByteBufAllocator.DEFAULT.directBuffer();
         Set<Long> recipientIds = Set.of(1L);
         boolean sent = outboundMessageService.sendNotificationToLocalClients(byteBuf, recipientIds);
-        byteBuf.release();
 
         assertThat(byteBuf.refCnt())
                 .as("Buffer should not be released if the notification hasn't been sent")
@@ -95,10 +94,9 @@ class OutboundMessageServiceTests {
     void sendNotificationToLocalClients_shouldReleaseAndReturnFalse_ifRecipientsAreOffline() {
         OutboundMessageService outboundMessageService = newOutboundMessageService(null);
 
-        ByteBuf byteBuf = PreferredDirectByteBufAllocator.DEFAULT.directBuffer();
+        ByteBuf byteBuf = UnpooledByteBufAllocator.DEFAULT.directBuffer();
         Set<Long> recipientIds = Set.of(1L);
         boolean sent = outboundMessageService.sendNotificationToLocalClients(byteBuf, recipientIds);
-        byteBuf.release();
 
         assertThat(byteBuf.refCnt())
                 .as("Buffer should be released if recipients are offline")

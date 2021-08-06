@@ -17,8 +17,8 @@
 
 package unit.im.turms.server.common.rpc.codec.request;
 
-import im.turms.server.common.rpc.request.CountOnlineUsersRequest;
 import im.turms.server.common.rpc.codec.request.CountOnlineUsersRequestCodec;
+import im.turms.server.common.rpc.request.CountOnlineUsersRequest;
 import org.junit.jupiter.api.Test;
 import unit.im.turms.server.common.rpc.codec.BaseCodecTest;
 

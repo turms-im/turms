@@ -64,7 +64,7 @@ public final class TcpServerFactory {
                 .runOn(LoopResourcesFactory.createForServer("gateway-tcp"))
                 // Note that the elements from "in.receive()" is emitted by FluxReceive,
                 // which will release buffer after "onNext" returns
-                .handle((in, out) -> handler.handle((Connection) in, in.receive(), out, ((Connection) in).onDispose()))
+                .handle((in, out) -> handler.handle((Connection) in, false, in.receive(), out, ((Connection) in).onDispose()))
                 .doOnChannelInit((connectionObserver, channel, remoteAddress) -> handlerConfig.configureChannel(channel))
                 .doOnConnection(handlerConfig::configureConnection);
         Ssl ssl = tcpProperties.getSsl();

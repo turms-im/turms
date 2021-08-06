@@ -64,6 +64,7 @@ public class OutboundMessageService implements IOutboundMessageService {
      * @param notificationData should be a buffer of TurmsNotification
      * @return true if the notification is ready to forward (queued) or has forwarded
      * to one recipient at least
+     * @implNote The method ensures notificationData will be released by 1
      */
     @Override
     public boolean sendNotificationToLocalClients(ByteBuf notificationData,
@@ -78,15 +79,11 @@ public class OutboundMessageService implements IOutboundMessageService {
                 ? CollectionUtil.newSetWithExpectedSize(Math.max(1, recipientIds.size() / 2))
                 : Collections.emptySet();
 
-        int initialRefCnt = notificationData.refCnt();
-        notificationData.retain(); // To avoid being released by the caller
         // RefCntAwareByteBuf is used to release the buffer to 0
         // because when the method returns, Netty may not flush the buffer to recipients
-        RefCntAwareByteBuf wrappedNotificationData = new RefCntAwareByteBuf(notificationData, refCnt -> {
-            if (refCnt == initialRefCnt) {
-                notificationData.release();
-            }
-        });
+        RefCntAwareByteBuf wrappedNotificationData = new RefCntAwareByteBuf(notificationData, notificationData::release);
+
+        wrappedNotificationData.startRetainCounter();
 
         // Send notification
         for (Long recipientId : recipientIds) {
@@ -94,7 +91,7 @@ public class OutboundMessageService implements IOutboundMessageService {
             if (userSessionsManager != null) {
                 for (UserSession userSession : userSessionsManager.getSessionMap().values()) {
                     wrappedNotificationData.retain();
-                    // It's the responsibility for the downstream to decrease the reference count of the notification by 1
+                    // It's the responsibility of the downstream to decrease the reference count of the notification by 1
                     // when the notification is queued successfully and released by Netty, or fails to be queued.
                     // Otherwise, there is a memory leak
                     EmitResult emitResult = userSession.tryEmitNextNotification(wrappedNotificationData);
@@ -117,10 +114,7 @@ public class OutboundMessageService implements IOutboundMessageService {
             triggerPlugins(wrappedNotificationData, recipientIds, offlineRecipientIds);
         }
 
-        // Release
-        if (!hasForwardedMessageToOneRecipient) {
-            notificationData.release();
-        }
+        wrappedNotificationData.stopRetainCounter();
 
         return hasForwardedMessageToOneRecipient;
     }

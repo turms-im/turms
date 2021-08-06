@@ -24,7 +24,7 @@ import im.turms.server.common.rpc.codec.request.RpcRequestCodec;
 import im.turms.server.common.tracing.TracingContext;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.CompositeByteBuf;
-import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.buffer.UnpooledByteBufAllocator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -47,10 +47,10 @@ public abstract class BaseCodecTest {
 
     public <T> T writeDataAndReadBuffer(Codec<T> codec, T data) {
         int initialCapacity = codec.initialCapacity(data);
-        ByteBuf baseBuffer = PooledByteBufAllocator.DEFAULT.buffer(initialCapacity);
+        ByteBuf baseBuffer = UnpooledByteBufAllocator.DEFAULT.buffer(initialCapacity);
         codec.write(baseBuffer, data);
 
-        CompositeByteBuf buffers = PooledByteBufAllocator.DEFAULT.compositeBuffer(2)
+        CompositeByteBuf buffers = UnpooledByteBufAllocator.DEFAULT.compositeBuffer(2)
                 .addComponent(true, baseBuffer);
 
         ByteBuf buffer = codec.byteBufToComposite(data);

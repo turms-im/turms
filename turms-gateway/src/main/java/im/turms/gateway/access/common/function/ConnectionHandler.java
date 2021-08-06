@@ -29,6 +29,7 @@ import reactor.netty.NettyOutbound;
 @FunctionalInterface
 public interface ConnectionHandler {
     Mono<Void> handle(Connection connection,
+                      boolean isWebSocketConnection,
                       Flux<ByteBuf> in,
                       NettyOutbound out,
                       Mono<Void> onClose);

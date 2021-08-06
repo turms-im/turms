@@ -111,6 +111,7 @@ TurmsStatusCode表明请求响应中的处理状态，类似HTTP的状态码。
 |                      | RECALL_NOT_PENDING_GROUP_INVITATION                  | 3710   |      |
 | 聊天会话相关错误     | UPDATING_TYPING_STATUS_IS_DISABLED                   | 4000   |      |
 |                      | UPDATING_READ_DATE_IS_DISABLED                       | 4001   |      |
+|                      | MOVING_READ_DATE_FORWARD_IS_DISABLED                 | 4002   |      |
 | 消息发送相关错误     | MESSAGE_RECIPIENT_NOT_ACTIVE                         | 5000   |      |
 |                      | MESSAGE_SENDER_NOT_IN_CONTACTS_OR_BLOCKED            | 5001   |      |
 |                      | PRIVATE_MESSAGE_SENDER_HAS_BEEN_BLOCKED              | 5002   |      |

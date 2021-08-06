@@ -18,7 +18,7 @@
 package im.turms.server.common.redis.codec;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.buffer.UnpooledByteBufAllocator;
 
 import java.nio.ByteBuffer;
 
@@ -29,7 +29,7 @@ public class GeoUserIdCodec implements TurmsRedisCodec<Long> {
 
     @Override
     public ByteBuf encode(Long value) {
-        return PooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES)
+        return UnpooledByteBufAllocator.DEFAULT.directBuffer(Long.BYTES)
                 .writeLong(value);
     }
 

@@ -51,7 +51,7 @@ public class ApplicationEnvironmentEventListener implements ApplicationListener<
 
         // Though it's more reasonable to init the node type/ID in im.turms.server.common.cluster.node.Node,
         // we need to ensure the local node info is logged even if the local node hasn't been inited.
-        // So we init the node info here
+        // So we initialize the node info here
         String applicationClassName = event.getSpringApplication().getMainApplicationClass().getSimpleName();
         TurmsContextLookup.setNodeType(applicationClassName.equals("TurmsGatewayApplication")
                 ? NodeType.GATEWAY

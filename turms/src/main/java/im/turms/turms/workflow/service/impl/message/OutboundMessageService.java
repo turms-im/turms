@@ -53,8 +53,11 @@ import java.util.Set;
 
 /**
  * @author James Chen
- * @implNote All operations that send the outbound message buffer to other servers
- * need to ensure that the buffer will be released by 1
+ * @implNote 1. All operations that send the outbound message buffer to other servers
+ * need to ensure that the buffer will be released by 1.
+ * 2. To keep operations as simple as possible,
+ * all operations doesn't support the cancellation operation.
+ * In other words, it will leak memory if cancellation occurs.
  */
 @Service
 @Log4j2
@@ -220,8 +223,7 @@ public class OutboundMessageService {
             monos.add(forwardClientMessageToNode(messageData, nodeId, recipientIds));
         }
         return ReactorUtil.atLeastOneTrue(monos)
-                .doOnTerminate(messageData::release);
-
+                .doFinally(signal -> messageData.release());
     }
 
     private Mono<Boolean> forwardClientMessageToNodes(
@@ -245,7 +247,7 @@ public class OutboundMessageService {
             monos.add(node.getRpcService().requestResponse(nodeId, request));
         }
         return ReactorUtil.atLeastOneTrue(monos)
-                .doOnTerminate(messageData::release);
+                .doFinally(signal -> messageData.release());
     }
 
     private Mono<Boolean> forwardClientMessageToNode(

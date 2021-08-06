@@ -24,6 +24,7 @@ import im.turms.server.common.cluster.service.rpc.dto.RpcRequest;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.handler.codec.LengthFieldPrepender;
+import io.netty.util.IllegalReferenceCountException;
 
 /**
  * @author James Chen
@@ -47,6 +48,10 @@ public final class RpcFrameEncoder extends LengthFieldPrepender {
         if (valueCodec == null) {
             throw new CodecNotFoundException("No codec found for the class: " + valueClass.getName());
         }
+        ByteBuf byteBufToComposite = valueCodec.byteBufToComposite(value);
+        if (byteBufToComposite != null && byteBufToComposite.refCnt() == 0) {
+            throw new IllegalReferenceCountException("byteBufToComposite of the data has been released: " + value);
+        }
         int codecId = valueCodec.getCodecId().getId();
         int initialCapacity = valueCodec.initialCapacity(value);
         initialCapacity = initialCapacity > -1
@@ -57,7 +62,6 @@ public final class RpcFrameEncoder extends LengthFieldPrepender {
                 .writeShort(codecId)
                 .writeInt(requestId);
         valueCodec.write(outputBuffer, value);
-        ByteBuf byteBufToComposite = valueCodec.byteBufToComposite(value);
         if (byteBufToComposite != null) {
             outputBuffer = PooledByteBufAllocator.DEFAULT
                     .compositeDirectBuffer(2)

@@ -60,12 +60,15 @@ public class InboundRequestService {
 
     /**
      * @return a response to the request.
+     * @implNote The method ensures turmsRequestBuffer in serviceRequest will be released by 1
      */
     public Mono<TurmsNotification> processServiceRequest(ServiceRequest serviceRequest) {
         try {
             return processServiceRequest0(serviceRequest);
         } catch (Exception e) {
             return Mono.error(e);
+        } finally {
+            serviceRequest.getTurmsRequestBuffer().release();
         }
     }
 
@@ -73,7 +76,12 @@ public class InboundRequestService {
         // Validate
         Long userId = serviceRequest.getUserId();
         DeviceType deviceType = serviceRequest.getDeviceType();
-        UserSession session = sessionService.getLocalUserSession(userId, deviceType);
+        UserSession session;
+        try {
+            session = sessionService.getLocalUserSession(userId, deviceType);
+        } catch (Exception e) {
+            return Mono.error(TurmsBusinessException.get(TurmsStatusCode.INVALID_REQUEST, e.getMessage()));
+        }
         if (session == null) {
             return Mono.error(TurmsBusinessException.get(TurmsStatusCode.SEND_REQUEST_FROM_NON_EXISTING_SESSION));
         }
@@ -90,6 +98,7 @@ public class InboundRequestService {
         sessionService.updateHeartbeatTimestamp(session);
 
         // Forward request
+        serviceRequest.getTurmsRequestBuffer().retain();
         return sendServiceRequest(serviceRequest)
                 .defaultIfEmpty(REQUEST_RESPONSE_NO_CONTENT)
                 .map(response -> getNotificationFromResponse(response, requestId));

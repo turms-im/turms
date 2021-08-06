@@ -11,7 +11,7 @@ logging:
 
 spring:
   netty:
-    leak-detection: advanced
+    leak-detection: paranoid
 
 ############################### Turms ###############################
 

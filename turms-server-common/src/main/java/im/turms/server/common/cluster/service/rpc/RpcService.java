@@ -37,7 +37,6 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.logging.RequestLoggingContext;
 import im.turms.server.common.property.env.common.cluster.RpcProperties;
 import im.turms.server.common.tracing.TracingContext;
-import im.turms.server.common.util.ByteBufUtil;
 import im.turms.server.common.util.CollectorUtil;
 import im.turms.server.common.util.ExceptionUtil;
 import im.turms.server.common.util.MapUtil;
@@ -131,7 +130,12 @@ public class RpcService implements ClusterService {
                 if (data instanceof RpcRequest<?> request) {
                     ChannelOperations<?, ?> conn = connection.getConnection();
                     requestExecutor.runRpcRequest(request, connection, connection.getNodeId())
+                            .onErrorResume(RpcException.class, t -> (Mono) Mono.just(t))
                             .doOnNext(response -> {
+                                if (conn.isDisposed()) {
+                                    log.error("Cannot send response to disposed connection: " + response);
+                                    return;
+                                }
                                 ByteBuf buf;
                                 try {
                                     buf = RpcFrameEncoder.INSTANCE.encode(request.getRequestId(), response);
@@ -143,13 +147,12 @@ public class RpcService implements ClusterService {
                                     log.error("The buffer of response is released unexpectedly: " + response);
                                     return;
                                 }
-                                conn.send(Mono.just(buf), byteBuf -> true)
+                                conn.sendObject(buf)
                                         .then()
                                         .onErrorResume(t -> {
                                             log.error("Failed to send response", t);
                                             return Mono.empty();
                                         })
-                                        .doOnTerminate(() -> ByteBufUtil.ensureReleased(buf))
                                         .subscribe();
                             })
                             .subscribe();
@@ -196,7 +199,7 @@ public class RpcService implements ClusterService {
 
     /**
      * @return 1. an empty publisher if the peer responds with a null value;
-     * 2. a non-empty publisher if the peer responds with an non-null value;
+     * 2. a non-empty publisher if the peer responds with a non-null value;
      * 3. error for other cases (e.g. no peer exists).
      */
     public <T> Mono<T> requestResponse(RpcRequest<T> request) {
@@ -204,6 +207,7 @@ public class RpcService implements ClusterService {
         List<String> otherMembers = getOtherActiveConnectedMembersToRespond(request);
         int size = otherMembers.size();
         if (size == 0) {
+            request.releaseBoundBuffer();
             return Mono.error(RpcException.get(RpcErrorCode.MEMBER_NOT_FOUND, TurmsStatusCode.SERVER_UNAVAILABLE));
         }
         // use System.currentTimeMillis() instead of "RandomUtil.nextPositiveInt()" for better performance
@@ -213,8 +217,11 @@ public class RpcService implements ClusterService {
         try {
             client = getOrCreateEndpoint(memberNodeId);
         } catch (Exception e) {
+            request.releaseBoundBuffer();
             return Mono.error(e);
         }
+        // Retain to invoke requestResponse() again if an error occurs
+        request.retainBoundBuffer();
         return requestResponse(client, request, defaultRequestTimeoutDuration)
                 .onErrorResume(throwable -> {
                     if (ExceptionUtil.isDisconnectedClientError(throwable)) {
@@ -226,12 +233,13 @@ public class RpcService implements ClusterService {
                     }
                     // No need to translate the error because it should have been translated
                     return Mono.error(throwable);
-                });
+                })
+                .doFinally(signal -> request.releaseBoundBuffer());
     }
 
     /**
      * @return 1. an empty publisher if the peer responds with a null value;
-     * 2. a non-empty publisher if the peer responds with an non-null value;
+     * 2. a non-empty publisher if the peer responds with a non-null value;
      * 3. error for other cases (e.g. no peer exists).
      */
     public <T> Mono<T> requestResponse(String memberNodeId, RpcRequest<T> request) {
@@ -240,7 +248,7 @@ public class RpcService implements ClusterService {
 
     /**
      * @return 1. an empty publisher if the peer responds with a null value;
-     * 2. a non-empty publisher if the peer responds with an non-null value;
+     * 2. a non-empty publisher if the peer responds with a non-null value;
      * 3. error for other cases (e.g. no peer exists).
      */
     public <T> Mono<T> requestResponse(String memberNodeId, RpcRequest<T> request, Duration timeout) {
@@ -249,7 +257,7 @@ public class RpcService implements ClusterService {
 
     /**
      * @return 1. an empty publisher if the peer responds with a null value;
-     * 2. a non-empty publisher if the peer responds with an non-null value;
+     * 2. a non-empty publisher if the peer responds with a non-null value;
      * 3. error for other cases (e.g. no peer exists).
      */
     public <T> Mono<T> requestResponse(String memberNodeId, RpcRequest<T> request, Duration timeout, @Nullable TurmsConnection connection) {
@@ -260,13 +268,14 @@ public class RpcService implements ClusterService {
             RpcEndpoint endpoint = getOrCreateEndpoint(memberNodeId, connection);
             return requestResponse0(endpoint, request, timeout);
         } catch (Exception e) {
+            request.releaseBoundBuffer();
             return Mono.error(e);
         }
     }
 
     /**
      * @return 1. an empty publisher if the peer responds with a null value;
-     * 2. a non-empty publisher if the peer responds with an non-null value;
+     * 2. a non-empty publisher if the peer responds with a non-null value;
      * 3. error for other cases (e.g. no peer exists).
      */
     public <T> Mono<T> requestResponse(RpcEndpoint connection, RpcRequest<T> request, @Nullable Duration timeout) {
@@ -300,7 +309,7 @@ public class RpcService implements ClusterService {
 
     /**
      * @return 1. an non-empty publisher that publishes an empty map if all peers respond with an empty payload;
-     * 2. a non-empty publisher that publishes a non-empty map if any peer responds with an non-empty valid payload;
+     * 2. a non-empty publisher that publishes a non-empty map if any peer responds with a non-empty valid payload;
      * 3. error for other cases (e.g. no peer exists).
      * The key is the member node ID, and the value is the response
      */
@@ -330,6 +339,7 @@ public class RpcService implements ClusterService {
         try {
             assertCurrentNodeIsAllowedToSend(request);
         } catch (Exception e) {
+            request.releaseBoundBuffer();
             return Mono.error(e);
         }
         if (timeout == null) {
@@ -338,7 +348,13 @@ public class RpcService implements ClusterService {
         Mono<T> mono = Mono
                 .deferContextual(context -> {
                     addTraceIdToRequestFromContext(context, request);
-                    ByteBuf requestBody = codecService.serializeWithoutCodecId(request);
+                    ByteBuf requestBody;
+                    try {
+                        requestBody = codecService.serializeWithoutCodecId(request);
+                    } catch (Exception e) {
+                        request.releaseBoundBuffer();
+                        return Mono.error(new IllegalStateException("Failed to encode the request: " + request, e));
+                    }
                     return endpoint.sendRequest(request, requestBody);
                 })
                 .timeout(timeout)
@@ -398,7 +414,7 @@ public class RpcService implements ClusterService {
             return responseFlux
                     .timeout(timeout)
                     .onErrorMap(t -> mapThrowable(t, request))
-                    .doOnTerminate(() -> ByteBufUtil.ensureReleased(requestBody));
+                    .doFinally(signal -> requestBody.release());
         });
     }
 
@@ -449,7 +465,7 @@ public class RpcService implements ClusterService {
                     .timeout(timeout)
                     .collectMap(Pair::getFirst, Pair::getSecond, CollectorUtil.toMap(MapUtil.getCapability(size)))
                     .onErrorMap(t -> mapThrowable(t, request))
-                    .doOnTerminate(() -> ByteBufUtil.ensureReleased(requestBody));
+                    .doFinally(signal -> requestBody.release());
         });
     }
 

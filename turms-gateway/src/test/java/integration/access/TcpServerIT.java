@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 @Log4j2
 class TcpServerIT {
 
-    private static final ConnectionHandler NEVER_CLOSE = (connection, in, out, onClose) -> Mono.never();
+    private static final ConnectionHandler NEVER_CLOSE = (connection, isWebSocketConnection, in, out, onClose) -> Mono.never();
 
     @Test
     void shouldCloseOrAcceptConnection_accordingTo_ServerStatusManager_isActive() throws InterruptedException {

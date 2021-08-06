@@ -84,4 +84,19 @@ public class SendNotificationRequest extends RpcRequest<Boolean> {
         return outboundMessageService.sendNotificationToLocalClients(notificationBuffer, recipientIds);
     }
 
+    @Override
+    public void retainBoundBuffer() {
+        notificationBuffer.retain();
+    }
+
+    @Override
+    public void releaseBoundBuffer() {
+        notificationBuffer.release();
+    }
+
+    @Override
+    public void touchBuffer(Object hint) {
+        notificationBuffer.touch(hint);
+    }
+
 }

@@ -31,12 +31,10 @@ import im.turms.server.common.util.ExceptionUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import lombok.extern.log4j.Log4j2;
-import reactor.core.CorePublisher;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.netty.Connection;
 import reactor.netty.NettyOutbound;
-import reactor.netty.http.websocket.WebsocketOutbound;
 
 import javax.annotation.Nullable;
 import java.net.InetSocketAddress;
@@ -60,38 +58,37 @@ public abstract class UserSessionDispatcher {
     }
 
     protected ConnectionHandler bindConnectionWithSessionWrapper() {
-        return (connection, in, out, onClose) -> {
+        return (connection, isWebSocketConnection, in, out, onClose) -> {
             InetSocketAddress ip = (InetSocketAddress) connection.address();
             NetConnection netConnection = NetConnection.create(connection);
             UserSessionWrapper sessionWrapper = new UserSessionWrapper(netConnection, ip, closeIdleConnectionAfterSeconds, userSession -> {
                 RequestLoggingContext loggingContext = new RequestLoggingContext();
-                Flux<ByteBuf> notifications = userSession.getNotificationFlux()
+                userSession.getNotificationFlux()
+                        // Should not happen
                         .onErrorResume(throwable -> {
                             handleNotificationError(throwable, userSession);
                             return Mono.empty();
                         })
+                        .flatMap(turmsNotificationBuffer -> {
+                            turmsNotificationBuffer.touch(turmsNotificationBuffer);
+                            NettyOutbound outbound = isWebSocketConnection
+                                    ? out.sendObject(new BinaryWebSocketFrame(turmsNotificationBuffer))
+                                    : out.sendObject(turmsNotificationBuffer);
+                            return Mono.from(outbound);
+                        })
+                        .onErrorResume(throwable -> handleConnectionError(throwable, netConnection, userSession))
                         .contextWrite(context -> context.put(RequestLoggingContext.CTX_KEY_NAME, loggingContext))
-                        .doFinally(signal -> loggingContext.clearMdc());
-                sendNotifications(out, notifications, netConnection, userSession).subscribe();
+                        .doFinally(signal -> loggingContext.clearMdc())
+                        .subscribe();
             });
-            respondWithRequests(connection, in, out, sessionWrapper).subscribe();
+            respondWithRequests(connection, isWebSocketConnection, in, out, sessionWrapper)
+                    .subscribe();
             return tryRemoveSessionInfoOnConnectionClosed(onClose, sessionWrapper);
         };
     }
 
-    private Mono<Void> sendNotifications(NettyOutbound out,
-                                         CorePublisher<ByteBuf> notifications,
-                                         NetConnection netConnection,
-                                         UserSession userSession) {
-        NettyOutbound outbound = out instanceof WebsocketOutbound
-                ? out.sendObject(Flux.from(notifications).map(BinaryWebSocketFrame::new), o -> true)
-                : out.send(notifications, byteBuf -> true);
-        return outbound
-                .then()
-                .onErrorResume(throwable -> handleConnectionError(throwable, netConnection, userSession));
-    }
-
     private Mono<Void> respondWithRequests(Connection connection,
+                                           boolean isWebSocketConnection,
                                            Flux<ByteBuf> in,
                                            NettyOutbound out,
                                            UserSessionWrapper sessionWrapper) {
@@ -100,36 +97,29 @@ public abstract class UserSessionDispatcher {
                     if (connection.isDisposed()) {
                         return;
                     }
-                    // Retain by 1 so that it won't be released by FluxReceive
+                    // Retain by 1 so that it won't be released by FluxReceive#drainReceiver
                     // before we finish handling the buffer.
                     // And it should be 2 after retained
                     requestData.retain();
 
                     // Note that handleRequest() should never return MonoError
                     RequestLoggingContext loggingContext = new RequestLoggingContext();
-                    Mono<ByteBuf> response = userRequestDispatcher.handleRequest(sessionWrapper, requestData)
+                    userRequestDispatcher.handleRequest(sessionWrapper, requestData)
                             .onErrorResume(throwable -> {
                                 loggingContext.updateMdc();
                                 handleNotificationError(throwable, sessionWrapper.getUserSession());
                                 return Mono.empty();
                             })
-                            .contextWrite(context -> context.put(RequestLoggingContext.CTX_KEY_NAME, loggingContext))
-                            .doOnTerminate(loggingContext::clearMdc);
-
-                    sendNotifications(out, response, sessionWrapper.getConnection(), sessionWrapper.getUserSession())
-                            .doOnTerminate(() -> {
-                                // Because the buffer will be merged into an RPC request
-                                // in HandleServiceRequestCodec.byteBufToComposite() if it's a service request,
-                                // if no error occurs, requestData.refCnt() should be:
-                                // 0 if it has been released by FluxReceive and RpcService
-                                // 1 if it is released by FluxReceive but RpcService doesn't release it (because error occurs)
-                                // or it's not a service request
-                                // 2 if FluxReceive hasn't released and RpcService doesn't release it (because error occurs)
-                                // or it's not a service request
-                                if (requestData.refCnt() > 0) {
-                                    requestData.release();
-                                }
+                            .flatMap(turmsNotificationBuffer -> {
+                                NettyOutbound outbound = isWebSocketConnection
+                                        ? out.sendObject(new BinaryWebSocketFrame(turmsNotificationBuffer))
+                                        : out.sendObject(turmsNotificationBuffer);
+                                return Mono.from(outbound);
                             })
+                            .onErrorResume(throwable -> handleConnectionError(throwable, sessionWrapper.getConnection(),
+                                    sessionWrapper.getUserSession()))
+                            .contextWrite(context -> context.put(RequestLoggingContext.CTX_KEY_NAME, loggingContext))
+                            .doFinally(signal -> loggingContext.clearMdc())
                             .subscribe();
                 })
                 .then()
@@ -141,7 +131,7 @@ public abstract class UserSessionDispatcher {
         return onClose
                 .onErrorResume(
                         throwable -> handleConnectionError(throwable, sessionWrapper.getConnection(), sessionWrapper.getUserSession()))
-                .doOnTerminate(() -> {
+                .doFinally(signal -> {
                     UserSession userSession = sessionWrapper.getUserSession();
                     if (userSession != null && userSession.isOpen()) {
                         Long userId = userSession.getUserId();

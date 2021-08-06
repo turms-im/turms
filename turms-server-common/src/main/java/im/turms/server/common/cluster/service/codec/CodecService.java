@@ -23,8 +23,8 @@ import im.turms.server.common.cluster.service.codec.codec.Codec;
 import im.turms.server.common.cluster.service.codec.codec.CodecPool;
 import im.turms.server.common.cluster.service.codec.exception.CodecNotFoundException;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.util.IllegalReferenceCountException;
 import lombok.extern.log4j.Log4j2;
 
 /**
@@ -39,8 +39,6 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class CodecService implements ClusterService {
 
-    public static final ByteBufAllocator BYTE_BUF_ALLOCATOR = PooledByteBufAllocator.DEFAULT;
-
     public CodecService() {
         // Init here so the application can exit if an error is detected
         CodecPool.init();
@@ -52,12 +50,17 @@ public class CodecService implements ClusterService {
         if (codec == null) {
             throw new CodecNotFoundException("Cannot find a codec for class: " + clazz.getName());
         }
-        int initialCapacity = codec.initialCapacity(data);
-        ByteBuf output = BYTE_BUF_ALLOCATOR.directBuffer(initialCapacity > -1 ? initialCapacity : 128);
-        codec.write(output, data);
         ByteBuf byteBufToComposite = codec.byteBufToComposite(data);
+        if (byteBufToComposite != null && byteBufToComposite.refCnt() == 0) {
+            throw new IllegalReferenceCountException("byteBufToComposite of the data has been released: " + data);
+        }
+        int initialCapacity = codec.initialCapacity(data);
+        ByteBuf output = PooledByteBufAllocator.DEFAULT
+                .directBuffer(initialCapacity > -1 ? initialCapacity : 128);
+        codec.write(output, data);
         if (byteBufToComposite != null) {
-            output = PooledByteBufAllocator.DEFAULT.compositeDirectBuffer(2)
+            output = PooledByteBufAllocator.DEFAULT
+                    .compositeDirectBuffer(2)
                     .addComponents(true, output, byteBufToComposite);
         }
         return output;

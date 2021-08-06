@@ -125,7 +125,7 @@ public class TurmsRedisClient {
         ByteBuf keyBuffer = serializationContext.encodeHashKey(key);
         ByteBuf[] fieldBuffers = serializationContext.encodeHashFields(fields);
         return commands.hdel(keyBuffer, fieldBuffers)
-                .doOnTerminate(() -> {
+                .doFinally(signal -> {
                     ByteBufUtil.ensureReleased(keyBuffer);
                     ByteBufUtil.ensureReleased(fieldBuffers);
                 });
@@ -142,7 +142,7 @@ public class TurmsRedisClient {
                     return Mono.just(new AbstractMap.SimpleEntry<>(entry.getKey(), entry.getValue()));
                 });
         return entryFlux
-                .doOnTerminate(() -> ByteBufUtil.ensureReleased(keyBuffer));
+                .doFinally(signal -> ByteBufUtil.ensureReleased(keyBuffer));
     }
 
     // Geo
@@ -151,7 +151,7 @@ public class TurmsRedisClient {
         ByteBuf keyBuffer = serializationContext.encodeGeoKey(key);
         ByteBuf memberBuffer = serializationContext.encodeGeoMember(member);
         return commands.geoadd(keyBuffer, coordinates.getX(), coordinates.getY(), memberBuffer)
-                .doOnTerminate(() -> {
+                .doFinally(signal -> {
                     ByteBufUtil.ensureReleased(keyBuffer);
                     ByteBufUtil.ensureReleased(memberBuffer);
                 });
@@ -162,7 +162,7 @@ public class TurmsRedisClient {
         ByteBuf[] memberBuffers = serializationContext.encodeGeoMembers(members);
         return commands.geopos(keyBuffer, memberBuffers)
                 .flatMap(value -> value.isEmpty() ? Mono.empty() : Mono.just(value.getValue()))
-                .doOnTerminate(() -> {
+                .doFinally(signal -> {
                     ByteBufUtil.ensureReleased(keyBuffer);
                     ByteBufUtil.ensureReleased(memberBuffers);
                 });
@@ -181,7 +181,7 @@ public class TurmsRedisClient {
                     }
                     return Flux.error(e);
                 })
-                .doOnTerminate(() -> {
+                .doFinally(signal -> {
                     ByteBufUtil.ensureReleased(keyBuffer);
                     ByteBufUtil.ensureReleased(memberBuffer);
                 });
@@ -191,7 +191,7 @@ public class TurmsRedisClient {
         ByteBuf keyBuffer = serializationContext.encodeGeoKey(key);
         ByteBuf[] memberBuffers = serializationContext.encodeGeoMembers(members);
         return commands.zrem(keyBuffer, memberBuffers)
-                .doOnTerminate(() -> {
+                .doFinally(signal -> {
                     ByteBufUtil.ensureReleased(keyBuffer);
                     ByteBufUtil.ensureReleased(memberBuffers);
                 });
@@ -212,7 +212,7 @@ public class TurmsRedisClient {
                     }
                     return Flux.error(e);
                 })
-                .doOnTerminate(() -> {
+                .doFinally(signal -> {
                     for (ByteBuf key : keys) {
                         if (key.refCnt() > 0) {
                             key.release();

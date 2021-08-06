@@ -110,7 +110,7 @@ public final class UserSession {
     public void close(@NotNull CloseReason closeReason) {
         if (isSessionOpen) {
             isSessionOpen = false;
-            // Note that it acceptable to complete/close the following objects multiple times
+            // Note that it is acceptable to complete/close the following objects multiple times
             // so that it's unnecessary to update isSessionOpen atomically
             notificationSink.tryEmitComplete();
             if (connection != null) {

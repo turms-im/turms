@@ -60,7 +60,7 @@ public class TcpConnection extends NetConnection {
                                 RETRY_SEND_CLOSE_NOTIFICATION.maxAttempts, throwable);
                         return Mono.empty();
                     })
-                    .doOnTerminate(this::close)
+                    .doFinally(signal -> close())
                     .subscribe();
         }
     }

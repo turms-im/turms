@@ -43,9 +43,11 @@ public class RpcRequestExecutor {
     }
 
     /**
-     * We record request time/response here because the RPC request may run on the local machine
+     * @implNote 1. We record request time/response here because the RPC request may run on the local machine
+     * 2.The method itself will call RpcRequest#releaseBoundBuffer()
      */
     public <T> Mono<T> runRpcRequest(RpcRequest<T> rpcRequest, @Nullable TurmsConnection connection, String fromNodeId) {
+        rpcRequest.touchBuffer(rpcRequest);
         TracingContext tracingContext = null;
         try {
             tracingContext = rpcRequest.getTracingContext();
@@ -53,6 +55,8 @@ public class RpcRequestExecutor {
             TracingContext finalTracingContext = tracingContext;
             rpcRequest.init(context, connection, fromNodeId);
             Mono<T> result;
+            // It's the responsibility of the implementations of call() or callAsync()
+            // to release by 1 if the request has a bound buffer
             if (rpcRequest.isAsync()) {
                 result = rpcRequest.callAsync();
             } else {
@@ -68,14 +72,17 @@ public class RpcRequestExecutor {
             return result
                     .onErrorMap(e -> e instanceof RpcException
                             ? e
-                            : RpcException.get(RpcErrorCode.FAILED_TO_RUN_RPC, TurmsStatusCode.SERVER_INTERNAL_ERROR, e.toString()))
+                            : RpcException.get(RpcErrorCode.FAILED_TO_RUN_RPC, TurmsStatusCode.SERVER_INTERNAL_ERROR, e.toString(), e))
                     .doFinally(signalType -> finalTracingContext.clearMdc());
         } catch (RpcException e) {
+            rpcRequest.releaseBoundBuffer();
             return Mono.error(e);
         } catch (TurmsBusinessException e) {
+            rpcRequest.releaseBoundBuffer();
             return Mono.error(RpcException.get(RpcErrorCode.FAILED_TO_RUN_RPC, e.getCode(), e.getReason()));
         } catch (Exception e) {
-            return Mono.error(RpcException.get(RpcErrorCode.FAILED_TO_RUN_RPC, TurmsStatusCode.SERVER_INTERNAL_ERROR, e.toString()));
+            rpcRequest.releaseBoundBuffer();
+            return Mono.error(RpcException.get(RpcErrorCode.FAILED_TO_RUN_RPC, TurmsStatusCode.SERVER_INTERNAL_ERROR, e.toString(), e));
         } finally {
             if (tracingContext != null) {
                 tracingContext.clearMdc();

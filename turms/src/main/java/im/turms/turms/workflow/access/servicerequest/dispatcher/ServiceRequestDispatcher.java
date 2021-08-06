@@ -129,48 +129,52 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
         return type == CREATE_SESSION_REQUEST || type == DELETE_SESSION_REQUEST;
     }
 
-    @Override
-    public Mono<ServiceResponse> dispatch(TracingContext tracingContext, ServiceRequest serviceRequest) {
-        try {
-            return dispatch0(tracingContext, serviceRequest)
-                    .doOnTerminate(() -> serviceRequest.getTurmsRequestBuffer().release());
-        } catch (Exception e) {
-            log.error("Failed to handle the request: {}", serviceRequest, e);
-            serviceRequest.getTurmsRequestBuffer().release();
-            return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.SERVER_INTERNAL_ERROR, e.toString()));
-        }
-    }
-
     /**
      * @implNote 1. Flow Control:
      * turms-gateway is responsible for the flow control of client requests
      * and RSocket is responsible for the backpressure between turms and turms-gateway
      * so we don't check the request rate here.
      * <p>
-     * 2. The method should never return MonoError and it should be considered as a bug if it occurs
+     * 2. The method should never return MonoError, and it should be considered as a bug if it occurs
      * because the method itself should wrap all kinds of Throwable as a ServiceResponse instance.
+     * 3. The method ensures turmsRequestBuffer in serviceRequest will be released by 1
      */
+    @Override
+    public Mono<ServiceResponse> dispatch(TracingContext tracingContext, ServiceRequest serviceRequest) {
+        ByteBuf requestBuffer = serviceRequest.getTurmsRequestBuffer();
+        try {
+            requestBuffer.touch(serviceRequest);
+            return dispatch0(tracingContext, serviceRequest);
+        } catch (Exception e) {
+            log.error("Failed to handle the request: {}", serviceRequest, e);
+            return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.SERVER_INTERNAL_ERROR, e.toString()));
+        } finally {
+            requestBuffer.release();
+        }
+    }
+
     private Mono<ServiceResponse> dispatch0(TracingContext tracingContext, ServiceRequest serviceRequest) {
         long requestTime = System.currentTimeMillis();
         // 1. Validate ServiceResponse
         Long userId = serviceRequest.getUserId();
         DeviceType deviceType = serviceRequest.getDeviceType();
         if (userId == null) {
-            String message = "The user ID is missing for the request: " + serviceRequest;
+            String message = "The user ID is missing in the request: " + serviceRequest;
             return Mono.just(new ServiceResponse(null, TurmsStatusCode.SERVER_INTERNAL_ERROR, message));
         }
         if (deviceType == null) {
-            String message = "The device type is missing for the request: " + serviceRequest;
+            String message = "The device type is missing in the request: " + serviceRequest;
             return Mono.just(new ServiceResponse(null, TurmsStatusCode.SERVER_INTERNAL_ERROR, message));
         }
         if (!serverStatusManager.isActive()) {
             return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.SERVER_UNAVAILABLE));
         }
         TurmsRequest request;
-        int requestSize = serviceRequest.getTurmsRequestBuffer().readableBytes();
+        ByteBuf turmsRequestBuffer = serviceRequest.getTurmsRequestBuffer();
+        int requestSize = turmsRequestBuffer.readableBytes();
         try {
             // Note that "parseFrom" won't block because the buffer is fully read
-            request = TurmsRequest.parseFrom(serviceRequest.getTurmsRequestBuffer().nioBuffer());
+            request = TurmsRequest.parseFrom(turmsRequestBuffer.nioBuffer());
         } catch (InvalidProtocolBufferException e) {
             return Mono.just(ServiceResponseFactory.get(TurmsStatusCode.INVALID_REQUEST, e.getMessage()));
         }
@@ -180,8 +184,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
                 serviceRequest.getUserId(),
                 serviceRequest.getDeviceType(),
                 request.getRequestId(),
-                request,
-                serviceRequest.getTurmsRequestBuffer());
+                request);
         Mono<ClientRequest> clientRequestMono = Mono.just(clientRequest);
         List<im.turms.turms.plugin.extension.handler.ClientRequestHandler> clientClientRequestHandlerList =
                 turmsPluginManager.getClientRequestHandlerList();
@@ -288,7 +291,7 @@ public class ServiceRequestDispatcher implements IServiceRequestDispatcher {
             Mono<Boolean> notifyRecipientsMono = outboundMessageService
                     .forwardNotification(notificationForRecipients, notificationByteBuf, recipients);
             return Mono.when(notifyRequesterMono, notifyRecipientsMono)
-                    .doOnTerminate(notificationByteBuf::release);
+                    .doFinally(signal -> notificationByteBuf.release());
         } else {
             return outboundMessageService.forwardNotification(notificationForRecipients, notificationByteBuf, recipients)
                     .then();

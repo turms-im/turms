@@ -19,8 +19,8 @@ package unit.im.turms.server.common.rpc.codec.request;
 
 import im.turms.common.constant.DeviceType;
 import im.turms.common.constant.statuscode.SessionCloseStatus;
-import im.turms.server.common.rpc.request.SetUserOfflineRequest;
 import im.turms.server.common.rpc.codec.request.SetUserOfflineRequestCodec;
+import im.turms.server.common.rpc.request.SetUserOfflineRequest;
 import org.junit.jupiter.api.Test;
 import unit.im.turms.server.common.rpc.codec.BaseCodecTest;
 

@@ -93,7 +93,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                         .setIntro("group intro")
                         .setAnnouncement("announcement"))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleCreateGroupRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result -> {
@@ -113,7 +113,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                         .addAllAnswers(List.of("answer1", "answer2"))
                         .setScore(10))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleCreateGroupQuestionRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result -> {
@@ -131,7 +131,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                         .setGroupId(groupId)
                         .setContent("content"))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleCreateGroupJoinRequestRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result -> {
@@ -151,7 +151,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                         .setName("name")
                         .setRole(GroupMemberRole.MEMBER))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleCreateGroupMemberRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -165,7 +165,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                         .setGroupId(groupId)
                         .setUserId(GROUP_BLOCKED_USER_ID))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleCreateGroupBlockedUserRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -180,7 +180,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                         .setInviteeId(GROUP_INVITATION_INVITEE)
                         .setContent("content"))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleCreateGroupInvitationRequestRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result -> {
@@ -201,7 +201,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                         .setGroupName("new name")
                         .setIntro("new intro"))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleUpdateGroupRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -216,7 +216,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                         .setSuccessorId(GROUP_SUCCESSOR)
                         .setQuitAfterTransfer(true))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleUpdateGroupRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -230,7 +230,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                         .setGroupId(groupId)
                         .setMuteEndDate(System.currentTimeMillis() + 100_000))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleUpdateGroupRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -244,7 +244,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                         .setGroupId(groupId)
                         .setMuteEndDate(0))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleUpdateGroupRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -259,7 +259,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                         .setQuestion("new question")
                         .addAnswers("answers"))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleUpdateGroupJoinQuestionRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -274,7 +274,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                         .setMemberId(GROUP_MEMBER_ID)
                         .setName("myname"))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleUpdateGroupMemberRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -289,7 +289,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                         .setMemberId(GROUP_MEMBER_ID)
                         .setMuteEndDate(System.currentTimeMillis() + 100_000))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleUpdateGroupMemberRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -304,7 +304,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                         .setMemberId(GROUP_MEMBER_ID)
                         .setMuteEndDate(0))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleUpdateGroupMemberRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -319,7 +319,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                 .setQueryGroupRequest(QueryGroupRequest.newBuilder()
                         .setGroupId(groupId))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryGroupRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result -> assertThat(result.getDataForRequester().getGroupsWithVersion().getGroups(0).getId())
@@ -333,7 +333,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                 .setQueryJoinedGroupIdsRequest(QueryJoinedGroupIdsRequest.newBuilder()
                         .setLastUpdatedDate(0))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryJoinedGroupsIdsRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result -> assertThat(result.getDataForRequester().getIdsWithVersion().getValuesList())
@@ -346,7 +346,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
         TurmsRequest request = TurmsRequest.newBuilder()
                 .setQueryJoinedGroupInfosRequest(QueryJoinedGroupInfosRequest.newBuilder())
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryJoinedGroupsRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result -> assertThat(result.getDataForRequester().getGroupsWithVersion().getGroupsList())
@@ -360,7 +360,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                 .setQueryGroupBlockedUserIdsRequest(QueryGroupBlockedUserIdsRequest.newBuilder()
                         .setGroupId(groupId))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryGroupBlockedUserIdsRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result -> assertThat(result.getDataForRequester().getIdsWithVersion().getValuesList())
@@ -374,7 +374,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                 .setQueryGroupBlockedUserInfosRequest(QueryGroupBlockedUserInfosRequest.newBuilder()
                         .setGroupId(groupId))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryGroupBlockedUsersInfosRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono, result -> assertThat(result.getDataForRequester().getUsersInfosWithVersion().getUserInfos(0).getId())
@@ -388,7 +388,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                 .setQueryGroupInvitationsRequest(QueryGroupInvitationsRequest.newBuilder()
                         .setGroupId(groupId))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryGroupInvitationsRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,
@@ -403,7 +403,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                 .setQueryGroupJoinRequestsRequest(QueryGroupJoinRequestsRequest.newBuilder()
                         .setGroupId(groupId))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryGroupJoinRequestsRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,
@@ -419,7 +419,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                         .setGroupId(groupId)
                         .setWithAnswers(true))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryGroupJoinQuestionsRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,
@@ -435,7 +435,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                         .setGroupId(groupId)
                         .setWithStatus(true))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryGroupMembersRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,
@@ -452,7 +452,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                         .addMemberIds(GROUP_MEMBER_ID)
                         .setWithStatus(true))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleQueryGroupMembersRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono,
@@ -467,7 +467,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                 .setCheckGroupJoinQuestionsAnswersRequest(CheckGroupJoinQuestionsAnswersRequest.newBuilder()
                         .putQuestionIdAndAnswer(groupJoinQuestionId, "answer"))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleCheckGroupQuestionAnswerRequest()
                 .handle(clientRequest);
         assertResult(resultMono, result -> {
@@ -486,7 +486,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                         .setGroupId(groupId)
                         .setMemberId(GROUP_MEMBER_ID))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleDeleteGroupMemberRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -499,7 +499,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                 .setDeleteGroupJoinQuestionRequest(DeleteGroupJoinQuestionRequest.newBuilder()
                         .setQuestionId(groupJoinQuestionId))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleDeleteGroupJoinQuestionRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -513,7 +513,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                         .setGroupId(groupId)
                         .setUserId(GROUP_BLOCKED_USER_ID))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleDeleteGroupBlockedUserRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -526,7 +526,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                 .setDeleteGroupInvitationRequest(DeleteGroupInvitationRequest.newBuilder()
                         .setInvitationId(groupInvitationId))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleDeleteGroupInvitationRequest()
                 .handle(clientRequest);
         assertResultCodes(resultMono, TurmsStatusCode.OK, TurmsStatusCode.RECALLING_GROUP_INVITATION_IS_DISABLED);
@@ -539,7 +539,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                 .setDeleteGroupJoinRequestRequest(DeleteGroupJoinRequestRequest.newBuilder()
                         .setRequestId(groupJoinRequestId))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleDeleteGroupJoinRequestRequest()
                 .handle(clientRequest);
         assertResultCodes(resultMono, TurmsStatusCode.OK, TurmsStatusCode.RECALLING_GROUP_JOIN_REQUEST_IS_DISABLED);
@@ -553,7 +553,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                         .setGroupId(groupId)
                         .setQuitAfterTransfer(false))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleUpdateGroupRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);
@@ -566,7 +566,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                 .setCreateGroupRequest(CreateGroupRequest.newBuilder()
                         .setName("readyToDelete"))
                 .build();
-        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        ClientRequest clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         Mono<RequestHandlerResult> resultMono = getController().handleCreateGroupRequest()
                 .handle(clientRequest);
         AtomicLong readyToDeleteGroupId = new AtomicLong();
@@ -576,7 +576,7 @@ class GroupServiceControllerST extends BaseServiceControllerTest<GroupServiceCon
                 .setDeleteGroupRequest(DeleteGroupRequest.newBuilder()
                         .setGroupId(readyToDeleteGroupId.get()))
                 .build();
-        clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request, null);
+        clientRequest = new ClientRequest(USER_ID, USER_DEVICE, REQUEST_ID, request);
         resultMono = getController().handleDeleteGroupRequest()
                 .handle(clientRequest);
         assertResultIsOk(resultMono);

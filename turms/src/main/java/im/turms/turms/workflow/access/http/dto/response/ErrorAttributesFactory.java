@@ -72,22 +72,12 @@ public final class ErrorAttributesFactory {
         private static SimpleErrorAttributes fromResponseStatusException(ResponseStatusException exception) {
             HttpStatus httpStatus = exception.getStatus();
             String reason = exception.getReason();
-            TurmsStatusCode statusCode;
-            switch (httpStatus.series()) {
-                case INFORMATIONAL:
-                case SUCCESSFUL:
-                case REDIRECTION:
-                    statusCode = TurmsStatusCode.OK;
-                    break;
-                case CLIENT_ERROR:
-                    statusCode = TurmsStatusCode.INVALID_REQUEST;
-                    break;
-                case SERVER_ERROR:
-                    statusCode = TurmsStatusCode.SERVER_INTERNAL_ERROR;
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + httpStatus.series());
-            }
+            TurmsStatusCode statusCode = switch (httpStatus.series()) {
+                case INFORMATIONAL, SUCCESSFUL, REDIRECTION -> TurmsStatusCode.OK;
+                case CLIENT_ERROR -> TurmsStatusCode.INVALID_REQUEST;
+                case SERVER_ERROR -> TurmsStatusCode.SERVER_INTERNAL_ERROR;
+                default -> throw new IllegalStateException("Unexpected value: " + httpStatus.series());
+            };
             return new SimpleErrorAttributes(httpStatus.value(), statusCode, reason);
         }
 

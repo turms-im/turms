@@ -21,7 +21,7 @@ import im.turms.server.common.cluster.service.connection.TurmsConnection;
 import im.turms.server.common.cluster.service.rpc.codec.RpcFrameEncoder;
 import im.turms.server.common.cluster.service.rpc.dto.RpcRequest;
 import im.turms.server.common.cluster.service.rpc.dto.RpcResponse;
-import im.turms.server.common.util.ByteBufUtil;
+import im.turms.server.common.util.MapUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.util.IllegalReferenceCountException;
 import lombok.Getter;
@@ -41,11 +41,17 @@ import java.util.concurrent.ThreadLocalRandom;
 @Log4j2
 public final class RpcEndpoint {
 
+    private static final int EXPECTED_MAX_QPS = 1000;
+    private static final int EXPECTED_AVERAGE_RTT = 10;
+    private static final int INITIAL_CAPACITY_PERCENTAGE = 10;
+
     @Getter
     private final String nodeId;
     @Getter
     private final TurmsConnection connection;
-    private final Map<Integer, Sinks.One<?>> pendingRequestMap = new ConcurrentHashMap<>(1024);
+    private final Map<Integer, Sinks.One<?>> pendingRequestMap =
+            new ConcurrentHashMap<>(MapUtil.getCapability(
+                    (int) (EXPECTED_MAX_QPS * EXPECTED_AVERAGE_RTT * (INITIAL_CAPACITY_PERCENTAGE / 100F))));
 
     public RpcEndpoint(String nodeId, TurmsConnection connection) {
         this.nodeId = nodeId;
@@ -55,7 +61,9 @@ public final class RpcEndpoint {
     // Handle Request
 
     /**
-     * Accept requestBody of ByteBuf so that we can send the same buffer for multiple peers
+     * Accept requestBody of ByteBuf so that we can send the same buffer to multiple peers
+     *
+     * @implNote The method ensures requestBody will be released by 1
      */
     public <T> Mono<T> sendRequest(RpcRequest<T> request, ByteBuf requestBody) {
         ChannelOperations<?, ?> conn = connection.getConnection();
@@ -69,26 +77,27 @@ public final class RpcEndpoint {
         Sinks.One<T> sink = Sinks.one();
         while (true) {
             int requestId = generateRandomId();
-            request.setRequestId(requestId);
             Sinks.One<?> previous = pendingRequestMap.putIfAbsent(requestId, sink);
             if (previous != null) {
                 continue;
             }
+            request.setRequestId(requestId);
             ByteBuf buffer;
             try {
                 buffer = RpcFrameEncoder.INSTANCE.encodeRequest(request, requestBody);
-                conn.send(Mono.just(buffer))
-                        .then()
-                        .onErrorResume(t -> {
-                            resolveRequest(requestId, null, t);
-                            ByteBufUtil.ensureReleased(buffer);
-                            return Mono.empty();
-                        })
-                        .subscribe();
             } catch (Exception e) {
                 requestBody.release();
-                resolveRequest(requestId, null, new IllegalStateException("Failed to send request", e));
+                resolveRequest(requestId, null, new IllegalStateException("Failed to encode request", e));
+                break;
             }
+            // Note sendObject() should release the buffer no matter it succeeds or fails
+            conn.sendObject(buffer)
+                    .then()
+                    .onErrorResume(t -> {
+                        resolveRequest(requestId, null, t);
+                        return Mono.empty();
+                    })
+                    .subscribe();
             break;
         }
         return sink.asMono();

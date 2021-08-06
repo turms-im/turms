@@ -24,8 +24,8 @@ import io.lettuce.core.protocol.ProtocolKeyword;
 import io.lettuce.core.protocol.RedisCommand;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.CompositeByteBuf;
-import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.buffer.Unpooled;
+import io.netty.buffer.UnpooledByteBufAllocator;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
 import io.netty.channel.ChannelPromise;
@@ -51,11 +51,11 @@ public class TurmsCommandEncoder extends ChannelOutboundHandlerAdapter {
     @Override
     public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
         CompositeByteBuf out;
-        if (msg instanceof RedisCommand command) {
+        if (msg instanceof RedisCommand<?, ?, ?> command) {
             CommandArgs<?, ?> args = command.getArgs();
             int componentCount = COMMAND_BYTEBUF_COMPONENT_COUNT
                     + (args == null ? 0 : args.count()) * CommandArgsUtil.ARG_BYTEBUF_COMPONENT_COUNT;
-            out = PooledByteBufAllocator.DEFAULT.compositeDirectBuffer(componentCount);
+            out = UnpooledByteBufAllocator.DEFAULT.compositeDirectBuffer(componentCount);
             encode(out, command);
         } else if (msg instanceof Collection) {
             Collection<RedisCommand<?, ?, ?>> commands = (Collection<RedisCommand<?, ?, ?>>) msg;
@@ -65,7 +65,7 @@ public class TurmsCommandEncoder extends ChannelOutboundHandlerAdapter {
                 componentCount += COMMAND_BYTEBUF_COMPONENT_COUNT
                         + (args == null ? 0 : args.count()) * CommandArgsUtil.ARG_BYTEBUF_COMPONENT_COUNT;
             }
-            out = PooledByteBufAllocator.DEFAULT.compositeDirectBuffer(componentCount);
+            out = UnpooledByteBufAllocator.DEFAULT.compositeDirectBuffer(componentCount);
             for (RedisCommand<?, ?, ?> command : commands) {
                 encode(out, command);
             }

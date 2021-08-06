@@ -150,7 +150,7 @@ public final class WebSocketFactory {
                                 : Mono.empty());
                 Mono<Void> onClose = in.receiveCloseStatus().then();
                 // BinaryWebSocketFrame will be created by reactor.netty.http.server.WebsocketServerOperations.send
-                return handler.handle((Connection) in, inbound, out, onClose);
+                return handler.handle((Connection) in, true, inbound, out, onClose);
             }, SERVER_SPEC);
         };
     }

@@ -17,8 +17,8 @@
 
 package unit.im.turms.server.common.rpc.codec.request;
 
-import im.turms.server.common.rpc.request.SendNotificationRequest;
 import im.turms.server.common.rpc.codec.request.SendNotificationRequestCodec;
+import im.turms.server.common.rpc.request.SendNotificationRequest;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
 import org.junit.jupiter.api.Test;

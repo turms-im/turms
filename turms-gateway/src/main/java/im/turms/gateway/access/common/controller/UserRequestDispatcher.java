@@ -98,13 +98,15 @@ public class UserRequestDispatcher {
     }
 
     /**
-     * @implNote If a throwable instance is thrown due to the failure of handling the client request,
+     * @implNote 1. If a throwable instance is thrown due to the failure of handling the client request,
      * the method should recover it to TurmsNotification.
-     * In other words, the method should never return MonoError and it should be considered as a bug if it occurs.
+     * In other words, the method should never return MonoError, and it should be considered as a bug if it occurs.
+     * 2. The method ensures serviceRequestBuffer will be released by 1
      */
     public Mono<ByteBuf> handleRequest(UserSessionWrapper sessionWrapper, ByteBuf serviceRequestBuffer) {
         // Check if it's a heartbeat request
         if (!serviceRequestBuffer.isReadable()) {
+            serviceRequestBuffer.release();
             if (!serverStatusManager.isActive()) {
                 return Mono.just(HEARTBEAT_RESPONSE_SERVER_UNAVAILABLE);
             }
@@ -162,6 +164,9 @@ public class UserRequestDispatcher {
                 });
     }
 
+    /**
+     * The method ensures serviceRequestBuffer will be released by 1
+     */
     public Mono<TurmsNotification> handleServiceRequest(UserSessionWrapper sessionWrapper,
                                                         SimpleTurmsRequest request,
                                                         ByteBuf serviceRequestBuffer,
@@ -188,13 +193,17 @@ public class UserRequestDispatcher {
                         .handleCreateSessionRequest(sessionWrapper, request.getCreateSessionRequest())
                         .map(result -> getNotificationFromHandlerResult(result, request.getRequestId()));
                 case DELETE_SESSION_REQUEST -> sessionController.handleDeleteSessionRequest(sessionWrapper);
-                default -> handleServiceRequestForTurms(sessionWrapper, request, serviceRequestBuffer);
+                default -> {
+                    serviceRequestBuffer.retain();
+                    yield handleServiceRequestForTurms(sessionWrapper, request, serviceRequestBuffer);
+                }
             };
         } catch (Exception e) {
             TurmsNotification notification = NotificationFactory
                     .create(ThrowableInfo.get(e), request.getRequestId());
             return Mono.just(notification);
         } finally {
+            serviceRequestBuffer.release();
             tracingContext.clearMdc();
         }
     }

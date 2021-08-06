@@ -33,6 +33,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MonitorProperties {
 
-    private int updateMemoryIntervalSeconds = 15;
+    private int updateMemoryIntervalSeconds = 3;
 
 }
