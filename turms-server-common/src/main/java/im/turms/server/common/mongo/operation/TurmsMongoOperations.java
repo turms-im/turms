@@ -74,7 +74,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author James Chen
- * @implNote 1. We operates in an unsafe way, which means
+ * @implNote 1. We operate in an unsafe way, which means
  * we don't check whether arguments are legal or not and so on
  * 2. The publishers of mongo-java-driver are cold
  * and the publishers of TurmsMongoOperations are also cold
@@ -218,14 +218,18 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         Publisher<UpdateResult> result = session == null
                 ? collection.updateOne(filter, update, DEFAULT_UPSERT_OPTIONS)
                 : collection.updateOne(session, filter, update, DEFAULT_UPSERT_OPTIONS);
-        return Mono.from(result).then();
+        return Mono.from(result)
+                .onErrorMap(translator::translate)
+                .then();
     }
 
     @Override
     public <T> Mono<Void> upsert(Class<T> clazz, Filter filter, Update update) {
         MongoCollection<T> collection = context.getCollection(clazz);
         Publisher<UpdateResult> source = collection.updateOne(filter, update, DEFAULT_UPSERT_OPTIONS);
-        return Mono.from(source).then();
+        return Mono.from(source)
+                .onErrorMap(translator::translate)
+                .then();
     }
 
     /**
@@ -411,8 +415,8 @@ public class TurmsMongoOperations implements MongoOperationsSupport {
         }
         String dbName = databaseToShard.getName();
         String namespace = String.format("%s.%s", dbName, entity.getCollectionName());
-        Mono<Document> shardCollection = Mono.from(adminDatabase.runCommand(new Document("shardCollection", namespace)
-                .append("key", shardKey)))
+        Document command = new Document("shardCollection", namespace).append("key", shardKey);
+        Mono<Document> shardCollection = Mono.from(adminDatabase.runCommand(command))
                 .doOnError(throwable ->
                         log.error("Failed to shard the collection {} with the shard key {}", namespace, shardKey.toJson(), throwable))
                 .doOnSuccess(ignored ->
