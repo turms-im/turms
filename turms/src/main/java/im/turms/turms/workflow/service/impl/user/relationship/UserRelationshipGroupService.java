@@ -28,6 +28,7 @@ import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.mongo.IMongoCollectionInitializer;
 import im.turms.server.common.mongo.TurmsMongoClient;
+import im.turms.server.common.mongo.exception.DuplicateKeyException;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.QueryOptions;
 import im.turms.server.common.mongo.operation.option.Update;
@@ -98,19 +99,29 @@ public class UserRelationshipGroupService {
         } catch (TurmsBusinessException e) {
             return Mono.error(e);
         }
-        if (groupIndex == null) {
-            groupIndex = (int) node.nextRandomId(ServiceType.USER_RELATIONSHIP_GROUP);
-        }
+        Integer finalGroupIndex = groupIndex == null
+                ? (int) node.nextRandomId(ServiceType.USER_RELATIONSHIP_GROUP)
+                : groupIndex;
         if (creationDate == null) {
             creationDate = new Date();
         }
         UserRelationshipGroup group = new UserRelationshipGroup(
                 ownerId,
-                groupIndex,
+                finalGroupIndex,
                 groupName,
                 creationDate);
-        return mongoClient.insert(session, group)
+        Mono<UserRelationshipGroup> result = mongoClient.insert(session, group)
                 .thenReturn(group);
+        // If groupIndex is null but session isn't null and DuplicateKeyException occurs,
+        // it's a bug of server because we cannot "resume" the session.
+        // Luckily, we don't have the case now.
+        if (groupIndex == null && session == null) {
+            Date finalCreationDate = creationDate;
+            return result
+                    .onErrorResume(DuplicateKeyException.class, t ->
+                            createRelationshipGroup(ownerId, null, groupName, finalCreationDate, null));
+        }
+        return result;
     }
 
     public Flux<UserRelationshipGroup> queryRelationshipGroupsInfos(@NotNull Long ownerId) {
