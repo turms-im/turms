@@ -25,6 +25,14 @@
                 class="cluster-config-item__input"
             />
         </div>
+        <div v-if="isFlatListType(property)">
+            <a-input
+                v-model:value="property.value"
+                :disabled="!property.mutable"
+                :min="0"
+                class="cluster-config-item__input"
+            />
+        </div>
         <div v-if="isNumberType(property.type)">
             <a-input-number
                 v-model:value="property.value"
@@ -55,10 +63,7 @@
             </a-select>
         </div>
         <div
-            v-if="!isNumberType(property.type)
-                && property.type !== 'string'
-                && property.type !== 'boolean'
-                && property.type !== 'enum'"
+            v-if="!isFlatListType(property) && !isFlatType(property.type)"
         >
             {{ property.type }}
         </div>
@@ -102,6 +107,19 @@ export default {
         },
         onRollbackClicked(item) {
             item.value = JSON.parse(JSON.stringify(item.defaultValue));
+        },
+        isFlatListType({type, elementType}) {
+            const isList = type === 'java.util.List'
+                || type === 'java.util.LinkedHashSet'
+                || type === 'java.util.Set';
+            const isFlatElement = this.isFlatType(elementType);
+            return isList && isFlatElement;
+        },
+        isFlatType(type) {
+            return this.isNumberType(type)
+                || type === 'string'
+                || type === 'boolean'
+                || type === 'enum';
         },
         isNumberType(type) {
             return type === 'int'
