@@ -33,7 +33,6 @@ import im.turms.server.common.cluster.service.rpc.RpcService;
 import im.turms.server.common.constant.TurmsStatusCode;
 import im.turms.server.common.exception.TurmsBusinessException;
 import im.turms.server.common.manager.address.BaseServiceAddressManager;
-import im.turms.server.common.mongo.exception.DuplicateKeyException;
 import im.turms.server.common.mongo.operation.option.Filter;
 import im.turms.server.common.mongo.operation.option.Update;
 import im.turms.server.common.property.env.common.cluster.DiscoveryProperties;
@@ -68,8 +67,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * Responsibilities:
  * 1. Ensure the local node is registered even if it is unregistered unexpectedly
- * 2. Listen to the changes (added/removed/updated) of members and notify ConnectionService to connect (TCP) or deregister
- * 3. Select leader
+ * 2. Listen to the changes (added/removed/updated) of members and notify ConnectionService to connect (TCP) or disconnect
+ * 3. Select a leader
  *
  * @author James Chen
  */
@@ -163,7 +162,7 @@ public class DiscoveryService implements ClusterService {
             String wsAddress = addresses.getWsAddress();
             String tcpAddress = addresses.getTcpAddress();
             String udpAddress = addresses.getUdpAddress();
-            Update update = Update.newBuilder()
+            Update update = Update.newBuilder(6)
                     .setIfNotNull(Member.Fields.memberHost, nodeHost)
                     .setIfNotNull(Member.Fields.metricsApiAddress, metricsApiAddress)
                     .setIfNotNull(Member.Fields.adminApiAddress, adminApiAddress)
@@ -208,7 +207,7 @@ public class DiscoveryService implements ClusterService {
         onMemberAddedOrReplaced(localMember);
         updateActiveMembers(allKnownMembers.values());
 
-        localNodeStatusManager.registerLocalMember().block(CRUD_TIMEOUT_DURATION);
+        localNodeStatusManager.registerLocalMember(false).block(CRUD_TIMEOUT_DURATION);
         localNodeStatusManager.tryBecomeFirstLeader().block();
         localNodeStatusManager.startHeartbeat();
     }
@@ -301,9 +300,8 @@ public class DiscoveryService implements ClusterService {
                                 if (nodeId.equals(localNodeStatusManager.getLocalMember().getNodeId())) {
                                     localNodeStatusManager.setLocalNodeRegistered(false);
                                     if (!localNodeStatusManager.isClosing()) {
-                                        localNodeStatusManager.registerLocalMember()
-                                                // Ignore the error because the node may has been registered by its heartbeat timer
-                                                .onErrorResume(DuplicateKeyException.class, e -> Mono.empty())
+                                        // Ignore the error because the node may have been registered by its heartbeat timer
+                                        localNodeStatusManager.registerLocalMember(true)
                                                 .subscribe();
                                     }
                                 }

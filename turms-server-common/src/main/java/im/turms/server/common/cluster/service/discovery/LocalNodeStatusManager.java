@@ -87,13 +87,21 @@ public class LocalNodeStatusManager {
                 .doOnSuccess(unused -> isLocalNodeRegistered = true);
     }
 
-    public Mono<Void> registerLocalMember() {
+    public Mono<Void> registerLocalMember(boolean suppressDuplicateMemberError) {
         log.info("Registering the local member");
         return discoveryService.registerMember(localMember)
-                .doOnError(e -> log.error("Failed to register the local member", e))
                 .doOnSuccess(ignored -> {
                     isLocalNodeRegistered = true;
                     log.info("Registered the local member successfully");
+                })
+                .onErrorResume(t -> {
+                    if (suppressDuplicateMemberError && t instanceof DuplicateKeyException) {
+                        log.info("Cancelled the local member registration because it has been registered");
+                        return Mono.empty();
+                    } else {
+                        log.error("Failed to register the local member", t);
+                        return Mono.error(t);
+                    }
                 });
     }
 
@@ -148,7 +156,7 @@ public class LocalNodeStatusManager {
                 try {
                     Date now = new Date();
                     List<Mono<?>> monos = new ArrayList<>(2);
-                    monos.add(upsertLocalNodeInfo(Update.newBuilder()
+                    monos.add(upsertLocalNodeInfo(Update.newBuilder(1)
                             .set(Member.STATUS_LAST_HEARTBEAT_DATE, now)));
                     if (isLocalNodeLeader()) {
                         monos.add(renewLocalLeader(now)
