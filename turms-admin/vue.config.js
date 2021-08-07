@@ -1,8 +1,9 @@
 const path = require('path');
-const NODE_ENV = process.env.NODE_ENV;
 const webpack = require('webpack');
+
+const NODE_ENV = process.env.NODE_ENV;
 const CLIENT_DIR = path.resolve(__dirname, 'client');
-const isProd = NODE_ENV === 'production';
+const IS_PROD = NODE_ENV === 'production';
 
 module.exports = {
     css: {
@@ -15,16 +16,20 @@ module.exports = {
         }
     },
     configureWebpack: config => {
-        // config.node = false; // To avoid importing node environment by third party dependencies
         config.entry = {
             app: [`${CLIENT_DIR}/src/main.js`]
         };
-        if (isProd) {
-            config.plugins.push(
-                new webpack.ContextReplacementPlugin(
-                    /moment[/\\]locale$/,
-                    /en|zh-cn/
-                ));
+        const processProvidePlugin = new webpack.ProvidePlugin({
+            Buffer: ['buffer', 'Buffer'],
+            process: 'process/browser'
+        });
+        config.plugins.push(processProvidePlugin);
+        if (IS_PROD) {
+            const contextReplacementPlugin = new webpack.ContextReplacementPlugin(
+                /moment[/\\]locale$/,
+                /en|zh-cn/
+            );
+            config.plugins.push(contextReplacementPlugin);
         } else {
             config.devtool = 'source-map';
         }
@@ -39,6 +44,18 @@ module.exports = {
                 }
             ]
         });
+        config.resolve = {
+            ...config.resolve,
+            alias: {
+                process: 'process/browser'
+            },
+            fallback: {
+                crypto: false,
+                fs: false,
+                stream: require.resolve('stream-browserify'),
+                util: false
+            }
+        };
     },
     chainWebpack: config => {
         config
