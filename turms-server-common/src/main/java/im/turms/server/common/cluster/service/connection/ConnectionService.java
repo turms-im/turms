@@ -89,8 +89,12 @@ public class ConnectionService implements ClusterService {
     private final long keepaliveIntervalMillis;
     private final long keepaliveTimeoutMillis;
     private final Duration reconnectInterval;
+
+    // Thread resources
     private final ScheduledExecutorService connectionRetryScheduler;
     private final NioEventLoopGroup eventLoopGroupForClients;
+    private final Thread keepaliveThread;
+
     /**
      * Note that it is allowed to connect to non-member turms servers
      */
@@ -124,16 +128,20 @@ public class ConnectionService implements ClusterService {
         reconnectInterval = Duration.ofSeconds(clientProperties.getReconnectIntervalSeconds());
         eventLoopGroupForClients = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors(),
                 new DefaultThreadFactory("turms-cluster-connection-client-io"));
-        Thread thread = new DefaultThreadFactory("turms-cluster-connection-keepalive", true)
-                .newThread(this::sendKeepaliveToConnectionsForever);
         connectionRetryScheduler =
                 Executors.newScheduledThreadPool(1, new DefaultThreadFactory("turms-cluster-connection-retry", true));
-        thread.start();
+        keepaliveThread = new DefaultThreadFactory("turms-cluster-connection-keepalive", true)
+                .newThread(() -> {
+                    sendKeepaliveToConnectionsForever();
+                    log.warn("Keepalive thread has been stopped");
+                });
+        keepaliveThread.start();
         server = setupServer();
     }
 
     @Override
     public void stop() {
+        keepaliveThread.interrupt();
         if (server != null) {
             try {
                 server.dispose();
@@ -298,39 +306,10 @@ public class ConnectionService implements ClusterService {
         while (!Thread.currentThread().isInterrupted()) {
             Iterator<Map.Entry<String, TurmsConnection>> iterator = connectionPool.entrySet().iterator();
             while (iterator.hasNext()) {
-                Map.Entry<String, TurmsConnection> entry = iterator.next();
-                String nodeId = entry.getKey();
-                TurmsConnection connection = entry.getValue();
-                Connection conn = connection.getConnection();
-                if (conn.isDisposed()) {
-                    iterator.remove();
-                    continue;
-                }
-                if (!connection.isLocalNodeClient()) {
-                    continue;
-                }
-                long now = System.currentTimeMillis();
-                long elapsedTime = now - connection.getLastKeepaliveTimestamp();
-                if (elapsedTime > keepaliveTimeoutMillis) {
-                    log.warn("Reconnecting to the member {} due to keepalive timeout", nodeId);
-                    // onConnectionClosed will reconnect the member
-                    disconnectConnection(connection);
-                    iterator.remove();
-                    continue;
-                }
-                if (elapsedTime < keepaliveIntervalMillis) {
-                    continue;
-                }
                 try {
-                    rpcService.requestResponse(nodeId, new KeepaliveRequest())
-                            .doOnSuccess(unused -> connection.setLastKeepaliveTimestamp(System.currentTimeMillis()))
-                            .onErrorResume(t -> {
-                                log.warn("Failed to send a keepalive probe to the member " + nodeId, t);
-                                return Mono.empty();
-                            })
-                            .subscribe();
+                    sendKeepalive(iterator);
                 } catch (Exception e) {
-                    log.error("Failed to send a keepalive probe to the member " + nodeId, e);
+                    log.error("Caught an exception when sending keepalive", e);
                 }
             }
             try {
@@ -338,6 +317,43 @@ public class ConnectionService implements ClusterService {
             } catch (InterruptedException e) {
                 break;
             }
+        }
+    }
+
+    private void sendKeepalive(Iterator<Map.Entry<String, TurmsConnection>> iterator) {
+        Map.Entry<String, TurmsConnection> entry = iterator.next();
+        String nodeId = entry.getKey();
+        TurmsConnection connection = entry.getValue();
+        Connection conn = connection.getConnection();
+        if (conn.isDisposed()) {
+            iterator.remove();
+            return;
+        }
+        if (!connection.isLocalNodeClient()) {
+            return;
+        }
+        long now = System.currentTimeMillis();
+        long elapsedTime = now - connection.getLastKeepaliveTimestamp();
+        if (elapsedTime > keepaliveTimeoutMillis) {
+            log.warn("Reconnecting to the member {} due to keepalive timeout", nodeId);
+            // onConnectionClosed() will reconnect the member
+            disconnectConnection(connection);
+            iterator.remove();
+            return;
+        }
+        if (elapsedTime < keepaliveIntervalMillis) {
+            return;
+        }
+        try {
+            rpcService.requestResponse(nodeId, new KeepaliveRequest())
+                    .doOnSuccess(unused -> connection.setLastKeepaliveTimestamp(System.currentTimeMillis()))
+                    .onErrorResume(t -> {
+                        log.warn("Failed to send a keepalive request to the member " + nodeId, t);
+                        return Mono.empty();
+                    })
+                    .subscribe();
+        } catch (Exception e) {
+            log.error("Failed to send a keepalive request to the member " + nodeId, e);
         }
     }
 
@@ -392,7 +408,7 @@ public class ConnectionService implements ClusterService {
         String memberIdAndAddress = getMemberIdAndAddress(member);
         log.info("[{}] Connected to member{}",
                 endpointType,
-                member == null ? "" : " " + memberIdAndAddress);
+                member == null ? "" : ": " + memberIdAndAddress);
         for (MemberConnectionListener listener : connection.getListeners()) {
             try {
                 listener.onConnectionOpen(connection);
@@ -417,7 +433,7 @@ public class ConnectionService implements ClusterService {
                     }
                     log.error("[{}] Failed to listen to the connection to the member{}",
                             endpointType,
-                            member == null ? "" : " " + memberIdAndAddress,
+                            member == null ? "" : ": " + memberIdAndAddress,
                             t);
                     return Mono.empty();
                 })
@@ -435,11 +451,10 @@ public class ConnectionService implements ClusterService {
         String nodeId = connection.getNodeId();
         Member member = discoveryService.getMember(nodeId);
         Level logLevel = connection.isClosing() ? Level.INFO : Level.WARN;
-        log.log(logLevel, "[{}] The connection to member {}[{}] has been closed{}",
+        log.log(logLevel, "[{}] The connection to a member has been closed{}{}",
                 connection.isLocalNodeClient() ? "Client" : "Server",
-                nodeId == null ? "" : nodeId,
-                connection.getConnection().channel().remoteAddress(),
                 connection.isClosing() ? "" : " unexpectedly",
+                member == null ? "" : ": " + getMemberIdAndAddress(member),
                 throwable);
         for (MemberConnectionListener listener : connection.getListeners()) {
             try {
