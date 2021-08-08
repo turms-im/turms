@@ -179,8 +179,8 @@ public class UserRelationshipService {
             return Mono.error(e);
         }
         return mongoClient.inTransaction(session -> deleteOneSidedRelationship(userOneId, userTwoId, session)
-                .zipWith(deleteOneSidedRelationship(userTwoId, userOneId, session))
-                .then())
+                        .then(deleteOneSidedRelationship(userTwoId, userOneId, session))
+                        .then())
                 .retryWhen(TRANSACTION_RETRY);
     }
 
