@@ -61,7 +61,6 @@ import java.util.stream.Collectors;
 
 import static im.turms.turms.constant.DaoConstant.DEFAULT_RELATIONSHIP_GROUP_INDEX;
 import static im.turms.turms.constant.DaoConstant.TRANSACTION_RETRY;
-import static im.turms.turms.workflow.dao.domain.user.UserRelationshipGroupMember.Fields.ID_GROUP_INDEX;
 
 /**
  * @author James Chen
@@ -182,21 +181,6 @@ public class UserRelationshipService {
                 .retryWhen(TRANSACTION_RETRY);
     }
 
-    private Flux<Long> queryMembersRelatedUserIds(
-            @Nullable Set<Long> ownerIds,
-            @Nullable Set<Integer> groupIndexes,
-            @Nullable Integer page,
-            @Nullable Integer size) {
-        Filter filter = Filter.newBuilder(2)
-                .inIfNotNull(UserRelationship.Fields.ID_OWNER_ID, ownerIds)
-                .inIfNotNull(ID_GROUP_INDEX, groupIndexes);
-        QueryOptions options = QueryOptions.newBuilder(3)
-                .paginateIfNotNull(page, size)
-                .include(UserRelationship.Fields.ID_RELATED_USER_ID);
-        return mongoClient.findMany(UserRelationshipGroupMember.class, filter, options)
-                .map(member -> member.getKey().getRelatedUserId());
-    }
-
     public Mono<Int64ValuesWithVersion> queryRelatedUserIdsWithVersion(
             @NotNull Long ownerId,
             @NotNull Integer groupIndex,
@@ -210,7 +194,7 @@ public class UserRelationshipService {
         return userVersionService.queryRelationshipsLastUpdatedDate(ownerId)
                 .flatMap(date -> {
                     if (lastUpdatedDate == null || lastUpdatedDate.before(date)) {
-                        return queryMembersRelatedUserIds(Set.of(ownerId), Set.of(groupIndex), isBlocked)
+                        return queryRelatedUserIds(Set.of(ownerId), Set.of(groupIndex), isBlocked)
                                 .collect(Collectors.toSet())
                                 .map(ids -> {
                                     if (ids.isEmpty()) {
@@ -278,22 +262,24 @@ public class UserRelationshipService {
                 .map(userRelationship -> userRelationship.getKey().getRelatedUserId());
     }
 
-    public Flux<Long> queryMembersRelatedUserIds(
+    public Flux<Long> queryRelatedUserIds(
             @Nullable Set<Long> ownerIds,
             @Nullable Set<Integer> groupIndexes,
             @Nullable Boolean isBlocked) {
         if (groupIndexes != null && isBlocked != null) {
-            return Mono.zip(
-                    queryMembersRelatedUserIds(ownerIds, groupIndexes, null, null)
-                            .collect(Collectors.toSet()),
-                    queryRelatedUserIds(ownerIds, isBlocked)
-                            .collect(Collectors.toSet()))
+            Mono<Set<Long>> queryRelationshipGroupMemberIds = userRelationshipGroupService
+                    .queryRelationshipGroupMemberIds(ownerIds, groupIndexes, null, null)
+                    .collect(Collectors.toSet());
+            Mono<Set<Long>> queryRelatedUserIds = queryRelatedUserIds(ownerIds, isBlocked)
+                    .collect(Collectors.toSet());
+            return Mono
+                    .zip(queryRelationshipGroupMemberIds, queryRelatedUserIds)
                     .flatMapIterable(tuple -> {
                         tuple.getT1().retainAll(tuple.getT2());
                         return tuple.getT1();
                     });
         } else if (groupIndexes != null) {
-            return queryMembersRelatedUserIds(ownerIds, groupIndexes, null, null);
+            return userRelationshipGroupService.queryRelationshipGroupMemberIds(ownerIds, groupIndexes, null, null);
         } else {
             return queryRelatedUserIds(ownerIds, isBlocked);
         }
@@ -330,7 +316,7 @@ public class UserRelationshipService {
             if (relatedUserIds != null && relatedUserIds.isEmpty()) {
                 return Flux.empty();
             }
-            return queryMembersRelatedUserIds(ownerIds, groupIndexes, null, null)
+            return userRelationshipGroupService.queryRelationshipGroupMemberIds(ownerIds, groupIndexes, null, null)
                     .collect(Collectors.toSet())
                     .flatMapMany(userIds -> {
                         if (relatedUserIds != null) {
@@ -350,7 +336,7 @@ public class UserRelationshipService {
             @Nullable Set<Integer> groupIndexes,
             @Nullable Integer page,
             @Nullable Integer size) {
-        return queryMembersRelatedUserIds(ownerIds, groupIndexes, null)
+        return queryRelatedUserIds(ownerIds, groupIndexes, null)
                 .collect(Collectors.toSet())
                 .flatMapMany(relatedUserIds -> {
                     if (relatedUserIds.isEmpty()) {
@@ -376,7 +362,7 @@ public class UserRelationshipService {
             if (relatedUserIds != null && relatedUserIds.isEmpty()) {
                 return Mono.just(0L);
             }
-            return queryMembersRelatedUserIds(ownerIds, groupIndexes, null, null)
+            return userRelationshipGroupService.queryRelationshipGroupMemberIds(ownerIds, groupIndexes, null, null)
                     .collect(Collectors.toSet())
                     .flatMap(userIds -> {
                         if (relatedUserIds != null) {
@@ -396,8 +382,8 @@ public class UserRelationshipService {
             @Nullable Set<Integer> groupIndexes) {
         Filter filter = Filter
                 .newBuilder(2)
-                .inIfNotNull(UserRelationship.Fields.ID_OWNER_ID, ownerIds)
-                .inIfNotNull(ID_GROUP_INDEX, groupIndexes);
+                .inIfNotNull(UserRelationshipGroupMember.Fields.ID_OWNER_ID, ownerIds)
+                .inIfNotNull(UserRelationshipGroupMember.Fields.ID_GROUP_INDEX, groupIndexes);
         return mongoClient.count(UserRelationshipGroupMember.class, filter);
     }
 

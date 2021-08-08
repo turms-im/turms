@@ -182,7 +182,7 @@ public class UserRelationshipGroupService {
                 .map(member -> member.getKey().getGroupIndex());
     }
 
-    public Flux<Long> queryRelatedUserIdsInRelationshipGroup(
+    public Flux<Long> queryRelationshipGroupMemberIds(
             @NotNull Long ownerId,
             @NotNull Integer groupIndex) {
         try {
@@ -195,6 +195,21 @@ public class UserRelationshipGroupService {
                 .eq(UserRelationshipGroupMember.Fields.ID_OWNER_ID, ownerId)
                 .eq(UserRelationshipGroupMember.Fields.ID_GROUP_INDEX, groupIndex);
         QueryOptions options = QueryOptions.newBuilder(1)
+                .include(UserRelationshipGroupMember.Fields.ID_RELATED_USER_ID);
+        return mongoClient.findMany(UserRelationshipGroupMember.class, filter, options)
+                .map(member -> member.getKey().getRelatedUserId());
+    }
+
+    public Flux<Long> queryRelationshipGroupMemberIds(
+            @Nullable Set<Long> ownerIds,
+            @Nullable Set<Integer> groupIndexes,
+            @Nullable Integer page,
+            @Nullable Integer size) {
+        Filter filter = Filter.newBuilder(2)
+                .inIfNotNull(UserRelationshipGroupMember.Fields.ID_OWNER_ID, ownerIds)
+                .inIfNotNull(UserRelationshipGroupMember.Fields.ID_GROUP_INDEX, groupIndexes);
+        QueryOptions options = QueryOptions.newBuilder(3)
+                .paginateIfNotNull(page, size)
                 .include(UserRelationshipGroupMember.Fields.ID_RELATED_USER_ID);
         return mongoClient.findMany(UserRelationshipGroupMember.class, filter, options)
                 .map(member -> member.getKey().getRelatedUserId());
